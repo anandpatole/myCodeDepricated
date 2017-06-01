@@ -1,0 +1,214 @@
+apply plugin: 'com.android.application'
+
+/*repositories {
+    maven { url 'https://maven.fabric.io/public' }
+//    maven { url 'https://github.com/500px/500px-android-blur/raw/master/releases/' }
+}*/
+
+repositories {
+    maven {
+        url 'https://maven.fabric.io/public'
+    }
+}
+
+android {
+
+    compileSdkVersion 25
+    buildToolsVersion "25.0.3"
+    defaultConfig {
+        applicationId "com.cheep"
+        minSdkVersion 16
+        targetSdkVersion 25
+        versionCode 11
+        versionName "1.0.5" // PLEASE FIRST MAKE SURE MIN-VERSION IS 16.
+
+        renderscriptTargetApi 18
+        renderscriptSupportModeEnabled true
+
+        // Enabling multidex support.
+        multiDexEnabled true
+
+        /*renderscriptTargetApi 19
+        renderscriptSupportModeEnabled true*/
+        buildConfigField("String", "FILE_PROVIDER_URL", getProperty("FILE_PROVIDER_URL"))
+
+        buildConfigField("String", "HOTLINE_APP_ID", getProperty("HOTLINE_APP_ID"))
+        buildConfigField("String", "HOTLINE_APP_KEY", getProperty("HOTLINE_APP_KEY"))
+        //Google Places API Key for PlacesAutoCompletion
+        buildConfigField("String", "PLACES_API_KEY", getProperty("PLACES_API_KEY"))
+        // Fetch DEFAULT X-API-KEY value from gradle.properties
+        buildConfigField("String", "X_API_KEY", getProperty("X_API_KEY"));
+        // Fetch Twitter Key value from gradle.properties
+        buildConfigField("String", "TWITTER_KEY", getProperty("TWITTER_KEY"));
+        // Fetch Twitter Secret Key value from gradle.properties
+        buildConfigField("String", "TWITTER_SECRET", getProperty("TWITTER_SECRET"));
+        // Fetch Cheep Helpline number
+        buildConfigField("String", "CHEEP_HELPLINE_NUMBER", getProperty("CHEEP_HELPLINE_NUMBER"));
+        //User Type whether its User or PRO
+        buildConfigField("String", "USER_TYPE", getProperty("USER_TYPE"));
+        // Playstore URL
+        buildConfigField("String", "PLAYSTORE_URL", getProperty("PLAYSTORE_URL"));
+
+        // Payment Success URL
+        buildConfigField("String", "PAYUBIZ_SUCCESS_URL", getProperty("PAYUBIZ_SUCCESS_URL"))
+        buildConfigField("String", "PAYUBIZ_FAIL_URL", getProperty("PAYUBIZ_FAIL_URL"))
+
+        //AppsFlyer
+        buildConfigField("String", "APPSFLYER_DEV_KEY", getProperty("APPSFLYER_DEV_KEY"))
+
+        // Below Key value pairs would get change based on Buildtype
+        buildConfigField("String", "BASE_URL", getProperty("DEVELOPMENT_BASE_URL"));
+        buildConfigField("String", "CHAT_NODE", getProperty("CHAT_NODE_DEBUG"));
+        buildConfigField("String", "PAYUBIZ_HDFC_KEY", getProperty("PAYUBIZ_HDFC_SANDBOX_KEY"))
+        buildConfigField("String", "PAYUBIZ_HDFC_URL", getProperty("PAYUBIZ_HDFC_SANDBOX_URL"))
+
+        // TODO: This needs to change (For Temporary LIVE)
+//        buildConfigField("String", "BASE_URL", getProperty("LIVE_BASE_URL"));
+//        buildConfigField("String", "CHAT_NODE", getProperty("CHAT_NODE_LIVE"));
+//        buildConfigField("String", "PAYUBIZ_HDFC_KEY", getProperty("PAYUBIZ_HDFC_LIVE_KEY"))
+//        buildConfigField("String", "PAYUBIZ_HDFC_URL", getProperty("PAYUBIZ_HDFC_LIVE_URL"))
+    }
+
+    // We are using apache library for MultiPart portion so, have to use below line to make apache library accessible on API LEVEL >=23
+    useLibrary 'org.apache.http.legacy'
+
+    buildTypes {
+        debug {
+            debuggable true
+            versionNameSuffix "-SNAPSHOT"
+        }
+        live {
+            buildConfigField("String", "BASE_URL", getProperty("LIVE_BASE_URL"));
+            buildConfigField("String", "CHAT_NODE", getProperty("CHAT_NODE_LIVE"));
+            buildConfigField("String", "PAYUBIZ_HDFC_KEY", getProperty("PAYUBIZ_HDFC_LIVE_KEY"))
+            buildConfigField("String", "PAYUBIZ_HDFC_URL", getProperty("PAYUBIZ_HDFC_LIVE_URL"))
+            signingConfig signingConfigs.debug
+        }
+        release {
+            buildConfigField("String", "BASE_URL", getProperty("LIVE_BASE_URL"));
+            buildConfigField("String", "CHAT_NODE", getProperty("CHAT_NODE_LIVE"));
+            buildConfigField("String", "PAYUBIZ_HDFC_KEY", getProperty("PAYUBIZ_HDFC_LIVE_KEY"))
+            buildConfigField("String", "PAYUBIZ_HDFC_URL", getProperty("PAYUBIZ_HDFC_LIVE_URL"))
+
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    //DataBinding needs to be enabled
+    dataBinding {
+        enabled true
+    }
+
+    dexOptions {
+        jumboMode true
+        javaMaxHeapSize "4g"
+    }
+
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/LICENSE'
+    }
+
+}
+
+//Added to resolve this error
+//Warning:WARNING: Dependency xpp3:xpp3:1.1.4c is ignored for release as it may be conflicting with the internal version provided by Android.
+// In case of problem, please repackage it with jarjar to change the class packages
+configurations {
+    all*.exclude group: 'xpp3', module: 'xpp3'
+}
+
+// Description
+ext {
+    supportLibVer = '25.3.1'
+    gsonLibVer = '2.7'
+    playServiceVer = '10.2.6'
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+
+    // Support Library
+    compile "com.android.support:appcompat-v7:$supportLibVer"
+    compile "com.android.support:design:$supportLibVer"
+    compile 'com.android.support:multidex:1.0.1'
+//    compile 'com.android.support.constraint:constraint-layout:1.0.0-beta5'
+
+    // Gson Library
+    compile "com.google.code.gson:gson:$gsonLibVer"
+
+    // Glide Library
+    compile 'com.github.bumptech.glide:glide:3.7.0'
+
+    //For Getting Location
+    compile "com.google.android.gms:play-services-location:$playServiceVer"
+
+    //For Google SignIn
+    compile "com.google.android.gms:play-services-auth:$playServiceVer"
+
+    //FCM (Push Notification)
+    compile "com.google.firebase:firebase-messaging:$playServiceVer"
+    compile "com.google.android.gms:play-services-places:$playServiceVer"
+
+    //Encryption
+    compile files('libs/jncryptor-1.2.0.jar')
+
+    //firebase crash
+    compile "com.google.firebase:firebase-core:$playServiceVer"
+    compile "com.google.firebase:firebase-crash:$playServiceVer"
+
+    // firebase database sdk
+    compile "com.google.firebase:firebase-database:$playServiceVer"
+
+    //Twitter
+    compile('com.twitter.sdk.android:twitter:2.3.2@aar') {
+        transitive = true;
+    }
+
+    // Swipe layout library
+    compile 'com.daimajia.swipelayout:library:1.2.0@aar'
+
+    //Volley Library
+    compile 'com.android.volley:volley:1.0.0'
+
+    //Apache Library
+    compile 'org.apache.httpcomponents:httpmime:4.3.6'
+    compile 'org.apache.httpcomponents:httpclient-android:4.3.5.1'
+
+    //Facebook
+    compile 'com.facebook.android:facebook-android-sdk:4.16.1'
+
+    //For Image Cropping
+//    compile 'com.theartofdev.edmodo:android-image-cropper:2.3.1'
+    compile 'com.theartofdev.edmodo:android-image-cropper:2.4.4'
+
+    //For Circular indicator with viewpager
+    compile 'me.relex:circleindicator:1.2.2@aar'
+
+    // For broadcasting
+    compile 'org.greenrobot:eventbus:3.0.0'
+
+    // payumoney
+    compile 'com.payu.india:payu-sdk:4.3.9'
+    compile 'com.payu.custombrowser:payu-custom-browser:5.3.7'
+    compile 'com.payu.magicretry:magicretry:1.0.0'
+
+    //HotLine integration(For Chat to Cheep Admin)
+    compile 'com.github.freshdesk:hotline-android:1.2.1'
+
+    // HDFC Payment PayU
+    //    compile 'com.payu.custombrowser:payu-custom-browser:6.1.1'
+    //this is gradle path from where CB will be automatically downloaded
+
+    // AppsFlyer SDK
+    compile 'com.appsflyer:af-android-sdk:4.7.2@aar'
+
+    testCompile 'junit:junit:4.12'
+
+}
+
+// Add to the bottom of the file
+apply plugin: 'com.google.gms.google-services'
+apply plugin: 'io.fabric'

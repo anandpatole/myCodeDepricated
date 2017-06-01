@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/scale_15dp"
+        android:paddingLeft="@dimen/scale_22dp"
+        android:paddingRight="@dimen/scale_22dp"
+        android:paddingTop="@dimen/scale_15dp">
+
+        <ImageView
+            android:id="@+id/img_photo"
+            android:layout_width="@dimen/chat_width"
+            android:layout_height="@dimen/chat_width"
+            android:layout_centerVertical="false"
+            android:layout_toRightOf="@+id/img_unread"
+            android:src="@drawable/icon_profile_img_solid"
+            android:text="5"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_25sp" />
+
+        <com.cheep.custom_view.CFTextViewRegular
+            android:id="@+id/text_desc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/top_row"
+            android:layout_marginLeft="@dimen/scale_16dp"
+            android:layout_toRightOf="@+id/img_photo"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:maxLines="4"
+            android:text="sdjklfsjkldslkdf;slkdfja;sldkjfa;lsdkjf;alkdfjl;asdjf;lajksdf;ljkasd;fljkad;lfjka;dlfjka;ldkfj;aldjkf;alkjsdfl;akjsdfklsdhkfljshdklfjsldfjskldfjsldkflskdjflskdhfklsjdflskjdflkjsdlfjsldfjsldjflsjdflsjdfljsdlfjsldjflsjkdfljsdfljksdlfkjsldfjks;akdfja;lsdkjflskdf"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_size_13sp" />
+
+        <com.cheep.custom_view.CFTextViewRegular
+            android:id="@+id/text_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/text_desc"
+            android:layout_below="@+id/text_desc"
+            android:layout_marginTop="@dimen/scale_10dp"
+            android:layout_toRightOf="@+id/img_profile"
+            android:ellipsize="end"
+            android:lines="1"
+            android:text="02/06/2016"
+            android:textColor="@color/grey_varient_2"
+            android:textSize="@dimen/text_size_11sp" />
+    </RelativeLayout>
+</layout>

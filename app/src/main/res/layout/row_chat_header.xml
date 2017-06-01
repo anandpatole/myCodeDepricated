@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|center"
+        android:background="@color/transparent"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <com.cheep.custom_view.CFTextViewRegular
+            android:id="@+id/tvHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/scale_5dp"
+            android:background="@drawable/rounded_corner_gray_border_fill_white_5x5"
+            android:textColor="@color/black_translucent"
+            android:textSize="@dimen/text_size_11sp"
+            tools:text="07 Oct,2016" />
+    </LinearLayout>
+</layout>

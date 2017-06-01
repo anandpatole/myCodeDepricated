@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/bottom_sheet"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <com.cheep.custom_view.CFTextViewSemiBold
+            android:id="@+id/txt_title"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:paddingLeft="@dimen/scale_16dp"
+            android:paddingRight="@dimen/scale_16dp"
+            android:paddingTop="@dimen/scale_16dp"
+            android:textAllCaps="false"
+            android:textColor="@color/splash_gradient_end"
+            android:textSize="@dimen/text_size_16sp"
+            tools:text="Title" />
+
+        <FrameLayout
+            android:id="@+id/view_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"></FrameLayout>
+
+        <LinearLayout
+            android:id="@+id/alert_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/scale_16dp"
+            android:paddingLeft="@dimen/scale_16dp"
+            android:paddingRight="@dimen/scale_16dp"
+            android:paddingTop="@dimen/scale_16dp">
+
+            <com.cheep.custom_view.CFTextViewRegular
+                android:id="@+id/txt_message"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Are you in an emergency ? "
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_20sp" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:orientation="horizontal"
+                android:paddingTop="16dp">
+
+                <com.cheep.custom_view.AppButton
+                    android:id="@+id/btn_positive"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:layout_marginRight="10dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/img_blue_edges_rounded"
+                    android:minWidth="150dp"
+                    android:text="Yes"
+                    android:textAllCaps="false"
+                    android:textColor="@color/splash_gradient_end" />
+
+                <com.cheep.custom_view.AppButton
+                    android:id="@+id/btn_negative"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/img_blue_edges_rounded"
+                    android:minWidth="150dp"
+                    android:text="No"
+                    android:textAllCaps="false"
+                    android:textColor="@color/splash_gradient_end" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</android.support.v4.widget.NestedScrollView>

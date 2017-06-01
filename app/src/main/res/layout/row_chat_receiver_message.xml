@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/scale_5dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/scale_10dp"
+            android:layout_marginRight="@dimen/scale_15dp"
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:background="@drawable/ic_chat_back_receiver"
+                android:paddingRight="@dimen/scale_18dp"
+                android:paddingTop="@dimen/scale_18dp"
+                android:paddingBottom="@dimen/scale_18dp"
+                android:paddingLeft="@dimen/scale_25dp"
+                android:orientation="vertical">
+
+                <com.cheep.custom_view.CFTextViewRegular
+                    android:id="@+id/text_message"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:text="Ok,I will send you."
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_14sp" />
+            </LinearLayout>
+            <com.cheep.custom_view.CFTextViewRegular
+                android:id="@+id/text_time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:paddingLeft="@dimen/scale_15dp"
+                android:lines="1"
+                android:layout_marginTop="@dimen/scale_2dp"
+                android:layout_marginBottom="@dimen/scale_2dp"
+                android:layout_gravity="left"
+                android:text="5:55 pm"
+                android:textColor="@color/grey_varient_5"
+                android:textSize="@dimen/text_size_10sp" />
+        </LinearLayout>
+    </LinearLayout>
+</layout>

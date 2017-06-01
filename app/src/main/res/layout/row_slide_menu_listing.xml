@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="45dp"
+    android:background="@color/white">
+    <!--android:background="@drawable/slide_menu_drawable"-->
+    <!--android:background="@color/colorPrimary"-->
+
+    <View
+        android:id="@+id/separator"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/scale_2dp"
+        android:layout_marginLeft="@dimen/scale_16dp"
+        android:background="@color/hotline_article_list_divider"
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/icon"
+        android:layout_width="@dimen/scale_22dp"
+        android:layout_height="@dimen/scale_22dp"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="@dimen/scale_16dp"
+        android:layout_marginRight="@dimen/scale_16dp"
+        android:adjustViewBounds="true"
+        android:visibility="gone" />
+
+    <com.cheep.custom_view.CFTextViewRegular
+        android:id="@+id/name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="@dimen/scale_50dp"
+        android:textColor="@color/black"
+        android:textSize="@dimen/text_size_16sp"
+        tools:text="Home" />
+</FrameLayout>
+
+    <!--
+    <?xml version="1.0" encoding="utf-8"?>
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:paddingBottom="@dimen/scale_15dp"
+
+        android:paddingLeft="@dimen/scale_20dp"
+        android:paddingRight="@dimen/scale_20dp"
+        android:paddingTop="@dimen/scale_15dp">
+        &lt;!&ndash;android:background="@drawable/slide_menu_drawable"&ndash;&gt;
+        &lt;!&ndash;android:background="@color/colorPrimary"&ndash;&gt;
+        <ImageView
+            android:id="@+id/icon"
+            android:layout_width="@dimen/scale_22dp"
+            android:layout_height="@dimen/scale_22dp"
+            android:adjustViewBounds="true"
+            tools:src="@drawable/icon_home" />
+
+        <com.cheep.custom_view.CFTextViewRegular
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/icon"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/scale_20dp"
+            android:layout_marginStart="@dimen/scale_20dp"
+            android:layout_toEndOf="@+id/icon"
+            android:layout_toRightOf="@+id/icon"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_size_15sp"
+            tools:text="Home" />
+    </RelativeLayout>-->

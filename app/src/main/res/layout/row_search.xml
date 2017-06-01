@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.cheep.custom_view.CFTextViewRegular xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/text_result"
+    android:layout_width="match_parent"
+    android:textColor="@color/grey_dark_color"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/scale_15dp"
+    android:paddingLeft="@dimen/scale_22dp"
+    android:paddingRight="@dimen/scale_15dp"
+    android:paddingTop="@dimen/scale_15dp" />

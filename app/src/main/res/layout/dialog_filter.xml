@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/scale_1dp"
+            android:layout_above="@+id/action_layout"
+            android:layout_marginLeft="@dimen/scale_22dp"
+            android:layout_marginRight="@dimen/scale_22dp"
+            android:layout_marginTop="@dimen/scale_16dp"
+            android:layout_toRightOf="@+id/profile_layout"
+            android:background="@color/grey_varient_3" />
+
+        <com.cheep.custom_view.CFTextViewRegular
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/scale_22dp"
+            android:layout_marginRight="@dimen/scale_22dp"
+            android:layout_marginTop="@dimen/scale_16dp"
+            android:background="@color/transparent"
+            android:fontFamily="sans-serif"
+            android:gravity="left"
+            android:text="@string/label_cheepest"
+            android:textColor="@color/splash_gradient_end"
+            android:textSize="@dimen/text_size_12sp" />
+
+        <com.cheep.custom_view.TextThumbSeekBar
+            android:id="@+id/seekbar_cheepest"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/scale_5dp"
+            android:layout_marginRight="@dimen/scale_5dp"
+            android:paddingLeft="@dimen/scale_15dp"
+            android:paddingRight="@dimen/scale_15dp"
+            android:paddingTop="15dp"
+            android:thumb="@drawable/icon_seekbar_thumb"
+            android:thumbOffset="@dimen/scale_5dp" />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.cheep.custom_view.CFTextViewRegular
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:layout_marginLeft="@dimen/scale_22dp"
+                android:text="₹0"
+                android:textSize="@dimen/text_size_10sp" />
+
+            <com.cheep.custom_view.CFTextViewRegular
+                android:id="@+id/text_label_max_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_marginRight="@dimen/scale_22dp"
+                android:text="₹20000"
+                android:textSize="@dimen/text_size_10sp" />
+        </FrameLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/scale_1dp"
+            android:layout_above="@+id/action_layout"
+            android:layout_marginLeft="@dimen/scale_22dp"
+            android:layout_marginRight="@dimen/scale_22dp"
+            android:layout_marginTop="@dimen/scale_16dp"
+            android:layout_toRightOf="@+id/profile_layout"
+            android:background="@color/grey_varient_3" />
+
+        <com.cheep.custom_view.CFTextViewRegular
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/scale_22dp"
+            android:layout_marginRight="@dimen/scale_22dp"
+            android:layout_marginTop="@dimen/scale_16dp"
+            android:background="@color/transparent"
+            android:fontFamily="sans-serif"
+            android:gravity="left"
+            android:text="@string/label_distance"
+            android:textColor="@color/splash_gradient_end"
+            android:textSize="@dimen/text_size_12sp" />
+
+        <com.cheep.custom_view.TextThumbSeekBar
+            android:id="@+id/seekbar_distance"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/scale_5dp"
+            android:layout_marginRight="@dimen/scale_5dp"
+            android:paddingLeft="@dimen/scale_15dp"
+            android:paddingRight="@dimen/scale_15dp"
+            android:paddingTop="15dp"
+            android:thumb="@drawable/icon_seekbar_thumb"
+            android:thumbOffset="@dimen/scale_5dp" />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.cheep.custom_view.CFTextViewRegular
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:layout_marginLeft="@dimen/scale_22dp"
+                android:text="0km"
+                android:textSize="@dimen/text_size_10sp" />
+
+            <com.cheep.custom_view.CFTextViewRegular
+                android:id="@+id/text_label_max_distance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_marginRight="@dimen/scale_22dp"
+                android:text="50km"
+                android:textSize="@dimen/text_size_10sp" />
+        </FrameLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/scale_1dp"
+            android:layout_above="@+id/action_layout"
+            android:layout_marginLeft="@dimen/scale_22dp"
+            android:layout_marginRight="@dimen/scale_22dp"
+            android:layout_marginTop="@dimen/scale_16dp"
+            android:layout_toRightOf="@+id/profile_layout"
+            android:background="@color/grey_varient_3" />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/scale_22dp"
+            android:layout_marginRight="@dimen/scale_22dp"
+            android:layout_marginTop="@dimen/scale_16dp">
+
+            <com.cheep.custom_view.CFTextViewRegular
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:background="@color/transparent"
+                android:fontFamily="sans-serif"
+                android:gravity="left"
+                android:text="@string/label_favourites"
+                android:textColor="@color/splash_gradient_end"
+                android:textSize="@dimen/text_size_12sp" />
+
+            <ImageView
+                android:id="@+id/img_fav"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_weight="0.5"
+                android:gravity="center"
+                android:padding="@dimen/scale_3dp"
+                android:src="@drawable/fav_selector" />
+        </FrameLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/scale_1dp"
+            android:layout_above="@+id/action_layout"
+            android:layout_marginLeft="@dimen/scale_22dp"
+            android:layout_marginRight="@dimen/scale_22dp"
+            android:layout_marginTop="@dimen/scale_10dp"
+            android:layout_toRightOf="@+id/profile_layout"
+            android:background="@color/grey_varient_3" />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/scale_22dp"
+            android:layout_marginRight="@dimen/scale_22dp"
+            android:layout_marginTop="@dimen/scale_16dp">
+
+            <com.cheep.custom_view.CFTextViewRegular
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:background="@color/transparent"
+                android:fontFamily="sans-serif"
+                android:gravity="left"
+                android:text="@string/label_rating"
+                android:textColor="@color/splash_gradient_end"
+                android:textSize="@dimen/text_size_12sp" />
+
+            <RatingBar
+                android:id="@+id/rating_bar"
+                android:layout_width="wrap_content"
+                android:layout_height="32dp"
+                android:layout_gravity="right"
+                android:progressDrawable="@drawable/rating_bar_selector"
+                android:rating="4"
+                android:stepSize="1" />
+        </FrameLayout>
+
+        <com.cheep.custom_view.CFButtonRegular
+            android:id="@+id/btn_reset"
+            app:letterSpacing="0.3"
+            android:background="@drawable/img_blue_edges_rounded"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="@dimen/scale_30dp"
+            android:layout_marginRight="@dimen/scale_30dp"
+            android:layout_marginTop="@dimen/scale_16dp"
+            android:minWidth="250dp"
+            android:letterSpacing="0.3"
+            android:text="@string/label_reset"
+            android:textColor="@color/splash_gradient_end" />
+
+        <com.cheep.custom_view.CFButtonRegular
+            android:id="@+id/btn_show_result"
+            android:textSize="@dimen/text_size_16sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/scale_22dp"
+            android:background="@color/splash_gradient_end"
+            android:letterSpacing="0.3"
+            android:text="@string/label_show_results"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            app:letterSpacing="0.3" />
+    </LinearLayout>
+</layout>

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/front_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingBottom="@dimen/scale_10dp"
+        android:paddingLeft="@dimen/scale_16dp"
+        android:paddingRight="@dimen/scale_16dp"
+        android:paddingTop="@dimen/scale_10dp">
+
+        <LinearLayout
+            android:layout_width="@dimen/scale_0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/img_profile"
+                android:layout_width="@dimen/history_profile_width"
+                android:layout_height="@dimen/history_profile_width"
+                android:gravity="center"
+                android:src="@drawable/icon_profile_img" />
+
+            <LinearLayout
+                android:id="@+id/profile_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/scale_10dp"
+                android:orientation="vertical">
+
+                <com.cheep.custom_view.CFTextViewRegular
+                    android:id="@+id/text_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/dummy_name"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_16sp" />
+
+                <com.cheep.custom_view.CFTextViewRegular
+                    android:id="@+id/text_category_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="PLUMBER"
+                    android:textColor="@color/splash_gradient_end"
+                    android:textSize="@dimen/text_size_11sp" />
+
+                <com.cheep.custom_view.CFTextViewRegular
+                    android:id="@+id/text_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="20/05/16"
+                    android:textColor="@color/grey_varient_2"
+                    android:textSize="@dimen/text_size_11sp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <com.cheep.custom_view.CFTextViewRegular
+            android:id="@+id/text_spent"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="0.5"
+            android:gravity="center"
+            android:text="31 jobs"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_size_13sp" />
+
+        <com.cheep.custom_view.CFTextViewRegular
+            android:id="@+id/text_saved"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="0.5"
+            android:gravity="center"
+            android:text="31 jobs"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_size_13sp" />
+
+    </LinearLayout>
+</layout>

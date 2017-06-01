@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="AppTheme" parent="BaseTheme">
+        <item name="android:windowContentTransitions">true</item>
+    </style>
+
+    <style name="NoAnimTheme" parent="BaseTheme">
+        <!--For Shared Element Transition Blinking Occoures , so this will remove it-->
+        <item name="android:windowBackground">@color/transparent</item>
+
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowNoTitle">true</item>
+
+        <item name="android:backgroundDimEnabled">false</item>
+
+        <!--Change the cursor color of edit text-->
+        <item name="colorControlActivated">@color/black</item>
+    </style>
+
+    <style name="SplashTheme" parent="BaseTheme">
+        <!-- Customize your theme here. -->
+        <item name="android:windowTranslucentStatus">true</item>
+
+    </style>
+
+    <style name="BlueTheme" parent="BaseTheme">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimaryDark">@color/splash_gradient_start</item>
+
+    </style>
+</resources>

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--colorAccent should be darker shade of colorPrimary-->
+    <color name="colorPrimary">#FFFFFF</color>
+    <color name="colorPrimaryDark">#000000</color>
+    <color name="colorAccent">#000000</color>
+    <!--#60007BD8-->
+    <color name="transparent">#00000000</color>
+
+    <color name="blue_varient_5">#e0effe</color>
+    <color name="blue_varient_3">#CCE2F8</color>
+    <color name="blue_varient_4">#9ABAD7</color>
+    <color name="grey_varient_1">#919598</color>
+    <color name="grey_varient_2">#777777</color>
+    <color name="grey_varient_3">#DCDEE3</color>
+    <color name="grey_varient_4">#333333</color>
+    <color name="grey_varient_5">#585858</color>
+    <color name="grey_varient_6">#313131</color>
+    <color name="grey_varient_7">#343434</color>
+    <color name="grey_varient_8">#3A3A3A</color>
+    <color name="grey_varient_9">#ABABAB</color>
+    <color name="grey_varient_10">#F5F5F5</color>
+    <color name="grey_varient_11">#8A8A8A</color>
+    <color name="grey_varient_12">#898989</color>
+    <color name="grey_varient_13">#858585</color>
+    <color name="grey_varient_14">#6C6C6C</color>
+
+    <color name="brown_varient_1">#f0f0f0</color>
+
+    <color name="cheepest_bg_color">#E3F1FE</color>
+
+    <color name="splash_gradient_start">#20BBEC</color>
+    <color name="splash_gradient_end">#006DDA</color>
+
+    <color name="extra_grey_dark_color">#FF67676E</color>
+    <color name="grey_dark_color">#b9b9b9</color>
+    <color name="grey_dark_color_2">#6A6A6A</color>
+
+    <color name="grey_color">#E8E8E8</color>
+    <color name="light_grey_color">#DCDEE3</color>
+
+    <color name="white_translucent_line">#33FFFFFF</color>
+    <color name="white_translucent">#77FFFFFF</color>
+    <color name="white_translucent_ninety">#E6FFFFFF</color>
+    <color name="white_translucent_fifty">#80FFFFFF</color>
+    <color name="black_translucent">#80000000</color>
+
+    <color name="dark_blue">#0260c1</color>
+    <color name="black">#000000</color>
+    <color name="white">#FFFFFF</color>
+
+    <color name="colorGray">#5f5f5f</color>
+    <color name="colorSemiGray">#acacac</color>
+
+    <color name="light_blue_line_color">#99C8E2F9</color>
+    <color name="red">#E20505</color>
+    <color name="yellow">#FF9501</color>
+    <color name="yellow_varient_1">#fff8de</color>
+
+    <color name="zero_opacity">#00000000</color>
+    <color name="sixty_opacity">#66000000</color>
+    <!--test-->
+    <!--<color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#007BD8</color>
+    <color name="colorAccentLight">#60007BD8</color>
+    <color name="transparent">#00000000</color>-->
+
+</resources>
+
+

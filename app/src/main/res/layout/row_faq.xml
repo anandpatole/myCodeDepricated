@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/front_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.cheep.custom_view.CFTextViewRegular
+            android:id="@+id/text_faq_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawablePadding="@dimen/scale_20dp"
+            android:drawableRight="@drawable/icon_profile_arrow_right_grey"
+            android:gravity="center_vertical"
+            android:padding="@dimen/scale_16dp"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_size_13sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/scale_1dp"
+            android:layout_above="@+id/action_layout"
+            android:layout_below="@+id/text_faq_title"
+            android:layout_marginLeft="@dimen/scale_16dp"
+            android:layout_toRightOf="@+id/profile_layout"
+            android:background="@color/grey_color" />
+    </RelativeLayout>
+</layout>

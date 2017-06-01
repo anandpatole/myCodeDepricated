@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RadioGroup
+        android:id="@+id/radio_group_reasons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/scale_22dp"
+        android:layout_marginRight="@dimen/scale_22dp"
+        android:layout_marginTop="@dimen/scale_16dp">
+
+        <com.cheep.custom_view.AppRadioButtom
+            android:id="@+id/radio_not_need_anymore"
+            style="@style/AppRadioButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/transparent"
+            android:padding="@dimen/scale_10dp"
+            android:text="@string/label_cancel_task_dont_need"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_size_13sp" />
+
+        <com.cheep.custom_view.AppRadioButtom
+            android:id="@+id/radio_something_came_up"
+            style="@style/AppRadioButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/transparent"
+            android:padding="@dimen/scale_10dp"
+            android:text="@string/label_cancel_something_else_came_up"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_size_13sp" />
+
+        <com.cheep.custom_view.AppRadioButtom
+            android:id="@+id/radio_problem_with_service_provider"
+            style="@style/AppRadioButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/transparent"
+            android:padding="@dimen/scale_10dp"
+            android:text="@string/label_cancel_problem_service_provider"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_size_13sp" />
+
+        <com.cheep.custom_view.AppRadioButtom
+            android:id="@+id/radio_other_reason"
+            style="@style/AppRadioButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/transparent"
+            android:padding="@dimen/scale_10dp"
+            android:text="@string/label_cancel_other_reason"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_size_13sp" />
+    </RadioGroup>
+
+    <com.cheep.custom_view.CFEditTextRegular
+        android:id="@+id/edit_reason"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/scale_22dp"
+        android:layout_marginRight="@dimen/scale_22dp"
+        android:background="@drawable/border_grey"
+        android:gravity="left|top"
+        android:lines="3"
+        android:maxLength="150"
+        android:maxLines="3"
+        android:minLines="3"
+        android:padding="@dimen/scale_10dp"
+        android:textColor="@color/black" />
+
+    <com.cheep.custom_view.CFButtonRegular
+        android:id="@+id/btn_submit"
+        android:textSize="@dimen/text_size_16sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/scale_22dp"
+        android:background="@color/splash_gradient_end"
+        android:letterSpacing="0.3"
+        android:text="@string/label_submit"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        app:letterSpacing="0.3" />
+</LinearLayout>

@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:orientation="vertical">
+
+        <android.support.design.widget.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/AppTheme.AppBarWhite">
+
+            <!--test-->
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.cheep.custom_view.CFTextViewSemiBold
+                    android:id="@+id/text_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="@android:color/transparent"
+                    android:gravity="center"
+                    android:lines="1"
+                    android:padding="@dimen/scale_10dp"
+                    android:singleLine="true"
+                    android:text="@string/label_faq"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/toolbar_title_text_size"
+                    android:transitionName="@string/transition_location"
+                     />
+            </android.support.v7.widget.Toolbar>
+        </android.support.design.widget.AppBarLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <include
+                android:id="@+id/common_recycler_view_no_swipe"
+                layout="@layout/common_recycler_view_no_swipe" />
+
+            <ProgressBar
+                android:id="@+id/progress"
+                style="@style/Widget.AppCompat.ProgressBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center" />
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/scale_16dp">
+
+            <com.cheep.custom_view.CFTextViewRegular
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/text_date"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/scale_5dp"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:lines="2"
+                android:text="@string/label_cant_find_answer"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_13sp" />
+
+            <com.cheep.custom_view.CFTextViewRegular
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/text_date"
+                android:layout_gravity="center"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:lines="2"
+                android:text="@string/label_check_our_forum"
+                android:textColor="@color/splash_gradient_end"
+                android:textSize="@dimen/text_size_13sp" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/scale_10dp"
+                android:orientation="horizontal">
+
+                <View
+                    android:layout_width="@dimen/scale_50dp"
+                    android:layout_height="@dimen/scale_2dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginRight="@dimen/scale_10dp"
+                    android:alpha="0.5"
+                    android:background="@color/black" />
+
+                <com.cheep.custom_view.CFTextViewRegular
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text="@string/label_or"
+                    android:textAllCaps="false"
+                    android:textColor="@color/black" />
+
+                <View
+                    android:layout_width="@dimen/scale_50dp"
+                    android:layout_height="@dimen/scale_2dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="@dimen/scale_10dp"
+                    android:alpha="0.5"
+                    android:background="@color/black" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:orientation="horizontal"
+                android:paddingTop="16dp">
+
+                <com.cheep.custom_view.AppButton
+                    android:id="@+id/btn_call"
+                    android:background="@drawable/img_blue_edges_rounded"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:layout_marginRight="10dp"
+                    android:layout_weight="1"
+                    android:textAllCaps="false"
+                    android:minWidth="150dp"
+                    android:text="@string/label_call"
+                    android:textColor="@color/splash_gradient_end" />
+
+                <com.cheep.custom_view.AppButton
+                    android:id="@+id/btn_chat"
+                    android:background="@drawable/img_blue_edges_rounded"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="1"
+                    android:minWidth="150dp"
+                    android:text="@string/label_chat"
+                    android:textAllCaps="false"
+                    android:textColor="@color/splash_gradient_end"
+                    android:visibility="visible" />
+            </LinearLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+</layout>

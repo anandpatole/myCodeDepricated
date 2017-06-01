@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/scale_5dp"
+        android:gravity="right"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/scale_10dp"
+            android:layout_marginRight="@dimen/scale_15dp"
+            android:background="@drawable/ic_chat_back_sender"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/scale_15dp"
+            android:paddingLeft="@dimen/scale_15dp"
+            android:paddingRight="@dimen/scale_25dp"
+            android:paddingTop="@dimen/scale_15dp">
+
+            <com.cheep.custom_view.CFTextViewLight
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/scale_5dp"
+                android:gravity="center"
+                android:text="My quote"
+                android:textColor="@color/white_translucent"
+                android:textSize="@dimen/text_size_9sp" />
+
+            <com.cheep.custom_view.CFTextViewRegular
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:lineSpacingExtra="@dimen/scale_2dp"
+                android:text="Custom quote for your\n requirement is"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_12sp" />
+
+            <com.cheep.custom_view.CFTextViewRegular
+                android:id="@+id/text_money"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/scale_2dp"
+                android:gravity="center"
+                android:text="\u20B9 100"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_15sp" />
+        </LinearLayout>
+
+        <com.cheep.custom_view.CFTextViewRegular
+            android:id="@+id/text_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/scale_2dp"
+            android:layout_marginLeft="@dimen/scale_10dp"
+            android:layout_marginRight="@dimen/scale_15dp"
+            android:layout_marginTop="@dimen/scale_2dp"
+            android:ellipsize="end"
+            android:gravity="right"
+            android:lines="1"
+            android:paddingRight="@dimen/scale_15dp"
+            android:text="5:55 pm"
+            android:textColor="@color/grey_varient_5"
+            android:textSize="@dimen/text_size_10sp" />
+    </LinearLayout>
+</layout>

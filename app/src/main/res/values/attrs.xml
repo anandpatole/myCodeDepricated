@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="CustomViews">
+        <attr name="letterSpacing" format="float" />
+    </declare-styleable>
+    <declare-styleable name="AppButtonBlue">
+        <attr name="appButtonBlueStyle" format="reference" />
+    </declare-styleable>
+    <declare-styleable name="AppRadioButtom">
+        <attr name="appRadioButtonStyle" format="reference" />
+    </declare-styleable>
+    <declare-styleable name="AppCheckBox">
+        <attr name="appCheckBoxStyle" format="reference" />
+    </declare-styleable>
+
+    <!--Discret seekbar-->
+    <!-- DiscreteSeekBar specific attributes -->
+    <declare-styleable name="Theme">
+        <attr name="discreteSeekBarStyle" format="reference" />
+    </declare-styleable>
+    <declare-styleable name="DiscreteSeekBar">
+        <attr name="dsb_min" format="integer|dimension" />
+        <attr name="dsb_max" format="integer|dimension" />
+        <attr name="dsb_value" format="integer|dimension" />
+        <attr name="dsb_mirrorForRtl" format="boolean" />
+        <attr name="dsb_allowTrackClickToDrag" format="boolean" />
+        <attr name="dsb_progressColor" format="color|reference" />
+        <attr name="dsb_trackColor" format="color|reference" />
+        <attr name="dsb_indicatorTextAppearance" format="reference" />
+        <attr name="dsb_indicatorColor" format="color|reference" />
+        <attr name="dsb_indicatorElevation" format="dimension" />
+        <attr name="dsb_indicatorFormatter" format="string|reference" />
+        <attr name="dsb_rippleColor" format="color|reference" />
+        <attr name="dsb_indicatorPopupEnabled" format="boolean" />
+        <attr name="dsb_trackHeight" format="integer|dimension" />
+        <attr name="dsb_scrubberHeight" format="integer|dimension" />
+        <attr name="dsb_thumbSize" format="integer|dimension" />
+        <attr name="dsb_indicatorSeparation" format="integer|dimension" />
+    </declare-styleable>
+
+
+    <declare-styleable name="CircularImageView">
+        <attr name="civ_border" format="boolean"/>
+        <attr name="civ_border_width" format="dimension"/>
+        <attr name="civ_border_color" format="color"/>
+        <attr name="civ_shadow" format="boolean"/>
+        <attr name="civ_shadow_color" format="color"/>
+        <attr name="civ_shadow_radius" format="float"/>
+    </declare-styleable>
+</resources>

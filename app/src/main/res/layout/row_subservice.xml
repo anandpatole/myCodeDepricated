@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout
+        android:id="@+id/ln_root"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingBottom="@dimen/scale_20dp"
+        android:paddingLeft="@dimen/scale_30dp"
+        android:paddingTop="@dimen/scale_20dp">
+
+        <ImageView
+            android:id="@+id/img_icon_correct"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/ic_tick" />
+
+        <com.cheep.custom_view.CFTextViewSemiBold
+            android:id="@+id/text_sub_category_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/scale_15dp"
+            android:text="Restaurant"
+            android:textColor="@color/selector_text_name_subservice"
+            android:textSize="@dimen/text_size_18sp" />
+    </LinearLayout>
+</layout>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RatingBar
+        android:id="@+id/rating_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="32dp"
+        android:layout_gravity="center"
+        android:layout_marginLeft="@dimen/scale_22dp"
+        android:layout_marginRight="@dimen/scale_22dp"
+        android:layout_marginTop="@dimen/scale_16dp"
+        android:progressDrawable="@drawable/rating_bar_selector_s4"
+        android:rating="0"
+        android:stepSize="1" />
+
+    <com.cheep.custom_view.CFTextViewRegular
+        android:id="@+id/text_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="left"
+        android:layout_marginLeft="@dimen/scale_22dp"
+        android:layout_marginRight="@dimen/scale_22dp"
+        android:layout_marginTop="@dimen/scale_22dp"
+        android:background="@color/transparent"
+        android:hint="@string/label_write_a_review"
+        android:textColor="@color/grey_varient_6"
+        android:textSize="@dimen/text_size_13sp" />
+
+    <com.cheep.custom_view.CFEditTextRegular
+        android:id="@+id/edit_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/scale_22dp"
+        android:layout_marginRight="@dimen/scale_22dp"
+        android:layout_marginTop="@dimen/scale_5dp"
+        android:background="@drawable/border_grey"
+        android:gravity="left|top"
+        android:lines="3"
+        android:textSize="@dimen/text_size_16sp"
+        android:maxLines="3"
+        android:minLines="3"
+        android:padding="@dimen/scale_10dp"
+        android:textColor="@color/black" />
+
+
+    <com.cheep.custom_view.CFButtonRegular
+        android:id="@+id/btn_submit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/scale_12dp"
+        android:background="@color/splash_gradient_end"
+        android:letterSpacing="0.3"
+        android:text="@string/label_submit"
+        android:textSize="@dimen/text_size_16sp"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        app:letterSpacing="0.3" />
+</LinearLayout>
