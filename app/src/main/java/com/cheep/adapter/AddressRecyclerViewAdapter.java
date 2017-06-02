@@ -45,7 +45,7 @@ public class AddressRecyclerViewAdapter extends RecyclerView.Adapter<AddressRecy
 
         final AddressModel model = mList.get(holder.getAdapterPosition());
 
-        holder.mRowAddressBinding.textAddressNickname.setText(model.name);
+//        holder.mRowAddressBinding.textAddressNickname.setText(model.name);
 
         if ((!TextUtils.isEmpty(model.address_initials))
                 && model.address_initials.length() > 0) {
@@ -67,8 +67,13 @@ public class AddressRecyclerViewAdapter extends RecyclerView.Adapter<AddressRecy
 
         if (NetworkUtility.TAGS.ADDRESS_TYPE.HOME.equalsIgnoreCase(model.category)) {
             holder.mRowAddressBinding.textAddressNickname.setCompoundDrawablesWithIntrinsicBounds(R.drawable.icon_address_home_active, 0, 0, 0);
+            holder.mRowAddressBinding.textAddressNickname.setText(holder.mRowAddressBinding.getRoot().getContext().getString(R.string.label_home));
+        } else if (NetworkUtility.TAGS.ADDRESS_TYPE.OFFICE.equalsIgnoreCase(model.category)) {
+            holder.mRowAddressBinding.textAddressNickname.setCompoundDrawablesWithIntrinsicBounds(R.drawable.icon_address_office_active, 0, 0, 0);
+            holder.mRowAddressBinding.textAddressNickname.setText(holder.mRowAddressBinding.getRoot().getContext().getString(R.string.label_office));
         } else {
             holder.mRowAddressBinding.textAddressNickname.setCompoundDrawablesWithIntrinsicBounds(R.drawable.icon_address_other_active, 0, 0, 0);
+            holder.mRowAddressBinding.textAddressNickname.setText(holder.mRowAddressBinding.getRoot().getContext().getString(R.string.label_other));
         }
 
         holder.mRowAddressBinding.radioButton.setOnClickListener(new View.OnClickListener() {

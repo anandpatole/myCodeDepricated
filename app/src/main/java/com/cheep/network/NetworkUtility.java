@@ -235,6 +235,7 @@ public class NetworkUtility {
 
         public class ADDRESS_TYPE {
             public static final String HOME = "home";
+            public static final String OFFICE = "office";
             public static final String OTHERS = "other";
         }
 

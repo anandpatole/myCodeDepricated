@@ -670,6 +670,7 @@ public class EnterTaskDetailFragment extends BaseFragment {
     private void showAddAddressDialog(final AddressModel addressModel) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.dialog_add_address, null, false);
         final RadioButton radioHome = (RadioButton) view.findViewById(R.id.radio_home);
+        final RadioButton radio_office = (RadioButton) view.findViewById(R.id.radio_office);
         final RadioButton radioOther = (RadioButton) view.findViewById(R.id.radio_other);
 //        final EditText edtName = (EditText) view.findViewById(R.id.edit_name);
         edtAddress = (TextView) view.findViewById(edit_address);
@@ -774,9 +775,11 @@ public class EnterTaskDetailFragment extends BaseFragment {
             if (NetworkUtility.TAGS.ADDRESS_TYPE.HOME.equalsIgnoreCase(addressModel.category)) {
                 radioHome.setChecked(true);
 //                radioHome.setSelected(true);
+            } else if (NetworkUtility.TAGS.ADDRESS_TYPE.OFFICE.equalsIgnoreCase(addressModel.category)) {
+                radio_office.setChecked(true);
+//                radioOther.setSelected(true);
             } else {
                 radioOther.setChecked(true);
-//                radioOther.setSelected(true);
             }
             edtAddress.setTag(addressModel.getLatLng());
 //            edtName.setText(addressModel.name);
@@ -810,13 +813,19 @@ public class EnterTaskDetailFragment extends BaseFragment {
                     Utility.showToast(mContext, getString(R.string.validate_address_initials));
                 } else {
                     if (addressModel != null) {
-                        callUpdateAddressWS(addressModel.address_id, (radioHome.isChecked() ? NetworkUtility.TAGS.ADDRESS_TYPE.HOME : NetworkUtility.TAGS.ADDRESS_TYPE.OTHERS)
+                        callUpdateAddressWS(addressModel.address_id,
+                                (radioHome.isChecked()
+                                        ? NetworkUtility.TAGS.ADDRESS_TYPE.HOME
+                                        : radio_office.isChecked() ? NetworkUtility.TAGS.ADDRESS_TYPE.OFFICE : NetworkUtility.TAGS.ADDRESS_TYPE.OTHERS)
                                 /*, edtName.getText().toString().trim()*/
                                 , edtAddress.getText().toString().trim()
                                 , edtAddressInitials.getText().toString().trim()
                                 , (LatLng) edtAddress.getTag());
                     } else {
-                        callAddAddressWS((radioHome.isChecked() ? NetworkUtility.TAGS.ADDRESS_TYPE.HOME : NetworkUtility.TAGS.ADDRESS_TYPE.OTHERS)
+                        callAddAddressWS(
+                                (radioHome.isChecked()
+                                        ? NetworkUtility.TAGS.ADDRESS_TYPE.HOME
+                                        : radio_office.isChecked() ? NetworkUtility.TAGS.ADDRESS_TYPE.OFFICE : NetworkUtility.TAGS.ADDRESS_TYPE.OTHERS)
                                 /*, edtName.getText().toString().trim()*/
                                 , edtAddress.getText().toString().trim()
                                 , edtAddressInitials.getText().toString().trim()
