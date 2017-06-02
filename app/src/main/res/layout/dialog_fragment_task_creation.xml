@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_bird_with_heart_illustration" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="160dp"
+                android:background="@drawable/rounded_bottom_part_only_fill_white_5x5"
+                android:orientation="vertical">
+
+                <com.cheep.custom_view.CFTextViewSemiBold
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/scale_8dp"
+                    android:text="@string/label_your_task_is_posted"
+                    android:textColor="@color/grey_varient_8"
+                    android:textSize="@dimen/text_size_18sp" />
+
+                <com.cheep.custom_view.CFTextViewSemiBold
+                    android:id="@+id/text_task_creation_acknowledgment"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/scale_8dp"
+                    android:gravity="center"
+                    android:padding="@dimen/scale_8dp"
+                    android:text="@string/desc_task_creation_acknowledgement"
+                    android:textColor="@color/grey_dark_color_2"
+                    android:textSize="@dimen/text_size_11sp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/scale_1dp"
+                    android:layout_marginTop="@dimen/scale_3dp"
+                    android:background="@color/grey_dark_color_2" />
+
+                <com.cheep.custom_view.CFTextViewSemiBold
+                    android:id="@+id/text_okay"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:gravity="bottom|center_horizontal"
+                    android:padding="@dimen/scale_8dp"
+                    android:text="@string/label_Ok_small"
+                    android:textColor="@color/splash_gradient_end" />
+            </LinearLayout>
+        </LinearLayout>
+    </FrameLayout>
+
+</layout>

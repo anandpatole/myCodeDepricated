@@ -167,6 +167,34 @@
                         android:textSize="@dimen/text_size_14sp"
                         tools:text="Bosche" />
 
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginBottom="@dimen/scale_5dp"
+                        android:layout_marginTop="@dimen/scale_10dp"
+                        android:orientation="horizontal"
+                        android:paddingLeft="@dimen/scale_20dp"
+                        android:paddingRight="@dimen/scale_20dp">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_shield" />
+
+                        <com.cheep.custom_view.CFTextViewRegular
+                            android:id="@+id/text_desclaimer"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/scale_5dp"
+                            android:gravity="left"
+                            android:lineSpacingExtra="@dimen/scale_2dp"
+                            android:paddingLeft="@dimen/scale_5dp"
+                            android:paddingRight="@dimen/scale_5dp"
+                            android:text="@string/desclaimer_task_completion"
+                            android:textColor="@color/task_desclaimer"
+                            android:textSize="@dimen/text_size_10sp" />
+                    </LinearLayout>
 
                     <View
                         android:id="@+id/divider1"

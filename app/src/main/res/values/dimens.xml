@@ -83,5 +83,6 @@
     <dimen name="scale_76dp">76dp</dimen>
     <dimen name="text_size_23sp">23sp</dimen>
     <dimen name="scale_27dp">27dp</dimen>
+    <dimen name="scale_200dp">200dp</dimen>
 
 </resources>

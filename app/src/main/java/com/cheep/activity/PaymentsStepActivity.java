@@ -185,6 +185,8 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
             mActivityPaymentDetailBinding.txtdesc.setText(spannableStringBuilder);
         }
 
+        // Add Desclaimer
+
 
         mActivityPaymentDetailBinding.imgCheepCodeClose.setOnClickListener(new View.OnClickListener() {
             @Override

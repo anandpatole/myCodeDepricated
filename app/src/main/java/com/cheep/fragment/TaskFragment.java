@@ -54,7 +54,6 @@ import static com.cheep.network.NetworkUtility.WS.PAST_TASK;
 public class TaskFragment extends BaseFragment {
 
     private static final String TAG = "TaskFragment";
-
     public static final int TAB_PENDING_TASK = 0;
     public static final int TAB_PAST_TASK = 1;
 
@@ -64,7 +63,6 @@ public class TaskFragment extends BaseFragment {
     ErrorLoadingHelper errorLoadingHelper;
     private int whichFrg;
     private String nextPageId;
-
     private String loadMoreKey;
 
     @SuppressWarnings("unused")
