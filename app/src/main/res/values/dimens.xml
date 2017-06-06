@@ -17,6 +17,7 @@
     <dimen name="chat_width">50dp</dimen>
     <dimen name="chat_profile_layout_width">60dp</dimen>
     <dimen name="unread_badge_width">10dp</dimen>
+    <dimen name="pro_level_width">40dp</dimen>
 
     <dimen name="history_profile_width">25dp</dimen>
 
@@ -84,5 +85,6 @@
     <dimen name="text_size_23sp">23sp</dimen>
     <dimen name="scale_27dp">27dp</dimen>
     <dimen name="scale_200dp">200dp</dimen>
+    <dimen name="scale_145dp">145dp</dimen>
 
 </resources>

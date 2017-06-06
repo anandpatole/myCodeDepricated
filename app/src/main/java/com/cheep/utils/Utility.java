@@ -39,6 +39,7 @@ import com.bumptech.glide.request.RequestListener;
 import com.cheep.BuildConfig;
 import com.cheep.R;
 import com.cheep.activity.LoginActivity;
+import com.cheep.firebase.DateUtils;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -51,6 +52,8 @@ import org.cryptonode.jncryptor.JNCryptor;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -83,7 +86,9 @@ public class Utility {
     public static final String DATE_FORMAT_DD_MM_YY = SuperFormatter.DATE + "/" + SuperFormatter.MONTH_NUMBER + "/" + SuperFormatter.YEAR_4_DIGIT;
     public static final String DATE_FORMAT_DD_MMM = SuperFormatter.DATE + " " + SuperFormatter.MONTH_JAN;
     public static final String DATE_FORMAT_HH_MM_AM = SuperFormatter.HOUR_12_HOUR_2_DIGIT + ":" + SuperFormatter.MINUTE + " " + SuperFormatter.AM_PM;
+    public static final String DATE_FORMAT_DD_MMM_HH_MM_AM = SuperFormatter.DATE + " " + SuperFormatter.MONTH_JAN+" "+SuperFormatter.HOUR_12_HOUR_2_DIGIT + ":" + SuperFormatter.MINUTE + "" + SuperFormatter.AM_PM;
     public static final String DATE_TIME_FORMAT_SERVICE_YEAR = SuperFormatter.YEAR_4_DIGIT + "-" + SuperFormatter.MONTH_NUMBER + "-" + SuperFormatter.DATE + " " + SuperFormatter.HOUR_24_HOUR + ":" + SuperFormatter.MINUTE + ":" + SuperFormatter.SECONDS;
+    public static final String DATE_FORMAT_FULL_DATE=SuperFormatter.FULL_DATE;
 
     public static final int PASSWORD_MIN_LENGTH = 6;
     public static final int PHONE_MIN_LENGTH = 10;
@@ -333,6 +338,19 @@ public class Utility {
         public static final String PROFILE_FROM_FAVOURITE = "from_favorite";
     }
 
+
+    /*1 for platinum
+    2 for Gold
+    3 for Silver
+    4 for bronze*/
+    public static class PRO_LEVEL
+    {
+        public static final String PLATINUM="1";
+        public static final String GOLD="2";
+        public static final String SILVER="3";
+        public static final String BRONZE="4";
+    }
+
     /**
      * Keyboard related methods for hiding and showing
      */
@@ -480,6 +498,32 @@ public class Utility {
         return shoppingdate;
     }
 
+    public static String getDateDifference(String date)
+    {
+        if(TextUtils.isEmpty(date))
+            return "";
+
+        String sCurrentDt = DateUtils.getFormatedDate(Calendar.getInstance().getTime(), Utility.DATE_FORMAT_FULL_DATE);
+        Date mCurrentDate=DateUtils.getFormatedDate(sCurrentDt,Utility.DATE_FORMAT_FULL_DATE);
+        Date mFutureDate=DateUtils.getFormatedDate(date,Utility.DATE_FORMAT_FULL_DATE);
+        if(mCurrentDate==null || mFutureDate==null)
+            return "";
+
+        long diff = mFutureDate.getTime() - mCurrentDate.getTime();
+        long diffSeconds = diff / 1000 % 60;
+        long diffMinutes = diff / (60 * 1000) % 60;
+        long diffHours = diff / (60 * 60 * 1000);
+        int diffInDays = (int) ((mFutureDate.getTime() - mCurrentDate.getTime()) / (1000 * 60 * 60 * 24));
+        NumberFormat numberFormat = new DecimalFormat("00");
+        if (diffInDays >0)
+        {
+            return String.format("%d days",diffInDays);
+        }
+        else
+        {
+            return String.format("%s:%s hrs",numberFormat.format(diffHours),numberFormat.format(diffMinutes));
+        }
+    }
 
     //Loading Circular image from url to imageview
     public static void showCircularImageView(Context context, String tag, ImageView img, String url, int placeholderRes) {

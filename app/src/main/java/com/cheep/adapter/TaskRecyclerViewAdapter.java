@@ -11,9 +11,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.cheep.R;
 import com.cheep.databinding.RowTaskBinding;
 import com.cheep.databinding.RowTaskGroupBinding;
+import com.cheep.databinding.RowUpcomingTaskBinding;
 import com.cheep.fragment.TaskFragment;
 import com.cheep.interfaces.TaskRowDataInteractionListener;
 import com.cheep.model.MessageEvent;
@@ -31,8 +34,9 @@ import java.util.Calendar;
 public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRecyclerViewAdapter.ViewHolder> {
 
     private static final String TAG = "TaskRecyclerViewAdapter";
-    public static final int VIEW_TYPE_INDIVIDUAL = 1;
-    public static final int VIEW_TYPE_GROUP = 2;
+    public static final int VIEW_TYPE_UPCOMING = 1;
+    public static final int VIEW_TYPE_INDIVIDUAL = 2;
+    public static final int VIEW_TYPE_GROUP = 3;
 
     private TaskRowDataInteractionListener listener;
     private Context context;
@@ -42,10 +46,15 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
     Calendar startDateTimeCalendar;
     SuperCalendar superStartDateTimeCalendar;
 
+    ArrayList<String> textlist=new ArrayList<>();
+
     public TaskRecyclerViewAdapter(int whichFrag, TaskRowDataInteractionListener listener) {
         this.mList = new ArrayList<>();
         this.whichFrag = whichFrag;
         this.listener = listener;
+        for(int i=1;i<=10;i++) {
+            textlist.add("Lorem Ipsum is simply dummy text of the printing and typesetting industry." + i);
+        }
     }
 
     public TaskRecyclerViewAdapter(ArrayList<TaskDetailModel> mList, TaskRowDataInteractionListener listener, int whichFrag) {
@@ -68,11 +77,18 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
     }
 
     @Override
-    public int getActualItemViewType(int position) {
-        if (mList.get(position).selectedProvider == null) {
-            return VIEW_TYPE_GROUP;
-        } else {
-            return VIEW_TYPE_INDIVIDUAL;
+    public int getActualItemViewType(int position)
+    {
+        if (whichFrag == TaskFragment.TAB_PAST_TASK) {
+            if (mList.get(position).selectedProvider == null) {
+                return VIEW_TYPE_GROUP;
+            } else {
+                return VIEW_TYPE_INDIVIDUAL;
+            }
+        }
+        else
+        {
+           return VIEW_TYPE_UPCOMING;
         }
     }
 
@@ -82,10 +98,18 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
         context = parent.getContext();
         startDateTimeCalendar = Calendar.getInstance();
         superStartDateTimeCalendar = SuperCalendar.getInstance();
-        if (viewType == VIEW_TYPE_GROUP) {
+        if(viewType == VIEW_TYPE_UPCOMING)
+        {
+            ViewDataBinding mRowTaskBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), R.layout.row_upcoming_task, parent, false);
+            return new ViewHolder(mRowTaskBinding);
+        }
+        else if (viewType == VIEW_TYPE_GROUP)
+        {
             ViewDataBinding mRowTaskBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), R.layout.row_task_group, parent, false);
             return new ViewHolder(mRowTaskBinding);
-        } else {
+        }
+        else
+        {
             ViewDataBinding mRowTaskBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), R.layout.row_task, parent, false);
             return new ViewHolder(mRowTaskBinding);
         }
@@ -96,34 +120,169 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
         final TaskDetailModel model = mList.get(holder.getAdapterPosition());
 
         int viewType = getItemViewType(holder.getAdapterPosition());
-
-        if (viewType == VIEW_TYPE_GROUP) {
+        if(viewType== VIEW_TYPE_UPCOMING)
+        {
             superStartDateTimeCalendar.setTimeZone(SuperCalendar.SuperTimeZone.GMT.GMT);
             superStartDateTimeCalendar.setTimeInMillis(Long.parseLong(model.taskStartdate));
             superStartDateTimeCalendar.setLocaleTimeZone();
-            /*holder.mRowTaskGroupBinding.textDate.setText(superStartDateTimeCalendar.format(Utility.DATE_FORMAT_DD_MMM));
-            holder.mRowTaskGroupBinding.textTime.setText(superStartDateTimeCalendar.format(Utility.DATE_FORMAT_HH_MM_AM));*/
+
+            Glide.with(context).load(R.drawable.gif_live).asGif().diskCacheStrategy(DiskCacheStrategy.SOURCE).centerCrop().into(holder.mUpcomingTaskBinding.imgLive);
+            if(model.selectedProvider==null)
+            {
+                holder.mUpcomingTaskBinding.layoutIndividualProfile.setVisibility(View.GONE);
+                holder.mUpcomingTaskBinding.layoutGroupProfile.setVisibility(View.VISIBLE);
+                holder.mUpcomingTaskBinding.tvProviderName.setText(model.categoryName);
+                holder.mUpcomingTaskBinding.tvVerified.setVisibility(View.GONE);
+                holder.mUpcomingTaskBinding.ratingBar.setVisibility(View.GONE);
+                holder.mUpcomingTaskBinding.imgBadge.setVisibility(View.GONE);
+                holder.mUpcomingTaskBinding.tvViewTask.setVisibility(View.GONE);
+                holder.mUpcomingTaskBinding.tvViewQuotes.setVisibility(View.VISIBLE);
+                holder.mUpcomingTaskBinding.tvTaskResponseStatus.setVisibility(View.VISIBLE);
+            }
+            else
+            {
+                holder.mUpcomingTaskBinding.layoutIndividualProfile.setVisibility(View.VISIBLE);
+                holder.mUpcomingTaskBinding.layoutGroupProfile.setVisibility(View.GONE);
+
+                Utility.showCircularImageView(holder.mUpcomingTaskBinding.imgProfilePic.getContext(), TAG, holder.mUpcomingTaskBinding.imgProfilePic, model.selectedProvider.profileUrl, Utility.DEFAULT_PROFILE_SRC);
+                if(Utility.BOOLEAN.YES.equals(model.selectedProvider.isFavourite))
+                    holder.mUpcomingTaskBinding.imgFav.setSelected(true);
+                else
+                    holder.mUpcomingTaskBinding.imgFav.setSelected(false);
+                holder.mUpcomingTaskBinding.tvProviderName.setText(model.selectedProvider.userName);
+                if (Utility.BOOLEAN.YES.equalsIgnoreCase(model.selectedProvider.isVerified))
+                {
+                    holder.mUpcomingTaskBinding.tvVerified.setVisibility(View.VISIBLE);
+                    holder.mUpcomingTaskBinding.tvVerified.setText(context.getString(R.string.label_verified).toLowerCase());
+                } else {
+                    holder.mUpcomingTaskBinding.tvVerified.setVisibility(View.GONE);
+                }
+                // Show Rating
+                holder.mUpcomingTaskBinding.ratingBar.setVisibility(View.VISIBLE);
+                Utility.showRating(model.selectedProvider.rating, holder.mUpcomingTaskBinding.ratingBar);
+
+                holder.mUpcomingTaskBinding.imgBadge.setVisibility(View.VISIBLE);
+                if(model.selectedProvider.pro_level.equals(Utility.PRO_LEVEL.PLATINUM))
+                    holder.mUpcomingTaskBinding.imgBadge.setImageResource(R.drawable.icon_badge_platinum);
+                else if(model.selectedProvider.equals(Utility.PRO_LEVEL.GOLD))
+                    holder.mUpcomingTaskBinding.imgBadge.setImageResource(R.drawable.icon_badge_gold);
+                else if(model.selectedProvider.pro_level.equals(Utility.PRO_LEVEL.SILVER))
+                    holder.mUpcomingTaskBinding.imgBadge.setImageResource(R.drawable.icon_badge_silver);
+                else if(model.selectedProvider.pro_level.equals(Utility.PRO_LEVEL.BRONZE))
+                    holder.mUpcomingTaskBinding.imgBadge.setImageResource(R.drawable.icon_badge_bronze);
+
+                holder.mUpcomingTaskBinding.tvViewTask.setVisibility(View.VISIBLE);
+                holder.mUpcomingTaskBinding.tvViewQuotes.setVisibility(View.GONE);
+
+                holder.mUpcomingTaskBinding.tvTaskResponseStatus.setVisibility(View.GONE);
+            }
+
+            if (model.providerCount.equals("0"))
+            {
+                holder.mUpcomingTaskBinding.tvTaskResponseStatus.setText(holder.mView.getContext().getString(R.string.label_awaiting_response));
+                holder.mUpcomingTaskBinding.tvViewQuotes.setBackground(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.img_grey_rounded));
+                holder.mUpcomingTaskBinding.tvViewQuotes.setEnabled(false);
+
+            } else {
+                int providerCount = Integer.parseInt(model.providerCount);
+                holder.mUpcomingTaskBinding.tvTaskResponseStatus.setText(holder.mView.getContext().getResources().getQuantityText(R.plurals.getResponseReceivedString, providerCount));
+                holder.mUpcomingTaskBinding.tvViewQuotes.setBackground(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.img_blue_rounded));
+                holder.mUpcomingTaskBinding.tvViewQuotes.setEnabled(true);
+            }
+
+            holder.mUpcomingTaskBinding.tvSubCategoryName.setText(model.subCategoryName);
+            holder.mUpcomingTaskBinding.tvDesc.setText(model.taskDesc);
+
+            String mBookingDate = holder.mView.getContext().getString(R.string.format_task_book_date
+                    , superStartDateTimeCalendar.format(Utility.DATE_FORMAT_DD_MMM_HH_MM_AM));
+            holder.mUpcomingTaskBinding.tvTaskBookedDateTime.setText(mBookingDate);
+
+            String mStartTime = holder.mView.getContext().getString(R.string.format_task_start_time
+                    , Utility.getDateDifference(superStartDateTimeCalendar.format(Utility.DATE_FORMAT_FULL_DATE)));
+            holder.mUpcomingTaskBinding.tvTaskStartedTime.setText(mStartTime);
+
+            holder.mUpcomingTaskBinding.textDelete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view)
+                {
+                    if (Utility.TASK_STATUS.PROCESSING.equalsIgnoreCase(model.taskStatus) || Utility.TASK_STATUS.COMPLETION_REQUEST.equalsIgnoreCase(model.taskStatus)) {
+                        Utility.showToast(context, context.getString(R.string.msg_processing_task_cancelled));
+                        holder.mUpcomingTaskBinding.swipeLayout.close(true);
+                    } else {
+                        listener.onTaskDelete(whichFrag, model, holder.mUpcomingTaskBinding);
+                    }
+                }
+            });
+
+            holder.mUpcomingTaskBinding.textReschedule.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (Utility.TASK_STATUS.PROCESSING.equalsIgnoreCase(model.taskStatus)
+                            || Utility.TASK_STATUS.COMPLETION_REQUEST.equalsIgnoreCase(model.taskStatus)
+                            || Utility.TASK_STATUS.ADDITIONAL_PAYMENT_REQUESTED.equalsIgnoreCase(model.taskStatus)) {
+                        Utility.showToast(context, context.getString(R.string.msg_processing_task_reschduled));
+                        holder.mUpcomingTaskBinding.swipeLayout.close(true);
+                    } else {
+                        listener.onTaskReschedule(whichFrag, model, holder.mUpcomingTaskBinding);
+                    }
+                }
+            });
+
+            holder.mUpcomingTaskBinding.textDelete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    listener.onTaskDelete(whichFrag, model, holder.mUpcomingTaskBinding);
+                }
+            });
+
+            holder.mUpcomingTaskBinding.textReschedule.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (listener != null) {
+                        listener.onTaskReschedule(whichFrag, model, holder.mUpcomingTaskBinding);
+                    }
+                }
+            });
+
+            holder.mUpcomingTaskBinding.tvViewQuotes.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v)
+                {
+                    if (listener != null)
+                        listener.onViewQuotesClick(whichFrag, model);
+                }
+            });
+
+            holder.mUpcomingTaskBinding.swipeLayout.getSurfaceView().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (listener != null)
+                        listener.onTaskRowFragListItemClicked(whichFrag, model);
+                }
+            });
+            //So swipe adapter (lib method) close any previous opened swipe menu when current swipe is done.
+            mItemManger.bindView(holder.itemView, position);
+        }
+        else if (viewType == VIEW_TYPE_GROUP)
+        {
+            superStartDateTimeCalendar.setTimeZone(SuperCalendar.SuperTimeZone.GMT.GMT);
+            superStartDateTimeCalendar.setTimeInMillis(Long.parseLong(model.taskStartdate));
+            superStartDateTimeCalendar.setLocaleTimeZone();
+
             String date_time = holder.mView.getContext().getString(R.string.format_date_time
                     , superStartDateTimeCalendar.format(Utility.DATE_FORMAT_DD_MMM)
                     , superStartDateTimeCalendar.format(Utility.DATE_FORMAT_HH_MM_AM));
+
             holder.mRowTaskGroupBinding.textDateTime.setText(date_time);
 
             holder.mRowTaskGroupBinding.textDesc.setText(model.taskDesc);
             holder.mRowTaskGroupBinding.textCategoryName.setText(model.categoryName);
             holder.mRowTaskGroupBinding.textSubCategoryName.setText(model.subCategoryName);
 
-            /*//this is for marquee
-            holder.mRowTaskGroupBinding.textCategoryName.setSingleLine(true);
-            holder.mRowTaskGroupBinding.textCategoryName.setSelected(true);
-            holder.mRowTaskGroupBinding.textCategoryName.setAllCaps(false);*/
-
-            /*holder.mRowTaskGroupBinding.textResponseCount.setText(String.valueOf(model.providerCount));
-            holder.mRowTaskGroupBinding.textResponseCount.setVisibility(View.VISIBLE);*/
-
-            if (model.providerCount.equals("0")) {
+            if (model.providerCount.equals("0"))
+            {
                 holder.mRowTaskGroupBinding.textResponseCounter.setText(String.valueOf(model.providerCount));
-                holder.mRowTaskGroupBinding.textTaskResponseStatus.setText(holder.mView.getContext().getString(R.string.label_awaiting_response));
-                holder.mRowTaskGroupBinding.textViewQuotes.setBackground(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.img_grey_rounded));
+                holder.mRowTaskGroupBinding.textTaskResponseStatus.setText(holder.mView.getContext().getString(R.string.label_responses));
             } else {
                 int providerCount = Integer.parseInt(model.providerCount);
                 if (providerCount == 1) {
@@ -131,124 +290,57 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
                 } else {
                     holder.mRowTaskGroupBinding.textResponseCounter.setText("+" + String.valueOf(providerCount - 1));
                 }
-                holder.mRowTaskGroupBinding.textTaskResponseStatus.setText(holder.mView.getContext().getResources().getQuantityText(R.plurals.getResponseReceivedString, providerCount));
-                holder.mRowTaskGroupBinding.textViewQuotes.setBackground(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.img_blue_rounded));
+                holder.mRowTaskGroupBinding.textTaskResponseStatus.setText(holder.mView.getContext().getString(R.string.label_responses));
             }
-            int pix_in_8_dp = (int) Utility.convertDpToPixel(8, holder.mView.getContext());
-            int pix_in_5_dp = (int) Utility.convertDpToPixel(5, holder.mView.getContext());
-            holder.mRowTaskGroupBinding.textViewQuotes.setPadding(pix_in_8_dp, pix_in_5_dp, pix_in_8_dp, pix_in_5_dp);
-
-            holder.mRowTaskGroupBinding.textDelete.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    listener.onTaskDelete(whichFrag, model, holder.mRowTaskBinding);
-                }
-            });
-
-            holder.mRowTaskGroupBinding.textReschedule.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (listener != null) {
-                        listener.onTaskReschedule(whichFrag, model, holder.mRowTaskBinding);
-                    }
-                }
-            });
-
-            if (Utility.TASK_STATUS.CANCELLED_CUSTOMER.equalsIgnoreCase(model.taskStatus)) {
-               /* holder.mRowTaskGroupBinding.textName.setTextColor(ContextCompat.getColor(context, R.color.red));
-                holder.mRowTaskGroupBinding.textName.setText(context.getString(R.string.msg_task_cancelled_title));*/
+            if (Utility.TASK_STATUS.CANCELLED_CUSTOMER.equalsIgnoreCase(model.taskStatus))
+            {
                 holder.mRowTaskGroupBinding.lnTaskStatusWithQuote.setVisibility(View.VISIBLE);
-                holder.mRowTaskGroupBinding.textViewQuotes.setVisibility(View.GONE);
                 holder.mRowTaskGroupBinding.textTaskStatus.setText(context.getString(R.string.label_cancelled));
                 holder.mRowTaskGroupBinding.textTaskApprovedQuote.setVisibility(View.GONE);
-            } else if (Utility.TASK_STATUS.CANCELLED_SP.equalsIgnoreCase(model.taskStatus)) {
-               /* holder.mRowTaskGroupBinding.textName.setTextColor(ContextCompat.getColor(context, R.color.red));
-                holder.mRowTaskGroupBinding.textName.setText(context.getString(R.string.msg_task_cancelled_title));*/
+            }
+            else if (Utility.TASK_STATUS.CANCELLED_SP.equalsIgnoreCase(model.taskStatus))
+            {
                 holder.mRowTaskGroupBinding.lnTaskStatusWithQuote.setVisibility(View.VISIBLE);
-                holder.mRowTaskGroupBinding.textViewQuotes.setVisibility(View.GONE);
                 holder.mRowTaskGroupBinding.textTaskStatus.setText(context.getString(R.string.label_cancelled));
                 holder.mRowTaskGroupBinding.textTaskApprovedQuote.setVisibility(View.GONE);
-            } else if (Utility.TASK_STATUS.ELAPSED.equalsIgnoreCase(model.taskStatus)) {
-               /* holder.mRowTaskGroupBinding.textName.setTextColor(ContextCompat.getColor(context, R.color.red));
-                holder.mRowTaskGroupBinding.textName.setText(context.getString(R.string.msg_task_cancelled_title));*/
+            }
+            else if (Utility.TASK_STATUS.ELAPSED.equalsIgnoreCase(model.taskStatus))
+            {
                 holder.mRowTaskGroupBinding.lnTaskStatusWithQuote.setVisibility(View.VISIBLE);
-                holder.mRowTaskGroupBinding.textViewQuotes.setVisibility(View.GONE);
                 holder.mRowTaskGroupBinding.textTaskStatus.setText(context.getString(R.string.label_lapsed));
                 holder.mRowTaskGroupBinding.textTaskApprovedQuote.setVisibility(View.GONE);
-            } else if (Utility.TASK_STATUS.DISPUTED.equalsIgnoreCase(model.taskStatus)) {
-            /*    holder.mRowTaskGroupBinding.textName.setTextColor(ContextCompat.getColor(context, R.color.red));
-                holder.mRowTaskGroupBinding.textName.setText(context.getString(R.string.msg_task_disputed_title));*/
+            }
+            else if (Utility.TASK_STATUS.DISPUTED.equalsIgnoreCase(model.taskStatus))
+            {
                 holder.mRowTaskGroupBinding.lnTaskStatusWithQuote.setVisibility(View.VISIBLE);
-                holder.mRowTaskGroupBinding.textViewQuotes.setVisibility(View.GONE);
                 holder.mRowTaskGroupBinding.textTaskStatus.setText(context.getString(R.string.label_disputed));
                 holder.mRowTaskGroupBinding.textTaskApprovedQuote.setVisibility(View.GONE);
-            } else {
-                /*holder.mRowTaskGroupBinding.textName.setTextColor(ContextCompat.getColor(context, R.color.grey_varient_2)); //initaly black
-                holder.mRowTaskGroupBinding.textName.setText(context.getString(R.string.label_select_service_provider));*/
-                holder.mRowTaskGroupBinding.textViewQuotes.setVisibility(View.VISIBLE);
+            }
+            else
+            {
                 holder.mRowTaskGroupBinding.lnTaskStatusWithQuote.setVisibility(View.GONE);
-//                holder.mRowTaskGroupBinding.textTaskStatus.setText(context.getString(R.string.msg_task_cancelled_title));
             }
-
-            //Checking if it is past task fragment then disable swipe feature else enable it
-            if (whichFrag == TaskFragment.TAB_PAST_TASK) {
-                holder.mRowTaskGroupBinding.swipeLayout.setSwipeEnabled(false);
-            } else {
-                holder.mRowTaskGroupBinding.swipeLayout.setSwipeEnabled(true);
-            }
-
-            holder.mRowTaskGroupBinding.swipeLayout.getSurfaceView().setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (listener != null)
-                        listener.onTaskRowFragListItemClicked(whichFrag, model);
-                }
-            });
-
-            // Click Event of ViewQuote
-            holder.mRowTaskGroupBinding.textViewQuotes.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (model.providerCount.equals("0")) {
-                        // Return as click event should not be handled.
-                        return;
-                    }
-                    if (listener != null)
-                        listener.onViewQuotesClick(whichFrag, model);
-                }
-            });
-
-            //So swipe adapter (lib method) close any previous opened swipe menu when current swipe is done.
+            holder.mRowTaskGroupBinding.swipeLayout.setSwipeEnabled(false);
             mItemManger.bindView(holder.itemView, position);
         } else {
-
             //======Individual item(when sp is selected for task)=====
 
             superStartDateTimeCalendar.setTimeZone(SuperCalendar.SuperTimeZone.GMT.GMT);
             superStartDateTimeCalendar.setTimeInMillis(Long.parseLong(model.taskStartdate));
             superStartDateTimeCalendar.setLocaleTimeZone();
 
-            /*holder.mRowTaskBinding.textDate.setText(superStartDateTimeCalendar.format(Utility.DATE_FORMAT_DD_MMM));
-            holder.mRowTaskBinding.textTime.setText(superStartDateTimeCalendar.format(Utility.DATE_FORMAT_HH_MM_AM));*/
             String date_time = holder.mView.getContext().getString(R.string.format_date_time
                     , superStartDateTimeCalendar.format(Utility.DATE_FORMAT_DD_MMM)
                     , superStartDateTimeCalendar.format(Utility.DATE_FORMAT_HH_MM_AM));
             holder.mRowTaskBinding.textDateTime.setText(date_time);
 
             holder.mRowTaskBinding.textDesc.setText(model.taskDesc);
-//            holder.mRowTaskBinding.textCategoryName.setText(model.categoryName);
-            //this is for marquee
-//            holder.mRowTaskBinding.textCategoryName.setSingleLine(true);
-//            holder.mRowTaskBinding.textCategoryName.setSelected(true);
-//            holder.mRowTaskBinding.textCategoryName.setAllCaps(false);
 
             Utility.showCircularImageView(holder.mRowTaskBinding.imgProfile.getContext(), TAG, holder.mRowTaskBinding.imgProfile, model.selectedProvider.profileUrl, Utility.DEFAULT_PROFILE_SRC);
             holder.mRowTaskBinding.textProviderName.setText(model.selectedProvider.userName);
             if (!TextUtils.isEmpty(model.subCategoryName))
                 holder.mRowTaskBinding.textSubCategoryName.setText(model.subCategoryName);
             holder.mRowTaskBinding.imgProfile.setVisibility(View.VISIBLE);
-            /*holder.mRowTaskBinding.textExpectedTime.setText(model.selectedProvider.distance);
-            holder.mRowTaskBinding.textPrice.setText(holder.mRowTaskBinding.imgProfile.getContext().getString(R.string.ruppe_symbol_x_space, Utility.getActualPrice(model.taskPaidAmount, model.selectedProvider.quotePrice)));*/
 
             if (Utility.BOOLEAN.YES.equalsIgnoreCase(model.selectedProvider.isVerified)) {
                 holder.mRowTaskBinding.textVerified.setVisibility(View.VISIBLE);
@@ -259,148 +351,25 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
 
             // Show Rating
             Utility.showRating(model.selectedProvider.rating, holder.mRowTaskBinding.ratingBar);
+            holder.mRowTaskBinding.swipeLayout.close(true);
 
-            /*holder.mRowTaskBinding.imgFav.setSelected(Utility.BOOLEAN.YES.equalsIgnoreCase(model.selectedProvider.isFavourite));
-            holder.mRowTaskBinding.textTotalJobs.setVisibility(View.VISIBLE);
-            holder.mRowTaskBinding.textTotalJobs.setText(Utility.getJobs(context, model.selectedProvider.jobsCount));*/
-            holder.mRowTaskBinding.textDelete.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (Utility.TASK_STATUS.PROCESSING.equalsIgnoreCase(model.taskStatus) || Utility.TASK_STATUS.COMPLETION_REQUEST.equalsIgnoreCase(model.taskStatus)) {
-                        Utility.showToast(context, context.getString(R.string.msg_processing_task_cancelled));
-                        holder.mRowTaskBinding.swipeLayout.close(true);
-                    } else {
-                        listener.onTaskDelete(whichFrag, model, holder.mRowTaskBinding);
-                    }
-                }
-            });
-            holder.mRowTaskBinding.textReschedule.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (Utility.TASK_STATUS.PROCESSING.equalsIgnoreCase(model.taskStatus)
-                            || Utility.TASK_STATUS.COMPLETION_REQUEST.equalsIgnoreCase(model.taskStatus)
-                            || Utility.TASK_STATUS.ADDITIONAL_PAYMENT_REQUESTED.equalsIgnoreCase(model.taskStatus)) {
-                        Utility.showToast(context, context.getString(R.string.msg_processing_task_reschduled));
-                        holder.mRowTaskBinding.swipeLayout.close(true);
-                    } else {
-                        listener.onTaskReschedule(whichFrag, model, holder.mRowTaskBinding);
-                    }
-                   /* if (listener != null) {
-                        listener.onTaskReschedule(whichFrag, model, holder.mRowTaskBinding);
-                    }*/
-                }
-            });
+            holder.mRowTaskBinding.lnTaskStatusWithQuote.setVisibility(View.VISIBLE);
 
-            /*holder.mRowTaskBinding.imgFav.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    holder.mRowTaskBinding.imgFav.setSelected(!holder.mRowTaskBinding.imgFav.isSelected());
-                    model.selectedProvider.isFavourite = holder.mRowTaskBinding.imgFav.isSelected() ? Utility.BOOLEAN.YES : Utility.BOOLEAN.NO;
+            holder.mRowTaskBinding.textTaskApprovedQuote.setText(holder.mRowTaskBinding.imgProfile.getContext().getString(R.string.ruppe_symbol_x_space, Utility.getActualPrice(model.taskPaidAmount, model.selectedProvider.quotePrice)));
+            if (Utility.TASK_STATUS.CANCELLED_CUSTOMER.equalsIgnoreCase(model.taskStatus)) {
+                holder.mRowTaskBinding.textTaskStatus.setText(context.getString(R.string.label_cancelled));
+            } else if (Utility.TASK_STATUS.RESCHEDULE_REQUEST_REJECTED.equalsIgnoreCase(model.taskStatus)) {
 
-                    //To update other fields for same selectedProvider
-                    updateFavStatus(model.selectedProvider.providerId, model.selectedProvider.isFavourite);
-
-                    if (listener != null) {
-                        listener.onFavClicked(model, holder.mRowTaskBinding.imgFav.isSelected(), holder.getAdapterPosition());
-                    }
-                }
-            });*/
-
-            /*holder.mRowTaskBinding.imgCall.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (listener != null) {
-                        listener.onCallClicked(model);
-                    }
-                }
-            });*/
-
-            /*
-            * Added by @sanjay
-            * 24 feb 2017
-            * */
-            /*holder.mRowTaskBinding.imgChat.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    TaskChatModel taskChatModel = new TaskChatModel();
-                    taskChatModel.categoryName = model.categoryName;
-                    taskChatModel.taskDesc = model.taskDesc;
-                    taskChatModel.taskId = model.taskId;
-                    taskChatModel.receiverId = FirebaseUtils.getPrefixSPId(model.selectedProvider.providerId);
-                    taskChatModel.participantName = model.selectedProvider.userName;
-                    taskChatModel.participantPhotoUrl = model.selectedProvider.profileUrl;
-                    ChatActivity.newInstance(context, taskChatModel);
-                }
-            });*/
-
-            holder.mRowTaskBinding.swipeLayout.setClickToClose(true);
-            if (whichFrag == TaskFragment.TAB_PENDING_TASK) {
-                holder.mRowTaskBinding.swipeLayout.setSwipeEnabled(true);
-//                holder.mRowTaskBinding.textExpectedTime.setVisibility(View.VISIBLE);
-//                holder.mRowTaskBinding.textRate.setVisibility(View.GONE);
-//                holder.mRowTaskBinding.imgChat.setVisibility(View.VISIBLE);
-//                holder.mRowTaskBinding.imgCall.setVisibility(View.VISIBLE);
-//                holder.mRowTaskBinding.textStatus.setVisibility(View.GONE);
-                holder.mRowTaskBinding.lnTaskStatusWithQuote.setVisibility(View.GONE);
-                holder.mRowTaskBinding.textViewTask.setVisibility(View.VISIBLE);
-            } else if (whichFrag == TaskFragment.TAB_PAST_TASK) {
-                holder.mRowTaskBinding.swipeLayout.setSwipeEnabled(false);
-//                holder.mRowTaskBinding.textExpectedTime.setVisibility(View.GONE);
-
-               /* if (Utility.BOOLEAN.YES.equalsIgnoreCase(model.ratingDone)) {
-                    holder.mRowTaskBinding.textRate.setVisibility(View.INVISIBLE);
-                } else {
-                    holder.mRowTaskBinding.textRate.setVisibility(View.VISIBLE);
-                }*/
-
-                /*holder.mRowTaskBinding.imgChat.setVisibility(View.GONE);
-                holder.mRowTaskBinding.imgCall.setVisibility(View.GONE);
-                holder.mRowTaskBinding.textStatus.setVisibility(View.VISIBLE);*/
-
-                //Changing text of "paid" or "quote" depends on task payment status
-                /*if (Utility.BOOLEAN.YES.equalsIgnoreCase(model.taskPaymentStatus) && !TextUtils.isEmpty(model.selectedProvider.quotePrice)) {
-                    holder.mRowTaskBinding.textLabelPaid.setText(context.getString(R.string.label_paid));
-                } else if (!TextUtils.isEmpty(model.selectedProvider.quotePrice)) {
-                    holder.mRowTaskBinding.textLabelPaid.setText(context.getString(R.string.label_quote));
-                }*/
-
-                holder.mRowTaskBinding.lnTaskStatusWithQuote.setVisibility(View.VISIBLE);
-                holder.mRowTaskBinding.textViewTask.setVisibility(View.GONE);
-
-                holder.mRowTaskBinding.textTaskApprovedQuote.setText(holder.mRowTaskBinding.imgProfile.getContext().getString(R.string.ruppe_symbol_x_space, Utility.getActualPrice(model.taskPaidAmount, model.selectedProvider.quotePrice)));
-                if (Utility.TASK_STATUS.CANCELLED_CUSTOMER.equalsIgnoreCase(model.taskStatus)) {
-                    holder.mRowTaskBinding.textTaskStatus.setText(context.getString(R.string.label_cancelled));
-//                    holder.mRowTaskBinding.textStatus.setTextColor(ContextCompat.getColor(context, R.color.red));
-                } else if (Utility.TASK_STATUS.RESCHEDULE_REQUEST_REJECTED.equalsIgnoreCase(model.taskStatus)) {
-
-                    holder.mRowTaskBinding.textTaskStatus.setText(context.getString(R.string.label_reschedule_rejected));
-//                    holder.mRowTaskBinding.textStatus.setTextColor(ContextCompat.getColor(context, R.color.red));
-//                    holder.mRowTaskBinding.textStatus.setSelected(true);
-                } else if (Utility.TASK_STATUS.CANCELLED_SP.equalsIgnoreCase(model.taskStatus)) {
-                    holder.mRowTaskBinding.textTaskStatus.setText(context.getString(R.string.label_cancelled));
-//                    holder.mRowTaskBinding.textStatus.setTextColor(ContextCompat.getColor(context, R.color.red));
-                } else if (Utility.TASK_STATUS.DISPUTED.equalsIgnoreCase(model.taskStatus)) {
-                    holder.mRowTaskBinding.textTaskStatus.setText(context.getString(R.string.label_disputed));
-//                    holder.mRowTaskBinding.textStatus.setTextColor(ContextCompat.getColor(context, R.color.red));
-                } else if (Utility.TASK_STATUS.COMPLETION_CONFIRM.equalsIgnoreCase(model.taskStatus)) {
-//                    holder.mRowTaskBinding.textLabelPaid.setText(context.getString(R.string.label_paid));
-                    holder.mRowTaskBinding.textTaskStatus.setText(context.getString(R.string.label_completed));
-//                    holder.mRowTaskBinding.textStatus.setTextColor(ContextCompat.getColor(context, R.color.black));
-                } else {
-                    holder.mRowTaskBinding.textTaskStatus.setText(context.getString(R.string.label_completed));
-//                    holder.mRowTaskBinding.textStatus.setTextColor(ContextCompat.getColor(context, R.color.black));
-                }
-
-                /*holder.mRowTaskBinding.textRate.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        if (listener != null) {
-                            listener.onRateClick(whichFrag, model, holder.mRowTaskBinding);
-                        }
-                    }
-                });*/
+                holder.mRowTaskBinding.textTaskStatus.setText(context.getString(R.string.label_reschedule_rejected));
+            } else if (Utility.TASK_STATUS.CANCELLED_SP.equalsIgnoreCase(model.taskStatus)) {
+                holder.mRowTaskBinding.textTaskStatus.setText(context.getString(R.string.label_cancelled));
+            } else if (Utility.TASK_STATUS.DISPUTED.equalsIgnoreCase(model.taskStatus)) {
+                holder.mRowTaskBinding.textTaskStatus.setText(context.getString(R.string.label_disputed));
+            } else if (Utility.TASK_STATUS.COMPLETION_CONFIRM.equalsIgnoreCase(model.taskStatus)) {
+                holder.mRowTaskBinding.textTaskStatus.setText(context.getString(R.string.label_completed));
+            } else {
+                holder.mRowTaskBinding.textTaskStatus.setText(context.getString(R.string.label_completed));
             }
-
             holder.mRowTaskBinding.swipeLayout.getSurfaceView().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -408,11 +377,10 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
                         listener.onTaskRowFragListItemClicked(whichFrag, model);
                 }
             });
+            holder.mRowTaskBinding.swipeLayout.setSwipeEnabled(false);
             mItemManger.bindView(holder.itemView, position);
         }
-
     }
-
 
     @Override
     public int onActualItemCount() {
@@ -571,11 +539,16 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
         public final View mView;
         RowTaskBinding mRowTaskBinding;
         RowTaskGroupBinding mRowTaskGroupBinding;
+        RowUpcomingTaskBinding mUpcomingTaskBinding;
 
         public ViewHolder(ViewDataBinding binding) {
             super(binding.getRoot());
             mView = binding.getRoot();
-            if (binding instanceof RowTaskBinding) {
+            if(binding instanceof RowUpcomingTaskBinding)
+            {
+                mUpcomingTaskBinding= (RowUpcomingTaskBinding) binding;
+            }
+            else if (binding instanceof RowTaskBinding) {
                 mRowTaskBinding = (RowTaskBinding) binding;
             } else {
                 mRowTaskGroupBinding = (RowTaskGroupBinding) binding;

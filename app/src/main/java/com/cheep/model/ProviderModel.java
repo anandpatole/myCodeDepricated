@@ -69,6 +69,10 @@ public class ProviderModel {
     @SerializedName("sp_phone_number")
     public String sp_phone_number;
 
+    @SerializedName("pro_level")
+    public String pro_level="";
+
+
     public int getQuotePriceInInteger() {
         if (TextUtils.isEmpty(quotePrice)) {
             // Return lesser than 1

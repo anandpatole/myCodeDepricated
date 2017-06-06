@@ -84,12 +84,16 @@ public class TaskDetailModel {
     @SerializedName("cat_image_extra")
     public AttachmentModel catImageExtras;
 
+    @SerializedName("profile_img_arr")
+    public ArrayList<String> profile_img_arr;
+
     // THis will be available in case Provider is Selected
     @SerializedName("sp_data")
     public ProviderModel selectedProvider;
 
     @SerializedName("quoted_sp_list")
     public ArrayList<ProviderModel> mQuotedSPList;
+
 
     public TaskDetailModel() {
 

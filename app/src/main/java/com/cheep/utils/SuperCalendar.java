@@ -175,5 +175,6 @@ public class SuperCalendar {
         public static final String WEEK_SUN = "EEE";
 
         public static final String PAYMENT_DATE = "yyyy-MM-dd hh:mm:ss";
+        public static final String FULL_DATE = "yyyy-MM-dd hh:mm:ss";
     }
 }

@@ -1,14 +1,14 @@
 package com.cheep.interfaces;
 
-import com.cheep.databinding.RowTaskBinding;
+import com.cheep.databinding.RowUpcomingTaskBinding;
 import com.cheep.model.TaskDetailModel;
 
 public interface TaskRowDataInteractionListener {
-    void onTaskDelete(int which, TaskDetailModel exploreDataModel, RowTaskBinding mRawTaskBinding);
+    void onTaskDelete(int which, TaskDetailModel exploreDataModel, RowUpcomingTaskBinding mRowUpcomingTaskBinding);
 
-    void onTaskReschedule(int which, TaskDetailModel exploreDataModel, RowTaskBinding mRawTaskBinding);
+    void onTaskReschedule(int which, TaskDetailModel exploreDataModel, RowUpcomingTaskBinding mRowUpcomingTaskBinding);
 
-    void onRateClick(int which, TaskDetailModel exploreDataModel, RowTaskBinding mRawTaskBinding);
+    void onRateClick(int which, TaskDetailModel exploreDataModel, RowUpcomingTaskBinding mRowUpcomingTaskBinding);
 
     void onViewQuotesClick(int which, TaskDetailModel exploreDataModel);
 
