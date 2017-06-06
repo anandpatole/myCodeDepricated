@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.cheep.activity.TaskQuotesActivity">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarWhite">
+
+        <!--test-->
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:elevation="@dimen/scale_2dp">
+
+            <com.cheep.custom_view.CFTextViewSemiBold
+                android:id="@+id/text_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layoutDirection="ltr"
+                android:text="ACEDEMIC"
+                android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/text_size_18sp" />
+
+        </android.support.v7.widget.Toolbar>
+    </android.support.design.widget.AppBarLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:elevation="@dimen/scale_2dp"
+        android:padding="@dimen/scale_15dp">
+
+        <com.cheep.custom_view.GridImageView
+            android:id="@+id/gridImageView"
+            android:layout_width="@dimen/scale_45dp"
+            android:layout_height="@dimen/scale_45dp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="@dimen/scale_4dp"
+            android:layout_marginRight="@dimen/scale_4dp"
+            android:layout_alignParentRight="true" />
+
+        <com.cheep.custom_view.CFTextViewSemiBold
+            android:id="@+id/tvTaskTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_toLeftOf="@id/gridImageView"
+            android:drawableLeft="@drawable/ic_tick_selector"
+            android:drawablePadding="@dimen/scale_8dp"
+            android:drawableStart="@drawable/ic_tick_selector"
+            android:text="@string/label_my_flush"
+            android:textColor="@color/splash_gradient_end"
+            android:textSize="@dimen/text_size_18sp" />
+
+        <com.cheep.custom_view.CFTextViewRegular
+            android:id="@+id/tvTaskDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@id/tvTaskTitle"
+            android:layout_marginTop="@dimen/scale_4dp"
+            android:layout_toLeftOf="@id/gridImageView"
+            android:minLines="2"
+            android:text="I need a plumber to repair the problem i facing"
+            android:textColor="@color/grey_varient_8"
+            android:textSize="@dimen/text_size_11sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/scale_8dp"
+            android:layout_below="@id/tvTaskDescription"
+            android:orientation="horizontal">
+
+            <com.cheep.custom_view.CFTextViewRegular
+                android:id="@+id/tvTaskBookingTime"
+                android:layout_width="@dimen/scale_0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:drawableLeft="@drawable/ic_calender"
+                android:drawablePadding="@dimen/scale_4dp"
+                android:gravity="center"
+                android:text="Task booked for 24 Apr 11:00am"
+                android:textColor="@color/task_quote_time_color"
+                android:textSize="@dimen/text_size_11sp" />
+
+            <View
+                android:layout_width="@dimen/scale_0dp"
+                android:layout_height="@dimen/scale_0dp"
+                android:layout_weight="0.25" />
+
+            <com.cheep.custom_view.CFTextViewRegular
+                android:id="@+id/tvTaskStartsIn"
+                android:layout_width="@dimen/scale_0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:drawableLeft="@drawable/ic_clock"
+                android:drawablePadding="@dimen/scale_4dp"
+                android:gravity="center"
+                android:text="Task starts in 2:30 hrs"
+                android:textColor="@color/task_quote_relative_time_color"
+                android:textSize="@dimen/text_size_11sp" />
+
+            <View
+                android:layout_width="@dimen/scale_0dp"
+                android:layout_height="@dimen/scale_0dp"
+                android:layout_weight="0.25" />
+
+            <com.cheep.custom_view.CFTextViewRegular
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/label_responses_received"
+                android:textColor="@color/grey_dark_color_2"
+                android:textSize="@dimen/text_size_11sp" />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <include
+        android:id="@+id/common_recycler_view"
+        layout="@layout/common_recycler_view" />
+</LinearLayout>

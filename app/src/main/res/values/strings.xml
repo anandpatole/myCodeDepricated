@@ -334,6 +334,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_my_flush">My flush is not working</string>
 
     <string name="label_response">%1$s Responses \nReceived</string>
+    <string name="label_responses_received">Responses\nReceived</string>
     <string name="label_cheepest_strip">Yay! Book the Cheepest PRO now!</string>
     <string name="label_highest_rated_strip">Book the most highly rated PRO in your neighbourhood</string>
 

@@ -29,7 +29,7 @@
     <color name="brown_varient_1">#f0f0f0</color>
 
     <color name="cheepest_bg_color">#E3F1FE</color>
-
+    <color name="highest_rated_bg_color">#FEF19B</color>
     <color name="splash_gradient_start">#20BBEC</color>
     <color name="splash_gradient_end">#006DDA</color>
 
@@ -62,6 +62,10 @@
     <color name="sixty_opacity">#66000000</color>
 
     <color name="task_desclaimer">#069665</color>
+
+    <color name="task_quote_time_color">#f16609</color>
+    <color name="task_quote_relative_time_color">#f82e2e</color>
+    <color name="task_quote_offer_color">#22a27c</color>
     <!--test-->
     <!--<color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
