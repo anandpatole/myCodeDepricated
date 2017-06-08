@@ -44,7 +44,7 @@ import com.cheep.adapter.SlideMenuAdapter;
 import com.cheep.custom_view.BottomAlertDialog;
 import com.cheep.databinding.ActivityHomeBinding;
 import com.cheep.databinding.NavHeaderHomeBinding;
-import com.cheep.databinding.RowTaskBinding;
+import com.cheep.databinding.RowUpcomingTaskBinding;
 import com.cheep.firebase.FierbaseChatService;
 import com.cheep.firebase.model.TaskChatModel;
 import com.cheep.fragment.BaseFragment;
@@ -471,7 +471,7 @@ public class HomeActivity extends BaseAppCompatActivity
     BottomAlertDialog cancelTaskDialog;
 
     @Override
-    public void onTaskDelete(int which, final TaskDetailModel exploreDataModel, RowTaskBinding mRawTaskBinding) {
+    public void onTaskDelete(int which, final TaskDetailModel exploreDataModel, RowUpcomingTaskBinding mRowUpcomingTaskBinding) {
         cancelTaskDialog = new BottomAlertDialog(mContext);
         cancelTaskDialog.setExpandedInitially(true);
         final View view = LayoutInflater.from(mContext).inflate(R.layout.dialog_cancel_task, null, false);
@@ -605,11 +605,11 @@ public class HomeActivity extends BaseAppCompatActivity
 
 
     @Override
-    public void onTaskReschedule(int which, TaskDetailModel exploreDataModel, RowTaskBinding mRawTaskBinding) {
+    public void onTaskReschedule(int which, TaskDetailModel exploreDataModel, RowUpcomingTaskBinding mRowUpcomingTaskBinding) {
 //        Toast.makeText(mContext, "Reschedule Task" + exploreDataModel.categoryName, Toast.LENGTH_SHORT).show();
 
 //        Utility.showToast(mContext, "Under Development.");
-        showDateTimePickerDialog(which, exploreDataModel, mRawTaskBinding);
+        showDateTimePickerDialog(which, exploreDataModel, mRowUpcomingTaskBinding);
 
         /*View view = LayoutInflater.from(mContext).inflate(R.layout.dialog_information, null, false);
         ((TextView) view.findViewById(R.id.text_message)).setText(getString(R.string.label_reschedule_inform, exploreDataModel.selectedProvider.userName));
@@ -630,7 +630,7 @@ public class HomeActivity extends BaseAppCompatActivity
 
 
     @Override
-    public void onRateClick(int which, TaskDetailModel exploreDataModel, RowTaskBinding mRawTaskBinding) {
+    public void onRateClick(int which, TaskDetailModel exploreDataModel, RowUpcomingTaskBinding mRowUpcomingTaskBinding) {
         showRateDialog(exploreDataModel.selectedProvider.userName, exploreDataModel.taskId, exploreDataModel.selectedProvider.providerId);
     }
 
@@ -1380,7 +1380,7 @@ public class HomeActivity extends BaseAppCompatActivity
      */
     private SuperCalendar startDateTimeSuperCalendar;
 
-    private void showDateTimePickerDialog(final int which, final TaskDetailModel exploreDataModel, final RowTaskBinding mRawTaskBinding) {
+    private void showDateTimePickerDialog(final int which, final TaskDetailModel exploreDataModel, final RowUpcomingTaskBinding mRowUpcomingTaskBinding) {
         // Get Current Date
         final Calendar c = Calendar.getInstance();
         startDateTimeSuperCalendar = SuperCalendar.getInstance();
@@ -1394,7 +1394,7 @@ public class HomeActivity extends BaseAppCompatActivity
                     startDateTimeSuperCalendar.set(Calendar.MONTH, monthOfYear);
                     startDateTimeSuperCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
 
-                    showTimePickerDialog(which, exploreDataModel, mRawTaskBinding);
+                    showTimePickerDialog(which, exploreDataModel, mRowUpcomingTaskBinding);
                 }
             }
         }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH));
@@ -1403,7 +1403,7 @@ public class HomeActivity extends BaseAppCompatActivity
         datePickerDialog.show();
     }
 
-    private void showTimePickerDialog(final int which, final TaskDetailModel exploreDataModel, final RowTaskBinding mRawTaskBinding) {
+    private void showTimePickerDialog(final int which, final TaskDetailModel exploreDataModel, final RowUpcomingTaskBinding mRowUpcomingTaskBinding) {
         // Get Current Time
         final Calendar c = Calendar.getInstance();
 

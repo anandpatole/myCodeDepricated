@@ -91,16 +91,6 @@
                         android:textColor="@color/white"
                         android:textSize="@dimen/text_size_16sp" />
 
-                    <!--<com.cheep.custom_view.CFTextViewRegular
-                        android:id="@+id/text_response_count"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/scale_3dp"
-                        android:gravity="center_horizontal"
-                        android:text="5"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/text_size_10sp" />-->
-
                     <com.cheep.custom_view.CFTextViewRegular
                         android:id="@+id/text_task_response_status"
                         android:layout_width="match_parent"
@@ -204,22 +194,6 @@
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentRight="true"
                     android:layout_below="@+id/text_desc">
-
-                    <com.cheep.custom_view.CFTextViewSemiBold
-                        android:id="@+id/text_view_quotes"
-                        android:layout_width="@dimen/scale_80dp"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/img_blue_rounded"
-                        android:paddingBottom="@dimen/scale_5dp"
-                        android:paddingLeft="@dimen/scale_8dp"
-                        android:paddingRight="@dimen/scale_8dp"
-                        android:gravity="center"
-                        android:paddingTop="@dimen/scale_5dp"
-                        android:text="@string/label_view_quotes"
-                        android:textAllCaps="false"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/text_size_11sp"
-                        android:visibility="visible" />
 
                     <LinearLayout
                         android:id="@+id/ln_task_status_with_quote"

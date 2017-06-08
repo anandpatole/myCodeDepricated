@@ -69,15 +69,14 @@ public class GridImageView extends MaskableFrameLayout {
             TextView tvCounter = (TextView) mRootView.findViewById(R.id.tv_badge_count);
             tvCounter.setBackgroundResource(R.color.splash_gradient_end);
             tvCounter.setText(count > MAX_IMAGE_COUNT ? TextUtils.concat("+", String.valueOf(count - MAX_IMAGE_COUNT)) : String.valueOf(count));
-            if (count > 1) {
-                int padding = getContext().getResources().getDimensionPixelSize(R.dimen.scale_2dp);
+            if (count > 2) {
+                int padding = getContext().getResources().getDimensionPixelSize(R.dimen.scale_3dp); // Change 2dp to 3dp
                 tvCounter.setGravity(Gravity.TOP | Gravity.LEFT);
                 tvCounter.setPadding(padding, padding, 0, 0);
             } else {
                 tvCounter.setGravity(Gravity.CENTER);
                 tvCounter.setPadding(0, 0, 0, 0);
             }
-
 
             List<ImageView> imageViews = new ArrayList<>();
             getImageViews(mRootView, imageViews);

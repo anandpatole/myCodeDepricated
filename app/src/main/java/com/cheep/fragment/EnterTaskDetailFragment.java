@@ -446,6 +446,7 @@ public class EnterTaskDetailFragment extends BaseFragment {
             isPlacePickerClicked = false;
             if (resultCode == RESULT_OK) {
                 isAddressPickYouLocationVerified = true;
+                isAddressNameVerified=true;
                 final Place place = PlacePicker.getPlace(mContext, data);
                 final CharSequence name = place.getName();
                 final CharSequence address = place.getAddress();
@@ -458,8 +459,15 @@ public class EnterTaskDetailFragment extends BaseFragment {
                     edtAddress.setTag(place.getLatLng());
                 }
             } else {
-                isAddressPickYouLocationVerified = false;
+                if(TextUtils.isEmpty(edtAddress.getText().toString().trim())) {
+                    isAddressPickYouLocationVerified = false;
+                }
+                else {
+                    isAddressPickYouLocationVerified = true;
+                    isAddressNameVerified=true;
+                }
             }
+            checkAddAddressVerified();
             hideProgressDialog();
         } else if (requestCode == Utility.REQUEST_CODE_IMAGE_CAPTURE_ADD_PROFILE && resultCode == RESULT_OK) {
             Log.i(TAG, "onActivityResult: CurrentPath" + mCurrentPhotoPath);
@@ -570,7 +578,8 @@ public class EnterTaskDetailFragment extends BaseFragment {
     private AddressRecyclerViewAdapter addressRecyclerViewAdapter;
     public String addressId = "";
 
-    private void showAddressDialog() {
+    private void showAddressDialog()
+    {
         View view = LayoutInflater.from(mContext).inflate(R.layout.dialog_choose_address_new_task, null, false);
         boolean shouldOpenAddAddress = fillAddressRecyclerView((RecyclerView) view.findViewById(R.id.recycler_view));
         addressDialog = new BottomAlertDialog(mContext);
@@ -667,7 +676,18 @@ public class EnterTaskDetailFragment extends BaseFragment {
     private boolean isAddressPickYouLocationVerified = false;
     private boolean isAddressFlatNoVerified = false;
 
-    private void showAddAddressDialog(final AddressModel addressModel) {
+    private void showAddAddressDialog(final AddressModel addressModel)
+    {
+        if(addressModel==null) {
+            isAddressPickYouLocationVerified = false;
+            isAddressNameVerified = false;
+        }
+        else
+        {
+            isAddressPickYouLocationVerified = true;
+            isAddressNameVerified = true;
+        }
+
         View view = LayoutInflater.from(mContext).inflate(R.layout.dialog_add_address, null, false);
         final RadioButton radioHome = (RadioButton) view.findViewById(R.id.radio_home);
         final RadioButton radio_office = (RadioButton) view.findViewById(R.id.radio_office);
@@ -789,8 +809,8 @@ public class EnterTaskDetailFragment extends BaseFragment {
 
             // Initiaze the varfication tags accordingly.
             isAddressFlatNoVerified = true;
-            isAddressNameVerified = true;
-            isAddressPickYouLocationVerified = addressModel.address_initials.trim().length() > 0;
+           /* isAddressNameVerified = true;
+            isAddressPickYouLocationVerified = addressModel.address_initials.trim().length() > 0;*/
             checkAddAddressVerified();
 
         } else {
@@ -809,9 +829,9 @@ public class EnterTaskDetailFragment extends BaseFragment {
                     Utility.showToast(mContext, getString(R.string.validate_address_nickname));
                 } else*/ if (TextUtils.isEmpty(edtAddress.getText().toString().trim())) {
                     Utility.showToast(mContext, getString(R.string.validate_address));
-                } else if (TextUtils.isEmpty(edtAddressInitials.getText().toString().trim())) {
+                } /*else if (TextUtils.isEmpty(edtAddressInitials.getText().toString().trim())) {
                     Utility.showToast(mContext, getString(R.string.validate_address_initials));
-                } else {
+                } */else {
                     if (addressModel != null) {
                         callUpdateAddressWS(addressModel.address_id,
                                 (radioHome.isChecked()
@@ -845,9 +865,16 @@ public class EnterTaskDetailFragment extends BaseFragment {
         checkAddAddressVerified();
     }
 
-    private void checkAddAddressVerified() {
-        if (isAddressFlatNoVerified
+    private void checkAddAddressVerified()
+    {
+        /*if (isAddressFlatNoVerified
                 && isAddressPickYouLocationVerified
+                && isAddressNameVerified) {
+            btnAdd.setBackgroundColor(ContextCompat.getColor(mContext, R.color.splash_gradient_end));
+        } else {
+            btnAdd.setBackgroundColor(ContextCompat.getColor(mContext, R.color.grey_varient_14));
+        }*/
+        if (isAddressPickYouLocationVerified
                 && isAddressNameVerified) {
             btnAdd.setBackgroundColor(ContextCompat.getColor(mContext, R.color.splash_gradient_end));
         } else {

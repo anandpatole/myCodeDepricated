@@ -511,7 +511,6 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
             chatTaskModel.userId = FirebaseUtils.getPrefixUserId(userDetails.UserID);
             FirebaseHelper.getTaskRef(chatTaskModel.taskId).setValue(chatTaskModel);
         }
-
         TaskCompletionDialog mTaskCompletionDialog = TaskCompletionDialog.newInstance(PreferenceUtility.getInstance(mContext).getUserDetails().UserName);
         mTaskCompletionDialog.show(getSupportFragmentManager(), TaskCompletionDialog.TAG);
     }

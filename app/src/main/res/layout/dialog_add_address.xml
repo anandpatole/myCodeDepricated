@@ -151,7 +151,7 @@
                 android:padding="@dimen/scale_10dp"
                 android:singleLine="true"
                 android:textColor="@color/black"
-                android:textSize="@dimen/text_size_16sp"
+                android:textSize="@dimen/text_size_15sp"
                 android:theme="@style/EditTextWhiteBG" />
 
             <View
@@ -203,6 +203,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/scale_22dp"
         android:text="@string/label_add"
+        android:background="@drawable/img_grey_rounded"
         android:textAllCaps="false"
         android:textColor="@color/white"
         android:textSize="@dimen/text_size_16sp" />

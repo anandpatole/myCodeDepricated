@@ -70,9 +70,9 @@
     <string name="label_sent_otp">Did your phone just beep? That\’s us! Enter the code we have texted you and get ready to put your feet up</string>
     <string name="label_enter_code_here">Enter Code Here</string>
     <!--<string name="label_send_otp_again">"Didn't receive? Send code again."</string>-->
-    <string name="label_send_otp_again">"Not received the quote? Click here!"</string>
+    <string name="label_send_otp_again">"Not received the code? Click here!"</string>
     <!--<string name="label_nearly_there">Nearly There!</string>-->
-    <string name="label_lets_get_cheeping">Lets get CHEEPING</string>
+    <string name="label_lets_get_cheeping">Let\'s get CHEEPING</string>
     <string name="label_chat">Chat</string>
     <string name="label_my_task">My Tasks</string>
 
@@ -262,7 +262,8 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_have_cheep_code">Have Promocode?</string>
     <string name="label_cheep_code_applied">Promocode Applied: “%1$s”</string>
     <!--<string name="label_task_desclaimer">The quoted price by our PRO only includes cost for the service, and does not include material cost!</string>-->
-    <string name="label_task_desclaimer">The charges above do not include any material cost. Very soon, you will be able to purchase material directly from our approved trade partners on CHEEP. Be rest assured! Your payment will be transferred to the PRO only after you are satisfied and confirm completion of the task</string>
+    <!--<string name="label_task_desclaimer">The charges above do not include any material cost. Very soon, you will be able to purchase material directly from our approved trade partners on CHEEP. Be rest assured! Your payment will be transferred to the PRO only after you are satisfied and confirm completion of the task</string>-->
+    <string name="label_task_desclaimer">The charges above do not include any material cost. Very soon, you will be able to purchase material directly from our approved trade partners on CHEEP.</string>
     <string name="label_welcome_message">Welcome to Cheep!</string>
     <string name="label_profile">Profile</string>
 
@@ -315,7 +316,12 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="step_2_desc">Please tell us when and where</string>
     <string name="hint_task_desc">Please tell us more about your requirement</string>
     <string name="format_date_time">%1$s at %2$s</string>
-    <string name="hint_address_initials">Flat No./ Building Name</string>
+
+    <string name="format_task_book_date">Task booked for\n%s</string>
+    <string name="format_task_start_time">Task starts in\n%s</string>
+
+    <!--<string name="hint_address_initials">Flat No./ Building Name</string>-->
+    <string name="hint_address_initials">Please enter house number / building name</string>
     <string name="label_task_summary">Task Summary</string>
     <string name="label_pick_your_location">Pick your Location</string>
     <string name="label_update_address">Update Address</string>
@@ -370,8 +376,8 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="hint_first_name">First Name</string>
     <string name="hint_last_name">Last Name</string>
     <string name="label_go">Go</string>
-    <string name="desclaimer_task_creation">Please go ahead and post your task. you are\npaying nothing as yet!</string>
-    <string name="desclaimer_task_completion">When you pay, your funds are help securely by us. you will only be charged, once work is completed to your satisfaction</string>
+    <string name="desclaimer_task_creation">Please go ahead and post your task, you are\npaying nothing as yet!</string>
+    <string name="desclaimer_task_completion">When you pay, your funds are held securely by us. You will only be charged, once work is completed to your satisfaction.</string>
     <string name="label_your_task_is_posted">Your task is posted!</string>
     <string name="desc_task_creation_acknowledgement">Hi %1$s, thank you for posting task. Soon you will receive quotes from verified and insured PROs around you.</string>
     <string name="label_happy_homes">%s Homes Made Happy So Far</string>

@@ -103,7 +103,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="@dimen/scale_9dp"
                         android:layout_alignParentRight="true"
-                        android:layout_gravity="right"
+                        android:layout_gravity="center"
                         android:layout_marginTop="@dimen/scale_8dp"
                         android:isIndicator="true"
                         android:progressDrawable="@drawable/rating_bar_selector_s1"
@@ -226,22 +226,6 @@
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentRight="true"
                     android:layout_below="@+id/text_desc">
-
-                    <com.cheep.custom_view.CFTextViewSemiBold
-                        android:id="@+id/text_view_task"
-                        android:layout_width="@dimen/scale_80dp"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/img_blue_rounded"
-                        android:paddingBottom="@dimen/scale_5dp"
-                        android:paddingLeft="@dimen/scale_8dp"
-                        android:paddingRight="@dimen/scale_8dp"
-                        android:gravity="center"
-                        android:paddingTop="@dimen/scale_5dp"
-                        android:text="@string/label_view_task"
-                        android:textAllCaps="false"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/text_size_11sp"
-                        android:visibility="visible" />
 
                     <LinearLayout
                         android:id="@+id/ln_task_status_with_quote"
