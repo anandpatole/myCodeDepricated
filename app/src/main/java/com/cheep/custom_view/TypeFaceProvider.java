@@ -11,7 +11,7 @@ import java.util.Map;
  * Created by @bhavesh
  * Class Used for managing TypeFace instances, to avoid memory leaks.
  */
-class TypeFaceProvider {
+public class TypeFaceProvider {
     private static final String TAG = "Typefaces";
 
     private static final Map<String, Typeface> cache = new Hashtable<>();

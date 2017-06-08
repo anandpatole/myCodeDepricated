@@ -60,6 +60,10 @@ public class GridImageView extends MaskableFrameLayout {
         populateView(urls, length);
     }
 
+    public void clear() {
+        removeAllViews();
+    }
+
     private void populateView(List<Uri> urls, int count) {
         if (mRootView != null) {
             TextView tvCounter = (TextView) mRootView.findViewById(R.id.tv_badge_count);
@@ -69,7 +73,7 @@ public class GridImageView extends MaskableFrameLayout {
                 int padding = getContext().getResources().getDimensionPixelSize(R.dimen.scale_2dp);
                 tvCounter.setGravity(Gravity.TOP | Gravity.LEFT);
                 tvCounter.setPadding(padding, padding, 0, 0);
-            }else{
+            } else {
                 tvCounter.setGravity(Gravity.CENTER);
                 tvCounter.setPadding(0, 0, 0, 0);
             }

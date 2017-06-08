@@ -43,9 +43,9 @@
             android:layout_width="@dimen/scale_45dp"
             android:layout_height="@dimen/scale_45dp"
             android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
             android:layout_marginEnd="@dimen/scale_4dp"
-            android:layout_marginRight="@dimen/scale_4dp"
-            android:layout_alignParentRight="true" />
+            android:layout_marginRight="@dimen/scale_4dp" />
 
         <com.cheep.custom_view.CFTextViewSemiBold
             android:id="@+id/tvTaskTitle"
@@ -54,9 +54,9 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_toLeftOf="@id/gridImageView"
-            android:drawableLeft="@drawable/ic_tick_selector"
+            android:drawableLeft="@drawable/ic_tick"
             android:drawablePadding="@dimen/scale_8dp"
-            android:drawableStart="@drawable/ic_tick_selector"
+            android:drawableStart="@drawable/ic_tick"
             android:text="@string/label_my_flush"
             android:textColor="@color/splash_gradient_end"
             android:textSize="@dimen/text_size_18sp" />
@@ -78,38 +78,60 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/scale_8dp"
             android:layout_below="@id/tvTaskDescription"
+            android:layout_marginTop="@dimen/scale_8dp"
             android:orientation="horizontal">
 
-            <com.cheep.custom_view.CFTextViewRegular
-                android:id="@+id/tvTaskBookingTime"
+            <LinearLayout
                 android:layout_width="@dimen/scale_0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:drawableLeft="@drawable/ic_calender"
-                android:drawablePadding="@dimen/scale_4dp"
-                android:gravity="center"
-                android:text="Task booked for 24 Apr 11:00am"
-                android:textColor="@color/task_quote_time_color"
-                android:textSize="@dimen/text_size_11sp" />
+                android:gravity="center_horizontal"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="@dimen/scale_2dp"
+                    android:src="@drawable/ic_calender" />
+
+                <com.cheep.custom_view.CFTextViewRegular
+                    android:id="@+id/tvTaskBookingTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="@dimen/scale_4dp"
+                    android:text="Task booked for 24 Apr 11:00am"
+                    android:textColor="@color/task_quote_time_color"
+                    android:textSize="@dimen/text_size_11sp" />
+            </LinearLayout>
 
             <View
                 android:layout_width="@dimen/scale_0dp"
                 android:layout_height="@dimen/scale_0dp"
                 android:layout_weight="0.25" />
 
-            <com.cheep.custom_view.CFTextViewRegular
-                android:id="@+id/tvTaskStartsIn"
+            <LinearLayout
                 android:layout_width="@dimen/scale_0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:drawableLeft="@drawable/ic_clock"
-                android:drawablePadding="@dimen/scale_4dp"
-                android:gravity="center"
-                android:text="Task starts in 2:30 hrs"
-                android:textColor="@color/task_quote_relative_time_color"
-                android:textSize="@dimen/text_size_11sp" />
+                android:gravity="center_horizontal"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="@dimen/scale_2dp"
+                    android:src="@drawable/ic_clock" />
+
+                <com.cheep.custom_view.CFTextViewRegular
+                    android:id="@+id/tvTaskStartsIn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="@dimen/scale_4dp"
+                    android:text="Task starts in 2:30 hrs"
+                    android:textColor="@color/task_quote_relative_time_color"
+                    android:textSize="@dimen/text_size_11sp" />
+            </LinearLayout>
 
             <View
                 android:layout_width="@dimen/scale_0dp"

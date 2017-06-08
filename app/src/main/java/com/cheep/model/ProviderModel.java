@@ -4,6 +4,8 @@ import android.text.TextUtils;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 /**
  * Created by pankaj on 10/6/16.
  */
@@ -14,6 +16,9 @@ public class ProviderModel {
 
     @SerializedName("sp_distance")
     public String distance;
+
+    @SerializedName("sp_time")
+    public String time;
 
     @SerializedName("sp_user_name")
     public String userName;
@@ -68,6 +73,18 @@ public class ProviderModel {
 
     @SerializedName("sp_phone_number")
     public String sp_phone_number;
+
+    @SerializedName("happy_home_count")
+    public String happyHomeCount;
+
+    @SerializedName("sp_per_off")
+    public String discount;
+
+    @SerializedName("pro_level")
+    public String proLevel;
+
+    @SerializedName("live_lable_arr")
+    public List<String> offerList;
 
     public int getQuotePriceInInteger() {
         if (TextUtils.isEmpty(quotePrice)) {
