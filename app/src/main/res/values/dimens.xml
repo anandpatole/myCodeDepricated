@@ -87,4 +87,10 @@
     <dimen name="scale_200dp">200dp</dimen>
     <dimen name="scale_145dp">145dp</dimen>
 
+    <dimen name="icon_live_width">30.75dp</dimen>
+    <dimen name="icon_live_height">13.50dp</dimen>
+    <dimen name="icon_home_width" >17dp</dimen>
+    <dimen name="icon_home_height">13.50dp</dimen>
+    <dimen name="icon_chat_width">28.75dp</dimen>
+    <dimen name="icon_chat_height">23.75dp</dimen>
 </resources>

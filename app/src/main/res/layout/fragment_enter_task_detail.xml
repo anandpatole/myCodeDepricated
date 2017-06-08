@@ -290,7 +290,7 @@
                     android:paddingRight="@dimen/scale_5dp"
                     android:text="@string/desclaimer_task_creation"
                     android:textColor="@color/task_desclaimer"
-                    android:textSize="@dimen/text_size_10sp" />
+                    android:textSize="@dimen/text_size_12sp" />
             </LinearLayout>
 
         </LinearLayout>

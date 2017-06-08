@@ -133,7 +133,7 @@ public class TaskFragment extends BaseFragment {
             loadMoreKey = NetworkUtility.TAGS.LAST_ID;
         }
 
-        taskRecyclerViewAdapter = new TaskRecyclerViewAdapter(whichFrg, mListener);
+        taskRecyclerViewAdapter = new TaskRecyclerViewAdapter(mContext,whichFrg, mListener);
         commonRecyclerViewBinding.recyclerView.setAdapter(taskRecyclerViewAdapter);
         //Set dividers to Recyclerview
         commonRecyclerViewBinding.recyclerView.addItemDecoration(new DividerItemDecoration(mContext, R.drawable.divider_grey_normal));

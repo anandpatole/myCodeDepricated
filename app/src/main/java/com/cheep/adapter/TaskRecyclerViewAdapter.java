@@ -1,18 +1,25 @@
 package com.cheep.adapter;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
+import android.graphics.drawable.AnimationDrawable;
+import android.net.Uri;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.style.LeadingMarginSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.cheep.R;
 import com.cheep.databinding.RowTaskBinding;
 import com.cheep.databinding.RowTaskGroupBinding;
@@ -26,7 +33,9 @@ import com.cheep.utils.SuperCalendar;
 import com.cheep.utils.Utility;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.List;
 
 /**
  * Created by pankaj on 9/27/16.
@@ -45,16 +54,20 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
     int whichFrag;
     Calendar startDateTimeCalendar;
     SuperCalendar superStartDateTimeCalendar;
+    private int mLiveIconOffset;
 
-    ArrayList<String> textlist=new ArrayList<>();
+    /*private Uri[] urls = new Uri[]{Uri.parse("http://www.animated-gifs.eu/category_leisure/avatars-100x100-music/0016.gif"), Uri.parse("http://www.smailikai.com/avatar/skelet/avatar_4348.gif"), Uri.parse("http://www.boorp.com/avatars_100x100_for_myspace/25.png")*//*, Uri.parse("http://www.boorp.com/avatars_100x100_for_myspace/25.png"), Uri.parse("http://www.boorp.com/avatars_100x100_for_myspace/25.png")*//*};
+    private List<Uri> arrayListUri=new ArrayList<>();
+    String[] stringArr=new String[]{"3.810 plumbing task booked today","17 home made happy by Lokesh Shah today.","Favorited by 9,800 Users till now"};*/
 
-    public TaskRecyclerViewAdapter(int whichFrag, TaskRowDataInteractionListener listener) {
+    public TaskRecyclerViewAdapter(Context mContext, int whichFrag, TaskRowDataInteractionListener listener) {
+        this.context=mContext;
         this.mList = new ArrayList<>();
         this.whichFrag = whichFrag;
         this.listener = listener;
-        for(int i=1;i<=10;i++) {
-            textlist.add("Lorem Ipsum is simply dummy text of the printing and typesetting industry." + i);
-        }
+        int offset = context.getResources().getDimensionPixelSize(R.dimen.scale_4dp);
+        mLiveIconOffset = context.getResources().getDimensionPixelSize(R.dimen.icon_live_width) + offset;
+        //arrayListUri.addAll(Arrays.asList(urls));
     }
 
     public TaskRecyclerViewAdapter(ArrayList<TaskDetailModel> mList, TaskRowDataInteractionListener listener, int whichFrag) {
@@ -119,14 +132,51 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
     public void onActualBindViewHolder(final ViewHolder holder, int position) {
         final TaskDetailModel model = mList.get(holder.getAdapterPosition());
 
+        holder.removeAnimations();
+
         int viewType = getItemViewType(holder.getAdapterPosition());
         if(viewType== VIEW_TYPE_UPCOMING)
         {
             superStartDateTimeCalendar.setTimeZone(SuperCalendar.SuperTimeZone.GMT.GMT);
             superStartDateTimeCalendar.setTimeInMillis(Long.parseLong(model.taskStartdate));
             superStartDateTimeCalendar.setLocaleTimeZone();
+            /*if(model.live_lable_arr.size()==0)
+                model.live_lable_arr.addAll(Arrays.asList(stringArr));*/
+            if(model.live_lable_arr!=null && model.live_lable_arr.size()>0)
+            {
+                holder.liveFeedindex=0;
+                final SpannableString labelOffer = new SpannableString(model.live_lable_arr.get(holder.liveFeedindex));
+                labelOffer.setSpan(new LeadingMarginSpan.Standard(mLiveIconOffset, 0), 0, labelOffer.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+                holder.mUpcomingTaskBinding.tvLiveFeed.setText(labelOffer);
 
-            Glide.with(context).load(R.drawable.gif_live).asGif().diskCacheStrategy(DiskCacheStrategy.SOURCE).centerCrop().into(holder.mUpcomingTaskBinding.imgLive);
+                AnimatorSet offerAnimation = loadBannerScrollAnimation(holder.mUpcomingTaskBinding.tvLiveFeed, 2000, 100, new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        super.onAnimationEnd(animation);
+                        if(holder.liveFeedindex>=model.live_lable_arr.size()-1)
+                            holder.liveFeedindex=0;
+                        else
+                            holder.liveFeedindex++;
+                        SpannableString labelOffer = new SpannableString(model.live_lable_arr.get(holder.liveFeedindex));
+                        labelOffer.setSpan(new LeadingMarginSpan.Standard(mLiveIconOffset, 0), 0, labelOffer.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+                        holder.mUpcomingTaskBinding.tvLiveFeed.setText(labelOffer);
+                    }
+                });
+                offerAnimation.start();
+                holder.addAnimator(offerAnimation);
+            }
+            else
+            {
+                holder.mUpcomingTaskBinding.tvLiveFeed.setText("");
+            }
+            // Start live image animations
+            holder.mUpcomingTaskBinding.ivLiveAnimated.setBackgroundResource(R.drawable.ic_live);
+            ((AnimationDrawable) holder.mUpcomingTaskBinding.ivLiveAnimated.getBackground()).start();
+
+            holder.mUpcomingTaskBinding.gridImageView.clear();
+            //holder.mUpcomingTaskBinding.gridImageView.createWithUrls(arrayListUri); // just for testing
+            holder.mUpcomingTaskBinding.gridImageView.createWithUrls(getURIListFromStringList(model.profile_img_arr));
+
             if(model.selectedProvider==null)
             {
                 holder.mUpcomingTaskBinding.layoutIndividualProfile.setVisibility(View.GONE);
@@ -163,13 +213,13 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
 
                 holder.mUpcomingTaskBinding.imgBadge.setVisibility(View.VISIBLE);
                 if(model.selectedProvider.pro_level.equals(Utility.PRO_LEVEL.PLATINUM))
-                    holder.mUpcomingTaskBinding.imgBadge.setImageResource(R.drawable.icon_badge_platinum);
+                    holder.mUpcomingTaskBinding.imgBadge.setImageResource(R.drawable.ic_badge_platinum);
                 else if(model.selectedProvider.equals(Utility.PRO_LEVEL.GOLD))
-                    holder.mUpcomingTaskBinding.imgBadge.setImageResource(R.drawable.icon_badge_gold);
+                    holder.mUpcomingTaskBinding.imgBadge.setImageResource(R.drawable.ic_badge_gold);
                 else if(model.selectedProvider.pro_level.equals(Utility.PRO_LEVEL.SILVER))
-                    holder.mUpcomingTaskBinding.imgBadge.setImageResource(R.drawable.icon_badge_silver);
+                    holder.mUpcomingTaskBinding.imgBadge.setImageResource(R.drawable.ic_badge_silver);
                 else if(model.selectedProvider.pro_level.equals(Utility.PRO_LEVEL.BRONZE))
-                    holder.mUpcomingTaskBinding.imgBadge.setImageResource(R.drawable.icon_badge_bronze);
+                    holder.mUpcomingTaskBinding.imgBadge.setImageResource(R.drawable.ic_badge_bronze);
 
                 holder.mUpcomingTaskBinding.tvViewTask.setVisibility(View.VISIBLE);
                 holder.mUpcomingTaskBinding.tvViewQuotes.setVisibility(View.GONE);
@@ -535,11 +585,65 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
         }
     }
 
+    private AnimatorSet loadBannerScrollAnimation(View view, int offset, int distance, AnimatorListenerAdapter midEndListener) {
+        ObjectAnimator moveOut = ObjectAnimator.ofFloat(view, View.TRANSLATION_Y, 0, (-1 * distance));
+        if (midEndListener != null) {
+            moveOut.addListener(midEndListener);
+        }
+
+        ObjectAnimator moveIn = ObjectAnimator.ofFloat(view, View.TRANSLATION_Y, distance, 0);
+        final AnimatorSet set = new AnimatorSet();
+        set.setDuration(1000);
+        set.setStartDelay(offset);
+        set.playSequentially(moveOut, moveIn);
+        set.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                set.start();
+            }
+        });
+        return set;
+    }
+
+    private List<Uri> getURIListFromStringList(List<String> imageUrls)
+    {
+        List<Uri> uriList=new ArrayList<>();
+        if(imageUrls==null || imageUrls.size()==0)
+            return uriList;
+        for(String url:imageUrls)
+        {
+            uriList.add(Uri.parse(url));
+        }
+        return uriList;
+    }
+
     class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
         RowTaskBinding mRowTaskBinding;
         RowTaskGroupBinding mRowTaskGroupBinding;
         RowUpcomingTaskBinding mUpcomingTaskBinding;
+        private int liveFeedindex=0;
+
+        private List<AnimatorSet> animators=new ArrayList<>();
+
+        public void addAnimator(AnimatorSet animator) {
+            if (animator != null) {
+                animators.add(animator);
+            }
+        }
+
+        public void removeAnimations() {
+            for (AnimatorSet animatorSet : animators) {
+                for (Animator child : animatorSet.getChildAnimations()) {
+                    child.removeAllListeners();
+                }
+                animatorSet.removeAllListeners();
+                animatorSet.end();
+                animatorSet.cancel();
+            }
+            animators.clear();
+        }
 
         public ViewHolder(ViewDataBinding binding) {
             super(binding.getRoot());
@@ -553,6 +657,7 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
             } else {
                 mRowTaskGroupBinding = (RowTaskGroupBinding) binding;
             }
+
         }
     }
 }

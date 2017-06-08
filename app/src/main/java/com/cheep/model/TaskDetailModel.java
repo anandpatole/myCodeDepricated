@@ -3,6 +3,7 @@ package com.cheep.model;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by pankaj on 11/15/16.
@@ -85,7 +86,10 @@ public class TaskDetailModel {
     public AttachmentModel catImageExtras;
 
     @SerializedName("profile_img_arr")
-    public ArrayList<String> profile_img_arr;
+    public List<String> profile_img_arr;
+
+    @SerializedName("live_lable_arr")
+    public List<String> live_lable_arr=new ArrayList<>();
 
     // THis will be available in case Provider is Selected
     @SerializedName("sp_data")

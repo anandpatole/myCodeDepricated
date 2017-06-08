@@ -78,7 +78,7 @@
                     android:layout_toRightOf="@+id/img_unread"
                     android:orientation="vertical"
                     android:paddingTop="@dimen/scale_3dp"
-                    android:visibility="visible">
+                    android:visibility="gone">
 
                     <ImageView
                         android:id="@+id/imgProfilePic"
@@ -105,15 +105,13 @@
                     android:layout_toRightOf="@+id/img_unread"
                     android:orientation="vertical"
                     android:paddingTop="@dimen/scale_3dp"
-                    android:visibility="gone">
+                    android:visibility="visible">
 
-                    <ImageView
-                        android:id="@+id/imgGroupPic"
+                    <com.cheep.custom_view.GridImageView
+                        android:id="@+id/gridImageView"
                         android:layout_width="@dimen/chat_width"
                         android:layout_height="@dimen/chat_width"
-                        android:layout_gravity="center"
-                        android:gravity="center"
-                        android:src="@drawable/ic_cheep_circular_icon" />
+                        android:layout_gravity="center"/>
                 </FrameLayout>
 
                 <LinearLayout
@@ -230,7 +228,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/scale_2dp"
-                            android:src="@drawable/icon_timer_saffron" />
+                            android:src="@drawable/ic_clock" />
 
                         <com.cheep.custom_view.CFTextViewRegular
                             android:id="@+id/tvTaskStartedTime"
@@ -290,7 +288,6 @@
                         android:layout_gravity="center"
                         android:layout_marginTop="@dimen/scale_5dp"
                         android:gravity="center"
-                        tools:src="@drawable/icon_badge_gold"
                         android:visibility="gone" />
                 </LinearLayout>
 
@@ -305,24 +302,17 @@
                         android:id="@+id/tvLiveFeed"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_below="@+id/text_sub_category_name"
-                        android:layout_marginBottom="@dimen/scale_8dp"
-                        android:layout_toRightOf="@+id/layout_participant_counter"
-                        android:ellipsize="end"
                         android:gravity="left|top"
-                        android:lineSpacingExtra="@dimen/scale_2dp"
+                        android:lineSpacingMultiplier="1.1"
                         android:lines="2"
-                        android:paddingTop="@dimen/scale_2dp"
-                        android:text="            17 Home made happy by Lokesh Shah today"
+                        android:text="17 Home made happy by Lokesh Shah today"
                         android:textColor="@color/grey_dark_color_3"
                         android:textSize="@dimen/text_size_11sp" />
 
                     <ImageView
-                        android:id="@+id/imgLive"
-                        android:layout_width="@dimen/scale_30dp"
-                        android:layout_height="@dimen/scale_15dp"
-                        android:scaleType="fitXY"
-                        android:src="@drawable/gif_live" />
+                        android:id="@+id/ivLiveAnimated"
+                        android:layout_width="@dimen/icon_live_width"
+                        android:layout_height="@dimen/icon_live_height" />
                 </FrameLayout>
 
                 <LinearLayout
