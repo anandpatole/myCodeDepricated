@@ -61,7 +61,7 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
     String[] stringArr=new String[]{"3.810 plumbing task booked today","17 home made happy by Lokesh Shah today.","Favorited by 9,800 Users till now"};*/
 
     public TaskRecyclerViewAdapter(Context mContext, int whichFrag, TaskRowDataInteractionListener listener) {
-        this.context=mContext;
+        this.context = mContext;
         this.mList = new ArrayList<>();
         this.whichFrag = whichFrag;
         this.listener = listener;
@@ -90,18 +90,15 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
     }
 
     @Override
-    public int getActualItemViewType(int position)
-    {
+    public int getActualItemViewType(int position) {
         if (whichFrag == TaskFragment.TAB_PAST_TASK) {
             if (mList.get(position).selectedProvider == null) {
                 return VIEW_TYPE_GROUP;
             } else {
                 return VIEW_TYPE_INDIVIDUAL;
             }
-        }
-        else
-        {
-           return VIEW_TYPE_UPCOMING;
+        } else {
+            return VIEW_TYPE_UPCOMING;
         }
     }
 
@@ -111,18 +108,13 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
         context = parent.getContext();
         startDateTimeCalendar = Calendar.getInstance();
         superStartDateTimeCalendar = SuperCalendar.getInstance();
-        if(viewType == VIEW_TYPE_UPCOMING)
-        {
+        if (viewType == VIEW_TYPE_UPCOMING) {
             ViewDataBinding mRowTaskBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), R.layout.row_upcoming_task, parent, false);
             return new ViewHolder(mRowTaskBinding);
-        }
-        else if (viewType == VIEW_TYPE_GROUP)
-        {
+        } else if (viewType == VIEW_TYPE_GROUP) {
             ViewDataBinding mRowTaskBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), R.layout.row_task_group, parent, false);
             return new ViewHolder(mRowTaskBinding);
-        }
-        else
-        {
+        } else {
             ViewDataBinding mRowTaskBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), R.layout.row_task, parent, false);
             return new ViewHolder(mRowTaskBinding);
         }
@@ -135,16 +127,14 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
         holder.removeAnimations();
 
         int viewType = getItemViewType(holder.getAdapterPosition());
-        if(viewType== VIEW_TYPE_UPCOMING)
-        {
+        if (viewType == VIEW_TYPE_UPCOMING) {
             superStartDateTimeCalendar.setTimeZone(SuperCalendar.SuperTimeZone.GMT.GMT);
             superStartDateTimeCalendar.setTimeInMillis(Long.parseLong(model.taskStartdate));
             superStartDateTimeCalendar.setLocaleTimeZone();
             /*if(model.live_lable_arr.size()==0)
                 model.live_lable_arr.addAll(Arrays.asList(stringArr));*/
-            if(model.live_lable_arr!=null && model.live_lable_arr.size()>0)
-            {
-                holder.liveFeedindex=0;
+            if (model.live_lable_arr != null && model.live_lable_arr.size() > 0) {
+                holder.liveFeedindex = 0;
                 final SpannableString labelOffer = new SpannableString(model.live_lable_arr.get(holder.liveFeedindex));
                 labelOffer.setSpan(new LeadingMarginSpan.Standard(mLiveIconOffset, 0), 0, labelOffer.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
                 holder.mUpcomingTaskBinding.tvLiveFeed.setText(labelOffer);
@@ -153,8 +143,8 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
                     @Override
                     public void onAnimationEnd(Animator animation) {
                         super.onAnimationEnd(animation);
-                        if(holder.liveFeedindex>=model.live_lable_arr.size()-1)
-                            holder.liveFeedindex=0;
+                        if (holder.liveFeedindex >= model.live_lable_arr.size() - 1)
+                            holder.liveFeedindex = 0;
                         else
                             holder.liveFeedindex++;
                         SpannableString labelOffer = new SpannableString(model.live_lable_arr.get(holder.liveFeedindex));
@@ -164,9 +154,7 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
                 });
                 offerAnimation.start();
                 holder.addAnimator(offerAnimation);
-            }
-            else
-            {
+            } else {
                 holder.mUpcomingTaskBinding.tvLiveFeed.setText("");
             }
             // Start live image animations
@@ -177,8 +165,7 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
             //holder.mUpcomingTaskBinding.gridImageView.createWithUrls(arrayListUri); // just for testing
             holder.mUpcomingTaskBinding.gridImageView.createWithUrls(getURIListFromStringList(model.profile_img_arr));
 
-            if(model.selectedProvider==null)
-            {
+            if (model.selectedProvider == null) {
                 holder.mUpcomingTaskBinding.layoutIndividualProfile.setVisibility(View.GONE);
                 holder.mUpcomingTaskBinding.layoutGroupProfile.setVisibility(View.VISIBLE);
                 holder.mUpcomingTaskBinding.tvProviderName.setText(model.categoryName);
@@ -188,20 +175,17 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
                 holder.mUpcomingTaskBinding.tvViewTask.setVisibility(View.GONE);
                 holder.mUpcomingTaskBinding.tvViewQuotes.setVisibility(View.VISIBLE);
                 holder.mUpcomingTaskBinding.tvTaskResponseStatus.setVisibility(View.VISIBLE);
-            }
-            else
-            {
+            } else {
                 holder.mUpcomingTaskBinding.layoutIndividualProfile.setVisibility(View.VISIBLE);
                 holder.mUpcomingTaskBinding.layoutGroupProfile.setVisibility(View.GONE);
 
                 Utility.showCircularImageView(holder.mUpcomingTaskBinding.imgProfilePic.getContext(), TAG, holder.mUpcomingTaskBinding.imgProfilePic, model.selectedProvider.profileUrl, Utility.DEFAULT_PROFILE_SRC);
-                if(Utility.BOOLEAN.YES.equals(model.selectedProvider.isFavourite))
+                if (Utility.BOOLEAN.YES.equals(model.selectedProvider.isFavourite))
                     holder.mUpcomingTaskBinding.imgFav.setSelected(true);
                 else
                     holder.mUpcomingTaskBinding.imgFav.setSelected(false);
                 holder.mUpcomingTaskBinding.tvProviderName.setText(model.selectedProvider.userName);
-                if (Utility.BOOLEAN.YES.equalsIgnoreCase(model.selectedProvider.isVerified))
-                {
+                if (Utility.BOOLEAN.YES.equalsIgnoreCase(model.selectedProvider.isVerified)) {
                     holder.mUpcomingTaskBinding.tvVerified.setVisibility(View.VISIBLE);
                     holder.mUpcomingTaskBinding.tvVerified.setText(context.getString(R.string.label_verified).toLowerCase());
                 } else {
@@ -212,13 +196,13 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
                 Utility.showRating(model.selectedProvider.rating, holder.mUpcomingTaskBinding.ratingBar);
 
                 holder.mUpcomingTaskBinding.imgBadge.setVisibility(View.VISIBLE);
-                if(model.selectedProvider.pro_level.equals(Utility.PRO_LEVEL.PLATINUM))
+                if (model.selectedProvider.pro_level.equals(Utility.PRO_LEVEL.PLATINUM))
                     holder.mUpcomingTaskBinding.imgBadge.setImageResource(R.drawable.ic_badge_platinum);
-                else if(model.selectedProvider.equals(Utility.PRO_LEVEL.GOLD))
+                else if (model.selectedProvider.equals(Utility.PRO_LEVEL.GOLD))
                     holder.mUpcomingTaskBinding.imgBadge.setImageResource(R.drawable.ic_badge_gold);
-                else if(model.selectedProvider.pro_level.equals(Utility.PRO_LEVEL.SILVER))
+                else if (model.selectedProvider.pro_level.equals(Utility.PRO_LEVEL.SILVER))
                     holder.mUpcomingTaskBinding.imgBadge.setImageResource(R.drawable.ic_badge_silver);
-                else if(model.selectedProvider.pro_level.equals(Utility.PRO_LEVEL.BRONZE))
+                else if (model.selectedProvider.pro_level.equals(Utility.PRO_LEVEL.BRONZE))
                     holder.mUpcomingTaskBinding.imgBadge.setImageResource(R.drawable.ic_badge_bronze);
 
                 holder.mUpcomingTaskBinding.tvViewTask.setVisibility(View.VISIBLE);
@@ -227,8 +211,7 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
                 holder.mUpcomingTaskBinding.tvTaskResponseStatus.setVisibility(View.GONE);
             }
 
-            if (model.providerCount.equals("0"))
-            {
+            if (model.providerCount.equals("0")) {
                 holder.mUpcomingTaskBinding.tvTaskResponseStatus.setText(holder.mView.getContext().getString(R.string.label_awaiting_response));
                 holder.mUpcomingTaskBinding.tvViewQuotes.setBackground(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.img_grey_rounded));
                 holder.mUpcomingTaskBinding.tvViewQuotes.setEnabled(false);
@@ -253,8 +236,7 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
 
             holder.mUpcomingTaskBinding.textDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View view)
-                {
+                public void onClick(View view) {
                     if (Utility.TASK_STATUS.PROCESSING.equalsIgnoreCase(model.taskStatus) || Utility.TASK_STATUS.COMPLETION_REQUEST.equalsIgnoreCase(model.taskStatus)) {
                         Utility.showToast(context, context.getString(R.string.msg_processing_task_cancelled));
                         holder.mUpcomingTaskBinding.swipeLayout.close(true);
@@ -296,8 +278,7 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
 
             holder.mUpcomingTaskBinding.tvViewQuotes.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View v)
-                {
+                public void onClick(View v) {
                     if (listener != null)
                         listener.onViewQuotesClick(whichFrag, model);
                 }
@@ -312,9 +293,7 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
             });
             //So swipe adapter (lib method) close any previous opened swipe menu when current swipe is done.
             mItemManger.bindView(holder.itemView, position);
-        }
-        else if (viewType == VIEW_TYPE_GROUP)
-        {
+        } else if (viewType == VIEW_TYPE_GROUP) {
             superStartDateTimeCalendar.setTimeZone(SuperCalendar.SuperTimeZone.GMT.GMT);
             superStartDateTimeCalendar.setTimeInMillis(Long.parseLong(model.taskStartdate));
             superStartDateTimeCalendar.setLocaleTimeZone();
@@ -329,8 +308,7 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
             holder.mRowTaskGroupBinding.textCategoryName.setText(model.categoryName);
             holder.mRowTaskGroupBinding.textSubCategoryName.setText(model.subCategoryName);
 
-            if (model.providerCount.equals("0"))
-            {
+            if (model.providerCount.equals("0")) {
                 holder.mRowTaskGroupBinding.textResponseCounter.setText(String.valueOf(model.providerCount));
                 holder.mRowTaskGroupBinding.textTaskResponseStatus.setText(holder.mView.getContext().getString(R.string.label_responses));
             } else {
@@ -342,32 +320,23 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
                 }
                 holder.mRowTaskGroupBinding.textTaskResponseStatus.setText(holder.mView.getContext().getString(R.string.label_responses));
             }
-            if (Utility.TASK_STATUS.CANCELLED_CUSTOMER.equalsIgnoreCase(model.taskStatus))
-            {
+            if (Utility.TASK_STATUS.CANCELLED_CUSTOMER.equalsIgnoreCase(model.taskStatus)) {
                 holder.mRowTaskGroupBinding.lnTaskStatusWithQuote.setVisibility(View.VISIBLE);
                 holder.mRowTaskGroupBinding.textTaskStatus.setText(context.getString(R.string.label_cancelled));
                 holder.mRowTaskGroupBinding.textTaskApprovedQuote.setVisibility(View.GONE);
-            }
-            else if (Utility.TASK_STATUS.CANCELLED_SP.equalsIgnoreCase(model.taskStatus))
-            {
+            } else if (Utility.TASK_STATUS.CANCELLED_SP.equalsIgnoreCase(model.taskStatus)) {
                 holder.mRowTaskGroupBinding.lnTaskStatusWithQuote.setVisibility(View.VISIBLE);
                 holder.mRowTaskGroupBinding.textTaskStatus.setText(context.getString(R.string.label_cancelled));
                 holder.mRowTaskGroupBinding.textTaskApprovedQuote.setVisibility(View.GONE);
-            }
-            else if (Utility.TASK_STATUS.ELAPSED.equalsIgnoreCase(model.taskStatus))
-            {
+            } else if (Utility.TASK_STATUS.ELAPSED.equalsIgnoreCase(model.taskStatus)) {
                 holder.mRowTaskGroupBinding.lnTaskStatusWithQuote.setVisibility(View.VISIBLE);
                 holder.mRowTaskGroupBinding.textTaskStatus.setText(context.getString(R.string.label_lapsed));
                 holder.mRowTaskGroupBinding.textTaskApprovedQuote.setVisibility(View.GONE);
-            }
-            else if (Utility.TASK_STATUS.DISPUTED.equalsIgnoreCase(model.taskStatus))
-            {
+            } else if (Utility.TASK_STATUS.DISPUTED.equalsIgnoreCase(model.taskStatus)) {
                 holder.mRowTaskGroupBinding.lnTaskStatusWithQuote.setVisibility(View.VISIBLE);
                 holder.mRowTaskGroupBinding.textTaskStatus.setText(context.getString(R.string.label_disputed));
                 holder.mRowTaskGroupBinding.textTaskApprovedQuote.setVisibility(View.GONE);
-            }
-            else
-            {
+            } else {
                 holder.mRowTaskGroupBinding.lnTaskStatusWithQuote.setVisibility(View.GONE);
             }
             holder.mRowTaskGroupBinding.swipeLayout.setSwipeEnabled(false);
@@ -606,13 +575,11 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
         return set;
     }
 
-    private List<Uri> getURIListFromStringList(List<String> imageUrls)
-    {
-        List<Uri> uriList=new ArrayList<>();
-        if(imageUrls==null || imageUrls.size()==0)
+    private List<Uri> getURIListFromStringList(List<String> imageUrls) {
+        List<Uri> uriList = new ArrayList<>();
+        if (imageUrls == null || imageUrls.size() == 0)
             return uriList;
-        for(String url:imageUrls)
-        {
+        for (String url : imageUrls) {
             uriList.add(Uri.parse(url));
         }
         return uriList;
@@ -623,9 +590,9 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
         RowTaskBinding mRowTaskBinding;
         RowTaskGroupBinding mRowTaskGroupBinding;
         RowUpcomingTaskBinding mUpcomingTaskBinding;
-        private int liveFeedindex=0;
+        private int liveFeedindex = 0;
 
-        private List<AnimatorSet> animators=new ArrayList<>();
+        private List<AnimatorSet> animators = new ArrayList<>();
 
         public void addAnimator(AnimatorSet animator) {
             if (animator != null) {
@@ -648,11 +615,9 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
         public ViewHolder(ViewDataBinding binding) {
             super(binding.getRoot());
             mView = binding.getRoot();
-            if(binding instanceof RowUpcomingTaskBinding)
-            {
-                mUpcomingTaskBinding= (RowUpcomingTaskBinding) binding;
-            }
-            else if (binding instanceof RowTaskBinding) {
+            if (binding instanceof RowUpcomingTaskBinding) {
+                mUpcomingTaskBinding = (RowUpcomingTaskBinding) binding;
+            } else if (binding instanceof RowTaskBinding) {
                 mRowTaskBinding = (RowTaskBinding) binding;
             } else {
                 mRowTaskGroupBinding = (RowTaskGroupBinding) binding;
