@@ -98,7 +98,6 @@ public class TaskDetailModel {
     @SerializedName("quoted_sp_list")
     public ArrayList<ProviderModel> mQuotedSPList;
 
-
     public TaskDetailModel() {
 
     }

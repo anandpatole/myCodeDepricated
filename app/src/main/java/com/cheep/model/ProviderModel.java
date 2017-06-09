@@ -81,7 +81,7 @@ public class ProviderModel {
     public String discount;
 
     @SerializedName("pro_level")
-    public String proLevel;
+    public String pro_level;
 
     @SerializedName("live_lable_arr")
     public List<String> offerList;

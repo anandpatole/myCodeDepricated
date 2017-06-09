@@ -255,7 +255,7 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
         }
 
         //badge
-        holder.ivBadge.setImageResource(getBadgeResource(provider.proLevel));
+        holder.ivBadge.setImageResource(getBadgeResource(provider.pro_level));
 
         //favorite
         holder.ivFavoriteQuote.setSelected(provider.isFavourite.equals(Utility.BOOLEAN.YES));
