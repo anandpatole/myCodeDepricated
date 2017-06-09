@@ -637,7 +637,8 @@ public class HomeActivity extends BaseAppCompatActivity
     @Override
     public void onViewQuotesClick(int which, TaskDetailModel exploreDataModel) {
         Log.d(TAG, "onViewQuotesClick() called with: which = [" + which + "], exploreDataModel = [" + exploreDataModel + "]");
-        HireNewJobActivity.newInstance(mContext, exploreDataModel, false);
+
+        TaskQuotesActivity.newInstance(mContext, exploreDataModel, false);
     }
 
     BottomAlertDialog rateDialog;

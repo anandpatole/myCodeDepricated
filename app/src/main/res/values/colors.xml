@@ -70,6 +70,7 @@
     <color name="task_quote_time_color">#f16609</color>
     <color name="task_quote_relative_time_color">#f82e2e</color>
     <color name="task_quote_offer_color">#22a27c</color>
+    <color name="happyHomeColor">#FE8417</color>
     <!--test-->
     <!--<color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>

@@ -515,7 +515,6 @@ public class HireNewJobActivity extends BaseAppCompatActivity implements Provide
             ProviderProfileActivity.newInstance(mContext, providerModel);
         }*/
         if (taskDetailModel != null) {
-            ProviderProfileActivity.newInstance(mContext, providerModel, taskDetailModel);
         } else {
             ProviderProfileActivity.newInstance(mContext, providerModel);
         }
@@ -2642,7 +2641,6 @@ public class HireNewJobActivity extends BaseAppCompatActivity implements Provide
                 e.printStackTrace();
                 mCallTaskDetailWSErrorListener.onErrorResponse(new VolleyError(e.getMessage()));
             }
-
         }
     };
 

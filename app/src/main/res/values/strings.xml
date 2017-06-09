@@ -344,7 +344,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_cheepest_strip">Yay! Book the Cheepest PRO now!</string>
     <string name="label_highest_rated_strip">Book the most highly rated PRO in your neighbourhood</string>
 
-    <string name="label_experience">%1$s Years Experience</string>
+    <string name="label_experience">%1$s Years\nExperience</string>
 
     <string name="label_pro_fee">PRO\'s Fees</string>
     <string name="label_additional_charges">Additional Charges</string>
@@ -380,4 +380,9 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="desclaimer_task_completion">When you pay, your funds are held securely by us. You will only be charged, once work is completed to your satisfaction.</string>
     <string name="label_your_task_is_posted">Your task is posted!</string>
     <string name="desc_task_creation_acknowledgement">Hi %1$s, thank you for posting task. Soon you will receive quotes from verified and insured PROs around you.</string>
+    <string name="label_happy_homes">%s Homes Made Happy So Far</string>
+    <string name="label_quote_discount">% Cheeper</string>
+    <string name="label_task_booking_time">Task booked for %1$s %2$s</string>
+    <string name="label_task_starts_in">Task starts in %s hrs</string>
+    <string name="label_verified_pro">\u00A0\u00A0verified\u00A0\u00A0</string>
 </resources>

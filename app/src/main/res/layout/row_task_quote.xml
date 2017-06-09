@@ -6,8 +6,10 @@
     android:orientation="vertical">
 
     <com.cheep.custom_view.CFTextViewSemiBold
+        android:id="@+id/tvBanner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         android:drawableLeft="@drawable/icon_cheapest_quote"
         android:drawablePadding="@dimen/scale_8dp"
         android:drawableStart="@drawable/icon_cheapest_quote"
@@ -147,11 +149,11 @@
 
             <com.cheep.custom_view.CFTextViewRegular
                 android:id="@+id/tvExperience"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/scale_4dp"
                 android:gravity="center"
-                android:text="6 Years\nExperience"
+                android:text="6 Years Experience"
                 android:textColor="@color/grey_varient_8"
                 android:textSize="@dimen/text_size_11sp" />
 

@@ -519,7 +519,7 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
             mActivityTaskSummaryBinding.textBottomAction.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    HireNewJobActivity.newInstance(mContext, mTaskDetailModel, false);
+                    TaskQuotesActivity.newInstance(mContext, mTaskDetailModel, false);
                 }
             });
             updateHeightOfLinearLayout(true);
