@@ -34,17 +34,18 @@
     <string name="label_faq">FAQ</string>
     <string name="label_rate_this_app">Rate CHEEP</string>
     <!--<string name="label_terms">Terms</string>-->
-    <string name="label_terms">T\'s &amp; C\'s </string>
+    <string name="label_terms">T\'s &amp; C\'s</string>
     <string name="label_privacy_policy">Privacy Policy</string>
     <string name="label_logout">Logout</string>
 
     <string name="hint_username">Username</string>
+    <!--<string name="hint_mobile_number">Please enter your mobile number</string>-->
     <string name="hint_mobile_number">Enter your mobile number</string>
 
     <string name="hint_search_placeholder">Hey %1$s, what are you looking for today?</string>
 
     <string name="label_signup_and_relax">Sign up now &amp; relax</string><!--Sign up now to relax-->
-    <string name="label_sign_agreement">By signing up, you agree to\nour Terms and Privacy Policy</string>
+    <string name="label_sign_agreement">By signing up, you agree to our T\'s &amp; C\'s</string>
 
     <!--DUMMY TEXTS-->
     <string name="dummy_name">Mohan Kumar</string>
@@ -286,7 +287,8 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_decline">Decline</string>
     <string name="desc_additional_payment_requsted_by_sp">%1$s has requested an additional payment of</string>
     <string name="message_additional_payment_can_not_be_done_due_to_task_completion">You can not make an additional payment for already completed task.</string>
-    <string name="desc_detail_action_request">%1$s has sent you a request to chat with you, please accept his request to discuss the task further to get the best quote!</string>
+    <!--<string name="desc_detail_action_request">%1$s has sent you a request to chat with you, please accept his request to discuss the task further to get the best quote!</string>-->
+    <string name="desc_detail_action_request">Our PRO %1$s has requested to contact you to discuss your task.</string>
     <string name="validate_phone_number_different">Woops! Both number must be different.</string>
     <string name="label_yesterday">Yesterday</string>
     <string name="label_today">Today</string>
@@ -297,6 +299,14 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
         <item quantity="one">Response\nReceived</item>
         <item quantity="other">Responses\nReceived</item>
     </plurals>
+
+    <plurals name="getTotalExperianceString">
+        <!--<item quantity="zero">Awaited\nResponse</item>-->
+        <item quantity="one">%d Year \nExperience</item>
+        <item quantity="other">%d Years \nExperience</item>
+    </plurals>
+    <string name="label_experience_zero">3 Years\nExperience</string>
+
 
     <!--<string name="label_responses_received">Responses\nReceived</string>-->
     <string name="label_awaiting_response">Awaiting\nResponse</string>
@@ -318,7 +328,8 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="format_date_time">%1$s at %2$s</string>
 
     <string name="format_task_book_date">Task booked for\n%s</string>
-    <string name="format_task_start_time">Task starts in\n%s</string>
+    <string name="format_task_start_time">Task starts \n%s</string>
+    <string name="format_task_start_soon">Task starts soon</string>
 
     <!--<string name="hint_address_initials">Flat No./ Building Name</string>-->
     <string name="hint_address_initials">Please enter house number / building name</string>
@@ -344,7 +355,6 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_cheepest_strip">Yay! Book the Cheepest PRO now!</string>
     <string name="label_highest_rated_strip">Book the most highly rated PRO in your neighbourhood</string>
 
-    <string name="label_experience">%1$s Years\nExperience</string>
 
     <string name="label_pro_fee">PRO\'s Fees</string>
     <string name="label_additional_charges">Additional Charges</string>
@@ -380,9 +390,13 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="desclaimer_task_completion">When you pay, your funds are held securely by us. You will only be charged, once work is completed to your satisfaction.</string>
     <string name="label_your_task_is_posted">Your task is posted!</string>
     <string name="desc_task_creation_acknowledgement">Hi %1$s, thank you for posting task. Soon you will receive quotes from verified and insured PROs around you.</string>
+    <!--<string name="desc_request_for_detail_accepted_acknowledgment">Hey %1$s! %2$s has been informed of your acceptance of contact request. %2$s may get in touch with you via Call or Chat.</string>-->
+    <string name="desc_request_for_detail_accepted_acknowledgment">Thanks! %1$s will now get back to you either by chat or call to discuss your task.</string>
     <string name="label_happy_homes">%s Homes Made Happy So Far</string>
     <string name="label_quote_discount">% Cheeper</string>
     <string name="label_task_booking_time">Task booked for %1$s %2$s</string>
     <string name="label_task_starts_in">Task starts in %s hrs</string>
     <string name="label_verified_pro">\u00A0\u00A0verified\u00A0\u00A0</string>
+    <string name="label_congratulation">Congratulation</string>
+    <string name="label_brilliant_its_time_to_cheep">Brilliant! Its\' time to CHEEP</string>
 </resources>

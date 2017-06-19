@@ -1,16 +1,23 @@
 package com.cheep.activity;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -22,6 +29,7 @@ import com.cheep.adapter.ReviewsRecyclerViewAdapter;
 import com.cheep.custom_view.BottomAlertDialog;
 import com.cheep.custom_view.DividerItemDecoration;
 import com.cheep.databinding.ActivityProfileBinding;
+import com.cheep.databinding.DialogFragmentTaskCreationBinding;
 import com.cheep.firebase.FirebaseUtils;
 import com.cheep.firebase.model.TaskChatModel;
 import com.cheep.model.CoverImageModel;
@@ -68,6 +76,7 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
     private String providerID;
     private Context mContext;
     private LinearLayoutManager linearLayoutManager;
+
     // Only to review Provider Profile
     public static void newInstance(Context context, ProviderModel model) {
         Intent intent = new Intent(context, ProviderProfileActivity.class);
@@ -93,7 +102,7 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
     }
 
     // Provider Profile from Favorite List Click
-    public static void newInstance(Context context, ProviderModel model,boolean fromfavorite) {
+    public static void newInstance(Context context, ProviderModel model, boolean fromfavorite) {
         Intent intent = new Intent(context, ProviderProfileActivity.class);
         intent.putExtra(Utility.Extra.DATA, Utility.getJsonStringFromObject(model));
         intent.putExtra(Utility.Extra.PROFILE_FROM_FAVOURITE, fromfavorite);
@@ -124,7 +133,7 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
                 }
             });
         }
-        linearLayoutManager =  new LinearLayoutManager(mContext);
+        linearLayoutManager = new LinearLayoutManager(mContext);
         //This will prevent auto focus to starting of recycler view
         mActivityProviderProfileBinding.recyclerView.setFocusable(false);
         //This will remove the jitter while scrolling (Recycler view inside NestedScrollView)
@@ -139,7 +148,7 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
         errorLoadingHelper = new ErrorLoadingHelper(mActivityProviderProfileBinding.recyclerView);
         if (getIntent().getExtras() != null) {
             Bundle bundle = getIntent().getExtras();
-           if (getIntent().hasExtra(Utility.Extra.DATA) == false) {
+            if (getIntent().hasExtra(Utility.Extra.DATA) == false) {
 
                 if (getIntent().hasExtra(NetworkUtility.TAGS.TASK_ID) == true) {
                     taskId = bundle.getString(NetworkUtility.TAGS.TASK_ID);
@@ -170,7 +179,7 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
         mActivityProviderProfileBinding.textExpectedTime.setText(providerModel.sp_locality + ", " + providerModel.distance + " away");
         mActivityProviderProfileBinding.textExpectedTime.setSelected(true);
 
-        if(taskDetailModel != null) {
+        if (taskDetailModel != null) {
             if (!TextUtils.isEmpty(taskDetailModel.categoryName)) {
                 mActivityProviderProfileBinding.textCategory.setText(taskDetailModel.categoryName);
             } else {
@@ -225,7 +234,7 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
         mActivityProviderProfileBinding.layoutPay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                PaymentsStepActivity.newInstance(mContext, taskDetailModel, providerModel,0);
+                PaymentsStepActivity.newInstance(mContext, taskDetailModel, providerModel, 0);
             }
         });
         mActivityProviderProfileBinding.textContactRequest.setVisibility(View.GONE);
@@ -291,7 +300,7 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
                 if (providerModel != null && !TextUtils.isEmpty(providerModel.providerId) && taskDetailModel != null) {
                     if (providerModel.request_detail_status.equalsIgnoreCase(Utility.SEND_TASK_DETAIL_REQUESTED_STATUS.ACCEPTED)) {
 //                        callToOtherUser(mActivityProviderProfileBinding.getRoot(), providerModel.providerId);
-                        Utility.openCustomerCareCallDialer(mContext,providerModel.sp_phone_number);
+                        Utility.openCustomerCareCallDialer(mContext, providerModel.sp_phone_number);
                         return;
                     }
                     callTaskDetailRequestAcceptWS(Utility.ACTION_CALL, taskDetailModel.taskId, providerModel);
@@ -360,7 +369,8 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
         if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.UPDATE_COMMENT_COUNT) {
             if (!TextUtils.isEmpty(event.id) && !TextUtils.isEmpty(event.commentCount))
                 reviewsRecyclerViewAdapter.updateCommentCounter(event.id, event.commentCount);
-        } else if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.TASK_PAID) {
+        } else if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.TASK_PAID
+                || event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.TASK_PROCESSING) {
             finish();
 //            initiateUI();
         }
@@ -383,6 +393,7 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
     private int visibleThreshold = 5;
     private int lastVisibleItem, totalItemCount;
     private boolean isLoading;
+
     @Override
     protected void setListeners() {
         mActivityProviderProfileBinding.imgReport.setOnClickListener(new View.OnClickListener() {
@@ -408,24 +419,24 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
             }
         });
 
-       mActivityProviderProfileBinding.nestedscrollview.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
-           @Override
-           public void onScrollChange(NestedScrollView nestedScrollView, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-               Log.e("scrollY","->"+scrollY);
-               Log.e("1st view nested height","->"+nestedScrollView.getChildAt(0).getMeasuredHeight());
-               Log.e("total nested height","->"+nestedScrollView.getMeasuredHeight());
-               Log.e("total recycleview","->"+mActivityProviderProfileBinding.recyclerView.getMeasuredHeight());
-               int diff = (nestedScrollView.getChildAt(0).getMeasuredHeight() - nestedScrollView.getMeasuredHeight()) - scrollY;
-               Log.e("diff","->"+diff);
-               if (diff <= 20) {
-                   Log.e("on load more","load more");
-                   int count = reviewsRecyclerViewAdapter.getmList().size();
-                   String reviewId = reviewsRecyclerViewAdapter.getmList().get(count -1).reviewId;
-                   callLoadMoreReviewList(providerModel.providerId,reviewId);
-               }
+        mActivityProviderProfileBinding.nestedscrollview.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(NestedScrollView nestedScrollView, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                Log.e("scrollY", "->" + scrollY);
+                Log.e("1st view nested height", "->" + nestedScrollView.getChildAt(0).getMeasuredHeight());
+                Log.e("total nested height", "->" + nestedScrollView.getMeasuredHeight());
+                Log.e("total recycleview", "->" + mActivityProviderProfileBinding.recyclerView.getMeasuredHeight());
+                int diff = (nestedScrollView.getChildAt(0).getMeasuredHeight() - nestedScrollView.getMeasuredHeight()) - scrollY;
+                Log.e("diff", "->" + diff);
+                if (diff <= 20) {
+                    Log.e("on load more", "load more");
+                    int count = reviewsRecyclerViewAdapter.getmList().size();
+                    String reviewId = reviewsRecyclerViewAdapter.getmList().get(count - 1).reviewId;
+                    callLoadMoreReviewList(providerModel.providerId, reviewId);
+                }
 
-           }
-       });
+            }
+        });
     }
 
     BottomAlertDialog reportDialog;
@@ -726,7 +737,7 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
         if (taskDetailModel != null) {
             mParams.put(NetworkUtility.TAGS.TASK_ID, taskDetailModel.taskId);
         } else {
-            if(taskId != null) {
+            if (taskId != null) {
                 mParams.put(NetworkUtility.TAGS.TASK_ID, taskId);
             }
         }
@@ -872,13 +883,11 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
 
 
     /**
-     *
      * @param providerId
      * @param reviewId
-     *
      * @chirag this method is used when user scroll to last index for pagination.
      */
-    private void callLoadMoreReviewList(String providerId,String reviewId) {
+    private void callLoadMoreReviewList(String providerId, String reviewId) {
         if (!Utility.isConnected(mContext)) {
 //            Utility.showSnackBar(getString(R.string.no_internet), mActivityProviderProfileBinding.getRoot());
             errorLoadingHelper.failed(getString(R.string.no_internet), 0, onRetryBtnClickListener);
@@ -1034,9 +1043,30 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
         });
         badForRequestTaskDetail.showDialog();
     }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////Accept-Reject Detail Service[Start] ///////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private void showDialogOnRequestForDetailAccepted(String acknowledgeMessage) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        // Add the buttons
+        builder.setPositiveButton(R.string.label_Ok_small, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User clicked OK button
+                dialog.dismiss();
+
+                // spRecyclerViewAdapter.updateModelForRequestDetailStatus(spUserID, requestDatailStatus);
+                mActivityProviderProfileBinding.textContactRequest.setVisibility(View.GONE);
+            }
+        });
+
+        // Create the AlertDialog
+        AlertDialog dialog = builder.create();
+        dialog.setTitle(mContext.getString(R.string.app_name).toUpperCase());
+        dialog.setMessage(acknowledgeMessage);
+        dialog.show();
+    }
 
     /**
      * Calling delete address Web service
@@ -1087,10 +1117,12 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
                         JSONObject jObjData = jsonObject.getJSONObject(NetworkUtility.TAGS.DATA);
 //                        String task_id = jsonObject.getString(NetworkUtility.TAGS.TASK_ID);
                         String spUserID = jObjData.getString(NetworkUtility.TAGS.SP_USER_ID);
+                        String spUserName = jObjData.optString(NetworkUtility.TAGS.SP_USER_NAME);
                         String requestDatailStatus = jObjData.getString(NetworkUtility.TAGS.REQUEST_DETAIL_STATUS);
                         if (requestDatailStatus.equalsIgnoreCase(Utility.SEND_TASK_DETAIL_REQUESTED_STATUS.ACCEPTED)) {
-                            // spRecyclerViewAdapter.updateModelForRequestDetailStatus(spUserID, requestDatailStatus);
-                            mActivityProviderProfileBinding.textContactRequest.setVisibility(View.GONE);
+                            String descriptionForAcknowledgement = mContext.getString(R.string.desc_request_for_detail_accepted_acknowledgment, spUserName);
+
+                            showDialogOnRequestForDetailAccepted(descriptionForAcknowledgement);
                         } else {
                             // Need to pass this details to Pending listing as well.
                             /*MessageEvent messageEvent = new MessageEvent();
@@ -1207,7 +1239,7 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
                                 ChatActivity.newInstance(ProviderProfileActivity.this, taskChatModel);
                             } else if (action.equalsIgnoreCase(Utility.ACTION_CALL)) {
 //                                callToOtherUser(mActivityProviderProfileBinding.getRoot(), providerModel.providerId);
-                                Utility.openCustomerCareCallDialer(mContext,providerModel.sp_phone_number);
+                                Utility.openCustomerCareCallDialer(mContext, providerModel.sp_phone_number);
                             }
                             break;
                         case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:

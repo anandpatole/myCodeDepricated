@@ -30,7 +30,9 @@ import com.cheep.model.ProviderModel;
 import com.cheep.utils.CustomTypefaceSpan;
 import com.cheep.utils.RoundedBackgroundSpan;
 import com.cheep.utils.Utility;
+import com.daimajia.swipe.SwipeLayout;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -115,7 +117,15 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
         Utility.showRating(provider.rating, holder.ratingBar);
 
         //experience
-        holder.tvExperience.setText(checkNonNullAndSet(mContext.getString(R.string.label_experience, provider.experience)));
+        if (TextUtils.isEmpty(provider.experience)
+                || Utility.ZERO_STRING.equals(provider.experience)) {
+            holder.tvExperience.setText(checkNonNullAndSet(mContext.getString(R.string.label_experience_zero)));
+        } else {
+            holder.tvExperience.setText(
+                    mContext.getResources().getQuantityString(R.plurals.getTotalExperianceString
+                            , Integer.parseInt(provider.experience)
+                            , Integer.parseInt(provider.experience)));
+        }
 
         // price - Checking if amount present then show call and paid lables else hide
         if (provider.getQuotePriceInInteger() > 0) {
@@ -140,11 +150,13 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
             holder.itemView.setBackgroundResource(R.color.cheepest_bg_color);
             holder.tvBanner.setText(mContext.getString(R.string.label_cheepest_strip));
             holder.tvBanner.setCompoundDrawablesWithIntrinsicBounds(R.drawable.icon_cheapest_quote, 0, 0, 0);
+            holder.tvBanner.setTextColor(ContextCompat.getColor(holder.tvBanner.getContext(), R.color.cheepest_highlighted_text_color));
         } else if (provider.high_rating != null && provider.high_rating.equals("1")) {
             holder.tvBanner.setVisibility(View.VISIBLE);
             holder.itemView.setBackgroundResource(R.color.yellow_varient_1);
             holder.tvBanner.setText(mContext.getString(R.string.label_highest_rated_strip));
             holder.tvBanner.setCompoundDrawablesWithIntrinsicBounds(R.drawable.icon_highest_rating, 0, 0, 0);
+            holder.tvBanner.setTextColor(ContextCompat.getColor(holder.tvBanner.getContext(), R.color.highest_rated_highlighted_text_color));
         } else {
             holder.itemView.setBackgroundResource(R.color.white);
             holder.tvBanner.setVisibility(View.GONE);
@@ -152,10 +164,11 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
 
         //discount
         try {
-            int discount = Integer.valueOf(provider.discount);
+            DecimalFormat df2 = new DecimalFormat(".##");
+            double discount = Double.valueOf(provider.discount);
             if (discount > 0) {
                 holder.tvDiscount.setVisibility(View.VISIBLE);
-                holder.tvDiscount.setText(TextUtils.concat("-", provider.discount, mContext.getString(R.string.label_quote_discount)));
+                holder.tvDiscount.setText(TextUtils.concat(/*"-",*/ df2.format(Double.valueOf(provider.discount)), mContext.getString(R.string.label_quote_discount)));
                 holder.tvDiscount.setSelected(true);
             } else {
                 holder.tvDiscount.setVisibility(View.GONE);
@@ -185,7 +198,7 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
         }
 
         //offer
-        int offerCount = provider.offerList != null ? provider.offerList.size() : 0;
+        final int offerCount = provider.offerList != null ? provider.offerList.size() : 0;
         if (offerCount > 0) {
             holder.ivLiveAnimated.setVisibility(View.VISIBLE);
             holder.tvOffer.setVisibility(View.VISIBLE);
@@ -198,24 +211,39 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
                 @Override
                 public void onAnimationEnd(Animator animation) {
                     super.onAnimationEnd(animation);
+
+                    int offerIndex = mOfferIndexMap.containsKey(provider.providerId) ? mOfferIndexMap.get(provider.providerId) : 0;
+                    SpannableString labelOffer = new SpannableString(provider.offerList.get(offerIndex));
+                    labelOffer.setSpan(new LeadingMarginSpan.Standard(mLiveIconOffset, 0), 0, labelOffer.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+                    holder.tvOffer.setText(labelOffer);
+                    offerIndex = (offerIndex == (offerCount - 1) ? 0 : offerIndex + 1);
+                    mOfferIndexMap.put(provider.providerId, offerIndex);
                 }
             });
             offerAnimation.start();
             holder.addAnimator(offerAnimation);
 
+
             int offerIndex = mOfferIndexMap.containsKey(provider.providerId) ? mOfferIndexMap.get(provider.providerId) : 0;
             SpannableString labelOffer = new SpannableString(provider.offerList.get(offerIndex));
             labelOffer.setSpan(new LeadingMarginSpan.Standard(mLiveIconOffset, 0), 0, labelOffer.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
             holder.tvOffer.setText(labelOffer);
-            mOfferIndexMap.put(provider.providerId, offerIndex == (offerCount - 1) ? 0 : offerIndex++);
-
+            offerIndex = (offerIndex == (offerCount - 1) ? 0 : offerIndex + 1);
+            mOfferIndexMap.put(provider.providerId, offerIndex);
         } else {
             holder.ivLiveAnimated.setVisibility(View.GONE);
             holder.tvOffer.setVisibility(View.GONE);
         }
 
-        //chat icon
-        Glide.with(mContext).load(R.drawable.ic_chat_animated).asGif().dontAnimate().diskCacheStrategy(DiskCacheStrategy.SOURCE).into(holder.ivChat);
+
+        if (Utility.SEND_TASK_DETAIL_REQUESTED_STATUS.ALREADY_REQUESTED.equalsIgnoreCase(provider.request_detail_status)) {
+            holder.ivChat.setVisibility(View.VISIBLE);
+            //chat icon
+            Glide.with(mContext).load(R.drawable.ic_chat_animated).asGif().dontAnimate().diskCacheStrategy(DiskCacheStrategy.SOURCE).into(holder.ivChat);
+        } else {
+            // Hide Chat Icon
+            holder.ivChat.setVisibility(View.GONE);
+        }
 
         //time-distance
         boolean hasDistance = provider.distance != null && (provider.distance = provider.distance.trim()).length() > 0;
@@ -223,12 +251,25 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
 
         if (hasDistance && hasTime) {
             holder.tvDistance.setVisibility(View.VISIBLE);
+
+            // Manage default state which is TIME
+            int state = mTimeDistanceStateMap.containsKey(provider.providerId) ? mTimeDistanceStateMap.get(provider.providerId) : TIME;
+            if (state == TIME) {
+                mTimeDistanceStateMap.put(provider.providerId, DISTANCE);
+                holder.tvDistance.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_time_distance, 0, 0, 0);
+                holder.tvDistance.setText(provider.time);
+            } else {
+                mTimeDistanceStateMap.put(provider.providerId, TIME);
+                holder.tvDistance.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_relative_distance, 0, 0, 0);
+                holder.tvDistance.setText(provider.distance);
+            }
+
             AnimatorSet distanceAnimation = loadBannerScrollAnimation(holder.tvDistance, 10000, 60, new AnimatorListenerAdapter() {
                 @Override
                 public void onAnimationEnd(Animator animation) {
                     super.onAnimationEnd(animation);
-                    int state = mTimeDistanceStateMap.containsKey(provider.providerId) ? mTimeDistanceStateMap.get(provider.providerId) : TIME;
 
+                    int state = mTimeDistanceStateMap.containsKey(provider.providerId) ? mTimeDistanceStateMap.get(provider.providerId) : TIME;
                     if (state == TIME) {
                         mTimeDistanceStateMap.put(provider.providerId, DISTANCE);
                         holder.tvDistance.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_time_distance, 0, 0, 0);
@@ -236,7 +277,7 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
                     } else {
                         mTimeDistanceStateMap.put(provider.providerId, TIME);
                         holder.tvDistance.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_relative_distance, 0, 0, 0);
-                        holder.tvDistance.setText(provider.discount);
+                        holder.tvDistance.setText(provider.distance);
                     }
                 }
             });
@@ -245,7 +286,7 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
         } else if (hasDistance) {
             holder.tvDistance.setVisibility(View.VISIBLE);
             holder.tvDistance.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_relative_distance, 0, 0, 0);
-            holder.tvDistance.setText(provider.discount);
+            holder.tvDistance.setText(provider.distance);
         } else if (hasTime) {
             holder.tvDistance.setVisibility(View.VISIBLE);
             holder.tvDistance.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_time_distance, 0, 0, 0);
@@ -259,6 +300,14 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
 
         //favorite
         holder.ivFavoriteQuote.setSelected(provider.isFavourite.equals(Utility.BOOLEAN.YES));
+
+        // Chat Image click event
+        holder.ivChat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mListener.onChatClicked(provider);
+            }
+        });
     }
 
     private String checkNonNullAndSet(String text) {
@@ -309,6 +358,16 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
         return mQuotesList != null ? mQuotesList.size() : 0;
     }
 
+    public void updateModelForRequestDetailStatus(String spUserID, String requestDatailStatus) {
+        for (int i = 0; i < mQuotesList.size(); i++) {
+            if (mQuotesList.get(i).providerId.equalsIgnoreCase(spUserID)) {
+                mQuotesList.get(i).request_detail_status = requestDatailStatus;
+                notifyItemChanged(i);
+                break;
+            }
+        }
+    }
+
     static class QuoteViewHolder extends RecyclerView.ViewHolder {
         private TextView tvBanner;
         private TextView tvName;
@@ -329,6 +388,7 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
         private RatingBar ratingBar;
 
         private List<AnimatorSet> animators;
+
 
         public void addAnimator(AnimatorSet animator) {
             if (animator != null) {
@@ -379,5 +439,7 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
         void onBookClick(ProviderModel provider);
 
         void onItemClick(ProviderModel provider);
+
+        void onChatClicked(ProviderModel provider);
     }
 }

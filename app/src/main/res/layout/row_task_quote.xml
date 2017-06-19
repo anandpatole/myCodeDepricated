@@ -9,14 +9,14 @@
         android:id="@+id/tvBanner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"
         android:drawableLeft="@drawable/icon_cheapest_quote"
         android:drawablePadding="@dimen/scale_8dp"
         android:drawableStart="@drawable/icon_cheapest_quote"
         android:gravity="center_vertical"
         android:paddingLeft="@dimen/scale_35dp"
         android:text="@string/label_cheepest_strip"
-        android:textSize="@dimen/text_size_11sp" />
+        android:textSize="@dimen/text_size_11sp"
+        android:visibility="gone" />
 
     <!--<RelativeLayout-->
     <!--android:layout_width="match_parent"-->
@@ -144,8 +144,8 @@
                 android:isIndicator="true"
                 android:max="5"
                 android:progressDrawable="@drawable/rating_bar_selector_s1"
-                android:rating="4"
-                android:stepSize="1" />
+                android:stepSize="1"
+                tools:rating="4" />
 
             <com.cheep.custom_view.CFTextViewRegular
                 android:id="@+id/tvExperience"
@@ -153,9 +153,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/scale_4dp"
                 android:gravity="center"
-                android:text="6 Years Experience"
                 android:textColor="@color/grey_varient_8"
-                android:textSize="@dimen/text_size_11sp" />
+                android:textSize="@dimen/text_size_11sp"
+                tools:text="6 Years Experience" />
 
             <ImageView
                 android:id="@+id/ivBadge"
@@ -180,9 +180,9 @@
                 android:layout_marginTop="@dimen/scale_8dp"
                 android:gravity="left|start"
                 android:minWidth="@dimen/scale_100dp"
-                android:text="Dahisar"
                 android:textColor="@color/grey_dark_color_2"
-                android:textSize="@dimen/text_size_11sp" />
+                android:textSize="@dimen/text_size_11sp"
+                tools:text="Dahisar" />
 
             <FrameLayout
                 android:id="@+id/flDistance"
@@ -198,13 +198,13 @@
                     android:id="@+id/tvDistance"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:drawablePadding="@dimen/scale_4dp"
                     android:drawableLeft="@drawable/ic_time_distance"
+                    android:drawablePadding="@dimen/scale_4dp"
                     android:drawableStart="@drawable/ic_time_distance"
                     android:gravity="center_vertical"
-                    android:text="20 mins away"
                     android:textColor="@color/grey_dark_color_2"
-                    android:textSize="@dimen/text_size_11sp" />
+                    android:textSize="@dimen/text_size_11sp"
+                    tools:text="20 mins away" />
             </FrameLayout>
 
             <com.cheep.custom_view.CFTextViewSemiBold
@@ -213,9 +213,9 @@
                 android:layout_height="wrap_content"
                 android:layout_alignBaseline="@id/tvLocation"
                 android:layout_toLeftOf="@id/flDistance"
-                android:text="Anurag Kulkarni"
                 android:textColor="@color/splash_gradient_end"
-                android:textSize="@dimen/text_size_12sp" />
+                android:textSize="@dimen/text_size_12sp"
+                tools:text="Anurag Kulkarni" />
 
             <com.cheep.custom_view.CFTextViewRegular
                 android:id="@+id/tvDescription"
@@ -225,9 +225,9 @@
                 android:layout_toLeftOf="@id/flDistance"
                 android:maxLines="3"
                 android:minLines="3"
-                android:text="Over 6 years of experience in trolling, Anurag is very qualified...Read more"
                 android:textColor="@color/black"
-                android:textSize="@dimen/text_size_11sp" />
+                android:textSize="@dimen/text_size_11sp"
+                tools:text="Over 6 years of experience in trolling, Anurag is very qualified...Read more" />
 
             <FrameLayout
                 android:id="@+id/flHappyHomes"
@@ -249,9 +249,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:lineSpacingMultiplier="1.1"
-                    android:text="60 Homes Made Happy So Far"
                     android:textColor="@color/grey_dark_color_2"
-                    android:textSize="@dimen/text_size_11sp" />
+                    android:textSize="@dimen/text_size_11sp"
+                    tools:text="60 Homes Made Happy So Far" />
             </FrameLayout>
 
             <FrameLayout
@@ -269,9 +269,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:lineSpacingMultiplier="1.1"
-                    android:text="17 people trolled by Anurag Kulkarni today"
                     android:textColor="@color/task_quote_offer_color"
-                    android:textSize="@dimen/text_size_11sp" />
+                    android:textSize="@dimen/text_size_11sp"
+                    tools:text="17 people trolled by Anurag Kulkarni today" />
 
                 <ImageView
                     android:id="@+id/ivLiveAnimated"
@@ -279,47 +279,54 @@
                     android:layout_height="@dimen/icon_live_height" />
             </FrameLayout>
 
-            <com.cheep.custom_view.CFTextViewSemiBold
-                android:id="@+id/tvPrice"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignLeft="@id/flHappyHomes"
                 android:layout_below="@id/flHappyHomes"
-                android:layout_centerVertical="true"
-                android:layout_marginTop="@dimen/scale_16dp"
-                android:background="@drawable/rounded_rect_blue"
-                android:gravity="center"
-                android:minWidth="@dimen/scale_80dp"
-                android:padding="@dimen/scale_4dp"
-                android:text="Book 1,770"
-                android:textColor="@color/white"
-                android:textSize="@dimen/scale_12dp" />
+                android:gravity="right"
+                android:orientation="horizontal"
+                android:padding="@dimen/scale_8dp">
 
-            <com.cheep.custom_view.CFTextViewSemiBold
-                android:id="@+id/tvDiscount"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBaseline="@id/tvPrice"
-                android:layout_marginRight="@dimen/scale_8dp"
-                android:layout_toLeftOf="@id/tvPrice"
-                android:background="@drawable/offer_tag_background"
-                android:ellipsize="marquee"
-                android:maxLines="1"
-                android:paddingLeft="@dimen/scale_4dp"
-                android:paddingRight="@dimen/scale_16dp"
-                android:singleLine="true"
-                android:text="-40% Cheeper"
-                android:textColor="@color/white"
-                android:textSize="@dimen/text_size_12sp" />
+                <ImageView
+                    android:id="@+id/ivChat"
+                    android:layout_width="@dimen/icon_chat_width"
+                    android:layout_height="@dimen/icon_chat_height"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginRight="@dimen/scale_8dp"
+                    android:src="@drawable/ic_chat_animated" />
 
-            <ImageView
-                android:id="@+id/ivChat"
-                android:layout_width="@dimen/icon_chat_width"
-                android:layout_height="@dimen/icon_chat_height"
-                android:layout_alignBottom="@id/tvPrice"
-                android:layout_marginRight="@dimen/scale_8dp"
-                android:layout_marginTop="@dimen/scale_12dp"
-                android:layout_toLeftOf="@id/tvDiscount" />
+                <com.cheep.custom_view.CFTextViewSemiBold
+                    android:id="@+id/tvDiscount"
+                    android:layout_width="@dimen/scale_80dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginRight="@dimen/scale_8dp"
+                    android:background="@drawable/ic_offer_tag_small"
+                    android:ellipsize="marquee"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:maxLines="1"
+                    android:paddingLeft="@dimen/scale_4dp"
+                    android:paddingRight="@dimen/scale_16dp"
+                    android:singleLine="true"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_size_12sp"
+                    android:visibility="visible"
+                    tools:text="-40% Cheeper" />
+
+                <com.cheep.custom_view.CFTextViewSemiBold
+                    android:id="@+id/tvPrice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="center_vertical"
+                    android:background="@drawable/rounded_rect_blue"
+                    android:gravity="center"
+                    android:minWidth="@dimen/scale_80dp"
+                    android:padding="@dimen/scale_4dp"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/scale_12dp"
+                    tools:text="Book 1,770" />
+            </LinearLayout>
         </RelativeLayout>
     </LinearLayout>
 </LinearLayout>

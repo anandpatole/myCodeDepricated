@@ -18,6 +18,7 @@ import android.os.Build;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.AppCompatEditText;
@@ -25,6 +26,7 @@ import android.support.v8.renderscript.Allocation;
 import android.support.v8.renderscript.RenderScript;
 import android.support.v8.renderscript.ScriptIntrinsicBlur;
 import android.text.TextUtils;
+import android.text.format.DateUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
@@ -39,7 +41,6 @@ import com.bumptech.glide.request.RequestListener;
 import com.cheep.BuildConfig;
 import com.cheep.R;
 import com.cheep.activity.LoginActivity;
-import com.cheep.firebase.DateUtils;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -71,7 +72,9 @@ import static com.cheep.utils.SuperCalendar.SuperFormatter;
  */
 
 public class Utility {
+    private static final String TAG = "Utility";
     public static final String EMPTY_STRING = "";
+    public static final String ZERO_STRING = "0";
     public static final String ONE_CHARACTER_SPACE = " ";
     public static final String DEFAULT_LOCATION = "0.0";
     public static final String ACTION_NEW_JOB_CREATE = "action_new_job_create";
@@ -86,9 +89,9 @@ public class Utility {
     public static final String DATE_FORMAT_DD_MM_YY = SuperFormatter.DATE + "/" + SuperFormatter.MONTH_NUMBER + "/" + SuperFormatter.YEAR_4_DIGIT;
     public static final String DATE_FORMAT_DD_MMM = SuperFormatter.DATE + " " + SuperFormatter.MONTH_JAN;
     public static final String DATE_FORMAT_HH_MM_AM = SuperFormatter.HOUR_12_HOUR_2_DIGIT + ":" + SuperFormatter.MINUTE + " " + SuperFormatter.AM_PM;
-    public static final String DATE_FORMAT_DD_MMM_HH_MM_AM = SuperFormatter.DATE + " " + SuperFormatter.MONTH_JAN+" "+SuperFormatter.HOUR_12_HOUR_2_DIGIT + ":" + SuperFormatter.MINUTE + "" + SuperFormatter.AM_PM;
+    public static final String DATE_FORMAT_DD_MMM_HH_MM_AM = SuperFormatter.DATE + " " + SuperFormatter.MONTH_JAN + " " + SuperFormatter.HOUR_12_HOUR_2_DIGIT + ":" + SuperFormatter.MINUTE + "" + SuperFormatter.AM_PM;
     public static final String DATE_TIME_FORMAT_SERVICE_YEAR = SuperFormatter.YEAR_4_DIGIT + "-" + SuperFormatter.MONTH_NUMBER + "-" + SuperFormatter.DATE + " " + SuperFormatter.HOUR_24_HOUR + ":" + SuperFormatter.MINUTE + ":" + SuperFormatter.SECONDS;
-    public static final String DATE_FORMAT_FULL_DATE=SuperFormatter.FULL_DATE;
+    public static final String DATE_FORMAT_FULL_DATE = SuperFormatter.FULL_DATE;
 
     public static final int PASSWORD_MIN_LENGTH = 6;
     public static final int PHONE_MIN_LENGTH = 10;
@@ -343,12 +346,11 @@ public class Utility {
     2 for Gold
     3 for Silver
     4 for bronze*/
-    public static class PRO_LEVEL
-    {
-        public static final String PLATINUM="1";
-        public static final String GOLD="2";
-        public static final String SILVER="3";
-        public static final String BRONZE="4";
+    public static class PRO_LEVEL {
+        public static final String PLATINUM = "1";
+        public static final String GOLD = "2";
+        public static final String SILVER = "3";
+        public static final String BRONZE = "4";
     }
 
     /**
@@ -498,12 +500,15 @@ public class Utility {
         return shoppingdate;
     }
 
-    public static String getDateDifference(String date)
-    {
-        if(TextUtils.isEmpty(date))
+    public static String getDateDifference(String date) {
+        if (TextUtils.isEmpty(date))
             return "";
 
-        String sCurrentDt = DateUtils.getFormatedDate(Calendar.getInstance().getTime(), Utility.DATE_FORMAT_FULL_DATE);
+        Date mFutureDate = com.cheep.firebase.DateUtils.getFormatedDate(date, Utility.DATE_FORMAT_FULL_DATE);
+        String timespan = DateUtils.getRelativeTimeSpanString(mFutureDate.getTime()).toString();
+        Log.d(TAG, "getDateDifference() returned: " + timespan);
+        return timespan;
+        /*String sCurrentDt = DateUtils.getFormatedDate(Calendar.getInstance().getTime(), Utility.DATE_FORMAT_FULL_DATE);
         Date mCurrentDate=DateUtils.getFormatedDate(sCurrentDt,Utility.DATE_FORMAT_FULL_DATE);
         Date mFutureDate=DateUtils.getFormatedDate(date,Utility.DATE_FORMAT_FULL_DATE);
         if(mCurrentDate==null || mFutureDate==null)
@@ -522,7 +527,44 @@ public class Utility {
         else
         {
             return String.format("%s:%s hrs",numberFormat.format(diffHours),numberFormat.format(diffMinutes));
+        }*/
+    }
+
+    public static String getDateDifference(Context mContext, String date) {
+        if (TextUtils.isEmpty(date))
+            return "";
+
+        String sCurrentDt = com.cheep.firebase.DateUtils.getFormatedDate(Calendar.getInstance().getTime(), Utility.DATE_FORMAT_FULL_DATE);
+        Date mFutureDate = com.cheep.firebase.DateUtils.getFormatedDate(date, Utility.DATE_FORMAT_FULL_DATE);
+        Date mCurrentDate = com.cheep.firebase.DateUtils.getFormatedDate(sCurrentDt, Utility.DATE_FORMAT_FULL_DATE);
+        long diff = mFutureDate.getTime() - mCurrentDate.getTime();
+        String timespan = DateUtils.getRelativeTimeSpanString(mFutureDate.getTime(), System.currentTimeMillis(), DateUtils.MINUTE_IN_MILLIS).toString();
+        Log.d(TAG, "getDateDifference() returned: " + timespan);
+        if (diff > 0) {
+            return mContext.getString(R.string.format_task_start_time, timespan);
+        } else {
+            return mContext.getString(R.string.format_task_start_soon);
         }
+        /*String sCurrentDt = DateUtils.getFormatedDate(Calendar.getInstance().getTime(), Utility.DATE_FORMAT_FULL_DATE);
+        Date mCurrentDate=DateUtils.getFormatedDate(sCurrentDt,Utility.DATE_FORMAT_FULL_DATE);
+        Date mFutureDate=DateUtils.getFormatedDate(date,Utility.DATE_FORMAT_FULL_DATE);
+        if(mCurrentDate==null || mFutureDate==null)
+            return "";
+
+        long diff = mFutureDate.getTime() - mCurrentDate.getTime();
+        long diffSeconds = diff / 1000 % 60;
+        long diffMinutes = diff / (60 * 1000) % 60;
+        long diffHours = diff / (60 * 60 * 1000);
+        int diffInDays = (int) ((mFutureDate.getTime() - mCurrentDate.getTime()) / (1000 * 60 * 60 * 24));
+        NumberFormat numberFormat = new DecimalFormat("00");
+        if (diffInDays >0)
+        {
+            return String.format("%d days",diffInDays);
+        }
+        else
+        {
+            return String.format("%s:%s hrs",numberFormat.format(diffHours),numberFormat.format(diffMinutes));
+        }*/
     }
 
     //Loading Circular image from url to imageview
@@ -972,6 +1014,8 @@ public class Utility {
         public static final String ADDITIONAL_PAYMENT_REQUESTED = "additional_payment_requested";
         public static final String REQUEST_FOR_DETAIL = "REQUEST_FOR_DETAIL";
         public static final String CHAT_MESSAGE = "FIREBASE";
+        public static final String TASK_CREATE = "TASK_CREATE";
+        public static final String PAYMENT_NOTIFICATION = "PAYMENT_NOTIFICATION";
     }
 
     public static final String SESSION_EXPIRE = "session_expire";

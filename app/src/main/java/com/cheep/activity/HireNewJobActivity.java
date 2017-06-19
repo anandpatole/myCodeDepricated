@@ -206,7 +206,8 @@ public class HireNewJobActivity extends BaseAppCompatActivity implements Provide
         if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.UPDATE_FAVOURITE) {
             if (!TextUtils.isEmpty(event.isFav))
                 spRecyclerViewAdapter.updateFavStatus(event.id, event.isFav);
-        } else if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.TASK_PAID) {
+        } else if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.TASK_PAID
+                || event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.TASK_PROCESSING) {
             finish();
             // Refresh the SP listing
         } else if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.QUOTE_REQUESTED_BY_PRO

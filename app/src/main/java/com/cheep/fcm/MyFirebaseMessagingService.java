@@ -65,7 +65,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     public void onMessageReceived(RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
 
-
+        Log.d(TAG, "onMessageReceived() called with: remoteMessage = [" + remoteMessage + "]");
         //Not taking any action if user is not logged in simply return
         if (PreferenceUtility.getInstance(getApplicationContext()).getUserDetails() == null) {
             return;
@@ -80,23 +80,28 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         Map<String, String> map = remoteMessage.getData();
         if (map != null) {
             String notificationType = map.get(NetworkUtility.TAGS.TYPE);
-            if (notificationType.equalsIgnoreCase(Utility.NOTIFICATION_TYPE.CHAT_MESSAGE)) {
+            if (Utility.NOTIFICATION_TYPE.CHAT_MESSAGE.equalsIgnoreCase(notificationType)) {
                 JsonElement jsonElement = new Gson().toJsonTree(map);
                 ChatNotification chatNotification = new Gson().fromJson(jsonElement, ChatNotification.class);
                 if (chatNotification != null) {
                     generateNotification(chatNotification);
                 }
                 return;
-            }
+            } /*else if (Utility.NOTIFICATION_TYPE.TASK_CREATE.equalsIgnoreCase(notificationType)) {
+                // Do nothing go ahead
+            } else {
+                // return from here as we couldnt get any NotificationType
+                return;
+            }*/
         }
 
         String from = remoteMessage.getFrom();
         String message = map.get("message");
         String title = map.get("title");
 
-        /*Log.d(TAG, "From: " + from);
+        Log.d(TAG, "From: " + from);
         Log.d(TAG, "Message: " + message);
-        Log.d(TAG, "Title: " + title);*/
+        Log.d(TAG, "Title: " + title);
 
         Bundle bnd = new Bundle();
         Iterator it = map.entrySet().iterator();
@@ -116,6 +121,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         sendNotification(notificationId, title, message, bnd);
         PreferenceUtility.getInstance(getApplicationContext()).incrementUnreadNotificationCounter();
 

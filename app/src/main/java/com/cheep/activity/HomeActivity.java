@@ -172,9 +172,12 @@ public class HomeActivity extends BaseAppCompatActivity
             } else if (bundle.getString(NetworkUtility.TAGS.TYPE).equalsIgnoreCase(Utility.NOTIFICATION_TYPE.QUOTE_REQUEST)) {
                 String taskID = bundle.getString(NetworkUtility.TAGS.TASK_ID);
                 String spUserId = bundle.getString(NetworkUtility.TAGS.SP_USER_ID);
-                //Redirecting the user to Quote Screen
+                // Redirecting the user to Quote Screen
                 TaskSummaryActivity.getInstance(mContext, bundle.getString(TASK_ID));
 //                HireNewJobActivity.newInstance(mContext, taskID, spUserId);
+            } else if (bundle.getString(NetworkUtility.TAGS.TYPE).equalsIgnoreCase(Utility.NOTIFICATION_TYPE.TASK_CREATE)) {
+                // Do Nothing as we just need to redirect the user to Home screen
+
             } else {
                /* TaskDetailModel taskDetailModel = new TaskDetailModel();
                 taskDetailModel.taskId = bundle.getString(TASK_ID);

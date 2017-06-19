@@ -230,9 +230,11 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
                     , superStartDateTimeCalendar.format(Utility.DATE_FORMAT_DD_MMM_HH_MM_AM));
             holder.mUpcomingTaskBinding.tvTaskBookedDateTime.setText(mBookingDate);
 
-            String mStartTime = holder.mView.getContext().getString(R.string.format_task_start_time
-                    , Utility.getDateDifference(superStartDateTimeCalendar.format(Utility.DATE_FORMAT_FULL_DATE)));
-            holder.mUpcomingTaskBinding.tvTaskStartedTime.setText(mStartTime);
+            /*String mStartTime = holder.mView.getContext().getString(R.string.format_task_start_time
+                    , Utility.getDateDifference(superStartDateTimeCalendar.format(Utility.DATE_FORMAT_FULL_DATE)));*/
+            /*String mStartTime = holder.mView.getContext().getString(R.string.format_task_start_time
+                    , Utility.getDateDifference(holder.mView.getContext(), superStartDateTimeCalendar.format(Utility.DATE_FORMAT_FULL_DATE)));*/
+            holder.mUpcomingTaskBinding.tvTaskStartedTime.setText(Utility.getDateDifference(holder.mView.getContext(), superStartDateTimeCalendar.format(Utility.DATE_FORMAT_FULL_DATE)));
 
             holder.mUpcomingTaskBinding.textDelete.setOnClickListener(new View.OnClickListener() {
                 @Override

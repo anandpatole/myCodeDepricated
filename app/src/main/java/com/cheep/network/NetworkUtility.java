@@ -109,6 +109,7 @@ public class NetworkUtility {
         public static final String LANGUAGE = "language";
 
         public static final String USERNAME = "user_name";
+        public static final String DESCRIPTION = "description";
         public static final String PHONE_NUMBER = "phone_number";
         public static final String FB_APP_ID = "fb_app_id"; // if Login with "fb"
         public static final String TWITTER_APP_ID = "tw_app_id"; // if Login with "tw"
@@ -147,6 +148,7 @@ public class NetworkUtility {
         public static final String SP_EXTRA_IMAGES = "sp_extra_imgs";
         public static final String SP_DATA = "sp_data";
         public static final String SP_USER_ID = "sp_user_id";
+        public static final String SP_USER_NAME = "sp_user_name";
         public static final String REQ_FOR = "req_for";
         public static final String TASK_ID = "task_id";
         public static final String TASK_STARTDATE = "task_startdate";
@@ -239,7 +241,13 @@ public class NetworkUtility {
             public static final String OTHERS = "other";
         }
 
-
+        public class APPSFLYER_CUSTOM_TRACK_EVENTS {
+            public static final String REG_MOBILE = "RegisterWithMobile";
+            public static final String REG_FB = "RegisterWithFB";
+            public static final String REG_TWITTER = "RegisterWithTwitter";
+            public static final String REG_GOOGLE = "RegisterWithGPlus";
+            public static final String TASK_CREATE = "TaskCreation";
+        }
     }
 
 }

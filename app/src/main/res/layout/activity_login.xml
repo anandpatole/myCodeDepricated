@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -12,7 +13,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingBottom="@dimen/scale_15dp">
+            android:paddingBottom="@dimen/scale_15dp"
+            tools:background="@color/black">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -26,6 +28,14 @@
                     android:layout_height="120dp"
                     android:layout_gravity="center_horizontal"
                     android:src="@drawable/icon_cheep_logo" />
+
+                <com.cheep.custom_view.CFTextViewRegular
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/scale_50dp"
+                    android:text="@string/label_lets_get_cheeping"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_size_19sp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -61,7 +71,7 @@
                         android:textColor="@color/colorPrimary"
                         android:textColorHint="@color/white_translucent_fifty"
                         android:textCursorDrawable="@null"
-                        android:textSize="@dimen/text_size_17sp" />
+                        android:textSize="@dimen/text_size_16sp" />
 
                     <ImageView
                         android:id="@+id/img_login_submit"

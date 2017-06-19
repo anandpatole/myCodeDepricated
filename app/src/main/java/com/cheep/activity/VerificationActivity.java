@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -14,6 +15,7 @@ import android.widget.EditText;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.appsflyer.AppsFlyerLib;
 import com.cheep.BuildConfig;
 import com.cheep.R;
 import com.cheep.databinding.ActivityVerificationBinding;
@@ -37,8 +39,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import static android.R.attr.phoneNumber;
-
 /**
  * Created by pankaj on 9/26/16.
  */
@@ -47,7 +47,7 @@ public class VerificationActivity extends BaseAppCompatActivity {
     private static final String TAG = "VerificationActivity";
     private ActivityVerificationBinding mActivityVerificationBinding;
 
-    private UserDetails userDetails;
+    private UserDetails mUserDetails;
     //    private String password;
     private String selectedImagePath;
 //    private String correctOTP;
@@ -96,7 +96,7 @@ public class VerificationActivity extends BaseAppCompatActivity {
         getWindow().setBackgroundDrawableResource(R.drawable.splash_gradient);
         //Check if we got any user details that need to be updated
         if (getIntent().hasExtra(Utility.Extra.USER_DETAILS)) {
-            userDetails = (UserDetails) Utility.getObjectFromJsonString(getIntent().getExtras().getString(Utility.Extra.USER_DETAILS), UserDetails.class);
+            mUserDetails = (UserDetails) Utility.getObjectFromJsonString(getIntent().getExtras().getString(Utility.Extra.USER_DETAILS), UserDetails.class);
         }
 
         //Check if we got password
@@ -135,7 +135,7 @@ public class VerificationActivity extends BaseAppCompatActivity {
         } else if (Utility.ACTION_REGISTER.equalsIgnoreCase(getIntent().getStringExtra(Utility.Extra.INFO_TYPE))
                 || Utility.ACTION_LOGIN.equalsIgnoreCase(getIntent().getStringExtra(Utility.Extra.INFO_TYPE))) {
             mActivityVerificationBinding.btnNearlyThere.setAllCaps(false);
-            mActivityVerificationBinding.btnNearlyThere.setText(getString(R.string.label_lets_get_cheeping));
+            mActivityVerificationBinding.btnNearlyThere.setText(getString(R.string.label_brilliant_its_time_to_cheep));
         }
 
     }
@@ -224,7 +224,8 @@ public class VerificationActivity extends BaseAppCompatActivity {
 
                     if (Utility.ACTION_CHANGE_PHONE_NUMBER.equalsIgnoreCase(getIntent().getStringExtra(Utility.Extra.INFO_TYPE))) {
                         callResendOTPWSForChangePassword(getIntent().getStringExtra(Utility.Extra.PHONE_NUMBER));
-                    } else if (Utility.ACTION_REGISTER.equalsIgnoreCase(getIntent().getStringExtra(Utility.Extra.INFO_TYPE))) {
+                    } else if (Utility.ACTION_REGISTER.equalsIgnoreCase(getIntent().getStringExtra(Utility.Extra.INFO_TYPE))
+                            || Utility.ACTION_LOGIN.equalsIgnoreCase(getIntent().getStringExtra(Utility.Extra.INFO_TYPE))) {
                         callResendOTPWS();
                     }
 
@@ -244,7 +245,7 @@ public class VerificationActivity extends BaseAppCompatActivity {
         }
 
         //Check if we are having proper userdetails
-        if (userDetails == null) {
+        if (mUserDetails == null) {
             Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityVerificationBinding.getRoot());
             return;
         }
@@ -388,15 +389,15 @@ public class VerificationActivity extends BaseAppCompatActivity {
                 e.printStackTrace();
             }
 
-            if (userDetails != null) {
+            if (mUserDetails != null) {
                                 /*
                                 * Create new register user in fierbase
                                 * @Sanjay 20 Feb 2016
                                 * */
                 ChatUserModel chatUserModel = new ChatUserModel();
-                chatUserModel.setUserId(FirebaseUtils.getPrefixUserId(userDetails.UserID));
-                chatUserModel.setUserName(userDetails.UserName);
-                chatUserModel.setProfileImg(userDetails.ProfileImg);
+                chatUserModel.setUserId(FirebaseUtils.getPrefixUserId(mUserDetails.UserID));
+                chatUserModel.setUserName(mUserDetails.UserName);
+                chatUserModel.setProfileImg(mUserDetails.ProfileImg);
                 FirebaseHelper.getUsersRef(chatUserModel.getUserId()).setValue(chatUserModel);
 
                                 /*
@@ -461,7 +462,7 @@ public class VerificationActivity extends BaseAppCompatActivity {
         }
 
         //Check if we are having proper userdetails
-        if (userDetails == null) {
+        if (mUserDetails == null) {
             Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityVerificationBinding.getRoot());
             return;
         }
@@ -474,20 +475,44 @@ public class VerificationActivity extends BaseAppCompatActivity {
         mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, BuildConfig.X_API_KEY);
 
         //Add Params
-        Map<String, String> mParams = new HashMap<>();
-        mParams.put(NetworkUtility.TAGS.LOGINWITH, userDetails.LoginWith);
-        mParams.put(NetworkUtility.TAGS.USERNAME, userDetails.UserName);
-        mParams.put(NetworkUtility.TAGS.EMAIL_ADDRESS, userDetails.Email);
-        mParams.put(NetworkUtility.TAGS.PHONE_NUMBER, userDetails.PhoneNumber);
+        Map<String, String> mParams = fetchKeyValuesForRegisteration();
 
-        if (!TextUtils.isEmpty(userDetails.fb_app_id)) {
-            mParams.put(NetworkUtility.TAGS.FB_APP_ID, userDetails.fb_app_id);
+        //Add File Params
+        HashMap<String, File> mFileParams = new HashMap<>();
+        if (selectedImagePath != null && (!TextUtils.isEmpty(selectedImagePath))) {
+            mFileParams.put(NetworkUtility.TAGS.PROFILE_IMAGE, new File(selectedImagePath));
         }
-        if (!TextUtils.isEmpty(userDetails.tw_app_id)) {
-            mParams.put(NetworkUtility.TAGS.TWITTER_APP_ID, userDetails.tw_app_id);
+
+        VolleyNetworkRequest mVolleyNetworkRequest = new VolleyNetworkRequest(NetworkUtility.WS.SIGNUP
+                , mCallSignUpWSErrorListener
+                , mCallSignUpWSResponseListener
+                , mHeaderParams
+                , mParams
+                , mFileParams);
+        Volley.getInstance(this).addToRequestQueue(mVolleyNetworkRequest);
+
+    }
+
+    /**
+     * This method will return HashMap in <String,String>
+     *
+     * @return
+     */
+    private Map<String, String> fetchKeyValuesForRegisteration() {
+        Map<String, String> mParams = new HashMap<>();
+        mParams.put(NetworkUtility.TAGS.LOGINWITH, mUserDetails.LoginWith);
+        mParams.put(NetworkUtility.TAGS.USERNAME, mUserDetails.UserName);
+        mParams.put(NetworkUtility.TAGS.EMAIL_ADDRESS, mUserDetails.Email);
+        mParams.put(NetworkUtility.TAGS.PHONE_NUMBER, mUserDetails.PhoneNumber);
+
+        if (!TextUtils.isEmpty(mUserDetails.fb_app_id)) {
+            mParams.put(NetworkUtility.TAGS.FB_APP_ID, mUserDetails.fb_app_id);
         }
-        if (!TextUtils.isEmpty(userDetails.gp_app_id)) {
-            mParams.put(NetworkUtility.TAGS.GOOGLE_PLUS_APP_ID, userDetails.gp_app_id);
+        if (!TextUtils.isEmpty(mUserDetails.tw_app_id)) {
+            mParams.put(NetworkUtility.TAGS.TWITTER_APP_ID, mUserDetails.tw_app_id);
+        }
+        if (!TextUtils.isEmpty(mUserDetails.gp_app_id)) {
+            mParams.put(NetworkUtility.TAGS.GOOGLE_PLUS_APP_ID, mUserDetails.gp_app_id);
         }
 
 //        mParams.put(NetworkUtility.TAGS.PASSWORD, password);
@@ -506,21 +531,50 @@ public class VerificationActivity extends BaseAppCompatActivity {
         mParams.put(NetworkUtility.TAGS.PLATFORM, NetworkUtility.TAGS.PLATFORMTYPE.ANDROID);
         mParams.put(NetworkUtility.TAGS.DEVICE_TOKEN, PreferenceUtility.getInstance(mContext).getFCMRegID());
 
-        //Add File Params
-        HashMap<String, File> mFileParams = new HashMap<>();
-        if (selectedImagePath != null && (!TextUtils.isEmpty(selectedImagePath))) {
-            mFileParams.put(NetworkUtility.TAGS.PROFILE_IMAGE, new File(selectedImagePath));
+        return mParams;
+    }
+
+    /**
+     * This method will return HashMap in <String,Object>
+     *
+     * @return
+     */
+    private Map<String, Object> fetchKeyValuesForRegisterationWithObject() {
+        Map<String, Object> mParams = new HashMap<>();
+        mParams.put(NetworkUtility.TAGS.LOGINWITH, mUserDetails.LoginWith);
+        mParams.put(NetworkUtility.TAGS.USERNAME, mUserDetails.UserName);
+        mParams.put(NetworkUtility.TAGS.EMAIL_ADDRESS, mUserDetails.Email);
+        mParams.put(NetworkUtility.TAGS.PHONE_NUMBER, mUserDetails.PhoneNumber);
+
+        if (!TextUtils.isEmpty(mUserDetails.fb_app_id)) {
+            mParams.put(NetworkUtility.TAGS.FB_APP_ID, mUserDetails.fb_app_id);
+        }
+        if (!TextUtils.isEmpty(mUserDetails.tw_app_id)) {
+            mParams.put(NetworkUtility.TAGS.TWITTER_APP_ID, mUserDetails.tw_app_id);
+        }
+        if (!TextUtils.isEmpty(mUserDetails.gp_app_id)) {
+            mParams.put(NetworkUtility.TAGS.GOOGLE_PLUS_APP_ID, mUserDetails.gp_app_id);
         }
 
-        VolleyNetworkRequest mVolleyNetworkRequest = new VolleyNetworkRequest(NetworkUtility.WS.SIGNUP
-                , mCallSignUpWSErrorListener
-                , mCallSignUpWSResponseListener
-                , mHeaderParams
-                , mParams
-                , mFileParams);
-        Volley.getInstance(this).addToRequestQueue(mVolleyNetworkRequest);
+//        mParams.put(NetworkUtility.TAGS.PASSWORD, password);
 
+        if (mLocationTrackService.mLocation != null && mLocationTrackService.mLocation.getLatitude() != 0 && mLocationTrackService.mLocation.getLongitude() != 0) {
+            mParams.put(NetworkUtility.TAGS.LAT, String.valueOf(mLocationTrackService.mLocation.getLatitude()));
+            mParams.put(NetworkUtility.TAGS.LNG, String.valueOf(mLocationTrackService.mLocation.getLongitude()));
+        } else {
+            mParams.put(NetworkUtility.TAGS.LAT, Utility.EMPTY_STRING);
+            mParams.put(NetworkUtility.TAGS.LNG, Utility.EMPTY_STRING);
+        }
+
+        /*mParams.put(NetworkUtility.TAGS.LAT, mLocationTrackService.mLocation != null ? String.valueOf(mLocationTrackService.mLocation.getLatitude()) : BootstrapConstant.LAT);
+        mParams.put(NetworkUtility.TAGS.LNG, mLocationTrackService.mLocation != null ? String.valueOf(mLocationTrackService.mLocation.getLongitude()) : BootstrapConstant.LNG);*/
+
+        mParams.put(NetworkUtility.TAGS.PLATFORM, NetworkUtility.TAGS.PLATFORMTYPE.ANDROID);
+        mParams.put(NetworkUtility.TAGS.DEVICE_TOKEN, PreferenceUtility.getInstance(mContext).getFCMRegID());
+
+        return mParams;
     }
+
 
     /**
      * Listeners for tracking Webservice calls
@@ -560,11 +614,37 @@ public class VerificationActivity extends BaseAppCompatActivity {
                                 * */
                                 startService(new Intent(VerificationActivity.this, FierbaseChatService.class));
                             }
+
+                            // Send Custom AppsFlyer Event Tracking
+                            if (NetworkUtility.TAGS.LOGINWITHTYPE.MOBILE.equals(mUserDetails.LoginWith)) {
+//                                AppsFlyerLib.getInstance().set
+                                AppsFlyerLib.getInstance().trackEvent(mContext
+                                        , NetworkUtility.TAGS.APPSFLYER_CUSTOM_TRACK_EVENTS.REG_MOBILE
+                                        , fetchKeyValuesForRegisterationWithObject());
+                            } else if (NetworkUtility.TAGS.LOGINWITHTYPE.FACEBOOK.equals(mUserDetails.LoginWith)) {
+                                AppsFlyerLib.getInstance().trackEvent(mContext
+                                        , NetworkUtility.TAGS.APPSFLYER_CUSTOM_TRACK_EVENTS.REG_FB
+                                        , fetchKeyValuesForRegisterationWithObject());
+                            } else if (NetworkUtility.TAGS.LOGINWITHTYPE.GOOGLEPLUS.equals(mUserDetails.LoginWith)) {
+                                AppsFlyerLib.getInstance().trackEvent(mContext
+                                        , NetworkUtility.TAGS.APPSFLYER_CUSTOM_TRACK_EVENTS.REG_GOOGLE
+                                        , fetchKeyValuesForRegisterationWithObject());
+                            } else if (NetworkUtility.TAGS.LOGINWITHTYPE.TWITTER.equals(mUserDetails.LoginWith)) {
+                                AppsFlyerLib.getInstance().trackEvent(mContext
+                                        , NetworkUtility.TAGS.APPSFLYER_CUSTOM_TRACK_EVENTS.REG_TWITTER
+                                        , fetchKeyValuesForRegisterationWithObject());
+                            }
                         }
 
-                        //Redirect user to Home Screen
-                        HomeActivity.newInstance(mContext);
-                        finish();
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                //Redirect user to Home Screen
+                                HomeActivity.newInstance(mContext);
+                                finish();
+                            }
+                        }, 1500);
+
 //                        Utility.showToast(mContext, getString(R.string.label_welcome_message));
                         /*String message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
                         // Show Toast
@@ -618,7 +698,7 @@ public class VerificationActivity extends BaseAppCompatActivity {
         }
 
         //Check if we are having proper userdetails
-        if (userDetails == null) {
+        if (mUserDetails == null) {
             Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityVerificationBinding.getRoot());
             return;
         }
@@ -667,7 +747,7 @@ public class VerificationActivity extends BaseAppCompatActivity {
         }
 
         //Check if we are having proper userdetails
-        if (userDetails == null) {
+        if (mUserDetails == null) {
             Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityVerificationBinding.getRoot());
             return;
         }
@@ -681,8 +761,8 @@ public class VerificationActivity extends BaseAppCompatActivity {
 
         //Add Params
         Map<String, String> mParams = new HashMap<>();
-        mParams.put(NetworkUtility.TAGS.EMAIL_ADDRESS, userDetails.Email);
-        mParams.put(NetworkUtility.TAGS.PHONE_NUMBER, userDetails.PhoneNumber);
+        mParams.put(NetworkUtility.TAGS.EMAIL_ADDRESS, mUserDetails.Email);
+        mParams.put(NetworkUtility.TAGS.PHONE_NUMBER, mUserDetails.PhoneNumber);
 
         VolleyNetworkRequest mVolleyNetworkRequest = new VolleyNetworkRequest(NetworkUtility.WS.SEND_OTP
                 , mCallReSendOTPWSErrorListener

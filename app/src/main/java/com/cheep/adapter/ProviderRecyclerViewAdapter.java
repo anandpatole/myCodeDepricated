@@ -102,12 +102,23 @@ public class ProviderRecyclerViewAdapter extends LoadMoreRecyclerAdapter<Provide
             holder.mRowProviderBinding.textVerified.setTextColor(ContextCompat.getColor(context, R.color.yellow));
         }*/
 
-        if (!TextUtils.isEmpty(model.experience)) {
+        /*if (!TextUtils.isEmpty(model.experience)) {
             holder.mRowProviderBinding.textExperience.setVisibility(View.VISIBLE);
-            holder.mRowProviderBinding.textExperience.setText(context.getString(R.string.label_experience, model.experience));
+            holder.mRowProviderBinding.textExperience.setText(context.getString(R.string.label_experience_zero));
         } else {
             holder.mRowProviderBinding.textExperience.setVisibility(View.GONE);
+        }*/
+        //experience
+        if (TextUtils.isEmpty(model.experience)
+                || Utility.ZERO_STRING.equals(model.experience)) {
+            holder.mRowProviderBinding.textExperience.setText(context.getString(R.string.label_experience_zero));
+        } else {
+            holder.mRowProviderBinding.textExperience.setText(
+                    context.getResources().getQuantityString(R.plurals.getTotalExperianceString
+                            , Integer.parseInt(model.experience)
+                            , Integer.parseInt(model.experience)));
         }
+
 
         holder.mRowProviderBinding.textMinToArrive.setSelected(true);
         if (model.distance != null) {

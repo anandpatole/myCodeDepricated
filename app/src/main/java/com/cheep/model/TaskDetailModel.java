@@ -25,7 +25,6 @@ public class TaskDetailModel {
     @SerializedName("task_address")
     public String taskAddress;
 
-
     @SerializedName("task_category")
     public String categoryName;
 

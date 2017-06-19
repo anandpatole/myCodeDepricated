@@ -24,6 +24,7 @@
                 android:orientation="vertical">
 
                 <com.cheep.custom_view.CFTextViewSemiBold
+                    android:id="@+id/title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
@@ -38,7 +39,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="@dimen/scale_8dp"
-                    android:gravity="center"
+                    android:gravity="left"
                     android:padding="@dimen/scale_8dp"
                     android:text="@string/desc_task_creation_acknowledgement"
                     android:textColor="@color/grey_dark_color_2"

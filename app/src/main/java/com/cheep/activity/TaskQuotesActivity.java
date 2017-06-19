@@ -1,19 +1,28 @@
 package com.cheep.activity;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.volley.Response;
@@ -24,6 +33,10 @@ import com.cheep.custom_view.BottomAlertDialog;
 import com.cheep.custom_view.DividerItemDecoration;
 import com.cheep.custom_view.GridImageView;
 import com.cheep.databinding.DialogFilterBinding;
+import com.cheep.databinding.DialogFragmentTaskCreationBinding;
+import com.cheep.firebase.FirebaseUtils;
+import com.cheep.firebase.model.TaskChatModel;
+import com.cheep.model.MessageEvent;
 import com.cheep.model.ProviderModel;
 import com.cheep.model.QuoteListResponse;
 import com.cheep.model.TaskDetailModel;
@@ -36,6 +49,12 @@ import com.cheep.utils.SuperCalendar;
 import com.cheep.utils.Utility;
 import com.google.gson.Gson;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -44,6 +63,7 @@ import java.util.Map;
 import static android.R.attr.rating;
 
 public class TaskQuotesActivity extends BaseAppCompatActivity implements TaskQuotesRecyclerViewAdapter.OnInteractionListener {
+    private static final String TAG = "TaskQuotesActivity";
 
     public static void newInstance(Context context, TaskDetailModel model, boolean isFirstTimeCreate) {
         Intent intent = new Intent(context, TaskQuotesActivity.class);
@@ -53,6 +73,7 @@ public class TaskQuotesActivity extends BaseAppCompatActivity implements TaskQuo
         context.startActivity(intent);
     }
 
+    private LinearLayout mRoot;
     private Toolbar mToolbar;
     private TextView tvTitle;
     private TextView tvTaskTitle;
@@ -85,6 +106,11 @@ public class TaskQuotesActivity extends BaseAppCompatActivity implements TaskQuo
         initiateUI();
 
         callSPListWS();
+
+
+        // Register EventBus
+        EventBus.getDefault().register(this);
+
     }
 
     @Override
@@ -92,6 +118,7 @@ public class TaskQuotesActivity extends BaseAppCompatActivity implements TaskQuo
         mGson = new Gson();
         mQuotesList = new ArrayList<>();
 
+        mRoot = (LinearLayout) findViewById(R.id.root);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         tvTitle = (TextView) findViewById(R.id.text_title);
         tvTaskTitle = (TextView) findViewById(R.id.tvTaskTitle);
@@ -142,7 +169,7 @@ public class TaskQuotesActivity extends BaseAppCompatActivity implements TaskQuo
 
     private void setupActionbar() {
         setSupportActionBar(mToolbar);
-        getSupportActionBar().setTitle("");
+        getSupportActionBar().setTitle(Utility.EMPTY_STRING);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDefaultDisplayHomeAsUpEnabled(true);
     }
@@ -211,8 +238,15 @@ public class TaskQuotesActivity extends BaseAppCompatActivity implements TaskQuo
             superCalendar.setTimeInMillis(Long.parseLong(mTaskDetailModel.taskStartdate));
             superCalendar.setLocaleTimeZone();
 
-            tvTaskBookingTime.setText(getString(R.string.label_task_booking_time, superCalendar.format(Utility.DATE_FORMAT_DD_MMM), superCalendar.format(Utility.DATE_FORMAT_HH_MM_AM)));
-            tvTaskStartsIn.setText(getString(R.string.label_task_starts_in, "XX"));
+            String mBookingDate = mContext.getString(R.string.format_task_book_date
+                    , superCalendar.format(Utility.DATE_FORMAT_DD_MMM_HH_MM_AM));
+            tvTaskBookingTime.setText(mBookingDate);
+
+
+            /*String mStartTime = mContext.getString(R.string.format_task_start_time
+                    , Utility.getDateDifference(superCalendar.format(Utility.DATE_FORMAT_FULL_DATE)));
+                    tvTaskStartsIn.setText(mStartTime);*/
+            tvTaskStartsIn.setText(Utility.getDateDifference(mContext, superCalendar.format(Utility.DATE_FORMAT_FULL_DATE)));
         }
     }
 
@@ -385,6 +419,27 @@ public class TaskQuotesActivity extends BaseAppCompatActivity implements TaskQuo
         ProviderProfileActivity.newInstance(mContext, provider, mTaskDetailModel);
     }
 
+    @Override
+    public void onChatClicked(ProviderModel providerModel) {
+        /*if (providerModel != null && mTaskDetailModel != null) {
+            if (providerModel.request_detail_status.equalsIgnoreCase(Utility.SEND_TASK_DETAIL_REQUESTED_STATUS.ACCEPTED)) {
+                TaskChatModel taskChatModel = new TaskChatModel();
+                taskChatModel.categoryName = mTaskDetailModel.categoryName;
+                taskChatModel.taskDesc = mTaskDetailModel.taskDesc;
+                taskChatModel.taskId = mTaskDetailModel.taskId;
+                taskChatModel.receiverId = FirebaseUtils.getPrefixSPId(providerModel.providerId);
+                taskChatModel.participantName = providerModel.userName;
+                taskChatModel.participantPhotoUrl = providerModel.profileUrl;
+                ChatActivity.newInstance(mContext, taskChatModel);
+                return;
+            }
+            callTaskDetailRequestAcceptWS(Utility.ACTION_CHAT, mTaskDetailModel.taskId, providerModel);
+        }*/
+
+        if (providerModel != null) {
+            showDetailRequestDialog(providerModel);
+        }
+    }
 
     private View.OnClickListener onRetryBtnClickListener = new View.OnClickListener() {
         @Override
@@ -407,10 +462,365 @@ public class TaskQuotesActivity extends BaseAppCompatActivity implements TaskQuo
         }
     }
 
-    public static class Filter {
+    private static class Filter {
         private int cheapest;
         private int distance;
         private int rating;
         private boolean isFav;
+    }
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////Accept-Reject Detail Service[End] //////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    /**
+     * Calling accept request Web service
+     */
+    private void callTaskDetailRequestAcceptWS(final String action, String taskID, final ProviderModel providerModel) {
+        if (!Utility.isConnected(mContext)) {
+            Utility.showSnackBar(getString(R.string.no_internet), mRoot);
+            return;
+        }
+
+        //Show Progress
+        showProgressDialog();
+
+        //Add Header parameters
+        Map<String, String> mHeaderParams = new HashMap<>();
+        mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
+        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
+
+        //Add Params
+        Map<String, String> mParams = new HashMap<>();
+        mParams.put(NetworkUtility.TAGS.REQUEST_DETAIL_STATUS, Utility.SEND_TASK_DETAIL_REQUESTED_STATUS.ACCEPTED);
+        mParams.put(NetworkUtility.TAGS.TASK_ID, taskID);
+        mParams.put(NetworkUtility.TAGS.SP_USER_ID, providerModel.providerId);
+
+        VolleyNetworkRequest mVolleyNetworkRequest = new VolleyNetworkRequest(NetworkUtility.WS.ACTION_ON_DETAIL
+                , new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
+
+                // Close Progressbar
+                hideProgressDialog();
+
+                // Show Toast
+                Utility.showSnackBar(getString(R.string.label_something_went_wrong), mRoot);
+            }
+        }
+                , new Response.Listener() {
+            @Override
+            public void onResponse(Object response) {
+                String strResponse = (String) response;
+                try {
+                    JSONObject jsonObject = new JSONObject(strResponse);
+                    Log.i(TAG, "onResponse: " + jsonObject.toString());
+                    int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
+                    String error_message;
+
+                    switch (statusCode) {
+                        case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
+                            if (action.equalsIgnoreCase(Utility.ACTION_CHAT)) {
+                                TaskChatModel taskChatModel = new TaskChatModel();
+                                taskChatModel.categoryName = mTaskDetailModel.categoryName;
+                                taskChatModel.taskDesc = mTaskDetailModel.taskDesc;
+                                taskChatModel.taskId = mTaskDetailModel.taskId;
+                                taskChatModel.receiverId = FirebaseUtils.getPrefixSPId(providerModel.providerId);
+                                taskChatModel.participantName = providerModel.userName;
+                                taskChatModel.participantPhotoUrl = providerModel.profileUrl;
+                                ChatActivity.newInstance(mContext, taskChatModel);
+                            } else if (action.equalsIgnoreCase(Utility.ACTION_CALL)) {
+//                                callToOtherUser(mActivityProviderProfileBinding.getRoot(), providerModel.providerId);
+                                Utility.openCustomerCareCallDialer(mContext, providerModel.sp_phone_number);
+                            }
+                            break;
+                        case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
+                            // Show Toast
+                            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mRoot);
+                            break;
+                        case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
+                            error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
+                            // Show message
+                            Utility.showSnackBar(error_message, mRoot);
+                            break;
+                        case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
+                        case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
+                            //Logout and finish the current activity
+                            Utility.logout(mContext, true, statusCode);
+                            finish();
+                            break;
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    mCallActionOnDetailWSErrorListener.onErrorResponse(new VolleyError(e.getMessage()));
+                }
+                hideProgressDialog();
+            }
+        }
+                , mHeaderParams
+                , mParams
+                , null);
+        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest);
+    }
+
+
+    /**
+     * Managing Accept/Decline Chat Request
+     */
+    /**
+     * In case Task is Getting Detail Request
+     */
+    BottomAlertDialog badForRequestTaskDetail;
+
+    private void showDetailRequestDialog(final ProviderModel providerModel) {
+        badForRequestTaskDetail = new BottomAlertDialog(mContext);
+        badForRequestTaskDetail.setTitle(getString(R.string.label_action));
+        badForRequestTaskDetail.setMessage(getString(R.string.desc_detail_action_request, providerModel.userName));
+        badForRequestTaskDetail.addPositiveButton(getString(R.string.label_accept), new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d(TAG, "onClick() called with: view = [" + view + "]");
+                callTaskDetailRequestAcceptRejectWS(Utility.SEND_TASK_DETAIL_REQUESTED_STATUS.ACCEPTED, mTaskDetailModel.taskId, providerModel.providerId);
+                badForRequestTaskDetail.dismiss();
+            }
+        });
+        badForRequestTaskDetail.addNegativeButton(getString(R.string.label_decline), new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                badForRequestTaskDetail.dismiss();
+                callTaskDetailRequestAcceptRejectWS(Utility.SEND_TASK_DETAIL_REQUESTED_STATUS.REJECTED, mTaskDetailModel.taskId, providerModel.providerId);
+            }
+        });
+        badForRequestTaskDetail.showDialog();
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////Accept-Reject Detail Service[Start] ///////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    /**
+     * Calling delete address Web service
+     */
+    private void callTaskDetailRequestAcceptRejectWS(String requestDetailStatus, String taskID, String spUserID) {
+        if (!Utility.isConnected(mContext)) {
+            Utility.showSnackBar(getString(R.string.no_internet), mRoot);
+            return;
+        }
+
+        //Show Progress
+        showProgressDialog();
+
+        //Add Header parameters
+        Map<String, String> mHeaderParams = new HashMap<>();
+        mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
+        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
+
+        //Add Params
+        Map<String, String> mParams = new HashMap<>();
+        mParams.put(NetworkUtility.TAGS.REQUEST_DETAIL_STATUS, requestDetailStatus);
+        mParams.put(NetworkUtility.TAGS.TASK_ID, taskID);
+        mParams.put(NetworkUtility.TAGS.SP_USER_ID, spUserID);
+
+        VolleyNetworkRequest mVolleyNetworkRequest = new VolleyNetworkRequest(NetworkUtility.WS.ACTION_ON_DETAIL
+                , mCallActionOnDetailWSErrorListener
+                , mCallActionOnDetailWSResponseListener
+                , mHeaderParams
+                , mParams
+                , null);
+        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest);
+    }
+
+    Response.Listener mCallActionOnDetailWSResponseListener = new Response.Listener() {
+        @Override
+        public void onResponse(Object response) {
+
+            String strResponse = (String) response;
+            try {
+                JSONObject jsonObject = new JSONObject(strResponse);
+                Log.i(TAG, "onResponse: " + jsonObject.toString());
+                int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
+                String error_message;
+
+                switch (statusCode) {
+                    case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
+//                        providerModel.request_detail_status = Utility.SEND_TASK_DETAIL_REQUESTED_STATUS.ACCEPTED;
+                        JSONObject jObjData = jsonObject.getJSONObject(NetworkUtility.TAGS.DATA);
+//                        String task_id = jsonObject.getString(NetworkUtility.TAGS.TASK_ID);
+                        String spUserID = jObjData.getString(NetworkUtility.TAGS.SP_USER_ID);
+                        String spUserName = jObjData.optString(NetworkUtility.TAGS.SP_USER_NAME);
+                        String requestDatailStatus = jObjData.getString(NetworkUtility.TAGS.REQUEST_DETAIL_STATUS);
+                        if (requestDatailStatus.equalsIgnoreCase(Utility.SEND_TASK_DETAIL_REQUESTED_STATUS.ACCEPTED)) {
+                            // spRecyclerViewAdapter.updateModelForRequestDetailStatus(spUserID, requestDatailStatus);
+//                            TODO: Update the views & Show popup
+                            mAdapter.updateModelForRequestDetailStatus(spUserID, requestDatailStatus);
+
+//                            String username = PreferenceUtility.getInstance(mContext).getUserDetails().UserName;
+                            String descriptionForAcknowledgement = mContext.getString(R.string.desc_request_for_detail_accepted_acknowledgment, spUserName);
+
+                            showDialogOnRequestForDetailAccepted(descriptionForAcknowledgement);
+
+                            /*DialogOnRequestForDetailAccepted mDialogOnRequestForDetailAccepted = DialogOnRequestForDetailAccepted.newInstance(descriptionForAcknowledgement);
+                            mDialogOnRequestForDetailAccepted.show(getSupportFragmentManager(), DialogOnRequestForDetailAccepted.TAG);*/
+//
+//
+//  mActivityProviderProfileBinding.textContactRequest.setVisibility(View.GONE);
+                        } else {
+                            mAdapter.updateModelForRequestDetailStatus(spUserID, requestDatailStatus);
+                            // Need to pass this details to Pending listing as well.
+                            /*MessageEvent messageEvent = new MessageEvent();
+                            messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.DETAIL_REQUEST_REJECTED;
+                            messageEvent.id = taskId;
+                            EventBus.getDefault().post(messageEvent);
+
+                            // Update recycler view
+                            spRecyclerViewAdapter.removeModelForRequestDetailStatus(spUserID, requestDatailStatus);
+
+                            // Check if listing is empty now, display message
+                            if (spRecyclerViewAdapter.getmList().size() == 0) {
+                                errorLoadingHelper.failed(getString(R.string.label_no_quotes_available), 0, null, null);
+                            }*/
+                        }
+                        break;
+                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
+                        // Show Toast
+                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mRoot);
+                        break;
+                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
+                        error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
+                        // Show message
+                        Utility.showSnackBar(error_message, mRoot);
+                        break;
+                    case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
+                    case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
+                        //Logout and finish the current activity
+                        Utility.logout(mContext, true, statusCode);
+                        finish();
+                        break;
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+                mCallActionOnDetailWSErrorListener.onErrorResponse(new VolleyError(e.getMessage()));
+            }
+            hideProgressDialog();
+        }
+    };
+
+    Response.ErrorListener mCallActionOnDetailWSErrorListener = new Response.ErrorListener() {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
+
+            // Close Progressbar
+            hideProgressDialog();
+
+            // Show Toast
+            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mRoot);
+        }
+    };
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////Accept-Reject Detail Service[End] //////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private void showDialogOnRequestForDetailAccepted(String acknowledgeMessage) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        // Add the buttons
+        builder.setPositiveButton(R.string.label_Ok_small, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User clicked OK button
+                dialog.dismiss();
+            }
+        });
+
+        // Create the AlertDialog
+        AlertDialog dialog = builder.create();
+        dialog.setTitle(mContext.getString(R.string.app_name).toUpperCase());
+        dialog.setMessage(acknowledgeMessage);
+        dialog.show();
+    }
+
+
+    /**
+     * Create Dialog which would going to show on successfull completion
+     */
+    public static class DialogOnRequestForDetailAccepted extends DialogFragment {
+        private static final String TAG = "DialogOnRequestForDetailAccepted";
+        private String mDescription = Utility.EMPTY_STRING;
+        private DialogFragmentTaskCreationBinding mDialogFragmentTaskCreationBinding;
+
+        /**
+         * Create a new instance of MyDialogFragment, providing "num"
+         * as an argument.
+         */
+        static DialogOnRequestForDetailAccepted newInstance(String desc) {
+            DialogOnRequestForDetailAccepted f = new DialogOnRequestForDetailAccepted();
+
+            // Supply num input as an argument.
+            Bundle args = new Bundle();
+            args.putString(NetworkUtility.TAGS.DESCRIPTION, desc);
+            f.setArguments(args);
+            return f;
+        }
+
+        @Override
+        public void onCreate(@Nullable Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+
+            mDescription = getArguments().getString(NetworkUtility.TAGS.DESCRIPTION);
+        }
+
+        @Nullable
+        @Override
+        public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+            // Set Window Background as Transparent.
+            getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+            mDialogFragmentTaskCreationBinding = DataBindingUtil.inflate(inflater, R.layout.dialog_fragment_task_creation, container, false);
+
+            // Hide the title as its not required here.
+            mDialogFragmentTaskCreationBinding.title.setText(getString(R.string.label_congratulation));
+
+            // Update the description
+            mDialogFragmentTaskCreationBinding.textTaskCreationAcknowledgment.setText(mDescription);
+
+            // Click event of Okay button
+            mDialogFragmentTaskCreationBinding.textOkay.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dismiss();
+                }
+            });
+            return mDialogFragmentTaskCreationBinding.getRoot();
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(MessageEvent event) {
+        if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.TASK_PAID
+                || event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.TASK_PROCESSING) {
+            // Refresh the SP listing
+            finish();
+        }/* else if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.QUOTE_REQUESTED_BY_PRO
+                || event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.REQUEST_FOR_DETAIL) {
+
+            // Only go ahead if we are in same task detail screen whose notification comes
+            if (taskDetailModel.taskId.equals(event.id)) {
+                // We need to refresh the SP listing.
+                spRecyclerViewAdapter.enableLoadMore();
+                reloadSPListWS();
+            }
+        }*/
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        // Unregister
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this);
+        }
     }
 }

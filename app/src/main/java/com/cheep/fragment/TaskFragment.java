@@ -177,7 +177,8 @@ public class TaskFragment extends BaseFragment {
         if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.UPDATE_FAVOURITE) {
             if (!TextUtils.isEmpty(event.isFav))
                 taskRecyclerViewAdapter.updateFavStatus(event.id, event.isFav);
-        } else if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.TASK_PAID) {
+        } else if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.TASK_PAID
+                || event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.TASK_PROCESSING) {
             nextPageId = null;
             taskRecyclerViewAdapter.enableLoadMore();
             reloadTaskListFromServer();

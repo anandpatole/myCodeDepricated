@@ -19,8 +19,8 @@ android {
         applicationId "com.cheep"
         minSdkVersion 16
         targetSdkVersion 25
-        versionCode 11
-        versionName "1.0.6" // PLEASE FIRST MAKE SURE MIN-VERSION IS 16.
+        versionCode 15
+        versionName "1.0.15" // PLEASE FIRST MAKE SURE MIN-VERSION IS 16.
 
         renderscriptTargetApi 18
         renderscriptSupportModeEnabled true
@@ -89,7 +89,7 @@ android {
             buildConfigField("String", "CHAT_NODE", getProperty("CHAT_NODE_LIVE"));
             buildConfigField("String", "PAYUBIZ_HDFC_KEY", getProperty("PAYUBIZ_HDFC_LIVE_KEY"))
             buildConfigField("String", "PAYUBIZ_HDFC_URL", getProperty("PAYUBIZ_HDFC_LIVE_URL"))
-
+            signingConfig signingConfigs.debug
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
@@ -122,9 +122,11 @@ configurations {
 
 // Description
 ext {
-    supportLibVer = '25.3.1'
+    supportLibVer = '25.4.0'
+//    supportLibVer = '25.3.1'
     gsonLibVer = '2.7'
-    playServiceVer = '10.2.6'
+    playServiceVer = '11.0.0'
+//    playServiceVer = '10.2.0'
 }
 
 dependencies {
@@ -189,7 +191,6 @@ dependencies {
     //this is gradle path from where CB will be automatically downloaded
 
     // AppsFlyer SDK
-
 
     compile 'com.android.support:multidex:1.0.1'
     compile 'com.github.bumptech.glide:glide:3.7.0'

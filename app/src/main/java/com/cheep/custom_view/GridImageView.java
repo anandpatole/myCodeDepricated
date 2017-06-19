@@ -56,7 +56,6 @@ public class GridImageView extends MaskableFrameLayout {
         } else {
             mRootView = (ViewGroup) mLayoutInflater.inflate(R.layout.layout_grid_image_n, this, true);
         }
-
         populateView(urls, length);
     }
 
@@ -84,7 +83,8 @@ public class GridImageView extends MaskableFrameLayout {
             int imageViewCount = imageViews.size();
             for (int i = 0; i < count; i++) {
                 if (i >= MAX_IMAGE_COUNT || i >= imageViewCount) break;
-                Glide.with(getContext()).load(urls.get(i)).placeholder(R.drawable.icon_profile_img_solid).centerCrop().into(imageViews.get(i));
+//                Glide.with(getContext()).load(urls.get(i)).placeholder(R.drawable.icon_profile_img_solid).centerCrop().into(imageViews.get(i));
+                Glide.with(getContext()).load(urls.get(i)).placeholder(R.drawable.ic_cheep_pro_logo_square_small).centerCrop().into(imageViews.get(i));
             }
         }
     }

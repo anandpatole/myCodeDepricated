@@ -331,6 +331,23 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
         else if (Utility.TASK_STATUS.RESCHEDULE_REQUEST_REJECTED.equalsIgnoreCase(mTaskDetailModel.taskStatus)) {
             mActivityTaskSummaryBinding.textTaskStatusTop.setText(getString(R.string.label_reschedule_rejected));
             mActivityTaskSummaryBinding.lnTaskRescheduleRejected.setVisibility(View.VISIBLE);
+
+            // Chat & Call with @Cheep team click event of buttons
+            mActivityTaskSummaryBinding.textContactCheepViaCall.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //callToCheepAdmin(mActivityHomeBinding.getRoot());
+                    Utility.initiateCallToCheepHelpLine(mContext);
+                }
+            });
+
+            mActivityTaskSummaryBinding.textContactCheepViaChat.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    HotlineHelper.getInstance(mContext).showConversation(mContext);
+                }
+            });
+
         }
         //Task's Additional Payment Request comes
         else if (Utility.TASK_STATUS.ADDITIONAL_PAYMENT_REQUESTED.equalsIgnoreCase(mTaskDetailModel.taskStatus)) {

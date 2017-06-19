@@ -21,6 +21,7 @@ import android.view.ViewGroup;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.appsflyer.AppsFlyerLib;
 import com.cheep.R;
 import com.cheep.adapter.TaskCreationPagerAdapter;
 import com.cheep.databinding.ActivityTaskCreateBinding;
@@ -58,6 +59,7 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
     public JobCategoryModel mJobCategoryModel;
     TaskCreationPagerAdapter mTaskCreationPagerAdapter;
     private SubServiceDetailModel mSelectedSubServiceDetailModel;
+    Map<String, Object> mTaskCreationParams;
 
     public static void getInstance(Context mContext, JobCategoryModel model) {
         Intent intent = new Intent(mContext, TaskCreationActivity.class);
@@ -422,6 +424,16 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
         mParams.put(NetworkUtility.TAGS.SUBCATEGORY_ID, String.valueOf(mSelectedSubServiceDetailModel.sub_cat_id));
         mParams.put(NetworkUtility.TAGS.START_DATETIME, String.valueOf(mTaskCreationPagerAdapter.mEnterTaskDetailFragment.superCalendar.getTimeInMillis()));
 
+        // Create Params for AppsFlyer event track
+        mTaskCreationParams = new HashMap<>();
+        mParams.put(NetworkUtility.TAGS.TASK_DESC, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.getTaskDescription());
+        mParams.put(NetworkUtility.TAGS.ADDRESS_ID, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.addressId);
+        mParams.put(NetworkUtility.TAGS.CITY_ID, userDetails.CityID);
+        mParams.put(NetworkUtility.TAGS.CAT_ID, mJobCategoryModel.catId);
+        mParams.put(NetworkUtility.TAGS.SUBCATEGORY_ID, String.valueOf(mSelectedSubServiceDetailModel.sub_cat_id));
+        mParams.put(NetworkUtility.TAGS.START_DATETIME, String.valueOf(mTaskCreationPagerAdapter.mEnterTaskDetailFragment.superCalendar.getTimeInMillis()));
+
+
         // Add Params
         HashMap<String, File> mFileParams = new HashMap<String, File>();
         if (!TextUtils.isEmpty(mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mCurrentPhotoPath)
@@ -460,6 +472,9 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
 //                        initiateUI();
 //                        setListeners();
 
+                        // Send Event tracking for AppsFlyer
+                        AppsFlyerLib.getInstance().trackEvent(mContext, NetworkUtility.TAGS.APPSFLYER_CUSTOM_TRACK_EVENTS.TASK_CREATE, mTaskCreationParams);
+
 
                         /**
                          * Now according to the new flow, once task created
@@ -497,10 +512,9 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
     private void onSuccessfullTaskCompletion(JSONObject jsonObject) {
         TaskDetailModel taskDetailModel = (TaskDetailModel) Utility.getObjectFromJsonString(jsonObject.optString(NetworkUtility.TAGS.DATA), TaskDetailModel.class);
         if (taskDetailModel != null) {
-                            /*
-                            * Add new task detail on firebase
-                            * @Sanjay 20 Feb 2016
-                            * */
+            /* * Add new task detail on firebase
+             * @Sanjay 20 Feb 2016
+             */
             ChatTaskModel chatTaskModel = new ChatTaskModel();
             chatTaskModel.taskId = FirebaseUtils.getPrefixTaskId(taskDetailModel.taskId);
             chatTaskModel.taskDesc = taskDetailModel.taskDesc;
@@ -511,6 +525,12 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
             chatTaskModel.userId = FirebaseUtils.getPrefixUserId(userDetails.UserID);
             FirebaseHelper.getTaskRef(chatTaskModel.taskId).setValue(chatTaskModel);
         }
+
+        // Update the name of User
+       /* mDialogFragmentTaskCreationBinding.textTaskCreationAcknowledgment
+                .setText(mDialogFragmentTaskCreationBinding.getRoot().getContext().getString(R.string.desc_task_creation_acknowledgement, mUserName));
+        */
+
         TaskCompletionDialog mTaskCompletionDialog = TaskCompletionDialog.newInstance(PreferenceUtility.getInstance(mContext).getUserDetails().UserName);
         mTaskCompletionDialog.show(getSupportFragmentManager(), TaskCompletionDialog.TAG);
     }
@@ -550,7 +570,7 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
         public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
             // Set Window Background as Transparent.
             getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-            
+
             mDialogFragmentTaskCreationBinding = DataBindingUtil.inflate(inflater, R.layout.dialog_fragment_task_creation, container, false);
             // Update the name of User
             mDialogFragmentTaskCreationBinding.textTaskCreationAcknowledgment
