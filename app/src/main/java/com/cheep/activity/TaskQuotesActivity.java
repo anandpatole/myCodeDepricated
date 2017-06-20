@@ -92,7 +92,7 @@ public class TaskQuotesActivity extends BaseAppCompatActivity implements TaskQuo
     private BottomAlertDialog mFilterDialog;
     private DialogFilterBinding mDialogFilterBinding;
 
-    private List<ProviderModel> mQuotesList;
+    //    private List<ProviderModel> mQuotesList;
     //private String mIntentAction;
     private TaskDetailModel mTaskDetailModel;
     private Gson mGson;
@@ -116,7 +116,7 @@ public class TaskQuotesActivity extends BaseAppCompatActivity implements TaskQuo
     @Override
     protected void initiateUI() {
         mGson = new Gson();
-        mQuotesList = new ArrayList<>();
+//        mQuotesList = new ArrayList<>();
 
         mRoot = (LinearLayout) findViewById(R.id.root);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -133,7 +133,7 @@ public class TaskQuotesActivity extends BaseAppCompatActivity implements TaskQuo
 
         mRecyclerView.setHasFixedSize(false);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mAdapter = new TaskQuotesRecyclerViewAdapter(this, mQuotesList, this);
+        mAdapter = new TaskQuotesRecyclerViewAdapter(this, /*mQuotesList,*/ this);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.addItemDecoration(new DividerItemDecoration(mContext, R.drawable.divider_grey_normal));
         setupActionbar();
@@ -209,9 +209,23 @@ public class TaskQuotesActivity extends BaseAppCompatActivity implements TaskQuo
 
             mParams.put(NetworkUtility.TAGS.IS_FAVOURITE, mFilter.isFav ? Utility.BOOLEAN.YES : Utility.BOOLEAN.NO);
 
-            if (rating > 0) {
+            if (mFilter.rating > 0) {
                 mParams.put(NetworkUtility.TAGS.RATINGS, mFilter.rating);
             }
+
+            // Now, see if user just did nothing and pressing done button.
+            if (!mParams.containsKey(NetworkUtility.TAGS.PRICE)
+                    && !mParams.containsKey(NetworkUtility.TAGS.DISTANCE)
+                    && !mParams.containsKey(NetworkUtility.TAGS.RATINGS)) {
+                // None of the filter is applied so dont need to go ahead.
+
+                resetFilterFields(mDialogFilterBinding);
+                mFilterDialog.dismiss();
+                mErrorLoadingHelper.showLoading();
+                callSPListWS();
+                return;
+            }
+
         } else {
             url = NetworkUtility.WS.SP_LIST_TASK_WISE;
         }
@@ -253,7 +267,7 @@ public class TaskQuotesActivity extends BaseAppCompatActivity implements TaskQuo
     private void populateGridImageView() {
         mGridImageView.clear();
         List<Uri> uriList = new ArrayList<>();
-        for (ProviderModel model : mQuotesList) {
+        for (ProviderModel model : mAdapter.getData()) {
             if (model.profileUrl != null) {
                 uriList.add(Uri.parse(model.profileUrl));
             } else {
@@ -295,7 +309,6 @@ public class TaskQuotesActivity extends BaseAppCompatActivity implements TaskQuo
                     mFilter.distance = mDialogFilterBinding.seekbarDistance.getDisplayProgress();
                     mFilter.rating = mDialogFilterBinding.ratingBar.getProgress();
                     mFilter.isFav = mDialogFilterBinding.imgFav.isSelected();
-
                     mFilterDialog.dismiss();
 
                     callSPListWS();
@@ -307,7 +320,6 @@ public class TaskQuotesActivity extends BaseAppCompatActivity implements TaskQuo
                 public void onClick(View view) {
                     resetFilterFields(mDialogFilterBinding);
                     mFilterDialog.dismiss();
-
                     mErrorLoadingHelper.showLoading();
                     callSPListWS();
                 }
@@ -339,7 +351,6 @@ public class TaskQuotesActivity extends BaseAppCompatActivity implements TaskQuo
         mDialogFilterBinding.seekbarCheepest.setProgress(getMaxQuote());
         mDialogFilterBinding.imgFav.setSelected(false);
         mDialogFilterBinding.ratingBar.setRating(0);
-
         mFilter = null;
     }
 
@@ -367,13 +378,14 @@ public class TaskQuotesActivity extends BaseAppCompatActivity implements TaskQuo
             QuoteListResponse response = mGson.fromJson((String) rawResponse, QuoteListResponse.class);
             switch (response.statusCode) {
                 case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
-                    //clear the data as there is no pagination login
-                    mQuotesList.clear();
+                    /*//clear the data as there is no pagination login
+                    mQuotesList.clear();*/
 
                     if (response.quoteList != null && response.quoteList.size() > 0) {
                         //repopulate the data
-                        mQuotesList.addAll(response.quoteList);
-                        mAdapter.notifyDataSetChanged();
+//                        mQuotesList.addAll(response.quoteList);
+//                        mAdapter.notifyDataSetChanged();
+                        mAdapter.addAll(response.quoteList);
 
                         mErrorLoadingHelper.success();
                     } else {

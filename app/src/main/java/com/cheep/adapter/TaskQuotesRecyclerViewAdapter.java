@@ -62,9 +62,9 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
     //saves the index of the upcoming offer to display
     private Map<String, Integer> mOfferIndexMap;
 
-    public TaskQuotesRecyclerViewAdapter(Context context, List<ProviderModel> quotesList, OnInteractionListener listener) {
+    public TaskQuotesRecyclerViewAdapter(Context context, /*List<ProviderModel> quotesList,*/ OnInteractionListener listener) {
         this.mContext = context;
-        this.mQuotesList = quotesList;
+        this.mQuotesList = new ArrayList<>();
         this.mListener = listener;
         mLayoutInflater = LayoutInflater.from(context);
 
@@ -366,6 +366,16 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
                 break;
             }
         }
+    }
+
+    public void addAll(List<ProviderModel> providerModels) {
+        this.mQuotesList.clear();
+        this.mQuotesList.addAll(providerModels);
+        notifyDataSetChanged();
+    }
+
+    public ArrayList<ProviderModel> getData() {
+        return (ArrayList<ProviderModel>) mQuotesList;
     }
 
     static class QuoteViewHolder extends RecyclerView.ViewHolder {
