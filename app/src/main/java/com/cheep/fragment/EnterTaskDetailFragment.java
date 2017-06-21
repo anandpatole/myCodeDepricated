@@ -446,7 +446,7 @@ public class EnterTaskDetailFragment extends BaseFragment {
             isPlacePickerClicked = false;
             if (resultCode == RESULT_OK) {
                 isAddressPickYouLocationVerified = true;
-                isAddressNameVerified=true;
+                isAddressNameVerified = true;
                 final Place place = PlacePicker.getPlace(mContext, data);
                 final CharSequence name = place.getName();
                 final CharSequence address = place.getAddress();
@@ -459,12 +459,11 @@ public class EnterTaskDetailFragment extends BaseFragment {
                     edtAddress.setTag(place.getLatLng());
                 }
             } else {
-                if(TextUtils.isEmpty(edtAddress.getText().toString().trim())) {
+                if (TextUtils.isEmpty(edtAddress.getText().toString().trim())) {
                     isAddressPickYouLocationVerified = false;
-                }
-                else {
+                } else {
                     isAddressPickYouLocationVerified = true;
-                    isAddressNameVerified=true;
+                    isAddressNameVerified = true;
                 }
             }
             checkAddAddressVerified();
@@ -540,10 +539,12 @@ public class EnterTaskDetailFragment extends BaseFragment {
                             // Get date-time for next 3 hours
                             SuperCalendar calAfter3Hours = SuperCalendar.getInstance().getNext3HoursTime();
 
-//                            TODO: This needs to Be commented NOT FORGET
-                            if (superCalendar.getTimeInMillis() < calAfter3Hours.getTimeInMillis()) {
-                                Utility.showSnackBar(getString(R.string.can_only_start_task_after_3_hours), mFragmentEnterTaskDetailBinding.getRoot());
-                                return;
+//                            TODO: This needs to Be UNCOMMENTED DO NOT FORGET
+                            if (!BuildConfig.BUILD_TYPE.equalsIgnoreCase(Utility.DEBUG)) {
+                                if (superCalendar.getTimeInMillis() < calAfter3Hours.getTimeInMillis()) {
+                                    Utility.showSnackBar(getString(R.string.can_only_start_task_after_3_hours), mFragmentEnterTaskDetailBinding.getRoot());
+                                    return;
+                                }
                             }
 
                             if (System.currentTimeMillis() < startDateTimeSuperCalendar.getTimeInMillis()) {
@@ -578,8 +579,7 @@ public class EnterTaskDetailFragment extends BaseFragment {
     private AddressRecyclerViewAdapter addressRecyclerViewAdapter;
     public String addressId = "";
 
-    private void showAddressDialog()
-    {
+    private void showAddressDialog() {
         View view = LayoutInflater.from(mContext).inflate(R.layout.dialog_choose_address_new_task, null, false);
         boolean shouldOpenAddAddress = fillAddressRecyclerView((RecyclerView) view.findViewById(R.id.recycler_view));
         addressDialog = new BottomAlertDialog(mContext);
@@ -676,14 +676,11 @@ public class EnterTaskDetailFragment extends BaseFragment {
     private boolean isAddressPickYouLocationVerified = false;
     private boolean isAddressFlatNoVerified = false;
 
-    private void showAddAddressDialog(final AddressModel addressModel)
-    {
-        if(addressModel==null) {
+    private void showAddAddressDialog(final AddressModel addressModel) {
+        if (addressModel == null) {
             isAddressPickYouLocationVerified = false;
             isAddressNameVerified = false;
-        }
-        else
-        {
+        } else {
             isAddressPickYouLocationVerified = true;
             isAddressNameVerified = true;
         }
@@ -827,11 +824,12 @@ public class EnterTaskDetailFragment extends BaseFragment {
 
                /* if (TextUtils.isEmpty(edtName.getText().toString().trim())) {
                     Utility.showToast(mContext, getString(R.string.validate_address_nickname));
-                } else*/ if (TextUtils.isEmpty(edtAddress.getText().toString().trim())) {
+                } else*/
+                if (TextUtils.isEmpty(edtAddress.getText().toString().trim())) {
                     Utility.showToast(mContext, getString(R.string.validate_address));
                 } /*else if (TextUtils.isEmpty(edtAddressInitials.getText().toString().trim())) {
                     Utility.showToast(mContext, getString(R.string.validate_address_initials));
-                } */else {
+                } */ else {
                     if (addressModel != null) {
                         callUpdateAddressWS(addressModel.address_id,
                                 (radioHome.isChecked()
@@ -865,8 +863,7 @@ public class EnterTaskDetailFragment extends BaseFragment {
         checkAddAddressVerified();
     }
 
-    private void checkAddAddressVerified()
-    {
+    private void checkAddAddressVerified() {
         /*if (isAddressFlatNoVerified
                 && isAddressPickYouLocationVerified
                 && isAddressNameVerified) {

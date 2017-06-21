@@ -39,7 +39,6 @@ public class InfoActivity extends BaseAppCompatActivity implements DrawerLayoutI
     @Override
     protected void initiateUI() {
         getSupportFragmentManager().beginTransaction().replace(R.id.info_container, InfoFragment.newInstance(getIntent().getStringExtra(Utility.Extra.INFO_TYPE))).commit(); //NetworkUtility.TAGS.PAGEID_TYPE.TERMS
-
     }
 
     @Override

@@ -68,6 +68,8 @@ public class NetworkUtility {
         public static final String PAYMENT = BASE_URL + "customers/payment/pay_money";
         public static final String PAYMENT_HISTORY = BASE_URL + "customers/payment/payment_history";
         public static final String EMERGENCY_ALERT = BASE_URL + "customers//sp_profile/emergency_alert";
+        public static final String CHECK_PROCESSING_TASK = BASE_URL + "customers/tasks/check_processing_task";
+
 
         // Chat Image upload
         public static final String IMAGE_UPLOAD_FOR_CHAT = BASE_URL + "customers/profile/imageUploadForChat";
@@ -169,6 +171,7 @@ public class NetworkUtility {
         public static final String TOTAL_EARNED = "total_earned";
         public static final String MONTHLY_TOTAL = "monthly_total";
         public static final String TASK_STATUS = "task_status";
+        public static final String TOTAL_ONGOING_TASK = "total_ongoing_task";
         public static final String TASK_PAID_AMOUNT = "task_paid_amount";
         public static final String ADDITIONAL_QUOTE_AMOUNT = "additional_quote_amount";
 

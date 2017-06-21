@@ -162,6 +162,7 @@ public class Utility {
 
     public static final int X_RATIO = 16;
     public static final int Y_RATIO = 9;
+    public static final String DEBUG = "debug";
 
     /**
      * ongoing user chatId
@@ -943,6 +944,9 @@ public class Utility {
 
         // When detail request getting rejected by User
         public static final int DETAIL_REQUEST_REJECTED = 13;
+
+        // When AnyTask is Created & We need to check for Alert Disable/Enable in @HomeActivity
+        public static final int TASK_START_ALERT = 14;
     }
 
     public static final class REQUEST_TYPE {
@@ -1016,6 +1020,7 @@ public class Utility {
         public static final String CHAT_MESSAGE = "FIREBASE";
         public static final String TASK_CREATE = "TASK_CREATE";
         public static final String PAYMENT_NOTIFICATION = "PAYMENT_NOTIFICATION";
+        public static final String TASK_START_ALERT = "TASK_START_ALERT";
     }
 
     public static final String SESSION_EXPIRE = "session_expire";

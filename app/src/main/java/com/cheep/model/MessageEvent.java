@@ -21,4 +21,7 @@ public class MessageEvent {
     // Used for additional payment requested
     public String additional_quote_amount;
 
+    // Used for Making Alert Enable/Disable
+    public String total_ongoing_task;
+
 }

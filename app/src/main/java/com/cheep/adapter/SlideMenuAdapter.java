@@ -47,8 +47,10 @@ public class SlideMenuAdapter extends BaseAdapter {
             mHolder = (ViewHolder) convertView.getTag();
         }
 
+
         mHolder.mIcon.setImageResource(list.get(position).image_id);
         mHolder.mName.setText(list.get(position).title);
+
 
         mHolder.mView.setOnClickListener(new View.OnClickListener() {
             @Override

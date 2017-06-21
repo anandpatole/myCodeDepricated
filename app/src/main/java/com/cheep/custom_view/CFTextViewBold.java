@@ -15,7 +15,7 @@ import com.cheep.R;
 /**
  * Custom Edittext for regular font
  */
-public class CFTextViewBold extends TextView {
+public class CFTextViewBold extends android.support.v7.widget.AppCompatTextView {
 
     private Context mContext;
 

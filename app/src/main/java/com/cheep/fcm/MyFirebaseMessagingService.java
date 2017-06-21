@@ -172,6 +172,14 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
             EventBus.getDefault().post(messageEvent);
         }
+        // Broadcast when Task Create ALERT Event
+        else if (bnd.getString(NetworkUtility.TAGS.TYPE).equalsIgnoreCase(Utility.NOTIFICATION_TYPE.TASK_START_ALERT)) {
+            messageEvent = new MessageEvent();
+            messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.TASK_START_ALERT;
+            messageEvent.id = String.valueOf(notificationId);
+            messageEvent.total_ongoing_task = bnd.getString(NetworkUtility.TAGS.TOTAL_ONGOING_TASK);
+            EventBus.getDefault().post(messageEvent);
+        }
 
     }
 

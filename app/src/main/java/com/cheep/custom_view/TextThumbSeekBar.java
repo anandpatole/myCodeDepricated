@@ -15,7 +15,7 @@ import android.widget.SeekBar;
 
 import com.cheep.R;
 
-public class TextThumbSeekBar extends SeekBar {
+public class TextThumbSeekBar extends android.support.v7.widget.AppCompatSeekBar {
 
     private int mThumbSize;
     private TextPaint mTextPaint;

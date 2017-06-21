@@ -220,7 +220,7 @@
                 android:padding="@dimen/scale_5dp"
                 android:text="@string/tab_alert"
                 android:textAllCaps="false"
-                android:textColor="@drawable/tab_text_color"
+                android:textColor="@drawable/tab_alert_text_color"
                 android:textSize="@dimen/text_size_11sp"
                 android:visibility="visible" />
         </LinearLayout>

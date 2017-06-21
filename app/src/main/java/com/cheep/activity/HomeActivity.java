@@ -149,6 +149,9 @@ public class HomeActivity extends BaseAppCompatActivity
 
         // Check Application version
         checkVersionOfApp();
+
+        // Check Ongoing task as well
+
     }
 
     private void manageNotificationRedirection(Intent intent) {
@@ -1760,7 +1763,6 @@ public class HomeActivity extends BaseAppCompatActivity
 
         builder.show();
     }
-
 
     Response.ErrorListener mCheckVersionNumberWSErrorListener = new Response.ErrorListener() {
         @Override
