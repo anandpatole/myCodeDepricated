@@ -184,7 +184,8 @@
                     android:textAllCaps="false"
                     android:textColor="@color/colorPrimary"
                     android:textSize="@dimen/text_size_12sp"
-                    app:letterSpacing="0.3" />
+                    app:letterSpacing="0.3"
+                    tools:ignore="UnusedAttribute" />
             </LinearLayout>
 
         </LinearLayout>

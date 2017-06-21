@@ -17,7 +17,8 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:elevation="@dimen/scale_2dp">
+            android:elevation="@dimen/scale_2dp"
+            tools:ignore="UnusedAttribute">
 
             <com.cheep.custom_view.CFTextViewSemiBold
                 android:id="@+id/text_title"
@@ -27,7 +28,8 @@
                 android:layoutDirection="ltr"
                 android:text="ACEDEMIC"
                 android:textColor="@color/colorPrimary"
-                android:textSize="@dimen/text_size_18sp" />
+                android:textSize="@dimen/text_size_18sp"
+                tools:ignore="UnusedAttribute" />
 
         </android.support.v7.widget.Toolbar>
     </android.support.design.widget.AppBarLayout>
@@ -37,7 +39,8 @@
         android:layout_height="wrap_content"
         android:background="@color/white"
         android:elevation="@dimen/scale_2dp"
-        android:padding="@dimen/scale_15dp">
+        android:padding="@dimen/scale_15dp"
+        tools:ignore="UnusedAttribute">
 
         <com.cheep.custom_view.GridImageView
             android:id="@+id/gridImageView"

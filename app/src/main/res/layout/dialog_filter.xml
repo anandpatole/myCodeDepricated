@@ -212,7 +212,8 @@
             android:minWidth="250dp"
             android:letterSpacing="0.3"
             android:text="@string/label_reset"
-            android:textColor="@color/splash_gradient_end" />
+            android:textColor="@color/splash_gradient_end"
+            tools:ignore="UnusedAttribute" />
 
         <com.cheep.custom_view.CFButtonRegular
             android:id="@+id/btn_show_result"
@@ -225,6 +226,7 @@
             android:text="@string/label_show_results"
             android:textAllCaps="false"
             android:textColor="@color/white"
-            app:letterSpacing="0.3" />
+            app:letterSpacing="0.3"
+            tools:ignore="UnusedAttribute" />
     </LinearLayout>
 </layout>

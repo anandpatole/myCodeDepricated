@@ -260,6 +260,7 @@
                             android:marqueeRepeatLimit="marquee_forever"
                             android:singleLine="true"
                             android:text="₹ 2000"
+                            android:maxLines="1"
                             android:textColor="@color/black"
                             android:textSize="@dimen/text_size_16sp"
                             android:textStyle="bold" />
@@ -562,7 +563,7 @@
                             android:textColor="@color/black"
                             android:textSize="@dimen/text_size_13sp"
                             android:transitionName="@string/transition_image_view"
-                            tools:ignore="ContentDescription" />
+                            tools:ignore="ContentDescription,UnusedAttribute" />
                     </FrameLayout>
 
                     <View
@@ -921,6 +922,7 @@
                                 android:lines="1"
                 android:padding="@dimen/scale_10dp"
                 android:singleLine="true"
+                android:maxLines="1"
                 android:text="@string/label_summary"
                 android:textAllCaps="false"
                 android:textColor="@color/white"

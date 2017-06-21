@@ -330,7 +330,7 @@
                     android:minWidth="@dimen/scale_80dp"
                     android:padding="@dimen/scale_4dp"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/scale_12dp"
+                    android:textSize="@dimen/text_size_12sp"
                     tools:text="Book 1,770" />
             </LinearLayout>
         </RelativeLayout>

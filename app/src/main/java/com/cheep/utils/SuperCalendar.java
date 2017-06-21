@@ -7,6 +7,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 import java.util.TimeZone;
 
 /**
@@ -23,7 +24,7 @@ public class SuperCalendar {
         mTimeZone = mCalendar.getTimeZone();
     }
 
-    public static final SuperCalendar getInstance() {
+    public static SuperCalendar getInstance() {
         superCalendar = new SuperCalendar();
         return superCalendar;
     }
@@ -58,7 +59,7 @@ public class SuperCalendar {
     }
 
     public void setTimeInString(String dateTime, String formatOfThisDate) throws ParseException {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(formatOfThisDate);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(formatOfThisDate, Locale.US);
         mCalendar.setTime(simpleDateFormat.parse(dateTime));
         mCalendar.setTimeZone(mTimeZone);
     }
@@ -70,7 +71,7 @@ public class SuperCalendar {
     public long getTimestampFromDate(String date, String dateFormat) {
         if (!TextUtils.isEmpty(date)) {
             // Create a DateFormatter object for displaying date in specified format.
-            SimpleDateFormat formatter = new SimpleDateFormat(dateFormat);
+            SimpleDateFormat formatter = new SimpleDateFormat(dateFormat,Locale.US);
             formatter.setTimeZone(TimeZone.getTimeZone("GMT"));
             try {
                 Date dt = formatter.parse(date);

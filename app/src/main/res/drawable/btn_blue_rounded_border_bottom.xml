@@ -5,7 +5,7 @@
         <shape android:shape="rectangle">
             <solid
                 android:width="1dp"
-                android:color="@color/splash_gradient_end"></solid>
+                android:color="@color/splash_gradient_end" />
             <corners
                 android:bottomLeftRadius="@dimen/scale_2dp"
                 android:bottomRightRadius="@dimen/scale_2dp" />

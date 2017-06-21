@@ -125,7 +125,7 @@ ext {
     supportLibVer = '25.4.0'
 //    supportLibVer = '25.3.1'
     gsonLibVer = '2.7'
-    playServiceVer = '11.0.0'
+    playServiceVer = '11.0.1'
 //    playServiceVer = '10.2.0'
 }
 

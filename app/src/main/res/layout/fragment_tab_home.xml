@@ -112,9 +112,11 @@
                             android:singleLine="true"
                             android:text="@string/dummy_name"
                             android:textAllCaps="false"
+                            android:maxLines="1"
                             android:textColor="@color/white"
                             android:textSize="@dimen/toolbar_title_text_size"
-                            android:transitionName="@string/transition_location" />
+                            android:transitionName="@string/transition_location"
+                            tools:ignore="UnusedAttribute" />
 
 
                         <RelativeLayout
@@ -184,11 +186,13 @@
                 android:paddingRight="@dimen/scale_15dp"
                 android:paddingTop="@dimen/scale_15dp"
                 android:singleLine="true"
+                android:maxLines="1"
                 android:text="@string/hint_search_placeholder"
                 android:textColor="@color/grey_dark_color"
                 android:textColorHint="@color/grey_varient_2"
                 android:textSize="@dimen/text_size_14sp"
-                android:transitionName="@string/transition_text_search" />
+                android:transitionName="@string/transition_text_search"
+                tools:ignore="UnusedAttribute" />
         </LinearLayout>
 
         <include

@@ -21,7 +21,8 @@
                 android:text="@string/label_verification"
                 android:textAllCaps="false"
                 android:textColor="@color/colorPrimary"
-                android:textSize="@dimen/text_size_20sp" />
+                android:textSize="@dimen/text_size_20sp"
+                tools:ignore="UnusedAttribute" />
         </android.support.v7.widget.Toolbar>
 
         <ScrollView

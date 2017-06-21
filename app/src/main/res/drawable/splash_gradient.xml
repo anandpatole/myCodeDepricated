@@ -6,7 +6,7 @@
             <gradient
                 android:angle="-90"
                 android:endColor="@color/splash_gradient_end"
-                android:startColor="@color/splash_gradient_start"></gradient>
+                android:startColor="@color/splash_gradient_start" />
         </shape>
     </item>
 </layer-list>

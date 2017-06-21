@@ -148,6 +148,7 @@
                             android:paddingBottom="@dimen/scale_5dp"
                             android:paddingTop="@dimen/scale_5dp"
                             android:singleLine="true"
+                            android:maxLines="1"
                             android:text="15miasasdasdasdasdasdsdasdn"
                             android:textColor="@color/grey_dark_color_2"
                             android:textSize="@dimen/text_size_11sp" />
@@ -291,6 +292,7 @@
                         android:paddingTop="@dimen/scale_3dp"
                         android:singleLine="true"
                         android:text="₹200"
+                        android:maxLines="1"
                         android:textColor="@color/white"
                         android:textSize="@dimen/text_size_14sp" />
                 </RelativeLayout>

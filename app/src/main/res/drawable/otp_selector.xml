@@ -1,5 +1,5 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:drawable="@drawable/otp_field_on" android:state_selected="true"></item>
-    <item android:drawable="@drawable/otp_field_off" android:state_selected="false"></item>
-    <item android:drawable="@drawable/otp_field_off"></item>
+    <item android:drawable="@drawable/otp_field_on" android:state_selected="true" />
+    <item android:drawable="@drawable/otp_field_off" android:state_selected="false" />
+    <item android:drawable="@drawable/otp_field_off" />
 </selector>

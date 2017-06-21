@@ -14,7 +14,8 @@
             android:layout_height="wrap_content"
             android:background="@color/splash_gradient_end"
             android:elevation="@dimen/scale_2dp"
-            android:theme="@style/AppTheme.AppBarWhite">
+            android:theme="@style/AppTheme.AppBarWhite"
+            tools:ignore="UnusedAttribute">
 
             <com.cheep.custom_view.CFTextViewSemiBold
                 android:layout_width="wrap_content"
@@ -24,7 +25,8 @@
                 android:text="@string/label_profile"
 
                 android:textColor="@color/colorPrimary"
-                android:textSize="@dimen/text_size_18sp" />
+                android:textSize="@dimen/text_size_18sp"
+                tools:ignore="UnusedAttribute" />
 
             <ImageView
                 android:id="@+id/img_report"

@@ -29,7 +29,7 @@
             android:id="@+id/view_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone"></FrameLayout>
+            android:visibility="gone" />
 
         <LinearLayout
             android:id="@+id/alert_container"

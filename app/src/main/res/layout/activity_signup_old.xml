@@ -25,7 +25,8 @@
                 android:textColor="@color/colorPrimary"
                 android:textSize="@dimen/text_size_16sp"
                 android:visibility="gone"
-                app:letterSpacing="0.3" />
+                app:letterSpacing="0.3"
+                tools:ignore="UnusedAttribute" />
         </android.support.v7.widget.Toolbar>
 
         <ScrollView

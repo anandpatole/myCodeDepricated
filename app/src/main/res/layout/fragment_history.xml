@@ -26,6 +26,7 @@
                     android:gravity="center"
                     android:lines="1"
                     android:padding="@dimen/scale_10dp"
+                    android:maxLines="1"
                     android:singleLine="true"
                     android:text="@string/label_payment_history"
                     android:textAllCaps="false"
@@ -119,7 +120,8 @@
                         android:textAllCaps="false"
                         android:textColor="@color/splash_gradient_end"
                         android:textSize="@dimen/text_size_16sp"
-                        app:letterSpacing="0.3" />
+                        app:letterSpacing="0.3"
+                        tools:ignore="UnusedAttribute" />
 
                     <com.cheep.custom_view.CFTextViewRegular
                         android:id="@+id/text_year"

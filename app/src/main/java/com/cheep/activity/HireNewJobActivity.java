@@ -796,12 +796,13 @@ public class HireNewJobActivity extends BaseAppCompatActivity implements Provide
 
                 /*if (TextUtils.isEmpty(edtName.getText().toString().trim())) {
                     Utility.showToast(mContext, getString(R.string.validate_address_nickname));
-                } else*/ if (TextUtils.isEmpty(edtAddress.getText().toString().trim())) {
+                } else*/
+                if (TextUtils.isEmpty(edtAddress.getText().toString().trim())) {
                     Utility.showToast(mContext, getString(R.string.validate_address));
                 } else {
                     if (addressModel != null) {
                         callUpdateAddressWS(addressModel.address_id
-                                ,  (radioHome.isChecked()
+                                , (radioHome.isChecked()
                                         ? NetworkUtility.TAGS.ADDRESS_TYPE.HOME
                                         : radio_office.isChecked() ? NetworkUtility.TAGS.ADDRESS_TYPE.OFFICE : NetworkUtility.TAGS.ADDRESS_TYPE.OTHERS)
                                 /*, edtName.getText().toString().trim()*/
@@ -1130,17 +1131,22 @@ public class HireNewJobActivity extends BaseAppCompatActivity implements Provide
     }
 
     // Custom method for api level 19 or higher to check location service status
-    protected boolean isLocationEnabledFromAPI19() {
-        int locationMode = Settings.Secure.getInt(
-                mContext.getContentResolver(),
-                Settings.Secure.LOCATION_MODE,
-                0
-        );
+    /*protected boolean isLocationEnabledFromAPI19() {
+        int locationMode = 0;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            locationMode = Settings.Secure.getInt(
+                    mContext.getContentResolver(),
+                    Settings.Secure.LOCATION_MODE,
+                    0
+            );
+        }
 
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
         return locationMode != Settings.Secure.LOCATION_MODE_OFF;
-    }
+//        }
+    }*/
 
-    private void showDateTimePickerDialog() {
+    /*private void showDateTimePickerDialog() {
         // Get Current Date
         final Calendar c = Calendar.getInstance();
 
@@ -1163,7 +1169,7 @@ public class HireNewJobActivity extends BaseAppCompatActivity implements Provide
         }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH));
 
         datePickerDialog.show();
-    }
+    }*/
 
     private void showTimePickerDialog() {
         // Get Current Time
@@ -1973,8 +1979,7 @@ public class HireNewJobActivity extends BaseAppCompatActivity implements Provide
     /**
      * Calling Add Address WS
      *
-     * @param addressType
-//     * @param addressName
+     * @param addressType //     * @param addressName
      * @param address
      */
     private void callAddAddressWS(String addressType, /*String addressName,*/ String address, LatLng latLng) {

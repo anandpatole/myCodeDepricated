@@ -48,14 +48,14 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
     }
 
     @Override
-    public void onBindViewHolder(SearchAdapter.ViewHolder holder, final int position) {
+    public void onBindViewHolder(final SearchAdapter.ViewHolder holder, int position) {
         final JobCategoryModel model = mList.get(holder.getAdapterPosition());
         holder.mTextResult.setText(model.catName);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (listener != null) {
-                    listener.onCategoryRowClicked(model, position);
+                    listener.onCategoryRowClicked(model, holder.getAdapterPosition());
                 }
             }
         });

@@ -130,7 +130,7 @@ public class PreferenceUtility {
     //For Notification Counter
     public void incrementUnreadNotificationCounter() {
         int counter = mSharedPreferences.getInt(PREF_NOTIFICATION_COUNTER, 0);
-        mSharedPreferences.edit().putInt(PREF_NOTIFICATION_COUNTER, ++counter).commit();
+        mSharedPreferences.edit().putInt(PREF_NOTIFICATION_COUNTER, ++counter).apply();
     }
 
     public int getUnreadNotificationCounter() {
@@ -138,6 +138,6 @@ public class PreferenceUtility {
     }
 
     public void clearUnreadNotificationCounter() {
-        mSharedPreferences.edit().putInt(PREF_NOTIFICATION_COUNTER, 0).commit();
+        mSharedPreferences.edit().putInt(PREF_NOTIFICATION_COUNTER, 0).apply();
     }
 }

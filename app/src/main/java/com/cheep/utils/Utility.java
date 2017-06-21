@@ -62,6 +62,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import static android.support.v8.renderscript.Allocation.createFromBitmap;
@@ -451,7 +452,7 @@ public class Utility {
    * */
     public static String getFormatedDate(long timeStamp) {
         Date date = new Date(timeStamp);
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("hh:mm aa");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("hh:mm aa", Locale.US);
         return simpleDateFormat.format(date);
     }
 
@@ -483,8 +484,8 @@ public class Utility {
             String inputPattern = inputDate;
             String outputPattern = OutputDate;
 
-            SimpleDateFormat inputFormat = new SimpleDateFormat(inputPattern);
-            SimpleDateFormat outputFormat = new SimpleDateFormat(outputPattern);
+            SimpleDateFormat inputFormat = new SimpleDateFormat(inputPattern,Locale.US);
+            SimpleDateFormat outputFormat = new SimpleDateFormat(outputPattern,Locale.US);
             Date date = null;
 
             try {

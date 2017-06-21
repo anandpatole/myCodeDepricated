@@ -1,5 +1,6 @@
 package com.cheep.activity;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.multidex.MultiDexApplication;
@@ -7,6 +8,7 @@ import android.support.multidex.MultiDexApplication;
 /**
  * Created by pankaj on 9/14/16.
  */
+@SuppressLint("Registered")
 public class ApplicationLifeCycle extends MultiDexApplication{
     @Override
     public void onCreate() {

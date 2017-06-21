@@ -151,6 +151,7 @@
                 android:lines="1"
                 android:padding="@dimen/scale_10dp"
                 android:singleLine="true"
+                android:maxLines="1"
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_size_15sp"
                 android:theme="@style/EditTextWhiteBG" />

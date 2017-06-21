@@ -6,7 +6,7 @@
                 android:bottomLeftRadius="@dimen/rounded_corner"
                 android:bottomRightRadius="@dimen/rounded_corner"
                 android:topLeftRadius="@dimen/rounded_corner"
-                android:topRightRadius="@dimen/rounded_corner"></corners>
+                android:topRightRadius="@dimen/rounded_corner" />
             <solid android:color="@color/splash_gradient_end" />
         </shape>
     </item>

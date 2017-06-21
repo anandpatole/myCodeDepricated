@@ -18,5 +18,5 @@
         android:layout_height="match_parent"
         android:adjustViewBounds="true"
         android:transitionName="@string/transition_image_view"
-        tools:ignore="ContentDescription" />
+        tools:ignore="ContentDescription,UnusedAttribute" />
 </LinearLayout>

@@ -106,6 +106,7 @@
                     android:marqueeRepeatLimit="marquee_forever"
                     android:scrollHorizontally="true"
                     android:singleLine="true"
+                    android:maxLines="1"
                     android:text="@string/label_verified"
                     android:textColor="@color/black"
                     android:textSize="@dimen/text_size_10sp" />
@@ -287,6 +288,7 @@
                     android:marqueeRepeatLimit="marquee_forever"
                     android:scrollHorizontally="true"
                     android:singleLine="true"
+                    android:maxLines="1"
                     android:text="Carpenter"
                     android:textAllCaps="false"
                     android:textColor="@color/splash_gradient_end"
@@ -397,6 +399,7 @@
                             android:layout_weight="1"
                             android:ellipsize="marquee"
                             android:gravity="center"
+
                             android:maxLines="1"
                             android:singleLine="true"
                             android:text="@string/label_reschedule_rejected"

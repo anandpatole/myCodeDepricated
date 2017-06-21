@@ -78,7 +78,9 @@ public class Marker extends ViewGroup implements MarkerDrawable.MarkerAnimationL
         mNumber.setText(maxValue);
         mNumber.setMaxLines(1);
         mNumber.setSingleLine(true);
-        SeekBarCompat.setTextDirection(mNumber, TEXT_DIRECTION_LOCALE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            SeekBarCompat.setTextDirection(mNumber, TEXT_DIRECTION_LOCALE);
+        }
         mNumber.setVisibility(View.INVISIBLE);
 
         //add some padding for the elevation shadow not to be clipped

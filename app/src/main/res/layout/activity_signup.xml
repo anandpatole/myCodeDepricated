@@ -11,7 +11,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingBottom="@dimen/scale_10dp"
             tools:background="@color/black">
@@ -37,7 +37,8 @@
                         android:textColor="@color/colorPrimary"
                         android:textSize="@dimen/text_size_16sp"
                         android:visibility="gone"
-                        app:letterSpacing="0.3" />
+                        app:letterSpacing="0.3"
+                        tools:ignore="UnusedAttribute" />
                 </android.support.v7.widget.Toolbar>
 
                 <LinearLayout

@@ -7,5 +7,5 @@
     <item android:drawable="@drawable/icon_favourite_not_selected" android:state_selected="false">
 
     </item>
-    <item android:drawable="@drawable/icon_favourite_not_selected"></item>
+    <item android:drawable="@drawable/icon_favourite_not_selected" />
 </selector>

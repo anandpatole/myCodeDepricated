@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name" translatable="false">Cheep</string>
 
     <!--IDs-->
@@ -114,7 +114,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_crop_image">Crop</string>
     <string name="label_reschedule_inform">%1$s has been informed about reschedule time.</string>
     <string name="label_Ok">@android:string/ok</string>
-    <string name="label_Ok_small">Ok</string>
+    <string name="label_Ok_small" tools:ignore="Typos">Ok</string>
     <string name="label_write_a_review">Please share with other users what you think of %1$s!</string><!--Please share with other users what you think of Laxman!-->
     <string name="label_rate">Rate</string>
     <string name="label_call">Call</string>

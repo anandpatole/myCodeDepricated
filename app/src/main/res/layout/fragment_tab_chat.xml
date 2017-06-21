@@ -30,10 +30,12 @@
                     android:padding="@dimen/scale_10dp"
                     android:singleLine="true"
                     android:text="@string/label_chat"
+                    android:maxLines="1"
                     android:textAllCaps="false"
                     android:textColor="@color/white"
                     android:textSize="@dimen/toolbar_title_text_size"
-                    android:transitionName="@string/transition_location" />
+                    android:transitionName="@string/transition_location"
+                    tools:ignore="UnusedAttribute" />
 
                 <RelativeLayout
                     android:id="@+id/rel_notification_action"

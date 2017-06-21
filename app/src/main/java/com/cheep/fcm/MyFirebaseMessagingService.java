@@ -55,6 +55,7 @@ import org.greenrobot.eventbus.EventBus;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.Map;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
@@ -99,9 +100,17 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         String message = map.get("message");
         String title = map.get("title");
 
+
         Log.d(TAG, "From: " + from);
         Log.d(TAG, "Message: " + message);
         Log.d(TAG, "Title: " + title);
+
+        /**
+         * In case Message is Empty DON'T Go ahead as it might be Dummy Notification sent by
+         */
+        if (TextUtils.isEmpty(message)) {
+            return;
+        }
 
         Bundle bnd = new Bundle();
         Iterator it = map.entrySet().iterator();
@@ -284,7 +293,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private static android.support.v7.app.NotificationCompat.Builder createMessageNotificationBuilder(Context context, ChatNotification chatNotification) {
         android.support.v7.app.NotificationCompat.Builder builder = new android.support.v7.app.NotificationCompat.Builder(context);
         if (mapMessages.size() > 1) {
-            String formatedText = String.format("%d New %s", getActiveMessageCount(), getActiveMessageCount() > 1 ? "Messages" : "Message");
+            String formatedText = String.format(Locale.US, "%d New %s", getActiveMessageCount(), getActiveMessageCount() > 1 ? "Messages" : "Message");
             builder.setContentTitle(formatedText);
         } else {
             builder.setContentTitle(chatNotification.title);
