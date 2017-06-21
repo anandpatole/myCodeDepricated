@@ -41,7 +41,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
-                            android:src="@drawable/ic_tick" />
+                            android:src="@drawable/ic_tick"
+                            tools:ignore="ContentDescription" />
 
                         <com.cheep.custom_view.CFTextViewSemiBold
                             android:id="@+id/text_sub_category_name"
@@ -82,13 +83,15 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:src="@drawable/ic_icon_task_camera" />
+                        android:src="@drawable/ic_icon_task_camera"
+                        tools:ignore="ContentDescription" />
 
                     <ImageView
                         android:id="@+id/img_picture"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:adjustViewBounds="true" />
+                        android:adjustViewBounds="true"
+                        tools:ignore="ContentDescription" />
                 </FrameLayout>
             </RelativeLayout>
 
@@ -121,7 +124,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:src="@drawable/ic_icon_task_when" />
+                        android:src="@drawable/ic_icon_task_when"
+                        tools:ignore="ContentDescription" />
 
                     <com.cheep.custom_view.CFTextViewSemiBold
                         android:id="@+id/text_when"
@@ -177,7 +181,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:src="@drawable/ic_icon_task_where_active" />
+                        android:src="@drawable/ic_icon_task_where_active"
+                        tools:ignore="ContentDescription" />
 
                     <com.cheep.custom_view.CFTextViewSemiBold
                         android:id="@+id/text_where"
@@ -222,35 +227,40 @@
                     android:id="@+id/img_1"
                     android:layout_width="@dimen/scale_60dp"
                     android:layout_height="@dimen/scale_60dp"
-                    android:src="@drawable/dummy_person1" />
+                    android:src="@drawable/dummy_person1"
+                    tools:ignore="ContentDescription" />
 
                 <ImageView
                     android:id="@+id/img_2"
                     android:layout_width="@dimen/scale_60dp"
                     android:layout_height="@dimen/scale_60dp"
                     android:layout_marginLeft="-20dp"
-                    android:src="@drawable/dummy_person1" />
+                    android:src="@drawable/dummy_person1"
+                    tools:ignore="ContentDescription" />
 
                 <ImageView
                     android:id="@+id/img_3"
                     android:layout_width="@dimen/scale_60dp"
                     android:layout_height="@dimen/scale_60dp"
                     android:layout_marginLeft="-20dp"
-                    android:src="@drawable/dummy_person1" />
+                    android:src="@drawable/dummy_person1"
+                    tools:ignore="ContentDescription" />
 
                 <ImageView
                     android:id="@+id/img_4"
                     android:layout_width="@dimen/scale_60dp"
                     android:layout_height="@dimen/scale_60dp"
                     android:layout_marginLeft="-20dp"
-                    android:src="@drawable/dummy_person1" />
+                    android:src="@drawable/dummy_person1"
+                    tools:ignore="ContentDescription" />
 
                 <ImageView
                     android:id="@+id/img_5"
                     android:layout_width="@dimen/scale_60dp"
                     android:layout_height="@dimen/scale_60dp"
                     android:layout_marginLeft="-20dp"
-                    android:src="@drawable/dummy_person1" />
+                    android:src="@drawable/dummy_person1"
+                    tools:ignore="ContentDescription" />
 
                 <com.cheep.custom_view.CFTextViewSemiBold
                     android:id="@+id/extra_pro_count"
@@ -277,7 +287,8 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_shield" />
+                    android:src="@drawable/ic_shield"
+                    tools:ignore="ContentDescription" />
 
                 <com.cheep.custom_view.CFTextViewRegular
                     android:id="@+id/text_desclaimer"

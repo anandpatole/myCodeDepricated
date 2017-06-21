@@ -94,7 +94,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingTop="@dimen/scale_2dp"
-                    android:src="@drawable/ic_calender" />
+                    android:src="@drawable/ic_calender"
+                    tools:ignore="ContentDescription" />
 
                 <com.cheep.custom_view.CFTextViewRegular
                     android:id="@+id/tvTaskBookingTime"
@@ -122,7 +123,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingTop="@dimen/scale_2dp"
-                    android:src="@drawable/ic_clock" />
+                    android:src="@drawable/ic_clock"
+                    tools:ignore="ContentDescription" />
 
                 <com.cheep.custom_view.CFTextViewRegular
                     android:id="@+id/tvTaskStartsIn"

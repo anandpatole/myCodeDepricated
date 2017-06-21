@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
@@ -40,7 +41,8 @@
                     android:layout_gravity="right|center_vertical"
                     android:padding="@dimen/scale_5dp"
                     android:visibility="gone"
-                    android:src="@drawable/ic_filter" />
+                    android:src="@drawable/ic_filter"
+                    tools:ignore="ContentDescription" />
 
                 <ImageView
                     android:id="@+id/img_profile"
@@ -48,7 +50,8 @@
                     android:layout_height="@dimen/scale_40dp"
                     android:layout_marginRight="@dimen/scale_10dp"
                     android:layout_gravity="right|center_vertical"
-                    android:src="@drawable/icon_profile_img_solid" />
+                    android:src="@drawable/icon_profile_img_solid"
+                    tools:ignore="ContentDescription" />
 
             </android.support.v7.widget.Toolbar>
         </android.support.design.widget.AppBarLayout>
@@ -89,7 +92,8 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:layout_marginLeft="@dimen/scale_15dp"
-                android:src="@drawable/ic_camera_gray" />
+                android:src="@drawable/ic_camera_gray"
+                tools:ignore="ContentDescription" />
 
             <com.cheep.custom_view.CFEditTextRegular
                 android:id="@+id/text_message"

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:tools="http://schemas.android.com/tools">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/front_layout"
@@ -14,7 +14,8 @@
             android:layout_gravity="center_vertical"
             android:padding="@dimen/scale_5dp"
             android:scaleType="centerCrop"
-            android:src="@drawable/icon_profile_img_solid" />
+            android:src="@drawable/icon_profile_img_solid"
+            tools:ignore="ContentDescription" />
 
 
     </LinearLayout>

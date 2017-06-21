@@ -11,7 +11,8 @@
             android:id="@+id/img_category_background"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scaleType="centerCrop" />
+            android:scaleType="centerCrop"
+            tools:ignore="ContentDescription" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -41,7 +42,8 @@
                     android:layout_width="@dimen/scale_50dp"
                     android:layout_height="@dimen/scale_50dp"
                     android:adjustViewBounds="false"
-                    android:visibility="gone" />
+                    android:visibility="gone"
+                    tools:ignore="ContentDescription" />
 
                 <com.cheep.custom_view.CFTextViewSemiBold
                     android:id="@+id/text_category_name"

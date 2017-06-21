@@ -86,7 +86,8 @@
                         android:layout_height="@dimen/chat_width"
                         android:layout_gravity="center"
                         android:gravity="center"
-                        android:src="@drawable/ic_cheep_circular_icon" />
+                        android:src="@drawable/ic_cheep_circular_icon"
+                        tools:ignore="ContentDescription" />
 
                     <ImageView
                         android:id="@+id/imgFav"
@@ -94,7 +95,8 @@
                         android:layout_height="@dimen/scale_20dp"
                         android:layout_gravity="right|bottom"
                         android:layout_marginBottom="@dimen/scale_5dp"
-                        android:background="@drawable/icon_fav_selector" />
+                        android:background="@drawable/icon_fav_selector"
+                        tools:ignore="ContentDescription" />
                 </FrameLayout>
 
                 <FrameLayout
@@ -202,7 +204,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/scale_2dp"
-                            android:src="@drawable/icon_calender_saffron" />
+                            android:src="@drawable/icon_calender_saffron"
+                            tools:ignore="ContentDescription" />
 
                         <com.cheep.custom_view.CFTextViewRegular
                             android:id="@+id/tvTaskBookedDateTime"
@@ -228,7 +231,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/scale_2dp"
-                            android:src="@drawable/ic_clock" />
+                            android:src="@drawable/ic_clock"
+                            tools:ignore="ContentDescription" />
 
                         <com.cheep.custom_view.CFTextViewRegular
                             android:id="@+id/tvTaskStartedTime"
@@ -288,7 +292,8 @@
                         android:layout_gravity="center"
                         android:layout_marginTop="@dimen/scale_5dp"
                         android:gravity="center"
-                        android:visibility="gone" />
+                        android:visibility="gone"
+                        tools:ignore="ContentDescription" />
                 </LinearLayout>
 
                 <FrameLayout
@@ -312,7 +317,8 @@
                     <ImageView
                         android:id="@+id/ivLiveAnimated"
                         android:layout_width="@dimen/icon_live_width"
-                        android:layout_height="@dimen/icon_live_height" />
+                        android:layout_height="@dimen/icon_live_height"
+                        tools:ignore="ContentDescription" />
                 </FrameLayout>
 
                 <LinearLayout

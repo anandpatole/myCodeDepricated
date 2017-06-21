@@ -86,7 +86,8 @@
                         android:layout_gravity="center"
                         android:layout_marginBottom="@dimen/scale_3dp"
                         android:gravity="center"
-                        android:src="@drawable/ic_cheep_circular_icon" />
+                        android:src="@drawable/ic_cheep_circular_icon"
+                        tools:ignore="ContentDescription" />
 
                     <!--<com.cheep.custom_view.CFTextViewRegular
                         android:id="@+id/text_response_count"

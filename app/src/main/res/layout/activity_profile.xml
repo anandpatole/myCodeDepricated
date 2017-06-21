@@ -32,7 +32,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="right"
                 android:paddingRight="@dimen/scale_15dp"
-                android:src="@drawable/icon_flag" />
+                android:src="@drawable/icon_flag"
+                tools:ignore="ContentDescription" />
         </android.support.v7.widget.Toolbar>
 
         <android.support.v4.widget.SwipeRefreshLayout
@@ -74,7 +75,8 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
-                                android:src="@drawable/icon_call" />
+                                android:src="@drawable/icon_call"
+                                tools:ignore="ContentDescription" />
 
                             <com.cheep.custom_view.CFTextViewRegular
                                 android:id="@+id/text_call"
@@ -119,7 +121,8 @@
                                 android:layout_alignParentRight="true"
                                 android:layout_marginBottom="@dimen/scale_20dp"
                                 android:layout_marginRight="@dimen/scale_20dp"
-                                android:background="@drawable/icon_fav_selector" />
+                                android:background="@drawable/icon_fav_selector"
+                                tools:ignore="ContentDescription" />
 
                         </RelativeLayout>
 
@@ -138,7 +141,8 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
-                                android:src="@drawable/icon_chat" />
+                                android:src="@drawable/icon_chat"
+                                tools:ignore="ContentDescription" />
 
                             <com.cheep.custom_view.CFTextViewRegular
                                 android:id="@+id/text_chat"
@@ -365,7 +369,8 @@
                                     android:layout_height="wrap_content"
                                     android:adjustViewBounds="true"
                                     android:src="@drawable/img_empty_category"
-                                    android:visibility="gone" />
+                                    android:visibility="gone"
+                                    tools:ignore="ContentDescription" />
 
                                 <com.cheep.custom_view.CFTextViewRegular
                                     android:id="@+id/text_error"

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
@@ -44,7 +45,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:src="@drawable/icon_profile_img" />
+                    android:src="@drawable/icon_profile_img"
+                    tools:ignore="ContentDescription" />
 
                 <com.cheep.custom_view.CFTextViewRegular
                     android:id="@+id/tv_add_photo"
@@ -72,7 +74,8 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="bottom"
                         android:layout_marginBottom="@dimen/scale_8dp"
-                        android:src="@drawable/icon_profile_white" />
+                        android:src="@drawable/icon_profile_white"
+                        tools:ignore="ContentDescription" />
 
                     <android.support.design.widget.TextInputLayout
                         android:layout_width="match_parent"
@@ -121,7 +124,8 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="bottom"
                         android:layout_marginBottom="@dimen/scale_8dp"
-                        android:src="@drawable/icon_email" />
+                        android:src="@drawable/icon_email"
+                        tools:ignore="ContentDescription" />
 
                     <android.support.design.widget.TextInputLayout
                         android:layout_width="match_parent"
@@ -169,7 +173,8 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="bottom"
                         android:layout_marginBottom="@dimen/scale_8dp"
-                        android:src="@drawable/icon_password" />
+                        android:src="@drawable/icon_password"
+                        tools:ignore="ContentDescription" />
 
                     <android.support.design.widget.TextInputLayout
                         android:layout_width="match_parent"
@@ -218,7 +223,8 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="bottom"
                         android:layout_marginBottom="@dimen/scale_8dp"
-                        android:src="@drawable/icon_mobile" />
+                        android:src="@drawable/icon_mobile"
+                        tools:ignore="ContentDescription" />
 
                     <android.support.design.widget.TextInputLayout
                         android:layout_width="match_parent"

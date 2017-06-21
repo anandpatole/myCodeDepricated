@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <LinearLayout
@@ -17,7 +18,8 @@
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:elevation="@dimen/scale_2dp">
+                android:elevation="@dimen/scale_2dp"
+                tools:ignore="UnusedAttribute">
 
                 <com.cheep.custom_view.CFTextViewSemiBold
                     android:id="@+id/text_title"
@@ -25,9 +27,10 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layoutDirection="ltr"
-                    android:text="ACEDEMIC"
+                    tools:text="ACEDEMIC"
                     android:textColor="@color/colorPrimary"
-                    android:textSize="@dimen/text_size_18sp" />
+                    android:textSize="@dimen/text_size_18sp"
+                    tools:ignore="UnusedAttribute" />
 
             </android.support.v7.widget.Toolbar>
         </android.support.design.widget.AppBarLayout>
@@ -55,7 +58,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:src="@drawable/ic_tick" />
+                    android:src="@drawable/ic_tick"
+                    tools:ignore="ContentDescription" />
 
                 <com.cheep.custom_view.CFTextViewSemiBold
                     android:id="@+id/text_sub_category_name"
@@ -145,7 +149,8 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/icon_when" />
+                    android:src="@drawable/icon_when"
+                    tools:ignore="ContentDescription" />
 
                 <com.cheep.custom_view.CFTextViewRegular
                     android:layout_width="wrap_content"
@@ -196,7 +201,8 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/icon_where" />
+                    android:src="@drawable/icon_where"
+                    tools:ignore="ContentDescription" />
 
                 <com.cheep.custom_view.CFTextViewRegular
                     android:layout_width="wrap_content"
@@ -244,7 +250,8 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/icon_camera" />
+                    android:src="@drawable/icon_camera"
+                    tools:ignore="ContentDescription" />
 
                 <com.cheep.custom_view.CFTextViewRegular
                     android:id="@+id/text_label_attach"
@@ -261,7 +268,8 @@
                     android:layout_width="@dimen/scale_30dp"
                     android:layout_height="@dimen/scale_30dp"
                     android:layout_marginTop="@dimen/scale_5dp"
-                    android:transitionName="@string/transition_image_view" />
+                    android:transitionName="@string/transition_image_view"
+                    tools:ignore="ContentDescription,UnusedAttribute" />
             </LinearLayout>
         </LinearLayout>
 
@@ -281,7 +289,8 @@
             android:textColor="@color/white"
             android:textSize="@dimen/text_size_13sp"
             app:letterSpacing="0.3"
-            android:visibility="gone"/>
+            android:visibility="gone"
+            tools:ignore="UnusedAttribute" />
 
         <include
             android:id="@+id/common_recycler_view"

@@ -52,7 +52,8 @@
                         android:layout_width="120dp"
                         android:layout_height="120dp"
                         android:layout_gravity="center_horizontal"
-                        android:src="@drawable/icon_cheep_logo" />
+                        android:src="@drawable/icon_cheep_logo"
+                        tools:ignore="ContentDescription" />
 
                     <LinearLayout
                         android:layout_width="match_parent"

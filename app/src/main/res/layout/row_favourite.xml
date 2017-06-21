@@ -40,7 +40,8 @@
                     android:layout_width="@dimen/chat_width"
                     android:layout_height="@dimen/chat_width"
                     android:gravity="center"
-                    android:src="@drawable/icon_profile_img" />
+                    android:src="@drawable/icon_profile_img"
+                    tools:ignore="ContentDescription" />
 
                 <com.cheep.custom_view.CFTextViewRegular
                     android:id="@+id/text_participant_counter"
@@ -202,7 +203,8 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:padding="@dimen/scale_3dp"
-                    android:src="@drawable/fav_selector" />
+                    android:src="@drawable/fav_selector"
+                    tools:ignore="ContentDescription" />
 
                 <com.cheep.custom_view.CFTextViewRegular
                     android:id="@+id/text_total_tasks"

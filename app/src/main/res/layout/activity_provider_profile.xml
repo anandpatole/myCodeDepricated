@@ -53,7 +53,8 @@
                             android:layout_width="76dp"
                             android:layout_height="76dp"
                             android:layout_gravity="center_horizontal|bottom"
-                            android:src="@drawable/icon_profile_img_solid" />
+                            android:src="@drawable/icon_profile_img_solid"
+                            tools:ignore="ContentDescription" />
 
                     </FrameLayout>
 
@@ -190,7 +191,8 @@
                                 android:layout_gravity="center"
                                 android:gravity="center"
                                 android:padding="@dimen/scale_3dp"
-                                android:src="@drawable/fav_selector" />
+                                android:src="@drawable/fav_selector"
+                                tools:ignore="ContentDescription" />
                         </LinearLayout>
 
                         <View
@@ -229,7 +231,8 @@
                                 android:layout_gravity="center"
                                 android:gravity="center"
                                 android:padding="@dimen/scale_3dp"
-                                android:src="@drawable/icon_chat_user" />
+                                android:src="@drawable/icon_chat_user"
+                                tools:ignore="ContentDescription" />
                         </LinearLayout>
 
                         <View
@@ -269,7 +272,8 @@
                                 android:layout_gravity="center"
                                 android:gravity="center"
                                 android:padding="@dimen/scale_3dp"
-                                android:src="@drawable/icon_call_user" />
+                                android:src="@drawable/icon_call_user"
+                                tools:ignore="ContentDescription" />
                         </LinearLayout>
 
                         <View
@@ -371,7 +375,8 @@
                                 android:layout_height="wrap_content"
                                 android:adjustViewBounds="true"
                                 android:src="@drawable/img_empty_category"
-                                android:visibility="gone" />
+                                android:visibility="gone"
+                                tools:ignore="ContentDescription" />
 
                             <com.cheep.custom_view.CFTextViewRegular
                                 android:id="@+id/text_error"
@@ -426,7 +431,8 @@
                 android:layout_height="@dimen/scale_32dp"
                 android:layout_gravity="right"
                 android:padding="@dimen/scale_5dp"
-                android:src="@drawable/icon_flag" />
+                android:src="@drawable/icon_flag"
+                tools:ignore="ContentDescription" />
         </android.support.v7.widget.Toolbar>
 
     </FrameLayout>

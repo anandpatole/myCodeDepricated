@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:tools="http://schemas.android.com/tools">
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
@@ -19,7 +19,8 @@
             android:src="@drawable/icon_profile_img_solid"
             android:text="5"
             android:textColor="@color/white"
-            android:textSize="@dimen/text_size_25sp" />
+            android:textSize="@dimen/text_size_25sp"
+            tools:ignore="ContentDescription" />
 
         <com.cheep.custom_view.CFTextViewRegular
             android:id="@+id/text_desc"

@@ -42,7 +42,8 @@
                     android:layout_height="wrap_content"
                     android:adjustViewBounds="true"
                     android:src="@drawable/img_empty_category"
-                    android:visibility="gone" />
+                    android:visibility="gone"
+                    tools:ignore="ContentDescription" />
 
                 <ImageView
                     android:id="@+id/img_post_a_task"
@@ -52,7 +53,8 @@
                     android:layout_marginBottom="@dimen/scale_30dp"
                     android:adjustViewBounds="true"
                     android:src="@drawable/ic_post_a_task"
-                    android:visibility="gone" />
+                    android:visibility="gone"
+                    tools:ignore="ContentDescription" />
             </FrameLayout>
 
             <com.cheep.custom_view.CFTextViewRegular

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:tools="http://schemas.android.com/tools">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/front_layout"
@@ -23,7 +23,8 @@
                 android:layout_width="@dimen/history_profile_width"
                 android:layout_height="@dimen/history_profile_width"
                 android:gravity="center"
-                android:src="@drawable/icon_profile_img" />
+                android:src="@drawable/icon_profile_img"
+                tools:ignore="ContentDescription" />
 
             <LinearLayout
                 android:id="@+id/profile_layout"

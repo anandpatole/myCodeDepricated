@@ -24,7 +24,8 @@
         android:layout_marginLeft="@dimen/scale_16dp"
         android:layout_marginRight="@dimen/scale_16dp"
         android:adjustViewBounds="true"
-        android:visibility="gone" />
+        android:visibility="gone"
+        tools:ignore="ContentDescription" />
 
     <com.cheep.custom_view.CFTextViewRegular
         android:id="@+id/name"

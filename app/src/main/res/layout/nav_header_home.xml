@@ -18,7 +18,8 @@
                 android:layout_width="@dimen/side_menu_logo_size"
                 android:layout_height="@dimen/side_menu_logo_size"
                 android:layout_margin="@dimen/scale_16dp"
-                android:src="@drawable/icon_profile_img" />
+                android:src="@drawable/icon_profile_img"
+                tools:ignore="ContentDescription" />
 
             <com.cheep.custom_view.CFTextViewSemiBold
                 android:id="@+id/text_name"

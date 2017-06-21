@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:tools="http://schemas.android.com/tools">
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
@@ -15,7 +15,8 @@
             android:layout_width="@dimen/unread_badge_width"
             android:layout_height="@dimen/unread_badge_width"
             android:layout_centerVertical="true"
-            android:src="@drawable/icon_red_dot" />
+            android:src="@drawable/icon_red_dot"
+            tools:ignore="ContentDescription" />
 
         <ImageView
             android:id="@+id/img_profile"
@@ -25,7 +26,8 @@
             android:layout_marginLeft="@dimen/scale_10dp"
             android:layout_toRightOf="@+id/img_unread"
             android:src="@drawable/icon_profile_img"
-            android:visibility="invisible" />
+            android:visibility="invisible"
+            tools:ignore="ContentDescription" />
 
         <com.cheep.custom_view.CFTextViewRegular
             android:id="@+id/text_participant_counter"

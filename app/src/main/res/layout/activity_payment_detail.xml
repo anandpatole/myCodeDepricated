@@ -39,7 +39,8 @@
                                     android:id="@+id/img_service"
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
-                                    android:scaleType="centerCrop" />
+                                    android:scaleType="centerCrop"
+                                    tools:ignore="ContentDescription" />
 
                                 <View
                                     android:layout_width="match_parent"
@@ -180,7 +181,8 @@
                         <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:src="@drawable/ic_shield" />
+                            android:src="@drawable/ic_shield"
+                            tools:ignore="ContentDescription" />
 
                         <com.cheep.custom_view.CFTextViewRegular
                             android:id="@+id/text_desclaimer"
@@ -378,7 +380,8 @@
                                 android:layout_toRightOf="@+id/textpromocodelabel"
                                 android:padding="@dimen/scale_5dp"
                                 android:src="@drawable/icon_cross_blue"
-                                android:visibility="gone" />
+                                android:visibility="gone"
+                                tools:ignore="ContentDescription" />
 
                             <com.cheep.custom_view.CFTextViewSemiBold
                                 android:id="@+id/txtpromocode"

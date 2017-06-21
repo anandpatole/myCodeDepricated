@@ -125,7 +125,8 @@
                     android:layout_height="@dimen/scale_50dp"
                     android:layout_margin="@dimen/scale_4dp"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/icon_profile_img_solid" />
+                    android:src="@drawable/icon_profile_img_solid"
+                    tools:ignore="ContentDescription" />
 
                 <ImageView
                     android:id="@+id/ivFavoriteQuote"
@@ -133,7 +134,8 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="right|end|bottom"
                     android:padding="@dimen/scale_4dp"
-                    android:src="@drawable/ic_favorite_quote_selector" />
+                    android:src="@drawable/ic_favorite_quote_selector"
+                    tools:ignore="ContentDescription" />
             </FrameLayout>
 
             <RatingBar
@@ -162,7 +164,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/scale_8dp"
-                android:src="@drawable/ic_badge_gold" />
+                android:src="@drawable/ic_badge_gold"
+                tools:ignore="ContentDescription" />
         </LinearLayout>
 
         <RelativeLayout
@@ -242,7 +245,8 @@
                 <ImageView
                     android:id="@+id/ivHomeAnimated"
                     android:layout_width="@dimen/icon_home_width"
-                    android:layout_height="@dimen/icon_home_height" />
+                    android:layout_height="@dimen/icon_home_height"
+                    tools:ignore="ContentDescription" />
 
                 <com.cheep.custom_view.CFTextViewRegular
                     android:id="@+id/tvHappyHomes"
@@ -276,7 +280,8 @@
                 <ImageView
                     android:id="@+id/ivLiveAnimated"
                     android:layout_width="@dimen/icon_live_width"
-                    android:layout_height="@dimen/icon_live_height" />
+                    android:layout_height="@dimen/icon_live_height"
+                    tools:ignore="ContentDescription" />
             </FrameLayout>
 
             <LinearLayout
@@ -293,7 +298,8 @@
                     android:layout_height="@dimen/icon_chat_height"
                     android:layout_gravity="center_vertical"
                     android:layout_marginRight="@dimen/scale_8dp"
-                    android:src="@drawable/ic_chat_animated" />
+                    android:src="@drawable/ic_chat_animated"
+                    tools:ignore="ContentDescription" />
 
                 <com.cheep.custom_view.CFTextViewSemiBold
                     android:id="@+id/tvDiscount"

@@ -49,7 +49,8 @@
                         android:layout_width="76dp"
                         android:layout_height="76dp"
                         android:layout_gravity="center_horizontal|bottom"
-                        android:src="@drawable/icon_profile_img_solid" />
+                        android:src="@drawable/icon_profile_img_solid"
+                        tools:ignore="ContentDescription" />
 
                 </FrameLayout>
 
@@ -140,7 +141,8 @@
                             android:layout_gravity="center"
                             android:gravity="center"
                             android:padding="@dimen/scale_3dp"
-                            android:src="@drawable/fav_selector" />
+                            android:src="@drawable/fav_selector"
+                            tools:ignore="ContentDescription" />
                     </LinearLayout>
 
                     <View
@@ -179,7 +181,8 @@
                             android:layout_gravity="center"
                             android:gravity="center"
                             android:padding="@dimen/scale_3dp"
-                            android:src="@drawable/icon_chat_user" />
+                            android:src="@drawable/icon_chat_user"
+                            tools:ignore="ContentDescription" />
                     </LinearLayout>
 
                     <View
@@ -219,7 +222,8 @@
                             android:layout_gravity="center"
                             android:gravity="center"
                             android:padding="@dimen/scale_3dp"
-                            android:src="@drawable/icon_call_user" />
+                            android:src="@drawable/icon_call_user"
+                            tools:ignore="ContentDescription" />
                     </LinearLayout>
 
                     <View
@@ -557,7 +561,8 @@
                             android:gravity="right"
                             android:textColor="@color/black"
                             android:textSize="@dimen/text_size_13sp"
-                            android:transitionName="@string/transition_image_view" />
+                            android:transitionName="@string/transition_image_view"
+                            tools:ignore="ContentDescription" />
                     </FrameLayout>
 
                     <View
@@ -594,7 +599,8 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="right|center_vertical"
 
-                            android:visibility="gone" />
+                            android:visibility="gone"
+                            tools:ignore="ContentDescription" />
                     </FrameLayout>
 
                     <View
