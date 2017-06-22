@@ -1022,6 +1022,7 @@ public class Utility {
         public static final String TASK_CREATE = "TASK_CREATE";
         public static final String PAYMENT_NOTIFICATION = "PAYMENT_NOTIFICATION";
         public static final String TASK_START_ALERT = "TASK_START_ALERT";
+        public static final String WEB_CUSTOM_NOTIFICATION = "WEB_CUSTOM_NOTIFICATION";
     }
 
     public static final String SESSION_EXPIRE = "session_expire";

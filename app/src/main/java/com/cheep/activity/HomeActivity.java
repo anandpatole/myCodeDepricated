@@ -178,7 +178,7 @@ public class HomeActivity extends BaseAppCompatActivity
                 // Redirecting the user to Quote Screen
                 TaskSummaryActivity.getInstance(mContext, bundle.getString(TASK_ID));
 //                HireNewJobActivity.newInstance(mContext, taskID, spUserId);
-            } else if (bundle.getString(NetworkUtility.TAGS.TYPE).equalsIgnoreCase(Utility.NOTIFICATION_TYPE.TASK_CREATE)) {
+            } else if (bundle.getString(NetworkUtility.TAGS.TYPE).equalsIgnoreCase(Utility.NOTIFICATION_TYPE.WEB_CUSTOM_NOTIFICATION)) {
                 // Do Nothing as we just need to redirect the user to Home screen
 
             } else {
