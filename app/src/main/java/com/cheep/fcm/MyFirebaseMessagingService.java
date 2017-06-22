@@ -130,7 +130,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         sendNotification(notificationId, title, message, bnd);
         PreferenceUtility.getInstance(getApplicationContext()).incrementUnreadNotificationCounter();
 

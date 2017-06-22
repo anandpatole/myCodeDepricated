@@ -150,7 +150,7 @@ public class HomeActivity extends BaseAppCompatActivity
         // Check Application version
         checkVersionOfApp();
 
-        // Check Ongoing task as well
+
 
     }
 
@@ -178,9 +178,9 @@ public class HomeActivity extends BaseAppCompatActivity
                 // Redirecting the user to Quote Screen
                 TaskSummaryActivity.getInstance(mContext, bundle.getString(TASK_ID));
 //                HireNewJobActivity.newInstance(mContext, taskID, spUserId);
-            } else if (bundle.getString(NetworkUtility.TAGS.TYPE).equalsIgnoreCase(Utility.NOTIFICATION_TYPE.WEB_CUSTOM_NOTIFICATION)) {
+            } else if (bundle.getString(NetworkUtility.TAGS.TYPE).equalsIgnoreCase(Utility.NOTIFICATION_TYPE.WEB_CUSTOM_NOTIFICATION)
+                    || bundle.getString(NetworkUtility.TAGS.TYPE).equalsIgnoreCase(Utility.NOTIFICATION_TYPE.TASK_CREATE)) {
                 // Do Nothing as we just need to redirect the user to Home screen
-
             } else {
                /* TaskDetailModel taskDetailModel = new TaskDetailModel();
                 taskDetailModel.taskId = bundle.getString(TASK_ID);

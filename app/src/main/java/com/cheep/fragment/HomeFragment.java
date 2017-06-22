@@ -439,7 +439,6 @@ public class HomeFragment extends BaseFragment {
                     mFragmentsStackTags.remove(ChatTabFragment.TAG);
                     mFragmentsStackTags.add(ChatTabFragment.TAG);
                 } else {
-
                     fragmentToCommit = ChatTabFragment.newInstance(mListener);
                     if (!mFragmentsStackTags.contains(ChatTabFragment.TAG)) {
                         mFragmentsStackTags.add(ChatTabFragment.TAG);
@@ -453,11 +452,13 @@ public class HomeFragment extends BaseFragment {
                     // Alert is active so show the alert dialog
                     showAlertDialog();
                 } else {
-                    Utility.showToast(mContext, getString(R.string.label_alert_not_active));
+//                    Utility.showToast(mContext, getString(R.string.label_alert_not_active));
+                    showFullDesc(getString(R.string.app_name).toUpperCase(), getString(R.string.label_alert_not_active));
                 }
                 break;
         }
     }
+
 
     @Override
     public boolean onBackPressed() {
@@ -668,7 +669,7 @@ public class HomeFragment extends BaseFragment {
         mParams.put(NetworkUtility.TAGS.LAT, lat);*/
 
 
-        showProgressDialog();
+//        showProgressDialog();
 
         VolleyNetworkRequest mVolleyNetworkRequestForCategoryList = new VolleyNetworkRequest(NetworkUtility.WS.CHECK_PROCESSING_TASK
                 , mCheckProcessingTaskWSErrorListener
@@ -689,7 +690,7 @@ public class HomeFragment extends BaseFragment {
                 JSONObject jsonObject = new JSONObject(strResponse);
                 Log.i(TAG, "onResponse: " + jsonObject.toString());
                 int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
-                hideProgressDialog();
+//                hideProgressDialog();
                 switch (statusCode) {
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
                         String counter = jsonObject.getJSONObject(NetworkUtility.TAGS.DATA).getString(NetworkUtility.TAGS.TOTAL_ONGOING_TASK);
@@ -702,7 +703,7 @@ public class HomeFragment extends BaseFragment {
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
                         // Show Toast
-                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mFragmentHomeBinding.getRoot());
+//                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mFragmentHomeBinding.getRoot());
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
 //                        Utility.showSnackBar(error_message, mFragmentTabHomeBinding.getRoot());
@@ -710,37 +711,32 @@ public class HomeFragment extends BaseFragment {
                     case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
                     case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
                         //Logout and finish the current activity
-                        Utility.logout(mContext, true, statusCode);
+//                        Utility.logout(mContext, true, statusCode);
 
                         /*if (getActivity() != null)
                             getActivity().finish();*/
                         break;
                 }
 
-            } catch (
-                    JSONException e)
-
-            {
+            } catch (JSONException e) {
                 e.printStackTrace();
                 mCheckProcessingTaskWSErrorListener.onErrorResponse(new VolleyError(e.getMessage()));
             }
         }
     };
 
-
     Response.ErrorListener mCheckProcessingTaskWSErrorListener = new Response.ErrorListener() {
         @Override
         public void onErrorResponse(VolleyError error) {
             Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
-            hideProgressDialog();
-            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mFragmentHomeBinding.getRoot());
+//            hideProgressDialog();
+//            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mFragmentHomeBinding.getRoot());
         }
     };
 
     /*================================================================================================================
-    ======================================Alert Icon Counter========================================================
+    ========================================Alert Icon Counter========================================================
     ================================================================================================================*/
-
 
     /**
      * This method would enable or disable the alert button
@@ -750,6 +746,30 @@ public class HomeFragment extends BaseFragment {
     private void enableAlert(boolean flag) {
         Log.d(TAG, "enableAlert() called with: flag = [" + flag + "]");
         mFragmentHomeBinding.textTabAlert.setSelected(flag);
+    }
+
+    /**
+     * Show Alert Dialog in case Alert is not active at this time.
+     */
+    private BottomAlertDialog dialogDesc;
+    private TextView txtMessage;
+
+    private void showFullDesc(String title, String message) {
+        if (dialogDesc == null) {
+            View view = LayoutInflater.from(mContext).inflate(R.layout.dialog_information, null, false);
+            txtMessage = (TextView) view.findViewById(R.id.text_message);
+            dialogDesc = new BottomAlertDialog(mContext);
+            view.findViewById(R.id.btn_ok).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    dialogDesc.dismiss();
+                }
+            });
+            dialogDesc.setCustomView(view);
+        }
+        dialogDesc.setTitle(title);
+        txtMessage.setText(message);
+        dialogDesc.showDialog();
     }
 
 
