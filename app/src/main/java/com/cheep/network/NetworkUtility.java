@@ -85,6 +85,9 @@ public class NetworkUtility {
 
         // Fetch List of Subservice
         public static final String FETCH_SUB_SERVICE_LIST = BASE_URL + "customers/category/all_sub_cats";
+
+        // Check Task Status
+        public static final String CHECK_TASK_STATUS = BASE_URL + "customers/tasks/check_task_status";
     }
 
     public static class TAGS {
@@ -180,6 +183,7 @@ public class NetworkUtility {
 
         public static final String TYPE = "type";
         public static final String CHAT_IMG = "chat_img";
+        public static final String IS_CHAT = "isChat";
 
         public static class VERSION_CHANGE_TYPE {
             public static final int NORMAL = 0;

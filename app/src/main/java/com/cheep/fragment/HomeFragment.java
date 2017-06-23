@@ -54,14 +54,13 @@ import java.util.Map;
  */
 
 public class HomeFragment extends BaseFragment {
+    public static final String TAG = "HomeFragment";
 
     public static final String TAB_HOME = HomeTabFragment.TAG;
     public static final String TAB_MY_TASK = MyTaskTabFragment.TAG;
     public static final String TAB_ME = ProfileTabFragment.TAG;
     public static final String TAB_CHAT = ChatTabFragment.TAG;
     public static final String TAB_ALERT = "ALERT";
-
-    public static final String TAG = "HomeFragment";
 
     private DrawerLayoutInteractionListener mListener;
     private TextView textLastSelectedTab = null;
