@@ -10,8 +10,10 @@ import android.graphics.drawable.AnimationDrawable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.LeadingMarginSpan;
 import android.text.style.RelativeSizeSpan;
@@ -25,6 +27,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.cheep.R;
+import com.cheep.custom_view.CFTextViewRegular;
 import com.cheep.custom_view.TypeFaceProvider;
 import com.cheep.model.ProviderModel;
 import com.cheep.utils.CustomTypefaceSpan;
@@ -112,7 +115,19 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
         }
         holder.tvName.setText(sVerified != null ? TextUtils.concat(sName, " ", sVerified) : sName);
 
-        holder.tvDescription.setText(checkNonNullAndSet(provider.information));
+//        holder.tvDescription.setText(checkNonNullAndSet(provider.information));
+
+        holder.tvDescription.setText(provider.information);
+        holder.tvDescription.makeExpandable(3);
+        holder.tvDescription.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mListener.onItemClick(provider);
+            }
+        });
+//        holder.tvDescription.makeExpandable(provider.information, 3);
+//        manageReadMore(holder.tvDescription, provider.information);
+
         holder.tvLocation.setText(checkNonNullAndSet(provider.sp_locality));
         Utility.showRating(provider.rating, holder.ratingBar);
 
@@ -205,7 +220,6 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
 
             holder.ivLiveAnimated.setBackgroundResource(R.drawable.ic_live);
             ((AnimationDrawable) holder.ivLiveAnimated.getBackground()).start();
-
 
             AnimatorSet offerAnimation = loadBannerScrollAnimation(holder.tvOffer, 2000, 100, new AnimatorListenerAdapter() {
                 @Override
@@ -310,6 +324,18 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
         });
     }
 
+    private void manageReadMore(TextView tvDescription, String information) {
+        final String ELLIPSIZE = "... ";
+        final String MORE = "Read More";
+
+        int lineEndIndex = tvDescription.getLayout().getLineEnd(3 - 1);
+        String newText = information.substring(0, lineEndIndex - (ELLIPSIZE.length() + MORE.length() + 1)) + ELLIPSIZE + MORE;
+        SpannableStringBuilder builder = new SpannableStringBuilder(newText);
+        builder.setSpan(new ForegroundColorSpan(ContextCompat.getColor(tvDescription.getContext(), R.color.splash_gradient_end)), newText.length() - MORE.length(), newText.length(), 0);
+//        builder.setSpan(new StyleSpan(Typeface.BOLD), newText.length() - MORE.length(), newText.length(), 0);
+        tvDescription.setText(builder, TextView.BufferType.SPANNABLE);
+    }
+
     private String checkNonNullAndSet(String text) {
         return text != null ? text.trim() : "";
     }
@@ -358,10 +384,19 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
         return mQuotesList != null ? mQuotesList.size() : 0;
     }
 
-    public void updateModelForRequestDetailStatus(String spUserID, String requestDatailStatus) {
+    public void updateModelForRequestDetailStatus(String spUserID, String requestDatailStatus, String quoted_sp_image_url) {
         for (int i = 0; i < mQuotesList.size(); i++) {
             if (mQuotesList.get(i).providerId.equalsIgnoreCase(spUserID)) {
                 mQuotesList.get(i).request_detail_status = requestDatailStatus;
+                if (Utility.SEND_TASK_DETAIL_REQUESTED_STATUS.REJECTED.equals(requestDatailStatus)) {
+                    // Check if already quoted any any other amount else remove it from list.
+                    if (!(mQuotesList.get(i).getQuotePriceInInteger() > 0)) {
+                        mQuotesList.remove(i);
+                        notifyItemRemoved(i);
+                        break;
+                    }
+                }
+
                 notifyItemChanged(i);
                 break;
             }
@@ -383,7 +418,7 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
         private TextView tvName;
         private TextView tvLocation;
         private TextView tvDistance;
-        private TextView tvDescription;
+        private CFTextViewRegular tvDescription;
         private TextView tvOffer;
         private TextView tvHappyHomes;
         private TextView tvDiscount;
@@ -429,7 +464,7 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
             tvName = (TextView) itemView.findViewById(R.id.tvName);
             tvLocation = (TextView) itemView.findViewById(R.id.tvLocation);
             tvDistance = (TextView) itemView.findViewById(R.id.tvDistance);
-            tvDescription = (TextView) itemView.findViewById(R.id.tvDescription);
+            tvDescription = (CFTextViewRegular) itemView.findViewById(R.id.tvDescription);
             tvOffer = (TextView) itemView.findViewById(R.id.tvOffer);
             tvHappyHomes = (TextView) itemView.findViewById(R.id.tvHappyHomes);
             tvDiscount = (TextView) itemView.findViewById(R.id.tvDiscount);

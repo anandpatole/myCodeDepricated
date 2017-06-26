@@ -270,6 +270,8 @@ public class NotificationActivity extends BaseAppCompatActivity implements Notif
             //Redirecting the user to Quote Screen
 //            HireNewJobActivity.newInstance(mContext, model.task_id, String.valueOf(model.sp_user_id));
             TaskSummaryActivity.getInstance(mContext, model.task_id);
+        } else if (model.notificationType.equalsIgnoreCase(Utility.NOTIFICATION_TYPE.WEB_CUSTOM_NOTIFICATION)) {
+            // Do Nothing for this TYPE of Notification.
         } else {
             // Need to redirect the user to Task Detail Screen
            /* TaskDetailModel taskDetailModel = new TaskDetailModel();

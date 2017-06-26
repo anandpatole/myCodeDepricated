@@ -175,6 +175,8 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
                 holder.mUpcomingTaskBinding.tvViewTask.setVisibility(View.GONE);
                 holder.mUpcomingTaskBinding.tvViewQuotes.setVisibility(View.VISIBLE);
                 holder.mUpcomingTaskBinding.tvTaskResponseStatus.setVisibility(View.VISIBLE);
+                // Need to hide reschedule button as PRO is not Finalized now.
+                holder.mUpcomingTaskBinding.frameRescheduleTask.setVisibility(View.GONE);
             } else {
                 holder.mUpcomingTaskBinding.layoutIndividualProfile.setVisibility(View.VISIBLE);
                 holder.mUpcomingTaskBinding.layoutGroupProfile.setVisibility(View.GONE);
@@ -209,6 +211,9 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
                 holder.mUpcomingTaskBinding.tvViewQuotes.setVisibility(View.GONE);
 
                 holder.mUpcomingTaskBinding.tvTaskResponseStatus.setVisibility(View.GONE);
+
+                // Need to Show reschedule button as PRO is not Finalized now.
+                holder.mUpcomingTaskBinding.frameRescheduleTask.setVisibility(View.VISIBLE);
             }
 
             if (model.providerCount.equals("0")) {
@@ -269,14 +274,14 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
                 }
             });
 
-            holder.mUpcomingTaskBinding.textReschedule.setOnClickListener(new View.OnClickListener() {
+           /* holder.mUpcomingTaskBinding.textReschedule.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     if (listener != null) {
                         listener.onTaskReschedule(whichFrag, model, holder.mUpcomingTaskBinding);
                     }
                 }
-            });
+            });*/
 
             holder.mUpcomingTaskBinding.tvViewQuotes.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -446,12 +451,20 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
     }
 
     // Update the list in case new quote requested by any of the PRO
-    public void updateOnNewQuoteRequested(String task_id, String max_quote_price, String sp_counts) {
+    public void updateOnNewQuoteRequested(String task_id, String max_quote_price, String sp_counts, String quoted_sp_image_url) {
         if (mList != null) {
             for (TaskDetailModel providerModel : mList) {
                 if (providerModel.taskId.equalsIgnoreCase(task_id)) {
                     providerModel.maxQuotePrice = max_quote_price;
                     providerModel.providerCount = sp_counts;
+                    if (providerModel.profile_img_arr == null)
+                        providerModel.profile_img_arr = new ArrayList<>();
+                    // Only add if already not added.
+                    if (!providerModel.profile_img_arr.contains(quoted_sp_image_url)) {
+                        providerModel.profile_img_arr.add(quoted_sp_image_url);
+                    } else {
+                        Log.i(TAG, "updateOnNewQuoteRequested: Image URL Already added");
+                    }
                     notifyDataSetChanged();
                     break;
                 }
@@ -536,6 +549,7 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
             for (TaskDetailModel taskDetailModel : mList) {
                 if (taskDetailModel.taskId.equalsIgnoreCase(event.id)) {
                     taskDetailModel.providerCount = String.valueOf(Integer.parseInt(taskDetailModel.providerCount) - 1);
+                    taskDetailModel.profile_img_arr.remove(event.quoted_sp_image_url);
                     notifyItemChanged(i);
                     break;
                 }
@@ -544,11 +558,20 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
         }
     }
 
-    public void updateOnNewDetailRequested(String id, String sp_counts) {
+    public void updateOnNewDetailRequested(String id, String sp_counts, String quoted_sp_image_url) {
         if (mList != null) {
             for (TaskDetailModel providerModel : mList) {
                 if (providerModel.taskId.equalsIgnoreCase(id)) {
                     providerModel.providerCount = sp_counts;
+                    if (providerModel.profile_img_arr == null) {
+                        providerModel.profile_img_arr = new ArrayList<>();
+                    }
+                    // Only add if already not added.
+                    if (!providerModel.profile_img_arr.contains(quoted_sp_image_url)) {
+                        providerModel.profile_img_arr.add(quoted_sp_image_url);
+                    } else {
+                        Log.i(TAG, "updateOnNewDetailRequested: Image URL Already added");
+                    }
                     notifyDataSetChanged();
                     break;
                 }

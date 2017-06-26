@@ -180,6 +180,7 @@ public class NetworkUtility {
 
         public static final String SP_COUNTS = "sp_counts";
         public static final String MAX_QUOTE_PRICE = "max_quote_price";
+        public static final String QUOTED_SP_IMAGE_URL = "quoted_sp_image_url";
 
         public static final String TYPE = "type";
         public static final String CHAT_IMG = "chat_img";

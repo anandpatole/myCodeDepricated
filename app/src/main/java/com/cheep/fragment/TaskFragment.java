@@ -133,7 +133,7 @@ public class TaskFragment extends BaseFragment {
             loadMoreKey = NetworkUtility.TAGS.LAST_ID;
         }
 
-        taskRecyclerViewAdapter = new TaskRecyclerViewAdapter(mContext,whichFrg, mListener);
+        taskRecyclerViewAdapter = new TaskRecyclerViewAdapter(mContext, whichFrg, mListener);
         commonRecyclerViewBinding.recyclerView.setAdapter(taskRecyclerViewAdapter);
         //Set dividers to Recyclerview
         commonRecyclerViewBinding.recyclerView.addItemDecoration(new DividerItemDecoration(mContext, R.drawable.divider_grey_normal));
@@ -191,9 +191,9 @@ public class TaskFragment extends BaseFragment {
         } else if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.TASK_RESCHEDULED) {
             taskRecyclerViewAdapter.rescheduleTask(event.id, event.taskStartdate);
         } else if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.QUOTE_REQUESTED_BY_PRO) {
-            taskRecyclerViewAdapter.updateOnNewQuoteRequested(event.id, event.max_quote_price, event.sp_counts);
+            taskRecyclerViewAdapter.updateOnNewQuoteRequested(event.id, event.max_quote_price, event.sp_counts, event.quoted_sp_image_url);
         } else if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.REQUEST_FOR_DETAIL) {
-            taskRecyclerViewAdapter.updateOnNewDetailRequested(event.id, event.sp_counts);
+            taskRecyclerViewAdapter.updateOnNewDetailRequested(event.id, event.sp_counts,event.quoted_sp_image_url);
         } else if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.TASK_STATUS_CHANGE) {
             taskRecyclerViewAdapter.updateTaskStatus(event);
         } else if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.ADDITIONAL_PAYMENT_REQUESTED) {

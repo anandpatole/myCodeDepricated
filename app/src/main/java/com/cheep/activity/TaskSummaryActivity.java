@@ -727,6 +727,11 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
                                 //Refresh UI for Paid status
                                 setUpTaskDetails(mTaskDetailModel);
 
+                                // Notify the Home Screen to check for ongoing task counter.
+                                MessageEvent messageEvent = new MessageEvent();
+                                messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.TASK_START_ALERT;
+                                EventBus.getDefault().post(messageEvent);
+
                             } else if (taskStatus.equalsIgnoreCase(Utility.TASK_STATUS.PROCESSING)) {
 
                                 /**

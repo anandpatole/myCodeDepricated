@@ -149,7 +149,6 @@ public class TaskQuotesActivity extends BaseAppCompatActivity implements TaskQuo
             Bundle bundle = getIntent().getExtras();
             //mIsFirstTime = bundle.getBoolean(Utility.Extra.IS_FIRST_TIME, false);
             mTaskDetailModel = (TaskDetailModel) Utility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA), TaskDetailModel.class);
-
             populateData();
         }
     }
@@ -657,14 +656,15 @@ public class TaskQuotesActivity extends BaseAppCompatActivity implements TaskQuo
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
 //                        providerModel.request_detail_status = Utility.SEND_TASK_DETAIL_REQUESTED_STATUS.ACCEPTED;
                         JSONObject jObjData = jsonObject.getJSONObject(NetworkUtility.TAGS.DATA);
-//                        String task_id = jsonObject.getString(NetworkUtility.TAGS.TASK_ID);
+                        String task_id = jObjData.getString(NetworkUtility.TAGS.TASK_ID);
                         String spUserID = jObjData.getString(NetworkUtility.TAGS.SP_USER_ID);
                         String spUserName = jObjData.optString(NetworkUtility.TAGS.SP_USER_NAME);
+                        String quoted_sp_image_url = jObjData.getString(NetworkUtility.TAGS.QUOTED_SP_IMAGE_URL);
                         String requestDatailStatus = jObjData.getString(NetworkUtility.TAGS.REQUEST_DETAIL_STATUS);
                         if (requestDatailStatus.equalsIgnoreCase(Utility.SEND_TASK_DETAIL_REQUESTED_STATUS.ACCEPTED)) {
                             // spRecyclerViewAdapter.updateModelForRequestDetailStatus(spUserID, requestDatailStatus);
 //                            TODO: Update the views & Show popup
-                            mAdapter.updateModelForRequestDetailStatus(spUserID, requestDatailStatus);
+                            mAdapter.updateModelForRequestDetailStatus(spUserID, requestDatailStatus, quoted_sp_image_url);
 
 //                            String username = PreferenceUtility.getInstance(mContext).getUserDetails().UserName;
                             String descriptionForAcknowledgement = mContext.getString(R.string.desc_request_for_detail_accepted_acknowledgment, spUserName);
@@ -677,7 +677,17 @@ public class TaskQuotesActivity extends BaseAppCompatActivity implements TaskQuo
 //
 //  mActivityProviderProfileBinding.textContactRequest.setVisibility(View.GONE);
                         } else {
-                            mAdapter.updateModelForRequestDetailStatus(spUserID, requestDatailStatus);
+
+                            // Need to pass this details to Pending listing as well.
+                            MessageEvent messageEvent = new MessageEvent();
+                            messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.DETAIL_REQUEST_REJECTED;
+                            messageEvent.id = task_id;
+                            messageEvent.quoted_sp_image_url = quoted_sp_image_url;
+                            EventBus.getDefault().post(messageEvent);
+
+                            mAdapter.updateModelForRequestDetailStatus(spUserID, requestDatailStatus, quoted_sp_image_url);
+
+                            populateGridImageView();
                             // Need to pass this details to Pending listing as well.
                             /*MessageEvent messageEvent = new MessageEvent();
                             messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.DETAIL_REQUEST_REJECTED;

@@ -145,6 +145,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.QUOTE_REQUESTED_BY_PRO;
             messageEvent.max_quote_price = bnd.getString(NetworkUtility.TAGS.MAX_QUOTE_PRICE);
             messageEvent.sp_counts = bnd.getString(NetworkUtility.TAGS.SP_COUNTS);
+            messageEvent.quoted_sp_image_url = bnd.getString(NetworkUtility.TAGS.QUOTED_SP_IMAGE_URL);
             messageEvent.id = String.valueOf(notificationId);
             EventBus.getDefault().post(messageEvent);
         }
@@ -154,6 +155,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.REQUEST_FOR_DETAIL;
             messageEvent.id = String.valueOf(notificationId);
             messageEvent.sp_counts = bnd.getString(NetworkUtility.TAGS.SP_COUNTS);
+            messageEvent.quoted_sp_image_url = bnd.getString(NetworkUtility.TAGS.QUOTED_SP_IMAGE_URL);
             messageEvent.request_detail_status = bnd.getString(NetworkUtility.TAGS.REQUEST_DETAIL_STATUS);
             EventBus.getDefault().post(messageEvent);
         }

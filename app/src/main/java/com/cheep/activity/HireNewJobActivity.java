@@ -2425,6 +2425,7 @@ public class HireNewJobActivity extends BaseAppCompatActivity implements Provide
                         JSONObject jObjData = jsonObject.getJSONObject(NetworkUtility.TAGS.DATA);
 //                        String task_id = jsonObject.getString(NetworkUtility.TAGS.TASK_ID);
                         String spUserID = jObjData.getString(NetworkUtility.TAGS.SP_USER_ID);
+                        String quoted_sp_image_url = jObjData.getString(NetworkUtility.TAGS.QUOTED_SP_IMAGE_URL);
                         String requestDatailStatus = jObjData.getString(NetworkUtility.TAGS.REQUEST_DETAIL_STATUS);
                         if (requestDatailStatus.equalsIgnoreCase(Utility.SEND_TASK_DETAIL_REQUESTED_STATUS.ACCEPTED)) {
                             spRecyclerViewAdapter.updateModelForRequestDetailStatus(spUserID, requestDatailStatus);
@@ -2433,6 +2434,7 @@ public class HireNewJobActivity extends BaseAppCompatActivity implements Provide
                             MessageEvent messageEvent = new MessageEvent();
                             messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.DETAIL_REQUEST_REJECTED;
                             messageEvent.id = taskId;
+                            messageEvent.quoted_sp_image_url = quoted_sp_image_url;
                             EventBus.getDefault().post(messageEvent);
 
                             // Update recycler view

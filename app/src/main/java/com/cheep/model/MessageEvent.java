@@ -14,6 +14,7 @@ public class MessageEvent {
     // Used for QUOTE_REQUEST Notification Type
     public String max_quote_price;
     public String sp_counts;
+    public String quoted_sp_image_url;
 
     // used for REQUEST_FOR_DETAIL Notification Type
     public String request_detail_status;
