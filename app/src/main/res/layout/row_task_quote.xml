@@ -267,12 +267,11 @@
                 android:layout_alignTop="@id/flHappyHomes"
                 android:layout_toLeftOf="@id/flHappyHomes">
 
-
                 <com.cheep.custom_view.CFTextViewRegular
                     android:id="@+id/tvOffer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:lineSpacingMultiplier="1.1"
+                    android:lineSpacingMultiplier="1.3"
                     android:textColor="@color/task_quote_offer_color"
                     android:textSize="@dimen/text_size_11sp"
                     tools:text="17 people trolled by Anurag Kulkarni today" />

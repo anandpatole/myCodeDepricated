@@ -540,12 +540,12 @@ public class EnterTaskDetailFragment extends BaseFragment {
                             SuperCalendar calAfter3Hours = SuperCalendar.getInstance().getNext3HoursTime();
 
 //                            TODO: This needs to Be UNCOMMENTED DO NOT FORGET
-//                            if (!BuildConfig.BUILD_TYPE.equalsIgnoreCase(Utility.DEBUG)) {
+                            if (!BuildConfig.BUILD_TYPE.equalsIgnoreCase(Utility.DEBUG)) {
                                 if (superCalendar.getTimeInMillis() < calAfter3Hours.getTimeInMillis()) {
                                     Utility.showSnackBar(getString(R.string.can_only_start_task_after_3_hours), mFragmentEnterTaskDetailBinding.getRoot());
                                     return;
                                 }
-//                            }
+                            }
 
                             if (System.currentTimeMillis() < startDateTimeSuperCalendar.getTimeInMillis()) {
                                 String selectedDateTime = startDateTimeSuperCalendar.format(Utility.DATE_FORMAT_DD_MMM)

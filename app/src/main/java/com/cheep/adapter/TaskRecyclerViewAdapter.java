@@ -35,7 +35,9 @@ import com.cheep.utils.Utility;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by pankaj on 9/27/16.
@@ -56,6 +58,10 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
     SuperCalendar superStartDateTimeCalendar;
     private int mLiveIconOffset;
 
+    //saves the index of the upcoming offer to display
+    private Map<String, Integer> mOfferIndexMap;
+
+
     /*private Uri[] urls = new Uri[]{Uri.parse("http://www.animated-gifs.eu/category_leisure/avatars-100x100-music/0016.gif"), Uri.parse("http://www.smailikai.com/avatar/skelet/avatar_4348.gif"), Uri.parse("http://www.boorp.com/avatars_100x100_for_myspace/25.png")*//*, Uri.parse("http://www.boorp.com/avatars_100x100_for_myspace/25.png"), Uri.parse("http://www.boorp.com/avatars_100x100_for_myspace/25.png")*//*};
     private List<Uri> arrayListUri=new ArrayList<>();
     String[] stringArr=new String[]{"3.810 plumbing task booked today","17 home made happy by Lokesh Shah today.","Favorited by 9,800 Users till now"};*/
@@ -68,6 +74,7 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
         int offset = context.getResources().getDimensionPixelSize(R.dimen.scale_4dp);
         mLiveIconOffset = context.getResources().getDimensionPixelSize(R.dimen.icon_live_width) + offset;
         //arrayListUri.addAll(Arrays.asList(urls));
+        mOfferIndexMap = new HashMap<>();
     }
 
     public TaskRecyclerViewAdapter(ArrayList<TaskDetailModel> mList, TaskRowDataInteractionListener listener, int whichFrag) {
@@ -133,13 +140,49 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
             superStartDateTimeCalendar.setLocaleTimeZone();
             /*if(model.live_lable_arr.size()==0)
                 model.live_lable_arr.addAll(Arrays.asList(stringArr));*/
-            if (model.live_lable_arr != null && model.live_lable_arr.size() > 0) {
-                holder.liveFeedindex = 0;
-                final SpannableString labelOffer = new SpannableString(model.live_lable_arr.get(holder.liveFeedindex));
-                labelOffer.setSpan(new LeadingMarginSpan.Standard(mLiveIconOffset, 0), 0, labelOffer.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-                holder.mUpcomingTaskBinding.tvLiveFeed.setText(labelOffer);
+
+            // Start LIVE tracking and Text changes
+            final int liveFeedCounter = model.live_lable_arr != null ? model.live_lable_arr.size() : 0;
+            if (liveFeedCounter > 0) {
+                holder.mUpcomingTaskBinding.ivLiveAnimated.setVisibility(View.VISIBLE);
+                holder.mUpcomingTaskBinding.tvLiveFeed.setVisibility(View.VISIBLE);
+
+                // Start live image animations
+                holder.mUpcomingTaskBinding.ivLiveAnimated.setBackgroundResource(R.drawable.ic_live);
+                ((AnimationDrawable) holder.mUpcomingTaskBinding.ivLiveAnimated.getBackground()).start();
+
 
                 AnimatorSet offerAnimation = loadBannerScrollAnimation(holder.mUpcomingTaskBinding.tvLiveFeed, 2000, 100, new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        super.onAnimationEnd(animation);
+
+                        int offerIndex = mOfferIndexMap.containsKey(model.taskId) ? mOfferIndexMap.get(model.taskId) : 0;
+                        SpannableString labelOffer = new SpannableString(model.live_lable_arr.get(offerIndex));
+                        labelOffer.setSpan(new LeadingMarginSpan.Standard(mLiveIconOffset, 0), 0, labelOffer.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+                        holder.mUpcomingTaskBinding.tvLiveFeed.setText(labelOffer);
+                        offerIndex = (offerIndex == (liveFeedCounter - 1) ? 0 : offerIndex + 1);
+                        mOfferIndexMap.put(model.taskId, offerIndex);
+                    }
+                });
+                offerAnimation.start();
+                holder.addAnimator(offerAnimation);
+
+                int offerIndex = mOfferIndexMap.containsKey(model.taskId) ? mOfferIndexMap.get(model.taskId) : 0;
+                SpannableString labelOffer = new SpannableString(model.live_lable_arr.get(offerIndex));
+                labelOffer.setSpan(new LeadingMarginSpan.Standard(mLiveIconOffset, 0), 0, labelOffer.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+                holder.mUpcomingTaskBinding.tvLiveFeed.setText(labelOffer);
+                offerIndex = (offerIndex == (liveFeedCounter - 1) ? 0 : offerIndex + 1);
+                mOfferIndexMap.put(model.taskId, offerIndex);
+
+
+                //
+//                holder.liveFeedindex = 0;
+//                final SpannableString labelOffer = new SpannableString(model.live_lable_arr.get(holder.liveFeedindex) + " This is Dummy text appended by Bhavesh just to check if its working for more than TWO line.");
+//                labelOffer.setSpan(new LeadingMarginSpan.Standard(mLiveIconOffset, 0), 0, labelOffer.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+//                holder.mUpcomingTaskBinding.tvLiveFeed.setText(labelOffer);
+
+                /*AnimatorSet offerAnimation = loadBannerScrollAnimation(holder.mUpcomingTaskBinding.tvLiveFeed, 2000, 100, new AnimatorListenerAdapter() {
                     @Override
                     public void onAnimationEnd(Animator animation) {
                         super.onAnimationEnd(animation);
@@ -153,13 +196,12 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
                     }
                 });
                 offerAnimation.start();
-                holder.addAnimator(offerAnimation);
+                holder.addAnimator(offerAnimation);*/
             } else {
-                holder.mUpcomingTaskBinding.tvLiveFeed.setText("");
+                holder.mUpcomingTaskBinding.ivLiveAnimated.setVisibility(View.GONE);
+                holder.mUpcomingTaskBinding.tvLiveFeed.setVisibility(View.GONE);
             }
-            // Start live image animations
-            holder.mUpcomingTaskBinding.ivLiveAnimated.setBackgroundResource(R.drawable.ic_live);
-            ((AnimationDrawable) holder.mUpcomingTaskBinding.ivLiveAnimated.getBackground()).start();
+
 
             holder.mUpcomingTaskBinding.gridImageView.clear();
             //holder.mUpcomingTaskBinding.gridImageView.createWithUrls(arrayListUri); // just for testing

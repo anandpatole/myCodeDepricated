@@ -924,7 +924,7 @@ public class HomeActivity extends BaseAppCompatActivity
                     Utility.showCircularImageView(mContext, TAG, navHeaderHomeBinding.imgProfile, userDetails.ProfileImg, R.drawable.icon_profile_img, true);
 
                 //Update the name
-                if (userDetails != null && TextUtils.isEmpty(userDetails.UserName) == false && userDetails.UserName.trim().length() > 1)
+                if (userDetails != null && !TextUtils.isEmpty(userDetails.UserName) && userDetails.UserName.trim().length() > 1)
                     navHeaderHomeBinding.textName.setText(userDetails.UserName.substring(0, 1).toUpperCase() + userDetails.UserName.substring(1));
 
 //                navHeaderHomeBinding.textName.setText(userDetails.UserName);

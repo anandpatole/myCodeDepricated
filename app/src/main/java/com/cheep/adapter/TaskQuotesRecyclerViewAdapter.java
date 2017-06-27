@@ -237,7 +237,6 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
             offerAnimation.start();
             holder.addAnimator(offerAnimation);
 
-
             int offerIndex = mOfferIndexMap.containsKey(provider.providerId) ? mOfferIndexMap.get(provider.providerId) : 0;
             SpannableString labelOffer = new SpannableString(provider.offerList.get(offerIndex));
             labelOffer.setSpan(new LeadingMarginSpan.Standard(mLiveIconOffset, 0), 0, labelOffer.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
