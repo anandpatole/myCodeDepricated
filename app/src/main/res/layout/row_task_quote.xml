@@ -210,6 +210,35 @@
                     tools:text="20 mins away" />
             </FrameLayout>
 
+            <LinearLayout
+                android:id="@+id/ln_chat_call"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/flDistance"
+                android:layout_toRightOf="@+id/tvDescription"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/img_call"
+                    android:layout_width="@dimen/scale_40dp"
+                    android:layout_height="@dimen/scale_40dp"
+                    android:layout_marginRight="@dimen/scale_5dp"
+                    android:adjustViewBounds="true"
+                    android:padding="@dimen/scale_5dp"
+                    android:src="@drawable/icon_call_smaller" />
+
+                <ImageView
+                    android:id="@+id/img_chat"
+                    android:layout_width="@dimen/scale_40dp"
+                    android:layout_height="@dimen/scale_40dp"
+                    android:layout_marginLeft="@dimen/scale_5dp"
+                    android:adjustViewBounds="true"
+                    android:padding="@dimen/scale_5dp"
+                    android:src="@drawable/icon_chat_smaller" />
+
+            </LinearLayout>
+
             <com.cheep.custom_view.CFTextViewSemiBold
                 android:id="@+id/tvName"
                 android:layout_width="match_parent"
@@ -291,14 +320,14 @@
                 android:orientation="horizontal"
                 android:padding="@dimen/scale_8dp">
 
-                <ImageView
+                <!--<ImageView
                     android:id="@+id/ivChat"
                     android:layout_width="@dimen/icon_chat_width"
                     android:layout_height="@dimen/icon_chat_height"
                     android:layout_gravity="center_vertical"
                     android:layout_marginRight="@dimen/scale_8dp"
                     android:src="@drawable/ic_chat_animated"
-                    tools:ignore="ContentDescription" />
+                    tools:ignore="ContentDescription" />-->
 
                 <com.cheep.custom_view.CFTextViewSemiBold
                     android:id="@+id/tvDiscount"

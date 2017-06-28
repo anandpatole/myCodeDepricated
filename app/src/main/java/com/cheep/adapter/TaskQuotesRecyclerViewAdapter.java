@@ -250,12 +250,18 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
 
 
         if (Utility.SEND_TASK_DETAIL_REQUESTED_STATUS.ALREADY_REQUESTED.equalsIgnoreCase(provider.request_detail_status)) {
-            holder.ivChat.setVisibility(View.VISIBLE);
+            holder.imgChat.setVisibility(View.VISIBLE);
             //chat icon
-            Glide.with(mContext).load(R.drawable.ic_chat_animated).asGif().dontAnimate().diskCacheStrategy(DiskCacheStrategy.SOURCE).into(holder.ivChat);
+            Glide.with(mContext)
+                    .load(R.drawable.ic_chat_normal_animation)
+                    .asGif()
+                    .dontAnimate()
+                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                    .into(holder.imgChat);
         } else {
-            // Hide Chat Icon
-            holder.ivChat.setVisibility(View.GONE);
+            Glide.with(mContext)
+                    .load(R.drawable.icon_chat_smaller)
+                    .into(holder.imgChat);
         }
 
         //time-distance
@@ -315,24 +321,20 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
         holder.ivFavoriteQuote.setSelected(provider.isFavourite.equals(Utility.BOOLEAN.YES));
 
         // Chat Image click event
-        holder.ivChat.setOnClickListener(new View.OnClickListener() {
+        holder.imgChat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mListener.onChatClicked(provider);
             }
         });
-    }
 
-    private void manageReadMore(TextView tvDescription, String information) {
-        final String ELLIPSIZE = "... ";
-        final String MORE = "Read More";
-
-        int lineEndIndex = tvDescription.getLayout().getLineEnd(3 - 1);
-        String newText = information.substring(0, lineEndIndex - (ELLIPSIZE.length() + MORE.length() + 1)) + ELLIPSIZE + MORE;
-        SpannableStringBuilder builder = new SpannableStringBuilder(newText);
-        builder.setSpan(new ForegroundColorSpan(ContextCompat.getColor(tvDescription.getContext(), R.color.splash_gradient_end)), newText.length() - MORE.length(), newText.length(), 0);
-//        builder.setSpan(new StyleSpan(Typeface.BOLD), newText.length() - MORE.length(), newText.length(), 0);
-        tvDescription.setText(builder, TextView.BufferType.SPANNABLE);
+        // Call Image click event
+        holder.imgCall.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mListener.onCallClicked(provider);
+            }
+        });
     }
 
     private String checkNonNullAndSet(String text) {
@@ -425,12 +427,13 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
         private TextView tvExperience;
         private ImageView ivBadge;
         private ImageView ivAvatar;
-        private ImageView ivChat;
+        //        private ImageView ivChat;
         private ImageView ivLiveAnimated;
         private ImageView ivHomeAnimated;
         private ImageView ivFavoriteQuote;
         private RatingBar ratingBar;
-
+        private ImageView imgCall;
+        private ImageView imgChat;
         private List<AnimatorSet> animators;
 
 
@@ -471,11 +474,14 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
             tvExperience = (TextView) itemView.findViewById(R.id.tvExperience);
             ivBadge = (ImageView) itemView.findViewById(R.id.ivBadge);
             ivAvatar = (ImageView) itemView.findViewById(R.id.ivAvatar);
-            ivChat = (ImageView) itemView.findViewById(R.id.ivChat);
+//            ivChat = (ImageView) itemView.findViewById(R.id.ivChat);
             ivLiveAnimated = (ImageView) itemView.findViewById(R.id.ivLiveAnimated);
             ivHomeAnimated = (ImageView) itemView.findViewById(R.id.ivHomeAnimated);
             ivFavoriteQuote = (ImageView) itemView.findViewById(R.id.ivFavoriteQuote);
             ratingBar = (RatingBar) itemView.findViewById(R.id.rating_bar);
+            imgCall = (ImageView) itemView.findViewById(R.id.img_call);
+            imgChat = (ImageView) itemView.findViewById(R.id.img_chat);
+
         }
     }
 
@@ -485,5 +491,7 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
         void onItemClick(ProviderModel provider);
 
         void onChatClicked(ProviderModel provider);
+
+        void onCallClicked(ProviderModel provider);
     }
 }

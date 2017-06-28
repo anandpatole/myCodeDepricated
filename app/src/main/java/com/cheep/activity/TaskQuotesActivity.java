@@ -445,8 +445,36 @@ public class TaskQuotesActivity extends BaseAppCompatActivity implements TaskQuo
             callTaskDetailRequestAcceptWS(Utility.ACTION_CHAT, mTaskDetailModel.taskId, providerModel);
         }*/
 
-        if (providerModel != null) {
+        // If Request already request try showing the requested dialog.
+        if (Utility.SEND_TASK_DETAIL_REQUESTED_STATUS.ALREADY_REQUESTED.equalsIgnoreCase(providerModel.request_detail_status)) {
             showDetailRequestDialog(providerModel);
+        } else {
+            if (providerModel != null && mTaskDetailModel != null) {
+                if (providerModel.request_detail_status.equalsIgnoreCase(Utility.SEND_TASK_DETAIL_REQUESTED_STATUS.ACCEPTED)) {
+                    TaskChatModel taskChatModel = new TaskChatModel();
+                    taskChatModel.categoryName = mTaskDetailModel.categoryName;
+                    taskChatModel.taskDesc = mTaskDetailModel.taskDesc;
+                    taskChatModel.taskId = mTaskDetailModel.taskId;
+                    taskChatModel.receiverId = FirebaseUtils.getPrefixSPId(providerModel.providerId);
+                    taskChatModel.participantName = providerModel.userName;
+                    taskChatModel.participantPhotoUrl = providerModel.profileUrl;
+                    ChatActivity.newInstance(mContext, taskChatModel);
+                    return;
+                }
+                callTaskDetailRequestAcceptWS(Utility.ACTION_CHAT, mTaskDetailModel.taskId, providerModel);
+            }
+        }
+    }
+
+    @Override
+    public void onCallClicked(ProviderModel providerModel) {
+        if (providerModel != null && !TextUtils.isEmpty(providerModel.providerId) && mTaskDetailModel != null) {
+            if (providerModel.request_detail_status.equalsIgnoreCase(Utility.SEND_TASK_DETAIL_REQUESTED_STATUS.ACCEPTED)) {
+//                        callToOtherUser(mActivityProviderProfileBinding.getRoot(), providerModel.providerId);
+                Utility.openCustomerCareCallDialer(mContext, providerModel.sp_phone_number);
+                return;
+            }
+            callTaskDetailRequestAcceptWS(Utility.ACTION_CALL, mTaskDetailModel.taskId, providerModel);
         }
     }
 
