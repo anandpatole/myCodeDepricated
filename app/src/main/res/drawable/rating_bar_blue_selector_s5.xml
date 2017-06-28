@@ -10,5 +10,5 @@
     <item
         android:id="@android:id/progress"
         android:drawable="@drawable/ic_rating_star_fill" />
-
+    
 </layer-list>

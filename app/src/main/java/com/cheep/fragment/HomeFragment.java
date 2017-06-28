@@ -37,6 +37,7 @@ import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -207,14 +208,31 @@ public class HomeFragment extends BaseFragment {
     }
 
     public void addUnreadCountListener() {
+        Log.d(TAG, "addUnreadCountListener() called");
         final DatabaseReference databaseReference = FirebaseHelper.getRecentChatRef(formattedSenderId);
         databaseReference.orderByChild(FirebaseHelper.KEY_TIMESTAMP).addChildEventListener(mChildEventListener);
+        databaseReference.orderByChild(FirebaseHelper.KEY_TIMESTAMP).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot)
+            {
+                if(dataSnapshot.exists())
+                {
+
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     /**
      * used to remove unread count listener
      */
     public void removeUnreadCountListener() {
+        Log.d(TAG, "removeUnreadCountListener() called");
         DatabaseReference databaseReference = FirebaseHelper.getRecentChatRef(formattedSenderId);
         databaseReference.removeEventListener(mChildEventListener);
     }
@@ -247,6 +265,7 @@ public class HomeFragment extends BaseFragment {
     };
 
     private void updateUnreadCount(DataSnapshot dataSnapshot, boolean isDelete) {
+        Log.d(TAG, "updateUnreadCount() called with: dataSnapshot = [" + dataSnapshot + "], isDelete = [" + isDelete + "]");
         if (dataSnapshot.exists() && dataSnapshot.getValue() != null) {
             TaskChatModel taskChatModel = dataSnapshot.getValue(TaskChatModel.class);
             if (taskChatModel != null) {

@@ -31,6 +31,7 @@
     <dimen name="scale_5dp">5dp</dimen>
     <dimen name="scale_6dp">6dp</dimen>
     <dimen name="scale_8dp">8dp</dimen>
+    <dimen name="scale_8_half_dp">8.5dp</dimen>
     <dimen name="scale_10dp">10dp</dimen>
     <dimen name="scale_12dp">12dp</dimen>
     <dimen name="scale_15dp">15dp</dimen>
@@ -93,4 +94,5 @@
     <dimen name="icon_home_height">13.50dp</dimen>
     <dimen name="icon_chat_width">28.75dp</dimen>
     <dimen name="icon_chat_height">23.75dp</dimen>
+    <dimen name="scale_23dp">23dp</dimen>
 </resources>

@@ -112,7 +112,12 @@ public class TaskQuotesActivity extends BaseAppCompatActivity implements TaskQuo
     }
 
     @Override
-    protected void initiateUI() {
+    protected void initiateUI()
+    {
+        //mIntentAction = getIntent().getAction();
+        if (getIntent().getExtras() != null) {
+            mTaskDetailModel = (TaskDetailModel) Utility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA), TaskDetailModel.class);
+        }
         mGson = new Gson();
 //        mQuotesList = new ArrayList<>();
 
@@ -131,7 +136,7 @@ public class TaskQuotesActivity extends BaseAppCompatActivity implements TaskQuo
 
         mRecyclerView.setHasFixedSize(false);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mAdapter = new TaskQuotesRecyclerViewAdapter(this, /*mQuotesList,*/ this);
+        mAdapter = new TaskQuotesRecyclerViewAdapter(this,mTaskDetailModel, /*mQuotesList,*/ this);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.addItemDecoration(new DividerItemDecoration(mContext, R.drawable.divider_grey_normal));
         setupActionbar();
@@ -145,12 +150,14 @@ public class TaskQuotesActivity extends BaseAppCompatActivity implements TaskQuo
         Utility.setSwipeRefreshLayoutColors(mSwipeRefreshLayout);
 
         //mIntentAction = getIntent().getAction();
-        if (getIntent().getExtras() != null) {
+        /*if (getIntent().getExtras() != null) {
             Bundle bundle = getIntent().getExtras();
             //mIsFirstTime = bundle.getBoolean(Utility.Extra.IS_FIRST_TIME, false);
             mTaskDetailModel = (TaskDetailModel) Utility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA), TaskDetailModel.class);
             populateData();
-        }
+        }*/
+        if(mTaskDetailModel!=null)
+            populateData();
     }
 
     @Override

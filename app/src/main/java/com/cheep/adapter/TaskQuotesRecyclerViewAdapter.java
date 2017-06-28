@@ -17,6 +17,7 @@ import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.LeadingMarginSpan;
 import android.text.style.RelativeSizeSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,15 +26,26 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.data.StreamAssetPathFetcher;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.cheep.R;
 import com.cheep.custom_view.CFTextViewRegular;
 import com.cheep.custom_view.TypeFaceProvider;
+import com.cheep.firebase.FirebaseHelper;
+import com.cheep.firebase.FirebaseUtils;
+import com.cheep.firebase.model.TaskChatModel;
 import com.cheep.model.ProviderModel;
+import com.cheep.model.TaskDetailModel;
 import com.cheep.utils.CustomTypefaceSpan;
+import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.RoundedBackgroundSpan;
 import com.cheep.utils.Utility;
 import com.daimajia.swipe.SwipeLayout;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -64,9 +76,11 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
     private Map<String, Integer> mTimeDistanceStateMap;
     //saves the index of the upcoming offer to display
     private Map<String, Integer> mOfferIndexMap;
+    private TaskDetailModel mTaskDetailModel;
 
-    public TaskQuotesRecyclerViewAdapter(Context context, /*List<ProviderModel> quotesList,*/ OnInteractionListener listener) {
+    public TaskQuotesRecyclerViewAdapter(Context context, TaskDetailModel mTaskDetailModel, /*List<ProviderModel> quotesList,*/ OnInteractionListener listener) {
         this.mContext = context;
+        this.mTaskDetailModel = mTaskDetailModel;
         this.mQuotesList = new ArrayList<>();
         this.mListener = listener;
         mLayoutInflater = LayoutInflater.from(context);
@@ -248,12 +262,11 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
             holder.tvOffer.setVisibility(View.GONE);
         }
 
-
         if (Utility.SEND_TASK_DETAIL_REQUESTED_STATUS.ALREADY_REQUESTED.equalsIgnoreCase(provider.request_detail_status)) {
             holder.imgChat.setVisibility(View.VISIBLE);
             //chat icon
             Glide.with(mContext)
-                    .load(R.drawable.ic_chat_normal_animation)
+                    .load(R.drawable.ic_chat_requested_animation_with_counter)
                     .asGif()
                     .dontAnimate()
                     .diskCacheStrategy(DiskCacheStrategy.SOURCE)
@@ -333,6 +346,31 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
             @Override
             public void onClick(View v) {
                 mListener.onCallClicked(provider);
+            }
+        });
+
+        // Read task chat unread count from firebase
+        String t_sp_u_formattedId = FirebaseUtils.get_T_SP_U_FormattedId(mTaskDetailModel.taskId, provider.providerId, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
+        FirebaseHelper.getTaskChatRef(FirebaseUtils.getPrefixTaskId(mTaskDetailModel.taskId)).child(t_sp_u_formattedId).child(FirebaseHelper.KEY_UNREADCOUNT).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    Integer count = dataSnapshot.getValue(Integer.class);
+                    Log.d(TAG, "onDataChange() called with: dataSnapshot = Unread Counter [" + count + "]");
+                    if (count <= 0) {
+                        holder.mTvUnreadChatCount.setVisibility(View.GONE);
+                    } else {
+                        holder.mTvUnreadChatCount.setVisibility(View.VISIBLE);
+                        holder.mTvUnreadChatCount.setText(String.valueOf(count));
+                    }
+                } else {
+                    holder.mTvUnreadChatCount.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
             }
         });
     }
@@ -435,6 +473,7 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
         private ImageView imgCall;
         private ImageView imgChat;
         private List<AnimatorSet> animators;
+        private TextView mTvUnreadChatCount;
 
 
         public void addAnimator(AnimatorSet animator) {
@@ -481,6 +520,7 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
             ratingBar = (RatingBar) itemView.findViewById(R.id.rating_bar);
             imgCall = (ImageView) itemView.findViewById(R.id.img_call);
             imgChat = (ImageView) itemView.findViewById(R.id.img_chat);
+            mTvUnreadChatCount = (TextView) itemView.findViewById(R.id.tv_chat_unread_count);
 
         }
     }

@@ -141,7 +141,7 @@
             <RatingBar
                 android:id="@+id/rating_bar"
                 android:layout_width="wrap_content"
-                android:layout_height="@dimen/scale_9dp"
+                android:layout_height="@dimen/scale_8_half_dp"
                 android:layout_marginTop="@dimen/scale_8dp"
                 android:isIndicator="true"
                 android:max="5"
@@ -228,14 +228,68 @@
                     android:padding="@dimen/scale_5dp"
                     android:src="@drawable/icon_call_smaller" />
 
-                <ImageView
+                <RelativeLayout
+                    android:id="@+id/rl_chat"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:clickable="true"
+                    android:gravity="center">
+
+                    <ImageView
+                        android:id="@+id/img_chat"
+                        android:layout_width="@dimen/scale_40dp"
+                        android:layout_height="@dimen/scale_40dp"
+                        android:layout_marginLeft="@dimen/scale_5dp"
+                        android:adjustViewBounds="true"
+                        android:padding="@dimen/scale_5dp"
+                        android:src="@drawable/icon_chat_smaller" />
+
+                    <!--<com.cheep.custom_view.CFTextViewRegular
+                        android:id="@+id/text_tab_chat"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawablePadding="@dimen/scale_5dp"
+                        android:drawableTop="@drawable/tab_chat"
+                        android:gravity="center"
+                        android:padding="@dimen/scale_5dp"
+                        android:text="@string/tab_chat"
+                        android:textAllCaps="false"
+                        android:textColor="@drawable/tab_text_color"
+                        android:textSize="@dimen/text_size_11sp"
+                        android:visibility="visible" />-->
+
+                    <com.cheep.custom_view.CFTextViewSemiBold
+                        android:id="@+id/tv_chat_unread_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="-15dp"
+                        android:layout_marginStart="-15dp"
+                        android:layout_toEndOf="@+id/img_chat"
+                        android:layout_toRightOf="@+id/img_chat"
+                        android:background="@drawable/icon_red_dot"
+                        android:ellipsize="marquee"
+                        android:gravity="center"
+                        android:marqueeRepeatLimit="marquee_forever"
+                        android:maxLines="1"
+                        android:paddingBottom="@dimen/scale_1dp"
+                        android:paddingLeft="@dimen/scale_3dp"
+                        android:paddingRight="@dimen/scale_3dp"
+                        android:paddingTop="@dimen/scale_1dp"
+                        android:singleLine="true"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/text_size_10sp"
+                        android:visibility="gone"
+                        tools:text="25" />
+                </RelativeLayout>
+
+                <!--<ImageView
                     android:id="@+id/img_chat"
                     android:layout_width="@dimen/scale_40dp"
                     android:layout_height="@dimen/scale_40dp"
                     android:layout_marginLeft="@dimen/scale_5dp"
                     android:adjustViewBounds="true"
                     android:padding="@dimen/scale_5dp"
-                    android:src="@drawable/icon_chat_smaller" />
+                    android:src="@drawable/icon_chat_smaller" />-->
 
             </LinearLayout>
 
