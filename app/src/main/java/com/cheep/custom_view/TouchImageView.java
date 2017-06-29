@@ -1,7 +1,7 @@
 package com.cheep.custom_view;
 
-/**
- * Created by admin on 7/5/15.
+/*
+  Created by admin on 7/5/15.
  */
 /*
  * TouchImageView.java
@@ -36,7 +36,6 @@ import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
-import android.widget.ImageView;
 import android.widget.OverScroller;
 import android.widget.Scroller;
 

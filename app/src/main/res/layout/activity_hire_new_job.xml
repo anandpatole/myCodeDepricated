@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:tools="http://schemas.android.com/tools"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -27,10 +27,10 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layoutDirection="ltr"
-                    tools:text="ACEDEMIC"
                     android:textColor="@color/colorPrimary"
                     android:textSize="@dimen/text_size_18sp"
-                    tools:ignore="UnusedAttribute" />
+                    tools:ignore="UnusedAttribute"
+                    tools:text="ACEDEMIC" />
 
             </android.support.v7.widget.Toolbar>
         </android.support.design.widget.AppBarLayout>
@@ -66,6 +66,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingLeft="@dimen/scale_15dp"
+                    android:paddingRight="@dimen/scale_5dp"
                     android:text="@string/label_my_flush"
                     android:textColor="@color/splash_gradient_end"
                     android:textSize="@dimen/text_size_18sp" />
@@ -79,9 +80,9 @@
                 android:layout_below="@+id/ln_sub_category"
                 android:layout_toLeftOf="@+id/rl_response"
                 android:lineSpacingExtra="@dimen/scale_3dp"
-                android:text="I need a plumber to repair the problem i facing"
                 android:textColor="@color/grey_varient_8"
-                android:textSize="@dimen/text_size_11sp" />
+                android:textSize="@dimen/text_size_11sp"
+                tools:text="I need a plumber to repair the problem i facing" />
 
             <RelativeLayout
                 android:id="@+id/rl_response"
@@ -94,9 +95,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingLeft="@dimen/scale_15dp"
-                    android:text="0 Responses \nRecieved"
+                    android:paddingRight="@dimen/scale_5dp"
                     android:textColor="@color/grey_varient_8"
-                    android:textSize="@dimen/text_size_11sp" />
+                    android:textSize="@dimen/text_size_11sp"
+                    tools:text="0 Responses \nRecieved" />
 
                 <com.cheep.custom_view.CFTextViewSemiBold
                     android:id="@+id/icon_filter"
@@ -288,8 +290,8 @@
             android:textAllCaps="false"
             android:textColor="@color/white"
             android:textSize="@dimen/text_size_13sp"
-            app:letterSpacing="0.3"
             android:visibility="gone"
+            app:letterSpacing="0.3"
             tools:ignore="UnusedAttribute" />
 
         <include

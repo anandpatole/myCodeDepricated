@@ -30,7 +30,7 @@
                     android:padding="@dimen/scale_10dp"
                     android:singleLine="true"
                     android:maxLines="1"
-                    android:text="Chat"
+                    android:text="@string/label_chat"
                     android:textAllCaps="false"
                     android:textColor="@color/white"
                     android:textSize="@dimen/toolbar_title_text_size" />

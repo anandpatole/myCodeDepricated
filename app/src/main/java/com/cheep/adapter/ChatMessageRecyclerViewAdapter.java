@@ -1,7 +1,6 @@
 package com.cheep.adapter;
 
 import android.app.Activity;
-import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -12,7 +11,6 @@ import android.view.ViewGroup;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.cheep.R;
-import com.cheep.activity.JobSummaryActivity;
 import com.cheep.activity.TaskSummaryActivity;
 import com.cheep.activity.ZoomImageActivity;
 import com.cheep.databinding.RowChatHeaderBinding;
@@ -26,9 +24,6 @@ import com.cheep.databinding.RowFooterProgressBinding;
 import com.cheep.firebase.DateUtils;
 import com.cheep.firebase.FirebaseUtils;
 import com.cheep.firebase.model.TaskChatMessageModel;
-import com.cheep.model.ProviderModel;
-import com.cheep.model.TaskDetailModel;
-import com.cheep.network.NetworkUtility;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.SharedElementTransitionHelper;
 import com.cheep.utils.Utility;
@@ -36,8 +31,6 @@ import com.cheep.utils.Utility;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-
-import static com.cheep.network.NetworkUtility.TAGS.TASK_ID;
 
 /**
  * Created by sanjay on 21/10/16.
@@ -265,9 +258,6 @@ public class ChatMessageRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
     public int getItemViewType(int position) {
         TaskChatMessageModel taskChatMessageModel = mList.get(position);
         if (taskChatMessageModel != null) {
-            /**
-             * Verify whether message type is NULL or not. if, its NULL return
-             */
             if (taskChatMessageModel.messageType == null) {
                 return VIEW_TYPE_PROGRESS;
             }

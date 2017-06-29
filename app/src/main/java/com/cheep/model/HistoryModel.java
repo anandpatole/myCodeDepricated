@@ -1,15 +1,12 @@
 package com.cheep.model;
 
-import android.text.format.DateFormat;
 import android.util.Log;
 
-import com.cheep.utils.SuperCalendar;
 import com.cheep.utils.Utility;
 import com.google.gson.annotations.SerializedName;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;

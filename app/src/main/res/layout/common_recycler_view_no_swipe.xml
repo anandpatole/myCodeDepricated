@@ -40,7 +40,7 @@
                 android:id="@+id/text_error"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="lskjdflsdjf;skdjfl;sdkjf;lkadjadfasdf"
+                tools:text="lskjdflsdjf;skdjfl;sdkjf;lkadjadfasdf"
                 android:visibility="gone" />
 
             <com.cheep.custom_view.CFTextViewRegular

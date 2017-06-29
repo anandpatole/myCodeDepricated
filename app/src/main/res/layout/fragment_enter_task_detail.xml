@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <ScrollView
@@ -49,7 +48,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:paddingLeft="@dimen/scale_15dp"
-                            android:text="Restaurant"
+                            tools:text="Restaurant"
                             android:textColor="@color/splash_gradient_end"
                             android:textSize="@dimen/text_size_18sp" />
                     </LinearLayout>
@@ -269,7 +268,7 @@
                     android:layout_marginLeft="-20dp"
                     android:background="@drawable/background_blue_white_circle"
                     android:gravity="center"
-                    android:text="+8"
+                    tools:text="+8"
                     android:textColor="@color/white"
                     android:textSize="@dimen/text_size_23sp" />
             </LinearLayout>

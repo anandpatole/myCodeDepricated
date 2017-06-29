@@ -75,7 +75,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
-                        android:text="Bosche"
+                        tools:text="Bosche"
                         android:textColor="@color/black"
                         android:textSize="@dimen/text_size_15sp"
                         android:visibility="gone" />
@@ -85,7 +85,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
-                        android:text="Verified | 31 Jobs"
+                        tools:text="Verified | 31 Jobs"
                         android:textColor="@color/black"
                         android:textSize="@dimen/text_size_12sp" />
 
@@ -164,7 +164,7 @@
                             android:marqueeRepeatLimit="marquee_forever"
                             android:padding="@dimen/scale_10dp"
                             android:singleLine="true"
-                            android:text="13min"
+                            tools:text="13min"
                             android:maxLines="1"
                             android:textColor="@color/black"
                             android:textSize="@dimen/text_size_13sp" />
@@ -311,7 +311,7 @@
                                 android:ellipsize="marquee"
                                 android:marqueeRepeatLimit="marquee_forever"
                                 android:singleLine="true"
-                                android:text="₹ 2000"
+                                tools:text="₹ 2000"
                                 android:maxLines="1"
                                 android:textColor="@color/splash_gradient_end"
                                 android:textSize="@dimen/text_size_13sp"
@@ -384,7 +384,7 @@
                                 android:id="@+id/text_error"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="lskjdflsdjf;skdjfl;sdkjf;lkadjadfasdf"
+                                tools:text="lskjdflsdjf;skdjfl;sdkjf;lkadjadfasdf"
                                 android:visibility="gone" />
 
                             <com.cheep.custom_view.CFTextViewRegular

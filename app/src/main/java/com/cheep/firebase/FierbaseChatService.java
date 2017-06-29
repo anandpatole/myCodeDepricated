@@ -33,8 +33,8 @@ public class FierbaseChatService extends Service
     {
         FierbaseChatService getService()
         {
-            /**
-             * Return this instance of LocalService so clients can call public methods
+            /*
+              Return this instance of LocalService so clients can call public methods
              */
             return FierbaseChatService.this;
         }

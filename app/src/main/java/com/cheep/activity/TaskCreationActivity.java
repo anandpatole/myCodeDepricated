@@ -122,8 +122,8 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
         mActivityTaskCreateBinding.textStep2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                /**
-                 * Need to check whether first step is verified or not.
+                /*
+                  Need to check whether first step is verified or not.
                  */
                 if (mCurrentStep > 2) {
                     gotoStep(STAGE_2);
@@ -298,8 +298,8 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
             mActivityTaskCreateBinding.textPostTask.setVisibility(View.GONE);
         }
 
-        /**
-         * If shown make the color change accordingly
+        /*
+          If shown make the color change accordingly
          */
         if (isEnabled) {
             mActivityTaskCreateBinding.textPostTask.setSelected(true);
@@ -435,7 +435,7 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
 
 
         // Add Params
-        HashMap<String, File> mFileParams = new HashMap<String, File>();
+        HashMap<String, File> mFileParams = new HashMap<>();
         if (!TextUtils.isEmpty(mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mCurrentPhotoPath)
                 && new File(mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mCurrentPhotoPath).exists()) {
             mFileParams.put(NetworkUtility.TAGS.TASK_IMAGE, new File(mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mCurrentPhotoPath));
@@ -462,8 +462,8 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
                 switch (statusCode) {
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
 
-                        /**
-                         * Below was older approach when app needs to update the same task page.
+                        /*
+                          Below was older approach when app needs to update the same task page.
                          */
 //                        TaskDetailModel taskDetailModel = (TaskDetailModel) Utility.getObjectFromJsonString(jsonObject.optString(NetworkUtility.TAGS.DATA), TaskDetailModel.class);
 //                        getIntent().putExtra(Utility.Extra.DATA, jsonObject.optString(NetworkUtility.TAGS.DATA));
@@ -476,9 +476,9 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
                         AppsFlyerLib.getInstance().trackEvent(mContext, NetworkUtility.TAGS.APPSFLYER_CUSTOM_TRACK_EVENTS.TASK_CREATE, mTaskCreationParams);
 
 
-                        /**
-                         * Now according to the new flow, once task created
-                         * app will be redirected to MyTask Detail screen.
+                        /*
+                          Now according to the new flow, once task created
+                          app will be redirected to MyTask Detail screen.
                          */
                         onSuccessfullTaskCompletion(jsonObject);
                         break;

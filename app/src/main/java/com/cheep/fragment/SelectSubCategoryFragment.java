@@ -18,7 +18,6 @@ import com.cheep.activity.BaseAppCompatActivity;
 import com.cheep.activity.TaskCreationActivity;
 import com.cheep.adapter.SubServiceRecyclerViewAdapter;
 import com.cheep.databinding.FragmentSelectSubserviceBinding;
-import com.cheep.model.JobCategoryModel;
 import com.cheep.model.SubServiceDetailModel;
 import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;

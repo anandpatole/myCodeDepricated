@@ -12,7 +12,6 @@ import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.RatingBar;
@@ -262,7 +261,7 @@ public class JobSummaryActivity extends BaseAppCompatActivity {
         mHeaderParams.put(NetworkUtility.TAGS.USER_ID, userDetails.UserID);
 
         //Add Params
-        Map<String, Object> mParams = new HashMap<String, Object>();
+        Map<String, Object> mParams = new HashMap<>();
         mParams.put(NetworkUtility.TAGS.QUOTE_AMOUNT, providerModel.quotePrice);
         mParams.put(NetworkUtility.TAGS.TASK_ID, taskDetailModel.taskId);
         mParams.put(NetworkUtility.TAGS.CHEEPCODE, cheepCode);
@@ -550,9 +549,9 @@ public class JobSummaryActivity extends BaseAppCompatActivity {
     private void fillProviderDetails(ProviderModel providerModel) {
         this.providerModel = providerModel;
 
-        /**
-         * Changes on 6thFeb2017, @Bhavesh
-         * In case PRO doesn't set any Image-URLs, we will display the default Profile PIC.
+        /*
+          Changes on 6thFeb2017, @Bhavesh
+          In case PRO doesn't set any Image-URLs, we will display the default Profile PIC.
          */
         Utility.showCircularImageView(mContext, TAG, mActivityJobSummaryBinding.imgProfile, providerModel.profileUrl, Utility.DEFAULT_PROFILE_SRC, true);
 //        if (!TextUtils.isEmpty(providerModel.profileUrl)) {
@@ -564,8 +563,8 @@ public class JobSummaryActivity extends BaseAppCompatActivity {
 //        }
 
         //Loading Task Details Fields
-        /**
-         * Setting dynamic fields based on current status of task(Job)
+        /*
+          Setting dynamic fields based on current status of task(Job)
          */
         SuperCalendar superCalendar = SuperCalendar.getInstance();
         superCalendar.setTimeZone(SuperCalendar.SuperTimeZone.GMT.GMT);
@@ -1225,8 +1224,8 @@ public class JobSummaryActivity extends BaseAppCompatActivity {
     @Override
     protected void onDestroy() {
         Log.i(TAG, "onDestroy: ");
-        /**
-         * Cancel the request as it no longer available
+        /*
+          Cancel the request as it no longer available
          */
         Volley.getInstance(mContext).getRequestQueue().cancelAll(Utility.getUniqueTagForNetwork(this, NetworkUtility.WS.TASK_DETAIL));
         Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.WS.ADD_REVIEW);
@@ -1567,15 +1566,15 @@ public class JobSummaryActivity extends BaseAppCompatActivity {
                                 showRateDialog();
                             } else if (taskStatus.equalsIgnoreCase(Utility.TASK_STATUS.PROCESSING)) {
 
-                                /**
-                                 * Update the UI Accordingly.
+                                /*
+                                  Update the UI Accordingly.
                                  */
                                 taskDetailModel.taskStatus = taskStatus;
                                 //Refresh UI for Paid status
                                 fillProviderDetails(providerModel);
 
-                                /**
-                                 *  Show Information Dialog about getting Cheep Help
+                                /*
+                                   Show Information Dialog about getting Cheep Help
                                  */
                                 showIncompleteTaskDialog();
                             }
@@ -1636,7 +1635,7 @@ public class JobSummaryActivity extends BaseAppCompatActivity {
         mHeaderParams.put(NetworkUtility.TAGS.USER_ID, userDetails.UserID);
 
         //Add Params
-        Map<String, Object> mParams = new HashMap<String, Object>();
+        Map<String, Object> mParams = new HashMap<>();
         mParams.put(NetworkUtility.TAGS.SP_USER_ID, providerModel.providerId);
         mParams.put(NetworkUtility.TAGS.TASK_ID, taskDetailModel.taskId);
         if (!TextUtils.isEmpty(cheepCode))

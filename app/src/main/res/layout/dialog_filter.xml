@@ -51,7 +51,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="left"
                 android:layout_marginLeft="@dimen/scale_22dp"
-                android:text="₹0"
+                android:text="@string/zero_rupees"
                 android:textSize="@dimen/text_size_10sp" />
 
             <com.cheep.custom_view.CFTextViewRegular
@@ -60,7 +60,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="right"
                 android:layout_marginRight="@dimen/scale_22dp"
-                android:text="₹20000"
+                tools:text="₹20000"
                 android:textSize="@dimen/text_size_10sp" />
         </FrameLayout>
 

@@ -11,7 +11,6 @@ import android.graphics.Typeface;
 import android.support.v4.content.ContextCompat;
 import android.text.TextPaint;
 import android.util.AttributeSet;
-import android.widget.SeekBar;
 
 import com.cheep.R;
 

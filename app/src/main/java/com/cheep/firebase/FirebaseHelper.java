@@ -1,6 +1,5 @@
 package com.cheep.firebase;
 
-import android.content.Context;
 import android.text.TextUtils;
 
 import com.cheep.BuildConfig;

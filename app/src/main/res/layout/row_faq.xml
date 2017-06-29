@@ -12,6 +12,7 @@
             android:layout_height="wrap_content"
             android:drawablePadding="@dimen/scale_20dp"
             android:drawableRight="@drawable/icon_profile_arrow_right_grey"
+            android:drawableEnd="@drawable/icon_profile_arrow_right_grey"
             android:gravity="center_vertical"
             android:padding="@dimen/scale_16dp"
             android:textColor="@color/black"
@@ -24,6 +25,7 @@
             android:layout_below="@+id/text_faq_title"
             android:layout_marginLeft="@dimen/scale_16dp"
             android:layout_toRightOf="@+id/profile_layout"
+            android:layout_toEndOf="@+id/profile_layout"
             android:background="@color/grey_color" />
     </RelativeLayout>
 </layout>

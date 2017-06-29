@@ -29,7 +29,7 @@ public class FavouriteRecyclerViewAdapter extends RecyclerView.Adapter<Favourite
     ArrayList<ProviderModel> mList;
 
     public FavouriteRecyclerViewAdapter(FavouriteRowInteractionListener listener) {
-        this.mList = new ArrayList<ProviderModel>();
+        this.mList = new ArrayList<>();
         this.listener = listener;
     }
 
@@ -45,7 +45,7 @@ public class FavouriteRecyclerViewAdapter extends RecyclerView.Adapter<Favourite
 
     public void addItem(ArrayList<ProviderModel> mList) {
         if (mList == null) {
-            mList = new ArrayList<ProviderModel>();
+            mList = new ArrayList<>();
         }
         this.mList.addAll(mList);
         notifyDataSetChanged();

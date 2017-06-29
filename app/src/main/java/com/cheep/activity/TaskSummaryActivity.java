@@ -215,8 +215,8 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
 
 
         // Set Up Third Section WHEN
-        /**
-         * Setting dynamic fields based on current status of task(Job)
+        /*
+          Setting dynamic fields based on current status of task(Job)
          */
         SuperCalendar superCalendar = SuperCalendar.getInstance();
         superCalendar.setTimeZone(SuperCalendar.SuperTimeZone.GMT.GMT);
@@ -719,8 +719,8 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
                             if (taskStatus.equalsIgnoreCase(Utility.TASK_STATUS.COMPLETION_CONFIRM)) {
                                 Utility.showSnackBar(getString(R.string.msg_thanks_for_confirmation), mActivityTaskSummaryBinding.getRoot());
 
-                                /**
-                                 * Update the UI Accordingly.
+                                /*
+                                  Update the UI Accordingly.
                                  */
                                 mTaskDetailModel.taskStatus = taskStatus;
 
@@ -734,16 +734,16 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
 
                             } else if (taskStatus.equalsIgnoreCase(Utility.TASK_STATUS.PROCESSING)) {
 
-                                /**
-                                 * Update the UI Accordingly.
+                                /*
+                                  Update the UI Accordingly.
                                  */
                                 mTaskDetailModel.taskStatus = taskStatus;
 
                                 //Refresh UI for Paid status
                                 setUpTaskDetails(mTaskDetailModel);
 
-                                /**
-                                 *  Show Information Dialog about getting Cheep Help
+                                /*
+                                   Show Information Dialog about getting Cheep Help
                                  */
                                 showIncompleteTaskDialog();
                             }
@@ -1097,8 +1097,8 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        /**
-         * Cancel the request as it no longer available
+        /*
+          Cancel the request as it no longer available
          */
         Volley.getInstance(mContext).getRequestQueue().cancelAll(Utility.getUniqueTagForNetwork(this, NetworkUtility.WS.TASK_DETAIL));
         Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.WS.ADD_REVIEW);

@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:tools="http://schemas.android.com/tools">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <RelativeLayout
         android:id="@+id/front_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -32,10 +33,10 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:lines="1"
-                android:text="Sarita Kumari"
                 android:textAllCaps="false"
                 android:textColor="@color/black"
-                android:textSize="@dimen/text_size_12sp" />
+                android:textSize="@dimen/text_size_12sp"
+                tools:text="Sarita Kumari" />
 
 
             <com.cheep.custom_view.CFTextViewRegular
@@ -45,9 +46,9 @@
                 android:layout_alignLeft="@+id/text_name"
                 android:layout_below="@+id/text_name"
                 android:layout_marginTop="@dimen/scale_5dp"
-                android:text="21/03/16"
                 android:textColor="@color/grey_varient_2"
-                android:textSize="@dimen/text_size_10sp" />
+                android:textSize="@dimen/text_size_10sp"
+                tools:text="21/03/16" />
 
             <com.cheep.custom_view.CFTextViewRegular
                 android:id="@+id/text_message"
@@ -56,9 +57,9 @@
                 android:layout_below="@+id/text_date"
                 android:layout_marginTop="@dimen/scale_5dp"
                 android:gravity="center_vertical"
-                android:text="@string/dummy_chat"
                 android:textColor="@color/black"
-                android:textSize="@dimen/text_size_11sp" />
+                android:textSize="@dimen/text_size_11sp"
+                tools:text="@string/dummy_chat" />
 
 
         </RelativeLayout>

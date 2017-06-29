@@ -120,8 +120,8 @@ public class HomeActivity extends BaseAppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        /**
-         * TODO: It would get enabled once Localization feature enabled
+        /*
+          TODO: It would get enabled once Localization feature enabled
          */
 //        onLanguageChangedSuccessFully();
 
@@ -932,8 +932,8 @@ public class HomeActivity extends BaseAppCompatActivity
 
                 navHeaderHomeBinding.radioHindi.setVisibility(View.GONE);
                 navHeaderHomeBinding.radioEnglish.setChecked(true);
-                /**
-                 * TODO: This would be enabled when translation is ready to use
+                /*
+                  TODO: This would be enabled when translation is ready to use
                  */
                 //Check which language is chooseen by user
                 /*if (userDetails.language.equals(NetworkUtility.TAGS.LANGUAGE_TYPE.ENGLISH)) {

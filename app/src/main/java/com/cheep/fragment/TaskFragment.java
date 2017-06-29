@@ -15,7 +15,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -220,8 +219,8 @@ public class TaskFragment extends BaseFragment {
 
         mListener = null;
 
-        /**
-         * Cancel the request as it no longer available
+        /*
+          Cancel the request as it no longer available
          */
         Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.WS.PENDING_TASK);
         Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.WS.PAST_TASK);

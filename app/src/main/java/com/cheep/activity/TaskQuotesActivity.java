@@ -610,8 +610,8 @@ public class TaskQuotesActivity extends BaseAppCompatActivity implements TaskQuo
     }
 
 
-    /**
-     * Managing Accept/Decline Chat Request
+    /*
+      Managing Accept/Decline Chat Request
      */
     /**
      * In case Task is Getting Detail Request

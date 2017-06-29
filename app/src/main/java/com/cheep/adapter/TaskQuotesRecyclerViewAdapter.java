@@ -10,10 +10,8 @@ import android.graphics.drawable.AnimationDrawable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
-import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
-import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.LeadingMarginSpan;
 import android.text.style.RelativeSizeSpan;
@@ -26,25 +24,20 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.data.StreamAssetPathFetcher;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.cheep.R;
 import com.cheep.custom_view.CFTextViewRegular;
 import com.cheep.custom_view.TypeFaceProvider;
 import com.cheep.firebase.FirebaseHelper;
 import com.cheep.firebase.FirebaseUtils;
-import com.cheep.firebase.model.TaskChatModel;
 import com.cheep.model.ProviderModel;
 import com.cheep.model.TaskDetailModel;
 import com.cheep.utils.CustomTypefaceSpan;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.RoundedBackgroundSpan;
 import com.cheep.utils.Utility;
-import com.daimajia.swipe.SwipeLayout;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
 import java.text.DecimalFormat;
@@ -182,7 +175,7 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
             holder.tvBanner.setTextColor(ContextCompat.getColor(holder.tvBanner.getContext(), R.color.cheepest_highlighted_text_color));
         } else if (provider.high_rating != null && provider.high_rating.equals("1")) {
             holder.tvBanner.setVisibility(View.VISIBLE);
-            holder.itemView.setBackgroundResource(R.color.yellow_varient_1);
+            holder.itemView.setBackgroundResource(R.color.highest_rated_bg_color);
             holder.tvBanner.setText(mContext.getString(R.string.label_highest_rated_strip));
             holder.tvBanner.setCompoundDrawablesWithIntrinsicBounds(R.drawable.icon_highest_rating, 0, 0, 0);
             holder.tvBanner.setTextColor(ContextCompat.getColor(holder.tvBanner.getContext(), R.color.highest_rated_highlighted_text_color));

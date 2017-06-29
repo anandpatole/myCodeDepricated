@@ -26,8 +26,6 @@ import com.cheep.R;
 import com.payu.custombrowser.Bank;
 import com.payu.custombrowser.PayUWebChromeClient;
 import com.payu.custombrowser.PayUWebViewClient;
-import com.payu.india.Payu.Payu;
-import com.payu.india.Payu.PayuConstants;
 import com.payu.magicretry.Helpers.Util;
 import com.payu.magicretry.MagicRetryFragment;
 
@@ -93,8 +91,8 @@ public class PaymentsActivity extends AppCompatActivity implements MagicRetryFra
     @TargetApi(Build.VERSION_CODES.KITKAT)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        /**
-         * when the device runing out of memory we dont want the user to restart the payment. rather we close it and redirect them to previous activity.
+        /*
+          when the device runing out of memory we dont want the user to restart the payment. rather we close it and redirect them to previous activity.
          */
 
         if (savedInstanceState != null) {
@@ -438,7 +436,7 @@ public class PaymentsActivity extends AppCompatActivity implements MagicRetryFra
         newInformationBundle.putString(MagicRetryFragment.KEY_TXNID, txnId);
         magicRetryFragment.setArguments(newInformationBundle);
 
-        Map<String, String> urlList = new HashMap<String, String>();
+        Map<String, String> urlList = new HashMap<>();
         urlList.put(url, postData);
         magicRetryFragment.setUrlListWithPostData(urlList);
 

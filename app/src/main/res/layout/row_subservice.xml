@@ -24,7 +24,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingLeft="@dimen/scale_15dp"
-            android:text="Restaurant"
+            tools:text="Restaurant"
             android:textColor="@color/selector_text_name_subservice"
             android:textSize="@dimen/text_size_18sp" />
     </LinearLayout>

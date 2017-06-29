@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/scale_5dp"
@@ -25,7 +26,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/scale_5dp"
                 android:gravity="center"
-                android:text="My quote"
+                android:text="@string/my_quote"
                 android:textColor="@color/white_translucent"
                 android:textSize="@dimen/text_size_9sp" />
 
@@ -34,7 +35,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:lineSpacingExtra="@dimen/scale_2dp"
-                android:text="Custom quote for your\n requirement is"
+                android:text="@string/custom_quote_for_your_requirement_is"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_size_12sp" />
 
@@ -44,9 +45,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/scale_2dp"
                 android:gravity="center"
-                android:text="\u20B9 100"
                 android:textColor="@color/white"
-                android:textSize="@dimen/text_size_15sp" />
+                android:textSize="@dimen/text_size_15sp"
+                tools:text="\u20B9 100" />
         </LinearLayout>
 
         <com.cheep.custom_view.CFTextViewRegular
@@ -61,8 +62,8 @@
             android:gravity="right"
             android:lines="1"
             android:paddingRight="@dimen/scale_15dp"
-            android:text="5:55 pm"
             android:textColor="@color/grey_varient_5"
-            android:textSize="@dimen/text_size_10sp" />
+            android:textSize="@dimen/text_size_10sp"
+            tools:text="5:55 pm" />
     </LinearLayout>
 </layout>

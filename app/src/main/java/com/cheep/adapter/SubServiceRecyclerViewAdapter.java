@@ -11,12 +11,8 @@ import android.view.ViewGroup;
 
 import com.cheep.R;
 import com.cheep.databinding.RowSubserviceBinding;
-import com.cheep.databinding.RowTaskBinding;
-import com.cheep.databinding.RowTaskGroupBinding;
 import com.cheep.fragment.SelectSubCategoryFragment;
 import com.cheep.model.SubServiceDetailModel;
-import com.cheep.model.TaskDetailModel;
-import com.cheep.utils.LoadMoreRecyclerAdapter;
 
 import java.util.ArrayList;
 

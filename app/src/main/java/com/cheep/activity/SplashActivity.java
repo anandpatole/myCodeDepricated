@@ -90,8 +90,8 @@ public class SplashActivity extends BaseAppCompatActivity {
     protected void onDestroy() {
 
 
-        /**
-         * To avoid memory leak, remove callback once its not necessary
+        /*
+          To avoid memory leak, remove callback once its not necessary
          */
         if (mHandler != null) {
             mHandler.removeCallbacks(mRunnable);

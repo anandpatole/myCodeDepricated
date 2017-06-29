@@ -29,55 +29,56 @@
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
-            <LinearLayout
+            <!--<LinearLayout-->
+            <!---->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:gravity="center_horizontal"-->
+            <!--android:orientation="vertical">-->
+
+            <RelativeLayout
                 android:id="@+id/profile_layout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:orientation="vertical">
+                android:layout_width="@dimen/chat_width"
+                android:layout_height="@dimen/chat_width">
 
-                <RelativeLayout
-                    android:layout_width="@dimen/chat_width"
-                    android:layout_height="@dimen/chat_width">
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true">
 
-                    <FrameLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true">
-
-                        <ImageView
-                            android:id="@+id/img_profile"
-                            android:layout_width="@dimen/chat_width"
-                            android:layout_height="@dimen/chat_width"
-                            android:gravity="center"
-                            android:src="@drawable/icon_profile_img"
-                            tools:ignore="ContentDescription" />
-
-                        <com.cheep.custom_view.CFTextViewRegular
-                            android:id="@+id/text_participant_counter"
-                            android:layout_width="@dimen/chat_width"
-                            android:layout_height="@dimen/chat_width"
-                            android:background="@drawable/participant_counter_rounded_background"
-                            android:gravity="center"
-                            android:text="5"
-                            android:textColor="@color/white"
-                            android:textSize="@dimen/text_size_25sp"
-                            android:visibility="gone" />
-
-                    </FrameLayout>
+                    <ImageView
+                        android:id="@+id/img_profile"
+                        android:layout_width="@dimen/chat_width"
+                        android:layout_height="@dimen/chat_width"
+                        android:gravity="center"
+                        android:src="@drawable/icon_profile_img"
+                        tools:ignore="ContentDescription" />
 
                     <com.cheep.custom_view.CFTextViewRegular
-                        android:id="@+id/text_contact_request"
-                        android:layout_width="@dimen/scale_8dp"
-                        android:layout_height="@dimen/scale_8dp"
-                        android:layout_alignParentRight="true"
-                        android:layout_marginRight="@dimen/scale_3dp"
-                        android:layout_marginTop="@dimen/scale_5dp"
-                        android:background="@drawable/circle_red"
+                        android:id="@+id/text_participant_counter"
+                        android:layout_width="@dimen/chat_width"
+                        android:layout_height="@dimen/chat_width"
+                        android:background="@drawable/participant_counter_rounded_background"
+                        android:gravity="center"
                         android:textColor="@color/white"
-                        android:visibility="visible" />
-                </RelativeLayout>
-            </LinearLayout>
+                        android:textSize="@dimen/text_size_25sp"
+                        android:visibility="gone"
+                        tools:text="5" />
+
+                </FrameLayout>
+
+                <com.cheep.custom_view.CFTextViewRegular
+                    android:id="@+id/text_contact_request"
+                    android:layout_width="@dimen/scale_8dp"
+                    android:layout_height="@dimen/scale_8dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="@dimen/scale_3dp"
+                    android:layout_marginTop="@dimen/scale_5dp"
+                    android:background="@drawable/circle_red"
+                    android:textColor="@color/white"
+                    android:visibility="visible" />
+            </RelativeLayout>
+            <!--</LinearLayout>-->
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -145,13 +146,13 @@
                             android:drawablePadding="@dimen/scale_5dp"
                             android:ellipsize="marquee"
                             android:marqueeRepeatLimit="marquee_forever"
+                            android:maxLines="1"
                             android:paddingBottom="@dimen/scale_5dp"
                             android:paddingTop="@dimen/scale_5dp"
                             android:singleLine="true"
-                            android:maxLines="1"
-                            android:text="15miasasdasdasdasdasdsdasdn"
                             android:textColor="@color/grey_dark_color_2"
-                            android:textSize="@dimen/text_size_11sp" />
+                            android:textSize="@dimen/text_size_11sp"
+                            tools:text="15miasasdasdasdasdasdsdasdn" />
                     </RelativeLayout>
                     <!-- <LinearLayout
                          android:layout_width="wrap_content"
@@ -249,10 +250,10 @@
                     android:layout_marginLeft="@dimen/scale_6dp"
                     android:layout_marginRight="@dimen/scale_5dp"
                     android:layout_toRightOf="@+id/rating_bar"
-                    android:text="5 Years Experience"
                     android:textColor="@color/grey_dark_color_2"
                     android:textSize="@dimen/text_size_11sp"
-                    android:visibility="visible" />
+                    android:visibility="visible"
+                    tools:text="5 Years Experience" />
 
                 <com.cheep.custom_view.CFTextViewRegular
                     android:id="@+id/text_total_jobs"
@@ -263,9 +264,9 @@
                     android:layout_marginLeft="@dimen/scale_8dp"
                     android:layout_marginRight="@dimen/scale_5dp"
                     android:layout_toRightOf="@+id/text_experience"
-                    android:text="31 jobs"
                     android:textColor="@color/grey_dark_color_2"
-                    android:textSize="@dimen/text_size_11sp" />
+                    android:textSize="@dimen/text_size_11sp"
+                    tools:text="31 jobs" />
 
                 <RelativeLayout
                     android:layout_width="0dp"
@@ -286,15 +287,15 @@
                         android:ellipsize="marquee"
                         android:gravity="center"
                         android:marqueeRepeatLimit="marquee_forever"
+                        android:maxLines="1"
                         android:paddingBottom="@dimen/scale_3dp"
                         android:paddingLeft="@dimen/scale_8dp"
                         android:paddingRight="@dimen/scale_8dp"
                         android:paddingTop="@dimen/scale_3dp"
                         android:singleLine="true"
-                        android:text="₹200"
-                        android:maxLines="1"
                         android:textColor="@color/white"
-                        android:textSize="@dimen/text_size_14sp" />
+                        android:textSize="@dimen/text_size_14sp"
+                        tools:text="₹200" />
                 </RelativeLayout>
             </LinearLayout>
             <!--<LinearLayout

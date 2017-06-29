@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/scale_5dp"
@@ -29,7 +30,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/scale_5dp"
                     android:gravity="center"
-                    android:text="My quote"
+                    android:text="@string/my_quote"
                     android:textColor="@color/grey_varient_2"
                     android:textSize="@dimen/text_size_9sp" />
 
@@ -38,7 +39,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:lineSpacingExtra="@dimen/scale_2dp"
-                    android:text="Custom quote for your\n requirement is"
+                    android:text="@string/custom_quote_for_your_requirement_is"
                     android:textColor="@color/black"
                     android:textSize="@dimen/text_size_12sp" />
 
@@ -49,9 +50,9 @@
                     android:layout_marginBottom="@dimen/scale_10dp"
                     android:layout_marginTop="@dimen/scale_2dp"
                     android:gravity="center"
-                    android:text="\u20B9 100"
                     android:textColor="@color/splash_gradient_end"
-                    android:textSize="@dimen/text_size_15sp" />
+                    android:textSize="@dimen/text_size_15sp"
+                    tools:text="\u20B9 100" />
             </LinearLayout>
 
             <com.cheep.custom_view.CFTextViewRegular
@@ -78,7 +79,7 @@
             android:layout_marginTop="@dimen/scale_2dp"
             android:ellipsize="end"
             android:lines="1"
-            android:text="5:55 pm"
+            tools:text="5:55 pm"
             android:textColor="@color/grey_varient_5"
             android:textSize="@dimen/text_size_10sp" />
     </RelativeLayout>

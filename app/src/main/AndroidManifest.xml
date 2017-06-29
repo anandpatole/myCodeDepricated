@@ -169,7 +169,8 @@
             android:resource="@color/splash_gradient_end" />
 
         <!-- [START instanceId_listener] -->
-        <service android:name=".fcm.MyInstanceIDListenerService">
+        <service android:name=".fcm.MyInstanceIDListenerService"
+            android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>

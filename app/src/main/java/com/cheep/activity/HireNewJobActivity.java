@@ -1,7 +1,6 @@
 package com.cheep.activity;
 
 import android.Manifest;
-import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.ClipData;
 import android.content.Context;
@@ -33,7 +32,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.TextView;
@@ -230,8 +228,8 @@ public class HireNewJobActivity extends BaseAppCompatActivity implements Provide
         if (EventBus.getDefault().isRegistered(this))
             EventBus.getDefault().unregister(this);
 
-        /**
-         * Cancel the request as it no longer available
+        /*
+          Cancel the request as it no longer available
          */
         Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.WS.SP_ADD_TO_FAV);
         Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.WS.EDIT_ADDRESS);
@@ -251,9 +249,9 @@ public class HireNewJobActivity extends BaseAppCompatActivity implements Provide
 
     }
 
-   /* *//**
-     * FIELDS INITIALIZATION AND DATA LOADING FOR
-     * NEW JOB CREATE
+   /* *//*
+      FIELDS INITIALIZATION AND DATA LOADING FOR
+      NEW JOB CREATE
      *//*
     private void populateFieldsForNewJobCreate() {
 
@@ -2236,7 +2234,7 @@ public class HireNewJobActivity extends BaseAppCompatActivity implements Provide
         mParams.put(NetworkUtility.TAGS.START_DATETIME, String.valueOf(superCalendar.getTimeInMillis()));
 
         // Add Params
-        HashMap<String, File> mFileParams = new HashMap<String, File>();
+        HashMap<String, File> mFileParams = new HashMap<>();
         if (!TextUtils.isEmpty(mCurrentPhotoPath) && new File(mCurrentPhotoPath).exists())
             mFileParams.put(NetworkUtility.TAGS.TASK_IMAGE, new File(mCurrentPhotoPath));
 
@@ -2262,8 +2260,8 @@ public class HireNewJobActivity extends BaseAppCompatActivity implements Provide
                 switch (statusCode) {
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
 
-                        /**
-                         * Below was older approach when app needs to update the same task page.
+                        /*
+                          Below was older approach when app needs to update the same task page.
                          */
 //                        TaskDetailModel taskDetailModel = (TaskDetailModel) Utility.getObjectFromJsonString(jsonObject.optString(NetworkUtility.TAGS.DATA), TaskDetailModel.class);
 //                        getIntent().putExtra(Utility.Extra.DATA, jsonObject.optString(NetworkUtility.TAGS.DATA));
@@ -2273,9 +2271,9 @@ public class HireNewJobActivity extends BaseAppCompatActivity implements Provide
 //                        setListeners();
 
 
-                        /**
-                         * Now according to the new flow, once task created
-                         * app will be redirected to MyTask Detail screen.
+                        /*
+                          Now according to the new flow, once task created
+                          app will be redirected to MyTask Detail screen.
                          */
                         TaskDetailModel taskDetailModel = (TaskDetailModel) Utility.getObjectFromJsonString(jsonObject.optString(NetworkUtility.TAGS.DATA), TaskDetailModel.class);
                         if (taskDetailModel != null) {
@@ -2623,8 +2621,8 @@ public class HireNewJobActivity extends BaseAppCompatActivity implements Provide
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
 
                         taskDetailModel = (TaskDetailModel) Utility.getObjectFromJsonString(jsonObject.optString(NetworkUtility.TAGS.DATA), TaskDetailModel.class);
-                        /**
-                         * NOW REFRESHES the listings
+                        /*
+                          NOW REFRESHES the listings
                          */
                         populateFieldsForHireProvider();
 

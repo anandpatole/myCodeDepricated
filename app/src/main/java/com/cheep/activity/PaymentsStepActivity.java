@@ -15,7 +15,6 @@ import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 
@@ -83,8 +82,8 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        /**
-         * when the device runing out of memory we dont want the user to restart the payment. rather we close it and redirect them to previous activity.
+        /*
+          when the device runing out of memory we dont want the user to restart the payment. rather we close it and redirect them to previous activity.
          */
         mActivityPaymentDetailBinding = DataBindingUtil.setContentView(this, R.layout.activity_payment_detail);
 
@@ -409,7 +408,7 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
         mHeaderParams.put(NetworkUtility.TAGS.USER_ID, userDetails.UserID);
 
         //Add Params
-        Map<String, Object> mParams = new HashMap<String, Object>();
+        Map<String, Object> mParams = new HashMap<>();
         mParams.put(NetworkUtility.TAGS.QUOTE_AMOUNT, providerModel.quotePrice);
         mParams.put(NetworkUtility.TAGS.TASK_ID, taskDetailModel.taskId);
         mParams.put(NetworkUtility.TAGS.CHEEPCODE, cheepCode);
@@ -777,7 +776,7 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
         mHeaderParams.put(NetworkUtility.TAGS.USER_ID, userDetails.UserID);
 
         //Add Params
-        Map<String, Object> mParams = new HashMap<String, Object>();
+        Map<String, Object> mParams = new HashMap<>();
         mParams.put(NetworkUtility.TAGS.SP_USER_ID, providerModel.providerId);
         mParams.put(NetworkUtility.TAGS.TASK_ID, taskDetailModel.taskId);
         if (!TextUtils.isEmpty(cheepCode))

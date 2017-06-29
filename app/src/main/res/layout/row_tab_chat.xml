@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:tools="http://schemas.android.com/tools">
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -39,7 +40,7 @@
             android:background="@drawable/participant_counter_rounded_background"
             android:gravity="center"
             android:src="@drawable/icon_profile_img"
-            android:text="5"
+            tools:text="5"
             android:textColor="@color/white"
             android:textSize="@dimen/text_size_15sp" />
 
@@ -59,7 +60,7 @@
                 android:layout_weight="1"
                 android:ellipsize="end"
                 android:lines="1"
-                android:text="PLUMBER"
+                tools:text="PLUMBER"
                 android:textAllCaps="false"
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_size_13sp" />
@@ -69,7 +70,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@+id/img_profile"
-                android:text="15/07/16"
+                tools:text="15/07/16"
                 android:textColor="@color/grey_varient_2"
                 android:textSize="@dimen/text_size_12sp" />
 

@@ -18,7 +18,6 @@ import android.view.View;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.cheep.R;
-import com.cheep.firebase.model.ChatImageModel;
 import com.cheep.interfaces.LocationTrackServiceInteractionListener;
 import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
@@ -30,10 +29,6 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.Status;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 

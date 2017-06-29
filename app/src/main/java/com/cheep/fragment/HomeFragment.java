@@ -546,8 +546,8 @@ public class HomeFragment extends BaseFragment {
         @Override
         public void onReceive(Context context, Intent intent) {
             Log.d(TAG, "onReceive() called with: context = [" + context + "], intent = [" + intent + "]");
-            /**
-             * Redirect the user to MYTask Screen
+            /*
+              Redirect the user to MYTask Screen
              */
             setCurrentTab(TAB_MY_TASK);
         }

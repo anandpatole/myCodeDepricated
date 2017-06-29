@@ -6,11 +6,9 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
-import com.cheep.BootstrapConstant;
 import com.cheep.R;
 import com.cheep.adapter.ChatTabRecyclerViewAdapter;
 import com.cheep.adapter.NotificationRecyclerViewAdapter;
@@ -356,7 +354,7 @@ public class ChatIndividualListActivity extends BaseAppCompatActivity implements
                             if (dataSnapshot.getChildrenCount() < Utility.CHAT_PAGINATION_RECORD_LIMIT) {
                                 hasMoreRecord = false;
                             }
-                            List<TaskChatModel> taskChatModelList = new ArrayList<TaskChatModel>();
+                            List<TaskChatModel> taskChatModelList = new ArrayList<>();
                             for (DataSnapshot ds : dataSnapshot.getChildren()) {
                                 if (ds.exists() && ds.getValue() != null) {
                                     TaskChatModel message = ds.getValue(TaskChatModel.class);

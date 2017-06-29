@@ -382,7 +382,7 @@ public class VerificationActivity extends BaseAppCompatActivity {
         if (getIntent().getExtras().getString(Utility.Extra.USER_DETAILS) != null) {
             JSONObject jsonObject = null;
             try {
-                jsonObject = new JSONObject(getIntent().getExtras().getString(Utility.Extra.USER_DETAILS).toString());
+                jsonObject = new JSONObject(getIntent().getExtras().getString(Utility.Extra.USER_DETAILS));
                 PreferenceUtility.getInstance(mContext).saveUserDetails(jsonObject);
                 PreferenceUtility.getInstance(mContext).setXAPIKey(jsonObject.getString(NetworkUtility.TAGS.WS_ACCESS_KEY));
             } catch (JSONException e) {

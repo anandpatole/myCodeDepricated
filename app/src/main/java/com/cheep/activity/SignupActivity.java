@@ -18,13 +18,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
-import android.text.SpannableStringBuilder;
-import android.text.Spanned;
 import android.text.TextUtils;
-import android.text.method.LinkMovementMethod;
-import android.text.style.ClickableSpan;
-import android.text.style.ForegroundColorSpan;
-import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.view.View;
 
@@ -38,12 +32,9 @@ import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
 import com.cheep.utils.Utility;
-import com.theartofdev.edmodo.cropper.CropImage;
-import com.theartofdev.edmodo.cropper.CropImageView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.io.File;
 import java.io.IOException;
@@ -54,7 +45,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import static com.cheep.utils.Utility.REQUEST_CODE_CROP_GET_FILE_ADD_PROFILE;
 import static com.cheep.utils.Utility.REQUEST_CODE_IMAGE_CAPTURE_ADD_PROFILE;
 
 /**
@@ -575,11 +565,11 @@ public class SignupActivity extends BaseAppCompatActivity {
         }
     }
 
-    /**************************************************************************************************************
-     * *************************************************************************************************************
-     * *****************************************Profile Pic Integration [End]**************************************
-     * *************************************************************************************************************
-     ************************************************************************************************************/
+    /*************************************************************************************************************
+     *************************************************************************************************************
+     *****************************************Profile Pic Integration [End]**************************************
+     *************************************************************************************************************
+     */
 
     /**************************************************************************************************************
      * *************************************************************************************************************
@@ -762,11 +752,11 @@ public class SignupActivity extends BaseAppCompatActivity {
         }
     };
 
-    /**************************************************************************************************************
-     * *************************************************************************************************************
-     * *****************************************Webservice Integration [End]**************************************
-     * *************************************************************************************************************
-     ************************************************************************************************************/
+    /*************************************************************************************************************
+     *************************************************************************************************************
+     *****************************************Webservice Integration [End]**************************************
+     *************************************************************************************************************
+     */
 
 
 }

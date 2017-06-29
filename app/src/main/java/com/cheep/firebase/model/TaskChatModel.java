@@ -1,6 +1,5 @@
 package com.cheep.firebase.model;
 
-import com.cheep.utils.Utility;
 import com.google.firebase.database.Exclude;
 import com.google.firebase.database.IgnoreExtraProperties;
 import com.google.firebase.database.ServerValue;

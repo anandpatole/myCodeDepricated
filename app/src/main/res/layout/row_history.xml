@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:tools="http://schemas.android.com/tools">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout
         android:id="@+id/front_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -46,17 +47,17 @@
                     android:id="@+id/text_category_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="PLUMBER"
                     android:textColor="@color/splash_gradient_end"
-                    android:textSize="@dimen/text_size_11sp" />
+                    android:textSize="@dimen/text_size_11sp"
+                    tools:text="PLUMBER" />
 
                 <com.cheep.custom_view.CFTextViewRegular
                     android:id="@+id/text_date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="20/05/16"
                     android:textColor="@color/grey_varient_2"
-                    android:textSize="@dimen/text_size_11sp" />
+                    android:textSize="@dimen/text_size_11sp"
+                    tools:text="20/05/16" />
             </LinearLayout>
         </LinearLayout>
 
@@ -67,9 +68,9 @@
             android:layout_gravity="center_vertical"
             android:layout_weight="0.5"
             android:gravity="center"
-            android:text="31 jobs"
             android:textColor="@color/black"
-            android:textSize="@dimen/text_size_13sp" />
+            android:textSize="@dimen/text_size_13sp"
+            tools:text="31 jobs" />
 
         <com.cheep.custom_view.CFTextViewRegular
             android:id="@+id/text_saved"
@@ -78,7 +79,7 @@
             android:layout_gravity="center_vertical"
             android:layout_weight="0.5"
             android:gravity="center"
-            android:text="31 jobs"
+            tools:text="31 jobs"
             android:textColor="@color/black"
             android:textSize="@dimen/text_size_13sp" />
 

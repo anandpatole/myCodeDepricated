@@ -418,7 +418,7 @@ public class ChatActivity extends BaseAppCompatActivity implements View.OnClickL
                         if (dataSnapshot.getChildrenCount() < Utility.CHAT_PAGINATION_RECORD_LIMIT) {
                             hasMoreRecord = false;
                         }
-                        List<TaskChatMessageModel> messageModelList = new ArrayList<TaskChatMessageModel>();
+                        List<TaskChatMessageModel> messageModelList = new ArrayList<>();
                         for (DataSnapshot ds : dataSnapshot.getChildren()) {
                             if (ds.exists() && ds.getValue() != null) {
                                 TaskChatMessageModel message = ds.getValue(TaskChatMessageModel.class);
@@ -473,7 +473,7 @@ public class ChatActivity extends BaseAppCompatActivity implements View.OnClickL
         chatMessageModel.messageType = chatType;
         chatMessageModel.receiverId = formattedReceiverId;
         chatMessageModel.senderId = formattedSenderId;
-        String key = FirebaseHelper.getMessagesRef(chatMessageModel.chatId).push().getKey().toString();
+        String key = FirebaseHelper.getMessagesRef(chatMessageModel.chatId).push().getKey();
         chatMessageModel.messageId = key;
 
         FirebaseHelper.getMessagesRef(chatMessageModel.chatId).child(key).setValue(chatMessageModel);
@@ -734,7 +734,7 @@ public class ChatActivity extends BaseAppCompatActivity implements View.OnClickL
         mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
 
         //Add Params
-        HashMap<String, File> mFileParams = new HashMap<String, File>();
+        HashMap<String, File> mFileParams = new HashMap<>();
         mFileParams.put(NetworkUtility.TAGS.CHAT_IMG, new File(imagePath));
 
         VolleyNetworkRequest mVolleyNetworkRequest = new VolleyNetworkRequest(NetworkUtility.WS.IMAGE_UPLOAD_FOR_CHAT

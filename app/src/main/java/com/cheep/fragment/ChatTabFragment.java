@@ -440,7 +440,7 @@ public class ChatTabFragment extends BaseFragment {
                             if (dataSnapshot.getChildrenCount() < Utility.CHAT_PAGINATION_RECORD_LIMIT) {
                                 hasMoreRecord = false;
                             }
-                            List<TaskChatModel> taskChatModelList = new ArrayList<TaskChatModel>();
+                            List<TaskChatModel> taskChatModelList = new ArrayList<>();
                             for (DataSnapshot ds : dataSnapshot.getChildren()) {
                                 if (ds.exists() && ds.getValue() != null) {
                                     TaskChatModel message = ds.getValue(TaskChatModel.class);

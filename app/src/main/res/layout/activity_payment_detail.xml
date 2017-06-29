@@ -67,10 +67,10 @@
                                         android:background="@android:color/transparent"
                                         android:gravity="center"
                                         android:lines="1"
+                                        android:maxLines="1"
                                         android:padding="@dimen/scale_10dp"
                                         android:singleLine="true"
                                         android:text="@string/label_payment_history"
-                                        android:maxLines="1"
                                         android:textAllCaps="false"
                                         android:textColor="@color/white"
                                         android:textSize="@dimen/text_size_18sp" />
@@ -89,7 +89,7 @@
                                         android:layout_height="@dimen/scale_32dp"
                                         android:background="@drawable/background_steps_verified"
                                         android:gravity="center"
-                                        android:text="1"
+                                        android:text="@string/number_one"
                                         android:textColor="@color/selector_text_name_steps"
                                         android:textSize="@dimen/text_size_18sp" />
 
@@ -105,7 +105,7 @@
                                         android:layout_height="@dimen/scale_32dp"
                                         android:background="@drawable/background_steps_verified"
                                         android:gravity="center"
-                                        android:text="2"
+                                        android:text="@string/number_two"
                                         android:textColor="@color/selector_text_name_steps"
                                         android:textSize="@dimen/text_size_18sp" />
 
@@ -121,7 +121,7 @@
                                         android:layout_height="@dimen/scale_32dp"
                                         android:background="@drawable/background_steps_unverified"
                                         android:gravity="center"
-                                        android:text="3"
+                                        android:text="@string/number_three"
                                         android:textColor="@color/selector_text_name_steps"
                                         android:textSize="@dimen/text_size_18sp" />
                                 </LinearLayout>
@@ -228,6 +228,7 @@
                             android:paddingTop="@dimen/scale_5dp">
 
                             <com.cheep.custom_view.CFTextViewRegular
+                                android:id="@+id/CFTextViewRegular"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="left|center_vertical"
@@ -244,12 +245,19 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentRight="true"
+                                android:layout_toEndOf="@+id/CFTextViewRegular"
+                                android:layout_toRightOf="@+id/CFTextViewRegular"
                                 android:drawablePadding="@dimen/scale_5dp"
+                                android:ellipsize="marquee"
+                                android:gravity="right"
+                                android:marqueeRepeatLimit="marquee_forever"
+                                android:maxLines="1"
                                 android:paddingBottom="@dimen/scale_5dp"
                                 android:paddingTop="@dimen/scale_5dp"
-                                android:text="₹ 300"
+                                android:singleLine="true"
                                 android:textColor="@color/black"
-                                android:textSize="@dimen/text_size_14sp" />
+                                android:textSize="@dimen/text_size_14sp"
+                                tools:text="₹ 300" />
 
                         </RelativeLayout>
 
@@ -272,6 +280,7 @@
                             android:paddingTop="@dimen/scale_5dp">
 
                             <com.cheep.custom_view.CFTextViewRegular
+                                android:id="@+id/CFTextViewRegular2"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="left|center_vertical"
@@ -288,12 +297,19 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentRight="true"
+                                android:layout_toEndOf="@+id/CFTextViewRegular2"
+                                android:layout_toRightOf="@+id/CFTextViewRegular2"
                                 android:drawablePadding="@dimen/scale_5dp"
+                                android:ellipsize="marquee"
+                                android:gravity="right"
+                                android:marqueeRepeatLimit="marquee_forever"
+                                android:maxLines="1"
                                 android:paddingBottom="@dimen/scale_5dp"
                                 android:paddingTop="@dimen/scale_5dp"
-                                android:text="₹ 0"
+                                android:singleLine="true"
                                 android:textColor="@color/black"
-                                android:textSize="@dimen/text_size_14sp" />
+                                android:textSize="@dimen/text_size_14sp"
+                                tools:text="₹ 0" />
 
                         </RelativeLayout>
 
@@ -314,6 +330,7 @@
                             android:paddingTop="@dimen/scale_5dp">
 
                             <com.cheep.custom_view.CFTextViewSemiBold
+                                android:id="@+id/CFTextViewSemiBold"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="left|center_vertical"
@@ -330,12 +347,19 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentRight="true"
+                                android:layout_toEndOf="@+id/CFTextViewSemiBold"
+                                android:layout_toRightOf="@+id/CFTextViewSemiBold"
                                 android:drawablePadding="@dimen/scale_5dp"
+                                android:ellipsize="marquee"
+                                android:gravity="right"
+                                android:marqueeRepeatLimit="marquee_forever"
+                                android:maxLines="1"
                                 android:paddingBottom="@dimen/scale_5dp"
                                 android:paddingTop="@dimen/scale_5dp"
-                                android:text="₹ 300"
+                                android:singleLine="true"
                                 android:textColor="@color/black"
-                                android:textSize="@dimen/text_size_14sp" />
+                                android:textSize="@dimen/text_size_14sp"
+                                tools:text="₹ 300" />
 
                         </RelativeLayout>
 
@@ -393,9 +417,16 @@
                                 android:drawablePadding="@dimen/scale_5dp"
                                 android:paddingBottom="@dimen/scale_5dp"
                                 android:paddingTop="@dimen/scale_5dp"
-                                android:text="₹ 0"
                                 android:textColor="@color/black"
-                                android:textSize="@dimen/text_size_14sp" />
+                                android:textSize="@dimen/text_size_14sp"
+                                tools:text="₹ 0"
+                                android:gravity="right"
+                                android:singleLine="true"
+                                android:maxLines="1"
+                                android:ellipsize="marquee"
+                                android:marqueeRepeatLimit="marquee_forever"
+                                android:layout_toRightOf="@+id/textpromocodelabel"
+                                android:layout_toEndOf="@+id/textpromocodelabel" />
 
 
                         </RelativeLayout>
@@ -438,9 +469,16 @@
                                 android:drawablePadding="@dimen/scale_5dp"
                                 android:paddingBottom="@dimen/scale_5dp"
                                 android:paddingTop="@dimen/scale_5dp"
-                                android:text="₹ 300"
                                 android:textColor="@color/black"
-                                android:textSize="@dimen/text_size_18sp" />
+                                android:textSize="@dimen/text_size_18sp"
+                                tools:text="₹ 300"
+                                android:gravity="right"
+                                android:singleLine="true"
+                                android:maxLines="1"
+                                android:ellipsize="marquee"
+                                android:marqueeRepeatLimit="marquee_forever"
+                                android:layout_toRightOf="@+id/text_label_total_paid"
+                                android:layout_toEndOf="@+id/text_label_total_paid" />
 
                         </RelativeLayout>
 
@@ -470,7 +508,7 @@
             android:background="@color/splash_gradient_end"
             android:gravity="center"
             android:padding="@dimen/scale_10dp"
-            android:text="Pay 300"
+            android:text="@string/label_pay_fee_v1"
             android:textColor="@color/white"
             android:textSize="@dimen/text_size_17sp"
             android:visibility="visible" />

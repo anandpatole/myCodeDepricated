@@ -9,7 +9,6 @@ import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.databinding.DataBindingUtil;
-import android.graphics.Bitmap;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
@@ -28,7 +27,6 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -39,21 +37,16 @@ import android.widget.TextView;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.SimpleTarget;
 import com.cheep.BootstrapConstant;
 import com.cheep.BuildConfig;
 import com.cheep.R;
 import com.cheep.activity.HomeActivity;
-import com.cheep.activity.LoginActivity;
 import com.cheep.activity.VerificationActivity;
 import com.cheep.adapter.AddressRecyclerViewAdapter;
 import com.cheep.custom_view.BottomAlertDialog;
 import com.cheep.custom_view.DividerItemDecoration;
 import com.cheep.databinding.DialogChangePhoneNumberBinding;
 import com.cheep.databinding.FragmentTabProfileBinding;
-import com.cheep.firebase.FierbaseChatService;
 import com.cheep.firebase.FirebaseHelper;
 import com.cheep.firebase.FirebaseUtils;
 import com.cheep.firebase.model.ChatUserModel;
@@ -63,7 +56,6 @@ import com.cheep.model.UserDetails;
 import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
-import com.cheep.services.LocationTrackService;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.Utility;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
@@ -161,8 +153,8 @@ public class ProfileTabFragment extends BaseFragment {
         Log.i(TAG, "onDetach: ");
         mListener = null;
 
-        /**
-         * Cancel the request as it no longer available
+        /*
+          Cancel the request as it no longer available
          */
         Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.WS.CATEGORY_LIST);
         Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.WS.UPDATE_LOCATION);
@@ -427,7 +419,7 @@ public class ProfileTabFragment extends BaseFragment {
                     return;
                 }
 
-                HashMap<String, String> mParams = new HashMap<String, String>();
+                HashMap<String, String> mParams = new HashMap<>();
                 mParams.put(NetworkUtility.TAGS.USERNAME, edtUsername.getText().toString().trim());
                 callUpdateProfileWS(mParams, null);
             }
@@ -450,7 +442,7 @@ public class ProfileTabFragment extends BaseFragment {
                     dialog.dismiss();
                     return;
                 }
-                HashMap<String, String> mParams = new HashMap<String, String>();
+                HashMap<String, String> mParams = new HashMap<>();
                 mParams.put(NetworkUtility.TAGS.EMAIL_ADDRESS, edtUsername.getText().toString().trim());
                 callUpdateProfileWS(mParams, null);
                 dialog.dismiss();
@@ -1512,7 +1504,7 @@ public class ProfileTabFragment extends BaseFragment {
                         AddressModel addressModel = (AddressModel) getObjectFromJsonString(jsonObject.getJSONObject(NetworkUtility.TAGS.DATA).toString(), AddressModel.class);
 
                         if (addressList == null)
-                            addressList = new ArrayList<AddressModel>();
+                            addressList = new ArrayList<>();
 
                         addressList.add(addressModel);
                         if (adapterAddressRecyclerView != null)
@@ -1996,11 +1988,11 @@ public class ProfileTabFragment extends BaseFragment {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-    /**************************************************************************************************************
-     * *************************************************************************************************************
-     * *****************************************Webservice Integration [End]**************************************
-     * *************************************************************************************************************
-     ************************************************************************************************************/
+    /*************************************************************************************************************
+     *************************************************************************************************************
+     *****************************************Webservice Integration [End]**************************************
+     *************************************************************************************************************
+     */
 
     /**
      * On Click of Search
@@ -2192,7 +2184,7 @@ public class ProfileTabFragment extends BaseFragment {
                 //Load the image from Glide
                 loadImage(selectedImagePath);
 
-                HashMap<String, File> mFileParams = new HashMap<String, File>();
+                HashMap<String, File> mFileParams = new HashMap<>();
                 mFileParams.put(NetworkUtility.TAGS.PROFILE_IMAGE, new File(selectedImagePath));
                 callUpdateProfileWS(null, mFileParams);
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
@@ -2281,7 +2273,7 @@ public class ProfileTabFragment extends BaseFragment {
                 Log.i(TAG, "onActivityResult: Path:" + selectedImagePath);
                 loadCoverImage(selectedImagePath);
 
-                HashMap<String, File> mFileParams = new HashMap<String, File>();
+                HashMap<String, File> mFileParams = new HashMap<>();
                 mFileParams.put(NetworkUtility.TAGS.PROFILE_BANNER, new File(selectedImagePath));
                 callUpdateProfileWS(null, mFileParams);
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
@@ -2323,8 +2315,8 @@ public class ProfileTabFragment extends BaseFragment {
     }
 
 /*
-    *//**
-     * Show setting dialog
+    *//*
+      Show setting dialog
      *//*
     public void settingsrequest() {
 

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <com.daimajia.swipe.SwipeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <com.daimajia.swipe.SwipeLayout
         android:id="@+id/swipe_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -139,10 +139,10 @@
                             android:layout_toRightOf="@+id/img_profile"
                             android:ellipsize="end"
                             android:lines="1"
-                            android:text="Plumber"
                             android:textAllCaps="false"
                             android:textColor="@color/splash_gradient_end"
-                            android:textSize="@dimen/text_size_14sp" />
+                            android:textSize="@dimen/text_size_14sp"
+                            tools:text="Plumber" />
 
                         <com.cheep.custom_view.CFTextViewSemiBold
                             android:id="@+id/tvVerified"
@@ -168,7 +168,7 @@
                         android:layout_weight="1"
                         android:ellipsize="end"
                         android:lines="1"
-                        android:text="Veg food"
+                        tools:text="Veg food"
                         android:textAllCaps="false"
                         android:textColor="@color/splash_gradient_end"
                         android:textSize="@dimen/text_size_10sp" />
@@ -217,7 +217,7 @@
                             android:lineSpacingExtra="@dimen/scale_2dp"
                             android:lines="2"
                             android:paddingLeft="@dimen/scale_3dp"
-                            android:text="Task book for 24 Apr 11:00am"
+                            tools:text="Task book for 24 Apr 11:00am"
                             android:textColor="@color/colorSaffron"
                             android:textSize="@dimen/text_size_11sp" />
                     </LinearLayout>
@@ -244,7 +244,7 @@
                             android:lineSpacingExtra="@dimen/scale_2dp"
                             android:lines="2"
                             android:paddingLeft="@dimen/scale_3dp"
-                            android:text="Task start in 2:30 hrs"
+                            tools:text="Task start in 2:30 hrs"
                             android:textColor="@color/color_red_varient_1"
                             android:textSize="@dimen/text_size_11sp" />
                     </LinearLayout>
@@ -310,7 +310,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="left|top"
                         android:lineSpacingMultiplier="1.3"
-                        android:text="17 Home made happy by Lokesh Shah today we are ready for go"
+                        tools:text="17 Home made happy by Lokesh Shah today we are ready for go"
                         android:textColor="@color/grey_dark_color_3"
                         android:textSize="@dimen/text_size_11sp" />
 

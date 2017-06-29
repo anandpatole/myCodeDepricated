@@ -46,7 +46,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="Are you in an emergency ? "
+                android:text="@string/are_you_in_emergency"
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_size_20sp" />
 
@@ -66,7 +66,7 @@
                     android:layout_weight="1"
                     android:background="@drawable/img_blue_edges_rounded"
                     android:minWidth="150dp"
-                    android:text="Yes"
+                    android:text="@string/label_yes"
                     android:textAllCaps="false"
                     android:textColor="@color/splash_gradient_end" />
 
@@ -79,7 +79,7 @@
                     android:layout_weight="1"
                     android:background="@drawable/img_blue_edges_rounded"
                     android:minWidth="150dp"
-                    android:text="No"
+                    android:text="@string/label_no"
                     android:textAllCaps="false"
                     android:textColor="@color/splash_gradient_end" />
             </LinearLayout>

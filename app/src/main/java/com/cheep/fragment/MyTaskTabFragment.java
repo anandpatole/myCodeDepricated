@@ -44,7 +44,7 @@ public class MyTaskTabFragment extends BaseFragment {
         return fragment;
     }
 
-    private static MyTaskTabFragment fragment;
+    /*private static MyTaskTabFragment fragment;
 
     public static MyTaskTabFragment singleInstance(DrawerLayoutInteractionListener mListener) {
         Bundle args = new Bundle();
@@ -54,7 +54,7 @@ public class MyTaskTabFragment extends BaseFragment {
             fragment.setmListener(mListener);
         }
         return fragment;
-    }
+    }*/
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {

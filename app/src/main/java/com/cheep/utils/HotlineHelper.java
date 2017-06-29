@@ -7,7 +7,6 @@ import com.cheep.model.UserDetails;
 import com.freshdesk.hotline.Hotline;
 import com.freshdesk.hotline.HotlineConfig;
 import com.freshdesk.hotline.HotlineUser;
-import com.freshdesk.hotline.exception.HotlineInvalidUserPropertyException;
 
 /**
  * Created by pankaj on 1/4/17.
@@ -38,8 +37,8 @@ public class HotlineHelper {
 
     public void updateUserInfo(UserDetails userDetails, Context mContext) {
 
-        /**
-         * Updating fcm registration id (Device token)
+        /*
+          Updating fcm registration id (Device token)
          */
         Hotline.getInstance(mContext).updateGcmRegistrationToken(PreferenceUtility.getInstance(mContext).getFCMRegID());
 

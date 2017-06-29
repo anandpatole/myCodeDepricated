@@ -4,20 +4,14 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -29,7 +23,6 @@ import com.cheep.adapter.ReviewsRecyclerViewAdapter;
 import com.cheep.custom_view.BottomAlertDialog;
 import com.cheep.custom_view.DividerItemDecoration;
 import com.cheep.databinding.ActivityProfileBinding;
-import com.cheep.databinding.DialogFragmentTaskCreationBinding;
 import com.cheep.firebase.FirebaseUtils;
 import com.cheep.firebase.model.TaskChatModel;
 import com.cheep.model.CoverImageModel;
@@ -512,8 +505,8 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
             EventBus.getDefault().unregister(this);
         }
 
-        /**
-         * Cancel the request as it no longer available
+        /*
+          Cancel the request as it no longer available
          */
         Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.WS.SP_ADD_TO_FAV);
         Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.WS.SP_PROFILE_DETAILS);
@@ -731,8 +724,8 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
         Map<String, Object> mParams = new HashMap<>();
         mParams.put(NetworkUtility.TAGS.SP_USER_ID, providerId);
 
-        /**
-         *  Send TaskID from EXTRA in case TaskDetail Model is NULL.
+        /*
+           Send TaskID from EXTRA in case TaskDetail Model is NULL.
          */
         if (taskDetailModel != null) {
             mParams.put(NetworkUtility.TAGS.TASK_ID, taskDetailModel.taskId);
@@ -1006,8 +999,8 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
         }
     };
 
-    /**
-     * Display Contact Request Popup by (Chirag)
+    /*
+      Display Contact Request Popup by (Chirag)
      */
 
     /**
@@ -1316,8 +1309,8 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
 
                         taskDetailModel = (TaskDetailModel) Utility.getObjectFromJsonString(jsonObject.optString(NetworkUtility.TAGS.DATA), TaskDetailModel.class);
-                        /**
-                         * NOW REFRESHES the listings
+                        /*
+                          NOW REFRESHES the listings
                          */
                         setData();
 

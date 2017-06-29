@@ -6,7 +6,6 @@ import android.support.v4.app.FragmentPagerAdapter;
 
 import com.cheep.fragment.EnterTaskDetailFragment;
 import com.cheep.fragment.SelectSubCategoryFragment;
-import com.cheep.fragment.TaskFragment;
 
 import java.util.ArrayList;
 import java.util.List;

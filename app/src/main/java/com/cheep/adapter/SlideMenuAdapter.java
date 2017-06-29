@@ -86,7 +86,7 @@ public class SlideMenuAdapter extends BaseAdapter {
             mView = convertView;
             mIcon = (ImageView) convertView.findViewById(R.id.icon);
             mName = (TextView) convertView.findViewById(R.id.name);
-            separator = (View) convertView.findViewById(R.id.separator);
+            separator = convertView.findViewById(R.id.separator);
         }
     }
 

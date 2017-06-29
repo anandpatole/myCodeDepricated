@@ -39,7 +39,7 @@
                 android:drawableLeft="@drawable/icon_home_address"
                 android:drawablePadding="@dimen/scale_5dp"
                 android:gravity="center"
-                android:text="My sweet home"
+                tools:text="My sweet home"
                 android:textColor="@color/splash_gradient_end"
                 android:textSize="@dimen/text_size_12sp" />
 
@@ -48,7 +48,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/scale_3dp"
-                android:text="Adinath Chowk, London"
+                tools:text="Adinath Chowk, London"
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_size_14sp" />
 

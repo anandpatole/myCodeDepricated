@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/root"
     android:orientation="vertical"
     tools:context="com.cheep.activity.TaskQuotesActivity">
 
@@ -26,10 +26,10 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layoutDirection="ltr"
-                android:text="ACEDEMIC"
                 android:textColor="@color/colorPrimary"
                 android:textSize="@dimen/text_size_18sp"
-                tools:ignore="UnusedAttribute" />
+                tools:ignore="UnusedAttribute"
+                tools:text="ACEDEMIC" />
 
         </android.support.v7.widget.Toolbar>
     </android.support.design.widget.AppBarLayout>
@@ -75,7 +75,7 @@
             android:layout_marginTop="@dimen/scale_4dp"
             android:layout_toLeftOf="@id/gridImageView"
             android:minLines="2"
-            android:text="I need a plumber to repair the problem i facing"
+            tools:text="I need a plumber to repair the problem i facing"
             android:textColor="@color/grey_varient_8"
             android:textSize="@dimen/text_size_11sp" />
 
@@ -105,7 +105,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingLeft="@dimen/scale_4dp"
-                    android:text="Task booked for 24 Apr 11:00am"
+                    tools:text="Task booked for 24 Apr 11:00am"
                     android:textColor="@color/task_quote_time_color"
                     android:textSize="@dimen/text_size_11sp" />
             </LinearLayout>
@@ -134,7 +134,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingLeft="@dimen/scale_4dp"
-                    android:text="Task starts in 2:30 hrs"
+                    tools:text="Task starts in 2:30 hrs"
                     android:textColor="@color/task_quote_relative_time_color"
                     android:textSize="@dimen/text_size_11sp" />
             </LinearLayout>

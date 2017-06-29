@@ -1,13 +1,10 @@
 package com.cheep.custom_view;
 
 import android.content.Context;
-import android.content.res.TypedArray;
-import android.os.Build;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ScaleXSpan;
 import android.util.AttributeSet;
-import android.widget.TextView;
 
 import com.cheep.R;
 

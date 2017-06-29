@@ -20,7 +20,7 @@
     <color name="grey_varient_7">#343434</color>
     <color name="grey_varient_8">#3A3A3A</color>
     <color name="grey_varient_9">#ABABAB</color>
-    <color name="grey_varient_10">#F5F5F5</color>
+    <!--<color name="grey_varient_10">#F5F5F5</color>-->
     <color name="grey_varient_11">#8A8A8A</color>
     <color name="grey_varient_12">#898989</color>
     <color name="grey_varient_13">#858585</color>
@@ -31,15 +31,15 @@
     <!--<color name="cheepest_bg_color">#E3F1FE</color>-->
     <!--<color name="cheepest_bg_color">#C5E1F7</color>-->
     <color name="cheepest_bg_color">#c0e5fd</color>
+    <color name="highest_rated_bg_color">#FEF19B</color>
 
     <!--Hightlight text color-->
     <color name="cheepest_highlighted_text_color">#1a3d63</color>
     <color name="highest_rated_highlighted_text_color">#644f03</color>
 
 
-    <!--<color name="highest_rated_bg_color">#FEF19B</color>-->
     <!--<color name="highest_rated_bg_color">#FBF3A3</color>-->
-    <color name="highest_rated_bg_color">#fef19b</color>
+    <!--<color name="highest_rated_bg_color">#fef19b</color>-->
 
 
     <color name="splash_gradient_start">#20BBEC</color>

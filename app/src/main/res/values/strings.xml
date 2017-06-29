@@ -131,7 +131,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_x_jobs">%1$s Jobs</string>
     <string name="label_x_task">%1$s Task</string>
     <string name="label_x_tasks">%1$s Tasks</string>
-    <string name="label_verified">verified</string>
+    <string name="label_verified">Verified</string>
     <string name="label_pending">Pending</string>
     <string name="label_x_reviews">%1$s reviews</string>
     <string name="label_x_review">%1$s review</string>
@@ -393,11 +393,19 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <!--<string name="desc_request_for_detail_accepted_acknowledgment">Hey %1$s! %2$s has been informed of your acceptance of contact request. %2$s may get in touch with you via Call or Chat.</string>-->
     <string name="desc_request_for_detail_accepted_acknowledgment">Thanks! %1$s will now get back to you either by chat or call to discuss your task.</string>
     <string name="label_happy_homes">%s Homes Made Happy So Far</string>
-    <string name="label_quote_discount">% Cheeper</string>
+    <string name="label_quote_discount" tools:ignore="StringFormatInvalid">% Cheeper</string>
     <string name="label_task_booking_time">Task booked for %1$s %2$s</string>
     <string name="label_task_starts_in">Task starts in %s hrs</string>
     <string name="label_verified_pro">\u00A0\u00A0verified\u00A0\u00A0</string>
     <string name="label_congratulation">Congratulation</string>
     <string name="label_brilliant_its_time_to_cheep">Brilliant! Its\' time to CHEEP</string>
     <string name="label_alert_not_active">Sorry! Alert will be active only once your task starts.</string>
+    <string name="default_country_code">+91</string>
+    <string name="number_one">1</string>
+    <string name="number_two">2</string>
+    <string name="number_three">3</string>
+    <string name="are_you_in_emergency">Are you in an emergency ?</string>
+    <string name="zero_rupees">₹0</string>
+    <string name="my_quote">My quote</string>
+    <string name="custom_quote_for_your_requirement_is">Custom quote for your\n requirement is</string>
 </resources>

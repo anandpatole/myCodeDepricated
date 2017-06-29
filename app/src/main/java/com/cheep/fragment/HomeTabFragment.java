@@ -176,8 +176,8 @@ public class HomeTabFragment extends BaseFragment {
         mCategoryRowInteractionListener = null;
         mNotificationClickInteractionListener = null;
 
-        /**
-         * Cancel the request as it no longer available
+        /*
+          Cancel the request as it no longer available
          */
         Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.WS.CATEGORY_LIST);
         Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.WS.UPDATE_LOCATION);
@@ -474,9 +474,9 @@ public class HomeTabFragment extends BaseFragment {
     private void getCategoryListFromServer(final String lat, final String lng) {
 
         //If user is logged out already,return from here only.
-        /**
-         * Fixed crash issue.
-         * @changes by @bhavesh on 25th Feb2017
+        /*
+          Fixed crash issue.
+          @changes by @bhavesh on 25th Feb2017
          */
         if (PreferenceUtility.getInstance(mContext).getUserDetails() == null) {
             return;

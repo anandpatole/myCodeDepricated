@@ -2,8 +2,6 @@ package com.cheep.firebase;
 
 import android.text.TextUtils;
 
-import com.cheep.utils.Utility;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -190,8 +188,8 @@ public class DateUtils
             minutes = String.valueOf(mins);
 
         // Append in a StringBuilder
-        String aTime = new StringBuilder().append(hours).append(':')
-                .append(minutes).append(" ").append(timeSet).toString();
+        String aTime = String.valueOf(hours) + ':' +
+                minutes + " " + timeSet;
         return aTime;
     }
 }

@@ -9,7 +9,6 @@ import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
 import android.location.Location;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
@@ -18,12 +17,9 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
-import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import com.android.volley.Response;
@@ -31,7 +27,6 @@ import com.android.volley.VolleyError;
 import com.appsflyer.AppsFlyerLib;
 import com.cheep.BuildConfig;
 import com.cheep.R;
-import com.cheep.custom_view.BottomAlertDialog;
 import com.cheep.databinding.ActivityLoginBinding;
 import com.cheep.facebook.FacebookHelper;
 import com.cheep.firebase.FierbaseChatService;
@@ -69,8 +64,6 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import static java.security.AccessController.getContext;
 
 /**
  * Created by pankaj on 9/26/16.
@@ -328,8 +321,8 @@ public class LoginActivity extends BaseAppCompatActivity implements FacebookHelp
     @Override
     public void onBindLocationTrackService() {
         Log.i(TAG, "onBindLocationTrackService: ");
-        /**
-         * Check if Location service is enabled or not, if not ask for user to accept it and stop the ongoing service
+        /*
+          Check if Location service is enabled or not, if not ask for user to accept it and stop the ongoing service
          */
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             //Let the activity know that location permission not granted
@@ -432,9 +425,9 @@ public class LoginActivity extends BaseAppCompatActivity implements FacebookHelp
             GraphRequest.executeBatchAsync(request);
         }
     }
-    /**************************************************************************************************************
-     * *****************************************Facebook SignIn[End]*******************************************************
-     ************************************************************************************************************/
+    /*************************************************************************************************************
+     *****************************************Facebook SignIn[End]*******************************************************
+     */
 
 
     /**************************************************************************************************************
@@ -461,8 +454,8 @@ public class LoginActivity extends BaseAppCompatActivity implements FacebookHelp
 
             Log.d(TAG, "success() called with: result = [" + result.data.getUserName() + "]");
 
-            /**
-             * This will request added permission
+            /*
+              This will request added permission
              */
             TwitterAuthClient authClient = new TwitterAuthClient();
             authClient.requestEmail(result.data, new Callback<String>() {
@@ -503,9 +496,9 @@ public class LoginActivity extends BaseAppCompatActivity implements FacebookHelp
         }
     };
 
-    /**************************************************************************************************************
-     *******************************************Twitter SignIn[End]*******************************************************
-     ************************************************************************************************************/
+    /*************************************************************************************************************
+     Twitter SignIn[End]*******************************************************
+     */
 
     /**************************************************************************************************************
      * ******************************************Google SignIn[Start]*******************************************************
@@ -607,9 +600,9 @@ public class LoginActivity extends BaseAppCompatActivity implements FacebookHelp
                     }
                 });
     }
-    /**************************************************************************************************************
-     * *****************************************Google SignIn[End]*******************************************************
-     ************************************************************************************************************/
+    /*************************************************************************************************************
+     *****************************************Google SignIn[End]*******************************************************
+     */
 
 
     /**************************************************************************************************************
@@ -803,38 +796,43 @@ public class LoginActivity extends BaseAppCompatActivity implements FacebookHelp
                         Utility.showSnackBar(error_message, mActivityLoginBinding.getRoot());
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.SIGNUP_REQUIRED:
-                        if (TEMP_LOGIN_WITH.equals(NetworkUtility.TAGS.LOGINWITHTYPE.MOBILE)) {
-                            redirectUserToSignUp(TEMP_EMAIL,
-                                    TEMP_NAME,
-                                    TEMP_LOGIN_WITH,
-                                    jsonObject.getString(NetworkUtility.TAGS.PHONE_NUMBER),
-                                    Utility.EMPTY_STRING,
-                                    Utility.EMPTY_STRING,
-                                    Utility.EMPTY_STRING);
-                        } else if (TEMP_LOGIN_WITH.equals(NetworkUtility.TAGS.LOGINWITHTYPE.FACEBOOK)) {
-                            redirectUserToSignUp(TEMP_EMAIL,
-                                    TEMP_NAME,
-                                    TEMP_LOGIN_WITH,
-                                    Utility.EMPTY_STRING,
-                                    TEMP_FB_APP_ID,
-                                    Utility.EMPTY_STRING,
-                                    Utility.EMPTY_STRING);
-                        } else if (TEMP_LOGIN_WITH.equals(NetworkUtility.TAGS.LOGINWITHTYPE.TWITTER)) {
-                            redirectUserToSignUp(TEMP_EMAIL,
-                                    TEMP_NAME,
-                                    TEMP_LOGIN_WITH,
-                                    Utility.EMPTY_STRING,
-                                    Utility.EMPTY_STRING,
-                                    TEMP_TWITTER_APP_ID,
-                                    Utility.EMPTY_STRING);
-                        } else if (TEMP_LOGIN_WITH.equals(NetworkUtility.TAGS.LOGINWITHTYPE.GOOGLEPLUS)) {
-                            redirectUserToSignUp(TEMP_EMAIL,
-                                    TEMP_NAME,
-                                    TEMP_LOGIN_WITH,
-                                    Utility.EMPTY_STRING,
-                                    Utility.EMPTY_STRING,
-                                    Utility.EMPTY_STRING,
-                                    TEMP_GOOGLE_PLUS_APP_ID);
+                        switch (TEMP_LOGIN_WITH) {
+                            case NetworkUtility.TAGS.LOGINWITHTYPE.MOBILE:
+                                redirectUserToSignUp(TEMP_EMAIL,
+                                        TEMP_NAME,
+                                        TEMP_LOGIN_WITH,
+                                        jsonObject.getString(NetworkUtility.TAGS.PHONE_NUMBER),
+                                        Utility.EMPTY_STRING,
+                                        Utility.EMPTY_STRING,
+                                        Utility.EMPTY_STRING);
+                                break;
+                            case NetworkUtility.TAGS.LOGINWITHTYPE.FACEBOOK:
+                                redirectUserToSignUp(TEMP_EMAIL,
+                                        TEMP_NAME,
+                                        TEMP_LOGIN_WITH,
+                                        Utility.EMPTY_STRING,
+                                        TEMP_FB_APP_ID,
+                                        Utility.EMPTY_STRING,
+                                        Utility.EMPTY_STRING);
+                                break;
+                            case NetworkUtility.TAGS.LOGINWITHTYPE.TWITTER:
+                                redirectUserToSignUp(TEMP_EMAIL,
+                                        TEMP_NAME,
+                                        TEMP_LOGIN_WITH,
+                                        Utility.EMPTY_STRING,
+                                        Utility.EMPTY_STRING,
+                                        TEMP_TWITTER_APP_ID,
+                                        Utility.EMPTY_STRING);
+                                break;
+                            case NetworkUtility.TAGS.LOGINWITHTYPE.GOOGLEPLUS:
+                                redirectUserToSignUp(TEMP_EMAIL,
+                                        TEMP_NAME,
+                                        TEMP_LOGIN_WITH,
+                                        Utility.EMPTY_STRING,
+                                        Utility.EMPTY_STRING,
+                                        Utility.EMPTY_STRING,
+                                        TEMP_GOOGLE_PLUS_APP_ID);
+                                break;
                         }
 //                        if (!TEMP_LOGIN_WITH.equals(NetworkUtility.TAGS.LOGINWITHTYPE.MOBILE))
 //                        else
@@ -877,8 +875,8 @@ public class LoginActivity extends BaseAppCompatActivity implements FacebookHelp
     };
 
 
-    /**
-     * Forgot password webservice integration
+    /*
+      Forgot password webservice integration
      *//*
     private void sendForgotPasswordMail(String emailAddress) {
         if (TextUtils.isEmpty(emailAddress)) {
@@ -1080,11 +1078,11 @@ public class LoginActivity extends BaseAppCompatActivity implements FacebookHelp
     /////////////////////////////////Check Version API [Ends]/////////////////////////
     //////////////////////////////////////////////////////////////////////////////////
 
-    /**************************************************************************************************************
-     * *************************************************************************************************************
-     * *****************************************Webservice Integration [End]**************************************
-     * *************************************************************************************************************
-     ************************************************************************************************************/
+    /*************************************************************************************************************
+     *************************************************************************************************************
+     *****************************************Webservice Integration [End]**************************************
+     *************************************************************************************************************
+     */
 
 
 }

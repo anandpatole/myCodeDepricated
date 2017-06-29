@@ -71,7 +71,7 @@
                         android:background="@android:color/transparent"
                         android:gravity="center"
                         android:lines="1"
-                        android:text="Plumber"
+                        tools:text="Plumber"
                         android:textColor="@color/white"
                         android:textSize="@dimen/toolbar_title_text_size" />
 
@@ -169,7 +169,7 @@
                                     android:layout_marginLeft="-20dp"
                                     android:background="@drawable/background_blue_white_circle"
                                     android:gravity="center"
-                                    android:text="+8"
+                                    tools:text="+8"
                                     android:textColor="@color/white"
                                     android:textSize="@dimen/text_size_14sp" />
 
@@ -365,7 +365,7 @@
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
                                         android:paddingLeft="@dimen/scale_15dp"
-                                        android:text="Restaurant"
+                                        tools:text="Restaurant"
                                         android:textColor="@color/splash_gradient_end"
                                         android:textSize="@dimen/text_size_18sp" />
                                 </LinearLayout>

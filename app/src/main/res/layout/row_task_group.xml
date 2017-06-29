@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <com.daimajia.swipe.SwipeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <com.daimajia.swipe.SwipeLayout
         android:id="@+id/swipe_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -76,7 +76,6 @@
                     android:id="@+id/layout_participant_counter"
                     android:layout_width="@dimen/chat_profile_layout_width"
                     android:layout_height="wrap_content"
-                    android:layout_toRightOf="@+id/img_unread"
                     android:orientation="vertical">
 
                     <com.cheep.custom_view.CFTextViewSemiBold
@@ -87,7 +86,7 @@
                         android:layout_marginBottom="@dimen/scale_3dp"
                         android:background="@drawable/background_blue_white_circle"
                         android:gravity="center"
-                        android:text="+15"
+                        tools:text="+15"
                         android:textColor="@color/white"
                         android:textSize="@dimen/text_size_16sp" />
 
@@ -121,7 +120,7 @@
                         android:layout_weight="1"
                         android:ellipsize="end"
                         android:lines="1"
-                        android:text="Plumber"
+                        tools:text="Plumber"
                         android:textAllCaps="false"
                         android:textColor="@color/splash_gradient_end"
                         android:textSize="@dimen/text_size_14sp" />
@@ -138,7 +137,7 @@
                         android:layout_gravity="center_vertical"
                         android:layout_toRightOf="@+id/img_profile"
                         android:gravity="right"
-                        android:text="16 Apr at 11:00 am"
+                        tools:text="16 Apr at 11:00 am"
                         android:textAllCaps="false"
                         android:textColor="@color/black"
                         android:textSize="@dimen/text_size_11sp" />
@@ -210,7 +209,7 @@
                             android:paddingLeft="@dimen/scale_8dp"
                             android:paddingRight="@dimen/scale_8dp"
                             android:paddingTop="@dimen/scale_5dp"
-                            android:text="123"
+                            tools:text="123"
                             android:textAllCaps="false"
                             android:textColor="@color/black"
                             android:textSize="@dimen/text_size_14sp" />

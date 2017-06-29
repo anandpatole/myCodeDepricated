@@ -16,7 +16,7 @@ public class Volley {
 
     private static final String TAG = "Volley";
 
-    private static Volley mInstance;
+    //    private static Volley mInstance;
     private RequestQueue mRequestQueue;
     private Context mCtx;
 
@@ -26,10 +26,7 @@ public class Volley {
     }
 
     public static synchronized Volley getInstance(Context context) {
-        if (mInstance == null) {
-            mInstance = new Volley(context);
-        }
-        return mInstance;
+        return new Volley(context);
     }
 
     public RequestQueue getRequestQueue() {

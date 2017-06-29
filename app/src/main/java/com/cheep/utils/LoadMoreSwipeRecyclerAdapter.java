@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
-import com.cheep.model.MessageEvent;
 import com.daimajia.swipe.adapters.RecyclerSwipeAdapter;
 
 /**

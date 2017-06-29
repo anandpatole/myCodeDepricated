@@ -150,8 +150,8 @@ public class LocationTrackService extends Service implements GoogleApiClient.Con
             return;
         }
 
-        /**
-         * Check if LocationSettings can be managed if not available
+        /*
+          Check if LocationSettings can be managed if not available
          */
         LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
                 .addLocationRequest(mLocationRequest);

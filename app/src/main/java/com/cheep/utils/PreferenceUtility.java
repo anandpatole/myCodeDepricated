@@ -16,9 +16,9 @@ import org.json.JSONObject;
 
 public class PreferenceUtility {
     private static final String TAG = "PreferenceUtility";
-    SharedPreferences mSharedPreferences;
+    private SharedPreferences mSharedPreferences;
     private Context context;
-    private static PreferenceUtility mPreferenceUtility;
+    //    private static PreferenceUtility mPreferenceUtility;
     private static UserDetails mUserDetails;
 
     private static final String PREF_X_API_KEY = "com.cheep.xapikey";
@@ -26,7 +26,7 @@ public class PreferenceUtility {
     private static final String PREF_USER_INFO = "com.cheep.fcm.userinfo";
     private static final String PREF_NOTIFICATION_COUNTER = "com.cheep.notification_counter";
 
-    private static final String PREF_INTRO_SCREEN_STATUS="com.cheep.intro.screen.status";
+    private static final String PREF_INTRO_SCREEN_STATUS = "com.cheep.intro.screen.status";
 
     private PreferenceUtility(Context mContext) {
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
@@ -34,9 +34,7 @@ public class PreferenceUtility {
     }
 
     public static PreferenceUtility getInstance(Context mContext) {
-        if (mPreferenceUtility == null)
-            mPreferenceUtility = new PreferenceUtility(mContext);
-        return mPreferenceUtility;
+        return new PreferenceUtility(mContext);
     }
 
     public void setXAPIKey(String value) {
@@ -67,7 +65,7 @@ public class PreferenceUtility {
         mSharedPreferences.edit().putString(PREF_USER_INFO, jsonData.toString()).apply();
 
         //updating hotline profile
-        HotlineHelper.getInstance(context).updateUserInfo(mUserDetails,context);
+        HotlineHelper.getInstance(context).updateUserInfo(mUserDetails, context);
     }
 
     /**
@@ -80,7 +78,7 @@ public class PreferenceUtility {
         mSharedPreferences.edit().putString(PREF_USER_INFO, Utility.getJsonStringFromObject(model)).apply();
         mUserDetails = model;
         //updating hotline profile
-        HotlineHelper.getInstance(context).updateUserInfo(mUserDetails,context);
+        HotlineHelper.getInstance(context).updateUserInfo(mUserDetails, context);
     }
 
     public UserDetails getUserDetails() {
@@ -99,16 +97,13 @@ public class PreferenceUtility {
         return null;
     }
 
-    public void updateIntroScreenStatus(boolean status)
-    {
-        mSharedPreferences.edit().putBoolean(PREF_INTRO_SCREEN_STATUS,status).apply();
+    public void updateIntroScreenStatus(boolean status) {
+        mSharedPreferences.edit().putBoolean(PREF_INTRO_SCREEN_STATUS, status).apply();
     }
 
-    public boolean getIntroScreenStatus()
-    {
-        if (mSharedPreferences.contains(PREF_INTRO_SCREEN_STATUS))
-        {
-            return  mSharedPreferences.getBoolean(PREF_INTRO_SCREEN_STATUS, false);
+    public boolean getIntroScreenStatus() {
+        if (mSharedPreferences.contains(PREF_INTRO_SCREEN_STATUS)) {
+            return mSharedPreferences.getBoolean(PREF_INTRO_SCREEN_STATUS, false);
         }
         return false;
     }
