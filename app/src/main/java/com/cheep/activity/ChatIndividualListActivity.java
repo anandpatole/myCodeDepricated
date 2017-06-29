@@ -135,7 +135,7 @@ public class ChatIndividualListActivity extends BaseAppCompatActivity implements
 
     @Override
     public void onNotificationRowClicked(NotificationModel model, int position) {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.dialog_information, null, false);
+        View view = View.inflate(mContext, R.layout.dialog_information, null);
         ((TextView) view.findViewById(R.id.text_message)).setText(getString(R.string.label_reschedule_inform, model.message));
         final BottomAlertDialog dialog = new BottomAlertDialog(mContext);
 

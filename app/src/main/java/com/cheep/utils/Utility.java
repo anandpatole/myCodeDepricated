@@ -460,7 +460,7 @@ public class Utility {
         String finalDate = "";
         try {
             // Create a DateFormatter object for displaying date in specified format.
-            SimpleDateFormat formatter = new SimpleDateFormat(dateFormat);
+            SimpleDateFormat formatter = new SimpleDateFormat(dateFormat,Locale.US);
 
             // Create a calendar object that will convert the date and time value in milliseconds to date.
             Calendar calendar = Calendar.getInstance();

@@ -226,7 +226,8 @@
                     android:layout_marginRight="@dimen/scale_5dp"
                     android:adjustViewBounds="true"
                     android:padding="@dimen/scale_5dp"
-                    android:src="@drawable/icon_call_smaller" />
+                    android:src="@drawable/icon_call_smaller"
+                    tools:ignore="ContentDescription" />
 
                 <RelativeLayout
                     android:id="@+id/rl_chat"
@@ -242,7 +243,8 @@
                         android:layout_marginLeft="@dimen/scale_5dp"
                         android:adjustViewBounds="true"
                         android:padding="@dimen/scale_5dp"
-                        android:src="@drawable/icon_chat_smaller" />
+                        android:src="@drawable/icon_chat_smaller"
+                        tools:ignore="ContentDescription" />
 
                     <!--<com.cheep.custom_view.CFTextViewRegular
                         android:id="@+id/text_tab_chat"

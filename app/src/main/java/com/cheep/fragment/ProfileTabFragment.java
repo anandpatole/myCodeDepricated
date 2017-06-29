@@ -412,7 +412,7 @@ public class ProfileTabFragment extends BaseFragment {
 
     private void showChangeUsernameDialog(final String username) {
 
-        View view = LayoutInflater.from(mContext).inflate(R.layout.dialog_change_username, null, false);
+        View view =View.inflate(mContext,R.layout.dialog_change_username, null);
         final EditText edtUsername = (EditText) view.findViewById(edit_username);
         edtUsername.setText(username);
         changeUsernameOrEmail = new BottomAlertDialog(mContext);
@@ -439,7 +439,7 @@ public class ProfileTabFragment extends BaseFragment {
 
     private void showChangeEmailDialog(final String email) {
 
-        View view = LayoutInflater.from(mContext).inflate(R.layout.dialog_change_username, null, false);
+        View view = View.inflate(mContext,R.layout.dialog_change_username, null);
         final EditText edtUsername = (EditText) view.findViewById(R.id.edit_username);
         edtUsername.setText(email);
         final BottomAlertDialog dialog = new BottomAlertDialog(mContext);
@@ -491,7 +491,7 @@ public class ProfileTabFragment extends BaseFragment {
 
     private void showChangeEmergencyContactDialog() {
 
-        View view = LayoutInflater.from(mContext).inflate(R.layout.dialog_emergency_phone_number, null, false);
+        View view = View.inflate(mContext,R.layout.dialog_emergency_phone_number, null);
 
         final EditText edtContactName1 = (EditText) view.findViewById(R.id.edit_contact_name_1);
         final EditText edtContactNumber1 = (EditText) view.findViewById(R.id.edit_contact_number_1);
@@ -572,7 +572,7 @@ public class ProfileTabFragment extends BaseFragment {
 
     private void showChangePasswordDialog() {
 
-        View view = LayoutInflater.from(mContext).inflate(R.layout.dialog_change_password, null, false);
+        View view = View.inflate(mContext,R.layout.dialog_change_password, null);
         changePasswordDialog = new BottomAlertDialog(mContext);
         final EditText editNewPassword = (EditText) view.findViewById(R.id.edit_new_password);
         final EditText editOldPassword = (EditText) view.findViewById(R.id.edit_old_password);
@@ -594,7 +594,7 @@ public class ProfileTabFragment extends BaseFragment {
 
     private void showAddressDialog() {
 
-        View view = LayoutInflater.from(mContext).inflate(R.layout.dialog_choose_address, null, false);
+        View view = View.inflate(mContext,R.layout.dialog_choose_address, null);
         boolean shouldOpenAddAddress = fillAddressRecyclerView((RecyclerView) view.findViewById(R.id.recycler_view));
         final BottomAlertDialog dialog = new BottomAlertDialog(mContext);
         view.findViewById(R.id.btn_add_address).setOnClickListener(new View.OnClickListener() {
@@ -791,7 +791,7 @@ public class ProfileTabFragment extends BaseFragment {
             isAddressPickYouLocationVerified = true;
             isAddressNameVerified = true;
         }
-        View view = LayoutInflater.from(mContext).inflate(R.layout.dialog_add_address, null, false);
+        View view = View.inflate(mContext,R.layout.dialog_add_address, null);
         final RadioButton radioHome = (RadioButton) view.findViewById(R.id.radio_home);
         final RadioButton radio_office = (RadioButton) view.findViewById(R.id.radio_office);
         final RadioButton radioOther = (RadioButton) view.findViewById(R.id.radio_other);

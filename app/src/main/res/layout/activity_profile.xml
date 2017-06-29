@@ -42,14 +42,12 @@
             android:id="@+id/swipeRefreshLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@+id/layout_status_process_blue_strip"
             android:layout_below="@+id/toolbar">
 
             <android.support.v4.widget.NestedScrollView
                 android:id="@+id/nestedscrollview"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-
                 android:clipToPadding="false"
                 android:paddingBottom="@dimen/scale_10dp"
                 android:paddingTop="@dimen/scale_10dp">
@@ -160,8 +158,6 @@
                                 android:visibility="visible" />
 
                         </LinearLayout>
-
-
                     </RelativeLayout>
 
                     <com.cheep.custom_view.CFTextViewSemiBold
@@ -180,18 +176,18 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/rl_profile"
+                        android:layout_marginLeft="@dimen/scale_5dp"
                         android:layout_toEndOf="@+id/text_name"
+                        android:layout_toRightOf="@+id/text_name"
                         android:background="@drawable/background_steps_verified"
                         android:gravity="center"
                         android:paddingBottom="@dimen/scale_2dp"
                         android:paddingLeft="@dimen/scale_5dp"
-                        android:layout_marginLeft="@dimen/scale_5dp"
                         android:paddingRight="@dimen/scale_5dp"
                         android:paddingTop="@dimen/scale_2dp"
                         android:text="@string/label_verified"
                         android:textColor="@color/white"
-                        android:textSize="@dimen/text_size_10sp"
-                        android:layout_toRightOf="@+id/text_name" />
+                        android:textSize="@dimen/text_size_10sp" />
 
 
                     <com.cheep.custom_view.CFTextViewRegular

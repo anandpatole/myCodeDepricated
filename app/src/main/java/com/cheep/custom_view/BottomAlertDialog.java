@@ -25,7 +25,8 @@ public class BottomAlertDialog {
 //    test
 
     public BottomAlertDialog(Context context) {
-        view = LayoutInflater.from(context).inflate(R.layout.alert_dialog_bottom_sheet, null, false);
+//        view = LayoutInflater.from(context).inflate(R.layout.alert_dialog_bottom_sheet, null);
+        view = View.inflate(context, R.layout.alert_dialog_bottom_sheet, null);
         dialog = new BottomSheetDialog(context);
     }
 

@@ -480,7 +480,7 @@ public class HomeActivity extends BaseAppCompatActivity
     public void onTaskDelete(int which, final TaskDetailModel exploreDataModel, RowUpcomingTaskBinding mRowUpcomingTaskBinding) {
         cancelTaskDialog = new BottomAlertDialog(mContext);
         cancelTaskDialog.setExpandedInitially(true);
-        final View view = LayoutInflater.from(mContext).inflate(R.layout.dialog_cancel_task, null, false);
+        final View view = View.inflate(mContext,R.layout.dialog_cancel_task, null);
         final RadioGroup radioGroupReasons = (RadioGroup) view.findViewById(R.id.radio_group_reasons);
         final EditText edtReason = (EditText) view.findViewById(R.id.edit_reason);
         edtReason.setEnabled(false);
@@ -651,7 +651,7 @@ public class HomeActivity extends BaseAppCompatActivity
 
     private void showRateDialog(String userName, final String taskId, final String providerId) {
 
-        View view = LayoutInflater.from(mContext).inflate(R.layout.dialog_rate, null, false);
+        View view = View.inflate(mContext,R.layout.dialog_rate, null);
         final RatingBar ratingBar = (RatingBar) view.findViewById(R.id.rating_bar);
         final EditText edtMessage = (EditText) view.findViewById(R.id.edit_message);
 

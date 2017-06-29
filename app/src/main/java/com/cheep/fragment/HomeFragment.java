@@ -774,7 +774,7 @@ public class HomeFragment extends BaseFragment {
 
     private void showFullDesc(String title, String message) {
         if (dialogDesc == null) {
-            View view = LayoutInflater.from(mContext).inflate(R.layout.dialog_information, null, false);
+            View view = View.inflate(mContext,R.layout.dialog_information, null);
             txtMessage = (TextView) view.findViewById(R.id.text_message);
             dialogDesc = new BottomAlertDialog(mContext);
             view.findViewById(R.id.btn_ok).setOnClickListener(new View.OnClickListener() {

@@ -347,7 +347,7 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
 
     private void showCheepCodeDialog() {
 
-        View view = LayoutInflater.from(mContext).inflate(R.layout.dialog_add_promocode, null, false);
+        View view = View.inflate(mContext,R.layout.dialog_add_promocode, null);
         edtCheepcode = (EditText) view.findViewById(R.id.edit_cheepcode);
         cheepCodeDialog = new BottomAlertDialog(mContext);
         view.findViewById(R.id.btn_apply).setOnClickListener(new View.OnClickListener() {

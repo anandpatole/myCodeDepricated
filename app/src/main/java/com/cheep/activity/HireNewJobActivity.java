@@ -475,7 +475,7 @@ public class HireNewJobActivity extends BaseAppCompatActivity implements Provide
 
     private void showFullDesc(String title, String message) {
         if (dialogDesc == null) {
-            View view = LayoutInflater.from(mContext).inflate(R.layout.dialog_information, null, false);
+            View view = View.inflate(mContext,R.layout.dialog_information, null);
             txtMessage = (TextView) view.findViewById(R.id.text_message);
             dialogDesc = new BottomAlertDialog(mContext);
 
@@ -576,7 +576,7 @@ public class HireNewJobActivity extends BaseAppCompatActivity implements Provide
     private AddressRecyclerViewAdapter addressRecyclerViewAdapter;
 
     private void showAddressDialog() {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.dialog_choose_address_new_task, null, false);
+        View view = View.inflate(mContext,R.layout.dialog_choose_address_new_task, null);
         boolean shouldOpenAddAddress = fillAddressRecyclerView((RecyclerView) view.findViewById(R.id.recycler_view));
         addressDialog = new BottomAlertDialog(mContext);
         view.findViewById(R.id.btn_add_address).setOnClickListener(new View.OnClickListener() {
@@ -733,7 +733,7 @@ public class HireNewJobActivity extends BaseAppCompatActivity implements Provide
     private EditText edtAddress;
 
     private void showAddAddressDialog(final AddressModel addressModel) {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.dialog_add_address, null, false);
+        View view = View.inflate(mContext,R.layout.dialog_add_address, null);
         final RadioButton radioHome = (RadioButton) view.findViewById(R.id.radio_home);
         final RadioButton radio_office = (RadioButton) view.findViewById(R.id.radio_office);
         final RadioButton radioOther = (RadioButton) view.findViewById(R.id.radio_other);

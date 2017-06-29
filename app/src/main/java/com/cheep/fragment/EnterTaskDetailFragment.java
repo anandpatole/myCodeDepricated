@@ -142,7 +142,10 @@ public class EnterTaskDetailFragment extends BaseFragment {
     }
 
     private void updateTaskVerificationFlags() {
-
+        // Check Whether because of any issues, activity reference is NULL or not.
+        if (mTaskCreationActivity == null) {
+            return;
+        }
         // Task Description
         if (mTaskCreationActivity.getSelectedSubService().sub_cat_id != -1) {
             isTaskDescriptionVerified = true;
@@ -580,7 +583,7 @@ public class EnterTaskDetailFragment extends BaseFragment {
     public String addressId = "";
 
     private void showAddressDialog() {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.dialog_choose_address_new_task, null, false);
+        View view = View.inflate(mContext, R.layout.dialog_choose_address_new_task, null);
         boolean shouldOpenAddAddress = fillAddressRecyclerView((RecyclerView) view.findViewById(R.id.recycler_view));
         addressDialog = new BottomAlertDialog(mContext);
         view.findViewById(R.id.btn_add_address).setOnClickListener(new View.OnClickListener() {
@@ -685,7 +688,7 @@ public class EnterTaskDetailFragment extends BaseFragment {
             isAddressNameVerified = true;
         }
 
-        View view = LayoutInflater.from(mContext).inflate(R.layout.dialog_add_address, null, false);
+        View view = View.inflate(mContext, R.layout.dialog_add_address, null);
         final RadioButton radioHome = (RadioButton) view.findViewById(R.id.radio_home);
         final RadioButton radio_office = (RadioButton) view.findViewById(R.id.radio_office);
         final RadioButton radioOther = (RadioButton) view.findViewById(R.id.radio_other);
