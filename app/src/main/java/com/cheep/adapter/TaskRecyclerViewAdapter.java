@@ -589,8 +589,8 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
             int i = 0;
             for (TaskDetailModel taskDetailModel : mList) {
                 if (taskDetailModel.taskId.equalsIgnoreCase(event.id)) {
-                    taskDetailModel.providerCount = String.valueOf(Integer.parseInt(taskDetailModel.providerCount) - 1);
                     taskDetailModel.profile_img_arr.remove(event.quoted_sp_image_url);
+                    taskDetailModel.providerCount = String.valueOf(taskDetailModel.profile_img_arr.size());
                     notifyItemChanged(i);
                     break;
                 }

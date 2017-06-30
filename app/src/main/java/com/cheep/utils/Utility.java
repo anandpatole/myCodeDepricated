@@ -457,7 +457,7 @@ public class Utility {
         String finalDate = "";
         try {
             // Create a DateFormatter object for displaying date in specified format.
-            SimpleDateFormat formatter = new SimpleDateFormat(dateFormat,Locale.US);
+            SimpleDateFormat formatter = new SimpleDateFormat(dateFormat, Locale.US);
 
             // Create a calendar object that will convert the date and time value in milliseconds to date.
             Calendar calendar = Calendar.getInstance();
@@ -481,8 +481,8 @@ public class Utility {
             String inputPattern = inputDate;
             String outputPattern = OutputDate;
 
-            SimpleDateFormat inputFormat = new SimpleDateFormat(inputPattern,Locale.US);
-            SimpleDateFormat outputFormat = new SimpleDateFormat(outputPattern,Locale.US);
+            SimpleDateFormat inputFormat = new SimpleDateFormat(inputPattern, Locale.US);
+            SimpleDateFormat outputFormat = new SimpleDateFormat(outputPattern, Locale.US);
             Date date = null;
 
             try {
@@ -945,6 +945,9 @@ public class Utility {
 
         // When AnyTask is Created & We need to check for Alert Disable/Enable in @HomeActivity
         public static final int TASK_START_ALERT = 14;
+
+        // When detail request getting accepted by User
+        public static final int DETAIL_REQUEST_ACCEPTED= 15;
     }
 
     public static final class REQUEST_TYPE {

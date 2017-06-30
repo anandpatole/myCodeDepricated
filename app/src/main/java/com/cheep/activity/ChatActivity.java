@@ -19,9 +19,13 @@ import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
+import android.text.style.ImageSpan;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -76,7 +80,6 @@ public class ChatActivity extends BaseAppCompatActivity implements View.OnClickL
     private String formattedTaskId = "";
     private String formattedSenderId = "";
     private String formattedReceiverId = "";
-
     private String mSelectedMediaPath = "";
 
     private boolean isSendClick = false;
@@ -157,7 +160,9 @@ public class ChatActivity extends BaseAppCompatActivity implements View.OnClickL
 
         Utility.showCircularImageView(mContext, TAG, mActivityChatBinding.imgProfile, taskChatModel.participantPhotoUrl, Utility.DEFAULT_PROFILE_SRC);
 
-        enableChatAccess(mCurrentChatStatus);
+        // By Default its YES, so message would be EMPTY STRING.
+        enableChatAccess(mCurrentChatStatus, Utility.EMPTY_STRING);
+
         checkTaskStatus(FirebaseUtils.removePrefixTaskId(taskChatModel.taskId), FirebaseUtils.removePrefixSpId(taskChatModel.receiverId));
     }
 
@@ -853,7 +858,8 @@ public class ChatActivity extends BaseAppCompatActivity implements View.OnClickL
                 switch (statusCode) {
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
                         mCurrentChatStatus = jsonObject.getString(NetworkUtility.TAGS.IS_CHAT);
-                        enableChatAccess(mCurrentChatStatus);
+                        final String mTaskStatus = jsonObject.getString(NetworkUtility.TAGS.TASK_STATUS);
+                        enableChatAccess(mCurrentChatStatus, mTaskStatus);
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
                         // Show Toast
@@ -872,19 +878,44 @@ public class ChatActivity extends BaseAppCompatActivity implements View.OnClickL
         }
     };
 
-    private void enableChatAccess(String mCurrentChatStatus) {
+    private void enableChatAccess(String mCurrentChatStatus, String currentTaskStatus) {
         if (CHAT_STATUS_YES.equalsIgnoreCase(mCurrentChatStatus)) {
             mActivityChatBinding.imgMedia.setOnClickListener(this);
             mActivityChatBinding.iconFilter.setOnClickListener(this);
             mActivityChatBinding.textSend.setOnClickListener(this);
             mActivityChatBinding.editMessage.setEnabled(true);
             mActivityChatBinding.lnChatFooter.setAlpha(1.0f);
+            mActivityChatBinding.lnChatFooter.setVisibility(View.VISIBLE);
+            mActivityChatBinding.textChatDisableMessage.setVisibility(View.GONE);
         } else {
             mActivityChatBinding.imgMedia.setOnClickListener(null);
             mActivityChatBinding.iconFilter.setOnClickListener(null);
             mActivityChatBinding.textSend.setOnClickListener(null);
             mActivityChatBinding.editMessage.setEnabled(false);
             mActivityChatBinding.lnChatFooter.setAlpha(0.5f);
+            mActivityChatBinding.lnChatFooter.setVisibility(View.GONE);
+
+            // Enable chat disable message and place the text
+            mActivityChatBinding.textChatDisableMessage.setVisibility(View.VISIBLE);
+            if (Utility.TASK_STATUS.ELAPSED.equalsIgnoreCase(currentTaskStatus)) {
+
+                SpannableStringBuilder ssb = new SpannableStringBuilder(getString(R.string.label_chat_ended_due_to_task_lapsed));
+                ssb.setSpan(new ImageSpan(mContext, R.drawable.ic_locked_50_60), 0, 1, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+                mActivityChatBinding.textChatDisableMessage.setText(ssb, TextView.BufferType.SPANNABLE);
+//                mActivityChatBinding.textChatDisableMessage.setText();
+            } else if (Utility.TASK_STATUS.CANCELLED_SP.equalsIgnoreCase(currentTaskStatus)
+                    || Utility.TASK_STATUS.CANCELLED_CUSTOMER.equalsIgnoreCase(currentTaskStatus)) {
+                SpannableStringBuilder ssb = new SpannableStringBuilder(getString(R.string.label_chat_ended_due_to_task_cancelled));
+                ssb.setSpan(new ImageSpan(mContext, R.drawable.ic_locked_50_60), 0, 1, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+                mActivityChatBinding.textChatDisableMessage.setText(ssb, TextView.BufferType.SPANNABLE);
+//                mActivityChatBinding.textChatDisableMessage.setText(getString(R.string.label_chat_ended_due_to_task_cancelled));
+            } else {
+                SpannableStringBuilder ssb = new SpannableStringBuilder(getString(R.string.label_chat_ended_due_to_assigned_to_another_pro));
+                ssb.setSpan(new ImageSpan(mContext, R.drawable.ic_locked_50_60), 0, 1, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+                mActivityChatBinding.textChatDisableMessage.setText(ssb, TextView.BufferType.SPANNABLE);
+
+//                mActivityChatBinding.textChatDisableMessage.setText(getString(R.string.label_chat_ended_due_to_assigned_to_another_pro));
+            }
         }
     }
 

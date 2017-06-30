@@ -17,12 +17,15 @@ import android.widget.TextView;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.cheep.R;
 import com.cheep.adapter.MyTaskRecyclerViewAdapter;
 import com.cheep.adapter.ReviewsRecyclerViewAdapter;
 import com.cheep.custom_view.BottomAlertDialog;
 import com.cheep.custom_view.DividerItemDecoration;
 import com.cheep.databinding.ActivityProfileBinding;
+import com.cheep.firebase.FirebaseHelper;
 import com.cheep.firebase.FirebaseUtils;
 import com.cheep.firebase.model.TaskChatModel;
 import com.cheep.model.CoverImageModel;
@@ -37,6 +40,9 @@ import com.cheep.utils.ErrorLoadingHelper;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.SharedElementTransitionHelper;
 import com.cheep.utils.Utility;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -49,6 +55,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.cheep.network.NetworkUtility.WS.REVIEW_LIST;
+import static com.facebook.login.widget.ProfilePictureView.TAG;
 
 /**
  * Created by pankaj on 10/6/16.
@@ -141,9 +148,9 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
         errorLoadingHelper = new ErrorLoadingHelper(mActivityProviderProfileBinding.recyclerView);
         if (getIntent().getExtras() != null) {
             Bundle bundle = getIntent().getExtras();
-            if (getIntent().hasExtra(Utility.Extra.DATA) == false) {
+            if (!getIntent().hasExtra(Utility.Extra.DATA)) {
 
-                if (getIntent().hasExtra(NetworkUtility.TAGS.TASK_ID) == true) {
+                if (getIntent().hasExtra(NetworkUtility.TAGS.TASK_ID)) {
                     taskId = bundle.getString(NetworkUtility.TAGS.TASK_ID);
                     providerID = bundle.getString(NetworkUtility.TAGS.SP_USER_ID);
                     showProgressDialog();
@@ -152,7 +159,7 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
                 }
             } else {
                 providerModel = (ProviderModel) Utility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA), ProviderModel.class);
-                if (getIntent().hasExtra(Utility.Extra.DATA_2) == true) {
+                if (getIntent().hasExtra(Utility.Extra.DATA_2)) {
                     //This is only when provider profile view for specific task (provider gives quote to specific task)
                     taskDetailModel = (TaskDetailModel) Utility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA_2), TaskDetailModel.class);
 
@@ -215,7 +222,7 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
             }
         });
 
-        mActivityProviderProfileBinding.textContactRequest.setOnClickListener(new View.OnClickListener() {
+        /*mActivityProviderProfileBinding.textContactRequest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (providerModel != null) {
@@ -223,14 +230,14 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
                 }
             }
         });
-
+*/
         mActivityProviderProfileBinding.layoutPay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 PaymentsStepActivity.newInstance(mContext, taskDetailModel, providerModel, 0);
             }
         });
-        mActivityProviderProfileBinding.textContactRequest.setVisibility(View.GONE);
+//        mActivityProviderProfileBinding.textContactRequest.setVisibility(View.GONE);
 
         // Checking if amount present then show call and paid lables else hide
         if (providerModel.getQuotePriceInInteger() > 0) {
@@ -242,48 +249,14 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
         }
 
         // Check Task Detail Requested status and make the changes accordingly.
-        if (Utility.SEND_TASK_DETAIL_REQUESTED_STATUS.INITIAL.equalsIgnoreCase(providerModel.request_detail_status)) {
-//            mActivityProviderProfileBinding.imgChat.setVisibility(View.GONE);
-//            mActivityProviderProfileBinding.imgCall.setVisibility(View.GONE);
-           /* mActivityProviderProfileBinding.lnChat.setVisibility(View.GONE);
-            mActivityProviderProfileBinding.lnCall.setVisibility(View.GONE);*/
-           /* mActivityProviderProfileBinding.verticalDividerCall.setVisibility(View.GONE);
-            mActivityProviderProfileBinding.verticalDividerChat.setVisibility(View.GONE);*/
+        /*if (Utility.SEND_TASK_DETAIL_REQUESTED_STATUS.INITIAL.equalsIgnoreCase(providerModel.request_detail_status)) {
         } else if (Utility.SEND_TASK_DETAIL_REQUESTED_STATUS.ALREADY_REQUESTED.equalsIgnoreCase(providerModel.request_detail_status)) {
             if (getIntent().hasExtra(Utility.Extra.PROFILE_FROM_FAVOURITE) == false) {
                 mActivityProviderProfileBinding.textContactRequest.setVisibility(View.VISIBLE);
             }
-//            mActivityProviderProfileBinding.imgChat.setVisibility(View.GONE);
-//            mActivityProviderProfileBinding.imgCall.setVisibility(View.GONE);
-           /* mActivityProviderProfileBinding.lnChat.setVisibility(View.GONE);
-            mActivityProviderProfileBinding.lnCall.setVisibility(View.GONE);*/
-
-           /* mActivityProviderProfileBinding.verticalDividerCall.setVisibility(View.GONE);
-            mActivityProviderProfileBinding.verticalDividerChat.setVisibility(View.GONE);*/
         } else if (Utility.SEND_TASK_DETAIL_REQUESTED_STATUS.ACCEPTED.equalsIgnoreCase(providerModel.request_detail_status)) {
-//            mActivityProviderProfileBinding.imgChat.setVisibility(View.VISIBLE);
-//            mActivityProviderProfileBinding.imgCall.setVisibility(View.VISIBLE);
-           /* mActivityProviderProfileBinding.lnChat.setVisibility(View.VISIBLE);
-            mActivityProviderProfileBinding.lnCall.setVisibility(View.VISIBLE);*/
 
-            /*mActivityProviderProfileBinding.verticalDividerCall.setVisibility(View.VISIBLE);
-            mActivityProviderProfileBinding.verticalDividerChat.setVisibility(View.VISIBLE);*/
-
-
-            // On Click on Chat & Call
-
-
-            // On Click on Chat & Call
-
-
-        } else {
-//            mActivityProviderProfileBinding.imgChat.setVisibility(View.GONE);
-//            mActivityProviderProfileBinding.imgCall.setVisibility(View.GONE);
-           /* mActivityProviderProfileBinding.lnChat.setVisibility(View.GONE);
-            mActivityProviderProfileBinding.lnCall.setVisibility(View.GONE);*/
-           /* mActivityProviderProfileBinding.verticalDividerCall.setVisibility(View.GONE);
-            mActivityProviderProfileBinding.verticalDividerChat.setVisibility(View.GONE);*/
-        }
+        }*/
 
 //        mActivityProviderProfileBinding.textAction.setVisibility(View.GONE);
 //        mActivityProviderProfileBinding.textChat.setVisibility(View.GONE);
@@ -298,26 +271,54 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
                     }
                     callTaskDetailRequestAcceptWS(Utility.ACTION_CALL, taskDetailModel.taskId, providerModel);
                 }
+
+//                if (providerModel != null && !TextUtils.isEmpty(providerModel.providerId) && taskDetailModel != null) {
+//                    if (providerModel.request_detail_status.equalsIgnoreCase(Utility.SEND_TASK_DETAIL_REQUESTED_STATUS.ACCEPTED)) {
+////                        callToOtherUser(mActivityProviderProfileBinding.getRoot(), providerModel.providerId);
+//                        Utility.openCustomerCareCallDialer(mContext, providerModel.sp_phone_number);
+//                        return;
+//                    }
+//                    callTaskDetailRequestAcceptWS(Utility.ACTION_CALL, taskDetailModel.taskId, providerModel);
+//                }
             }
         });
         mActivityProviderProfileBinding.lnChat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                if (providerModel != null && taskDetailModel != null) {
-                    if (providerModel.request_detail_status.equalsIgnoreCase(Utility.SEND_TASK_DETAIL_REQUESTED_STATUS.ACCEPTED)) {
-                        TaskChatModel taskChatModel = new TaskChatModel();
-                        taskChatModel.categoryName = taskDetailModel.categoryName;
-                        taskChatModel.taskDesc = taskDetailModel.taskDesc;
-                        taskChatModel.taskId = taskDetailModel.taskId;
-                        taskChatModel.receiverId = FirebaseUtils.getPrefixSPId(providerModel.providerId);
-                        taskChatModel.participantName = providerModel.userName;
-                        taskChatModel.participantPhotoUrl = providerModel.profileUrl;
-                        ChatActivity.newInstance(ProviderProfileActivity.this, taskChatModel);
-                        return;
+                if (Utility.SEND_TASK_DETAIL_REQUESTED_STATUS.ALREADY_REQUESTED.equalsIgnoreCase(providerModel.request_detail_status)) {
+                    showDetailRequestDialog(providerModel);
+                } else {
+                    if (providerModel != null && taskDetailModel != null) {
+                        if (providerModel.request_detail_status.equalsIgnoreCase(Utility.SEND_TASK_DETAIL_REQUESTED_STATUS.ACCEPTED)) {
+                            TaskChatModel taskChatModel = new TaskChatModel();
+                            taskChatModel.categoryName = taskDetailModel.categoryName;
+                            taskChatModel.taskDesc = taskDetailModel.taskDesc;
+                            taskChatModel.taskId = taskDetailModel.taskId;
+                            taskChatModel.receiverId = FirebaseUtils.getPrefixSPId(providerModel.providerId);
+                            taskChatModel.participantName = providerModel.userName;
+                            taskChatModel.participantPhotoUrl = providerModel.profileUrl;
+                            ChatActivity.newInstance(mContext, taskChatModel);
+                            return;
+                        }
+                        callTaskDetailRequestAcceptWS(Utility.ACTION_CHAT, taskDetailModel.taskId, providerModel);
                     }
-                    callTaskDetailRequestAcceptWS(Utility.ACTION_CHAT, taskDetailModel.taskId, providerModel);
                 }
+
+//                if (providerModel != null && taskDetailModel != null) {
+//                    if (providerModel.request_detail_status.equalsIgnoreCase(Utility.SEND_TASK_DETAIL_REQUESTED_STATUS.ACCEPTED)) {
+//                        TaskChatModel taskChatModel = new TaskChatModel();
+//                        taskChatModel.categoryName = taskDetailModel.categoryName;
+//                        taskChatModel.taskDesc = taskDetailModel.taskDesc;
+//                        taskChatModel.taskId = taskDetailModel.taskId;
+//                        taskChatModel.receiverId = FirebaseUtils.getPrefixSPId(providerModel.providerId);
+//                        taskChatModel.participantName = providerModel.userName;
+//                        taskChatModel.participantPhotoUrl = providerModel.profileUrl;
+//                        ChatActivity.newInstance(ProviderProfileActivity.this, taskChatModel);
+//                        return;
+//                    }
+//                    callTaskDetailRequestAcceptWS(Utility.ACTION_CHAT, taskDetailModel.taskId, providerModel);
+//                }
             }
         });
         initSwipeToRefreshLayout();
@@ -325,12 +326,46 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
             mActivityProviderProfileBinding.lnCall.setVisibility(View.GONE);
             mActivityProviderProfileBinding.lnChat.setVisibility(View.GONE);
             mActivityProviderProfileBinding.textCategory.setVisibility(View.GONE);
-            mActivityProviderProfileBinding.textContactRequest.setVisibility(View.GONE);
+//            mActivityProviderProfileBinding.textContactRequest.setVisibility(View.GONE);
             mActivityProviderProfileBinding.layoutPay.setVisibility(View.GONE);
         }
 
         if (EventBus.getDefault().isRegistered(this) == false)
             EventBus.getDefault().register(this);
+
+
+        // Update the UI
+        updateChatUIBasedOnCurrentRequestStatus();
+
+        // Set Listner for Unread Counter
+        manageUnreadBadgeCounterForChat();
+    }
+
+    private void manageUnreadBadgeCounterForChat() {
+        // Read task chat unread count from firebase
+        String t_sp_u_formattedId = FirebaseUtils.get_T_SP_U_FormattedId(taskDetailModel.taskId, providerModel.providerId, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
+        FirebaseHelper.getTaskChatRef(FirebaseUtils.getPrefixTaskId(taskDetailModel.taskId)).child(t_sp_u_formattedId).child(FirebaseHelper.KEY_UNREADCOUNT).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    Integer count = dataSnapshot.getValue(Integer.class);
+                    Log.d(TAG, "onDataChange() called with: dataSnapshot = Unread Counter [" + count + "]");
+                    if (count <= 0) {
+                        mActivityProviderProfileBinding.tvChatUnreadCount.setVisibility(View.GONE);
+                    } else {
+                        mActivityProviderProfileBinding.tvChatUnreadCount.setVisibility(View.VISIBLE);
+                        mActivityProviderProfileBinding.tvChatUnreadCount.setText(String.valueOf(count));
+                    }
+                } else {
+                    mActivityProviderProfileBinding.tvChatUnreadCount.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private BottomAlertDialog dialogDesc;
@@ -338,7 +373,7 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
 
     private void showFullDesc(String title, String message) {
         if (dialogDesc == null) {
-            View view = View.inflate(mContext,R.layout.dialog_information, null);
+            View view = View.inflate(mContext, R.layout.dialog_information, null);
             txtMessage = (TextView) view.findViewById(R.id.text_message);
             dialogDesc = new BottomAlertDialog(mContext);
 
@@ -366,6 +401,14 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
                 || event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.TASK_PROCESSING) {
             finish();
 //            initiateUI();
+        } else if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.QUOTE_REQUESTED_BY_PRO
+                || event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.REQUEST_FOR_DETAIL) {
+            // Only go ahead if we are in same task detail screen whose notification comes
+            if (taskId != null && taskId.equals(event.id)) {
+                showProgressDialog();
+                callSPProfileDetailWS(providerID);
+                callReviewList(providerID);
+            }
         }
     }
 
@@ -1022,16 +1065,14 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
 //                spRecyclerViewAdapter.updateModelForRequestDetailStatus(providerModel);
 
                 callTaskDetailRequestAcceptRejectWS(Utility.SEND_TASK_DETAIL_REQUESTED_STATUS.ACCEPTED, taskDetailModel.taskId, providerModel.providerId);
-
                 badForRequestTaskDetail.dismiss();
             }
         });
         badForRequestTaskDetail.addNegativeButton(getString(R.string.label_decline), new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                badForRequestTaskDetail.dismiss();
-
                 callTaskDetailRequestAcceptRejectWS(Utility.SEND_TASK_DETAIL_REQUESTED_STATUS.REJECTED, taskDetailModel.taskId, providerModel.providerId);
+                badForRequestTaskDetail.dismiss();
             }
         });
         badForRequestTaskDetail.showDialog();
@@ -1050,7 +1091,8 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
                 dialog.dismiss();
 
                 // spRecyclerViewAdapter.updateModelForRequestDetailStatus(spUserID, requestDatailStatus);
-                mActivityProviderProfileBinding.textContactRequest.setVisibility(View.GONE);
+                // TODO: It needs to update here.
+//                mActivityProviderProfileBinding.textContactRequest.setVisibility(View.GONE);
             }
         });
 
@@ -1108,22 +1150,39 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
 //                        providerModel.request_detail_status = Utility.SEND_TASK_DETAIL_REQUESTED_STATUS.ACCEPTED;
                         JSONObject jObjData = jsonObject.getJSONObject(NetworkUtility.TAGS.DATA);
-//                        String task_id = jsonObject.getString(NetworkUtility.TAGS.TASK_ID);
+                        String task_id = jObjData.getString(NetworkUtility.TAGS.TASK_ID);
                         String spUserID = jObjData.getString(NetworkUtility.TAGS.SP_USER_ID);
                         String spUserName = jObjData.optString(NetworkUtility.TAGS.SP_USER_NAME);
+                        String quoted_sp_image_url = jObjData.getString(NetworkUtility.TAGS.QUOTED_SP_IMAGE_URL);
                         String requestDatailStatus = jObjData.getString(NetworkUtility.TAGS.REQUEST_DETAIL_STATUS);
                         if (requestDatailStatus.equalsIgnoreCase(Utility.SEND_TASK_DETAIL_REQUESTED_STATUS.ACCEPTED)) {
+                            providerModel.request_detail_status = requestDatailStatus;
+                            updateChatUIBasedOnCurrentRequestStatus();
                             String descriptionForAcknowledgement = mContext.getString(R.string.desc_request_for_detail_accepted_acknowledgment, spUserName);
-
                             showDialogOnRequestForDetailAccepted(descriptionForAcknowledgement);
-                        } else {
+
                             // Need to pass this details to Pending listing as well.
-                            /*MessageEvent messageEvent = new MessageEvent();
+                            MessageEvent messageEvent = new MessageEvent();
+                            messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.DETAIL_REQUEST_ACCEPTED;
+                            messageEvent.id = task_id;
+                            messageEvent.spUserId = spUserID;
+                            messageEvent.quoted_sp_image_url = quoted_sp_image_url;
+                            messageEvent.request_detail_status = requestDatailStatus;
+                            EventBus.getDefault().post(messageEvent);
+                        } else {
+                            providerModel.request_detail_status = requestDatailStatus;
+                            updateChatUIBasedOnCurrentRequestStatus();
+
+                            // Need to pass this details to Pending listing as well.
+                            MessageEvent messageEvent = new MessageEvent();
                             messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.DETAIL_REQUEST_REJECTED;
-                            messageEvent.id = taskId;
+                            messageEvent.id = task_id;
+                            messageEvent.spUserId = spUserID;
+                            messageEvent.quoted_sp_image_url = quoted_sp_image_url;
+                            messageEvent.request_detail_status = requestDatailStatus;
                             EventBus.getDefault().post(messageEvent);
 
-                            // Update recycler view
+                            /*// Update recycler view
                             spRecyclerViewAdapter.removeModelForRequestDetailStatus(spUserID, requestDatailStatus);
 
                             // Check if listing is empty now, display message
@@ -1348,8 +1407,26 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
             hideProgressDialog();
 
             Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityProviderProfileBinding.getRoot());
-
         }
     };
 
+    public void updateChatUIBasedOnCurrentRequestStatus() {
+        Log.d(TAG, "updateChatUIBasedOnCurrentRequestStatus() called");
+        if (providerModel == null) {
+            return;
+        }
+        if (Utility.SEND_TASK_DETAIL_REQUESTED_STATUS.ALREADY_REQUESTED.equalsIgnoreCase(providerModel.request_detail_status)) {
+            //chat icon
+            Glide.with(mContext)
+                    .load(R.drawable.ic_chat_requested_animation_with_counter)
+                    .asGif()
+                    .dontAnimate()
+                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                    .into(mActivityProviderProfileBinding.imgChat);
+        } else {
+            Glide.with(mContext)
+                    .load(R.drawable.icon_chat_smaller)
+                    .into(mActivityProviderProfileBinding.imgChat);
+        }
+    }
 }

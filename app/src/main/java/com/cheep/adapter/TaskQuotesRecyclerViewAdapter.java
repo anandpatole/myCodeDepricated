@@ -425,6 +425,10 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
                     if (!(mQuotesList.get(i).getQuotePriceInInteger() > 0)) {
                         mQuotesList.remove(i);
                         notifyItemRemoved(i);
+                        // Let the activity Finish in case there are no quotes to show.
+                        if (mQuotesList.isEmpty()) {
+                            mListener.onQuoteListEmpty();
+                        }
                         break;
                     }
                 }
@@ -526,5 +530,7 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
         void onChatClicked(ProviderModel provider);
 
         void onCallClicked(ProviderModel provider);
+
+        void onQuoteListEmpty();
     }
 }

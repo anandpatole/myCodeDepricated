@@ -105,15 +105,13 @@ public class TaskQuotesActivity extends BaseAppCompatActivity implements TaskQuo
 
         callSPListWS();
 
-
         // Register EventBus
         EventBus.getDefault().register(this);
 
     }
 
     @Override
-    protected void initiateUI()
-    {
+    protected void initiateUI() {
         //mIntentAction = getIntent().getAction();
         if (getIntent().getExtras() != null) {
             mTaskDetailModel = (TaskDetailModel) Utility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA), TaskDetailModel.class);
@@ -136,7 +134,7 @@ public class TaskQuotesActivity extends BaseAppCompatActivity implements TaskQuo
 
         mRecyclerView.setHasFixedSize(false);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mAdapter = new TaskQuotesRecyclerViewAdapter(this,mTaskDetailModel, /*mQuotesList,*/ this);
+        mAdapter = new TaskQuotesRecyclerViewAdapter(this, mTaskDetailModel, /*mQuotesList,*/ this);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.addItemDecoration(new DividerItemDecoration(mContext, R.drawable.divider_grey_normal));
         setupActionbar();
@@ -156,7 +154,7 @@ public class TaskQuotesActivity extends BaseAppCompatActivity implements TaskQuo
             mTaskDetailModel = (TaskDetailModel) Utility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA), TaskDetailModel.class);
             populateData();
         }*/
-        if(mTaskDetailModel!=null)
+        if (mTaskDetailModel != null)
             populateData();
     }
 
@@ -233,7 +231,6 @@ public class TaskQuotesActivity extends BaseAppCompatActivity implements TaskQuo
         } else {
             url = NetworkUtility.WS.SP_LIST_TASK_WISE;
         }
-
 
         //Url is based on condition if address id is greater then 0 then it means we need to update the existing address
         VolleyNetworkRequest mVolleyNetworkRequestForSPList = new VolleyNetworkRequest(url
@@ -485,6 +482,12 @@ public class TaskQuotesActivity extends BaseAppCompatActivity implements TaskQuo
         }
     }
 
+    @Override
+    public void onQuoteListEmpty() {
+        // Finish the activity now.
+        finish();
+    }
+
     private View.OnClickListener onRetryBtnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
@@ -633,8 +636,8 @@ public class TaskQuotesActivity extends BaseAppCompatActivity implements TaskQuo
         badForRequestTaskDetail.addNegativeButton(getString(R.string.label_decline), new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                badForRequestTaskDetail.dismiss();
                 callTaskDetailRequestAcceptRejectWS(Utility.SEND_TASK_DETAIL_REQUESTED_STATUS.REJECTED, mTaskDetailModel.taskId, providerModel.providerId);
+                badForRequestTaskDetail.dismiss();
             }
         });
         badForRequestTaskDetail.showDialog();
@@ -697,32 +700,22 @@ public class TaskQuotesActivity extends BaseAppCompatActivity implements TaskQuo
                         String quoted_sp_image_url = jObjData.getString(NetworkUtility.TAGS.QUOTED_SP_IMAGE_URL);
                         String requestDatailStatus = jObjData.getString(NetworkUtility.TAGS.REQUEST_DETAIL_STATUS);
                         if (requestDatailStatus.equalsIgnoreCase(Utility.SEND_TASK_DETAIL_REQUESTED_STATUS.ACCEPTED)) {
-                            // spRecyclerViewAdapter.updateModelForRequestDetailStatus(spUserID, requestDatailStatus);
-//                            TODO: Update the views & Show popup
                             mAdapter.updateModelForRequestDetailStatus(spUserID, requestDatailStatus, quoted_sp_image_url);
-
-//                            String username = PreferenceUtility.getInstance(mContext).getUserDetails().UserName;
                             String descriptionForAcknowledgement = mContext.getString(R.string.desc_request_for_detail_accepted_acknowledgment, spUserName);
-
                             showDialogOnRequestForDetailAccepted(descriptionForAcknowledgement);
-
-                            /*DialogOnRequestForDetailAccepted mDialogOnRequestForDetailAccepted = DialogOnRequestForDetailAccepted.newInstance(descriptionForAcknowledgement);
-                            mDialogOnRequestForDetailAccepted.show(getSupportFragmentManager(), DialogOnRequestForDetailAccepted.TAG);*/
-//
-//
-//  mActivityProviderProfileBinding.textContactRequest.setVisibility(View.GONE);
                         } else {
 
-                            // Need to pass this details to Pending listing as well.
+                            // Send Broadcast that would update the current UI as well.
                             MessageEvent messageEvent = new MessageEvent();
                             messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.DETAIL_REQUEST_REJECTED;
                             messageEvent.id = task_id;
+                            messageEvent.spUserId = spUserID;
                             messageEvent.quoted_sp_image_url = quoted_sp_image_url;
+                            messageEvent.request_detail_status = requestDatailStatus;
                             EventBus.getDefault().post(messageEvent);
 
-                            mAdapter.updateModelForRequestDetailStatus(spUserID, requestDatailStatus, quoted_sp_image_url);
-
-                            populateGridImageView();
+                            // Need to pass this details to Pending listing as well.
+//                            onRequestDetailRejected(task_id, spUserID, requestDatailStatus, quoted_sp_image_url);
                             // Need to pass this details to Pending listing as well.
                             /*MessageEvent messageEvent = new MessageEvent();
                             messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.DETAIL_REQUEST_REJECTED;
@@ -761,6 +754,11 @@ public class TaskQuotesActivity extends BaseAppCompatActivity implements TaskQuo
             hideProgressDialog();
         }
     };
+
+    private void onRequestDetailRejected(String task_id, String spUserID, String requestDatailStatus, String quoted_sp_image_url) {
+        mAdapter.updateModelForRequestDetailStatus(spUserID, requestDatailStatus, quoted_sp_image_url);
+        populateGridImageView();
+    }
 
     Response.ErrorListener mCallActionOnDetailWSErrorListener = new Response.ErrorListener() {
         @Override
@@ -855,9 +853,20 @@ public class TaskQuotesActivity extends BaseAppCompatActivity implements TaskQuo
     public void onMessageEvent(MessageEvent event) {
         if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.TASK_PAID
                 || event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.TASK_PROCESSING) {
-            // Refresh the SP listing
+            // Finish this activity as its not needed now.
             finish();
-        }/* else if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.QUOTE_REQUESTED_BY_PRO
+        } else if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.DETAIL_REQUEST_REJECTED
+                || event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.DETAIL_REQUEST_ACCEPTED) {
+            // Update the list now.
+            onRequestDetailRejected(event.id, event.spUserId, event.request_detail_status, event.quoted_sp_image_url);
+        } else if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.QUOTE_REQUESTED_BY_PRO
+                || event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.REQUEST_FOR_DETAIL) {
+            // Update the list now.
+            // Only go ahead if we are in same task detail screen whose notification comes
+            if (mTaskDetailModel.taskId.equals(event.id)) {
+                callSPListWS();
+            }
+        } /* else if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.QUOTE_REQUESTED_BY_PRO
                 || event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.REQUEST_FOR_DETAIL) {
 
             // Only go ahead if we are in same task detail screen whose notification comes

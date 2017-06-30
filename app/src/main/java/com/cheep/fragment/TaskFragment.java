@@ -192,7 +192,7 @@ public class TaskFragment extends BaseFragment {
         } else if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.QUOTE_REQUESTED_BY_PRO) {
             taskRecyclerViewAdapter.updateOnNewQuoteRequested(event.id, event.max_quote_price, event.sp_counts, event.quoted_sp_image_url);
         } else if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.REQUEST_FOR_DETAIL) {
-            taskRecyclerViewAdapter.updateOnNewDetailRequested(event.id, event.sp_counts,event.quoted_sp_image_url);
+            taskRecyclerViewAdapter.updateOnNewDetailRequested(event.id, event.sp_counts, event.quoted_sp_image_url);
         } else if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.TASK_STATUS_CHANGE) {
             taskRecyclerViewAdapter.updateTaskStatus(event);
         } else if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.ADDITIONAL_PAYMENT_REQUESTED) {
@@ -264,7 +264,6 @@ public class TaskFragment extends BaseFragment {
                 , mHeaderParams
                 , mParams
                 , null);
-
         Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequestForCategoryList);
     }
 
@@ -364,7 +363,6 @@ public class TaskFragment extends BaseFragment {
         }
     };
 
-
     /**
      * Broadcastreceiver for updating the tasklisting
      */
@@ -379,4 +377,6 @@ public class TaskFragment extends BaseFragment {
 
         }
     };
+
+
 }

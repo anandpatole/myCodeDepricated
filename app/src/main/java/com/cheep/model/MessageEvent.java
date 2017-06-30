@@ -18,6 +18,7 @@ public class MessageEvent {
 
     // used for REQUEST_FOR_DETAIL Notification Type
     public String request_detail_status;
+    public String spUserId;
 
     // Used for additional payment requested
     public String additional_quote_amount;
