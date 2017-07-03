@@ -897,24 +897,34 @@ public class ChatActivity extends BaseAppCompatActivity implements View.OnClickL
 
             // Enable chat disable message and place the text
             mActivityChatBinding.textChatDisableMessage.setVisibility(View.VISIBLE);
-            if (Utility.TASK_STATUS.ELAPSED.equalsIgnoreCase(currentTaskStatus)) {
 
+            // Incase Task Lapsed
+            if (Utility.TASK_STATUS.ELAPSED.equalsIgnoreCase(currentTaskStatus)) {
                 SpannableStringBuilder ssb = new SpannableStringBuilder(getString(R.string.label_chat_ended_due_to_task_lapsed));
                 ssb.setSpan(new ImageSpan(mContext, R.drawable.ic_locked_50_60), 0, 1, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
                 mActivityChatBinding.textChatDisableMessage.setText(ssb, TextView.BufferType.SPANNABLE);
-//                mActivityChatBinding.textChatDisableMessage.setText();
-            } else if (Utility.TASK_STATUS.CANCELLED_SP.equalsIgnoreCase(currentTaskStatus)
-                    || Utility.TASK_STATUS.CANCELLED_CUSTOMER.equalsIgnoreCase(currentTaskStatus)) {
+            }
+            // Incase Task Cancelled,Reschedule Rejected
+            else if (Utility.TASK_STATUS.CANCELLED_SP.equalsIgnoreCase(currentTaskStatus)
+                    || Utility.TASK_STATUS.CANCELLED_CUSTOMER.equalsIgnoreCase(currentTaskStatus)
+                    || Utility.TASK_STATUS.RESCHEDULE_REQUEST_REJECTED.equalsIgnoreCase(currentTaskStatus)
+                    ) {
                 SpannableStringBuilder ssb = new SpannableStringBuilder(getString(R.string.label_chat_ended_due_to_task_cancelled));
                 ssb.setSpan(new ImageSpan(mContext, R.drawable.ic_locked_50_60), 0, 1, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
                 mActivityChatBinding.textChatDisableMessage.setText(ssb, TextView.BufferType.SPANNABLE);
-//                mActivityChatBinding.textChatDisableMessage.setText(getString(R.string.label_chat_ended_due_to_task_cancelled));
-            } else {
+            }
+            // Incase Task Completed
+            else if (Utility.TASK_STATUS.COMPLETION_CONFIRM.equalsIgnoreCase(currentTaskStatus)) {
+                SpannableStringBuilder ssb = new SpannableStringBuilder(getString(R.string.label_chat_ended_due_to_task_completed));
+                ssb.setSpan(new ImageSpan(mContext, R.drawable.ic_locked_50_60), 0, 1, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+                mActivityChatBinding.textChatDisableMessage.setText(ssb, TextView.BufferType.SPANNABLE);
+            }
+
+            // Any other reason like Task has been allocated to other PRO.
+            else {
                 SpannableStringBuilder ssb = new SpannableStringBuilder(getString(R.string.label_chat_ended_due_to_assigned_to_another_pro));
                 ssb.setSpan(new ImageSpan(mContext, R.drawable.ic_locked_50_60), 0, 1, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
                 mActivityChatBinding.textChatDisableMessage.setText(ssb, TextView.BufferType.SPANNABLE);
-
-//                mActivityChatBinding.textChatDisableMessage.setText(getString(R.string.label_chat_ended_due_to_assigned_to_another_pro));
             }
         }
     }

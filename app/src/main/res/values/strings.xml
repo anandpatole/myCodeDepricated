@@ -411,4 +411,6 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_chat_ended_due_to_task_lapsed">"  This chat has ended as the task has lapsed."</string>
     <string name="label_chat_ended_due_to_assigned_to_another_pro">"  This chat has ended as the task has been assigned to another PRO."</string>
     <string name="label_chat_ended_due_to_task_cancelled">"  This chat has ended as the task has been cancelled."</string>
+    <string name="label_chat_ended_due_to_task_dispute">"  This chat has ended as the task is in dispute."</string>
+    <string name="label_chat_ended_due_to_task_completed">"  This chat has ended as the task has been completed."</string>
 </resources>
