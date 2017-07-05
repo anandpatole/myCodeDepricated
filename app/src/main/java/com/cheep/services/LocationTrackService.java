@@ -29,6 +29,7 @@ import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStates;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 
@@ -77,6 +78,9 @@ public class LocationTrackService extends Service implements GoogleApiClient.Con
 
     public Location mLocation;
 
+    private MyHandler mHandler;
+
+
     //Empty Constructor
     public LocationTrackService() {
 
@@ -93,6 +97,10 @@ public class LocationTrackService extends Service implements GoogleApiClient.Con
 
         //Connect with Google API Client
         mGoogleApiClient.connect();
+
+
+        //Initiate Handler
+        mHandler = new MyHandler(this, mCallBacks);
     }
 
     @Override
@@ -232,7 +240,18 @@ public class LocationTrackService extends Service implements GoogleApiClient.Con
     /**
      * Create Handler to communicate with Activity
      */
-    private Handler mHandler = new Handler() {
+    /**
+     * Create Handler to communicate with Activity
+     */
+    private static class MyHandler extends Handler {
+        final WeakReference<LocationTrackService> mLocationTrackServiceWeakReference;
+        final ArrayList<LocationTrackServiceInteractionListener> mCallBacks;
+
+        MyHandler(LocationTrackService service, ArrayList<LocationTrackServiceInteractionListener> mCallBacks) {
+            mLocationTrackServiceWeakReference = new WeakReference<>(service);
+            this.mCallBacks = mCallBacks;
+        }
+
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
@@ -259,7 +278,35 @@ public class LocationTrackService extends Service implements GoogleApiClient.Con
                     break;
             }
         }
-    };
+    }
+   /* private Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case LOCATION_NOT_AVAILABLE:
+                    for (LocationTrackServiceInteractionListener mCallBack : mCallBacks) {
+                        mCallBack.onLocationNotAvailable();
+                    }
+                    break;
+                case LOCATION_FETCHED:
+                    for (LocationTrackServiceInteractionListener mCallBack : mCallBacks) {
+                        mCallBack.onLocationFetched((Location) msg.obj);
+                    }
+                    break;
+                case LOCATION_SETTINGS_DIALOG_NEEDS_TOBE_SHOWN:
+                    for (LocationTrackServiceInteractionListener mCallBack : mCallBacks) {
+                        mCallBack.onLocationSettingsDialogNeedToBeShow((Status) msg.obj);
+                    }
+                    break;
+                case GPS_ENABLED:
+                    for (LocationTrackServiceInteractionListener mCallBack : mCallBacks) {
+                        mCallBack.gpsEnabled();
+                    }
+                    break;
+            }
+        }
+    };*/
 
     protected LocationRequest createLocationRequest() {
         mLocationRequest = new LocationRequest();

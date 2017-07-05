@@ -184,7 +184,7 @@
             android:id="@+id/common_recycler_view"
             layout="@layout/common_recycler_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
             android:layout_weight="1" />
 
         <View
@@ -250,11 +250,11 @@
                 <com.cheep.custom_view.CFTextViewSemiBold
                     android:id="@+id/monthly_saved"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="0dp"
                     android:layout_below="@+id/text_month"
                     android:layout_weight="0.5"
                     android:gravity="center"
-                    android:text="₹ 3600"
+                    tools:text="₹ 3600"
                     android:textAllCaps="false"
                     android:textColor="@color/splash_gradient_end"
                     android:textSize="@dimen/text_size_12sp" />

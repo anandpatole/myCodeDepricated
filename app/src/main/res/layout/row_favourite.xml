@@ -9,7 +9,8 @@
         android:orientation="horizontal"
         android:paddingLeft="@dimen/scale_16dp"
         android:paddingTop="@dimen/scale_10dp"
-        android:paddingRight="@dimen/scale_16dp">
+        android:paddingRight="@dimen/scale_16dp"
+        android:baselineAligned="false">
 
         <LinearLayout
             android:id="@+id/profile_layout"
@@ -89,7 +90,7 @@
 
                 <com.cheep.custom_view.CFTextViewRegular
                     android:id="@+id/text_name"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="top"
                     android:layout_toLeftOf="@+id/rating_bar"
@@ -140,7 +141,7 @@
 
                 <com.cheep.custom_view.CFTextViewRegular
                     android:id="@+id/text_desc"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/text_total_reviews"
                     android:layout_marginTop="@dimen/scale_3dp"

@@ -43,24 +43,24 @@
     <dimen name="scale_25dp">25dp</dimen>
     <dimen name="scale_30dp">30dp</dimen>
     <dimen name="scale_35dp">35dp</dimen>
-    <dimen name="scale_37dp">37dp</dimen>
+    <!--<dimen name="scale_37dp">37dp</dimen>-->
     <dimen name="scale_50dp">50dp</dimen>
     <dimen name="scale_55dp">55dp</dimen>
     <dimen name="scale_80dp">80dp</dimen>
     <dimen name="scale_100dp">100dp</dimen>
     <dimen name="scale_120dp">120dp</dimen>
-    <dimen name="scale_130dp">130dp</dimen>
+    <!--<dimen name="scale_130dp">130dp</dimen>-->
     <dimen name="scale_140dp">140dp</dimen>
-    <dimen name="scale_150dp">150dp</dimen>
-    <dimen name="scale_160dp">160dp</dimen>
+    <!--<dimen name="scale_150dp">150dp</dimen>-->
+    <!--<dimen name="scale_160dp">160dp</dimen>-->
     <dimen name="scale_170dp">170dp</dimen>
     <dimen name="scale_180dp">180dp</dimen>
-    <dimen name="scale_190dp">190dp</dimen>
+    <!--<dimen name="scale_190dp">190dp</dimen>-->
     <dimen name="scale_260dp">260dp</dimen>
 
     <!--TextSize-->
-    <dimen name="text_size_6sp">6sp</dimen>
-    <dimen name="text_size_7sp">7sp</dimen>
+    <!--<dimen name="text_size_6sp">6sp</dimen>-->
+    <!--<dimen name="text_size_7sp">7sp</dimen>-->
     <dimen name="text_size_10sp">10sp</dimen>
     <dimen name="text_size_12sp">12sp</dimen>
     <dimen name="text_size_13sp">13sp</dimen>
@@ -84,15 +84,15 @@
     <dimen name="scale_70dp">70dp</dimen>
     <dimen name="scale_76dp">76dp</dimen>
     <dimen name="text_size_23sp">23sp</dimen>
-    <dimen name="scale_27dp">27dp</dimen>
-    <dimen name="scale_200dp">200dp</dimen>
-    <dimen name="scale_145dp">145dp</dimen>
+    <!--<dimen name="scale_27dp">27dp</dimen>-->
+    <!--<dimen name="scale_200dp">200dp</dimen>-->
+    <!--<dimen name="scale_145dp">145dp</dimen>-->
 
     <dimen name="icon_live_width">30.75dp</dimen>
     <dimen name="icon_live_height">13.50dp</dimen>
     <dimen name="icon_home_width" >17dp</dimen>
     <dimen name="icon_home_height">13.50dp</dimen>
-    <dimen name="icon_chat_width">28.75dp</dimen>
-    <dimen name="icon_chat_height">23.75dp</dimen>
+    <!--<dimen name="icon_chat_width">28.75dp</dimen>-->
+    <!--<dimen name="icon_chat_height">23.75dp</dimen>-->
     <dimen name="scale_23dp">23dp</dimen>
 </resources>

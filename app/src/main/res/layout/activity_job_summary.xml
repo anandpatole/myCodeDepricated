@@ -479,7 +479,7 @@
 
                         <com.cheep.custom_view.CFTextViewRegular
                             android:id="@+id/text_when"
-                            android:layout_width="@dimen/scale_0dp"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_gravity="right"
                             android:layout_weight="1"
