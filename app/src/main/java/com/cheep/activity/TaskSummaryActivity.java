@@ -22,6 +22,7 @@ import com.cheep.R;
 import com.cheep.custom_view.BottomAlertDialog;
 import com.cheep.databinding.ActivityTaskSummaryBinding;
 import com.cheep.databinding.DialogChangePhoneNumberBinding;
+import com.cheep.firebase.FirebaseHelper;
 import com.cheep.firebase.FirebaseUtils;
 import com.cheep.firebase.model.TaskChatModel;
 import com.cheep.model.MessageEvent;
@@ -36,6 +37,9 @@ import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.SharedElementTransitionHelper;
 import com.cheep.utils.SuperCalendar;
 import com.cheep.utils.Utility;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -52,7 +56,7 @@ import java.util.Map;
  */
 
 public class TaskSummaryActivity extends BaseAppCompatActivity {
-    private static final String TAG = "TaskCreationActivity";
+    private static final String TAG = "TaskSummaryActivity";
     private ActivityTaskSummaryBinding mActivityTaskSummaryBinding;
     private TaskDetailModel mTaskDetailModel;
 
@@ -176,7 +180,6 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     Log.i(TAG, "onClick: Call");
-//                    callToOtherUser(mActivityTaskSummaryBinding.getRoot(), mTaskDetailModel.selectedProvider.providerId);
                     Utility.openCustomerCareCallDialer(mContext, mTaskDetailModel.selectedProvider.sp_phone_number);
                 }
             });
@@ -192,9 +195,10 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
                     taskChatModel.participantName = mTaskDetailModel.selectedProvider.userName;
                     taskChatModel.participantPhotoUrl = mTaskDetailModel.selectedProvider.profileUrl;
                     ChatActivity.newInstance(mContext, taskChatModel);
-
                 }
             });
+
+
             // On Click on Payment Summary
             mActivityTaskSummaryBinding.textViewPaymentSummary.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -206,6 +210,9 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
 
             // Manage UI Based on Status
             updateUIBasedOnTaskStatus();
+
+            // Manage UnreadBadge count for Task
+            manageUnreadBadgeCounterForChat();
         }
 
         // Set Second Section
@@ -425,7 +432,7 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
 
     private void showFullDesc(String title, String message) {
         if (dialogDesc == null) {
-            View view = View.inflate(mContext,R.layout.dialog_information, null);
+            View view = View.inflate(mContext, R.layout.dialog_information, null);
             txtMessage = (TextView) view.findViewById(R.id.text_message);
             dialogDesc = new BottomAlertDialog(mContext);
             view.findViewById(R.id.btn_ok).setOnClickListener(new View.OnClickListener() {
@@ -822,7 +829,7 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
 
     private void showRateDialog() {
 
-        View view = View.inflate(mContext,R.layout.dialog_rate, null);
+        View view = View.inflate(mContext, R.layout.dialog_rate, null);
         final RatingBar ratingBar = (RatingBar) view.findViewById(R.id.rating_bar);
         final EditText edtMessage = (EditText) view.findViewById(R.id.edit_message);
         final TextView txtLabel = (TextView) view.findViewById(R.id.text_label);
@@ -1314,4 +1321,34 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
             Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityTaskSummaryBinding.getRoot());
         }
     };
+
+    private void manageUnreadBadgeCounterForChat() {
+        Log.d(TAG, "manageUnreadBadgeCounterForChat() called");
+        // Read task chat unread count from firebase
+        String t_sp_u_formattedId = FirebaseUtils.get_T_SP_U_FormattedId(mTaskDetailModel.taskId, mTaskDetailModel.selectedProvider.providerId, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
+        FirebaseHelper.getRecentChatRef(FirebaseUtils.getPrefixUserId(PreferenceUtility.getInstance(mContext).getUserDetails().UserID)).child(t_sp_u_formattedId).child(FirebaseHelper.KEY_UNREADCOUNT).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.d(TAG, "onDataChange() called with: dataSnapshot = [" + dataSnapshot + "]");
+                if (dataSnapshot.exists()) {
+                    Integer count = dataSnapshot.getValue(Integer.class);
+                    Log.d(TAG, "onDataChange() called with: dataSnapshot = Unread Counter [" + count + "]");
+                    if (count <= 0) {
+                        mActivityTaskSummaryBinding.tvChatUnreadCount.setVisibility(View.GONE);
+                    } else {
+                        mActivityTaskSummaryBinding.tvChatUnreadCount.setVisibility(View.VISIBLE);
+                        mActivityTaskSummaryBinding.tvChatUnreadCount.setText(String.valueOf(count));
+                    }
+                } else {
+                    mActivityTaskSummaryBinding.tvChatUnreadCount.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.d(TAG, "onCancelled() called with: databaseError = [" + databaseError + "]");
+            }
+        });
+    }
+
 }

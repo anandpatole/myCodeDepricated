@@ -5,19 +5,14 @@ import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -25,7 +20,7 @@ import com.appsflyer.AppsFlyerLib;
 import com.cheep.R;
 import com.cheep.adapter.TaskCreationPagerAdapter;
 import com.cheep.databinding.ActivityTaskCreateBinding;
-import com.cheep.databinding.DialogFragmentTaskCreationBinding;
+import com.cheep.dialogs.AcknowledgementDialog;
 import com.cheep.firebase.FirebaseHelper;
 import com.cheep.firebase.FirebaseUtils;
 import com.cheep.firebase.model.ChatTaskModel;
@@ -52,7 +47,6 @@ import java.util.Map;
 /**
  * Created by bhavesh on 26/4/17.
  */
-
 public class TaskCreationActivity extends BaseAppCompatActivity {
     private static final String TAG = "TaskCreationActivity";
     private ActivityTaskCreateBinding mActivityTaskCreateBinding;
@@ -530,69 +524,28 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
        /* mDialogFragmentTaskCreationBinding.textTaskCreationAcknowledgment
                 .setText(mDialogFragmentTaskCreationBinding.getRoot().getContext().getString(R.string.desc_task_creation_acknowledgement, mUserName));
         */
+        String message = mContext.getString(R.string.desc_task_creation_acknowledgement
+                , PreferenceUtility.getInstance(mContext).getUserDetails().UserName);
+        String title = mContext.getString(R.string.label_your_task_is_posted);
+        AcknowledgementDialog mAcknowledgementDialog = AcknowledgementDialog.newInstance(R.drawable.ic_bird_with_heart_illustration, title, message, new AcknowledgementDialog.AcknowledgementInteractionListener() {
 
-        TaskCompletionDialog mTaskCompletionDialog = TaskCompletionDialog.newInstance(PreferenceUtility.getInstance(mContext).getUserDetails().UserName);
-        mTaskCompletionDialog.show(getSupportFragmentManager(), TaskCompletionDialog.TAG);
+            @Override
+            public void onAcknowledgementAccepted() {
+                // Finish the current activity
+                finish();
+
+                //Sending Broadcast to the HomeScreen Screen.
+                Intent intent = new Intent(Utility.BR_ON_TASK_CREATED);
+                sendBroadcast(intent);
+            }
+        });
+        mAcknowledgementDialog.show(getSupportFragmentManager(), AcknowledgementDialog.TAG);
     }
 
 
     /**
-     * Create Dialog which would going to show on successfull completion
+     * Create Dialog which would going to show on successful completion
      */
-    public static class TaskCompletionDialog extends DialogFragment {
-        private static final String TAG = "TaskCompletionDialog";
-        private String mUserName = Utility.EMPTY_STRING;
-        private DialogFragmentTaskCreationBinding mDialogFragmentTaskCreationBinding;
-
-        /**
-         * Create a new instance of MyDialogFragment, providing "num"
-         * as an argument.
-         */
-        static TaskCompletionDialog newInstance(String userName) {
-            TaskCompletionDialog f = new TaskCompletionDialog();
-
-            // Supply num input as an argument.
-            Bundle args = new Bundle();
-            args.putString(NetworkUtility.TAGS.USERNAME, userName);
-            f.setArguments(args);
-            return f;
-        }
-
-        @Override
-        public void onCreate(@Nullable Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-
-            mUserName = getArguments().getString(NetworkUtility.TAGS.USERNAME);
-        }
-
-        @Nullable
-        @Override
-        public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-            // Set Window Background as Transparent.
-            getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-
-            mDialogFragmentTaskCreationBinding = DataBindingUtil.inflate(inflater, R.layout.dialog_fragment_task_creation, container, false);
-            // Update the name of User
-            mDialogFragmentTaskCreationBinding.textTaskCreationAcknowledgment
-                    .setText(mDialogFragmentTaskCreationBinding.getRoot().getContext().getString(R.string.desc_task_creation_acknowledgement, mUserName));
-
-            // Click event of Okay button
-            mDialogFragmentTaskCreationBinding.textOkay.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    dismiss();
-
-                    // Finish the current activity
-                    getActivity().finish();
-
-                    //Sending Broadcast to the HomeScreen Screen.
-                    Intent intent = new Intent(Utility.BR_ON_TASK_CREATED);
-                    getActivity().sendBroadcast(intent);
-                }
-            });
-            return mDialogFragmentTaskCreationBinding.getRoot();
-        }
-    }
 
 
     Response.ErrorListener mCallCreateTaskWSErrorListener = new Response.ErrorListener() {

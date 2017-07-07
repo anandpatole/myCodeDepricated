@@ -255,7 +255,14 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
             holder.tvOffer.setVisibility(View.GONE);
         }
 
-        if (Utility.SEND_TASK_DETAIL_REQUESTED_STATUS.ALREADY_REQUESTED.equalsIgnoreCase(provider.request_detail_status)) {
+        /**
+         * TODO: If in case in future, need to enable Chat call feature we just need to comment below portion
+         */
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////// Managing Chat Call Icons[Start] ////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////////////////////
+
+        /*if (Utility.SEND_TASK_DETAIL_REQUESTED_STATUS.ALREADY_REQUESTED.equalsIgnoreCase(provider.request_detail_status)) {
             holder.imgChat.setVisibility(View.VISIBLE);
             //chat icon
             Glide.with(mContext)
@@ -268,7 +275,12 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
             Glide.with(mContext)
                     .load(R.drawable.icon_chat_smaller)
                     .into(holder.imgChat);
-        }
+        }*/
+
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////// Managing Chat Call Icons[END] ///////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////////////////////
+
 
         //time-distance
         boolean hasDistance = provider.distance != null && (provider.distance = provider.distance.trim()).length() > 0;
@@ -326,7 +338,15 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
         //favorite
         holder.ivFavoriteQuote.setSelected(provider.isFavourite.equals(Utility.BOOLEAN.YES));
 
-        // Chat Image click event
+
+        /**
+         * TODO: If in case in future, need to enable Chat call feature we just need to comment below portion
+         */
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////// Managing Chat Call Icons[Start] ////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////////////////////
+
+        /*// Chat Image click event
         holder.imgChat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -365,7 +385,11 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
             public void onCancelled(DatabaseError databaseError) {
 
             }
-        });
+        });*/
+
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////// Managing Chat Call Icons[END] ////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////////////////////
     }
 
     private String checkNonNullAndSet(String text) {
@@ -467,10 +491,10 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
         private ImageView ivHomeAnimated;
         private ImageView ivFavoriteQuote;
         private RatingBar ratingBar;
-        private ImageView imgCall;
-        private ImageView imgChat;
+        //        private ImageView imgCall;
+//        private ImageView imgChat;
         private List<AnimatorSet> animators;
-        private TextView mTvUnreadChatCount;
+//        private TextView mTvUnreadChatCount;
 
 
         public void addAnimator(AnimatorSet animator) {
@@ -515,9 +539,9 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
             ivHomeAnimated = (ImageView) itemView.findViewById(R.id.ivHomeAnimated);
             ivFavoriteQuote = (ImageView) itemView.findViewById(R.id.ivFavoriteQuote);
             ratingBar = (RatingBar) itemView.findViewById(R.id.rating_bar);
-            imgCall = (ImageView) itemView.findViewById(R.id.img_call);
-            imgChat = (ImageView) itemView.findViewById(R.id.img_chat);
-            mTvUnreadChatCount = (TextView) itemView.findViewById(R.id.tv_chat_unread_count);
+//            imgCall = (ImageView) itemView.findViewById(R.id.img_call);
+//            imgChat = (ImageView) itemView.findViewById(R.id.img_chat);
+//            mTvUnreadChatCount = (TextView) itemView.findViewById(R.id.tv_chat_unread_count);
 
         }
     }

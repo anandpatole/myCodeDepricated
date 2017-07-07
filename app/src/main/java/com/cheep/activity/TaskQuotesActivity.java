@@ -33,7 +33,6 @@ import com.cheep.custom_view.BottomAlertDialog;
 import com.cheep.custom_view.DividerItemDecoration;
 import com.cheep.custom_view.GridImageView;
 import com.cheep.databinding.DialogFilterBinding;
-import com.cheep.databinding.DialogFragmentTaskCreationBinding;
 import com.cheep.firebase.FirebaseUtils;
 import com.cheep.firebase.model.TaskChatModel;
 import com.cheep.model.MessageEvent;
@@ -792,61 +791,6 @@ public class TaskQuotesActivity extends BaseAppCompatActivity implements TaskQuo
         dialog.setTitle(mContext.getString(R.string.app_name).toUpperCase());
         dialog.setMessage(acknowledgeMessage);
         dialog.show();
-    }
-
-
-    /**
-     * Create Dialog which would going to show on successfull completion
-     */
-    public static class DialogOnRequestForDetailAccepted extends DialogFragment {
-        private static final String TAG = "DialogOnRequestForDetailAccepted";
-        private String mDescription = Utility.EMPTY_STRING;
-        private DialogFragmentTaskCreationBinding mDialogFragmentTaskCreationBinding;
-
-        /**
-         * Create a new instance of MyDialogFragment, providing "num"
-         * as an argument.
-         */
-        static DialogOnRequestForDetailAccepted newInstance(String desc) {
-            DialogOnRequestForDetailAccepted f = new DialogOnRequestForDetailAccepted();
-
-            // Supply num input as an argument.
-            Bundle args = new Bundle();
-            args.putString(NetworkUtility.TAGS.DESCRIPTION, desc);
-            f.setArguments(args);
-            return f;
-        }
-
-        @Override
-        public void onCreate(@Nullable Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-
-            mDescription = getArguments().getString(NetworkUtility.TAGS.DESCRIPTION);
-        }
-
-        @Nullable
-        @Override
-        public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-            // Set Window Background as Transparent.
-            getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-
-            mDialogFragmentTaskCreationBinding = DataBindingUtil.inflate(inflater, R.layout.dialog_fragment_task_creation, container, false);
-
-            // Hide the title as its not required here.
-            mDialogFragmentTaskCreationBinding.title.setText(getString(R.string.label_congratulation));
-
-            // Update the description
-            mDialogFragmentTaskCreationBinding.textTaskCreationAcknowledgment.setText(mDescription);
-
-            // Click event of Okay button
-            mDialogFragmentTaskCreationBinding.textOkay.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    dismiss();
-                }
-            });
-            return mDialogFragmentTaskCreationBinding.getRoot();
-        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

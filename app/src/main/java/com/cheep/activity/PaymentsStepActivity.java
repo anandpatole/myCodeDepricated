@@ -25,6 +25,7 @@ import com.cheep.BuildConfig;
 import com.cheep.R;
 import com.cheep.custom_view.BottomAlertDialog;
 import com.cheep.databinding.ActivityPaymentDetailBinding;
+import com.cheep.dialogs.AcknowledgementDialog;
 import com.cheep.firebase.FirebaseHelper;
 import com.cheep.firebase.FirebaseUtils;
 import com.cheep.firebase.model.TaskChatModel;
@@ -36,6 +37,7 @@ import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
 import com.cheep.utils.PreferenceUtility;
+import com.cheep.utils.SuperCalendar;
 import com.cheep.utils.Utility;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -346,7 +348,7 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
 
     private void showCheepCodeDialog() {
 
-        View view = View.inflate(mContext,R.layout.dialog_add_promocode, null);
+        View view = View.inflate(mContext, R.layout.dialog_add_promocode, null);
         edtCheepcode = (EditText) view.findViewById(R.id.edit_cheepcode);
         cheepCodeDialog = new BottomAlertDialog(mContext);
         view.findViewById(R.id.btn_apply).setOnClickListener(new View.OnClickListener() {
@@ -842,8 +844,27 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
                             messageEvent.id = taskDetailModel.taskId;
                             EventBus.getDefault().post(messageEvent);
 
-                            // Finish the activity
-                            finish();
+                            /**
+                             *  @Changes : 7th July, 2017 :- Bhavesh Patadiya
+                             *  Need to show Model Dialog once Payment has been made successfull. Once
+                             *  User clicks on OK. we will finish of the activity.
+                             */
+                            String title = mContext.getString(R.string.label_great_choice_x, PreferenceUtility.getInstance(mContext).getUserDetails().UserName);
+                            final SuperCalendar superStartDateTimeCalendar = SuperCalendar.getInstance();
+                            superStartDateTimeCalendar.setTimeZone(SuperCalendar.SuperTimeZone.GMT.GMT);
+                            superStartDateTimeCalendar.setTimeInMillis(Long.parseLong(taskDetailModel.taskStartdate));
+                            superStartDateTimeCalendar.setLocaleTimeZone();
+                            final String message = mContext.getString(R.string.desc_task_payment_done_acknowledgement
+                                    , taskDetailModel.selectedProvider.userName, superStartDateTimeCalendar.format(Utility.DATE_FORMAT_DD_MMM_HH_MM_AM));
+                            AcknowledgementDialog mAcknowledgementDialog = AcknowledgementDialog.newInstance(R.drawable.ic_acknowledgement_dialog_header_background, title, message, new AcknowledgementDialog.AcknowledgementInteractionListener() {
+
+                                @Override
+                                public void onAcknowledgementAccepted() {
+                                    // Finish the activity
+                                    finish();
+                                }
+                            });
+                            mAcknowledgementDialog.show(getSupportFragmentManager(), AcknowledgementDialog.TAG);
 
                         } else if (Utility.TASK_STATUS.PROCESSING.equalsIgnoreCase(taskStatus)) {
                             //We are commenting it because from here we are intiating a payment flow and after that we need to call update payment status on server

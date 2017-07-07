@@ -114,6 +114,7 @@ public class NetworkUtility {
         public static final String LANGUAGE = "language";
 
         public static final String USERNAME = "user_name";
+        public static final String TITLE = "title";
         public static final String DESCRIPTION = "description";
         public static final String PHONE_NUMBER = "phone_number";
         public static final String FB_APP_ID = "fb_app_id"; // if Login with "fb"
@@ -234,6 +235,7 @@ public class NetworkUtility {
         }
 
         public static final String MESSAGE = "message";
+        public static final String RESOURCE_ID = "resourceid";
         public static final String VERSION_DESC = "version_desc";
 
         public static final String OTP_CODE = "otp_code";

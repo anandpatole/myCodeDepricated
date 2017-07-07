@@ -163,7 +163,7 @@ public class ChatActivity extends BaseAppCompatActivity implements View.OnClickL
         // By Default its YES, so message would be EMPTY STRING.
         enableChatAccess(mCurrentChatStatus, Utility.EMPTY_STRING);
 
-        checkTaskStatus(FirebaseUtils.removePrefixTaskId(taskChatModel.taskId), FirebaseUtils.removePrefixSpId(taskChatModel.receiverId));
+        checkTaskStatus(FirebaseUtils.removePrefixTaskId(taskChatModel.taskId), FirebaseUtils.removePrefixSpId(formattedReceiverId));
     }
 
     @Override

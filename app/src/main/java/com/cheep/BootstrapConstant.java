@@ -16,8 +16,8 @@ public class BootstrapConstant {
     Expiry Date : 05/22
     CVV : 245
     */
-//    public static final String CC_DETAILS = "5289455000214756";
     public static final String CC_DETAILS = "5123456789012346";
+    //    public static final String CC_DETAILS = "5289455000214756";
 
 
    /* public static final ArrayList<TaskChatModel> DUMMY_TASK_CHAT_LIST;

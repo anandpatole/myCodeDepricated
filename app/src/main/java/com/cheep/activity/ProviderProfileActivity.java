@@ -171,7 +171,6 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
                 callReviewList(providerModel.providerId);
             }
         }
-
     }
 
     public void setData() {
@@ -222,22 +221,13 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
             }
         });
 
-        /*mActivityProviderProfileBinding.textContactRequest.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (providerModel != null) {
-                    showDetailRequestDialog(providerModel);
-                }
-            }
-        });
-*/
+
         mActivityProviderProfileBinding.layoutPay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 PaymentsStepActivity.newInstance(mContext, taskDetailModel, providerModel, 0);
             }
         });
-//        mActivityProviderProfileBinding.textContactRequest.setVisibility(View.GONE);
 
         // Checking if amount present then show call and paid lables else hide
         if (providerModel.getQuotePriceInInteger() > 0) {
@@ -248,38 +238,23 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
             mActivityProviderProfileBinding.layoutPay.setVisibility(View.GONE);
         }
 
-        // Check Task Detail Requested status and make the changes accordingly.
-        /*if (Utility.SEND_TASK_DETAIL_REQUESTED_STATUS.INITIAL.equalsIgnoreCase(providerModel.request_detail_status)) {
-        } else if (Utility.SEND_TASK_DETAIL_REQUESTED_STATUS.ALREADY_REQUESTED.equalsIgnoreCase(providerModel.request_detail_status)) {
-            if (getIntent().hasExtra(Utility.Extra.PROFILE_FROM_FAVOURITE) == false) {
-                mActivityProviderProfileBinding.textContactRequest.setVisibility(View.VISIBLE);
-            }
-        } else if (Utility.SEND_TASK_DETAIL_REQUESTED_STATUS.ACCEPTED.equalsIgnoreCase(providerModel.request_detail_status)) {
 
-        }*/
-
-//        mActivityProviderProfileBinding.textAction.setVisibility(View.GONE);
-//        mActivityProviderProfileBinding.textChat.setVisibility(View.GONE);
-        mActivityProviderProfileBinding.lnCall.setOnClickListener(new View.OnClickListener() {
+        /**
+         * TODO: If in case in future, need to enable Chat call feature we just need to comment below portion
+         */
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////// Managing Chat Call Icons[Start] ////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        /*mActivityProviderProfileBinding.lnCall.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (providerModel != null && !TextUtils.isEmpty(providerModel.providerId) && taskDetailModel != null) {
                     if (providerModel.request_detail_status.equalsIgnoreCase(Utility.SEND_TASK_DETAIL_REQUESTED_STATUS.ACCEPTED)) {
-//                        callToOtherUser(mActivityProviderProfileBinding.getRoot(), providerModel.providerId);
                         Utility.openCustomerCareCallDialer(mContext, providerModel.sp_phone_number);
                         return;
                     }
                     callTaskDetailRequestAcceptWS(Utility.ACTION_CALL, taskDetailModel.taskId, providerModel);
                 }
-
-//                if (providerModel != null && !TextUtils.isEmpty(providerModel.providerId) && taskDetailModel != null) {
-//                    if (providerModel.request_detail_status.equalsIgnoreCase(Utility.SEND_TASK_DETAIL_REQUESTED_STATUS.ACCEPTED)) {
-////                        callToOtherUser(mActivityProviderProfileBinding.getRoot(), providerModel.providerId);
-//                        Utility.openCustomerCareCallDialer(mContext, providerModel.sp_phone_number);
-//                        return;
-//                    }
-//                    callTaskDetailRequestAcceptWS(Utility.ACTION_CALL, taskDetailModel.taskId, providerModel);
-//                }
             }
         });
         mActivityProviderProfileBinding.lnChat.setOnClickListener(new View.OnClickListener() {
@@ -304,29 +279,30 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
                         callTaskDetailRequestAcceptWS(Utility.ACTION_CHAT, taskDetailModel.taskId, providerModel);
                     }
                 }
-
-//                if (providerModel != null && taskDetailModel != null) {
-//                    if (providerModel.request_detail_status.equalsIgnoreCase(Utility.SEND_TASK_DETAIL_REQUESTED_STATUS.ACCEPTED)) {
-//                        TaskChatModel taskChatModel = new TaskChatModel();
-//                        taskChatModel.categoryName = taskDetailModel.categoryName;
-//                        taskChatModel.taskDesc = taskDetailModel.taskDesc;
-//                        taskChatModel.taskId = taskDetailModel.taskId;
-//                        taskChatModel.receiverId = FirebaseUtils.getPrefixSPId(providerModel.providerId);
-//                        taskChatModel.participantName = providerModel.userName;
-//                        taskChatModel.participantPhotoUrl = providerModel.profileUrl;
-//                        ChatActivity.newInstance(ProviderProfileActivity.this, taskChatModel);
-//                        return;
-//                    }
-//                    callTaskDetailRequestAcceptWS(Utility.ACTION_CHAT, taskDetailModel.taskId, providerModel);
-//                }
             }
         });
-        initSwipeToRefreshLayout();
+
+        // Update the UI
+        updateChatUIBasedOnCurrentRequestStatus();
+
+        // Set Listner for Unread Counter
+        manageUnreadBadgeCounterForChat();
+
+        */
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////// Managing Chat Call Icons[End] ///////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////////////////////
+
         if (getIntent().hasExtra(Utility.Extra.PROFILE_FROM_FAVOURITE) == true) {
-            mActivityProviderProfileBinding.lnCall.setVisibility(View.GONE);
-            mActivityProviderProfileBinding.lnChat.setVisibility(View.GONE);
+
+
+//            TODO: If in case in future, need to enable Chat call feature we just need to comment
+//            TODO: below portion
+            /*mActivityProviderProfileBinding.lnCall.setVisibility(View.GONE);
+            mActivityProviderProfileBinding.lnChat.setVisibility(View.GONE);*/
+
+
             mActivityProviderProfileBinding.textCategory.setVisibility(View.GONE);
-//            mActivityProviderProfileBinding.textContactRequest.setVisibility(View.GONE);
             mActivityProviderProfileBinding.layoutPay.setVisibility(View.GONE);
         }
 
@@ -334,14 +310,18 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
             EventBus.getDefault().register(this);
 
 
-        // Update the UI
-        updateChatUIBasedOnCurrentRequestStatus();
+        initSwipeToRefreshLayout();
 
-        // Set Listner for Unread Counter
-        manageUnreadBadgeCounterForChat();
+
     }
 
-    private void manageUnreadBadgeCounterForChat() {
+    /**
+     * TODO: If in case in future, need to enable Chat call feature we just need to comment below portion
+     */
+    ////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////// Managing Chat Call Icons[Start] ////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////
+    /*private void manageUnreadBadgeCounterForChat() {
         // Read task chat unread count from firebase
         String t_sp_u_formattedId = FirebaseUtils.get_T_SP_U_FormattedId(taskDetailModel.taskId, providerModel.providerId, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
         FirebaseHelper.getTaskChatRef(FirebaseUtils.getPrefixTaskId(taskDetailModel.taskId)).child(t_sp_u_formattedId).child(FirebaseHelper.KEY_UNREADCOUNT).addValueEventListener(new ValueEventListener() {
@@ -367,6 +347,32 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
             }
         });
     }
+
+    public void updateChatUIBasedOnCurrentRequestStatus() {
+        Log.d(TAG, "updateChatUIBasedOnCurrentRequestStatus() called");
+        if (providerModel == null) {
+            return;
+        }
+        if (Utility.SEND_TASK_DETAIL_REQUESTED_STATUS.ALREADY_REQUESTED.equalsIgnoreCase(providerModel.request_detail_status)) {
+            //chat icon
+            Glide.with(mContext)
+                    .load(R.drawable.ic_chat_requested_animation_with_counter)
+                    .asGif()
+                    .dontAnimate()
+                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                    .into(mActivityProviderProfileBinding.imgChat);
+        } else {
+            Glide.with(mContext)
+                    .load(R.drawable.icon_chat_smaller)
+                    .into(mActivityProviderProfileBinding.imgChat);
+        }
+    }
+
+    */
+    ////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////// Managing Chat Call Icons[End] ///////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////
+
 
     private BottomAlertDialog dialogDesc;
     private TextView txtMessage;
@@ -1157,7 +1163,7 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
                         String requestDatailStatus = jObjData.getString(NetworkUtility.TAGS.REQUEST_DETAIL_STATUS);
                         if (requestDatailStatus.equalsIgnoreCase(Utility.SEND_TASK_DETAIL_REQUESTED_STATUS.ACCEPTED)) {
                             providerModel.request_detail_status = requestDatailStatus;
-                            updateChatUIBasedOnCurrentRequestStatus();
+
                             String descriptionForAcknowledgement = mContext.getString(R.string.desc_request_for_detail_accepted_acknowledgment, spUserName);
                             showDialogOnRequestForDetailAccepted(descriptionForAcknowledgement);
 
@@ -1169,9 +1175,12 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
                             messageEvent.quoted_sp_image_url = quoted_sp_image_url;
                             messageEvent.request_detail_status = requestDatailStatus;
                             EventBus.getDefault().post(messageEvent);
+
+                            //TODO: If in case in future, need to enable Chat call feature we just need to comment below portion
+                            //updateChatUIBasedOnCurrentRequestStatus();
+
                         } else {
                             providerModel.request_detail_status = requestDatailStatus;
-                            updateChatUIBasedOnCurrentRequestStatus();
 
                             // Need to pass this details to Pending listing as well.
                             MessageEvent messageEvent = new MessageEvent();
@@ -1181,6 +1190,9 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
                             messageEvent.quoted_sp_image_url = quoted_sp_image_url;
                             messageEvent.request_detail_status = requestDatailStatus;
                             EventBus.getDefault().post(messageEvent);
+
+                            //TODO: If in case in future, need to enable Chat call feature we just need to comment below portion
+                            //updateChatUIBasedOnCurrentRequestStatus();
 
                             /*// Update recycler view
                             spRecyclerViewAdapter.removeModelForRequestDetailStatus(spUserID, requestDatailStatus);
@@ -1410,23 +1422,5 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
         }
     };
 
-    public void updateChatUIBasedOnCurrentRequestStatus() {
-        Log.d(TAG, "updateChatUIBasedOnCurrentRequestStatus() called");
-        if (providerModel == null) {
-            return;
-        }
-        if (Utility.SEND_TASK_DETAIL_REQUESTED_STATUS.ALREADY_REQUESTED.equalsIgnoreCase(providerModel.request_detail_status)) {
-            //chat icon
-            Glide.with(mContext)
-                    .load(R.drawable.ic_chat_requested_animation_with_counter)
-                    .asGif()
-                    .dontAnimate()
-                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                    .into(mActivityProviderProfileBinding.imgChat);
-        } else {
-            Glide.with(mContext)
-                    .load(R.drawable.icon_chat_smaller)
-                    .into(mActivityProviderProfileBinding.imgChat);
-        }
-    }
+
 }
