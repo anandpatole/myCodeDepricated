@@ -112,7 +112,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_cancel_problem_service_provider">I accidentally booked the task.</string>
     <string name="label_cancel_other_reason">None of the reasons above? Please enter details in the box below.</string>
     <string name="label_crop_image">Crop</string>
-    <string name="label_reschedule_inform">%1$s has been informed about reschedule time.</string>
+    <string name="label_reschedule_inform">%1$s has been informed about rescheduled time.</string>
     <string name="label_Ok">@android:string/ok</string>
     <string name="label_Ok_small" tools:ignore="Typos">Ok</string>
     <string name="label_write_a_review">Please share with other users what you think of %1$s!</string><!--Please share with other users what you think of Laxman!-->
@@ -353,8 +353,8 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_response">%1$s Responses \nReceived</string>
     <string name="label_responses_received">Responses\nReceived</string>
     <string name="label_cheepest_strip">Yay! Book the Cheepest PRO now!</string>
-    <string name="label_highest_rated_strip">Book the most highly rated PRO in your neighbourhood</string>
-
+    <!--<string name="label_highest_rated_strip">Book the most highly rated PRO in your neighbourhood</string>-->
+    <string name="label_highest_rated_strip">Book the most highly experienced PRO in your neighbourhood</string>
 
     <string name="label_pro_fee">PRO\'s Fees</string>
     <string name="label_additional_charges">Additional Charges</string>

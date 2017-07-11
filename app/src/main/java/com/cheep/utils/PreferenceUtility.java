@@ -1,5 +1,6 @@
 package com.cheep.utils;
 
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
@@ -9,6 +10,8 @@ import com.cheep.model.UserDetails;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import static com.facebook.FacebookSdk.getApplicationContext;
 
 /**
  * Created by bhavesh on 13/10/16.
@@ -115,12 +118,17 @@ public class PreferenceUtility {
         //updating hotline profile
         HotlineHelper.getInstance(context).clearUser(context);
 
+        // Clear All notification if raised
+        NotificationManager notificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.cancelAll();
+
         mUserDetails = null;
         mSharedPreferences.edit().remove(PREF_USER_INFO).apply();
         mSharedPreferences.edit().remove(PREF_X_API_KEY).apply();
+
+        // Clear Unread otification counter
         mSharedPreferences.edit().remove(PREF_NOTIFICATION_COUNTER).apply();
     }
-
 
     //For Notification Counter
     public void incrementUnreadNotificationCounter() {

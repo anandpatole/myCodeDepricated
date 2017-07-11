@@ -130,6 +130,8 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
         mActivityTaskSummaryBinding.lnTaskRescheduleRejected.setVisibility(View.GONE);
         mActivityTaskSummaryBinding.lnTaskAdditionalQuoteRequested.setVisibility(View.GONE);
 
+        //Bydefault show the chat call icons
+        showChatCallButton(true);
 
         // Hide Bottom Action Button
         mActivityTaskSummaryBinding.textBottomAction.setVisibility(View.GONE);
@@ -268,6 +270,9 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
         } else if (Utility.TASK_STATUS.COMPLETION_CONFIRM.equalsIgnoreCase(mTaskDetailModel.taskStatus)) {
             mActivityTaskSummaryBinding.textTaskStatusTop.setText(getString(R.string.label_task_complete));
 
+            // No need to hide ChatCall Button Now.
+            showChatCallButton(false);
+
             // Check if Rating is done or not
             if (Utility.BOOLEAN.YES.equalsIgnoreCase(mTaskDetailModel.ratingDone)) {
                 // Rating Section
@@ -303,6 +308,9 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
             if (!TextUtils.isEmpty(mTaskDetailModel.taskCancelReason)) {
                 mActivityTaskSummaryBinding.textTaskCancellationReason.setText(mTaskDetailModel.taskCancelReason);
             }
+
+            // No need to hide ChatCall Button Now.
+            showChatCallButton(false);
         } else if (Utility.TASK_STATUS.CANCELLED_SP.equalsIgnoreCase(mTaskDetailModel.taskStatus)) {
 //            mActivityTaskSummaryBinding.textTaskStatusTop.setText(getString(R.string.task_was_cancelled_by_x, mTaskDetailModel.selectedProvider.userName));
             mActivityTaskSummaryBinding.textTaskStatusTop.setText(getString(R.string.msg_task_cancelled_title));
@@ -312,6 +320,9 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
             if (!TextUtils.isEmpty(mTaskDetailModel.taskCancelReason)) {
                 mActivityTaskSummaryBinding.textTaskCancellationReason.setText(mTaskDetailModel.taskCancelReason);
             }
+
+            // No need to hide ChatCall Button Now.
+            showChatCallButton(false);
         }
         // reschedule task status
         else if (Utility.TASK_STATUS.RESCHEDULE_REQUESTED.equalsIgnoreCase(mTaskDetailModel.taskStatus)) {
@@ -355,6 +366,8 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
                 }
             });
 
+            // No need to hide ChatCall Button Now.
+            showChatCallButton(false);
         }
         //Task's Additional Payment Request comes
         else if (Utility.TASK_STATUS.ADDITIONAL_PAYMENT_REQUESTED.equalsIgnoreCase(mTaskDetailModel.taskStatus)) {
@@ -370,10 +383,8 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
                 public void onClick(View v) {
                     Log.i(TAG, "onClick: Accept Additional Payment");
 
-//                    TODO: This is pending
                     // First Call Asynctask that would going to check whether current status of Progressing or not.
                     callCheckingTaskStatus();
-//                    payNow(true);
 
 
                 }
@@ -387,7 +398,19 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
                 }
             });
         }
+    }
 
+    /**
+     * This would make the Chat Call Visible/Invisible
+     *
+     * @param flag
+     */
+    private void showChatCallButton(boolean flag) {
+        if (flag) {
+            mActivityTaskSummaryBinding.lnChatCall.setVisibility(View.VISIBLE);
+        } else {
+            mActivityTaskSummaryBinding.lnChatCall.setVisibility(View.GONE);
+        }
     }
 
     private void showTaskCompletionDialog(boolean flag) {
@@ -878,8 +901,11 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
         mParams.put(NetworkUtility.TAGS.SP_USER_ID, mTaskDetailModel.selectedProvider.providerId);
         mParams.put(NetworkUtility.TAGS.TASK_ID, mTaskDetailModel.taskId);
         mParams.put(NetworkUtility.TAGS.RATINGS, String.valueOf(rating));
-        if (!TextUtils.isEmpty(message))
+        if (!TextUtils.isEmpty(message)) {
             mParams.put(NetworkUtility.TAGS.MESSAGE, message);
+        } else {
+            mParams.put(NetworkUtility.TAGS.MESSAGE, Utility.EMPTY_STRING);
+        }
 
         VolleyNetworkRequest mVolleyNetworkRequest = new VolleyNetworkRequest(NetworkUtility.WS.ADD_REVIEW
                 , mCallAddReviewWSErrorListener

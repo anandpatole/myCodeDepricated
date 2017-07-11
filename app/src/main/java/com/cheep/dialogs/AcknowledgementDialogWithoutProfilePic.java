@@ -1,6 +1,5 @@
 package com.cheep.dialogs;
 
-import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -12,22 +11,22 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.cheep.R;
-import com.cheep.databinding.DialogFragmentAcknowledgementBinding;
+import com.cheep.databinding.DialogFragmentAcknowledgementWithoutProfilePicBinding;
 import com.cheep.network.NetworkUtility;
 import com.cheep.utils.Utility;
 
-public class AcknowledgementDialog extends DialogFragment {
-    public static final String TAG = "AcknowledgementDialog";
+public class AcknowledgementDialogWithoutProfilePic extends DialogFragment {
+    public static final String TAG = "AcknowledgementDialogWithoutProfilePic";
     private String mTitle = Utility.EMPTY_STRING;
     private String mMessage = Utility.EMPTY_STRING;
     private int imgResourceIdOfHeader = -1;
-    private DialogFragmentAcknowledgementBinding mDialogFragmentAcknowledgementBinding;
+    private DialogFragmentAcknowledgementWithoutProfilePicBinding mDialogFragmentAcknowledgementBinding;
     private AcknowledgementInteractionListener mListener;
 
     /*
     Empty Constructor
      */
-    public AcknowledgementDialog() {
+    public AcknowledgementDialogWithoutProfilePic() {
 
     }
 
@@ -35,8 +34,8 @@ public class AcknowledgementDialog extends DialogFragment {
      * Create a new instance of MyDialogFragment, providing "num"
      * as an argument.
      */
-    public static AcknowledgementDialog newInstance(int imgResourceIdOfHeader, String title, String message, AcknowledgementInteractionListener listener) {
-        AcknowledgementDialog f = new AcknowledgementDialog();
+    public static AcknowledgementDialogWithoutProfilePic newInstance(int imgResourceIdOfHeader, String title, String message, AcknowledgementInteractionListener listener) {
+        AcknowledgementDialogWithoutProfilePic f = new AcknowledgementDialogWithoutProfilePic();
         f.setListener(listener);
         // Supply num input as an argument.
         Bundle args = new Bundle();
@@ -44,7 +43,6 @@ public class AcknowledgementDialog extends DialogFragment {
         args.putString(NetworkUtility.TAGS.MESSAGE, message);
         args.putInt(NetworkUtility.TAGS.RESOURCE_ID, imgResourceIdOfHeader);
         f.setArguments(args);
-
         return f;
     }
 
@@ -74,9 +72,9 @@ public class AcknowledgementDialog extends DialogFragment {
             getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         }
 
-        mDialogFragmentAcknowledgementBinding = DataBindingUtil.inflate(inflater, R.layout.dialog_fragment_acknowledgement, container, false);
+        mDialogFragmentAcknowledgementBinding = DataBindingUtil.inflate(inflater, R.layout.dialog_fragment_acknowledgement_without_profile_pic, container, false);
 
-        //Set Image
+        //Set Header Image
         mDialogFragmentAcknowledgementBinding.imgHeader.setImageResource(imgResourceIdOfHeader);
 
         // Set title
@@ -99,7 +97,4 @@ public class AcknowledgementDialog extends DialogFragment {
         return mDialogFragmentAcknowledgementBinding.getRoot();
     }
 
-    public interface AcknowledgementInteractionListener {
-        void onAcknowledgementAccepted();
-    }
 }

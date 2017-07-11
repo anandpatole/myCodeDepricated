@@ -1,5 +1,6 @@
 package com.cheep.network;
 
+
 import android.util.Log;
 
 import com.android.volley.AuthFailureError;
@@ -8,11 +9,8 @@ import com.android.volley.NetworkResponse;
 import com.android.volley.ParseError;
 import com.android.volley.Request;
 import com.android.volley.Response;
-import com.android.volley.Response.ErrorListener;
-import com.android.volley.Response.Listener;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.HttpHeaderParser;
-import com.google.firebase.crash.FirebaseCrash;
 import com.google.gson.JsonSyntaxException;
 
 import org.apache.http.entity.ContentType;
@@ -26,7 +24,6 @@ import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
-
 
 public class VolleyNetworkRequest<T> extends Request<T> {
 
@@ -42,8 +39,8 @@ public class VolleyNetworkRequest<T> extends Request<T> {
 
     //Constructor
     public VolleyNetworkRequest(String url,
-                                ErrorListener errorListener,
-                                Listener<T> listener,
+                                Response.ErrorListener errorListener,
+                                Response.Listener<T> listener,
                                 Map<String, String> headers,
                                 Map<String, Object> stringData,
                                 HashMap<String, File> fileParam) {
@@ -53,7 +50,7 @@ public class VolleyNetworkRequest<T> extends Request<T> {
                 DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         mListener = listener;
         this.stringData = stringData;
-        mFilePart = fileParam;
+        this.mFilePart = fileParam;
         this.headers = headers;
         buildMultipartEntity();
     }
@@ -69,7 +66,6 @@ public class VolleyNetworkRequest<T> extends Request<T> {
     /**
      * mFilePart and FILE_PART_NAME size must be equal else it will throw error
      */
-
     private void buildMultipartEntity() {
         if (null != mFilePart) {
             for (Map.Entry<String, File> entry : mFilePart.entrySet()) {
@@ -108,9 +104,9 @@ public class VolleyNetworkRequest<T> extends Request<T> {
         try {
             mBuilder.build().writeTo(bos);
         } catch (IOException e) {
-            FirebaseCrash.report(e);
-            e.printStackTrace();
+            // FirebaseCrash.report(e);
             VolleyLog.e("IOException writing to ByteArrayOutputStream bos, building the multipart request.");
+            e.printStackTrace();
         }
         return bos.toByteArray();
     }

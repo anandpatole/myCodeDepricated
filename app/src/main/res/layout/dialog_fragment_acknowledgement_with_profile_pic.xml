@@ -1,30 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:tools="http://schemas.android.com/tools"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center">
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:layout_marginLeft="@dimen/scale_15dp"
+            android:layout_marginRight="@dimen/scale_15dp"
             android:orientation="vertical">
 
             <ImageView
                 android:id="@+id/img_header"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_bird_with_heart_illustration"
+                android:adjustViewBounds="true"
+                android:src="@drawable/ic_acknowledgement_dialog_header_background"
                 tools:ignore="ContentDescription" />
 
             <LinearLayout
+                android:id="@+id/ln_bottom_section"
                 android:layout_width="match_parent"
-                android:layout_height="160dp"
+                android:layout_height="210dp"
+                android:layout_below="@+id/img_header"
                 android:background="@drawable/rounded_bottom_part_only_fill_white_5x5"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:paddingTop="60dp">
 
                 <com.cheep.custom_view.CFTextViewSemiBold
                     android:id="@+id/title"
@@ -59,12 +65,22 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"
-                    android:gravity="bottom|center_horizontal"
-                    android:padding="@dimen/scale_8dp"
+                    android:gravity="center"
                     android:text="@string/label_Ok_small"
                     android:textColor="@color/splash_gradient_end" />
             </LinearLayout>
-        </LinearLayout>
+
+            <ImageView
+                android:id="@+id/imgProfilePic"
+                android:layout_width="@dimen/scale_100dp"
+                android:layout_height="@dimen/scale_100dp"
+                android:layout_below="@+id/img_header"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="-55dp"
+                android:src="@drawable/ic_cheep_circular_icon"
+                android:visibility="visible" />
+        </RelativeLayout>
     </FrameLayout>
 
 </layout>

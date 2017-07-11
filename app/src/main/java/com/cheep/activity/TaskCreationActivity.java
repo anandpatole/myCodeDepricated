@@ -20,7 +20,8 @@ import com.appsflyer.AppsFlyerLib;
 import com.cheep.R;
 import com.cheep.adapter.TaskCreationPagerAdapter;
 import com.cheep.databinding.ActivityTaskCreateBinding;
-import com.cheep.dialogs.AcknowledgementDialog;
+import com.cheep.dialogs.AcknowledgementDialogWithoutProfilePic;
+import com.cheep.dialogs.AcknowledgementInteractionListener;
 import com.cheep.firebase.FirebaseHelper;
 import com.cheep.firebase.FirebaseUtils;
 import com.cheep.firebase.model.ChatTaskModel;
@@ -527,7 +528,7 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
         String message = mContext.getString(R.string.desc_task_creation_acknowledgement
                 , PreferenceUtility.getInstance(mContext).getUserDetails().UserName);
         String title = mContext.getString(R.string.label_your_task_is_posted);
-        AcknowledgementDialog mAcknowledgementDialog = AcknowledgementDialog.newInstance(R.drawable.ic_bird_with_heart_illustration, title, message, new AcknowledgementDialog.AcknowledgementInteractionListener() {
+        AcknowledgementDialogWithoutProfilePic mAcknowledgementDialogWithoutProfilePic = AcknowledgementDialogWithoutProfilePic.newInstance(R.drawable.ic_bird_with_heart_illustration, title, message, new AcknowledgementInteractionListener() {
 
             @Override
             public void onAcknowledgementAccepted() {
@@ -539,7 +540,8 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
                 sendBroadcast(intent);
             }
         });
-        mAcknowledgementDialog.show(getSupportFragmentManager(), AcknowledgementDialog.TAG);
+        mAcknowledgementDialogWithoutProfilePic.setCancelable(false);
+        mAcknowledgementDialogWithoutProfilePic.show(getSupportFragmentManager(), AcknowledgementDialogWithoutProfilePic.TAG);
     }
 
 

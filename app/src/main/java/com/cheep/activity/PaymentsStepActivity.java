@@ -25,7 +25,9 @@ import com.cheep.BuildConfig;
 import com.cheep.R;
 import com.cheep.custom_view.BottomAlertDialog;
 import com.cheep.databinding.ActivityPaymentDetailBinding;
-import com.cheep.dialogs.AcknowledgementDialog;
+import com.cheep.dialogs.AcknowledgementDialogWithProfilePic;
+import com.cheep.dialogs.AcknowledgementDialogWithoutProfilePic;
+import com.cheep.dialogs.AcknowledgementInteractionListener;
 import com.cheep.firebase.FirebaseHelper;
 import com.cheep.firebase.FirebaseUtils;
 import com.cheep.firebase.model.TaskChatModel;
@@ -47,6 +49,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -203,7 +206,6 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
             }
         });
 
-
     }
 
     /**
@@ -336,8 +338,10 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
         public void onClick(View view) {
             setTaskState(STEP_THREE_VERIFIED);
             if (isAdditional == 0) {
+                // Go for regular payment gateway
                 payNow(false);
             } else {
+                // Go for regular payment gateway
                 payNow(true);
             }
         }
@@ -648,7 +652,6 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
         mParams.put("udf5", "");
         mParams.put("user_credentials", BuildConfig.PAYUBIZ_HDFC_KEY + ":" + userDetails.Email);
 
-
         return mParams;
     }
 
@@ -667,26 +670,42 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
                 switch (statusCode) {
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
 
-                        //TODO: Remove this when release and it is saving cc detail in clipboard only
-                        if ("debug".equalsIgnoreCase(BuildConfig.BUILD_TYPE)) {
-                            //Copy dummy creditcard detail in clipboard
-                            try {
-                                Utility.setClipboard(mContext, BootstrapConstant.CC_DETAILS);
-                            } catch (Exception e) {
-                                e.printStackTrace();
+
+                        /**
+                         * Changes @Bhavesh : 7thJuly,2017
+                         * In case we have to bypass the payment
+                         */
+                        if (BuildConfig.NEED_TO_BYPASS_PAYMENT) {
+//                            PLEASE NOTE: THIS IS JUST TO BYPPASS THE PAYMENT GATEWAY. THIS IS NOT
+//                            GOING TO RUN IN LIVE ENVIRONMENT BUILDS
+                            // Direct bypass the things
+                            if (jsonObject.getString(NetworkUtility.TAGS.IS_FOR_ADDITIONAL_QUOTE).equalsIgnoreCase(getString(R.string.label_yes))) {
+                                //Call update payment service from here with all the response come from service
+                                updatePaymentStatus(true, "Payment has been bypassed for development", true);
+                            } else {
+                                //Call update payment service from here with all the response come from service
+                                updatePaymentStatus(true, "Payment has been bypassed for development", false);
+                            }
+                        } else {
+                            //TODO: Remove this when release and it is saving cc detail in clipboard only
+                            if ("debug".equalsIgnoreCase(BuildConfig.BUILD_TYPE)) {
+                                //Copy dummy creditcard detail in clipboard
+                                try {
+                                    Utility.setClipboard(mContext, BootstrapConstant.CC_DETAILS);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                            Intent intent = new Intent(PaymentsStepActivity.this, PaymentsActivity.class);
+                            intent.putExtra("url", BuildConfig.PAYUBIZ_HDFC_URL);
+                            intent.putExtra("postData", postData.replaceAll("hash=", "hash=" + jsonObject.optString("hash_string")));
+
+                            if (jsonObject.getString(NetworkUtility.TAGS.IS_FOR_ADDITIONAL_QUOTE).equalsIgnoreCase(getString(R.string.label_yes))) {
+                                startActivityForResult(intent, Utility.ADDITIONAL_REQUEST_START_PAYMENT);
+                            } else {
+                                startActivityForResult(intent, Utility.REQUEST_START_PAYMENT);
                             }
                         }
-
-                        Intent intent = new Intent(PaymentsStepActivity.this, PaymentsActivity.class);
-                        intent.putExtra("url", BuildConfig.PAYUBIZ_HDFC_URL);
-                        intent.putExtra("postData", postData.replaceAll("hash=", "hash=" + jsonObject.optString("hash_string")));
-
-                        if (jsonObject.getString(NetworkUtility.TAGS.IS_FOR_ADDITIONAL_QUOTE).equalsIgnoreCase(getString(R.string.label_yes))) {
-                            startActivityForResult(intent, Utility.ADDITIONAL_REQUEST_START_PAYMENT);
-                        } else {
-                            startActivityForResult(intent, Utility.REQUEST_START_PAYMENT);
-                        }
-
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
                         // Show Toast
@@ -854,9 +873,10 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
                             superStartDateTimeCalendar.setTimeZone(SuperCalendar.SuperTimeZone.GMT.GMT);
                             superStartDateTimeCalendar.setTimeInMillis(Long.parseLong(taskDetailModel.taskStartdate));
                             superStartDateTimeCalendar.setLocaleTimeZone();
-                            final String message = mContext.getString(R.string.desc_task_payment_done_acknowledgement
-                                    , taskDetailModel.selectedProvider.userName, superStartDateTimeCalendar.format(Utility.DATE_FORMAT_DD_MMM_HH_MM_AM));
-                            AcknowledgementDialog mAcknowledgementDialog = AcknowledgementDialog.newInstance(R.drawable.ic_acknowledgement_dialog_header_background, title, message, new AcknowledgementDialog.AcknowledgementInteractionListener() {
+
+                            int onlydate = Integer.parseInt(superStartDateTimeCalendar.format("dd"));
+                            String message = fetchMessageFromDateOfMonth(onlydate, superStartDateTimeCalendar);
+                            AcknowledgementDialogWithProfilePic mAcknowledgementDialogWithProfilePic = AcknowledgementDialogWithProfilePic.newInstance(mContext, R.drawable.ic_acknowledgement_dialog_header_background, title, message, new AcknowledgementInteractionListener() {
 
                                 @Override
                                 public void onAcknowledgementAccepted() {
@@ -864,7 +884,8 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
                                     finish();
                                 }
                             });
-                            mAcknowledgementDialog.show(getSupportFragmentManager(), AcknowledgementDialog.TAG);
+                            mAcknowledgementDialogWithProfilePic.setCancelable(false);
+                            mAcknowledgementDialogWithProfilePic.show(getSupportFragmentManager(), AcknowledgementDialogWithProfilePic.TAG);
 
                         } else if (Utility.TASK_STATUS.PROCESSING.equalsIgnoreCase(taskStatus)) {
                             //We are commenting it because from here we are intiating a payment flow and after that we need to call update payment status on server
@@ -909,6 +930,41 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
 
         }
     };
+
+    private String fetchMessageFromDateOfMonth(int day, SuperCalendar superStartDateTimeCalendar) {
+        String date = Utility.EMPTY_STRING;
+        String DATE_FORMAT_TASK_HAS_BEEN_PAID_DATE_TH = SuperCalendar.SuperFormatter.DATE + "'th '" + SuperCalendar.SuperFormatter.MONTH_JAN;
+        String DATE_FORMAT_TASK_HAS_BEEN_PAID_DATE_ST = SuperCalendar.SuperFormatter.DATE + "'st '" + SuperCalendar.SuperFormatter.MONTH_JAN;
+        String DATE_FORMAT_TASK_HAS_BEEN_PAID_DATE_RD = SuperCalendar.SuperFormatter.DATE + "'rd '" + SuperCalendar.SuperFormatter.MONTH_JAN;
+        String DATE_FORMAT_TASK_HAS_BEEN_PAID_DATE_ND = SuperCalendar.SuperFormatter.DATE + "'nd '" + SuperCalendar.SuperFormatter.MONTH_JAN;
+
+        if (day >= 11 && day <= 13) {
+            date = superStartDateTimeCalendar.format(DATE_FORMAT_TASK_HAS_BEEN_PAID_DATE_TH);
+        } else {
+            switch (day % 10) {
+                case 1:
+                    date = superStartDateTimeCalendar.format(DATE_FORMAT_TASK_HAS_BEEN_PAID_DATE_ST);
+                    break;
+                case 2:
+                    date = superStartDateTimeCalendar.format(DATE_FORMAT_TASK_HAS_BEEN_PAID_DATE_ND);
+                    break;
+                case 3:
+                    date = superStartDateTimeCalendar.format(DATE_FORMAT_TASK_HAS_BEEN_PAID_DATE_RD);
+                    break;
+                default:
+                    date = superStartDateTimeCalendar.format(DATE_FORMAT_TASK_HAS_BEEN_PAID_DATE_TH);
+                    break;
+            }
+        }
+        String DATE_FORMAT_TASK_HAS_BEEN_PAID_TIME = SuperCalendar.SuperFormatter.HOUR_12_HOUR_2_DIGIT + ":" + SuperCalendar.SuperFormatter.MINUTE + "' '" + SuperCalendar.SuperFormatter.AM_PM;
+        String time = superStartDateTimeCalendar.format(DATE_FORMAT_TASK_HAS_BEEN_PAID_TIME);
+        String message = mContext.getString(R.string.desc_task_payment_done_acknowledgement
+                , providerModel.userName, date + " at " + time);
+        message = message.replace(".", "");
+        message = message.replace("AM", "am").replace("PM", "pm");
+        return message + ".";
+    }
+
     Response.ErrorListener mCallUpdatePaymentStatusWSErrorListener = new Response.ErrorListener() {
         @Override
         public void onErrorResponse(final VolleyError error) {

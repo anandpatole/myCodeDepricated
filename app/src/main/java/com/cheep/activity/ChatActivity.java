@@ -692,9 +692,8 @@ public class ChatActivity extends BaseAppCompatActivity implements View.OnClickL
 
     public File createImageFile() throws IOException {
         // Create an image file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(new Date());
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss"/*, Locale.US*/).format(new Date());
         String imageFileName = "JPEG_" + timeStamp + ".jpg";
-
         File photoFile = new File(new File(getFilesDir(), "CheepImages"), imageFileName);
         mSelectedMediaPath = photoFile.getAbsolutePath();
         return photoFile;

@@ -34,7 +34,7 @@ public class DateUtils
     public static String getFormatedDate(long milliSeconds, String dateFormat)
     {
         // Create a DateFormatter object for displaying date in specified format.
-        SimpleDateFormat formatter = new SimpleDateFormat(dateFormat, Locale.getDefault());
+        SimpleDateFormat formatter = new SimpleDateFormat(dateFormat/*, Locale.getDefault()*/);
 
         // Create a calendar object that will convert the date and time value in milliseconds to date.
         Calendar calendar = Calendar.getInstance();
@@ -47,7 +47,7 @@ public class DateUtils
         if(!TextUtils.isEmpty(date))
         {
             // Create a DateFormatter object for displaying date in specified format.
-            SimpleDateFormat formatter = new SimpleDateFormat(dateFormat,Locale.US);
+            SimpleDateFormat formatter = new SimpleDateFormat(dateFormat/*,Locale.US*/);
             try
             {
                 return formatter.parse(date);
@@ -65,8 +65,8 @@ public class DateUtils
         if(!TextUtils.isEmpty(date))
         {
             // Create a DateFormatter object for displaying date in specified format.
-            SimpleDateFormat sdfSource = new SimpleDateFormat(sourceFormat,Locale.US);
-            SimpleDateFormat sdfDest = new SimpleDateFormat(destFormat,Locale.US);
+            SimpleDateFormat sdfSource = new SimpleDateFormat(sourceFormat/*,Locale.US*/);
+            SimpleDateFormat sdfDest = new SimpleDateFormat(destFormat/*,Locale.US*/);
             try
             {
                 Date dt= sdfSource.parse(date);
@@ -94,7 +94,7 @@ public class DateUtils
         if(date!=null)
         {
             // Create a DateFormatter object for displaying date in specified format.
-            SimpleDateFormat formatter = new SimpleDateFormat(dateFormat,Locale.US);
+            SimpleDateFormat formatter = new SimpleDateFormat(dateFormat/*,Locale.US*/);
 
             // Create a calendar object that will convert the date and time value in milliseconds to date.
             return formatter.format(date);
@@ -115,7 +115,7 @@ public class DateUtils
      */
     public static Date getDate(long milliSeconds, String format)
     {
-        SimpleDateFormat formatter = new SimpleDateFormat(format,Locale.US);
+        SimpleDateFormat formatter = new SimpleDateFormat(format/*,Locale.US*/);
         // Create a calendar object that will convert the date and time value in milliseconds to date.
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(milliSeconds);

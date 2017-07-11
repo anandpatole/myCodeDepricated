@@ -88,6 +88,8 @@ public class Utility {
     public static final String DATE_FORMAT_DD_MMM = SuperFormatter.DATE + " " + SuperFormatter.MONTH_JAN;
     public static final String DATE_FORMAT_HH_MM_AM = SuperFormatter.HOUR_12_HOUR_2_DIGIT + ":" + SuperFormatter.MINUTE + " " + SuperFormatter.AM_PM;
     public static final String DATE_FORMAT_DD_MMM_HH_MM_AM = SuperFormatter.DATE + " " + SuperFormatter.MONTH_JAN + " " + SuperFormatter.HOUR_12_HOUR_2_DIGIT + ":" + SuperFormatter.MINUTE + "" + SuperFormatter.AM_PM;
+    public static final String DATE_FORMAT_TASK_HAS_BEEN_PAID_DATE = SuperFormatter.DATE + " " + SuperFormatter.MONTH_JAN;
+    public static final String DATE_FORMAT_TASK_HAS_BEEN_PAID_TIME = SuperFormatter.HOUR_12_HOUR_2_DIGIT + ":" + SuperFormatter.MINUTE + "" + SuperFormatter.AM_PM;
     public static final String DATE_TIME_FORMAT_SERVICE_YEAR = SuperFormatter.YEAR_4_DIGIT + "-" + SuperFormatter.MONTH_NUMBER + "-" + SuperFormatter.DATE + " " + SuperFormatter.HOUR_24_HOUR + ":" + SuperFormatter.MINUTE + ":" + SuperFormatter.SECONDS;
     public static final String DATE_FORMAT_FULL_DATE = SuperFormatter.FULL_DATE;
 
@@ -449,7 +451,7 @@ public class Utility {
    * */
     public static String getFormatedDate(long timeStamp) {
         Date date = new Date(timeStamp);
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("hh:mm aa", Locale.US);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("hh:mm aa"/*, Locale.US*/);
         return simpleDateFormat.format(date);
     }
 
@@ -457,7 +459,7 @@ public class Utility {
         String finalDate = "";
         try {
             // Create a DateFormatter object for displaying date in specified format.
-            SimpleDateFormat formatter = new SimpleDateFormat(dateFormat, Locale.US);
+            SimpleDateFormat formatter = new SimpleDateFormat(dateFormat/*, Locale.US*/);
 
             // Create a calendar object that will convert the date and time value in milliseconds to date.
             Calendar calendar = Calendar.getInstance();
@@ -481,8 +483,8 @@ public class Utility {
             String inputPattern = inputDate;
             String outputPattern = OutputDate;
 
-            SimpleDateFormat inputFormat = new SimpleDateFormat(inputPattern, Locale.US);
-            SimpleDateFormat outputFormat = new SimpleDateFormat(outputPattern, Locale.US);
+            SimpleDateFormat inputFormat = new SimpleDateFormat(inputPattern/*, Locale.US*/);
+            SimpleDateFormat outputFormat = new SimpleDateFormat(outputPattern/*, Locale.US*/);
             Date date = null;
 
             try {
@@ -537,6 +539,7 @@ public class Utility {
         Date mFutureDate = com.cheep.firebase.DateUtils.getFormatedDate(date, Utility.DATE_FORMAT_FULL_DATE);
         Date mCurrentDate = com.cheep.firebase.DateUtils.getFormatedDate(sCurrentDt, Utility.DATE_FORMAT_FULL_DATE);
         long diff = mFutureDate.getTime() - mCurrentDate.getTime();
+
         String timespan = DateUtils.getRelativeTimeSpanString(mFutureDate.getTime(), System.currentTimeMillis(), DateUtils.MINUTE_IN_MILLIS).toString();
         Log.d(TAG, "getDateDifference() returned: " + timespan);
         if (diff > 0) {
@@ -947,7 +950,7 @@ public class Utility {
         public static final int TASK_START_ALERT = 14;
 
         // When detail request getting accepted by User
-        public static final int DETAIL_REQUEST_ACCEPTED= 15;
+        public static final int DETAIL_REQUEST_ACCEPTED = 15;
     }
 
     public static final class REQUEST_TYPE {

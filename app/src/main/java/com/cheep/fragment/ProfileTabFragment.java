@@ -92,7 +92,6 @@ import static com.cheep.utils.Utility.getObjectFromJsonString;
 /**
  * Created by pankaj on 9/27/16.
  */
-
 public class ProfileTabFragment extends BaseFragment {
     public static final String TAG = "ProfileTabFragment";
 
@@ -101,7 +100,8 @@ public class ProfileTabFragment extends BaseFragment {
     private JSONArray jsonEmergencyContacts;
     private ArrayList<AddressModel> addressList;
     private DrawerLayoutInteractionListener mListener;
-    private String mCurrentPhotoPath;
+    //    private String mCurrentPhotoPath;
+    private File photoFile;
 
     public static ProfileTabFragment newInstance(DrawerLayoutInteractionListener mListener) {
         Bundle args = new Bundle();
@@ -250,6 +250,10 @@ public class ProfileTabFragment extends BaseFragment {
                     break;
                 case R.id.img_profile_photo_edit:
                     if (Utility.isConnected(mContext)) {
+//                        CropImage.activity()
+//                                .setGuidelines(CropImageView.Guidelines.ON)
+//                                .start(getContext(), ProfileTabFragment.this);
+//
                         showPictureChooserDialog(false);
                     } else {
                         Utility.showSnackBar(getString(R.string.no_internet), mFragmentTabProfileBinding.getRoot());
@@ -318,10 +322,10 @@ public class ProfileTabFragment extends BaseFragment {
         // Ensure that there's a camera activity to handle the intent
         if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
             // Create the File where the photo should go
-            File photoFile = null;
+            photoFile = null;
             try {
                 photoFile = createImageFile();
-                mCurrentPhotoPath = photoFile.getAbsolutePath();
+//                mCurrentPhotoPath = photoFile.getAbsolutePath();
                 if (photoFile.exists()) {
                     photoFile.delete();
                 } else {
@@ -384,7 +388,7 @@ public class ProfileTabFragment extends BaseFragment {
 
     public File createImageFile() throws IOException {
         // Create an image file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(new Date());
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss"/*, Locale.US*/).format(new Date());
         String imageFileName = "JPEG_" + timeStamp + ".jpg";
         /*File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File image = File.createTempFile(
@@ -393,18 +397,17 @@ public class ProfileTabFragment extends BaseFragment {
                 storageDir      *//* directory *//*
         );*/
 
-        File photoFile = new File(new File(getActivity().getFilesDir(), "CheepImages"), imageFileName);
-        mCurrentPhotoPath = photoFile.getAbsolutePath();
+        //        mCurrentPhotoPath = photoFile.getAbsolutePath();
         // Save a file: path for use with ACTION_VIEW intents
 //        mCurrentPhotoPath = photoFile.getAbsolutePath();
-        return photoFile;
+        return new File(new File(getActivity().getFilesDir(), "CheepImages"), imageFileName);
     }
 
     private BottomAlertDialog changeUsernameOrEmail;
 
     private void showChangeUsernameDialog(final String username) {
 
-        View view =View.inflate(mContext,R.layout.dialog_change_username, null);
+        View view = View.inflate(mContext, R.layout.dialog_change_username, null);
         final EditText edtUsername = (EditText) view.findViewById(edit_username);
         edtUsername.setText(username);
         changeUsernameOrEmail = new BottomAlertDialog(mContext);
@@ -431,7 +434,7 @@ public class ProfileTabFragment extends BaseFragment {
 
     private void showChangeEmailDialog(final String email) {
 
-        View view = View.inflate(mContext,R.layout.dialog_change_username, null);
+        View view = View.inflate(mContext, R.layout.dialog_change_username, null);
         final EditText edtUsername = (EditText) view.findViewById(R.id.edit_username);
         edtUsername.setText(email);
         final BottomAlertDialog dialog = new BottomAlertDialog(mContext);
@@ -483,7 +486,7 @@ public class ProfileTabFragment extends BaseFragment {
 
     private void showChangeEmergencyContactDialog() {
 
-        View view = View.inflate(mContext,R.layout.dialog_emergency_phone_number, null);
+        View view = View.inflate(mContext, R.layout.dialog_emergency_phone_number, null);
 
         final EditText edtContactName1 = (EditText) view.findViewById(R.id.edit_contact_name_1);
         final EditText edtContactNumber1 = (EditText) view.findViewById(R.id.edit_contact_number_1);
@@ -551,8 +554,6 @@ public class ProfileTabFragment extends BaseFragment {
                     dialog.dismiss();
                 }
             }
-
-
         });
         dialog.setTitle(getString(R.string.label_emergency_contacts));
         dialog.setCustomView(view);
@@ -564,7 +565,7 @@ public class ProfileTabFragment extends BaseFragment {
 
     private void showChangePasswordDialog() {
 
-        View view = View.inflate(mContext,R.layout.dialog_change_password, null);
+        View view = View.inflate(mContext, R.layout.dialog_change_password, null);
         changePasswordDialog = new BottomAlertDialog(mContext);
         final EditText editNewPassword = (EditText) view.findViewById(R.id.edit_new_password);
         final EditText editOldPassword = (EditText) view.findViewById(R.id.edit_old_password);
@@ -586,7 +587,7 @@ public class ProfileTabFragment extends BaseFragment {
 
     private void showAddressDialog() {
 
-        View view = View.inflate(mContext,R.layout.dialog_choose_address, null);
+        View view = View.inflate(mContext, R.layout.dialog_choose_address, null);
         boolean shouldOpenAddAddress = fillAddressRecyclerView((RecyclerView) view.findViewById(R.id.recycler_view));
         final BottomAlertDialog dialog = new BottomAlertDialog(mContext);
         view.findViewById(R.id.btn_add_address).setOnClickListener(new View.OnClickListener() {
@@ -772,18 +773,15 @@ public class ProfileTabFragment extends BaseFragment {
         }
     }*/
 
-    private void showAddAddressDialog(final AddressModel addressModel)
-    {
-        if(addressModel==null) {
+    private void showAddAddressDialog(final AddressModel addressModel) {
+        if (addressModel == null) {
             isAddressPickYouLocationVerified = false;
             isAddressNameVerified = false;
-        }
-        else
-        {
+        } else {
             isAddressPickYouLocationVerified = true;
             isAddressNameVerified = true;
         }
-        View view = View.inflate(mContext,R.layout.dialog_add_address, null);
+        View view = View.inflate(mContext, R.layout.dialog_add_address, null);
         final RadioButton radioHome = (RadioButton) view.findViewById(R.id.radio_home);
         final RadioButton radio_office = (RadioButton) view.findViewById(R.id.radio_office);
         final RadioButton radioOther = (RadioButton) view.findViewById(R.id.radio_other);
@@ -961,8 +959,7 @@ public class ProfileTabFragment extends BaseFragment {
         checkAddAddressVerified();
     }
 
-    private void checkAddAddressVerified()
-    {
+    private void checkAddAddressVerified() {
         /*if (isAddressFlatNoVerified
                 && isAddressPickYouLocationVerified
                 && isAddressNameVerified) {
@@ -2001,9 +1998,9 @@ public class ProfileTabFragment extends BaseFragment {
         Log.d(TAG, "choosePictureFromGallery() called with: requestFileChooserCode = [" + requestFileChooserCode + "], requestPermissionCode = [" + requestPermissionCode + "]");
         if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             if (shouldShowRequestPermissionRationale(Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, requestPermissionCode);
+                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, requestPermissionCode);
             } else {
-                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, requestPermissionCode);
+                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, requestPermissionCode);
             }
         } else {
             //Go ahead with file choosing
@@ -2054,6 +2051,21 @@ public class ProfileTabFragment extends BaseFragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
+        /*if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+            if (resultCode == RESULT_OK) {
+                Uri resultUri = result.getUri();
+                String selectedImagePath = Utility.getPath(mContext, resultUri);
+                Log.i(TAG, "onActivityResult: Path:" + selectedImagePath);
+                //Load the image from Glide
+                loadImage(selectedImagePath);
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                Exception error = result.getError();
+            }
+        }*/
+
+
 //        Log.i(TAG, "onActivityResult: " + data.getData().toString());
 
        /* if (requestCode == Utility.REQUEST_CODE_CHECK_LOCATION_SETTINGS) {
@@ -2067,7 +2079,7 @@ public class ProfileTabFragment extends BaseFragment {
             isPlacePickerClicked = false;
             if (resultCode == RESULT_OK) {
                 isAddressPickYouLocationVerified = true;
-                isAddressNameVerified=true;
+                isAddressNameVerified = true;
                 final Place place = PlacePicker.getPlace(mContext, data);
                 final CharSequence name = place.getName();
                 final CharSequence address = place.getAddress();
@@ -2080,28 +2092,28 @@ public class ProfileTabFragment extends BaseFragment {
                     edtAddress.setTag(place.getLatLng());
                 }
             } else {
-                if(TextUtils.isEmpty(edtAddress.getText().toString().trim())) {
+                if (TextUtils.isEmpty(edtAddress.getText().toString().trim())) {
                     isAddressPickYouLocationVerified = false;
-                }
-                else {
+                } else {
                     isAddressPickYouLocationVerified = true;
-                    isAddressNameVerified=true;
+                    isAddressNameVerified = true;
                 }
             }
             checkAddAddressVerified();
             hideProgressDialog();
         } else if (requestCode == Utility.REQUEST_CODE_IMAGE_CAPTURE_ADD_PROFILE && resultCode == RESULT_OK) {
-            Log.i(TAG, "onActivityResult: CurrentPath" + mCurrentPhotoPath);
+            Log.i(TAG, "onActivityResult: CurrentPath" + photoFile);
 
             /*File f = new File(mCurrentPhotoPath);
             Uri contentUri = Uri.fromFile(f);*/
 
-            File f = new File(mCurrentPhotoPath);
+//            File f = new File(mCurrentPhotoPath);
 //            Uri contentUri = Uri.fromFile(f);
-            Uri contentUri = FileProvider.getUriForFile(mContext, BuildConfig.FILE_PROVIDER_URL, f);
+            Uri contentUri = FileProvider.getUriForFile(mContext, BuildConfig.FILE_PROVIDER_URL, photoFile);
 
             Intent intent = CropImage
                     .activity(contentUri)
+                    .setOutputUri(contentUri)
 
                     //Set Aspect ration
                     .setAspectRatio(1, 1)
@@ -2141,6 +2153,7 @@ public class ProfileTabFragment extends BaseFragment {
 
             Intent intent = CropImage
                     .activity(data.getData())
+                    .setOutputUri(data.getData())
 
                     //Set Aspect ration
                     .setAspectRatio(1, 1)
@@ -2169,13 +2182,13 @@ public class ProfileTabFragment extends BaseFragment {
                     //Border Corner Color
                     .setBorderCornerColor(ContextCompat.getColor(mContext, R.color.white))
 
-//                    Shape
+                    //Shape
                     .setCropShape(CropImageView.CropShape.OVAL)
 
                     .getIntent(mContext);
 
             startActivityForResult(intent, REQUEST_CODE_CROP_GET_FILE_ADD_PROFILE);
-        } else if (requestCode == Utility.REQUEST_CODE_CROP_GET_FILE_ADD_PROFILE && resultCode == RESULT_OK) {
+        } else if (requestCode == Utility.REQUEST_CODE_CROP_GET_FILE_ADD_PROFILE) {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             if (resultCode == RESULT_OK) {
                 Uri resultUri = result.getUri();
@@ -2194,6 +2207,7 @@ public class ProfileTabFragment extends BaseFragment {
         } else if (requestCode == Utility.REQUEST_CODE_GET_FILE_ADD_COVER_GALLERY && resultCode == RESULT_OK) {
             Intent intent = CropImage
                     .activity(data.getData())
+                    .setOutputUri(data.getData())
 
                     //Set Aspect ration
                     .setAspectRatio(Utility.X_RATIO, Utility.Y_RATIO)
@@ -2225,7 +2239,7 @@ public class ProfileTabFragment extends BaseFragment {
                     .getIntent(mContext);
             startActivityForResult(intent, Utility.REQUEST_CODE_CROP_GET_FILE_ADD_COVER);
         } else if (requestCode == Utility.REQUEST_CODE_IMAGE_CAPTURE_ADD_COVER && resultCode == RESULT_OK) {
-            File photoFile = new File(mCurrentPhotoPath);
+//            File photoFile = new File(mCurrentPhotoPath);
             if (photoFile == null) {
                 return;
             }
@@ -2235,7 +2249,7 @@ public class ProfileTabFragment extends BaseFragment {
 
             Intent intent = CropImage
                     .activity(contentUri)
-
+                    .setOutputUri(data.getData())
                     //Set Aspect ration
                     .setAspectRatio(Utility.X_RATIO, Utility.Y_RATIO)
 
@@ -2274,7 +2288,7 @@ public class ProfileTabFragment extends BaseFragment {
                 loadCoverImage(selectedImagePath);
 
                 HashMap<String, File> mFileParams = new HashMap<>();
-                mFileParams.put(NetworkUtility.TAGS.PROFILE_BANNER, new File(selectedImagePath));
+                mFileParams.put(NetworkUtility.TAGS.PROFILE_BANNER, new File(resultUri.getPath()));
                 callUpdateProfileWS(null, mFileParams);
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 Exception error = result.getError();

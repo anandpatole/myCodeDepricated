@@ -389,7 +389,7 @@ public class HomeTabFragment extends BaseFragment {
                 , mHeaderParams
                 , mParams
                 , null);
-        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest);
+        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest,NetworkUtility.WS.UPDATE_LOCATION);
     }
 
     Response.Listener mCallUpdateLatLngWSResponseListener = new Response.Listener() {
@@ -509,7 +509,7 @@ public class HomeTabFragment extends BaseFragment {
                 , mHeaderParams
                 , mParams
                 , null);
-        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequestForCategoryList);
+        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequestForCategoryList,NetworkUtility.WS.CATEGORY_LIST);
     }
 
     Response.Listener mCallCategoryListWSResponseListener = new Response.Listener() {

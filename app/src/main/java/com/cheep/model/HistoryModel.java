@@ -40,9 +40,9 @@ public class HistoryModel {
 
     public String getPaymentDate() {
         Log.i(TAG, "getPaymentDate: Initial Date: " + payment_date);
-        SimpleDateFormat serverSDF = new SimpleDateFormat(Utility.DATE_TIME_FORMAT_SERVICE_YEAR, Locale.US);
+        SimpleDateFormat serverSDF = new SimpleDateFormat(Utility.DATE_TIME_FORMAT_SERVICE_YEAR/*, Locale.US*/);
         serverSDF.setTimeZone(TimeZone.getTimeZone("UTC"));
-        SimpleDateFormat outputSDF = new SimpleDateFormat(Utility.DATE_TIME_FORMAT_SERVICE_YEAR, Locale.US);
+        SimpleDateFormat outputSDF = new SimpleDateFormat(Utility.DATE_TIME_FORMAT_SERVICE_YEAR/*, Locale.US*/);
         Date date = null;
         try {
             date = serverSDF.parse(payment_date);

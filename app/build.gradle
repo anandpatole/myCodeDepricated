@@ -20,7 +20,7 @@ android {
         minSdkVersion 16
         targetSdkVersion 25
         versionCode 18
-        versionName "1.0.27" // PLEASE FIRST MAKE SURE MIN-VERSION IS 16.
+        versionName "1.0.33" // PLEASE FIRST MAKE SURE MIN-VERSION IS 16.
         renderscriptTargetApi 18
         renderscriptSupportModeEnabled true
 
@@ -60,6 +60,7 @@ android {
         buildConfigField("String", "CHAT_NODE", getProperty("CHAT_NODE_DEBUG"));
         buildConfigField("String", "PAYUBIZ_HDFC_KEY", getProperty("PAYUBIZ_HDFC_SANDBOX_KEY"))
         buildConfigField("String", "PAYUBIZ_HDFC_URL", getProperty("PAYUBIZ_HDFC_SANDBOX_URL"))
+        buildConfigField("boolean", "NEED_TO_BYPASS_PAYMENT", "true")
 
         // TODO: This needs to change (For Temporary LIVE)
 //        buildConfigField("String", "BASE_URL", getProperty("LIVE_BASE_URL"));
@@ -81,6 +82,7 @@ android {
             buildConfigField("String", "CHAT_NODE", getProperty("CHAT_NODE_LIVE"));
             buildConfigField("String", "PAYUBIZ_HDFC_KEY", getProperty("PAYUBIZ_HDFC_LIVE_KEY"))
             buildConfigField("String", "PAYUBIZ_HDFC_URL", getProperty("PAYUBIZ_HDFC_LIVE_URL"))
+            buildConfigField("boolean", "NEED_TO_BYPASS_PAYMENT", "true")
             signingConfig signingConfigs.debug
         }
         release {
@@ -88,6 +90,7 @@ android {
             buildConfigField("String", "CHAT_NODE", getProperty("CHAT_NODE_LIVE"));
             buildConfigField("String", "PAYUBIZ_HDFC_KEY", getProperty("PAYUBIZ_HDFC_LIVE_KEY"))
             buildConfigField("String", "PAYUBIZ_HDFC_URL", getProperty("PAYUBIZ_HDFC_LIVE_URL"))
+            buildConfigField("boolean", "NEED_TO_BYPASS_PAYMENT", "false")
             signingConfig signingConfigs.debug
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
@@ -121,11 +124,11 @@ configurations {
 
 // Description
 ext {
-    supportLibVer = '25.4.0'
-//    supportLibVer = '25.3.1'
+//    supportLibVer = '25.4.0'
+    supportLibVer = '25.3.1'
     gsonLibVer = '2.7'
-    playServiceVer = '11.0.1'
-//    playServiceVer = '10.2.0'
+//    playServiceVer = '11.0.1'
+    playServiceVer = '10.2.0'
 }
 
 dependencies {
@@ -198,7 +201,7 @@ dependencies {
     compile 'org.apache.httpcomponents:httpmime:4.3.6'
     compile 'org.apache.httpcomponents:httpclient-android:4.3.5.1'
     compile 'com.facebook.android:facebook-android-sdk:4.16.1'
-    compile 'com.theartofdev.edmodo:android-image-cropper:2.4.4'
+    compile 'com.theartofdev.edmodo:android-image-cropper:2.3.1'
     compile 'me.relex:circleindicator:1.2.2@aar'
     compile 'org.greenrobot:eventbus:3.0.0'
     compile 'com.payu.india:payu-sdk:4.3.9'

@@ -292,9 +292,7 @@ public class TaskFragment extends BaseFragment {
                         } else {
                             taskRecyclerViewAdapter.addItem(list);
                         }
-
                         nextPageId = jsonObject.optString(loadMoreKey);
-
                         errorLoadingHelper.success();
                         taskRecyclerViewAdapter.onLoadMoreComplete();
                         if (list.size() == 0) {
@@ -311,7 +309,6 @@ public class TaskFragment extends BaseFragment {
 
                                 }
                             });*/
-
                             errorLoadingHelper.failed(null, R.drawable.img_empty_pending_task, null, null, onMakeAPostClickListener);
                         }
 
