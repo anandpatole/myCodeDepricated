@@ -2113,7 +2113,7 @@ public class ProfileTabFragment extends BaseFragment {
 
             Intent intent = CropImage
                     .activity(contentUri)
-                    .setOutputUri(contentUri)
+//                    .setOutputUri(contentUri)
 
                     //Set Aspect ration
                     .setAspectRatio(1, 1)
@@ -2153,7 +2153,7 @@ public class ProfileTabFragment extends BaseFragment {
 
             Intent intent = CropImage
                     .activity(data.getData())
-                    .setOutputUri(data.getData())
+//                    .setOutputUri(contentUri)
 
                     //Set Aspect ration
                     .setAspectRatio(1, 1)
@@ -2182,7 +2182,7 @@ public class ProfileTabFragment extends BaseFragment {
                     //Border Corner Color
                     .setBorderCornerColor(ContextCompat.getColor(mContext, R.color.white))
 
-                    //Shape
+//                    Shape
                     .setCropShape(CropImageView.CropShape.OVAL)
 
                     .getIntent(mContext);
@@ -2207,7 +2207,7 @@ public class ProfileTabFragment extends BaseFragment {
         } else if (requestCode == Utility.REQUEST_CODE_GET_FILE_ADD_COVER_GALLERY && resultCode == RESULT_OK) {
             Intent intent = CropImage
                     .activity(data.getData())
-                    .setOutputUri(data.getData())
+//                    .setOutputUri(contentUri)
 
                     //Set Aspect ration
                     .setAspectRatio(Utility.X_RATIO, Utility.Y_RATIO)
@@ -2249,7 +2249,7 @@ public class ProfileTabFragment extends BaseFragment {
 
             Intent intent = CropImage
                     .activity(contentUri)
-                    .setOutputUri(data.getData())
+
                     //Set Aspect ration
                     .setAspectRatio(Utility.X_RATIO, Utility.Y_RATIO)
 
