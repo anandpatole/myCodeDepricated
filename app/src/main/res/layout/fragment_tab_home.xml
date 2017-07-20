@@ -5,6 +5,7 @@
 
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
+
         android:layout_height="match_parent"
         android:orientation="vertical">
 
@@ -123,17 +124,32 @@
             </LinearLayout>
         </android.support.design.widget.AppBarLayout>
 
-        <include
-            android:id="@+id/common_recycler_view"
-            layout="@layout/common_recycler_view" />
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/swipeRefreshLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <!--<android.support.v4.widget.NestedScrollView-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent"-->
-            <!--app:layout_behavior="@string/appbar_scrolling_view_behavior">-->
+            <android.support.v4.widget.NestedScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scrollbars="none">
 
-            <!---->
-        <!--</android.support.v4.widget.NestedScrollView>-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clipToPadding="false"
+                    android:orientation="vertical">
 
+                    <include
+                        android:id="@+id/layout_banner_header"
+                        layout="@layout/layout_banner_home_screen" />
+
+                    <include
+                        android:id="@+id/common_recycler_view"
+                        layout="@layout/common_recycler_view_no_swipe" />
+                </LinearLayout>
+            </android.support.v4.widget.NestedScrollView>
+        </android.support.v4.widget.SwipeRefreshLayout>
     </android.support.design.widget.CoordinatorLayout>
 </layout>

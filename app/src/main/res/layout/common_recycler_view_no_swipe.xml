@@ -7,18 +7,16 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layoutManager="LinearLayoutManager" />
 
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:gravity="center"
             android:orientation="vertical">
 
             <ProgressBar
@@ -26,6 +24,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginTop="@dimen/scale_50dp"
                 android:visibility="gone" />
 
             <ImageView
@@ -33,6 +32,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
+                android:src="@drawable/img_empty_category"
                 android:visibility="gone"
                 tools:ignore="ContentDescription" />
 
@@ -40,8 +40,11 @@
                 android:id="@+id/text_error"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                tools:text="lskjdflsdjf;skdjfl;sdkjf;lkadjadfasdf"
-                android:visibility="gone" />
+                android:layout_marginTop="@dimen/scale_25dp"
+                android:gravity="center"
+                android:padding="@dimen/scale_20dp"
+                android:visibility="visible"
+                tools:text="asdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasd" />
 
             <com.cheep.custom_view.CFTextViewRegular
                 android:id="@+id/text_error_action"

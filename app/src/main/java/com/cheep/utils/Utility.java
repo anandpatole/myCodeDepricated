@@ -304,6 +304,12 @@ public class Utility {
         return encryptedText;
     }
 
+    public static int getHeightFromWidthForSixteenNineRatio(int width) {
+        Log.d(TAG, "getHeightFromWidthForSixteenNineRatio() called with: width = [" + width + "]");
+        Log.d(TAG, "getHeightFromWidthForSixteenNineRatio() returned: " + ((width * 9) / 16));
+        return ((width * 9) / 16);
+    }
+
     //Bundle Extra parameters
     public static class Extra {
         public static final String WHICH_FRAG = "which_frag";
@@ -593,6 +599,20 @@ public class Utility {
                 .into(img);
     }*/
 
+    public static void showCircularImageView(Context context, String tag, ImageView img, String imageToLoad, int placeholderRes, boolean isRounded, float strockwidthIndp) {
+        if (!isActivityCorrectForGlide(context)) {
+            return;
+        }
+        Glide
+                .with(context)
+                .load(imageToLoad)
+                .transform(new CircleTransform(context, isRounded, Color.WHITE, (int) Utility.convertDpToPixel(strockwidthIndp, context), imageToLoad, tag))
+                .placeholder(placeholderRes)
+                .error(placeholderRes)
+                .crossFade()
+                .into(img);
+    }
+
     public static void showCircularImageView(Context context, String tag, ImageView img, String imageToLoad, int placeholderRes, boolean isRounded) {
         if (!isActivityCorrectForGlide(context)) {
             return;
@@ -607,7 +627,7 @@ public class Utility {
                 .into(img);
     }
 
-    public static void showCircularImageView(Context context, String tag, ImageView img, String imageToLoad, int placeholderRes, boolean isRounded, int cbo) {
+    /*public static void showCircularImageView(Context context, String tag, ImageView img, String imageToLoad, int placeholderRes, boolean isRounded, int cbo) {
         if (!isActivityCorrectForGlide(context)) {
             return;
         }
@@ -619,7 +639,7 @@ public class Utility {
                 .error(placeholderRes)
                 .crossFade()
                 .into(img);
-    }
+    }*/
 
     public static void loadImageView(Context context, ImageView img, String imageToLoad, int placeholderRes) {
 
@@ -913,6 +933,12 @@ public class Utility {
         return "com.google.android.apps.photos.content".equals(uri.getAuthority());
     }
 
+    public static final class FILTER_TYPES {
+        public static final String FILTER_TYPE_FEATURED = "Featured";
+        public static final String FILTER_TYPE_POPULAR = "Popular";
+        public static final String FILTER_TYPE_FAVOURITES = "Favourites";
+    }
+
     public static final class BOOLEAN {
         public static final String YES = "yes";
         public static final String NO = "no";
@@ -947,7 +973,7 @@ public class Utility {
         public static final int TASK_START_ALERT = 14;
 
         // When detail request getting accepted by User
-        public static final int DETAIL_REQUEST_ACCEPTED= 15;
+        public static final int DETAIL_REQUEST_ACCEPTED = 15;
     }
 
     public static final class REQUEST_TYPE {

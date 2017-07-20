@@ -90,15 +90,6 @@ public class HomeFragment extends BaseFragment {
         EventBus.getDefault().register(this);
     }
 
-    /*public void profileUpdate() {
-
-        if (mFragmentsStackTags.contains(HomeTabFragment.TAG) && mFragments.containsKey(HomeTabFragment.TAG)) {
-            Fragment fragment = mFragments.get(HomeTabFragment.TAG);
-            HomeTabFragment homeTabFragment = ((HomeTabFragment) fragment);
-            homeTabFragment.profileUpdate();
-        }
-    }*/
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -213,10 +204,8 @@ public class HomeFragment extends BaseFragment {
         databaseReference.orderByChild(FirebaseHelper.KEY_TIMESTAMP).addChildEventListener(mChildEventListener);
         databaseReference.orderByChild(FirebaseHelper.KEY_TIMESTAMP).addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot)
-            {
-                if(dataSnapshot.exists())
-                {
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
 
                 }
             }
@@ -394,8 +383,7 @@ public class HomeFragment extends BaseFragment {
                 break;
 
         }
-
-        getChildFragmentManager().beginTransaction().replace(R.id.inner_content, fragmentToCommit).commitAllowingStateLoss();
+        getChildFragmentManager().beginTransaction().replace(R.id.inner_content, fragmentToCommit, tab).commitAllowingStateLoss();
     }
 
     /**
@@ -774,7 +762,7 @@ public class HomeFragment extends BaseFragment {
 
     private void showFullDesc(String title, String message) {
         if (dialogDesc == null) {
-            View view = View.inflate(mContext,R.layout.dialog_information, null);
+            View view = View.inflate(mContext, R.layout.dialog_information, null);
             txtMessage = (TextView) view.findViewById(R.id.text_message);
             dialogDesc = new BottomAlertDialog(mContext);
             view.findViewById(R.id.btn_ok).setOnClickListener(new View.OnClickListener() {

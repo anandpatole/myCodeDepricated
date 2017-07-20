@@ -85,6 +85,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+import static com.cheep.network.NetworkUtility.TAGS.LOGINWITH;
 import static com.cheep.network.NetworkUtility.TAGS.TASK_ID;
 
 /**
@@ -149,7 +150,6 @@ public class HomeActivity extends BaseAppCompatActivity
 
         // Check Application version
         checkVersionOfApp();
-
 
 
     }
@@ -480,7 +480,7 @@ public class HomeActivity extends BaseAppCompatActivity
     public void onTaskDelete(int which, final TaskDetailModel exploreDataModel, RowUpcomingTaskBinding mRowUpcomingTaskBinding) {
         cancelTaskDialog = new BottomAlertDialog(mContext);
         cancelTaskDialog.setExpandedInitially(true);
-        final View view = View.inflate(mContext,R.layout.dialog_cancel_task, null);
+        final View view = View.inflate(mContext, R.layout.dialog_cancel_task, null);
         final RadioGroup radioGroupReasons = (RadioGroup) view.findViewById(R.id.radio_group_reasons);
         final EditText edtReason = (EditText) view.findViewById(R.id.edit_reason);
         edtReason.setEnabled(false);
@@ -651,7 +651,7 @@ public class HomeActivity extends BaseAppCompatActivity
 
     private void showRateDialog(String userName, final String taskId, final String providerId) {
 
-        View view = View.inflate(mContext,R.layout.dialog_rate, null);
+        View view = View.inflate(mContext, R.layout.dialog_rate, null);
         final RatingBar ratingBar = (RatingBar) view.findViewById(R.id.rating_bar);
         final EditText edtMessage = (EditText) view.findViewById(R.id.edit_message);
 
@@ -830,6 +830,31 @@ public class HomeActivity extends BaseAppCompatActivity
         // Changes on 27thApril,2017
 //        HireNewJobActivity.newInstance(mContext, model);
         TaskCreationActivity.getInstance(mContext, model);
+    }
+
+    @Override
+    public void onCategoryFavouriteClicked(JobCategoryModel model, int position) {
+        Log.d(TAG, "onCategoryFavouriteClicked() called with: model = [" + model + "], position = [" + position + "]");
+        Fragment mHomeFragment = getSupportFragmentManager().findFragmentByTag(HomeFragment.TAG);
+        if (mHomeFragment != null) {
+            Fragment mHomeTabFragment = mHomeFragment.getChildFragmentManager().findFragmentByTag(HomeFragment.TAB_HOME);
+            if (mHomeTabFragment != null) {
+                Log.i(TAG, "onCategoryFavouriteClicked: Called for HomeTab");
+                ((HomeTabFragment) mHomeTabFragment).onCategoryFavouriteClicked(model, position);
+            }
+        }
+    }
+
+    @Override
+    public void onListCategoryListGetsEmpty() {
+        Fragment mHomeFragment = getSupportFragmentManager().findFragmentByTag(HomeFragment.TAG);
+        if (mHomeFragment != null) {
+            Fragment mHomeTabFragment = mHomeFragment.getChildFragmentManager().findFragmentByTag(HomeFragment.TAB_HOME);
+            if (mHomeTabFragment != null) {
+                Log.i(TAG, "onCategoryFavouriteClicked: Called for HomeTab");
+                ((HomeTabFragment) mHomeTabFragment).onListCategoryListGetsEmpty();
+            }
+        }
     }
 
     /**

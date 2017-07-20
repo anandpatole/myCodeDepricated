@@ -88,7 +88,7 @@ public class TaskDetailModel {
     public List<String> profile_img_arr;
 
     @SerializedName("live_lable_arr")
-    public List<String> live_lable_arr=new ArrayList<>();
+    public List<String> live_lable_arr = new ArrayList<>();
 
     // THis will be available in case Provider is Selected
     @SerializedName("sp_data")

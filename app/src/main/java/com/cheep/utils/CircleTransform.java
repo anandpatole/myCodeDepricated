@@ -6,12 +6,13 @@ import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.util.Log;
 
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
 import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
 
 public class CircleTransform extends BitmapTransformation {
-
+    private static final String TAG = "CircleTransform";
     private boolean roundedCorner = false;
     private int borderColor = Color.WHITE;
     private int borderWidth = 0;
@@ -26,6 +27,7 @@ public class CircleTransform extends BitmapTransformation {
 
     public CircleTransform(Context context, boolean roundedCorner, int borderColor, int borderWidth, String url, String tag) {
         super(context);
+//        Log.d(TAG, "CircleTransform() called with: context = [" + context + "], roundedCorner = [" + roundedCorner + "], borderColor = [" + borderColor + "], borderWidth = [" + borderWidth + "], url = [" + url + "], tag = [" + tag + "]");
         this.roundedCorner = roundedCorner;
         this.borderColor = borderColor;
         this.borderWidth = borderWidth;

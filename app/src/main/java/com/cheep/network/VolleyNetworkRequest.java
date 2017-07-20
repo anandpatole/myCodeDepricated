@@ -40,7 +40,7 @@ public class VolleyNetworkRequest<T> extends Request<T> {
     private Map<String, Object> stringData;
     private HashMap<String, File> mFilePart;
 
-    //Constructor
+    // Constructor
     public VolleyNetworkRequest(String url,
                                 ErrorListener errorListener,
                                 Listener<T> listener,
@@ -69,7 +69,6 @@ public class VolleyNetworkRequest<T> extends Request<T> {
     /**
      * mFilePart and FILE_PART_NAME size must be equal else it will throw error
      */
-
     private void buildMultipartEntity() {
         if (null != mFilePart) {
             for (Map.Entry<String, File> entry : mFilePart.entrySet()) {

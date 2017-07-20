@@ -33,7 +33,7 @@ public class ErrorLoadingHelper {
     }
 
     public void showLoading() {
-        recyclerView.setVisibility(View.GONE);
+        recyclerView.setVisibility(View.INVISIBLE);
         progressBar.setVisibility(View.VISIBLE);
         imgError.setVisibility(View.GONE);
         textError.setVisibility(View.GONE);

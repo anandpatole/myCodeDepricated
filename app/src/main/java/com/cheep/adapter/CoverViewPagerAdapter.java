@@ -14,12 +14,12 @@ import java.util.ArrayList;
 //Banner Image View Pager Adapter
 public class CoverViewPagerAdapter extends FragmentStatePagerAdapter {
 
-    private static final String TAG = "CoverViewPagerAdapter";
+    private static final String TAG = "BannerViewPagerAdapter";
     private ArrayList<CoverImageModel> imageModelArrayList;
 
     public CoverViewPagerAdapter(FragmentManager fragmentManager, ArrayList<CoverImageModel> modelArrayList) {
         super(fragmentManager);
-        Log.d(TAG, "CoverViewPagerAdapter() called with: fragmentManager = [" + fragmentManager + "], modelArrayList = [" + modelArrayList + "]");
+        Log.d(TAG, "BannerViewPagerAdapter() called with: fragmentManager = [" + fragmentManager + "], modelArrayList = [" + modelArrayList + "]");
         this.imageModelArrayList = modelArrayList;
     }
 

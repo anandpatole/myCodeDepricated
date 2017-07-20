@@ -507,7 +507,7 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
 
     private void setupCoverViewPager(ArrayList<CoverImageModel> mBannerListModels) {
         Log.d(TAG, "setupCoverViewPager() called with: mBannerListModels = [" + mBannerListModels.size() + "]");
-        /*CoverViewPagerAdapter coverViewPagerAdapter = new CoverViewPagerAdapter(getSupportFragmentManager(), mBannerListModels);
+        /*BannerViewPagerAdapter coverViewPagerAdapter = new BannerViewPagerAdapter(getSupportFragmentManager(), mBannerListModels);
         mActivityProviderProfileBinding.viewPagerBannerImage.setAdapter(coverViewPagerAdapter);
         mActivityProviderProfileBinding.indicator.setViewPager(mActivityProviderProfileBinding.viewPagerBannerImage);
         if (mBannerListModels != null && mBannerListModels.size() > 1) {
