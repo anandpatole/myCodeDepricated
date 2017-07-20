@@ -2,6 +2,7 @@ package com.cheep.fragment;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,15 +16,16 @@ import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.cheep.R;
+import com.cheep.model.BannerImageModel;
 import com.cheep.model.CoverImageModel;
 
-public class CoverImageFragment extends BaseFragment {
-    private static final String TAG = "CoverImageFragment";
+public class BannerImageFragment extends BaseFragment {
+    private static final String TAG = "BannerImageFragment";
     private ImageView img_cover;
-    private CoverImageModel coverImageModel;
+    private BannerImageModel bannerImageModel;
     private ProgressBar progress;
 
-    public CoverImageFragment() {
+    public BannerImageFragment() {
         // Required empty public constructor
     }
 
@@ -38,14 +40,13 @@ public class CoverImageFragment extends BaseFragment {
     }
 
     @SuppressLint("ValidFragment")
-    public CoverImageFragment(CoverImageModel bannerModel) {
+    public BannerImageFragment(BannerImageModel bannerModel) {
         // Required empty public constructor
-        this.coverImageModel = bannerModel;
+        this.bannerImageModel = bannerModel;
     }
 
-    public static CoverImageFragment getInstance(CoverImageModel bannerModel) {
-        CoverImageFragment coverImageFragment = new CoverImageFragment(bannerModel);
-        return coverImageFragment;
+    public static BannerImageFragment getInstance(BannerImageModel bannerModel) {
+        return new BannerImageFragment(bannerModel);
     }
 
     @Override
@@ -53,25 +54,22 @@ public class CoverImageFragment extends BaseFragment {
         super.onCreate(savedInstanceState);
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.d(TAG, "onCreateView() called with: inflater = [" + inflater + "], container = [" + container + "], savedInstanceState = [" + savedInstanceState + "]");
         // Inflate the layout for this fragment
-        FrameLayout view = (FrameLayout) inflater.inflate(R.layout.fragment_cover_image, container, false);
+        FrameLayout view = (FrameLayout) inflater.inflate(R.layout.fragment_banner_image, container, false);
         img_cover = (ImageView) view.findViewById(R.id.img_cover);
         progress = (ProgressBar) view.findViewById(R.id.progress);
         return view;
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        Log.d(TAG, "onResume() called: " + coverImageModel);
-        if (coverImageModel != null) {
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if (bannerImageModel != null) {
             Glide.with(mContext)
-                    .load(coverImageModel.imgUrl)
+                    .load(bannerImageModel.imgCatImageUrl)
                     .listener(new RequestListener<String, GlideDrawable>() {
                         @Override
                         public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
@@ -88,6 +86,11 @@ public class CoverImageFragment extends BaseFragment {
         } else {
             progress.setVisibility(View.GONE);
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
     }
 
     @Override

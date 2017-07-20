@@ -49,6 +49,9 @@
     <color name="grey_dark_color">#b9b9b9</color>
     <color name="grey_dark_color_2">#6A6A6A</color>
     <color name="grey_dark_color_3">#22a27c</color>
+    <color name="grey_dark_color_4">#dbdde2</color>
+    <color name="grey_dark_color_5">#525252</color>
+    <color name="grey_dark_color_6">#787878</color>
 
     <color name="grey_color">#E8E8E8</color>
     <color name="light_grey_color">#DCDEE3</color>

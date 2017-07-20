@@ -176,29 +176,6 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
                 holder.mUpcomingTaskBinding.tvLiveFeed.setText(labelOffer);
                 offerIndex = (offerIndex == (liveFeedCounter - 1) ? 0 : offerIndex + 1);
                 mOfferIndexMap.put(model.taskId, offerIndex);
-
-
-                //
-//                holder.liveFeedindex = 0;
-//                final SpannableString labelOffer = new SpannableString(model.live_lable_arr.get(holder.liveFeedindex) + " This is Dummy text appended by Bhavesh just to check if its working for more than TWO line.");
-//                labelOffer.setSpan(new LeadingMarginSpan.Standard(mLiveIconOffset, 0), 0, labelOffer.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-//                holder.mUpcomingTaskBinding.tvLiveFeed.setText(labelOffer);
-
-                /*AnimatorSet offerAnimation = loadBannerScrollAnimation(holder.mUpcomingTaskBinding.tvLiveFeed, 2000, 100, new AnimatorListenerAdapter() {
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        super.onAnimationEnd(animation);
-                        if (holder.liveFeedindex >= model.live_lable_arr.size() - 1)
-                            holder.liveFeedindex = 0;
-                        else
-                            holder.liveFeedindex++;
-                        SpannableString labelOffer = new SpannableString(model.live_lable_arr.get(holder.liveFeedindex));
-                        labelOffer.setSpan(new LeadingMarginSpan.Standard(mLiveIconOffset, 0), 0, labelOffer.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-                        holder.mUpcomingTaskBinding.tvLiveFeed.setText(labelOffer);
-                    }
-                });
-                offerAnimation.start();
-                holder.addAnimator(offerAnimation);*/
             } else {
                 holder.mUpcomingTaskBinding.ivLiveAnimated.setVisibility(View.GONE);
                 holder.mUpcomingTaskBinding.tvLiveFeed.setVisibility(View.GONE);

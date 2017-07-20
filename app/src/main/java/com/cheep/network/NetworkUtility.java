@@ -30,6 +30,9 @@ public class NetworkUtility {
         public static final String DELETE_ADDRESS = BASE_URL + "customers/profile/delete_address";
         public static final String UPDATE_PROFILE = BASE_URL + "customers/profile/edit";
         public static final String CATEGORY_LIST = BASE_URL + "customers/category/all_cats";
+        public static final String ALL_BANNER = BASE_URL + "customers/category/all_banner";
+        public static final String FAVOURITE_CATEGORY = BASE_URL + "customers/category/category_favourite";
+
         public static final String UPDATE_LOCATION = BASE_URL + "customers/profile/update_location";
         public static final String CREATE_TASK = BASE_URL + "customers/tasks/create";
         public static final String SP_LIST = BASE_URL + "customers/sp_list/listing";
@@ -106,6 +109,7 @@ public class NetworkUtility {
         public static final String PASSWORD = "password";
         public static final String LAT = "lat";
         public static final String LNG = "lng";
+        public static final String SORT_TYPE = "sortType";
 
         public static final String OLD_PASSWORD = "old_password";
         public static final String NEW_PASSWORD = "new_password";
@@ -186,6 +190,9 @@ public class NetworkUtility {
         public static final String TYPE = "type";
         public static final String CHAT_IMG = "chat_img";
         public static final String IS_CHAT = "isChat";
+
+        public static final String ADD = "add";
+        public static final String REMOVE = "remove";
 
         public static class VERSION_CHANGE_TYPE {
             public static final int NORMAL = 0;

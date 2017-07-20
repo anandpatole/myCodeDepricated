@@ -5,7 +5,8 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <android.support.v4.widget.SwipeRefreshLayout
             android:id="@+id/swipeRefreshLayout"
@@ -32,30 +33,14 @@
                 android:layout_gravity="center"
                 android:visibility="gone" />
 
-            <FrameLayout
+            <ImageView
+                android:id="@+id/img_error"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <ImageView
-                    android:id="@+id/img_error"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:adjustViewBounds="true"
-                    android:src="@drawable/img_empty_category"
-                    android:visibility="gone"
-                    tools:ignore="ContentDescription" />
-
-                <ImageView
-                    android:id="@+id/img_post_a_task"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="bottom|center"
-                    android:layout_marginBottom="@dimen/scale_30dp"
-                    android:adjustViewBounds="true"
-                    android:src="@drawable/ic_post_a_task"
-                    android:visibility="gone"
-                    tools:ignore="ContentDescription" />
-            </FrameLayout>
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:src="@drawable/img_empty_category"
+                android:visibility="gone"
+                tools:ignore="ContentDescription" />
 
             <com.cheep.custom_view.CFTextViewRegular
                 android:id="@+id/text_error"

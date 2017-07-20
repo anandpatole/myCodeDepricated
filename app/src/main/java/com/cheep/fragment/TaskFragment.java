@@ -213,7 +213,7 @@ public class TaskFragment extends BaseFragment {
 
     @Override
     public void onDetach() {
-
+        Log.d(TAG, "onDetach() called");
         if (EventBus.getDefault().isRegistered(this) == true)
             EventBus.getDefault().unregister(this);
 

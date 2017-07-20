@@ -37,7 +37,7 @@ public class VolleyNetworkRequest<T> extends Request<T> {
     private Map<String, Object> stringData;
     private HashMap<String, File> mFilePart;
 
-    //Constructor
+    // Constructor
     public VolleyNetworkRequest(String url,
                                 Response.ErrorListener errorListener,
                                 Response.Listener<T> listener,

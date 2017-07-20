@@ -3,28 +3,44 @@ package com.cheep.fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.ViewCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.cheep.BuildConfig;
 import com.cheep.R;
 import com.cheep.activity.SearchActivity;
 import com.cheep.activity.SelectLocationActivity;
 import com.cheep.adapter.HomeTabRecyclerViewAdapter;
-import com.cheep.custom_view.DividerItemDecoration;
 import com.cheep.databinding.FragmentTabHomeBinding;
+import com.cheep.databinding.LayoutFilterHomePopupBinding;
 import com.cheep.interfaces.DrawerLayoutInteractionListener;
 import com.cheep.interfaces.NotificationClickInteractionListener;
+import com.cheep.model.BannerImageModel;
 import com.cheep.model.JobCategoryModel;
 import com.cheep.model.MessageEvent;
 import com.cheep.model.UserDetails;
@@ -60,11 +76,18 @@ public class HomeTabFragment extends BaseFragment {
     private DrawerLayoutInteractionListener mListener;
     private NotificationClickInteractionListener mNotificationClickInteractionListener;
     private CategoryRowInteractionListener mCategoryRowInteractionListener;
-    private HomeTabRecyclerViewAdapter adapter;
+    private HomeTabRecyclerViewAdapter homeTabRecyclerViewAdapter;
     private String tempCityName; // this variables value comes from SelectLocationActivity and onActivityResult of this class
-
     private ErrorLoadingHelper errorLoadingHelper;
-    private boolean mAlreadyLoaded = false;
+//    private boolean mAlreadyLoaded = false;
+
+    // Saving Current Location for using them later on
+    private String mLat;
+    private String mLon;
+
+    // For storing category Cover image list
+    private ArrayList<BannerImageModel> bannerImageModelArrayList;
+    private String mSelectedFilterType = Utility.FILTER_TYPES.FILTER_TYPE_FEATURED;
 
     public static HomeTabFragment newInstance(DrawerLayoutInteractionListener mListener) {
         Bundle args = new Bundle();
@@ -137,15 +160,8 @@ public class HomeTabFragment extends BaseFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-        if (savedInstanceState == null && !mAlreadyLoaded) {
-            mAlreadyLoaded = true;
-            // Do this code only first time, not after rotation or reuse fragment from backstack
-            initiateUI();
-            setListener();
-        } else {
-            profileUpdate();
-        }
+        initiateUI();
+        setListener();
     }
 
     @Override
@@ -182,8 +198,8 @@ public class HomeTabFragment extends BaseFragment {
         Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.WS.CATEGORY_LIST);
         Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.WS.UPDATE_LOCATION);
 
-        if (mFragmentTabHomeBinding != null && mFragmentTabHomeBinding.commonRecyclerView != null && mFragmentTabHomeBinding.commonRecyclerView.swipeRefreshLayout != null)
-            mFragmentTabHomeBinding.commonRecyclerView.swipeRefreshLayout.setRefreshing(false);
+        if (mFragmentTabHomeBinding != null && mFragmentTabHomeBinding.commonRecyclerView != null && mFragmentTabHomeBinding.swipeRefreshLayout != null)
+            mFragmentTabHomeBinding.swipeRefreshLayout.setRefreshing(false);
 
         super.onDetach();
     }
@@ -213,17 +229,28 @@ public class HomeTabFragment extends BaseFragment {
             toggleErrorScreen(false);
             mFragmentTabHomeBinding.textLocation.setText(userDetails.getLocality());
             errorLoadingHelper.showLoading();
-            getCategoryListFromServer("", "");
-        } else {
 
-//            TODO: This needs to be changed afetr
+            /**
+             * @Change: Load Banner image first then call category listing.
+             */
+//            TODO: This needs to be changed (OLD Implementation)
+//            getCategoryListFromServer("", "");
+
+            // New Implementation
+            mLat = Utility.EMPTY_STRING;
+            mLon = Utility.EMPTY_STRING;
+            getBannerImageListFromServer();
+        } else {
+//            TODO: This needs to be changed after
            /* toggleErrorScreen(true);
             mFragmentTabHomeBinding.textLocation.setText(getString(R.string.hint_select_location));
             //starting to choose location
             Intent intent = new Intent(mContext, SelectLocationActivity.class);
             startActivityForResult(intent, Utility.REQUEST_CODE_CHANGE_LOCATION);
             ((AppCompatActivity) mContext).overridePendingTransition(0, 0);*/
-            updateLatLongOnServer("19.1363246", "72.82766");
+            mLat = "19.1363246";
+            mLon = "72.82766";
+            updateLatLongOnServer();
         }
 
         mFragmentTabHomeBinding.textSearch.setVisibility(View.GONE);
@@ -234,6 +261,43 @@ public class HomeTabFragment extends BaseFragment {
 
         if (EventBus.getDefault().isRegistered(this) == false)
             EventBus.getDefault().register(this);
+
+        // Set Height of Viewpager according to 16:9 resolution to make the things work
+       /* mFragmentTabHomeBinding.layoutBannerHeader.viewPagerBannerImages.post(new Runnable() {
+            @Override
+            public void run() {
+                ViewGroup.LayoutParams params = mFragmentTabHomeBinding.layoutBannerHeader.viewPagerBannerImages.getLayoutParams();
+                params.height = Utility.getHeightFromWidthForSixteenNineRatio(params.width);
+                mFragmentTabHomeBinding.layoutBannerHeader.viewPagerBannerImages.setLayoutParams(params);
+            }
+        });*/
+
+        // Setup Cover Image Adapter as Empty
+        setupCoverViewPager(null);
+        // Initiate Recyclerview
+        initiateRecyclerView(null);
+
+        // Hide Banner Image view by default
+        showBannerView(false);
+
+        // Enable Filter text
+        updateFilterText();
+
+        // Calculat Pager Height and Width
+        ViewTreeObserver mViewTreeObserver = mFragmentTabHomeBinding.layoutBannerHeader.viewPagerBannerImages.getViewTreeObserver();
+        mViewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                Log.d(TAG, "onGlobalLayout() called");
+                mFragmentTabHomeBinding.layoutBannerHeader.viewPagerBannerImages.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                int width = mFragmentTabHomeBinding.layoutBannerHeader.viewPagerBannerImages.getMeasuredWidth();
+                int height = mFragmentTabHomeBinding.layoutBannerHeader.viewPagerBannerImages.getMeasuredHeight();
+                Log.d(TAG, "onGlobalLayout() called==> " + width + "*" + height);
+                ViewGroup.LayoutParams params = mFragmentTabHomeBinding.layoutBannerHeader.viewPagerBannerImages.getLayoutParams();
+                params.height = Utility.getHeightFromWidthForSixteenNineRatio(width);
+                mFragmentTabHomeBinding.layoutBannerHeader.viewPagerBannerImages.setLayoutParams(params);
+            }
+        });
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -243,14 +307,27 @@ public class HomeTabFragment extends BaseFragment {
         }
     }
 
+    private void initiateRecyclerView(ArrayList<JobCategoryModel> list) {
+        Log.d(TAG, "initiateRecyclerView() called with: list = [" + list + "]");
+        homeTabRecyclerViewAdapter = new HomeTabRecyclerViewAdapter(list, mCategoryRowInteractionListener);
+        mFragmentTabHomeBinding.commonRecyclerView.recyclerView.setHasFixedSize(true);
+//        int padding_In_px = (int) Utility.convertDpToPixel(10, mContext);
+//        mFragmentTabHomeBinding.commonRecyclerView.recyclerView.setPadding(0, 0, 0, padding_In_px);
+        mFragmentTabHomeBinding.commonRecyclerView.recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
+        mFragmentTabHomeBinding.commonRecyclerView.recyclerView.setAdapter(homeTabRecyclerViewAdapter);
+        ViewCompat.setNestedScrollingEnabled(mFragmentTabHomeBinding.commonRecyclerView.recyclerView, false);
+//        mFragmentTabHomeBinding.commonRecyclerView.recyclerView.addItemDecoration(new DividerItemDecoration(mContext, R.drawable.divider_home_screen, (int) getResources().getDimension(R.dimen.scale_0dp)));
+    }
+
     private void initSwipeToRefreshLayout() {
-        mFragmentTabHomeBinding.commonRecyclerView.swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        mFragmentTabHomeBinding.swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                reloadCategoryListFromServer();
+                // Fetch Only Category List from server
+                getCategoryListFromServer();
             }
         });
-        Utility.setSwipeRefreshLayoutColors(mFragmentTabHomeBinding.commonRecyclerView.swipeRefreshLayout);
+        Utility.setSwipeRefreshLayoutColors(mFragmentTabHomeBinding.swipeRefreshLayout);
     }
 
     @Override
@@ -258,8 +335,14 @@ public class HomeTabFragment extends BaseFragment {
         mFragmentTabHomeBinding.textSearch.setOnClickListener(onClickListener);
         mFragmentTabHomeBinding.textLocation.setOnClickListener(onClickListener);
         mFragmentTabHomeBinding.relNotificationAction.setOnClickListener(onClickListener);
+        mFragmentTabHomeBinding.layoutBannerHeader.textFilter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Setup Popup Window view for Filter section
+                showFilterWindow();
+            }
+        });
     }
-
 
     View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
@@ -269,10 +352,10 @@ public class HomeTabFragment extends BaseFragment {
 
                 case text_search:
 
-                    if (adapter != null) {
+                    if (homeTabRecyclerViewAdapter != null) {
                         sharedElementTransitionHelper = new SharedElementTransitionHelper(getActivity());
                         sharedElementTransitionHelper.put(mFragmentTabHomeBinding.textSearch, R.string.transition_text_search);
-                        SearchActivity.newInstance(mContext, sharedElementTransitionHelper.getBundle(), mFragmentTabHomeBinding.textLocation.getText().toString().trim(), adapter.getmList());
+                        SearchActivity.newInstance(mContext, sharedElementTransitionHelper.getBundle(), mFragmentTabHomeBinding.textLocation.getText().toString().trim(), homeTabRecyclerViewAdapter.getmList());
                     }
 
                     break;
@@ -292,8 +375,13 @@ public class HomeTabFragment extends BaseFragment {
         }
     };
 
+
     public interface CategoryRowInteractionListener {
         void onCategoryRowClicked(JobCategoryModel model, int position);
+
+        void onCategoryFavouriteClicked(JobCategoryModel model, int position);
+
+        void onListCategoryListGetsEmpty();
     }
 
     @Override
@@ -312,7 +400,10 @@ public class HomeTabFragment extends BaseFragment {
         Log.d(TAG, "onLocationFetched() called with: mLocation = [" + mLocation + "]");
         if (!isPreviousLocationPresent()) {
             errorLoadingHelper.showLoading();
-            getCategoryListFromServer(String.valueOf(mLocation.getLatitude()), String.valueOf(mLocation.getLongitude()));
+
+//            TODO: This needs to be changed
+//            getCategoryListFromServer(String.valueOf(mLocation.getLatitude()), String.valueOf(mLocation.getLongitude()));
+            getBannerImageListFromServer();
 //            getCategoryListFromServer("", "");
         }
     }
@@ -343,11 +434,10 @@ public class HomeTabFragment extends BaseFragment {
         if (requestCode == Utility.REQUEST_CODE_CHANGE_LOCATION && resultCode == AppCompatActivity.RESULT_OK) {
 
             if (data != null) {
-                String latitude = data.getStringExtra(Utility.Extra.LATITUDE);
-                String longitude = data.getStringExtra(Utility.Extra.LONGITUDE);
+                mLat = data.getStringExtra(Utility.Extra.LATITUDE);
+                mLon = data.getStringExtra(Utility.Extra.LONGITUDE);
                 tempCityName = data.getStringExtra(Utility.Extra.CITY_NAME);
-                updateLatLongOnServer(latitude, longitude);
-
+                updateLatLongOnServer();
             }
 
         }
@@ -357,20 +447,14 @@ public class HomeTabFragment extends BaseFragment {
     //============== WEB INTEGRATION =====================
     //====================================================
 
-
     /**
      * Update Category list on server
-     *
-     * @param lat
-     * @param lng
      */
-    private void updateLatLongOnServer(String lat, String lng) {
-        this.lat = lat;
-        this.lng = lng;
+    private void updateLatLongOnServer() {
         //Setting RecyclerView Adapter
-        /*HomeTabRecyclerViewAdapter adapter = new HomeTabRecyclerViewAdapter(BootstrapConstant.DUMMY_JOB_CATEGORY_MODELS_LIST, mCategoryRowInteractionListener);
+        /*HomeTabRecyclerViewAdapter homeTabRecyclerViewAdapter = new HomeTabRecyclerViewAdapter(BootstrapConstant.DUMMY_JOB_CATEGORY_MODELS_LIST, mCategoryRowInteractionListener);
         mFragmentTabHomeBinding.commonRecyclerView.recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
-        mFragmentTabHomeBinding.commonRecyclerView.recyclerView.setAdapter(adapter);
+        mFragmentTabHomeBinding.commonRecyclerView.recyclerView.setAdapter(homeTabRecyclerViewAdapter);
         mFragmentTabHomeBinding.commonRecyclerView.recyclerView.addItemDecoration(new DividerItemDecoration(mContext, R.drawable.divider_white, (int) getResources().getDimension(R.dimen.scale_0dp)));*/
 
         //Add Header parameters
@@ -380,8 +464,8 @@ public class HomeTabFragment extends BaseFragment {
 
         //Add Params
         Map<String, String> mParams = new HashMap<>();
-        mParams.put(NetworkUtility.TAGS.LAT, lat);
-        mParams.put(NetworkUtility.TAGS.LNG, lng);
+        mParams.put(NetworkUtility.TAGS.LAT, mLat);
+        mParams.put(NetworkUtility.TAGS.LNG, mLon);
 
         VolleyNetworkRequest mVolleyNetworkRequest = new VolleyNetworkRequest(NetworkUtility.WS.UPDATE_LOCATION
                 , mCallUpdateLatLngWSErrorListener
@@ -409,6 +493,7 @@ public class HomeTabFragment extends BaseFragment {
                         Utility.showToast(mContext, "Location updated");
                         JSONObject jsonData = jsonObject.optJSONObject(NetworkUtility.TAGS.DATA);
 
+                        // Update City and Address issue and update the same information from
                         UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
                         userDetails.CityID = jsonData.optString(NetworkUtility.TAGS.CITY_ID);
                         userDetails.CityName = jsonData.optString(NetworkUtility.TAGS.CITY_NAME);
@@ -416,24 +501,21 @@ public class HomeTabFragment extends BaseFragment {
                         PreferenceUtility.getInstance(mContext).saveUserDetails(userDetails);
                         mFragmentTabHomeBinding.textLocation.setText(userDetails.getLocality());
 
-                        getCategoryListFromServer(lat, lng);
-                        // Show message
+                        // Call Call category listing from server.
+//                        TODO: Fetch Banner Images First
+//                        getCategoryListFromServer(lat, lng);
+                        getBannerImageListFromServer();
+
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
-                        // Show Toast
-//                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mFragmentTabHomeBinding.getRoot());
                         mFragmentTabHomeBinding.textLocation.setText(tempCityName);
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
-                        error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
-                        // Show message
-//                        Utility.showSnackBar(error_message, mFragmentTabHomeBinding.getRoot());
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
                     case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
                         //Logout and finish the current activity
                         Utility.logout(mContext, true, statusCode);
-                        ;
                         if (getActivity() != null)
                             getActivity().finish();
                         break;
@@ -456,34 +538,146 @@ public class HomeTabFragment extends BaseFragment {
         }
     };
 
-    /**
-     * Get Category list from server
-     */
 
-    private void reloadCategoryListFromServer() {
-        /*if (mVolleyNetworkRequestForCategoryList != null) {
-            Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequestForCategoryList);
-        } else {
-            mFragmentTabHomeBinding.commonRecyclerView.swipeRefreshLayout.setRefreshing(false);
-        }*/
-        getCategoryListFromServer(lat, lng);
-    }
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////// Banner Image [Start]/////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
 
-    String lat, lng;
-
-    private void getCategoryListFromServer(final String lat, final String lng) {
-
+    private void getBannerImageListFromServer() {
         //If user is logged out already,return from here only.
-        /*
-          Fixed crash issue.
-          @changes by @bhavesh on 25th Feb2017
-         */
         if (PreferenceUtility.getInstance(mContext).getUserDetails() == null) {
             return;
         }
 
-        this.lat = lat;
-        this.lng = lng;
+        if (!Utility.isConnected(mContext)) {
+            errorLoadingHelper.failed(getString(R.string.no_internet), 0, onRetryBtnClickListener);
+            return;
+        }
+
+        //Add Header parameters
+        Map<String, String> mHeaderParams = new HashMap<>();
+        mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
+        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
+
+        /*//Add Params
+        Map<String, String> mParams = new HashMap<>();
+        */
+
+        VolleyNetworkRequest mVolleyNetworkRequestForCategoryList = new VolleyNetworkRequest(NetworkUtility.WS.ALL_BANNER
+                , mCallFetchBannerImageWSErrorListener
+                , mCallFetchBannerImageWSResponseListener
+                , mHeaderParams
+                , null
+                , null);
+        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequestForCategoryList);
+    }
+
+    Response.Listener mCallFetchBannerImageWSResponseListener = new Response.Listener() {
+        @Override
+        public void onResponse(Object response) {
+            Log.d(TAG, "onResponse() called with: response = [" + response + "]");
+
+            String strResponse = (String) response;
+            try {
+                JSONObject jsonObject = new JSONObject(strResponse);
+                Log.i(TAG, "onResponse: " + jsonObject.toString());
+                int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
+                String error_message;
+                switch (statusCode) {
+                    case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
+                        bannerImageModelArrayList = Utility.getObjectListFromJsonString(jsonObject.optString(NetworkUtility.TAGS.DATA), BannerImageModel[].class);
+
+                        // Call Category listing webservice.
+                        getCategoryListFromServer();
+
+
+                        /*ArrayList<JobCategoryModel> list;
+                        list = Utility.getObjectListFromJsonString(jsonObject.optString(NetworkUtility.TAGS.DATA), JobCategoryModel[].class);
+
+                        //Setting RecyclerView Adapter
+                        homeTabRecyclerViewAdapter = new HomeTabRecyclerViewAdapter(list, mCategoryRowInteractionListener);
+                        ViewCompat.setNestedScrollingEnabled(mFragmentTabHomeBinding.commonRecyclerView.recyclerView, false);
+                        mFragmentTabHomeBinding.commonRecyclerView.recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
+                        mFragmentTabHomeBinding.commonRecyclerView.recyclerView.setAdapter(homeTabRecyclerViewAdapter);
+                        mFragmentTabHomeBinding.commonRecyclerView.recyclerView.addItemDecoration(new DividerItemDecoration(mContext, R.drawable.divider_white, (int) getResources().getDimension(R.dimen.scale_0dp)));
+                        toggleErrorScreen(false);
+
+                        if (list != null && list.size() <= 0) {
+                            errorLoadingHelper.failed(null, R.drawable.img_empty_category, onRetryBtnClickListener);
+                        }*/
+
+                        break;
+                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
+                        // Show Toast
+//                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mFragmentTabHomeBinding.getRoot());
+                        errorLoadingHelper.failed(getString(R.string.label_something_went_wrong), 0, onRetryBtnClickListener);
+                        break;
+                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
+                        error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
+                        toggleErrorScreen(true);
+                        // Show message
+//                        Utility.showSnackBar(error_message, mFragmentTabHomeBinding.getRoot());
+                        errorLoadingHelper.failed(error_message, 0, onRetryBtnClickListener);
+                        break;
+                    case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
+                    case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
+                        //Logout and finish the current activity
+                        Utility.logout(mContext, true, statusCode);
+                        if (getActivity() != null)
+                            getActivity().finish();
+                        break;
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+                mCallFetchBannerImageWSErrorListener.onErrorResponse(new VolleyError(e.getMessage()));
+            }
+        }
+    };
+
+    Response.ErrorListener mCallFetchBannerImageWSErrorListener = new Response.ErrorListener() {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
+            mFragmentTabHomeBinding.swipeRefreshLayout.setRefreshing(false);
+            errorLoadingHelper.failed(getString(R.string.label_something_went_wrong), 0, onRetryBtnClickListener);
+        }
+    };
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////// Banner Image [End]/////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////// Category Listing [Start]/////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public void onListCategoryListGetsEmpty() {
+        Log.d(TAG, "onListCategoryListGetsEmpty() called");
+        errorLoadingHelper.failed(getResources().getString(R.string.empty_favourited_list), 0, null);
+    }
+
+
+    private void getCategoryListFromServer(boolean isShowDialog) {
+//        showProgressDialog();
+        errorLoadingHelper.showLoading();
+        getCategoryListFromServer();
+    }
+
+    private void getCategoryListFromServer() {
+        //If user is logged out already,return from here only.
+        /*
+          Fixed crash issue.
+          @changes by @bhavesh on 25th Feb, 2017
+         */
+        if (PreferenceUtility.getInstance(mContext).getUserDetails() == null) {
+            return;
+        }
 
         if (!Utility.isConnected(mContext)) {
 //            Utility.showSnackBar(getString(R.string.no_internet), mFragmentTabHomeBinding.getRoot());
@@ -498,10 +692,14 @@ public class HomeTabFragment extends BaseFragment {
 
         //Add Params
         Map<String, String> mParams = new HashMap<>();
-        if (!TextUtils.isEmpty(lat)) {
-            mParams.put(NetworkUtility.TAGS.LAT, lat);
-            mParams.put(NetworkUtility.TAGS.LNG, lng);
+        if (!TextUtils.isEmpty(mLat)) {
+            mParams.put(NetworkUtility.TAGS.LAT, mLat);
+            mParams.put(NetworkUtility.TAGS.LNG, mLon);
         }
+
+        // Sort Type Params
+        mParams.put(NetworkUtility.TAGS.SORT_TYPE, mSelectedFilterType);
+
 
         VolleyNetworkRequest mVolleyNetworkRequestForCategoryList = new VolleyNetworkRequest(NetworkUtility.WS.CATEGORY_LIST
                 , mCallCategoryListWSErrorListener
@@ -518,27 +716,35 @@ public class HomeTabFragment extends BaseFragment {
             Log.d(TAG, "onResponse() called with: response = [" + response + "]");
 
             String strResponse = (String) response;
+            hideProgressDialog();
             try {
                 JSONObject jsonObject = new JSONObject(strResponse);
                 Log.i(TAG, "onResponse: " + jsonObject.toString());
                 int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
                 String error_message;
-                mFragmentTabHomeBinding.commonRecyclerView.swipeRefreshLayout.setRefreshing(false);
+                mFragmentTabHomeBinding.swipeRefreshLayout.setRefreshing(false);
                 switch (statusCode) {
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
-
                         ArrayList<JobCategoryModel> list;
                         list = Utility.getObjectListFromJsonString(jsonObject.optString(NetworkUtility.TAGS.DATA), JobCategoryModel[].class);
 
-                        //Setting RecyclerView Adapter
-                        adapter = new HomeTabRecyclerViewAdapter(list, mCategoryRowInteractionListener);
-                        mFragmentTabHomeBinding.commonRecyclerView.recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
-                        mFragmentTabHomeBinding.commonRecyclerView.recyclerView.setAdapter(adapter);
-                        mFragmentTabHomeBinding.commonRecyclerView.recyclerView.addItemDecoration(new DividerItemDecoration(mContext, R.drawable.divider_white, (int) getResources().getDimension(R.dimen.scale_0dp)));
-                        toggleErrorScreen(false);
+                        // SHow Banner view now
+                        showBannerView(true);
 
+                        // Setup Cover ViewPager homeTabRecyclerViewAdapter
+                        addCoverImageListing(bannerImageModelArrayList);
+
+                        // Setting RecyclerView Adapter
+                        homeTabRecyclerViewAdapter.addItems(list);
+
+                        toggleErrorScreen(false);
                         if (list != null && list.size() <= 0) {
-                            errorLoadingHelper.failed(null, R.drawable.img_empty_category, onRetryBtnClickListener);
+                            if (mSelectedFilterType.equalsIgnoreCase(Utility.FILTER_TYPES.FILTER_TYPE_FAVOURITES)) {
+                                onListCategoryListGetsEmpty();
+                            } else {
+                                errorLoadingHelper.failed(null, R.drawable.img_empty_category, onRetryBtnClickListener);
+                            }
+
                         }
 
                         break;
@@ -558,7 +764,6 @@ public class HomeTabFragment extends BaseFragment {
                     case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
                         //Logout and finish the current activity
                         Utility.logout(mContext, true, statusCode);
-                        ;
                         if (getActivity() != null)
                             getActivity().finish();
                         break;
@@ -574,10 +779,11 @@ public class HomeTabFragment extends BaseFragment {
         @Override
         public void onErrorResponse(VolleyError error) {
             Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
-            mFragmentTabHomeBinding.commonRecyclerView.swipeRefreshLayout.setRefreshing(false);
+            mFragmentTabHomeBinding.swipeRefreshLayout.setRefreshing(false);
 
             errorLoadingHelper.failed(getString(R.string.label_something_went_wrong), 0, onRetryBtnClickListener);
 
+            hideProgressDialog();
             // Show Toast
 //            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mFragmentTabHomeBinding.getRoot());
         }
@@ -586,7 +792,371 @@ public class HomeTabFragment extends BaseFragment {
         @Override
         public void onClick(View view) {
             errorLoadingHelper.showLoading();
-            reloadCategoryListFromServer();
+            getCategoryListFromServer();
         }
     };
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////// Category Listing [END]/////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////Banner Image Logic[Start]/////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private void showBannerView(boolean flag) {
+        mFragmentTabHomeBinding.layoutBannerHeader.rootBannerView.setVisibility(flag ? View.VISIBLE : View.INVISIBLE);
+    }
+
+    private BannerViewPagerAdapter bannerViewPagerAdapter;
+    private Handler mHandler;
+
+    private void setupCoverViewPager(ArrayList<BannerImageModel> mBannerListModels) {
+
+        bannerViewPagerAdapter = new BannerViewPagerAdapter(getChildFragmentManager(), mBannerListModels);
+        mFragmentTabHomeBinding.layoutBannerHeader.viewPagerBannerImages.setAdapter(bannerViewPagerAdapter);
+
+        //See if we are having only one image, do not show the indicator in that case
+        showORHidePagerIndicator();
+
+        // For Setting up view pager Indicator
+        mFragmentTabHomeBinding.layoutBannerHeader.indicatorHomeBanner.setViewPager(mFragmentTabHomeBinding.layoutBannerHeader.viewPagerBannerImages);
+        bannerViewPagerAdapter.registerDataSetObserver(mFragmentTabHomeBinding.layoutBannerHeader.indicatorHomeBanner.getDataSetObserver());
+        if (mHandler != null) {
+            mHandler.removeCallbacks(mAutoSlideRunnable);
+            mHandler = null;
+            mHandler = new Handler();
+        } else {
+            mHandler = new Handler();
+        }
+        // Sliding of Viewpager image
+        mHandler.postDelayed(mAutoSlideRunnable, 4000);
+
+        mFragmentTabHomeBinding.layoutBannerHeader.viewPagerBannerImages.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int i, float v, int i1) {
+
+            }
+
+            @Override
+            public void onPageSelected(int i) {
+                if (mHandler == null) {
+                    return;
+                }
+                //Reset the sliding
+                mHandler.removeCallbacks(mAutoSlideRunnable);
+                // reset the sliding
+                mHandler.postDelayed(mAutoSlideRunnable, 4000);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int i) {
+
+            }
+        });
+    }
+
+    private Runnable mAutoSlideRunnable = new Runnable() {
+        @Override
+        public void run() {
+            int currentPosition = mFragmentTabHomeBinding.layoutBannerHeader.viewPagerBannerImages.getCurrentItem();
+            if (currentPosition == (bannerViewPagerAdapter.getCount() - 1)) {
+                currentPosition = 0;
+            } else {
+                currentPosition = currentPosition + 1;
+            }
+            mFragmentTabHomeBinding.layoutBannerHeader.viewPagerBannerImages.setCurrentItem(currentPosition);
+        }
+    };
+
+    private void addCoverImageListing(ArrayList<BannerImageModel> mBannerListModels) {
+        bannerViewPagerAdapter.replaceData(mBannerListModels);
+
+        //See if we are having only one image, do not show the indicator in that case
+        showORHidePagerIndicator();
+    }
+
+    private void showORHidePagerIndicator() {
+        if (bannerViewPagerAdapter != null && bannerViewPagerAdapter.getCount() >= 1) {
+            mFragmentTabHomeBinding.layoutBannerHeader.indicatorHomeBanner.setVisibility(View.VISIBLE);
+        } else {
+            mFragmentTabHomeBinding.layoutBannerHeader.indicatorHomeBanner.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    private static class BannerViewPagerAdapter extends FragmentStatePagerAdapter {
+        private ArrayList<BannerImageModel> imageModelArrayList;
+
+        BannerViewPagerAdapter(FragmentManager fragmentManager, ArrayList<BannerImageModel> modelArrayList) {
+            super(fragmentManager);
+            Log.d(TAG, "BannerViewPagerAdapter() called with: fragmentManager = [" + fragmentManager + "], modelArrayList = [" + modelArrayList + "]");
+            this.imageModelArrayList = modelArrayList != null ? modelArrayList : new ArrayList<BannerImageModel>();
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            Log.d(TAG, "getItem() called with: position = [" + position + "]" + " Size: " + imageModelArrayList.size());
+            return BannerImageFragment.getInstance(imageModelArrayList.get(position));
+        }
+
+        @Override
+        public int getItemPosition(Object object) {
+            return POSITION_NONE;
+        }
+
+        @Override
+        public int getCount() {
+            return imageModelArrayList.size();
+        }
+
+        private ArrayList<BannerImageModel> getLists() {
+            return imageModelArrayList;
+        }
+
+        private void replaceData(ArrayList<BannerImageModel> modelArrayList) {
+            Log.d(TAG, "replaceData() called with: modelArrayList = [" + modelArrayList.size() + "]");
+            imageModelArrayList = modelArrayList;
+            notifyDataSetChanged();
+        }
+
+        @Override
+        public void restoreState(Parcelable state, ClassLoader loader) {
+//            super.restoreState(state, loader);
+        }
+
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////Banner Image Logic[End]///////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////// Filter Section[Start]///////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private void updateFilterText() {
+        mFragmentTabHomeBinding.layoutBannerHeader.textFilter.setSelected(true);
+        if (mSelectedFilterType.equalsIgnoreCase(Utility.FILTER_TYPES.FILTER_TYPE_FEATURED)) {
+            mFragmentTabHomeBinding.layoutBannerHeader.textFilter.setText(getResources().getString(R.string.label_featured));
+            mFragmentTabHomeBinding.layoutBannerHeader.textFilter.setCompoundDrawablesWithIntrinsicBounds(R.drawable.selector_drawable_left_filter_home_featured, 0, 0, 0);
+        } else if (mSelectedFilterType.equalsIgnoreCase(Utility.FILTER_TYPES.FILTER_TYPE_POPULAR)) {
+            mFragmentTabHomeBinding.layoutBannerHeader.textFilter.setText(getResources().getString(R.string.label_popular));
+            mFragmentTabHomeBinding.layoutBannerHeader.textFilter.setCompoundDrawablesWithIntrinsicBounds(R.drawable.selector_drawable_left_filter_home_popular, 0, 0, 0);
+        } else if (mSelectedFilterType.equalsIgnoreCase(Utility.FILTER_TYPES.FILTER_TYPE_FAVOURITES)) {
+            mFragmentTabHomeBinding.layoutBannerHeader.textFilter.setText(getResources().getString(R.string.label_favourites));
+            mFragmentTabHomeBinding.layoutBannerHeader.textFilter.setCompoundDrawablesWithIntrinsicBounds(R.drawable.selector_drawable_left_filter_home_favourites, 0, 0, 0);
+        }
+    }
+
+    /**
+     * This method would setup Filter Window  for customized view
+     */
+    private void showFilterWindow() {
+        Log.i(TAG, "showFilterWindow: ");
+
+        final LayoutFilterHomePopupBinding mLayoutFilterHomePopupBinding = DataBindingUtil.inflate(getLayoutInflater(), R.layout.layout_filter_home_popup, mFragmentTabHomeBinding.layoutBannerHeader.rootBannerView, false);
+//        View mFilterPopupWindow = View.inflate(mContext, R.layout.layout_filter_home_popup, null);
+
+        final PopupWindow mPopupWindow = new PopupWindow(mContext);
+        mPopupWindow.setContentView(mLayoutFilterHomePopupBinding.getRoot());
+        mPopupWindow.setWidth(LinearLayout.LayoutParams.WRAP_CONTENT);
+        mPopupWindow.setHeight(LinearLayout.LayoutParams.WRAP_CONTENT);
+        mPopupWindow.setFocusable(true);
+
+        mPopupWindow.setBackgroundDrawable(new BitmapDrawable());
+
+        // No animation at present
+        mPopupWindow.setAnimationStyle(0);
+
+        // Displaying the popup at the specified location, + offsets.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            mPopupWindow.showAsDropDown(mFragmentTabHomeBinding.layoutBannerHeader.textFilter, 0, -mFragmentTabHomeBinding.layoutBannerHeader.textFilter.getHeight(), Gravity.NO_GRAVITY);
+        } else {
+            mPopupWindow.showAsDropDown(mFragmentTabHomeBinding.layoutBannerHeader.textFilter, 0, -mFragmentTabHomeBinding.layoutBannerHeader.textFilter.getHeight());
+        }
+
+        // Manage selection till now
+        updateFilterSelectionInPopup(mLayoutFilterHomePopupBinding);
+
+        mLayoutFilterHomePopupBinding.textFeatured.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mSelectedFilterType.equalsIgnoreCase(Utility.FILTER_TYPES.FILTER_TYPE_FEATURED)) {
+                    mPopupWindow.dismiss();
+                    return;
+                }
+                mSelectedFilterType = Utility.FILTER_TYPES.FILTER_TYPE_FEATURED;
+                updateFilterSelectionInPopup(mLayoutFilterHomePopupBinding);
+                updateFilterText();
+                getCategoryListFromServer(true);
+                mPopupWindow.dismiss();
+            }
+        });
+
+        mLayoutFilterHomePopupBinding.textPopular.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mSelectedFilterType.equalsIgnoreCase(Utility.FILTER_TYPES.FILTER_TYPE_POPULAR)) {
+                    mPopupWindow.dismiss();
+                    return;
+                }
+                mSelectedFilterType = Utility.FILTER_TYPES.FILTER_TYPE_POPULAR;
+                updateFilterSelectionInPopup(mLayoutFilterHomePopupBinding);
+                updateFilterText();
+                getCategoryListFromServer(true);
+                mPopupWindow.dismiss();
+            }
+        });
+
+        mLayoutFilterHomePopupBinding.textFavourites.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mSelectedFilterType.equalsIgnoreCase(Utility.FILTER_TYPES.FILTER_TYPE_FAVOURITES)) {
+                    mPopupWindow.dismiss();
+                    return;
+                }
+                mSelectedFilterType = Utility.FILTER_TYPES.FILTER_TYPE_FAVOURITES;
+                updateFilterSelectionInPopup(mLayoutFilterHomePopupBinding);
+                updateFilterText();
+                getCategoryListFromServer(true);
+                mPopupWindow.dismiss();
+            }
+        });
+
+    }
+
+    private void updateFilterSelectionInPopup(LayoutFilterHomePopupBinding mLayoutFilterHomePopupBinding) {
+        // Click events logic
+        if (mSelectedFilterType.equalsIgnoreCase(Utility.FILTER_TYPES.FILTER_TYPE_FEATURED)) {
+            mLayoutFilterHomePopupBinding.textFeatured.setSelected(true);
+            mLayoutFilterHomePopupBinding.textPopular.setSelected(false);
+            mLayoutFilterHomePopupBinding.textFavourites.setSelected(false);
+        } else if (mSelectedFilterType.equalsIgnoreCase(Utility.FILTER_TYPES.FILTER_TYPE_POPULAR)) {
+            mLayoutFilterHomePopupBinding.textFeatured.setSelected(false);
+            mLayoutFilterHomePopupBinding.textPopular.setSelected(true);
+            mLayoutFilterHomePopupBinding.textFavourites.setSelected(false);
+        } else if (mSelectedFilterType.equalsIgnoreCase(Utility.FILTER_TYPES.FILTER_TYPE_FAVOURITES)) {
+            mLayoutFilterHomePopupBinding.textFeatured.setSelected(false);
+            mLayoutFilterHomePopupBinding.textPopular.setSelected(false);
+            mLayoutFilterHomePopupBinding.textFavourites.setSelected(true);
+        } else {
+            // By Deafult make featured as selected
+            mLayoutFilterHomePopupBinding.textFeatured.setSelected(true);
+            mLayoutFilterHomePopupBinding.textPopular.setSelected(false);
+            mLayoutFilterHomePopupBinding.textFavourites.setSelected(false);
+        }
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////// Filter Section[End]///////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////// Favourite Category [Start]//////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public void onCategoryFavouriteClicked(JobCategoryModel model, int position) {
+        if (model.isFavourite.equalsIgnoreCase(Utility.BOOLEAN.YES)) {
+            favouriteCategory(model.catId, NetworkUtility.TAGS.REMOVE);
+        } else {
+            favouriteCategory(model.catId, NetworkUtility.TAGS.ADD);
+        }
+    }
+
+    private void favouriteCategory(String catId, String req_for) {
+        //If user is logged out already,return from here only.
+        if (PreferenceUtility.getInstance(mContext).getUserDetails() == null) {
+            return;
+        }
+
+        if (!Utility.isConnected(mContext)) {
+            Utility.showToast(mContext, getString(R.string.no_internet));
+            return;
+        }
+
+//        showProgressDialog();
+
+        //Add Header parameters
+        Map<String, String> mHeaderParams = new HashMap<>();
+        mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
+        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
+
+        //Add Params
+        Map<String, String> mParams = new HashMap<>();
+        mParams.put(NetworkUtility.TAGS.CAT_ID, catId);
+        mParams.put(NetworkUtility.TAGS.REQ_FOR, req_for);
+
+        VolleyNetworkRequest mVolleyNetworkRequestForCategoryList = new VolleyNetworkRequest(NetworkUtility.WS.FAVOURITE_CATEGORY
+                , mCallFavouriteCategoryWSErrorListener
+                , mCallFavouriteCategoryWSResponseListener
+                , mHeaderParams
+                , mParams
+                , null);
+        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequestForCategoryList);
+    }
+
+    Response.Listener mCallFavouriteCategoryWSResponseListener = new Response.Listener() {
+        @Override
+        public void onResponse(Object response) {
+            Log.d(TAG, "onResponse() called with: response = [" + response + "]");
+
+            String strResponse = (String) response;
+            hideProgressDialog();
+            try {
+                JSONObject jsonObject = new JSONObject(strResponse);
+                Log.i(TAG, "onResponse: " + jsonObject.toString());
+                int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
+                String error_message;
+                switch (statusCode) {
+                    case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
+                        String cat_id = jsonObject.getString(NetworkUtility.TAGS.CAT_ID);
+                        String isFavourite = jsonObject.getString(NetworkUtility.TAGS.IS_FAVOURITE);
+                        homeTabRecyclerViewAdapter.updateOnCategoryFavourited(cat_id, isFavourite, mSelectedFilterType);
+                        break;
+                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
+                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
+                        break;
+                    case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
+                    case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
+                        //Logout and finish the current activity
+                        Utility.logout(mContext, true, statusCode);
+                        if (getActivity() != null)
+                            getActivity().finish();
+                        break;
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+                mCallFavouriteCategoryWSErrorListener.onErrorResponse(new VolleyError(e.getMessage()));
+            }
+        }
+    };
+
+    Response.ErrorListener mCallFavouriteCategoryWSErrorListener = new Response.ErrorListener() {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
+            hideProgressDialog();
+            Utility.showToast(mContext, getString(R.string.label_something_went_wrong));
+//            errorLoadingHelper.failed(getString(R.string.label_something_went_wrong), 0, onRetryBtnClickListener);
+        }
+    };
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////// Favourite Category [End]/////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
 }

@@ -1,6 +1,10 @@
 package com.cheep.model;
 
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by pankaj on 9/27/16.
@@ -24,6 +28,16 @@ public class JobCategoryModel {
     public String spCount;
     @SerializedName("cat_image_extra")
     public AttachmentModel catImageExtras;
+
+    // Newly added
+    @SerializedName("is_favourite")
+    @Expose
+    public String isFavourite;
+    @SerializedName("live_lable_arr")
+    public List<String> live_lable_arr;
+    @SerializedName("pro_image_per_cat")
+    public List<String> proImagesPerCategory;
+
 
     /*public String categoryName;
     public int totalNoOfJobs;

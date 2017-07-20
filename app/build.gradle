@@ -19,8 +19,8 @@ android {
         applicationId "com.cheep"
         minSdkVersion 16
         targetSdkVersion 25
-        versionCode 19
-        versionName "1.0.33" // PLEASE FIRST MAKE SURE MIN-VERSION IS 16.
+        versionCode 20
+        versionName "1.0.37" // PLEASE FIRST MAKE SURE MIN-VERSION IS 16.
         renderscriptTargetApi 18
         renderscriptSupportModeEnabled true
 

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:id="@+id/root_banner_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/ln_root"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:focusableInTouchMode="true"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/scale_5dp"
+            android:paddingLeft="@dimen/scale_10dp"
+            android:paddingRight="@dimen/scale_10dp"
+            android:paddingTop="@dimen/scale_15dp">
+
+            <android.support.v4.view.ViewPager
+                android:id="@+id/view_pager_banner_images"
+                android:layout_width="match_parent"
+                android:layout_height="200dp" />
+
+            <me.relex.circleindicator.CircleIndicator
+                android:id="@+id/indicator_home_banner"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/scale_25dp"
+                android:layout_gravity="center"
+                app:ci_drawable="@drawable/xml_circular_indicator_selected"
+                app:ci_drawable_unselected="@drawable/xml_circular_indicator_unselected" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/scale_10dp"
+            android:background="@color/grey_dark_color_4" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/scale_15dp"
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/scale_15dp"
+            android:paddingRight="@dimen/scale_15dp">
+
+            <com.cheep.custom_view.CFTextViewSemiBold
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="@string/label_our_services"
+                android:textColor="@color/grey_dark_color_5"
+                android:textSize="@dimen/text_size_18sp" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:orientation="horizontal">
+
+                <com.cheep.custom_view.CFTextViewRegular
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/label_filter"
+                    android:textAllCaps="true"
+                    android:textColor="@color/grey_dark_color_6" />
+
+                <com.cheep.custom_view.CFTextViewRegular
+                    android:id="@+id/text_filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/scale_10dp"
+                    android:background="@drawable/btn_blue_rounded_border_all_5_dp"
+                    android:drawableLeft="@drawable/selector_drawable_left_filter_home_featured"
+                    android:drawablePadding="@dimen/scale_5dp"
+                    android:minWidth="@dimen/scale_100dp"
+                    android:paddingBottom="@dimen/scale_5dp"
+                    android:paddingLeft="@dimen/scale_8dp"
+                    android:paddingRight="@dimen/scale_8dp"
+                    android:paddingTop="@dimen/scale_5dp"
+                    android:text="Featured"
+                    android:textColor="@color/selector_text_color_home_filter"
+                    android:textSize="@dimen/text_size_14sp" />
+            </LinearLayout>
+        </RelativeLayout>
+    </LinearLayout>
+</layout>

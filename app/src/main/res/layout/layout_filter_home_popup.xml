@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingRight="@dimen/scale_10dp">
+
+        <com.cheep.custom_view.CFTextViewRegular
+            android:id="@+id/text_featured"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/btn_blue_rounded_border_top_right_5_dp"
+            android:drawableLeft="@drawable/selector_drawable_left_filter_home_featured"
+            android:drawablePadding="@dimen/scale_5dp"
+            android:minWidth="@dimen/scale_100dp"
+            android:paddingBottom="@dimen/scale_5dp"
+            android:paddingLeft="@dimen/scale_8dp"
+            android:paddingRight="@dimen/scale_8dp"
+            android:paddingTop="@dimen/scale_5dp"
+            android:text="@string/label_featured"
+            android:textColor="@color/selector_text_color_home_filter"
+            android:textSize="@dimen/text_size_14sp" />
+
+        <com.cheep.custom_view.CFTextViewRegular
+            android:id="@+id/text_popular"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/btn_blue_flat"
+            android:drawableLeft="@drawable/selector_drawable_left_filter_home_popular"
+            android:drawablePadding="@dimen/scale_5dp"
+            android:minWidth="@dimen/scale_100dp"
+            android:paddingBottom="@dimen/scale_5dp"
+            android:paddingLeft="@dimen/scale_8dp"
+            android:paddingRight="@dimen/scale_8dp"
+            android:paddingTop="@dimen/scale_5dp"
+            android:text="@string/label_popular"
+            android:textColor="@color/selector_text_color_home_filter"
+            android:textSize="@dimen/text_size_14sp" />
+
+        <com.cheep.custom_view.CFTextViewRegular
+            android:id="@+id/text_favourites"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/btn_blue_rounded_border_bottom_right_5_dp"
+            android:drawableLeft="@drawable/selector_drawable_left_filter_home_favourites"
+            android:drawablePadding="@dimen/scale_5dp"
+            android:minWidth="@dimen/scale_100dp"
+            android:paddingBottom="@dimen/scale_5dp"
+            android:paddingLeft="@dimen/scale_8dp"
+            android:paddingRight="@dimen/scale_8dp"
+            android:paddingTop="@dimen/scale_5dp"
+            android:text="@string/label_favourites"
+            android:textColor="@color/selector_text_color_home_filter"
+            android:textSize="@dimen/text_size_14sp" />
+    </LinearLayout>
+</layout>
