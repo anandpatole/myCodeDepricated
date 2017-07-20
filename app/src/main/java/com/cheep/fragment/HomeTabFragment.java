@@ -473,7 +473,7 @@ public class HomeTabFragment extends BaseFragment {
                 , mHeaderParams
                 , mParams
                 , null);
-        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest,NetworkUtility.WS.UPDATE_LOCATION);
+        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest, NetworkUtility.WS.UPDATE_LOCATION);
     }
 
     Response.Listener mCallUpdateLatLngWSResponseListener = new Response.Listener() {
@@ -707,7 +707,7 @@ public class HomeTabFragment extends BaseFragment {
                 , mHeaderParams
                 , mParams
                 , null);
-        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequestForCategoryList,NetworkUtility.WS.CATEGORY_LIST);
+        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequestForCategoryList, NetworkUtility.WS.CATEGORY_LIST);
     }
 
     Response.Listener mCallCategoryListWSResponseListener = new Response.Listener() {
@@ -962,7 +962,7 @@ public class HomeTabFragment extends BaseFragment {
     private void showFilterWindow() {
         Log.i(TAG, "showFilterWindow: ");
 
-        final LayoutFilterHomePopupBinding mLayoutFilterHomePopupBinding = DataBindingUtil.inflate(getLayoutInflater(), R.layout.layout_filter_home_popup, mFragmentTabHomeBinding.layoutBannerHeader.rootBannerView, false);
+        final LayoutFilterHomePopupBinding mLayoutFilterHomePopupBinding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.layout_filter_home_popup, mFragmentTabHomeBinding.layoutBannerHeader.rootBannerView, false);
 //        View mFilterPopupWindow = View.inflate(mContext, R.layout.layout_filter_home_popup, null);
 
         final PopupWindow mPopupWindow = new PopupWindow(mContext);
