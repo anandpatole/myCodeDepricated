@@ -166,7 +166,7 @@ public class HomeTabFragment extends BaseFragment {
 
     @Override
     public void onAttach(Context context) {
-        Log.i(TAG, "onAttach: ");
+//        Log.i(TAG, "onAttach: ");
         super.onAttach(context);
         if (context instanceof CategoryRowInteractionListener) {
             mCategoryRowInteractionListener = (CategoryRowInteractionListener) context;
@@ -183,7 +183,7 @@ public class HomeTabFragment extends BaseFragment {
 
     @Override
     public void onDetach() {
-        Log.i(TAG, "onDetach: ");
+//        Log.i(TAG, "onDetach: ");
 
         if (EventBus.getDefault().isRegistered(this) == true)
             EventBus.getDefault().unregister(this);
@@ -288,11 +288,11 @@ public class HomeTabFragment extends BaseFragment {
         mViewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
-                Log.d(TAG, "onGlobalLayout() called");
+//                Log.d(TAG, "onGlobalLayout() called");
                 mFragmentTabHomeBinding.layoutBannerHeader.viewPagerBannerImages.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                 int width = mFragmentTabHomeBinding.layoutBannerHeader.viewPagerBannerImages.getMeasuredWidth();
                 int height = mFragmentTabHomeBinding.layoutBannerHeader.viewPagerBannerImages.getMeasuredHeight();
-                Log.d(TAG, "onGlobalLayout() called==> " + width + "*" + height);
+//                Log.d(TAG, "onGlobalLayout() called==> " + width + "*" + height);
                 ViewGroup.LayoutParams params = mFragmentTabHomeBinding.layoutBannerHeader.viewPagerBannerImages.getLayoutParams();
                 params.height = Utility.getHeightFromWidthForSixteenNineRatio(width);
                 mFragmentTabHomeBinding.layoutBannerHeader.viewPagerBannerImages.setLayoutParams(params);
@@ -308,7 +308,7 @@ public class HomeTabFragment extends BaseFragment {
     }
 
     private void initiateRecyclerView(ArrayList<JobCategoryModel> list) {
-        Log.d(TAG, "initiateRecyclerView() called with: list = [" + list + "]");
+//        Log.d(TAG, "initiateRecyclerView() called with: list = [" + list + "]");
         homeTabRecyclerViewAdapter = new HomeTabRecyclerViewAdapter(list, mCategoryRowInteractionListener);
         mFragmentTabHomeBinding.commonRecyclerView.recyclerView.setHasFixedSize(true);
 //        int padding_In_px = (int) Utility.convertDpToPixel(10, mContext);
@@ -387,7 +387,7 @@ public class HomeTabFragment extends BaseFragment {
     @Override
     public void onLocationNotAvailable() {
         super.onLocationNotAvailable();
-        Log.d(TAG, "onLocationNotAvailable() called");
+//        Log.d(TAG, "onLocationNotAvailable() called");
         if (!isPreviousLocationPresent()) {
             // Show Error Screen
             toggleErrorScreen(true);
@@ -397,7 +397,7 @@ public class HomeTabFragment extends BaseFragment {
     @Override
     public void onLocationFetched(Location mLocation) {
         super.onLocationFetched(mLocation);
-        Log.d(TAG, "onLocationFetched() called with: mLocation = [" + mLocation + "]");
+//        Log.d(TAG, "onLocationFetched() called with: mLocation = [" + mLocation + "]");
         if (!isPreviousLocationPresent()) {
             errorLoadingHelper.showLoading();
 
@@ -658,7 +658,7 @@ public class HomeTabFragment extends BaseFragment {
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
     public void onListCategoryListGetsEmpty() {
-        Log.d(TAG, "onListCategoryListGetsEmpty() called");
+//        Log.d(TAG, "onListCategoryListGetsEmpty() called");
         errorLoadingHelper.failed(getResources().getString(R.string.empty_favourited_list), 0, null);
     }
 
@@ -892,13 +892,13 @@ public class HomeTabFragment extends BaseFragment {
 
         BannerViewPagerAdapter(FragmentManager fragmentManager, ArrayList<BannerImageModel> modelArrayList) {
             super(fragmentManager);
-            Log.d(TAG, "BannerViewPagerAdapter() called with: fragmentManager = [" + fragmentManager + "], modelArrayList = [" + modelArrayList + "]");
+//            Log.d(TAG, "BannerViewPagerAdapter() called with: fragmentManager = [" + fragmentManager + "], modelArrayList = [" + modelArrayList + "]");
             this.imageModelArrayList = modelArrayList != null ? modelArrayList : new ArrayList<BannerImageModel>();
         }
 
         @Override
         public Fragment getItem(int position) {
-            Log.d(TAG, "getItem() called with: position = [" + position + "]" + " Size: " + imageModelArrayList.size());
+//            Log.d(TAG, "getItem() called with: position = [" + position + "]" + " Size: " + imageModelArrayList.size());
             return BannerImageFragment.getInstance(imageModelArrayList.get(position));
         }
 
@@ -917,7 +917,7 @@ public class HomeTabFragment extends BaseFragment {
         }
 
         private void replaceData(ArrayList<BannerImageModel> modelArrayList) {
-            Log.d(TAG, "replaceData() called with: modelArrayList = [" + modelArrayList.size() + "]");
+//            Log.d(TAG, "replaceData() called with: modelArrayList = [" + modelArrayList.size() + "]");
             imageModelArrayList = modelArrayList;
             notifyDataSetChanged();
         }
@@ -960,7 +960,7 @@ public class HomeTabFragment extends BaseFragment {
      * This method would setup Filter Window  for customized view
      */
     private void showFilterWindow() {
-        Log.i(TAG, "showFilterWindow: ");
+//        Log.i(TAG, "showFilterWindow: ");
 
         final LayoutFilterHomePopupBinding mLayoutFilterHomePopupBinding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.layout_filter_home_popup, mFragmentTabHomeBinding.layoutBannerHeader.rootBannerView, false);
 //        View mFilterPopupWindow = View.inflate(mContext, R.layout.layout_filter_home_popup, null);

@@ -19,14 +19,13 @@ import static com.cheep.BuildConfig.TWITTER_KEY;
 import static com.cheep.BuildConfig.TWITTER_SECRET;
 
 /**
- * Created by pankaj on 9/14/16.
+ * Created by Bhavesh Patadiya on 9/14/16.
  */
 public class App extends ApplicationLifeCycle {
 
     @Override
     public void onCreate() {
         super.onCreate();
-        MultiDex.install(this);
         //Start the Intialization of varioud Operation in separated threads
 //        new AsyncOnInitiateOperations(getApplicationContext()).execute();
 
@@ -70,18 +69,9 @@ public class App extends ApplicationLifeCycle {
         Log.i("APP", "Application Destroyed");
     }
 
-    private static class AsyncOnInitiateOperations extends AsyncTask<Void, Void, Void> {
-        private Context mContext;
-
-        AsyncOnInitiateOperations(Context mContext) {
-            this.mContext = mContext;
-        }
-
-        @Override
-        protected Void doInBackground(Void... params) {
-
-
-            return null;
-        }
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(this);
     }
 }

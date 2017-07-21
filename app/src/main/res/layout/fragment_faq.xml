@@ -26,10 +26,10 @@
                     android:background="@android:color/transparent"
                     android:gravity="center"
                     android:lines="1"
+                    android:maxLines="1"
                     android:padding="@dimen/scale_10dp"
                     android:singleLine="true"
                     android:text="@string/label_faq"
-                    android:maxLines="1"
                     android:textAllCaps="false"
                     android:textColor="@color/white"
                     android:textSize="@dimen/toolbar_title_text_size"
@@ -75,6 +75,8 @@
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_size_13sp" />
 
+            <!--TODO: According to Zoho#JM-621, We will not put this now
+            @TODO: Changes been done by @Bhavesh Patadiya on 20thJuly2017-->
             <com.cheep.custom_view.CFTextViewRegular
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -85,7 +87,8 @@
                 android:lines="2"
                 android:text="@string/label_check_our_forum"
                 android:textColor="@color/splash_gradient_end"
-                android:textSize="@dimen/text_size_13sp" />
+                android:textSize="@dimen/text_size_13sp"
+                android:visibility="gone" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -129,25 +132,25 @@
 
                 <com.cheep.custom_view.AppButton
                     android:id="@+id/btn_call"
-                    android:background="@drawable/img_blue_edges_rounded"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
                     android:layout_marginRight="10dp"
                     android:layout_weight="1"
-                    android:textAllCaps="false"
+                    android:background="@drawable/img_blue_edges_rounded"
                     android:minWidth="150dp"
                     android:text="@string/label_call"
+                    android:textAllCaps="false"
                     android:textColor="@color/splash_gradient_end" />
 
                 <com.cheep.custom_view.AppButton
                     android:id="@+id/btn_chat"
-                    android:background="@drawable/img_blue_edges_rounded"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
                     android:layout_marginLeft="10dp"
                     android:layout_weight="1"
+                    android:background="@drawable/img_blue_edges_rounded"
                     android:minWidth="150dp"
                     android:text="@string/label_chat"
                     android:textAllCaps="false"

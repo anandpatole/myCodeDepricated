@@ -104,13 +104,13 @@ public class BannerImageFragment extends BaseFragment {
 
     @Override
     public void onDestroy() {
-        Log.d(TAG, "onDestroy() called");
+//        Log.d(TAG, "onDestroy() called");
         super.onDestroy();
     }
 
     @Override
     public void onDetach() {
-        Log.d(TAG, "onDetach() called");
+//        Log.d(TAG, "onDetach() called");
         super.onDetach();
     }
 }
