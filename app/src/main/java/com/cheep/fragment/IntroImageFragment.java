@@ -27,7 +27,7 @@ public class IntroImageFragment extends BaseFragment
     }
 
     @Override
-    void initiateUI()
+    public void initiateUI()
     {
         img_intro.setImageResource(introImage);
         img_get_started.setVisibility(View.GONE);
@@ -38,7 +38,7 @@ public class IntroImageFragment extends BaseFragment
     }
 
     @Override
-    void setListener()
+    public void setListener()
     {
         img_get_started.setOnClickListener(new View.OnClickListener()
         {

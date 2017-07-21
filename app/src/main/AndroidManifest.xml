@@ -231,7 +231,7 @@
             tools:replace="android:theme" />
 
         <activity
-            android:name=".activity.TaskCreationForBannerActivity"
+            android:name=".strategicpartner.StrategicPartnerTaskCreationAct"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Translucent" />
 

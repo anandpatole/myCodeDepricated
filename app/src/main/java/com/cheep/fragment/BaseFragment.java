@@ -24,9 +24,9 @@ public abstract class BaseFragment extends Fragment {
         mContext = context;
     }
 
-    abstract void initiateUI();
+    public abstract void initiateUI();
 
-    abstract void setListener();
+    public abstract void setListener();
 
     public boolean onBackPressed() {
         return false;

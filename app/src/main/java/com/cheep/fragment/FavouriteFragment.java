@@ -100,7 +100,7 @@ public class FavouriteFragment extends BaseFragment {
     }
 
     @Override
-    void initiateUI() {
+    public void initiateUI() {
 
         errorLoadingHelper = new ErrorLoadingHelper(mFragmentFavouriteFragment.commonRecyclerView.recyclerView);
 
@@ -211,7 +211,7 @@ public class FavouriteFragment extends BaseFragment {
     }
 
     @Override
-    void setListener() {
+    public void setListener() {
 
     }
 

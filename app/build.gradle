@@ -69,6 +69,18 @@ android {
 //        buildConfigField("String", "PAYUBIZ_HDFC_URL", getProperty("PAYUBIZ_HDFC_LIVE_URL"))
     }
 
+    // Source Sets
+    sourceSets {
+        main {
+            res.srcDirs = [
+                    'src/main/res/layouts/strategicpartner',
+                    'src/main/res/layouts/others',
+                    'src/main/res/layouts',
+                    'src/main/res'
+            ]
+        }
+    }
+
     // We are using apache library for MultiPart portion so, have to use below line to make apache library accessible on API LEVEL >=23
     useLibrary 'org.apache.http.legacy'
 
