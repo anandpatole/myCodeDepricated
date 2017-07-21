@@ -13,14 +13,14 @@ repositories {
 
 android {
 
-    compileSdkVersion 25
-    buildToolsVersion "25.0.3"
+    compileSdkVersion 26
+    buildToolsVersion "26.0.0"
     defaultConfig {
         applicationId "com.cheep"
         minSdkVersion 16
-        targetSdkVersion 25
+        targetSdkVersion 26
         versionCode 20
-        versionName "1.0.37" // PLEASE FIRST MAKE SURE MIN-VERSION IS 16.
+        versionName "1.0.39" // PLEASE FIRST MAKE SURE MIN-VERSION IS 16.
         renderscriptTargetApi 18
         renderscriptSupportModeEnabled true
 
@@ -124,11 +124,11 @@ configurations {
 
 // Description
 ext {
-//    supportLibVer = '25.4.0'
-    supportLibVer = '25.3.1'
+    supportLibVer = '26.0.0-beta2'
+//    supportLibVer = '25.3.1'
     gsonLibVer = '2.7'
-//    playServiceVer = '11.0.1'
-    playServiceVer = '10.2.0'
+    playServiceVer = '11.0.2'
+//    playServiceVer = '10.2.0'
 }
 
 dependencies {
@@ -193,7 +193,6 @@ dependencies {
     //this is gradle path from where CB will be automatically downloaded
 
     // AppsFlyer SDK
-
     compile 'com.android.support:multidex:1.0.1'
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'com.daimajia.swipelayout:library:1.2.0@aar'
@@ -209,8 +208,7 @@ dependencies {
     compile 'com.payu.magicretry:magicretry:1.0.0'
     compile 'com.github.freshdesk:hotline-android:1.2.1'
     compile 'com.appsflyer:af-android-sdk:4.7.2@aar'
-    compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    testCompile 'junit:junit:4.12'
+//    compile 'com.android.support.constraint:constraint-layout:1.0.2'
 }
 
 // Add to the bottom of the file

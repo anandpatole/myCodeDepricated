@@ -161,11 +161,11 @@
                     android:gravity="left|center_vertical"
                     android:scrollHorizontally="true"
                     android:textColor="@color/splash_gradient_end"
-                    android:textSize="@dimen/text_size_11sp"
+                    android:textSize="@dimen/home_screen_pro_available_text_size"
                     tools:text="@string/label_pros_available" />
             </LinearLayout>
 
-            <FrameLayout
+            <RelativeLayout
                 android:id="@+id/flOffer"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -176,20 +176,22 @@
                 <com.cheep.custom_view.CFTextViewSemiBold
                     android:id="@+id/tv_live_feed"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/home_screen_near_by_pro_image_height_width"
                     android:layout_gravity="right"
                     android:lineSpacingMultiplier="1.3"
                     android:lines="2"
                     android:textColor="@color/task_quote_offer_color"
                     android:textSize="@dimen/text_size_11sp"
-                    tools:text="17 people trolled by Anurag Kulkarni today" />
+                    tools:text="17 people trolled by Anurag Kulkarni todayasdad sdassdasd asd dasdasdad" />
 
                 <ImageView
                     android:id="@+id/ivLiveAnimated"
                     android:layout_width="@dimen/icon_live_width"
-                    android:layout_height="@dimen/icon_live_height"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@+id/tv_live_feed"
+                    android:src="@drawable/ic_live_0001"
                     tools:ignore="ContentDescription" />
-            </FrameLayout>
+            </RelativeLayout>
         </LinearLayout>
 
         <View

@@ -100,4 +100,5 @@
     <dimen name="scale_36dp">36dp</dimen>
 
     <dimen name="home_screen_near_by_pro_image_height_width">36dp</dimen>
+    <dimen name="home_screen_pro_available_text_size">11sp</dimen>
 </resources>
