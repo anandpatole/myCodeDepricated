@@ -16,8 +16,8 @@ import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.cheep.R;
+import com.cheep.activity.TaskCreationForBannerActivity;
 import com.cheep.model.BannerImageModel;
-import com.cheep.model.CoverImageModel;
 
 public class BannerImageFragment extends BaseFragment {
     private static final String TAG = "BannerImageFragment";
@@ -83,6 +83,15 @@ public class BannerImageFragment extends BaseFragment {
                         }
                     })
                     .into(img_cover);
+
+            img_cover.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (bannerImageModel != null && !bannerImageModel.cat_id.equalsIgnoreCase("0")) {
+                        TaskCreationForBannerActivity.getInstance(mContext, bannerImageModel);
+                    }
+                }
+            });
         } else {
             progress.setVisibility(View.GONE);
         }
