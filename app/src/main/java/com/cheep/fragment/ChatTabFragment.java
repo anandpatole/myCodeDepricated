@@ -157,7 +157,7 @@ public class ChatTabFragment extends BaseFragment {
     }
 
     @Override
-    void initiateUI() {
+    public void initiateUI() {
         errorLoadingHelper = new ErrorLoadingHelper(mFragmentTabChatBinding.commonRecyclerView.recyclerView);
         //Setting up toolbar
         ((AppCompatActivity) mContext).setSupportActionBar(mFragmentTabChatBinding.toolbar);
@@ -192,7 +192,7 @@ public class ChatTabFragment extends BaseFragment {
     }
 
     @Override
-    void setListener() {
+    public void setListener() {
         mEndlessRecyclerOnScrollListener = new EndlessRecyclerOnScrollListener(mLinearLayoutManager) {
             @Override
             public void onLoadMore() {

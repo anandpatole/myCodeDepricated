@@ -93,7 +93,7 @@ public class SelectSubCategoryFragment extends BaseFragment {
     }
 
     @Override
-    void initiateUI() {
+    public void initiateUI() {
         Log.d(TAG, "initiateUI() called");
 
         //Setting recycler view
@@ -108,7 +108,7 @@ public class SelectSubCategoryFragment extends BaseFragment {
     }
 
     @Override
-    void setListener() {
+    public void setListener() {
         Log.d(TAG, "setListener() called");
     }
 

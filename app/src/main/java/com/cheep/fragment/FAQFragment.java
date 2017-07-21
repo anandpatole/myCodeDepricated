@@ -93,7 +93,7 @@ public class FAQFragment extends BaseFragment {
     }
 
     @Override
-    void initiateUI() {
+    public void initiateUI() {
         //Setting up toolbar
         if (((AppCompatActivity) mContext).getSupportActionBar() != null) {
             ((AppCompatActivity) mContext).setSupportActionBar(mFragmentFaqBinding.toolbar);
@@ -114,7 +114,7 @@ public class FAQFragment extends BaseFragment {
     }
 
     @Override
-    void setListener()
+    public void setListener()
     {
         mFragmentFaqBinding.btnCall.setOnClickListener(new View.OnClickListener()
         {

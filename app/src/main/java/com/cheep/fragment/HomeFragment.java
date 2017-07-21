@@ -168,7 +168,7 @@ public class HomeFragment extends BaseFragment {
     }
 
     @Override
-    void initiateUI() {
+    public void initiateUI() {
 
         mFragments = new HashMap<>();
         mFragmentsStackTags = new ArrayList<>();
@@ -187,7 +187,7 @@ public class HomeFragment extends BaseFragment {
     }
 
     @Override
-    void setListener() {
+    public void setListener() {
 
         //Setting listener to tabs
         mFragmentHomeBinding.textTabHome.setOnClickListener(tabClickListener);

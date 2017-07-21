@@ -28,12 +28,12 @@ public class CoverImageFragment extends BaseFragment {
     }
 
     @Override
-    void initiateUI() {
+    public void initiateUI() {
 
     }
 
     @Override
-    void setListener() {
+    public void setListener() {
 
     }
 

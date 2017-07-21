@@ -1,4 +1,4 @@
-package com.cheep.fragment;
+package com.cheep.strategicpartner;
 
 import android.content.Context;
 import android.databinding.DataBindingUtil;
@@ -12,34 +12,34 @@ import android.view.ViewGroup;
 import com.cheep.R;
 import com.cheep.activity.BaseAppCompatActivity;
 import com.cheep.activity.TaskCreationActivity;
-import com.cheep.activity.TaskCreationForBannerActivity;
 import com.cheep.adapter.BannerServiceRecyclerViewAdapter;
-import com.cheep.databinding.FragmentServiceDetailsBinding;
+import com.cheep.databinding.FragmentStrategicPartnerPhaseTwoBinding;
+import com.cheep.fragment.BaseFragment;
 import com.cheep.utils.ErrorLoadingHelper;
 
 /**
  * Created by bhavesh on 28/4/17.
  */
 
-public class ServiceDetailsFragment extends BaseFragment {
-    public static final String TAG = "ServiceDetailsFragment";
-    private FragmentServiceDetailsBinding mFragmentSelectSubserviceBinding;
+public class StrategicPartnerFragPhaseTwo extends BaseFragment {
+    public static final String TAG = "StrategicPartnerFragPhaseThree";
+    private FragmentStrategicPartnerPhaseTwoBinding mFragmentStrategicPartnerPhaseTwoBinding;
     private BannerServiceRecyclerViewAdapter mSubServiceRecyclerViewAdapter;
     ErrorLoadingHelper errorLoadingHelper;
-    private TaskCreationForBannerActivity mTaskCreationActivity;
+    private StrategicPartnerTaskCreationAct mTaskCreationActivity;
     private boolean isVerified = false;
 
     @SuppressWarnings("unused")
-    public static ServiceDetailsFragment newInstance() {
-        return new ServiceDetailsFragment();
+    public static StrategicPartnerFragPhaseTwo newInstance() {
+        return new StrategicPartnerFragPhaseTwo();
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        mFragmentSelectSubserviceBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_service_details, container, false);
-        return mFragmentSelectSubserviceBinding.getRoot();
+        mFragmentStrategicPartnerPhaseTwoBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_strategic_partner_phase_two, container, false);
+        return mFragmentStrategicPartnerPhaseTwoBinding.getRoot();
     }
 
     @Override
@@ -74,13 +74,12 @@ public class ServiceDetailsFragment extends BaseFragment {
     }
 
     @Override
-    void initiateUI() {
+    public void initiateUI() {
         Log.d(TAG, "initiateUI() called");
-
     }
 
     @Override
-    void setListener() {
+    public void setListener() {
         Log.d(TAG, "setListener() called");
     }
 
@@ -89,8 +88,8 @@ public class ServiceDetailsFragment extends BaseFragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         BaseAppCompatActivity activity = (BaseAppCompatActivity) context;
-        if (activity instanceof TaskCreationForBannerActivity) {
-            mTaskCreationActivity = (TaskCreationForBannerActivity) activity;
+        if (activity instanceof StrategicPartnerTaskCreationAct) {
+            mTaskCreationActivity = (StrategicPartnerTaskCreationAct) activity;
         }
     }
 

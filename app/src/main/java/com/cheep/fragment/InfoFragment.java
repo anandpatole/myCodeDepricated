@@ -87,7 +87,7 @@ public class InfoFragment extends BaseFragment {
     }
 
     @Override
-    void initiateUI() {
+    public void initiateUI() {
         if (((AppCompatActivity) mContext).getSupportActionBar() != null) {
             //Setting up toolbar
             ((AppCompatActivity) mContext).setSupportActionBar(mFragmentInfoBinding.toolbar);
@@ -115,7 +115,7 @@ public class InfoFragment extends BaseFragment {
     }
 
     @Override
-    void setListener() {
+    public void setListener() {
 
     }
 

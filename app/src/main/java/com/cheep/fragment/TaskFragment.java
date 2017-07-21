@@ -117,7 +117,7 @@ public class TaskFragment extends BaseFragment {
     }
 
     @Override
-    void initiateUI() {
+    public void initiateUI() {
         //Setting recycler view
         errorLoadingHelper = new ErrorLoadingHelper(commonRecyclerViewBinding.recyclerView);
 
@@ -158,7 +158,7 @@ public class TaskFragment extends BaseFragment {
 
 
     @Override
-    void setListener() {
+    public void setListener() {
         taskRecyclerViewAdapter.setIsLoadMoreEnabled(true, R.layout.load_more_progress, commonRecyclerViewBinding.recyclerView, new LoadMoreSwipeRecyclerAdapter.OnLoadMoreListener() {
             @Override
             public void onLoadMore() {

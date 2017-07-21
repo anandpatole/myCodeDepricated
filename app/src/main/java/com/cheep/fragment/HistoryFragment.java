@@ -98,7 +98,7 @@ public class HistoryFragment extends BaseFragment {
     }
 
     @Override
-    void initiateUI() {
+    public void initiateUI() {
 
         if (((AppCompatActivity) mContext).getSupportActionBar() != null) {
             //Setting up toolbar
@@ -142,7 +142,7 @@ public class HistoryFragment extends BaseFragment {
     }
 
     @Override
-    void setListener() {
+    public void setListener() {
         mFragmentHistoryBinding.iconLeft.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

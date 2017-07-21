@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 
 import com.cheep.R;
 import com.cheep.databinding.RowSubserviceBinding;
-import com.cheep.fragment.SelectBannerServicesFragment;
+import com.cheep.strategicpartner.StrategicPartnerFragPhaseOne;
 import com.cheep.model.SubServiceDetailModel;
 
 import java.util.ArrayList;
@@ -23,9 +23,9 @@ import java.util.ArrayList;
 public class BannerServiceRecyclerViewAdapter extends RecyclerView.Adapter<BannerServiceRecyclerViewAdapter.ViewHolder> {
     private static final String TAG = "SubServiceRecyclerViewA";
     ArrayList<SubServiceDetailModel> mList = new ArrayList<>();
-    private SelectBannerServicesFragment.SubServiceListInteractionListener mSubServiceListInteractionListener;
+    private StrategicPartnerFragPhaseOne.SubServiceListInteractionListener mSubServiceListInteractionListener;
 
-    public BannerServiceRecyclerViewAdapter(SelectBannerServicesFragment.SubServiceListInteractionListener listener) {
+    public BannerServiceRecyclerViewAdapter(StrategicPartnerFragPhaseOne.SubServiceListInteractionListener listener) {
         this.mSubServiceListInteractionListener = listener;
     }
 

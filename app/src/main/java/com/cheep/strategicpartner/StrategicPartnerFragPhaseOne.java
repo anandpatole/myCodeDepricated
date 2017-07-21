@@ -1,4 +1,4 @@
-package com.cheep.fragment;
+package com.cheep.strategicpartner;
 
 import android.content.Context;
 import android.databinding.DataBindingUtil;
@@ -14,9 +14,9 @@ import android.view.ViewGroup;
 import com.cheep.R;
 import com.cheep.activity.BaseAppCompatActivity;
 import com.cheep.activity.TaskCreationActivity;
-import com.cheep.activity.TaskCreationForBannerActivity;
 import com.cheep.adapter.BannerServiceRecyclerViewAdapter;
-import com.cheep.databinding.FragmentSelectSubserviceBinding;
+import com.cheep.databinding.FragmentStrategicPartnerPhaseOneBinding;
+import com.cheep.fragment.BaseFragment;
 import com.cheep.model.SubServiceDetailModel;
 import com.cheep.utils.ErrorLoadingHelper;
 
@@ -24,17 +24,17 @@ import com.cheep.utils.ErrorLoadingHelper;
  * Created by bhavesh on 28/4/17.
  */
 
-public class SelectBannerServicesFragment extends BaseFragment {
-    public static final String TAG = "SelectSubCategoryFragme";
-    private FragmentSelectSubserviceBinding mFragmentSelectSubserviceBinding;
+public class StrategicPartnerFragPhaseOne extends BaseFragment {
+    public static final String TAG = "SelectSubServicesForStr";
+    private FragmentStrategicPartnerPhaseOneBinding mFragmentStrategicPartnerPhaseOneBinding;
     private BannerServiceRecyclerViewAdapter mSubServiceRecyclerViewAdapter;
     ErrorLoadingHelper errorLoadingHelper;
-    private TaskCreationForBannerActivity mTaskCreationActivity;
+    private StrategicPartnerTaskCreationAct mStrategicPartnerTaskCreationAct;
     private boolean isVerified = false;
 
     @SuppressWarnings("unused")
-    public static SelectBannerServicesFragment newInstance() {
-        SelectBannerServicesFragment fragment = new SelectBannerServicesFragment();
+    public static StrategicPartnerFragPhaseOne newInstance() {
+        StrategicPartnerFragPhaseOne fragment = new StrategicPartnerFragPhaseOne();
         return fragment;
     }
 
@@ -42,8 +42,8 @@ public class SelectBannerServicesFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        mFragmentSelectSubserviceBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_select_subservice, container, false);
-        return mFragmentSelectSubserviceBinding.getRoot();
+        mFragmentStrategicPartnerPhaseOneBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_strategic_partner_phase_one, container, false);
+        return mFragmentStrategicPartnerPhaseOneBinding.getRoot();
     }
 
     @Override
@@ -53,23 +53,22 @@ public class SelectBannerServicesFragment extends BaseFragment {
         setListener();
     }
 
-
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         Log.d(TAG, "setUserVisibleHint() called with: isVisibleToUser = [" + isVisibleToUser + "]");
-        if (!isVisibleToUser || mTaskCreationActivity == null) {
+        if (!isVisibleToUser || mStrategicPartnerTaskCreationAct == null) {
             return;
         }
 
         if (isVerified) {
-            mTaskCreationActivity.setTaskState(TaskCreationActivity.STEP_ONE_VERIFIED);
+            mStrategicPartnerTaskCreationAct.setTaskState(TaskCreationActivity.STEP_ONE_VERIFIED);
         } else {
-            mTaskCreationActivity.setTaskState(TaskCreationActivity.STEP_ONE_NORMAL);
+            mStrategicPartnerTaskCreationAct.setTaskState(TaskCreationActivity.STEP_ONE_NORMAL);
         }
 
         // Hide the post task button
-        mTaskCreationActivity.showPostTaskButton(false, false);
+        mStrategicPartnerTaskCreationAct.showPostTaskButton(false, false);
     }
 
     @Override
@@ -78,21 +77,21 @@ public class SelectBannerServicesFragment extends BaseFragment {
     }
 
     @Override
-    void initiateUI() {
+    public void initiateUI() {
         Log.d(TAG, "initiateUI() called");
 
         //Setting recycler view
-        errorLoadingHelper = new ErrorLoadingHelper(mFragmentSelectSubserviceBinding.recyclerView);
+        errorLoadingHelper = new ErrorLoadingHelper(mFragmentStrategicPartnerPhaseOneBinding.recyclerView);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mContext);
-        mFragmentSelectSubserviceBinding.recyclerView.setLayoutManager(linearLayoutManager);
+        mFragmentStrategicPartnerPhaseOneBinding.recyclerView.setLayoutManager(linearLayoutManager);
         mSubServiceRecyclerViewAdapter = new BannerServiceRecyclerViewAdapter(mSubServiceListInteractionListener);
-        mFragmentSelectSubserviceBinding.recyclerView.setAdapter(mSubServiceRecyclerViewAdapter);
+        mFragmentStrategicPartnerPhaseOneBinding.recyclerView.setAdapter(mSubServiceRecyclerViewAdapter);
         errorLoadingHelper.showLoading();
     }
 
     @Override
-    void setListener() {
+    public void setListener() {
         Log.d(TAG, "setListener() called");
     }
 
@@ -103,19 +102,19 @@ public class SelectBannerServicesFragment extends BaseFragment {
     private SubServiceListInteractionListener mSubServiceListInteractionListener = new SubServiceListInteractionListener() {
         @Override
         public void onSubCategoryRowItemClicked(SubServiceDetailModel subServiceDetailModel) {
-            mTaskCreationActivity.setSelectedSubService(subServiceDetailModel);
+            mStrategicPartnerTaskCreationAct.setSelectedSubService(subServiceDetailModel);
 
             Log.d(TAG, "onSubCategoryRowItemClicked() called with: subServiceDetailModel = [" + subServiceDetailModel.name + "]");
             // Make the status Verified
             isVerified = true;
 
             //Alert The activity that step one is been varified.
-            mTaskCreationActivity.setTaskState(TaskCreationActivity.STEP_ONE_VERIFIED);
+            mStrategicPartnerTaskCreationAct.setTaskState(TaskCreationActivity.STEP_ONE_VERIFIED);
 
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    mTaskCreationActivity.gotoStep(TaskCreationActivity.STAGE_2);
+                    mStrategicPartnerTaskCreationAct.gotoStep(TaskCreationActivity.STAGE_2);
                 }
             }, 500);
 
@@ -126,8 +125,8 @@ public class SelectBannerServicesFragment extends BaseFragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         BaseAppCompatActivity activity = (BaseAppCompatActivity) context;
-        if (activity instanceof TaskCreationForBannerActivity) {
-            mTaskCreationActivity = (TaskCreationForBannerActivity) activity;
+        if (activity instanceof StrategicPartnerTaskCreationAct) {
+            mStrategicPartnerTaskCreationAct = (StrategicPartnerTaskCreationAct) activity;
         }
     }
 
@@ -135,7 +134,6 @@ public class SelectBannerServicesFragment extends BaseFragment {
     @Override
     public void onDetach() {
         super.onDetach();
-//        Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.WS.FETCH_SUB_SERVICE_LIST);
     }
 
     /**

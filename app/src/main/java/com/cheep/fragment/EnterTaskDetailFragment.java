@@ -194,7 +194,7 @@ public class EnterTaskDetailFragment extends BaseFragment {
     }
 
     @Override
-    void initiateUI() {
+    public void initiateUI() {
         Log.d(TAG, "initiateUI() called");
 
         // Setup images
@@ -276,7 +276,7 @@ public class EnterTaskDetailFragment extends BaseFragment {
     }
 
     @Override
-    void setListener() {
+    public void setListener() {
         Log.d(TAG, "setListener() called");
     }
 

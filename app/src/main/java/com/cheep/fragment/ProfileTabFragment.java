@@ -172,7 +172,7 @@ public class ProfileTabFragment extends BaseFragment {
 
 
     @Override
-    void initiateUI() {
+    public void initiateUI() {
         //Fetch User Details from Preference
         UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
 
@@ -214,7 +214,7 @@ public class ProfileTabFragment extends BaseFragment {
 
 
     @Override
-    void setListener() {
+    public void setListener() {
 //        mFragmentTabProfileBinding.textPhoneNumber.setOnClickListener(onClickListener);
         mFragmentTabProfileBinding.textEmergencyContact.setOnClickListener(onClickListener);
         mFragmentTabProfileBinding.textManageAddress.setOnClickListener(onClickListener);

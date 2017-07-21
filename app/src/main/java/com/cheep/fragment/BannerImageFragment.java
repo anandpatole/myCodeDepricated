@@ -3,7 +3,6 @@ package com.cheep.fragment;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,8 +15,9 @@ import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.cheep.R;
-import com.cheep.activity.TaskCreationForBannerActivity;
+import com.cheep.strategicpartner.StrategicPartnerTaskCreationAct;
 import com.cheep.model.BannerImageModel;
+import com.cheep.utils.Utility;
 
 public class BannerImageFragment extends BaseFragment {
     private static final String TAG = "BannerImageFragment";
@@ -30,12 +30,12 @@ public class BannerImageFragment extends BaseFragment {
     }
 
     @Override
-    void initiateUI() {
+    public void initiateUI() {
 
     }
 
     @Override
-    void setListener() {
+    public void setListener() {
 
     }
 
@@ -87,8 +87,8 @@ public class BannerImageFragment extends BaseFragment {
             img_cover.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (bannerImageModel != null && !bannerImageModel.cat_id.equalsIgnoreCase("0")) {
-                        TaskCreationForBannerActivity.getInstance(mContext, bannerImageModel);
+                    if (bannerImageModel != null && !bannerImageModel.cat_id.equalsIgnoreCase(Utility.ZERO_STRING)) {
+                        StrategicPartnerTaskCreationAct.getInstance(mContext, bannerImageModel);
                     }
                 }
             });
