@@ -12,6 +12,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 
 import com.cheep.R;
 
@@ -76,14 +77,14 @@ public class AcknowledgementDialogWithProfilePic extends DialogFragment {
         if (getDialog() != null) {
             getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             getDialog().getWindow().setGravity(Gravity.CENTER);
-//            getDialog().getWindow().
+            getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         }
 
         mDialogFragmentAcknowledgementBinding = DataBindingUtil.inflate(inflater, R.layout.dialog_fragment_acknowledgement_with_profile_pic, container, false);
 
         final UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
         if (userDetails != null && userDetails.ProfileImg != null && (!TextUtils.isEmpty(userDetails.ProfileImg)))
-            Utility.showCircularImageView(mContext, TAG, mDialogFragmentAcknowledgementBinding.imgProfilePic, userDetails.ProfileImg, R.drawable.ic_cheep_circular_icon, true);
+            Utility.showCircularImageView(mContext, TAG, mDialogFragmentAcknowledgementBinding.imgProfilePic, userDetails.ProfileImg, R.drawable.ic_cheep_circular_icon, false, 0);
 
 
         //Set Header Image
@@ -109,5 +110,10 @@ public class AcknowledgementDialogWithProfilePic extends DialogFragment {
         return mDialogFragmentAcknowledgementBinding.getRoot();
     }
 
-
+    @Override
+    public void onResume() {
+        super.onResume();
+//        getDialog().getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+//        getDialog().getWindow().setGravity(Gravity.CENTER);
+    }
 }

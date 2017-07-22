@@ -546,7 +546,7 @@ public class Utility {
         Date mCurrentDate = com.cheep.firebase.DateUtils.getFormatedDate(sCurrentDt, Utility.DATE_FORMAT_FULL_DATE);
         long diff = mFutureDate.getTime() - mCurrentDate.getTime();
 
-        String timespan = DateUtils.getRelativeTimeSpanString(mFutureDate.getTime(), System.currentTimeMillis(), DateUtils.MINUTE_IN_MILLIS).toString();
+        String timespan = DateUtils.getRelativeTimeSpanString(mFutureDate.getTime(), System.currentTimeMillis(), DateUtils.SECOND_IN_MILLIS).toString();
         Log.d(TAG, "getDateDifference() returned: " + timespan);
         if (diff > 0) {
             return mContext.getString(R.string.format_task_start_time, timespan);

@@ -237,18 +237,27 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
                 holder.mUpcomingTaskBinding.frameRescheduleTask.setVisibility(View.VISIBLE);
             }
 
-            if (model.providerCount.equals("0")) {
+
+            /**
+             * For the bug for lower version of Device like Kitkat, we have to store the padding before setting the background of textview,
+             * as due to bug it would reset the padding once resource set to the textview.
+             */
+            int pL = holder.mUpcomingTaskBinding.tvViewQuotes.getPaddingLeft();
+            int pT = holder.mUpcomingTaskBinding.tvViewQuotes.getPaddingTop();
+            int pR = holder.mUpcomingTaskBinding.tvViewQuotes.getPaddingRight();
+            int pB = holder.mUpcomingTaskBinding.tvViewQuotes.getPaddingBottom();
+            if (model.providerCount.equals(Utility.ZERO_STRING)) {
                 holder.mUpcomingTaskBinding.tvTaskResponseStatus.setText(holder.mView.getContext().getString(R.string.label_awaiting_response));
                 holder.mUpcomingTaskBinding.tvViewQuotes.setBackground(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.img_grey_rounded));
                 holder.mUpcomingTaskBinding.tvViewQuotes.setEnabled(false);
-
+                holder.mUpcomingTaskBinding.tvViewQuotes.setPadding(pL, pT, pR, pB);
             } else {
                 int providerCount = Integer.parseInt(model.providerCount);
                 holder.mUpcomingTaskBinding.tvTaskResponseStatus.setText(holder.mView.getContext().getResources().getQuantityText(R.plurals.getResponseReceivedString, providerCount));
                 holder.mUpcomingTaskBinding.tvViewQuotes.setBackground(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.img_blue_rounded));
                 holder.mUpcomingTaskBinding.tvViewQuotes.setEnabled(true);
+                holder.mUpcomingTaskBinding.tvViewQuotes.setPadding(pL, pT, pR, pB);
             }
-
             holder.mUpcomingTaskBinding.tvSubCategoryName.setText(model.subCategoryName);
             holder.mUpcomingTaskBinding.tvDesc.setText(model.taskDesc);
 

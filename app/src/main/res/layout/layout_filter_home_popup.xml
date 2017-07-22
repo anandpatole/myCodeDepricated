@@ -5,7 +5,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingRight="@dimen/scale_10dp">
+        android:layout_marginRight="@dimen/scale_10dp">
 
         <com.cheep.custom_view.CFTextViewRegular
             android:id="@+id/text_featured"

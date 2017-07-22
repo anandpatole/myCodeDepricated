@@ -5,14 +5,15 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="center">
+        android:layout_gravity="center"
+        tools:background="@color/black">
 
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginLeft="@dimen/scale_15dp"
-            android:layout_marginRight="@dimen/scale_15dp"
+            android:layout_marginLeft="@dimen/scale_10dp"
+            android:layout_marginRight="@dimen/scale_10dp"
             android:orientation="vertical">
 
             <ImageView
@@ -26,25 +27,24 @@
             <LinearLayout
                 android:id="@+id/ln_bottom_section"
                 android:layout_width="match_parent"
-                android:layout_height="210dp"
+                android:layout_height="wrap_content"
                 android:layout_below="@+id/img_header"
                 android:background="@drawable/rounded_bottom_part_only_fill_white_5x5"
                 android:orientation="vertical"
-                android:paddingTop="60dp">
+                android:paddingTop="50dp">
 
                 <com.cheep.custom_view.CFTextViewSemiBold
                     android:id="@+id/title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="@dimen/scale_8dp"
                     android:text="@string/label_your_task_is_posted"
                     android:textColor="@color/grey_varient_8"
                     android:textSize="@dimen/text_size_18sp" />
 
-                <com.cheep.custom_view.CFTextViewSemiBold
+                <com.cheep.custom_view.CFTextViewRegular
                     android:id="@+id/text_task_creation_acknowledgment"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="@dimen/scale_8dp"
@@ -57,29 +57,43 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/scale_1dp"
-                    android:layout_marginTop="@dimen/scale_3dp"
+                    android:layout_marginLeft="@dimen/scale_8dp"
+                    android:layout_marginRight="@dimen/scale_8dp"
+                    android:layout_marginTop="@dimen/scale_15dp"
                     android:background="@color/grey_dark_color_2" />
 
                 <com.cheep.custom_view.CFTextViewSemiBold
                     android:id="@+id/text_okay"
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
+                    android:layout_height="56dp"
                     android:gravity="center"
                     android:text="@string/label_Ok_small"
-                    android:textColor="@color/splash_gradient_end" />
+                    android:textColor="@color/splash_gradient_end"
+                    android:textSize="@dimen/text_size_16sp" />
             </LinearLayout>
 
-            <ImageView
-                android:id="@+id/imgProfilePic"
-                android:layout_width="@dimen/scale_100dp"
-                android:layout_height="@dimen/scale_100dp"
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_below="@+id/img_header"
                 android:layout_centerHorizontal="true"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="-55dp"
-                android:src="@drawable/ic_cheep_circular_icon"
-                android:visibility="visible" />
+                android:layout_marginTop="-76dp">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/model_background_shadow_circle" />
+
+                <ImageView
+                    android:id="@+id/imgProfilePic"
+                    android:layout_width="87dp"
+                    android:layout_height="87dp"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="-6dp"
+                    android:visibility="visible"
+                    tools:src="@drawable/ic_cheep_circular_icon" />
+            </FrameLayout>
         </RelativeLayout>
     </FrameLayout>
 
