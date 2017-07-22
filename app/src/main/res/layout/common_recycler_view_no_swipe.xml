@@ -43,8 +43,44 @@
                 android:layout_marginTop="@dimen/scale_25dp"
                 android:gravity="center"
                 android:padding="@dimen/scale_20dp"
-                android:visibility="visible"
-                tools:text="asdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasd" />
+                tools:text="asdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasd"
+                tools:visibility="gone" />
+
+            <LinearLayout
+                android:id="@+id/ln_empty_favourite_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="@dimen/scale_45dp"
+                android:layout_marginTop="@dimen/scale_45dp"
+                android:orientation="vertical"
+                android:visibility="visible">
+
+                <com.cheep.custom_view.CFTextViewRegular
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:gravity="center_horizontal"
+                    android:text="@string/empty_favourited_list_1"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_15sp" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="@dimen/scale_20dp"
+                    android:layout_marginTop="@dimen/scale_15dp"
+                    android:src="@drawable/empty_state_no_favourite_category" />
+
+                <com.cheep.custom_view.CFTextViewRegular
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:gravity="center_horizontal"
+                    android:text="@string/empty_favourited_list_2"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_15sp" />
+            </LinearLayout>
 
             <com.cheep.custom_view.CFTextViewRegular
                 android:id="@+id/text_error_action"

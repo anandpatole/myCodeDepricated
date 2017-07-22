@@ -2,10 +2,12 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <FrameLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center"
+        android:paddingLeft="@dimen/scale_10dp"
+        android:paddingRight="@dimen/scale_10dp"
         tools:background="@color/black">
 
         <RelativeLayout
@@ -95,6 +97,6 @@
                     tools:src="@drawable/ic_cheep_circular_icon" />
             </FrameLayout>
         </RelativeLayout>
-    </FrameLayout>
+    </LinearLayout>
 
 </layout>

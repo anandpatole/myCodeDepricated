@@ -113,7 +113,7 @@ public class AcknowledgementDialogWithProfilePic extends DialogFragment {
     @Override
     public void onResume() {
         super.onResume();
-//        getDialog().getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-//        getDialog().getWindow().setGravity(Gravity.CENTER);
+        getDialog().getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        getDialog().getWindow().setGravity(Gravity.CENTER);
     }
 }

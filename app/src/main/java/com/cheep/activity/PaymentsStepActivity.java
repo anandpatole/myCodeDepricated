@@ -114,15 +114,13 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
         // Enable Step Three Unverified state
         setTaskState(STEP_THREE_UNVERIFIED);
 
-
-        if (getIntent().hasExtra(Utility.Extra.DATA) == true) {
-
+        if (getIntent().hasExtra(Utility.Extra.DATA)) {
             providerModel = (ProviderModel) Utility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA), ProviderModel.class);
             //This is only when provider profile view for specific task (provider gives quote to specific task)
             taskDetailModel = (TaskDetailModel) Utility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA_2), TaskDetailModel.class);
         }
 
-        if (getIntent().hasExtra(Utility.Extra.PAYMENT_VIEW_IS_ADDITIONAL_CHARGE) == true) {
+        if (getIntent().hasExtra(Utility.Extra.PAYMENT_VIEW_IS_ADDITIONAL_CHARGE)) {
             isAdditional = getIntent().getIntExtra(Utility.Extra.PAYMENT_VIEW_IS_ADDITIONAL_CHARGE, 0);
             if (isAdditional == 0) {
                 if (taskDetailModel != null) {
@@ -134,7 +132,7 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
                 }
             }
             mActivityPaymentDetailBinding.textpromocodelabel.setEnabled(true);
-        } else if (getIntent().hasExtra(Utility.Extra.PAYMENT_VIEW) == true) {
+        } else if (getIntent().hasExtra(Utility.Extra.PAYMENT_VIEW)) {
             boolean viewonly = getIntent().getBooleanExtra(Utility.Extra.PAYMENT_VIEW, false);
             if (viewonly) {
                 if (taskDetailModel != null) {
@@ -175,7 +173,6 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
             spannableStringBuilder.append(getSpannableString(getString(R.string.label_at), ContextCompat.getColor(this, R.color.grey_varient_8), false));
             spannableStringBuilder.append(getSpannableString(taskDetailModel.taskAddress, ContextCompat.getColor(this, R.color.splash_gradient_end), true));
 
-
            /* SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder();
             spannableStringBuilder.append(getSpannableString(getString(R.string.label_booking), ContextCompat.getColor(this, R.color.grey_varient_8), false));
             spannableStringBuilder.append(getSpannableString(providerModel.userName, ContextCompat.getColor(this, R.color.splash_gradient_end), true));
@@ -190,8 +187,6 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
         }
 
         // Add Desclaimer
-
-
         mActivityPaymentDetailBinding.imgCheepCodeClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -341,7 +336,7 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
              *  Need to show Model Dialog once Payment has been made successfull. Once
              *  User clicks on OK. we will finish of the activity.
              */
-            /*String title = mContext.getString(R.string.label_great_choice_x, PreferenceUtility.getInstance(mContext).getUserDetails().UserName);
+            String title = mContext.getString(R.string.label_great_choice_x, PreferenceUtility.getInstance(mContext).getUserDetails().UserName);
             final SuperCalendar superStartDateTimeCalendar = SuperCalendar.getInstance();
             superStartDateTimeCalendar.setTimeZone(SuperCalendar.SuperTimeZone.GMT.GMT);
             superStartDateTimeCalendar.setTimeInMillis(Long.parseLong(taskDetailModel.taskStartdate));
@@ -359,16 +354,16 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
             });
             mAcknowledgementDialogWithProfilePic.setCancelable(false);
             mAcknowledgementDialogWithProfilePic.show(getSupportFragmentManager(), AcknowledgementDialogWithProfilePic.TAG);
-            return;*/
+            return;
 
-            setTaskState(STEP_THREE_VERIFIED);
+            /*setTaskState(STEP_THREE_VERIFIED);
             if (isAdditional == 0) {
                 // Go for regular payment gateway
                 payNow(false);
             } else {
                 // Go for regular payment gateway
                 payNow(true);
-            }
+            }*/
         }
     };
 

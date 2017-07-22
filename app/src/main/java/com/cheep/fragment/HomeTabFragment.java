@@ -659,7 +659,7 @@ public class HomeTabFragment extends BaseFragment {
 
     public void onListCategoryListGetsEmpty() {
 //        Log.d(TAG, "onListCategoryListGetsEmpty() called");
-        errorLoadingHelper.failed(getResources().getString(R.string.empty_favourited_list), 0, null);
+        errorLoadingHelper.showEmptyFavouriteCategorySection();
     }
 
 

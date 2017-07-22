@@ -420,7 +420,9 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_pros_available">PROs\nAvailable</string>
     <string name="label_popular">Popular</string>
     <string name="label_featured">Featured</string>
-    <string name="empty_favourited_list">Haven\'t favourited a service category yet? If you like a service which you often use, just tap the heart on it.</string>
+    <string name="empty_favourited_list_1">Haven\'t favourited a service\ncategory yet?</string>
+    <string name="empty_favourited_list_2">If you like a service which you often use,\njust tap the heart on it.</string>
+
 
     <string name="no_pros_in_this_category">No PROs in this category</string>
 </resources>
