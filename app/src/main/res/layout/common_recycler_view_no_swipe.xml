@@ -50,10 +50,10 @@
                 android:id="@+id/ln_empty_favourite_list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingBottom="@dimen/scale_45dp"
                 android:layout_marginTop="@dimen/scale_45dp"
                 android:orientation="vertical"
-                android:visibility="visible">
+                android:paddingBottom="@dimen/scale_45dp"
+                android:visibility="gone">
 
                 <com.cheep.custom_view.CFTextViewRegular
                     android:layout_width="wrap_content"

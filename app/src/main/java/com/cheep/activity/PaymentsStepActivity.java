@@ -336,7 +336,7 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
              *  Need to show Model Dialog once Payment has been made successfull. Once
              *  User clicks on OK. we will finish of the activity.
              */
-            String title = mContext.getString(R.string.label_great_choice_x, PreferenceUtility.getInstance(mContext).getUserDetails().UserName);
+            /*String title = mContext.getString(R.string.label_great_choice_x, PreferenceUtility.getInstance(mContext).getUserDetails().UserName);
             final SuperCalendar superStartDateTimeCalendar = SuperCalendar.getInstance();
             superStartDateTimeCalendar.setTimeZone(SuperCalendar.SuperTimeZone.GMT.GMT);
             superStartDateTimeCalendar.setTimeInMillis(Long.parseLong(taskDetailModel.taskStartdate));
@@ -354,16 +354,16 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
             });
             mAcknowledgementDialogWithProfilePic.setCancelable(false);
             mAcknowledgementDialogWithProfilePic.show(getSupportFragmentManager(), AcknowledgementDialogWithProfilePic.TAG);
-            return;
+            return;*/
 
-            /*setTaskState(STEP_THREE_VERIFIED);
+            setTaskState(STEP_THREE_VERIFIED);
             if (isAdditional == 0) {
                 // Go for regular payment gateway
                 payNow(false);
             } else {
                 // Go for regular payment gateway
                 payNow(true);
-            }*/
+            }
         }
     };
 

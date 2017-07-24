@@ -83,8 +83,11 @@ public class AcknowledgementDialogWithProfilePic extends DialogFragment {
         mDialogFragmentAcknowledgementBinding = DataBindingUtil.inflate(inflater, R.layout.dialog_fragment_acknowledgement_with_profile_pic, container, false);
 
         final UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
-        if (userDetails != null && userDetails.ProfileImg != null && (!TextUtils.isEmpty(userDetails.ProfileImg)))
+        if (userDetails != null && userDetails.ProfileImg != null && (!TextUtils.isEmpty(userDetails.ProfileImg))) {
             Utility.showCircularImageView(mContext, TAG, mDialogFragmentAcknowledgementBinding.imgProfilePic, userDetails.ProfileImg, R.drawable.ic_cheep_circular_icon, false, 0);
+        } else {
+            mDialogFragmentAcknowledgementBinding.imgProfilePic.setImageResource(Utility.DEFAULT_CHEEP_LOGO);
+        }
 
 
         //Set Header Image

@@ -4,12 +4,12 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginRight="@dimen/scale_10dp">
+        android:layout_marginRight="@dimen/scale_10dp"
+        android:orientation="vertical">
 
         <com.cheep.custom_view.CFTextViewRegular
             android:id="@+id/text_featured"
-            android:layout_width="wrap_content"
+            android:layout_width="@dimen/scale_100dp"
             android:layout_height="wrap_content"
             android:background="@drawable/btn_blue_rounded_border_top_right_5_dp"
             android:drawableLeft="@drawable/selector_drawable_left_filter_home_featured"
@@ -23,25 +23,42 @@
             android:textColor="@color/selector_text_color_home_filter"
             android:textSize="@dimen/text_size_14sp" />
 
-        <com.cheep.custom_view.CFTextViewRegular
-            android:id="@+id/text_popular"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="@dimen/scale_100dp"
             android:layout_height="wrap_content"
-            android:background="@drawable/btn_blue_flat"
-            android:drawableLeft="@drawable/selector_drawable_left_filter_home_popular"
-            android:drawablePadding="@dimen/scale_5dp"
-            android:minWidth="@dimen/scale_100dp"
-            android:paddingBottom="@dimen/scale_5dp"
-            android:paddingLeft="@dimen/scale_8dp"
-            android:paddingRight="@dimen/scale_8dp"
-            android:paddingTop="@dimen/scale_5dp"
-            android:text="@string/label_popular"
-            android:textColor="@color/selector_text_color_home_filter"
-            android:textSize="@dimen/text_size_14sp" />
+            android:background="@color/white"
+            android:orientation="horizontal">
+
+            <View
+                android:layout_width="@dimen/scale_1dp"
+                android:layout_height="match_parent"
+                android:background="@color/splash_gradient_end" />
+
+            <com.cheep.custom_view.CFTextViewRegular
+                android:id="@+id/text_popular"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:drawableLeft="@drawable/selector_drawable_left_filter_home_popular"
+                android:drawablePadding="@dimen/scale_5dp"
+                android:minWidth="@dimen/scale_100dp"
+                android:paddingBottom="@dimen/scale_5dp"
+                android:paddingLeft="@dimen/scale_8dp"
+                android:paddingRight="@dimen/scale_8dp"
+                android:paddingTop="@dimen/scale_5dp"
+                android:text="@string/label_popular"
+                android:textColor="@color/selector_text_color_home_filter"
+                android:textSize="@dimen/text_size_14sp" />
+
+            <View
+                android:layout_width="@dimen/scale_1dp"
+                android:layout_height="match_parent"
+                android:background="@color/splash_gradient_end" />
+        </LinearLayout>
 
         <com.cheep.custom_view.CFTextViewRegular
             android:id="@+id/text_favourites"
-            android:layout_width="wrap_content"
+            android:layout_width="@dimen/scale_100dp"
             android:layout_height="wrap_content"
             android:background="@drawable/btn_blue_rounded_border_bottom_right_5_dp"
             android:drawableLeft="@drawable/selector_drawable_left_filter_home_favourites"
