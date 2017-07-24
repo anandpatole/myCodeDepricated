@@ -3,6 +3,7 @@ package com.cheep.strategicpartner;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,8 +12,6 @@ import android.view.ViewGroup;
 
 import com.cheep.R;
 import com.cheep.activity.BaseAppCompatActivity;
-import com.cheep.activity.TaskCreationActivity;
-import com.cheep.adapter.BannerServiceRecyclerViewAdapter;
 import com.cheep.databinding.FragmentStrategicPartnerPhaseTwoBinding;
 import com.cheep.fragment.BaseFragment;
 import com.cheep.utils.ErrorLoadingHelper;
@@ -24,10 +23,10 @@ import com.cheep.utils.ErrorLoadingHelper;
 public class StrategicPartnerFragPhaseTwo extends BaseFragment {
     public static final String TAG = "StrategicPartnerFragPhaseThree";
     private FragmentStrategicPartnerPhaseTwoBinding mFragmentStrategicPartnerPhaseTwoBinding;
-    private BannerServiceRecyclerViewAdapter mSubServiceRecyclerViewAdapter;
     ErrorLoadingHelper errorLoadingHelper;
-    private StrategicPartnerTaskCreationAct mTaskCreationActivity;
+    private StrategicPartnerTaskCreationAct mStrategicPartnerTaskCreationAct;
     private boolean isVerified = false;
+    private boolean isTaskDescriptionVerified;
 
     @SuppressWarnings("unused")
     public static StrategicPartnerFragPhaseTwo newInstance() {
@@ -54,18 +53,17 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         Log.d(TAG, "setUserVisibleHint() called with: isVisibleToUser = [" + isVisibleToUser + "]");
-        if (!isVisibleToUser || mTaskCreationActivity == null) {
+        if (!isVisibleToUser || mStrategicPartnerTaskCreationAct == null) {
             return;
         }
 
-        if (isVerified) {
-            mTaskCreationActivity.setTaskState(TaskCreationActivity.STEP_ONE_VERIFIED);
+        // Task Description
+        if (mStrategicPartnerTaskCreationAct.getSelectedSubService().length() != 0) {
+            isTaskDescriptionVerified = true;
         } else {
-            mTaskCreationActivity.setTaskState(TaskCreationActivity.STEP_ONE_NORMAL);
+            isTaskDescriptionVerified = false;
         }
 
-        // Hide the post task button
-        mTaskCreationActivity.showPostTaskButton(false, false);
     }
 
     @Override
@@ -76,6 +74,29 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
     @Override
     public void initiateUI() {
         Log.d(TAG, "initiateUI() called");
+
+        mFragmentStrategicPartnerPhaseTwoBinding.textContinue.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mStrategicPartnerTaskCreationAct.setSelectedQuestions("question");
+
+                Log.d(TAG, "onSubCategoryRowItemClicked() called with: subServiceDetailModel = [" + "]");
+                // Make the status Verified
+                isVerified = true;
+
+                //Alert The activity that step one is been varified.
+                mStrategicPartnerTaskCreationAct.setTaskState(StrategicPartnerTaskCreationAct.STEP_TWO_VERIFIED);
+
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        mStrategicPartnerTaskCreationAct.gotoStep(StrategicPartnerTaskCreationAct.STAGE_3);
+                    }
+                }, 500);
+
+            }
+        });
+
     }
 
     @Override
@@ -89,7 +110,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
         super.onAttach(context);
         BaseAppCompatActivity activity = (BaseAppCompatActivity) context;
         if (activity instanceof StrategicPartnerTaskCreationAct) {
-            mTaskCreationActivity = (StrategicPartnerTaskCreationAct) activity;
+            mStrategicPartnerTaskCreationAct = (StrategicPartnerTaskCreationAct) activity;
         }
     }
 

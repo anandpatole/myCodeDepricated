@@ -18,7 +18,6 @@ import com.cheep.activity.BaseAppCompatActivity;
 import com.cheep.adapter.TaskCreationForStrategicPartnerPagerAdapter;
 import com.cheep.databinding.ActivityTaskCreationForStrategicPartnerBinding;
 import com.cheep.model.BannerImageModel;
-import com.cheep.model.SubServiceDetailModel;
 import com.cheep.utils.Utility;
 import com.google.android.gms.common.api.Status;
 
@@ -30,7 +29,9 @@ public class StrategicPartnerTaskCreationAct extends BaseAppCompatActivity {
     private ActivityTaskCreationForStrategicPartnerBinding mActivityTaskCreationForStrategicPartnerBinding;
     public BannerImageModel mBannerImageModel;
     TaskCreationForStrategicPartnerPagerAdapter mTaskCreationPagerAdapter;
-    private SubServiceDetailModel mSelectedSubServiceDetailModel;
+    private String value;
+    private String mSelectedQuestions;
+    public boolean isSingleSelection = false;
 
     public static void getInstance(Context mContext, BannerImageModel model) {
         Intent intent = new Intent(mContext, StrategicPartnerTaskCreationAct.class);
@@ -54,7 +55,15 @@ public class StrategicPartnerTaskCreationAct extends BaseAppCompatActivity {
             // Fetch banner Model
             Log.e(TAG, " data " + getIntent().getStringExtra(Utility.Extra.DATA));
             mBannerImageModel = (BannerImageModel) Utility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA), BannerImageModel.class);
+            if (mBannerImageModel != null) {
+                Utility.loadImageView(mContext, mActivityTaskCreationForStrategicPartnerBinding.imgService, mBannerImageModel.imgCatImageUrl, R.drawable.gradient_black);
+                isSingleSelection = mBannerImageModel.minimum_selection.equalsIgnoreCase("1");
+                mActivityTaskCreationForStrategicPartnerBinding.textTitle.setText(mBannerImageModel.name != null ? mBannerImageModel.name : Utility.EMPTY_STRING);
+            }
         }
+
+        mActivityTaskCreationForStrategicPartnerBinding.textStepDesc.setText(getString(R.string.step_1_desc_for_strategic_partner));
+
 
         // manage Viewpager
         setupViewPager(mActivityTaskCreationForStrategicPartnerBinding.viewpager);
@@ -72,6 +81,45 @@ public class StrategicPartnerTaskCreationAct extends BaseAppCompatActivity {
                 }
             });
         }
+
+        mActivityTaskCreationForStrategicPartnerBinding.textStep1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                gotoStep(STAGE_1);
+            }
+        });
+        mActivityTaskCreationForStrategicPartnerBinding.textStep2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                /*
+                  Need to check whether first step is verified or not.
+                 */
+                if (mCurrentStep > 2) {
+                    gotoStep(STAGE_2);
+                } else {
+                    Utility.showSnackBar(getString(R.string.step_1_desc_for_strategic_partner), mActivityTaskCreationForStrategicPartnerBinding.getRoot());
+                }
+
+            }
+        });
+        mActivityTaskCreationForStrategicPartnerBinding.textStep3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                /*
+                  Need to check whether first step is verified or not.
+                 */
+                if (mCurrentStep > 5) {
+                    gotoStep(STAGE_3);
+                } else {
+                    if (mCurrentStep < STEP_ONE_UNVERIFIED)
+                        Utility.showSnackBar(getString(R.string.step_1_desc_for_strategic_partner), mActivityTaskCreationForStrategicPartnerBinding.getRoot());
+                    else
+                        Utility.showSnackBar(getString(R.string.step_2_desc_for_strategic_partner), mActivityTaskCreationForStrategicPartnerBinding.getRoot());
+                }
+
+            }
+        });
+
 
     }
 
@@ -197,18 +245,24 @@ public class StrategicPartnerTaskCreationAct extends BaseAppCompatActivity {
 
     public static final int STAGE_1 = 0;
     public static final int STAGE_2 = 1;
+    public static final int STAGE_3 = 2;
 
     public void gotoStep(int step) {
         switch (step) {
             case STAGE_1:
                 mActivityTaskCreationForStrategicPartnerBinding.viewpager.setCurrentItem(0);
                 // Change description
-                mActivityTaskCreationForStrategicPartnerBinding.textStepDesc.setText(getString(R.string.step_1_desc));
+                mActivityTaskCreationForStrategicPartnerBinding.textStepDesc.setText(getString(R.string.step_1_desc_for_strategic_partner));
                 break;
             case STAGE_2:
                 mActivityTaskCreationForStrategicPartnerBinding.viewpager.setCurrentItem(1);
                 // Change description
-                mActivityTaskCreationForStrategicPartnerBinding.textStepDesc.setText(getString(R.string.step_2_desc));
+                mActivityTaskCreationForStrategicPartnerBinding.textStepDesc.setText(getString(R.string.step_2_desc_for_strategic_partner));
+                break;
+            case STAGE_3:
+                mActivityTaskCreationForStrategicPartnerBinding.viewpager.setCurrentItem(2);
+                // Change description
+                mActivityTaskCreationForStrategicPartnerBinding.textStepDesc.setText(getString(R.string.step_3_desc_for_strategic_partner));
                 break;
         }
     }
@@ -223,36 +277,12 @@ public class StrategicPartnerTaskCreationAct extends BaseAppCompatActivity {
         super.onBackPressed();
     }
 
-    public void showPostTaskButton(boolean needsToShow, boolean isEnabled) {
-        if (needsToShow) {
-            mActivityTaskCreationForStrategicPartnerBinding.textPostTask.setVisibility(View.VISIBLE);
-        } else {
-            mActivityTaskCreationForStrategicPartnerBinding.textPostTask.setVisibility(View.GONE);
-        }
 
-        /*
-          If shown make the color change accordingly
-         */
-        if (isEnabled) {
-            mActivityTaskCreationForStrategicPartnerBinding.textPostTask.setSelected(true);
-            mActivityTaskCreationForStrategicPartnerBinding.textPostTask.setBackgroundColor(ContextCompat.getColor(mContext, R.color.splash_gradient_end));
-        } else {
-            mActivityTaskCreationForStrategicPartnerBinding.textPostTask.setSelected(false);
-            mActivityTaskCreationForStrategicPartnerBinding.textPostTask.setBackgroundColor(ContextCompat.getColor(mContext, R.color.grey_varient_12));
-        }
+    public void setSelectedSubService(String value) {
+        this.value = value;
+        Log.e(TAG, " on continue click");
     }
 
-    public int getPostButtonHeight() {
-        return mActivityTaskCreationForStrategicPartnerBinding.textPostTask.getHeight();
-    }
-
-    public void setSelectedSubService(SubServiceDetailModel subServiceDetailModel) {
-        this.mSelectedSubServiceDetailModel = subServiceDetailModel;
-    }
-
-    public SubServiceDetailModel getSelectedSubService() {
-        return mSelectedSubServiceDetailModel;
-    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -314,5 +344,17 @@ public class StrategicPartnerTaskCreationAct extends BaseAppCompatActivity {
                 mLocationTrackService.requestLocationUpdate();
             }
         }
+    }
+
+    public String getSelectedSubService() {
+        return value;
+    }
+
+    public void setSelectedQuestions(String selectedQuestions) {
+        mSelectedQuestions = selectedQuestions;
+    }
+
+    public String getSelectedQuestions() {
+        return mSelectedQuestions;
     }
 }

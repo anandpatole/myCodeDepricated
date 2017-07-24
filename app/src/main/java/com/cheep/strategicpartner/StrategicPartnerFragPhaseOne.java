@@ -11,14 +11,28 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.cheep.R;
 import com.cheep.activity.BaseAppCompatActivity;
 import com.cheep.activity.TaskCreationActivity;
-import com.cheep.adapter.BannerServiceRecyclerViewAdapter;
 import com.cheep.databinding.FragmentStrategicPartnerPhaseOneBinding;
 import com.cheep.fragment.BaseFragment;
-import com.cheep.model.SubServiceDetailModel;
+import com.cheep.network.NetworkUtility;
+import com.cheep.network.Volley;
+import com.cheep.network.VolleyNetworkRequest;
 import com.cheep.utils.ErrorLoadingHelper;
+import com.cheep.utils.PreferenceUtility;
+import com.cheep.utils.Utility;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
+import static com.cheep.network.NetworkUtility.TAGS.CAT_ID;
 
 /**
  * Created by bhavesh on 28/4/17.
@@ -27,10 +41,11 @@ import com.cheep.utils.ErrorLoadingHelper;
 public class StrategicPartnerFragPhaseOne extends BaseFragment {
     public static final String TAG = "SelectSubServicesForStr";
     private FragmentStrategicPartnerPhaseOneBinding mFragmentStrategicPartnerPhaseOneBinding;
-    private BannerServiceRecyclerViewAdapter mSubServiceRecyclerViewAdapter;
+    private ExpandableRecyclerViewAdapter mExpandableRecyclerViewAdapter;
     ErrorLoadingHelper errorLoadingHelper;
     private StrategicPartnerTaskCreationAct mStrategicPartnerTaskCreationAct;
     private boolean isVerified = false;
+
 
     @SuppressWarnings("unused")
     public static StrategicPartnerFragPhaseOne newInstance() {
@@ -67,8 +82,6 @@ public class StrategicPartnerFragPhaseOne extends BaseFragment {
             mStrategicPartnerTaskCreationAct.setTaskState(TaskCreationActivity.STEP_ONE_NORMAL);
         }
 
-        // Hide the post task button
-        mStrategicPartnerTaskCreationAct.showPostTaskButton(false, false);
     }
 
     @Override
@@ -85,9 +98,30 @@ public class StrategicPartnerFragPhaseOne extends BaseFragment {
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mContext);
         mFragmentStrategicPartnerPhaseOneBinding.recyclerView.setLayoutManager(linearLayoutManager);
-        mSubServiceRecyclerViewAdapter = new BannerServiceRecyclerViewAdapter(mSubServiceListInteractionListener);
-        mFragmentStrategicPartnerPhaseOneBinding.recyclerView.setAdapter(mSubServiceRecyclerViewAdapter);
         errorLoadingHelper.showLoading();
+        fetchListOfSubCategory(mStrategicPartnerTaskCreationAct.mBannerImageModel.cat_id);
+
+        mFragmentStrategicPartnerPhaseOneBinding.textContinue.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mStrategicPartnerTaskCreationAct.setSelectedSubService("categories");
+
+                Log.d(TAG, "onSubCategoryRowItemClicked() called with: subServiceDetailModel = [" + "]");
+                // Make the status Verified
+                isVerified = true;
+
+                //Alert The activity that step one is been varified.
+                mStrategicPartnerTaskCreationAct.setTaskState(StrategicPartnerTaskCreationAct.STEP_ONE_VERIFIED);
+
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        mStrategicPartnerTaskCreationAct.gotoStep(StrategicPartnerTaskCreationAct.STAGE_2);
+                    }
+                }, 500);
+
+            }
+        });
     }
 
     @Override
@@ -95,31 +129,90 @@ public class StrategicPartnerFragPhaseOne extends BaseFragment {
         Log.d(TAG, "setListener() called");
     }
 
-    public interface SubServiceListInteractionListener {
-        void onSubCategoryRowItemClicked(SubServiceDetailModel subServiceDetailModel);
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////// Fetch Strategic partner Service Listing[START] ////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    private void fetchListOfSubCategory(String catId) {
+        Log.d(TAG, "fetchListOfSubCategory() called with: catId = [" + catId + "]");
+        if (!Utility.isConnected(mContext)) {
+            Utility.showSnackBar(getString(R.string.no_internet), mFragmentStrategicPartnerPhaseOneBinding.getRoot());
+            return;
+        }
+
+        //Add Header parameters
+        Map<String, String> mHeaderParams = new HashMap<>();
+        mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
+        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
+
+        //Add Params
+        Map<String, String> mParams = new HashMap<>();
+        mParams.put(CAT_ID, catId);
+
+        VolleyNetworkRequest mVolleyNetworkRequestForCategoryList = new VolleyNetworkRequest(NetworkUtility.WS.FETCH_SUB_CATS_STRATEGIC_PARTNER_LIST
+                , mCallFetchAllSubCateStreParListingWSErrorListener
+                , mCallFetchAllSubCateStreParListingWSResponseListener
+                , mHeaderParams
+                , mParams
+                , null);
+
+        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequestForCategoryList, NetworkUtility.WS.FETCH_SUB_CATS_STRATEGIC_PARTNER_LIST);
     }
 
-    private SubServiceListInteractionListener mSubServiceListInteractionListener = new SubServiceListInteractionListener() {
+    Response.Listener mCallFetchAllSubCateStreParListingWSResponseListener = new Response.Listener() {
         @Override
-        public void onSubCategoryRowItemClicked(SubServiceDetailModel subServiceDetailModel) {
-            mStrategicPartnerTaskCreationAct.setSelectedSubService(subServiceDetailModel);
+        public void onResponse(Object response) {
+            Log.d(TAG, "onResponse() called with: response = [" + response + "]");
+            String strResponse = (String) response;
+            try {
+                JSONObject jsonObject = new JSONObject(strResponse);
+                Log.i(TAG, "onResponse: " + jsonObject.toString());
+                int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
+                String error_message;
+                switch (statusCode) {
+                    case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
+                        ArrayList<StrategicPartnerSubCategoryModel> list = Utility.getObjectListFromJsonString(jsonObject.optString(NetworkUtility.TAGS.DATA), StrategicPartnerSubCategoryModel[].class);
+                        mExpandableRecyclerViewAdapter = new ExpandableRecyclerViewAdapter(list, mStrategicPartnerTaskCreationAct.isSingleSelection);
+                        mFragmentStrategicPartnerPhaseOneBinding.recyclerView.setAdapter(mExpandableRecyclerViewAdapter);
+                        errorLoadingHelper.success();
+                        break;
+                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
+                        // Show Toast
+                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mFragmentStrategicPartnerPhaseOneBinding.getRoot());
+                        errorLoadingHelper.success();
+                        break;
+                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
+                        error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
 
-            Log.d(TAG, "onSubCategoryRowItemClicked() called with: subServiceDetailModel = [" + subServiceDetailModel.name + "]");
-            // Make the status Verified
-            isVerified = true;
-
-            //Alert The activity that step one is been varified.
-            mStrategicPartnerTaskCreationAct.setTaskState(TaskCreationActivity.STEP_ONE_VERIFIED);
-
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    mStrategicPartnerTaskCreationAct.gotoStep(TaskCreationActivity.STAGE_2);
+                        // Show message
+                        Utility.showSnackBar(error_message, mFragmentStrategicPartnerPhaseOneBinding.getRoot());
+                        errorLoadingHelper.success();
+                        break;
+                    case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
+                    case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
+                        //Logout and finish the current activity
+                        Utility.logout(mContext, true, statusCode);
+                        if (getActivity() != null)
+                            getActivity().finish();
+                        break;
                 }
-            }, 500);
+            } catch (JSONException e) {
+                e.printStackTrace();
+                mCallFetchAllSubCateStreParListingWSErrorListener.onErrorResponse(new VolleyError(e.getMessage()));
+            }
 
         }
     };
+    Response.ErrorListener mCallFetchAllSubCateStreParListingWSErrorListener = new Response.ErrorListener() {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
+            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mFragmentStrategicPartnerPhaseOneBinding.getRoot());
+        }
+    };
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////// Fetch SubService Listing[END] ////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
     public void onAttach(Context context) {

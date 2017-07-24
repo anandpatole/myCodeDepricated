@@ -425,8 +425,9 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="no_pros_in_this_category">No PROs in this category</string>
 
 
-    <string name="step_1_desc_for_banner">Please select the services</string>
-    <string name="step_2_desc_for_banner">Questions</string>
-    <string name="step_3_desc_for_banner">Please check details below and pay</string>
+    <string name="step_1_desc_for_strategic_partner">Please select the services</string>
+    <string name="step_2_desc_for_strategic_partner">Questions</string>
+    <string name="step_3_desc_for_strategic_partner">Please check details below and pay</string>
+    <string name="continue_">Continue</string>
 
 </resources>
