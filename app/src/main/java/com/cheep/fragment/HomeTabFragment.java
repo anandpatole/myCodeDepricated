@@ -294,7 +294,7 @@ public class HomeTabFragment extends BaseFragment {
                 int height = mFragmentTabHomeBinding.layoutBannerHeader.viewPagerBannerImages.getMeasuredHeight();
 //                Log.d(TAG, "onGlobalLayout() called==> " + width + "*" + height);
                 ViewGroup.LayoutParams params = mFragmentTabHomeBinding.layoutBannerHeader.viewPagerBannerImages.getLayoutParams();
-                params.height = Utility.getHeightFromWidthForSixteenNineRatio(width);
+                params.height = Utility.getHeightFromWidthForTwoOneRatio(width);
                 mFragmentTabHomeBinding.layoutBannerHeader.viewPagerBannerImages.setLayoutParams(params);
             }
         });

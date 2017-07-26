@@ -27,7 +27,7 @@
 
     <!-- <uses-permission android:name="android.permission.READ_PHONE_STATE" /> -->
     <application
-        android:name="com.cheep.App"
+        android:name=".App"
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -135,6 +135,16 @@
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/AppTheme.CropActivity" />
 
+        <!-- Hotline theming -->
+        <activity
+            android:name="com.freshdesk.hotline.activity.ChannelListActivity"
+            android:theme="@style/HotlineTheme"
+            tools:replace="android:theme" />
+        <activity
+            android:name="com.freshdesk.hotline.activity.ConversationDetailActivity"
+            android:theme="@style/HotlineTheme"
+            tools:replace="android:theme" />
+
         <!-- Location Tracked Service -->
         <service
             android:name=".services.LocationTrackService"
@@ -195,15 +205,6 @@
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             android:label="@string/app_name" />
 
-        <!-- Hotline theming -->
-        <!--<activity
-            android:name="com.freshdesk.hotline.activity.ChannelListActivity"
-            android:theme="@style/HotlineTheme"
-            tools:replace="android:theme" />
-        <activity
-            android:name="com.freshdesk.hotline.activity.ConversationDetailActivity"
-            android:theme="@style/HotlineTheme"
-            tools:replace="android:theme" />-->
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"

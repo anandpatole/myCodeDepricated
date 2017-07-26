@@ -28,7 +28,7 @@ public class CircleTransform extends BitmapTransformation {
 
     public CircleTransform(Context context, boolean roundedCorner, int borderColor, int borderWidth, String url, String tag) {
         super(context);
-        Log.d(TAG, "CircleTransform() called with: context = [" + context + "], roundedCorner = [" + roundedCorner + "], borderColor = [" + borderColor + "], borderWidth = [" + borderWidth + "], url = [" + url + "], tag = [" + tag + "]");
+//        Log.d(TAG, "CircleTransform() called with: context = [" + context + "], roundedCorner = [" + roundedCorner + "], borderColor = [" + borderColor + "], borderWidth = [" + borderWidth + "], url = [" + url + "], tag = [" + tag + "]");
         this.roundedCorner = roundedCorner;
         this.borderColor = borderColor;
         this.borderWidth = borderWidth;

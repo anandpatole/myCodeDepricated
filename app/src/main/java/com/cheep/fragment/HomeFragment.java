@@ -129,7 +129,6 @@ public class HomeFragment extends BaseFragment {
         checkOngoingTaskCounter();
     }
 
-
     @Override
     public void onDetach() {
         Log.i(TAG, "onDetach: ");
@@ -146,9 +145,11 @@ public class HomeFragment extends BaseFragment {
             checkOngoingTaskCounter();
 //            mTaskDetailModel.taskStatus = event.taskStatus;
 //            setUpTaskDetails(mTaskDetailModel);
+        } else if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.PAYMENT_COMPLETED_NEED_TO_REDIRECT_TO_MY_TASK_SCREEN) {
+            // Need to rediretct the user to MyTask Screen
+            setCurrentTab(TAB_MY_TASK);
         }
     }
-
 
     @Override
     public void onDestroy() {

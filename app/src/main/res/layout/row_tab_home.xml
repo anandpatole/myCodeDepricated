@@ -2,7 +2,6 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-
     <LinearLayout
         android:id="@+id/front_layout"
         android:layout_width="match_parent"
@@ -12,10 +11,10 @@
         <RelativeLayout
             android:id="@+id/rel_category_image"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/home_tab_row_height"
-            android:layout_marginLeft="@dimen/scale_10dp"
-            android:layout_marginRight="@dimen/scale_10dp"
-            android:layout_marginTop="@dimen/scale_15dp">
+            android:layout_height="170dp"
+            android:layout_marginLeft="@dimen/home_screen_general_margin"
+            android:layout_marginRight="@dimen/home_screen_general_margin"
+            android:layout_marginTop="@dimen/home_screen_general_margin">
 
             <ImageView
                 android:id="@+id/img_category_background"
@@ -28,8 +27,8 @@
                 android:id="@+id/img_category_favourite"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/scale_15dp"
-                android:layout_marginTop="@dimen/scale_10dp"
+                android:layout_marginLeft="@dimen/home_screen_category_image_inner_margin"
+                android:layout_marginTop="@dimen/home_screen_category_image_inner_margin"
                 android:src="@drawable/heart_icon_selected" />
 
             <LinearLayout
@@ -37,14 +36,13 @@
                 android:layout_height="match_parent"
                 android:layout_alignParentBottom="true"
                 android:background="@drawable/home_tab_black_gradient"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:padding="@dimen/home_screen_category_image_inner_margin">
 
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
-                    android:layout_marginBottom="@dimen/scale_10dp"
-                    android:layout_marginLeft="@dimen/scale_15dp"
                     android:layout_weight="1"
                     android:orientation="vertical">
 
@@ -70,14 +68,11 @@
 
                 <com.cheep.custom_view.CFTextViewSemiBold
                     android:id="@+id/tvBook"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="@dimen/home_screen_book_button_width"
+                    android:layout_height="@dimen/home_screen_book_button_height"
                     android:layout_gravity="bottom"
-                    android:layout_marginBottom="@dimen/scale_5dp"
-                    android:layout_marginRight="@dimen/scale_15dp"
                     android:background="@drawable/rounded_rect_blue"
                     android:gravity="center"
-                    android:minWidth="@dimen/scale_100dp"
                     android:padding="@dimen/scale_6dp"
                     android:text="@string/label_book"
                     android:textColor="@color/white"
@@ -102,10 +97,10 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="@dimen/scale_15dp"
-            android:paddingLeft="@dimen/scale_25dp"
-            android:paddingRight="@dimen/scale_25dp"
-            android:paddingTop="@dimen/scale_15dp">
+            android:paddingBottom="@dimen/home_screen_general_margin"
+            android:paddingLeft="@dimen/home_screen_pro_available_section_left_right_margin"
+            android:paddingRight="@dimen/home_screen_pro_available_section_left_right_margin"
+            android:paddingTop="@dimen/home_screen_general_margin">
 
             <!-- Below is the UI for Actions which are reported for particular task. -->
             <LinearLayout
@@ -148,8 +143,8 @@
                     android:background="@drawable/background_blue_white_circle_strock_width_one"
                     android:gravity="center"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/text_size_14sp"
-                    tools:text="+8" />
+                    android:textSize="@dimen/home_screen_extra_category_count_text_size"
+                    tools:text="+000" />
 
                 <com.cheep.custom_view.CFTextViewSemiBold
                     android:id="@+id/text_task_response_status"
@@ -186,17 +181,17 @@
 
                 <ImageView
                     android:id="@+id/ivLiveAnimated"
-                    android:layout_width="@dimen/icon_live_width"
-                    android:layout_height="wrap_content"
+                    android:layout_width="@dimen/icon_live_home_screen_width"
+                    android:layout_height="@dimen/icon_live_home_screen_height"
                     android:layout_alignLeft="@+id/tv_live_feed"
-                    android:src="@drawable/ic_live_0001"
-                    tools:ignore="ContentDescription" />
+                    tools:ignore="ContentDescription"
+                    tools:src="@drawable/ic_live_0001" />
             </RelativeLayout>
         </LinearLayout>
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="@dimen/scale_10dp"
+            android:layout_height="@dimen/home_screen_divider_height"
             android:background="@color/grey_dark_color_4" />
 
     </LinearLayout>

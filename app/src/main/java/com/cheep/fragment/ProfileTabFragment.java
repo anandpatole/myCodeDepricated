@@ -1168,7 +1168,6 @@ public class ProfileTabFragment extends BaseFragment {
                         }
                         JSONObject jsonData = jsonObject.getJSONObject(NetworkUtility.TAGS.DATA);
                         UserDetails userDetails = (UserDetails) Utility.getObjectFromJsonString(jsonData.toString(), UserDetails.class);
-
                         PreferenceUtility.getInstance(mContext).saveUserDetails(jsonData);
                         fillFields(userDetails);
                         mListener.profileUpdated();
