@@ -77,6 +77,7 @@ android {
             versionNameSuffix "-SNAPSHOT"
         }
         live {
+            versionNameSuffix "-LIVE"
             buildConfigField("String", "BASE_URL", getProperty("LIVE_BASE_URL"));
             buildConfigField("String", "CHAT_NODE", getProperty("CHAT_NODE_LIVE"));
             buildConfigField("String", "PAYUBIZ_HDFC_KEY", getProperty("PAYUBIZ_HDFC_LIVE_KEY"))
