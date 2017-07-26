@@ -10,7 +10,7 @@ public class BannerImageModel {
     @SerializedName("cat_id")
     @Expose
     public String cat_id;
-    @SerializedName("name")
+    @SerializedName("title")
     @Expose
     public String name;
     @SerializedName("minimum_selection")

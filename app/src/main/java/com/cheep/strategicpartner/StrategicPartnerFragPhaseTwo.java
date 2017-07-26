@@ -58,7 +58,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
         }
 
         // Task Description
-        if (mStrategicPartnerTaskCreationAct.getSelectedSubService().length() != 0) {
+        if (mStrategicPartnerTaskCreationAct.getSelectedSubService().size() != 0) {
             isTaskDescriptionVerified = true;
         } else {
             isTaskDescriptionVerified = false;
@@ -74,6 +74,8 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
     @Override
     public void initiateUI() {
         Log.d(TAG, "initiateUI() called");
+
+        //
 
         mFragmentStrategicPartnerPhaseTwoBinding.textContinue.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -117,14 +119,8 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
     @Override
     public void onDetach() {
         super.onDetach();
-//        Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.WS.FETCH_SUB_SERVICE_LIST);
     }
 
-    /**
-     * This method would return whether the stage is verified or not
-     *
-     * @return
-     */
     public boolean isVerified() {
         return isVerified;
     }

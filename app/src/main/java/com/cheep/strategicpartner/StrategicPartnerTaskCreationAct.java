@@ -21,6 +21,8 @@ import com.cheep.model.BannerImageModel;
 import com.cheep.utils.Utility;
 import com.google.android.gms.common.api.Status;
 
+import java.util.ArrayList;
+
 /**
  * Created by bhavesh on 26/4/17.
  */
@@ -29,9 +31,9 @@ public class StrategicPartnerTaskCreationAct extends BaseAppCompatActivity {
     private ActivityTaskCreationForStrategicPartnerBinding mActivityTaskCreationForStrategicPartnerBinding;
     public BannerImageModel mBannerImageModel;
     TaskCreationForStrategicPartnerPagerAdapter mTaskCreationPagerAdapter;
-    private String value;
     private String mSelectedQuestions;
     public boolean isSingleSelection = false;
+    private ArrayList<StrategicPartnerSubCategoryModel> mSelectedServicesList;
 
     public static void getInstance(Context mContext, BannerImageModel model) {
         Intent intent = new Intent(mContext, StrategicPartnerTaskCreationAct.class);
@@ -274,13 +276,23 @@ public class StrategicPartnerTaskCreationAct extends BaseAppCompatActivity {
             gotoStep(STAGE_1);
             return;
         }
+        if (mActivityTaskCreationForStrategicPartnerBinding.viewpager.getCurrentItem() == 2) {
+            gotoStep(STAGE_2);
+            return;
+        }
         super.onBackPressed();
     }
 
 
-    public void setSelectedSubService(String value) {
-        this.value = value;
+    public void setSelectedSubService(ArrayList<StrategicPartnerSubCategoryModel> mSelectedServicesList) {
+        this.mSelectedServicesList = mSelectedServicesList;
         Log.e(TAG, " on continue click");
+        for (StrategicPartnerSubCategoryModel model : mSelectedServicesList) {
+            Log.e(TAG, " Item Name " + model.name);
+            for (StrategicPartnerSubCategoryModel.AllSubSubCat allSubSubCat : model.allSubSubCats) {
+                Log.e(TAG, " Item  sub name " + allSubSubCat.subSubCatName);
+            }
+        }
     }
 
 
@@ -346,8 +358,8 @@ public class StrategicPartnerTaskCreationAct extends BaseAppCompatActivity {
         }
     }
 
-    public String getSelectedSubService() {
-        return value;
+    public ArrayList<StrategicPartnerSubCategoryModel> getSelectedSubService() {
+        return mSelectedServicesList;
     }
 
     public void setSelectedQuestions(String selectedQuestions) {

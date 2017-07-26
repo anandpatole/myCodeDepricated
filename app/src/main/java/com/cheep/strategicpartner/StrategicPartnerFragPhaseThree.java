@@ -4,6 +4,7 @@ import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,11 +16,13 @@ import com.cheep.databinding.FragmentStrategicPartnerPhaseThreeBinding;
 import com.cheep.fragment.BaseFragment;
 import com.cheep.utils.ErrorLoadingHelper;
 
+import java.util.List;
+
 /**
  * Created by bhavesh on 28/4/17.
  */
 public class StrategicPartnerFragPhaseThree extends BaseFragment {
-    public static final String TAG = "StrategicPartnerFragPha";
+    public static final String TAG = "StrategicPartnerFragPhaseThree";
     private FragmentStrategicPartnerPhaseThreeBinding mFragmentStrategicPartnerPhaseThreeBinding;
     ErrorLoadingHelper errorLoadingHelper;
     private StrategicPartnerTaskCreationAct mStrategicPartnerTaskCreationAct;
@@ -61,6 +64,20 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
         } else {
             isTaskDescriptionVerified = false;
         }
+        int total = 0;
+
+        for (StrategicPartnerSubCategoryModel model : mStrategicPartnerTaskCreationAct.getSelectedSubService()) {
+            List<StrategicPartnerSubCategoryModel.AllSubSubCat> allSubSubCats = model.allSubSubCats;
+            for (StrategicPartnerSubCategoryModel.AllSubSubCat allSubSubCat : allSubSubCats) {
+                try {
+                    total += Integer.parseInt(allSubSubCat.price);
+                } catch (NumberFormatException e) {
+                    total += 0;
+                }
+            }
+        }
+        mFragmentStrategicPartnerPhaseThreeBinding.txttotal.setText(getString(R.string.ruppe_symbol_x, String.valueOf(total)));
+        mFragmentStrategicPartnerPhaseThreeBinding.txtsubtotal.setText(getString(R.string.ruppe_symbol_x, String.valueOf(total)));
     }
 
     @Override
@@ -72,6 +89,8 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
     public void initiateUI() {
         Log.d(TAG, "initiateUI() called");
 
+        mFragmentStrategicPartnerPhaseThreeBinding.recycleSelectedService.setLayoutManager(new LinearLayoutManager(mStrategicPartnerTaskCreationAct));
+        mFragmentStrategicPartnerPhaseThreeBinding.recycleSelectedService.setAdapter(new StrategicPartnerPaymentAdapter(mStrategicPartnerTaskCreationAct, mStrategicPartnerTaskCreationAct.getSelectedSubService()));
     }
 
     @Override
@@ -100,6 +119,7 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
      *
      * @return
      */
+
     public boolean isVerified() {
         return isVerified;
     }

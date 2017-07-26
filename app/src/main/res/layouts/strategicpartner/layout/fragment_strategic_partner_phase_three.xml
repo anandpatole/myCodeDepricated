@@ -63,7 +63,6 @@
                 </LinearLayout>
 
 
-
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -74,16 +73,18 @@
                     android:paddingTop="@dimen/scale_5dp">
 
 
+                    <!--  <View
+                          android:layout_width="match_parent"
+                          android:layout_height="@dimen/scale_1dp"
+                          android:layout_above="@+id/action_layout"
+                          android:layout_toRightOf="@+id/profile_layout"
+                          android:background="@color/grey_color"/>
+  -->
 
-                    <View
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/recycleSelectedService"
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/scale_1dp"
-                        android:layout_above="@+id/action_layout"
-                        android:layout_toRightOf="@+id/profile_layout"
-                        android:background="@color/grey_color"/>
-
-
-
+                        android:layout_height="wrap_content"/>
 
                     <RelativeLayout
                         android:id="@+id/rlsubtotal"
@@ -128,14 +129,14 @@
 
                     </RelativeLayout>
 
-                    <View
-                        android:id="@+id/devicerpromocode"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/scale_1dp"
-                        android:layout_above="@+id/action_layout"
-                        android:layout_toRightOf="@+id/profile_layout"
-                        android:background="@color/grey_color"/>
-
+                    <!--  <View
+                          android:id="@+id/devicerpromocode"
+                          android:layout_width="match_parent"
+                          android:layout_height="@dimen/scale_1dp"
+                          android:layout_above="@+id/action_layout"
+                          android:layout_toRightOf="@+id/profile_layout"
+                          android:background="@color/grey_color"/>
+  -->
                     <RelativeLayout
                         android:id="@+id/rlpromocode"
                         android:layout_width="match_parent"
