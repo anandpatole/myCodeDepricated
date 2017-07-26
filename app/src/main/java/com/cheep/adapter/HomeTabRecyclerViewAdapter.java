@@ -12,6 +12,7 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.LeadingMarginSpan;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -314,6 +315,23 @@ public class HomeTabRecyclerViewAdapter extends RecyclerView.Adapter<HomeTabRecy
         // Check if list size is more than 3
         if (list.size() > 3) {
             int extra_count = list.size() - 3;
+            // Set size of textview based on number of digits, to make sure it looks proper in
+            // In all devices(specifically for hdpi) devices.
+            int digit_length = String.valueOf(extra_count).length();
+            if (digit_length == 1) {
+                mRowTabHomeBinding.extraProCount.setTextSize(
+                        TypedValue.COMPLEX_UNIT_PX,
+                        mContext.getResources().getDimension(R.dimen.home_screen_extra_category_count_text_size_one_digits));
+            } else if (digit_length == 2) {
+                mRowTabHomeBinding.extraProCount.setTextSize(
+                        TypedValue.COMPLEX_UNIT_PX,
+                        mContext.getResources().getDimension(R.dimen.home_screen_extra_category_count_text_size_two_digits));
+            } else {
+                mRowTabHomeBinding.extraProCount.setTextSize(
+                        TypedValue.COMPLEX_UNIT_PX,
+                        mContext.getResources().getDimension(R.dimen.home_screen_extra_category_count_text_size_three_digits));
+            }
+
             mRowTabHomeBinding.extraProCount.setVisibility(View.VISIBLE);
             mRowTabHomeBinding.extraProCount.setText("+" + String.valueOf(extra_count));
         } else {

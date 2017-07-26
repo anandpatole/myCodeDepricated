@@ -143,8 +143,8 @@
                     android:background="@drawable/background_blue_white_circle_strock_width_one"
                     android:gravity="center"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/home_screen_extra_category_count_text_size"
-                    tools:text="+000" />
+                    android:textSize="@dimen/home_screen_extra_category_count_text_size_one_digits"
+                    tools:text="+0" />
 
                 <com.cheep.custom_view.CFTextViewSemiBold
                     android:id="@+id/text_task_response_status"

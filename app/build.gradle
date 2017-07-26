@@ -20,7 +20,7 @@ android {
         minSdkVersion 16
         targetSdkVersion 26
         versionCode 21
-        versionName "1.0.49" // PLEASE FIRST MAKE SURE MIN-VERSION IS 16.
+        versionName "1.0.50" // PLEASE FIRST MAKE SURE MIN-VERSION IS 16.
         renderscriptTargetApi 18
         renderscriptSupportModeEnabled true
 
@@ -89,11 +89,12 @@ android {
             versionNameSuffix "-SNAPSHOT"
         }
         live {
+            versionNameSuffix "-LIVE"
             buildConfigField("String", "BASE_URL", getProperty("LIVE_BASE_URL"));
             buildConfigField("String", "CHAT_NODE", getProperty("CHAT_NODE_LIVE"));
             buildConfigField("String", "PAYUBIZ_HDFC_KEY", getProperty("PAYUBIZ_HDFC_LIVE_KEY"))
             buildConfigField("String", "PAYUBIZ_HDFC_URL", getProperty("PAYUBIZ_HDFC_LIVE_URL"))
-            buildConfigField("boolean", "NEED_TO_BYPASS_PAYMENT", "true")
+            buildConfigField("boolean", "NEED_TO_BYPASS_PAYMENT", "false")
             signingConfig signingConfigs.debug
         }
         release {
