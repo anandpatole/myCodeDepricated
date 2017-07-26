@@ -1119,12 +1119,14 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
             mTaskDetailModel.taskStatus = event.taskStatus;
             mTaskDetailModel.additionalQuoteAmount = event.additional_quote_amount;
             setUpTaskDetails(mTaskDetailModel);
-        } else if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.TASK_PAID
-                || event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.TASK_PROCESSING) {
+        } else if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.TASK_PROCESSING) {
             // Call Task Detail update WS from here so that it can refresh the content.
             if (mTaskDetailModel.taskId.equalsIgnoreCase(event.id)) {
                 callTaskDetailWS(getIntent().getExtras().getString(Utility.Extra.TASK_ID));
             }
+        } else if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.PAYMENT_COMPLETED_NEED_TO_REDIRECT_TO_MY_TASK_SCREEN) {
+            // Finish this activity
+            finish();
         }
     }
 

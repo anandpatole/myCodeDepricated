@@ -83,7 +83,6 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
         mHomeIconOffset = context.getResources().getDimensionPixelSize(R.dimen.icon_home_width) + offset;
         mTagBackgroundColor = ContextCompat.getColor(context, R.color.splash_gradient_end);
         mTagTextColor = ContextCompat.getColor(context, R.color.white);
-
         mSemiBoldTypeface = TypeFaceProvider.get(mContext, mContext.getResources().getString(R.string.font_semi_bold));
         mTimeDistanceStateMap = new HashMap<>();
         mOfferIndexMap = new HashMap<>();

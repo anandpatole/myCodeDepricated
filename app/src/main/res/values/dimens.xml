@@ -5,8 +5,6 @@
     <dimen name="thumb_size">22dp</dimen>
     <dimen name="thumb_text_size">9sp</dimen>
 
-    <dimen name="home_tab_row_height">170dp</dimen>
-
     <dimen name="rounded_corner">15dp</dimen>
     <dimen name="side_menu_logo_size">50dp</dimen>
 
@@ -90,7 +88,7 @@
 
     <dimen name="icon_live_width">30.75dp</dimen>
     <dimen name="icon_live_height">13.50dp</dimen>
-    <dimen name="icon_home_width" >17dp</dimen>
+    <dimen name="icon_home_width">17dp</dimen>
     <dimen name="icon_home_height">13.50dp</dimen>
     <!--<dimen name="icon_chat_width">28.75dp</dimen>-->
     <!--<dimen name="icon_chat_height">23.75dp</dimen>-->
@@ -99,6 +97,33 @@
     <dimen name="scale_90dp">90dp</dimen>
     <dimen name="scale_36dp">36dp</dimen>
 
-    <dimen name="home_screen_near_by_pro_image_height_width">36dp</dimen>
+
+    <!--Home Screen Alignments[Start]-->
+    <dimen name="icon_live_home_screen_width">31.250dp</dimen>
+    <dimen name="icon_live_home_screen_height">13.750dp</dimen>
+    <dimen name="home_screen_near_by_pro_image_height_width">31.250dp</dimen>
     <dimen name="home_screen_pro_available_text_size">11sp</dimen>
+    <!--<dimen name="home_screen_filter_text_width">100dp</dimen>-->
+    <dimen name="home_screen_general_margin">11.250dp</dimen>
+    <dimen name="home_screen_divider_height">8.5dp</dimen>
+    <!--ORG-->
+    <!--<dimen name="home_screen_banner_view_bottom_margin">16.750dp</dimen>-->
+
+    <!--Modified-->
+    <dimen name="home_screen_banner_view_bottom_margin">18.500dp</dimen>
+
+    <dimen name="home_screen_our_service_section_top_margin">12.5dp</dimen>
+    <dimen name="home_screen_our_service_section_left_right_margin">17dp</dimen>
+    <dimen name="home_screen_category_image_inner_margin">11dp</dimen>
+    <dimen name="home_screen_pro_available_section_left_right_margin">22.250dp</dimen>
+    <dimen name="home_screen_book_button_width">96.250dp</dimen>
+    <dimen name="home_screen_book_button_height">24dp</dimen>
+
+    <!--This dimensions would apply for xhdpi,hdpi devices as for xxhdpi,xxxhdpi we are having other
+     dimension as specified mentioned in 'values-xxhdpi/dimens.xml' -->
+    <dimen name="home_screen_filter_text_width">103dp</dimen>
+
+    <dimen name="home_screen_extra_category_count_text_size">11sp</dimen>
+    <!--Home Screen Alignments[End]-->
+
 </resources>

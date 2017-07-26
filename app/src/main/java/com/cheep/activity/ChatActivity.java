@@ -912,6 +912,7 @@ public class ChatActivity extends BaseAppCompatActivity implements View.OnClickL
                 ssb.setSpan(new ImageSpan(mContext, R.drawable.ic_locked_50_60), 0, 1, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
                 mActivityChatBinding.textChatDisableMessage.setText(ssb, TextView.BufferType.SPANNABLE);
             }
+
             // Incase Task Completed
             else if (Utility.TASK_STATUS.COMPLETION_CONFIRM.equalsIgnoreCase(currentTaskStatus)) {
                 SpannableStringBuilder ssb = new SpannableStringBuilder(getString(R.string.label_chat_ended_due_to_task_completed));

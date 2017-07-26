@@ -114,15 +114,13 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
         // Enable Step Three Unverified state
         setTaskState(STEP_THREE_UNVERIFIED);
 
-
-        if (getIntent().hasExtra(Utility.Extra.DATA) == true) {
-
+        if (getIntent().hasExtra(Utility.Extra.DATA)) {
             providerModel = (ProviderModel) Utility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA), ProviderModel.class);
             //This is only when provider profile view for specific task (provider gives quote to specific task)
             taskDetailModel = (TaskDetailModel) Utility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA_2), TaskDetailModel.class);
         }
 
-        if (getIntent().hasExtra(Utility.Extra.PAYMENT_VIEW_IS_ADDITIONAL_CHARGE) == true) {
+        if (getIntent().hasExtra(Utility.Extra.PAYMENT_VIEW_IS_ADDITIONAL_CHARGE)) {
             isAdditional = getIntent().getIntExtra(Utility.Extra.PAYMENT_VIEW_IS_ADDITIONAL_CHARGE, 0);
             if (isAdditional == 0) {
                 if (taskDetailModel != null) {
@@ -134,7 +132,7 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
                 }
             }
             mActivityPaymentDetailBinding.textpromocodelabel.setEnabled(true);
-        } else if (getIntent().hasExtra(Utility.Extra.PAYMENT_VIEW) == true) {
+        } else if (getIntent().hasExtra(Utility.Extra.PAYMENT_VIEW)) {
             boolean viewonly = getIntent().getBooleanExtra(Utility.Extra.PAYMENT_VIEW, false);
             if (viewonly) {
                 if (taskDetailModel != null) {
@@ -175,7 +173,6 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
             spannableStringBuilder.append(getSpannableString(getString(R.string.label_at), ContextCompat.getColor(this, R.color.grey_varient_8), false));
             spannableStringBuilder.append(getSpannableString(taskDetailModel.taskAddress, ContextCompat.getColor(this, R.color.splash_gradient_end), true));
 
-
            /* SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder();
             spannableStringBuilder.append(getSpannableString(getString(R.string.label_booking), ContextCompat.getColor(this, R.color.grey_varient_8), false));
             spannableStringBuilder.append(getSpannableString(providerModel.userName, ContextCompat.getColor(this, R.color.splash_gradient_end), true));
@@ -190,8 +187,6 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
         }
 
         // Add Desclaimer
-
-
         mActivityPaymentDetailBinding.imgCheepCodeClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -336,6 +331,7 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
     View.OnClickListener onPayClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
+
             setTaskState(STEP_THREE_VERIFIED);
             if (isAdditional == 0) {
                 // Go for regular payment gateway
@@ -863,7 +859,7 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
                             messageEvent.id = taskDetailModel.taskId;
                             EventBus.getDefault().post(messageEvent);
 
-                            /**
+                             /*
                              *  @Changes : 7th July, 2017 :- Bhavesh Patadiya
                              *  Need to show Model Dialog once Payment has been made successfull. Once
                              *  User clicks on OK. we will finish of the activity.
@@ -876,14 +872,27 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
 
                             int onlydate = Integer.parseInt(superStartDateTimeCalendar.format("dd"));
                             String message = fetchMessageFromDateOfMonth(onlydate, superStartDateTimeCalendar);
-                            AcknowledgementDialogWithProfilePic mAcknowledgementDialogWithProfilePic = AcknowledgementDialogWithProfilePic.newInstance(mContext, R.drawable.ic_acknowledgement_dialog_header_background, title, message, new AcknowledgementInteractionListener() {
 
-                                @Override
-                                public void onAcknowledgementAccepted() {
-                                    // Finish the activity
-                                    finish();
-                                }
-                            });
+//                            final UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
+                            AcknowledgementDialogWithProfilePic mAcknowledgementDialogWithProfilePic = AcknowledgementDialogWithProfilePic.newInstance(
+                                    mContext,
+                                    R.drawable.ic_acknowledgement_dialog_header_background,
+                                    title,
+                                    message,
+                                    providerModel != null ? providerModel.profileUrl : null,
+                                    new AcknowledgementInteractionListener() {
+
+                                        @Override
+                                        public void onAcknowledgementAccepted() {
+                                            // Finish the activity
+                                            finish();
+
+                                            // Payment is been done now, so broadcast this specific case to relavent activities
+                                            MessageEvent messageEvent = new MessageEvent();
+                                            messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.PAYMENT_COMPLETED_NEED_TO_REDIRECT_TO_MY_TASK_SCREEN;
+                                            EventBus.getDefault().post(messageEvent);
+                                        }
+                                    });
                             mAcknowledgementDialogWithProfilePic.setCancelable(false);
                             mAcknowledgementDialogWithProfilePic.show(getSupportFragmentManager(), AcknowledgementDialogWithProfilePic.TAG);
 

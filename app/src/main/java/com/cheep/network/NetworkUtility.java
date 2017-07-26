@@ -242,6 +242,7 @@ public class NetworkUtility {
         }
 
         public static final String MESSAGE = "message";
+        public static final String PICTURE_URL = "picture_url";
         public static final String RESOURCE_ID = "resourceid";
         public static final String PROFILE_PIC_NEEDS_TOBE_SHOWN = "is_profile_pic_needs_be_shown";
         public static final String VERSION_DESC = "version_desc";

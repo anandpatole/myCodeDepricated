@@ -68,10 +68,10 @@ public class NotificationRecyclerViewAdapter extends LoadMoreRecyclerAdapter<Not
          * If case we are showing Web Notification, we need to show cheep Logo.
          */
         if (Utility.NOTIFICATION_TYPE.WEB_CUSTOM_NOTIFICATION.equalsIgnoreCase(model.notificationType)) {
-            holder.mRowNotificationBinding.imgPhoto.setImageResource(R.drawable.ic_cheep_circular_icon);
+            holder.mRowNotificationBinding.imgPhoto.setImageResource(Utility.DEFAULT_CHEEP_LOGO);
         } else {
             // Show Circular image
-            Utility.showCircularImageView(holder.mRowNotificationBinding.imgPhoto.getContext(), TAG, holder.mRowNotificationBinding.imgPhoto, model.sp_profile_image, Utility.DEFAULT_PROFILE_SRC);
+            Utility.showCircularImageView(holder.mRowNotificationBinding.imgPhoto.getContext(), TAG, holder.mRowNotificationBinding.imgPhoto, model.sp_profile_image, Utility.DEFAULT_CHEEP_LOGO);
         }
 
         // Set OnClicklistener

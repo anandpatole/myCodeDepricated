@@ -6,6 +6,7 @@ import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.provider.Settings;
 import android.util.Log;
 
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
@@ -77,6 +78,6 @@ public class CircleTransform extends BitmapTransformation {
 
     @Override
     public String getId() {
-        return tag;
+        return "[roundedCorner = [" + roundedCorner + "], borderColor = [" + borderColor + "], borderWidth = [" + borderWidth + "], url = [" + mUrl + "], tag = [" + tag + "]";
     }
 } 

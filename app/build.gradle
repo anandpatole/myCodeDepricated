@@ -14,13 +14,13 @@ repositories {
 android {
 
     compileSdkVersion 26
-    buildToolsVersion "26.0.0"
+    buildToolsVersion "26.0.1"
     defaultConfig {
         applicationId "com.cheep"
         minSdkVersion 16
         targetSdkVersion 26
-        versionCode 20
-        versionName "1.0.39" // PLEASE FIRST MAKE SURE MIN-VERSION IS 16.
+        versionCode 21
+        versionName "1.0.49" // PLEASE FIRST MAKE SURE MIN-VERSION IS 16.
         renderscriptTargetApi 18
         renderscriptSupportModeEnabled true
 
@@ -60,7 +60,7 @@ android {
         buildConfigField("String", "CHAT_NODE", getProperty("CHAT_NODE_DEBUG"));
         buildConfigField("String", "PAYUBIZ_HDFC_KEY", getProperty("PAYUBIZ_HDFC_SANDBOX_KEY"))
         buildConfigField("String", "PAYUBIZ_HDFC_URL", getProperty("PAYUBIZ_HDFC_SANDBOX_URL"))
-        buildConfigField("boolean", "NEED_TO_BYPASS_PAYMENT", "true")
+        buildConfigField("boolean", "NEED_TO_BYPASS_PAYMENT", "false")
 
         // TODO: This needs to change (For Temporary LIVE)
 //        buildConfigField("String", "BASE_URL", getProperty("LIVE_BASE_URL"));
@@ -86,7 +86,6 @@ android {
 
     buildTypes {
         debug {
-            debuggable true
             versionNameSuffix "-SNAPSHOT"
         }
         live {
@@ -136,8 +135,8 @@ configurations {
 
 // Description
 ext {
-    supportLibVer = '26.0.0-beta2'
-//    supportLibVer = '25.3.1'
+//    supportLibVer = '26.0.0'
+    supportLibVer = '25.4.0'
     gsonLibVer = '2.7'
     playServiceVer = '11.0.2'
 //    playServiceVer = '10.2.0'
@@ -218,7 +217,7 @@ dependencies {
     compile 'com.payu.india:payu-sdk:4.3.9'
     compile 'com.payu.custombrowser:payu-custom-browser:5.3.7'
     compile 'com.payu.magicretry:magicretry:1.0.0'
-    compile 'com.github.freshdesk:hotline-android:1.2.1'
+    compile 'com.github.freshdesk:hotline-android:1.2.4'
     compile 'com.appsflyer:af-android-sdk:4.7.2@aar'
 //    compile 'com.android.support.constraint:constraint-layout:1.0.2'
 }

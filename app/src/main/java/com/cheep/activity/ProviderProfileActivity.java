@@ -194,7 +194,6 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
         /*mActivityProviderProfileBinding.textVerifiedTotalJobs.setText((Utility.BOOLEAN.YES.equalsIgnoreCase(providerModel.isVerified) ? getString(R.string.label_verified) : getString(R.string.label_pending)));
         mActivityProviderProfileBinding.textVerifiedTotalJobs.setText(mActivityProviderProfileBinding.textVerifiedTotalJobs.getText().toString() + " | " + Utility.getJobs(mContext, providerModel.jobsCount));*/
 
-
         if (!TextUtils.isEmpty(providerModel.reviews) && Double.parseDouble(providerModel.reviews) > 0) {
             mActivityProviderProfileBinding.textTotalReviews.setText(getString(R.string.label_basedon, providerModel.reviews));
             mActivityProviderProfileBinding.layoutReview.setVisibility(View.VISIBLE);

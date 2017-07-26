@@ -97,6 +97,7 @@ public class Utility {
     public static final int PHONE_MIN_LENGTH = 10;
 
     public static final int DEFAULT_PROFILE_SRC = R.drawable.icon_profile_img_solid;
+    public static final int DEFAULT_CHEEP_LOGO = R.drawable.ic_cheep_circular_icon;
     public static final String DEFAULT_PROFILE_URL = "http://msz.uniklinikum-dresden.de/zkn/images/mitarbeiter/dummy120_dagobert83_female_user_icon.png";//"http://lorempixel.com/200/200/people/";
 
     public static final String LOCALE_FOR_HINDI = "hi";
@@ -163,6 +164,12 @@ public class Utility {
     public static final int X_RATIO = 16;
     public static final int Y_RATIO = 9;
     public static final String DEBUG = "debug";
+
+    /*
+    Home Screen Category Image Ratio
+     */
+    public static final float CATEGORY_IMAGE_RATIO = (float) 2.3972;
+
 
     /**
      * ongoing user chatId
@@ -306,10 +313,28 @@ public class Utility {
         return encryptedText;
     }
 
-    public static int getHeightFromWidthForSixteenNineRatio(int width) {
+    /*public static int getHeightFromWidthForSixteenNineRatio(int width) {
         Log.d(TAG, "getHeightFromWidthForSixteenNineRatio() called with: width = [" + width + "]");
         Log.d(TAG, "getHeightFromWidthForSixteenNineRatio() returned: " + ((width * 9) / 16));
         return ((width * 9) / 16);
+    }*/
+
+    public static int getHeightFromWidthForTwoOneRatio(int width) {
+        Log.d(TAG, "getHeightFromWidthForTwoOneRatio() called with: width = [" + width + "]");
+        Log.d(TAG, "getHeightFromWidthForTwoOneRatio() returned: " + (width / 2));
+        return (width / 2);
+    }
+
+    /**
+     * Below would provide dynamic height of image based on #Utility.CATEGORY_IMAGE_RATIO
+     *
+     * @param width
+     * @return
+     */
+    public static int getHeightCategoryImageBasedOnRatio(int width) {
+        Log.d(TAG, "getHeightCategoryImageBasedOnRatio() called with: width = [" + width + "]");
+        Log.d(TAG, "getHeightCategoryImageBasedOnRatio() called with: width = [" + Math.round((width / CATEGORY_IMAGE_RATIO)) + "]");
+        return Math.round((width / CATEGORY_IMAGE_RATIO));
     }
 
     //Bundle Extra parameters
@@ -546,7 +571,7 @@ public class Utility {
         Date mCurrentDate = com.cheep.firebase.DateUtils.getFormatedDate(sCurrentDt, Utility.DATE_FORMAT_FULL_DATE);
         long diff = mFutureDate.getTime() - mCurrentDate.getTime();
 
-        String timespan = DateUtils.getRelativeTimeSpanString(mFutureDate.getTime(), System.currentTimeMillis(), DateUtils.MINUTE_IN_MILLIS).toString();
+        String timespan = DateUtils.getRelativeTimeSpanString(mFutureDate.getTime(), System.currentTimeMillis(), DateUtils.SECOND_IN_MILLIS).toString();
         Log.d(TAG, "getDateDifference() returned: " + timespan);
         if (diff > 0) {
             return mContext.getString(R.string.format_task_start_time, timespan);
@@ -977,6 +1002,9 @@ public class Utility {
 
         // When detail request getting accepted by User
         public static final int DETAIL_REQUEST_ACCEPTED = 15;
+
+        //When Payment has been paid by the user, Need to redirect the user to MyTask Screen
+        public static final int PAYMENT_COMPLETED_NEED_TO_REDIRECT_TO_MY_TASK_SCREEN = 16;
     }
 
     public static final class REQUEST_TYPE {
