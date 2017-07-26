@@ -346,7 +346,7 @@
                         android:textAllCaps="false"
                         android:textColor="@color/white"
                         android:textSize="@dimen/text_size_11sp"
-                        android:visibility="gone" />
+                        android:visibility="visible" />
 
                     <com.cheep.custom_view.CFTextViewSemiBold
                         android:id="@+id/tvViewTask"
@@ -363,7 +363,7 @@
                         android:textAllCaps="false"
                         android:textColor="@color/white"
                         android:textSize="@dimen/text_size_11sp"
-                        android:visibility="visible" />
+                        android:visibility="gone" />
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>

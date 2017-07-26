@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -21,6 +22,7 @@ public class ErrorLoadingHelper {
     private ImageView imgPostATask;
     private TextView textErrorAction;
     private ProgressBar progressBar;
+    private LinearLayout mEmptyFavouriteLayout;
 
     public ErrorLoadingHelper(RecyclerView recyclerView) {
         this.recyclerView = recyclerView;
@@ -30,6 +32,7 @@ public class ErrorLoadingHelper {
         imgPostATask = (ImageView) view.findViewById(R.id.img_post_a_task);
         textError = (TextView) view.findViewById(R.id.text_error);
         textErrorAction = (TextView) view.findViewById(R.id.text_error_action);
+        mEmptyFavouriteLayout = (LinearLayout) view.findViewById(R.id.ln_empty_favourite_list);
     }
 
     public void showLoading() {
@@ -40,6 +43,10 @@ public class ErrorLoadingHelper {
         if (imgPostATask != null)
             imgPostATask.setVisibility(View.GONE);
         textErrorAction.setVisibility(View.GONE);
+
+        // Hide Favourite section view
+        if (mEmptyFavouriteLayout != null)
+            mEmptyFavouriteLayout.setVisibility(View.GONE);
     }
 
     public void success() {
@@ -50,6 +57,10 @@ public class ErrorLoadingHelper {
             imgPostATask.setVisibility(View.GONE);
         textError.setVisibility(View.GONE);
         textErrorAction.setVisibility(View.GONE);
+
+        // Hide Favourite section view
+        if (mEmptyFavouriteLayout != null)
+            mEmptyFavouriteLayout.setVisibility(View.GONE);
     }
 
     public void failed(String errorMessage, int errorRes, View.OnClickListener clickListener) {
@@ -60,7 +71,22 @@ public class ErrorLoadingHelper {
         failed(errorMessage, errorRes, btnText, clickListener, null);
     }
 
+    public void showEmptyFavouriteCategorySection() {
+        recyclerView.setVisibility(View.GONE);
+        progressBar.setVisibility(View.GONE);
+        textError.setVisibility(View.GONE);
+        imgError.setVisibility(View.GONE);
+
+        // Hide Favourite section view
+        if (mEmptyFavouriteLayout != null)
+            mEmptyFavouriteLayout.setVisibility(View.VISIBLE);
+    }
+
     public void failed(String errorMessage, int errorRes, String btnText, View.OnClickListener clickListener, View.OnClickListener postaTaskClickListener) {
+
+        // Hide Favourite section view
+        if (mEmptyFavouriteLayout != null)
+            mEmptyFavouriteLayout.setVisibility(View.GONE);
 
         //Changing it to null so retry button is not visible
         clickListener = null;

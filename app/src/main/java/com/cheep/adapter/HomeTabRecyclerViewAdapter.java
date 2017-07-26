@@ -65,24 +65,20 @@ public class HomeTabRecyclerViewAdapter extends RecyclerView.Adapter<HomeTabRecy
         mContext = parent.getContext();
         final RowTabHomeBinding mRowTabHomeBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), R.layout.row_tab_home, parent, false);
 
-        // Calculate Relative Layout Height and Width
         // TODO: This can be enabled in orderto make the category images in Listing according to 16:9 ratio.
         // TODO: Currently Its not needed so commenting it.
-        /*ViewTreeObserver mViewTreeObserver = mRowTabHomeBinding.relCategoryImage.getViewTreeObserver();
+        ViewTreeObserver mViewTreeObserver = mRowTabHomeBinding.relCategoryImage.getViewTreeObserver();
         mViewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
-                Log.d(TAG, "onGlobalLayout() called");
                 mRowTabHomeBinding.relCategoryImage.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                 // Manage height of Cover Image
                 int width = mRowTabHomeBinding.relCategoryImage.getMeasuredWidth();
-                int height = mRowTabHomeBinding.relCategoryImage.getMeasuredHeight();
-                Log.d(TAG, "onGlobalLayout() called==> " + width + "*" + height);
                 ViewGroup.LayoutParams params = mRowTabHomeBinding.relCategoryImage.getLayoutParams();
-                params.height = Utility.getHeightFromWidthForSixteenNineRatio(width);
+                params.height = Utility.getHeightCategoryImageBasedOnRatio(width);
                 mRowTabHomeBinding.relCategoryImage.setLayoutParams(params);
             }
-        });*/
+        });
 
         return new ViewHolder(mRowTabHomeBinding);
     }

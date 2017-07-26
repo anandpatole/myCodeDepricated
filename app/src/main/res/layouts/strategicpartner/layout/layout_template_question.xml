@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -15,7 +14,7 @@
             android:layout_width="2dp"
             android:layout_height="match_parent"
             android:layout_gravity="center_horizontal"
-            android:background="@color/grey_dark_color_4"/>
+            android:background="@color/grey_dark_color_4" />
 
         <TextView
             android:id="@+id/txtQueNo"
@@ -29,7 +28,7 @@
             android:paddingTop="5dp"
             android:textColor="@color/selector_text_color_que_no"
             android:textSize="15sp"
-            tools:text="1"/>
+            tools:text="1" />
     </FrameLayout>
 
     <LinearLayout
@@ -45,15 +44,14 @@
             android:layout_height="wrap_content"
             android:textColor="@android:color/black"
             android:textSize="18sp"
-            tools:text="asdasd"
-            />
+            tools:text="asdasd" />
 
         <LinearLayout
             android:id="@+id/relAnsView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:orientation="horizontal"/>
+            android:orientation="horizontal" />
     </LinearLayout>
 
 

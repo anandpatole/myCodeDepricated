@@ -294,7 +294,7 @@ public class HomeTabFragment extends BaseFragment {
                 int height = mFragmentTabHomeBinding.layoutBannerHeader.viewPagerBannerImages.getMeasuredHeight();
 //                Log.d(TAG, "onGlobalLayout() called==> " + width + "*" + height);
                 ViewGroup.LayoutParams params = mFragmentTabHomeBinding.layoutBannerHeader.viewPagerBannerImages.getLayoutParams();
-                params.height = Utility.getHeightFromWidthForSixteenNineRatio(width);
+                params.height = Utility.getHeightFromWidthForTwoOneRatio(width);
                 mFragmentTabHomeBinding.layoutBannerHeader.viewPagerBannerImages.setLayoutParams(params);
             }
         });
@@ -659,7 +659,7 @@ public class HomeTabFragment extends BaseFragment {
 
     public void onListCategoryListGetsEmpty() {
 //        Log.d(TAG, "onListCategoryListGetsEmpty() called");
-        errorLoadingHelper.failed(getResources().getString(R.string.empty_favourited_list), 0, null);
+        errorLoadingHelper.showEmptyFavouriteCategorySection();
     }
 
 

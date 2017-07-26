@@ -796,7 +796,8 @@ public class TaskQuotesActivity extends BaseAppCompatActivity implements TaskQuo
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(MessageEvent event) {
         if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.TASK_PAID
-                || event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.TASK_PROCESSING) {
+                || event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.TASK_PROCESSING
+                || event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.PAYMENT_COMPLETED_NEED_TO_REDIRECT_TO_MY_TASK_SCREEN) {
             // Finish this activity as its not needed now.
             finish();
         } else if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.DETAIL_REQUEST_REJECTED
