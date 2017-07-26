@@ -1,59 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:orientation="vertical"
-              android:paddingBottom="@dimen/scale_5dp"
-              android:paddingLeft="@dimen/scale_10dp"
-              android:paddingRight="@dimen/scale_10dp"
-              android:paddingTop="@dimen/scale_5dp">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+    >
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="vertical"
         android:paddingBottom="@dimen/scale_5dp"
         android:paddingLeft="@dimen/scale_10dp"
         android:paddingRight="@dimen/scale_10dp"
         android:paddingTop="@dimen/scale_5dp">
 
-        <com.cheep.custom_view.CFTextViewRegular
-            android:id="@+id/text_service_name"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="left|center_vertical"
-            android:drawablePadding="@dimen/scale_5dp"
-            android:gravity="center_vertical"
-            android:paddingBottom="@dimen/scale_5dp"
-            android:paddingTop="@dimen/scale_5dp"
-            android:textColor="@color/black"
-            android:textSize="@dimen/text_size_14sp"
-            tools:text="@string/label_pro_fee"/>
+            android:orientation="horizontal"
+            >
 
-        <com.cheep.custom_view.CFTextViewSemiBold
-            android:id="@+id/text_service_rate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_toEndOf="@+id/text_service_name"
-            android:layout_toRightOf="@+id/text_service_name"
-            android:drawablePadding="@dimen/scale_5dp"
-            android:ellipsize="marquee"
-            android:gravity="right"
-            android:marqueeRepeatLimit="marquee_forever"
-            android:maxLines="1"
-            android:paddingBottom="@dimen/scale_5dp"
-            android:paddingTop="@dimen/scale_5dp"
-            android:singleLine="true"
-            android:textColor="@color/black"
-            android:textSize="@dimen/text_size_14sp"
-            tools:text="₹ 300"/>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/scale_10dp"
+                android:layout_weight="0.7"
+                android:orientation="vertical">
 
-    </RelativeLayout>
+                <com.cheep.custom_view.CFTextViewRegular
+                    android:id="@+id/text_service_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left|center_vertical"
+                    android:drawablePadding="@dimen/scale_5dp"
+                    android:gravity="center_vertical"
+                    android:paddingTop="@dimen/scale_5dp"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_14sp"
+                    tools:text="adssdasdasdasdasd asdasda dadasdasdasdasdasd"/>
 
+                <com.cheep.custom_view.CFTextViewRegular
+                    android:id="@+id/text_service_sub_service"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left|center_vertical"
+                    android:layout_marginTop="@dimen/scale_3dp"
+                    android:drawablePadding="@dimen/scale_5dp"
+                    android:ellipsize="end"
+                    android:gravity="center_vertical"
+                    android:maxLines="1"
+                    android:paddingBottom="@dimen/scale_5dp"
+                    android:textColor="@color/grey_varient_8"
+                    android:textSize="@dimen/text_size_12sp"
+                    tools:text="sdfsdfsdfsdffffffffffffffffffffffffffffffffffffffffffffffffffffffff"/>
+            </LinearLayout>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/scale_1dp"
-        android:background="@color/grey_color"/>
-</LinearLayout>
+            <com.cheep.custom_view.CFTextViewSemiBold
+                android:id="@+id/text_service_rate"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_weight="0.3"
+                android:drawablePadding="@dimen/scale_5dp"
+                android:ellipsize="marquee"
+                android:gravity="right"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:maxLines="1"
+                android:paddingBottom="@dimen/scale_5dp"
+                android:paddingTop="@dimen/scale_5dp"
+                android:singleLine="true"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_14sp"
+                tools:text="₹ 300"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+</layout>

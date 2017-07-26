@@ -58,7 +58,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
         }
 
         // Task Description
-        if (mStrategicPartnerTaskCreationAct.getSelectedSubService().length() != 0) {
+        if (mStrategicPartnerTaskCreationAct.getSelectedSubService().size() != 0) {
             isTaskDescriptionVerified = true;
         } else {
             isTaskDescriptionVerified = false;
