@@ -75,6 +75,8 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
     public void initiateUI() {
         Log.d(TAG, "initiateUI() called");
 
+        //
+
         mFragmentStrategicPartnerPhaseTwoBinding.textContinue.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -117,14 +119,8 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
     @Override
     public void onDetach() {
         super.onDetach();
-//        Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.WS.FETCH_SUB_SERVICE_LIST);
     }
 
-    /**
-     * This method would return whether the stage is verified or not
-     *
-     * @return
-     */
     public boolean isVerified() {
         return isVerified;
     }
