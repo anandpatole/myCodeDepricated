@@ -2,16 +2,38 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     >
 
-    <FrameLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white_translucent_ninety">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="service questions"/>
+        <FrameLayout
+            android:layout_width="match_parent"
 
-    </FrameLayout>
+            android:layout_height="match_parent"
+            android:layout_above="@+id/text_continue">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="service questions"/>
+
+        </FrameLayout>
+
+        <com.cheep.custom_view.CFTextViewSemiBold
+            android:id="@+id/text_continue"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_gravity="bottom"
+            android:background="@color/dark_blue"
+            android:gravity="center"
+            android:padding="@dimen/scale_10dp"
+            android:text="@string/continue_"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_17sp"
+            android:visibility="visible"/>
+
+    </RelativeLayout>
 </layout>

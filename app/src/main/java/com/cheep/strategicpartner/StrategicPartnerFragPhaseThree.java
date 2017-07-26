@@ -11,8 +11,6 @@ import android.view.ViewGroup;
 
 import com.cheep.R;
 import com.cheep.activity.BaseAppCompatActivity;
-import com.cheep.activity.TaskCreationActivity;
-import com.cheep.adapter.BannerServiceRecyclerViewAdapter;
 import com.cheep.databinding.FragmentStrategicPartnerPhaseThreeBinding;
 import com.cheep.fragment.BaseFragment;
 import com.cheep.utils.ErrorLoadingHelper;
@@ -23,10 +21,10 @@ import com.cheep.utils.ErrorLoadingHelper;
 public class StrategicPartnerFragPhaseThree extends BaseFragment {
     public static final String TAG = "StrategicPartnerFragPha";
     private FragmentStrategicPartnerPhaseThreeBinding mFragmentStrategicPartnerPhaseThreeBinding;
-    private BannerServiceRecyclerViewAdapter mSubServiceRecyclerViewAdapter;
     ErrorLoadingHelper errorLoadingHelper;
-    private StrategicPartnerTaskCreationAct mTaskCreationActivity;
+    private StrategicPartnerTaskCreationAct mStrategicPartnerTaskCreationAct;
     private boolean isVerified = false;
+    private boolean isTaskDescriptionVerified;
 
     @SuppressWarnings("unused")
     public static StrategicPartnerFragPhaseThree newInstance() {
@@ -53,18 +51,16 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         Log.d(TAG, "setUserVisibleHint() called with: isVisibleToUser = [" + isVisibleToUser + "]");
-        if (!isVisibleToUser || mTaskCreationActivity == null) {
+        if (!isVisibleToUser || mStrategicPartnerTaskCreationAct == null) {
             return;
         }
 
-        if (isVerified) {
-            mTaskCreationActivity.setTaskState(TaskCreationActivity.STEP_ONE_VERIFIED);
+        // Task Description
+        if (mStrategicPartnerTaskCreationAct.getSelectedQuestions().length() != 0) {
+            isTaskDescriptionVerified = true;
         } else {
-            mTaskCreationActivity.setTaskState(TaskCreationActivity.STEP_ONE_NORMAL);
+            isTaskDescriptionVerified = false;
         }
-
-        // Hide the post task button
-        mTaskCreationActivity.showPostTaskButton(false, false);
     }
 
     @Override
@@ -89,7 +85,7 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
         super.onAttach(context);
         BaseAppCompatActivity activity = (BaseAppCompatActivity) context;
         if (activity instanceof StrategicPartnerTaskCreationAct) {
-            mTaskCreationActivity = (StrategicPartnerTaskCreationAct) activity;
+            mStrategicPartnerTaskCreationAct = (StrategicPartnerTaskCreationAct) activity;
         }
     }
 

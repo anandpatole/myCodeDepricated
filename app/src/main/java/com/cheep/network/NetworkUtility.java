@@ -91,6 +91,9 @@ public class NetworkUtility {
 
         // Check Task Status
         public static final String CHECK_TASK_STATUS = BASE_URL + "customers/tasks/check_task_status";
+
+        // Fetch list of all strategic partber services and sub categories
+        public static final String FETCH_SUB_CATS_STRATEGIC_PARTNER_LIST = BASE_URL + "customers/category/all_sub_cats_strategic_partner";
     }
 
     public static class TAGS {
