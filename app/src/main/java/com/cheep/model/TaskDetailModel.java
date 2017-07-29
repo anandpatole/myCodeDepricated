@@ -1,5 +1,7 @@
 package com.cheep.model;
 
+import android.support.annotation.Keep;
+
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
@@ -8,7 +10,7 @@ import java.util.List;
 /**
  * Created by pankaj on 11/15/16.
  */
-
+@Keep
 public class TaskDetailModel {
     @SerializedName("task_id")
     public String taskId;

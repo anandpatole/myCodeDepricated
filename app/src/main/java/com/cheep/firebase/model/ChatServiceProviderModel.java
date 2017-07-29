@@ -1,10 +1,12 @@
 package com.cheep.firebase.model;
 
+import android.support.annotation.Keep;
 import android.text.TextUtils;
 
 /**
  * Created by sanjay on 10/2/17.
  */
+@Keep
 public class ChatServiceProviderModel
 {
     private String spId;

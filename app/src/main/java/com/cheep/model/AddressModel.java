@@ -1,11 +1,13 @@
 package com.cheep.model;
 
+import android.support.annotation.Keep;
+
 import com.google.android.gms.maps.model.LatLng;
 
 /**
  * Created by pankaj on 10/13/16.
  */
-
+@Keep
 public class AddressModel {
 
     public String address_id;

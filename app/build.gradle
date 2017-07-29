@@ -1,10 +1,5 @@
 apply plugin: 'com.android.application'
 
-/*repositories {
-    maven { url 'https://maven.fabric.io/public' }
-//    maven { url 'https://github.com/500px/500px-android-blur/raw/master/releases/' }
-}*/
-
 repositories {
     maven {
         url 'https://maven.fabric.io/public'
@@ -87,6 +82,7 @@ android {
     buildTypes {
         debug {
             versionNameSuffix "-SNAPSHOT"
+
         }
         live {
             versionNameSuffix "-LIVE"
@@ -104,7 +100,7 @@ android {
             buildConfigField("String", "PAYUBIZ_HDFC_URL", getProperty("PAYUBIZ_HDFC_LIVE_URL"))
             buildConfigField("boolean", "NEED_TO_BYPASS_PAYMENT", "false")
             signingConfig signingConfigs.debug
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }

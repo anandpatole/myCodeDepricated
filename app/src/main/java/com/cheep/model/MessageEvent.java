@@ -1,5 +1,8 @@
 package com.cheep.model;
 
+import android.support.annotation.Keep;
+
+@Keep
 public class MessageEvent {
     public int BROADCAST_ACTION;
     public String id;

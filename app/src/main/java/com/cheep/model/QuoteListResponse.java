@@ -1,5 +1,7 @@
 package com.cheep.model;
 
+import android.support.annotation.Keep;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -8,6 +10,7 @@ import java.util.List;
 /**
  * Created by Anurag on 08-06-2017.
  */
+@Keep
 public class QuoteListResponse {
     @SerializedName("data")
     @Expose
