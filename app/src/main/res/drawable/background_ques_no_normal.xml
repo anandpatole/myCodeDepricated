@@ -3,22 +3,22 @@
         <shape android:shape="rectangle">
             <corners android:radius="500dp"/>
             <stroke
-                android:width="4dp"
-                android:color="#ffffff"
+                android:width="@dimen/scale_3dp"
+                android:color="@android:color/white"
                 />
         </shape>
     </item>
     <item
-        android:bottom="4dp"
-        android:left="4dp"
-        android:right="4dp"
-        android:top="4dp">
+        android:bottom="@dimen/scale_3dp"
+        android:left="@dimen/scale_3dp"
+        android:right="@dimen/scale_3dp"
+        android:top="@dimen/scale_3dp">
         <shape android:shape="rectangle">
             <solid android:color="@android:color/white"/>
             <corners android:radius="500dp"/>
             <stroke
-                android:width="2dp"
-                android:color="@color/dark_blue"
+                android:width="@dimen/scale_2dp"
+                android:color="@color/dark_blue_variant_1"
                 />
         </shape>
     </item>

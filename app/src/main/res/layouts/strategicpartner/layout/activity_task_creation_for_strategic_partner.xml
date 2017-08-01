@@ -13,7 +13,7 @@
 
             <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/scale_170dp"
+                android:layout_height="@dimen/scale_206dp"
                 android:background="@color/white">
 
                 <ImageView

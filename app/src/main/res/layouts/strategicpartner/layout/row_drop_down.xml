@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/text_popular"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:checked="true"
+    android:drawablePadding="@dimen/scale_10dp"
+    android:minWidth="@dimen/scale_100dp"
+    android:padding="10dp"
+    android:textColor="@color/splash_gradient_end"
+    android:textSize="@dimen/text_size_14sp"
+    tools:text="Sad"/>

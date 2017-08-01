@@ -4,12 +4,11 @@
 
     <LinearLayout
         android:id="@+id/ln_root"
+        android:layout_marginTop="@dimen/scale_32dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:paddingBottom="@dimen/scale_5dp"
-        android:paddingLeft="@dimen/scale_30dp"
-        android:paddingTop="@dimen/scale_20dp">
+        android:paddingLeft="@dimen/scale_22dp">
 
         <ImageView
             android:id="@+id/img_icon_correct"
@@ -24,7 +23,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:paddingLeft="@dimen/scale_15dp"
+            android:layout_marginLeft="@dimen/scale_16dp"
             android:textColor="@color/selector_text_name_subservice"
             android:textSize="@dimen/text_size_18sp"
             tools:text="Restaurant"/>
@@ -35,7 +34,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_marginRight="@dimen/scale_20dp"
+            android:layout_marginRight="@dimen/scale_31dp"
             android:src="@drawable/ic_drop_down_arrow"/>
 
     </LinearLayout>
