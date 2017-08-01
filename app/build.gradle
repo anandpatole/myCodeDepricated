@@ -22,8 +22,7 @@ android {
         // Enabling multidex support.
         multiDexEnabled true
 
-        /*renderscriptTargetApi 19
-        renderscriptSupportModeEnabled true*/
+
         buildConfigField("String", "FILE_PROVIDER_URL", getProperty("FILE_PROVIDER_URL"))
 
         buildConfigField("String", "HOTLINE_APP_ID", getProperty("HOTLINE_APP_ID"))
