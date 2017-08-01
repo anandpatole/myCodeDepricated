@@ -19,10 +19,8 @@ android {
         applicationId "com.cheep"
         minSdkVersion 16
         targetSdkVersion 26
-        versionCode 21
-        versionName "1.0.49" // PLEASE FIRST MAKE SURE MIN-VERSION IS 16.
-        renderscriptTargetApi 18
-        renderscriptSupportModeEnabled true
+        versionCode 22
+        versionName "1.0.50" // PLEASE FIRST MAKE SURE MIN-VERSION IS 16.
 
         // Enabling multidex support.
         multiDexEnabled true
@@ -127,22 +125,23 @@ ext {
 //    supportLibVer = '26.0.0'
     supportLibVer = '25.4.0'
     gsonLibVer = '2.7'
-    playServiceVer = '11.0.2'
+    playServiceVer = '11.0.4'
 //    playServiceVer = '10.2.0'
 }
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
-    // Support Library
+    // V7 Compat library, it also included v4 libraries under the hood.
     compile "com.android.support:appcompat-v7:$supportLibVer"
+
+    // Design Support Library, it also included Multidex library support, So there is no need to provide
+    // another library here.
     compile "com.android.support:design:$supportLibVer"
-    //    compile 'com.android.support.constraint:constraint-layout:1.0.0-beta5'
+//    compile 'com.android.support:multidex:1.0.1'
 
     // Gson Library
     compile "com.google.code.gson:gson:$gsonLibVer"
-
-    // Glide Library
 
     //For Getting Location
     compile "com.google.android.gms:play-services-location:$playServiceVer"
@@ -169,46 +168,45 @@ dependencies {
         transitive = true;
     }
 
+    // Glide Library
+    compile 'com.github.bumptech.glide:glide:3.7.0'
+
     // Swipe layout library This is Test Experiment
+    compile 'com.daimajia.swipelayout:library:1.2.0@aar'
 
     //Volley Library
+    compile 'com.android.volley:volley:1.0.0'
 
     //Apache Library
-
-    //Facebook
-
-    //For Image Cropping
-//    compile 'com.theartofdev.edmodo:android-image-cropper:2.3.1'
-
-    //For Circular indicator with viewpager
-
-    // For broadcasting
-
-    // payumoney
-
-    //HotLine integration(For Chat to Cheep Admin)
-
-    // HDFC Payment PayU
-    //    compile 'com.payu.custombrowser:payu-custom-browser:6.1.1'
-    //this is gradle path from where CB will be automatically downloaded
-
-    // AppsFlyer SDK
-    compile 'com.android.support:multidex:1.0.1'
-    compile 'com.github.bumptech.glide:glide:3.7.0'
-    compile 'com.daimajia.swipelayout:library:1.2.0@aar'
-    compile 'com.android.volley:volley:1.0.0'
     compile 'org.apache.httpcomponents:httpmime:4.3.6'
     compile 'org.apache.httpcomponents:httpclient-android:4.3.5.1'
+
+    //Facebook
     compile 'com.facebook.android:facebook-android-sdk:4.16.1'
+
+    //For Image Cropping
     compile 'com.theartofdev.edmodo:android-image-cropper:2.3.1'
+
+    //For Circular indicator with viewpager
     compile 'me.relex:circleindicator:1.2.2@aar'
+
+    // For Broadcasting
     compile 'org.greenrobot:eventbus:3.0.0'
+
+    // For PayUMoney payment integration
     compile 'com.payu.india:payu-sdk:4.3.9'
     compile 'com.payu.custombrowser:payu-custom-browser:5.3.7'
     compile 'com.payu.magicretry:magicretry:1.0.0'
+//    compile 'com.payu.india:payu-sdk:4.4.1'
+//    compile 'com.payu.custombrowser:payu-custom-browser:6.1.1'
+//    compile 'com.payu.magicretry:magicretry:1.0.4'
+
+
+    //HotLine integration(For Chat to Cheep Admin)
     compile 'com.github.freshdesk:hotline-android:1.2.4'
+
+    // AppsFlyer SDK
     compile 'com.appsflyer:af-android-sdk:4.7.2@aar'
-//    compile 'com.android.support.constraint:constraint-layout:1.0.2'
 }
 
 // Add to the bottom of the file

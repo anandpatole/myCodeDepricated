@@ -1,8 +1,6 @@
 package com.cheep;
 
 import android.content.Context;
-import android.os.AsyncTask;
-import android.os.StrictMode;
 import android.support.multidex.MultiDex;
 import android.util.Log;
 
@@ -46,26 +44,26 @@ public class App extends ApplicationLifeCycle {
     }
 
     @Override
-    protected void onApplicationResume() {
-        super.onApplicationResume();
+    protected void onActivityResume() {
+        super.onActivityResume();
         Log.i("APP", "Application Resume");
     }
 
     @Override
-    protected void onApplicationPaused() {
-        super.onApplicationPaused();
+    protected void onActivityPaused() {
+        super.onActivityPaused();
         Log.i("APP", "Application Paused");
     }
 
     @Override
-    protected void onApplicationCreated() {
-        super.onApplicationCreated();
+    protected void onActivityCreated() {
+        super.onActivityCreated();
         Log.i("APP", "Application Created");
     }
 
     @Override
-    protected void onApplicationDestroyed() {
-        super.onApplicationDestroyed();
+    protected void onActivityDestroyed() {
+        super.onActivityDestroyed();
         Log.i("APP", "Application Destroyed");
     }
 

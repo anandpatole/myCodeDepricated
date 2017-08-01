@@ -9,7 +9,6 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -21,9 +20,6 @@ import android.provider.MediaStore;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.AppCompatEditText;
-import android.support.v8.renderscript.Allocation;
-import android.support.v8.renderscript.RenderScript;
-import android.support.v8.renderscript.ScriptIntrinsicBlur;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.util.DisplayMetrics;
@@ -59,10 +55,8 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
-import static android.support.v8.renderscript.Allocation.createFromBitmap;
 import static com.cheep.utils.SuperCalendar.SuperFormatter;
 
 /**
@@ -792,7 +786,15 @@ public class Utility {
     }
 
 
-    public static Bitmap BlurImage(Bitmap input, Context mContext) {
+    /**
+     * Blur the provided Image
+     * Note: We are not using this for our app.
+     *
+     * @param input    Bitmap of the image
+     * @param mContext Context of the activity
+     * @return blurred bitmap file based on provided bitmap
+     */
+    /*public static Bitmap BlurImage(Bitmap input, Context mContext) {
         RenderScript rsScript = RenderScript.create(mContext);
         Allocation alloc = createFromBitmap(rsScript, input);
         ScriptIntrinsicBlur blur = ScriptIntrinsicBlur.create(rsScript, alloc.getElement());
@@ -804,7 +806,7 @@ public class Utility {
         outAlloc.copyTo(result);
         rsScript.destroy();
         return result;
-    }
+    }*/
 
     // copy text to clipboard
     public static void setClipboard(Context context, String text) {
