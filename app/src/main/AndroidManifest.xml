@@ -225,6 +225,9 @@
             android:name=".strategicpartner.StrategicPartnerTaskCreationAct"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Translucent" />
+        <activity
+            android:name=".strategicpartner.recordvideo.RecordVideoNewActivity"
+            android:screenOrientation="portrait"/>
 
         <!--
          (APPSFLYER) add the following receiver as the FIRST receiver for INSTALL_REFERRER or after another

@@ -46,6 +46,8 @@ public class StrategicPartnerSubCategoryModel implements Parent<StrategicPartner
 
         @SerializedName("sub_sub_cat_id")
         public String subSubCatId;
+        @SerializedName("package_description")
+        public String package_description;
 
         public boolean isSelected = false;
 

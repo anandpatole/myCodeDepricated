@@ -7,52 +7,51 @@
     android:orientation="horizontal">
 
     <FrameLayout
-        android:layout_width="50dp"
+        android:layout_width="@dimen/scale_50dp"
         android:layout_height="match_parent">
 
         <TextView
             android:layout_width="2dp"
             android:layout_height="match_parent"
             android:layout_gravity="center_horizontal"
-            android:background="@color/grey_dark_color_4" />
+            android:background="@color/grey_varient_15" />
 
         <TextView
             android:id="@+id/txtQueNo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:background="@drawable/xml_circular_indicator_selected"
-            android:paddingBottom="5dp"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:paddingTop="5dp"
-            android:textColor="@color/selector_text_color_home_filter"
-            android:textSize="15sp"
+            android:background="@drawable/background_text_que_no_selector"
+            android:paddingBottom="@dimen/scale_5dp"
+            android:paddingLeft="@dimen/scale_10dp"
+            android:paddingRight="@dimen/scale_10dp"
+            android:paddingTop="@dimen/scale_5dp"
+            android:textColor="@color/selector_text_color_que_no"
+            android:textSize="@dimen/text_size_12sp"
             tools:text="1" />
     </FrameLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="15dp"
-        android:layout_marginRight="15dp"
+        android:layout_marginBottom="@dimen/scale_15dp"
+        android:layout_marginRight="@dimen/scale_15dp"
         android:orientation="vertical">
 
-        <TextView
+        <com.cheep.custom_view.CFTextViewRegular
             android:id="@+id/txtQueStr"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@android:color/black"
-            android:textSize="18sp"
+            android:textColor="@color/grey_dark_color_2"
+            android:textSize="@dimen/text_size_16sp"
             tools:text="asdasd" />
 
         <LinearLayout
             android:id="@+id/relAnsView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="@dimen/scale_10dp"
             android:orientation="horizontal" />
     </LinearLayout>
-
 
 </LinearLayout>

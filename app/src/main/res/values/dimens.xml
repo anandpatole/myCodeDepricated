@@ -40,10 +40,12 @@
     <dimen name="scale_22dp">22dp</dimen>
     <dimen name="scale_25dp">25dp</dimen>
     <dimen name="scale_30dp">30dp</dimen>
+    <dimen name="scale_31dp">31dp</dimen>
     <dimen name="scale_35dp">35dp</dimen>
     <!--<dimen name="scale_37dp">37dp</dimen>-->
     <dimen name="scale_50dp">50dp</dimen>
     <dimen name="scale_55dp">55dp</dimen>
+    <dimen name="scale_56dp">56dp</dimen>
     <dimen name="scale_80dp">80dp</dimen>
     <dimen name="scale_100dp">100dp</dimen>
     <dimen name="scale_120dp">120dp</dimen>
@@ -55,6 +57,7 @@
     <dimen name="scale_180dp">180dp</dimen>
     <!--<dimen name="scale_190dp">190dp</dimen>-->
     <dimen name="scale_260dp">260dp</dimen>
+    <dimen name="scale_206dp">206dp</dimen>
 
     <!--TextSize-->
     <!--<dimen name="text_size_6sp">6sp</dimen>-->

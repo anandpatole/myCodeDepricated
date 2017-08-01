@@ -6,48 +6,53 @@
         android:id="@+id/ln_root"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingBottom="@dimen/scale_5dp"
-        android:paddingLeft="@dimen/scale_30dp"
-        android:paddingTop="@dimen/scale_5dp">
+        android:layout_marginTop="@dimen/scale_10dp"
+        android:orientation="horizontal">
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:src="@drawable/ic_tick_selector"
-            android:visibility="invisible"
-            tools:ignore="ContentDescription"/>
 
         <ImageView
             android:id="@+id/img_icon_correct"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="@dimen/scale_15dp"
+            android:layout_marginLeft="@dimen/scale_56dp"
             android:src="@drawable/ic_tick_selector"
             tools:ignore="ContentDescription"/>
 
-        <com.cheep.custom_view.CFTextViewSemiBold
-            android:id="@+id/text_sub_category_name"
+        <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/scale_16dp"
             android:layout_weight="0.7"
-            android:paddingLeft="@dimen/scale_15dp"
-            android:textColor="@color/selector_text_name_subservice"
-            android:textSize="@dimen/text_size_18sp"
-            tools:text="Restaurant fghf fghfg fghfghbfghfgh fghfg "/>
+            android:orientation="vertical">
 
+            <com.cheep.custom_view.CFTextViewSemiBold
+                android:id="@+id/text_sub_category_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/grey_varient_8"
+                android:textSize="@dimen/text_size_18sp"
+                tools:text="Restaurant fghf fghfg fghfghbfghfgh fghfg "/>
+
+            <com.cheep.custom_view.CFTextViewSemiBold
+                android:id="@+id/text_package_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/scale_10dp"
+                android:textColor="@color/grey_varient_8"
+                android:textSize="@dimen/text_size_14sp"
+                tools:text="Restaurant fghf fghfg fghfghbfghfgh fghfg "/>
+
+        </LinearLayout>
 
         <com.cheep.custom_view.CFTextViewRegular
             android:id="@+id/text_sub_category_price"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginRight="@dimen/scale_10dp"
+            android:layout_marginRight="@dimen/scale_22dp"
             android:layout_weight="0.3"
             android:gravity="right"
             android:textColor="@drawable/sub_category_text_color_selector"
-            android:textSize="@dimen/text_size_18sp"
+            android:textSize="@dimen/text_size_14sp"
             tools:text="#300sdfsdfsdfsdfsddsfsdfs"/>
     </LinearLayout>
 </layout>

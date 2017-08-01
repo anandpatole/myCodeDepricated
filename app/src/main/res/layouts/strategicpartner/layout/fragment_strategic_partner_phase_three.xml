@@ -23,11 +23,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/scale_5dp"
+                    android:layout_marginLeft="@dimen/scale_22dp"
+                    android:layout_marginRight="@dimen/scale_10dp"
                     android:layout_marginTop="@dimen/scale_10dp"
                     android:gravity="center"
                     android:lineSpacingExtra="10dp"
-                    android:paddingLeft="@dimen/scale_10dp"
-                    android:paddingRight="@dimen/scale_10dp"
                     android:textColor="@color/grey_varient_8"
                     android:textSize="@dimen/text_size_14sp"
                     tools:text="Bosche"/>
@@ -36,11 +36,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_marginBottom="@dimen/scale_5dp"
-                    android:layout_marginTop="@dimen/scale_10dp"
+                    android:layout_marginBottom="@dimen/scale_15dp"
+                    android:layout_marginTop="@dimen/scale_11dp"
                     android:orientation="horizontal"
-                    android:paddingLeft="@dimen/scale_20dp"
-                    android:paddingRight="@dimen/scale_20dp">
+                    android:layout_marginLeft="@dimen/scale_22dp"
+                    android:layout_marginRight="@dimen/scale_22dp">
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -52,25 +52,24 @@
                         android:id="@+id/text_desclaimer"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/scale_5dp"
+                        android:layout_marginLeft="@dimen/scale_8dp"
                         android:gravity="left"
                         android:lineSpacingExtra="@dimen/scale_2dp"
-                        android:paddingLeft="@dimen/scale_5dp"
-                        android:paddingRight="@dimen/scale_5dp"
                         android:text="@string/desclaimer_task_completion"
                         android:textColor="@color/task_desclaimer"
                         android:textSize="@dimen/text_size_12sp"/>
                 </LinearLayout>
 
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/scale_10dp"
+                    android:background="@drawable/divide_gradient"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:paddingBottom="@dimen/scale_5dp"
-                    android:paddingLeft="@dimen/scale_10dp"
-                    android:paddingRight="@dimen/scale_10dp"
-                    android:paddingTop="@dimen/scale_5dp">
+                    android:layout_marginTop="@dimen/scale_15dp"
+                    android:orientation="vertical">
 
 
                     <!--  <View
@@ -84,16 +83,17 @@
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/recycleSelectedService"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"/>
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/scale_22dp"
+                        android:layout_marginRight="@dimen/scale_22dp"/>
 
                     <RelativeLayout
                         android:id="@+id/rlsubtotal"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:paddingBottom="@dimen/scale_5dp"
-                        android:paddingLeft="@dimen/scale_10dp"
-                        android:paddingRight="@dimen/scale_10dp"
-                        android:paddingTop="@dimen/scale_5dp">
+                        android:layout_marginLeft="@dimen/scale_22dp"
+                        android:layout_marginRight="@dimen/scale_22dp"
+                        android:layout_marginTop="@dimen/scale_5dp">
 
                         <com.cheep.custom_view.CFTextViewSemiBold
                             android:id="@+id/CFTextViewSemiBold"
@@ -102,8 +102,6 @@
                             android:layout_gravity="left|center_vertical"
                             android:drawablePadding="@dimen/scale_5dp"
                             android:gravity="center_vertical"
-                            android:paddingBottom="@dimen/scale_5dp"
-                            android:paddingTop="@dimen/scale_5dp"
                             android:text="@string/label_sub_total"
                             android:textColor="@color/black"
                             android:textSize="@dimen/text_size_14sp"/>
@@ -120,8 +118,6 @@
                             android:gravity="right"
                             android:marqueeRepeatLimit="marquee_forever"
                             android:maxLines="1"
-                            android:paddingBottom="@dimen/scale_5dp"
-                            android:paddingTop="@dimen/scale_5dp"
                             android:singleLine="true"
                             android:textColor="@color/black"
                             android:textSize="@dimen/text_size_14sp"
@@ -141,10 +137,9 @@
                         android:id="@+id/rlpromocode"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:paddingBottom="@dimen/scale_5dp"
-                        android:paddingLeft="@dimen/scale_10dp"
-                        android:paddingRight="@dimen/scale_10dp"
-                        android:paddingTop="@dimen/scale_5dp"
+                        android:layout_marginLeft="@dimen/scale_22dp"
+                        android:layout_marginRight="@dimen/scale_22dp"
+                        android:layout_marginTop="@dimen/scale_20dp"
                         android:visibility="visible">
 
 
@@ -156,8 +151,6 @@
                             android:layout_gravity="left|center_vertical"
                             android:drawablePadding="@dimen/scale_5dp"
                             android:gravity="center_vertical"
-                            android:paddingBottom="@dimen/scale_5dp"
-                            android:paddingTop="@dimen/scale_5dp"
                             android:text="@string/label_promocode_apply"
                             android:textColor="@color/black"
                             android:textSize="@dimen/text_size_14sp"/>
@@ -187,8 +180,6 @@
                             android:gravity="right"
                             android:marqueeRepeatLimit="marquee_forever"
                             android:maxLines="1"
-                            android:paddingBottom="@dimen/scale_5dp"
-                            android:paddingTop="@dimen/scale_5dp"
                             android:textColor="@color/black"
                             android:textSize="@dimen/text_size_14sp"
                             tools:text="₹ 0"/>
@@ -200,18 +191,19 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/scale_1dp"
                         android:layout_above="@+id/action_layout"
-                        android:layout_marginTop="@dimen/scale_5dp"
+                        android:layout_marginLeft="@dimen/scale_15dp"
+                        android:layout_marginRight="@dimen/scale_15dp"
+                        android:layout_marginTop="@dimen/scale_16dp"
                         android:layout_toRightOf="@+id/profile_layout"
                         android:background="@color/black"/>
 
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/scale_22dp"
+                        android:layout_marginRight="@dimen/scale_22dp"
                         android:layout_marginTop="@dimen/scale_20dp"
-                        android:paddingBottom="@dimen/scale_5dp"
-                        android:paddingLeft="@dimen/scale_10dp"
-                        android:paddingRight="@dimen/scale_10dp"
-                        android:paddingTop="@dimen/scale_5dp">
+                        >
 
                         <com.cheep.custom_view.CFTextViewSemiBold
                             android:id="@+id/text_label_total_paid"
@@ -220,8 +212,6 @@
                             android:layout_gravity="left|center_vertical"
                             android:drawablePadding="@dimen/scale_5dp"
                             android:gravity="center_vertical"
-                            android:paddingBottom="@dimen/scale_5dp"
-                            android:paddingTop="@dimen/scale_5dp"
                             android:text="@string/label_total"
                             android:textColor="@color/black"
                             android:textSize="@dimen/text_size_18sp"/>
@@ -233,13 +223,10 @@
                             android:layout_alignParentRight="true"
                             android:layout_toEndOf="@+id/text_label_total_paid"
                             android:layout_toRightOf="@+id/text_label_total_paid"
-                            android:drawablePadding="@dimen/scale_5dp"
                             android:ellipsize="marquee"
                             android:gravity="right"
                             android:marqueeRepeatLimit="marquee_forever"
                             android:maxLines="1"
-                            android:paddingBottom="@dimen/scale_5dp"
-                            android:paddingTop="@dimen/scale_5dp"
                             android:singleLine="true"
                             android:textColor="@color/black"
                             android:textSize="@dimen/text_size_18sp"
@@ -267,7 +254,7 @@
             android:layout_gravity="bottom"
             android:background="@color/dark_blue"
             android:gravity="center"
-            android:padding="@dimen/scale_10dp"
+            android:padding="@dimen/scale_12dp"
             android:text="@string/continue_"
             android:textColor="@color/white"
             android:textSize="@dimen/text_size_17sp"

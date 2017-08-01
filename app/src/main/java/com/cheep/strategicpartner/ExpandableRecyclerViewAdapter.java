@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.cheep.R;
@@ -139,7 +140,9 @@ class ExpandableRecyclerViewAdapter extends ExpandableRecyclerAdapter<StrategicP
     class ChildSubCategoryViewHolder extends ChildViewHolder {
         private TextView textSubCategoryName;
         private TextView textSubCategoryPrice;
-        ImageView imgIconCorrect;
+        private TextView textPackageDescription;
+        private ImageView imgIconCorrect;
+        private LinearLayout ln_root;
 
         ChildSubCategoryViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -147,9 +150,11 @@ class ExpandableRecyclerViewAdapter extends ExpandableRecyclerAdapter<StrategicP
             textSubCategoryName = itemView.findViewById(R.id.text_sub_category_name);
             imgIconCorrect = itemView.findViewById(R.id.img_icon_correct);
             textSubCategoryPrice = itemView.findViewById(R.id.text_sub_category_price);
+            textPackageDescription = itemView.findViewById(R.id.text_package_description);
+            ln_root = itemView.findViewById(R.id.ln_root);
 
             // on click of check box
-            imgIconCorrect.setOnClickListener(new View.OnClickListener() {
+            ln_root.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
 
@@ -180,7 +185,7 @@ class ExpandableRecyclerViewAdapter extends ExpandableRecyclerAdapter<StrategicP
 
                             for (int j = 0; j < mSubCategoriesList.get(i).allSubSubCats.size(); j++) {
 
-                                mSubCategoriesList.get(i).allSubSubCats.get(j).isSelected= (i == parentPos && j == childPos);
+                                mSubCategoriesList.get(i).allSubSubCats.get(j).isSelected = (i == parentPos && j == childPos);
                                 mSubCategoriesList.get(i).isSelected = i == parentPos;
                             }
                         }
@@ -193,11 +198,19 @@ class ExpandableRecyclerViewAdapter extends ExpandableRecyclerAdapter<StrategicP
         }
 
         // bind data with view for child row
-        public void bind(@NonNull StrategicPartnerSubCategoryModel.AllSubSubCat ingredient) {
-            textSubCategoryName.setText(ingredient.subSubCatName);
-            textSubCategoryPrice.setText(itemView.getContext().getString(R.string.ruppe_symbol_x, String.valueOf(ingredient.price)));
-            imgIconCorrect.setSelected(ingredient.isSelected);
-            textSubCategoryPrice.setSelected(ingredient.isSelected);
+        public void bind(@NonNull StrategicPartnerSubCategoryModel.AllSubSubCat subSubCat) {
+            textSubCategoryName.setText(subSubCat.subSubCatName);
+            if (subSubCat.package_description != null && !subSubCat.package_description.isEmpty())
+            {
+                textPackageDescription.setText(subSubCat.package_description);
+                textPackageDescription.setVisibility(View.VISIBLE);
+            }
+            else{
+                textPackageDescription.setVisibility(View.GONE);
+            }
+            textSubCategoryPrice.setText(itemView.getContext().getString(R.string.ruppe_symbol_x, String.valueOf(subSubCat.price)));
+            imgIconCorrect.setSelected(subSubCat.isSelected);
+            textSubCategoryPrice.setSelected(subSubCat.isSelected);
         }
 
     }

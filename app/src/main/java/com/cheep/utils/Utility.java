@@ -11,6 +11,7 @@ import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.media.MediaMetadataRetriever;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -59,7 +60,6 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import static android.support.v8.renderscript.Allocation.createFromBitmap;
@@ -133,6 +133,9 @@ public class Utility {
     public static final int REQUEST_CODE_READ_EXTERNAL_STORAGE_ADD_PROFILE_GALLERY = 116;
     public static final int PLACE_PICKER_REQUEST = 117;
     public static final int REQUEST_CODE_ADD_PROFILE_CAMERA = 118;
+    public static final int REQUEST_CODE_VIDEO_CAPTURE = 119;
+    public static final int REQUEST_CODE_GET_VIDEO_GALLERY = 120;
+
 
     /*
     * @Sanjay
@@ -1105,4 +1108,99 @@ public class Utility {
             context.startActivity(intent);
         }
     }
+
+    /**
+     * @param p_videoPath
+     * @return returns bitmap thumbnail for video
+     * @throws Throwable
+     */
+    public static Bitmap getVideoThumbnail(String p_videoPath)
+            throws Throwable {
+        Bitmap m_bitmap = null;
+        MediaMetadataRetriever m_mediaMetadataRetriever = null;
+        try {
+            m_mediaMetadataRetriever = new MediaMetadataRetriever();
+            m_mediaMetadataRetriever.setDataSource(p_videoPath);
+            m_bitmap = m_mediaMetadataRetriever.getFrameAtTime();
+        } catch (Exception m_e) {
+            throw new Throwable(
+                    "Exception in getVideoThumbnail(String p_videoPath)"
+                            + m_e.getMessage());
+        } finally {
+            if (m_mediaMetadataRetriever != null) {
+                m_mediaMetadataRetriever.release();
+            }
+        }
+        return m_bitmap;
+    }
+
+
+    public static String TEMPLATE_DATE_PICKER = "calendar";
+    public static String TEMPLATE_TIME_PICKER = "timepicker";
+    public static String TEMPLATE_UPLOAD = "upload";
+    public static String TEMPLATE_LOCATION = "location";
+    public static String TEMPLATE_TEXT_FIELD = "textfield";
+    public static String TEMPLATE_MULTIPLE_FIELD = "choices";
+
+
+    public static String JSON_STRING = "{\n" +
+            "  \"data\": [\n" +
+            "    {\n" +
+            "      \"question_id\": \"3\",\n" +
+            "      \"answer_type\": \"upload\",\n" +
+            "      \"question\": \"Have any photos or video to help? \"\n" +
+            "    },\n" +
+            "    {\n" +
+            "      \"question_id\": \"4\",\n" +
+            "      \"answer_type\": \"calendar\",\n" +
+            "      \"question\": \"On what date would you like the task?\"\n" +
+            "    },\n" +
+            "    {\n" +
+            "      \"question_id\": \"11\",\n" +
+            "      \"answer_type\": \"timepicker\",\n" +
+            "      \"question\": \"What time would you prefer?\"\n" +
+            "    },\n" +
+            "    {\n" +
+            "      \"question_id\": \"5\",\n" +
+            "      \"answer_type\": \"location\",\n" +
+            "      \"question\": \"Please share the task location\"\n" +
+            "    },\n" +
+            "    {\n" +
+            "      \"question_id\": \"10\",\n" +
+            "      \"answer_type\": \"textfield\",\n" +
+            "      \"question\": \"Any other details you want to share?\"\n" +
+            "    },\n" +
+            "    {\n" +
+            "      \"question_id\": \"12\",\n" +
+            "      \"answer_type\": \"textfield\",\n" +
+            "      \"question\": \"Any other details you want to share 1 ?\"\n" +
+            "    },\n" +
+            "    {\n" +
+            "      \"question_id\": \"13\",\n" +
+            "      \"answer_type\": \"textfield\",\n" +
+            "      \"question\": \"Any other details you want to share 2 ?\"\n" +
+            "    },\n" +
+            "    {\n" +
+            "      \"question_id\": \"14\",\n" +
+            "      \"answer_type\": \"choices\",\n" +
+            "      \"question\": \"How would you like the drive equipped?\",\n" +
+            "      \"choices\":\"With car,Without car\"\n" +
+            "    }\n" +
+            "    ,\n" +
+            "    {\n" +
+            "      \"question_id\": \"15\",\n" +
+            "      \"answer_type\": \"choices\",\n" +
+            "      \"question\": \"How would you like the drive equipped 123 ?\",\n" +
+            "      \"choices\":\"One,Two,Three\"\n" +
+            "    }\n" +
+            "    \n" +
+            "    ,\n" +
+            "    {\n" +
+            "      \"question_id\": \"16\",\n" +
+            "      \"answer_type\": \"choices\",\n" +
+            "      \"question\": \"How would you like the drive equipped 456?\",\n" +
+            "      \"choices\":\"Four,Five,Six\"\n" +
+            "    }\n" +
+            "  ]\n" +
+            "}";
 }
