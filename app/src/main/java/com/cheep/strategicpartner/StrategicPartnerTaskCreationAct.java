@@ -68,6 +68,7 @@ public class StrategicPartnerTaskCreationAct extends BaseAppCompatActivity {
             }
         }
         mActivityTaskCreationForStrategicPartnerBinding.imgLogo.setVisibility(View.GONE);
+        Utility.loadImageView(this, mActivityTaskCreationForStrategicPartnerBinding.imgLogo, mBannerImageModel.imgCatImageUrl, R.drawable.icon_profile_img);
         mActivityTaskCreationForStrategicPartnerBinding.textStepDesc.setText(getString(R.string.step_1_desc_for_strategic_partner));
 
 
