@@ -18,7 +18,7 @@ android {
     defaultConfig {
         applicationId "com.cheep"
         minSdkVersion 16
-        targetSdkVersion 26
+        targetSdkVersion 25
         versionCode 22
         versionName "1.0.50" // PLEASE FIRST MAKE SURE MIN-VERSION IS 16.
 
@@ -138,7 +138,7 @@ dependencies {
     // Design Support Library, it also included Multidex library support, So there is no need to provide
     // another library here.
     compile "com.android.support:design:$supportLibVer"
-//    compile 'com.android.support:multidex:1.0.1'
+    compile 'com.android.support:multidex:1.0.1'
 
     // Gson Library
     compile "com.google.code.gson:gson:$gsonLibVer"

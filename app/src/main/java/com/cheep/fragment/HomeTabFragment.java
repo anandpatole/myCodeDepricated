@@ -909,6 +909,9 @@ public class HomeTabFragment extends BaseFragment {
 
         @Override
         public int getCount() {
+            if (imageModelArrayList == null) {
+                return 0;
+            }
             return imageModelArrayList.size();
         }
 
