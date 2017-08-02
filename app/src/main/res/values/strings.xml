@@ -431,6 +431,10 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="step_2_desc_for_strategic_partner">Questions</string>
     <string name="step_3_desc_for_strategic_partner">Please check details below and pay</string>
     <string name="continue_">Continue</string>
+
+    <string name="label_select_an_address">Select an Address</string>
+    <string name="label_select_the_date">Select the Date</string>
+    <string name="label_select_the_time">Select the Time</string>
     <string-array name="choose_media_type">
         <item>Video</item>
         <item>Photos</item>

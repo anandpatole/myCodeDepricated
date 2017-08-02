@@ -31,9 +31,10 @@ public class StrategicPartnerTaskCreationAct extends BaseAppCompatActivity {
     private ActivityTaskCreationForStrategicPartnerBinding mActivityTaskCreationForStrategicPartnerBinding;
     public BannerImageModel mBannerImageModel;
     TaskCreationForStrategicPartnerPagerAdapter mTaskCreationPagerAdapter;
-    private String mSelectedQuestions;
-    public boolean isSingleSelection = false;
+    private ArrayList<QueAnsModel> mSelectedQuestions;
     private ArrayList<StrategicPartnerSubCategoryModel> mSelectedServicesList;
+    public boolean isSingleSelection = false;
+    public boolean isAllQuestionAnswer = false;
 
     public static void getInstance(Context mContext, BannerImageModel model) {
         Intent intent = new Intent(mContext, StrategicPartnerTaskCreationAct.class);
@@ -142,6 +143,7 @@ public class StrategicPartnerTaskCreationAct extends BaseAppCompatActivity {
         mTaskCreationPagerAdapter.addFragment(StrategicPartnerFragPhaseOne.TAG);
         mTaskCreationPagerAdapter.addFragment(StrategicPartnerFragPhaseTwo.TAG);
         mTaskCreationPagerAdapter.addFragment(StrategicPartnerFragPhaseThree.TAG);
+        pager.setOffscreenPageLimit(2);
         pager.setAdapter(mTaskCreationPagerAdapter);
     }
 
@@ -362,11 +364,11 @@ public class StrategicPartnerTaskCreationAct extends BaseAppCompatActivity {
         return mSelectedServicesList;
     }
 
-    public void setSelectedQuestions(String selectedQuestions) {
+    public void setSelectedQuestions(ArrayList<QueAnsModel> selectedQuestions) {
         mSelectedQuestions = selectedQuestions;
     }
 
-    public String getSelectedQuestions() {
+    public ArrayList<QueAnsModel> getSelectedQuestions() {
         return mSelectedQuestions;
     }
 }

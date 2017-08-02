@@ -4,32 +4,36 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class QueAnsModel {
 
-    @SerializedName("data")
+
+    @SerializedName("question_id")
     @Expose
-    public List<DataModel> data = null;
+    public String questionId;
+    @SerializedName("answer_type")
+    @Expose
+    public String answerType;
+    @SerializedName("question")
+    @Expose
+    public String question;
+    @SerializedName("dropdown_answer")
+    @Expose
+    public ArrayList<DropDownModel> dropDownList;
 
-    public class DataModel {
+    public String answer;
 
-        @SerializedName("question_id")
+    public ArrayList<String> medialList = null;
+
+
+    public class DropDownModel {
+
+        public boolean isSelected = false;
+        @SerializedName("dropdown_id")
         @Expose
-        public String questionId;
-        @SerializedName("answer_type")
+        public String dropdown_id;
+        @SerializedName("dropdown_answer")
         @Expose
-        public String answerType;
-        @SerializedName("question")
-        @Expose
-        public String question;
-        @SerializedName("choices")
-        @Expose
-        public String choices;
-
-        public String answer;
-
-        public ArrayList<String> medialList = null;
-
+        public String dropdown_answer;
     }
 }

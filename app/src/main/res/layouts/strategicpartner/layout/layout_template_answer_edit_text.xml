@@ -14,8 +14,8 @@
         android:paddingBottom="@dimen/scale_5dp"
         android:paddingRight="@dimen/scale_15dp"
         android:paddingTop="@dimen/scale_5dp"
-        android:textColor="@color/grey_varient_14"
-        android:textColorHint="@color/grey_varient_16"
+        android:textColor="@color/dark_blue_variant_1"
+        android:textColorHint="@color/grey_varient_14"
         android:textSize="@dimen/text_size_14sp"
         />
 

@@ -1139,68 +1139,8 @@ public class Utility {
     public static String TEMPLATE_TIME_PICKER = "timepicker";
     public static String TEMPLATE_UPLOAD = "upload";
     public static String TEMPLATE_LOCATION = "location";
-    public static String TEMPLATE_TEXT_FIELD = "textfield";
-    public static String TEMPLATE_MULTIPLE_FIELD = "choices";
+    public static String TEMPLATE_TEXT_FIELD = "textbox";
+    public static String TEMPLATE_DROPDOWN = "dropdown";
 
 
-    public static String JSON_STRING = "{\n" +
-            "  \"data\": [\n" +
-            "    {\n" +
-            "      \"question_id\": \"3\",\n" +
-            "      \"answer_type\": \"upload\",\n" +
-            "      \"question\": \"Have any photos or video to help? \"\n" +
-            "    },\n" +
-            "    {\n" +
-            "      \"question_id\": \"4\",\n" +
-            "      \"answer_type\": \"calendar\",\n" +
-            "      \"question\": \"On what date would you like the task?\"\n" +
-            "    },\n" +
-            "    {\n" +
-            "      \"question_id\": \"11\",\n" +
-            "      \"answer_type\": \"timepicker\",\n" +
-            "      \"question\": \"What time would you prefer?\"\n" +
-            "    },\n" +
-            "    {\n" +
-            "      \"question_id\": \"5\",\n" +
-            "      \"answer_type\": \"location\",\n" +
-            "      \"question\": \"Please share the task location\"\n" +
-            "    },\n" +
-            "    {\n" +
-            "      \"question_id\": \"10\",\n" +
-            "      \"answer_type\": \"textfield\",\n" +
-            "      \"question\": \"Any other details you want to share?\"\n" +
-            "    },\n" +
-            "    {\n" +
-            "      \"question_id\": \"12\",\n" +
-            "      \"answer_type\": \"textfield\",\n" +
-            "      \"question\": \"Any other details you want to share 1 ?\"\n" +
-            "    },\n" +
-            "    {\n" +
-            "      \"question_id\": \"13\",\n" +
-            "      \"answer_type\": \"textfield\",\n" +
-            "      \"question\": \"Any other details you want to share 2 ?\"\n" +
-            "    },\n" +
-            "    {\n" +
-            "      \"question_id\": \"14\",\n" +
-            "      \"answer_type\": \"choices\",\n" +
-            "      \"question\": \"How would you like the drive equipped?\",\n" +
-            "      \"choices\":\"With car,Without car\"\n" +
-            "    }\n" +
-            "    ,\n" +
-            "    {\n" +
-            "      \"question_id\": \"15\",\n" +
-            "      \"answer_type\": \"choices\",\n" +
-            "      \"question\": \"How would you like the drive equipped 123 ?\",\n" +
-            "      \"choices\":\"One,Two,Three\"\n" +
-            "    }\n" +
-            "    \n" +
-            "    ,\n" +
-            "    {\n" +
-            "      \"question_id\": \"16\",\n" +
-            "      \"answer_type\": \"choices\",\n" +
-            "      \"question\": \"How would you like the drive equipped 456?\",\n" +
-            "      \"choices\":\"Four,Five,Six\"\n" +
-            "    }\n" +
-            "  ]\n" +
-            "}";
 }

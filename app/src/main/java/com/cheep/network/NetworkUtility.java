@@ -94,6 +94,9 @@ public class NetworkUtility {
 
         // Fetch list of all strategic partber services and sub categories
         public static final String FETCH_SUB_CATS_STRATEGIC_PARTNER_LIST = BASE_URL + "customers/category/all_sub_cats_strategic_partner";
+
+        // Fetch list of all strategic partner services and sub categories
+        public static final String FETCH_SUB_CATEGORIES_QUESTIONNAIRE = BASE_URL + "customers/category/categories_questionnaire";
     }
 
     public static class TAGS {
