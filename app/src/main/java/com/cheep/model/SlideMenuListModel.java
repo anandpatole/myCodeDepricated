@@ -1,5 +1,8 @@
 package com.cheep.model;
 
+import android.support.annotation.Keep;
+
+@Keep
 public class SlideMenuListModel {
     public String title;
     public int image_id;

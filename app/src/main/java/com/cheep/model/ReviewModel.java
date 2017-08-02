@@ -1,11 +1,14 @@
 package com.cheep.model;
 
+import android.support.annotation.Keep;
+
 import com.google.gson.annotations.SerializedName;
 
 /**
  * Created by pankaj on 10/7/16.
  */
 
+@Keep
 public class ReviewModel {
 
     @SerializedName("review_id")

@@ -1,11 +1,13 @@
 package com.cheep.firebase.model;
 
+import android.support.annotation.Keep;
+
 import java.io.Serializable;
 
 /**
  * Created by sanjay on 11/3/17.
  */
-
+@Keep
 public class ChatNotification implements Serializable
 {
     public String title="";

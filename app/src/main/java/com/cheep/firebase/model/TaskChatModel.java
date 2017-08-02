@@ -1,5 +1,7 @@
 package com.cheep.firebase.model;
 
+import android.support.annotation.Keep;
+
 import com.google.firebase.database.Exclude;
 import com.google.firebase.database.IgnoreExtraProperties;
 import com.google.firebase.database.ServerValue;
@@ -9,6 +11,7 @@ import com.google.firebase.database.ServerValue;
  */
 
 @IgnoreExtraProperties
+@Keep
 public class TaskChatModel
 {
     @Exclude

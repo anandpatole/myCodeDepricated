@@ -126,7 +126,10 @@
      dimension as specified mentioned in 'values-xxhdpi/dimens.xml' -->
     <dimen name="home_screen_filter_text_width">103dp</dimen>
 
-    <dimen name="home_screen_extra_category_count_text_size">11sp</dimen>
+    <!--Available Pros Count (+15) text size-->
+    <dimen name="home_screen_extra_category_count_text_size_one_digits">15sp</dimen>
+    <dimen name="home_screen_extra_category_count_text_size_two_digits">13sp</dimen>
+    <dimen name="home_screen_extra_category_count_text_size_three_digits">11sp</dimen>
     <!--Home Screen Alignments[End]-->
 
 </resources>

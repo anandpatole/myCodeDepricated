@@ -1,5 +1,6 @@
 package com.cheep.model;
 
+import android.support.annotation.Keep;
 import android.text.TextUtils;
 
 import com.google.gson.annotations.SerializedName;
@@ -9,7 +10,7 @@ import java.util.ArrayList;
 /**
  * Created by bhavesh on 14/10/16.
  */
-
+@Keep
 public class UserDetails {
 
     @SerializedName("user_id")

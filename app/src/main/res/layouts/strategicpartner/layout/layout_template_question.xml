@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:orientation="horizontal">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
 
     <FrameLayout
         android:layout_width="@dimen/scale_50dp"
@@ -14,7 +14,7 @@
             android:layout_width="2dp"
             android:layout_height="match_parent"
             android:layout_gravity="center_horizontal"
-            android:background="@color/grey_varient_15"/>
+            android:background="@color/grey_varient_15" />
 
         <TextView
             android:id="@+id/txtQueNo"
@@ -28,7 +28,7 @@
             android:paddingTop="@dimen/scale_5dp"
             android:textColor="@color/selector_text_color_que_no"
             android:textSize="@dimen/text_size_12sp"
-            tools:text="1"/>
+            tools:text="1" />
     </FrameLayout>
 
     <LinearLayout
@@ -44,14 +44,14 @@
             android:layout_height="wrap_content"
             android:textColor="@color/grey_dark_color_2"
             android:textSize="@dimen/text_size_16sp"
-            tools:text="asdasd"/>
+            tools:text="asdasd" />
 
         <LinearLayout
             android:id="@+id/relAnsView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/scale_10dp"
-            android:orientation="horizontal"/>
+            android:orientation="horizontal" />
     </LinearLayout>
 
 </LinearLayout>

@@ -1,11 +1,13 @@
 package com.cheep.model;
 
+import android.support.annotation.Keep;
+
 import com.google.gson.annotations.SerializedName;
 
 /**
  * Created by pankaj on 10/10/16.
  */
-
+@Keep
 public class CommentsModel {
 
     @SerializedName("comment_id")
