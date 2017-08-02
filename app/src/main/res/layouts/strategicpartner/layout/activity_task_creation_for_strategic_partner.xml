@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
         <FrameLayout
+            android:id="@+id/flTop"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -121,9 +123,12 @@
             </LinearLayout>
         </FrameLayout>
 
+
         <FrameLayout
+            android:id="@+id/flBottom"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_below="@+id/flTop">
 
             <com.cheep.custom_view.NonSwipeableViewPager
                 android:id="@+id/viewpager"
@@ -145,5 +150,19 @@
                             android:visibility="invisible" />
             -->
         </FrameLayout>
-    </LinearLayout>
+
+        <com.cheep.utils.CircularImageView
+            android:id="@+id/imgLogo"
+            android:layout_width="@dimen/scale_100dp"
+            android:layout_height="@dimen/scale_100dp"
+            android:layout_below="@+id/flTop"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="-50dp"
+            android:src="@drawable/icon_profile_img_solid"
+            app:civ_border="true"
+            app:civ_border_color="@color/splash_gradient_end"
+            app:civ_border_width="@dimen/scale_1dp"/>
+
+
+    </RelativeLayout>
 </layout>

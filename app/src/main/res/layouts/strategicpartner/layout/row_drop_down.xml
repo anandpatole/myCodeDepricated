@@ -5,7 +5,6 @@
     android:id="@+id/txt_drop_down"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/scale_5dp"
     android:background="@drawable/background_menu_drop_down_row_selector"
     android:drawablePadding="@dimen/scale_10dp"
     android:minWidth="@dimen/scale_100dp"

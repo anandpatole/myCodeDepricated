@@ -2,9 +2,15 @@ package com.cheep.strategicpartner;
 
 import android.content.Context;
 import android.databinding.DataBindingUtil;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -70,6 +76,24 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
         } else {
             isTaskDescriptionVerified = false;
         }
+
+        mFragmentStrategicPartnerPhaseThreeBinding.scrollView.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mFragmentStrategicPartnerPhaseThreeBinding.scrollView.fullScroll(View.FOCUS_UP);
+            }
+        }, 10);
+        SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder();
+        spannableStringBuilder.append(getSpannableString("Your order with ", ContextCompat.getColor(mStrategicPartnerTaskCreationAct, R.color.grey_varient_8), false));
+        spannableStringBuilder.append(getSpannableString(mStrategicPartnerTaskCreationAct.mBannerImageModel.name, ContextCompat.getColor(mStrategicPartnerTaskCreationAct, R.color.splash_gradient_end), true));
+        spannableStringBuilder.append(getSpannableString(getString(R.string.label_on), ContextCompat.getColor(mStrategicPartnerTaskCreationAct, R.color.grey_varient_8), false));
+        spannableStringBuilder.append(getSpannableString(mStrategicPartnerTaskCreationAct.date + ", " + mStrategicPartnerTaskCreationAct.time
+                , ContextCompat.getColor(mStrategicPartnerTaskCreationAct, R.color.splash_gradient_end), true));
+        spannableStringBuilder.append(getSpannableString(getString(R.string.label_at), ContextCompat.getColor(mStrategicPartnerTaskCreationAct, R.color.grey_varient_8), false));
+        spannableStringBuilder.append(getSpannableString(mStrategicPartnerTaskCreationAct.address, ContextCompat.getColor(mStrategicPartnerTaskCreationAct, R.color.splash_gradient_end), true));
+
+        mFragmentStrategicPartnerPhaseThreeBinding.txtdesc.setText(spannableStringBuilder);
+
         if (mStrategicPartnerTaskCreationAct.getSelectedSubService() != null)
             mFragmentStrategicPartnerPhaseThreeBinding.recycleSelectedService.setAdapter(new StrategicPartnerPaymentAdapter(mStrategicPartnerTaskCreationAct, mStrategicPartnerTaskCreationAct.getSelectedSubService()));
         int total = 0;
@@ -86,12 +110,23 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
         }
         mFragmentStrategicPartnerPhaseThreeBinding.txttotal.setText(getString(R.string.ruppe_symbol_x, String.valueOf(total)));
         mFragmentStrategicPartnerPhaseThreeBinding.txtsubtotal.setText(getString(R.string.ruppe_symbol_x, String.valueOf(total)));
+        mFragmentStrategicPartnerPhaseThreeBinding.textPay.setText("Pay " + getString(R.string.ruppe_symbol_x, String.valueOf(total)));
         mFragmentStrategicPartnerPhaseThreeBinding.textPay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 callWeb();
+                Utility.showToast(mStrategicPartnerTaskCreationAct, "Work in progress!");
             }
         });
+    }
+
+    public SpannableStringBuilder getSpannableString(String fullstring, int color, boolean isBold) {
+        SpannableStringBuilder text = new SpannableStringBuilder(fullstring);
+        text.setSpan(new ForegroundColorSpan(color), 0, fullstring.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        if (isBold) {
+            text.setSpan(new StyleSpan(Typeface.BOLD), 0, fullstring.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
+        return text;
     }
 
     @Override
@@ -183,7 +218,6 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
                 jsonObject.addProperty("answer", queAnsModel.answer);
                 quesArray.add(jsonObject);
             }
-
         }
 
         String question_detail = quesArray.toString();

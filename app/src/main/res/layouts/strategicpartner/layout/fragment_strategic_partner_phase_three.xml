@@ -8,6 +8,7 @@
         android:layout_height="match_parent">
 
         <ScrollView
+            android:id="@+id/scrollView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@+id/text_pay"
@@ -25,7 +26,7 @@
                     android:layout_marginBottom="@dimen/scale_5dp"
                     android:layout_marginLeft="@dimen/scale_22dp"
                     android:layout_marginRight="@dimen/scale_10dp"
-                    android:layout_marginTop="@dimen/scale_10dp"
+                    android:layout_marginTop="@dimen/scale_60dp"
                     android:gravity="center"
                     android:lineSpacingExtra="10dp"
                     android:textColor="@color/grey_varient_8"
@@ -140,7 +141,7 @@
                         android:layout_marginLeft="@dimen/scale_22dp"
                         android:layout_marginRight="@dimen/scale_22dp"
                         android:layout_marginTop="@dimen/scale_20dp"
-                        android:visibility="visible">
+                        android:visibility="gone">
 
 
                         <com.cheep.custom_view.CFTextViewRegular
@@ -203,6 +204,7 @@
                         android:layout_marginLeft="@dimen/scale_22dp"
                         android:layout_marginRight="@dimen/scale_22dp"
                         android:layout_marginTop="@dimen/scale_20dp"
+                        android:layout_marginBottom="@dimen/scale_20dp"
                         >
 
                         <com.cheep.custom_view.CFTextViewSemiBold
@@ -234,14 +236,6 @@
 
                     </RelativeLayout>
 
-                    <com.cheep.custom_view.CFTextViewRegular
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="@dimen/scale_10dp"
-                        android:paddingRight="@dimen/scale_10dp"
-                        android:text="@string/label_task_desclaimer"
-                        android:textColor="@color/grey_varient_11"
-                        android:textSize="@dimen/text_size_10sp"/>
                 </LinearLayout>
             </LinearLayout>
         </ScrollView>

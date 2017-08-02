@@ -98,7 +98,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
     private boolean isVerified = false;
     private boolean isTaskDescriptionVerified;
     SuperCalendar startDateTimeSuperCalendar = SuperCalendar.getInstance();
-    public SuperCalendar superCalendar;
+    public SuperCalendar superCalendar = SuperCalendar.getInstance();
 
     private String mCurrentPhotoPath = "";
     private ImageAdapter imageAdapter;
@@ -134,6 +134,20 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
         if (!isVisibleToUser || mStrategicPartnerTaskCreationAct == null) {
             return;
         }
+
+        int total = 0;
+
+        for (StrategicPartnerSubCategoryModel model : mStrategicPartnerTaskCreationAct.getSelectedSubService()) {
+            List<StrategicPartnerSubCategoryModel.AllSubSubCat> allSubSubCats = model.allSubSubCats;
+            for (StrategicPartnerSubCategoryModel.AllSubSubCat allSubSubCat : allSubSubCats) {
+                try {
+                    total += Integer.parseInt(allSubSubCat.price);
+                } catch (NumberFormatException e) {
+                    total += 0;
+                }
+            }
+        }
+        mFragmentStrategicPartnerPhaseTwoBinding.textContinue.setText("Book & Pay " + getString(R.string.ruppe_symbol_x, String.valueOf(total)));
 
         // Task Description
         isTaskDescriptionVerified = mStrategicPartnerTaskCreationAct.getSelectedSubService().size() != 0;
@@ -319,7 +333,9 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
 
         final View viewInflated = LayoutInflater.from(mStrategicPartnerTaskCreationAct).inflate(R.layout.layout_template_answer_multiple_choice, null, false);
         final TextView txtAnswer = viewInflated.findViewById(R.id.txtQueAnswer);
-        txtAnswer.setText("Select an answer");
+        txtAnswer.setText(model.dropDownList.get(0).dropdown_answer);
+        model.dropDownList.get(0).isSelected = true;
+        model.answer = model.dropDownList.get(0).dropdown_answer;
         txtAnswer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -372,7 +388,14 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
         txtAnswer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showTimePickerDialog(txtAnswer, model);
+
+                for (QueAnsModel queAnsModel : mList) {
+                    if (queAnsModel.answerType.equalsIgnoreCase(Utility.TEMPLATE_DATE_PICKER))
+                        if (queAnsModel.answer != null && !queAnsModel.answer.equalsIgnoreCase(""))
+                            showTimePickerDialog(txtAnswer, model);
+                        else
+                            Utility.showSnackBar("Please select the date", mFragmentStrategicPartnerPhaseTwoBinding.getRoot());
+                }
             }
         });
         ansView.addView(view);
@@ -433,13 +456,16 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
                     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                         if (view.isShown()) {
                             Log.d(TAG, "onDateSet() called with: view = [" + view + "], year = [" + year + "], monthOfYear = [" + monthOfYear + "], dayOfMonth = [" + dayOfMonth + "]");
+                            startDateTimeSuperCalendar.setTimeInMillis(superCalendar.getTimeInMillis());
                             startDateTimeSuperCalendar.set(Calendar.YEAR, year);
                             startDateTimeSuperCalendar.set(Calendar.MONTH, monthOfYear);
                             startDateTimeSuperCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                            startDateTimeSuperCalendar.setTimeZone(SuperCalendar.SuperTimeZone.GMT.GMT);
                             txtAnswer.setText(startDateTimeSuperCalendar.format(Utility.DATE_FORMAT_DD_MMM));
                             model.answer = startDateTimeSuperCalendar.format(Utility.DATE_FORMAT_DD_MMM);
                             txtQueNo.setSelected(true);
                             txtAnswer.setSelected(false);
+                            mStrategicPartnerTaskCreationAct.date = startDateTimeSuperCalendar.format(Utility.DATE_FORMAT_DD_MMM);
 
                         }
                     }
@@ -471,7 +497,6 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
 
                             Log.d(TAG, "onTimeSet() called with: view = [" + view + "], hourOfDay = [" + hourOfDay + "], minute = [" + minute + "]");
 
-                            superCalendar = SuperCalendar.getInstance();
                             superCalendar.setTimeInMillis(startDateTimeSuperCalendar.getTimeInMillis());
 
                             superCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
@@ -495,6 +520,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
                                 String selectedDateTime = superCalendar.format(Utility.DATE_FORMAT_HH_MM_AM);
                                 textView.setText(selectedDateTime);
                                 textView.setSelected(true);
+                                mStrategicPartnerTaskCreationAct.time = selectedDateTime;
                                 model.answer = String.valueOf(superCalendar.getTimeInMillis());
                                 mFragmentStrategicPartnerPhaseTwoBinding.linMain.findViewWithTag(model.questionId).setSelected(true);
                             } else {
@@ -847,6 +873,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
                         } else {
                             address = model.address;
                         }
+                        mStrategicPartnerTaskCreationAct.address = address;
                         addressId = model.address_id;
                         Log.e(TAG, "category detail >> " + model.category + "");
 

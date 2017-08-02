@@ -36,10 +36,9 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_gravity="bottom"
-            android:background="@color/dark_blue"
+            android:background="@color/grey_varient_12"
             android:gravity="center"
             android:padding="@dimen/scale_10dp"
-            android:text="@string/continue_"
             android:textColor="@color/white"
             android:textSize="@dimen/text_size_17sp"
             android:visibility="visible"/>
