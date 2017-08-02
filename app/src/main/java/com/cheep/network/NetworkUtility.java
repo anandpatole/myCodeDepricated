@@ -35,6 +35,7 @@ public class NetworkUtility {
 
         public static final String UPDATE_LOCATION = BASE_URL + "customers/profile/update_location";
         public static final String CREATE_TASK = BASE_URL + "customers/tasks/create";
+        public static final String CURL_NOTIFICATION_TO_SP = BASE_URL + "customers/tasks/curl_for_notification_to_sp";
         public static final String SP_LIST = BASE_URL + "customers/sp_list/listing";
         public static final String SP_LIST_FILTER = BASE_URL + "customers/sp_list/filter_sp_list";
 

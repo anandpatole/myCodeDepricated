@@ -20,7 +20,7 @@ android {
         minSdkVersion 16
         targetSdkVersion 25
         versionCode 22
-        versionName "1.0.50" // PLEASE FIRST MAKE SURE MIN-VERSION IS 16.
+        versionName "1.0.51" // PLEASE FIRST MAKE SURE MIN-VERSION IS 16.
 
         // Enabling multidex support.
         multiDexEnabled true

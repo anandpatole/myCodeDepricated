@@ -482,6 +482,7 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
 
     // Update the list in case new quote requested by any of the PRO
     public void updateOnNewQuoteRequested(String task_id, String max_quote_price, String sp_counts, String quoted_sp_image_url) {
+        Log.d(TAG, "updateOnNewQuoteRequested() called with: task_id = [" + task_id + "], max_quote_price = [" + max_quote_price + "], sp_counts = [" + sp_counts + "], quoted_sp_image_url = [" + quoted_sp_image_url + "]");
         if (mList != null) {
             for (TaskDetailModel providerModel : mList) {
                 if (providerModel.taskId.equalsIgnoreCase(task_id)) {
@@ -490,7 +491,7 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
                     if (providerModel.profile_img_arr == null)
                         providerModel.profile_img_arr = new ArrayList<>();
                     // Only add if already not added.
-                    if (!providerModel.profile_img_arr.contains(quoted_sp_image_url)) {
+                    if (quoted_sp_image_url != null && !providerModel.profile_img_arr.contains(quoted_sp_image_url)) {
                         providerModel.profile_img_arr.add(quoted_sp_image_url);
                     } else {
                         Log.i(TAG, "updateOnNewQuoteRequested: Image URL Already added");

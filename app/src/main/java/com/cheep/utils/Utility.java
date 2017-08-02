@@ -326,8 +326,8 @@ public class Utility {
      * @return
      */
     public static int getHeightCategoryImageBasedOnRatio(int width) {
-        Log.d(TAG, "getHeightCategoryImageBasedOnRatio() called with: width = [" + width + "]");
-        Log.d(TAG, "getHeightCategoryImageBasedOnRatio() called with: width = [" + Math.round((width / CATEGORY_IMAGE_RATIO)) + "]");
+//        Log.d(TAG, "getHeightCategoryImageBasedOnRatio() called with: width = [" + width + "]");
+//        Log.d(TAG, "getHeightCategoryImageBasedOnRatio() called with: width = [" + Math.round((width / CATEGORY_IMAGE_RATIO)) + "]");
         return Math.round((width / CATEGORY_IMAGE_RATIO));
     }
 
