@@ -28,7 +28,7 @@ import java.util.List;
  * Created by bhavesh on 28/4/17.
  */
 public class StrategicPartnerFragPhaseThree extends BaseFragment {
-    public static final String TAG = "StrategicPartnerFragPhaseThree";
+    public static final String TAG = "StrategicPartnerFragPha";
     private FragmentStrategicPartnerPhaseThreeBinding mFragmentStrategicPartnerPhaseThreeBinding;
     ErrorLoadingHelper errorLoadingHelper;
     private StrategicPartnerTaskCreationAct mStrategicPartnerTaskCreationAct;

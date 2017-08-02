@@ -162,6 +162,7 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
                 dateTime = Utility.getDate(Long.parseLong(taskDetailModel.taskStartdate), "dd MMMM, HH:mm a");
                 dateTime = dateTime.replace("AM", "am").replace("PM", "pm");
             }
+
             // String description = "You are booking "+providerModel.userName + " to "+taskDetailModel.subCategoryName + " on "+dateTime+ " at "+taskDetailModel.taskAddress;
 
             SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder();

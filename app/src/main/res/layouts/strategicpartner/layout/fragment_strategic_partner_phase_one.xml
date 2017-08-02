@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -15,10 +15,12 @@
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recycler_view"
-                android:paddingTop="@dimen/scale_12dp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:layoutManager="LinearLayoutManager"/>
+                android:clipToPadding="false"
+                android:paddingBottom="@dimen/scale_12dp"
+                android:paddingTop="@dimen/scale_12dp"
+                app:layoutManager="LinearLayoutManager" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -31,7 +33,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:visibility="gone"/>
+                    android:visibility="gone" />
 
                 <FrameLayout
                     android:layout_width="match_parent"
@@ -44,7 +46,7 @@
                         android:adjustViewBounds="true"
                         android:src="@drawable/img_empty_category"
                         android:visibility="gone"
-                        tools:ignore="ContentDescription"/>
+                        tools:ignore="ContentDescription" />
 
                     <ImageView
                         android:id="@+id/img_post_a_task"
@@ -55,7 +57,7 @@
                         android:adjustViewBounds="true"
                         android:src="@drawable/ic_post_a_task"
                         android:visibility="gone"
-                        tools:ignore="ContentDescription"/>
+                        tools:ignore="ContentDescription" />
                 </FrameLayout>
 
                 <com.cheep.custom_view.CFTextViewRegular
@@ -65,7 +67,7 @@
                     android:layout_gravity="center"
                     android:padding="@dimen/scale_16dp"
                     android:visibility="gone"
-                    tools:text="Work In Progress"/>
+                    tools:text="Work In Progress" />
 
                 <com.cheep.custom_view.CFTextViewRegular
                     android:id="@+id/text_error_action"
@@ -79,7 +81,7 @@
                     android:text="@string/label_retry"
                     android:textAllCaps="false"
                     android:textColor="@color/white"
-                    android:visibility="gone"/>
+                    android:visibility="gone" />
             </LinearLayout>
         </FrameLayout>
 
@@ -95,7 +97,7 @@
             android:text="@string/continue_"
             android:textColor="@color/white"
             android:textSize="@dimen/text_size_17sp"
-            android:visibility="visible"/>
+            android:visibility="visible" />
 
     </RelativeLayout>
 </layout>

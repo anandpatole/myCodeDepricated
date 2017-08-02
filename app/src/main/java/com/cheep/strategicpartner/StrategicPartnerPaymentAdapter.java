@@ -56,6 +56,8 @@ public class StrategicPartnerPaymentAdapter extends RecyclerView.Adapter<Strateg
                 total += 0;
             }
         }
+        
+        holder.rowPastTaskBinding.textServiceSubService.setSelected(true);
         holder.rowPastTaskBinding.textServiceSubService.append(subscription.toString());
         holder.rowPastTaskBinding.textServiceRate.setText(activity.getString(R.string.ruppe_symbol_x, String.valueOf(total)));
     }
