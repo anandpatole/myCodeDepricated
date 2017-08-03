@@ -13,15 +13,14 @@ android {
     defaultConfig {
         applicationId "com.cheep"
         minSdkVersion 16
-        targetSdkVersion 26
-        versionCode 21
-        versionName "1.0.50" // PLEASE FIRST MAKE SURE MIN-VERSION IS 16.
+        targetSdkVersion 25
+        versionCode 22
+        versionName "1.0.52" // PLEASE FIRST MAKE SURE MIN-VERSION IS 16.
         renderscriptTargetApi 18
         renderscriptSupportModeEnabled true
 
         // Enabling multidex support.
         multiDexEnabled true
-
 
         buildConfigField("String", "FILE_PROVIDER_URL", getProperty("FILE_PROVIDER_URL"))
 

@@ -645,6 +645,7 @@ public class Utility {
     }
 
     public static void showCircularImageView(Context context, String tag, ImageView img, String imageToLoad, int placeholderRes, boolean isRounded) {
+        Log.d(TAG, "showCircularImageView() called with: context = [" + context + "], tag = [" + tag + "], img = [" + img + "], imageToLoad = [" + imageToLoad + "], placeholderRes = [" + placeholderRes + "], isRounded = [" + isRounded + "]");
         if (!isActivityCorrectForGlide(context)) {
             return;
         }

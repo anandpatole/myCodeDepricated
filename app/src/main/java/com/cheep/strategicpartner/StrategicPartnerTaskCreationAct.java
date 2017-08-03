@@ -62,13 +62,19 @@ public class StrategicPartnerTaskCreationAct extends BaseAppCompatActivity {
             Log.e(TAG, " data " + getIntent().getStringExtra(Utility.Extra.DATA));
             mBannerImageModel = (BannerImageModel) Utility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA), BannerImageModel.class);
             if (mBannerImageModel != null) {
+                // Load PRO image
+                Utility.showCircularImageView(mContext, TAG, mActivityTaskCreationForStrategicPartnerBinding.imgLogo, mBannerImageModel.imgCatImageUrl, R.drawable.icon_profile_img_solid, true);
+
                 Utility.loadImageView(mContext, mActivityTaskCreationForStrategicPartnerBinding.imgService, mBannerImageModel.imgCatImageUrl, R.drawable.gradient_black);
                 isSingleSelection = mBannerImageModel.minimum_selection.equalsIgnoreCase("1");
                 mActivityTaskCreationForStrategicPartnerBinding.textTitle.setText(mBannerImageModel.name != null ? mBannerImageModel.name : Utility.EMPTY_STRING);
+
+
             }
         }
+
         mActivityTaskCreationForStrategicPartnerBinding.imgLogo.setVisibility(View.GONE);
-        Utility.loadImageView(this, mActivityTaskCreationForStrategicPartnerBinding.imgLogo, mBannerImageModel.imgCatImageUrl, R.drawable.icon_profile_img);
+//        Utility.loadImageView(this, mActivityTaskCreationForStrategicPartnerBinding.imgLogo, mBannerImageModel.imgCatImageUrl, R.drawable.icon_profile_img);
         mActivityTaskCreationForStrategicPartnerBinding.textStepDesc.setText(getString(R.string.step_1_desc_for_strategic_partner));
 
 
