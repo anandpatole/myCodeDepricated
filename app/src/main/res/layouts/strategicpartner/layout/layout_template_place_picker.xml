@@ -7,17 +7,15 @@
 
     <com.cheep.custom_view.CFTextViewRegular
         android:id="@+id/txtQueAnswer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/w_text_view_picker"
+        android:layout_height="@dimen/h_text_view_picker"
         android:background="@drawable/background_ans_address_normal"
         android:drawableLeft="@drawable/ic_address_white"
         android:drawablePadding="@dimen/scale_10dp"
-        android:paddingBottom="@dimen/scale_5dp"
-        android:paddingLeft="@dimen/scale_10dp"
-        android:paddingRight="@dimen/scale_10dp"
-        android:paddingTop="@dimen/scale_5dp"
         android:textColor="@color/white"
         android:textSize="@dimen/text_size_15sp"
+        android:paddingLeft="@dimen/scale_12dp"
+        android:gravity="center_vertical"
         tools:text="Pick Time"/>
 
 </LinearLayout>

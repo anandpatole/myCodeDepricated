@@ -28,7 +28,7 @@ import java.util.ArrayList;
  */
 public class StrategicPartnerTaskCreationAct extends BaseAppCompatActivity {
     private static final String TAG = "TaskCreationForStrategi";
-    private ActivityTaskCreationForStrategicPartnerBinding mActivityTaskCreationForStrategicPartnerBinding;
+    private ActivityTaskCreationForStrategicPartnerBinding himActivityTaskCreationForStrategicPartnerBinding;
     public BannerImageModel mBannerImageModel;
     TaskCreationForStrategicPartnerPagerAdapter mTaskCreationPagerAdapter;
     private ArrayList<QueAnsModel> mSelectedQuestions;
@@ -345,7 +345,7 @@ public class StrategicPartnerTaskCreationAct extends BaseAppCompatActivity {
     public void gpsEnabled() {
         super.gpsEnabled();
         // Show placepicker activity
-//        mTaskCreationPagerAdapter.mStrategicPartnerFragPhaseThree.showPlacePickerDialog(true);
+        mTaskCreationPagerAdapter.mStrategicPartnerFragPhaseTwo.showPlacePickerDialog(true);
     }
 
     @Override
