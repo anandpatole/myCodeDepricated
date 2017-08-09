@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools">
 
     <RelativeLayout
@@ -158,9 +157,6 @@
             android:layout_below="@+id/flTop"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="-50dp"
-            app:civ_border="true"
-            app:civ_border_color="@color/splash_gradient_end"
-            app:civ_border_width="@dimen/scale_1dp"
             tools:src="@drawable/icon_profile_img_solid"/>
 
 

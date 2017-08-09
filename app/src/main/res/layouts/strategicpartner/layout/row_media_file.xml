@@ -1,15 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="wrap_content"
-              android:layout_height="80dp"
-              android:orientation="vertical">
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:orientation="vertical">
+
 
     <ImageView
-        android:id="@+id/imgMedia"
-        android:layout_width="80dp"
-        android:layout_height="match_parent"
-        android:layout_marginRight="@dimen/scale_20dp"
+        android:layout_marginRight="@dimen/scale_10dp"
+        android:id="@+id/imgThumb"
+        android:layout_width="@dimen/h_camera_que_fragment"
+        android:layout_height="@dimen/h_camera_que_fragment"
         android:scaleType="fitXY"
+        android:layout_marginTop="@dimen/scale_10dp"
         />
 
-</LinearLayout>
+    <ImageView
+        android:id="@+id/imgRemove"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right|top"
+        android:scaleType="fitXY"
+        android:src="@drawable/ic_remove"
+        />
+</FrameLayout>

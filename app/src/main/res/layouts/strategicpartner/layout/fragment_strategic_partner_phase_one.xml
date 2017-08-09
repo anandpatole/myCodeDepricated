@@ -88,10 +88,10 @@
         <com.cheep.custom_view.CFTextViewSemiBold
             android:id="@+id/text_continue"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/h_book_and_pay"
             android:layout_alignParentBottom="true"
             android:layout_gravity="bottom"
-            android:background="@color/dark_blue"
+            android:background="@color/dark_blue_variant_1"
             android:gravity="center"
             android:padding="@dimen/scale_10dp"
             android:text="@string/continue_"

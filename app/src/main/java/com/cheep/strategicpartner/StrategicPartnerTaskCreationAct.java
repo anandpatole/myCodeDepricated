@@ -28,7 +28,7 @@ import java.util.ArrayList;
  */
 public class StrategicPartnerTaskCreationAct extends BaseAppCompatActivity {
     private static final String TAG = "TaskCreationForStrategi";
-    private ActivityTaskCreationForStrategicPartnerBinding himActivityTaskCreationForStrategicPartnerBinding;
+    private ActivityTaskCreationForStrategicPartnerBinding mActivityTaskCreationForStrategicPartnerBinding;
     public BannerImageModel mBannerImageModel;
     TaskCreationForStrategicPartnerPagerAdapter mTaskCreationPagerAdapter;
     private ArrayList<QueAnsModel> mSelectedQuestions;
@@ -53,7 +53,7 @@ public class StrategicPartnerTaskCreationAct extends BaseAppCompatActivity {
     }
 
     @Override
-    protected void initiateUI() {
+    protected void  initiateUI() {
         /**
          * Fetch data from Home Screen(Includes details about strategic Partners
          */
@@ -63,7 +63,7 @@ public class StrategicPartnerTaskCreationAct extends BaseAppCompatActivity {
             mBannerImageModel = (BannerImageModel) Utility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA), BannerImageModel.class);
             if (mBannerImageModel != null) {
                 // Load PRO image
-                Utility.showCircularImageView(mContext, TAG, mActivityTaskCreationForStrategicPartnerBinding.imgLogo, mBannerImageModel.imgCatImageUrl, R.drawable.icon_profile_img_solid, true);
+                Utility.showCircularImageViewBlueBorder(mContext, TAG, mActivityTaskCreationForStrategicPartnerBinding.imgLogo, mBannerImageModel.imgCatImageUrl, R.drawable.icon_profile_img_solid, true);
 
                 Utility.loadImageView(mContext, mActivityTaskCreationForStrategicPartnerBinding.imgService, mBannerImageModel.imgCatImageUrl, R.drawable.gradient_black);
                 isSingleSelection = mBannerImageModel.minimum_selection.equalsIgnoreCase("1");

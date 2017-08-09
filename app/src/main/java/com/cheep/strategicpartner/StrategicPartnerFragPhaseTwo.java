@@ -32,7 +32,6 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -79,6 +78,8 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -98,12 +99,12 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
     private boolean isVerified = false;
     private boolean isTaskDescriptionVerified;
     SuperCalendar startDateTimeSuperCalendar = SuperCalendar.getInstance();
-    public SuperCalendar superCalendar = SuperCalendar.getInstance();
 
     private String mCurrentPhotoPath = "";
     private ImageAdapter imageAdapter;
     int count = 1;
     private ArrayList<QueAnsModel> mList;
+    private DropDownAdapter.ClickItem cliclListener;
 
     @SuppressWarnings("unused")
     public static StrategicPartnerFragPhaseTwo newInstance() {
@@ -184,7 +185,6 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
                     }, 500);
                 } else {
                     mStrategicPartnerTaskCreationAct.isAllQuestionAnswer = false;
-
                 }
             }
         });
@@ -315,6 +315,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
             } else if (model.answerType.equalsIgnoreCase(Utility.TEMPLATE_DROPDOWN)) {
                 inflateAnsDropDownTemplate(model);
             }
+
             count++;
         }
     }
@@ -327,6 +328,9 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
         TextView txtQueStr = queView.findViewById(R.id.txtQueStr);
         txtQueNo.setText(String.valueOf(count));
         txtQueStr.setText(String.valueOf(model.question));
+        TextView txtVerticalLine= queView.findViewById(R.id.txtVerticalLine);
+        if (count == mList.size())
+            txtVerticalLine.setVisibility(View.GONE);
 
         // add question view on top view
         mFragmentStrategicPartnerPhaseTwoBinding.linMain.addView(queView);
@@ -352,6 +356,9 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
         TextView txtQueStr = queView.findViewById(R.id.txtQueStr);
         txtQueNo.setText(String.valueOf(count));
         txtQueStr.setText(String.valueOf(model.question));
+        TextView txtVerticalLine= queView.findViewById(R.id.txtVerticalLine);
+        if (count == mList.size())
+            txtVerticalLine.setVisibility(View.GONE);
 
         // add question view on top view
         mFragmentStrategicPartnerPhaseTwoBinding.linMain.addView(queView);
@@ -377,6 +384,9 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
         txtQueNo.setText(String.valueOf(count));
         txtQueNo.setTag(model.questionId);
         txtQueStr.setText(String.valueOf(model.question));
+        TextView txtVerticalLine= queView.findViewById(R.id.txtVerticalLine);
+        if (count == mList.size())
+            txtVerticalLine.setVisibility(View.GONE);
 
         // add question view on top view
         mFragmentStrategicPartnerPhaseTwoBinding.linMain.addView(queView);
@@ -408,6 +418,9 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
         TextView txtQueStr = queView.findViewById(R.id.txtQueStr);
         txtQueNo.setText(String.valueOf(count));
         txtQueStr.setText(String.valueOf(model.question));
+        TextView txtVerticalLine= queView.findViewById(R.id.txtVerticalLine);
+        if (count == mList.size())
+            txtVerticalLine.setVisibility(View.GONE);
         // add question view on top view
         mFragmentStrategicPartnerPhaseTwoBinding.linMain.addView(queView);
         View view = LayoutInflater.from(mStrategicPartnerTaskCreationAct).inflate(R.layout.layout_template_answer_edit_text, null, false);
@@ -438,6 +451,9 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
         TextView txtQueStr = queView.findViewById(R.id.txtQueStr);
         txtQueNo.setText(String.valueOf(count));
         txtQueStr.setText(String.valueOf(model.question));
+        TextView txtVerticalLine= queView.findViewById(R.id.txtVerticalLine);
+        if (count == mList.size())
+            txtVerticalLine.setVisibility(View.GONE);
 
         // add question view on top view
         mFragmentStrategicPartnerPhaseTwoBinding.linMain.addView(queView);
@@ -456,11 +472,9 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
                     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                         if (view.isShown()) {
                             Log.d(TAG, "onDateSet() called with: view = [" + view + "], year = [" + year + "], monthOfYear = [" + monthOfYear + "], dayOfMonth = [" + dayOfMonth + "]");
-                            startDateTimeSuperCalendar.setTimeInMillis(superCalendar.getTimeInMillis());
                             startDateTimeSuperCalendar.set(Calendar.YEAR, year);
                             startDateTimeSuperCalendar.set(Calendar.MONTH, monthOfYear);
                             startDateTimeSuperCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                            startDateTimeSuperCalendar.setTimeZone(SuperCalendar.SuperTimeZone.GMT.GMT);
                             txtAnswer.setText(startDateTimeSuperCalendar.format(Utility.DATE_FORMAT_DD_MMM));
                             model.answer = startDateTimeSuperCalendar.format(Utility.DATE_FORMAT_DD_MMM);
                             txtQueNo.setSelected(true);
@@ -490,6 +504,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
         TimePickerDialog timePickerDialog = new TimePickerDialog(mStrategicPartnerTaskCreationAct,
                 new TimePickerDialog.OnTimeSetListener() {
 
+
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                         if (view.isShown()) {
@@ -497,37 +512,28 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
 
                             Log.d(TAG, "onTimeSet() called with: view = [" + view + "], hourOfDay = [" + hourOfDay + "], minute = [" + minute + "]");
 
-                            superCalendar.setTimeInMillis(startDateTimeSuperCalendar.getTimeInMillis());
 
-                            superCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
-                            superCalendar.set(Calendar.MINUTE, minute);
+                            startDateTimeSuperCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                            startDateTimeSuperCalendar.set(Calendar.MINUTE, minute);
 
-                            superCalendar.setTimeZone(SuperCalendar.SuperTimeZone.GMT.GMT);
-
-
-                            // Get date-time for next 3 hours
-                            SuperCalendar calAfter3Hours = SuperCalendar.getInstance().getNext3HoursTime();
 
 //                            TODO: mStrategicPartnerTaskCreationAct needs to Be UNCOMMENTED DO NOT FORGET
 //                            if (!BuildConfig.BUILD_TYPE.equalsIgnoreCase(Utility.DEBUG)) {
-                            if (superCalendar.getTimeInMillis() < calAfter3Hours.getTimeInMillis()) {
-                                Utility.showSnackBar("Date Time must be after 3 hour.", mFragmentStrategicPartnerPhaseTwoBinding.linMain);
-                                return;
-                            }
+
 //                            }
 
-                            if (System.currentTimeMillis() < superCalendar.getTimeInMillis()) {
-                                String selectedDateTime = superCalendar.format(Utility.DATE_FORMAT_HH_MM_AM);
-                                textView.setText(selectedDateTime);
-                                textView.setSelected(true);
-                                mStrategicPartnerTaskCreationAct.time = selectedDateTime;
-                                model.answer = String.valueOf(superCalendar.getTimeInMillis());
-                                mFragmentStrategicPartnerPhaseTwoBinding.linMain.findViewWithTag(model.questionId).setSelected(true);
-                            } else {
-                                textView.setText(getString(R.string.label_select_the_time));
-                                textView.setSelected(false);
-                                Utility.showSnackBar("Please enter future  time.", mFragmentStrategicPartnerPhaseTwoBinding.linMain);
-                            }
+//                            if (System.currentTimeMillis() < startDateTimeSuperCalendar.getTimeInMillis()) {
+                            String selectedDateTime = startDateTimeSuperCalendar.format(Utility.DATE_FORMAT_HH_MM_AM);
+                            textView.setText(selectedDateTime);
+                            textView.setSelected(true);
+                            mStrategicPartnerTaskCreationAct.time = selectedDateTime;
+                            model.answer = String.valueOf(startDateTimeSuperCalendar.getTimeInMillis());
+                            mFragmentStrategicPartnerPhaseTwoBinding.linMain.findViewWithTag(model.questionId).setSelected(true);
+//                            } else {
+//                                textView.setText(getString(R.string.label_select_the_time));
+//                                textView.setSelected(false);
+//                                Utility.showSnackBar("Please enter future  time.", mFragmentStrategicPartnerPhaseTwoBinding.linMain);
+//                            }
                         }
                     }
                 }, c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE), false);
@@ -545,19 +551,30 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
         txtQueNo.setText(String.valueOf(count));
         txtQueStr.setText(String.valueOf(model.question));
 
-        // add question view on top view
+        TextView txtVerticalLine= queView.findViewById(R.id.txtVerticalLine);
+        if (count == mList.size())
+            txtVerticalLine.setVisibility(View.GONE);
+
+            // add question view on top view
         mFragmentStrategicPartnerPhaseTwoBinding.linMain.addView(queView);
 
 
         txtQueStr.setText(String.valueOf(model.question));
 
         View view = LayoutInflater.from(mStrategicPartnerTaskCreationAct).inflate(R.layout.layout_template_answer_upload, null, false);
+        final ImageView imgAdd = view.findViewById(R.id.imgAdd);
         RecyclerView recycleImg = view.findViewById(R.id.recycleImg);
         recycleImg.setNestedScrollingEnabled(false);
         recycleImg.setLayoutManager(new LinearLayoutManager(mStrategicPartnerTaskCreationAct, LinearLayoutManager.HORIZONTAL, false));
-        imageAdapter = new ImageAdapter();
+        imageAdapter = new ImageAdapter(new ImageAdapter.ItemClick() {
+            @Override
+            public void removeMedia(int pos) {
+                if (imageAdapter.getItemCount() < 3)
+                    imgAdd.setVisibility(View.VISIBLE);
+
+            }
+        });
         recycleImg.setAdapter(imageAdapter);
-        final ImageView imgAdd = view.findViewById(R.id.imgAdd);
         imgAdd.setTag("AddImage");
         imgAdd.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -804,14 +821,34 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
         final View mFilterPopupWindow = View.inflate(mStrategicPartnerTaskCreationAct, R.layout.layout_template_drop_down_list, null);
 
         final PopupWindow mPopupWindow = new PopupWindow(mStrategicPartnerTaskCreationAct);
-        ListView listView = mFilterPopupWindow.findViewById(R.id.listMultipleChoice);
+        RecyclerView recyclerview = mFilterPopupWindow.findViewById(R.id.listMultipleChoice);
+        recyclerview.setLayoutManager(new LinearLayoutManager(mStrategicPartnerTaskCreationAct));
+
+        Collections.sort(model.dropDownList, new Comparator<QueAnsModel.DropDownModel>() {
+            @Override
+            public int compare(QueAnsModel.DropDownModel abc1, QueAnsModel.DropDownModel abc2) {
+
+                boolean b1 = abc1.isSelected;
+                boolean b2 = abc2.isSelected;
+
+                if (b1 != b2) {
+
+                    if (b1) {
+                        return -1;
+                    }
+
+                    return 1;
+                }
+                return 0;
+
+            }
+        });
 
         final DropDownAdapter dropDownAdapter = new DropDownAdapter(mStrategicPartnerTaskCreationAct, model.dropDownList);
-        listView.setAdapter(dropDownAdapter);
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        recyclerview.setAdapter(dropDownAdapter);
+        this.cliclListener = new DropDownAdapter.ClickItem() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+            public void clickItem(int i) {
                 for (int j = 0; j < model.dropDownList.size(); j++) {
                     QueAnsModel.DropDownModel dropDownModel = model.dropDownList.get(j);
                     dropDownModel.isSelected = i == j;
@@ -824,7 +861,24 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
                 mPopupWindow.dismiss();
 
             }
-        });
+        };
+        dropDownAdapter.setListener(cliclListener);
+//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+//                for (int j = 0; j < model.dropDownList.size(); j++) {
+//                    QueAnsModel.DropDownModel dropDownModel = model.dropDownList.get(j);
+//                    dropDownModel.isSelected = i == j;
+//                }
+//                dropDownAdapter.setSelected(i);
+//                textView.setText(model.dropDownList.get(i).dropdown_answer);
+//                textView.setSelected(true);
+//                model.answer = model.dropDownList.get(i).dropdown_answer;
+//                mFragmentStrategicPartnerPhaseTwoBinding.linMain.findViewWithTag(model.questionId).setSelected(true);
+//                mPopupWindow.dismiss();
+//
+//            }
+//        });
 
         mPopupWindow.setBackgroundDrawable(new BitmapDrawable());
         mPopupWindow.setContentView(mFilterPopupWindow);
@@ -1692,6 +1746,8 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
 
     private boolean doValidation() {
         String message = "";
+        // Get date-time for next 3 hours
+        SuperCalendar calAfter3Hours = SuperCalendar.getInstance().getNext3HoursTime();
         for (int i = 0; i < mList.size(); i++) {
             QueAnsModel queAnsModel = mList.get(i);
             if (queAnsModel.answer == null || queAnsModel.answer.equalsIgnoreCase("")) {
@@ -1702,6 +1758,9 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
                 } else if (queAnsModel.answerType.equalsIgnoreCase(Utility.TEMPLATE_TIME_PICKER)) {
                     message = "Please select the time";
                     Utility.showSnackBar(message, mFragmentStrategicPartnerPhaseTwoBinding.getRoot());
+                    return false;
+                } else if (startDateTimeSuperCalendar.getTimeInMillis() < calAfter3Hours.getTimeInMillis()) {
+                    Utility.showSnackBar("Date Time must be after 3 hour.", mFragmentStrategicPartnerPhaseTwoBinding.linMain);
                     return false;
                 } else if (queAnsModel.answerType.equalsIgnoreCase(Utility.TEMPLATE_DROPDOWN)) {
                     message = "Please answer all the questions";

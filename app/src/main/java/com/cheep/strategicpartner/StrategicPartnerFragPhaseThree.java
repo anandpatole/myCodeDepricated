@@ -9,15 +9,18 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
+import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 
 import com.cheep.R;
 import com.cheep.activity.BaseAppCompatActivity;
+import com.cheep.custom_view.BottomAlertDialog;
 import com.cheep.databinding.FragmentStrategicPartnerPhaseThreeBinding;
 import com.cheep.fragment.BaseFragment;
 import com.cheep.model.UserDetails;
@@ -76,13 +79,13 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
         } else {
             isTaskDescriptionVerified = false;
         }
-
+        mFragmentStrategicPartnerPhaseThreeBinding.txtdesc.setSelected(true);
         mFragmentStrategicPartnerPhaseThreeBinding.scrollView.postDelayed(new Runnable() {
             @Override
             public void run() {
                 mFragmentStrategicPartnerPhaseThreeBinding.scrollView.fullScroll(View.FOCUS_UP);
             }
-        }, 10);
+        }, 5);
         SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder();
         spannableStringBuilder.append(getSpannableString("Your order with ", ContextCompat.getColor(mStrategicPartnerTaskCreationAct, R.color.grey_varient_8), false));
         spannableStringBuilder.append(getSpannableString(mStrategicPartnerTaskCreationAct.mBannerImageModel.name, ContextCompat.getColor(mStrategicPartnerTaskCreationAct, R.color.splash_gradient_end), true));
@@ -118,6 +121,123 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
                 Utility.showToast(mStrategicPartnerTaskCreationAct, "Work in progress!");
             }
         });
+        mFragmentStrategicPartnerPhaseThreeBinding.textpromocodelabel.setTextColor(ContextCompat.getColor(mStrategicPartnerTaskCreationAct, R.color.splash_gradient_end));
+        mFragmentStrategicPartnerPhaseThreeBinding.textpromocodelabel.setText(getResources().getString(R.string.label_enter_promocode));
+
+        mFragmentStrategicPartnerPhaseThreeBinding.textpromocodelabel.setEnabled(true);
+        mFragmentStrategicPartnerPhaseThreeBinding.textpromocodelabel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showCheepCodeDialog();
+            }
+        });
+        mFragmentStrategicPartnerPhaseThreeBinding.imgCheepCodeClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mFragmentStrategicPartnerPhaseThreeBinding.textpromocodelabel.setEnabled(true);
+                cheepCode = null;
+//                if (TextUtils.isEmpty(actualQuotePrice) == false) {
+//                    providerModel.quotePrice = actualQuotePrice;
+//                }
+//                actualQuotePrice = null;
+                mFragmentStrategicPartnerPhaseThreeBinding.imgCheepCodeClose.setVisibility(View.GONE);
+                resetPromocodeValue();
+            }
+        });
+
+    }
+    public void resetPromocodeValue() {
+        mFragmentStrategicPartnerPhaseThreeBinding.textpromocodelabel.setTextColor(ContextCompat.getColor(mStrategicPartnerTaskCreationAct, R.color.splash_gradient_end));
+        mFragmentStrategicPartnerPhaseThreeBinding.textpromocodelabel.setText(getResources().getString(R.string.label_enter_promocode));
+//        if (!TextUtils.isEmpty(providerModel.quotePrice)) {
+//            double taskPaidAmount = getQuotePriceInInteger(providerModel.quotePrice);
+//            double additionalCharges = 0;
+//            double promocodeValue = 0;
+//            double additionalPaidAmount = 0;
+//            if (!TextUtils.isEmpty(taskDetailModel.additionalQuoteAmount)) {
+//                additionalCharges = getQuotePriceInInteger(taskDetailModel.additionalQuoteAmount);
+//            }
+//
+//            if (!TextUtils.isEmpty(taskDetailModel.task_total_amount)) {
+//                double task_total_amount = 0;
+//                double taskPaidAmountTotal = 0;
+//                if (!TextUtils.isEmpty(taskDetailModel.taskPaidAmount)) {
+//                    taskPaidAmountTotal = getQuotePriceInInteger(taskDetailModel.taskPaidAmount);
+//                }
+//                task_total_amount = getQuotePriceInInteger(taskDetailModel.task_total_amount);
+//                promocodeValue = task_total_amount - taskPaidAmountTotal;
+//
+//            }
+//
+//            double subTotal = (taskPaidAmount + additionalCharges);
+//            double totalPayment = (taskPaidAmount + additionalCharges) - promocodeValue;
+//            mFragmentStrategicPartnerPhaseThreeBinding.txtprofee.setText(getString(R.string.ruppe_symbol_x, "" + taskPaidAmount));
+//            mFragmentStrategicPartnerPhaseThreeBinding.txtsubtotal.setText(getString(R.string.ruppe_symbol_x, "" + subTotal));
+//            mFragmentStrategicPartnerPhaseThreeBinding.txttotal.setText(getString(R.string.ruppe_symbol_x, "" + totalPayment));
+//            mFragmentStrategicPartnerPhaseThreeBinding.textPay.setText(getString(R.string.label_pay_fee_v1, "" + totalPayment));
+//            mFragmentStrategicPartnerPhaseThreeBinding.txtpromocode.setText(getString(R.string.ruppe_symbol_x, "" + promocodeValue));
+//
+//            mFragmentStrategicPartnerPhaseThreeBinding.textpromocodelabel.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    showCheepCodeDialog();
+//                }
+//            });
+//        }
+    }
+
+    EditText edtCheepcode;
+    BottomAlertDialog cheepCodeDialog;
+
+    private void showCheepCodeDialog() {
+
+        View view = View.inflate(mContext, R.layout.dialog_add_promocode, null);
+        edtCheepcode = view.findViewById(R.id.edit_cheepcode);
+        cheepCodeDialog = new BottomAlertDialog(mContext);
+        view.findViewById(R.id.btn_apply).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (TextUtils.isEmpty(edtCheepcode.getText().toString())) {
+                    Utility.showToast(mContext, getString(R.string.validate_cheepcode));
+                    return;
+                }
+                validateCheepCode(edtCheepcode.getText().toString());
+            }
+        });
+        cheepCodeDialog.setTitle(getString(R.string.label_cheepcode));
+        cheepCodeDialog.setCustomView(view);
+        cheepCodeDialog.showDialog();
+    }
+
+    private String cheepCode;
+
+    private void validateCheepCode(String s) {
+        if (edtCheepcode != null) {
+            cheepCode = edtCheepcode.getText().toString().trim();
+
+
+            cheepCodeDialog.dismiss();
+
+            String total = "yyyyyy";
+            String discount = "zzzz";
+            String payable = "sdsdad";
+            updatePaymentBtn(total, discount, payable);
+
+        }
+    }
+
+    private void updatePaymentBtn(String total, String discount, String payable) {
+        // setting payable amount as quote price to pay.
+//        providerModel.quotePrice = payable;
+//        mActivityJobSummaryBinding.btnPay.setText(getString(R.string.label_pay_X_X_X, total, discount, payable));
+//        @change only need to show payable amount
+        mFragmentStrategicPartnerPhaseThreeBinding.txtpromocode.setText(getString(R.string.ruppe_symbol_x, "" + discount));
+        mFragmentStrategicPartnerPhaseThreeBinding.txttotal.setText(getString(R.string.ruppe_symbol_x, "" + payable));
+        mFragmentStrategicPartnerPhaseThreeBinding.textPay.setText(getString(R.string.label_pay_fee_v1, payable));
+        mFragmentStrategicPartnerPhaseThreeBinding.textpromocodelabel.setEnabled(false);
+        mFragmentStrategicPartnerPhaseThreeBinding.textpromocodelabel.setText(cheepCode);
+
+        mFragmentStrategicPartnerPhaseThreeBinding.imgCheepCodeClose.setVisibility(View.VISIBLE);
     }
 
     public SpannableStringBuilder getSpannableString(String fullstring, int color, boolean isBold) {

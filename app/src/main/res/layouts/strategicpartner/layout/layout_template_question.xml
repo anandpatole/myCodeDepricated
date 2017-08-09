@@ -11,6 +11,7 @@
         android:layout_height="match_parent">
 
         <TextView
+            android:id="@+id/txtVerticalLine"
             android:layout_width="2dp"
             android:layout_height="match_parent"
             android:layout_below="@+id/txtQueNo"

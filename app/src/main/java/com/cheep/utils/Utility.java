@@ -10,7 +10,13 @@ import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
+import android.graphics.RectF;
 import android.media.MediaMetadataRetriever;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -20,6 +26,7 @@ import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.AppCompatEditText;
 import android.support.v8.renderscript.Allocation;
@@ -653,6 +660,55 @@ public class Utility {
                 .with(context)
                 .load(imageToLoad)
                 .transform(new CircleTransform(context, isRounded, Color.WHITE, 5, imageToLoad, tag))
+                .placeholder(placeholderRes)
+                .error(placeholderRes)
+                .crossFade()
+                .into(img);
+    }
+
+    public static Bitmap getRoundedCornerBitmap(Bitmap bitmap, Context context) {
+//int color, int cornerDips, int borderDips,
+        Bitmap output = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(),
+                Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(output);
+//
+//        final int borderSizePx = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, (float) R.dimen.scale_2dp,
+//                context.getResources().getDisplayMetrics());
+//        final int cornerSizePx = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, (float) R.dimen.scale_5dp,
+//                context.getResources().getDisplayMetrics());
+        final Paint paint = new Paint();
+        final Rect rect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
+        final RectF rectF = new RectF(rect);
+
+        // prepare canvas for transfer
+        paint.setAntiAlias(true);
+        paint.setColor(0xFFFFFFFF);
+        paint.setStyle(Paint.Style.FILL);
+        canvas.drawARGB(0, 0, 0, 0);
+        canvas.drawRoundRect(rectF, 15, 15, paint);
+
+        // draw bitmap
+        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+        canvas.drawBitmap(bitmap, rect, rect, paint);
+
+        // draw border
+        paint.setColor(ContextCompat.getColor(context, R.color.grey_varient_1));
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setStrokeWidth((float) 15);
+        canvas.drawRoundRect(rectF, 15, 15, paint);
+
+        return output;
+    }
+
+    public static void showCircularImageViewBlueBorder(Context context, String tag, ImageView img, String imageToLoad, int placeholderRes, boolean isRounded) {
+        Log.d(TAG, "showCircularImageView() called with: context = [" + context + "], tag = [" + tag + "], img = [" + img + "], imageToLoad = [" + imageToLoad + "], placeholderRes = [" + placeholderRes + "], isRounded = [" + isRounded + "]");
+        if (!isActivityCorrectForGlide(context)) {
+            return;
+        }
+        Glide
+                .with(context)
+                .load(imageToLoad)
+                .transform(new CircleTransform(context, isRounded, ContextCompat.getColor(context, R.color.dark_blue_variant_1), 5, imageToLoad, tag))
                 .placeholder(placeholderRes)
                 .error(placeholderRes)
                 .crossFade()

@@ -1,12 +1,12 @@
 package com.cheep.strategicpartner;
 
+import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.bumptech.glide.Glide;
 import com.cheep.R;
 import com.cheep.utils.Utility;
 
@@ -18,8 +18,10 @@ import java.util.ArrayList;
 
 public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.MyViewHolder> {
     ArrayList<MediaModel> mList = new ArrayList<>();
+    ItemClick mItemClick;
 
-    public ImageAdapter() {
+    public ImageAdapter(ItemClick itemClick) {
+        mItemClick = itemClick;
     }
 
     public void addImage(MediaModel path) {
@@ -52,23 +54,38 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.MyViewHolder
         return mList;
     }
 
+    interface ItemClick {
+        void removeMedia(int pos);
+    }
+
     class MyViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
-        ImageView mImageView = null;
+        ImageView mImgThumb = null;
+        ImageView mImgRemove = null;
 
         public MyViewHolder(View binding) {
             super(binding);
             mView = binding;
-            mImageView = mView.findViewById(R.id.imgMedia);
+            mImgThumb = mView.findViewById(R.id.imgThumb);
+            mImgRemove = mView.findViewById(R.id.imgRemove);
+            mImgRemove.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mList.remove(getAdapterPosition());
+                    notifyDataSetChanged();
+                    mItemClick.removeMedia(getAdapterPosition());
+                }
+            });
         }
 
         void bind(MediaModel mediaModel) {
             if (mediaModel.type == MediaModel.MediaType.IMAGE)
-                Glide.with(mImageView.getContext())
-                        .load(mediaModel.path).into(mImageView);
+//                Utility.showCircularImageView(mImgThumb.getContext(), "Image", mImgThumb, mediaModel.path, R.drawable.ic_camera, true);
+//                Glide.with(mImgThumb.getContext()).load(mediaModel.path).into(mImgThumb);
+                mImgThumb.setImageBitmap(Utility.getRoundedCornerBitmap(BitmapFactory.decodeFile(mediaModel.path), mImgThumb.getContext()));
             else
                 try {
-                    mImageView.setImageBitmap(Utility.getVideoThumbnail(mediaModel.path));
+                    mImgThumb.setImageBitmap(Utility.getVideoThumbnail(mediaModel.path));
                 } catch (Throwable throwable) {
                     throwable.printStackTrace();
                 }

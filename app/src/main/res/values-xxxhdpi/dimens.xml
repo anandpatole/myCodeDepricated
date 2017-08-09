@@ -13,4 +13,8 @@
     <dimen name="w_text_view_picker">160dp</dimen>
     136
     <dimen name="h_text_view_picker">34dp</dimen>
+    300
+    <dimen name="h_camera_que_fragment">75dp</dimen>
+    183
+    <dimen name="h_book_and_pay">45.75dp</dimen>
 </resources>

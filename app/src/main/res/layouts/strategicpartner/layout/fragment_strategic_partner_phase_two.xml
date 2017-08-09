@@ -33,7 +33,7 @@
         <com.cheep.custom_view.CFTextViewSemiBold
             android:id="@+id/text_continue"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/h_book_and_pay"
             android:layout_alignParentBottom="true"
             android:layout_gravity="bottom"
             android:background="@color/grey_varient_12"
