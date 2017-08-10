@@ -63,41 +63,49 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
+import static com.cheep.utils.LogUtils.LOGI;
+import static com.cheep.utils.LogUtils.makeLogTag;
 
+/**
+ * Created by Bhavesh Patadiya on 25/5/15.
+ * Activity related to Chatting screen and its features.
+ */
 public class ChatActivity extends BaseAppCompatActivity implements View.OnClickListener {
-    private static final String TAG = ChatActivity.class.getSimpleName();
+
+    // Constants
+    private static final String TAG = makeLogTag(ChatActivity.class);
+    public static final String CHAT_STATUS_YES = "yes";
+    public static final String CHAT_STATUS_NO = "no";
+
     private ActivityChatBinding mActivityChatBinding;
     private LinearLayoutManager mLinearLayoutManager;
     private ChatMessageRecyclerViewAdapter chatMessageRecyclerViewAdapter;
     private TaskChatModel taskChatModel;
-
     private UserDetails mUserDetails;
 
     private String mChatId = "";
     private String formattedTaskId = "";
     private String formattedSenderId = "";
     private String formattedReceiverId = "";
+    private String mCurrentChatStatus = CHAT_STATUS_YES;
     private String mSelectedMediaPath = "";
 
     private boolean isSendClick = false;
-
     private boolean isLoaded = false;
     private boolean hasMoreRecord = true;
-
     private boolean isBackPressed = false;
 
-    // For managing Chat Status
-    private String mCurrentChatStatus = CHAT_STATUS_YES;
-    public static final String CHAT_STATUS_YES = "yes";
-    public static final String CHAT_STATUS_NO = "no";
-
-
-    public static void newInstance(Context context, TaskChatModel chatModel) {
+    /**
+     * This would start the @{@link ChatActivity}
+     *
+     * @param context       context to start start the activity
+     * @param taskChatModel @{@link TaskChatModel} so that activity can be initialized accordingly.
+     */
+    public static void newInstance(Context context, TaskChatModel taskChatModel) {
         Intent intent = new Intent(context, ChatActivity.class);
-        intent.putExtra(Utility.Extra.DATA, Utility.getJsonStringFromObject(chatModel));
+        intent.putExtra(Utility.Extra.DATA, Utility.getJsonStringFromObject(taskChatModel));
         context.startActivity(intent);
     }
 
@@ -111,46 +119,137 @@ public class ChatActivity extends BaseAppCompatActivity implements View.OnClickL
         addMessageListener();
     }
 
-    /**
-     * Read data from previous page
-     */
-    private void initDATA() {
-        mUserDetails = PreferenceUtility.getInstance(ChatActivity.this).getUserDetails();
-        taskChatModel = (TaskChatModel) Utility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA), TaskChatModel.class);
-        if (taskChatModel != null && mUserDetails != null) {
-            formattedTaskId = FirebaseUtils.getPrefixTaskId(taskChatModel.taskId);
-            formattedSenderId = FirebaseUtils.getPrefixUserId(mUserDetails.UserID);
-            if (taskChatModel.senderId.startsWith("SP")) {
-                formattedReceiverId = FirebaseUtils.getPrefixSPId(taskChatModel.senderId);
-            } else {
-                formattedReceiverId = FirebaseUtils.getPrefixSPId(taskChatModel.receiverId);
-            }
-            mChatId = FirebaseUtils.get_T_SP_U_FormattedId(formattedTaskId, formattedReceiverId, formattedSenderId);
-            Utility.CURRENT_CHAT_ID = mChatId;
-            sendMessageViewBroadcast(mChatId);
+
+    @Override
+    protected void onPause() {
+        // We will only update unread counter incase user backpressed via back button.
+        if (!isBackPressed) {
+            updateUnreadCount();
+        }
+        super.onPause();
+    }
+
+    @Override
+    public void onClick(View view) {
+        /**
+         * Click event of buttons from the screens.
+         */
+        switch (view.getId()) {
+            case R.id.img_media:
+                // Show Media choosed dialog that would let the user choose the image.
+                showMediaChooserDialog();
+                break;
+            case R.id.icon_filter:
+                break;
+            case R.id.text_send:
+                if (!TextUtils.isEmpty(mActivityChatBinding.editMessage.getText().toString().trim())) {
+                    sendMessage(Utility.CHAT_TYPE_MESSAGE);
+                }
+                break;
         }
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        /**
+         * Manage several Request code and act accordingly.
+         */
+        switch (requestCode) {
+            case Utility.REQUEST_CODE_IMAGE_CAPTURE_CHAT_MEDIA:
+                if (resultCode == RESULT_OK)
+                    displayAndUploadFile();
+                break;
+            case Utility.REQUEST_CODE_GET_FILE_CHAT_MEDIA_GALLERY:
+                if (resultCode == RESULT_OK) {
+                    mSelectedMediaPath = Utility.getPath(ChatActivity.this, data.getData());
+                    displayAndUploadFile();
+                }
+                break;
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        /**
+         * Manage Request permission code and act accordingly.
+         */
+        switch (requestCode) {
+            case Utility.REQUEST_CODE_READ_EXTERNAL_STORAGE_CHAT_MEDIA:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    startIntentFileChooser(Utility.REQUEST_CODE_GET_FILE_CHAT_MEDIA);
+                } else if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_DENIED) {
+                    Utility.showSnackBar(getString(R.string.permission_denied_read), mActivityChatBinding.getRoot());
+                }
+                break;
+            case Utility.REQUEST_CODE_READ_EXTERNAL_STORAGE_CHAT_MEDIA_GALLERY:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    startIntentFileChooser(Utility.REQUEST_CODE_GET_FILE_CHAT_MEDIA_GALLERY);
+                } else if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_DENIED) {
+                    Utility.showSnackBar(getString(R.string.permission_denied_read), mActivityChatBinding.getRoot());
+                }
+                break;
+            case Utility.REQUEST_CODE_CHAT_MEDIA_CAMERA:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    startCameraCaptureChooser(Utility.REQUEST_CODE_IMAGE_CAPTURE_CHAT_MEDIA);
+                } else if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_DENIED) {
+                    Utility.showSnackBar(getString(R.string.permission_denied_camera), mActivityChatBinding.getRoot());
+                }
+                break;
+        }
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        // Reset the values to default when activity is about to destroy.
+        Utility.CURRENT_CHAT_ID = "";
+        isBackPressed = true;
+        updateUnreadCount();
+        super.onBackPressed();
+    }
+
+    @Override
+    protected void onDestroy() {
+        // unregister all receivers
+        removeMessageListener();
+
+        // Cancel all running network calls in case any of them is running even after android.app.Activity destroyed
+        Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.WS.IMAGE_UPLOAD_FOR_CHAT);
+        Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.WS.CHECK_TASK_STATUS);
+
+        // Call Super method now.
+        super.onDestroy();
+    }
+
+    @Override
     protected void initiateUI() {
+        // Setting background image at runtime in order to override background set by @android.content.res.Resources.Theme
         getWindow().setBackgroundDrawableResource(R.drawable.ic_chat_back);
+
+        // Setup actionbar
         setSupportActionBar(mActivityChatBinding.toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setTitle(Utility.EMPTY_STRING);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
+
+        // Manage event when back arrow from @android.support.v7.widget.Toolbar pressed.
         mActivityChatBinding.toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // Call default back pressed event
                 onBackPressed();
             }
         });
 
+        // Update UI
         if (taskChatModel != null) {
             mActivityChatBinding.textTitle.setText(taskChatModel.participantName);
         }
 
-        //Setting adapter on recycler view
+        //Setting data in @RecyclerView
         chatMessageRecyclerViewAdapter = new ChatMessageRecyclerViewAdapter(ChatActivity.this);
         mLinearLayoutManager = new LinearLayoutManager(mContext);
         mLinearLayoutManager.setStackFromEnd(true);
@@ -158,17 +257,30 @@ public class ChatActivity extends BaseAppCompatActivity implements View.OnClickL
         mActivityChatBinding.recyclerView.setAdapter(chatMessageRecyclerViewAdapter);
         mActivityChatBinding.recyclerView.scrollToPosition(chatMessageRecyclerViewAdapter.getItemCount());
 
-        Utility.showCircularImageView(mContext, TAG, mActivityChatBinding.imgProfile, taskChatModel.participantPhotoUrl, Utility.DEFAULT_PROFILE_SRC);
+        // Load User image
+        Utility.showCircularImageView(mContext,
+                TAG,
+                mActivityChatBinding.imgProfile,
+                taskChatModel.participantPhotoUrl,
+                Utility.DEFAULT_PROFILE_SRC);
 
         // By Default its YES, so message would be EMPTY STRING.
         enableChatAccess(mCurrentChatStatus, Utility.EMPTY_STRING);
 
+        /**
+         * We need to check whether user would be allow to chat with other person now.
+         * In case Task is @{@link com.cheep.utils.Utility.TASK_STATUS}"completed/cancelled/.." scenarios we need to show proper message
+         * and do not allow the user.
+         */
         checkTaskStatus(FirebaseUtils.removePrefixTaskId(taskChatModel.taskId), FirebaseUtils.removePrefixSpId(formattedReceiverId));
     }
 
     @Override
     protected void setListeners() {
-
+        /**
+         * set @RecyclerView.OnScrollListener to {@link RecyclerView} to manage loading more content on
+         * scrolling the chat upwords
+         */
         mActivityChatBinding.recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
@@ -188,27 +300,48 @@ public class ChatActivity extends BaseAppCompatActivity implements View.OnClickL
         });
     }
 
-    @Override
-    protected void onPause() {
-        if (isBackPressed == false) {
-            updateUnreadCount();
+
+    /**
+     * Initiate the firebase session using @{@link TaskChatModel} from intent extras.
+     */
+    private void initDATA() {
+        mUserDetails = PreferenceUtility.getInstance(ChatActivity.this).getUserDetails();
+        taskChatModel = (TaskChatModel) Utility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA), TaskChatModel.class);
+
+        if (taskChatModel != null && mUserDetails != null) {
+            formattedTaskId = FirebaseUtils.getPrefixTaskId(taskChatModel.taskId);
+            formattedSenderId = FirebaseUtils.getPrefixUserId(mUserDetails.UserID);
+
+            if (taskChatModel.senderId.startsWith("SP")) {
+                formattedReceiverId = FirebaseUtils.getPrefixSPId(taskChatModel.senderId);
+            } else {
+                formattedReceiverId = FirebaseUtils.getPrefixSPId(taskChatModel.receiverId);
+            }
+
+            mChatId = FirebaseUtils.get_T_SP_U_FormattedId(formattedTaskId, formattedReceiverId, formattedSenderId);
+            Utility.CURRENT_CHAT_ID = mChatId;
+            sendMessageViewBroadcast(mChatId);
         }
-        super.onPause();
     }
 
-    @Override
-    public void onBackPressed() {
-        Utility.CURRENT_CHAT_ID = "";
-        isBackPressed = true;
-        updateUnreadCount();
-        super.onBackPressed();
-    }
 
+    /**
+     * This method would update the unread count and update the UI accordingly.
+     */
     private void updateUnreadCount() {
-        if (!TextUtils.isEmpty(formattedSenderId) && !TextUtils.isEmpty(mChatId)) {
+        // Check whether either of them @formattedSenderId or @mChatId is null or not, if any of them
+        // is null then return, else go ahead.
+        if (!TextUtils.isEmpty(formattedSenderId)
+                && !TextUtils.isEmpty(mChatId)) {
+
+            // Set Listener for receiving any unreadchat count badge.
             FirebaseHelper.getRecentChatRef(formattedSenderId).child(mChatId).child(FirebaseHelper.KEY_UNREADCOUNT).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
+
+                    /**
+                     * Check if received data is proper and not Null or empty.
+                     */
                     if (dataSnapshot.exists()) {
                         long unreadCount = (long) dataSnapshot.getValue();
                         if (unreadCount > 0) {
@@ -237,12 +370,17 @@ public class ChatActivity extends BaseAppCompatActivity implements View.OnClickL
 
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
-
+                    // Do nothing here.
                 }
             });
         }
     }
 
+    /**
+     * This would update recent chat listing unread count.
+     *
+     * @param taskId TaskId of the task.
+     */
     private void updateRecentChatTaskUnreadCount(final String taskId) {
         final DatabaseReference databaseReference = FirebaseHelper.getTaskChatRef(taskId);
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -258,7 +396,6 @@ public class ChatActivity extends BaseAppCompatActivity implements View.OnClickL
                             }
                         }
                     }
-                    ;
                     final DatabaseReference databaseReference = FirebaseHelper.getRecentChatRef(formattedSenderId);
                     databaseReference.child(taskId).child(FirebaseHelper.KEY_UNREADCOUNT).setValue(unreadCount);
                 }
@@ -272,6 +409,12 @@ public class ChatActivity extends BaseAppCompatActivity implements View.OnClickL
     }
 
 
+    /**
+     * It would broadcast the information to @{@link MyFirebaseMessagingService} in order to manage notification
+     * mapping.
+     *
+     * @param mChatId unique id of conversation, we are using @mChatId
+     */
     private void sendMessageViewBroadcast(String mChatId) {
         if (!TextUtils.isEmpty(mChatId)) {
             if (MyFirebaseMessagingService.mapMessages != null && MyFirebaseMessagingService.mapMessages.size() > 0) {
@@ -281,75 +424,80 @@ public class ChatActivity extends BaseAppCompatActivity implements View.OnClickL
         }
     }
 
-    @Override
-    protected void onDestroy() {
-        removeMessageListener();
-        Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.WS.IMAGE_UPLOAD_FOR_CHAT);
-        Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.WS.CHECK_TASK_STATUS);
-        super.onDestroy();
-    }
 
     /**
-     * used to get last 20 messages and set message update listener
+     * This method is used to get last 20 messages and set message.
+     * It would also update listener.
      */
     public void addMessageListener() {
         mActivityChatBinding.srlMessages.setRefreshing(true);
+
         final DatabaseReference databaseReference = FirebaseHelper.getMessagesRef(mChatId);
-        databaseReference.limitToLast(Utility.CHAT_PAGINATION_RECORD_LIMIT).orderByChild(FirebaseHelper.KEY_TIMESTAMP).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                isLoaded = false;
-                mActivityChatBinding.srlMessages.setRefreshing(false);
-                mActivityChatBinding.srlMessages.setEnabled(false);
-                if (dataSnapshot.getValue() != null && dataSnapshot.getChildrenCount() > 0) {
-                    hasMoreRecord = true;
-                    if (dataSnapshot.getChildrenCount() < Utility.CHAT_PAGINATION_RECORD_LIMIT) {
-                        hasMoreRecord = false;
-                    }
-                    for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                        if (ds.exists() && ds.getValue() != null) {
-                            TaskChatMessageModel message = ds.getValue(TaskChatMessageModel.class);
-                            if (message != null) {
-                                //tvNoData.setVisibility(View.GONE);
-                                chatMessageRecyclerViewAdapter.appendNewMessage(message);
-                                mActivityChatBinding.recyclerView.smoothScrollToPosition(chatMessageRecyclerViewAdapter.getItemCount() - 1);
+
+        databaseReference
+                .limitToLast(Utility.CHAT_PAGINATION_RECORD_LIMIT)
+                .orderByChild(FirebaseHelper.KEY_TIMESTAMP)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+
+                        isLoaded = false;
+                        mActivityChatBinding.srlMessages.setRefreshing(false);
+                        mActivityChatBinding.srlMessages.setEnabled(false);
+
+                        if (dataSnapshot.getValue() != null && dataSnapshot.getChildrenCount() > 0) {
+                            hasMoreRecord = dataSnapshot.getChildrenCount() >= Utility.CHAT_PAGINATION_RECORD_LIMIT;
+
+                            for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                                if (ds.exists() && ds.getValue() != null) {
+                                    TaskChatMessageModel message = ds.getValue(TaskChatMessageModel.class);
+                                    if (message != null) {
+                                        //tvNoData.setVisibility(View.GONE);
+                                        chatMessageRecyclerViewAdapter.appendNewMessage(message);
+                                        mActivityChatBinding.recyclerView.smoothScrollToPosition(chatMessageRecyclerViewAdapter.getItemCount() - 1);
+                                    }
+                                }
                             }
+
+                            final Long mLastTimestamp = chatMessageRecyclerViewAdapter.getLastTimestamp();
+                            Query query = databaseReference.orderByChild(FirebaseHelper.KEY_TIMESTAMP).startAt(mLastTimestamp + 1);
+                            query.addChildEventListener(messageChildEventListener);
+                        } else {
+                            Query query = databaseReference.orderByChild(FirebaseHelper.KEY_TIMESTAMP);
+                            query.addChildEventListener(messageChildEventListener);
                         }
                     }
-                    final Long mLastTimestamp = chatMessageRecyclerViewAdapter.getLastTimestamp();
-                    Query query = databaseReference.orderByChild(FirebaseHelper.KEY_TIMESTAMP).startAt(mLastTimestamp + 1);
-                    query.addChildEventListener(messageChildEventListener);
-                } else {
-                    Query query = databaseReference.orderByChild(FirebaseHelper.KEY_TIMESTAMP);
-                    query.addChildEventListener(messageChildEventListener);
-                }
-            }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                mActivityChatBinding.srlMessages.setRefreshing(false);
-                mActivityChatBinding.srlMessages.setEnabled(true);
-            }
-        });
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        mActivityChatBinding.srlMessages.setRefreshing(false);
+                        mActivityChatBinding.srlMessages.setEnabled(true);
+                    }
+                });
     }
 
     /**
-     * used to remove message listener
+     * This would remove the earlier set Message Listener
      */
     public void removeMessageListener() {
         DatabaseReference databaseReference = FirebaseHelper.getMessagesRef(mChatId);
         databaseReference.removeEventListener(messageChildEventListener);
     }
 
+    /**
+     * Implementation of {@link ChildEventListener} which would provide callback on specific events
+     * This would also update the UI Accordingly.
+     */
     ChildEventListener messageChildEventListener = new ChildEventListener() {
         @Override
         public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+            // Check whether its null or not.
             if (dataSnapshot.getValue() != null) {
+
                 TaskChatMessageModel message = dataSnapshot.getValue(TaskChatMessageModel.class);
                 if (message != null) {
-                    //tvNoData.setVisibility(View.GONE);
                     chatMessageRecyclerViewAdapter.appendNewMessage(message);
-                    if (isSendClick == true) {
+                    if (isSendClick) {
                         mActivityChatBinding.recyclerView.smoothScrollToPosition(chatMessageRecyclerViewAdapter.getItemCount() - 1);
                         isSendClick = false;
                     } else if (mLinearLayoutManager.findLastVisibleItemPosition() == mLinearLayoutManager.getItemCount() - 2) {
@@ -381,33 +529,21 @@ public class ChatActivity extends BaseAppCompatActivity implements View.OnClickL
 
         @Override
         public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
+            // Do nothing.
         }
 
         @Override
         public void onCancelled(DatabaseError databaseError) {
-
+            // Do nothing.
         }
     };
 
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.img_media:
-                showMediaChooserDialog();
-                break;
-
-            case R.id.icon_filter:
-                break;
-
-            case R.id.text_send:
-                if (!TextUtils.isEmpty(mActivityChatBinding.editMessage.getText().toString().trim())) {
-                    sendMessage(Utility.CHAT_TYPE_MESSAGE);
-                }
-                break;
-        }
-    }
-
+    /**
+     * Load mode data to @{@link RecyclerView} when it scrolled upwards.
+     *
+     * @param lastTimestamp time stamp of last fetched chat.
+     *                      it would fetch earlier chat before mentioned timestamp.
+     */
     private void loadMoreData(final long lastTimestamp) {
         if (lastTimestamp > 0) {
             chatMessageRecyclerViewAdapter.showProgressBar();
@@ -419,10 +555,7 @@ public class ChatActivity extends BaseAppCompatActivity implements View.OnClickL
                     chatMessageRecyclerViewAdapter.hideProgressBar();
                     isLoaded = false;
                     if (dataSnapshot.getValue() != null && dataSnapshot.getChildrenCount() > 0) {
-                        hasMoreRecord = true;
-                        if (dataSnapshot.getChildrenCount() < Utility.CHAT_PAGINATION_RECORD_LIMIT) {
-                            hasMoreRecord = false;
-                        }
+                        hasMoreRecord = dataSnapshot.getChildrenCount() >= Utility.CHAT_PAGINATION_RECORD_LIMIT;
                         List<TaskChatMessageModel> messageModelList = new ArrayList<>();
                         for (DataSnapshot ds : dataSnapshot.getChildren()) {
                             if (ds.exists() && ds.getValue() != null) {
@@ -448,15 +581,22 @@ public class ChatActivity extends BaseAppCompatActivity implements View.OnClickL
     }
 
     /**
-     * send text message
+     * Sent Message to Firebase(only for text)
+     *
+     * @param chatType Input text
      */
     public void sendMessage(String chatType) {
-        sendMessage(chatType, "", "");
+        // Sent message with only text and Empty string for others.
+        sendMessage(chatType, Utility.EMPTY_STRING, Utility.EMPTY_STRING);
     }
-    /*
-    * send media
-    * */
 
+    /**
+     * Sent message to Firebase ( for Media(images) )
+     *
+     * @param chatType      Type of chat
+     * @param mediaUrl      Media Path
+     * @param mediaThumbUrl Thumb image path of media
+     */
     public void sendMessage(String chatType, String mediaUrl, String mediaThumbUrl) {
         if (!Utility.isConnected(mContext)) {
             Utility.showSnackBar(getString(R.string.no_internet), mActivityChatBinding.getRoot());
@@ -466,40 +606,50 @@ public class ChatActivity extends BaseAppCompatActivity implements View.OnClickL
             return;
         }
 
+        // Manage @TaskChatMessageModel in order to provide the same to Firebase
         final TaskChatMessageModel chatMessageModel = new TaskChatMessageModel();
         chatMessageModel.chatId = mChatId;
         chatMessageModel.taskId = formattedTaskId;
+        chatMessageModel.messageType = chatType;
+        chatMessageModel.receiverId = formattedReceiverId;
+        chatMessageModel.senderId = formattedSenderId;
+        /**
+         * We will set message in case @chatType is @{@link Utility.CHAT_TYPE_MESSAGE}
+         * and will set media & thumb url in case @chatType is @{@link Utility.CHAT_TYPE_MEDIA}
+         */
         if (chatType.equalsIgnoreCase(Utility.CHAT_TYPE_MESSAGE)) {
             chatMessageModel.message = mActivityChatBinding.editMessage.getText().toString().trim();
         } else if (chatType.equalsIgnoreCase(Utility.CHAT_TYPE_MEDIA)) {
             chatMessageModel.mediaUrl = mediaUrl;
             chatMessageModel.mediaThumbUrl = mediaThumbUrl;
         }
-        chatMessageModel.messageType = chatType;
-        chatMessageModel.receiverId = formattedReceiverId;
-        chatMessageModel.senderId = formattedSenderId;
+
         String key = FirebaseHelper.getMessagesRef(chatMessageModel.chatId).push().getKey();
         chatMessageModel.messageId = key;
 
         FirebaseHelper.getMessagesRef(chatMessageModel.chatId).child(key).setValue(chatMessageModel);
         FirebaseHelper.getMessageQueueRef().push().setValue(chatMessageModel);
 
+
+        // Manage @TaskChatModel
         final TaskChatModel taskChatModel = new TaskChatModel();
         taskChatModel.chatId = chatMessageModel.chatId;
         taskChatModel.taskId = chatMessageModel.taskId;
+        taskChatModel.messageId = chatMessageModel.messageId;
+        taskChatModel.senderId = chatMessageModel.senderId;
+        taskChatModel.receiverId = chatMessageModel.receiverId;
+        taskChatModel.messageType = chatMessageModel.messageType;
+        taskChatModel.unreadCount = 0;
+        /**
+         * We will set message in case @chatType is @{@link Utility.CHAT_TYPE_MESSAGE}
+         * and will set media & thumb url in case @chatType is @{@link Utility.CHAT_TYPE_MEDIA}
+         */
         if (chatType.equalsIgnoreCase(Utility.CHAT_TYPE_MESSAGE)) {
             taskChatModel.message = chatMessageModel.message;
         } else if (chatType.equalsIgnoreCase(Utility.CHAT_TYPE_MEDIA)) {
             taskChatModel.mediaUrl = mediaUrl;
             taskChatModel.mediaThumbUrl = mediaThumbUrl;
         }
-        taskChatModel.messageId = chatMessageModel.messageId;
-        taskChatModel.senderId = chatMessageModel.senderId;
-        taskChatModel.receiverId = chatMessageModel.receiverId;
-
-        taskChatModel.messageType = chatMessageModel.messageType;
-        taskChatModel.unreadCount = 0;
-
         FirebaseHelper.getRecentChatRef(formattedReceiverId).child(chatMessageModel.chatId).child(FirebaseHelper.KEY_UNREADCOUNT).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -546,6 +696,8 @@ public class ChatActivity extends BaseAppCompatActivity implements View.OnClickL
 
             }
         });
+
+        // Set up edit lable based on @chatType
         if (chatType.equalsIgnoreCase(Utility.CHAT_TYPE_MESSAGE)) {
             mActivityChatBinding.editMessage.setText(Utility.EMPTY_STRING);
         } else if (chatType.equalsIgnoreCase(Utility.CHAT_TYPE_MEDIA)) {
@@ -562,49 +714,10 @@ public class ChatActivity extends BaseAppCompatActivity implements View.OnClickL
         }
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == Utility.REQUEST_CODE_IMAGE_CAPTURE_CHAT_MEDIA && resultCode == RESULT_OK) {
-            Log.i(TAG, "onActivityResult: CurrentPath" + mSelectedMediaPath);
-            displayAndUploadFile();
-        } else if (requestCode == Utility.REQUEST_CODE_GET_FILE_CHAT_MEDIA_GALLERY && resultCode == RESULT_OK) {
-            Log.i(TAG, "onActivityResult: " + data.getData().toString());
-            mSelectedMediaPath = Utility.getPath(ChatActivity.this, data.getData());
-            displayAndUploadFile();
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == Utility.REQUEST_CODE_READ_EXTERNAL_STORAGE_CHAT_MEDIA) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Log.i(TAG, "onRequestPermissionsResult: Permission Granted");
-                startIntentFileChooser(Utility.REQUEST_CODE_GET_FILE_CHAT_MEDIA);
-            } else if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_DENIED) {
-                Log.i(TAG, "onRequestPermissionsResult: Permission Denied");
-                Utility.showSnackBar(getString(R.string.permission_denied_read), mActivityChatBinding.getRoot());
-            }
-        } else if (requestCode == Utility.REQUEST_CODE_READ_EXTERNAL_STORAGE_CHAT_MEDIA_GALLERY) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Log.i(TAG, "onRequestPermissionsResult: Permission Granted");
-                startIntentFileChooser(Utility.REQUEST_CODE_GET_FILE_CHAT_MEDIA_GALLERY);
-            } else if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_DENIED) {
-                Log.i(TAG, "onRequestPermissionsResult: Permission Denied");
-                Utility.showSnackBar(getString(R.string.permission_denied_read), mActivityChatBinding.getRoot());
-            }
-        } else if (requestCode == Utility.REQUEST_CODE_CHAT_MEDIA_CAMERA) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Log.i(TAG, "onRequestPermissionsResult: Permission Granted");
-                startCameraCaptureChooser(Utility.REQUEST_CODE_IMAGE_CAPTURE_CHAT_MEDIA);
-            } else if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_DENIED) {
-                Log.i(TAG, "onRequestPermissionsResult: Permission Denied Camera");
-                Utility.showSnackBar(getString(R.string.permission_denied_camera), mActivityChatBinding.getRoot());
-            }
-        }
-    }
-
+    /**
+     * This would show @{@link AlertDialog} to the user asking him selecting whether media needs to be
+     * fetched from Camera or Gallery
+     */
     private void showMediaChooserDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
         builder.setTitle(R.string.choose_image)
@@ -625,6 +738,13 @@ public class ChatActivity extends BaseAppCompatActivity implements View.OnClickL
         builder.show();
     }
 
+    /**
+     * This would check whether permission is granted or not.
+     * If permission is granted, app would ask abour camera or gallery dialog.
+     *
+     * @param requestCode           RequestCode whether user started go for camera or gallery
+     * @param requestPermissionCode RequestCode for particular permission that needs to be checked.
+     */
     private void dispatchTakePictureIntent(int requestCode, int requestPermissionCode) {
         //Go ahead with Camera capturing
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
@@ -639,6 +759,11 @@ public class ChatActivity extends BaseAppCompatActivity implements View.OnClickL
         }
     }
 
+    /**
+     * Start capturing image from Camera
+     *
+     * @param requestCode requestCode so that we can track the same in @onActivityResult when needed.
+     */
     public void startCameraCaptureChooser(int requestCode) {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // Ensure that there's a camera activity to handle the intent
@@ -690,6 +815,12 @@ public class ChatActivity extends BaseAppCompatActivity implements View.OnClickL
         }
     }
 
+    /**
+     * Creating a file
+     *
+     * @return File object that can be used later on.
+     * @throws IOException
+     */
     public File createImageFile() throws IOException {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss"/*, Locale.US*/).format(new Date());
@@ -699,6 +830,13 @@ public class ChatActivity extends BaseAppCompatActivity implements View.OnClickL
         return photoFile;
     }
 
+    /**
+     * This would check whether permission is granted or not.
+     * If permission is granted, app would ask abour camera or gallery dialog.
+     *
+     * @param requestFileChooserCode RequestCode whether user started go for camera or gallery
+     * @param requestPermissionCode  RequestCode for particular permission that needs to be checked.
+     */
     public void choosePictureFromGallery(int requestFileChooserCode, int requestPermissionCode) {
         Log.d(TAG, "choosePictureFromGallery() called with: requestFileChooserCode = [" + requestFileChooserCode + "], requestPermissionCode = [" + requestPermissionCode + "]");
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
@@ -713,6 +851,11 @@ public class ChatActivity extends BaseAppCompatActivity implements View.OnClickL
         }
     }
 
+    /**
+     * redirecting the user to gallery to let him/her selects the picture
+     *
+     * @param requestCode RequestCode whether user started go for camera or gallery
+     */
     public void startIntentFileChooser(int requestCode) {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("*/*");
@@ -723,6 +866,18 @@ public class ChatActivity extends BaseAppCompatActivity implements View.OnClickL
         }
     }
 
+    /***********************************************************************************************
+     ***********************************************************************************************
+     ************************[Image Upload for Chat ] [Start]***************************************
+     ***********************************************************************************************
+     ***********************************************************************************************/
+    /**
+     * Once image is selected(Camera or Gallery) app would call this method in order to
+     * upload the image.
+     *
+     * @param imagePath Absolute path of selected media file.
+     */
+    @SuppressWarnings("unchecked")
     public void uploadImage(String imagePath) {
         if (!Utility.isConnected(mContext)) {
             Utility.showSnackBar(getString(R.string.no_internet), mActivityChatBinding.getRoot());
@@ -751,11 +906,13 @@ public class ChatActivity extends BaseAppCompatActivity implements View.OnClickL
 
     }
 
+    /**
+     * Implementing Error callback interface
+     */
     private final Response.ErrorListener mCallChatImageUploadErrorListener = new Response.ErrorListener() {
         @Override
         public void onErrorResponse(VolleyError error) {
-            Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
-
+            LOGI(TAG, "onErrorResponse() called with: error = [" + error + "]");
             // Close Progressbar
             hideProgressDialog();
 
@@ -764,13 +921,16 @@ public class ChatActivity extends BaseAppCompatActivity implements View.OnClickL
         }
     };
 
+    /**
+     * Implementing success callback interface
+     */
     private final Response.Listener mCallChatImageUploadWSResponseListener = new Response.Listener() {
         @Override
         public void onResponse(Object response) {
             String strResponse = (String) response;
             try {
                 JSONObject jsonObject = new JSONObject(strResponse);
-                Log.i(TAG, "onResponse: " + jsonObject.toString());
+                LOGI(TAG, "onResponse: " + jsonObject.toString());
                 int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
                 switch (statusCode) {
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
@@ -798,12 +958,23 @@ public class ChatActivity extends BaseAppCompatActivity implements View.OnClickL
             hideProgressDialog();
         }
     };
-
+    /***********************************************************************************************
+     ***********************************************************************************************
+     ************************[Image Upload for Chat ] [End]*****************************************
+     ***********************************************************************************************
+     ***********************************************************************************************/
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    //////////////////////////  Check Task Status [TASK_STATUS] ////////////////////////////////////
+    //////////////////////////  Check Task Status [Start] //////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
+    /**
+     * Web Call in order to check current status of Task.
+     * Based on that app would going to change UI.
+     *
+     * @param taskID   TaskId for which chat is going on.
+     * @param spUserID PRO userId with whom user is chatting with.
+     */
     public void checkTaskStatus(String taskID, String spUserID) {
         if (!Utility.isConnected(mContext)) {
             Utility.showSnackBar(getString(R.string.no_internet), mActivityChatBinding.getRoot());
@@ -928,8 +1099,7 @@ public class ChatActivity extends BaseAppCompatActivity implements View.OnClickL
             }
         }
     }
-
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    //////////////////////////  Check Task Status [TASK_STATUS] ////////////////////////////////////
+    //////////////////////////  Check Task Status [End]  ///////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////
 }

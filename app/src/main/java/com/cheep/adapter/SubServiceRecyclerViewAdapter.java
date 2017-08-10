@@ -48,11 +48,7 @@ public class SubServiceRecyclerViewAdapter extends RecyclerView.Adapter<SubServi
 
                 // Manage Selection state
                 for (SubServiceDetailModel subServiceDetailModel : mList) {
-                    if (subServiceDetailModel.equals(mSubServiceDetailModel)) {
-                        subServiceDetailModel.isSelected = true;
-                    } else {
-                        subServiceDetailModel.isSelected = false;
-                    }
+                    subServiceDetailModel.isSelected = subServiceDetailModel.equals(mSubServiceDetailModel);
                 }
                 notifyDataSetChanged();
             }

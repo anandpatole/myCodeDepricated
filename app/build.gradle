@@ -1,10 +1,5 @@
 apply plugin: 'com.android.application'
 
-/*repositories {
-    maven { url 'https://maven.fabric.io/public' }
-//    maven { url 'https://github.com/500px/500px-android-blur/raw/master/releases/' }
-}*/
-
 repositories {
     maven {
         url 'https://maven.fabric.io/public'
@@ -12,7 +7,6 @@ repositories {
 }
 
 android {
-
     compileSdkVersion 26
     buildToolsVersion "26.0.1"
     defaultConfig {
@@ -200,7 +194,6 @@ dependencies {
 //    compile 'com.payu.india:payu-sdk:4.4.1'
 //    compile 'com.payu.custombrowser:payu-custom-browser:6.1.1'
 //    compile 'com.payu.magicretry:magicretry:1.0.4'
-
 
     //HotLine integration(For Chat to Cheep Admin)
     compile 'com.github.freshdesk:hotline-android:1.2.4'

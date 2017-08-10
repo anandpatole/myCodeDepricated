@@ -217,10 +217,7 @@ public class ChatTabFragment extends BaseFragment {
                 mFragmentTabChatBinding.commonRecyclerView.swipeRefreshLayout.setRefreshing(false);
                 mFragmentTabChatBinding.commonRecyclerView.swipeRefreshLayout.setEnabled(false);
                 if (dataSnapshot.getValue() != null && dataSnapshot.getChildrenCount() > 0) {
-                    hasMoreRecord = true;
-                    if (dataSnapshot.getChildrenCount() < Utility.CHAT_PAGINATION_RECORD_LIMIT) {
-                        hasMoreRecord = false;
-                    }
+                    hasMoreRecord = dataSnapshot.getChildrenCount() >= Utility.CHAT_PAGINATION_RECORD_LIMIT;
                     int count = 0;
                     for (DataSnapshot ds : dataSnapshot.getChildren()) {
                         if (ds.exists() && ds.getValue() != null) {
@@ -436,10 +433,7 @@ public class ChatTabFragment extends BaseFragment {
                     chatTabRecyclerViewAdapter.hideProgressBar();
                     if (dataSnapshot.exists()) {
                         if (dataSnapshot.getChildrenCount() > 0) {
-                            hasMoreRecord = true;
-                            if (dataSnapshot.getChildrenCount() < Utility.CHAT_PAGINATION_RECORD_LIMIT) {
-                                hasMoreRecord = false;
-                            }
+                            hasMoreRecord = dataSnapshot.getChildrenCount() >= Utility.CHAT_PAGINATION_RECORD_LIMIT;
                             List<TaskChatModel> taskChatModelList = new ArrayList<>();
                             for (DataSnapshot ds : dataSnapshot.getChildren()) {
                                 if (ds.exists() && ds.getValue() != null) {

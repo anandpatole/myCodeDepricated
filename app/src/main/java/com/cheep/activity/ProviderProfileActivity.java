@@ -399,21 +399,25 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(MessageEvent event) {
         Log.e("onMessageEvent", "" + event.BROADCAST_ACTION);
-        if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.UPDATE_COMMENT_COUNT) {
-            if (!TextUtils.isEmpty(event.id) && !TextUtils.isEmpty(event.commentCount))
-                reviewsRecyclerViewAdapter.updateCommentCounter(event.id, event.commentCount);
-        } else if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.TASK_PAID
-                || event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.TASK_PROCESSING) {
-            finish();
+        switch (event.BROADCAST_ACTION) {
+            case Utility.BROADCAST_TYPE.UPDATE_COMMENT_COUNT:
+                if (!TextUtils.isEmpty(event.id) && !TextUtils.isEmpty(event.commentCount))
+                    reviewsRecyclerViewAdapter.updateCommentCounter(event.id, event.commentCount);
+                break;
+            case Utility.BROADCAST_TYPE.TASK_PAID:
+            case Utility.BROADCAST_TYPE.TASK_PROCESSING:
+                finish();
 //            initiateUI();
-        } else if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.QUOTE_REQUESTED_BY_PRO
-                || event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.REQUEST_FOR_DETAIL) {
-            // Only go ahead if we are in same task detail screen whose notification comes
-            if (taskId != null && taskId.equals(event.id)) {
-                showProgressDialog();
-                callSPProfileDetailWS(providerID);
-                callReviewList(providerID);
-            }
+                break;
+            case Utility.BROADCAST_TYPE.QUOTE_REQUESTED_BY_PRO:
+            case Utility.BROADCAST_TYPE.REQUEST_FOR_DETAIL:
+                // Only go ahead if we are in same task detail screen whose notification comes
+                if (taskId != null && taskId.equals(event.id)) {
+                    showProgressDialog();
+                    callSPProfileDetailWS(providerID);
+                    callReviewList(providerID);
+                }
+                break;
         }
     }
 

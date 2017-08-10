@@ -1112,21 +1112,26 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(MessageEvent event) {
         Log.d(TAG, "onMessageEvent() called with: event = [" + event.BROADCAST_ACTION + "]");
-        if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.TASK_STATUS_CHANGE) {
-            mTaskDetailModel.taskStatus = event.taskStatus;
-            setUpTaskDetails(mTaskDetailModel);
-        } else if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.ADDITIONAL_PAYMENT_REQUESTED) {
-            mTaskDetailModel.taskStatus = event.taskStatus;
-            mTaskDetailModel.additionalQuoteAmount = event.additional_quote_amount;
-            setUpTaskDetails(mTaskDetailModel);
-        } else if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.TASK_PROCESSING) {
-            // Call Task Detail update WS from here so that it can refresh the content.
-            if (mTaskDetailModel.taskId.equalsIgnoreCase(event.id)) {
-                callTaskDetailWS(getIntent().getExtras().getString(Utility.Extra.TASK_ID));
-            }
-        } else if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.PAYMENT_COMPLETED_NEED_TO_REDIRECT_TO_MY_TASK_SCREEN) {
-            // Finish this activity
-            finish();
+        switch (event.BROADCAST_ACTION) {
+            case Utility.BROADCAST_TYPE.TASK_STATUS_CHANGE:
+                mTaskDetailModel.taskStatus = event.taskStatus;
+                setUpTaskDetails(mTaskDetailModel);
+                break;
+            case Utility.BROADCAST_TYPE.ADDITIONAL_PAYMENT_REQUESTED:
+                mTaskDetailModel.taskStatus = event.taskStatus;
+                mTaskDetailModel.additionalQuoteAmount = event.additional_quote_amount;
+                setUpTaskDetails(mTaskDetailModel);
+                break;
+            case Utility.BROADCAST_TYPE.TASK_PROCESSING:
+                // Call Task Detail update WS from here so that it can refresh the content.
+                if (mTaskDetailModel.taskId.equalsIgnoreCase(event.id)) {
+                    callTaskDetailWS(getIntent().getExtras().getString(Utility.Extra.TASK_ID));
+                }
+                break;
+            case Utility.BROADCAST_TYPE.PAYMENT_COMPLETED_NEED_TO_REDIRECT_TO_MY_TASK_SCREEN:
+                // Finish this activity
+                finish();
+                break;
         }
     }
 

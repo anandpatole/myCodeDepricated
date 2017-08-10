@@ -150,26 +150,14 @@ public class EnterTaskDetailFragment extends BaseFragment {
         if (mTaskCreationActivity.getSelectedSubService().sub_cat_id != -1) {
             isTaskDescriptionVerified = true;
         } else {
-            if (TextUtils.isEmpty(mFragmentEnterTaskDetailBinding.editTaskDesc.getText().toString().trim())) {
-                isTaskDescriptionVerified = false;
-            } else {
-                isTaskDescriptionVerified = true;
-            }
+            isTaskDescriptionVerified = !TextUtils.isEmpty(mFragmentEnterTaskDetailBinding.editTaskDesc.getText().toString().trim());
         }
 
         // When Verification
-        if (TextUtils.isEmpty(mFragmentEnterTaskDetailBinding.textTaskWhen.getText().toString().trim())) {
-            isTaskWhenVerified = false;
-        } else {
-            isTaskWhenVerified = true;
-        }
+        isTaskWhenVerified = !TextUtils.isEmpty(mFragmentEnterTaskDetailBinding.textTaskWhen.getText().toString().trim());
 
         // Where Verification
-        if (TextUtils.isEmpty(mFragmentEnterTaskDetailBinding.textTaskWhere.getText().toString().trim())) {
-            isTaskWhereVerified = false;
-        } else {
-            isTaskWhereVerified = true;
-        }
+        isTaskWhereVerified = !TextUtils.isEmpty(mFragmentEnterTaskDetailBinding.textTaskWhere.getText().toString().trim());
 
         updateFinalVerificationFlag();
     }
@@ -663,10 +651,7 @@ public class EnterTaskDetailFragment extends BaseFragment {
         recyclerView.addItemDecoration(new DividerItemDecoration(mContext, R.drawable.divider_grey_normal, (int) getResources().getDimension(R.dimen.scale_16dp)));
 
         //Here we are checking if address is not there then open add address dialog immediatly
-        if (addressList == null || (addressList != null && addressList.isEmpty())) {
-            return true;
-        }
-        return false;
+        return addressList == null || (addressList != null && addressList.isEmpty());
     }
 
     private BottomAlertDialog addAddressDialog;

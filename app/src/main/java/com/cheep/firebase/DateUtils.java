@@ -159,11 +159,7 @@ public class DateUtils
     {
         final Calendar cal = Calendar.getInstance();
         cal.add(Calendar.DATE, -1);
-        if(isEqual(cal.getTimeInMillis(),timestamp))
-        {
-            return true;
-        }
-        return false;
+        return isEqual(cal.getTimeInMillis(), timestamp);
     }
 
     // Used to convert 24hr format to 12hr format with AM/PM values

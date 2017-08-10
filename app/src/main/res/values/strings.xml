@@ -425,4 +425,5 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
 
 
     <string name="no_pros_in_this_category">No PROs in this category</string>
+    <string name="validate_comment">Please provide valid comment.</string>
 </resources>

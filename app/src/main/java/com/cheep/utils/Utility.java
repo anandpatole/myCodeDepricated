@@ -172,10 +172,7 @@ public class Utility {
     public static Boolean IS_FROM_NOTIFICATION = false;
 
     public static boolean isValidPhoneNumber(String phoneNumber) {
-        if (phoneNumber.length() == Utility.PHONE_MIN_LENGTH) {
-            return true;
-        }
-        return false;
+        return phoneNumber.length() == Utility.PHONE_MIN_LENGTH;
     }
 
     public static int parseInt(String integer) {
@@ -750,7 +747,8 @@ public class Utility {
     /**
      * Check whether device is having google playservice up to date or note
      *
-     * @return
+     * @param context Context of activity
+     * @return true if device is having google playservice up to date, false if not.
      */
     public static int checkGooglePlayService(Context context) {
         //Check if Google PLayservice is available
@@ -1027,24 +1025,67 @@ public class Utility {
         public static final String FAILED = "failed";
     }
 
-
     public static final class TASK_STATUS {
-        public static final String PENDING = "pending"; //1->if task created and only quotes is there, 2-> task created and user paid to sp, but sp not started the task yet.
-        public static final String PAID = "paid";//if user payed and task is in progress
-        public static final String PROCESSING = "processing";// if user starts task on my home
+        /**
+         * 1->If task created and only quotes is there.
+         * 2->Task created and user paid to sp, but sp not started the task yet.
+         */
+        public static final String PENDING = "pending";
 
-        public static final String RESCHEDULE_REQUESTED = "reschedule_requested";// if user tries to reschdule the task.
-        public static final String RESCHEDULE_REQUEST_REJECTED = "reschedule_request_rejected";// if Task's Reschedule Request has been cancelled by User
+        /**
+         * If user Payed and task is in progress
+         */
+        public static final String PAID = "paid";
 
-        public static final String COMPLETION_REQUEST = "completion_request";// if tasks completed by SP
-        public static final String COMPLETION_CONFIRM = "completion_confirm";// if tasks completed confirmed by User
+        /**
+         * If user starts task on my home
+         */
+        public static final String PROCESSING = "processing";
 
-        public static final String CANCELLED_CUSTOMER = "cancel_by_customer";// if user starts task on my home
-        public static final String CANCELLED_SP = "cancel_by_sp";// if user starts task on my home
+        /**
+         * If user tries to reschdule the task.
+         */
+        public static final String RESCHEDULE_REQUESTED = "reschedule_requested";
 
-        public static final String DISPUTED = "dispute";// if Task is Disputed
-        public static final String ELAPSED = "elapsed";// if Task is Elapsed
-        public static final String ADDITIONAL_PAYMENT_REQUESTED = "additional_payment_requested";// if Additional Payment is Requested by SP
+        /**
+         * If Task's Reschedule Request has been cancelled by User
+         */
+        public static final String RESCHEDULE_REQUEST_REJECTED = "reschedule_request_rejected";
+
+        /**
+         * If tasks completed by SP
+         */
+        public static final String COMPLETION_REQUEST = "completion_request";
+
+        /**
+         * If tasks completed confirmed by User
+         */
+        public static final String COMPLETION_CONFIRM = "completion_confirm";
+
+        /**
+         * If user starts task on my home
+         */
+        public static final String CANCELLED_CUSTOMER = "cancel_by_customer";
+
+        /**
+         * If user starts task on my home
+         */
+        public static final String CANCELLED_SP = "cancel_by_sp";
+
+        /**
+         * If Task is Disputed
+         */
+        public static final String DISPUTED = "dispute";
+
+        /**
+         * If Task is Elapsed
+         */
+        public static final String ELAPSED = "elapsed";
+
+        /**
+         * If Additional Payment is Requested by SP
+         */
+        public static final String ADDITIONAL_PAYMENT_REQUESTED = "additional_payment_requested";
 
     }
 
@@ -1072,14 +1113,11 @@ public class Utility {
 
     public class NOTIFICATION_TYPE {
         public static final String QUOTE_REQUEST = "QUOTE_REQUEST";
-        //        public static final String COMPLITION_REQUEST = "COMPLITION_REQUEST";
-//        public static final String PROGRESS = "PROGRESS";
         public static final String TASK_STATUS_CHANGE = "TASK_STATUS_CHANGE";
         public static final String ADDITIONAL_PAYMENT_REQUESTED = "additional_payment_requested";
         public static final String REQUEST_FOR_DETAIL = "REQUEST_FOR_DETAIL";
         public static final String CHAT_MESSAGE = "FIREBASE";
         public static final String TASK_CREATE = "TASK_CREATE";
-        public static final String PAYMENT_NOTIFICATION = "PAYMENT_NOTIFICATION";
         public static final String TASK_START_ALERT = "TASK_START_ALERT";
         public static final String WEB_CUSTOM_NOTIFICATION = "WEB_CUSTOM_NOTIFICATION";
     }

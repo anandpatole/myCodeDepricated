@@ -795,32 +795,27 @@ public class TaskQuotesActivity extends BaseAppCompatActivity implements TaskQuo
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(MessageEvent event) {
-        if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.TASK_PAID
-                || event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.TASK_PROCESSING
-                || event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.PAYMENT_COMPLETED_NEED_TO_REDIRECT_TO_MY_TASK_SCREEN) {
-            // Finish this activity as its not needed now.
-            finish();
-        } else if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.DETAIL_REQUEST_REJECTED
-                || event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.DETAIL_REQUEST_ACCEPTED) {
-            // Update the list now.
-            onRequestDetailRejected(event.id, event.spUserId, event.request_detail_status, event.quoted_sp_image_url);
-        } else if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.QUOTE_REQUESTED_BY_PRO
-                || event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.REQUEST_FOR_DETAIL) {
-            // Update the list now.
-            // Only go ahead if we are in same task detail screen whose notification comes
-            if (mTaskDetailModel.taskId.equals(event.id)) {
-                callSPListWS();
-            }
-        } /* else if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.QUOTE_REQUESTED_BY_PRO
-                || event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.REQUEST_FOR_DETAIL) {
-
-            // Only go ahead if we are in same task detail screen whose notification comes
-            if (taskDetailModel.taskId.equals(event.id)) {
-                // We need to refresh the SP listing.
-                spRecyclerViewAdapter.enableLoadMore();
-                reloadSPListWS();
-            }
-        }*/
+        switch (event.BROADCAST_ACTION) {
+            case Utility.BROADCAST_TYPE.TASK_PAID:
+            case Utility.BROADCAST_TYPE.TASK_PROCESSING:
+            case Utility.BROADCAST_TYPE.PAYMENT_COMPLETED_NEED_TO_REDIRECT_TO_MY_TASK_SCREEN:
+                // Finish this activity as its not needed now.
+                finish();
+                break;
+            case Utility.BROADCAST_TYPE.DETAIL_REQUEST_REJECTED:
+            case Utility.BROADCAST_TYPE.DETAIL_REQUEST_ACCEPTED:
+                // Update the list now.
+                onRequestDetailRejected(event.id, event.spUserId, event.request_detail_status, event.quoted_sp_image_url);
+                break;
+            case Utility.BROADCAST_TYPE.QUOTE_REQUESTED_BY_PRO:
+            case Utility.BROADCAST_TYPE.REQUEST_FOR_DETAIL:
+                // Update the list now.
+                // Only go ahead if we are in same task detail screen whose notification comes
+                if (mTaskDetailModel.taskId.equals(event.id)) {
+                    callSPListWS();
+                }
+                break;
+        }
     }
 
     @Override

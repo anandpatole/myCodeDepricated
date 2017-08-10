@@ -114,12 +114,16 @@ public class AlmostRippleDrawable extends StateDrawable implements Animatable {
         boolean pressed = false;
         boolean disabled = true;
         for (int i : stateSet) {
-            if (i == android.R.attr.state_focused) {
-                focused = true;
-            } else if (i == android.R.attr.state_pressed) {
-                pressed = true;
-            } else if (i == android.R.attr.state_enabled) {
-                disabled = false;
+            switch (i) {
+                case android.R.attr.state_focused:
+                    focused = true;
+                    break;
+                case android.R.attr.state_pressed:
+                    pressed = true;
+                    break;
+                case android.R.attr.state_enabled:
+                    disabled = false;
+                    break;
             }
         }
 
