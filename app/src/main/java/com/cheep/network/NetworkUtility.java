@@ -97,6 +97,7 @@ public class NetworkUtility {
 
         // Fetch list of all strategic partner services and sub categories
         public static final String FETCH_SUB_CATEGORIES_QUESTIONNAIRE = BASE_URL + "customers/category/categories_questionnaire";
+        public static final String CHECK_CHEEPCODE_FOR_STRATEGIC_PARTNER = BASE_URL + "customers/payment/check_cheepcode_for_strategic_partner";
     }
 
     public static class TAGS {
@@ -199,6 +200,9 @@ public class NetworkUtility {
 
         public static final String ADD = "add";
         public static final String REMOVE = "remove";
+
+        public static final String SUB_CATEGORY_DETAIL= "sub_category_detail";
+        public static final String QUESTION_DETAIL = "question_detail";
 
         public static class VERSION_CHANGE_TYPE {
             public static final int NORMAL = 0;

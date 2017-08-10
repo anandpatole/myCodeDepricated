@@ -700,6 +700,39 @@ public class Utility {
         return output;
     }
 
+    // Custom method to add a border around bitmap
+    public static Bitmap addBorderToBitmap(Bitmap srcBitmap, int borderWidth, int borderColor) {
+// Initialize a new Bitmap to make it bordered bitmap
+        Bitmap dstBitmap = Bitmap.createBitmap(
+                srcBitmap.getWidth() + borderWidth / 2, // Width
+                srcBitmap.getHeight() + borderWidth / 2, // Height
+                Bitmap.Config.ARGB_8888 // Config
+        );
+// Initialize a new Canvas instance
+        Canvas canvas = new Canvas(dstBitmap);
+
+// Initialize a new Paint instance to draw border
+        Paint paint = new Paint();
+        paint.setColor(borderColor);
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setStrokeWidth(borderWidth);
+        paint.setAntiAlias(true);
+
+        Rect rect = new Rect(
+                borderWidth / 2,
+                borderWidth / 2,
+                canvas.getWidth() - borderWidth / 2,
+                canvas.getHeight() - borderWidth / 2);
+// Draw a rectangle as a border/shadow on canvas
+        canvas.drawRect(rect, paint);
+// Draw source bitmap to canvas
+        canvas.drawBitmap(srcBitmap, borderWidth, borderWidth, null);
+        srcBitmap.recycle();
+
+// Return the bordered circular bitmap
+        return dstBitmap;
+    }
+
     public static void showCircularImageViewBlueBorder(Context context, String tag, ImageView img, String imageToLoad, int placeholderRes, boolean isRounded) {
         Log.d(TAG, "showCircularImageView() called with: context = [" + context + "], tag = [" + tag + "], img = [" + img + "], imageToLoad = [" + imageToLoad + "], placeholderRes = [" + placeholderRes + "], isRounded = [" + isRounded + "]");
         if (!isActivityCorrectForGlide(context)) {

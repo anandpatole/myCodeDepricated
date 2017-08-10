@@ -6,12 +6,13 @@
 
 
     <ImageView
+        android:layout_marginTop="@dimen/scale_10dp"
         android:layout_marginRight="@dimen/scale_10dp"
+        android:layout_marginBottom="@dimen/scale_10dp"
         android:id="@+id/imgThumb"
         android:layout_width="@dimen/h_camera_que_fragment"
         android:layout_height="@dimen/h_camera_que_fragment"
         android:scaleType="fitXY"
-        android:layout_marginTop="@dimen/scale_10dp"
         />
 
     <ImageView
@@ -20,6 +21,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="right|top"
         android:scaleType="fitXY"
+        android:layout_marginRight="@dimen/scale_5dp"
         android:src="@drawable/ic_remove"
         />
 </FrameLayout>
