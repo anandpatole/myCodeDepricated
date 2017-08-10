@@ -2,18 +2,17 @@ package com.cheep.strategicpartner;
 
 /**
  * Created by giteeka on 31/7/17.
+ * Media model for Type image and video
+ *
  */
 
-public class MediaModel {
+class MediaModel {
 
     enum MediaType {
         IMAGE,
         VIDEO
     }
 
-    public MediaModel() {
-
-    }
 
     public MediaModel(String path, MediaType type) {
         this.path = path;

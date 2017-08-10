@@ -40,22 +40,30 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
- * Created by bhavesh on 28/4/17.
+ * Created by Giteeka on 28/7/17.
+ * This Fragment is Third step of Strategic partner screen.
+ * Payment summary
+ * Task time and address details
+ * Selection service total amount
+ * Enter promo code logic
+ * and payment flow
  */
 public class StrategicPartnerFragPhaseThree extends BaseFragment {
     public static final String TAG = "StrategicPartnerFragPha";
     private FragmentStrategicPartnerPhaseThreeBinding mFragmentStrategicPartnerPhaseThreeBinding;
-    ErrorLoadingHelper errorLoadingHelper;
+    private ErrorLoadingHelper errorLoadingHelper;
     private StrategicPartnerTaskCreationAct mStrategicPartnerTaskCreationAct;
     private boolean isVerified = false;
     private boolean isTaskDescriptionVerified;
-    private String total;
-    String addressId = "";
+    private String addressId = "";
     private String payableAmount;
+    private String start_datetime = "";
+    private EditText edtCheepCode;
+    private BottomAlertDialog cheepCodeDialog;
+    private String cheepCode;
 
     @SuppressWarnings("unused")
     public static StrategicPartnerFragPhaseThree newInstance() {
@@ -92,13 +100,27 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
         } else {
             isTaskDescriptionVerified = false;
         }
-        mFragmentStrategicPartnerPhaseThreeBinding.txtdesc.setSelected(true);
+
+
+        // force to scroll up the view for strategic partner logo
         mFragmentStrategicPartnerPhaseThreeBinding.scrollView.postDelayed(new Runnable() {
             @Override
             public void run() {
                 mFragmentStrategicPartnerPhaseThreeBinding.scrollView.fullScroll(View.FOCUS_UP);
             }
         }, 5);
+
+        // get date time and selected address from Questions (phase 2)
+        for (int i = 0; i < mStrategicPartnerTaskCreationAct.getSelectedQuestions().size(); i++) {
+            QueAnsModel queAnsModel = mStrategicPartnerTaskCreationAct.getSelectedQuestions().get(i);
+            if (queAnsModel.answerType.equalsIgnoreCase(Utility.TEMPLATE_TIME_PICKER)) {
+                start_datetime = queAnsModel.answer;
+            }
+            if (queAnsModel.answerType.equalsIgnoreCase(Utility.TEMPLATE_LOCATION)) {
+                addressId = queAnsModel.answer;
+            }
+        }
+        // set details of partner name user selected date time and address
         SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder();
         spannableStringBuilder.append(getSpannableString("Your order with ", ContextCompat.getColor(mStrategicPartnerTaskCreationAct, R.color.grey_varient_8), false));
         spannableStringBuilder.append(getSpannableString(mStrategicPartnerTaskCreationAct.mBannerImageModel.name, ContextCompat.getColor(mStrategicPartnerTaskCreationAct, R.color.splash_gradient_end), true));
@@ -110,32 +132,17 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
 
         mFragmentStrategicPartnerPhaseThreeBinding.txtdesc.setText(spannableStringBuilder);
 
-        if (mStrategicPartnerTaskCreationAct.getSelectedSubService() != null)
-            mFragmentStrategicPartnerPhaseThreeBinding.recycleSelectedService.setAdapter(new StrategicPartnerPaymentAdapter(mStrategicPartnerTaskCreationAct, mStrategicPartnerTaskCreationAct.getSelectedSubService()));
-        int totalAmount = 0;
 
-        ArrayList<QueAnsModel> mList = mStrategicPartnerTaskCreationAct.getSelectedQuestions();
-        for (int i = 0; i < mList.size(); i++) {
-            QueAnsModel queAnsModel = mList.get(i);
-            if (queAnsModel.answerType.equalsIgnoreCase(Utility.TEMPLATE_TIME_PICKER))
-                start_datetime = queAnsModel.answer;
-            if (queAnsModel.answerType.equalsIgnoreCase(Utility.TEMPLATE_LOCATION))
-                addressId = queAnsModel.answer;
-        }
-        for (StrategicPartnerSubCategoryModel model : mStrategicPartnerTaskCreationAct.getSelectedSubService()) {
-            List<StrategicPartnerSubCategoryModel.AllSubSubCat> allSubSubCats = model.allSubSubCats;
-            for (StrategicPartnerSubCategoryModel.AllSubSubCat allSubSubCat : allSubSubCats) {
-                try {
-                    totalAmount += Integer.parseInt(allSubSubCat.price);
-                } catch (NumberFormatException e) {
-                    totalAmount += 0;
-                }
-            }
-        }
-        total = String.valueOf(totalAmount);
-        mFragmentStrategicPartnerPhaseThreeBinding.txttotal.setText(getString(R.string.ruppe_symbol_x, String.valueOf(total)));
-        mFragmentStrategicPartnerPhaseThreeBinding.txtsubtotal.setText(getString(R.string.ruppe_symbol_x, String.valueOf(total)));
-        mFragmentStrategicPartnerPhaseThreeBinding.textPay.setText("Pay " + getString(R.string.ruppe_symbol_x, String.valueOf(total)));
+        // get list of selected services from phase 1
+        if (mStrategicPartnerTaskCreationAct.getSelectedSubService() != null)
+            mFragmentStrategicPartnerPhaseThreeBinding.recycleSelectedService.setAdapter(new PaymentSummaryAdapter(mStrategicPartnerTaskCreationAct.getSelectedSubService()));
+
+        // set total and sub total details
+        mFragmentStrategicPartnerPhaseThreeBinding.txttotal.setText(getString(R.string.ruppe_symbol_x, mStrategicPartnerTaskCreationAct.total));
+        mFragmentStrategicPartnerPhaseThreeBinding.txtsubtotal.setText(getString(R.string.ruppe_symbol_x, mStrategicPartnerTaskCreationAct.total));
+        mFragmentStrategicPartnerPhaseThreeBinding.textPay.setText("Pay " + getString(R.string.ruppe_symbol_x, String.valueOf(mStrategicPartnerTaskCreationAct.total)));
+
+        // handle clicks for create task web api and payment flow
         mFragmentStrategicPartnerPhaseThreeBinding.textPay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -143,6 +150,9 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
                 Utility.showToast(mStrategicPartnerTaskCreationAct, "Work in progress!");
             }
         });
+
+
+        // Enter promo code UI
         mFragmentStrategicPartnerPhaseThreeBinding.textpromocodelabel.setTextColor(ContextCompat.getColor(mStrategicPartnerTaskCreationAct, R.color.splash_gradient_end));
         mFragmentStrategicPartnerPhaseThreeBinding.textpromocodelabel.setText(getResources().getString(R.string.label_enter_promocode));
 
@@ -158,52 +168,42 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
         mFragmentStrategicPartnerPhaseThreeBinding.imgCheepCodeClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mFragmentStrategicPartnerPhaseThreeBinding.textpromocodelabel.setEnabled(true);
                 cheepCode = null;
-//                if (TextUtils.isEmpty(actualQuotePrice) == false) {
-//                    providerModel.quotePrice = actualQuotePrice;
-//                }
-//                actualQuotePrice = null;
+                mFragmentStrategicPartnerPhaseThreeBinding.textpromocodelabel.setEnabled(true);
                 mFragmentStrategicPartnerPhaseThreeBinding.imgCheepCodeClose.setVisibility(View.GONE);
-                resetPromocodeValue();
+                resetPromoCodeValue();
             }
         });
 
     }
 
-    public void resetPromocodeValue() {
+
+    /**
+     * clear promo code details and set original total values
+     */
+    public void resetPromoCodeValue() {
         mFragmentStrategicPartnerPhaseThreeBinding.textpromocodelabel.setTextColor(ContextCompat.getColor(mStrategicPartnerTaskCreationAct, R.color.splash_gradient_end));
         mFragmentStrategicPartnerPhaseThreeBinding.textpromocodelabel.setText(getResources().getString(R.string.label_enter_promocode));
-        mFragmentStrategicPartnerPhaseThreeBinding.txtsubtotal.setText(getString(R.string.ruppe_symbol_x, "" + total));
-        mFragmentStrategicPartnerPhaseThreeBinding.txttotal.setText(getString(R.string.ruppe_symbol_x, "" + total));
-        mFragmentStrategicPartnerPhaseThreeBinding.textPay.setText(getString(R.string.label_pay_fee_v1, "" + total));
+        mFragmentStrategicPartnerPhaseThreeBinding.txtsubtotal.setText(getString(R.string.ruppe_symbol_x, "" + mStrategicPartnerTaskCreationAct.total));
+        mFragmentStrategicPartnerPhaseThreeBinding.txttotal.setText(getString(R.string.ruppe_symbol_x, "" + mStrategicPartnerTaskCreationAct.total));
+        mFragmentStrategicPartnerPhaseThreeBinding.textPay.setText(getString(R.string.label_pay_fee_v1, "" + mStrategicPartnerTaskCreationAct.total));
         mFragmentStrategicPartnerPhaseThreeBinding.txtpromocode.setText(getString(R.string.ruppe_symbol_x, "" + 0.0));
-
-        mFragmentStrategicPartnerPhaseThreeBinding.textpromocodelabel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showCheepCodeDialog();
-            }
-        });
     }
 
-
-    EditText edtCheepcode;
-    BottomAlertDialog cheepCodeDialog;
 
     private void showCheepCodeDialog() {
 
         View view = View.inflate(mContext, R.layout.dialog_add_promocode, null);
-        edtCheepcode = view.findViewById(R.id.edit_cheepcode);
+        edtCheepCode = view.findViewById(R.id.edit_cheepcode);
         cheepCodeDialog = new BottomAlertDialog(mContext);
         view.findViewById(R.id.btn_apply).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (TextUtils.isEmpty(edtCheepcode.getText().toString())) {
+                if (TextUtils.isEmpty(edtCheepCode.getText().toString())) {
                     Utility.showToast(mContext, getString(R.string.validate_cheepcode));
                     return;
                 }
-                validateCheepCode(edtCheepcode.getText().toString());
+                validateCheepCode(edtCheepCode.getText().toString());
             }
         });
         cheepCodeDialog.setTitle(getString(R.string.label_cheepcode));
@@ -211,7 +211,6 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
         cheepCodeDialog.showDialog();
     }
 
-    private String cheepCode;
 
     private void validateCheepCode(String s) {
         cheepCode = s;
@@ -230,8 +229,8 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
 
         //Add Params
         Map<String, Object> mParams = new HashMap<>();
-        mParams.put(NetworkUtility.TAGS.QUOTE_AMOUNT, total);
-        mParams.put(NetworkUtility.TAGS.CHEEPCODE, s);
+        mParams.put(NetworkUtility.TAGS.QUOTE_AMOUNT, mStrategicPartnerTaskCreationAct.total);
+        mParams.put(NetworkUtility.TAGS.CHEEPCODE, cheepCode);
         mParams.put(NetworkUtility.TAGS.CAT_ID, mStrategicPartnerTaskCreationAct.mBannerImageModel.cat_id);
         mParams.put(NetworkUtility.TAGS.ADDRESS_ID, addressId);
 
@@ -259,15 +258,15 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
                 switch (statusCode) {
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
 
-                        if (edtCheepcode != null) {
-                            cheepCode = edtCheepcode.getText().toString().trim();
+                        if (edtCheepCode != null) {
+                            cheepCode = edtCheepCode.getText().toString().trim();
                             cheepCodeDialog.dismiss();
 
-                            total = jsonObject.optString(NetworkUtility.TAGS.QUOTE_AMOUNT);
+                            mStrategicPartnerTaskCreationAct.total = jsonObject.optString(NetworkUtility.TAGS.QUOTE_AMOUNT);
 
                             String discount = jsonObject.optString(NetworkUtility.TAGS.DISCOUNT_AMOUNT);
                             String payable = jsonObject.optString(NetworkUtility.TAGS.PAYABLE_AMOUNT);
-                            updatePaymentBtn(total, discount, payable);
+                            updatePaymentDetails(discount, payable);
 
                         }
 
@@ -300,19 +299,14 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
         @Override
         public void onErrorResponse(final VolleyError error) {
             Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
-
-            // Close Progressbar
-//            hideProgressDialog();
-
-//            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityJobSummaryBinding.getRoot());
             Utility.showToast(mContext, getString(R.string.label_something_went_wrong));
 
         }
 
     };
 
-    private void updatePaymentBtn(String total, String discount, String payable) {
-        this.total = total;
+
+    private void updatePaymentDetails(String discount, String payable) {
         payableAmount = payable;
         mFragmentStrategicPartnerPhaseThreeBinding.txtpromocode.setText(getString(R.string.ruppe_symbol_x, "" + discount));
         mFragmentStrategicPartnerPhaseThreeBinding.txttotal.setText(getString(R.string.ruppe_symbol_x, "" + payable));
@@ -322,7 +316,7 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
         mFragmentStrategicPartnerPhaseThreeBinding.imgCheepCodeClose.setVisibility(View.VISIBLE);
     }
 
-    public SpannableStringBuilder getSpannableString(String fullstring, int color, boolean isBold) {
+    private SpannableStringBuilder getSpannableString(String fullstring, int color, boolean isBold) {
         SpannableStringBuilder text = new SpannableStringBuilder(fullstring);
         text.setSpan(new ForegroundColorSpan(color), 0, fullstring.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         if (isBold) {
@@ -342,7 +336,7 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
 
         mFragmentStrategicPartnerPhaseThreeBinding.recycleSelectedService.setLayoutManager(new LinearLayoutManager(mStrategicPartnerTaskCreationAct));
         if (mStrategicPartnerTaskCreationAct.getSelectedSubService() != null)
-            mFragmentStrategicPartnerPhaseThreeBinding.recycleSelectedService.setAdapter(new StrategicPartnerPaymentAdapter(mStrategicPartnerTaskCreationAct, mStrategicPartnerTaskCreationAct.getSelectedSubService()));
+            mFragmentStrategicPartnerPhaseThreeBinding.recycleSelectedService.setAdapter(new PaymentSummaryAdapter(mStrategicPartnerTaskCreationAct.getSelectedSubService()));
     }
 
     @Override
@@ -376,54 +370,19 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
         return isVerified;
     }
 
-    String start_datetime = "";
 
     private void callWeb() {
-        JsonArray selectedServiceArray = new JsonArray();
-        ArrayList<StrategicPartnerSubCategoryModel> list = mStrategicPartnerTaskCreationAct.getSelectedSubService();
-        for (int i = 0; i < list.size(); i++) {
-            StrategicPartnerSubCategoryModel model = list.get(i);
-            for (int j = 0; j < model.allSubSubCats.size(); j++) {
-                StrategicPartnerSubCategoryModel.AllSubSubCat allSubSubCat = model.allSubSubCats.get(j);
-                if (allSubSubCat.isSelected) {
-                    JsonObject obj = new JsonObject();
-                    obj.addProperty("subcategory_id", model.catId);
-                    obj.addProperty("sub_sub_cat_id", allSubSubCat.subSubCatId);
-                    obj.addProperty("price", allSubSubCat.price);
-                    selectedServiceArray.add(obj);
-                }
-            }
-        }
-        String sub_category_detail = selectedServiceArray.toString();
 
+        String subCategoryDetail = getSelectedServicesJsonString().toString();
         ArrayList<QueAnsModel> mList = mStrategicPartnerTaskCreationAct.getSelectedQuestions();
-        for (int i = 0; i < mList.size(); i++) {
-            QueAnsModel queAnsModel = mList.get(i);
-            if (queAnsModel.answerType.equalsIgnoreCase(Utility.TEMPLATE_TIME_PICKER))
-                start_datetime = queAnsModel.answer;
-            if (queAnsModel.answerType.equalsIgnoreCase(Utility.TEMPLATE_LOCATION))
-                addressId = queAnsModel.answer;
-        }
-        JsonArray quesArray = new JsonArray();
-        for (int i = 0; i < mList.size(); i++) {
-            QueAnsModel queAnsModel = mList.get(i);
-            if (!queAnsModel.answerType.equalsIgnoreCase(Utility.TEMPLATE_DATE_PICKER)
-                    && !queAnsModel.answerType.equalsIgnoreCase(Utility.TEMPLATE_TIME_PICKER)
-                    && !queAnsModel.answerType.equalsIgnoreCase(Utility.TEMPLATE_LOCATION)
-                    && !queAnsModel.answerType.equalsIgnoreCase(Utility.TEMPLATE_UPLOAD)) {
-                JsonObject jsonObject = new JsonObject();
-                jsonObject.addProperty("question_id", queAnsModel.questionId);
-                jsonObject.addProperty("answer", queAnsModel.answer);
-                quesArray.add(jsonObject);
-            }
-        }
-
+        String question_detail = getQuestionAnswerDetailsJsonString(mList).toString();
         UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
-        String question_detail = quesArray.toString();
+
+
         Log.e(TAG, " addressId >>" + addressId);
         Log.e(TAG, " city_id >>" + userDetails.CityID);
         Log.e(TAG, " cat_id >>" + mStrategicPartnerTaskCreationAct.mBannerImageModel.cat_id);
-        Log.e(TAG, " sub_category_detail >>" + sub_category_detail);
+        Log.e(TAG, " sub_category_detail >>" + subCategoryDetail);
         Log.e(TAG, " question_detail >>" + question_detail);
         Log.e(TAG, " start_datetime >>" + start_datetime);
 
@@ -440,14 +399,48 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
         mParams.put(NetworkUtility.TAGS.CITY_ID, userDetails.CityID);
         mParams.put(NetworkUtility.TAGS.CAT_ID, mStrategicPartnerTaskCreationAct.mBannerImageModel.cat_id);
         mParams.put(NetworkUtility.TAGS.START_DATETIME, start_datetime);
-        mParams.put(NetworkUtility.TAGS.SUB_CATEGORY_DETAIL, sub_category_detail);
+        mParams.put(NetworkUtility.TAGS.SUB_CATEGORY_DETAIL, subCategoryDetail);
         mParams.put(NetworkUtility.TAGS.QUESTION_DETAIL, question_detail);
-        mParams.put(NetworkUtility.TAGS.QUOTE_AMOUNT, total + "");
+        mParams.put(NetworkUtility.TAGS.QUOTE_AMOUNT, mStrategicPartnerTaskCreationAct.total + "");
         mParams.put(NetworkUtility.TAGS.CHEEPCODE, cheepCode);
         mParams.put(NetworkUtility.TAGS.PAYABLE_AMOUNT, payableAmount);
         mParams.put(NetworkUtility.TAGS.TRANSACTION_ID, txnid);
         Log.e(TAG, mParams + "");
 
+    }
+
+    private JsonArray getQuestionAnswerDetailsJsonString(ArrayList<QueAnsModel> mList) {
+        JsonArray quesArray = new JsonArray();
+        for (int i = 0; i < mList.size(); i++) {
+            QueAnsModel queAnsModel = mList.get(i);
+            if (!queAnsModel.answerType.equalsIgnoreCase(Utility.TEMPLATE_DATE_PICKER)
+                    && !queAnsModel.answerType.equalsIgnoreCase(Utility.TEMPLATE_TIME_PICKER)
+                    && !queAnsModel.answerType.equalsIgnoreCase(Utility.TEMPLATE_LOCATION)
+                    && !queAnsModel.answerType.equalsIgnoreCase(Utility.TEMPLATE_UPLOAD)) {
+                JsonObject jsonObject = new JsonObject();
+                jsonObject.addProperty("question_id", queAnsModel.questionId);
+                jsonObject.addProperty("answer", queAnsModel.answer);
+                quesArray.add(jsonObject);
+            }
+        }
+        return quesArray;
+    }
+
+    private JsonArray getSelectedServicesJsonString() {
+        JsonArray selectedServiceArray = new JsonArray();
+        ArrayList<StrategicPartnerServiceModel> list = mStrategicPartnerTaskCreationAct.getSelectedSubService();
+        for (int i = 0; i < list.size(); i++) {
+            StrategicPartnerServiceModel model = list.get(i);
+            for (int j = 0; j < model.allSubSubCats.size(); j++) {
+                StrategicPartnerServiceModel.AllSubSubCat allSubSubCat = model.allSubSubCats.get(j);
+                JsonObject obj = new JsonObject();
+                obj.addProperty("subcategory_id", model.catId);
+                obj.addProperty("sub_sub_cat_id", allSubSubCat.subSubCatId);
+                obj.addProperty("price", allSubSubCat.price);
+                selectedServiceArray.add(obj);
+            }
+        }
+        return selectedServiceArray;
     }
 
 }

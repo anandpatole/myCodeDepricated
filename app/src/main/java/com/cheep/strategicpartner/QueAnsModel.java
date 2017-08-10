@@ -5,6 +5,10 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
 
+/**
+ * Created by Giteeka 31/7/2017
+ * Question and Answer Json class model
+ */
 public class QueAnsModel {
 
 

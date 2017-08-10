@@ -25,6 +25,12 @@ import java.util.ArrayList;
 
 /**
  * Created by bhavesh on 26/4/17.
+ * This activity is Specifically for Strategic partner feature
+ * This includes 3 Step
+ * Phase 1 - service selection
+ * Phase 2 - Questionnary
+ * Phase 3 - Payment summary
+ * logic to update status of step number in header
  */
 public class StrategicPartnerTaskCreationAct extends BaseAppCompatActivity {
     private static final String TAG = "TaskCreationForStrategi";
@@ -32,12 +38,13 @@ public class StrategicPartnerTaskCreationAct extends BaseAppCompatActivity {
     public BannerImageModel mBannerImageModel;
     TaskCreationForStrategicPartnerPagerAdapter mTaskCreationPagerAdapter;
     private ArrayList<QueAnsModel> mSelectedQuestions;
-    private ArrayList<StrategicPartnerSubCategoryModel> mSelectedServicesList;
+    private ArrayList<StrategicPartnerServiceModel> mSelectedServicesList;
     public boolean isSingleSelection = false;
     public boolean isAllQuestionAnswer = false;
     public String date = "";
     public String time = "";
     public String address = "";
+    public String total = "";
 
     public static void getInstance(Context mContext, BannerImageModel model) {
         Intent intent = new Intent(mContext, StrategicPartnerTaskCreationAct.class);
@@ -53,7 +60,7 @@ public class StrategicPartnerTaskCreationAct extends BaseAppCompatActivity {
     }
 
     @Override
-    protected void  initiateUI() {
+    protected void initiateUI() {
         /**
          * Fetch data from Home Screen(Includes details about strategic Partners
          */
@@ -299,12 +306,12 @@ public class StrategicPartnerTaskCreationAct extends BaseAppCompatActivity {
     }
 
 
-    public void setSelectedSubService(ArrayList<StrategicPartnerSubCategoryModel> mSelectedServicesList) {
+    public void setSelectedSubService(ArrayList<StrategicPartnerServiceModel> mSelectedServicesList) {
         this.mSelectedServicesList = mSelectedServicesList;
         Log.e(TAG, " on continue click");
-        for (StrategicPartnerSubCategoryModel model : mSelectedServicesList) {
+        for (StrategicPartnerServiceModel model : mSelectedServicesList) {
             Log.e(TAG, " Item Name " + model.name);
-            for (StrategicPartnerSubCategoryModel.AllSubSubCat allSubSubCat : model.allSubSubCats) {
+            for (StrategicPartnerServiceModel.AllSubSubCat allSubSubCat : model.allSubSubCats) {
                 Log.e(TAG, " Item  sub name " + allSubSubCat.subSubCatName);
             }
         }
@@ -373,7 +380,7 @@ public class StrategicPartnerTaskCreationAct extends BaseAppCompatActivity {
         }
     }
 
-    public ArrayList<StrategicPartnerSubCategoryModel> getSelectedSubService() {
+    public ArrayList<StrategicPartnerServiceModel> getSelectedSubService() {
         return mSelectedServicesList;
     }
 

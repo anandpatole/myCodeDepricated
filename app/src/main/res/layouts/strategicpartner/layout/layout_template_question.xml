@@ -23,7 +23,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:background="@drawable/background_text_que_no_selector"
+            android:background="@drawable/background_text_que_num_selector"
             android:paddingBottom="@dimen/scale_5dp"
             android:paddingLeft="@dimen/scale_10dp"
             android:paddingRight="@dimen/scale_10dp"

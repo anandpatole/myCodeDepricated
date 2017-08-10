@@ -35,17 +35,20 @@ import java.util.Map;
 import static com.cheep.network.NetworkUtility.TAGS.CAT_ID;
 
 /**
- * Created by bhavesh on 28/4/17.
+ * Created by Giteeka on 20/7/17.
+ * This Fragment is first step of Strategic partner screen.
+ * Expandable list view of services
+ * Single or multiple sub services selection according to specific partners features
  */
 
 public class StrategicPartnerFragPhaseOne extends BaseFragment {
     public static final String TAG = "StrategicPartnerFragPhaseOne";
     private FragmentStrategicPartnerPhaseOneBinding mFragmentStrategicPartnerPhaseOneBinding;
-    private ExpandableRecyclerViewAdapter mExpandableRecyclerViewAdapter;
+    private ExpandableServicesRecycleAdapter mExpandableRecyclerViewAdapter;
     ErrorLoadingHelper errorLoadingHelper;
     private StrategicPartnerTaskCreationAct mStrategicPartnerTaskCreationAct;
     private boolean isVerified = false;
-    private ArrayList<StrategicPartnerSubCategoryModel> list;
+    private ArrayList<StrategicPartnerServiceModel> list;
 
 
     @SuppressWarnings("unused")
@@ -107,16 +110,16 @@ public class StrategicPartnerFragPhaseOne extends BaseFragment {
             public void onClick(View view) {
 
                 if (list != null && list.size() > 0) {
-                    ArrayList<StrategicPartnerSubCategoryModel> selectedServiceList = new ArrayList<>();
-                    for (StrategicPartnerSubCategoryModel model : list) {
+                    ArrayList<StrategicPartnerServiceModel> selectedServiceList = new ArrayList<>();
+                    for (StrategicPartnerServiceModel model : list) {
                         // get all sub selected services
                         if (model.isSelected) {
-                            StrategicPartnerSubCategoryModel categoryModel = new StrategicPartnerSubCategoryModel();
+                            StrategicPartnerServiceModel categoryModel = new StrategicPartnerServiceModel();
                             categoryModel.catId = model.catId;
                             categoryModel.name = model.name;
                             categoryModel.sub_cat_id = model.sub_cat_id;
-                            ArrayList<StrategicPartnerSubCategoryModel.AllSubSubCat> allSubSubCats = new ArrayList<>();
-                            for (StrategicPartnerSubCategoryModel.AllSubSubCat allSubSubCat : model.allSubSubCats) {
+                            ArrayList<StrategicPartnerServiceModel.AllSubSubCat> allSubSubCats = new ArrayList<>();
+                            for (StrategicPartnerServiceModel.AllSubSubCat allSubSubCat : model.allSubSubCats) {
                                 {
                                     if (allSubSubCat.isSelected) {
                                         allSubSubCats.add(allSubSubCat);
@@ -201,8 +204,8 @@ public class StrategicPartnerFragPhaseOne extends BaseFragment {
                 String error_message;
                 switch (statusCode) {
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
-                        list = Utility.getObjectListFromJsonString(jsonObject.optString(NetworkUtility.TAGS.DATA), StrategicPartnerSubCategoryModel[].class);
-                        mExpandableRecyclerViewAdapter = new ExpandableRecyclerViewAdapter(list, mStrategicPartnerTaskCreationAct.isSingleSelection);
+                        list = Utility.getObjectListFromJsonString(jsonObject.optString(NetworkUtility.TAGS.DATA), StrategicPartnerServiceModel[].class);
+                        mExpandableRecyclerViewAdapter = new ExpandableServicesRecycleAdapter(list, mStrategicPartnerTaskCreationAct.isSingleSelection);
                         mFragmentStrategicPartnerPhaseOneBinding.recyclerView.setAdapter(mExpandableRecyclerViewAdapter);
                         errorLoadingHelper.success();
                         break;
@@ -257,6 +260,7 @@ public class StrategicPartnerFragPhaseOne extends BaseFragment {
     @Override
     public void onDetach() {
         super.onDetach();
+        Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.WS.FETCH_SUB_CATS_STRATEGIC_PARTNER_LIST);
     }
 
     /**

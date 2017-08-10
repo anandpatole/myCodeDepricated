@@ -24,13 +24,18 @@ import com.cheep.R;
 import java.io.File;
 import java.io.IOException;
 
+/**
+ * Creator Giteeka 31/07/2017
+ * Activity for capturing video.
+ * Maximum duration is 10 sec and and size 20 MB
+ */
 public class RecordVideoNewActivity extends AppCompatActivity implements View.OnClickListener {
+
+    public static final String TAG = "RecordVideoNewActivity";
 
     public static final int MAXIMUM_DURATION = 10000;
     public static final int DURATION_SECOND = 1000;
     public static final int MAX_FILE_SIZE = 20000000;
-
-    public static final String TAG = "RecordVideoNewActivity";
 
     private Camera mCamera;
     private CameraPreview mPreview;
@@ -49,9 +54,9 @@ public class RecordVideoNewActivity extends AppCompatActivity implements View.On
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_record_video);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
         initialize();
     }
 
@@ -59,13 +64,16 @@ public class RecordVideoNewActivity extends AppCompatActivity implements View.On
 
         tvCounter = (TextView) findViewById(R.id.tv_counter);
 
+        // imageview for front/back camera selection
         ivSwitchCamera = (ImageView) findViewById(R.id.iv_change_camera);
         ivSwitchCamera.setOnClickListener(this);
+
 
         flCameraPreview = (FrameLayout) findViewById(R.id.camera_preview);
         mPreview = new CameraPreview(RecordVideoNewActivity.this, mCamera);
         flCameraPreview.addView(mPreview);
 
+        // imageview for start/stop video playing
         ivCapture = (ImageView) findViewById(R.id.ivCapture);
         ivCapture.setOnClickListener(this);
     }
@@ -227,6 +235,10 @@ public class RecordVideoNewActivity extends AppCompatActivity implements View.On
         }
     }
 
+    /**
+     * start 10 sec count timer and media recorder
+     * set stop button
+     */
     private void startMediaRecorder() {
         try {
             if (!prepareMediaRecorder()) {
@@ -252,6 +264,11 @@ public class RecordVideoNewActivity extends AppCompatActivity implements View.On
         }
     }
 
+    /**
+     * stop video recording,
+     * release media recorder and camera
+     * and send file result back to called fragment/activity
+     */
     private void stopMediaRecorder() {
         try {
             mCountDownTimer.cancel();
@@ -268,6 +285,9 @@ public class RecordVideoNewActivity extends AppCompatActivity implements View.On
         }
     }
 
+    /**
+     * release media recorder and camera and finish activuity
+     */
     private void cancelMediaRecorder() {
         try {
             if (recording) {
@@ -298,6 +318,9 @@ public class RecordVideoNewActivity extends AppCompatActivity implements View.On
         }
     }
 
+    /**
+     * @return true if media recorder is set up completely
+     */
     private boolean prepareMediaRecorder() {
 
         mediaRecorder = new MediaRecorder();
@@ -309,37 +332,35 @@ public class RecordVideoNewActivity extends AppCompatActivity implements View.On
         mediaRecorder.setVideoSource(MediaRecorder.VideoSource.CAMERA);
 
         int numCameras = Camera.getNumberOfCameras();
-        if (CamcorderProfile.hasProfile(CamcorderProfile.QUALITY_480P)) {
-            Log.e(TAG, "QUALITY_480P");
-        } else {
-            Log.e(TAG, "QUALITY_480P not suppported.");
-        }
 
         if (numCameras > 1) {
             if (CamcorderProfile.hasProfile(CamcorderProfile.QUALITY_480P)) {
+                Log.e(TAG, "QUALITY_480P");
                 CamcorderProfile profile = CamcorderProfile.get(CamcorderProfile.QUALITY_480P);
                 mediaRecorder.setProfile(CamcorderProfile.get(Camera.CameraInfo.CAMERA_FACING_FRONT, CamcorderProfile.QUALITY_480P));
                 mediaRecorder.setVideoSize(profile.videoFrameWidth, profile.videoFrameHeight);
             } else {
                 CamcorderProfile profile = CamcorderProfile.get(CamcorderProfile.QUALITY_LOW);
+                Log.e(TAG, "QUALITY_480P not suppported.");
                 mediaRecorder.setProfile(CamcorderProfile.get(Camera.CameraInfo.CAMERA_FACING_FRONT, CamcorderProfile.QUALITY_LOW));
                 mediaRecorder.setVideoSize(profile.videoFrameWidth, profile.videoFrameHeight);
             }
         } else {
             if (CamcorderProfile.hasProfile(CamcorderProfile.QUALITY_480P)) {
+                Log.e(TAG, "QUALITY_480P");
                 CamcorderProfile profile = CamcorderProfile.get(CamcorderProfile.QUALITY_480P);
                 mediaRecorder.setProfile(CamcorderProfile.get(Camera.CameraInfo.CAMERA_FACING_BACK, CamcorderProfile.QUALITY_480P));
                 mediaRecorder.setVideoSize(profile.videoFrameWidth, profile.videoFrameHeight);
             } else {
                 CamcorderProfile profile = CamcorderProfile.get(CamcorderProfile.QUALITY_LOW);
+                Log.e(TAG, "QUALITY_480P not suppported.");
                 mediaRecorder.setProfile(CamcorderProfile.get(Camera.CameraInfo.CAMERA_FACING_BACK, CamcorderProfile.QUALITY_LOW));
                 mediaRecorder.setVideoSize(profile.videoFrameWidth, profile.videoFrameHeight);
             }
         }
 
 
-        output_file = CameraHelper.getOutputMediaFile(
-                CameraHelper.MEDIA_TYPE_VIDEO);
+        output_file = CameraHelper.getOutputMediaFile(this);
         if (output_file.exists()) {
             output_file.delete();
         }
@@ -375,6 +396,9 @@ public class RecordVideoNewActivity extends AppCompatActivity implements View.On
         }
     }
 
+    /**
+     * count down timer for 10 sec and update text
+     */
     CountDownTimer mCountDownTimer = new CountDownTimer(MAXIMUM_DURATION, DURATION_SECOND - 500) {
         @Override
         public void onTick(long millisUntilFinished) {
