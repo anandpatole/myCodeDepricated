@@ -97,7 +97,6 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
     private FragmentStrategicPartnerPhaseTwoBinding mFragmentStrategicPartnerPhaseTwoBinding;
     private StrategicPartnerTaskCreationAct mStrategicPartnerTaskCreationAct;
     private boolean isVerified = false;
-    private boolean isTaskDescriptionVerified;
     SuperCalendar startDateTimeSuperCalendar = SuperCalendar.getInstance();
 
     private String mCurrentPhotoPath = "";
@@ -105,6 +104,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
     int count = 1;
     private ArrayList<QueAnsModel> mList;
     private DropDownAdapter.ClickItem cliclListener;
+    private boolean isTaskDescriptionVerified;
 
     @SuppressWarnings("unused")
     public static StrategicPartnerFragPhaseTwo newInstance() {
@@ -124,7 +124,6 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
         super.onActivityCreated(savedInstanceState);
         initiateUI();
         setListener();
-
     }
 
 
@@ -135,9 +134,8 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
         if (!isVisibleToUser || mStrategicPartnerTaskCreationAct == null) {
             return;
         }
-
+        // get  total of selected sub services amount and set bottom button
         int total = 0;
-
         for (StrategicPartnerSubCategoryModel model : mStrategicPartnerTaskCreationAct.getSelectedSubService()) {
             List<StrategicPartnerSubCategoryModel.AllSubSubCat> allSubSubCats = model.allSubSubCats;
             for (StrategicPartnerSubCategoryModel.AllSubSubCat allSubSubCat : allSubSubCats) {
@@ -163,14 +161,15 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
     @Override
     public void initiateUI() {
         Log.d(TAG, "initiateUI() called");
+
+        // handle click of bottom button (book and pay)
         mFragmentStrategicPartnerPhaseTwoBinding.textContinue.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                if (doValidation()) {
+                if (validateAllQueAndAns()) {
                     mStrategicPartnerTaskCreationAct.setSelectedQuestions(mList);
                     mStrategicPartnerTaskCreationAct.isAllQuestionAnswer = true;
-                    Log.d(TAG, "onSubCategoryRowItemClicked() called with: subServiceDetailModel = [" + "]");
+
                     // Make the status Verified
                     isVerified = true;
 
@@ -189,12 +188,13 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
             }
         });
 
-        fetchListOfSubCategory(mStrategicPartnerTaskCreationAct.mBannerImageModel.cat_id);
+        fetchListOfQuestions(mStrategicPartnerTaskCreationAct.mBannerImageModel.cat_id);
 
     }
 
-    private void fetchListOfSubCategory(String catId) {
-        Log.d(TAG, "fetchListOfSubCategory() called with: catId = [" + catId + "]");
+    /////////////////////////////////////// WEB CALL FOR QUESTIONARY ////////////////////////////////
+    private void fetchListOfQuestions(String catId) {
+        Log.d(TAG, "fetchListOfQuestions() called with: catId = [" + catId + "]");
         if (!Utility.isConnected(mContext)) {
             Utility.showSnackBar(getString(R.string.no_internet), mFragmentStrategicPartnerPhaseTwoBinding.getRoot());
             return;
@@ -231,6 +231,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
                 String error_message;
                 switch (statusCode) {
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
+                        // inflate all question ui
                         inflateUI(jsonObject.optString(NetworkUtility.TAGS.DATA));
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
@@ -266,6 +267,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
             Utility.showSnackBar(getString(R.string.label_something_went_wrong), mFragmentStrategicPartnerPhaseTwoBinding.getRoot());
         }
     };
+    /////////////////////////////////////// WEB CALL FOR QUESTIONARY completed ////////////////////////////////
 
     @Override
     public void setListener() {
@@ -302,71 +304,110 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
         // get question answer list
         mList = Utility.getObjectListFromJsonString(response, QueAnsModel[].class);        // load list
         for (QueAnsModel model : mList) {
+            // image/video selection UI
             if (model.answerType.equalsIgnoreCase(Utility.TEMPLATE_UPLOAD)) {
                 inflateAnsUploadTemplate(model);
-            } else if (model.answerType.equalsIgnoreCase(Utility.TEMPLATE_DATE_PICKER)) {
+            }
+            // date  selection UI
+            else if (model.answerType.equalsIgnoreCase(Utility.TEMPLATE_DATE_PICKER)) {
                 inflateAnsDatePickerTemplate(model);
-            } else if (model.answerType.equalsIgnoreCase(Utility.TEMPLATE_TIME_PICKER)) {
+            }
+            // time selection UI
+            else if (model.answerType.equalsIgnoreCase(Utility.TEMPLATE_TIME_PICKER)) {
                 inflateAnsTimePickerTemplate(model);
-            } else if (model.answerType.equalsIgnoreCase(Utility.TEMPLATE_LOCATION)) {
+            }
+            // location selection UI
+            else if (model.answerType.equalsIgnoreCase(Utility.TEMPLATE_LOCATION)) {
                 inflateAnsLocationPickerTemplate(model);
-            } else if (model.answerType.equalsIgnoreCase(Utility.TEMPLATE_TEXT_FIELD)) {
+            }
+            // enter free text UI
+            else if (model.answerType.equalsIgnoreCase(Utility.TEMPLATE_TEXT_FIELD)) {
                 inflateAnsTextTemplate(model);
-            } else if (model.answerType.equalsIgnoreCase(Utility.TEMPLATE_DROPDOWN)) {
-                inflateAnsDropDownTemplate(model);
+            }
+            // multiple choice UI
+            else if (model.answerType.equalsIgnoreCase(Utility.TEMPLATE_DROPDOWN)) {
+                inflateDropDownTemplate(model);
             }
 
             count++;
         }
     }
 
-    private void inflateAnsDropDownTemplate(final QueAnsModel model) {
+    private void inflateDropDownTemplate(final QueAnsModel model) {
+        // question view
         ViewGroup queView = (ViewGroup) LayoutInflater.from(mStrategicPartnerTaskCreationAct).inflate(R.layout.layout_template_question, null, false);
-        final ViewGroup ansView = queView.findViewById(R.id.relAnsView);
+        // text question number
         TextView txtQueNo = queView.findViewById(R.id.txtQueNo);
-        txtQueNo.setTag(model.questionId);
-        TextView txtQueStr = queView.findViewById(R.id.txtQueStr);
         txtQueNo.setText(String.valueOf(count));
+        txtQueNo.setTag(model.questionId);
+
+        // text question
+        TextView txtQueStr = queView.findViewById(R.id.txtQueStr);
         txtQueStr.setText(String.valueOf(model.question));
-        TextView txtVerticalLine= queView.findViewById(R.id.txtVerticalLine);
-        if (count == mList.size())
+
+        // if question is last then dont show vertical line
+        TextView txtVerticalLine = queView.findViewById(R.id.txtVerticalLine);
+        if (count == mList.size()) {
             txtVerticalLine.setVisibility(View.GONE);
+        }
 
         // add question view on top view
         mFragmentStrategicPartnerPhaseTwoBinding.linMain.addView(queView);
 
+        // answer view
+        final ViewGroup ansView = queView.findViewById(R.id.relAnsView);
         final View viewInflated = LayoutInflater.from(mStrategicPartnerTaskCreationAct).inflate(R.layout.layout_template_answer_multiple_choice, null, false);
+
+        // answer text view
         final TextView txtAnswer = viewInflated.findViewById(R.id.txtQueAnswer);
+
+        // by default first option will be selected
         txtAnswer.setText(model.dropDownList.get(0).dropdown_answer);
         model.dropDownList.get(0).isSelected = true;
         model.answer = model.dropDownList.get(0).dropdown_answer;
+
+        // open menu onClick of ans text
         txtAnswer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showFilterWindow(txtAnswer, model);
+                showDropDownMenu(txtAnswer, model);
             }
         });
+
         ansView.addView(viewInflated);
     }
 
     private void inflateAnsLocationPickerTemplate(final QueAnsModel model) {
+        // question view
         ViewGroup queView = (ViewGroup) LayoutInflater.from(mStrategicPartnerTaskCreationAct).inflate(R.layout.layout_template_question, null, false);
-        ViewGroup ansView = queView.findViewById(R.id.relAnsView);
+
+        // text question number
         final TextView txtQueNo = queView.findViewById(R.id.txtQueNo);
-        TextView txtQueStr = queView.findViewById(R.id.txtQueStr);
         txtQueNo.setText(String.valueOf(count));
+
+        // text question
+        TextView txtQueStr = queView.findViewById(R.id.txtQueStr);
         txtQueStr.setText(String.valueOf(model.question));
-        TextView txtVerticalLine= queView.findViewById(R.id.txtVerticalLine);
-        if (count == mList.size())
+
+        // if question is last then dont show vertical line
+        TextView txtVerticalLine = queView.findViewById(R.id.txtVerticalLine);
+        if (count == mList.size()) {
             txtVerticalLine.setVisibility(View.GONE);
+        }
 
         // add question view on top view
         mFragmentStrategicPartnerPhaseTwoBinding.linMain.addView(queView);
 
+        // answer view
+        ViewGroup ansView = queView.findViewById(R.id.relAnsView);
         View view = LayoutInflater.from(mStrategicPartnerTaskCreationAct).inflate(R.layout.layout_template_place_picker, null, false);
+
+        // answer text view
         final TextView txtAnswer = view.findViewById(R.id.txtQueAnswer);
         txtAnswer.setText(getString(R.string.label_select_an_address));
         txtAnswer.setTag(Utility.TEMPLATE_LOCATION);
+
+        // handle click - open bottom sheet address dialog for location
         txtAnswer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -377,34 +418,54 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
     }
 
     private void inflateAnsTimePickerTemplate(final QueAnsModel model) {
+
+        // question view
         ViewGroup queView = (ViewGroup) LayoutInflater.from(mStrategicPartnerTaskCreationAct).inflate(R.layout.layout_template_question, null, false);
-        ViewGroup ansView = queView.findViewById(R.id.relAnsView);
+
+        // text question number
         TextView txtQueNo = queView.findViewById(R.id.txtQueNo);
-        TextView txtQueStr = queView.findViewById(R.id.txtQueStr);
         txtQueNo.setText(String.valueOf(count));
         txtQueNo.setTag(model.questionId);
+
+        // text question
+        TextView txtQueStr = queView.findViewById(R.id.txtQueStr);
         txtQueStr.setText(String.valueOf(model.question));
-        TextView txtVerticalLine= queView.findViewById(R.id.txtVerticalLine);
-        if (count == mList.size())
+
+        // if question is last then dont show vertical line
+        TextView txtVerticalLine = queView.findViewById(R.id.txtVerticalLine);
+        if (count == mList.size()) {
             txtVerticalLine.setVisibility(View.GONE);
+        }
 
         // add question view on top view
         mFragmentStrategicPartnerPhaseTwoBinding.linMain.addView(queView);
 
 
-        View view = LayoutInflater.from(mStrategicPartnerTaskCreationAct).inflate(R.layout.layout_template_time_picker, null, false);
+        // answer view
+        ViewGroup ansView = queView.findViewById(R.id.relAnsView);
+        View view = LayoutInflater.from(mStrategicPartnerTaskCreationAct).inflate(R.layout.layout_template_date_picker, null, false);
+
+        // answer text view
         final TextView txtAnswer = view.findViewById(R.id.txtQueAnswer);
         txtAnswer.setText(getString(R.string.label_select_the_time));
+
+        // handle click - time selection
         txtAnswer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
                 for (QueAnsModel queAnsModel : mList) {
-                    if (queAnsModel.answerType.equalsIgnoreCase(Utility.TEMPLATE_DATE_PICKER))
-                        if (queAnsModel.answer != null && !queAnsModel.answer.equalsIgnoreCase(""))
+                    // check if date is selected
+                    if (queAnsModel.answerType.equalsIgnoreCase(Utility.TEMPLATE_DATE_PICKER)) {
+                        if (queAnsModel.answer != null && !queAnsModel.answer.equalsIgnoreCase("")) {
+                            txtAnswer.setSelected(true);
                             showTimePickerDialog(txtAnswer, model);
-                        else
+                        } else {
+                            txtAnswer.setSelected(false);
                             Utility.showSnackBar("Please select the date", mFragmentStrategicPartnerPhaseTwoBinding.getRoot());
+                        }
+                        break;
+                    }
                 }
             }
         });
@@ -418,7 +479,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
         TextView txtQueStr = queView.findViewById(R.id.txtQueStr);
         txtQueNo.setText(String.valueOf(count));
         txtQueStr.setText(String.valueOf(model.question));
-        TextView txtVerticalLine= queView.findViewById(R.id.txtVerticalLine);
+        TextView txtVerticalLine = queView.findViewById(R.id.txtVerticalLine);
         if (count == mList.size())
             txtVerticalLine.setVisibility(View.GONE);
         // add question view on top view
@@ -437,7 +498,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
             @Override
             public void afterTextChanged(Editable editable) {
                 model.answer = edtQueAnswer.getText().toString();
-                txtQueNo.setSelected(model.answer != null && model.answer.trim().length() > 0);
+                txtQueNo.setSelected(model.answer.trim().length() > 0);
             }
         });
         ansView.addView(view);
@@ -451,7 +512,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
         TextView txtQueStr = queView.findViewById(R.id.txtQueStr);
         txtQueNo.setText(String.valueOf(count));
         txtQueStr.setText(String.valueOf(model.question));
-        TextView txtVerticalLine= queView.findViewById(R.id.txtVerticalLine);
+        TextView txtVerticalLine = queView.findViewById(R.id.txtVerticalLine);
         if (count == mList.size())
             txtVerticalLine.setVisibility(View.GONE);
 
@@ -497,6 +558,11 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
         ansView.addView(view);
     }
 
+    /**
+     *
+     * @param textView this is answer textview to set time
+     * @param model
+     */
     private void showTimePickerDialog(final TextView textView, final QueAnsModel model) {
         // Get Current Time
         final Calendar c = Calendar.getInstance();
@@ -525,7 +591,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
 //                            if (System.currentTimeMillis() < startDateTimeSuperCalendar.getTimeInMillis()) {
                             String selectedDateTime = startDateTimeSuperCalendar.format(Utility.DATE_FORMAT_HH_MM_AM);
                             textView.setText(selectedDateTime);
-                            textView.setSelected(true);
+                            textView.setSelected(false);
                             mStrategicPartnerTaskCreationAct.time = selectedDateTime;
                             model.answer = String.valueOf(startDateTimeSuperCalendar.getTimeInMillis());
                             mFragmentStrategicPartnerPhaseTwoBinding.linMain.findViewWithTag(model.questionId).setSelected(true);
@@ -537,6 +603,12 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
                         }
                     }
                 }, c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE), false);
+        timePickerDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialogInterface) {
+                textView.setSelected(false);
+            }
+        });
         timePickerDialog.show();
 
     }
@@ -551,11 +623,11 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
         txtQueNo.setText(String.valueOf(count));
         txtQueStr.setText(String.valueOf(model.question));
 
-        TextView txtVerticalLine= queView.findViewById(R.id.txtVerticalLine);
+        TextView txtVerticalLine = queView.findViewById(R.id.txtVerticalLine);
         if (count == mList.size())
             txtVerticalLine.setVisibility(View.GONE);
 
-            // add question view on top view
+        // add question view on top view
         mFragmentStrategicPartnerPhaseTwoBinding.linMain.addView(queView);
 
 
@@ -816,8 +888,8 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////// -- Menu multiple choice--- ////////////////////////////////////////
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    private void showFilterWindow(final TextView textView, final QueAnsModel model) {
-        Log.i(TAG, "showFilterWindow: ");
+    private void showDropDownMenu(final TextView textView, final QueAnsModel model) {
+        Log.i(TAG, "showDropDownMenu: ");
         final View mFilterPopupWindow = View.inflate(mStrategicPartnerTaskCreationAct, R.layout.layout_template_drop_down_list, null);
 
         final PopupWindow mPopupWindow = new PopupWindow(mStrategicPartnerTaskCreationAct);
@@ -863,22 +935,6 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
             }
         };
         dropDownAdapter.setListener(cliclListener);
-//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-//                for (int j = 0; j < model.dropDownList.size(); j++) {
-//                    QueAnsModel.DropDownModel dropDownModel = model.dropDownList.get(j);
-//                    dropDownModel.isSelected = i == j;
-//                }
-//                dropDownAdapter.setSelected(i);
-//                textView.setText(model.dropDownList.get(i).dropdown_answer);
-//                textView.setSelected(true);
-//                model.answer = model.dropDownList.get(i).dropdown_answer;
-//                mFragmentStrategicPartnerPhaseTwoBinding.linMain.findViewWithTag(model.questionId).setSelected(true);
-//                mPopupWindow.dismiss();
-//
-//            }
-//        });
 
         mPopupWindow.setBackgroundDrawable(new BitmapDrawable());
         mPopupWindow.setContentView(mFilterPopupWindow);
@@ -930,7 +986,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
                         mStrategicPartnerTaskCreationAct.address = address;
                         addressId = model.address_id;
                         Log.e(TAG, "category detail >> " + model.category + "");
-
+                        textAns.setBackground(ContextCompat.getDrawable(mStrategicPartnerTaskCreationAct, R.drawable.background_ans_normal));
                         if (model.category.equalsIgnoreCase(NetworkUtility.TAGS.ADDRESS_TYPE.HOME))
                             textAns.setText(getString(R.string.label_home));
                         else if (model.category.equalsIgnoreCase(NetworkUtility.TAGS.ADDRESS_TYPE.OFFICE))
@@ -1363,7 +1419,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
         }
 
 
-        //if address id is greater then 0 then it means we need to update the existing address so sending address_id as parameter also
+        //if address id is greater then 0 then it means we need to update the existing address so sending addressId as parameter also
         if (!"0".equalsIgnoreCase(addressId)) {
             mParams.put(NetworkUtility.TAGS.ADDRESS_ID, String.valueOf(addressId));
         }
@@ -1744,36 +1800,46 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
     }
 
 
-    private boolean doValidation() {
+    /**
+     * @return true if all questions are answered
+     * or false is something is missing
+     */
+    private boolean validateAllQueAndAns() {
         String message = "";
         // Get date-time for next 3 hours
         SuperCalendar calAfter3Hours = SuperCalendar.getInstance().getNext3HoursTime();
         for (int i = 0; i < mList.size(); i++) {
             QueAnsModel queAnsModel = mList.get(i);
             if (queAnsModel.answer == null || queAnsModel.answer.equalsIgnoreCase("")) {
+                // alert date is not selected
                 if (queAnsModel.answerType.equalsIgnoreCase(Utility.TEMPLATE_DATE_PICKER)) {
                     message = "Please select the date";
                     Utility.showSnackBar(message, mFragmentStrategicPartnerPhaseTwoBinding.getRoot());
                     return false;
+                    // alert time is not selected
                 } else if (queAnsModel.answerType.equalsIgnoreCase(Utility.TEMPLATE_TIME_PICKER)) {
                     message = "Please select the time";
                     Utility.showSnackBar(message, mFragmentStrategicPartnerPhaseTwoBinding.getRoot());
                     return false;
+                    // alert selected date and time is less then 3 hours
                 } else if (startDateTimeSuperCalendar.getTimeInMillis() < calAfter3Hours.getTimeInMillis()) {
                     Utility.showSnackBar("Date Time must be after 3 hour.", mFragmentStrategicPartnerPhaseTwoBinding.linMain);
                     return false;
+                    // alert multiple choices option is not selected
                 } else if (queAnsModel.answerType.equalsIgnoreCase(Utility.TEMPLATE_DROPDOWN)) {
                     message = "Please answer all the questions";
                     Utility.showSnackBar(message, mFragmentStrategicPartnerPhaseTwoBinding.getRoot());
                     return false;
                 }
             }
+            // location is not selected
             if (queAnsModel.answerType.equalsIgnoreCase(Utility.TEMPLATE_LOCATION) && addressId.equalsIgnoreCase("")) {
                 message = "Please select an address";
                 Utility.showSnackBar(message, mFragmentStrategicPartnerPhaseTwoBinding.getRoot());
                 return false;
             }
         }
+        // all necessary questions are answered
         return true;
     }
 

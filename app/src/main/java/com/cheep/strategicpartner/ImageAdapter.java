@@ -80,12 +80,13 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.MyViewHolder
 
         void bind(MediaModel mediaModel) {
             if (mediaModel.type == MediaModel.MediaType.IMAGE)
-//                Utility.showCircularImageView(mImgThumb.getContext(), "Image", mImgThumb, mediaModel.path, R.drawable.ic_camera, true);
-//                Glide.with(mImgThumb.getContext()).load(mediaModel.path).into(mImgThumb);
                 mImgThumb.setImageBitmap(Utility.getRoundedCornerBitmap(BitmapFactory.decodeFile(mediaModel.path), mImgThumb.getContext()));
+//                mImgThumb.setImageBitmap(Utility.addBorderToBitmap(BitmapFactory.decodeFile(mediaModel.path), 15, ContextCompat.getColor(mImgThumb.getContext(), R.color.grey_varient_1)));
             else
                 try {
-                    mImgThumb.setImageBitmap(Utility.getVideoThumbnail(mediaModel.path));
+//                    mImgThumb.setImageBitmap(Utility.getVideoThumbnail(mediaModel.path));
+                    mImgThumb.setImageBitmap(Utility.getRoundedCornerBitmap(Utility.getVideoThumbnail(mediaModel.path), mImgThumb.getContext()));
+//                    mImgThumb.setImageBitmap(Utility.addBorderToBitmap(Utility.getVideoThumbnail(mediaModel.path), 15, ContextCompat.getColor(mImgThumb.getContext(), R.color.grey_varient_1)));
                 } catch (Throwable throwable) {
                     throwable.printStackTrace();
                 }

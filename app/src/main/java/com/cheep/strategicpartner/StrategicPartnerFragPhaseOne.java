@@ -39,18 +39,18 @@ import static com.cheep.network.NetworkUtility.TAGS.CAT_ID;
  */
 
 public class StrategicPartnerFragPhaseOne extends BaseFragment {
-    public static final String TAG = "SelectSubServicesForStr";
+    public static final String TAG = "StrategicPartnerFragPhaseOne";
     private FragmentStrategicPartnerPhaseOneBinding mFragmentStrategicPartnerPhaseOneBinding;
     private ExpandableRecyclerViewAdapter mExpandableRecyclerViewAdapter;
     ErrorLoadingHelper errorLoadingHelper;
     private StrategicPartnerTaskCreationAct mStrategicPartnerTaskCreationAct;
     private boolean isVerified = false;
+    private ArrayList<StrategicPartnerSubCategoryModel> list;
 
 
     @SuppressWarnings("unused")
     public static StrategicPartnerFragPhaseOne newInstance() {
-        StrategicPartnerFragPhaseOne fragment = new StrategicPartnerFragPhaseOne();
-        return fragment;
+        return new StrategicPartnerFragPhaseOne();
     }
 
     @Nullable
@@ -75,7 +75,7 @@ public class StrategicPartnerFragPhaseOne extends BaseFragment {
         if (!isVisibleToUser || mStrategicPartnerTaskCreationAct == null) {
             return;
         }
-
+        // set step number background in top banner
         if (isVerified) {
             mStrategicPartnerTaskCreationAct.setTaskState(TaskCreationActivity.STEP_ONE_VERIFIED);
         } else {
@@ -95,18 +95,21 @@ public class StrategicPartnerFragPhaseOne extends BaseFragment {
 
         //Setting recycler view
         errorLoadingHelper = new ErrorLoadingHelper(mFragmentStrategicPartnerPhaseOneBinding.recyclerView);
-
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mContext);
         mFragmentStrategicPartnerPhaseOneBinding.recyclerView.setLayoutManager(linearLayoutManager);
         errorLoadingHelper.showLoading();
+        // web call
         fetchListOfSubCategory(mStrategicPartnerTaskCreationAct.mBannerImageModel.cat_id);
 
+        // handle bottom button click
         mFragmentStrategicPartnerPhaseOneBinding.textContinue.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 if (list != null && list.size() > 0) {
                     ArrayList<StrategicPartnerSubCategoryModel> selectedServiceList = new ArrayList<>();
                     for (StrategicPartnerSubCategoryModel model : list) {
+                        // get all sub selected services
                         if (model.isSelected) {
                             StrategicPartnerSubCategoryModel categoryModel = new StrategicPartnerSubCategoryModel();
                             categoryModel.catId = model.catId;
@@ -186,7 +189,6 @@ public class StrategicPartnerFragPhaseOne extends BaseFragment {
         Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequestForCategoryList, NetworkUtility.WS.FETCH_SUB_CATS_STRATEGIC_PARTNER_LIST);
     }
 
-    private ArrayList<StrategicPartnerSubCategoryModel> list;
     Response.Listener mCallFetchAllSubCateStreParListingWSResponseListener = new Response.Listener() {
         @Override
         public void onResponse(Object response) {
