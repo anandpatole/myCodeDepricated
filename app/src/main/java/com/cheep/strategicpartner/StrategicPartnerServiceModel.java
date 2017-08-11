@@ -10,7 +10,7 @@ import java.util.List;
  * Strategic partner services Json class model
  */
 
-public class StrategicPartnerServiceModel implements Parent<StrategicPartnerServiceModel.AllSubSubCat> {
+class StrategicPartnerServiceModel implements Parent<StrategicPartnerServiceModel.AllSubSubCat> {
 
 
     @SerializedName("cat_id")

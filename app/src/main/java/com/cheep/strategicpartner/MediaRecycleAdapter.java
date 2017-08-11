@@ -51,12 +51,8 @@ class MediaRecycleAdapter extends RecyclerView.Adapter<MediaRecycleAdapter.MyVie
         return mList.size();
     }
 
-    public ArrayList<MediaModel> getList() {
-        return mList;
-    }
-
     interface ItemClick {
-        void removeMedia(int pos);
+        void removeMedia();
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder {
@@ -74,14 +70,14 @@ class MediaRecycleAdapter extends RecyclerView.Adapter<MediaRecycleAdapter.MyVie
                 public void onClick(View view) {
                     mList.remove(getAdapterPosition());
                     notifyDataSetChanged();
-                    mItemClick.removeMedia(getAdapterPosition());
+                    mItemClick.removeMedia();
                 }
             });
         }
 
         void bind(MediaModel mediaModel) {
 
-            // set image thumbnails with rounder grey border around imageview
+            // set image thumbnails with rounder grey border around image view
             if (mediaModel.type == MediaModel.MediaType.IMAGE)
                 mImgThumb.setImageBitmap(Utility.getRoundedCornerBitmap(BitmapFactory.decodeFile(mediaModel.path), mImgThumb.getContext()));
             else

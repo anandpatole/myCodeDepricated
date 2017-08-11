@@ -14,7 +14,7 @@ class MediaModel {
     }
 
 
-    public MediaModel(String path, MediaType type) {
+    MediaModel(String path, MediaType type) {
         this.path = path;
         this.type = type;
     }

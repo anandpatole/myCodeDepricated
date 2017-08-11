@@ -29,7 +29,6 @@ import com.cheep.model.UserDetails;
 import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
-import com.cheep.utils.ErrorLoadingHelper;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.Utility;
 import com.google.gson.JsonArray;
@@ -54,15 +53,13 @@ import java.util.Map;
 public class StrategicPartnerFragPhaseThree extends BaseFragment {
     public static final String TAG = "StrategicPartnerFragPha";
     private FragmentStrategicPartnerPhaseThreeBinding mFragmentStrategicPartnerPhaseThreeBinding;
-    private ErrorLoadingHelper errorLoadingHelper;
     private StrategicPartnerTaskCreationAct mStrategicPartnerTaskCreationAct;
-    private boolean isVerified = false;
-    private boolean isTaskDescriptionVerified;
     private String addressId = "";
     private String payableAmount;
     private String start_datetime = "";
     private EditText edtCheepCode;
     private BottomAlertDialog cheepCodeDialog;
+    @Nullable
     private String cheepCode;
 
     @SuppressWarnings("unused")
@@ -94,12 +91,6 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
             return;
         }
 
-        // Task Description
-        if (mStrategicPartnerTaskCreationAct.isAllQuestionAnswer) {
-            isTaskDescriptionVerified = true;
-        } else {
-            isTaskDescriptionVerified = false;
-        }
 
 
         // force to scroll up the view for strategic partner logo
@@ -181,7 +172,7 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
     /**
      * clear promo code details and set original total values
      */
-    public void resetPromoCodeValue() {
+    private void resetPromoCodeValue() {
         mFragmentStrategicPartnerPhaseThreeBinding.textpromocodelabel.setTextColor(ContextCompat.getColor(mStrategicPartnerTaskCreationAct, R.color.splash_gradient_end));
         mFragmentStrategicPartnerPhaseThreeBinding.textpromocodelabel.setText(getResources().getString(R.string.label_enter_promocode));
         mFragmentStrategicPartnerPhaseThreeBinding.txtsubtotal.setText(getString(R.string.ruppe_symbol_x, "" + mStrategicPartnerTaskCreationAct.total));
@@ -244,7 +235,7 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
         Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequestForSPList);
     }
 
-    Response.Listener mCallValidateCheepCodeWSResponseListener = new Response.Listener() {
+    private Response.Listener mCallValidateCheepCodeWSResponseListener = new Response.Listener() {
         @Override
         public void onResponse(Object response) {
 
@@ -295,7 +286,7 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
             }
         }
     };
-    Response.ErrorListener mCallValidateCheepCodeWSErrorListener = new Response.ErrorListener() {
+    private Response.ErrorListener mCallValidateCheepCodeWSErrorListener = new Response.ErrorListener() {
         @Override
         public void onErrorResponse(final VolleyError error) {
             Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
@@ -316,18 +307,13 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
         mFragmentStrategicPartnerPhaseThreeBinding.imgCheepCodeClose.setVisibility(View.VISIBLE);
     }
 
-    private SpannableStringBuilder getSpannableString(String fullstring, int color, boolean isBold) {
-        SpannableStringBuilder text = new SpannableStringBuilder(fullstring);
-        text.setSpan(new ForegroundColorSpan(color), 0, fullstring.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+    private SpannableStringBuilder getSpannableString(String string, int color, boolean isBold) {
+        SpannableStringBuilder text = new SpannableStringBuilder(string);
+        text.setSpan(new ForegroundColorSpan(color), 0, string.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         if (isBold) {
-            text.setSpan(new StyleSpan(Typeface.BOLD), 0, fullstring.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            text.setSpan(new StyleSpan(Typeface.BOLD), 0, string.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
         return text;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
     }
 
     @Override
@@ -360,15 +346,6 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
 //        Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.WS.FETCH_SUB_SERVICE_LIST);
     }
 
-    /**
-     * This method would return whether the stage is verified or not
-     *
-     * @return
-     */
-
-    public boolean isVerified() {
-        return isVerified;
-    }
 
 
     private void callWeb() {
@@ -392,7 +369,7 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
         mHeaderParams.put(NetworkUtility.TAGS.USER_ID, userDetails.UserID);
         mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
 
-        String txnid = System.currentTimeMillis() + "";
+        String transactionID = System.currentTimeMillis() + "";
         // Add Params
         Map<String, String> mParams = new HashMap<>();
         mParams.put(NetworkUtility.TAGS.ADDRESS_ID, addressId);
@@ -404,7 +381,7 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
         mParams.put(NetworkUtility.TAGS.QUOTE_AMOUNT, mStrategicPartnerTaskCreationAct.total + "");
         mParams.put(NetworkUtility.TAGS.CHEEPCODE, cheepCode);
         mParams.put(NetworkUtility.TAGS.PAYABLE_AMOUNT, payableAmount);
-        mParams.put(NetworkUtility.TAGS.TRANSACTION_ID, txnid);
+        mParams.put(NetworkUtility.TAGS.TRANSACTION_ID, transactionID);
         Log.e(TAG, mParams + "");
 
     }

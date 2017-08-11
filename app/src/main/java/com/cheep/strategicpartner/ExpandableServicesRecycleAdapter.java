@@ -1,6 +1,5 @@
 package com.cheep.strategicpartner;
 
-import android.annotation.SuppressLint;
 import android.support.annotation.NonNull;
 import android.support.annotation.UiThread;
 import android.view.LayoutInflater;
@@ -118,16 +117,6 @@ class ExpandableServicesRecycleAdapter extends ExpandableRecyclerAdapter<Strateg
             textSubCategoryName.setText(subServiceDetailModel.name);
         }
 
-        @SuppressLint("NewApi")
-        @Override
-        public void setExpanded(boolean expanded) {
-            super.setExpanded(expanded);
-        }
-
-        @Override
-        public void onExpansionToggled(boolean expanded) {
-            super.onExpansionToggled(expanded);
-        }
     }
 
     /**

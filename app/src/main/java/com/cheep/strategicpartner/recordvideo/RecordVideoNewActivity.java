@@ -9,6 +9,7 @@ import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -23,6 +24,8 @@ import com.cheep.R;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Creator Giteeka 31/07/2017
@@ -31,19 +34,20 @@ import java.io.IOException;
  */
 public class RecordVideoNewActivity extends AppCompatActivity implements View.OnClickListener {
 
-    public static final String TAG = "RecordVideoNewActivity";
+    private static final String TAG = "RecordVideoNewActivity";
 
-    public static final int MAXIMUM_DURATION = 10000;
-    public static final int DURATION_SECOND = 1000;
-    public static final int MAX_FILE_SIZE = 20000000;
+    private static final int MAXIMUM_DURATION = 10000;
+    private static final int DURATION_SECOND = 1000;
+    private static final int MAX_FILE_SIZE = 20000000;
 
+    @Nullable
     private Camera mCamera;
     private CameraPreview mPreview;
+    @Nullable
     private MediaRecorder mediaRecorder;
     private TextView tvCounter;
     private ImageView ivCapture;
     private ImageView ivSwitchCamera;
-    private FrameLayout flCameraPreview;
     private boolean cameraFront = false;
     private boolean recording = false;
     private File output_file;
@@ -60,20 +64,20 @@ public class RecordVideoNewActivity extends AppCompatActivity implements View.On
         initialize();
     }
 
-    public void initialize() {
+    private void initialize() {
 
         tvCounter = (TextView) findViewById(R.id.tv_counter);
 
-        // imageview for front/back camera selection
+        // image view for front/back camera selection
         ivSwitchCamera = (ImageView) findViewById(R.id.iv_change_camera);
         ivSwitchCamera.setOnClickListener(this);
 
 
-        flCameraPreview = (FrameLayout) findViewById(R.id.camera_preview);
+        FrameLayout flCameraPreview = (FrameLayout) findViewById(R.id.camera_preview);
         mPreview = new CameraPreview(RecordVideoNewActivity.this, mCamera);
         flCameraPreview.addView(mPreview);
 
-        // imageview for start/stop video playing
+        // image view for start/stop video playing
         ivCapture = (ImageView) findViewById(R.id.ivCapture);
         ivCapture.setOnClickListener(this);
     }
@@ -114,7 +118,7 @@ public class RecordVideoNewActivity extends AppCompatActivity implements View.On
     }
 
 
-    public void chooseCamera() {
+    private void chooseCamera() {
         // if the camera preview is the front
         if (cameraFront) {
             int cameraId = findBackFacingCamera();
@@ -201,11 +205,7 @@ public class RecordVideoNewActivity extends AppCompatActivity implements View.On
 
     private boolean hasCamera(Context context) {
         // check if the device has camera
-        if (context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
-            return true;
-        } else {
-            return false;
-        }
+        return context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA);
     }
 
     @Override
@@ -286,7 +286,7 @@ public class RecordVideoNewActivity extends AppCompatActivity implements View.On
     }
 
     /**
-     * release media recorder and camera and finish activuity
+     * release media recorder and camera and finish activity
      */
     private void cancelMediaRecorder() {
         try {
@@ -341,7 +341,7 @@ public class RecordVideoNewActivity extends AppCompatActivity implements View.On
                 mediaRecorder.setVideoSize(profile.videoFrameWidth, profile.videoFrameHeight);
             } else {
                 CamcorderProfile profile = CamcorderProfile.get(CamcorderProfile.QUALITY_LOW);
-                Log.e(TAG, "QUALITY_480P not suppported.");
+                Log.e(TAG, "QUALITY_480P not supported.");
                 mediaRecorder.setProfile(CamcorderProfile.get(Camera.CameraInfo.CAMERA_FACING_FRONT, CamcorderProfile.QUALITY_LOW));
                 mediaRecorder.setVideoSize(profile.videoFrameWidth, profile.videoFrameHeight);
             }
@@ -353,14 +353,14 @@ public class RecordVideoNewActivity extends AppCompatActivity implements View.On
                 mediaRecorder.setVideoSize(profile.videoFrameWidth, profile.videoFrameHeight);
             } else {
                 CamcorderProfile profile = CamcorderProfile.get(CamcorderProfile.QUALITY_LOW);
-                Log.e(TAG, "QUALITY_480P not suppported.");
+                Log.e(TAG, "QUALITY_480P not supported.");
                 mediaRecorder.setProfile(CamcorderProfile.get(Camera.CameraInfo.CAMERA_FACING_BACK, CamcorderProfile.QUALITY_LOW));
                 mediaRecorder.setVideoSize(profile.videoFrameWidth, profile.videoFrameHeight);
             }
         }
 
 
-        output_file = CameraHelper.getOutputMediaFile(this);
+        output_file = getOutputMediaFile(this);
         if (output_file.exists()) {
             output_file.delete();
         }
@@ -387,7 +387,12 @@ public class RecordVideoNewActivity extends AppCompatActivity implements View.On
         return true;
 
     }
+  private File getOutputMediaFile(Context context) {
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss"/*, Locale.US*/).format(new Date());
+        String imageFileName = "VID_" + timeStamp + ".mp4";
 
+        return new File(new File(context.getFilesDir(), "CheepImages"), imageFileName);
+    }
     private void releaseCamera() {
         // stop and release camera
         if (mCamera != null) {
@@ -399,7 +404,7 @@ public class RecordVideoNewActivity extends AppCompatActivity implements View.On
     /**
      * count down timer for 10 sec and update text
      */
-    CountDownTimer mCountDownTimer = new CountDownTimer(MAXIMUM_DURATION, DURATION_SECOND - 500) {
+    private CountDownTimer mCountDownTimer = new CountDownTimer(MAXIMUM_DURATION, DURATION_SECOND - 500) {
         @Override
         public void onTick(long millisUntilFinished) {
             //Update text

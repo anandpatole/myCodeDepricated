@@ -28,8 +28,8 @@ class PaymentSummaryAdapter extends RecyclerView.Adapter<PaymentSummaryAdapter.M
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        RowPaymentSummaryBinding rowSelectedServiceAmoutBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), R.layout.row_payment_summary, parent, false);
-        return new PaymentSummaryAdapter.MyViewHolder(rowSelectedServiceAmoutBinding);
+        RowPaymentSummaryBinding rowPaymentSummaryBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), R.layout.row_payment_summary, parent, false);
+        return new PaymentSummaryAdapter.MyViewHolder(rowPaymentSummaryBinding);
 
     }
 

@@ -73,7 +73,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -98,13 +97,11 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
     public static final String TAG = "StrategicPartnerFragPhaseThree";
     private FragmentStrategicPartnerPhaseTwoBinding mFragmentStrategicPartnerPhaseTwoBinding;
     private StrategicPartnerTaskCreationAct mStrategicPartnerTaskCreationAct;
-    private boolean isVerified = false;
-    SuperCalendar startDateTimeSuperCalendar = SuperCalendar.getInstance();
+    private SuperCalendar startDateTimeSuperCalendar = SuperCalendar.getInstance();
     private String mCurrentPhotoPath = "";
     private MediaRecycleAdapter mMediaRecycleAdapter;
-    int count = 1;
+    private int count = 1;
     private ArrayList<QueAnsModel> mList;
-    private boolean isTaskDescriptionVerified;
 
     @SuppressWarnings("unused")
     public static StrategicPartnerFragPhaseTwo newInstance() {
@@ -149,13 +146,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
         mFragmentStrategicPartnerPhaseTwoBinding.textContinue.setText("Book & Pay " + getString(R.string.ruppe_symbol_x, String.valueOf(total)));
         mStrategicPartnerTaskCreationAct.total = String.valueOf(total);
         // Task Description
-        isTaskDescriptionVerified = mStrategicPartnerTaskCreationAct.getSelectedSubService().size() != 0;
 
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
     }
 
     @Override
@@ -168,12 +159,10 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
             public void onClick(View view) {
                 if (validateAllQueAndAns()) {
                     mStrategicPartnerTaskCreationAct.setSelectedQuestions(mList);
-                    mStrategicPartnerTaskCreationAct.isAllQuestionAnswer = true;
 
                     // Make the status Verified
-                    isVerified = true;
 
-                    //Alert The activity that step one is been varified.
+                    //Alert The activity that step one is been verified.
                     mStrategicPartnerTaskCreationAct.setTaskState(StrategicPartnerTaskCreationAct.STEP_TWO_VERIFIED);
 
                     new Handler().postDelayed(new Runnable() {
@@ -182,8 +171,6 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
                             mStrategicPartnerTaskCreationAct.gotoStep(StrategicPartnerTaskCreationAct.STAGE_3);
                         }
                     }, 500);
-                } else {
-                    mStrategicPartnerTaskCreationAct.isAllQuestionAnswer = false;
                 }
             }
         });
@@ -192,7 +179,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
 
     }
 
-    /////////////////////////////////////// WEB CALL FOR QUESTIONARY ////////////////////////////////
+    /////////////////////////////////////// WEB CALL FOR QUESTIONNARY ////////////////////////////////
     private void fetchListOfQuestions(String catId) {
         Log.d(TAG, "fetchListOfQuestions() called with: catId = [" + catId + "]");
         if (!Utility.isConnected(mContext)) {
@@ -210,8 +197,8 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
         mParams.put(CAT_ID, catId);
 
         VolleyNetworkRequest mVolleyNetworkRequestForCategoryList = new VolleyNetworkRequest(NetworkUtility.WS.FETCH_SUB_CATEGORIES_QUESTIONNAIRE
-                , mCallFetchAllSubCateStreParListingWSErrorListener
-                , mCallFetchAllSubCateStreParListingWSResponseListener
+                , mCallFetchAllSubCateSPListingWSErrorListener
+                , mCallFetchAllSubCateSPListingWSResponseListener
                 , mHeaderParams
                 , mParams
                 , null);
@@ -219,7 +206,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
         Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequestForCategoryList, NetworkUtility.WS.FETCH_SUB_CATEGORIES_QUESTIONNAIRE);
     }
 
-    Response.Listener mCallFetchAllSubCateStreParListingWSResponseListener = new Response.Listener() {
+    private Response.Listener mCallFetchAllSubCateSPListingWSResponseListener = new Response.Listener() {
         @Override
         public void onResponse(Object response) {
             Log.d(TAG, "onResponse() called with: response = [" + response + "]");
@@ -253,21 +240,21 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
-                mCallFetchAllSubCateStreParListingWSErrorListener.onErrorResponse(new VolleyError(e.getMessage()));
+                mCallFetchAllSubCateSPListingWSErrorListener.onErrorResponse(new VolleyError(e.getMessage()));
             }
 
         }
     };
 
 
-    Response.ErrorListener mCallFetchAllSubCateStreParListingWSErrorListener = new Response.ErrorListener() {
+    private Response.ErrorListener mCallFetchAllSubCateSPListingWSErrorListener = new Response.ErrorListener() {
         @Override
         public void onErrorResponse(VolleyError error) {
             Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
             Utility.showSnackBar(getString(R.string.label_something_went_wrong), mFragmentStrategicPartnerPhaseTwoBinding.getRoot());
         }
     };
-    /////////////////////////////////////// WEB CALL FOR QUESTIONARY completed ////////////////////////////////
+    /////////////////////////////////////// WEB CALL FOR QUESTIONNARY completed ////////////////////////////////
 
     @Override
     public void setListener() {
@@ -291,15 +278,6 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
 
     }
 
-    public boolean isVerified() {
-        return isVerified;
-    }
-
-
-    @Override
-    public Object getSharedElementEnterTransition() {
-        return super.getSharedElementEnterTransition();
-    }
 
     private void inflateUI(String response) {
         // top layout
@@ -347,7 +325,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
         TextView txtQueStr = queView.findViewById(R.id.txtQueStr);
         txtQueStr.setText(String.valueOf(model.question));
 
-        // if question is last then dont show vertical line
+        // if question is last then don't show vertical line
         TextView txtVerticalLine = queView.findViewById(R.id.txtVerticalLine);
         if (count == mList.size()) {
             txtVerticalLine.setVisibility(View.GONE);
@@ -457,7 +435,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
         TextView txtQueStr = queView.findViewById(R.id.txtQueStr);
         txtQueStr.setText(String.valueOf(model.question));
 
-        // if question is last then dont show vertical line
+        // if question is last then don't show vertical line
         TextView txtVerticalLine = queView.findViewById(R.id.txtVerticalLine);
         if (count == mList.size()) {
             txtVerticalLine.setVisibility(View.GONE);
@@ -521,7 +499,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
         TextView txtQueStr = queView.findViewById(R.id.txtQueStr);
         txtQueStr.setText(String.valueOf(model.question));
 
-        // if question is last then dont show vertical line
+        // if question is last then don't show vertical line
         TextView txtVerticalLine = queView.findViewById(R.id.txtVerticalLine);
         if (count == mList.size()) {
             txtVerticalLine.setVisibility(View.GONE);
@@ -580,7 +558,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
         TextView txtQueStr = queView.findViewById(R.id.txtQueStr);
         txtQueStr.setText(String.valueOf(model.question));
 
-        // if question is last then dont show vertical line
+        // if question is last then don't show vertical line
         TextView txtVerticalLine = queView.findViewById(R.id.txtVerticalLine);
         if (count == mList.size()) {
             txtVerticalLine.setVisibility(View.GONE);
@@ -608,15 +586,15 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
             public void afterTextChanged(Editable editable) {
                 model.answer = edtQueAnswer.getText().toString();
                 // set background of question no as answered
-                txtQueNo.setSelected(model.answer.trim().length() > 0);
+                txtQueNo.setSelected(!model.answer.trim().isEmpty());
             }
         });
         ansView.addView(view);
     }
 
     /**
-     * @param textView this is answer textview to set time
-     * @param model
+     * @param textView this is answer text view to set time
+     * @param model    question model for time picker
      */
     private void showTimePickerDialog(final TextView textView, final QueAnsModel model) {
         // Get Current Time
@@ -638,7 +616,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
 
                             String selectedDateTime = startDateTimeSuperCalendar.format(Utility.DATE_FORMAT_HH_MM_AM);
 
-                            // set selected time to textview
+                            // set selected time to text view
                             textView.setText(selectedDateTime);
                             textView.setSelected(false);
 
@@ -685,7 +663,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
         TextView txtQueStr = queView.findViewById(R.id.txtQueStr);
         txtQueStr.setText(String.valueOf(model.question));
 
-        // if question is last then dont show vertical line
+        // if question is last then don't show vertical line
         TextView txtVerticalLine = queView.findViewById(R.id.txtVerticalLine);
         if (count == mList.size()) {
             txtVerticalLine.setVisibility(View.GONE);
@@ -699,7 +677,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
         View view = LayoutInflater.from(mStrategicPartnerTaskCreationAct).inflate(R.layout.layout_template_answer_media, null, false);
 
         final ImageView imgAdd = view.findViewById(R.id.imgAdd);
-        // this tag is set for onActivityResult to find imageview by tag
+        // this tag is set for onActivityResult to find image view by tag
         imgAdd.setTag("AddImage");
 
         // handles click for adding image/video chooser flow
@@ -717,8 +695,8 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
 
         mMediaRecycleAdapter = new MediaRecycleAdapter(new MediaRecycleAdapter.ItemClick() {
             @Override
-            public void removeMedia(int pos) {
-                // after uploading 3 media file if any one is deleted then add imageview again
+            public void removeMedia() {
+                // after uploading 3 media file if any one is deleted then add image view again
                 if (mMediaRecycleAdapter.getItemCount() < 3)
                     imgAdd.setVisibility(View.VISIBLE);
             }
@@ -761,7 +739,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
                         // The 'which' argument contains the index position
                         // of the selected item
                         if (which == 0) {
-                            takeVideoIntent(Utility.REQUEST_CODE_VIDEO_CAPTURE, Utility.REQUEST_CODE_WRITE_EXTERNAL_STORAGE_ADD_PROFILE_CAMERA);
+                            takeVideoIntent(Utility.REQUEST_CODE_WRITE_EXTERNAL_STORAGE_ADD_PROFILE_CAMERA);
                         } else {
                             //Select Gallery
                             // In case Choose File from Gallery
@@ -776,7 +754,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
     }
 
 
-    private void takeVideoIntent(int requestCode, int requestPermissionCode) {
+    private void takeVideoIntent(int requestPermissionCode) {
         //Go ahead with Camera capturing
         if (ContextCompat.checkSelfPermission(mStrategicPartnerTaskCreationAct, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(mStrategicPartnerTaskCreationAct
                 , Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(mStrategicPartnerTaskCreationAct
@@ -788,12 +766,12 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
             }
         } else {
             //Go ahead with Camera capturing
-            startActivityForResult(new Intent(mStrategicPartnerTaskCreationAct, RecordVideoNewActivity.class), requestCode);
+            startActivityForResult(new Intent(mStrategicPartnerTaskCreationAct, RecordVideoNewActivity.class), Utility.REQUEST_CODE_VIDEO_CAPTURE);
 
         }
     }
 
-    public void chooseVideoFromGallery(int requestFileChooserCode, int requestPermissionCode) {
+    private void chooseVideoFromGallery(int requestFileChooserCode, int requestPermissionCode) {
         Log.d(TAG, "choosePictureFromGallery() called with: requestFileChooserCode = [" + requestFileChooserCode + "], requestPermissionCode = [" + requestPermissionCode + "]");
         if (ContextCompat.checkSelfPermission(mStrategicPartnerTaskCreationAct, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             if (ActivityCompat.shouldShowRequestPermissionRationale(mStrategicPartnerTaskCreationAct, Manifest.permission.READ_EXTERNAL_STORAGE)) {
@@ -854,58 +832,52 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
         }
     }
 
-    public void startCameraCaptureChooser(int requestCode) {
+    private void startCameraCaptureChooser(int requestCode) {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // Ensure that there's a camera activity to handle the intent
         if (takePictureIntent.resolveActivity(mStrategicPartnerTaskCreationAct.getPackageManager()) != null) {
             // Create the File where the photo should go
-            File photoFile = null;
-            try {
-                photoFile = createImageFile();
-                mCurrentPhotoPath = photoFile.getAbsolutePath();
-                if (photoFile.exists()) {
-                    photoFile.delete();
-                } else {
-                    photoFile.getParentFile().mkdirs();
-                }
-
-            } catch (IOException ex) {
-                // Error occurred while creating the File
+            File photoFile;
+            photoFile = createImageFile();
+            mCurrentPhotoPath = photoFile.getAbsolutePath();
+            if (photoFile.exists()) {
+                photoFile.delete();
+            } else {
+                photoFile.getParentFile().mkdirs();
             }
+
             // Continue only if the File was successfully created
-            if (photoFile != null) {
-                Uri photoURI = FileProvider.getUriForFile(mStrategicPartnerTaskCreationAct,
-                        BuildConfig.FILE_PROVIDER_URL,
-                        photoFile);
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+            Uri photoURI = FileProvider.getUriForFile(mStrategicPartnerTaskCreationAct,
+                    BuildConfig.FILE_PROVIDER_URL,
+                    photoFile);
+            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
 
-                // Grant URI permission START
-                // Enableing the permission at runtime
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    takePictureIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-                } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                    ClipData clip =
-                            ClipData.newUri(mStrategicPartnerTaskCreationAct.getContentResolver(), "A photo", photoURI);
-                    takePictureIntent.setClipData(clip);
-                    takePictureIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-                } else {
-                    List<ResolveInfo> resInfoList =
-                            mStrategicPartnerTaskCreationAct.getPackageManager()
-                                    .queryIntentActivities(takePictureIntent, PackageManager.MATCH_DEFAULT_ONLY);
+            // Grant URI permission START
+            // Enabling the permission at runtime
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                takePictureIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                ClipData clip =
+                        ClipData.newUri(mStrategicPartnerTaskCreationAct.getContentResolver(), "A photo", photoURI);
+                takePictureIntent.setClipData(clip);
+                takePictureIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+            } else {
+                List<ResolveInfo> resInfoList =
+                        mStrategicPartnerTaskCreationAct.getPackageManager()
+                                .queryIntentActivities(takePictureIntent, PackageManager.MATCH_DEFAULT_ONLY);
 
-                    for (ResolveInfo resolveInfo : resInfoList) {
-                        String packageName = resolveInfo.activityInfo.packageName;
-                        mStrategicPartnerTaskCreationAct.grantUriPermission(packageName, photoURI,
-                                Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-                    }
+                for (ResolveInfo resolveInfo : resInfoList) {
+                    String packageName = resolveInfo.activityInfo.packageName;
+                    mStrategicPartnerTaskCreationAct.grantUriPermission(packageName, photoURI,
+                            Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
                 }
-                //Grant URI permission END
-                startActivityForResult(takePictureIntent, requestCode);
             }
+            //Grant URI permission END
+            startActivityForResult(takePictureIntent, requestCode);
         }
     }
 
-    public File createImageFile() throws IOException {
+    private File createImageFile() {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss"/*, Locale.US*/).format(new Date());
         String imageFileName = "JPEG_" + timeStamp + ".jpg";
@@ -925,7 +897,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
 
 
     //// Gallery /////
-    public void choosePictureFromGallery(int requestFileChooserCode, int requestPermissionCode) {
+    private void choosePictureFromGallery(int requestFileChooserCode, int requestPermissionCode) {
         Log.d(TAG, "choosePictureFromGallery() called with: requestFileChooserCode = [" + requestFileChooserCode + "], requestPermissionCode = [" + requestPermissionCode + "]");
         if (ContextCompat.checkSelfPermission(mStrategicPartnerTaskCreationAct, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             if (ActivityCompat.shouldShowRequestPermissionRationale(mStrategicPartnerTaskCreationAct, Manifest.permission.READ_EXTERNAL_STORAGE)) {
@@ -939,7 +911,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
         }
     }
 
-    public void startIntentFileChooser(int requestCode) {
+    private void startIntentFileChooser(int requestCode) {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("image/*");
         intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
@@ -966,7 +938,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
         TextView txtQueStr = queView.findViewById(R.id.txtQueStr);
         txtQueStr.setText(String.valueOf(model.question));
 
-        // if question is last then dont show vertical line
+        // if question is last then don't show vertical line
         TextView txtVerticalLine = queView.findViewById(R.id.txtVerticalLine);
         if (count == mList.size()) {
             txtVerticalLine.setVisibility(View.GONE);
@@ -996,7 +968,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
 
     private BottomAlertDialog addressDialog;
     private AddressRecyclerViewAdapter addressRecyclerViewAdapter;
-    public String addressId = "";
+    private String addressId = "";
 
     private void showAddressDialog(final TextView textAns, final TextView textQueNo, final QueAnsModel queAnsModel) {
         View view = View.inflate(mContext, R.layout.dialog_choose_address_new_task, null);
@@ -1012,11 +984,11 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
         view.findViewById(R.id.btn_submit).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (addressRecyclerViewAdapter != null && addressRecyclerViewAdapter.getmList().isEmpty() == false) {
+                if (addressRecyclerViewAdapter != null && !addressRecyclerViewAdapter.getmList().isEmpty()) {
                     AddressModel model = addressRecyclerViewAdapter.getSelectedAddress();
                     if (model != null) {
-                        String address = "";
-                        if (model.address_initials.length() > 0) {
+                        String address;
+                        if (!model.address_initials.isEmpty()) {
                             address = model.address_initials + ", " + model.address;
                         } else {
                             address = model.address;
@@ -1081,8 +1053,8 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
         recyclerView.setAdapter(addressRecyclerViewAdapter);
         recyclerView.addItemDecoration(new DividerItemDecoration(mContext, R.drawable.divider_grey_normal, (int) getResources().getDimension(R.dimen.scale_16dp)));
 
-        //Here we are checking if address is not there then open add address dialog immediatly
-        return addressList == null || (addressList != null && addressList.isEmpty());
+        //Here we are checking if address is not there then open add address dialog immediately
+        return addressList == null || addressList.isEmpty();
     }
 
     private BottomAlertDialog addAddressDialog;
@@ -1093,7 +1065,6 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
     private Button btnAdd;
     private boolean isAddressNameVerified = false;
     private boolean isAddressPickYouLocationVerified = false;
-    private boolean isAddressFlatNoVerified = false;
 
     private void showAddAddressDialog(final AddressModel addressModel) {
         if (addressModel == null) {
@@ -1127,11 +1098,9 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (edtAddressInitials.getText().toString().trim().length() > 0) {
-                    isAddressFlatNoVerified = true;
+                if (!edtAddressInitials.getText().toString().trim().isEmpty()) {
                     checkAddAddressVerified();
                 } else {
-                    isAddressFlatNoVerified = false;
                     checkAddAddressVerified();
                 }
             }
@@ -1176,8 +1145,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
             edtAddressInitials.setText(addressModel.address_initials);
             btnAdd.setText(getString(R.string.label_update));
 
-            // Initiaze the varfication tags accordingly.
-            isAddressFlatNoVerified = true;
+            // Initialize the verification tags accordingly.
            /* isAddressNameVerified = true;
             isAddressPickYouLocationVerified = addressModel.address_initials.trim().length() > 0;*/
             checkAddAddressVerified();
@@ -1244,13 +1212,11 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
         }
     }
 
-    boolean isPlacePickerClicked = false;
 
     public void showPlacePickerDialog(boolean isForceShow) {
 
         if (!isForceShow) {
             if (mStrategicPartnerTaskCreationAct.mLocationTrackService != null) {
-                isPlacePickerClicked = true;
                 mStrategicPartnerTaskCreationAct.mLocationTrackService.requestLocationUpdate();
                 return;
             }
@@ -1264,7 +1230,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
             startActivityForResult(intent, Utility.PLACE_PICKER_REQUEST);
         } catch (GooglePlayServicesRepairableException | GooglePlayServicesNotAvailableException e) {
 
-            //TODO: Adding dummy place when playservice is not there
+            //TODO: Adding dummy place when play service is not there
             if (edtAddress != null) {
                 edtAddress.setText("Dummy Address with " + BootstrapConstant.LAT + "," + BootstrapConstant.LNG);
                 edtAddress.setFocusable(true);
@@ -1314,7 +1280,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
         Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest, NetworkUtility.WS.DELETE_ADDRESS);
     }
 
-    Response.Listener mCallDeleteAddressResponseListener = new Response.Listener() {
+    private Response.Listener mCallDeleteAddressResponseListener = new Response.Listener() {
         @Override
         public void onResponse(Object response) {
 
@@ -1330,7 +1296,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
                         if (addressRecyclerViewAdapter != null) {
                             addressRecyclerViewAdapter.delete(TEMP_ADDRESS_ID);
 
-                            //Saving information in sharedpreference
+                            //Saving information in shared preference
                             UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
                             userDetails.addressList = addressRecyclerViewAdapter.getmList();
                             PreferenceUtility.getInstance(mContext).saveUserDetails(userDetails);
@@ -1360,7 +1326,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
         }
     };
 
-    Response.ErrorListener mCallDeleteAddressWSErrorListener = new Response.ErrorListener() {
+    private Response.ErrorListener mCallDeleteAddressWSErrorListener = new Response.ErrorListener() {
         @Override
         public void onErrorResponse(VolleyError error) {
             Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
@@ -1376,8 +1342,8 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
     /**
      * Calling Update Address WS
      *
-     * @param addressType
-     * @param address
+     * @param addressType home/office/other
+     * @param address     address string
      */
     private void callUpdateAddressWS(String addressId, String addressType,/* String addressName,*/ String address, String addressInitials, LatLng latLng) {
         if (!Utility.isConnected(mContext)) {
@@ -1422,7 +1388,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
     }
 
 
-    Response.Listener mCallUpdateAddressResponseListener = new Response.Listener() {
+    private Response.Listener mCallUpdateAddressResponseListener = new Response.Listener() {
         @Override
         public void onResponse(Object response) {
 
@@ -1446,7 +1412,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
                             }
                         }
 
-                        //Saving information in sharedpreference
+                        //Saving information in shared preference
                         UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
                         userDetails.addressList = addressRecyclerViewAdapter.getmList();
                         PreferenceUtility.getInstance(mContext).saveUserDetails(userDetails);
@@ -1480,7 +1446,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
         }
     };
 
-    Response.ErrorListener mCallUpdateAddressWSErrorListener = new Response.ErrorListener() {
+    private Response.ErrorListener mCallUpdateAddressWSErrorListener = new Response.ErrorListener() {
         @Override
         public void onErrorResponse(VolleyError error) {
             Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
@@ -1497,8 +1463,8 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
     /**
      * Calling Add Address WS
      *
-     * @param addressType
-     * @param address
+     * @param addressType home/office/other
+     * @param address     address string
      */
     private void callAddAddressWS(String addressType, /*String addressName,*/ String address, String addressInitials, LatLng latLng) {
         if (!Utility.isConnected(mContext)) {
@@ -1537,7 +1503,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
     }
 
 
-    Response.Listener mCallAddAddressResponseListener = new Response.Listener() {
+    private Response.Listener mCallAddAddressResponseListener = new Response.Listener() {
         @Override
         public void onResponse(Object response) {
 
@@ -1557,7 +1523,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
                             addressRecyclerViewAdapter.add(addressModel);
                         }
 
-                        //Saving information in sharedpreference
+                        //Saving information in shared preference
                         UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
                         userDetails.addressList = addressRecyclerViewAdapter.getmList();
                         PreferenceUtility.getInstance(mContext).saveUserDetails(userDetails);
@@ -1593,7 +1559,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
         }
     };
 
-    Response.ErrorListener mCallAddAddressWSErrorListener = new Response.ErrorListener() {
+    private Response.ErrorListener mCallAddAddressWSErrorListener = new Response.ErrorListener() {
         @Override
         public void onErrorResponse(VolleyError error) {
             Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
@@ -1618,12 +1584,10 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
 
         // place picker result
         if (requestCode == Utility.PLACE_PICKER_REQUEST) {
-            isPlacePickerClicked = false;
             if (resultCode == RESULT_OK) {
                 isAddressPickYouLocationVerified = true;
                 isAddressNameVerified = true;
                 final Place place = PlacePicker.getPlace(mContext, data);
-                final CharSequence name = place.getName();
                 final CharSequence address = place.getAddress();
                 ln_pick_your_location.setVisibility(View.GONE);
                 ln_address_row.setVisibility(View.VISIBLE);
@@ -1702,7 +1666,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
      * or false is something is missing
      */
     private boolean validateAllQueAndAns() {
-        String message = "";
+        String message;
         // Get date-time for next 3 hours
         SuperCalendar calAfter3Hours = SuperCalendar.getInstance().getNext3HoursTime();
         for (int i = 0; i < mList.size(); i++) {
