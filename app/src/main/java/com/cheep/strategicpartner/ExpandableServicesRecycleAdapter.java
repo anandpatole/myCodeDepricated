@@ -1,6 +1,5 @@
 package com.cheep.strategicpartner;
 
-import android.annotation.SuppressLint;
 import android.support.annotation.NonNull;
 import android.support.annotation.UiThread;
 import android.view.LayoutInflater;
@@ -17,13 +16,19 @@ import com.cheep.custom_view.expandablerecycleview.ParentViewHolder;
 
 import java.util.List;
 
-class ExpandableRecyclerViewAdapter extends ExpandableRecyclerAdapter<StrategicPartnerSubCategoryModel, StrategicPartnerSubCategoryModel.AllSubSubCat, ExpandableRecyclerViewAdapter.ParentSubCategoryViewHolder, ExpandableRecyclerViewAdapter.ChildSubCategoryViewHolder> {
+/**
+ * created by Giteeka 24/7/2017
+ *
+ * Expandable RecyclerView for service selection in Strategic partner Phase 1
+ *
+ *
+ */
+class ExpandableServicesRecycleAdapter extends ExpandableRecyclerAdapter<StrategicPartnerServiceModel, StrategicPartnerServiceModel.AllSubSubCat, ExpandableServicesRecycleAdapter.ParentSubCategoryViewHolder, ExpandableServicesRecycleAdapter.ChildSubCategoryViewHolder> {
 
-
-    private List<StrategicPartnerSubCategoryModel> mSubCategoriesList;
+    private List<StrategicPartnerServiceModel> mSubCategoriesList;
     private boolean isSingleSelection = false;
 
-    ExpandableRecyclerViewAdapter(@NonNull List<StrategicPartnerSubCategoryModel> subCategoriesList, boolean isSingleSelection) {
+    ExpandableServicesRecycleAdapter(@NonNull List<StrategicPartnerServiceModel> subCategoriesList, boolean isSingleSelection) {
         super(subCategoriesList);
         mSubCategoriesList = subCategoriesList;
         this.isSingleSelection = isSingleSelection;
@@ -60,7 +65,7 @@ class ExpandableRecyclerViewAdapter extends ExpandableRecyclerAdapter<StrategicP
     @Override
     public void onBindParentViewHolder(@NonNull ParentSubCategoryViewHolder parentSubCategoryViewHolder,
                                        int parentPosition,
-                                       @NonNull final StrategicPartnerSubCategoryModel recipe) {
+                                       @NonNull final StrategicPartnerServiceModel recipe) {
         parentSubCategoryViewHolder.bind(recipe);
 
     }
@@ -70,7 +75,7 @@ class ExpandableRecyclerViewAdapter extends ExpandableRecyclerAdapter<StrategicP
      */
     @UiThread
     @Override
-    public void onBindChildViewHolder(@NonNull final ChildSubCategoryViewHolder childSubCategoryViewHolder, int parentPosition, int childPosition, @NonNull final StrategicPartnerSubCategoryModel.AllSubSubCat ingredient) {
+    public void onBindChildViewHolder(@NonNull final ChildSubCategoryViewHolder childSubCategoryViewHolder, int parentPosition, int childPosition, @NonNull final StrategicPartnerServiceModel.AllSubSubCat ingredient) {
         childSubCategoryViewHolder.bind(ingredient);
 
     }
@@ -97,7 +102,7 @@ class ExpandableRecyclerViewAdapter extends ExpandableRecyclerAdapter<StrategicP
                 public void onClick(View view) {
 
                     if (!isSingleSelection) {
-                        StrategicPartnerSubCategoryModel recipe = mSubCategoriesList.get(getParentAdapterPosition());
+                        StrategicPartnerServiceModel recipe = mSubCategoriesList.get(getParentAdapterPosition());
                         recipe.isSelected = !recipe.isSelected;
                         setAllChildSelected(recipe);
                         notifyDataSetChanged();
@@ -107,28 +112,18 @@ class ExpandableRecyclerViewAdapter extends ExpandableRecyclerAdapter<StrategicP
         }
 
         // bind data with view parent row
-        public void bind(@NonNull StrategicPartnerSubCategoryModel subServiceDetailModel) {
+        public void bind(@NonNull StrategicPartnerServiceModel subServiceDetailModel) {
             imgIconCorrect.setSelected(subServiceDetailModel.isSelected);
             textSubCategoryName.setText(subServiceDetailModel.name);
         }
 
-        @SuppressLint("NewApi")
-        @Override
-        public void setExpanded(boolean expanded) {
-            super.setExpanded(expanded);
-        }
-
-        @Override
-        public void onExpansionToggled(boolean expanded) {
-            super.onExpansionToggled(expanded);
-        }
     }
 
     /**
      * select/deselect all child row of parent if parent is select/deselect
      */
-    private void setAllChildSelected(StrategicPartnerSubCategoryModel recipe) {
-        for (StrategicPartnerSubCategoryModel.AllSubSubCat ingredient : recipe.allSubSubCats) {
+    private void setAllChildSelected(StrategicPartnerServiceModel recipe) {
+        for (StrategicPartnerServiceModel.AllSubSubCat ingredient : recipe.allSubSubCats) {
             ingredient.isSelected = recipe.isSelected;
         }
         notifyDataSetChanged();
@@ -166,13 +161,13 @@ class ExpandableRecyclerViewAdapter extends ExpandableRecyclerAdapter<StrategicP
                     // if all children are deselected then parent should be deselected
 
                     if (!isSingleSelection) {
-                        StrategicPartnerSubCategoryModel.AllSubSubCat subSubCat = mSubCategoriesList.get(parentPos).allSubSubCats.get(childPos);
+                        StrategicPartnerServiceModel.AllSubSubCat subSubCat = mSubCategoriesList.get(parentPos).allSubSubCats.get(childPos);
                         subSubCat.isSelected = !subSubCat.isSelected;
                         if (subSubCat.isSelected)
                             mSubCategoriesList.get(parentPos).isSelected = true;
                         else {
                             int flag = 0;
-                            for (StrategicPartnerSubCategoryModel.AllSubSubCat allSubSubCat : mSubCategoriesList.get(parentPos).allSubSubCats) {
+                            for (StrategicPartnerServiceModel.AllSubSubCat allSubSubCat : mSubCategoriesList.get(parentPos).allSubSubCats) {
                                 if (!allSubSubCat.isSelected)
                                     flag++;
                             }
@@ -198,7 +193,8 @@ class ExpandableRecyclerViewAdapter extends ExpandableRecyclerAdapter<StrategicP
         }
 
         // bind data with view for child row
-        public void bind(@NonNull StrategicPartnerSubCategoryModel.AllSubSubCat subSubCat) {
+        public void bind(@NonNull StrategicPartnerServiceModel.AllSubSubCat subSubCat) {
+
             textSubCategoryName.setText(subSubCat.subSubCatName);
             if (subSubCat.package_description != null && !subSubCat.package_description.isEmpty())
             {

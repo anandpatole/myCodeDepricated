@@ -5,7 +5,11 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
 
-public class QueAnsModel {
+/**
+ * Created by Giteeka 31/7/2017
+ * Question and Answer Json class model
+ */
+class QueAnsModel {
 
 
     @SerializedName("question_id")

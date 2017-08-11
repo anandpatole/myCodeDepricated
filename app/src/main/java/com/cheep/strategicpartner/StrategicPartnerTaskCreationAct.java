@@ -24,20 +24,27 @@ import com.google.android.gms.common.api.Status;
 import java.util.ArrayList;
 
 /**
- * Created by bhavesh on 26/4/17.
+ * Created by Giteeka on 20/7/17.
+ * This activity is Specifically for Strategic partner feature
+ * This includes 3 Step
+ * Phase 1 - service selection
+ * Phase 2 - Questionnary
+ * Phase 3 - Payment summary
+ * logic to update status of step number in header
+ * location services for address
  */
 public class StrategicPartnerTaskCreationAct extends BaseAppCompatActivity {
-    private static final String TAG = "TaskCreationForStrategi";
+    private static final String TAG = "TaskCreationForSPScreen";
     private ActivityTaskCreationForStrategicPartnerBinding mActivityTaskCreationForStrategicPartnerBinding;
     public BannerImageModel mBannerImageModel;
-    TaskCreationForStrategicPartnerPagerAdapter mTaskCreationPagerAdapter;
+    private TaskCreationForStrategicPartnerPagerAdapter mTaskCreationPagerAdapter;
     private ArrayList<QueAnsModel> mSelectedQuestions;
-    private ArrayList<StrategicPartnerSubCategoryModel> mSelectedServicesList;
+    private ArrayList<StrategicPartnerServiceModel> mSelectedServicesList;
     public boolean isSingleSelection = false;
-    public boolean isAllQuestionAnswer = false;
     public String date = "";
     public String time = "";
     public String address = "";
+    public String total = "";
 
     public static void getInstance(Context mContext, BannerImageModel model) {
         Intent intent = new Intent(mContext, StrategicPartnerTaskCreationAct.class);
@@ -53,9 +60,9 @@ public class StrategicPartnerTaskCreationAct extends BaseAppCompatActivity {
     }
 
     @Override
-    protected void  initiateUI() {
-        /**
-         * Fetch data from Home Screen(Includes details about strategic Partners
+    protected void initiateUI() {
+        /*
+          Fetch data from Home Screen(Includes details about strategic Partners
          */
         if (getIntent().getExtras() != null) {
             // Fetch banner Model
@@ -68,8 +75,6 @@ public class StrategicPartnerTaskCreationAct extends BaseAppCompatActivity {
                 Utility.loadImageView(mContext, mActivityTaskCreationForStrategicPartnerBinding.imgService, mBannerImageModel.imgCatImageUrl, R.drawable.gradient_black);
                 isSingleSelection = mBannerImageModel.minimum_selection.equalsIgnoreCase("1");
                 mActivityTaskCreationForStrategicPartnerBinding.textTitle.setText(mBannerImageModel.name != null ? mBannerImageModel.name : Utility.EMPTY_STRING);
-
-
             }
         }
 
@@ -146,7 +151,7 @@ public class StrategicPartnerTaskCreationAct extends BaseAppCompatActivity {
     /**
      * This will setup the viewpager and tabs as well
      *
-     * @param pager
+     * @param pager view pager for 3 steps
      */
     private void setupViewPager(ViewPager pager) {
         mTaskCreationPagerAdapter = new TaskCreationForStrategicPartnerPagerAdapter(getSupportFragmentManager());
@@ -160,19 +165,17 @@ public class StrategicPartnerTaskCreationAct extends BaseAppCompatActivity {
     /**
      * Below would manage the state of Step while creating task creation
      */
-    public static final int STEP_ONE_NORMAL = 1;
-    public static final int STEP_ONE_UNVERIFIED = 2;
+    private static final int STEP_ONE_NORMAL = 1;
+    private static final int STEP_ONE_UNVERIFIED = 2;
     public static final int STEP_ONE_VERIFIED = 3;
-    public static final int STEP_TWO_NORMAL = 4;
-    public static final int STEP_TWO_UNVERIFIED = 5;
+    private static final int STEP_TWO_NORMAL = 4;
+    private static final int STEP_TWO_UNVERIFIED = 5;
     public static final int STEP_TWO_VERIFIED = 6;
-    public static final int STEP_THREE_NORMAL = 7;
-    public static final int STEP_THREE_UNVERIFIED = 8;
-    public static final int STEP_THREE_VERIFIED = 9;
-    public int mCurrentStep = -1;
+    private static final int STEP_THREE_NORMAL = 7;
+    private static final int STEP_THREE_UNVERIFIED = 8;
+    private static final int STEP_THREE_VERIFIED = 9;
 
     public void setTaskState(int step_state) {
-        mCurrentStep = step_state;
         switch (step_state) {
             case STEP_ONE_NORMAL:
                 mActivityTaskCreationForStrategicPartnerBinding.textStep1.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_steps_normal));
@@ -252,12 +255,11 @@ public class StrategicPartnerTaskCreationAct extends BaseAppCompatActivity {
 
                 mActivityTaskCreationForStrategicPartnerBinding.textStep3.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_steps_verified));
                 mActivityTaskCreationForStrategicPartnerBinding.textStep3.setTextColor(ContextCompat.getColor(mContext, R.color.white));
-
                 break;
         }
     }
 
-    public static final int STAGE_1 = 0;
+    private static final int STAGE_1 = 0;
     public static final int STAGE_2 = 1;
     public static final int STAGE_3 = 2;
 
@@ -299,12 +301,12 @@ public class StrategicPartnerTaskCreationAct extends BaseAppCompatActivity {
     }
 
 
-    public void setSelectedSubService(ArrayList<StrategicPartnerSubCategoryModel> mSelectedServicesList) {
+    public void setSelectedSubService(ArrayList<StrategicPartnerServiceModel> mSelectedServicesList) {
         this.mSelectedServicesList = mSelectedServicesList;
         Log.e(TAG, " on continue click");
-        for (StrategicPartnerSubCategoryModel model : mSelectedServicesList) {
+        for (StrategicPartnerServiceModel model : mSelectedServicesList) {
             Log.e(TAG, " Item Name " + model.name);
-            for (StrategicPartnerSubCategoryModel.AllSubSubCat allSubSubCat : model.allSubSubCats) {
+            for (StrategicPartnerServiceModel.AllSubSubCat allSubSubCat : model.allSubSubCats) {
                 Log.e(TAG, " Item  sub name " + allSubSubCat.subSubCatName);
             }
         }
@@ -314,37 +316,41 @@ public class StrategicPartnerTaskCreationAct extends BaseAppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == Utility.REQUEST_CODE_READ_EXTERNAL_STORAGE_ADD_COVER) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Log.i(TAG, "onRequestPermissionsResult: Permission Granted");
-                //startIntentFileChooser(Utility.REQUEST_CODE_GET_FILE_ADD_COVER);
-            } else if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_DENIED) {
-                Log.i(TAG, "onRequestPermissionsResult: Permission Denied");
-                Utility.showSnackBar(getString(R.string.permission_denied_read), mActivityTaskCreationForStrategicPartnerBinding.getRoot());
-            }
-        } else if (requestCode == Utility.REQUEST_CODE_READ_EXTERNAL_STORAGE_ADD_PROFILE_GALLERY) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Log.i(TAG, "onRequestPermissionsResult: Permission Granted");
-                // startIntentFileChooser(Utility.REQUEST_CODE_GET_FILE_ADD_PROFILE_GALLERY);
-            } else if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_DENIED) {
-                Log.i(TAG, "onRequestPermissionsResult: Permission Denied");
-                Utility.showSnackBar(getString(R.string.permission_denied_read), mActivityTaskCreationForStrategicPartnerBinding.getRoot());
-            }
-        } else if (requestCode == Utility.REQUEST_CODE_ADD_PROFILE_CAMERA) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Log.i(TAG, "onRequestPermissionsResult: Permission Granted");
-                //  startCameraCaptureChooser(Utility.REQUEST_CODE_IMAGE_CAPTURE_ADD_PROFILE);
-            } else if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_DENIED) {
-                Log.i(TAG, "onRequestPermissionsResult: Permission Denied Camera");
-                Utility.showSnackBar(getString(R.string.permission_denied_camera), mActivityTaskCreationForStrategicPartnerBinding.getRoot());
-            }
+        switch (requestCode) {
+            case Utility.REQUEST_CODE_READ_EXTERNAL_STORAGE_ADD_COVER:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Log.i(TAG, "onRequestPermissionsResult: Permission Granted");
+                    //startIntentFileChooser(Utility.REQUEST_CODE_GET_FILE_ADD_COVER);
+                } else if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_DENIED) {
+                    Log.i(TAG, "onRequestPermissionsResult: Permission Denied");
+                    Utility.showSnackBar(getString(R.string.permission_denied_read), mActivityTaskCreationForStrategicPartnerBinding.getRoot());
+                }
+                break;
+            case Utility.REQUEST_CODE_READ_EXTERNAL_STORAGE_ADD_PROFILE_GALLERY:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Log.i(TAG, "onRequestPermissionsResult: Permission Granted");
+                    // startIntentFileChooser(Utility.REQUEST_CODE_GET_FILE_ADD_PROFILE_GALLERY);
+                } else if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_DENIED) {
+                    Log.i(TAG, "onRequestPermissionsResult: Permission Denied");
+                    Utility.showSnackBar(getString(R.string.permission_denied_read), mActivityTaskCreationForStrategicPartnerBinding.getRoot());
+                }
+                break;
+            case Utility.REQUEST_CODE_ADD_PROFILE_CAMERA:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Log.i(TAG, "onRequestPermissionsResult: Permission Granted");
+                    //  startCameraCaptureChooser(Utility.REQUEST_CODE_IMAGE_CAPTURE_ADD_PROFILE);
+                } else if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_DENIED) {
+                    Log.i(TAG, "onRequestPermissionsResult: Permission Denied Camera");
+                    Utility.showSnackBar(getString(R.string.permission_denied_camera), mActivityTaskCreationForStrategicPartnerBinding.getRoot());
+                }
+                break;
         }
     }
 
     @Override
     public void gpsEnabled() {
         super.gpsEnabled();
-        // Show placepicker activity
+        // Show place picker activity
         mTaskCreationPagerAdapter.mStrategicPartnerFragPhaseTwo.showPlacePickerDialog(true);
     }
 
@@ -373,7 +379,7 @@ public class StrategicPartnerTaskCreationAct extends BaseAppCompatActivity {
         }
     }
 
-    public ArrayList<StrategicPartnerSubCategoryModel> getSelectedSubService() {
+    public ArrayList<StrategicPartnerServiceModel> getSelectedSubService() {
         return mSelectedServicesList;
     }
 

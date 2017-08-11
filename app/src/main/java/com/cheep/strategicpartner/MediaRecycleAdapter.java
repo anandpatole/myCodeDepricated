@@ -13,18 +13,19 @@ import com.cheep.utils.Utility;
 import java.util.ArrayList;
 
 /**
- * Created by pankaj on 9/30/16.
+ * Created by Giteeka on 31/7/17.
+ * Adapter to show thumbnails of selected image and video in Strategic partner Phase 2(Questionnary screen)
  */
 
-public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.MyViewHolder> {
-    ArrayList<MediaModel> mList = new ArrayList<>();
-    ItemClick mItemClick;
+class MediaRecycleAdapter extends RecyclerView.Adapter<MediaRecycleAdapter.MyViewHolder> {
+    private ArrayList<MediaModel> mList = new ArrayList<>();
+    private ItemClick mItemClick;
 
-    public ImageAdapter(ItemClick itemClick) {
+    MediaRecycleAdapter(ItemClick itemClick) {
         mItemClick = itemClick;
     }
 
-    public void addImage(MediaModel path) {
+    void addImage(MediaModel path) {
         if (mList == null) {
             mList = new ArrayList<>();
         }
@@ -50,12 +51,8 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.MyViewHolder
         return mList.size();
     }
 
-    public ArrayList<MediaModel> getList() {
-        return mList;
-    }
-
     interface ItemClick {
-        void removeMedia(int pos);
+        void removeMedia();
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder {
@@ -63,7 +60,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.MyViewHolder
         ImageView mImgThumb = null;
         ImageView mImgRemove = null;
 
-        public MyViewHolder(View binding) {
+        MyViewHolder(View binding) {
             super(binding);
             mView = binding;
             mImgThumb = mView.findViewById(R.id.imgThumb);
@@ -73,20 +70,19 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.MyViewHolder
                 public void onClick(View view) {
                     mList.remove(getAdapterPosition());
                     notifyDataSetChanged();
-                    mItemClick.removeMedia(getAdapterPosition());
+                    mItemClick.removeMedia();
                 }
             });
         }
 
         void bind(MediaModel mediaModel) {
+
+            // set image thumbnails with rounder grey border around image view
             if (mediaModel.type == MediaModel.MediaType.IMAGE)
                 mImgThumb.setImageBitmap(Utility.getRoundedCornerBitmap(BitmapFactory.decodeFile(mediaModel.path), mImgThumb.getContext()));
-//                mImgThumb.setImageBitmap(Utility.addBorderToBitmap(BitmapFactory.decodeFile(mediaModel.path), 15, ContextCompat.getColor(mImgThumb.getContext(), R.color.grey_varient_1)));
             else
                 try {
-//                    mImgThumb.setImageBitmap(Utility.getVideoThumbnail(mediaModel.path));
                     mImgThumb.setImageBitmap(Utility.getRoundedCornerBitmap(Utility.getVideoThumbnail(mediaModel.path), mImgThumb.getContext()));
-//                    mImgThumb.setImageBitmap(Utility.addBorderToBitmap(Utility.getVideoThumbnail(mediaModel.path), 15, ContextCompat.getColor(mImgThumb.getContext(), R.color.grey_varient_1)));
                 } catch (Throwable throwable) {
                     throwable.printStackTrace();
                 }

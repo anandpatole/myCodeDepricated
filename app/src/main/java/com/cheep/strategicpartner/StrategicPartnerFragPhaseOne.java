@@ -35,17 +35,19 @@ import java.util.Map;
 import static com.cheep.network.NetworkUtility.TAGS.CAT_ID;
 
 /**
- * Created by bhavesh on 28/4/17.
+ * Created by Giteeka on 20/7/17.
+ * This Fragment is first step of Strategic partner screen.
+ * Expandable list view of services
+ * Single or multiple sub services selection according to specific partners features
  */
 
 public class StrategicPartnerFragPhaseOne extends BaseFragment {
     public static final String TAG = "StrategicPartnerFragPhaseOne";
     private FragmentStrategicPartnerPhaseOneBinding mFragmentStrategicPartnerPhaseOneBinding;
-    private ExpandableRecyclerViewAdapter mExpandableRecyclerViewAdapter;
-    ErrorLoadingHelper errorLoadingHelper;
+    private ErrorLoadingHelper errorLoadingHelper;
     private StrategicPartnerTaskCreationAct mStrategicPartnerTaskCreationAct;
     private boolean isVerified = false;
-    private ArrayList<StrategicPartnerSubCategoryModel> list;
+    private ArrayList<StrategicPartnerServiceModel> list;
 
 
     @SuppressWarnings("unused")
@@ -84,10 +86,6 @@ public class StrategicPartnerFragPhaseOne extends BaseFragment {
 
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
 
     @Override
     public void initiateUI() {
@@ -106,17 +104,17 @@ public class StrategicPartnerFragPhaseOne extends BaseFragment {
             @Override
             public void onClick(View view) {
 
-                if (list != null && list.size() > 0) {
-                    ArrayList<StrategicPartnerSubCategoryModel> selectedServiceList = new ArrayList<>();
-                    for (StrategicPartnerSubCategoryModel model : list) {
+                if (list != null && !list.isEmpty()) {
+                    ArrayList<StrategicPartnerServiceModel> selectedServiceList = new ArrayList<>();
+                    for (StrategicPartnerServiceModel model : list) {
                         // get all sub selected services
                         if (model.isSelected) {
-                            StrategicPartnerSubCategoryModel categoryModel = new StrategicPartnerSubCategoryModel();
+                            StrategicPartnerServiceModel categoryModel = new StrategicPartnerServiceModel();
                             categoryModel.catId = model.catId;
                             categoryModel.name = model.name;
                             categoryModel.sub_cat_id = model.sub_cat_id;
-                            ArrayList<StrategicPartnerSubCategoryModel.AllSubSubCat> allSubSubCats = new ArrayList<>();
-                            for (StrategicPartnerSubCategoryModel.AllSubSubCat allSubSubCat : model.allSubSubCats) {
+                            ArrayList<StrategicPartnerServiceModel.AllSubSubCat> allSubSubCats = new ArrayList<>();
+                            for (StrategicPartnerServiceModel.AllSubSubCat allSubSubCat : model.allSubSubCats) {
                                 {
                                     if (allSubSubCat.isSelected) {
                                         allSubSubCats.add(allSubSubCat);
@@ -127,14 +125,14 @@ public class StrategicPartnerFragPhaseOne extends BaseFragment {
                             selectedServiceList.add(categoryModel);
                         }
                     }
-                    if (selectedServiceList.size() > 0) {
+                    if (!selectedServiceList.isEmpty()) {
                         mStrategicPartnerTaskCreationAct.setSelectedSubService(selectedServiceList);
 
                         Log.d(TAG, "onSubCategoryRowItemClicked() called with: subServiceDetailModel = [" + "]");
                         // Make the status Verified
                         isVerified = true;
 
-                        //Alert The activity that step one is been varified.
+                        //Alert The activity that step one is been verified.
                         mStrategicPartnerTaskCreationAct.setTaskState(StrategicPartnerTaskCreationAct.STEP_ONE_VERIFIED);
 
                         new Handler().postDelayed(new Runnable() {
@@ -179,9 +177,10 @@ public class StrategicPartnerFragPhaseOne extends BaseFragment {
         Map<String, String> mParams = new HashMap<>();
         mParams.put(CAT_ID, catId);
 
+        //noinspection unchecked
         VolleyNetworkRequest mVolleyNetworkRequestForCategoryList = new VolleyNetworkRequest(NetworkUtility.WS.FETCH_SUB_CATS_STRATEGIC_PARTNER_LIST
-                , mCallFetchAllSubCateStreParListingWSErrorListener
-                , mCallFetchAllSubCateStreParListingWSResponseListener
+                , mCallFetchAllSubCateSPListingWSErrorListener
+                , mCallFetchAllSubCateSPListingWSResponseListener
                 , mHeaderParams
                 , mParams
                 , null);
@@ -189,7 +188,7 @@ public class StrategicPartnerFragPhaseOne extends BaseFragment {
         Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequestForCategoryList, NetworkUtility.WS.FETCH_SUB_CATS_STRATEGIC_PARTNER_LIST);
     }
 
-    Response.Listener mCallFetchAllSubCateStreParListingWSResponseListener = new Response.Listener() {
+    private Response.Listener mCallFetchAllSubCateSPListingWSResponseListener = new Response.Listener() {
         @Override
         public void onResponse(Object response) {
             Log.d(TAG, "onResponse() called with: response = [" + response + "]");
@@ -201,9 +200,9 @@ public class StrategicPartnerFragPhaseOne extends BaseFragment {
                 String error_message;
                 switch (statusCode) {
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
-                        list = Utility.getObjectListFromJsonString(jsonObject.optString(NetworkUtility.TAGS.DATA), StrategicPartnerSubCategoryModel[].class);
-                        mExpandableRecyclerViewAdapter = new ExpandableRecyclerViewAdapter(list, mStrategicPartnerTaskCreationAct.isSingleSelection);
-                        mFragmentStrategicPartnerPhaseOneBinding.recyclerView.setAdapter(mExpandableRecyclerViewAdapter);
+                        list = Utility.getObjectListFromJsonString(jsonObject.optString(NetworkUtility.TAGS.DATA), StrategicPartnerServiceModel[].class);
+                        ExpandableServicesRecycleAdapter expandableRecyclerViewAdapter = new ExpandableServicesRecycleAdapter(list, mStrategicPartnerTaskCreationAct.isSingleSelection);
+                        mFragmentStrategicPartnerPhaseOneBinding.recyclerView.setAdapter(expandableRecyclerViewAdapter);
                         errorLoadingHelper.success();
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
@@ -228,12 +227,12 @@ public class StrategicPartnerFragPhaseOne extends BaseFragment {
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
-                mCallFetchAllSubCateStreParListingWSErrorListener.onErrorResponse(new VolleyError(e.getMessage()));
+                mCallFetchAllSubCateSPListingWSErrorListener.onErrorResponse(new VolleyError(e.getMessage()));
             }
 
         }
     };
-    Response.ErrorListener mCallFetchAllSubCateStreParListingWSErrorListener = new Response.ErrorListener() {
+    private Response.ErrorListener mCallFetchAllSubCateSPListingWSErrorListener = new Response.ErrorListener() {
         @Override
         public void onErrorResponse(VolleyError error) {
             Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
@@ -257,15 +256,8 @@ public class StrategicPartnerFragPhaseOne extends BaseFragment {
     @Override
     public void onDetach() {
         super.onDetach();
+        Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.WS.FETCH_SUB_CATS_STRATEGIC_PARTNER_LIST);
     }
 
-    /**
-     * This method would return whether the stage is verified or not
-     *
-     * @return
-     */
-    public boolean isVerified() {
-        return isVerified;
-    }
 
 }

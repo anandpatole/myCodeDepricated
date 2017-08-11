@@ -1,6 +1,5 @@
 package com.cheep.strategicpartner;
 
-import android.content.Context;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -14,69 +13,27 @@ import java.util.ArrayList;
 
 /**
  * Created by giteeka on 1/8/17.
+ * This adapter is for custom drop down menu strategic partner phase 2
  */
 
-public class DropDownAdapter extends RecyclerView.Adapter<DropDownAdapter.MyViewHolder> {
-    Context mContext;
-    ArrayList<QueAnsModel.DropDownModel> mList;
-    private ClickItem mListener;
+class DropDownAdapter extends RecyclerView.Adapter<DropDownAdapter.MyViewHolder> {
 
-    public void setListener(ClickItem listener) {
-        mListener = listener;
-    }
-
+    /**
+     * Listener for click item of menu
+     */
     interface ClickItem {
         void clickItem(int pos);
     }
 
-    DropDownAdapter() {
-
+    private ArrayList<QueAnsModel.DropDownModel> mList;
+    private ClickItem mListener;
+    public void setListener(ClickItem listener) {
+        mListener = listener;
     }
 
-    public DropDownAdapter(Context context, ArrayList<QueAnsModel.DropDownModel> list) {
-        mContext = context;
+    DropDownAdapter(ArrayList<QueAnsModel.DropDownModel> list) {
         mList = list;
     }
-
-//    @Override
-//
-//    public int getCount() {
-//        return mList.size();
-//    }
-//
-//    @Override
-//    public QueAnsModel.DropDownModel getItem(int i) {
-//        return mList.get(i);
-//    }
-//
-//    @Override
-//    public long getItemId(int i) {
-//        return 0;
-//    }
-//
-//    @Override
-//    public View getView(int i, View view, ViewGroup viewGroup) {
-//        ViewDataHolder viewDataHolder;
-//        if (view == null) {
-//            view = LayoutInflater.from(mContext).inflate(R.layout.row_drop_down, null);
-//            viewDataHolder = new ViewDataHolder();
-//            view.setTag(viewDataHolder);
-//            viewDataHolder.mTextView = view.findViewById(R.id.txt_drop_down);
-//        } else {
-//            viewDataHolder = (ViewDataHolder) view.getTag();
-//        }
-//        viewDataHolder.mTextView.setText(mediaModel.dropdown_answer);
-//        viewDataHolder.mTextView.setSelected(mediaModel.isSelected);
-//
-//        if (mediaModel.isSelected) {
-//            viewDataHolder.mTextView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.dark_blue_variant_1));
-//            viewDataHolder.mTextView.setTextColor(ContextCompat.getColor(mContext, R.color.white));
-//        } else {
-//            viewDataHolder.mTextView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.white));
-//            viewDataHolder.mTextView.setTextColor(ContextCompat.getColor(mContext, R.color.dark_blue_variant_1));
-//        }
-//        return view;
-//    }
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -107,29 +64,30 @@ public class DropDownAdapter extends RecyclerView.Adapter<DropDownAdapter.MyView
     class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView mTextView;
 
-        public MyViewHolder(View itemView) {
+        MyViewHolder(View itemView) {
             super(itemView);
             mTextView = itemView.findViewById(R.id.txt_drop_down);
             itemView.setOnClickListener(this);
         }
 
 
-        void bind(QueAnsModel.DropDownModel mediaModel) {
-            mTextView.setText(mediaModel.dropdown_answer);
-            mTextView.setSelected(mediaModel.isSelected);
-            if (getAdapterPosition() == 0)
-                mTextView.setBackgroundResource(R.drawable.bg_item_top);
-            else if (getAdapterPosition() == mList.size() - 1)
-                mTextView.setBackgroundResource(R.drawable.bg_item_last);
-            else
-                mTextView.setBackgroundResource(R.drawable.bg_item_middle);
+        void bind(QueAnsModel.DropDownModel dropDownModel) {
+            mTextView.setText(dropDownModel.dropdown_answer);
+            mTextView.setSelected(dropDownModel.isSelected);
 
-            if (mediaModel.isSelected) {
-//                mTextView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.dark_blue_variant_1));
-                mTextView.setTextColor(ContextCompat.getColor(mContext, R.color.white));
+            // to set proper background of menu
+            if (getAdapterPosition() == 0)
+                mTextView.setBackgroundResource(R.drawable.bg_drop_down_item_top);
+            else if (getAdapterPosition() == mList.size() - 1)
+                mTextView.setBackgroundResource(R.drawable.bg_drop_down_item_last);
+            else
+                mTextView.setBackgroundResource(R.drawable.bg_drop_down_item_middle);
+
+            // dynamically setting text color for selected item
+            if (dropDownModel.isSelected) {
+                mTextView.setTextColor(ContextCompat.getColor(itemView.getContext(), R.color.white));
             } else {
-//                mTextView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.white));
-                mTextView.setTextColor(ContextCompat.getColor(mContext, R.color.black));
+                mTextView.setTextColor(ContextCompat.getColor(itemView.getContext(), R.color.black));
             }
         }
 

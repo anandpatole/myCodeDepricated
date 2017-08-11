@@ -7,9 +7,10 @@ import java.util.List;
 
 /**
  * Created by giteeka on 21/7/17.
+ * Strategic partner services Json class model
  */
 
-public class StrategicPartnerSubCategoryModel implements Parent<StrategicPartnerSubCategoryModel.AllSubSubCat> {
+class StrategicPartnerServiceModel implements Parent<StrategicPartnerServiceModel.AllSubSubCat> {
 
 
     @SerializedName("cat_id")
