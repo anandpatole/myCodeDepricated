@@ -165,15 +165,15 @@ public class StrategicPartnerTaskCreationAct extends BaseAppCompatActivity {
     /**
      * Below would manage the state of Step while creating task creation
      */
-    private static final int STEP_ONE_NORMAL = 1;
-    private static final int STEP_ONE_UNVERIFIED = 2;
+    public static final int STEP_ONE_NORMAL = 1;
+    public static final int STEP_ONE_UNVERIFIED = 2;
     public static final int STEP_ONE_VERIFIED = 3;
-    private static final int STEP_TWO_NORMAL = 4;
-    private static final int STEP_TWO_UNVERIFIED = 5;
+    public static final int STEP_TWO_NORMAL = 4;
+    public static final int STEP_TWO_UNVERIFIED = 5;
     public static final int STEP_TWO_VERIFIED = 6;
-    private static final int STEP_THREE_NORMAL = 7;
-    private static final int STEP_THREE_UNVERIFIED = 8;
-    private static final int STEP_THREE_VERIFIED = 9;
+    public static final int STEP_THREE_NORMAL = 7;
+    public static final int STEP_THREE_UNVERIFIED = 8;
+    public static final int STEP_THREE_VERIFIED = 9;
 
     public void setTaskState(int step_state) {
         switch (step_state) {

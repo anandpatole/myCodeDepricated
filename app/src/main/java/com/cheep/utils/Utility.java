@@ -53,6 +53,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.mixpanel.android.java_websocket.util.Base64;
+import com.twitter.sdk.android.core.internal.scribe.SyndicatedSdkImpressionEvent;
 
 import org.cryptonode.jncryptor.AES256JNCryptor;
 import org.cryptonode.jncryptor.CryptorException;
@@ -170,6 +171,7 @@ public class Utility {
 
     //Different Types of Braoadcast Actions
     public static final String BR_ON_TASK_CREATED = "com.cheep.ontaskcreated";
+    public static final String BR_ON_TASK_CREATED_FOR_STRATEGIC_PARTNER = "com.cheep.ontaskcreated.strategicpartner";
     public static final String BR_NEW_TASK_ADDED = "com.cheep.newtask.added";
     public static final int CHAT_PAGINATION_RECORD_LIMIT = 20;
 
@@ -347,6 +349,10 @@ public class Utility {
         Log.d(TAG, "getHeightCategoryImageBasedOnRatio() called with: width = [" + width + "]");
         Log.d(TAG, "getHeightCategoryImageBasedOnRatio() called with: width = [" + Math.round((width / CATEGORY_IMAGE_RATIO)) + "]");
         return Math.round((width / CATEGORY_IMAGE_RATIO));
+    }
+
+    public static String getUniqueTransactionId() {
+        return String.valueOf(System.currentTimeMillis());
     }
 
     //Bundle Extra parameters

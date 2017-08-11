@@ -68,6 +68,7 @@ public class NetworkUtility {
 
         public static final String VALIDATE_CHEEP_CODE = BASE_URL + "customers/payment/check_cheepcode";
         public static final String GET_PAYMENT_HASH = BASE_URL + "customers/payment/generate_hash";
+        public static final String GET_PAYMENT_HASH_FOR_STRATEGIC_PARTNER = BASE_URL + "customers/payment/generate_hash_for_stratagic_partner";
         public static final String PAYMENT = BASE_URL + "customers/payment/pay_money";
         public static final String PAYMENT_HISTORY = BASE_URL + "customers/payment/payment_history";
         public static final String EMERGENCY_ALERT = BASE_URL + "customers//sp_profile/emergency_alert";
@@ -98,6 +99,10 @@ public class NetworkUtility {
         // Fetch list of all strategic partner services and sub categories
         public static final String FETCH_SUB_CATEGORIES_QUESTIONNAIRE = BASE_URL + "customers/category/categories_questionnaire";
         public static final String CHECK_CHEEPCODE_FOR_STRATEGIC_PARTNER = BASE_URL + "customers/payment/check_cheepcode_for_strategic_partner";
+
+        // Task Creation for Strategic Partner
+        public static final String TASK_CREATE_STRATEGIC_PARTNER = BASE_URL + "customers/tasks/stratagic_partner_task_create";
+
     }
 
     public static class TAGS {
@@ -201,7 +206,7 @@ public class NetworkUtility {
         public static final String ADD = "add";
         public static final String REMOVE = "remove";
 
-        public static final String SUB_CATEGORY_DETAIL= "sub_category_detail";
+        public static final String SUB_CATEGORY_DETAIL = "sub_category_detail";
         public static final String QUESTION_DETAIL = "question_detail";
 
         public static class VERSION_CHANGE_TYPE {
