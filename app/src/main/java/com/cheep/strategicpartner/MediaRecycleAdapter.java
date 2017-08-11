@@ -51,6 +51,10 @@ class MediaRecycleAdapter extends RecyclerView.Adapter<MediaRecycleAdapter.MyVie
         return mList.size();
     }
 
+    public ArrayList<MediaModel> getList() {
+        return mList;
+    }
+
     interface ItemClick {
         void removeMedia();
     }

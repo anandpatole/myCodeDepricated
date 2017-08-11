@@ -38,7 +38,7 @@ public class StrategicPartnerTaskCreationAct extends BaseAppCompatActivity {
     private ActivityTaskCreationForStrategicPartnerBinding mActivityTaskCreationForStrategicPartnerBinding;
     public BannerImageModel mBannerImageModel;
     private TaskCreationForStrategicPartnerPagerAdapter mTaskCreationPagerAdapter;
-    private ArrayList<QueAnsModel> mSelectedQuestions;
+    private ArrayList<QueAnsModel> mQuestionsList;
     private ArrayList<StrategicPartnerServiceModel> mSelectedServicesList;
     public boolean isSingleSelection = false;
     public String date = "";
@@ -64,6 +64,8 @@ public class StrategicPartnerTaskCreationAct extends BaseAppCompatActivity {
         /*
           Fetch data from Home Screen(Includes details about strategic Partners
          */
+
+        setTaskState(STEP_ONE_UNVERIFIED);
         if (getIntent().getExtras() != null) {
             // Fetch banner Model
             Log.e(TAG, " data " + getIntent().getStringExtra(Utility.Extra.DATA));
@@ -174,8 +176,10 @@ public class StrategicPartnerTaskCreationAct extends BaseAppCompatActivity {
     public static final int STEP_THREE_NORMAL = 7;
     public static final int STEP_THREE_UNVERIFIED = 8;
     public static final int STEP_THREE_VERIFIED = 9;
+    public int mCurrentStep = -1;
 
     public void setTaskState(int step_state) {
+        mCurrentStep = step_state;
         switch (step_state) {
             case STEP_ONE_NORMAL:
                 mActivityTaskCreationForStrategicPartnerBinding.textStep1.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_steps_normal));
@@ -255,6 +259,7 @@ public class StrategicPartnerTaskCreationAct extends BaseAppCompatActivity {
 
                 mActivityTaskCreationForStrategicPartnerBinding.textStep3.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_steps_verified));
                 mActivityTaskCreationForStrategicPartnerBinding.textStep3.setTextColor(ContextCompat.getColor(mContext, R.color.white));
+
                 break;
         }
     }
@@ -267,18 +272,21 @@ public class StrategicPartnerTaskCreationAct extends BaseAppCompatActivity {
         switch (step) {
             case STAGE_1:
                 mActivityTaskCreationForStrategicPartnerBinding.viewpager.setCurrentItem(0);
+                setTaskState(STEP_ONE_UNVERIFIED);
                 // Change description
                 mActivityTaskCreationForStrategicPartnerBinding.imgLogo.setVisibility(View.GONE);
                 mActivityTaskCreationForStrategicPartnerBinding.textStepDesc.setText(getString(R.string.step_1_desc_for_strategic_partner));
                 break;
             case STAGE_2:
                 mActivityTaskCreationForStrategicPartnerBinding.viewpager.setCurrentItem(1);
+                setTaskState(STEP_TWO_UNVERIFIED);
                 // Change description
                 mActivityTaskCreationForStrategicPartnerBinding.imgLogo.setVisibility(View.GONE);
                 mActivityTaskCreationForStrategicPartnerBinding.textStepDesc.setText(getString(R.string.step_2_desc_for_strategic_partner));
                 break;
             case STAGE_3:
                 mActivityTaskCreationForStrategicPartnerBinding.viewpager.setCurrentItem(2);
+                setTaskState(STEP_THREE_UNVERIFIED);
                 // Change description
                 mActivityTaskCreationForStrategicPartnerBinding.textStepDesc.setText(getString(R.string.step_3_desc_for_strategic_partner));
                 mActivityTaskCreationForStrategicPartnerBinding.imgLogo.setVisibility(View.VISIBLE);
@@ -383,11 +391,11 @@ public class StrategicPartnerTaskCreationAct extends BaseAppCompatActivity {
         return mSelectedServicesList;
     }
 
-    public void setSelectedQuestions(ArrayList<QueAnsModel> selectedQuestions) {
-        mSelectedQuestions = selectedQuestions;
+    public void setQuestionsList(ArrayList<QueAnsModel> questionsList) {
+        mQuestionsList = questionsList;
     }
 
-    public ArrayList<QueAnsModel> getSelectedQuestions() {
-        return mSelectedQuestions;
+    public ArrayList<QueAnsModel> getQuestionsList() {
+        return mQuestionsList;
     }
 }

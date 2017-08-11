@@ -2,6 +2,7 @@ package com.cheep.network;
 
 
 import android.util.Log;
+import android.webkit.MimeTypeMap;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
@@ -69,7 +70,7 @@ public class VolleyNetworkRequest<T> extends Request<T> {
     private void buildMultipartEntity() {
         if (null != mFilePart) {
             for (Map.Entry<String, File> entry : mFilePart.entrySet()) {
-                mBuilder.addBinaryBody(entry.getKey(), entry.getValue(), ContentType.create("image/jpeg"), entry.getValue().getName());
+                mBuilder.addBinaryBody(entry.getKey(), entry.getValue(), ContentType.create(getMimeType(entry.getValue().getPath())), entry.getValue().getName());
             }
         }
 
@@ -90,6 +91,14 @@ public class VolleyNetworkRequest<T> extends Request<T> {
             }
         }
 
+    }
+
+    public static String getMimeType(String url) {
+        String extension = url.substring(url.lastIndexOf("."));
+        String mimeTypeMap = MimeTypeMap.getFileExtensionFromUrl(extension);
+        String mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(mimeTypeMap);
+        Log.d(TAG, "getMimeType() returned: " + mimeType);
+        return mimeType;
     }
 
     @Override
