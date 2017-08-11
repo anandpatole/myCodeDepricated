@@ -28,7 +28,6 @@ import com.cheep.BuildConfig;
 import com.cheep.R;
 import com.cheep.activity.BaseAppCompatActivity;
 import com.cheep.activity.PaymentsActivity;
-import com.cheep.activity.PaymentsStepActivity;
 import com.cheep.custom_view.BottomAlertDialog;
 import com.cheep.databinding.FragmentStrategicPartnerPhaseThreeBinding;
 import com.cheep.dialogs.AcknowledgementDialogWithoutProfilePic;
@@ -453,8 +452,8 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
         }
     }
 
-    // Contants
-    public static final String TXT_ID = "txnid";
+    // Constants
+    public static final String TXN_ID = "txnid";
     public static final String DEVICE_TYPE = "device_type";
     public static final String ISMOBILEVIEW = "ismobileview";
     public static final String PRODUCTINFO = "productinfo";
@@ -478,28 +477,6 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
     StringBuilder postData = new StringBuilder();
 
     private String getPaymentUrl() {
-        /*postData = "&txnid=" + transaction_Id +
-                "&device_type=1" +
-                "&ismobileview=1" +
-                "&productinfo=" + taskDetailModel.taskId +
-                "&user_credentials=" + userDetails.Email +
-                "&key=" + BuildConfig.PAYUBIZ_HDFC_KEY +
-                "&instrument_type=" + PreferenceUtility.getInstance(mContext).getFCMRegID() +
-                "&surl=" + BuildConfig.PAYUBIZ_SUCCESS_URL +
-                "&furl=" + BuildConfig.PAYUBIZ_FAIL_URL + "" +
-                "&instrument_id=7dd17561243c202" +
-                "&firstname=" + userDetails.UserName +
-                "&email=" + userDetails.Email +
-                "&phone=" + userDetails.PhoneNumber +
-                "&amount=" + (isAdditionalPayment ? taskDetailModel.additionalQuoteAmount : providerModel.quotePrice) +
-//                "&bankcode=PAYUW" + //for PayU Money
-//                "&pg=WALLET"+//for PayU Money
-                "&udf1=Task Start Date : " + taskDetailModel.taskStartdate +
-                "&udf2=Provider Id : " + providerModel.providerId +
-                "&udf3=" + NetworkUtility.TAGS.PLATFORMTYPE.ANDROID +
-                "&udf4=" + (isAdditionalPayment ? Utility.TASK_STATUS.ADDITIONAL_PAYMENT_REQUESTED : "") +
-                "&udf5=" +
-                "&hash=";*/
         for (String key : mTransactionFieldsParams.keySet()) {
             postData = postData.append("&").append(key).append("=").append(mTransactionFieldsParams.get(key));
         }
@@ -507,9 +484,7 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
         return postData.toString();
     }
 
-
     String transaction_Id;
-
     HashMap<String, Object> mTransactionFieldsParams;
 
     private Map<String, Object> getPaymentTransactionFields(UserDetails userDetails) {
@@ -518,7 +493,7 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
         // Create Unique Transaction ID
         transaction_Id = Utility.getUniqueTransactionId();
 
-        mTransactionFieldsParams.put(TXT_ID, transaction_Id);
+        mTransactionFieldsParams.put(TXN_ID, transaction_Id);
         mTransactionFieldsParams.put(DEVICE_TYPE, "1");
         mTransactionFieldsParams.put(ISMOBILEVIEW, "1");
         mTransactionFieldsParams.put(PRODUCTINFO, userDetails.UserID);
@@ -528,16 +503,22 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
         mTransactionFieldsParams.put(SURL, BuildConfig.PAYUBIZ_SUCCESS_URL);
         mTransactionFieldsParams.put(FURL, BuildConfig.PAYUBIZ_FAIL_URL);
         mTransactionFieldsParams.put(INSTRUMENT_ID, "7dd17561243c202");
+
+        // User Details
         mTransactionFieldsParams.put(FIRSTNAME, userDetails.UserName);
         mTransactionFieldsParams.put(EMAIL, userDetails.Email);
         mTransactionFieldsParams.put(PHONE, userDetails.PhoneNumber);
+
+        // Task total amount
         mTransactionFieldsParams.put(AMOUNT, mStrategicPartnerTaskCreationAct.total);
         // Start DateTime(In Milliseconds- Timestamp)
         mTransactionFieldsParams.put(UDF1, "Task Start Date : " + start_datetime);
         // We don't have Provider ID so pass it empty.
         mTransactionFieldsParams.put(UDF2, Utility.EMPTY_STRING);
+
         // Platform
         mTransactionFieldsParams.put(UDF3, NetworkUtility.TAGS.PLATFORMTYPE.ANDROID);
+
         mTransactionFieldsParams.put(UDF4, Utility.EMPTY_STRING);
         mTransactionFieldsParams.put(UDF5, Utility.EMPTY_STRING);
         mTransactionFieldsParams.put(HASH, Utility.EMPTY_STRING);
@@ -750,11 +731,12 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
                           Now according to the new flow, once task created
                           app will be redirected to MyTask Detail screen.
                          */
-//                        onSuccessfullTaskCompletion(jsonObject);
-                        Utility.showToast(mContext,
-                                getString(R.string.desc_task_creation_acknowledgement, PreferenceUtility.getInstance(mContext).getUserDetails().UserName));
-                        // Finish the current activity
-                        mStrategicPartnerTaskCreationAct.finish();
+//                        TODO:This needs to be updated.
+                        onSuccessfullTaskCreated(jsonObject);
+//                        Utility.showToast(mContext,
+//                                getString(R.string.desc_task_creation_acknowledgement, PreferenceUtility.getInstance(mContext).getUserDetails().UserName));
+//                        // Finish the current activity
+//                        mStrategicPartnerTaskCreationAct.finish();
 
                         //Sending Broadcast to the HomeScreen Screen.
                         Intent intent = new Intent(Utility.BR_ON_TASK_CREATED_FOR_STRATEGIC_PARTNER);
@@ -786,9 +768,9 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
     };
 
     /**
-     * This method would going to call when task completed successfully
+     * This method would going to call when task created successfully
      */
-    private void onSuccessfullTaskCompletion(JSONObject jsonObject) {
+    private void onSuccessfullTaskCreated(JSONObject jsonObject) {
         TaskDetailModel taskDetailModel = (TaskDetailModel) Utility.getObjectFromJsonString(jsonObject.optString(NetworkUtility.TAGS.DATA), TaskDetailModel.class);
         if (taskDetailModel != null) {
             /* * Add new task detail on firebase
@@ -830,10 +812,8 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
 
 
     /**
-     * Create Dialog which would going to show on successful completion
+     * Create Dialog which would going to show on error completion
      */
-
-
     Response.ErrorListener mCallCreateTaskWSErrorListener = new Response.ErrorListener() {
         @Override
         public void onErrorResponse(VolleyError error) {
@@ -846,42 +826,6 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
             Utility.showSnackBar(getString(R.string.label_something_went_wrong), mFragmentStrategicPartnerPhaseThreeBinding.getRoot());
         }
     };
-
-    /*private void callTaskCreationWebServiceForStratgicPartner() {
-
-        String subCategoryDetail = getSelectedServicesJsonString().toString();
-        ArrayList<QueAnsModel> mList = mStrategicPartnerTaskCreationAct.getSelectedQuestions();
-        String question_detail = getQuestionAnswerDetailsJsonString(mList).toString();
-        UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
-
-        Log.e(TAG, " addressId >>" + addressId);
-        Log.e(TAG, " city_id >>" + userDetails.CityID);
-        Log.e(TAG, " cat_id >>" + mStrategicPartnerTaskCreationAct.mBannerImageModel.cat_id);
-        Log.e(TAG, " sub_category_detail >>" + subCategoryDetail);
-        Log.e(TAG, " question_detail >>" + question_detail);
-        Log.e(TAG, " start_datetime >>" + start_datetime);
-
-        // Add Header parameters
-        Map<String, String> mHeaderParams = new HashMap<>();
-        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, userDetails.UserID);
-        mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
-
-        String transactionID = System.currentTimeMillis() + "";
-        // Add Params
-        Map<String, String> mParams = new HashMap<>();
-        mParams.put(NetworkUtility.TAGS.ADDRESS_ID, addressId);
-        mParams.put(NetworkUtility.TAGS.CITY_ID, userDetails.CityID);
-        mParams.put(NetworkUtility.TAGS.CAT_ID, mStrategicPartnerTaskCreationAct.mBannerImageModel.cat_id);
-        mParams.put(NetworkUtility.TAGS.START_DATETIME, start_datetime);
-        mParams.put(NetworkUtility.TAGS.SUB_CATEGORY_DETAIL, subCategoryDetail);
-        mParams.put(NetworkUtility.TAGS.QUESTION_DETAIL, question_detail);
-        mParams.put(NetworkUtility.TAGS.QUOTE_AMOUNT, mStrategicPartnerTaskCreationAct.total + "");
-        mParams.put(NetworkUtility.TAGS.CHEEPCODE, cheepCode);
-        mParams.put(NetworkUtility.TAGS.PAYABLE_AMOUNT, payableAmount);
-        mParams.put(NetworkUtility.TAGS.TRANSACTION_ID, transactionID);
-        Log.e(TAG, mParams + "");
-
-    }*/
 
     private JsonArray getQuestionAnswerDetailsJsonString(ArrayList<QueAnsModel> mList) {
         JsonArray quesArray = new JsonArray();
