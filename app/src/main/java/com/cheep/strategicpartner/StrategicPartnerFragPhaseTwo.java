@@ -12,6 +12,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.databinding.DataBindingUtil;
 import android.graphics.drawable.BitmapDrawable;
+import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -42,6 +43,7 @@ import android.widget.PopupWindow;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -94,7 +96,7 @@ import static com.cheep.network.NetworkUtility.TAGS.CAT_ID;
  */
 
 public class StrategicPartnerFragPhaseTwo extends BaseFragment {
-    public static final String TAG = "StrategicPartnerFragPhaseThree";
+    public static final String TAG = "StracPartnerFragThree";
     private FragmentStrategicPartnerPhaseTwoBinding mFragmentStrategicPartnerPhaseTwoBinding;
     private StrategicPartnerTaskCreationAct mStrategicPartnerTaskCreationAct;
     private SuperCalendar startDateTimeSuperCalendar = SuperCalendar.getInstance();
@@ -773,17 +775,18 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
 
     private void takeVideoIntent(int requestPermissionCode) {
         //Go ahead with Camera capturing
-        if (ContextCompat.checkSelfPermission(mStrategicPartnerTaskCreationAct, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(mStrategicPartnerTaskCreationAct
-                , Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED ) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(mStrategicPartnerTaskCreationAct, Manifest.permission.CAMERA) && ActivityCompat.shouldShowRequestPermissionRationale(mStrategicPartnerTaskCreationAct, Manifest.permission.RECORD_AUDIO)) {
-                ActivityCompat.requestPermissions(mStrategicPartnerTaskCreationAct, new String[]{Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO}, requestPermissionCode);
+        if (ContextCompat.checkSelfPermission(mStrategicPartnerTaskCreationAct, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED
+                || ContextCompat.checkSelfPermission(mStrategicPartnerTaskCreationAct, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED
+                || ContextCompat.checkSelfPermission(mStrategicPartnerTaskCreationAct, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(mStrategicPartnerTaskCreationAct, Manifest.permission.CAMERA)
+                    && ActivityCompat.shouldShowRequestPermissionRationale(mStrategicPartnerTaskCreationAct, Manifest.permission.RECORD_AUDIO)) {
+                ActivityCompat.requestPermissions(mStrategicPartnerTaskCreationAct, new String[]{Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO, Manifest.permission.READ_EXTERNAL_STORAGE}, requestPermissionCode);
             } else {
-                ActivityCompat.requestPermissions(mStrategicPartnerTaskCreationAct, new String[]{Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO}, requestPermissionCode);
+                ActivityCompat.requestPermissions(mStrategicPartnerTaskCreationAct, new String[]{Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO, Manifest.permission.READ_EXTERNAL_STORAGE}, requestPermissionCode);
             }
         } else {
             //Go ahead with Camera capturing
             startActivityForResult(new Intent(mStrategicPartnerTaskCreationAct, RecordVideoNewActivity.class), Utility.REQUEST_CODE_VIDEO_CAPTURE);
-
         }
     }
 
@@ -1656,16 +1659,43 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
         else if (requestCode == Utility.REQUEST_CODE_GET_VIDEO_GALLERY && resultCode == RESULT_OK && data != null) {
             Uri selectedImageUri = data.getData();
             mCurrentPhotoPath = Utility.getPath(mStrategicPartnerTaskCreationAct, selectedImageUri);
-            Log.e(TAG, "path >> " + mCurrentPhotoPath);
-            mMediaRecycleAdapter.addImage(new MediaModel(mCurrentPhotoPath, MediaModel.MediaType.VIDEO));
-            checkMediaArraySize();
+
+            if (mCurrentPhotoPath != null && !selectedImageUri.equals(""))
+                if (getDuration(mCurrentPhotoPath) > 10) {
+                    Toast.makeText(mStrategicPartnerTaskCreationAct, "Looks like the size of the file is heavy. Please try again.", Toast.LENGTH_SHORT).show();
+                } else {
+                    try {
+                        Log.e(TAG, "path >> " + mCurrentPhotoPath);
+                        mMediaRecycleAdapter.addImage(new MediaModel(mCurrentPhotoPath, MediaModel.MediaType.VIDEO));
+                        checkMediaArraySize();
+                    } catch (Throwable throwable) {
+                        throwable.printStackTrace();
+                    }
+                }
+
         }
+    }
+
+    private long getDuration(String selectedImagePath) {
+        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+//        use one of overloaded setDataSource() functions to set your data source
+        retriever.setDataSource(selectedImagePath);
+        String time = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+        long timeInSec = 0;
+        try {
+            timeInSec = Long.parseLong(time) / 1000;
+        } catch (NumberFormatException e) {
+            timeInSec = 0;
+        }
+        retriever.release();
+        return timeInSec;
     }
 
     /**
      * check if 3 image/video is added then hide image add view
      * to preventing from adding more media files
      */
+
     private void checkMediaArraySize() {
         if (mMediaRecycleAdapter.getItemCount() > 0)
             mFragmentStrategicPartnerPhaseTwoBinding.linMain.findViewWithTag(Utility.TEMPLATE_UPLOAD).setSelected(true);
@@ -1675,7 +1705,6 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
                 imageView.setVisibility(View.GONE);
         }
     }
-
 
 
     /**

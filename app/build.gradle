@@ -14,8 +14,8 @@ android {
         applicationId "com.cheep"
         minSdkVersion 16
         targetSdkVersion 25
-        versionCode 22
-        versionName "1.0.52" // PLEASE FIRST MAKE SURE MIN-VERSION IS 16.
+        versionCode 23
+        versionName "1.0.53" // PLEASE FIRST MAKE SURE MIN-VERSION IS 16.
         renderscriptTargetApi 18
         renderscriptSupportModeEnabled true
 
@@ -53,7 +53,7 @@ android {
         buildConfigField("String", "CHAT_NODE", getProperty("CHAT_NODE_DEBUG"));
         buildConfigField("String", "PAYUBIZ_HDFC_KEY", getProperty("PAYUBIZ_HDFC_SANDBOX_KEY"))
         buildConfigField("String", "PAYUBIZ_HDFC_URL", getProperty("PAYUBIZ_HDFC_SANDBOX_URL"))
-        buildConfigField("boolean", "NEED_TO_BYPASS_PAYMENT", "true")
+        buildConfigField("boolean", "NEED_TO_BYPASS_PAYMENT", "false")
 
         // TODO: This needs to change (For Temporary LIVE)
 //        buildConfigField("String", "BASE_URL", getProperty("LIVE_BASE_URL"));

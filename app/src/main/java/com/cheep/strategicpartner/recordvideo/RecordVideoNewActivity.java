@@ -1,15 +1,21 @@
 package com.cheep.strategicpartner.recordvideo;
 
+import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.hardware.Camera;
 import android.media.CamcorderProfile;
 import android.media.MediaRecorder;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -20,12 +26,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.cheep.BuildConfig;
 import com.cheep.R;
 
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Creator Giteeka 31/07/2017
@@ -364,7 +372,8 @@ public class RecordVideoNewActivity extends AppCompatActivity implements View.On
         if (output_file.exists()) {
             output_file.delete();
         }
-        mediaRecorder.setOutputFile(output_file.toString());
+
+        mediaRecorder.setOutputFile(output_file.getPath());
         mediaRecorder.setMaxDuration(MAXIMUM_DURATION); // Set max duration 10 sec.
         mediaRecorder.setMaxFileSize(MAX_FILE_SIZE); // Set max file size 20M
 
@@ -387,12 +396,41 @@ public class RecordVideoNewActivity extends AppCompatActivity implements View.On
         return true;
 
     }
-  private File getOutputMediaFile(Context context) {
+
+    private File getOutputMediaFile(Context context) {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss"/*, Locale.US*/).format(new Date());
         String imageFileName = "VID_" + timeStamp + ".mp4";
 
-        return new File(new File(context.getFilesDir(), "CheepImages"), imageFileName);
+        File videoFile = new File(new File(context.getFilesDir(), "CheepImages"), imageFileName);
+
+        // Continue only if the File was successfully created
+        Uri photoURI = FileProvider.getUriForFile(this,
+                BuildConfig.FILE_PROVIDER_URL,
+                videoFile);
+
+        // Grant URI permission START
+        // Enabling the permission at runtime
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getIntent().addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            ClipData clip =
+                    ClipData.newUri(getContentResolver(), "A photo", photoURI);
+            getIntent().setClipData(clip);
+            getIntent().addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+        } else {
+            List<ResolveInfo> resInfoList =
+                    getPackageManager()
+                            .queryIntentActivities(getIntent(), PackageManager.MATCH_DEFAULT_ONLY);
+
+            for (ResolveInfo resolveInfo : resInfoList) {
+                String packageName = resolveInfo.activityInfo.packageName;
+                grantUriPermission(packageName, photoURI,
+                        Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+            }
+        }
+        return videoFile;
     }
+
     private void releaseCamera() {
         // stop and release camera
         if (mCamera != null) {

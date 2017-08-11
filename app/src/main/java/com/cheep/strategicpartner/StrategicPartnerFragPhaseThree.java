@@ -554,15 +554,7 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
 //                            PLEASE NOTE: THIS IS JUST TO BYPPASS THE PAYMENT GATEWAY. THIS IS NOT
 //                            GOING TO RUN IN LIVE ENVIRONMENT BUILDS
                             // Direct bypass the things
-                            if (jsonObject.getString(NetworkUtility.TAGS.IS_FOR_ADDITIONAL_QUOTE).equalsIgnoreCase(getString(R.string.label_yes))) {
-                                // TODO : Need To Call Task Creation WS and Payment Successfull WS
-                                //Call update payment service from here with all the response come from service
-//                                updatePaymentStatus(true, "Payment has been bypassed for development", true);
-                            } else {
-                                // TODO : Need To Call Task Creation WS and Payment Successfull WS
-                                //Call update payment service from here with all the response come from service
-//                                updatePaymentStatus(true, "Payment has been bypassed for development", false);
-                            }
+                            callTaskCreationWebServiceForStratgicPartner(true, "Payment has been bypassed for development");
                         } else {
                             //TODO: Remove this when release and it is saving cc detail in clipboard only
                             if ("debug".equalsIgnoreCase(BuildConfig.BUILD_TYPE)) {
@@ -754,11 +746,10 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
                           app will be redirected to MyTask Detail screen.
                          */
 //                        TODO:This needs to be updated.
-                        onSuccessfullTaskCreated(jsonObject);
-//                        Utility.showToast(mContext,
-//                                getString(R.string.desc_task_creation_acknowledgement, PreferenceUtility.getInstance(mContext).getUserDetails().UserName));
-//                        // Finish the current activity
-//                        mStrategicPartnerTaskCreationAct.finish();
+//                        onSuccessfullTaskCreated(jsonObject);
+                        Utility.showToast(mContext, "Task Created Successfully!!");
+                        // Finish the current activity
+                        mStrategicPartnerTaskCreationAct.finish();
 
                         //Sending Broadcast to the HomeScreen Screen.
                         Intent intent = new Intent(Utility.BR_ON_TASK_CREATED_FOR_STRATEGIC_PARTNER);
