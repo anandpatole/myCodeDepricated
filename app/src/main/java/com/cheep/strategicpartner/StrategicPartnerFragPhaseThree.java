@@ -28,7 +28,6 @@ import com.cheep.BuildConfig;
 import com.cheep.R;
 import com.cheep.activity.BaseAppCompatActivity;
 import com.cheep.activity.PaymentsActivity;
-import com.cheep.activity.PaymentsStepActivity;
 import com.cheep.custom_view.BottomAlertDialog;
 import com.cheep.databinding.FragmentStrategicPartnerPhaseThreeBinding;
 import com.cheep.dialogs.AcknowledgementDialogWithoutProfilePic;
@@ -73,6 +72,7 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
     private String start_datetime = "";
     private EditText edtCheepCode;
     private BottomAlertDialog cheepCodeDialog;
+    private boolean isVerified = false;
     @Nullable
     private String cheepCode;
 
@@ -108,6 +108,11 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
             return;
         }
 
+        mStrategicPartnerTaskCreationAct.setTaskState(
+                isVerified ?
+                        StrategicPartnerTaskCreationAct.STEP_THREE_VERIFIED :
+                        StrategicPartnerTaskCreationAct.STEP_THREE_NORMAL);
+
 
         // force to scroll up the view for strategic partner logo
         mFragmentStrategicPartnerPhaseThreeBinding.scrollView.postDelayed(new Runnable() {
@@ -118,8 +123,8 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
         }, 5);
 
         // get date time and selected address from Questions (phase 2)
-        for (int i = 0; i < mStrategicPartnerTaskCreationAct.getSelectedQuestions().size(); i++) {
-            QueAnsModel queAnsModel = mStrategicPartnerTaskCreationAct.getSelectedQuestions().get(i);
+        for (int i = 0; i < mStrategicPartnerTaskCreationAct.getQuestionsList().size(); i++) {
+            QueAnsModel queAnsModel = mStrategicPartnerTaskCreationAct.getQuestionsList().get(i);
             if (queAnsModel.answerType.equalsIgnoreCase(Utility.TEMPLATE_TIME_PICKER)) {
                 start_datetime = queAnsModel.answer;
             }
@@ -531,7 +536,7 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
         mTransactionFieldsParams.put(FIRSTNAME, userDetails.UserName);
         mTransactionFieldsParams.put(EMAIL, userDetails.Email);
         mTransactionFieldsParams.put(PHONE, userDetails.PhoneNumber);
-        mTransactionFieldsParams.put(AMOUNT, mStrategicPartnerTaskCreationAct.total);
+        mTransactionFieldsParams.put(AMOUNT, TextUtils.isEmpty(cheepCode) ? mStrategicPartnerTaskCreationAct.total : payableAmount);
         // Start DateTime(In Milliseconds- Timestamp)
         mTransactionFieldsParams.put(UDF1, "Task Start Date : " + start_datetime);
         // We don't have Provider ID so pass it empty.
@@ -688,7 +693,9 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
 
         // Add Params
         String subCategoryDetail = getSelectedServicesJsonString().toString();
-        ArrayList<QueAnsModel> mList = mStrategicPartnerTaskCreationAct.getSelectedQuestions();
+
+
+        ArrayList<QueAnsModel> mList = mStrategicPartnerTaskCreationAct.getQuestionsList();
         String question_detail = getQuestionAnswerDetailsJsonString(mList).toString();
         Map<String, String> mParams = new HashMap<>();
         mParams.put(NetworkUtility.TAGS.ADDRESS_ID, addressId);
@@ -696,31 +703,44 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
         mParams.put(NetworkUtility.TAGS.START_DATETIME, start_datetime);
         mParams.put(NetworkUtility.TAGS.SUB_CATEGORY_DETAIL, subCategoryDetail);
         mParams.put(NetworkUtility.TAGS.QUESTION_DETAIL, question_detail);
-        mParams.put(NetworkUtility.TAGS.QUOTE_AMOUNT, mStrategicPartnerTaskCreationAct.total + "");
-        mParams.put(NetworkUtility.TAGS.CHEEPCODE, cheepCode);
-        mParams.put(NetworkUtility.TAGS.PAYABLE_AMOUNT, payableAmount);
+        mParams.put(NetworkUtility.TAGS.QUOTE_AMOUNT, mStrategicPartnerTaskCreationAct.total);
+
+        mParams.put(NetworkUtility.TAGS.CHEEPCODE, TextUtils.isEmpty(cheepCode) ? Utility.EMPTY_STRING : cheepCode);
+        mParams.put(NetworkUtility.TAGS.PAYABLE_AMOUNT, TextUtils.isEmpty(cheepCode) ? mStrategicPartnerTaskCreationAct.total : payableAmount);
         mParams.put(NetworkUtility.TAGS.TRANSACTION_ID, transaction_Id);
 
 
         // Create Params for AppsFlyer event track
         mTaskCreationParams = new HashMap<>();
-        mParams.put(NetworkUtility.TAGS.ADDRESS_ID, addressId);
-        mParams.put(NetworkUtility.TAGS.CAT_ID, mStrategicPartnerTaskCreationAct.mBannerImageModel.cat_id);
-        mParams.put(NetworkUtility.TAGS.START_DATETIME, start_datetime);
-        mParams.put(NetworkUtility.TAGS.SUB_CATEGORY_DETAIL, subCategoryDetail);
-        mParams.put(NetworkUtility.TAGS.QUESTION_DETAIL, question_detail);
-        mParams.put(NetworkUtility.TAGS.QUOTE_AMOUNT, mStrategicPartnerTaskCreationAct.total + "");
-        mParams.put(NetworkUtility.TAGS.CHEEPCODE, cheepCode);
-        mParams.put(NetworkUtility.TAGS.PAYABLE_AMOUNT, payableAmount);
-        mParams.put(NetworkUtility.TAGS.TRANSACTION_ID, transaction_Id);
+        mTaskCreationParams.put(NetworkUtility.TAGS.ADDRESS_ID, addressId);
+        mTaskCreationParams.put(NetworkUtility.TAGS.CAT_ID, mStrategicPartnerTaskCreationAct.mBannerImageModel.cat_id);
+        mTaskCreationParams.put(NetworkUtility.TAGS.START_DATETIME, start_datetime);
+        mTaskCreationParams.put(NetworkUtility.TAGS.SUB_CATEGORY_DETAIL, subCategoryDetail);
+        mTaskCreationParams.put(NetworkUtility.TAGS.QUESTION_DETAIL, question_detail);
+        mTaskCreationParams.put(NetworkUtility.TAGS.QUOTE_AMOUNT, mStrategicPartnerTaskCreationAct.total + "");
+        mTaskCreationParams.put(NetworkUtility.TAGS.CHEEPCODE, cheepCode);
+        mTaskCreationParams.put(NetworkUtility.TAGS.PAYABLE_AMOUNT, payableAmount);
+        mTaskCreationParams.put(NetworkUtility.TAGS.TRANSACTION_ID, transaction_Id);
 
         // Add Params
         HashMap<String, File> mFileParams = new HashMap<>();
         // TODO : This needs to be improved after words.
-        /*if (!TextUtils.isEmpty(mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mCurrentPhotoPath)
-                && new File(mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mCurrentPhotoPath).exists()) {
-            mFileParams.put(NetworkUtility.TAGS.TASK_IMAGE, new File(mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mCurrentPhotoPath));
-        }*/
+
+        ArrayList<MediaModel> mFileList = null;
+        for (QueAnsModel model : mList)
+            if (model.answerType.equalsIgnoreCase(Utility.TEMPLATE_UPLOAD)) {
+                mFileList = model.medialList;
+                break;
+            }
+
+        if (mFileList != null && !mFileList.isEmpty())
+            for (int i = 0; i < mFileList.size(); i++) {
+                MediaModel mediaModel = mFileList.get(i);
+                if (!TextUtils.isEmpty(mediaModel.path) && new File(mediaModel.path).exists()) {
+                    Log.e(TAG, "callTaskCreationWebServiceForStratgicPartner: path " + mediaModel.path + "");
+                    mFileParams.put("media_file[" + i + "]", new File(mediaModel.path));
+                }
+            }
 
         VolleyNetworkRequest mVolleyNetworkRequest = new VolleyNetworkRequest(NetworkUtility.WS.TASK_CREATE_STRATEGIC_PARTNER
                 , mCallCreateTaskWSErrorListener
@@ -850,7 +870,7 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
     /*private void callTaskCreationWebServiceForStratgicPartner() {
 
         String subCategoryDetail = getSelectedServicesJsonString().toString();
-        ArrayList<QueAnsModel> mList = mStrategicPartnerTaskCreationAct.getSelectedQuestions();
+        ArrayList<QueAnsModel> mList = mStrategicPartnerTaskCreationAct.getQuestionsList();
         String question_detail = getQuestionAnswerDetailsJsonString(mList).toString();
         UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
 
@@ -893,7 +913,10 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
                     && !queAnsModel.answerType.equalsIgnoreCase(Utility.TEMPLATE_UPLOAD)) {
                 JsonObject jsonObject = new JsonObject();
                 jsonObject.addProperty("question_id", queAnsModel.questionId);
-                jsonObject.addProperty("answer", queAnsModel.answer);
+                if (queAnsModel.answer != null)
+                    jsonObject.addProperty("answer", queAnsModel.answer);
+                else
+                    jsonObject.addProperty("answer", Utility.EMPTY_STRING);
                 quesArray.add(jsonObject);
             }
         }

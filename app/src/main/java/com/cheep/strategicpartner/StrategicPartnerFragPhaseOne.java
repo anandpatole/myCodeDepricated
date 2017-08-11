@@ -15,7 +15,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.cheep.R;
 import com.cheep.activity.BaseAppCompatActivity;
-import com.cheep.activity.TaskCreationActivity;
 import com.cheep.databinding.FragmentStrategicPartnerPhaseOneBinding;
 import com.cheep.fragment.BaseFragment;
 import com.cheep.network.NetworkUtility;
@@ -78,11 +77,10 @@ public class StrategicPartnerFragPhaseOne extends BaseFragment {
             return;
         }
         // set step number background in top banner
-        if (isVerified) {
-            mStrategicPartnerTaskCreationAct.setTaskState(TaskCreationActivity.STEP_ONE_VERIFIED);
-        } else {
-            mStrategicPartnerTaskCreationAct.setTaskState(TaskCreationActivity.STEP_ONE_NORMAL);
-        }
+        mStrategicPartnerTaskCreationAct.setTaskState(
+                isVerified ?
+                        StrategicPartnerTaskCreationAct.STEP_ONE_VERIFIED :
+                        StrategicPartnerTaskCreationAct.STEP_ONE_UNVERIFIED);
 
     }
 

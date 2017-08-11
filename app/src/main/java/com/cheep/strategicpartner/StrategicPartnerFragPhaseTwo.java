@@ -102,6 +102,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
     private MediaRecycleAdapter mMediaRecycleAdapter;
     private int count = 1;
     private ArrayList<QueAnsModel> mList;
+    private boolean isVerified = false;
 
     @SuppressWarnings("unused")
     public static StrategicPartnerFragPhaseTwo newInstance() {
@@ -147,6 +148,12 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
         mStrategicPartnerTaskCreationAct.total = String.valueOf(total);
         // Task Description
 
+        mStrategicPartnerTaskCreationAct.setTaskState(
+                isVerified ?
+                        StrategicPartnerTaskCreationAct.STEP_TWO_VERIFIED :
+                        StrategicPartnerTaskCreationAct.STEP_TWO_NORMAL);
+
+
     }
 
     @Override
@@ -158,8 +165,15 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
             @Override
             public void onClick(View view) {
                 if (validateAllQueAndAns()) {
-                    mStrategicPartnerTaskCreationAct.setSelectedQuestions(mList);
 
+
+                    for (QueAnsModel model : mList)
+                        if (model.answerType.equalsIgnoreCase(Utility.TEMPLATE_UPLOAD)) {
+                            model.medialList = mMediaRecycleAdapter.getList();
+                            break;
+                        }
+                    mStrategicPartnerTaskCreationAct.setQuestionsList(mList);
+                    isVerified = true;
                     // Make the status Verified
 
                     //Alert The activity that step one is been verified.
@@ -345,7 +359,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
         txtAnswer.setText(model.dropDownList.get(0).dropdown_answer);
         model.dropDownList.get(0).isSelected = true;
         model.answer = model.dropDownList.get(0).dropdown_answer;
-
+        txtQueNo.setSelected(true);
         // open menu onClick of ans text
         txtAnswer.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -699,6 +713,9 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
                 // after uploading 3 media file if any one is deleted then add image view again
                 if (mMediaRecycleAdapter.getItemCount() < 3)
                     imgAdd.setVisibility(View.VISIBLE);
+                if (mMediaRecycleAdapter.getItemCount() < 1)
+                    mFragmentStrategicPartnerPhaseTwoBinding.linMain.findViewWithTag(Utility.TEMPLATE_UPLOAD).setSelected(false);
+
             }
         });
         recycleImg.setAdapter(mMediaRecycleAdapter);
@@ -757,12 +774,11 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
     private void takeVideoIntent(int requestPermissionCode) {
         //Go ahead with Camera capturing
         if (ContextCompat.checkSelfPermission(mStrategicPartnerTaskCreationAct, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(mStrategicPartnerTaskCreationAct
-                , Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(mStrategicPartnerTaskCreationAct
-                , Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                , Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED ) {
             if (ActivityCompat.shouldShowRequestPermissionRationale(mStrategicPartnerTaskCreationAct, Manifest.permission.CAMERA) && ActivityCompat.shouldShowRequestPermissionRationale(mStrategicPartnerTaskCreationAct, Manifest.permission.RECORD_AUDIO)) {
-                ActivityCompat.requestPermissions(mStrategicPartnerTaskCreationAct, new String[]{Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE}, requestPermissionCode);
+                ActivityCompat.requestPermissions(mStrategicPartnerTaskCreationAct, new String[]{Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO}, requestPermissionCode);
             } else {
-                ActivityCompat.requestPermissions(mStrategicPartnerTaskCreationAct, new String[]{Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE}, requestPermissionCode);
+                ActivityCompat.requestPermissions(mStrategicPartnerTaskCreationAct, new String[]{Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO}, requestPermissionCode);
             }
         } else {
             //Go ahead with Camera capturing
@@ -791,9 +807,9 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////
     //////////////////////////////////////////    IMAGE CAPTURE - CHOOSER   /////////////////////
-    ////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////
 
     private void showPictureChooserDialog() {
         Log.d(TAG, "showPictureChooserDialog() called");
@@ -1617,7 +1633,6 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
             Uri contentUri = Uri.fromFile(f);
             mCurrentPhotoPath = Utility.getPath(mStrategicPartnerTaskCreationAct, contentUri);
             mMediaRecycleAdapter.addImage(new MediaModel(mCurrentPhotoPath, MediaModel.MediaType.IMAGE));
-            mFragmentStrategicPartnerPhaseTwoBinding.linMain.findViewWithTag(Utility.TEMPLATE_UPLOAD).setSelected(true);
             checkMediaArraySize();
         }
 
@@ -1626,7 +1641,6 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
             Log.i(TAG, "onActivityResult: " + data.getData().toString());
             mCurrentPhotoPath = Utility.getPath(mStrategicPartnerTaskCreationAct, data.getData());
             mMediaRecycleAdapter.addImage(new MediaModel(mCurrentPhotoPath, MediaModel.MediaType.IMAGE));
-            mFragmentStrategicPartnerPhaseTwoBinding.linMain.findViewWithTag(Utility.TEMPLATE_UPLOAD).setSelected(true);
             checkMediaArraySize();
         }
 
@@ -1653,12 +1667,15 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
      * to preventing from adding more media files
      */
     private void checkMediaArraySize() {
+        if (mMediaRecycleAdapter.getItemCount() > 0)
+            mFragmentStrategicPartnerPhaseTwoBinding.linMain.findViewWithTag(Utility.TEMPLATE_UPLOAD).setSelected(true);
         if (mMediaRecycleAdapter.getItemCount() == 3) {
             ImageView imageView = mFragmentStrategicPartnerPhaseTwoBinding.linMain.findViewWithTag("AddImage");
             if (imageView != null)
                 imageView.setVisibility(View.GONE);
         }
     }
+
 
 
     /**

@@ -27,7 +27,7 @@ class QueAnsModel {
 
     public String answer;
 
-    public ArrayList<String> medialList = null;
+    public ArrayList<MediaModel> medialList = null;
 
 
     public class DropDownModel {
