@@ -786,7 +786,51 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
             }
         } else {
             //Go ahead with Camera capturing
-            startActivityForResult(new Intent(mStrategicPartnerTaskCreationAct, RecordVideoNewActivity.class), Utility.REQUEST_CODE_VIDEO_CAPTURE);
+
+
+            Intent takePictureIntent = new Intent(mStrategicPartnerTaskCreationAct, RecordVideoNewActivity.class);
+            if (takePictureIntent.resolveActivity(mStrategicPartnerTaskCreationAct.getPackageManager()) != null) {
+                // Create the File where the photo should go
+                File photoFile;
+                photoFile = createVideoFile();
+                mCurrentPhotoPath = photoFile.getAbsolutePath();
+                if (photoFile.exists()) {
+                    photoFile.delete();
+                } else {
+                    photoFile.getParentFile().mkdirs();
+                }
+
+                // Continue only if the File was successfully created
+                Uri photoURI = FileProvider.getUriForFile(mStrategicPartnerTaskCreationAct,
+                        BuildConfig.FILE_PROVIDER_URL,
+                        photoFile);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+
+                // Grant URI permission START
+                // Enabling the permission at runtime
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    takePictureIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                    ClipData clip =
+                            ClipData.newUri(mStrategicPartnerTaskCreationAct.getContentResolver(), "A photo", photoURI);
+                    takePictureIntent.setClipData(clip);
+                    takePictureIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                } else {
+                    List<ResolveInfo> resInfoList =
+                            mStrategicPartnerTaskCreationAct.getPackageManager()
+                                    .queryIntentActivities(takePictureIntent, PackageManager.MATCH_DEFAULT_ONLY);
+
+                    for (ResolveInfo resolveInfo : resInfoList) {
+                        String packageName = resolveInfo.activityInfo.packageName;
+                        mStrategicPartnerTaskCreationAct.grantUriPermission(packageName, photoURI,
+                                Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                    }
+                }
+                //Grant URI permission END
+//                startActivityForResult(takePictureIntent, requestCode);
+                startActivityForResult(takePictureIntent, Utility.REQUEST_CODE_VIDEO_CAPTURE);
+            }
+
         }
     }
 
@@ -900,6 +944,23 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss"/*, Locale.US*/).format(new Date());
         String imageFileName = "JPEG_" + timeStamp + ".jpg";
+        /*File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  *//* prefix *//*
+                ".jpg",         *//* suffix *//*
+                storageDir      *//* directory *//*
+        );*/
+
+        File photoFile = new File(new File(mStrategicPartnerTaskCreationAct.getFilesDir(), "CheepImages"), imageFileName);
+        mCurrentPhotoPath = photoFile.getAbsolutePath();
+        // Save a file: path for use with ACTION_VIEW intents
+//        mCurrentPhotoPath = photoFile.getAbsolutePath();
+        return photoFile;
+    }
+    private File createVideoFile() {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss"/*, Locale.US*/).format(new Date());
+        String imageFileName = "VID_" + timeStamp + ".mp4";
         /*File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File image = File.createTempFile(
                 imageFileName,  *//* prefix *//*

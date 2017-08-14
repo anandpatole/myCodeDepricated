@@ -16,7 +16,6 @@ import com.bumptech.glide.request.target.Target;
 import com.cheep.R;
 import com.cheep.utils.Utility;
 
-import java.io.File;
 import java.util.ArrayList;
 
 /**
@@ -106,7 +105,7 @@ class MediaRecycleAdapter extends RecyclerView.Adapter<MediaRecycleAdapter.MyVie
                         Log.e("SARMAD_GLIDE", "Is First Time loaded = " + isFirstResource);
                         mImgThumb.setImageBitmap(Utility.getRoundedCornerBitmap(resource, mImgThumb.getContext()));
                         // how to tell if the Bitmap resource is Thumbnail or actually the large size image
-                        return false;
+                        return true;
                     }
                 }).into(mImgThumb);
             } else {
