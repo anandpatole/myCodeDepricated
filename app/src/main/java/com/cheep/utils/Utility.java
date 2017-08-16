@@ -60,6 +60,7 @@ import org.cryptonode.jncryptor.JNCryptor;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -1213,14 +1214,18 @@ public class Utility {
 
     /**
      * get decimal value to show price
+     *
      * @param quotePrice string value
      * @return decimal value
      */
-    public static  Double getQuotePriceInInteger(String quotePrice) {
+    public static String getQuotePriceInInteger(String quotePrice) {
+
+        DecimalFormat formatter = new DecimalFormat("#,###.#");
+        double price = Double.parseDouble(quotePrice);
         if (quotePrice == null) {
-            return -1.0;
+            return "";
         }
-        return Double.parseDouble(quotePrice);
+        return formatter.format(price);
     }
 
 }

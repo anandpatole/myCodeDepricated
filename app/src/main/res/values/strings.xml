@@ -441,6 +441,9 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="alert_please_answer_all_the_questions">Please answer all the questions</string>
     <string name="alert_select_an_address">Please select an address</string>
     <string name="alert_select_date_and_time">"Please select date and time"</string>
+
+    <string name="label_partner">partner</string>
+
     <string-array name="choose_media_type">
         <item>Video</item>
         <item>Photos</item>
