@@ -30,12 +30,14 @@ import com.cheep.activity.BaseAppCompatActivity;
 import com.cheep.activity.PaymentsActivity;
 import com.cheep.custom_view.BottomAlertDialog;
 import com.cheep.databinding.FragmentStrategicPartnerPhaseThreeBinding;
+import com.cheep.dialogs.AcknowledgementDialogWithProfilePic;
 import com.cheep.dialogs.AcknowledgementDialogWithoutProfilePic;
 import com.cheep.dialogs.AcknowledgementInteractionListener;
 import com.cheep.firebase.FirebaseHelper;
 import com.cheep.firebase.FirebaseUtils;
 import com.cheep.firebase.model.ChatTaskModel;
 import com.cheep.fragment.BaseFragment;
+import com.cheep.model.MessageEvent;
 import com.cheep.model.TaskDetailModel;
 import com.cheep.model.UserDetails;
 import com.cheep.network.NetworkUtility;
@@ -46,6 +48,7 @@ import com.cheep.utils.Utility;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -140,6 +143,7 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
                 , ContextCompat.getColor(mStrategicPartnerTaskCreationAct, R.color.splash_gradient_end), true));
         spannableStringBuilder.append(getSpannableString(getString(R.string.label_at), ContextCompat.getColor(mStrategicPartnerTaskCreationAct, R.color.grey_varient_8), false));
         spannableStringBuilder.append(getSpannableString(mStrategicPartnerTaskCreationAct.address, ContextCompat.getColor(mStrategicPartnerTaskCreationAct, R.color.splash_gradient_end), true));
+        spannableStringBuilder.append(getSpannableString(".", ContextCompat.getColor(mStrategicPartnerTaskCreationAct, R.color.splash_gradient_end), true));
 
         mFragmentStrategicPartnerPhaseThreeBinding.txtdesc.setText(spannableStringBuilder);
 
@@ -149,9 +153,9 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
             mFragmentStrategicPartnerPhaseThreeBinding.recycleSelectedService.setAdapter(new PaymentSummaryAdapter(mStrategicPartnerTaskCreationAct.getSelectedSubService()));
 
         // set total and sub total details
-        mFragmentStrategicPartnerPhaseThreeBinding.txttotal.setText(getString(R.string.ruppe_symbol_x, mStrategicPartnerTaskCreationAct.total));
-        mFragmentStrategicPartnerPhaseThreeBinding.txtsubtotal.setText(getString(R.string.ruppe_symbol_x, mStrategicPartnerTaskCreationAct.total));
-        mFragmentStrategicPartnerPhaseThreeBinding.textPay.setText("Pay " + getString(R.string.ruppe_symbol_x, String.valueOf(mStrategicPartnerTaskCreationAct.total)));
+        mFragmentStrategicPartnerPhaseThreeBinding.txttotal.setText(getString(R.string.ruppe_symbol_x, "" + Utility.getQuotePriceInInteger(mStrategicPartnerTaskCreationAct.total)));
+        mFragmentStrategicPartnerPhaseThreeBinding.txtsubtotal.setText(getString(R.string.ruppe_symbol_x, "" + Utility.getQuotePriceInInteger(mStrategicPartnerTaskCreationAct.total)));
+        mFragmentStrategicPartnerPhaseThreeBinding.textPay.setText("Pay " + getString(R.string.ruppe_symbol_x, String.valueOf(Utility.getQuotePriceInInteger(mStrategicPartnerTaskCreationAct.total))));
 
         // handle clicks for create task web api and payment flow
         mFragmentStrategicPartnerPhaseThreeBinding.textPay.setOnClickListener(new View.OnClickListener() {
@@ -199,10 +203,10 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
     private void resetPromoCodeValue() {
         mFragmentStrategicPartnerPhaseThreeBinding.textpromocodelabel.setTextColor(ContextCompat.getColor(mStrategicPartnerTaskCreationAct, R.color.splash_gradient_end));
         mFragmentStrategicPartnerPhaseThreeBinding.textpromocodelabel.setText(getResources().getString(R.string.label_enter_promocode));
-        mFragmentStrategicPartnerPhaseThreeBinding.txtsubtotal.setText(getString(R.string.ruppe_symbol_x, "" + mStrategicPartnerTaskCreationAct.total));
-        mFragmentStrategicPartnerPhaseThreeBinding.txttotal.setText(getString(R.string.ruppe_symbol_x, "" + mStrategicPartnerTaskCreationAct.total));
-        mFragmentStrategicPartnerPhaseThreeBinding.textPay.setText(getString(R.string.label_pay_fee_v1, "" + mStrategicPartnerTaskCreationAct.total));
-        mFragmentStrategicPartnerPhaseThreeBinding.txtpromocode.setText(getString(R.string.ruppe_symbol_x, "" + 0.0));
+        mFragmentStrategicPartnerPhaseThreeBinding.txtsubtotal.setText(getString(R.string.ruppe_symbol_x, "" + Utility.getQuotePriceInInteger(mStrategicPartnerTaskCreationAct.total)));
+        mFragmentStrategicPartnerPhaseThreeBinding.txttotal.setText(getString(R.string.ruppe_symbol_x, "" + Utility.getQuotePriceInInteger(mStrategicPartnerTaskCreationAct.total)));
+        mFragmentStrategicPartnerPhaseThreeBinding.textPay.setText(getString(R.string.label_pay_fee_v1, "" + Utility.getQuotePriceInInteger(mStrategicPartnerTaskCreationAct.total)));
+        mFragmentStrategicPartnerPhaseThreeBinding.txtpromocode.setText(getString(R.string.ruppe_symbol_x, "" + Utility.getQuotePriceInInteger("0")));
     }
 
 
@@ -323,9 +327,9 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
 
     private void updatePaymentDetails(String discount, String payable) {
         payableAmount = payable;
-        mFragmentStrategicPartnerPhaseThreeBinding.txtpromocode.setText(getString(R.string.ruppe_symbol_x, "" + discount));
-        mFragmentStrategicPartnerPhaseThreeBinding.txttotal.setText(getString(R.string.ruppe_symbol_x, "" + payable));
-        mFragmentStrategicPartnerPhaseThreeBinding.textPay.setText(getString(R.string.label_pay_fee_v1, payable));
+        mFragmentStrategicPartnerPhaseThreeBinding.txtpromocode.setText(getString(R.string.ruppe_symbol_x, "" + Utility.getQuotePriceInInteger(discount)));
+        mFragmentStrategicPartnerPhaseThreeBinding.txttotal.setText(getString(R.string.ruppe_symbol_x, "" + Utility.getQuotePriceInInteger(payable)));
+        mFragmentStrategicPartnerPhaseThreeBinding.textPay.setText(getString(R.string.label_pay_fee_v1, "" + Utility.getQuotePriceInInteger(payable)));
         mFragmentStrategicPartnerPhaseThreeBinding.textpromocodelabel.setEnabled(false);
         mFragmentStrategicPartnerPhaseThreeBinding.textpromocodelabel.setText(cheepCode);
         mFragmentStrategicPartnerPhaseThreeBinding.imgCheepCodeClose.setVisibility(View.VISIBLE);
@@ -747,9 +751,36 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
                          */
 //                        TODO:This needs to be updated.
 //                        onSuccessfullTaskCreated(jsonObject);
-                        Utility.showToast(mContext, "Task Created Successfully!!");
+//                        Utility.showToast(mContext, "Task Created Successfully!!");
+
+                        String title = mContext.getString(R.string.label_great_choice_x, PreferenceUtility.getInstance(mContext).getUserDetails().UserName);
+                        String message = "Your task is confirmed and a PRO from " + mStrategicPartnerTaskCreationAct.mBannerImageModel.name + ", will be there at your location on " +
+                                mStrategicPartnerTaskCreationAct.date + " at " + mStrategicPartnerTaskCreationAct.time;
+
+                        final AcknowledgementDialogWithProfilePic mAcknowledgementDialogWithProfilePic = AcknowledgementDialogWithProfilePic.newInstance(
+                                mContext,
+                                R.drawable.ic_acknowledgement_dialog_header_background,
+                                title,
+                                message,
+                                mStrategicPartnerTaskCreationAct.mBannerImageModel.imgCatImageUrl,
+                                new AcknowledgementInteractionListener() {
+
+                                    @Override
+                                    public void onAcknowledgementAccepted() {
+                                        // Finish the activity
+                                        mStrategicPartnerTaskCreationAct.finish();
+                                        // Payment is been done now, so broadcast this specific case to relavent activities
+                                        MessageEvent messageEvent = new MessageEvent();
+                                        messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.PAYMENT_COMPLETED_NEED_TO_REDIRECT_TO_MY_TASK_SCREEN;
+                                        EventBus.getDefault().post(messageEvent);
+                                    }
+                                });
+                        mAcknowledgementDialogWithProfilePic.setCancelable(false);
+                        mAcknowledgementDialogWithProfilePic.show(mStrategicPartnerTaskCreationAct.getSupportFragmentManager(), AcknowledgementDialogWithProfilePic.TAG);
+
+
                         // Finish the current activity
-                        mStrategicPartnerTaskCreationAct.finish();
+//                        mStrategicPartnerTaskCreationAct.finish();
 
                         //Sending Broadcast to the HomeScreen Screen.
                         Intent intent = new Intent(Utility.BR_ON_TASK_CREATED_FOR_STRATEGIC_PARTNER);

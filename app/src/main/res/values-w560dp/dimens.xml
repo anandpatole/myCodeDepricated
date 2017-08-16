@@ -17,4 +17,11 @@
     <dimen name="h_camera_que_fragment">85.71dp</dimen>
     183
     <dimen name="h_book_and_pay">52.28dp</dimen>
+
+    <dimen name="banner_title_text_size">18sp</dimen>
+    <dimen name="stra_partner_logo_size">100dp</dimen>
+    <dimen name="margin_top_payment_step">60dp</dimen>
+    <dimen name="margin_top_partner_logo">-50dp</dimen>
+    <dimen name="banner_height_strategic_partner">206dp</dimen>
+
 </resources>

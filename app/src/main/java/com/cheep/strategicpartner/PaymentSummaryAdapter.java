@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 
 import com.cheep.R;
 import com.cheep.databinding.RowPaymentSummaryBinding;
+import com.cheep.utils.Utility;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +37,7 @@ class PaymentSummaryAdapter extends RecyclerView.Adapter<PaymentSummaryAdapter.M
     @Override
     public void onBindViewHolder(PaymentSummaryAdapter.MyViewHolder holder, int position) {
         holder.rowPastTaskBinding.textServiceName.setText(mList.get(position).name);
-        int total = 0;
+        double total = 0;
         StringBuilder subscription = new StringBuilder("");
 
         // calculate selected sub services amount and set total
@@ -48,16 +49,16 @@ class PaymentSummaryAdapter extends RecyclerView.Adapter<PaymentSummaryAdapter.M
             else
                 subscription.append(",").append(allSubSubCat.subSubCatName);
             try {
-                total += Integer.parseInt(allSubSubCat.price);
+                total += Double.parseDouble(allSubSubCat.price);
             } catch (NumberFormatException e) {
                 total += 0;
             }
         }
 
         holder.rowPastTaskBinding.textServiceSubService.setSelected(true);
-        holder.rowPastTaskBinding.textServiceSubService.append(subscription.toString());
+        holder.rowPastTaskBinding.textServiceSubService.setText(subscription.toString());
         holder.rowPastTaskBinding.textServiceRate.setText(
-                holder.rowPastTaskBinding.textServiceRate.getContext().getString(R.string.ruppe_symbol_x, String.valueOf(total)));
+                holder.rowPastTaskBinding.textServiceRate.getContext().getString(R.string.ruppe_symbol_x, String.valueOf(Utility.getQuotePriceInInteger(String.valueOf(total)))));
     }
 
     @Override

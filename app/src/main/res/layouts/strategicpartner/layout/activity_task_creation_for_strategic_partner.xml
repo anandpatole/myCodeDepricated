@@ -14,7 +14,7 @@
 
             <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/scale_206dp"
+                android:layout_height="@dimen/banner_height_strategic_partner"
                 android:background="@color/white">
 
                 <ImageView
@@ -117,7 +117,7 @@
                     android:paddingLeft="@dimen/scale_20dp"
                     android:paddingRight="@dimen/scale_20dp"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/text_size_18sp"
+                    android:textSize="@dimen/banner_title_text_size"
                     tools:text="asdadasdasdasdadasdasd"/>
             </LinearLayout>
         </FrameLayout>
@@ -152,11 +152,11 @@
 
         <ImageView
             android:id="@+id/imgLogo"
-            android:layout_width="@dimen/scale_100dp"
-            android:layout_height="@dimen/scale_100dp"
+            android:layout_width="@dimen/stra_partner_logo_size"
+            android:layout_height="@dimen/stra_partner_logo_size"
             android:layout_below="@+id/flTop"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="-50dp"
+            android:layout_marginTop="@dimen/margin_top_partner_logo"
             tools:src="@drawable/icon_profile_img_solid"/>
 
 

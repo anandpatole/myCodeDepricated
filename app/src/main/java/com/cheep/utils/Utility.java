@@ -53,7 +53,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.mixpanel.android.java_websocket.util.Base64;
-import com.twitter.sdk.android.core.internal.scribe.SyndicatedSdkImpressionEvent;
 
 import org.cryptonode.jncryptor.AES256JNCryptor;
 import org.cryptonode.jncryptor.CryptorException;
@@ -61,6 +60,7 @@ import org.cryptonode.jncryptor.JNCryptor;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -96,6 +96,7 @@ public class Utility {
     //Date Formats
     public static final String DATE_FORMAT_DD_MM_YY = SuperFormatter.DATE + "/" + SuperFormatter.MONTH_NUMBER + "/" + SuperFormatter.YEAR_4_DIGIT;
     public static final String DATE_FORMAT_DD_MMM = SuperFormatter.DATE + " " + SuperFormatter.MONTH_JAN;
+    public static final String DATE_FORMAT_DD_MMM_YYYY = SuperFormatter.DATE + " " + SuperFormatter.MONTH_JAN + " " + SuperFormatter.YEAR_4_DIGIT;
     public static final String DATE_FORMAT_HH_MM_AM = SuperFormatter.HOUR_12_HOUR_2_DIGIT + ":" + SuperFormatter.MINUTE + " " + SuperFormatter.AM_PM;
     public static final String DATE_FORMAT_DD_MMM_HH_MM_AM = SuperFormatter.DATE + " " + SuperFormatter.MONTH_JAN + " " + SuperFormatter.HOUR_12_HOUR_2_DIGIT + ":" + SuperFormatter.MINUTE + "" + SuperFormatter.AM_PM;
     public static final String DATE_FORMAT_TASK_HAS_BEEN_PAID_DATE = SuperFormatter.DATE + " " + SuperFormatter.MONTH_JAN;
@@ -1210,5 +1211,21 @@ public class Utility {
     public static String TEMPLATE_TEXT_FIELD = "textbox";
     public static String TEMPLATE_DROPDOWN = "dropdown";
 
+
+    /**
+     * get decimal value to show price
+     *
+     * @param quotePrice string value
+     * @return decimal value
+     */
+    public static String getQuotePriceInInteger(String quotePrice) {
+
+        DecimalFormat formatter = new DecimalFormat("#,###.#");
+        double price = Double.parseDouble(quotePrice);
+        if (quotePrice == null) {
+            return "";
+        }
+        return formatter.format(price);
+    }
 
 }

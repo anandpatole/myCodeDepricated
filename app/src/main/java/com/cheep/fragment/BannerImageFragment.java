@@ -63,6 +63,7 @@ public class BannerImageFragment extends BaseFragment {
         progress = (ProgressBar) view.findViewById(R.id.progress);
         return view;
     }
+    boolean processingClick = false;
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -87,11 +88,18 @@ public class BannerImageFragment extends BaseFragment {
             img_cover.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (bannerImageModel != null && !bannerImageModel.cat_id.equalsIgnoreCase(Utility.ZERO_STRING)) {
-                        StrategicPartnerTaskCreationAct.getInstance(mContext, bannerImageModel);
+
+                    if (!processingClick) {
+                        processingClick = true;
+
+
+                        if (bannerImageModel != null && !bannerImageModel.cat_id.equalsIgnoreCase(Utility.ZERO_STRING)) {
+                            StrategicPartnerTaskCreationAct.getInstance(mContext, bannerImageModel);
+                        }
                     }
                 }
             });
+
         } else {
             progress.setVisibility(View.GONE);
         }
@@ -100,6 +108,7 @@ public class BannerImageFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
+        processingClick = false;
     }
 
     @Override
