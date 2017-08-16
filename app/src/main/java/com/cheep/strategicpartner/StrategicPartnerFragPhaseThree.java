@@ -823,7 +823,6 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
         mAcknowledgementDialogWithoutProfilePic.show(getActivity().getSupportFragmentManager(), AcknowledgementDialogWithoutProfilePic.TAG);
     }
 
-
     /**
      * Create Dialog which would going to show on error completion
      */
