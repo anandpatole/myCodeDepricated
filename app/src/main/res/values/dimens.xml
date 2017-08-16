@@ -57,7 +57,6 @@
     <dimen name="scale_180dp">180dp</dimen>
     <!--<dimen name="scale_190dp">190dp</dimen>-->
     <dimen name="scale_260dp">260dp</dimen>
-    <dimen name="scale_206dp">206dp</dimen>
 
     <!--TextSize-->
     <!--<dimen name="text_size_6sp">6sp</dimen>-->
@@ -131,5 +130,13 @@
     <dimen name="home_screen_extra_category_count_text_size_two_digits">13sp</dimen>
     <dimen name="home_screen_extra_category_count_text_size_three_digits">11sp</dimen>
     <!--Home Screen Alignments[End]-->
+
+
+    <!-- Strategic partner Banner header -->
+    <dimen name="banner_title_text_size">18sp</dimen>
+    <dimen name="stra_partner_logo_size">100dp</dimen>
+    <dimen name="margin_top_payment_step">60dp</dimen>
+    <dimen name="margin_top_partner_logo">-50dp</dimen>
+    <dimen name="banner_height_strategic_partner">206dp</dimen>
 
 </resources>

@@ -140,6 +140,7 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
                 , ContextCompat.getColor(mStrategicPartnerTaskCreationAct, R.color.splash_gradient_end), true));
         spannableStringBuilder.append(getSpannableString(getString(R.string.label_at), ContextCompat.getColor(mStrategicPartnerTaskCreationAct, R.color.grey_varient_8), false));
         spannableStringBuilder.append(getSpannableString(mStrategicPartnerTaskCreationAct.address, ContextCompat.getColor(mStrategicPartnerTaskCreationAct, R.color.splash_gradient_end), true));
+        spannableStringBuilder.append(getSpannableString(".", ContextCompat.getColor(mStrategicPartnerTaskCreationAct, R.color.splash_gradient_end), true));
 
         mFragmentStrategicPartnerPhaseThreeBinding.txtdesc.setText(spannableStringBuilder);
 
@@ -149,9 +150,9 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
             mFragmentStrategicPartnerPhaseThreeBinding.recycleSelectedService.setAdapter(new PaymentSummaryAdapter(mStrategicPartnerTaskCreationAct.getSelectedSubService()));
 
         // set total and sub total details
-        mFragmentStrategicPartnerPhaseThreeBinding.txttotal.setText(getString(R.string.ruppe_symbol_x, mStrategicPartnerTaskCreationAct.total));
-        mFragmentStrategicPartnerPhaseThreeBinding.txtsubtotal.setText(getString(R.string.ruppe_symbol_x, mStrategicPartnerTaskCreationAct.total));
-        mFragmentStrategicPartnerPhaseThreeBinding.textPay.setText("Pay " + getString(R.string.ruppe_symbol_x, String.valueOf(mStrategicPartnerTaskCreationAct.total)));
+        mFragmentStrategicPartnerPhaseThreeBinding.txttotal.setText(getString(R.string.ruppe_symbol_x, "" + Utility.getQuotePriceInInteger(mStrategicPartnerTaskCreationAct.total)));
+        mFragmentStrategicPartnerPhaseThreeBinding.txtsubtotal.setText(getString(R.string.ruppe_symbol_x, "" + Utility.getQuotePriceInInteger(mStrategicPartnerTaskCreationAct.total)));
+        mFragmentStrategicPartnerPhaseThreeBinding.textPay.setText("Pay " + getString(R.string.ruppe_symbol_x, String.valueOf(Utility.getQuotePriceInInteger(mStrategicPartnerTaskCreationAct.total))));
 
         // handle clicks for create task web api and payment flow
         mFragmentStrategicPartnerPhaseThreeBinding.textPay.setOnClickListener(new View.OnClickListener() {
@@ -199,10 +200,10 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
     private void resetPromoCodeValue() {
         mFragmentStrategicPartnerPhaseThreeBinding.textpromocodelabel.setTextColor(ContextCompat.getColor(mStrategicPartnerTaskCreationAct, R.color.splash_gradient_end));
         mFragmentStrategicPartnerPhaseThreeBinding.textpromocodelabel.setText(getResources().getString(R.string.label_enter_promocode));
-        mFragmentStrategicPartnerPhaseThreeBinding.txtsubtotal.setText(getString(R.string.ruppe_symbol_x, "" + mStrategicPartnerTaskCreationAct.total));
-        mFragmentStrategicPartnerPhaseThreeBinding.txttotal.setText(getString(R.string.ruppe_symbol_x, "" + mStrategicPartnerTaskCreationAct.total));
-        mFragmentStrategicPartnerPhaseThreeBinding.textPay.setText(getString(R.string.label_pay_fee_v1, "" + mStrategicPartnerTaskCreationAct.total));
-        mFragmentStrategicPartnerPhaseThreeBinding.txtpromocode.setText(getString(R.string.ruppe_symbol_x, "" + 0.0));
+        mFragmentStrategicPartnerPhaseThreeBinding.txtsubtotal.setText(getString(R.string.ruppe_symbol_x, "" + Utility.getQuotePriceInInteger(mStrategicPartnerTaskCreationAct.total)));
+        mFragmentStrategicPartnerPhaseThreeBinding.txttotal.setText(getString(R.string.ruppe_symbol_x, "" + Utility.getQuotePriceInInteger(mStrategicPartnerTaskCreationAct.total)));
+        mFragmentStrategicPartnerPhaseThreeBinding.textPay.setText(getString(R.string.label_pay_fee_v1, "" + Utility.getQuotePriceInInteger(mStrategicPartnerTaskCreationAct.total)));
+        mFragmentStrategicPartnerPhaseThreeBinding.txtpromocode.setText(getString(R.string.ruppe_symbol_x, "" + Utility.getQuotePriceInInteger("0")));
     }
 
 
@@ -323,9 +324,9 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
 
     private void updatePaymentDetails(String discount, String payable) {
         payableAmount = payable;
-        mFragmentStrategicPartnerPhaseThreeBinding.txtpromocode.setText(getString(R.string.ruppe_symbol_x, "" + discount));
-        mFragmentStrategicPartnerPhaseThreeBinding.txttotal.setText(getString(R.string.ruppe_symbol_x, "" + payable));
-        mFragmentStrategicPartnerPhaseThreeBinding.textPay.setText(getString(R.string.label_pay_fee_v1, payable));
+        mFragmentStrategicPartnerPhaseThreeBinding.txtpromocode.setText(getString(R.string.ruppe_symbol_x, "" + Utility.getQuotePriceInInteger(discount)));
+        mFragmentStrategicPartnerPhaseThreeBinding.txttotal.setText(getString(R.string.ruppe_symbol_x, "" + Utility.getQuotePriceInInteger(payable)));
+        mFragmentStrategicPartnerPhaseThreeBinding.textPay.setText(getString(R.string.label_pay_fee_v1, "" + Utility.getQuotePriceInInteger(payable)));
         mFragmentStrategicPartnerPhaseThreeBinding.textpromocodelabel.setEnabled(false);
         mFragmentStrategicPartnerPhaseThreeBinding.textpromocodelabel.setText(cheepCode);
         mFragmentStrategicPartnerPhaseThreeBinding.imgCheepCodeClose.setVisibility(View.VISIBLE);
