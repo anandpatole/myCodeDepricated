@@ -548,7 +548,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
                             showTimePickerDialog(txtAnswer, model);
                         } else {
                             txtAnswer.setSelected(false);
-                            Utility.showSnackBar("Please select the date", mFragmentStrategicPartnerPhaseTwoBinding.getRoot());
+                            Utility.showSnackBar(getString(R.string.alert_select_date_and_time), mFragmentStrategicPartnerPhaseTwoBinding.getRoot());
                         }
                         break;
                     }
@@ -1053,7 +1053,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
                 if (txtAnswer.isSelected())
                     showAddressDialog(txtAnswer, txtQueNo, model);
                 else
-                    Utility.showSnackBar("Please select date and time", mFragmentStrategicPartnerPhaseTwoBinding.getRoot());
+                    Utility.showSnackBar(getString(R.string.alert_select_date_and_time), mFragmentStrategicPartnerPhaseTwoBinding.getRoot());
             }
         });
         ansView.addView(view);
@@ -1795,7 +1795,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
             // alert date is not selected
             if (queAnsModel.answerType.equalsIgnoreCase(Utility.TEMPLATE_DATE_PICKER)) {
                 if (TextUtils.isEmpty(queAnsModel.answer)) {
-                    message = "Please select the date";
+                    message = getString(R.string.alert_select_the_date);
                     return message;
                 }
 //                else if (startDateTimeSuperCalendar.getTimeInMillis() < calAfter3Hours.getTimeInMillis()) {
@@ -1808,24 +1808,24 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
             // alert time is not selected
             else if (queAnsModel.answerType.equalsIgnoreCase(Utility.TEMPLATE_TIME_PICKER)) {
                 if (TextUtils.isEmpty(queAnsModel.answer)) {
-                    message = "Please select the time";
+                    message = getString(R.string.alert_select_the_time);
                     return message;
                 } else if (startDateTimeSuperCalendar.getTimeInMillis() < calAfter3Hours.getTimeInMillis()) {
-                    message = "Date Time must be after 3 hour.";
+                    message = getString(R.string.alert_time_must_be_after_3_hour);
                     return message;
                 }
             }
             // alert multiple choices option is not selected
             else if (queAnsModel.answerType.equalsIgnoreCase(Utility.TEMPLATE_DROPDOWN)) {
                 if (TextUtils.isEmpty(queAnsModel.answer)) {
-                    message = "Please answer all the questions";
+                    message = getString(R.string.alert_please_answer_all_the_questions);
                     return message;
 
                 }
             }
             // location is not selected
             else if (queAnsModel.answerType.equalsIgnoreCase(Utility.TEMPLATE_LOCATION) && addressId.equalsIgnoreCase("")) {
-                message = "Please select an address";
+                message = getString(R.string.alert_select_an_address);
                 return message;
 
             }
