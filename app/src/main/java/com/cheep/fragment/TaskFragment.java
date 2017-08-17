@@ -185,7 +185,11 @@ public class TaskFragment extends BaseFragment {
             taskRecyclerViewAdapter.updateRatedStatus(event.id);
         } else if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.TASK_CANCELED) {
             if (taskRecyclerViewAdapter.cancelTask(event.id, event.taskStatus) == 0) {
-                errorLoadingHelper.failed(null, R.drawable.img_empty_pending_task, null, null, onMakeAPostClickListener);
+                errorLoadingHelper.failed(null,
+                        R.drawable.img_empty_pending_task,
+                        null,
+                        null,
+                        onMakeAPostClickListener);
             }
         } else if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.TASK_RESCHEDULED) {
             taskRecyclerViewAdapter.rescheduleTask(event.id, event.taskStartdate);
@@ -309,7 +313,11 @@ public class TaskFragment extends BaseFragment {
 
                                 }
                             });*/
-                            errorLoadingHelper.failed(null, R.drawable.img_empty_pending_task, null, null, onMakeAPostClickListener);
+                            errorLoadingHelper.failed(null,
+                                    R.drawable.img_empty_pending_task,
+                                    null,
+                                    null,
+                                    onMakeAPostClickListener);
                         }
 
                         break;

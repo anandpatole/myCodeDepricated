@@ -13,7 +13,6 @@ import com.cheep.R;
 /**
  * Created by pankaj on 11/10/16.
  */
-
 public class ErrorLoadingHelper {
 
     private RecyclerView recyclerView;
@@ -88,8 +87,8 @@ public class ErrorLoadingHelper {
         if (mEmptyFavouriteLayout != null)
             mEmptyFavouriteLayout.setVisibility(View.GONE);
 
-        //Changing it to null so retry button is not visible
-        clickListener = null;
+        // Changing it to null so retry button is not visible
+//        clickListener = null;
 
         recyclerView.setVisibility(View.GONE);
         progressBar.setVisibility(View.GONE);
