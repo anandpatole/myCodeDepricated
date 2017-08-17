@@ -671,10 +671,10 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
         mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
 
         // Add Params
-        String subCategoryDetail = getSelectedServicesJsonString().toString();
-
-
         ArrayList<QueAnsModel> mList = mStrategicPartnerTaskCreationAct.getQuestionsList();
+        String subCategoryDetail = getSelectedServicesJsonString().toString();
+        String task_desc = getTaskDescription(mList);
+
         String question_detail = getQuestionAnswerDetailsJsonString(mList).toString();
         Map<String, String> mParams = new HashMap<>();
         mParams.put(NetworkUtility.TAGS.ADDRESS_ID, addressId);
@@ -687,6 +687,7 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
         mParams.put(NetworkUtility.TAGS.CHEEPCODE, TextUtils.isEmpty(cheepCode) ? Utility.EMPTY_STRING : cheepCode);
         mParams.put(NetworkUtility.TAGS.PAYABLE_AMOUNT, TextUtils.isEmpty(cheepCode) ? mStrategicPartnerTaskCreationAct.total : payableAmount);
         mParams.put(NetworkUtility.TAGS.TRANSACTION_ID, transaction_Id);
+        mParams.put(NetworkUtility.TAGS.TASK_DESC, task_desc);
 
 
         // Create Params for AppsFlyer event track
@@ -730,6 +731,16 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
         Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest);
     }
 
+    private String getTaskDescription(ArrayList<QueAnsModel> mList) {
+        for (int i = 0; i < mList.size(); i++) {
+            QueAnsModel queAnsModel = mList.get(i);
+            if (queAnsModel.answerType.equalsIgnoreCase(Utility.TEMPLATE_TEXT_FIELD)) {
+                return queAnsModel.answer;
+            }
+        }
+        return "";
+    }
+
     Response.Listener mCallCreateTaskWSResponseListener = new Response.Listener() {
         @Override
         public void onResponse(Object response) {
@@ -753,7 +764,7 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
 //                        onSuccessfullTaskCreated(jsonObject);
 //                        Utility.showToast(mContext, "Task Created Successfully!!");
 
-                        String title = mContext.getString(R.string.label_great_choice_x, PreferenceUtility.getInstance(mContext).getUserDetails().UserName);
+                        String title = "Brilliant";
                         String message = "Your task is confirmed and a PRO from " + mStrategicPartnerTaskCreationAct.mBannerImageModel.name + ", will be there at your location on " +
                                 mStrategicPartnerTaskCreationAct.date + " at " + mStrategicPartnerTaskCreationAct.time;
 
@@ -814,6 +825,7 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
     /**
      * This method would going to call when task created successfully
      */
+
     private void onSuccessfullTaskCreated(JSONObject jsonObject) {
         TaskDetailModel taskDetailModel = (TaskDetailModel) Utility.getObjectFromJsonString(jsonObject.optString(NetworkUtility.TAGS.DATA), TaskDetailModel.class);
         if (taskDetailModel != null) {

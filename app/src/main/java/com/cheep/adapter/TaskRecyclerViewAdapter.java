@@ -131,7 +131,7 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
         final TaskDetailModel model = mList.get(holder.getAdapterPosition());
 
         holder.removeAnimations();
-
+        Log.d(TAG, "onActualBindViewHolder: position :: >> " + position);
         int viewType = getItemViewType(holder.getAdapterPosition());
         if (viewType == VIEW_TYPE_UPCOMING) {
             superStartDateTimeCalendar.setTimeZone(SuperCalendar.SuperTimeZone.GMT.GMT);
@@ -186,6 +186,34 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
             //holder.mUpcomingTaskBinding.gridImageView.createWithUrls(arrayListUri); // just for testing
             holder.mUpcomingTaskBinding.gridImageView.createWithUrls(getURIListFromStringList(model.profile_img_arr));
 
+//            if (Utility.TASK_TYPE.STRATEGIC.equalsIgnoreCase(model.taskType)) {
+//                holder.mUpcomingTaskBinding.layoutIndividualProfile.setVisibility(View.VISIBLE);
+//                holder.mUpcomingTaskBinding.layoutGroupProfile.setVisibility(View.GONE);
+//
+//                // profile image
+//                if (!TextUtils.isEmpty(model.selectedProvider.profileUrl))
+//                Utility.showCircularImageView(holder.mUpcomingTaskBinding.imgProfilePic.getContext(), TAG, holder.mUpcomingTaskBinding.imgProfilePic, model.selectedProvider.profileUrl, Utility.DEFAULT_PROFILE_SRC);
+//                //
+//                if (Utility.BOOLEAN.YES.equalsIgnoreCase(model.selectedProvider.isVerified)) {
+//                    holder.mUpcomingTaskBinding.tvVerified.setVisibility(View.VISIBLE);
+//                    holder.mUpcomingTaskBinding.tvVerified.setText(context.getString(R.string.label_verified).toLowerCase());
+//                } else {
+//                    holder.mUpcomingTaskBinding.tvVerified.setVisibility(View.GONE);
+//                }
+//                holder.mUpcomingTaskBinding.ratingBar.setVisibility(View.VISIBLE);
+//                Utility.showRating(model.selectedProvider.rating, holder.mUpcomingTaskBinding.ratingBar);
+//                holder.mUpcomingTaskBinding.imgBadge.setVisibility(View.VISIBLE);
+//                holder.mUpcomingTaskBinding.imgBadge.setImageResource(R.drawable.ic_silver_badge_partner);
+//                holder.mUpcomingTaskBinding.tvViewTask.setVisibility(View.VISIBLE);
+//                holder.mUpcomingTaskBinding.tvViewQuotes.setVisibility(View.GONE);
+//
+//                holder.mUpcomingTaskBinding.tvTaskResponseStatus.setVisibility(View.GONE);
+//
+//                // Need to Show reschedule button as PRO is not Finalized now.
+//                holder.mUpcomingTaskBinding.frameRescheduleTask.setVisibility(View.VISIBLE);
+//
+//
+//            } else {
             if (model.selectedProvider == null) {
                 holder.mUpcomingTaskBinding.layoutIndividualProfile.setVisibility(View.GONE);
                 holder.mUpcomingTaskBinding.layoutGroupProfile.setVisibility(View.VISIBLE);
@@ -219,15 +247,20 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
                 Utility.showRating(model.selectedProvider.rating, holder.mUpcomingTaskBinding.ratingBar);
 
                 holder.mUpcomingTaskBinding.imgBadge.setVisibility(View.VISIBLE);
-                if (model.selectedProvider.pro_level.equals(Utility.PRO_LEVEL.PLATINUM))
-                    holder.mUpcomingTaskBinding.imgBadge.setImageResource(R.drawable.ic_badge_platinum);
-                else if (model.selectedProvider.equals(Utility.PRO_LEVEL.GOLD))
-                    holder.mUpcomingTaskBinding.imgBadge.setImageResource(R.drawable.ic_badge_gold);
-                else if (model.selectedProvider.pro_level.equals(Utility.PRO_LEVEL.SILVER))
-                    holder.mUpcomingTaskBinding.imgBadge.setImageResource(R.drawable.ic_badge_silver);
-                else if (model.selectedProvider.pro_level.equals(Utility.PRO_LEVEL.BRONZE))
-                    holder.mUpcomingTaskBinding.imgBadge.setImageResource(R.drawable.ic_badge_bronze);
 
+
+                if (model.taskType.equalsIgnoreCase(Utility.TASK_TYPE.STRATEGIC))
+                    holder.mUpcomingTaskBinding.imgBadge.setImageResource(R.drawable.ic_silver_badge_partner);
+                else {
+                    if (model.selectedProvider.pro_level.equals(Utility.PRO_LEVEL.PLATINUM))
+                        holder.mUpcomingTaskBinding.imgBadge.setImageResource(R.drawable.ic_badge_platinum);
+                    else if (model.selectedProvider.equals(Utility.PRO_LEVEL.GOLD))
+                        holder.mUpcomingTaskBinding.imgBadge.setImageResource(R.drawable.ic_badge_gold);
+                    else if (model.selectedProvider.pro_level.equals(Utility.PRO_LEVEL.SILVER))
+                        holder.mUpcomingTaskBinding.imgBadge.setImageResource(R.drawable.ic_badge_silver);
+                    else if (model.selectedProvider.pro_level.equals(Utility.PRO_LEVEL.BRONZE))
+                        holder.mUpcomingTaskBinding.imgBadge.setImageResource(R.drawable.ic_badge_bronze);
+                }
                 holder.mUpcomingTaskBinding.tvViewTask.setVisibility(View.VISIBLE);
                 holder.mUpcomingTaskBinding.tvViewQuotes.setVisibility(View.GONE);
 
@@ -236,6 +269,7 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
                 // Need to Show reschedule button as PRO is not Finalized now.
                 holder.mUpcomingTaskBinding.frameRescheduleTask.setVisibility(View.VISIBLE);
             }
+//            }
 
 
             /**
@@ -330,7 +364,9 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
             });
             //So swipe adapter (lib method) close any previous opened swipe menu when current swipe is done.
             mItemManger.bindView(holder.itemView, position);
-        } else if (viewType == VIEW_TYPE_GROUP) {
+        } else if (viewType == VIEW_TYPE_GROUP)
+
+        {
             superStartDateTimeCalendar.setTimeZone(SuperCalendar.SuperTimeZone.GMT.GMT);
             superStartDateTimeCalendar.setTimeInMillis(Long.parseLong(model.taskStartdate));
             superStartDateTimeCalendar.setLocaleTimeZone();
@@ -378,7 +414,9 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
             }
             holder.mRowTaskGroupBinding.swipeLayout.setSwipeEnabled(false);
             mItemManger.bindView(holder.itemView, position);
-        } else {
+        } else
+
+        {
             //======Individual item(when sp is selected for task)=====
 
             superStartDateTimeCalendar.setTimeZone(SuperCalendar.SuperTimeZone.GMT.GMT);
@@ -680,4 +718,16 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
 
         }
     }
+
+//    private List<> getAllUniqueEnemies(List<mystatistik> list){
+//        List<mystatistik> uniqueList = new ArrayList<mystatistik>();
+//        List<String> enemyIds = new ArrayList<String>();
+//        for (mystatistik entry : list){
+//            if (!enemyIds.contains(entry.getEnemyId())){
+//                enemyIds.add(entry.getEnemyId());
+//                uniqueList.add(entry);
+//            }
+//        }
+//        return uniqueList;
+//    }
 }
