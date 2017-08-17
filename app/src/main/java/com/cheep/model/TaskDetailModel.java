@@ -80,6 +80,9 @@ public class TaskDetailModel {
     @SerializedName("task_address_id")
     public String taskAddressId;
 
+    @SerializedName("task_type")
+    public String taskType;
+
     @SerializedName("cat_image")
     public String catImage;
 

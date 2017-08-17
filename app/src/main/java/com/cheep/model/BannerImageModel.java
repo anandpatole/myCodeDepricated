@@ -10,6 +10,9 @@ public class BannerImageModel {
     @SerializedName("cat_image")
     @Expose
     public String imgCatImageUrl;
+    @SerializedName("banner_image")
+    @Expose
+    public String bannerImage;
     @SerializedName("cat_id")
     @Expose
     public String cat_id;
