@@ -111,8 +111,8 @@ public class StrategicPartnerFragPhaseOne extends BaseFragment {
                             categoryModel.catId = model.catId;
                             categoryModel.name = model.name;
                             categoryModel.sub_cat_id = model.sub_cat_id;
-                            ArrayList<StrategicPartnerServiceModel.AllSubSubCat> allSubSubCats = new ArrayList<>();
-                            for (StrategicPartnerServiceModel.AllSubSubCat allSubSubCat : model.allSubSubCats) {
+                            ArrayList<AllSubSubCat> allSubSubCats = new ArrayList<>();
+                            for (AllSubSubCat allSubSubCat : model.allSubSubCats) {
                                 {
                                     if (allSubSubCat.isSelected) {
                                         allSubSubCats.add(allSubSubCat);

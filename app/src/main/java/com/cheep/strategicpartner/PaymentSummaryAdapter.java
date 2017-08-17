@@ -41,9 +41,9 @@ class PaymentSummaryAdapter extends RecyclerView.Adapter<PaymentSummaryAdapter.M
         StringBuilder subscription = new StringBuilder("");
 
         // calculate selected sub services amount and set total
-        List<StrategicPartnerServiceModel.AllSubSubCat> allSubSubCats = mList.get(position).allSubSubCats;
+        List<AllSubSubCat> allSubSubCats = mList.get(position).allSubSubCats;
         for (int i = 0; i < allSubSubCats.size(); i++) {
-            StrategicPartnerServiceModel.AllSubSubCat allSubSubCat = allSubSubCats.get(i);
+            AllSubSubCat allSubSubCat = allSubSubCats.get(i);
             if (subscription.length() == 0)
                 subscription.append(allSubSubCat.subSubCatName);
             else

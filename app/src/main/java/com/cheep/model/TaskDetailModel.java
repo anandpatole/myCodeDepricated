@@ -2,6 +2,7 @@ package com.cheep.model;
 
 import android.support.annotation.Keep;
 
+import com.cheep.strategicpartner.ServiceTaskDetailModel;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
@@ -101,6 +102,11 @@ public class TaskDetailModel {
 
     @SerializedName("quoted_sp_list")
     public ArrayList<ProviderModel> mQuotedSPList;
+
+    @SerializedName("task_sub_sub_category")
+    public ArrayList<ServiceTaskDetailModel> subSubCategoryList;
+    @SerializedName("task_selected_sub_category")
+    public ArrayList<ServiceTaskDetailModel> taskSelectedSubCategoryList;
 
     public TaskDetailModel() {
 

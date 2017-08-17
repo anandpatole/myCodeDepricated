@@ -28,6 +28,7 @@ import com.cheep.fragment.TaskFragment;
 import com.cheep.interfaces.TaskRowDataInteractionListener;
 import com.cheep.model.MessageEvent;
 import com.cheep.model.TaskDetailModel;
+import com.cheep.strategicpartner.ServiceTaskDetailModel;
 import com.cheep.utils.LoadMoreSwipeRecyclerAdapter;
 import com.cheep.utils.SuperCalendar;
 import com.cheep.utils.Utility;
@@ -186,34 +187,6 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
             //holder.mUpcomingTaskBinding.gridImageView.createWithUrls(arrayListUri); // just for testing
             holder.mUpcomingTaskBinding.gridImageView.createWithUrls(getURIListFromStringList(model.profile_img_arr));
 
-//            if (Utility.TASK_TYPE.STRATEGIC.equalsIgnoreCase(model.taskType)) {
-//                holder.mUpcomingTaskBinding.layoutIndividualProfile.setVisibility(View.VISIBLE);
-//                holder.mUpcomingTaskBinding.layoutGroupProfile.setVisibility(View.GONE);
-//
-//                // profile image
-//                if (!TextUtils.isEmpty(model.selectedProvider.profileUrl))
-//                Utility.showCircularImageView(holder.mUpcomingTaskBinding.imgProfilePic.getContext(), TAG, holder.mUpcomingTaskBinding.imgProfilePic, model.selectedProvider.profileUrl, Utility.DEFAULT_PROFILE_SRC);
-//                //
-//                if (Utility.BOOLEAN.YES.equalsIgnoreCase(model.selectedProvider.isVerified)) {
-//                    holder.mUpcomingTaskBinding.tvVerified.setVisibility(View.VISIBLE);
-//                    holder.mUpcomingTaskBinding.tvVerified.setText(context.getString(R.string.label_verified).toLowerCase());
-//                } else {
-//                    holder.mUpcomingTaskBinding.tvVerified.setVisibility(View.GONE);
-//                }
-//                holder.mUpcomingTaskBinding.ratingBar.setVisibility(View.VISIBLE);
-//                Utility.showRating(model.selectedProvider.rating, holder.mUpcomingTaskBinding.ratingBar);
-//                holder.mUpcomingTaskBinding.imgBadge.setVisibility(View.VISIBLE);
-//                holder.mUpcomingTaskBinding.imgBadge.setImageResource(R.drawable.ic_silver_badge_partner);
-//                holder.mUpcomingTaskBinding.tvViewTask.setVisibility(View.VISIBLE);
-//                holder.mUpcomingTaskBinding.tvViewQuotes.setVisibility(View.GONE);
-//
-//                holder.mUpcomingTaskBinding.tvTaskResponseStatus.setVisibility(View.GONE);
-//
-//                // Need to Show reschedule button as PRO is not Finalized now.
-//                holder.mUpcomingTaskBinding.frameRescheduleTask.setVisibility(View.VISIBLE);
-//
-//
-//            } else {
             if (model.selectedProvider == null) {
                 holder.mUpcomingTaskBinding.layoutIndividualProfile.setVisibility(View.GONE);
                 holder.mUpcomingTaskBinding.layoutGroupProfile.setVisibility(View.VISIBLE);
@@ -231,17 +204,18 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
                 holder.mUpcomingTaskBinding.layoutGroupProfile.setVisibility(View.GONE);
 
                 Utility.showCircularImageView(holder.mUpcomingTaskBinding.imgProfilePic.getContext(), TAG, holder.mUpcomingTaskBinding.imgProfilePic, model.selectedProvider.profileUrl, Utility.DEFAULT_PROFILE_SRC);
-                if (Utility.BOOLEAN.YES.equals(model.selectedProvider.isFavourite))
-                    holder.mUpcomingTaskBinding.imgFav.setSelected(true);
-                else
-                    holder.mUpcomingTaskBinding.imgFav.setSelected(false);
-                holder.mUpcomingTaskBinding.tvProviderName.setText(model.selectedProvider.userName);
-                if (Utility.BOOLEAN.YES.equalsIgnoreCase(model.selectedProvider.isVerified)) {
-                    holder.mUpcomingTaskBinding.tvVerified.setVisibility(View.VISIBLE);
-                    holder.mUpcomingTaskBinding.tvVerified.setText(context.getString(R.string.label_verified).toLowerCase());
+
+                if (model.taskType.equalsIgnoreCase(Utility.TASK_TYPE.STRATEGIC)) {
+                    holder.mUpcomingTaskBinding.imgFav.setVisibility(View.GONE);
                 } else {
-                    holder.mUpcomingTaskBinding.tvVerified.setVisibility(View.GONE);
+                    holder.mUpcomingTaskBinding.imgFav.setVisibility(View.VISIBLE);
+                    if (Utility.BOOLEAN.YES.equals(model.selectedProvider.isFavourite))
+                        holder.mUpcomingTaskBinding.imgFav.setSelected(true);
+                    else
+                        holder.mUpcomingTaskBinding.imgFav.setSelected(false);
                 }
+                holder.mUpcomingTaskBinding.tvProviderName.setText(model.selectedProvider.userName);
+
                 // Show Rating
                 holder.mUpcomingTaskBinding.ratingBar.setVisibility(View.VISIBLE);
                 Utility.showRating(model.selectedProvider.rating, holder.mUpcomingTaskBinding.ratingBar);
@@ -249,9 +223,20 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
                 holder.mUpcomingTaskBinding.imgBadge.setVisibility(View.VISIBLE);
 
 
-                if (model.taskType.equalsIgnoreCase(Utility.TASK_TYPE.STRATEGIC))
+                if (model.taskType.equalsIgnoreCase(Utility.TASK_TYPE.STRATEGIC)) {
                     holder.mUpcomingTaskBinding.imgBadge.setImageResource(R.drawable.ic_silver_badge_partner);
-                else {
+                    holder.mUpcomingTaskBinding.tvVerified.setVisibility(View.VISIBLE);
+                    holder.mUpcomingTaskBinding.tvVerified.setText(context.getString(R.string.label_partner).toLowerCase());
+                } else {
+
+                    if (Utility.BOOLEAN.YES.equalsIgnoreCase(model.selectedProvider.isVerified)) {
+                        holder.mUpcomingTaskBinding.tvVerified.setVisibility(View.VISIBLE);
+                        holder.mUpcomingTaskBinding.tvVerified.setText(context.getString(R.string.label_verified).toLowerCase());
+                    } else {
+                        holder.mUpcomingTaskBinding.tvVerified.setVisibility(View.GONE);
+                    }
+
+
                     if (model.selectedProvider.pro_level.equals(Utility.PRO_LEVEL.PLATINUM))
                         holder.mUpcomingTaskBinding.imgBadge.setImageResource(R.drawable.ic_badge_platinum);
                     else if (model.selectedProvider.equals(Utility.PRO_LEVEL.GOLD))
@@ -260,6 +245,8 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
                         holder.mUpcomingTaskBinding.imgBadge.setImageResource(R.drawable.ic_badge_silver);
                     else if (model.selectedProvider.pro_level.equals(Utility.PRO_LEVEL.BRONZE))
                         holder.mUpcomingTaskBinding.imgBadge.setImageResource(R.drawable.ic_badge_bronze);
+
+
                 }
                 holder.mUpcomingTaskBinding.tvViewTask.setVisibility(View.VISIBLE);
                 holder.mUpcomingTaskBinding.tvViewQuotes.setVisibility(View.GONE);
@@ -269,7 +256,6 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
                 // Need to Show reschedule button as PRO is not Finalized now.
                 holder.mUpcomingTaskBinding.frameRescheduleTask.setVisibility(View.VISIBLE);
             }
-//            }
 
 
             /**
@@ -292,7 +278,13 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
                 holder.mUpcomingTaskBinding.tvViewQuotes.setEnabled(true);
                 holder.mUpcomingTaskBinding.tvViewQuotes.setPadding(pL, pT, pR, pB);
             }
-            holder.mUpcomingTaskBinding.tvSubCategoryName.setText(model.subCategoryName);
+
+            if (model.taskType.equalsIgnoreCase(Utility.TASK_TYPE.STRATEGIC)) {
+                holder.mUpcomingTaskBinding.tvSubCategoryName.setText(getAllUniqueCategories(model.subSubCategoryList));
+            } else {
+                holder.mUpcomingTaskBinding.tvSubCategoryName.setText(model.subCategoryName);
+            }
+
             holder.mUpcomingTaskBinding.tvDesc.setText(model.taskDesc);
 
             String mBookingDate = holder.mView.getContext().getString(R.string.format_task_book_date
@@ -363,6 +355,8 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
                 }
             });
             //So swipe adapter (lib method) close any previous opened swipe menu when current swipe is done.
+
+            holder.mUpcomingTaskBinding.swipeLayout.setSwipeEnabled(!model.taskType.equalsIgnoreCase(Utility.TASK_TYPE.STRATEGIC));
             mItemManger.bindView(holder.itemView, position);
         } else if (viewType == VIEW_TYPE_GROUP)
 
@@ -435,6 +429,7 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
             if (!TextUtils.isEmpty(model.subCategoryName))
                 holder.mRowTaskBinding.textSubCategoryName.setText(model.subCategoryName);
             holder.mRowTaskBinding.imgProfile.setVisibility(View.VISIBLE);
+
 
             if (Utility.BOOLEAN.YES.equalsIgnoreCase(model.selectedProvider.isVerified)) {
                 holder.mRowTaskBinding.textVerified.setVisibility(View.VISIBLE);
@@ -719,15 +714,20 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
         }
     }
 
-//    private List<> getAllUniqueEnemies(List<mystatistik> list){
-//        List<mystatistik> uniqueList = new ArrayList<mystatistik>();
-//        List<String> enemyIds = new ArrayList<String>();
-//        for (mystatistik entry : list){
-//            if (!enemyIds.contains(entry.getEnemyId())){
-//                enemyIds.add(entry.getEnemyId());
-//                uniqueList.add(entry);
-//            }
-//        }
-//        return uniqueList;
-//    }
+    private String getAllUniqueCategories(List<ServiceTaskDetailModel> list) {
+        if (list == null)
+            return "";
+        List<String> enemyIds = new ArrayList<>();
+        StringBuilder sb = new StringBuilder();
+        for (ServiceTaskDetailModel entry : list) {
+            if (!enemyIds.contains(entry.subCategoryName)) {
+                enemyIds.add(entry.subCategoryName);
+                if (sb.toString().isEmpty())
+                    sb.append(entry.subCategoryName);
+                else
+                    sb.append(",").append(entry.subCategoryName);
+            }
+        }
+        return sb.toString();
+    }
 }

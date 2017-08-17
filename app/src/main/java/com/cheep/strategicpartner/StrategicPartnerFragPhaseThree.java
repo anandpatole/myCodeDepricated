@@ -735,7 +735,7 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
         for (int i = 0; i < mList.size(); i++) {
             QueAnsModel queAnsModel = mList.get(i);
             if (queAnsModel.answerType.equalsIgnoreCase(Utility.TEMPLATE_TEXT_FIELD)) {
-                return queAnsModel.answer;
+                return queAnsModel.answer == null || queAnsModel.answer.equalsIgnoreCase("") ? "" : queAnsModel.answer;
             }
         }
         return "";
@@ -909,9 +909,9 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
         for (int i = 0; i < list.size(); i++) {
             StrategicPartnerServiceModel model = list.get(i);
             for (int j = 0; j < model.allSubSubCats.size(); j++) {
-                StrategicPartnerServiceModel.AllSubSubCat allSubSubCat = model.allSubSubCats.get(j);
+                AllSubSubCat allSubSubCat = model.allSubSubCats.get(j);
                 JsonObject obj = new JsonObject();
-                obj.addProperty("subcategory_id", model.catId);
+                obj.addProperty("subcategory_id", model.sub_cat_id);
                 obj.addProperty("sub_sub_cat_id", allSubSubCat.subSubCatId);
                 obj.addProperty("price", allSubSubCat.price);
                 selectedServiceArray.add(obj);
