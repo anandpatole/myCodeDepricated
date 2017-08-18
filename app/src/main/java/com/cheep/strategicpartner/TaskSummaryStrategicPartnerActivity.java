@@ -173,13 +173,14 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
             Utility.showRating(mTaskDetailModel.selectedProvider.rating, mActivityTaskSummaryBinding.providerRating);
 
             // Name of Provider
-            mActivityTaskSummaryBinding.textProviderName.setText(mTaskDetailModel.selectedProvider.userName);
+            mActivityTaskSummaryBinding.textProviderName.setText(mTaskDetailModel.categoryName);
 
             // Distanceof Provider
             mActivityTaskSummaryBinding.textAddressKmAway.setText(mTaskDetailModel.selectedProvider.distance + " away");
 
             // Profile Pic
-            Utility.showCircularImageView(mContext, TAG, mActivityTaskSummaryBinding.imgProfile, mTaskDetailModel.selectedProvider.profileUrl, Utility.DEFAULT_PROFILE_SRC, true);
+//            Utility.showCircularImdageView(mContext, TAG, mActivityTaskSummaryBinding.imgProfile, mTaskDetailModel.selectedProvider.profileUrl, Utility.DEFAULT_PROFILE_SRC, true);
+            Utility.showCircularImageView(mContext, TAG, mActivityTaskSummaryBinding.imgProfile, mTaskDetailModel.catImageExtras.medium, Utility.DEFAULT_PROFILE_SRC, true);
 
             // Whether Provider Verified or not
 //            if (Utility.BOOLEAN.YES.equalsIgnoreCase(mTaskDetailModel.selectedProvider.isVerified)) {

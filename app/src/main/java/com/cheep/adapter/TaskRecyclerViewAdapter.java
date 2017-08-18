@@ -203,18 +203,20 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
                 holder.mUpcomingTaskBinding.layoutIndividualProfile.setVisibility(View.VISIBLE);
                 holder.mUpcomingTaskBinding.layoutGroupProfile.setVisibility(View.GONE);
 
-                Utility.showCircularImageView(holder.mUpcomingTaskBinding.imgProfilePic.getContext(), TAG, holder.mUpcomingTaskBinding.imgProfilePic, model.selectedProvider.profileUrl, Utility.DEFAULT_PROFILE_SRC);
 
                 if (model.taskType.equalsIgnoreCase(Utility.TASK_TYPE.STRATEGIC)) {
+                    holder.mUpcomingTaskBinding.tvProviderName.setText(model.categoryName);
                     holder.mUpcomingTaskBinding.imgFav.setVisibility(View.GONE);
+                    Utility.showCircularImageView(holder.mUpcomingTaskBinding.imgProfilePic.getContext(), TAG, holder.mUpcomingTaskBinding.imgProfilePic, model.catImageExtras.medium, Utility.DEFAULT_PROFILE_SRC);
                 } else {
+                    Utility.showCircularImageView(holder.mUpcomingTaskBinding.imgProfilePic.getContext(), TAG, holder.mUpcomingTaskBinding.imgProfilePic, model.selectedProvider.profileUrl, Utility.DEFAULT_PROFILE_SRC);
+                    holder.mUpcomingTaskBinding.tvProviderName.setText(model.selectedProvider.userName);
                     holder.mUpcomingTaskBinding.imgFav.setVisibility(View.VISIBLE);
                     if (Utility.BOOLEAN.YES.equals(model.selectedProvider.isFavourite))
                         holder.mUpcomingTaskBinding.imgFav.setSelected(true);
                     else
                         holder.mUpcomingTaskBinding.imgFav.setSelected(false);
                 }
-                holder.mUpcomingTaskBinding.tvProviderName.setText(model.selectedProvider.userName);
 
                 // Show Rating
                 holder.mUpcomingTaskBinding.ratingBar.setVisibility(View.VISIBLE);
