@@ -1,5 +1,7 @@
 package com.cheep.strategicpartner;
 
+import android.support.annotation.Keep;
+
 import com.cheep.custom_view.expandablerecycleview.Parent;
 import com.google.gson.annotations.SerializedName;
 
@@ -10,7 +12,8 @@ import java.util.List;
  * Strategic partner services Json class model
  */
 
-class StrategicPartnerServiceModel implements Parent<StrategicPartnerServiceModel.AllSubSubCat> {
+@Keep
+public class StrategicPartnerServiceModel implements Parent<AllSubSubCat> {
 
 
     @SerializedName("cat_id")
@@ -37,20 +40,4 @@ class StrategicPartnerServiceModel implements Parent<StrategicPartnerServiceMode
         return false;
     }
 
-    public class AllSubSubCat {
-
-        @SerializedName("sub_sub_cat_name")
-        public String subSubCatName;
-
-        @SerializedName("price")
-        public String price;
-
-        @SerializedName("sub_sub_cat_id")
-        public String subSubCatId;
-        @SerializedName("package_description")
-        public String package_description;
-
-        public boolean isSelected = false;
-
-    }
 }

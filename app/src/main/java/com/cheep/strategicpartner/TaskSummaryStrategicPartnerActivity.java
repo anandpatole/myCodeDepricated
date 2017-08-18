@@ -3,11 +3,17 @@ package com.cheep.strategicpartner;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.text.InputFilter;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -61,7 +67,7 @@ import java.util.Map;
  */
 
 public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
-    private static final String TAG = "TaskSummaryActivity";
+    private static final String TAG = "TaskSummaryStrategicPar";
     private ActivityTaskSummaryStrategicPartnerBinding mActivityTaskSummaryBinding;
     private TaskDetailModel mTaskDetailModel;
 
@@ -136,8 +142,8 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
         mActivityTaskSummaryBinding.lnTaskAdditionalQuoteRequested.setVisibility(View.GONE);
 
         //Bydefault show the chat call icons
-        showChatCallButton(true);
-
+        showChatCallButton(false);
+        mActivityTaskSummaryBinding.tvCounter.setText("+2");
         // Hide Bottom Action Button
         mActivityTaskSummaryBinding.textBottomAction.setVisibility(View.GONE);
         updateHeightOfLinearLayout(false);
@@ -167,41 +173,42 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
             Utility.showRating(mTaskDetailModel.selectedProvider.rating, mActivityTaskSummaryBinding.providerRating);
 
             // Name of Provider
-            mActivityTaskSummaryBinding.textProviderName.setText(mTaskDetailModel.selectedProvider.userName);
+            mActivityTaskSummaryBinding.textProviderName.setText(mTaskDetailModel.categoryName);
 
             // Distanceof Provider
             mActivityTaskSummaryBinding.textAddressKmAway.setText(mTaskDetailModel.selectedProvider.distance + " away");
 
             // Profile Pic
-            Utility.showCircularImageView(mContext, TAG, mActivityTaskSummaryBinding.imgProfile, mTaskDetailModel.selectedProvider.profileUrl, Utility.DEFAULT_PROFILE_SRC, true);
+//            Utility.showCircularImdageView(mContext, TAG, mActivityTaskSummaryBinding.imgProfile, mTaskDetailModel.selectedProvider.profileUrl, Utility.DEFAULT_PROFILE_SRC, true);
+            Utility.showCircularImageView(mContext, TAG, mActivityTaskSummaryBinding.imgProfile, mTaskDetailModel.catImageExtras.medium, Utility.DEFAULT_PROFILE_SRC, true);
 
             // Whether Provider Verified or not
-            if (Utility.BOOLEAN.YES.equalsIgnoreCase(mTaskDetailModel.selectedProvider.isVerified)) {
-                mActivityTaskSummaryBinding.textProVerified.setVisibility(View.VISIBLE);
-            } else {
-                mActivityTaskSummaryBinding.textProVerified.setVisibility(View.GONE);
-            }
+//            if (Utility.BOOLEAN.YES.equalsIgnoreCase(mTaskDetailModel.selectedProvider.isVerified)) {
+//                mActivityTaskSummaryBinding.textProVerified.setVisibility(View.VISIBLE);
+//            } else {
+//                mActivityTaskSummaryBinding.textProVerified.setVisibility(View.GONE);
+//            }
 
             // Manage Click events of Call & Chat
             mActivityTaskSummaryBinding.lnCall.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Log.i(TAG, "onClick: Call");
-                    Utility.openCustomerCareCallDialer(mContext, mTaskDetailModel.selectedProvider.sp_phone_number);
+//                    Utility.openCustomerCareCallDialer(mContext, mTaskDetailModel.selectedProvider.sp_phone_number);
                 }
             });
             mActivityTaskSummaryBinding.lnChat.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Log.i(TAG, "onClick: Chat");
-                    TaskChatModel taskChatModel = new TaskChatModel();
-                    taskChatModel.categoryName = mTaskDetailModel.categoryName;
-                    taskChatModel.taskDesc = mTaskDetailModel.taskDesc;
-                    taskChatModel.taskId = mTaskDetailModel.taskId;
-                    taskChatModel.receiverId = FirebaseUtils.getPrefixSPId(mTaskDetailModel.selectedProvider.providerId);
-                    taskChatModel.participantName = mTaskDetailModel.selectedProvider.userName;
-                    taskChatModel.participantPhotoUrl = mTaskDetailModel.selectedProvider.profileUrl;
-                    ChatActivity.newInstance(mContext, taskChatModel);
+//                    TaskChatModel taskChatModel = new TaskChatModel();
+//                    taskChatModel.categoryName = mTaskDetailModel.categoryName;
+//                    taskChatModel.taskDesc = mTaskDetailModel.taskDesc;
+//                    taskChatModel.taskId = mTaskDetailModel.taskId;
+//                    taskChatModel.receiverId = FirebaseUtils.getPrefixSPId(mTaskDetailModel.selectedProvider.providerId);
+//                    taskChatModel.participantName = mTaskDetailModel.selectedProvider.userName;
+//                    taskChatModel.participantPhotoUrl = mTaskDetailModel.selectedProvider.profileUrl;
+//                    ChatActivity.newInstance(mContext, taskChatModel);
                 }
             });
 
@@ -220,11 +227,13 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
 
             // Manage UnreadBadge count for Task
             manageUnreadBadgeCounterForChat();
+
+            setSelectedServicesDetails();
         }
 
         // Set Second Section
-        mActivityTaskSummaryBinding.textSubCategoryName.setText(mTaskDetailModel.subCategoryName);
-        mActivityTaskSummaryBinding.textTaskDesc.setText(mTaskDetailModel.taskDesc);
+//        mActivityTaskSummaryBinding.textSubCategoryName.setText(mTaskDetailModel.subCategoryName);
+//        mActivityTaskSummaryBinding.textTaskDesc.setText(mTaskDetailModel.taskDesc);
         Utility.loadImageView(mContext, mActivityTaskSummaryBinding.imgTaskPicture, mTaskDetailModel.taskImage, 0);
 
 
@@ -240,7 +249,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
             e.printStackTrace();
         }
         superCalendar.setLocaleTimeZone();
-        String task_original_date_time = superCalendar.format(Utility.DATE_FORMAT_DD_MMM + " " + Utility.DATE_FORMAT_HH_MM_AM);
+        String task_original_date_time = superCalendar.format(Utility.DATE_FORMAT_DD_MMM_YYYY + " " + Utility.DATE_FORMAT_HH_MM_AM);
         mActivityTaskSummaryBinding.textTaskWhen.setText(task_original_date_time);
 
         // Setup WHERE section
@@ -248,18 +257,96 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
 
 
         // Onclick of when and Where section
-        mActivityTaskSummaryBinding.lnTaskDesc.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showFullDesc(getString(R.string.label_desc), mActivityTaskSummaryBinding.textTaskDesc.getText().toString());
-            }
-        });
+//        mActivityTaskSummaryBinding.lnTaskDesc.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                showFullDesc(getString(R.string.label_desc), mActivityTaskSummaryBinding.textTaskDesc.getText().toString());
+//            }
+//        });
         mActivityTaskSummaryBinding.lnTaskWhere.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 showFullDesc(getString(R.string.label_address), mActivityTaskSummaryBinding.textTaskWhere.getText().toString());
             }
         });
+    }
+
+    private void setSelectedServicesDetails() {
+        if (mTaskDetailModel.taskSelectedSubCategoryList != null && !mTaskDetailModel.taskSelectedSubCategoryList.isEmpty()) {
+            ArrayList<ServiceTaskDetailModel> subSubCategoryList = mTaskDetailModel.taskSelectedSubCategoryList;
+
+            ServiceTaskDetailModel serviceTaskDetailModel2 = subSubCategoryList.get(0);
+            mActivityTaskSummaryBinding.textSubCategoryName.setText(serviceTaskDetailModel2.name);
+            SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder();
+            for (ServiceTaskDetailModel.SubSubCat subSubCat : serviceTaskDetailModel2.allSubSubCats) {
+                if (spannableStringBuilder.length() == 0) {
+                    spannableStringBuilder.append(getSpannableString(subSubCat.subSubCatName, ContextCompat.getColor(this, R.color.grey_varient_2), false));
+                } else {
+                    spannableStringBuilder.append(getSpannableString(" + ", ContextCompat.getColor(this, R.color.dark_blue_variant_1), false));
+                    spannableStringBuilder.append(getSpannableString(subSubCat.subSubCatName, ContextCompat.getColor(this, R.color.grey_varient_2), false));
+                }
+            }
+            mActivityTaskSummaryBinding.textSubSubCategoryName.setText(spannableStringBuilder);
+
+//            HashMap<String, String> stringStringHashMap = new HashMap<>();
+//            for (int i = 1; i < subSubCategoryList.size(); i++) {
+//                AllSubSubCat subSubCat = subSubCategoryList.get(i);
+//                if (!stringStringHashMap.containsKey(subSubCat.subCategoryName)) {
+//                    stringStringHashMap.put(subSubCat.subCategoryName, subSubCat.subSubCatName);
+//                } else {
+//                    stringStringHashMap.put(subSubCat.subCategoryName, stringStringHashMap.get(subSubCat.subCategoryName) + " + " + subSubCat.subSubCatName);
+//                }
+//            }
+
+            mActivityTaskSummaryBinding.lnTaskDetails.removeAllViews();
+
+            for (int i = 1; i < mTaskDetailModel.taskSelectedSubCategoryList.size(); i++) {
+                ServiceTaskDetailModel serviceTaskDetailModel1 = subSubCategoryList.get(i);
+                View view = LayoutInflater.from(this).inflate(R.layout.layout_selected_service_task_summary, null);
+                TextView textSubCategoryName = view.findViewById(R.id.text_sub_category_name);
+                TextView textSubSubCategoryName = view.findViewById(R.id.text_sub_sub_category_name);
+                textSubCategoryName.setText(serviceTaskDetailModel1.name);
+                SpannableStringBuilder spannableStringBuilder1 = new SpannableStringBuilder();
+                for (ServiceTaskDetailModel.SubSubCat subSubCat : serviceTaskDetailModel1.allSubSubCats) {
+                    if (spannableStringBuilder1.length() == 0) {
+                        spannableStringBuilder1.append(getSpannableString(subSubCat.subSubCatName, ContextCompat.getColor(this, R.color.grey_varient_2), false));
+                    } else {
+                        spannableStringBuilder1.append(getSpannableString(" + ", ContextCompat.getColor(this, R.color.dark_blue_variant_1), false));
+                        spannableStringBuilder1.append(getSpannableString(subSubCat.subSubCatName, ContextCompat.getColor(this, R.color.grey_varient_2), false));
+                    }
+
+                }
+                textSubSubCategoryName.setText(spannableStringBuilder1);
+                mActivityTaskSummaryBinding.lnTaskDetails.addView(view);
+            }
+
+            if (mTaskDetailModel.categoryName.equalsIgnoreCase("VLCC")) {
+                View view = LayoutInflater.from(this).inflate(R.layout.layout_selected_service_task_summary, null);
+                TextView textSubCategoryName = view.findViewById(R.id.text_sub_category_name);
+                TextView textSubSubCategoryName = view.findViewById(R.id.text_sub_sub_category_name);
+                textSubCategoryName.setText("Service Required For");
+                textSubSubCategoryName.setText("To needs to be changed");
+                mActivityTaskSummaryBinding.lnTaskDetails.addView(view);
+            }
+
+            View view = LayoutInflater.from(this).inflate(R.layout.layout_selected_service_task_summary, null);
+            TextView textSubCategoryName = view.findViewById(R.id.text_sub_category_name);
+            TextView textSubSubCategoryName = view.findViewById(R.id.text_sub_sub_category_name);
+            textSubCategoryName.setText("Special Instructions");
+            textSubSubCategoryName.setText(mTaskDetailModel.taskDesc);
+            mActivityTaskSummaryBinding.lnTaskDetails.addView(view);
+
+        }
+
+    }
+
+    private SpannableStringBuilder getSpannableString(String string, int color, boolean isBold) {
+        SpannableStringBuilder text = new SpannableStringBuilder(string);
+        text.setSpan(new ForegroundColorSpan(color), 0, string.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        if (isBold) {
+            text.setSpan(new StyleSpan(Typeface.BOLD), 0, string.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
+        return text;
     }
 
     private void updateUIBasedOnTaskStatus() {
@@ -1215,6 +1302,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
                                 taskChatModel.receiverId = FirebaseUtils.getPrefixSPId(providerModel.providerId);
                                 taskChatModel.participantName = providerModel.userName;
                                 taskChatModel.participantPhotoUrl = providerModel.profileUrl;
+
                                 ChatActivity.newInstance(mContext, taskChatModel);
                             } else if (action.equalsIgnoreCase(Utility.ACTION_CALL)) {
 //                                callToOtherUser(mActivityTaskSummaryBinding.getRoot(), providerModel.providerId);

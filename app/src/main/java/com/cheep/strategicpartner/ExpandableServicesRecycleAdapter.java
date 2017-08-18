@@ -23,7 +23,7 @@ import java.util.List;
  *
  *
  */
-class ExpandableServicesRecycleAdapter extends ExpandableRecyclerAdapter<StrategicPartnerServiceModel, StrategicPartnerServiceModel.AllSubSubCat, ExpandableServicesRecycleAdapter.ParentSubCategoryViewHolder, ExpandableServicesRecycleAdapter.ChildSubCategoryViewHolder> {
+class ExpandableServicesRecycleAdapter extends ExpandableRecyclerAdapter<StrategicPartnerServiceModel, AllSubSubCat, ExpandableServicesRecycleAdapter.ParentSubCategoryViewHolder, ExpandableServicesRecycleAdapter.ChildSubCategoryViewHolder> {
 
     private List<StrategicPartnerServiceModel> mSubCategoriesList;
     private boolean isSingleSelection = false;
@@ -75,7 +75,7 @@ class ExpandableServicesRecycleAdapter extends ExpandableRecyclerAdapter<Strateg
      */
     @UiThread
     @Override
-    public void onBindChildViewHolder(@NonNull final ChildSubCategoryViewHolder childSubCategoryViewHolder, int parentPosition, int childPosition, @NonNull final StrategicPartnerServiceModel.AllSubSubCat ingredient) {
+    public void onBindChildViewHolder(@NonNull final ChildSubCategoryViewHolder childSubCategoryViewHolder, int parentPosition, int childPosition, @NonNull final AllSubSubCat ingredient) {
         childSubCategoryViewHolder.bind(ingredient);
 
     }
@@ -123,7 +123,7 @@ class ExpandableServicesRecycleAdapter extends ExpandableRecyclerAdapter<Strateg
      * select/deselect all child row of parent if parent is select/deselect
      */
     private void setAllChildSelected(StrategicPartnerServiceModel recipe) {
-        for (StrategicPartnerServiceModel.AllSubSubCat ingredient : recipe.allSubSubCats) {
+        for (AllSubSubCat ingredient : recipe.allSubSubCats) {
             ingredient.isSelected = recipe.isSelected;
         }
         notifyDataSetChanged();
@@ -161,13 +161,13 @@ class ExpandableServicesRecycleAdapter extends ExpandableRecyclerAdapter<Strateg
                     // if all children are deselected then parent should be deselected
 
                     if (!isSingleSelection) {
-                        StrategicPartnerServiceModel.AllSubSubCat subSubCat = mSubCategoriesList.get(parentPos).allSubSubCats.get(childPos);
+                        AllSubSubCat subSubCat = mSubCategoriesList.get(parentPos).allSubSubCats.get(childPos);
                         subSubCat.isSelected = !subSubCat.isSelected;
                         if (subSubCat.isSelected)
                             mSubCategoriesList.get(parentPos).isSelected = true;
                         else {
                             int flag = 0;
-                            for (StrategicPartnerServiceModel.AllSubSubCat allSubSubCat : mSubCategoriesList.get(parentPos).allSubSubCats) {
+                            for (AllSubSubCat allSubSubCat : mSubCategoriesList.get(parentPos).allSubSubCats) {
                                 if (!allSubSubCat.isSelected)
                                     flag++;
                             }
@@ -193,7 +193,7 @@ class ExpandableServicesRecycleAdapter extends ExpandableRecyclerAdapter<Strateg
         }
 
         // bind data with view for child row
-        public void bind(@NonNull StrategicPartnerServiceModel.AllSubSubCat subSubCat) {
+        public void bind(@NonNull AllSubSubCat subSubCat) {
 
             textSubCategoryName.setText(subSubCat.subSubCatName);
             if (subSubCat.package_description != null && !subSubCat.package_description.isEmpty())

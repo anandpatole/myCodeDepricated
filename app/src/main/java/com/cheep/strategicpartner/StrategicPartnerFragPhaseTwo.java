@@ -137,8 +137,8 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
         // calculation of total amount of selected services
         int total = 0;
         for (StrategicPartnerServiceModel model : mStrategicPartnerTaskCreationAct.getSelectedSubService()) {
-            List<StrategicPartnerServiceModel.AllSubSubCat> allSubSubCats = model.allSubSubCats;
-            for (StrategicPartnerServiceModel.AllSubSubCat allSubSubCat : allSubSubCats) {
+            List<AllSubSubCat> allSubSubCats = model.allSubSubCats;
+            for (AllSubSubCat allSubSubCat : allSubSubCats) {
                 try {
                     total += Integer.parseInt(allSubSubCat.price);
                 } catch (NumberFormatException e) {

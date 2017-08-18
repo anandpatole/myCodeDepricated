@@ -230,6 +230,9 @@
         <activity
             android:name=".strategicpartner.recordvideo.RecordVideoNewActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".strategicpartner.TaskSummaryStrategicPartnerActivity"
+            android:screenOrientation="portrait" />
 
         <!--
          (APPSFLYER) add the following receiver as the FIRST receiver for INSTALL_REFERRER or after another

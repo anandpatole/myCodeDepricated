@@ -69,6 +69,7 @@ import com.cheep.model.UserDetails;
 import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
+import com.cheep.strategicpartner.TaskSummaryStrategicPartnerActivity;
 import com.cheep.utils.HotlineHelper;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.SuperCalendar;
@@ -85,7 +86,6 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-import static com.cheep.network.NetworkUtility.TAGS.LOGINWITH;
 import static com.cheep.network.NetworkUtility.TAGS.TASK_ID;
 
 /**
@@ -436,7 +436,10 @@ public class HomeActivity extends BaseAppCompatActivity
             }
         } else {
 //            JobSummaryActivity.newInstance(mContext, taskDetailModel, taskDetailModel.selectedProvider);
-            TaskSummaryActivity.getInstance(mContext, taskDetailModel.taskId);
+            if (taskDetailModel.taskType.equalsIgnoreCase(Utility.TASK_TYPE.STRATEGIC))
+                TaskSummaryStrategicPartnerActivity.getInstance(mContext, taskDetailModel.taskId);
+            else
+                TaskSummaryActivity.getInstance(mContext, taskDetailModel.taskId);
         }
     }
 

@@ -313,7 +313,7 @@ public class StrategicPartnerTaskCreationAct extends BaseAppCompatActivity {
         Log.e(TAG, " on continue click");
         for (StrategicPartnerServiceModel model : mSelectedServicesList) {
             Log.e(TAG, " Item Name " + model.name);
-            for (StrategicPartnerServiceModel.AllSubSubCat allSubSubCat : model.allSubSubCats) {
+            for (AllSubSubCat allSubSubCat : model.allSubSubCats) {
                 Log.e(TAG, " Item  sub name " + allSubSubCat.subSubCatName);
             }
         }
