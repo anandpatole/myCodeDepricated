@@ -146,7 +146,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
                 }
             }
         }
-        mFragmentStrategicPartnerPhaseTwoBinding.textContinue.setText("Book & Pay " + getString(R.string.ruppe_symbol_x, "" + Utility.getQuotePriceInInteger(String.valueOf(total))));
+        mFragmentStrategicPartnerPhaseTwoBinding.textContinue.setText("Book & Pay " + getString(R.string.ruppe_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf(total))));
         mStrategicPartnerTaskCreationAct.total = String.valueOf(total);
         // Task Description
 
@@ -477,14 +477,28 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
                     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                         if (view.isShown()) {
                             Log.d(TAG, "onDateSet() called with: view = [" + view + "], year = [" + year + "], monthOfYear = [" + monthOfYear + "], dayOfMonth = [" + dayOfMonth + "]");
+                            startDateTimeSuperCalendar = SuperCalendar.getInstance();
                             startDateTimeSuperCalendar.set(Calendar.YEAR, year);
                             startDateTimeSuperCalendar.set(Calendar.MONTH, monthOfYear);
                             startDateTimeSuperCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+
                             txtAnswer.setText(startDateTimeSuperCalendar.format(Utility.DATE_FORMAT_DD_MMM_YYYY));
                             model.answer = startDateTimeSuperCalendar.format(Utility.DATE_FORMAT_DD_MMM_YYYY);
                             txtQueNo.setSelected(true);
                             txtAnswer.setSelected(false);
-                            mStrategicPartnerTaskCreationAct.date = startDateTimeSuperCalendar.format(Utility.DATE_FORMAT_DD_MMM_YYYY);
+
+
+                            for (int i = 0; i < mList.size(); i++) {
+                                QueAnsModel queAnsModel = mList.get(i);
+                                if (queAnsModel.answerType.equalsIgnoreCase(Utility.TEMPLATE_TIME_PICKER)) {
+                                    queAnsModel.answer = "";
+
+                                    TextView txtTime = mFragmentStrategicPartnerPhaseTwoBinding.linMain.findViewWithTag(Utility.TEMPLATE_TIME_PICKER);
+                                    if (txtTime!=null)
+                                    txtTime.setText(getString(R.string.label_select_the_time));
+                                }
+                            }
+                            //                            mStrategicPartnerTaskCreationAct.date = startDateTimeSuperCalendar.format(Utility.DATE_FORMAT_DD_MMM_YYYY);
                             setBtnBookAndPayBgState(validateAllQueAndAns().isEmpty());
                         }
                     }
@@ -532,6 +546,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
 
         // answer text view
         final TextView txtAnswer = view.findViewById(R.id.txtQueAnswer);
+        txtAnswer.setTag(Utility.TEMPLATE_TIME_PICKER);
         txtAnswer.setText(getString(R.string.label_select_the_time));
 
         // handle click - time selection
@@ -631,30 +646,39 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
 
                             startDateTimeSuperCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
                             startDateTimeSuperCalendar.set(Calendar.MINUTE, minute);
-
-                            String selectedDateTime = startDateTimeSuperCalendar.format(Utility.DATE_FORMAT_HH_MM_AM);
-
-                            // set selected time to text view
-                            textView.setText(selectedDateTime);
-                            textView.setSelected(false);
-
-                            // this var is for payment summary screen for user task details
-                            mStrategicPartnerTaskCreationAct.time = selectedDateTime;
-
-                            // set time zone for start date time
-                            startDateTimeSuperCalendar.setTimeZone(SuperCalendar.SuperTimeZone.GMT.GMT);
-
-                            // set timestamp as answer for web api
-                            model.answer = String.valueOf(startDateTimeSuperCalendar.getTimeInMillis());
-
-                            // set background of ques no as answered
-                            mFragmentStrategicPartnerPhaseTwoBinding.linMain.findViewWithTag(model.questionId).setSelected(true);
-                            setBtnBookAndPayBgState(validateAllQueAndAns().isEmpty());
+                            SuperCalendar calAfter3Hours = SuperCalendar.getInstance().getNext3HoursTime();
 
 
-                            TextView txtLocation = mFragmentStrategicPartnerPhaseTwoBinding.linMain.findViewWithTag(Utility.TEMPLATE_LOCATION);
-                            txtLocation.setSelected(true);
-                            txtLocation.setBackground(ContextCompat.getDrawable(mStrategicPartnerTaskCreationAct, R.drawable.background_ans_normal));
+                            if (startDateTimeSuperCalendar.getTimeInMillis() < calAfter3Hours.getTimeInMillis()) {
+                                Utility.showSnackBar(getString(R.string.alert_time_must_be_after_3_hour), mFragmentStrategicPartnerPhaseTwoBinding.getRoot());
+                            } else {
+                                String selectedDateTime = startDateTimeSuperCalendar.format(Utility.DATE_FORMAT_HH_MM_AM);
+
+
+                                // set selected time to text view
+                                textView.setText(selectedDateTime);
+                                textView.setSelected(false);
+
+                                // this var is for payment summary screen for user task details
+//                            mStrategicPartnerTaskCreationAct.time = selectedDateTime;
+
+                                // set time zone for start date time
+                                startDateTimeSuperCalendar.setTimeZone(SuperCalendar.SuperTimeZone.GMT.GMT);
+
+                                // set timestamp as answer for web api
+                                model.answer = String.valueOf(startDateTimeSuperCalendar.getTimeInMillis());
+
+                                // set background of ques no as answered
+                                mFragmentStrategicPartnerPhaseTwoBinding.linMain.findViewWithTag(model.questionId).setSelected(true);
+                                setBtnBookAndPayBgState(validateAllQueAndAns().isEmpty());
+
+
+                                // enable
+                                TextView txtLocation = mFragmentStrategicPartnerPhaseTwoBinding.linMain.findViewWithTag(Utility.TEMPLATE_LOCATION);
+                                txtLocation.setSelected(true);
+                                txtLocation.setBackground(ContextCompat.getDrawable(mStrategicPartnerTaskCreationAct, R.drawable.background_ans_normal));
+
+                            }
                         }
                     }
                 }, c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE), false);
@@ -1710,7 +1734,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
             File f = new File(mCurrentPhotoPath);
             Uri contentUri = Uri.fromFile(f);
             mCurrentPhotoPath = Utility.getPath(mStrategicPartnerTaskCreationAct, contentUri);
-            mMediaRecycleAdapter.addImage(new MediaModel(mCurrentPhotoPath, MediaModel.MediaType.IMAGE));
+            mMediaRecycleAdapter.addImage(new MediaModel(mCurrentPhotoPath, MediaModel.MediaType.TYPE_IMAGE));
             checkMediaArraySize();
         }
 
@@ -1718,7 +1742,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
         else if (requestCode == Utility.REQUEST_CODE_GET_FILE_ADD_PROFILE_GALLERY && resultCode == Activity.RESULT_OK) {
             Log.i(TAG, "onActivityResult: " + data.getData().toString());
             mCurrentPhotoPath = Utility.getPath(mStrategicPartnerTaskCreationAct, data.getData());
-            mMediaRecycleAdapter.addImage(new MediaModel(mCurrentPhotoPath, MediaModel.MediaType.IMAGE));
+            mMediaRecycleAdapter.addImage(new MediaModel(mCurrentPhotoPath, MediaModel.MediaType.TYPE_IMAGE));
             checkMediaArraySize();
         }
 
@@ -1726,7 +1750,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
         else if (requestCode == Utility.REQUEST_CODE_VIDEO_CAPTURE && resultCode == RESULT_OK && data != null) {
             mCurrentPhotoPath = data.getStringExtra("path");
             Log.e(TAG, "path >> " + mCurrentPhotoPath);
-            mMediaRecycleAdapter.addImage(new MediaModel(mCurrentPhotoPath, MediaModel.MediaType.VIDEO));
+            mMediaRecycleAdapter.addImage(new MediaModel(mCurrentPhotoPath, MediaModel.MediaType.TYPE_VIDEO));
             checkMediaArraySize();
         }
 
@@ -1741,7 +1765,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
                 } else {
                     try {
                         Log.e(TAG, "path >> " + mCurrentPhotoPath);
-                        mMediaRecycleAdapter.addImage(new MediaModel(mCurrentPhotoPath, MediaModel.MediaType.VIDEO));
+                        mMediaRecycleAdapter.addImage(new MediaModel(mCurrentPhotoPath, MediaModel.MediaType.TYPE_VIDEO));
                         checkMediaArraySize();
                     } catch (Throwable throwable) {
                         throwable.printStackTrace();
@@ -1781,6 +1805,11 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
         }
     }
 
+
+    private void resetTime(TextView txtAnswer, QueAnsModel model, TextView txtQueNo) {
+        SuperCalendar calAfter3Hours = SuperCalendar.getInstance().getNext3HoursTime();
+
+    }
 
     /**
      * @return true if all questions are answered

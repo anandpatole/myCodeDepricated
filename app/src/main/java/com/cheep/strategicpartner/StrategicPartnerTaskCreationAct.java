@@ -41,8 +41,8 @@ public class StrategicPartnerTaskCreationAct extends BaseAppCompatActivity {
     private ArrayList<QueAnsModel> mQuestionsList;
     private ArrayList<StrategicPartnerServiceModel> mSelectedServicesList;
     public boolean isSingleSelection = false;
-    public String date = "";
-    public String time = "";
+//    public String date = "";
+//    public String time = "";
     public String address = "";
     public String total = "";
 

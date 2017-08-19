@@ -5,6 +5,7 @@ import android.support.annotation.Keep;
 import com.cheep.custom_view.expandablerecycleview.Parent;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -13,7 +14,7 @@ import java.util.List;
  */
 
 @Keep
-public class StrategicPartnerServiceModel implements Parent<AllSubSubCat> {
+public class StrategicPartnerServiceModel implements Parent<AllSubSubCat>, Serializable {
 
 
     @SerializedName("cat_id")

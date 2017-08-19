@@ -4,68 +4,68 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/white_translucent_ninety">
 
-
-        <LinearLayout
+        <ScrollView
+            android:id="@+id/scrollView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:paddingTop="@dimen/margin_top_payment_step"
             android:layout_above="@+id/text_pay"
-            android:background="@color/white_translucent_ninety"
-            android:orientation="vertical">
-
-            <com.cheep.custom_view.CFTextViewRegular
-                android:id="@+id/txtdesc"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/scale_5dp"
-                android:layout_marginLeft="@dimen/scale_22dp"
-                android:layout_marginRight="@dimen/scale_10dp"
-                android:layout_marginTop="@dimen/margin_top_payment_step"
-                android:gravity="center"
-                android:lineSpacingExtra="@dimen/scale_5dp"
-                android:textColor="@color/grey_varient_8"
-                android:textSize="@dimen/text_size_14sp"
-                tools:text="Bosche"/>
+            >
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginBottom="@dimen/scale_10dp"
-                android:layout_marginLeft="@dimen/scale_22dp"
-                android:layout_marginRight="@dimen/scale_22dp"
-                android:layout_marginTop="@dimen/scale_8dp"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_shield"
-                    tools:ignore="ContentDescription"/>
+                android:orientation="vertical">
 
                 <com.cheep.custom_view.CFTextViewRegular
-                    android:id="@+id/text_desclaimer"
+                    android:id="@+id/txtdesc"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/scale_8dp"
-                    android:gravity="left"
-                    android:lineSpacingExtra="@dimen/scale_2dp"
-                    android:text="@string/desclaimer_task_completion_strategic_partner"
-                    android:textColor="@color/task_desclaimer"
-                    android:textSize="@dimen/text_size_12sp"/>
-            </LinearLayout>
+                    android:layout_marginBottom="@dimen/scale_5dp"
+                    android:layout_marginLeft="@dimen/scale_22dp"
+                    android:layout_marginRight="@dimen/scale_10dp"
+                    android:gravity="center"
+                    android:lineSpacingExtra="@dimen/scale_5dp"
+                    android:textColor="@color/grey_varient_8"
+                    android:textSize="@dimen/text_size_14sp"
+                    tools:text="Bosche"/>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/scale_10dp"
-                android:background="@drawable/divide_gradient"/>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="@dimen/scale_10dp"
+                    android:layout_marginLeft="@dimen/scale_22dp"
+                    android:layout_marginRight="@dimen/scale_22dp"
+                    android:layout_marginTop="@dimen/scale_8dp"
+                    android:orientation="horizontal">
 
-            <ScrollView
-                android:id="@+id/scrollView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                >
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_shield"
+                        tools:ignore="ContentDescription"/>
+
+                    <com.cheep.custom_view.CFTextViewRegular
+                        android:id="@+id/text_desclaimer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/scale_8dp"
+                        android:gravity="left"
+                        android:lineSpacingExtra="@dimen/scale_2dp"
+                        android:text="@string/desclaimer_task_completion_strategic_partner"
+                        android:textColor="@color/task_desclaimer"
+                        android:textSize="@dimen/text_size_12sp"/>
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/scale_10dp"
+                    android:background="@drawable/divide_gradient"/>
+
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -84,11 +84,11 @@
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/recycleSelectedService"
                         android:layout_width="match_parent"
-                        android:clipToPadding="false"
-                        android:paddingTop="@dimen/scale_10dp"
                         android:layout_height="wrap_content"
+                        android:clipToPadding="false"
                         android:paddingLeft="@dimen/scale_22dp"
-                        android:paddingRight="@dimen/scale_22dp"/>
+                        android:paddingRight="@dimen/scale_22dp"
+                        android:paddingTop="@dimen/scale_10dp"/>
 
                     <RelativeLayout
                         android:id="@+id/rlsubtotal"
@@ -236,21 +236,22 @@
                             tools:text="₹ 300"/>
 
                     </RelativeLayout>
+
                     <com.cheep.custom_view.CFTextViewRegular
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/scale_10dp"
                         android:layout_marginLeft="@dimen/scale_22dp"
                         android:layout_marginRight="@dimen/scale_22dp"
-                        android:layout_marginBottom="@dimen/scale_10dp"
                         android:text="@string/label_task_desclaimer"
                         android:textColor="@color/grey_varient_11"
-                        android:textSize="@dimen/text_size_10sp" />
+                        android:textSize="@dimen/text_size_10sp"/>
 
                 </LinearLayout>
 
-            </ScrollView>
+            </LinearLayout>
+        </ScrollView>
 
-        </LinearLayout>
 
         <com.cheep.custom_view.CFTextViewSemiBold
             android:id="@+id/text_pay"

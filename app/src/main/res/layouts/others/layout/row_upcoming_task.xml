@@ -135,16 +135,15 @@
 
                         <com.cheep.custom_view.CFTextViewSemiBold
                             android:id="@+id/tvProviderName"
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_toRightOf="@+id/img_profile"
                             android:ellipsize="end"
                             android:lines="1"
-                            android:layout_weight="0.9"
+                            android:layout_weight="1"
                             android:textAllCaps="false"
                             android:textColor="@color/splash_gradient_end"
                             android:textSize="@dimen/text_size_14sp"
-                            tools:text="Plumber hi care "/>
+                            tools:text="vlcc vlccvlccvlccvlccvlccvlcc"/>
 
                         <com.cheep.custom_view.CFTextViewSemiBold
                             android:id="@+id/tvVerified"
@@ -157,11 +156,11 @@
                             android:maxLines="1"
                             android:padding="@dimen/scale_2dp"
                             android:singleLine="true"
-                            android:text="@string/label_verified"
                             android:textAllCaps="false"
                             android:textColor="@color/white"
                             android:textSize="@dimen/text_size_10sp"
-                            android:visibility="visible"/>
+                            android:visibility="visible"
+                            tools:text="@string/label_partner"/>
                     </LinearLayout>
 
                     <com.cheep.custom_view.CFTextViewRegular

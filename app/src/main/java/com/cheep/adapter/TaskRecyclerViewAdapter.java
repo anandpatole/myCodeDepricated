@@ -207,7 +207,7 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
                 if (model.taskType.equalsIgnoreCase(Utility.TASK_TYPE.STRATEGIC)) {
                     holder.mUpcomingTaskBinding.tvProviderName.setText(model.categoryName);
                     holder.mUpcomingTaskBinding.imgFav.setVisibility(View.GONE);
-                    Utility.showCircularImageView(holder.mUpcomingTaskBinding.imgProfilePic.getContext(), TAG, holder.mUpcomingTaskBinding.imgProfilePic, model.catImageExtras.medium, Utility.DEFAULT_PROFILE_SRC);
+                    Utility.showCircularImageView(holder.mUpcomingTaskBinding.imgProfilePic.getContext(), TAG, holder.mUpcomingTaskBinding.imgProfilePic, model.selectedProvider.profileUrl, Utility.DEFAULT_PROFILE_SRC);
                 } else {
                     Utility.showCircularImageView(holder.mUpcomingTaskBinding.imgProfilePic.getContext(), TAG, holder.mUpcomingTaskBinding.imgProfilePic, model.selectedProvider.profileUrl, Utility.DEFAULT_PROFILE_SRC);
                     holder.mUpcomingTaskBinding.tvProviderName.setText(model.selectedProvider.userName);

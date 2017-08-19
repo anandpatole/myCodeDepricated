@@ -29,7 +29,6 @@ import com.cheep.activity.BaseAppCompatActivity;
 import com.cheep.activity.ChatActivity;
 import com.cheep.activity.PaymentsStepActivity;
 import com.cheep.activity.TaskQuotesActivity;
-import com.cheep.activity.ZoomImageActivity;
 import com.cheep.custom_view.BottomAlertDialog;
 import com.cheep.databinding.ActivityTaskSummaryStrategicPartnerBinding;
 import com.cheep.databinding.DialogChangePhoneNumberBinding;
@@ -45,7 +44,6 @@ import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
 import com.cheep.utils.HotlineHelper;
 import com.cheep.utils.PreferenceUtility;
-import com.cheep.utils.SharedElementTransitionHelper;
 import com.cheep.utils.SuperCalendar;
 import com.cheep.utils.Utility;
 import com.google.firebase.database.DataSnapshot;
@@ -101,6 +99,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
             }
         }
 
+
         // Setting up Toolbar
         setSupportActionBar(mActivityTaskSummaryBinding.toolbar);
         if (getSupportActionBar() != null) {
@@ -141,13 +140,32 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
         mActivityTaskSummaryBinding.lnTaskRescheduleRejected.setVisibility(View.GONE);
         mActivityTaskSummaryBinding.lnTaskAdditionalQuoteRequested.setVisibility(View.GONE);
 
+
+        if (mTaskDetailModel.mMediaModelList != null && !mTaskDetailModel.mMediaModelList.isEmpty()) {
+            if (mTaskDetailModel.mMediaModelList.size() > 1)
+                mActivityTaskSummaryBinding.tvCounter.setText("+" + (mTaskDetailModel.mMediaModelList.size() - 1));
+            else
+                mActivityTaskSummaryBinding.tvCounter.setVisibility(View.GONE);
+
+            Utility.loadImageView(this, mActivityTaskSummaryBinding.imgTaskPicture, mTaskDetailModel.mMediaModelList.get(0).mediaThumbName);
+
+        } else
+            mActivityTaskSummaryBinding.frameSelectPicture.setVisibility(View.GONE);
+
+
+        mActivityTaskSummaryBinding.frameSelectPicture.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                StrategicPartnerMediaViewActiivty.getInstance(TaskSummaryStrategicPartnerActivity.this, mTaskDetailModel.mMediaModelList);
+            }
+        });
+
+
         //Bydefault show the chat call icons
         showChatCallButton(false);
-        mActivityTaskSummaryBinding.tvCounter.setText("+2");
         // Hide Bottom Action Button
         mActivityTaskSummaryBinding.textBottomAction.setVisibility(View.GONE);
         updateHeightOfLinearLayout(false);
-
 
         // Setup First section whether SP is final or not
         if (mTaskDetailModel.selectedProvider == null) {
@@ -217,8 +235,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
             mActivityTaskSummaryBinding.textViewPaymentSummary.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    // Redirect the user to Payment Summary screen.
-                    PaymentsStepActivity.newInstance(TaskSummaryStrategicPartnerActivity.this, mTaskDetailModel, mTaskDetailModel.selectedProvider, true);
+                    PaymentsStepStrategicPartnerActivity.newInstance(TaskSummaryStrategicPartnerActivity.this, mTaskDetailModel);
                 }
             });
 
@@ -234,7 +251,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
         // Set Second Section
 //        mActivityTaskSummaryBinding.textSubCategoryName.setText(mTaskDetailModel.subCategoryName);
 //        mActivityTaskSummaryBinding.textTaskDesc.setText(mTaskDetailModel.taskDesc);
-        Utility.loadImageView(mContext, mActivityTaskSummaryBinding.imgTaskPicture, mTaskDetailModel.taskImage, 0);
+//        Utility.loadImageView(mContext, mActivityTaskSummaryBinding.imgTaskPicture, mTaskDetailModel.taskImage, 0);
 
 
         // Set Up Third Section WHEN
@@ -273,12 +290,12 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
 
     private void setSelectedServicesDetails() {
         if (mTaskDetailModel.taskSelectedSubCategoryList != null && !mTaskDetailModel.taskSelectedSubCategoryList.isEmpty()) {
-            ArrayList<ServiceTaskDetailModel> subSubCategoryList = mTaskDetailModel.taskSelectedSubCategoryList;
+            ArrayList<StrategicPartnerServiceModel> subSubCategoryList = mTaskDetailModel.taskSelectedSubCategoryList;
 
-            ServiceTaskDetailModel serviceTaskDetailModel2 = subSubCategoryList.get(0);
+            StrategicPartnerServiceModel serviceTaskDetailModel2 = subSubCategoryList.get(0);
             mActivityTaskSummaryBinding.textSubCategoryName.setText(serviceTaskDetailModel2.name);
             SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder();
-            for (ServiceTaskDetailModel.SubSubCat subSubCat : serviceTaskDetailModel2.allSubSubCats) {
+            for (AllSubSubCat subSubCat : serviceTaskDetailModel2.allSubSubCats) {
                 if (spannableStringBuilder.length() == 0) {
                     spannableStringBuilder.append(getSpannableString(subSubCat.subSubCatName, ContextCompat.getColor(this, R.color.grey_varient_2), false));
                 } else {
@@ -301,13 +318,13 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
             mActivityTaskSummaryBinding.lnTaskDetails.removeAllViews();
 
             for (int i = 1; i < mTaskDetailModel.taskSelectedSubCategoryList.size(); i++) {
-                ServiceTaskDetailModel serviceTaskDetailModel1 = subSubCategoryList.get(i);
+                StrategicPartnerServiceModel serviceTaskDetailModel1 = subSubCategoryList.get(i);
                 View view = LayoutInflater.from(this).inflate(R.layout.layout_selected_service_task_summary, null);
                 TextView textSubCategoryName = view.findViewById(R.id.text_sub_category_name);
                 TextView textSubSubCategoryName = view.findViewById(R.id.text_sub_sub_category_name);
                 textSubCategoryName.setText(serviceTaskDetailModel1.name);
                 SpannableStringBuilder spannableStringBuilder1 = new SpannableStringBuilder();
-                for (ServiceTaskDetailModel.SubSubCat subSubCat : serviceTaskDetailModel1.allSubSubCats) {
+                for (AllSubSubCat subSubCat : serviceTaskDetailModel1.allSubSubCats) {
                     if (spannableStringBuilder1.length() == 0) {
                         spannableStringBuilder1.append(getSpannableString(subSubCat.subSubCatName, ContextCompat.getColor(this, R.color.grey_varient_2), false));
                     } else {
@@ -325,7 +342,9 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
                 TextView textSubCategoryName = view.findViewById(R.id.text_sub_category_name);
                 TextView textSubSubCategoryName = view.findViewById(R.id.text_sub_sub_category_name);
                 textSubCategoryName.setText("Service Required For");
-                textSubSubCategoryName.setText("To needs to be changed");
+
+                if (mTaskDetailModel.mQuesList != null && !mTaskDetailModel.mQuesList.isEmpty())
+                    textSubSubCategoryName.setText(mTaskDetailModel.mQuesList.get(0).answer);
                 mActivityTaskSummaryBinding.lnTaskDetails.addView(view);
             }
 
@@ -529,17 +548,6 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
 
     @Override
     protected void setListeners() {
-        mActivityTaskSummaryBinding.imgTaskPicture.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (!TextUtils.isEmpty(mTaskDetailModel.taskImage)) {
-
-                    SharedElementTransitionHelper sharedElementTransitionHelper = new SharedElementTransitionHelper(TaskSummaryStrategicPartnerActivity.this);
-                    sharedElementTransitionHelper.put(mActivityTaskSummaryBinding.imgTaskPicture, R.string.transition_image_view);
-                    ZoomImageActivity.newInstance(mContext, sharedElementTransitionHelper.getBundle(), mTaskDetailModel.taskImage);
-                }
-            }
-        });
     }
 
     private BottomAlertDialog dialogDesc;

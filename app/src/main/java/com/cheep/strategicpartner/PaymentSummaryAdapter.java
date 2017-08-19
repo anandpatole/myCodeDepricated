@@ -58,7 +58,7 @@ class PaymentSummaryAdapter extends RecyclerView.Adapter<PaymentSummaryAdapter.M
         holder.rowPastTaskBinding.textServiceSubService.setSelected(true);
         holder.rowPastTaskBinding.textServiceSubService.setText(subscription.toString());
         holder.rowPastTaskBinding.textServiceRate.setText(
-                holder.rowPastTaskBinding.textServiceRate.getContext().getString(R.string.ruppe_symbol_x, String.valueOf(Utility.getQuotePriceInInteger(String.valueOf(total)))));
+                holder.rowPastTaskBinding.textServiceRate.getContext().getString(R.string.ruppe_symbol_x, String.valueOf(Utility.getQuotePriceFormatter(String.valueOf(total)))));
     }
 
     @Override

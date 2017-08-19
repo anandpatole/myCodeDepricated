@@ -64,6 +64,7 @@
     <color name="white_translucent_fifty">#80FFFFFF</color>
     <color name="white_translucent_sixty">#99FFFFFF</color>
     <color name="black_translucent">#80000000</color>
+    <color name="black_translucent_1">#70000000</color>
 
     <color name="dark_blue">#0260c1</color>
     <color name="dark_blue_variant_1">#0070d4</color>

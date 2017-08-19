@@ -10,12 +10,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@null"
+        android:cursorVisible="true"
         android:hint="Type Here"
         android:paddingBottom="@dimen/scale_5dp"
         android:paddingRight="@dimen/scale_15dp"
         android:paddingTop="@dimen/scale_5dp"
         android:textColor="@color/black"
         android:textColorHint="@color/grey_varient_14"
+        android:textCursorDrawable="@drawable/cursor_blue_drawble"
         android:textSize="@dimen/text_size_14sp"
         />
 

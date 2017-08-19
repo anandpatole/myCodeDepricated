@@ -44,6 +44,7 @@ import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
 import com.cheep.utils.PreferenceUtility;
+import com.cheep.utils.SuperCalendar;
 import com.cheep.utils.Utility;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -73,6 +74,8 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
     private String addressId = "";
     private String payableAmount;
     private String start_datetime = "";
+    private String date = "";
+    private String time = "";
     private EditText edtCheepCode;
     private BottomAlertDialog cheepCodeDialog;
     private boolean isVerified = false;
@@ -129,6 +132,11 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
             QueAnsModel queAnsModel = mStrategicPartnerTaskCreationAct.getQuestionsList().get(i);
             if (queAnsModel.answerType.equalsIgnoreCase(Utility.TEMPLATE_TIME_PICKER)) {
                 start_datetime = queAnsModel.answer;
+                SuperCalendar superCalendar = SuperCalendar.getInstance();
+                superCalendar.setTimeInMillis(Long.parseLong(start_datetime));
+                time = superCalendar.format(Utility.DATE_FORMAT_HH_MM_AM);
+                date = superCalendar.format(Utility.DATE_FORMAT_DD_MMM_YYYY);
+
             }
             if (queAnsModel.answerType.equalsIgnoreCase(Utility.TEMPLATE_LOCATION)) {
                 addressId = queAnsModel.answer;
@@ -139,7 +147,7 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
         spannableStringBuilder.append(getSpannableString("Your order with ", ContextCompat.getColor(mStrategicPartnerTaskCreationAct, R.color.grey_varient_8), false));
         spannableStringBuilder.append(getSpannableString(mStrategicPartnerTaskCreationAct.mBannerImageModel.name, ContextCompat.getColor(mStrategicPartnerTaskCreationAct, R.color.splash_gradient_end), true));
         spannableStringBuilder.append(getSpannableString(getString(R.string.label_on), ContextCompat.getColor(mStrategicPartnerTaskCreationAct, R.color.grey_varient_8), false));
-        spannableStringBuilder.append(getSpannableString(mStrategicPartnerTaskCreationAct.date + ", " + mStrategicPartnerTaskCreationAct.time
+        spannableStringBuilder.append(getSpannableString(date + ", " + time
                 , ContextCompat.getColor(mStrategicPartnerTaskCreationAct, R.color.splash_gradient_end), true));
         spannableStringBuilder.append(getSpannableString(getString(R.string.label_at), ContextCompat.getColor(mStrategicPartnerTaskCreationAct, R.color.grey_varient_8), false));
         spannableStringBuilder.append(getSpannableString(mStrategicPartnerTaskCreationAct.address, ContextCompat.getColor(mStrategicPartnerTaskCreationAct, R.color.splash_gradient_end), true));
@@ -153,9 +161,9 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
             mFragmentStrategicPartnerPhaseThreeBinding.recycleSelectedService.setAdapter(new PaymentSummaryAdapter(mStrategicPartnerTaskCreationAct.getSelectedSubService()));
 
         // set total and sub total details
-        mFragmentStrategicPartnerPhaseThreeBinding.txttotal.setText(getString(R.string.ruppe_symbol_x, "" + Utility.getQuotePriceInInteger(mStrategicPartnerTaskCreationAct.total)));
-        mFragmentStrategicPartnerPhaseThreeBinding.txtsubtotal.setText(getString(R.string.ruppe_symbol_x, "" + Utility.getQuotePriceInInteger(mStrategicPartnerTaskCreationAct.total)));
-        mFragmentStrategicPartnerPhaseThreeBinding.textPay.setText("Pay " + getString(R.string.ruppe_symbol_x, String.valueOf(Utility.getQuotePriceInInteger(mStrategicPartnerTaskCreationAct.total))));
+        mFragmentStrategicPartnerPhaseThreeBinding.txttotal.setText(getString(R.string.ruppe_symbol_x, "" + Utility.getQuotePriceFormatter(mStrategicPartnerTaskCreationAct.total)));
+        mFragmentStrategicPartnerPhaseThreeBinding.txtsubtotal.setText(getString(R.string.ruppe_symbol_x, "" + Utility.getQuotePriceFormatter(mStrategicPartnerTaskCreationAct.total)));
+        mFragmentStrategicPartnerPhaseThreeBinding.textPay.setText("Pay " + getString(R.string.ruppe_symbol_x, String.valueOf(Utility.getQuotePriceFormatter(mStrategicPartnerTaskCreationAct.total))));
 
         // handle clicks for create task web api and payment flow
         mFragmentStrategicPartnerPhaseThreeBinding.textPay.setOnClickListener(new View.OnClickListener() {
@@ -180,7 +188,7 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
             }
         });
         mFragmentStrategicPartnerPhaseThreeBinding.imgCheepCodeClose.setVisibility(View.GONE);
-        mFragmentStrategicPartnerPhaseThreeBinding.txtpromocode.setText(getString(R.string.ruppe_symbol_x, "" + 0.0));
+        mFragmentStrategicPartnerPhaseThreeBinding.txtpromocode.setText(getString(R.string.ruppe_symbol_x, "" + 0));
         mFragmentStrategicPartnerPhaseThreeBinding.imgCheepCodeClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -203,10 +211,10 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
     private void resetPromoCodeValue() {
         mFragmentStrategicPartnerPhaseThreeBinding.textpromocodelabel.setTextColor(ContextCompat.getColor(mStrategicPartnerTaskCreationAct, R.color.splash_gradient_end));
         mFragmentStrategicPartnerPhaseThreeBinding.textpromocodelabel.setText(getResources().getString(R.string.label_enter_promocode));
-        mFragmentStrategicPartnerPhaseThreeBinding.txtsubtotal.setText(getString(R.string.ruppe_symbol_x, "" + Utility.getQuotePriceInInteger(mStrategicPartnerTaskCreationAct.total)));
-        mFragmentStrategicPartnerPhaseThreeBinding.txttotal.setText(getString(R.string.ruppe_symbol_x, "" + Utility.getQuotePriceInInteger(mStrategicPartnerTaskCreationAct.total)));
-        mFragmentStrategicPartnerPhaseThreeBinding.textPay.setText(getString(R.string.label_pay_fee_v1, "" + Utility.getQuotePriceInInteger(mStrategicPartnerTaskCreationAct.total)));
-        mFragmentStrategicPartnerPhaseThreeBinding.txtpromocode.setText(getString(R.string.ruppe_symbol_x, "" + Utility.getQuotePriceInInteger("0")));
+        mFragmentStrategicPartnerPhaseThreeBinding.txtsubtotal.setText(getString(R.string.ruppe_symbol_x, "" + Utility.getQuotePriceFormatter(mStrategicPartnerTaskCreationAct.total)));
+        mFragmentStrategicPartnerPhaseThreeBinding.txttotal.setText(getString(R.string.ruppe_symbol_x, "" + Utility.getQuotePriceFormatter(mStrategicPartnerTaskCreationAct.total)));
+        mFragmentStrategicPartnerPhaseThreeBinding.textPay.setText(getString(R.string.label_pay_fee_v1, "" + Utility.getQuotePriceFormatter(mStrategicPartnerTaskCreationAct.total)));
+        mFragmentStrategicPartnerPhaseThreeBinding.txtpromocode.setText(getString(R.string.ruppe_symbol_x, "" + Utility.getQuotePriceFormatter("0")));
     }
 
 
@@ -327,9 +335,9 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
 
     private void updatePaymentDetails(String discount, String payable) {
         payableAmount = payable;
-        mFragmentStrategicPartnerPhaseThreeBinding.txtpromocode.setText(getString(R.string.ruppe_symbol_x, "" + Utility.getQuotePriceInInteger(discount)));
-        mFragmentStrategicPartnerPhaseThreeBinding.txttotal.setText(getString(R.string.ruppe_symbol_x, "" + Utility.getQuotePriceInInteger(payable)));
-        mFragmentStrategicPartnerPhaseThreeBinding.textPay.setText(getString(R.string.label_pay_fee_v1, "" + Utility.getQuotePriceInInteger(payable)));
+        mFragmentStrategicPartnerPhaseThreeBinding.txtpromocode.setText(getString(R.string.ruppe_symbol_x, "" + Utility.getQuotePriceFormatter(discount)));
+        mFragmentStrategicPartnerPhaseThreeBinding.txttotal.setText(getString(R.string.ruppe_symbol_x, "" + Utility.getQuotePriceFormatter(payable)));
+        mFragmentStrategicPartnerPhaseThreeBinding.textPay.setText(getString(R.string.label_pay_fee_v1, "" + Utility.getQuotePriceFormatter(payable)));
         mFragmentStrategicPartnerPhaseThreeBinding.textpromocodelabel.setEnabled(false);
         mFragmentStrategicPartnerPhaseThreeBinding.textpromocodelabel.setText(cheepCode);
         mFragmentStrategicPartnerPhaseThreeBinding.imgCheepCodeClose.setVisibility(View.VISIBLE);
@@ -716,9 +724,9 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
         if (mFileList != null && !mFileList.isEmpty())
             for (int i = 0; i < mFileList.size(); i++) {
                 MediaModel mediaModel = mFileList.get(i);
-                if (!TextUtils.isEmpty(mediaModel.path) && new File(mediaModel.path).exists()) {
-                    Log.e(TAG, "callTaskCreationWebServiceForStratgicPartner: path " + mediaModel.path + "");
-                    mFileParams.put("media_file[" + i + "]", new File(mediaModel.path));
+                if (!TextUtils.isEmpty(mediaModel.mediaName) && new File(mediaModel.mediaName).exists()) {
+                    Log.e(TAG, "callTaskCreationWebServiceForStratgicPartner: path " + mediaModel.mediaName + "");
+                    mFileParams.put("media_file[" + i + "]", new File(mediaModel.mediaName));
                 }
             }
 
@@ -766,7 +774,7 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
 
                         String title = "Brilliant";
                         String message = "Your task is confirmed and a PRO from " + mStrategicPartnerTaskCreationAct.mBannerImageModel.name + ", will be there at your location on " +
-                                mStrategicPartnerTaskCreationAct.date + " at " + mStrategicPartnerTaskCreationAct.time;
+                                date + " at " + time;
 
                         final AcknowledgementDialogWithProfilePic mAcknowledgementDialogWithProfilePic = AcknowledgementDialogWithProfilePic.newInstance(
                                 mContext,
@@ -888,6 +896,7 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
             QueAnsModel queAnsModel = mList.get(i);
             if (!queAnsModel.answerType.equalsIgnoreCase(Utility.TEMPLATE_DATE_PICKER)
                     && !queAnsModel.answerType.equalsIgnoreCase(Utility.TEMPLATE_TIME_PICKER)
+                    && !queAnsModel.answerType.equalsIgnoreCase(Utility.TEMPLATE_TEXT_FIELD)
                     && !queAnsModel.answerType.equalsIgnoreCase(Utility.TEMPLATE_LOCATION)
                     && !queAnsModel.answerType.equalsIgnoreCase(Utility.TEMPLATE_UPLOAD)) {
                 JsonObject jsonObject = new JsonObject();

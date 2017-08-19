@@ -753,6 +753,17 @@ public class Utility {
                 .into(img);
     }
 
+    public static void loadImageView(Context context, ImageView img, String imageToLoad) {
+        if (!isActivityCorrectForGlide(context)) {
+            return;
+        }
+        Glide
+                .with(context)
+                .load(imageToLoad)
+                .crossFade()
+                .into(img);
+    }
+
     public static void loadImageView(Context context, ImageView img, int imageToLoad, int placeholderRes) {
 
         if (!isActivityCorrectForGlide(context)) {
@@ -1115,11 +1126,13 @@ public class Utility {
         public static final String ADDITIONAL_PAYMENT_REQUESTED = "additional_payment_requested";// if Additional Payment is Requested by SP
 
     }
+
     public static final class TASK_TYPE {
-        public static final String STRATEGIC= "strategic"; //1->if task created and only quotes is there, 2-> task created and user paid to sp, but sp not started the task yet.
+        public static final String STRATEGIC = "strategic"; //1->if task created and only quotes is there, 2-> task created and user paid to sp, but sp not started the task yet.
         public static final String NORMAL = "normal";//if user payed and task is in progress
     }
-        public static String urlEncodeUTF8(String s) {
+
+    public static String urlEncodeUTF8(String s) {
         try {
             return URLEncoder.encode(s, "UTF-8");
         } catch (UnsupportedEncodingException e) {
@@ -1221,13 +1234,14 @@ public class Utility {
      * @param quotePrice string value
      * @return decimal value
      */
-    public static String getQuotePriceInInteger(String quotePrice) {
+    public static String getQuotePriceFormatter(String quotePrice) {
 
-        DecimalFormat formatter = new DecimalFormat("#,###.0");
+        if (quotePrice==null || quotePrice.equalsIgnoreCase("null"))
+            return "0";
+        if (quotePrice.equalsIgnoreCase("") || quotePrice.equalsIgnoreCase("0") || quotePrice.equalsIgnoreCase("0.0"))
+            return "0";
+        DecimalFormat formatter = new DecimalFormat("#,###.00");
         double price = Double.parseDouble(quotePrice);
-        if (quotePrice == null) {
-            return "";
-        }
         return formatter.format(price);
     }
 

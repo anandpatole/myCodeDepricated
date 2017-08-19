@@ -268,12 +268,12 @@
                                 <LinearLayout
                                     android:id="@+id/ln_chat_call"
                                     android:layout_width="0dp"
-                                    android:visibility="gone"
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center_vertical"
                                     android:layout_weight="1"
                                     android:gravity="center"
-                                    android:orientation="horizontal">
+                                    android:orientation="horizontal"
+                                    android:visibility="gone">
 
                                     <LinearLayout
                                         android:id="@+id/ln_chat"
@@ -436,7 +436,7 @@
                             android:layout_height="wrap_content"
                             android:paddingLeft="@dimen/scale_16dp"
                             android:paddingRight="@dimen/scale_16dp"
-                            android:paddingTop="@dimen/scale_16dp">
+                            android:layout_marginTop="@dimen/scale_16dp">
 
                             <LinearLayout
                                 android:id="@+id/ln_task_desc"
@@ -490,9 +490,10 @@
                             <FrameLayout
                                 android:id="@+id/frame_select_picture"
                                 android:layout_width="@dimen/scale_70dp"
+                                android:background="@color/light_grey_color"
                                 android:layout_height="@dimen/scale_70dp"
                                 android:layout_alignParentRight="true"
-                                android:layout_centerVertical="true">7
+                                android:layout_centerVertical="true">
 
 
                                 <ImageView
@@ -500,19 +501,19 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
                                     android:adjustViewBounds="true"
-                                    android:background="#eeeeee"
+                                    android:scaleType="centerCrop"
                                     tools:ignore="ContentDescription"/>
 
-                                <com.cheep.custom_view.CFTextViewRegular
+                                <TextView
                                     android:id="@+id/tv_counter"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
+                                    android:layout_width="@dimen/scale_20dp"
+                                    android:layout_height="@dimen/scale_20dp"
                                     android:layout_gravity="center"
-                                    android:textSize="@dimen/text_size_11sp"
                                     android:background="@drawable/xml_circular_indicator_selected"
-                                    android:padding="@dimen/scale_3dp"
+                                    android:gravity="center_vertical|center_horizontal"
                                     android:textColor="@color/white"
-                                    tools:text="+4"/>
+                                    android:textSize="@dimen/text_size_10sp"
+                                    tools:text="+2"/>
 
                             </FrameLayout>
                         </RelativeLayout>

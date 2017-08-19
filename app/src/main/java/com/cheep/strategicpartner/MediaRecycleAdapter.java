@@ -87,11 +87,11 @@ class MediaRecycleAdapter extends RecyclerView.Adapter<MediaRecycleAdapter.MyVie
         }
 
         void bind(final MediaModel mediaModel) {
-            Log.i(TAG, "bind:>>  " + mediaModel.path);
+            Log.i(TAG, "bind:>>  " + mediaModel.mediaName);
             // set image thumbnails with rounder grey border around image view
-            if (mediaModel.type == MediaModel.MediaType.IMAGE) {
-                mImgThumb.setImageBitmap(BitmapFactory.decodeFile(mediaModel.path));
-                Glide.with(mView.getContext()).load(mediaModel.path).asBitmap().thumbnail(0.2f).diskCacheStrategy(DiskCacheStrategy.ALL).listener(new RequestListener<String, Bitmap>() {
+            if (mediaModel.mediaType.equalsIgnoreCase(MediaModel.MediaType.TYPE_IMAGE)) {
+                mImgThumb.setImageBitmap(BitmapFactory.decodeFile(mediaModel.mediaName));
+                Glide.with(mView.getContext()).load(mediaModel.mediaName).asBitmap().thumbnail(0.2f).diskCacheStrategy(DiskCacheStrategy.ALL).listener(new RequestListener<String, Bitmap>() {
 
                     @Override
                     public boolean onException(Exception e, String model, Target<Bitmap> target, boolean isFirstResource) {
@@ -110,7 +110,7 @@ class MediaRecycleAdapter extends RecyclerView.Adapter<MediaRecycleAdapter.MyVie
                 }).into(mImgThumb);
             } else {
                 try {
-                    mImgThumb.setImageBitmap(Utility.getRoundedCornerBitmap(Utility.getVideoThumbnail(mediaModel.path), mImgThumb.getContext()));
+                    mImgThumb.setImageBitmap(Utility.getRoundedCornerBitmap(Utility.getVideoThumbnail(mediaModel.mediaName), mImgThumb.getContext()));
                 } catch (Throwable throwable) {
                     throwable.printStackTrace();
                 }
