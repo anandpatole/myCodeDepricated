@@ -121,6 +121,18 @@
                         android:text="@string/label_responses_received"
                         android:textColor="@color/black"
                         android:textSize="@dimen/text_size_11sp" />-->
+                    <ImageView
+                        android:id="@+id/img_badge"
+                        android:layout_marginTop="@dimen/scale_10dp"
+                        android:layout_width="@dimen/chat_width"
+                        android:layout_height="@dimen/chat_width"
+                        android:layout_gravity="center"
+                        android:layout_marginBottom="@dimen/scale_3dp"
+                        android:gravity="center"
+                        android:src="@drawable/ic_silver_badge_partner"
+                        tools:ignore="ContentDescription" />
+
+
                 </LinearLayout>
 
                 <LinearLayout
@@ -150,8 +162,10 @@
                         android:layout_gravity="center_vertical"
                         android:layout_marginLeft="@dimen/scale_5dp"
                         android:background="@drawable/img_blue_rounded"
-                        android:padding="@dimen/scale_2dp"
-                        android:text="@string/label_verified"
+                        android:paddingLeft="@dimen/scale_5dp"
+                        android:paddingRight="@dimen/scale_5dp"
+                        android:paddingTop="@dimen/scale_3dp"
+                        android:paddingBottom="@dimen/scale_3dp"      android:text="@string/label_verified"
                         android:textAllCaps="false"
                         android:textColor="@color/white"
                         android:textSize="@dimen/text_size_10sp"
@@ -224,6 +238,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="true"
                     android:layout_alignParentRight="true"
                     android:layout_below="@+id/text_desc">
 
@@ -262,6 +277,8 @@
                     </LinearLayout>
                 </FrameLayout>
             </RelativeLayout>
+
+
         </LinearLayout>
     </com.daimajia.swipe.SwipeLayout>
 </layout>

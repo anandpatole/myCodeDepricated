@@ -128,20 +128,21 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
         }, 5);
 
         // get date time and selected address from Questions (phase 2)
-        for (int i = 0; i < mStrategicPartnerTaskCreationAct.getQuestionsList().size(); i++) {
-            QueAnsModel queAnsModel = mStrategicPartnerTaskCreationAct.getQuestionsList().get(i);
-            if (queAnsModel.answerType.equalsIgnoreCase(Utility.TEMPLATE_TIME_PICKER)) {
-                start_datetime = queAnsModel.answer;
-                SuperCalendar superCalendar = SuperCalendar.getInstance();
-                superCalendar.setTimeInMillis(Long.parseLong(start_datetime));
-                time = superCalendar.format(Utility.DATE_FORMAT_HH_MM_AM);
-                date = superCalendar.format(Utility.DATE_FORMAT_DD_MMM_YYYY);
+        if (mStrategicPartnerTaskCreationAct.getQuestionsList() != null)
+            for (int i = 0; i < mStrategicPartnerTaskCreationAct.getQuestionsList().size(); i++) {
+                QueAnsModel queAnsModel = mStrategicPartnerTaskCreationAct.getQuestionsList().get(i);
+                if (queAnsModel.answerType.equalsIgnoreCase(Utility.TEMPLATE_TIME_PICKER)) {
+                    start_datetime = queAnsModel.answer;
+                    SuperCalendar superCalendar = SuperCalendar.getInstance();
+                    superCalendar.setTimeInMillis(Long.parseLong(start_datetime));
+                    time = superCalendar.format(Utility.DATE_FORMAT_HH_MM_AM);
+                    date = superCalendar.format(Utility.DATE_FORMAT_DD_MMM_YYYY);
 
+                }
+                if (queAnsModel.answerType.equalsIgnoreCase(Utility.TEMPLATE_LOCATION)) {
+                    addressId = queAnsModel.answer;
+                }
             }
-            if (queAnsModel.answerType.equalsIgnoreCase(Utility.TEMPLATE_LOCATION)) {
-                addressId = queAnsModel.answer;
-            }
-        }
         // set details of partner name user selected date time and address
         SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder();
         spannableStringBuilder.append(getSpannableString("Your order with ", ContextCompat.getColor(mStrategicPartnerTaskCreationAct, R.color.grey_varient_8), false));
@@ -357,6 +358,7 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
         Log.d(TAG, "initiateUI() called");
 
         mFragmentStrategicPartnerPhaseThreeBinding.recycleSelectedService.setLayoutManager(new LinearLayoutManager(mStrategicPartnerTaskCreationAct));
+        mFragmentStrategicPartnerPhaseThreeBinding.recycleSelectedService.setNestedScrollingEnabled(false);
         if (mStrategicPartnerTaskCreationAct.getSelectedSubService() != null)
             mFragmentStrategicPartnerPhaseThreeBinding.recycleSelectedService.setAdapter(new PaymentSummaryAdapter(mStrategicPartnerTaskCreationAct.getSelectedSubService()));
     }

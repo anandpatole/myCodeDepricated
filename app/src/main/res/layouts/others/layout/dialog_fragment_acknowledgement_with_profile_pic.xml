@@ -40,6 +40,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
+                    android:gravity="center_horizontal"
                     android:text="@string/label_your_task_is_posted"
                     android:textColor="@color/grey_varient_8"
                     android:textSize="@dimen/text_size_18sp" />

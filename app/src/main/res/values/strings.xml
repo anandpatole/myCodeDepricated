@@ -440,10 +440,12 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="alert_time_must_be_after_3_hour">Date Time must be after 3 hour</string>
     <string name="alert_please_answer_all_the_questions">Please answer all the questions</string>
     <string name="alert_select_an_address">Please select an address</string>
-    <string name="alert_select_date_and_time">"Please select date and time"</string>
+
+    <string name="alert_select_date_and_time">Please select date and time</string>
+
     <string name="desclaimer_task_completion_strategic_partner">When you pay, your funds are held securely by us. You will only be charged, once work is completed to your satisfaction</string>
 
-    <string name="label_partner">partner</string>
+    <string name="label_partner">Partner</string>
 
     <string-array name="choose_media_type">
         <item>Video</item>
@@ -453,5 +455,6 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
         <item>Camera</item>
         <item>Gallery</item>
     </string-array>
+    <string name="label_create_task">Create Task</string>
 
 </resources>

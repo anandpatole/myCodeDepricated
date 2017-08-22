@@ -70,7 +70,7 @@
                                         android:maxLines="1"
                                         android:padding="@dimen/scale_10dp"
                                         android:singleLine="true"
-                                        android:text="@string/label_payment_history"
+                                        android:text="@string/label_payment_summary"
                                         android:textAllCaps="false"
                                         android:textColor="@color/white"
                                         android:textSize="@dimen/text_size_18sp"/>

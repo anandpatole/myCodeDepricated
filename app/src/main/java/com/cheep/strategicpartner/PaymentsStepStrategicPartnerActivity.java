@@ -79,7 +79,7 @@ public class PaymentsStepStrategicPartnerActivity extends BaseAppCompatActivity 
             if (taskDetailModel.taskSelectedSubCategoryList != null)
                 mActivityPaymentDetailBinding.recycleSelectedService.setAdapter(new PaymentSummaryAdapter(taskDetailModel.taskSelectedSubCategoryList));
             Utility.loadImageView(mContext, mActivityPaymentDetailBinding.imgService, taskDetailModel.catImage, R.drawable.gradient_black);
-            Utility.showCircularImageViewBlueBorder(mContext, TAG, mActivityPaymentDetailBinding.imgProfile, taskDetailModel.catImage, R.drawable.icon_profile_img_solid, true);
+            Utility.showCircularImageViewWithColorBorder(mContext, TAG, mActivityPaymentDetailBinding.imgProfile, taskDetailModel.catImage, R.drawable.icon_profile_img_solid, R.color.dark_blue_variant_1,true);
             String dateTime = "";
             if (!TextUtils.isEmpty(taskDetailModel.taskStartdate)) {
                 dateTime = Utility.getDate(Long.parseLong(taskDetailModel.taskStartdate), "dd MMMM, HH:mm a");

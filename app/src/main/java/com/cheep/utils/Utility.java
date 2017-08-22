@@ -710,7 +710,7 @@ public class Utility {
     }
 
 
-    public static void showCircularImageViewBlueBorder(Context context, String tag, ImageView img, String imageToLoad, int placeholderRes, boolean isRounded) {
+    public static void showCircularImageViewWithColorBorder(Context context, String tag, ImageView img, String imageToLoad, int placeholderRes, int color, boolean isRounded) {
         Log.d(TAG, "showCircularImageView() called with: context = [" + context + "], tag = [" + tag + "], img = [" + img + "], imageToLoad = [" + imageToLoad + "], placeholderRes = [" + placeholderRes + "], isRounded = [" + isRounded + "]");
         if (!isActivityCorrectForGlide(context)) {
             return;
@@ -718,7 +718,7 @@ public class Utility {
         Glide
                 .with(context)
                 .load(imageToLoad)
-                .transform(new CircleTransform(context, isRounded, ContextCompat.getColor(context, R.color.dark_blue_variant_1), 5, imageToLoad, tag))
+                .transform(new CircleTransform(context, isRounded, ContextCompat.getColor(context, color), 5, imageToLoad, tag))
                 .placeholder(placeholderRes)
                 .error(placeholderRes)
                 .crossFade()

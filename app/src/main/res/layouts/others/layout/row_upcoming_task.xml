@@ -135,15 +135,15 @@
 
                         <com.cheep.custom_view.CFTextViewSemiBold
                             android:id="@+id/tvProviderName"
-                            android:layout_width="0dp"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:ellipsize="end"
                             android:lines="1"
-                            android:layout_weight="1"
+                            android:maxWidth="@dimen/tv_max_width_provider_name_task_list"
                             android:textAllCaps="false"
                             android:textColor="@color/splash_gradient_end"
                             android:textSize="@dimen/text_size_14sp"
-                            tools:text="vlcc vlccvlccvlccvlccvlccvlcc"/>
+                            tools:text="vlcc dfcvfghfghfghfg ghjghjghj"/>
 
                         <com.cheep.custom_view.CFTextViewSemiBold
                             android:id="@+id/tvVerified"
@@ -154,7 +154,10 @@
                             android:background="@drawable/img_blue_rounded"
                             android:ellipsize="marquee"
                             android:maxLines="1"
-                            android:padding="@dimen/scale_2dp"
+                            android:paddingLeft="@dimen/scale_5dp"
+                            android:paddingRight="@dimen/scale_5dp"
+                            android:paddingTop="@dimen/scale_3dp"
+                            android:paddingBottom="@dimen/scale_3dp"
                             android:singleLine="true"
                             android:textAllCaps="false"
                             android:textColor="@color/white"
@@ -164,6 +167,20 @@
                     </LinearLayout>
 
                     <com.cheep.custom_view.CFTextViewRegular
+                        android:id="@+id/tvSubCategoryNameStrPart"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_below="@+id/top_row"
+                        android:layout_toRightOf="@+id/layout_participant_counter"
+                        android:layout_weight="1"
+                        android:lines="1"
+                        android:maxLines="1"
+                        android:textAllCaps="false"
+                        android:ellipsize="end"
+                        android:textColor="@color/splash_gradient_end"
+                        android:textSize="@dimen/text_size_10sp"
+                        tools:text="Veg food"/>
+                    <com.cheep.custom_view.CFTextViewRegular
                         android:id="@+id/tvSubCategoryName"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
@@ -172,6 +189,7 @@
                         android:layout_weight="1"
                         android:ellipsize="end"
                         android:lines="1"
+                        android:maxLines="1"
                         android:textAllCaps="false"
                         android:textColor="@color/splash_gradient_end"
                         android:textSize="@dimen/text_size_10sp"

@@ -26,7 +26,6 @@ import com.cheep.R;
 import com.cheep.custom_view.BottomAlertDialog;
 import com.cheep.databinding.ActivityPaymentDetailBinding;
 import com.cheep.dialogs.AcknowledgementDialogWithProfilePic;
-import com.cheep.dialogs.AcknowledgementDialogWithoutProfilePic;
 import com.cheep.dialogs.AcknowledgementInteractionListener;
 import com.cheep.firebase.FirebaseHelper;
 import com.cheep.firebase.FirebaseUtils;
@@ -49,7 +48,6 @@ import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -121,6 +119,9 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
         }
 
         if (getIntent().hasExtra(Utility.Extra.PAYMENT_VIEW_IS_ADDITIONAL_CHARGE)) {
+            if (taskDetailModel != null) {
+                mActivityPaymentDetailBinding.textTitle.setText(taskDetailModel.categoryName);
+            }
             isAdditional = getIntent().getIntExtra(Utility.Extra.PAYMENT_VIEW_IS_ADDITIONAL_CHARGE, 0);
             if (isAdditional == 0) {
                 if (taskDetailModel != null) {

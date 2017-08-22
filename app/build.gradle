@@ -15,7 +15,7 @@ android {
         minSdkVersion 16
         targetSdkVersion 25
         versionCode 23
-        versionName "1.0.56" // PLEASE FIRST MAKE SURE MIN-VERSION IS 16.
+        versionName "1.0.60" // PLEASE FIRST MAKE SURE MIN-VERSION IS 16.
         renderscriptTargetApi 18
         renderscriptSupportModeEnabled true
 
@@ -169,6 +169,7 @@ dependencies {
 
     // firebase database sdk
     compile "com.google.firebase:firebase-database:$playServiceVer"
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
 
     //Twitter
     compile('com.twitter.sdk.android:twitter:2.3.2@aar') {

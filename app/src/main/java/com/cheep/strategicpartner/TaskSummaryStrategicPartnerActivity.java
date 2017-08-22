@@ -128,8 +128,8 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
         mActivityTaskSummaryBinding.textCategoryName.setText(mTaskDetailModel.categoryName != null ? mTaskDetailModel.categoryName : Utility.EMPTY_STRING);
 
         // Set up image
-        Utility.loadImageView(mContext, mActivityTaskSummaryBinding.imgService, mTaskDetailModel.catImage, R.drawable.gradient_black);
-        Utility.loadImageView(mContext, mActivityTaskSummaryBinding.imgService, mTaskDetailModel.catImageExtras.thumb, R.drawable.gradient_black);
+        Utility.loadImageView(mContext, mActivityTaskSummaryBinding.imgService, mTaskDetailModel.catImage);
+        Utility.loadImageView(mContext, mActivityTaskSummaryBinding.imgService, mTaskDetailModel.catImageExtras.thumb);
 
 
         // By Default makethe task completion dialog as gone
@@ -147,6 +147,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
             else
                 mActivityTaskSummaryBinding.tvCounter.setVisibility(View.GONE);
 
+
             Utility.loadImageView(this, mActivityTaskSummaryBinding.imgTaskPicture, mTaskDetailModel.mMediaModelList.get(0).mediaThumbName);
 
         } else
@@ -162,7 +163,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
 
 
         //Bydefault show the chat call icons
-        showChatCallButton(false);
+        showChatCallButton(true);
         // Hide Bottom Action Button
         mActivityTaskSummaryBinding.textBottomAction.setVisibility(View.GONE);
         updateHeightOfLinearLayout(false);
@@ -198,7 +199,8 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
 
             // Profile Pic
 //            Utility.showCircularImdageView(mContext, TAG, mActivityTaskSummaryBinding.imgProfile, mTaskDetailModel.selectedProvider.profileUrl, Utility.DEFAULT_PROFILE_SRC, true);
-            Utility.showCircularImageView(mContext, TAG, mActivityTaskSummaryBinding.imgProfile, mTaskDetailModel.catImageExtras.medium, Utility.DEFAULT_PROFILE_SRC, true);
+//            Utility.showCircularImageView(mContext, TAG, mActivityTaskSummaryBinding.imgProfile, mTaskDetailModel.catImageExtras.medium, Utility.DEFAULT_PROFILE_SRC, true);
+            Utility.showCircularImageViewWithColorBorder(this, TAG,mActivityTaskSummaryBinding.imgProfile,mTaskDetailModel.catImageExtras.medium, R.drawable.icon_profile_img_solid, R.color.grey_dark_color, true);
 
             // Whether Provider Verified or not
 //            if (Utility.BOOLEAN.YES.equalsIgnoreCase(mTaskDetailModel.selectedProvider.isVerified)) {
@@ -212,6 +214,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     Log.i(TAG, "onClick: Call");
+                    Utility.showToast(TaskSummaryStrategicPartnerActivity.this, "Work in progress");
 //                    Utility.openCustomerCareCallDialer(mContext, mTaskDetailModel.selectedProvider.sp_phone_number);
                 }
             });
@@ -219,6 +222,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     Log.i(TAG, "onClick: Chat");
+                    Utility.showToast(TaskSummaryStrategicPartnerActivity.this, "Work in progress");
 //                    TaskChatModel taskChatModel = new TaskChatModel();
 //                    taskChatModel.categoryName = mTaskDetailModel.categoryName;
 //                    taskChatModel.taskDesc = mTaskDetailModel.taskDesc;
