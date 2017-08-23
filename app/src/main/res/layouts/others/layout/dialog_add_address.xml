@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
 
     <RadioGroup
         android:layout_width="match_parent"
@@ -19,11 +19,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:drawableLeft="@drawable/checkbox_address_home_drawable_selector"
-            android:drawablePadding="@dimen/scale_5dp"
-            android:padding="@dimen/scale_5dp"
+            android:drawablePadding="@dimen/radio_button_padding_for_address"
+            android:padding="@dimen/radio_button_padding_for_address"
             android:text="@string/label_home"
             android:textColor="@drawable/checkbox_text_color_selector"
-            android:textSize="@dimen/text_size_12sp" />
+            android:textSize="@dimen/text_size_12sp"/>
 
         <RadioButton
             android:id="@+id/radio_office"
@@ -32,11 +32,11 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/scale_10dp"
             android:drawableLeft="@drawable/checkbox_address_office_drawable_selector"
-            android:drawablePadding="@dimen/scale_5dp"
-            android:padding="@dimen/scale_5dp"
+            android:drawablePadding="@dimen/radio_button_padding_for_address"
+            android:padding="@dimen/radio_button_padding_for_address"
             android:text="@string/label_office"
             android:textColor="@drawable/checkbox_text_color_selector"
-            android:textSize="@dimen/text_size_12sp" />
+            android:textSize="@dimen/text_size_12sp"/>
 
         <RadioButton
             android:id="@+id/radio_other"
@@ -45,11 +45,11 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/scale_10dp"
             android:drawableLeft="@drawable/checkbox_address_other_drawable_selector"
-            android:drawablePadding="@dimen/scale_5dp"
-            android:padding="@dimen/scale_5dp"
+            android:drawablePadding="@dimen/radio_button_padding_for_address"
+            android:padding="@dimen/radio_button_padding_for_address"
             android:text="@string/label_other"
             android:textColor="@drawable/checkbox_text_color_selector"
-            android:textSize="@dimen/text_size_12sp" />
+            android:textSize="@dimen/text_size_12sp"/>
 
 
     </RadioGroup>
@@ -80,7 +80,7 @@
         android:layout_marginLeft="@dimen/scale_22dp"
         android:layout_marginRight="@dimen/scale_22dp"
         android:layout_toRightOf="@+id/profile_layout"
-        android:background="@color/grey_varient_3" />
+        android:background="@color/grey_varient_3"/>
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -108,7 +108,7 @@
                 android:padding="@dimen/scale_10dp"
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_size_16sp"
-                android:theme="@style/EditTextWhiteBG" />
+                android:theme="@style/EditTextWhiteBG"/>
 
             <!-- <com.cheep.custom_view.CFEditTextRegular
                  android:id="@+id/edit_address"
@@ -135,7 +135,7 @@
                 android:layout_marginLeft="@dimen/scale_22dp"
                 android:layout_marginRight="@dimen/scale_22dp"
                 android:layout_toRightOf="@+id/profile_layout"
-                android:background="@color/grey_varient_3" />
+                android:background="@color/grey_varient_3"/>
 
             <com.cheep.custom_view.CFEditTextRegular
                 android:id="@+id/edit_address_initials"
@@ -148,12 +148,12 @@
                 android:gravity="left"
                 android:hint="@string/hint_address_initials"
                 android:lines="1"
+                android:maxLines="1"
                 android:padding="@dimen/scale_10dp"
                 android:singleLine="true"
-                android:maxLines="1"
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_size_15sp"
-                android:theme="@style/EditTextWhiteBG" />
+                android:theme="@style/EditTextWhiteBG"/>
 
             <View
                 android:layout_width="match_parent"
@@ -162,7 +162,7 @@
                 android:layout_marginLeft="@dimen/scale_22dp"
                 android:layout_marginRight="@dimen/scale_22dp"
                 android:layout_toRightOf="@+id/profile_layout"
-                android:background="@color/grey_varient_3" />
+                android:background="@color/grey_varient_3"/>
         </LinearLayout>
 
         <LinearLayout
@@ -182,7 +182,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:src="@drawable/ic_icon_pick_your_location"
-                tools:ignore="ContentDescription" />
+                tools:ignore="ContentDescription"/>
 
             <com.cheep.custom_view.CFTextViewSemiBold
                 android:id="@+id/btn_pick_your_location"
@@ -195,7 +195,7 @@
                 android:text="@string/label_pick_your_location"
                 android:textAllCaps="false"
                 android:textColor="@color/splash_gradient_end"
-                android:textSize="@dimen/text_size_14sp" />
+                android:textSize="@dimen/text_size_14sp"/>
         </LinearLayout>
     </FrameLayout>
 
@@ -204,9 +204,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/scale_22dp"
-        android:text="@string/label_add"
         android:background="@drawable/img_grey_rounded"
+        android:text="@string/label_add"
         android:textAllCaps="false"
         android:textColor="@color/white"
-        android:textSize="@dimen/text_size_16sp" />
+        android:textSize="@dimen/text_size_16sp"/>
 </LinearLayout>

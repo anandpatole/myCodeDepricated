@@ -31,6 +31,7 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -146,7 +147,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
                 }
             }
         }
-        mFragmentStrategicPartnerPhaseTwoBinding.textContinue.setText("Book & Pay " + getString(R.string.ruppe_symbol_x, "" + Utility.getQuotePriceInInteger(String.valueOf(total))));
+        mFragmentStrategicPartnerPhaseTwoBinding.textContinue.setText("Book & Pay " + getString(R.string.ruppe_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf(total))));
         mStrategicPartnerTaskCreationAct.total = String.valueOf(total);
         // Task Description
 
@@ -477,14 +478,28 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
                     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                         if (view.isShown()) {
                             Log.d(TAG, "onDateSet() called with: view = [" + view + "], year = [" + year + "], monthOfYear = [" + monthOfYear + "], dayOfMonth = [" + dayOfMonth + "]");
+                            startDateTimeSuperCalendar = SuperCalendar.getInstance();
                             startDateTimeSuperCalendar.set(Calendar.YEAR, year);
                             startDateTimeSuperCalendar.set(Calendar.MONTH, monthOfYear);
                             startDateTimeSuperCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+
                             txtAnswer.setText(startDateTimeSuperCalendar.format(Utility.DATE_FORMAT_DD_MMM_YYYY));
                             model.answer = startDateTimeSuperCalendar.format(Utility.DATE_FORMAT_DD_MMM_YYYY);
                             txtQueNo.setSelected(true);
                             txtAnswer.setSelected(false);
-                            mStrategicPartnerTaskCreationAct.date = startDateTimeSuperCalendar.format(Utility.DATE_FORMAT_DD_MMM_YYYY);
+
+
+                            for (int i = 0; i < mList.size(); i++) {
+                                QueAnsModel queAnsModel = mList.get(i);
+                                if (queAnsModel.answerType.equalsIgnoreCase(Utility.TEMPLATE_TIME_PICKER)) {
+                                    queAnsModel.answer = "";
+
+                                    TextView txtTime = mFragmentStrategicPartnerPhaseTwoBinding.linMain.findViewWithTag(Utility.TEMPLATE_TIME_PICKER);
+                                    if (txtTime != null)
+                                        txtTime.setText(getString(R.string.label_select_the_time));
+                                }
+                            }
+                            //                            mStrategicPartnerTaskCreationAct.date = startDateTimeSuperCalendar.format(Utility.DATE_FORMAT_DD_MMM_YYYY);
                             setBtnBookAndPayBgState(validateAllQueAndAns().isEmpty());
                         }
                     }
@@ -532,6 +547,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
 
         // answer text view
         final TextView txtAnswer = view.findViewById(R.id.txtQueAnswer);
+        txtAnswer.setTag(Utility.TEMPLATE_TIME_PICKER);
         txtAnswer.setText(getString(R.string.label_select_the_time));
 
         // handle click - time selection
@@ -548,7 +564,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
                             showTimePickerDialog(txtAnswer, model);
                         } else {
                             txtAnswer.setSelected(false);
-                            Utility.showSnackBar(getString(R.string.alert_select_date_and_time), mFragmentStrategicPartnerPhaseTwoBinding.getRoot());
+                            Utility.showSnackBar(getString(R.string.alert_select_the_date), mFragmentStrategicPartnerPhaseTwoBinding.getRoot());
                         }
                         break;
                     }
@@ -589,7 +605,13 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
         ViewGroup ansView = queView.findViewById(R.id.relAnsView);
         View view = LayoutInflater.from(mStrategicPartnerTaskCreationAct).inflate(R.layout.layout_template_answer_edit_text, null, false);
         final EditText edtQueAnswer = view.findViewById(R.id.edtQueAnswer);
-
+        edtQueAnswer.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                edtQueAnswer.setCursorVisible(true);
+                return false;
+            }
+        });
         // text watcher set typed text as answer in models
         edtQueAnswer.addTextChangedListener(new TextWatcher() {
             @Override
@@ -631,15 +653,21 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
 
                             startDateTimeSuperCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
                             startDateTimeSuperCalendar.set(Calendar.MINUTE, minute);
+                            SuperCalendar calAfter3Hours = SuperCalendar.getInstance().getNext3HoursTime();
 
+
+                            if (startDateTimeSuperCalendar.getTimeInMillis() < calAfter3Hours.getTimeInMillis()) {
+                                Utility.showSnackBar(getString(R.string.alert_time_must_be_after_3_hour), mFragmentStrategicPartnerPhaseTwoBinding.getRoot());
+                            } else {
                             String selectedDateTime = startDateTimeSuperCalendar.format(Utility.DATE_FORMAT_HH_MM_AM);
+
 
                             // set selected time to text view
                             textView.setText(selectedDateTime);
                             textView.setSelected(false);
 
                             // this var is for payment summary screen for user task details
-                            mStrategicPartnerTaskCreationAct.time = selectedDateTime;
+//                            mStrategicPartnerTaskCreationAct.time = selectedDateTime;
 
                             // set time zone for start date time
                             startDateTimeSuperCalendar.setTimeZone(SuperCalendar.SuperTimeZone.GMT.GMT);
@@ -652,10 +680,13 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
                             setBtnBookAndPayBgState(validateAllQueAndAns().isEmpty());
 
 
+                            // enable
                             TextView txtLocation = mFragmentStrategicPartnerPhaseTwoBinding.linMain.findViewWithTag(Utility.TEMPLATE_LOCATION);
                             txtLocation.setSelected(true);
                             txtLocation.setBackground(ContextCompat.getDrawable(mStrategicPartnerTaskCreationAct, R.drawable.background_ans_normal));
+
                         }
+                    }
                     }
                 }, c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE), false);
         timePickerDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
@@ -1038,7 +1069,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
 
         // answer view
         ViewGroup ansView = queView.findViewById(R.id.relAnsView);
-        View view = LayoutInflater.from(mStrategicPartnerTaskCreationAct).inflate(R.layout.layout_template_answer_place_picker, null, false);
+        View view = LayoutInflater.from(mStrategicPartnerTaskCreationAct).inflate(R.layout.layout_template_answer_location_picker, null, false);
 
         // answer text view
         final TextView txtAnswer = view.findViewById(R.id.txtQueAnswer);
@@ -1052,8 +1083,25 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
             public void onClick(View view) {
                 if (txtAnswer.isSelected())
                     showAddressDialog(txtAnswer, txtQueNo, model);
-                else
-                    Utility.showSnackBar(getString(R.string.alert_select_date_and_time), mFragmentStrategicPartnerPhaseTwoBinding.getRoot());
+//                else {
+//                    for (int i = 0; i < mList.size(); i++) {
+//                        QueAnsModel queAnsModel = mList.get(i);
+//                        // alert date is not selected
+//                        if (queAnsModel.answerType.equalsIgnoreCase(Utility.TEMPLATE_DATE_PICKER)) {
+//                            if (TextUtils.isEmpty(queAnsModel.answer)) {
+//                                Utility.showSnackBar(getString(R.string.alert_select_the_date), mFragmentStrategicPartnerPhaseTwoBinding.getRoot());
+//                                break;
+//                            }
+//                        }
+//                        // alert time is not selected
+//                        else if (queAnsModel.answerType.equalsIgnoreCase(Utility.TEMPLATE_TIME_PICKER)) {
+//                            if (TextUtils.isEmpty(queAnsModel.answer)) {
+//                                Utility.showSnackBar(getString(R.string.alert_select_the_time), mFragmentStrategicPartnerPhaseTwoBinding.getRoot());
+//                                break;
+//                            }
+//                        }
+//                    }
+//                }
             }
         });
         ansView.addView(view);
@@ -1063,7 +1111,8 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
     private AddressRecyclerViewAdapter addressRecyclerViewAdapter;
     private String addressId = "";
 
-    private void showAddressDialog(final TextView textAns, final TextView textQueNo, final QueAnsModel queAnsModel) {
+    private void showAddressDialog(final TextView textAns, final TextView textQueNo,
+                                   final QueAnsModel queAnsModel) {
         View view = View.inflate(mContext, R.layout.dialog_choose_address_new_task, null);
         boolean shouldOpenAddAddress = fillAddressRecyclerView((RecyclerView) view.findViewById(R.id.recycler_view));
         addressDialog = new BottomAlertDialog(mContext);
@@ -1133,8 +1182,10 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
 
             @Override
             public void onDeleteClicked(AddressModel model, int position) {
-                TEMP_ADDRESS_ID = model.address_id;
-                callDeleteAddressWS(model.address_id);
+//                TEMP_ADDRESS_ID = model.address_id;
+//                callDeleteAddressWS(model.address_id);
+                showAddressDeletionConfirmationDialog(model);
+
             }
 
             @Override
@@ -1149,6 +1200,29 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
 
         //Here we are checking if address is not there then open add address dialog immediately
         return addressList == null || addressList.isEmpty();
+    }
+///////////////////////////// DELETE CONFIRMATION DIALOG//////////////////////////////////////
+
+    private void showAddressDeletionConfirmationDialog(final AddressModel model) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext, R.style.MyAlertDialogStyle);
+        builder.setCancelable(false);
+        builder.setTitle(getString(R.string.label_address_delete_title));
+        builder.setMessage(getString(R.string.label_address_delete_message));
+        builder.setPositiveButton(getString(R.string.label_Ok), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                Log.d(TAG, "onClick() called with: dialogInterface = [" + dialogInterface + "], i = [" + i + "]");
+                TEMP_ADDRESS_ID = model.address_id;
+                callDeleteAddressWS(model.address_id);
+            }
+        });
+        builder.setNegativeButton(getString(R.string.label_cancel), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                Log.d(TAG, "onClick() called with: dialogInterface = [" + dialogInterface + "], i = [" + i + "]");
+            }
+        });
+        builder.show();
     }
 
     private BottomAlertDialog addAddressDialog;
@@ -1439,7 +1513,8 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
      * @param addressType home/office/other
      * @param address     address string
      */
-    private void callUpdateAddressWS(String addressId, String addressType,/* String addressName,*/ String address, String addressInitials, LatLng latLng) {
+    private void callUpdateAddressWS(String addressId, String
+            addressType,/* String addressName,*/ String address, String addressInitials, LatLng latLng) {
         if (!Utility.isConnected(mContext)) {
             Utility.showSnackBar(getString(R.string.no_internet), mFragmentStrategicPartnerPhaseTwoBinding.getRoot());
             return;
@@ -1560,7 +1635,8 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
      * @param addressType home/office/other
      * @param address     address string
      */
-    private void callAddAddressWS(String addressType, /*String addressName,*/ String address, String addressInitials, LatLng latLng) {
+    private void callAddAddressWS(String addressType, /*String addressName,*/ String
+            address, String addressInitials, LatLng latLng) {
         if (!Utility.isConnected(mContext)) {
             Utility.showSnackBar(getString(R.string.no_internet), mFragmentStrategicPartnerPhaseTwoBinding.getRoot());
             return;
@@ -1710,7 +1786,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
             File f = new File(mCurrentPhotoPath);
             Uri contentUri = Uri.fromFile(f);
             mCurrentPhotoPath = Utility.getPath(mStrategicPartnerTaskCreationAct, contentUri);
-            mMediaRecycleAdapter.addImage(new MediaModel(mCurrentPhotoPath, MediaModel.MediaType.IMAGE));
+            mMediaRecycleAdapter.addImage(new MediaModel(mCurrentPhotoPath, MediaModel.MediaType.TYPE_IMAGE));
             checkMediaArraySize();
         }
 
@@ -1718,7 +1794,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
         else if (requestCode == Utility.REQUEST_CODE_GET_FILE_ADD_PROFILE_GALLERY && resultCode == Activity.RESULT_OK) {
             Log.i(TAG, "onActivityResult: " + data.getData().toString());
             mCurrentPhotoPath = Utility.getPath(mStrategicPartnerTaskCreationAct, data.getData());
-            mMediaRecycleAdapter.addImage(new MediaModel(mCurrentPhotoPath, MediaModel.MediaType.IMAGE));
+            mMediaRecycleAdapter.addImage(new MediaModel(mCurrentPhotoPath, MediaModel.MediaType.TYPE_IMAGE));
             checkMediaArraySize();
         }
 
@@ -1726,7 +1802,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
         else if (requestCode == Utility.REQUEST_CODE_VIDEO_CAPTURE && resultCode == RESULT_OK && data != null) {
             mCurrentPhotoPath = data.getStringExtra("path");
             Log.e(TAG, "path >> " + mCurrentPhotoPath);
-            mMediaRecycleAdapter.addImage(new MediaModel(mCurrentPhotoPath, MediaModel.MediaType.VIDEO));
+            mMediaRecycleAdapter.addImage(new MediaModel(mCurrentPhotoPath, MediaModel.MediaType.TYPE_VIDEO));
             checkMediaArraySize();
         }
 
@@ -1741,7 +1817,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
                 } else {
                     try {
                         Log.e(TAG, "path >> " + mCurrentPhotoPath);
-                        mMediaRecycleAdapter.addImage(new MediaModel(mCurrentPhotoPath, MediaModel.MediaType.VIDEO));
+                        mMediaRecycleAdapter.addImage(new MediaModel(mCurrentPhotoPath, MediaModel.MediaType.TYPE_VIDEO));
                         checkMediaArraySize();
                     } catch (Throwable throwable) {
                         throwable.printStackTrace();
@@ -1782,6 +1858,12 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
     }
 
 
+    private void resetTime(TextView txtAnswer, QueAnsModel model, TextView txtQueNo) {
+        SuperCalendar calAfter3Hours = SuperCalendar.getInstance().getNext3HoursTime();
+
+    }
+
+
     /**
      * @return true if all questions are answered
      * or false is something is missing
@@ -1795,13 +1877,13 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
             // alert date is not selected
             if (queAnsModel.answerType.equalsIgnoreCase(Utility.TEMPLATE_DATE_PICKER)) {
                 if (TextUtils.isEmpty(queAnsModel.answer)) {
-                    message = getString(R.string.alert_select_the_date);
+                    message = getString(R.string.alert_select_date_and_time);
                     return message;
                 }
-//                else if (startDateTimeSuperCalendar.getTimeInMillis() < calAfter3Hours.getTimeInMillis()) {
-//                    message = "Date Time must be after 3 hour.";
-//                    return message;
-//                }
+                else if (startDateTimeSuperCalendar.getTimeInMillis() < calAfter3Hours.getTimeInMillis()) {
+                    message = "Date Time must be after 3 hour.";
+                    return message;
+                }
 
             }
 
@@ -1810,10 +1892,11 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
                 if (TextUtils.isEmpty(queAnsModel.answer)) {
                     message = getString(R.string.alert_select_the_time);
                     return message;
-                } else if (startDateTimeSuperCalendar.getTimeInMillis() < calAfter3Hours.getTimeInMillis()) {
-                    message = getString(R.string.alert_time_must_be_after_3_hour);
-                    return message;
                 }
+//                else if (startDateTimeSuperCalendar.getTimeInMillis() < calAfter3Hours.getTimeInMillis()) {
+//                    message = getString(R.string.alert_time_must_be_after_3_hour);
+//                    return message;
+//                }
             }
             // alert multiple choices option is not selected
             else if (queAnsModel.answerType.equalsIgnoreCase(Utility.TEMPLATE_DROPDOWN)) {

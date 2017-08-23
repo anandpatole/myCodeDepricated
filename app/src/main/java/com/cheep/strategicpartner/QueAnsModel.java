@@ -9,7 +9,7 @@ import java.util.ArrayList;
  * Created by Giteeka 31/7/2017
  * Question and Answer Json class model
  */
-class QueAnsModel {
+public class QueAnsModel {
 
 
     @SerializedName("question_id")

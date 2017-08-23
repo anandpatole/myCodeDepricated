@@ -74,7 +74,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import static android.app.Activity.RESULT_OK;
@@ -648,8 +647,9 @@ public class EnterTaskDetailFragment extends BaseFragment {
 
             @Override
             public void onDeleteClicked(AddressModel model, int position) {
-                TEMP_ADDRESS_ID = model.address_id;
-                callDeleteAddressWS(model.address_id);
+//                TEMP_ADDRESS_ID = model.address_id;
+//                callDeleteAddressWS(model.address_id);
+                showAddressDeletionConfirmationDialog(model);
             }
 
             @Override
@@ -667,6 +667,29 @@ public class EnterTaskDetailFragment extends BaseFragment {
             return true;
         }
         return false;
+    }
+///////////////////////////// DELETE CONFIRMATION DIALOG//////////////////////////////////////
+
+    private void showAddressDeletionConfirmationDialog(final AddressModel model) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext, R.style.MyAlertDialogStyle);
+        builder.setCancelable(false);
+        builder.setTitle(getString(R.string.label_address_delete_title));
+        builder.setMessage(getString(R.string.label_address_delete_message));
+        builder.setPositiveButton(getString(R.string.label_Ok), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                Log.d(TAG, "onClick() called with: dialogInterface = [" + dialogInterface + "], i = [" + i + "]");
+                TEMP_ADDRESS_ID = model.address_id;
+                callDeleteAddressWS(model.address_id);
+            }
+        });
+        builder.setNegativeButton(getString(R.string.label_cancel), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                Log.d(TAG, "onClick() called with: dialogInterface = [" + dialogInterface + "], i = [" + i + "]");
+            }
+        });
+        builder.show();
     }
 
     private BottomAlertDialog addAddressDialog;

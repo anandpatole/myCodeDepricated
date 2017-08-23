@@ -9,6 +9,7 @@
         android:orientation="horizontal"
         android:paddingBottom="@dimen/scale_20dp"
         android:paddingLeft="@dimen/scale_30dp"
+        android:paddingRight="@dimen/scale_30dp"
         android:paddingTop="@dimen/scale_20dp">
 
         <ImageView

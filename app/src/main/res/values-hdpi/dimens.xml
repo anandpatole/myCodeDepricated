@@ -11,6 +11,8 @@
     <dimen name="margin_top_payment_step">50dp</dimen>
     <dimen name="margin_top_partner_logo">-40dp</dimen>
     <dimen name="banner_height_strategic_partner">190dp</dimen>
+    <dimen name="tv_max_width_provider_name_task_list">70dp</dimen>
+    <dimen name="radio_button_padding_for_address">2dp</dimen>
 
 
 </resources>

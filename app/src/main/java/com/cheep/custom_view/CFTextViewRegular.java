@@ -31,6 +31,7 @@ public class CFTextViewRegular extends AppCompatTextView {
     private static final String ELLIPSIZE = "... ";
     private static final String MORE = "Read More";
     private static final String LESS = "less";
+    private static final String CATEGORY_MORE = "More";
     private String mFullText;
     private int mMaxLines;
 
@@ -150,6 +151,34 @@ public class CFTextViewRegular extends AppCompatTextView {
         builder.setSpan(new StyleSpan(Typeface.BOLD), builder.length() - LESS.length(), builder.length(), 0);
         setText(builder, BufferType.SPANNABLE);
     }
+
+
+    public void editMore() {
+        ViewTreeObserver vto = getViewTreeObserver();
+        vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                try {
+                    ViewTreeObserver obs = getViewTreeObserver();
+                    obs.removeOnGlobalLayoutListener(this);
+                    setMovementMethod(LinkMovementMethod.getInstance());
+                    Log.i(TAG, "onGlobalLayout: addMore ");
+                    int lineEndIndex = getLayout().getLineEnd(0);
+                    String newText;
+                    String fulltext = getText().toString();
+                    newText = fulltext.substring(0, lineEndIndex - (ELLIPSIZE.length() + CATEGORY_MORE.length() + 1)) + ELLIPSIZE + CATEGORY_MORE;
+                    SpannableStringBuilder builder = new SpannableStringBuilder(newText);
+                    setText(builder, BufferType.SPANNABLE);
+                } catch (Exception e) {
+                    Log.i(TAG, "onGlobalLayout: : " + getText());
+                    Log.e(TAG, "onGlobalLayout: exception : " + e );
+                }
+            }
+        });
+
+
+    }
+
 
 }
 
