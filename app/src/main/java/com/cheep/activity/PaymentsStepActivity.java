@@ -157,7 +157,8 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
         }
         if (providerModel != null) {
 
-            Utility.loadImageView(mContext, mActivityPaymentDetailBinding.imgProfile, providerModel.profileUrl, Utility.DEFAULT_PROFILE_SRC);
+//            Utility.loadImageView(mContext, mActivityPaymentDetailBinding.imgProfile, providerModel.profileUrl, Utility.DEFAULT_PROFILE_SRC);
+            Utility.showCircularImageViewWithColorBorder(mContext, TAG, mActivityPaymentDetailBinding.imgProfile, providerModel.profileUrl, R.drawable.icon_profile_img_solid, R.color.dark_blue_variant_1,true);
             String dateTime = "";
             if (!TextUtils.isEmpty(taskDetailModel.taskStartdate)) {
                 dateTime = Utility.getDate(Long.parseLong(taskDetailModel.taskStartdate), "dd MMMM, HH:mm a");

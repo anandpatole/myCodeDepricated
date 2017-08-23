@@ -454,7 +454,8 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
 
 
                 if (model.selectedProvider != null) {
-                    Utility.showCircularImageView(holder.mRowTaskBinding.imgProfile.getContext(), TAG, holder.mRowTaskBinding.imgProfile, model.selectedProvider.profileUrl, Utility.DEFAULT_PROFILE_SRC);
+                    Utility.showCircularImageViewWithColorBorder(holder.mRowTaskBinding.imgProfile.getContext(), TAG, holder.mRowTaskBinding.imgProfile, model.selectedProvider.profileUrl, R.drawable.icon_profile_img_solid, R.color.grey_dark_color, true);
+
                     holder.mRowTaskBinding.textTaskApprovedQuote.setText(holder.mRowTaskBinding.imgProfile.getContext().getString(R.string.ruppe_symbol_x_space, Utility.getActualPrice(model.taskPaidAmount, model.selectedProvider.quotePrice)));
                     if (model.taskType.equalsIgnoreCase(Utility.TASK_TYPE.STRATEGIC)) {
                         holder.mRowTaskBinding.textProviderName.setText(model.categoryName);

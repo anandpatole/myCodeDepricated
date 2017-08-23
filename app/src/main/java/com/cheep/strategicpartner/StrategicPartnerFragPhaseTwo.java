@@ -659,34 +659,34 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
 //                            if (startDateTimeSuperCalendar.getTimeInMillis() < calAfter3Hours.getTimeInMillis()) {
 //                                Utility.showSnackBar(getString(R.string.alert_time_must_be_after_3_hour), mFragmentStrategicPartnerPhaseTwoBinding.getRoot());
 //                            } else {
-                                String selectedDateTime = startDateTimeSuperCalendar.format(Utility.DATE_FORMAT_HH_MM_AM);
+                            String selectedDateTime = startDateTimeSuperCalendar.format(Utility.DATE_FORMAT_HH_MM_AM);
 
 
-                                // set selected time to text view
-                                textView.setText(selectedDateTime);
-                                textView.setSelected(false);
+                            // set selected time to text view
+                            textView.setText(selectedDateTime);
+                            textView.setSelected(false);
 
-                                // this var is for payment summary screen for user task details
+                            // this var is for payment summary screen for user task details
 //                            mStrategicPartnerTaskCreationAct.time = selectedDateTime;
 
-                                // set time zone for start date time
-                                startDateTimeSuperCalendar.setTimeZone(SuperCalendar.SuperTimeZone.GMT.GMT);
+                            // set time zone for start date time
+                            startDateTimeSuperCalendar.setTimeZone(SuperCalendar.SuperTimeZone.GMT.GMT);
 
-                                // set timestamp as answer for web api
-                                model.answer = String.valueOf(startDateTimeSuperCalendar.getTimeInMillis());
+                            // set timestamp as answer for web api
+                            model.answer = String.valueOf(startDateTimeSuperCalendar.getTimeInMillis());
 
-                                // set background of ques no as answered
-                                mFragmentStrategicPartnerPhaseTwoBinding.linMain.findViewWithTag(model.questionId).setSelected(true);
-                                setBtnBookAndPayBgState(validateAllQueAndAns().isEmpty());
+                            // set background of ques no as answered
+                            mFragmentStrategicPartnerPhaseTwoBinding.linMain.findViewWithTag(model.questionId).setSelected(true);
+                            setBtnBookAndPayBgState(validateAllQueAndAns().isEmpty());
 
 
-                                // enable
-                                TextView txtLocation = mFragmentStrategicPartnerPhaseTwoBinding.linMain.findViewWithTag(Utility.TEMPLATE_LOCATION);
-                                txtLocation.setSelected(true);
-                                txtLocation.setBackground(ContextCompat.getDrawable(mStrategicPartnerTaskCreationAct, R.drawable.background_ans_normal));
+                            // enable
+                            TextView txtLocation = mFragmentStrategicPartnerPhaseTwoBinding.linMain.findViewWithTag(Utility.TEMPLATE_LOCATION);
+                            txtLocation.setSelected(true);
+                            txtLocation.setBackground(ContextCompat.getDrawable(mStrategicPartnerTaskCreationAct, R.drawable.background_ans_normal));
 
-                            }
                         }
+                    }
 //                    }
                 }, c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE), false);
         timePickerDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
@@ -1182,8 +1182,10 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
 
             @Override
             public void onDeleteClicked(AddressModel model, int position) {
-                TEMP_ADDRESS_ID = model.address_id;
-                callDeleteAddressWS(model.address_id);
+//                TEMP_ADDRESS_ID = model.address_id;
+//                callDeleteAddressWS(model.address_id);
+                showAddressDeletionConfirmationDialog(model);
+
             }
 
             @Override
@@ -1198,6 +1200,29 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
 
         //Here we are checking if address is not there then open add address dialog immediately
         return addressList == null || addressList.isEmpty();
+    }
+///////////////////////////// DELETE CONFIRMATION DIALOG//////////////////////////////////////
+
+    private void showAddressDeletionConfirmationDialog(final AddressModel model) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext, R.style.MyAlertDialogStyle);
+        builder.setCancelable(false);
+        builder.setTitle(getString(R.string.label_address_delete_title));
+        builder.setMessage(getString(R.string.label_address_delete_message));
+        builder.setPositiveButton(getString(R.string.label_Ok), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                Log.d(TAG, "onClick() called with: dialogInterface = [" + dialogInterface + "], i = [" + i + "]");
+                TEMP_ADDRESS_ID = model.address_id;
+                callDeleteAddressWS(model.address_id);
+            }
+        });
+        builder.setNegativeButton(getString(R.string.label_cancel), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                Log.d(TAG, "onClick() called with: dialogInterface = [" + dialogInterface + "], i = [" + i + "]");
+            }
+        });
+        builder.show();
     }
 
     private BottomAlertDialog addAddressDialog;
