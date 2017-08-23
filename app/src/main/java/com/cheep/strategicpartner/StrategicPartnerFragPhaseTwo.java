@@ -656,9 +656,9 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
                             SuperCalendar calAfter3Hours = SuperCalendar.getInstance().getNext3HoursTime();
 
 
-//                            if (startDateTimeSuperCalendar.getTimeInMillis() < calAfter3Hours.getTimeInMillis()) {
-//                                Utility.showSnackBar(getString(R.string.alert_time_must_be_after_3_hour), mFragmentStrategicPartnerPhaseTwoBinding.getRoot());
-//                            } else {
+                            if (startDateTimeSuperCalendar.getTimeInMillis() < calAfter3Hours.getTimeInMillis()) {
+                                Utility.showSnackBar(getString(R.string.alert_time_must_be_after_3_hour), mFragmentStrategicPartnerPhaseTwoBinding.getRoot());
+                            } else {
                             String selectedDateTime = startDateTimeSuperCalendar.format(Utility.DATE_FORMAT_HH_MM_AM);
 
 
@@ -687,7 +687,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
 
                         }
                     }
-//                    }
+                    }
                 }, c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE), false);
         timePickerDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
@@ -1880,10 +1880,10 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
                     message = getString(R.string.alert_select_date_and_time);
                     return message;
                 }
-//                else if (startDateTimeSuperCalendar.getTimeInMillis() < calAfter3Hours.getTimeInMillis()) {
-//                    message = "Date Time must be after 3 hour.";
-//                    return message;
-//                }
+                else if (startDateTimeSuperCalendar.getTimeInMillis() < calAfter3Hours.getTimeInMillis()) {
+                    message = "Date Time must be after 3 hour.";
+                    return message;
+                }
 
             }
 
