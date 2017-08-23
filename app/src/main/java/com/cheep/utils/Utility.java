@@ -1115,11 +1115,13 @@ public class Utility {
         public static final String ADDITIONAL_PAYMENT_REQUESTED = "additional_payment_requested";// if Additional Payment is Requested by SP
 
     }
+
     public static final class TASK_TYPE {
-        public static final String STRATEGIC= "strategic"; //1->if task created and only quotes is there, 2-> task created and user paid to sp, but sp not started the task yet.
+        public static final String STRATEGIC = "strategic"; //1->if task created and only quotes is there, 2-> task created and user paid to sp, but sp not started the task yet.
         public static final String NORMAL = "normal";//if user payed and task is in progress
     }
-        public static String urlEncodeUTF8(String s) {
+
+    public static String urlEncodeUTF8(String s) {
         try {
             return URLEncoder.encode(s, "UTF-8");
         } catch (UnsupportedEncodingException e) {
