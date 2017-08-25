@@ -442,11 +442,40 @@
 
                         </RelativeLayout>
 
+                        <LinearLayout
+                            android:id="@+id/ln_promo_code_disclaimer"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="@dimen/scale_8dp"
+                            android:orientation="horizontal"
+                            android:paddingLeft="@dimen/scale_10dp"
+                            android:paddingRight="@dimen/scale_10dp"
+                            android:visibility="gone">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:src="@drawable/ic_shield"
+                                tools:ignore="ContentDescription"/>
+
+                            <com.cheep.custom_view.CFTextViewRegular
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginLeft="@dimen/scale_8dp"
+                                android:gravity="left"
+                                android:lineSpacingExtra="@dimen/scale_2dp"
+                                android:text="@string/disclaimer_promo_code"
+                                android:textColor="@color/task_desclaimer"
+                                android:textSize="@dimen/text_size_12sp"/>
+                        </LinearLayout>
+
                         <View
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/scale_1dp"
                             android:layout_above="@+id/action_layout"
-                            android:layout_marginTop="@dimen/scale_5dp"
+                            android:layout_marginTop="@dimen/scale_10dp"
                             android:layout_toRightOf="@+id/profile_layout"
                             android:background="@color/black"/>
 

@@ -378,15 +378,9 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
                     }
                 });
                 //So swipe adapter (lib method) close any previous opened swipe menu when current swipe is done.
-
-                holder.mUpcomingTaskBinding.swipeLayout.setSwipeEnabled(!model.taskType.equalsIgnoreCase(Utility.TASK_TYPE.STRATEGIC));
+                holder.mUpcomingTaskBinding.swipeLayout.setSwipeEnabled(true);
                 mItemManger.bindView(holder.itemView, position);
 
-//            if (holder.mUpcomingTaskBinding.tvVerified.getVisibility() == View.GONE) {
-//                holder.mUpcomingTaskBinding.tvProviderName.setMaxWidth(((View)(holder.mUpcomingTaskBinding.tvProviderName.getParent())).getWidth());
-//            } else {
-//                holder.mUpcomingTaskBinding.tvProviderName.setMaxWidth(context.getResources().getDimensionPixelOffset(R.dimen.tv_max_width_provider_name_task_list));
-//            }
                 break;
             case VIEW_TYPE_GROUP: {
                 superStartDateTimeCalendar.setTimeZone(SuperCalendar.SuperTimeZone.GMT.GMT);

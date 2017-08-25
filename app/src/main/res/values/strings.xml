@@ -459,5 +459,6 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_cancel">Cancel</string>
     <string name="label_address_delete_title">CHEEP</string>
     <string name="label_address_delete_message">Are you sure you want to delete this address?</string>
+    <string name="disclaimer_promo_code">The Promo Code discount has been levied on pre tax amount.</string>
 
 </resources>

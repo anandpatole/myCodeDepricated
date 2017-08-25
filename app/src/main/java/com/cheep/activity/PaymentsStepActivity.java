@@ -133,6 +133,8 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
                 }
             }
             mActivityPaymentDetailBinding.textpromocodelabel.setEnabled(true);
+            mActivityPaymentDetailBinding.lnPromoCodeDisclaimer.setVisibility(View.GONE);
+
         } else if (getIntent().hasExtra(Utility.Extra.PAYMENT_VIEW)) {
             boolean viewonly = getIntent().getBooleanExtra(Utility.Extra.PAYMENT_VIEW, false);
             if (viewonly) {
@@ -158,7 +160,7 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
         if (providerModel != null) {
 
 //            Utility.loadImageView(mContext, mActivityPaymentDetailBinding.imgProfile, providerModel.profileUrl, Utility.DEFAULT_PROFILE_SRC);
-            Utility.showCircularImageViewWithColorBorder(mContext, TAG, mActivityPaymentDetailBinding.imgProfile, providerModel.profileUrl, R.drawable.icon_profile_img_solid, R.color.dark_blue_variant_1,true);
+            Utility.showCircularImageViewWithColorBorder(mContext, TAG, mActivityPaymentDetailBinding.imgProfile, providerModel.profileUrl, R.drawable.icon_profile_img_solid, R.color.dark_blue_variant_1, true);
             String dateTime = "";
             if (!TextUtils.isEmpty(taskDetailModel.taskStartdate)) {
                 dateTime = Utility.getDate(Long.parseLong(taskDetailModel.taskStartdate), "dd MMMM, HH:mm a");
@@ -194,6 +196,7 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
             @Override
             public void onClick(View view) {
                 mActivityPaymentDetailBinding.textpromocodelabel.setEnabled(true);
+
                 cheepCode = null;
                 if (TextUtils.isEmpty(actualQuotePrice) == false) {
                     providerModel.quotePrice = actualQuotePrice;
@@ -213,6 +216,7 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
     public void resetPromocodeValue() {
         mActivityPaymentDetailBinding.textpromocodelabel.setTextColor(ContextCompat.getColor(this, R.color.splash_gradient_end));
         mActivityPaymentDetailBinding.textpromocodelabel.setText(getResources().getString(R.string.label_enter_promocode));
+        mActivityPaymentDetailBinding.lnPromoCodeDisclaimer.setVisibility(View.GONE);
         if (!TextUtils.isEmpty(providerModel.quotePrice)) {
             double taskPaidAmount = getQuotePriceInInteger(providerModel.quotePrice);
             double additionalCharges = 0;
@@ -240,7 +244,7 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
             mActivityPaymentDetailBinding.txtsubtotal.setText(getString(R.string.ruppe_symbol_x, "" + subTotal));
             mActivityPaymentDetailBinding.txttotal.setText(getString(R.string.ruppe_symbol_x, "" + totalPayment));
             mActivityPaymentDetailBinding.textPay.setText(getString(R.string.label_pay_fee_v1, "" + totalPayment));
-            mActivityPaymentDetailBinding.txtpromocode.setText(getString(R.string.ruppe_symbol_x, "" + promocodeValue));
+            mActivityPaymentDetailBinding.txtpromocode.setText(getString(R.string.ruppe_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf(promocodeValue))));
 
             mActivityPaymentDetailBinding.textpromocodelabel.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -284,7 +288,8 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
             mActivityPaymentDetailBinding.txtsubtotal.setText(getString(R.string.ruppe_symbol_x, "" + subTotal));
             mActivityPaymentDetailBinding.txttotal.setText(getString(R.string.ruppe_symbol_x, "" + totalPayment));
             mActivityPaymentDetailBinding.textPay.setText(getString(R.string.label_pay_fee_v1, "" + totalPayment));
-            mActivityPaymentDetailBinding.txtpromocode.setText(getString(R.string.ruppe_symbol_x, "" + promocodeValue));
+            mActivityPaymentDetailBinding.txtpromocode.setText(getString(R.string.ruppe_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf(promocodeValue))));
+            mActivityPaymentDetailBinding.lnPromoCodeDisclaimer.setVisibility(promocodeValue == 0 ? View.GONE : View.VISIBLE);
 
             mActivityPaymentDetailBinding.textpromocodelabel.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -453,6 +458,7 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
                             String discount = jsonObject.optString(NetworkUtility.TAGS.DISCOUNT_AMOUNT);
                             String payable = jsonObject.optString(NetworkUtility.TAGS.PAYABLE_AMOUNT);
                             updatePaymentBtn(total, discount, payable);
+                            mActivityPaymentDetailBinding.lnPromoCodeDisclaimer.setVisibility(View.VISIBLE);
 
                         }
 

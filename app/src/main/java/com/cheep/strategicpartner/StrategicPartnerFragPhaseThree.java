@@ -104,6 +104,16 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
         setListener();
     }
 
+    @Override
+    public void initiateUI() {
+        Log.d(TAG, "initiateUI() called");
+
+        mFragmentStrategicPartnerPhaseThreeBinding.recycleSelectedService.setLayoutManager(new LinearLayoutManager(mStrategicPartnerTaskCreationAct));
+        mFragmentStrategicPartnerPhaseThreeBinding.recycleSelectedService.setNestedScrollingEnabled(false);
+        if (mStrategicPartnerTaskCreationAct.getSelectedSubService() != null)
+            mFragmentStrategicPartnerPhaseThreeBinding.recycleSelectedService.setAdapter(new PaymentSummaryAdapter(mStrategicPartnerTaskCreationAct.getSelectedSubService()));
+    }
+
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
@@ -179,6 +189,7 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
         // Enter promo code UI
         mFragmentStrategicPartnerPhaseThreeBinding.textpromocodelabel.setTextColor(ContextCompat.getColor(mStrategicPartnerTaskCreationAct, R.color.splash_gradient_end));
         mFragmentStrategicPartnerPhaseThreeBinding.textpromocodelabel.setText(getResources().getString(R.string.label_enter_promocode));
+        mFragmentStrategicPartnerPhaseThreeBinding.lnPromoCodeDisclaimer.setVisibility(View.GONE);
 
         mFragmentStrategicPartnerPhaseThreeBinding.textpromocodelabel.setEnabled(true);
         mFragmentStrategicPartnerPhaseThreeBinding.textpromocodelabel.setOnClickListener(new View.OnClickListener() {
@@ -215,6 +226,7 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
         mFragmentStrategicPartnerPhaseThreeBinding.txttotal.setText(getString(R.string.ruppe_symbol_x, "" + Utility.getQuotePriceFormatter(mStrategicPartnerTaskCreationAct.total)));
         mFragmentStrategicPartnerPhaseThreeBinding.textPay.setText(getString(R.string.label_pay_fee_v1, "" + Utility.getQuotePriceFormatter(mStrategicPartnerTaskCreationAct.total)));
         mFragmentStrategicPartnerPhaseThreeBinding.txtpromocode.setText(getString(R.string.ruppe_symbol_x, "" + Utility.getQuotePriceFormatter("0")));
+        mFragmentStrategicPartnerPhaseThreeBinding.lnPromoCodeDisclaimer.setVisibility(View.GONE);
     }
 
 
@@ -293,6 +305,7 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
 
                             String discount = jsonObject.optString(NetworkUtility.TAGS.DISCOUNT_AMOUNT);
                             String payable = jsonObject.optString(NetworkUtility.TAGS.PAYABLE_AMOUNT);
+                            mFragmentStrategicPartnerPhaseThreeBinding.lnPromoCodeDisclaimer.setVisibility(View.VISIBLE);
                             updatePaymentDetails(discount, payable);
 
                         }
@@ -350,16 +363,6 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
             text.setSpan(new StyleSpan(Typeface.BOLD), 0, string.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
         return text;
-    }
-
-    @Override
-    public void initiateUI() {
-        Log.d(TAG, "initiateUI() called");
-
-        mFragmentStrategicPartnerPhaseThreeBinding.recycleSelectedService.setLayoutManager(new LinearLayoutManager(mStrategicPartnerTaskCreationAct));
-        mFragmentStrategicPartnerPhaseThreeBinding.recycleSelectedService.setNestedScrollingEnabled(false);
-        if (mStrategicPartnerTaskCreationAct.getSelectedSubService() != null)
-            mFragmentStrategicPartnerPhaseThreeBinding.recycleSelectedService.setAdapter(new PaymentSummaryAdapter(mStrategicPartnerTaskCreationAct.getSelectedSubService()));
     }
 
     @Override

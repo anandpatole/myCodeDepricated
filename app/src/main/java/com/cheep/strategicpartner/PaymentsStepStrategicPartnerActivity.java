@@ -123,6 +123,7 @@ public class PaymentsStepStrategicPartnerActivity extends BaseAppCompatActivity 
             mActivityPaymentDetailBinding.txtsubtotal.setText(getString(R.string.ruppe_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf(taskPaidAmount))));
             mActivityPaymentDetailBinding.txttotal.setText(getString(R.string.ruppe_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf(totalPayment))));
             mActivityPaymentDetailBinding.txtpromocode.setText(getString(R.string.ruppe_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf((promocodeValue)))));
+            mActivityPaymentDetailBinding.lnPromoCodeDisclaimer.setVisibility(promocodeValue == 0 ? View.GONE : View.VISIBLE);
         }
         mActivityPaymentDetailBinding.textLabelTotalPaid.setText(getString(R.string.label_total_paid));
         mActivityPaymentDetailBinding.textpromocodelabel.setEnabled(false);
