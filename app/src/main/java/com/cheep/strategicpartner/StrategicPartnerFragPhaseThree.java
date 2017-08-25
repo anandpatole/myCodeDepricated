@@ -53,7 +53,6 @@ import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -686,6 +685,13 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
         String task_desc = getTaskDescription(mList);
 
         String question_detail = getQuestionAnswerDetailsJsonString(mList).toString();
+        String media_file = "";
+        for (QueAnsModel model : mList)
+            if (model.answerType.equalsIgnoreCase(Utility.TEMPLATE_UPLOAD)) {
+                media_file = getSelectedMediaJsonString(model.medialList).toString();
+                break;
+            }
+
         Map<String, String> mParams = new HashMap<>();
         mParams.put(NetworkUtility.TAGS.ADDRESS_ID, addressId);
         mParams.put(NetworkUtility.TAGS.CAT_ID, mStrategicPartnerTaskCreationAct.mBannerImageModel.cat_id);
@@ -698,7 +704,16 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
         mParams.put(NetworkUtility.TAGS.PAYABLE_AMOUNT, TextUtils.isEmpty(cheepCode) ? mStrategicPartnerTaskCreationAct.total : payableAmount);
         mParams.put(NetworkUtility.TAGS.TRANSACTION_ID, transaction_Id);
         mParams.put(NetworkUtility.TAGS.TASK_DESC, task_desc);
+        // new amazon s3 uploaded file names
+        mParams.put(NetworkUtility.TAGS.MEDIA_FILE, media_file);
 
+        Log.e(TAG, "subCategoryDetail = [ " + subCategoryDetail + " ] ");
+        Log.e(TAG, "question_detail = [ " + question_detail + " ] ");
+        Log.e(TAG, "start_datetime = [ " + start_datetime + " ] ");
+        Log.e(TAG, "total = [ " + mStrategicPartnerTaskCreationAct.total + " ] ");
+        Log.e(TAG, "task_desc= [ " + task_desc + " ] ");
+        Log.e(TAG, "media_file= [ " + media_file + " ] ");
+        Log.e(TAG, "cat_id = [ " + mStrategicPartnerTaskCreationAct.mBannerImageModel.cat_id + " ] ");
 
         // Create Params for AppsFlyer event track
         mTaskCreationParams = new HashMap<>();
@@ -711,33 +726,27 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
         mTaskCreationParams.put(NetworkUtility.TAGS.CHEEPCODE, cheepCode);
         mTaskCreationParams.put(NetworkUtility.TAGS.PAYABLE_AMOUNT, payableAmount);
         mTaskCreationParams.put(NetworkUtility.TAGS.TRANSACTION_ID, transaction_Id);
+        mTaskCreationParams.put(NetworkUtility.TAGS.MEDIA_FILE, media_file);
 
         // Add Params
-        HashMap<String, File> mFileParams = new HashMap<>();
-        // TODO : This needs to be improved after words.
+//        HashMap<String, File> mFileParams = new HashMap<>();
 
-        ArrayList<MediaModel> mFileList = null;
-        for (QueAnsModel model : mList)
-            if (model.answerType.equalsIgnoreCase(Utility.TEMPLATE_UPLOAD)) {
-                mFileList = model.medialList;
-                break;
-            }
 
-        if (mFileList != null && !mFileList.isEmpty())
-            for (int i = 0; i < mFileList.size(); i++) {
-                MediaModel mediaModel = mFileList.get(i);
-                if (!TextUtils.isEmpty(mediaModel.mediaName) && new File(mediaModel.mediaName).exists()) {
-                    Log.e(TAG, "callTaskCreationWebServiceForStratgicPartner: path " + mediaModel.mediaName + "");
-                    mFileParams.put("media_file[" + i + "]", new File(mediaModel.mediaName));
-                }
-            }
+//        if (mFileList != null && !mFileList.isEmpty())
+//            for (int i = 0; i < mFileList.size(); i++) {
+//                MediaModel mediaModel = mFileList.get(i);
+//                if (!TextUtils.isEmpty(mediaModel.mediaName) && new File(mediaModel.mediaName).exists()) {
+//                    Log.e(TAG, "callTaskCreationWebServiceForStratgicPartner: path " + mediaModel.mediaName + "");
+//                    mFileParams.put("media_file[" + i + "]", new File(mediaModel.mediaName));
+//                }
+//            }
 
         VolleyNetworkRequest mVolleyNetworkRequest = new VolleyNetworkRequest(NetworkUtility.WS.TASK_CREATE_STRATEGIC_PARTNER
                 , mCallCreateTaskWSErrorListener
                 , mCallCreateTaskWSResponseListener
                 , mHeaderParams
                 , mParams
-                , mFileParams);
+                , null);
         Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest);
     }
 
@@ -928,6 +937,20 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
             }
         }
         return selectedServiceArray;
+    }
+
+    //    media name will be with extension
+//    [{"media_name" : "5","media_type" : "288"},{"media_name" : "5","media_type" : "288"}]
+    private JsonArray getSelectedMediaJsonString(ArrayList<MediaModel> list) {
+        JsonArray selectedMediaArray = new JsonArray();
+        for (int i = 0; i < list.size(); i++) {
+            MediaModel model = list.get(i);
+            JsonObject obj = new JsonObject();
+            obj.addProperty("media_name", AmazonUtils.getFileNameWithExt(model.mediaName, true));
+            obj.addProperty("media_type", model.mediaType);
+            selectedMediaArray.add(obj);
+        }
+        return selectedMediaArray;
     }
 
     /***********************************************************************************************

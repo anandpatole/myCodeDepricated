@@ -41,7 +41,7 @@ public class StrategicPartnerTaskCreationAct extends BaseAppCompatActivity {
     private ArrayList<QueAnsModel> mQuestionsList;
     private ArrayList<StrategicPartnerServiceModel> mSelectedServicesList;
     public boolean isSingleSelection = false;
-//    public String date = "";
+    //    public String date = "";
 //    public String time = "";
     public String address = "";
     public String total = "";
@@ -72,7 +72,7 @@ public class StrategicPartnerTaskCreationAct extends BaseAppCompatActivity {
             mBannerImageModel = (BannerImageModel) Utility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA), BannerImageModel.class);
             if (mBannerImageModel != null) {
                 // Load PRO image
-                Utility.showCircularImageViewWithColorBorder(mContext, TAG, mActivityTaskCreationForStrategicPartnerBinding.imgLogo, mBannerImageModel.imgCatImageUrl, R.drawable.icon_profile_img_solid,  R.color.dark_blue_variant_1,true);
+                Utility.showCircularImageViewWithColorBorder(mContext, TAG, mActivityTaskCreationForStrategicPartnerBinding.imgLogo, mBannerImageModel.imgCatImageUrl, R.drawable.icon_profile_img_solid, R.color.dark_blue_variant_1, true);
                 Utility.loadImageView(mContext, mActivityTaskCreationForStrategicPartnerBinding.imgService, mBannerImageModel.bannerImage, R.drawable.gradient_black);
                 isSingleSelection = mBannerImageModel.minimum_selection.equalsIgnoreCase("1");
                 mActivityTaskCreationForStrategicPartnerBinding.textTitle.setText(mBannerImageModel.name != null ? mBannerImageModel.name : Utility.EMPTY_STRING);
@@ -303,6 +303,23 @@ public class StrategicPartnerTaskCreationAct extends BaseAppCompatActivity {
         if (mActivityTaskCreationForStrategicPartnerBinding.viewpager.getCurrentItem() == 2) {
             gotoStep(STAGE_2);
             return;
+        }
+
+        if (getQuestionsList() != null) {
+            for (QueAnsModel model : getQuestionsList())
+                if (model.answerType.equalsIgnoreCase(Utility.TEMPLATE_UPLOAD)) {
+                    ArrayList<MediaModel> mediaModelArrayList = model.medialList;
+                    if (mediaModelArrayList != null && !mediaModelArrayList.isEmpty()) {
+                        for (MediaModel mediaModel : mediaModelArrayList) {
+                            Log.d(TAG, "onBackPressed() delete");
+                            Log.d(TAG, "onBackPressed() "+mediaModel.mediaName);
+                            Log.d(TAG, "onBackPressed() "+mediaModel.mediaThumbName);
+                            Log.d(TAG, "onBackPressed() ============");
+                            AmazonUtils.deleteFiles(this, mediaModel.mediaName, mediaModel.mediaThumbName);
+                        }
+                        break;
+                    }
+                }
         }
         super.onBackPressed();
     }

@@ -3,6 +3,7 @@ package com.cheep.strategicpartner;
 import android.Manifest;
 import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.content.ClipData;
 import android.content.Context;
@@ -14,6 +15,7 @@ import android.databinding.DataBindingUtil;
 import android.graphics.drawable.BitmapDrawable;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -46,6 +48,9 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.cheep.BootstrapConstant;
@@ -237,6 +242,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
                 switch (statusCode) {
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
                         // inflate all question ui
+                        mStrategicPartnerTaskCreationAct.setQuestionsList(mList);
                         inflateUI(jsonObject.optString(NetworkUtility.TAGS.DATA));
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
@@ -301,6 +307,8 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
         // top layout
         // get question answer list
         mList = Utility.getObjectListFromJsonString(response, QueAnsModel[].class);        // load list
+
+        mStrategicPartnerTaskCreationAct.setQuestionsList(mList);
         for (QueAnsModel model : mList) {
             // image/video selection UI
             if (model.answerType.equalsIgnoreCase(Utility.TEMPLATE_UPLOAD)) {
@@ -659,34 +667,34 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
                             if (startDateTimeSuperCalendar.getTimeInMillis() < calAfter3Hours.getTimeInMillis()) {
                                 Utility.showSnackBar(getString(R.string.alert_time_must_be_after_3_hour), mFragmentStrategicPartnerPhaseTwoBinding.getRoot());
                             } else {
-                            String selectedDateTime = startDateTimeSuperCalendar.format(Utility.DATE_FORMAT_HH_MM_AM);
+                                String selectedDateTime = startDateTimeSuperCalendar.format(Utility.DATE_FORMAT_HH_MM_AM);
 
 
-                            // set selected time to text view
-                            textView.setText(selectedDateTime);
-                            textView.setSelected(false);
+                                // set selected time to text view
+                                textView.setText(selectedDateTime);
+                                textView.setSelected(false);
 
-                            // this var is for payment summary screen for user task details
+                                // this var is for payment summary screen for user task details
 //                            mStrategicPartnerTaskCreationAct.time = selectedDateTime;
 
-                            // set time zone for start date time
-                            startDateTimeSuperCalendar.setTimeZone(SuperCalendar.SuperTimeZone.GMT.GMT);
+                                // set time zone for start date time
+                                startDateTimeSuperCalendar.setTimeZone(SuperCalendar.SuperTimeZone.GMT.GMT);
 
-                            // set timestamp as answer for web api
-                            model.answer = String.valueOf(startDateTimeSuperCalendar.getTimeInMillis());
+                                // set timestamp as answer for web api
+                                model.answer = String.valueOf(startDateTimeSuperCalendar.getTimeInMillis());
 
-                            // set background of ques no as answered
-                            mFragmentStrategicPartnerPhaseTwoBinding.linMain.findViewWithTag(model.questionId).setSelected(true);
-                            setBtnBookAndPayBgState(validateAllQueAndAns().isEmpty());
+                                // set background of ques no as answered
+                                mFragmentStrategicPartnerPhaseTwoBinding.linMain.findViewWithTag(model.questionId).setSelected(true);
+                                setBtnBookAndPayBgState(validateAllQueAndAns().isEmpty());
 
 
-                            // enable
-                            TextView txtLocation = mFragmentStrategicPartnerPhaseTwoBinding.linMain.findViewWithTag(Utility.TEMPLATE_LOCATION);
-                            txtLocation.setSelected(true);
-                            txtLocation.setBackground(ContextCompat.getDrawable(mStrategicPartnerTaskCreationAct, R.drawable.background_ans_normal));
+                                // enable
+                                TextView txtLocation = mFragmentStrategicPartnerPhaseTwoBinding.linMain.findViewWithTag(Utility.TEMPLATE_LOCATION);
+                                txtLocation.setSelected(true);
+                                txtLocation.setBackground(ContextCompat.getDrawable(mStrategicPartnerTaskCreationAct, R.drawable.background_ans_normal));
 
+                            }
                         }
-                    }
                     }
                 }, c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE), false);
         timePickerDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
@@ -759,6 +767,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
 
             }
         });
+
         recycleImg.setAdapter(mMediaRecycleAdapter);
 
         ansView.addView(view);
@@ -1786,24 +1795,27 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
             File f = new File(mCurrentPhotoPath);
             Uri contentUri = Uri.fromFile(f);
             mCurrentPhotoPath = Utility.getPath(mStrategicPartnerTaskCreationAct, contentUri);
-            mMediaRecycleAdapter.addImage(new MediaModel(mCurrentPhotoPath, MediaModel.MediaType.TYPE_IMAGE));
-            checkMediaArraySize();
+            uploadFile(mCurrentPhotoPath, MediaModel.MediaType.TYPE_IMAGE);
+//            mMediaRecycleAdapter.addImage(new MediaModel(mCurrentPhotoPath, MediaModel.MediaType.TYPE_IMAGE));
+//            checkMediaArraySize();
         }
 
         // image chosen from gallery result
         else if (requestCode == Utility.REQUEST_CODE_GET_FILE_ADD_PROFILE_GALLERY && resultCode == Activity.RESULT_OK) {
             Log.i(TAG, "onActivityResult: " + data.getData().toString());
             mCurrentPhotoPath = Utility.getPath(mStrategicPartnerTaskCreationAct, data.getData());
-            mMediaRecycleAdapter.addImage(new MediaModel(mCurrentPhotoPath, MediaModel.MediaType.TYPE_IMAGE));
-            checkMediaArraySize();
+            uploadFile(mCurrentPhotoPath, MediaModel.MediaType.TYPE_IMAGE);
+//            mMediaRecycleAdapter.addImage(new MediaModel(mCurrentPhotoPath, MediaModel.MediaType.TYPE_IMAGE));
+//            checkMediaArraySize();
         }
 
         // video captured from camera result
         else if (requestCode == Utility.REQUEST_CODE_VIDEO_CAPTURE && resultCode == RESULT_OK && data != null) {
             mCurrentPhotoPath = data.getStringExtra("path");
             Log.e(TAG, "path >> " + mCurrentPhotoPath);
-            mMediaRecycleAdapter.addImage(new MediaModel(mCurrentPhotoPath, MediaModel.MediaType.TYPE_VIDEO));
-            checkMediaArraySize();
+            uploadFile(mCurrentPhotoPath, MediaModel.MediaType.TYPE_VIDEO);
+//            mMediaRecycleAdapter.addImage(new MediaModel(mCurrentPhotoPath, MediaModel.MediaType.TYPE_VIDEO));
+//            checkMediaArraySize();
         }
 
         // video chosen from gallery result
@@ -1817,8 +1829,9 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
                 } else {
                     try {
                         Log.e(TAG, "path >> " + mCurrentPhotoPath);
-                        mMediaRecycleAdapter.addImage(new MediaModel(mCurrentPhotoPath, MediaModel.MediaType.TYPE_VIDEO));
-                        checkMediaArraySize();
+//                        mMediaRecycleAdapter.addImage(new MediaModel(mCurrentPhotoPath, MediaModel.MediaType.TYPE_VIDEO));
+                        uploadFile(mCurrentPhotoPath, MediaModel.MediaType.TYPE_VIDEO);
+//                        checkMediaArraySize();
                     } catch (Throwable throwable) {
                         throwable.printStackTrace();
                     }
@@ -1879,8 +1892,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
                 if (TextUtils.isEmpty(queAnsModel.answer)) {
                     message = getString(R.string.alert_select_date_and_time);
                     return message;
-                }
-                else if (startDateTimeSuperCalendar.getTimeInMillis() < calAfter3Hours.getTimeInMillis()) {
+                } else if (startDateTimeSuperCalendar.getTimeInMillis() < calAfter3Hours.getTimeInMillis()) {
                     message = "Date Time must be after 3 hour.";
                     return message;
                 }
@@ -1922,4 +1934,109 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
                 setBackgroundColor(ContextCompat.getColor(mStrategicPartnerTaskCreationAct, isEnable ? R.color.dark_blue_variant_1 : R.color.grey_varient_12));
     }
 
+
+    ///////////////////////// ********* Amazon code start here*********** //////////////////////////////////
+
+    private void uploadFile(final String path, final String type) {
+        if (path.equalsIgnoreCase(""))
+            return;
+
+        new AsyncTask<Void, Void, Void>() {
+
+            public String s3PathThumb;
+            public String s3pathOriginal;
+            public String localFilePath;
+            ProgressDialog mProgressDialog = null;
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                mProgressDialog = new ProgressDialog(mStrategicPartnerTaskCreationAct);
+                mProgressDialog.setCancelable(false);
+                mProgressDialog.setCanceledOnTouchOutside(false);
+                mProgressDialog.setMessage("Uploading media");
+                mProgressDialog.show();
+            }
+
+            @Override
+            protected Void doInBackground(Void... voids) {
+                File fileOriginal = new File(path);
+                String thumbPath = "";
+                if (type.equalsIgnoreCase(MediaModel.MediaType.TYPE_VIDEO))
+                    thumbPath = AmazonUtils.getVideoThumbPath(mStrategicPartnerTaskCreationAct, path);
+                else
+                    thumbPath = AmazonUtils.getImageThumbPath(mStrategicPartnerTaskCreationAct, path);
+                final File fileThumb = new File(thumbPath);
+                String name;
+                String thumbName;
+                String timeStamp = System.currentTimeMillis() + "";
+                if (type.equalsIgnoreCase(MediaModel.MediaType.TYPE_IMAGE)) {
+                    name = "AND_IMG_" + timeStamp + AmazonUtils.getExtension(path);
+                    thumbName = "AND_IMG_" + timeStamp + ".jpg";
+                } else {
+                    name = "AND_VID_" + timeStamp + AmazonUtils.getExtension(path);
+                    thumbName = "AND_VID_" + timeStamp + ".jpg";
+                }
+                localFilePath = thumbPath;
+                s3pathOriginal = AmazonUtils.FOLDER_ORIGINAL + File.separator + name;
+                s3PathThumb = AmazonUtils.FOLDER_THUMB + File.separator + thumbName;
+
+                TransferObserver observer = AmazonUtils.uploadMedia(mStrategicPartnerTaskCreationAct, fileOriginal, s3pathOriginal, new UploadListener());
+                TransferObserver observer1 = AmazonUtils.uploadMedia(mStrategicPartnerTaskCreationAct, fileThumb, s3PathThumb, new UploadListener());
+
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+
+                String thumbUrl = AmazonUtils.getThumbURL(s3PathThumb);
+                String originalUrl = AmazonUtils.getOriginalURL(s3pathOriginal);
+                MediaModel mediaModel = new MediaModel();
+                mediaModel.mediaName = originalUrl;
+                mediaModel.mediaThumbName = thumbUrl;
+                Log.e(TAG, "mediaName: " + originalUrl);
+                Log.e(TAG, "mediaThumbName: " + thumbUrl);
+                mediaModel.mediaType = type;
+                mediaModel.localFilePath = localFilePath;
+                mMediaRecycleAdapter.addImage(mediaModel);
+
+                for (QueAnsModel model : mList)
+                    if (model.answerType.equalsIgnoreCase(Utility.TEMPLATE_UPLOAD)) {
+                        model.medialList = mMediaRecycleAdapter.getList();
+                        break;
+                    }
+
+                checkMediaArraySize();
+
+
+                mProgressDialog.dismiss();
+            }
+        }.execute();
+
+    }
+
+    private class UploadListener implements TransferListener {
+
+        // Simply updates the UI list when notified.
+        @Override
+        public void onError(int id, Exception e) {
+            Log.e(TAG, "Error during upload: " + id, e);
+        }
+
+        @Override
+        public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {
+            Log.d(TAG, String.format("onProgressChanged: %d, total: %d, current: %d",
+                    id, bytesTotal, bytesCurrent));
+        }
+
+        @Override
+        public void onStateChanged(int id, TransferState newState) {
+            Log.d(TAG, "onStateChanged: " + id + ", " + newState);
+        }
+    }
+
+
+    ///////////////////////// ********* Amazon code ends here*********** //////////////////////////////////
 }

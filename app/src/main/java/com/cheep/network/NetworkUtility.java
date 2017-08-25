@@ -208,6 +208,7 @@ public class NetworkUtility {
 
         public static final String SUB_CATEGORY_DETAIL = "sub_category_detail";
         public static final String QUESTION_DETAIL = "question_detail";
+        public static final String MEDIA_FILE = "media_file";
 
         public static class VERSION_CHANGE_TYPE {
             public static final int NORMAL = 0;

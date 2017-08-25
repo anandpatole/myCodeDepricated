@@ -215,6 +215,9 @@ dependencies {
     compile 'com.payu.magicretry:magicretry:1.0.0'
     compile 'com.github.freshdesk:hotline-android:1.2.4'
     compile 'com.appsflyer:af-android-sdk:4.7.2@aar'
+
+    compile 'com.amazonaws:aws-android-sdk-s3:2.2.+'
+
 //    compile 'com.android.support.constraint:constraint-layout:1.0.2'
 }
 
