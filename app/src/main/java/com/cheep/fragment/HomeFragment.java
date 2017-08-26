@@ -103,7 +103,6 @@ public class HomeFragment extends BaseFragment {
     public void onResume() {
         super.onResume();
         Log.i(TAG, "onResume: ");
-
     }
 
     @Override
@@ -201,6 +200,10 @@ public class HomeFragment extends BaseFragment {
 
     public void addUnreadCountListener() {
         Log.d(TAG, "addUnreadCountListener() called");
+        if (PreferenceUtility.getInstance(mContext).getUserDetails() == null) {
+            return;
+        }
+
         final DatabaseReference databaseReference = FirebaseHelper.getRecentChatRef(formattedSenderId);
         databaseReference.orderByChild(FirebaseHelper.KEY_TIMESTAMP).addChildEventListener(mChildEventListener);
         databaseReference.orderByChild(FirebaseHelper.KEY_TIMESTAMP).addValueEventListener(new ValueEventListener() {
@@ -223,6 +226,10 @@ public class HomeFragment extends BaseFragment {
      */
     public void removeUnreadCountListener() {
         Log.d(TAG, "removeUnreadCountListener() called");
+        if (PreferenceUtility.getInstance(mContext).getUserDetails() == null) {
+            return;
+        }
+
         DatabaseReference databaseReference = FirebaseHelper.getRecentChatRef(formattedSenderId);
         databaseReference.removeEventListener(mChildEventListener);
     }
@@ -661,6 +668,13 @@ public class HomeFragment extends BaseFragment {
 
     private void checkOngoingTaskCounter() {
         Log.d(TAG, "checkOngoingTaskCounter() called");
+        /**
+         * In case of Guest User we need to return from here.
+         */
+        if (PreferenceUtility.getInstance(mContext).getUserDetails() == null) {
+            return;
+        }
+
         if (!Utility.isConnected(mContext)) {
             Utility.showSnackBar(getString(R.string.no_internet), mFragmentHomeBinding.getRoot());
             return;

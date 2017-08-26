@@ -1,16 +1,22 @@
 package com.cheep.activity;
 
+import android.Manifest;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentSender;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.databinding.DataBindingUtil;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -129,10 +135,12 @@ public class HomeActivity extends BaseAppCompatActivity
         initDATA();
         getWindow().setBackgroundDrawable(null);
 
+        /*
+        Earlier, we were not allowing the user to Login
         //finishing activity because no user registered
         if (PreferenceUtility.getInstance(getApplicationContext()).getUserDetails() == null) {
             finish();
-        }
+        }*/
 
         mActivityHomeBinding = DataBindingUtil.setContentView(this, R.layout.activity_home);
 
@@ -156,8 +164,8 @@ public class HomeActivity extends BaseAppCompatActivity
 
     private void manageNotificationRedirection(Intent intent) {
         if (PreferenceUtility.getInstance(mContext).getUserDetails() == null) {
-            LoginActivity.newInstance(mContext);
-            finish();
+//            LoginActivity.newInstance(mContext);
+//            finish();
             return;
         }
 
@@ -239,33 +247,6 @@ public class HomeActivity extends BaseAppCompatActivity
 
     }
 
-    @Override
-    public void onLocationSettingsDialogNeedToBeShow(Status locationRequest) {
-        super.onLocationSettingsDialogNeedToBeShow(locationRequest);
-        Fragment fragment = getSupportFragmentManager().findFragmentByTag(HomeFragment.TAG);
-        if (fragment != null) {
-            ((BaseFragment) fragment).onLocationSettingsDialogNeedToBeShow(locationRequest);
-        }
-
-        fragment = getSupportFragmentManager().findFragmentByTag(ProfileTabFragment.TAG);
-        if (fragment != null) {
-            ((BaseFragment) fragment).onLocationSettingsDialogNeedToBeShow(locationRequest);
-        }
-    }
-
-    @Override
-    public void gpsEnabled() {
-        super.gpsEnabled();
-        Fragment fragment = getSupportFragmentManager().findFragmentByTag(HomeFragment.TAG);
-        if (fragment != null) {
-            ((BaseFragment) fragment).gpsEnabled();
-        }
-
-        fragment = getSupportFragmentManager().findFragmentByTag(ProfileTabFragment.TAG);
-        if (fragment != null) {
-            ((BaseFragment) fragment).gpsEnabled();
-        }
-    }
 
     @Override
     protected void setListeners() {
@@ -655,9 +636,9 @@ public class HomeActivity extends BaseAppCompatActivity
     private void showRateDialog(String userName, final String taskId, final String providerId) {
 
         View view = View.inflate(mContext, R.layout.dialog_rate, null);
+
         final RatingBar ratingBar = (RatingBar) view.findViewById(R.id.rating_bar);
         final EditText edtMessage = (EditText) view.findViewById(R.id.edit_message);
-
         final TextView txtLabel = (TextView) view.findViewById(R.id.text_label);
         txtLabel.setText(getString(R.string.label_write_a_review, userName));
 
@@ -1154,8 +1135,9 @@ public class HomeActivity extends BaseAppCompatActivity
             //Finish the current activity
             finish();
 
-            //Redirect user to Home Screen
-            LoginActivity.newInstance(mContext);
+            // Redirect user to Home Screen
+//          LoginActivity.newInstance(mContext);
+            HomeActivity.newInstance(mContext);
             return;
         }
 
@@ -1204,7 +1186,8 @@ public class HomeActivity extends BaseAppCompatActivity
             finish();
 
             //Redirect user to Home Screen
-            LoginActivity.newInstance(mContext);
+//            LoginActivity.newInstance(mContext);
+            HomeActivity.newInstance(mContext);
 
             /*String strResponse = (String) response;
             try {
@@ -1254,7 +1237,8 @@ public class HomeActivity extends BaseAppCompatActivity
             finish();
 
             //Redirect user to Home Screen
-            LoginActivity.newInstance(mContext);
+//            LoginActivity.newInstance(mContext);
+            HomeActivity.newInstance(mContext);
 
             // Show Toast
 //            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityHomeBinding.getRoot());
@@ -1270,140 +1254,6 @@ public class HomeActivity extends BaseAppCompatActivity
      * *****************************************Webservice Integration [End]**************************************
      * *************************************************************************************************************
      ************************************************************************************************************/
-
-
-    @Override
-    public void onBindLocationTrackService() {
-        super.onBindLocationTrackService();
-        Log.d(TAG, "onBindLocationTrackService() called");
-        if (mLocationTrackService.mLocation != null) {
-            double latitude = mLocationTrackService.mLocation.getLatitude();
-            double longitude = mLocationTrackService.mLocation.getLongitude();
-
-            Fragment mFragment = getSupportFragmentManager().findFragmentById(R.id.content);
-            if (mFragment != null && mFragment instanceof BaseFragment) {
-                ((BaseFragment) mFragment).onLocationFetched(mLocationTrackService.mLocation);
-            }
-
-        } else {
-
-            Fragment mFragment = getSupportFragmentManager().findFragmentById(R.id.content);
-            if (mFragment != null && mFragment instanceof BaseFragment) {
-                ((BaseFragment) mFragment).onLocationNotAvailable();
-            }
-            mLocationTrackService.requestLocationUpdate();
-        }
-    }
-
-    @Override
-    protected void onLocationNotAvailable() {
-        super.onLocationNotAvailable();
-        Log.d(TAG, "onLocationNotAvailable() called");
-        Fragment mFragment = getSupportFragmentManager().findFragmentById(R.id.content);
-        if (mFragment != null && mFragment instanceof BaseFragment) {
-            ((BaseFragment) mFragment).onLocationNotAvailable();
-        }
-    }
-
-    @Override
-    protected void onLocationFetched(Location mLocation) {
-        super.onLocationFetched(mLocation);
-        Log.d(TAG, "onLocationFetched() called with: mLocation = [" + mLocation + "]");
-        Fragment mFragment = getSupportFragmentManager().findFragmentById(R.id.content);
-        if (mFragment != null && mFragment instanceof BaseFragment) {
-            ((BaseFragment) mFragment).onLocationFetched(mLocation);
-        }
-    }
-
-    /**
-     * Update Category list on server
-     *
-     * @param lat
-     * @param lng
-     */
-    private void updateLatLongOnServer(String lat, String lng) {
-        //Setting RecyclerView Adapter
-        /*HomeTabRecyclerViewAdapter adapter = new HomeTabRecyclerViewAdapter(BootstrapConstant.DUMMY_JOB_CATEGORY_MODELS_LIST, mCategoryRowInteractionListener);
-        mFragmentTabHomeBinding.commonRecyclerView.recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
-        mFragmentTabHomeBinding.commonRecyclerView.recyclerView.setAdapter(adapter);
-        mFragmentTabHomeBinding.commonRecyclerView.recyclerView.addItemDecoration(new DividerItemDecoration(mContext, R.drawable.divider_white, (int) getResources().getDimension(R.dimen.scale_0dp)));*/
-
-        //Add Header parameters
-        Map<String, String> mHeaderParams = new HashMap<>();
-        mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
-        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
-
-        //Add Params
-        Map<String, String> mParams = new HashMap<>();
-        mParams.put(NetworkUtility.TAGS.LAT, lat);
-        mParams.put(NetworkUtility.TAGS.LNG, lng);
-
-        VolleyNetworkRequest mVolleyNetworkRequest = new VolleyNetworkRequest(NetworkUtility.WS.UPDATE_LOCATION
-                , mCallUpdateLatLngWSErrorListener
-                , mCallUpdateLatLngWSResponseListener
-                , mHeaderParams
-                , mParams
-                , null);
-        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest);
-    }
-
-    Response.Listener mCallUpdateLatLngWSResponseListener = new Response.Listener() {
-        @Override
-        public void onResponse(Object response) {
-            Log.d(TAG, "onResponse() called with: response = [" + response + "]");
-
-            String strResponse = (String) response;
-            try {
-                JSONObject jsonObject = new JSONObject(strResponse);
-                Log.i(TAG, "onResponse: " + jsonObject.toString());
-                int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
-                String error_message;
-                switch (statusCode) {
-                    case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
-
-                        Utility.showToast(mContext, "Location updated");
-                        JSONObject jsonData = jsonObject.optJSONObject(NetworkUtility.TAGS.DATA);
-
-                        UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
-                        userDetails.CityID = jsonData.optString(NetworkUtility.TAGS.CITY_ID);
-                        userDetails.CityName = jsonData.optString(NetworkUtility.TAGS.CITY_NAME);
-                        userDetails.locality = jsonData.optString(NetworkUtility.TAGS.LOCALITY);
-                        PreferenceUtility.getInstance(mContext).saveUserDetails(userDetails);
-                        // Show message
-                        break;
-                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
-                        // Show Toast
-//                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mFragmentTabHomeBinding.getRoot());
-
-                        break;
-                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
-                        error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
-                        // Show message
-//                        Utility.showSnackBar(error_message, mFragmentTabHomeBinding.getRoot());
-                        break;
-                    case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
-                    case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
-                        //Logout and finish the current activity
-                        Utility.logout(mContext, true, statusCode);
-                        break;
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-                mCallUpdateLatLngWSErrorListener.onErrorResponse(new VolleyError(e.getMessage()));
-            }
-
-        }
-    };
-
-    Response.ErrorListener mCallUpdateLatLngWSErrorListener = new Response.ErrorListener() {
-        @Override
-        public void onErrorResponse(VolleyError error) {
-            Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
-
-            // Show Toast
-//            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mFragmentTabHomeBinding.getRoot());
-        }
-    };
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1803,5 +1653,124 @@ public class HomeActivity extends BaseAppCompatActivity
     /////////////////////////////////WebService [Ends]//////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////
 
+    /**
+     * Location [Start]
+     */
+    @Override
+    public void onBindLocationTrackService() {
+        super.onBindLocationTrackService();
+        Log.d(TAG, "onBindLocationTrackService() called");
+         /*
+          Check if Location service is enabled or not, if not ask for user to accept it and stop the ongoing service
+         */
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            //Let the activity know that location permission not granted
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_COARSE_LOCATION)) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, Utility.REQUEST_CODE_PERMISSION_LOCATION);
+            } else {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, Utility.REQUEST_CODE_PERMISSION_LOCATION);
+            }
+        } else {
+            requestLocationUpdateFromService();
+        }
+
+        /*if (mLocationTrackService.mLocation != null) {
+            double latitude = mLocationTrackService.mLocation.getLatitude();
+            double longitude = mLocationTrackService.mLocation.getLongitude();
+
+            Fragment mFragment = getSupportFragmentManager().findFragmentById(R.id.content);
+            if (mFragment != null && mFragment instanceof BaseFragment) {
+                ((BaseFragment) mFragment).onLocationFetched(mLocationTrackService.mLocation);
+            }
+
+        } else {
+            Fragment mFragment = getSupportFragmentManager().findFragmentById(R.id.content);
+            if (mFragment != null && mFragment instanceof BaseFragment) {
+                ((BaseFragment) mFragment).onLocationNotAvailable();
+            }
+            mLocationTrackService.requestLocationUpdate();
+        }*/
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == Utility.REQUEST_CODE_PERMISSION_LOCATION) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Log.i(TAG, "onRequestPermissionsResult: Permission Granted");
+                //So, ask service to fetch the location now
+                requestLocationUpdateFromService();
+            } else if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_DENIED) {
+                Log.i(TAG, "onRequestPermissionsResult: Permission Denied");
+                Snackbar.make(mActivityHomeBinding.getRoot(), getString(R.string.permission_denied_location), 3000).show();
+                onLocationNotAvailable();
+            }
+        }
+    }
+
+    @Override
+    protected void onLocationNotAvailable() {
+        super.onLocationNotAvailable();
+        Log.d(TAG, "onLocationNotAvailable() called");
+        Fragment mFragment = getSupportFragmentManager().findFragmentById(R.id.content);
+        if (mFragment != null && mFragment instanceof BaseFragment) {
+            ((BaseFragment) mFragment).onLocationNotAvailable();
+        }
+    }
+
+    @Override
+    protected void onLocationFetched(Location mLocation) {
+        super.onLocationFetched(mLocation);
+        Log.d(TAG, "onLocationFetched() called with: mLocation = [" + mLocation + "]");
+        Fragment mFragment = getSupportFragmentManager().findFragmentById(R.id.content);
+        if (mFragment != null && mFragment instanceof BaseFragment) {
+            ((BaseFragment) mFragment).onLocationFetched(mLocation);
+        }
+        // Now There is no need to start the service so stop it.
+
+    }
+
+    @Override
+    public void onLocationSettingsDialogNeedToBeShow(Status status) {
+        super.onLocationSettingsDialogNeedToBeShow(status);
+        // Location settings are not satisfied, but this can be fixed
+        // by showing the user a dialog.
+        try {
+            // Show the dialog by calling startResolutionForResult(),
+            // and check the result in onActivityResult().
+            status.startResolutionForResult(this, Utility.REQUEST_CODE_CHECK_LOCATION_SETTINGS);
+        } catch (IntentSender.SendIntentException e) {
+            // Ignore the error.
+        }
+    }
+
+    @Override
+    public void gpsEnabled() {
+        super.gpsEnabled();
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(HomeFragment.TAG);
+        if (fragment != null) {
+            ((BaseFragment) fragment).gpsEnabled();
+        }
+
+        fragment = getSupportFragmentManager().findFragmentByTag(ProfileTabFragment.TAG);
+        if (fragment != null) {
+            ((BaseFragment) fragment).gpsEnabled();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == Utility.REQUEST_CODE_CHECK_LOCATION_SETTINGS) {
+            if (resultCode == RESULT_OK) {
+                onBindLocationTrackService();
+            }
+        }
+    }
+
+    /**
+     * Location [END]
+     */
 
 }

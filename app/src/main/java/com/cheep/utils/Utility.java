@@ -47,6 +47,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestListener;
 import com.cheep.BuildConfig;
 import com.cheep.R;
+import com.cheep.activity.HomeActivity;
 import com.cheep.activity.LoginActivity;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.gson.Gson;
@@ -80,6 +81,10 @@ import static com.cheep.utils.SuperCalendar.SuperFormatter;
  */
 
 public class Utility {
+    public static final class GUEST_STATIC_INFO {
+        public static final String USERNAME = "Guest";
+    }
+
     private static final String TAG = "Utility";
     public static final String EMPTY_STRING = "";
     public static final String ZERO_STRING = "0";
@@ -335,8 +340,8 @@ public class Utility {
     }*/
 
     public static int getHeightFromWidthForTwoOneRatio(int width) {
-        Log.d(TAG, "getHeightFromWidthForTwoOneRatio() called with: width = [" + width + "]");
-        Log.d(TAG, "getHeightFromWidthForTwoOneRatio() returned: " + (width / 2));
+//        Log.d(TAG, "getHeightFromWidthForTwoOneRatio() called with: width = [" + width + "]");
+//        Log.d(TAG, "getHeightFromWidthForTwoOneRatio() returned: " + (width / 2));
         return (width / 2);
     }
 
@@ -347,8 +352,8 @@ public class Utility {
      * @return
      */
     public static int getHeightCategoryImageBasedOnRatio(int width) {
-        Log.d(TAG, "getHeightCategoryImageBasedOnRatio() called with: width = [" + width + "]");
-        Log.d(TAG, "getHeightCategoryImageBasedOnRatio() called with: width = [" + Math.round((width / CATEGORY_IMAGE_RATIO)) + "]");
+//        Log.d(TAG, "getHeightCategoryImageBasedOnRatio() called with: width = [" + width + "]");
+//        Log.d(TAG, "getHeightCategoryImageBasedOnRatio() called with: width = [" + Math.round((width / CATEGORY_IMAGE_RATIO)) + "]");
         return Math.round((width / CATEGORY_IMAGE_RATIO));
     }
 
@@ -458,7 +463,8 @@ public class Utility {
         PreferenceUtility.getInstance(mContext).onUserLogout();
 
         //Redirect user to Home Screen
-        LoginActivity.newInstance(mContext, isSessionExpire, action);
+//        LoginActivity.newInstance(mContext, isSessionExpire, action);
+        HomeActivity.newInstance(mContext);
     }
 
     //Method to get Device width and height in array, [0] = width, [1] = height
@@ -1236,7 +1242,7 @@ public class Utility {
      */
     public static String getQuotePriceFormatter(String quotePrice) {
 
-        if (quotePrice==null || quotePrice.equalsIgnoreCase("null"))
+        if (quotePrice == null || quotePrice.equalsIgnoreCase("null"))
             return "0";
         if (quotePrice.equalsIgnoreCase("") || quotePrice.equalsIgnoreCase("0") || quotePrice.equalsIgnoreCase("0.0"))
             return "0";

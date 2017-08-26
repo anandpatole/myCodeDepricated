@@ -208,7 +208,9 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
         //Add Header parameters
         Map<String, String> mHeaderParams = new HashMap<>();
         mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
-        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
+        if (PreferenceUtility.getInstance(mContext).getUserDetails() != null) {
+            mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
+        }
 
         //Add Params
         Map<String, String> mParams = new HashMap<>();
@@ -659,34 +661,34 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
                             if (startDateTimeSuperCalendar.getTimeInMillis() < calAfter3Hours.getTimeInMillis()) {
                                 Utility.showSnackBar(getString(R.string.alert_time_must_be_after_3_hour), mFragmentStrategicPartnerPhaseTwoBinding.getRoot());
                             } else {
-                            String selectedDateTime = startDateTimeSuperCalendar.format(Utility.DATE_FORMAT_HH_MM_AM);
+                                String selectedDateTime = startDateTimeSuperCalendar.format(Utility.DATE_FORMAT_HH_MM_AM);
 
 
-                            // set selected time to text view
-                            textView.setText(selectedDateTime);
-                            textView.setSelected(false);
+                                // set selected time to text view
+                                textView.setText(selectedDateTime);
+                                textView.setSelected(false);
 
-                            // this var is for payment summary screen for user task details
+                                // this var is for payment summary screen for user task details
 //                            mStrategicPartnerTaskCreationAct.time = selectedDateTime;
 
-                            // set time zone for start date time
-                            startDateTimeSuperCalendar.setTimeZone(SuperCalendar.SuperTimeZone.GMT.GMT);
+                                // set time zone for start date time
+                                startDateTimeSuperCalendar.setTimeZone(SuperCalendar.SuperTimeZone.GMT.GMT);
 
-                            // set timestamp as answer for web api
-                            model.answer = String.valueOf(startDateTimeSuperCalendar.getTimeInMillis());
+                                // set timestamp as answer for web api
+                                model.answer = String.valueOf(startDateTimeSuperCalendar.getTimeInMillis());
 
-                            // set background of ques no as answered
-                            mFragmentStrategicPartnerPhaseTwoBinding.linMain.findViewWithTag(model.questionId).setSelected(true);
-                            setBtnBookAndPayBgState(validateAllQueAndAns().isEmpty());
+                                // set background of ques no as answered
+                                mFragmentStrategicPartnerPhaseTwoBinding.linMain.findViewWithTag(model.questionId).setSelected(true);
+                                setBtnBookAndPayBgState(validateAllQueAndAns().isEmpty());
 
 
-                            // enable
-                            TextView txtLocation = mFragmentStrategicPartnerPhaseTwoBinding.linMain.findViewWithTag(Utility.TEMPLATE_LOCATION);
-                            txtLocation.setSelected(true);
-                            txtLocation.setBackground(ContextCompat.getDrawable(mStrategicPartnerTaskCreationAct, R.drawable.background_ans_normal));
+                                // enable
+                                TextView txtLocation = mFragmentStrategicPartnerPhaseTwoBinding.linMain.findViewWithTag(Utility.TEMPLATE_LOCATION);
+                                txtLocation.setSelected(true);
+                                txtLocation.setBackground(ContextCompat.getDrawable(mStrategicPartnerTaskCreationAct, R.drawable.background_ans_normal));
 
+                            }
                         }
-                    }
                     }
                 }, c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE), false);
         timePickerDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
@@ -1879,8 +1881,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
                 if (TextUtils.isEmpty(queAnsModel.answer)) {
                     message = getString(R.string.alert_select_date_and_time);
                     return message;
-                }
-                else if (startDateTimeSuperCalendar.getTimeInMillis() < calAfter3Hours.getTimeInMillis()) {
+                } else if (startDateTimeSuperCalendar.getTimeInMillis() < calAfter3Hours.getTimeInMillis()) {
                     message = "Date Time must be after 3 hour.";
                     return message;
                 }

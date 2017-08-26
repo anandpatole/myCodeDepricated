@@ -243,6 +243,15 @@ public class TaskFragment extends BaseFragment {
 
     private void callTasksWS() {
 
+        if (PreferenceUtility.getInstance(mContext).getUserDetails() == null) {
+            errorLoadingHelper.failed(null,
+                    R.drawable.img_empty_pending_task,
+                    null,
+                    null,
+                    onMakeAPostClickListener);
+            return;
+        }
+
         if (!Utility.isConnected(mContext)) {
 //            Utility.showSnackBar(getString(R.string.no_internet), mFragmentFavouriteFragment.getRoot());
             errorLoadingHelper.failed(getString(R.string.no_internet), 0, onRetryBtnClickListener);

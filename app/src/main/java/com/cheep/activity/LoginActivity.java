@@ -289,20 +289,6 @@ public class LoginActivity extends BaseAppCompatActivity implements FacebookHelp
         Log.d(TAG, "onLocationFetched() called with: mLocation = [" + mLocation + "]");
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == Utility.REQUEST_CODE_PERMISSION_LOCATION) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Log.i(TAG, "onRequestPermissionsResult: Permission Granted");
-                //So, ask service to fetch the location now
-                requestLocationUpdateFromService();
-            } else if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_DENIED) {
-                Log.i(TAG, "onRequestPermissionsResult: Permission Denied");
-                Snackbar.make(mActivityLoginBinding.getRoot(), getString(R.string.permission_denied_location), 3000).show();
-            }
-        }
-    }
 
     @Override
     public void onLocationSettingsDialogNeedToBeShow(Status status) {
@@ -333,6 +319,21 @@ public class LoginActivity extends BaseAppCompatActivity implements FacebookHelp
             }
         } else {
             requestLocationUpdateFromService();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == Utility.REQUEST_CODE_PERMISSION_LOCATION) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Log.i(TAG, "onRequestPermissionsResult: Permission Granted");
+                //So, ask service to fetch the location now
+                requestLocationUpdateFromService();
+            } else if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_DENIED) {
+                Log.i(TAG, "onRequestPermissionsResult: Permission Denied");
+                Snackbar.make(mActivityLoginBinding.getRoot(), getString(R.string.permission_denied_location), 3000).show();
+            }
         }
     }
 
@@ -1083,6 +1084,5 @@ public class LoginActivity extends BaseAppCompatActivity implements FacebookHelp
      *****************************************Webservice Integration [End]**************************************
      *************************************************************************************************************
      */
-
 
 }

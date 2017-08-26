@@ -196,8 +196,6 @@ public class EnterTaskDetailFragment extends BaseFragment {
     public void initiateUI() {
         Log.d(TAG, "initiateUI() called");
 
-        // Setup images
-        final UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
 
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -263,8 +261,13 @@ public class EnterTaskDetailFragment extends BaseFragment {
             }
         });
 
-        // Update the SP lists
-        callSPListWS(mTaskCreationActivity.mJobCategoryModel.catId, userDetails.CityID, Utility.EMPTY_STRING);
+        if (PreferenceUtility.getInstance(mContext).getUserDetails() != null) {
+            // Update the SP lists
+            callSPListWS(mTaskCreationActivity.mJobCategoryModel.catId, PreferenceUtility.getInstance(mContext).getUserDetails().CityID, Utility.EMPTY_STRING);
+        } else {
+            // Update the SP lists
+            callSPListWS(mTaskCreationActivity.mJobCategoryModel.catId, PreferenceUtility.getInstance(mContext).getGuestUserDetails().mCityID, Utility.EMPTY_STRING);
+        }
     }
 
     public void updateHeightOfLinearLayout() {
@@ -1317,7 +1320,9 @@ public class EnterTaskDetailFragment extends BaseFragment {
         //Add Header parameters
         Map<String, String> mHeaderParams = new HashMap<>();
         mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
-        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
+        if (PreferenceUtility.getInstance(mContext).getUserDetails() != null) {
+            mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
+        }
 
         //Add Params
         Map<String, Object> mParams = new HashMap<>();

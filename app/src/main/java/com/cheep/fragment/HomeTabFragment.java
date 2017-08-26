@@ -1,7 +1,10 @@
 package com.cheep.fragment;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentSender;
+import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
 import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
@@ -9,10 +12,12 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
@@ -31,7 +36,6 @@ import android.widget.PopupWindow;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.cheep.BuildConfig;
 import com.cheep.R;
 import com.cheep.activity.SearchActivity;
 import com.cheep.activity.SelectLocationActivity;
@@ -41,16 +45,21 @@ import com.cheep.databinding.LayoutFilterHomePopupBinding;
 import com.cheep.interfaces.DrawerLayoutInteractionListener;
 import com.cheep.interfaces.NotificationClickInteractionListener;
 import com.cheep.model.BannerImageModel;
+import com.cheep.model.GuestDetails;
 import com.cheep.model.JobCategoryModel;
+import com.cheep.model.LocationInfo;
 import com.cheep.model.MessageEvent;
 import com.cheep.model.UserDetails;
 import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
+import com.cheep.strategicpartner.StrategicPartnerFragPhaseOne;
 import com.cheep.utils.ErrorLoadingHelper;
+import com.cheep.utils.FetchLocationInfoUtility;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.SharedElementTransitionHelper;
 import com.cheep.utils.Utility;
+import com.google.android.gms.common.api.Status;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -125,7 +134,13 @@ public class HomeTabFragment extends BaseFragment {
 
     public void profileUpdate() {
         UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
+        if (userDetails == null) {
+            //In case of Guest User we would be having static stuff
+            mFragmentTabHomeBinding.textSearch.setText(getString(R.string.hint_search_placeholder, Utility.GUEST_STATIC_INFO.USERNAME));
+            return;
+        }
 
+        // Normal User so, go ahead as per earlier flow.
         //Update the name
         if (userDetails != null && TextUtils.isEmpty(userDetails.UserName) == false && userDetails.UserName.trim().length() > 1) {
             String name = userDetails.UserName.substring(0, 1).toUpperCase() + userDetails.UserName.substring(1);
@@ -220,38 +235,6 @@ public class HomeTabFragment extends BaseFragment {
 
         //Provide callback to activity to link drawerlayout with toolbar
         mListener.setUpDrawerLayoutWithToolBar(mFragmentTabHomeBinding.toolbar);
-
-        //Seting Location Name
-        UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
-
-        //Checking if there is city then call the category list else fetch and send current location to server
-        if (isPreviousLocationPresent()) {
-            toggleErrorScreen(false);
-            mFragmentTabHomeBinding.textLocation.setText(userDetails.getLocality());
-            errorLoadingHelper.showLoading();
-
-            /**
-             * @Change: Load Banner image first then call category listing.
-             */
-//            TODO: This needs to be changed (OLD Implementation)
-//            getCategoryListFromServer("", "");
-
-            // New Implementation
-            mLat = Utility.EMPTY_STRING;
-            mLon = Utility.EMPTY_STRING;
-            getBannerImageListFromServer();
-        } else {
-//            TODO: This needs to be changed after
-           /* toggleErrorScreen(true);
-            mFragmentTabHomeBinding.textLocation.setText(getString(R.string.hint_select_location));
-            //starting to choose location
-            Intent intent = new Intent(mContext, SelectLocationActivity.class);
-            startActivityForResult(intent, Utility.REQUEST_CODE_CHANGE_LOCATION);
-            ((AppCompatActivity) mContext).overridePendingTransition(0, 0);*/
-            mLat = "19.1363246";
-            mLon = "72.82766";
-            updateLatLongOnServer();
-        }
 
         mFragmentTabHomeBinding.textSearch.setVisibility(View.GONE);
         //Setting search placeholder
@@ -387,24 +370,53 @@ public class HomeTabFragment extends BaseFragment {
     @Override
     public void onLocationNotAvailable() {
         super.onLocationNotAvailable();
-//        Log.d(TAG, "onLocationNotAvailable() called");
-        if (!isPreviousLocationPresent()) {
+        Log.d(TAG, "onLocationNotAvailable() called");
+        /*if (!isPreviousLocationPresent()) {
             // Show Error Screen
             toggleErrorScreen(true);
-        }
+        }*/
+        loadHomeScreenDetails();
     }
+
 
     @Override
     public void onLocationFetched(Location mLocation) {
         super.onLocationFetched(mLocation);
-//        Log.d(TAG, "onLocationFetched() called with: mLocation = [" + mLocation + "]");
-        if (!isPreviousLocationPresent()) {
+        Log.d(TAG, "onLocationFetched() called with: mLocation = [" + mLocation + "]");
+        mLat = String.valueOf(mLocation.getLatitude());
+        mLon = String.valueOf(mLocation.getLongitude());
+        updateLatLongOnServer();
+        /*if (!isPreviousLocationPresent()) {
+            errorLoadingHelper.showLoading();
+            getBannerImageListFromServer();
+        }*/
+    }
+
+    private void loadHomeScreenDetails() {
+        //Seting Location Name
+        UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
+
+        //Checking if there is city then call the category list else fetch and send current location to server
+        if (isPreviousLocationPresent()) {
+            toggleErrorScreen(false);
+            mFragmentTabHomeBinding.textLocation.setText(userDetails.getLocality());
             errorLoadingHelper.showLoading();
 
-//            TODO: This needs to be changed
-//            getCategoryListFromServer(String.valueOf(mLocation.getLatitude()), String.valueOf(mLocation.getLongitude()));
+            // New Implementation
+            mLat = Utility.EMPTY_STRING;
+            mLon = Utility.EMPTY_STRING;
             getBannerImageListFromServer();
-//            getCategoryListFromServer("", "");
+        } else {
+//            TODO: This needs to be changed after
+           /* toggleErrorScreen(true);
+            mFragmentTabHomeBinding.textLocation.setText(getString(R.string.hint_select_location));
+            //starting to choose location
+            Intent intent = new Intent(mContext, SelectLocationActivity.class);
+            startActivityForResult(intent, Utility.REQUEST_CODE_CHANGE_LOCATION);
+            ((AppCompatActivity) mContext).overridePendingTransition(0, 0);*/
+            mLat = "19.1363246";
+            mLon = "72.82766";
+            updateLatLongOnServer();
         }
     }
 
@@ -432,7 +444,6 @@ public class HomeTabFragment extends BaseFragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == Utility.REQUEST_CODE_CHANGE_LOCATION && resultCode == AppCompatActivity.RESULT_OK) {
-
             if (data != null) {
                 mLat = data.getStringExtra(Utility.Extra.LATITUDE);
                 mLon = data.getStringExtra(Utility.Extra.LONGITUDE);
@@ -451,6 +462,22 @@ public class HomeTabFragment extends BaseFragment {
      * Update Category list on server
      */
     private void updateLatLongOnServer() {
+        Log.d(TAG, "updateLatLongOnServer() called");
+        errorLoadingHelper.showLoading();
+        if (PreferenceUtility.getInstance(mContext).getUserDetails() == null) {
+            //Its a guest user and hence we need to call google api for ourselves for Guest user.
+//            TODO: Guest User we need to call Webservice for fetching the temporary location data
+            FetchLocationInfoUtility mFetchLocationInfoUtility = new FetchLocationInfoUtility(mContext, new FetchLocationInfoUtility.FetchLocationInfoCallBack() {
+                @Override
+                public void onLocationInfoAvailable(LocationInfo mLocationIno) {
+                    Log.d(TAG, "onLocationInfoAvailable() called with: mLocationIno = [" + mLocationIno + "]");
+                    updateLatLongSuccess(mLocationIno.City);
+                }
+            }
+            );
+            mFetchLocationInfoUtility.getLocationInfo(mLat, mLon);
+            return;
+        }
         //Setting RecyclerView Adapter
         /*HomeTabRecyclerViewAdapter homeTabRecyclerViewAdapter = new HomeTabRecyclerViewAdapter(BootstrapConstant.DUMMY_JOB_CATEGORY_MODELS_LIST, mCategoryRowInteractionListener);
         mFragmentTabHomeBinding.commonRecyclerView.recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
@@ -499,12 +526,8 @@ public class HomeTabFragment extends BaseFragment {
                         userDetails.CityName = jsonData.optString(NetworkUtility.TAGS.CITY_NAME);
                         userDetails.locality = jsonData.optString(NetworkUtility.TAGS.LOCALITY);
                         PreferenceUtility.getInstance(mContext).saveUserDetails(userDetails);
-                        mFragmentTabHomeBinding.textLocation.setText(userDetails.getLocality());
 
-                        // Call Call category listing from server.
-//                        TODO: Fetch Banner Images First
-//                        getCategoryListFromServer(lat, lng);
-                        getBannerImageListFromServer();
+                        updateLatLongSuccess(userDetails.locality);
 
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
@@ -528,6 +551,11 @@ public class HomeTabFragment extends BaseFragment {
         }
     };
 
+    private void updateLatLongSuccess(String cityName) {
+        mFragmentTabHomeBinding.textLocation.setText(cityName);
+        getBannerImageListFromServer();
+    }
+
     Response.ErrorListener mCallUpdateLatLngWSErrorListener = new Response.ErrorListener() {
         @Override
         public void onErrorResponse(VolleyError error) {
@@ -547,9 +575,9 @@ public class HomeTabFragment extends BaseFragment {
 
     private void getBannerImageListFromServer() {
         //If user is logged out already,return from here only.
-        if (PreferenceUtility.getInstance(mContext).getUserDetails() == null) {
+        /*if (PreferenceUtility.getInstance(mContext).getUserDetails() == null) {
             return;
-        }
+        }*/
 
         if (!Utility.isConnected(mContext)) {
             errorLoadingHelper.failed(getString(R.string.no_internet), 0, onRetryBtnClickListener);
@@ -559,7 +587,8 @@ public class HomeTabFragment extends BaseFragment {
         //Add Header parameters
         Map<String, String> mHeaderParams = new HashMap<>();
         mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
-        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
+        if (PreferenceUtility.getInstance(mContext).getUserDetails() != null)
+            mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
 
         /*//Add Params
         Map<String, String> mParams = new HashMap<>();
@@ -675,9 +704,9 @@ public class HomeTabFragment extends BaseFragment {
           Fixed crash issue.
           @changes by @bhavesh on 25th Feb, 2017
          */
-        if (PreferenceUtility.getInstance(mContext).getUserDetails() == null) {
+        /*if (PreferenceUtility.getInstance(mContext).getUserDetails() == null) {
             return;
-        }
+        }*/
 
         if (!Utility.isConnected(mContext)) {
 //            Utility.showSnackBar(getString(R.string.no_internet), mFragmentTabHomeBinding.getRoot());
@@ -688,18 +717,24 @@ public class HomeTabFragment extends BaseFragment {
         //Add Header parameters
         Map<String, String> mHeaderParams = new HashMap<>();
         mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
-        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
+        if (PreferenceUtility.getInstance(mContext).getUserDetails() != null)
+            mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
 
         //Add Params
         Map<String, String> mParams = new HashMap<>();
-        if (!TextUtils.isEmpty(mLat)) {
+        if (PreferenceUtility.getInstance(mContext).getUserDetails() != null) {
+            mParams.put(NetworkUtility.TAGS.CITY_NAME, PreferenceUtility.getInstance(mContext).getUserDetails().getLocality());
+        } else {
+            mParams.put(NetworkUtility.TAGS.CITY_NAME, PreferenceUtility.getInstance(mContext).getGuestUserDetails().mCityName);
+        }
+
+        /*if (!TextUtils.isEmpty(mLat)) {
             mParams.put(NetworkUtility.TAGS.LAT, mLat);
             mParams.put(NetworkUtility.TAGS.LNG, mLon);
-        }
+        }*/
 
         // Sort Type Params
         mParams.put(NetworkUtility.TAGS.SORT_TYPE, mSelectedFilterType);
-
 
         VolleyNetworkRequest mVolleyNetworkRequestForCategoryList = new VolleyNetworkRequest(NetworkUtility.WS.CATEGORY_LIST
                 , mCallCategoryListWSErrorListener
@@ -725,6 +760,16 @@ public class HomeTabFragment extends BaseFragment {
                 mFragmentTabHomeBinding.swipeRefreshLayout.setRefreshing(false);
                 switch (statusCode) {
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
+                        /**
+                         * Save CityID in case of Guest User
+                         */
+                        if (PreferenceUtility.getInstance(mContext).getUserDetails() == null) {
+                            // We need to store provided CityID
+                            GuestDetails mGuestDetails = PreferenceUtility.getInstance(mContext).getGuestUserDetails();
+                            mGuestDetails.mCityID = jsonObject.getString(NetworkUtility.TAGS.CITY_ID);
+                            PreferenceUtility.getInstance(mContext).saveGuestUserDetails(mGuestDetails);
+                        }
+
                         ArrayList<JobCategoryModel> list;
                         list = Utility.getObjectListFromJsonString(jsonObject.optString(NetworkUtility.TAGS.DATA), JobCategoryModel[].class);
 
@@ -738,13 +783,12 @@ public class HomeTabFragment extends BaseFragment {
                         homeTabRecyclerViewAdapter.addItems(list);
 
                         toggleErrorScreen(false);
-                        if (list != null && list.size() <= 0) {
+                        if (list.size() <= 0) {
                             if (mSelectedFilterType.equalsIgnoreCase(Utility.FILTER_TYPES.FILTER_TYPE_FAVOURITES)) {
                                 onListCategoryListGetsEmpty();
                             } else {
                                 errorLoadingHelper.failed(null, R.drawable.img_empty_category, onRetryBtnClickListener);
                             }
-
                         }
 
                         break;
@@ -909,6 +953,9 @@ public class HomeTabFragment extends BaseFragment {
 
         @Override
         public int getCount() {
+            if (imageModelArrayList == null) {
+                return 0;
+            }
             return imageModelArrayList.size();
         }
 

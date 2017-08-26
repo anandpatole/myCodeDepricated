@@ -88,7 +88,7 @@ public class ErrorLoadingHelper {
             mEmptyFavouriteLayout.setVisibility(View.GONE);
 
         // Changing it to null so retry button is not visible
-//        clickListener = null;
+        clickListener = null;
 
         recyclerView.setVisibility(View.GONE);
         progressBar.setVisibility(View.GONE);

@@ -3,9 +3,11 @@ package com.cheep.utils;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.preference.Preference;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import com.cheep.model.GuestDetails;
 import com.cheep.model.UserDetails;
 
 import org.json.JSONException;
@@ -23,16 +25,22 @@ public class PreferenceUtility {
     private Context context;
     //    private static PreferenceUtility mPreferenceUtility;
     private static UserDetails mUserDetails;
+    private static GuestDetails mGuestUserDetails;
 
     private static final String PREF_X_API_KEY = "com.cheep.xapikey";
     private static final String PREF_FCM_TOKEN = "com.cheep.fcm.tokem";
     private static final String PREF_USER_INFO = "com.cheep.fcm.userinfo";
     private static final String PREF_NOTIFICATION_COUNTER = "com.cheep.notification_counter";
-
     private static final String PREF_INTRO_SCREEN_STATUS = "com.cheep.intro.screen.status";
+
+    //Guest User Pref
+    private static final String PREF_FILE_GUEST = "com.cheep.guest";
+    private static final String PREF_GUEST_USER_INFO = "com.cheep.guest.userinfo";
+    private SharedPreferences mGuestSharedPreferences;
 
     private PreferenceUtility(Context mContext) {
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
+        mGuestSharedPreferences = mContext.getSharedPreferences(PREF_FILE_GUEST, Context.MODE_PRIVATE);
         context = mContext;
     }
 
@@ -128,6 +136,9 @@ public class PreferenceUtility {
 
         // Clear Unread otification counter
         mSharedPreferences.edit().remove(PREF_NOTIFICATION_COUNTER).apply();
+
+        // Clear all Guest User Details if any
+        mGuestSharedPreferences.edit().remove(PREF_GUEST_USER_INFO).apply();
     }
 
     //For Notification Counter
@@ -142,5 +153,31 @@ public class PreferenceUtility {
 
     public void clearUnreadNotificationCounter() {
         mSharedPreferences.edit().putInt(PREF_NOTIFICATION_COUNTER, 0).apply();
+    }
+
+
+    /**
+     * Guest user Info
+     */
+    public GuestDetails getGuestUserDetails() {
+        if (mGuestUserDetails != null) {
+            return mGuestUserDetails;
+        }
+        if (mGuestSharedPreferences.contains(PREF_GUEST_USER_INFO)) {
+            try {
+                JSONObject jsonObject = new JSONObject(mGuestSharedPreferences.getString(PREF_GUEST_USER_INFO, null));
+                mGuestUserDetails = (GuestDetails) Utility.getObjectFromJsonString(jsonObject.toString(), GuestDetails.class);
+                return mGuestUserDetails;
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return mGuestUserDetails == null ? new GuestDetails() : mGuestUserDetails;
+    }
+
+    public void saveGuestUserDetails(GuestDetails model) {
+        Log.d(TAG, "saveUserDetails() called with: model = [" + model + "]");
+        mGuestSharedPreferences.edit().putString(PREF_GUEST_USER_INFO, Utility.getJsonStringFromObject(model)).apply();
+        mGuestUserDetails = model;
     }
 }

@@ -173,7 +173,6 @@ public class ChatTabFragment extends BaseFragment {
         mLinearLayoutManager = new LinearLayoutManager(mContext);
         mFragmentTabChatBinding.commonRecyclerView.recyclerView.setLayoutManager(mLinearLayoutManager);
         mFragmentTabChatBinding.commonRecyclerView.recyclerView.setAdapter(chatTabRecyclerViewAdapter);
-
         mFragmentTabChatBinding.commonRecyclerView.recyclerView.addItemDecoration(new DividerItemDecoration(mContext, R.drawable.divider_grey_normal, (int) getResources().getDimension(R.dimen.scale_0dp)));
 
         // Update Notification Counter
@@ -259,6 +258,7 @@ public class ChatTabFragment extends BaseFragment {
     }
 
     private void loadTaskDetail(final TaskChatModel taskChatModel) {
+        Log.d(TAG, "loadTaskDetail() called with: taskChatModel = [" + taskChatModel + "]");
         final DatabaseReference databaseReference = FirebaseHelper.getTaskRef(taskChatModel.taskId);
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override

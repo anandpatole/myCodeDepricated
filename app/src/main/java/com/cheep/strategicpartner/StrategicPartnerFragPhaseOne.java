@@ -41,7 +41,7 @@ import static com.cheep.network.NetworkUtility.TAGS.CAT_ID;
  */
 
 public class StrategicPartnerFragPhaseOne extends BaseFragment {
-    public static final String TAG = "StrategicPartnerFragPhaseOne";
+    public static final String TAG = "StrategicPartnerFragPha";
     private FragmentStrategicPartnerPhaseOneBinding mFragmentStrategicPartnerPhaseOneBinding;
     private ErrorLoadingHelper errorLoadingHelper;
     private StrategicPartnerTaskCreationAct mStrategicPartnerTaskCreationAct;
@@ -169,7 +169,8 @@ public class StrategicPartnerFragPhaseOne extends BaseFragment {
         //Add Header parameters
         Map<String, String> mHeaderParams = new HashMap<>();
         mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
-        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
+        if (PreferenceUtility.getInstance(mContext).getUserDetails() != null)
+            mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
 
         //Add Params
         Map<String, String> mParams = new HashMap<>();

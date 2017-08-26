@@ -147,7 +147,7 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity {
     public void bindLocationTrackService() {
         //Bind service
         Intent intent = new Intent(mContext, LocationTrackService.class);
-        startService(intent);
+//        startService(intent);
         bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
     }
 

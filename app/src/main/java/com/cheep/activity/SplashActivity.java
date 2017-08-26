@@ -63,14 +63,20 @@ public class SplashActivity extends BaseAppCompatActivity {
         @Override
         public void run() {
 
-            if (PreferenceUtility.getInstance(mContext).getUserDetails() == null) {
-                if (PreferenceUtility.getInstance(mContext).getIntroScreenStatus() == false) {
+            /**
+             * For Guest Login We would directly redirect the user to HomeScreen
+             */
+            HomeActivity.newInstance(mContext);
+            finish();
+
+            /*if (PreferenceUtility.getInstance(mContext).getUserDetails() == null) {
+                if (!PreferenceUtility.getInstance(mContext).getIntroScreenStatus()) {
                     //Start the Introduction activity
 //                    TODO: This would be enabled once new INTROScreen Available
 //                    IntroScreenActivity.newInstance(mContext);
 
 
-                    // TEmporary intiating Login Screen
+                    // Temporary intiating Login Screen
                     PreferenceUtility.getInstance(mContext).updateIntroScreenStatus(true);
                     //Start the Login activity
                     LoginActivity.newInstance(mContext);
@@ -82,7 +88,7 @@ public class SplashActivity extends BaseAppCompatActivity {
             } else {
                 HomeActivity.newInstance(mContext);
                 finish();
-            }
+            }*/
         }
     };
 
