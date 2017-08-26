@@ -560,6 +560,7 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
      * @param taskId        Task Id of Method
      * @param taskAddressId AddressID from which Task is Initiated
      */
+    @SuppressWarnings("unchecked")
     private void callWSForPrefedQuotes(String taskId, String taskAddressId) {
         Log.d(TAG, "callWSForPrefedQuotes() called with: taskId = [" + taskId + "], taskAddressId = [" + taskAddressId + "]");
 
@@ -599,7 +600,6 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
     /**
      * Create Dialog which would going to show on successful completion
      */
-
 
     Response.ErrorListener mCallCreateTaskWSErrorListener = new Response.ErrorListener() {
         @Override
