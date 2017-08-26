@@ -3,7 +3,6 @@ package com.cheep.strategicpartner;
 import android.Manifest;
 import android.app.Activity;
 import android.app.DatePickerDialog;
-import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.content.ClipData;
 import android.content.Context;
@@ -1823,9 +1822,11 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
             Uri selectedImageUri = data.getData();
             mCurrentPhotoPath = Utility.getPath(mStrategicPartnerTaskCreationAct, selectedImageUri);
 
-            if (mCurrentPhotoPath != null && !selectedImageUri.equals(""))
+            if (mCurrentPhotoPath != null && !mCurrentPhotoPath.equals("")) {
                 if (getDuration(mCurrentPhotoPath) > 10) {
                     Toast.makeText(mStrategicPartnerTaskCreationAct, "Looks like the size of the file is heavy. Please try again.", Toast.LENGTH_SHORT).show();
+                } else if (getDuration(mCurrentPhotoPath) <= 0) {
+                    Toast.makeText(mStrategicPartnerTaskCreationAct, "Looks like there is something wrong with file. Please try again.", Toast.LENGTH_SHORT).show();
                 } else {
                     try {
                         Log.e(TAG, "path >> " + mCurrentPhotoPath);
@@ -1836,23 +1837,30 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
                         throwable.printStackTrace();
                     }
                 }
+            }
 
         }
     }
 
     private long getDuration(String selectedImagePath) {
-        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-//        use one of overloaded setDataSource() functions to set your data source
-        retriever.setDataSource(selectedImagePath);
-        String time = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
-        long timeInSec = 0;
         try {
-            timeInSec = Long.parseLong(time) / 1000;
-        } catch (NumberFormatException e) {
-            timeInSec = 0;
+            MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+//        use one of overloaded setDataSource() functions to set your data source
+            retriever.setDataSource(selectedImagePath);
+
+            String time = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+            long timeInSec = 0;
+            try {
+                timeInSec = Long.parseLong(time) / 1000;
+            } catch (NumberFormatException e) {
+                timeInSec = 0;
+            }
+            retriever.release();
+            return timeInSec;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
         }
-        retriever.release();
-        return timeInSec;
     }
 
     /**
@@ -1941,32 +1949,39 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
         if (path.equalsIgnoreCase(""))
             return;
 
+        // async task for uploading file on amazon
+
         new AsyncTask<Void, Void, Void>() {
 
-            public String s3PathThumb;
-            public String s3pathOriginal;
-            public String localFilePath;
-            ProgressDialog mProgressDialog = null;
+            // thumb folder path for s3 amazon
+            String s3PathThumb;
+            // original file folder path for s3 amazon
+            String s3pathOriginal;
+
+            // to show thumbnail in recycler view in after uploading file on s3
+            String localFilePath;
 
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
-                mProgressDialog = new ProgressDialog(mStrategicPartnerTaskCreationAct);
-                mProgressDialog.setCancelable(false);
-                mProgressDialog.setCanceledOnTouchOutside(false);
-                mProgressDialog.setMessage("Uploading media");
-                mProgressDialog.show();
+                // start progress
+                showProgressDialog();
             }
 
             @Override
             protected Void doInBackground(Void... voids) {
+
                 File fileOriginal = new File(path);
+
                 String thumbPath = "";
+                // create thumbnail for uploading
                 if (type.equalsIgnoreCase(MediaModel.MediaType.TYPE_VIDEO))
                     thumbPath = AmazonUtils.getVideoThumbPath(mStrategicPartnerTaskCreationAct, path);
                 else
                     thumbPath = AmazonUtils.getImageThumbPath(mStrategicPartnerTaskCreationAct, path);
                 final File fileThumb = new File(thumbPath);
+
+//                this name is for creating s3 url for original and file file
                 String name;
                 String thumbName;
                 String timeStamp = System.currentTimeMillis() + "";
@@ -1977,6 +1992,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
                     name = "AND_VID_" + timeStamp + AmazonUtils.getExtension(path);
                     thumbName = "AND_VID_" + timeStamp + ".jpg";
                 }
+
                 localFilePath = thumbPath;
                 s3pathOriginal = AmazonUtils.FOLDER_ORIGINAL + File.separator + name;
                 s3PathThumb = AmazonUtils.FOLDER_THUMB + File.separator + thumbName;
@@ -1991,8 +2007,11 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
             protected void onPostExecute(Void aVoid) {
                 super.onPostExecute(aVoid);
 
+                // get s3 urls
                 String thumbUrl = AmazonUtils.getThumbURL(s3PathThumb);
                 String originalUrl = AmazonUtils.getOriginalURL(s3pathOriginal);
+
+                // add image/video model to recycle view
                 MediaModel mediaModel = new MediaModel();
                 mediaModel.mediaName = originalUrl;
                 mediaModel.mediaThumbName = thumbUrl;
@@ -2002,6 +2021,10 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
                 mediaModel.localFilePath = localFilePath;
                 mMediaRecycleAdapter.addImage(mediaModel);
 
+                // set update media list for strategic partner activity
+                // for when  user is not creating tasks but he press back buttons
+                // and goes to home screen that time all uploaded media will be deleted.
+
                 for (QueAnsModel model : mList)
                     if (model.answerType.equalsIgnoreCase(Utility.TEMPLATE_UPLOAD)) {
                         model.medialList = mMediaRecycleAdapter.getList();
@@ -2009,9 +2032,9 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
                     }
 
                 checkMediaArraySize();
+                // close progress
+                hideProgressDialog();
 
-
-                mProgressDialog.dismiss();
             }
         }.execute();
 
@@ -2019,7 +2042,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
 
     private class UploadListener implements TransferListener {
 
-        // Simply updates the UI list when notified.
+        // Keep tracks for media uploading
         @Override
         public void onError(int id, Exception e) {
             Log.e(TAG, "Error during upload: " + id, e);

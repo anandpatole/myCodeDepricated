@@ -26,21 +26,21 @@ import java.io.IOException;
  * Created by giteeka on 24/8/17.
  */
 
-public class AmazonUtils {
+class AmazonUtils {
     private static AmazonS3Client sS3Client;
     private static CognitoCachingCredentialsProvider sCredProvider;
     private static TransferUtility sTransferUtility;
     private static final String TAG = "AmazonUtils";
 
 
-    public static final String COGNITO_POOL_ID = "ap-south-1:219f4bf8-6f0c-4fbe-aacf-1079267e128d";
-    public static final String COGNITO_POOL_REGION = Regions.AP_SOUTH_1.getName();
-    public static final String BUCKET_NAME = "cheepapp";
-    public static final String BUCKET_REGION = Regions.AP_SOUTH_1.getName();
-//    public static final String FOLDER_ORIGINAL = "strategic_partner/original";
+    private static final String COGNITO_POOL_ID = "ap-south-1:219f4bf8-6f0c-4fbe-aacf-1079267e128d";
+    private static final String COGNITO_POOL_REGION = Regions.AP_SOUTH_1.getName();
+    private static final String BUCKET_NAME = "cheepapp";
+    private static final String BUCKET_REGION = Regions.AP_SOUTH_1.getName();
+    //    public static final String FOLDER_ORIGINAL = "strategic_partner/original";
 //    public static final String FOLDER_THUMB = "strategic_partner/thumb";
-    public static final String FOLDER_ORIGINAL = "task_image/original";
-    public static final String FOLDER_THUMB = "task_image/thumb";
+    static final String FOLDER_ORIGINAL = "task_image/original";
+    static final String FOLDER_THUMB = "task_image/thumb";
 
     private static CognitoCachingCredentialsProvider getCredProvider(Context context) {
         if (sCredProvider == null) {
@@ -52,7 +52,7 @@ public class AmazonUtils {
         return sCredProvider;
     }
 
-    public static AmazonS3Client getS3Client(Context context) {
+    private static AmazonS3Client getS3Client(Context context) {
         if (sS3Client == null) {
             sS3Client = new AmazonS3Client(getCredProvider(context.getApplicationContext()));
             sS3Client.setRegion(Region.getRegion(Regions.fromName(BUCKET_REGION)));
@@ -60,7 +60,7 @@ public class AmazonUtils {
         return sS3Client;
     }
 
-    public static TransferUtility getTransferUtility(Context context) {
+    private static TransferUtility getTransferUtility(Context context) {
         if (sTransferUtility == null) {
             sTransferUtility = new TransferUtility(getS3Client(context.getApplicationContext()),
                     context.getApplicationContext());
@@ -69,13 +69,13 @@ public class AmazonUtils {
         return sTransferUtility;
     }
 
-    public static TransferObserver uploadMedia(final Context context, File file, String s3Path, TransferListener l) {
+    static TransferObserver uploadMedia(final Context context, File file, String s3Path, TransferListener l) {
         TransferObserver observer = getTransferUtility(context).upload(BUCKET_NAME, s3Path, file);
         observer.setTransferListener(l);
         return observer;
     }
 
-    public static String getFileNameWithExt(String mFilePath, boolean withExt) {
+    static String getFileNameWithExt(String mFilePath, boolean withExt) {
         if (!TextUtils.isEmpty(mFilePath)) {
             if (withExt)
                 return mFilePath.substring(mFilePath.lastIndexOf("/") + 1);
@@ -88,7 +88,7 @@ public class AmazonUtils {
         return "";
     }
 
-    public static String getExtension(String mFilePath) {
+    static String getExtension(String mFilePath) {
         if (!TextUtils.isEmpty(mFilePath)) {
             String ext = mFilePath.substring(mFilePath.lastIndexOf("."), mFilePath.length());
             Log.d(TAG, "getExtension() called with: ext = [" + ext + "]");
@@ -100,7 +100,7 @@ public class AmazonUtils {
 
     private static final int THUMBNAIL_SIZE = 400;
 
-    public static String getImageThumbPath(Context context, String path) {
+    static String getImageThumbPath(Context context, String path) {
         String filepath = "";
         BitmapFactory.Options bounds = new BitmapFactory.Options();
         bounds.inJustDecodeBounds = true;
@@ -135,17 +135,15 @@ public class AmazonUtils {
         return filepath;
     }
 
-    public static String getVideoThumbPath(Context mContext, String mVideoPath) {
+    static String getVideoThumbPath(Context mContext, String mVideoPath) {
         try {
             File outputDir = mContext.getCacheDir(); // context being the Activity pointer
             File file = File.createTempFile(getFileNameWithExt(mVideoPath, false), ".jpg", outputDir);
-            if (file != null) {
-                Bitmap mThumbBitmap = ThumbnailUtils.createVideoThumbnail(mVideoPath, MediaStore.Video.Thumbnails.MINI_KIND);
-                FileOutputStream fileOutputStream = new FileOutputStream(file);
-                mThumbBitmap.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream);
-                if (file != null && file.exists()) {
-                    return file.getAbsolutePath();
-                }
+            Bitmap mThumbBitmap = ThumbnailUtils.createVideoThumbnail(mVideoPath, MediaStore.Video.Thumbnails.MINI_KIND);
+            FileOutputStream fileOutputStream = new FileOutputStream(file);
+            mThumbBitmap.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream);
+            if (file.exists()) {
+                return file.getAbsolutePath();
             }
         } catch (Exception e) {
             Log.i("TAG", "Exception while creating temp file" + e.toString());
@@ -155,15 +153,27 @@ public class AmazonUtils {
     }
 
 
-    public static String getOriginalURL(String name) {
+    /**
+     * @param name folder path of
+     * @return
+     */
+    static String getOriginalURL(String name) {
         return "https://s3.ap-south-1.amazonaws.com/" + AmazonUtils.BUCKET_NAME + "/" + name;
     }
 
-    public static String getThumbURL(String name) {
+    static String getThumbURL(String name) {
         return "https://s3.ap-south-1.amazonaws.com/" + AmazonUtils.BUCKET_NAME + "/" + name;
     }
 
-    public static void deleteFiles(final Context context, final String original, final String thumb) {
+    /**
+     * when user click on cancel button from list
+     * when user goes back to home screen without creating task.
+     *
+     * @param context
+     * @param original
+     * @param thumb
+     */
+    static void deleteFiles(final Context context, final String original, final String thumb) {
 
         new AsyncTask<Void, Void, Void>() {
 
