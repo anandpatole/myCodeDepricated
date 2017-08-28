@@ -482,7 +482,6 @@
                         <RelativeLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/scale_20dp"
                             android:paddingBottom="@dimen/scale_5dp"
                             android:paddingLeft="@dimen/scale_10dp"
                             android:paddingRight="@dimen/scale_10dp"

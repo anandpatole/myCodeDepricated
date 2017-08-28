@@ -17,15 +17,12 @@ import android.widget.TextView;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.cheep.R;
 import com.cheep.adapter.MyTaskRecyclerViewAdapter;
 import com.cheep.adapter.ReviewsRecyclerViewAdapter;
 import com.cheep.custom_view.BottomAlertDialog;
 import com.cheep.custom_view.DividerItemDecoration;
 import com.cheep.databinding.ActivityProfileBinding;
-import com.cheep.firebase.FirebaseHelper;
 import com.cheep.firebase.FirebaseUtils;
 import com.cheep.firebase.model.TaskChatModel;
 import com.cheep.model.CoverImageModel;
@@ -40,9 +37,6 @@ import com.cheep.utils.ErrorLoadingHelper;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.SharedElementTransitionHelper;
 import com.cheep.utils.Utility;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.ValueEventListener;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -55,7 +49,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.cheep.network.NetworkUtility.WS.REVIEW_LIST;
-import static com.facebook.login.widget.ProfilePictureView.TAG;
 
 /**
  * Created by pankaj on 10/6/16.
@@ -204,7 +197,15 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
 
         //loading rounded image on profile
         //  Utility.showCircularImageView(mContext, TAG, mActivityProviderProfileBinding.imgProfile, providerModel.profileUrl, Utility.DEFAULT_PROFILE_SRC, true);
-        Utility.loadImageView(mContext, mActivityProviderProfileBinding.imgProfile, providerModel.profileUrl, Utility.DEFAULT_PROFILE_SRC);
+        Utility.showCircularImageViewWithColorBorder(
+                mContext,
+                TAG,
+                mActivityProviderProfileBinding.imgProfile,
+                providerModel.profileUrl,
+                R.drawable.icon_profile_img_solid,
+                R.color.splash_gradient_end
+                , true);
+//        Utility.loadImageView(mContext, mActivityProviderProfileBinding.imgProfile, providerModel.profileUrl, Utility.DEFAULT_PROFILE_SRC);
 
         if (!TextUtils.isEmpty(providerModel.information)) {
             mActivityProviderProfileBinding.textDesc.setText(providerModel.information);

@@ -234,7 +234,7 @@
                         android:layout_marginBottom="@dimen/scale_10dp"
                         android:layout_marginLeft="@dimen/scale_22dp"
                         android:layout_marginRight="@dimen/scale_22dp"
-                        android:layout_marginTop="@dimen/scale_20dp">
+                        android:layout_marginTop="@dimen/scale_10dp">
 
                         <com.cheep.custom_view.CFTextViewSemiBold
                             android:id="@+id/text_label_total_paid"

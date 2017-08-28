@@ -567,7 +567,6 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
                     if (queAnsModel.answerType.equalsIgnoreCase(Utility.TEMPLATE_DATE_PICKER)) {
                         if (queAnsModel.answer != null && !queAnsModel.answer.equalsIgnoreCase("")) {
                             txtAnswer.setSelected(true);
-
                             showTimePickerDialog(txtAnswer, model);
                         } else {
                             txtAnswer.setSelected(false);
@@ -664,11 +663,12 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
 
 
                             if (startDateTimeSuperCalendar.getTimeInMillis() < calAfter3Hours.getTimeInMillis()) {
+                                textView.setText(getString(R.string.label_select_the_time));
+                                textView.setSelected(false);
+                                model.answer ="";
                                 Utility.showSnackBar(getString(R.string.alert_time_must_be_after_3_hour), mFragmentStrategicPartnerPhaseTwoBinding.getRoot());
                             } else {
                                 String selectedDateTime = startDateTimeSuperCalendar.format(Utility.DATE_FORMAT_HH_MM_AM);
-
-
                                 // set selected time to text view
                                 textView.setText(selectedDateTime);
                                 textView.setSelected(false);
@@ -677,7 +677,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
 //                            mStrategicPartnerTaskCreationAct.time = selectedDateTime;
 
                                 // set time zone for start date time
-                                startDateTimeSuperCalendar.setTimeZone(SuperCalendar.SuperTimeZone.GMT.GMT);
+//                                startDateTimeSuperCalendar.setTimeZone(SuperCalendar.SuperTimeZone.GMT.GMT);
 
                                 // set timestamp as answer for web api
                                 model.answer = String.valueOf(startDateTimeSuperCalendar.getTimeInMillis());
@@ -1900,10 +1900,11 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
                 if (TextUtils.isEmpty(queAnsModel.answer)) {
                     message = getString(R.string.alert_select_date_and_time);
                     return message;
-                } else if (startDateTimeSuperCalendar.getTimeInMillis() < calAfter3Hours.getTimeInMillis()) {
-                    message = "Date Time must be after 3 hour.";
-                    return message;
                 }
+//                else if (startDateTimeSuperCalendar.getTimeInMillis() < calAfter3Hours.getTimeInMillis()) {
+//                    message = "Date Time must be after 3 hour.";
+//                    return message;
+//                }
 
             }
 
@@ -1913,10 +1914,10 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
                     message = getString(R.string.alert_select_the_time);
                     return message;
                 }
-//                else if (startDateTimeSuperCalendar.getTimeInMillis() < calAfter3Hours.getTimeInMillis()) {
-//                    message = getString(R.string.alert_time_must_be_after_3_hour);
-//                    return message;
-//                }
+                else if (startDateTimeSuperCalendar.getTimeInMillis() < calAfter3Hours.getTimeInMillis()) {
+                    message = getString(R.string.alert_time_must_be_after_3_hour);
+                    return message;
+                }
             }
             // alert multiple choices option is not selected
             else if (queAnsModel.answerType.equalsIgnoreCase(Utility.TEMPLATE_DROPDOWN)) {

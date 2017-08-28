@@ -199,7 +199,7 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
             }
         });
         mFragmentStrategicPartnerPhaseThreeBinding.imgCheepCodeClose.setVisibility(View.GONE);
-        mFragmentStrategicPartnerPhaseThreeBinding.txtpromocode.setText(getString(R.string.ruppe_symbol_x, "" + 0));
+        mFragmentStrategicPartnerPhaseThreeBinding.txtpromocode.setText(getString(R.string.ruppe_symbol_x, "" + Utility.getQuotePriceFormatter("0")));
         mFragmentStrategicPartnerPhaseThreeBinding.imgCheepCodeClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -352,7 +352,8 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
         mFragmentStrategicPartnerPhaseThreeBinding.txttotal.setText(getString(R.string.ruppe_symbol_x, "" + Utility.getQuotePriceFormatter(payable)));
         mFragmentStrategicPartnerPhaseThreeBinding.textPay.setText(getString(R.string.label_pay_fee_v1, "" + Utility.getQuotePriceFormatter(payable)));
         mFragmentStrategicPartnerPhaseThreeBinding.textpromocodelabel.setEnabled(false);
-        mFragmentStrategicPartnerPhaseThreeBinding.textpromocodelabel.setText(cheepCode);
+        mFragmentStrategicPartnerPhaseThreeBinding.textpromocodelabel.setText(getString(R.string.label_promocode_apply));
+        mFragmentStrategicPartnerPhaseThreeBinding.textpromocodelabel.setTextColor(ContextCompat.getColor(mStrategicPartnerTaskCreationAct, R.color.black));
         mFragmentStrategicPartnerPhaseThreeBinding.imgCheepCodeClose.setVisibility(View.VISIBLE);
     }
 
@@ -694,11 +695,17 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
                 media_file = getSelectedMediaJsonString(model.medialList).toString();
                 break;
             }
+        Log.e(TAG, "start dat time " + start_datetime);
+        SuperCalendar superCalendar = SuperCalendar.getInstance();
+        superCalendar.setTimeInMillis(Long.parseLong(start_datetime));
+        superCalendar.setTimeZone(SuperCalendar.SuperTimeZone.GMT.GMT);
+
+        Log.e(TAG, "gmt time " + String.valueOf(superCalendar.getTimeInMillis()));
 
         Map<String, String> mParams = new HashMap<>();
         mParams.put(NetworkUtility.TAGS.ADDRESS_ID, addressId);
         mParams.put(NetworkUtility.TAGS.CAT_ID, mStrategicPartnerTaskCreationAct.mBannerImageModel.cat_id);
-        mParams.put(NetworkUtility.TAGS.START_DATETIME, start_datetime);
+        mParams.put(NetworkUtility.TAGS.START_DATETIME, String.valueOf(superCalendar.getTimeInMillis()));
         mParams.put(NetworkUtility.TAGS.SUB_CATEGORY_DETAIL, subCategoryDetail);
         mParams.put(NetworkUtility.TAGS.QUESTION_DETAIL, question_detail);
         mParams.put(NetworkUtility.TAGS.QUOTE_AMOUNT, mStrategicPartnerTaskCreationAct.total);

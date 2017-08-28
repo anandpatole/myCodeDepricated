@@ -623,7 +623,12 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
             for (TaskDetailModel taskDetailModel : mList) {
                 if (taskDetailModel.taskId.equalsIgnoreCase(taskId)) {
 //                    taskDetailModel.taskStartdate = start_datetime;
-                    taskDetailModel.taskStatus = Utility.TASK_STATUS.RESCHEDULE_REQUESTED;
+                    if (taskDetailModel.taskType.equalsIgnoreCase(Utility.TASK_TYPE.STRATEGIC)) {
+                        taskDetailModel.taskStartdate = start_datetime;
+                    }
+                    else{
+                        taskDetailModel.taskStatus = Utility.TASK_STATUS.RESCHEDULE_REQUESTED;
+                    }
                     notifyItemChanged(i);
                     break;
                 }

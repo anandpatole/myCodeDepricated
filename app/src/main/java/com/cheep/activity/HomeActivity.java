@@ -1536,7 +1536,7 @@ public class HomeActivity extends BaseAppCompatActivity
                         MessageEvent messageEvent = new MessageEvent();
                         messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.TASK_RESCHEDULED;
                         messageEvent.id = jData.getString(NetworkUtility.TAGS.TASK_ID);
-//                        messageEvent.taskStartdate = jData.getString(NetworkUtility.TAGS.TASK_STARTDATE);
+                        messageEvent.taskStartdate = jData.getString(NetworkUtility.TAGS.RESCHEDULE_DATETIME);
                         EventBus.getDefault().post(messageEvent);
 
                         break;

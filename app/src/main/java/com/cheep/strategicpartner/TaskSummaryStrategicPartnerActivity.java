@@ -198,16 +198,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
             mActivityTaskSummaryBinding.textAddressKmAway.setText(mTaskDetailModel.selectedProvider.distance + " away");
 
             // Profile Pic
-//            Utility.showCircularImdageView(mContext, TAG, mActivityTaskSummaryBinding.imgProfile, mTaskDetailModel.selectedProvider.profileUrl, Utility.DEFAULT_PROFILE_SRC, true);
-//            Utility.showCircularImageView(mContext, TAG, mActivityTaskSummaryBinding.imgProfile, mTaskDetailModel.catImageExtras.medium, Utility.DEFAULT_PROFILE_SRC, true);
             Utility.showCircularImageViewWithColorBorder(this, TAG,mActivityTaskSummaryBinding.imgProfile,mTaskDetailModel.catImageExtras.medium, R.drawable.icon_profile_img_solid, R.color.grey_dark_color, true);
-
-            // Whether Provider Verified or not
-//            if (Utility.BOOLEAN.YES.equalsIgnoreCase(mTaskDetailModel.selectedProvider.isVerified)) {
-//                mActivityTaskSummaryBinding.textProVerified.setVisibility(View.VISIBLE);
-//            } else {
-//                mActivityTaskSummaryBinding.textProVerified.setVisibility(View.GONE);
-//            }
 
             // Manage Click events of Call & Chat
             mActivityTaskSummaryBinding.lnCall.setOnClickListener(new View.OnClickListener() {
@@ -252,10 +243,6 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
             setSelectedServicesDetails();
         }
 
-        // Set Second Section
-//        mActivityTaskSummaryBinding.textSubCategoryName.setText(mTaskDetailModel.subCategoryName);
-//        mActivityTaskSummaryBinding.textTaskDesc.setText(mTaskDetailModel.taskDesc);
-//        Utility.loadImageView(mContext, mActivityTaskSummaryBinding.imgTaskPicture, mTaskDetailModel.taskImage, 0);
 
 
         // Set Up Third Section WHEN

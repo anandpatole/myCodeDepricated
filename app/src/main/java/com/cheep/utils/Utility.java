@@ -1242,9 +1242,9 @@ public class Utility {
     public static String getQuotePriceFormatter(String quotePrice) {
 
         if (quotePrice==null || quotePrice.equalsIgnoreCase("null"))
-            return "0";
+            return "0.00";
         if (quotePrice.equalsIgnoreCase("") || quotePrice.equalsIgnoreCase("0") || quotePrice.equalsIgnoreCase("0.0"))
-            return "0";
+            return "0.00";
         DecimalFormat formatter = new DecimalFormat("#,###.00");
         double price = Double.parseDouble(quotePrice);
         return formatter.format(price);

@@ -103,6 +103,7 @@ public class NetworkUtility {
         // Task Creation for Strategic Partner
         public static final String TASK_CREATE_STRATEGIC_PARTNER = BASE_URL + "customers/tasks/stratagic_partner_task_create";
 
+        public static final String CURL_NOTIFICATION_TO_SP = BASE_URL + "customers/tasks/curl_for_notification_to_sp";
     }
 
     public static class TAGS {
@@ -247,6 +248,7 @@ public class NetworkUtility {
         public static final String PAYMENT_STATUS = "payment_status";
         public static final String PAYMENT_LOG = "payment_log";
         public static final String IS_FOR_ADDITIONAL_QUOTE = "isForAdditionalQuote";
+        public static final String RESCHEDULE_DATETIME= "reschedule_datetime";
 
         public static class STATUSCODETYPE {
             public static final int SUCCESS = 200;
