@@ -600,7 +600,6 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
     /**
      * Create Dialog which would going to show on successful completion
      */
-
     Response.ErrorListener mCallCreateTaskWSErrorListener = new Response.ErrorListener() {
         @Override
         public void onErrorResponse(VolleyError error) {
