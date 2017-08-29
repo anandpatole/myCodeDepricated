@@ -14,7 +14,6 @@ import android.databinding.DataBindingUtil;
 import android.graphics.drawable.BitmapDrawable;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -665,7 +664,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
                             if (startDateTimeSuperCalendar.getTimeInMillis() < calAfter3Hours.getTimeInMillis()) {
                                 textView.setText(getString(R.string.label_select_the_time));
                                 textView.setSelected(false);
-                                model.answer ="";
+                                model.answer = "";
                                 Utility.showSnackBar(getString(R.string.alert_time_must_be_after_3_hour), mFragmentStrategicPartnerPhaseTwoBinding.getRoot());
                             } else {
                                 String selectedDateTime = startDateTimeSuperCalendar.format(Utility.DATE_FORMAT_HH_MM_AM);
@@ -1913,8 +1912,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
                 if (TextUtils.isEmpty(queAnsModel.answer)) {
                     message = getString(R.string.alert_select_the_time);
                     return message;
-                }
-                else if (startDateTimeSuperCalendar.getTimeInMillis() < calAfter3Hours.getTimeInMillis()) {
+                } else if (startDateTimeSuperCalendar.getTimeInMillis() < calAfter3Hours.getTimeInMillis()) {
                     message = getString(R.string.alert_time_must_be_after_3_hour);
                     return message;
                 }
@@ -1952,98 +1950,68 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
 
         // async task for uploading file on amazon
 
-        new AsyncTask<Void, Void, Void>() {
+//        new AsyncTask<Void, Void, Void>() {
 
-            // thumb folder path for s3 amazon
-            String s3PathThumb;
-            // original file folder path for s3 amazon
-            String s3pathOriginal;
+        // thumb folder path for s3 amazon
+        String s3PathThumb;
+        // original file folder path for s3 amazon
+        String s3pathOriginal;
 
-            // to show thumbnail in recycler view in after uploading file on s3
-            String localFilePath;
+        // to show thumbnail in recycler view in after uploading file on s3
+        String localFilePath;
 
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-                // start progress
-                showProgressDialog();
-            }
+        showProgressDialog();
 
-            @Override
-            protected Void doInBackground(Void... voids) {
+        File fileOriginal = new File(path);
 
-                File fileOriginal = new File(path);
-
-                String thumbPath = "";
-                // create thumbnail for uploading
-                if (type.equalsIgnoreCase(MediaModel.MediaType.TYPE_VIDEO))
-                    thumbPath = AmazonUtils.getVideoThumbPath(mStrategicPartnerTaskCreationAct, path);
-                else
-                    thumbPath = AmazonUtils.getImageThumbPath(mStrategicPartnerTaskCreationAct, path);
-                final File fileThumb = new File(thumbPath);
+        String thumbPath = "";
+        // create thumbnail for uploading
+        if (type.equalsIgnoreCase(MediaModel.MediaType.TYPE_VIDEO))
+            thumbPath = AmazonUtils.getVideoThumbPath(mStrategicPartnerTaskCreationAct, path);
+        else
+            thumbPath = AmazonUtils.getImageThumbPath(mStrategicPartnerTaskCreationAct, path);
+        final File fileThumb = new File(thumbPath);
 
 //                this name is for creating s3 url for original and file file
-                String name;
-                String thumbName;
-                String timeStamp = System.currentTimeMillis() + "";
-                if (type.equalsIgnoreCase(MediaModel.MediaType.TYPE_IMAGE)) {
-                    name = "AND_IMG_" + timeStamp + AmazonUtils.getExtension(path);
-                    thumbName = "AND_IMG_" + timeStamp + ".jpg";
-                } else {
-                    name = "AND_VID_" + timeStamp + AmazonUtils.getExtension(path);
-                    thumbName = "AND_VID_" + timeStamp + ".jpg";
-                }
+        String name;
+        String thumbName;
+        String timeStamp = System.currentTimeMillis() + "";
+        if (type.equalsIgnoreCase(MediaModel.MediaType.TYPE_IMAGE)) {
+            name = "AND_IMG_" + timeStamp + AmazonUtils.getExtension(path);
+            thumbName = "AND_IMG_" + timeStamp + ".jpg";
+        } else {
+            name = "AND_VID_" + timeStamp + AmazonUtils.getExtension(path);
+            thumbName = "AND_VID_" + timeStamp + ".jpg";
+        }
 
-                localFilePath = thumbPath;
-                s3pathOriginal = AmazonUtils.FOLDER_ORIGINAL + File.separator + name;
-                s3PathThumb = AmazonUtils.FOLDER_THUMB + File.separator + thumbName;
-
-                TransferObserver observer = AmazonUtils.uploadMedia(mStrategicPartnerTaskCreationAct, fileOriginal, s3pathOriginal, new UploadListener());
-                TransferObserver observer1 = AmazonUtils.uploadMedia(mStrategicPartnerTaskCreationAct, fileThumb, s3PathThumb, new UploadListener());
-
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                super.onPostExecute(aVoid);
-
-                // get s3 urls
-                String thumbUrl = AmazonUtils.getThumbURL(s3PathThumb);
-                String originalUrl = AmazonUtils.getOriginalURL(s3pathOriginal);
-
-                // add image/video model to recycle view
-                MediaModel mediaModel = new MediaModel();
-                mediaModel.mediaName = originalUrl;
-                mediaModel.mediaThumbName = thumbUrl;
-                Log.e(TAG, "mediaName: " + originalUrl);
-                Log.e(TAG, "mediaThumbName: " + thumbUrl);
-                mediaModel.mediaType = type;
-                mediaModel.localFilePath = localFilePath;
-                mMediaRecycleAdapter.addImage(mediaModel);
-
-                // set update media list for strategic partner activity
-                // for when  user is not creating tasks but he press back buttons
-                // and goes to home screen that time all uploaded media will be deleted.
-
-                for (QueAnsModel model : mList)
-                    if (model.answerType.equalsIgnoreCase(Utility.TEMPLATE_UPLOAD)) {
-                        model.medialList = mMediaRecycleAdapter.getList();
-                        break;
-                    }
-
-                checkMediaArraySize();
-                // close progress
-                hideProgressDialog();
-
-            }
-        }.execute();
+        localFilePath = thumbPath;
+        s3pathOriginal = AmazonUtils.FOLDER_ORIGINAL + File.separator + name;
+        s3PathThumb = AmazonUtils.FOLDER_THUMB + File.separator + thumbName;
+        UploadListener listener = new UploadListener(s3PathThumb, s3pathOriginal, type, localFilePath);
+        TransferObserver observer;
+        TransferObserver observer1;
+        observer = AmazonUtils.uploadMedia(mStrategicPartnerTaskCreationAct, fileOriginal, s3pathOriginal, listener);
+        observer1 = AmazonUtils.uploadMedia(mStrategicPartnerTaskCreationAct, fileThumb, s3PathThumb, listener);
+        listener.observer = observer;
+        listener.observer1 = observer1;
 
     }
 
     private class UploadListener implements TransferListener {
+        String s3PathThumb, s3pathOriginal, type, localFilePath;
+
+        UploadListener(String s3PathThumb, String s3pathOriginal, String type, String localFilePath) {
+            this.s3PathThumb = s3PathThumb;
+            this.s3pathOriginal = s3pathOriginal;
+            this.type = type;
+            this.localFilePath = localFilePath;
+        }
 
         // Keep tracks for media uploading
+        TransferObserver observer;
+        TransferObserver observer1;
+
+
         @Override
         public void onError(int id, Exception e) {
             Log.e(TAG, "Error during upload: " + id, e);
@@ -2058,6 +2026,39 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
         @Override
         public void onStateChanged(int id, TransferState newState) {
             Log.d(TAG, "onStateChanged: " + id + ", " + newState);
+            Log.d(TAG, "observer: " + observer.getId() + ", " + observer.getState());
+            Log.d(TAG, "observer1: " + observer1.getId() + ", " + observer.getState());
+            if (observer != null && observer1 != null) {
+                if (observer.getState() == TransferState.COMPLETED && observer1.getState() == TransferState.COMPLETED) {
+                    // get s3 urls
+                    String thumbUrl = AmazonUtils.getThumbURL(s3PathThumb);
+                    String originalUrl = AmazonUtils.getOriginalURL(s3pathOriginal);
+
+                    // add image/video model to recycle view
+                    MediaModel mediaModel = new MediaModel();
+                    mediaModel.mediaName = originalUrl;
+                    mediaModel.mediaThumbName = thumbUrl;
+                    Log.e(TAG, "mediaName: " + originalUrl);
+                    Log.e(TAG, "mediaThumbName: " + thumbUrl);
+                    mediaModel.mediaType = type;
+                    mediaModel.localFilePath = localFilePath;
+                    mMediaRecycleAdapter.addImage(mediaModel);
+
+                    // set update media list for strategic partner activity
+                    // for when  user is not creating tasks but he press back buttons
+                    // and goes to home screen that time all uploaded media will be deleted.
+
+                    for (QueAnsModel model : mList)
+                        if (model.answerType.equalsIgnoreCase(Utility.TEMPLATE_UPLOAD)) {
+                            model.medialList = mMediaRecycleAdapter.getList();
+                            break;
+                        }
+
+                    checkMediaArraySize();
+                    // close progress
+                    hideProgressDialog();
+                }
+            }
         }
     }
 

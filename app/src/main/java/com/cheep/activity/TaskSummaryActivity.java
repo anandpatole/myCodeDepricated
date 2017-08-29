@@ -6,8 +6,12 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.text.InputFilter;
+import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.style.RelativeSizeSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,6 +38,7 @@ import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
 import com.cheep.utils.HotlineHelper;
 import com.cheep.utils.PreferenceUtility;
+import com.cheep.utils.RoundedBackgroundSpan;
 import com.cheep.utils.SharedElementTransitionHelper;
 import com.cheep.utils.SuperCalendar;
 import com.cheep.utils.Utility;
@@ -164,18 +169,26 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
             // Name of Provider
             mActivityTaskSummaryBinding.textProviderName.setText(mTaskDetailModel.selectedProvider.userName);
 
+            SpannableString sName = new SpannableString(mTaskDetailModel.selectedProvider.userName);
+            SpannableString sVerified = null;
+            if (Utility.BOOLEAN.YES.equalsIgnoreCase(mTaskDetailModel.selectedProvider.isVerified)) {
+                sVerified = new SpannableString( " " + mContext.getString(R.string.label_verified_pro)+" " );
+                sVerified.setSpan(new RelativeSizeSpan(0.9f), 0, sVerified.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                sVerified.setSpan(new RoundedBackgroundSpan(ContextCompat.getColor(this, R.color.splash_gradient_end), ContextCompat.getColor(this, R.color.white)), 0, sVerified.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+                mActivityTaskSummaryBinding.textProviderName.setText(sVerified != null ? TextUtils.concat(sName, " ", sVerified) : sName);
+            }
             // Distanceof Provider
             mActivityTaskSummaryBinding.textAddressKmAway.setText(mTaskDetailModel.selectedProvider.distance + " away");
 
             // Profile Pic
             Utility.showCircularImageView(mContext, TAG, mActivityTaskSummaryBinding.imgProfile, mTaskDetailModel.selectedProvider.profileUrl, Utility.DEFAULT_PROFILE_SRC, true);
 
-            // Whether Provider Verified or not
-            if (Utility.BOOLEAN.YES.equalsIgnoreCase(mTaskDetailModel.selectedProvider.isVerified)) {
-                mActivityTaskSummaryBinding.textProVerified.setVisibility(View.VISIBLE);
-            } else {
-                mActivityTaskSummaryBinding.textProVerified.setVisibility(View.GONE);
-            }
+//            // Whether Provider Verified or not
+//            if (Utility.BOOLEAN.YES.equalsIgnoreCase(mTaskDetailModel.selectedProvider.isVerified)) {
+//                mActivityTaskSummaryBinding.textProVerified.setVisibility(View.VISIBLE);
+//            } else {
+//                mActivityTaskSummaryBinding.textProVerified.setVisibility(View.GONE);
+//            }
 
             // Manage Click events of Call & Chat
             mActivityTaskSummaryBinding.lnCall.setOnClickListener(new View.OnClickListener() {

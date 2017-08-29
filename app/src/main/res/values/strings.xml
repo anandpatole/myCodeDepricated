@@ -398,7 +398,8 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_quote_discount" tools:ignore="StringFormatInvalid">% Cheeper</string>
     <string name="label_task_booking_time">Task booked for %1$s %2$s</string>
     <string name="label_task_starts_in">Task starts in %s hrs</string>
-    <string name="label_verified_pro">\u00A0\u00A0verified\u00A0\u00A0</string>
+    <string name="label_verified_pro">verified</string>
+    <string name="label_partner_pro">Partner</string>
     <string name="label_congratulation">Congratulation</string>
     <string name="label_brilliant_its_time_to_cheep">Brilliant! Its\' time to CHEEP</string>
     <string name="label_alert_not_active">Sorry! Alert will be active only once your task starts.</string>
