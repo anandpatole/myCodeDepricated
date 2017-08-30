@@ -17,6 +17,7 @@ import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
+import com.cheep.BuildConfig;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -33,21 +34,21 @@ class AmazonUtils {
     private static final String TAG = "AmazonUtils";
 
 
-    private static final String COGNITO_POOL_ID = "ap-south-1:219f4bf8-6f0c-4fbe-aacf-1079267e128d";
-    private static final String COGNITO_POOL_REGION = Regions.AP_SOUTH_1.getName();
-    private static final String BUCKET_NAME = "cheepapp";
-    private static final String BUCKET_REGION = Regions.AP_SOUTH_1.getName();
+//    private static final String COGNITO_POOL_ID = "ap-south-1:219f4bf8-6f0c-4fbe-aacf-1079267e128d";
+//    private static final String BUCKET_NAME = "cheepapp";
+    private static final String AMAZON_REGION = Regions.AP_SOUTH_1.getName();
+//    private static final String BUCKET_REGION = Regions.AP_SOUTH_1.getName();
     //    public static final String FOLDER_ORIGINAL = "strategic_partner/original";
 //    public static final String FOLDER_THUMB = "strategic_partner/thumb";
-    static final String FOLDER_ORIGINAL = "task_image/original";
-    static final String FOLDER_THUMB = "task_image/thumb";
+//    static final String FOLDER_ORIGINAL = "task_image/original";
+//    static final String FOLDER_THUMB = "task_image/thumb";
 
     private static CognitoCachingCredentialsProvider getCredProvider(Context context) {
         if (sCredProvider == null) {
             sCredProvider = new CognitoCachingCredentialsProvider(
                     context.getApplicationContext(),
-                    COGNITO_POOL_ID,
-                    Regions.fromName(COGNITO_POOL_REGION));
+                    BuildConfig.COGNITO_POOL_ID,
+                    Regions.fromName(AMAZON_REGION));
         }
         return sCredProvider;
     }
@@ -55,7 +56,7 @@ class AmazonUtils {
     private static AmazonS3Client getS3Client(Context context) {
         if (sS3Client == null) {
             sS3Client = new AmazonS3Client(getCredProvider(context.getApplicationContext()));
-            sS3Client.setRegion(Region.getRegion(Regions.fromName(BUCKET_REGION)));
+            sS3Client.setRegion(Region.getRegion(Regions.fromName(AMAZON_REGION)));
         }
         return sS3Client;
     }
@@ -70,7 +71,7 @@ class AmazonUtils {
     }
 
     static TransferObserver uploadMedia(final Context context, File file, String s3Path, TransferListener l) {
-        TransferObserver observer = getTransferUtility(context).upload(BUCKET_NAME, s3Path, file);
+        TransferObserver observer = getTransferUtility(context).upload( BuildConfig.BUCKET_NAME, s3Path, file);
         observer.setTransferListener(l);
         return observer;
     }
@@ -158,11 +159,11 @@ class AmazonUtils {
      * @return
      */
     static String getOriginalURL(String name) {
-        return "https://s3.ap-south-1.amazonaws.com/" + AmazonUtils.BUCKET_NAME + "/" + name;
+        return BuildConfig.AMAZON_S3_URL + BuildConfig.BUCKET_NAME + File.separator + name;
     }
 
     static String getThumbURL(String name) {
-        return "https://s3.ap-south-1.amazonaws.com/" + AmazonUtils.BUCKET_NAME + "/" + name;
+        return BuildConfig.AMAZON_S3_URL + BuildConfig.BUCKET_NAME + File.separator + name;
     }
 
     /**
@@ -179,8 +180,8 @@ class AmazonUtils {
 
             @Override
             protected Void doInBackground(Void... voids) {
-                getS3Client(context).deleteObject(new DeleteObjectRequest(AmazonUtils.BUCKET_NAME + "/" + AmazonUtils.FOLDER_ORIGINAL, AmazonUtils.getFileNameWithExt(original, true)));
-                getS3Client(context).deleteObject(new DeleteObjectRequest(AmazonUtils.BUCKET_NAME + "/" + AmazonUtils.FOLDER_THUMB, AmazonUtils.getFileNameWithExt(thumb, true)));
+                getS3Client(context).deleteObject(new DeleteObjectRequest( BuildConfig.BUCKET_NAME + File.separator + BuildConfig.TASK_ORIGINAL_FOLDER, AmazonUtils.getFileNameWithExt(original, true)));
+                getS3Client(context).deleteObject(new DeleteObjectRequest(BuildConfig.BUCKET_NAME + File.separator+ BuildConfig.TASK_THUMB_FOLDER, AmazonUtils.getFileNameWithExt(thumb, true)));
                 return null;
             }
         }.execute();

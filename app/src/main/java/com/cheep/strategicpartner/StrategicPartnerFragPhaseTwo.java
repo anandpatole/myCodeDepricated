@@ -139,18 +139,18 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
             return;
         }
         // calculation of total amount of selected services
-        int total = 0;
+        double total = 0;
         for (StrategicPartnerServiceModel model : mStrategicPartnerTaskCreationAct.getSelectedSubService()) {
             List<AllSubSubCat> allSubSubCats = model.allSubSubCats;
             for (AllSubSubCat allSubSubCat : allSubSubCats) {
                 try {
-                    total += Integer.parseInt(allSubSubCat.price);
+                    total += Double.parseDouble(allSubSubCat.price);
                 } catch (NumberFormatException e) {
                     total += 0;
                 }
             }
         }
-        mFragmentStrategicPartnerPhaseTwoBinding.textContinue.setText("Book & Pay " + getString(R.string.ruppe_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf(total))));
+        mFragmentStrategicPartnerPhaseTwoBinding.textContinue.setText(getString(R.string.book_and_pay_x, "" + Utility.getQuotePriceFormatter(String.valueOf(total))));
         mStrategicPartnerTaskCreationAct.total = String.valueOf(total);
         // Task Description
 
@@ -1985,8 +1985,8 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
         }
 
         localFilePath = thumbPath;
-        s3pathOriginal = AmazonUtils.FOLDER_ORIGINAL + File.separator + name;
-        s3PathThumb = AmazonUtils.FOLDER_THUMB + File.separator + thumbName;
+        s3pathOriginal = BuildConfig.TASK_ORIGINAL_FOLDER + File.separator + name;
+        s3PathThumb = BuildConfig.TASK_THUMB_FOLDER + File.separator + thumbName;
         UploadListener listener = new UploadListener(s3PathThumb, s3pathOriginal, type, localFilePath);
         TransferObserver observer;
         TransferObserver observer1;
