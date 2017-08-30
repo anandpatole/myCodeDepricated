@@ -625,8 +625,7 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
 //                    taskDetailModel.taskStartdate = start_datetime;
                     if (taskDetailModel.taskType.equalsIgnoreCase(Utility.TASK_TYPE.STRATEGIC)) {
                         taskDetailModel.taskStartdate = start_datetime;
-                    }
-                    else{
+                    } else {
                         taskDetailModel.taskStatus = Utility.TASK_STATUS.RESCHEDULE_REQUESTED;
                     }
                     notifyItemChanged(i);
@@ -728,13 +727,15 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
 
     private List<Uri> getURIListFromStringList(List<String> imageUrls) {
         List<Uri> uriList = new ArrayList<>();
-        if (imageUrls == null || imageUrls.size() == 0)
-            return uriList;
-        for (String url : imageUrls) {
-            uriList.add(Uri.parse(url));
+        if (imageUrls != null && !imageUrls.isEmpty()) {
+            for (String url : imageUrls) {
+                if (url != null && !url.isEmpty())
+                    uriList.add(Uri.parse(url));
+            }
         }
         return uriList;
     }
+
 
     class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
