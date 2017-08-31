@@ -187,7 +187,6 @@ public class TaskQuotesActivity extends BaseAppCompatActivity implements TaskQuo
             mErrorLoadingHelper.showLoading();
         }
 
-
         //Add Header parameters
         Map<String, String> mHeaderParams = new HashMap<>();
         mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());

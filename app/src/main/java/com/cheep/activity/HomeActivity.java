@@ -3,9 +3,11 @@ package com.cheep.activity;
 import android.Manifest;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
@@ -15,7 +17,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
@@ -110,6 +111,14 @@ public class HomeActivity extends BaseAppCompatActivity
     private ActivityHomeBinding mActivityHomeBinding;
     private NavHeaderHomeBinding navHeaderHomeBinding;
 
+    /**
+     * We will only load the listing once we have proper lat-long or Location.
+     * So, once we get the location from Service we can manage this flow via
+     * mentioned boolean.
+     * This would be used by @{@link HomeTabFragment}
+     */
+    public boolean isReadyToLoad = false;
+
     public static void newInstance(Context context) {
         Intent intent = new Intent(context, HomeActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -146,9 +155,11 @@ public class HomeActivity extends BaseAppCompatActivity
 
         //For managing notification redirect to job summary
         onNewIntent(getIntent());
-
         initiateUI();
         setListeners();
+
+        //Register BroadCast
+        registerReceiver(mBR_OnLoginSuccess, new IntentFilter(Utility.BR_ON_LOGIN_SUCCESS));
 
     }
 
@@ -158,7 +169,6 @@ public class HomeActivity extends BaseAppCompatActivity
 
         // Check Application version
         checkVersionOfApp();
-
 
     }
 
@@ -270,7 +280,11 @@ public class HomeActivity extends BaseAppCompatActivity
         list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.label_rate_this_app), R.drawable.icon_rate, false, false));
         list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.label_terms), R.drawable.icon_privacy, false, false));
 //        list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.label_privacy_policy), R.drawable.icon_privacy, false, false));
-        list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.label_logout), R.drawable.icon_logout, false, true));
+        if (PreferenceUtility.getInstance(mContext).getUserDetails() != null) {
+            list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.label_logout), R.drawable.icon_logout, false, true));
+        } else {
+            list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.label_login), R.drawable.icon_logout, false, true));
+        }
 //        list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.tab_alert), R.drawable.icon_logout, false, true));
 
         return list;
@@ -342,7 +356,9 @@ public class HomeActivity extends BaseAppCompatActivity
 //            finish();
             // We are returning here so side menu will not close at end of this method
             return;
-        } /*else if (slideMenuListModel.title.equals(getString(R.string.tab_alert))) {
+        } else if (slideMenuListModel.title.equals(getString(R.string.label_login))) {
+            LoginActivity.newInstance(mContext);
+        }/*else if (slideMenuListModel.title.equals(getString(R.string.tab_alert))) {
             showAlertDialog();
 //            LoginActivity.newInstance(mContext);
 //            finish();
@@ -933,8 +949,13 @@ public class HomeActivity extends BaseAppCompatActivity
                     Utility.showCircularImageView(mContext, TAG, navHeaderHomeBinding.imgProfile, userDetails.ProfileImg, R.drawable.icon_profile_img, true);
 
                 //Update the name
-                if (userDetails != null && !TextUtils.isEmpty(userDetails.UserName) && userDetails.UserName.trim().length() > 1)
+                if (userDetails != null && !TextUtils.isEmpty(userDetails.UserName) && userDetails.UserName.trim().length() > 1) {
                     navHeaderHomeBinding.textName.setText(userDetails.UserName.substring(0, 1).toUpperCase() + userDetails.UserName.substring(1));
+                } else {
+                    if (PreferenceUtility.getInstance(mContext).getUserDetails() == null) {
+                        navHeaderHomeBinding.textName.setText(Utility.GUEST_STATIC_INFO.USERNAME);
+                    }
+                }
 
 //                navHeaderHomeBinding.textName.setText(userDetails.UserName);
 
@@ -993,11 +1014,17 @@ public class HomeActivity extends BaseAppCompatActivity
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////
     @Override
     protected void onDestroy() {
+        Log.d(TAG, "onDestroy() called");
         Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.WS.SP_ADD_TO_FAV);
         Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.WS.LOGOUT);
         Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.WS.ADD_REVIEW);
         Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.WS.CANCEL_TASK);
         Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.WS.CHECK_APP_VERSION);
+        try {
+            unregisterReceiver(mBR_OnLoginSuccess);
+        } catch (Exception e) {
+
+        }
         super.onDestroy();
     }
 
@@ -1671,7 +1698,18 @@ public class HomeActivity extends BaseAppCompatActivity
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, Utility.REQUEST_CODE_PERMISSION_LOCATION);
             }
         } else {
-            requestLocationUpdateFromService();
+            UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
+            // In case user is logged in and we have stored CityID
+            if (userDetails != null && !"-1".equalsIgnoreCase(userDetails.CityID)) {
+                loadHomeScreenWithEarlierSavedAddress();
+            } else {
+                // In case Guest user details is there
+                if (PreferenceUtility.getInstance(mContext).getGuestUserDetails() != null) {
+                    loadHomeScreenWithEarlierSavedAddress();
+                } else {
+                    requestLocationUpdateFromService();
+                }
+            }
         }
 
         /*if (mLocationTrackService.mLocation != null) {
@@ -1692,6 +1730,14 @@ public class HomeActivity extends BaseAppCompatActivity
         }*/
     }
 
+    private void loadHomeScreenWithEarlierSavedAddress() {
+        // Do Nothing as app would load the earlier saved Guest locations
+        Fragment mFragment = getSupportFragmentManager().findFragmentById(R.id.content);
+        if (mFragment != null && mFragment instanceof HomeFragment) {
+            ((HomeFragment) mFragment).onLoadHomeScreenWithEarlierSavedAddress();
+        }
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -1700,9 +1746,13 @@ public class HomeActivity extends BaseAppCompatActivity
                 Log.i(TAG, "onRequestPermissionsResult: Permission Granted");
                 //So, ask service to fetch the location now
                 requestLocationUpdateFromService();
+                /**
+                 * Showing Progress Dialog that, fetching your location
+                 */
+                showProgressDialog(getString(R.string.fetching_location));
             } else if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_DENIED) {
                 Log.i(TAG, "onRequestPermissionsResult: Permission Denied");
-                Snackbar.make(mActivityHomeBinding.getRoot(), getString(R.string.permission_denied_location), 3000).show();
+//                Snackbar.make(mActivityHomeBinding.getRoot(), getString(R.string.permission_denied_location), 3000).show();
                 onLocationNotAvailable();
             }
         }
@@ -1765,12 +1815,36 @@ public class HomeActivity extends BaseAppCompatActivity
         if (requestCode == Utility.REQUEST_CODE_CHECK_LOCATION_SETTINGS) {
             if (resultCode == RESULT_OK) {
                 onBindLocationTrackService();
+            } else {
+                /*
+                 * Feature: Guest Login.
+                 * @Changes by: Bhavesh, on 28th Aug, 2017
+                 *If user doesn't want to enable location from notification pannel, we
+                 * can see whether there are any earlier saved address is and if yes, we can load the
+                 * data accordingly.
+                 */
+                onLocationNotAvailable();
             }
         }
     }
 
+
     /**
      * Location [END]
      */
+
+    /**
+     * BroadCast that would restart the screen once login has been done.
+     */
+    private BroadcastReceiver mBR_OnLoginSuccess = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            // Do nothing, just restart the activity
+            Utility.hideKeyboard(mContext);
+//            HomeActivity.newInstance(mContext);
+            finish();
+        }
+    };
+
 
 }

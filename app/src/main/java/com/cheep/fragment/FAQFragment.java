@@ -114,15 +114,11 @@ public class FAQFragment extends BaseFragment {
     }
 
     @Override
-    public void setListener()
-    {
-        mFragmentFaqBinding.btnCall.setOnClickListener(new View.OnClickListener()
-        {
+    public void setListener() {
+        mFragmentFaqBinding.btnCall.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view)
-            {
-                if(mContext instanceof HomeActivity)
-                {
+            public void onClick(View view) {
+                if (mContext instanceof HomeActivity) {
                     /*HomeActivity homeActivity= (HomeActivity) mContext;
                     homeActivity.callToCheepAdmin(mFragmentFaqBinding.getRoot());*/
                     Utility.initiateCallToCheepHelpLine(mContext);
@@ -165,8 +161,10 @@ public class FAQFragment extends BaseFragment {
 
         //Add Header parameters
         Map<String, String> mHeaderParams = new HashMap<>();
-        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
         mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
+        if (PreferenceUtility.getInstance(mContext).getUserDetails() != null) {
+            mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
+        }
 
         VolleyNetworkRequest mVolleyNetworkRequest = new VolleyNetworkRequest(NetworkUtility.WS.FAQS
                 , mCallFetchContentWSErrorListener

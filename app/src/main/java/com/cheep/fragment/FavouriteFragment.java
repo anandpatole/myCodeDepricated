@@ -175,7 +175,6 @@ public class FavouriteFragment extends BaseFragment {
             return;
         }
 
-
         Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequestForFavSP);
     }
 
@@ -187,10 +186,23 @@ public class FavouriteFragment extends BaseFragment {
             return;
         }
 
+        if (PreferenceUtility.getInstance(mContext).getUserDetails() == null) {
+            /**
+             * As user is guest user, we need to show only Empty screen.
+             */
+            mFragmentFavouriteFragment.commonRecyclerView.swipeRefreshLayout.setEnabled(false);
+            mFragmentFavouriteFragment.commonRecyclerView.swipeRefreshLayout.setRefreshing(false);
+            errorLoadingHelper.failed(null, R.drawable.img_empty_favourite, null);
+
+        }
+
+
         //Add Header parameters
         Map<String, String> mHeaderParams = new HashMap<>();
         mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
-        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
+        if (PreferenceUtility.getInstance(mContext).getUserDetails() != null) {
+            mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
+        }
 
         //Add Params
         Map<String, String> mParams = new HashMap<>();

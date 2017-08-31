@@ -93,7 +93,7 @@ public class HistoryFragment extends BaseFragment {
         mListener = null;
         super.onDetach();
 
-        // Cancele the asynctask so it won't crash in case fragment is getting destroyed
+        // Cancel the asynctask so it won't crash in case fragment is getting destroyed
         Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.WS.PAYMENT_HISTORY);
     }
 
@@ -183,6 +183,18 @@ public class HistoryFragment extends BaseFragment {
             return;
         }
 
+        if (PreferenceUtility.getInstance(mContext).getUserDetails() == null) {
+            mFragmentHistoryBinding.lnTotalMoneySpent.setVisibility(View.GONE);
+            mFragmentHistoryBinding.rlMonthSelector.setVisibility(View.GONE);
+            mFragmentHistoryBinding.layoutTitle.setVisibility(View.GONE);
+            mFragmentHistoryBinding.layoutSummary.setVisibility(View.GONE);
+            errorLoadingHelper.failed(null, R.drawable.img_empty_history, null, null);
+            return;
+        } else {
+            mFragmentHistoryBinding.lnTotalMoneySpent.setVisibility(View.VISIBLE);
+            mFragmentHistoryBinding.rlMonthSelector.setVisibility(View.VISIBLE);
+        }
+
         if (calendarChanger == null)
             calendarChanger = SuperCalendar.getInstance();
 
@@ -262,7 +274,6 @@ public class HistoryFragment extends BaseFragment {
                     case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
                         // Logout and finish the current activity
                         Utility.logout(mContext, true, statusCode);
-                        ;
                         if (getActivity() != null)
                             getActivity().finish();
                         break;

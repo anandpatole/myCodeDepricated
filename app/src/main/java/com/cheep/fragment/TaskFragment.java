@@ -96,7 +96,6 @@ public class TaskFragment extends BaseFragment {
         return commonRecyclerViewBinding.getRoot();
     }
 
-    Paint p = new Paint();
 
     @Override
     public void onAttach(Context context) {
@@ -249,6 +248,7 @@ public class TaskFragment extends BaseFragment {
                     null,
                     null,
                     onMakeAPostClickListener);
+            commonRecyclerViewBinding.swipeRefreshLayout.setRefreshing(false);
             return;
         }
 

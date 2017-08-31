@@ -152,7 +152,6 @@ public class Utility {
     public static final int REQUEST_CODE_VIDEO_CAPTURE = 119;
     public static final int REQUEST_CODE_GET_VIDEO_GALLERY = 120;
 
-
     /*
     * @Sanjay
     * Chat image chooser constants
@@ -179,6 +178,7 @@ public class Utility {
     public static final String BR_ON_TASK_CREATED = "com.cheep.ontaskcreated";
     public static final String BR_ON_TASK_CREATED_FOR_STRATEGIC_PARTNER = "com.cheep.ontaskcreated.strategicpartner";
     public static final String BR_NEW_TASK_ADDED = "com.cheep.newtask.added";
+    public static final String BR_ON_LOGIN_SUCCESS = "com.cheep.login.success";
     public static final int CHAT_PAGINATION_RECORD_LIMIT = 20;
 
     public static final int X_RATIO = 16;
@@ -395,6 +395,7 @@ public class Utility {
 
         public static final String CHAT_NOTIFICATION_DATA = "chat_notification_data";
         public static final String PROFILE_FROM_FAVOURITE = "from_favorite";
+        public static final String FROM_WHERE = "from_where";
     }
 
 

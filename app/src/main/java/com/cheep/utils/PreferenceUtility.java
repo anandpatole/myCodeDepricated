@@ -3,11 +3,10 @@ package com.cheep.utils;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.preference.Preference;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-import com.cheep.model.GuestDetails;
+import com.cheep.model.GuestUserDetails;
 import com.cheep.model.UserDetails;
 
 import org.json.JSONException;
@@ -25,7 +24,7 @@ public class PreferenceUtility {
     private Context context;
     //    private static PreferenceUtility mPreferenceUtility;
     private static UserDetails mUserDetails;
-    private static GuestDetails mGuestUserDetails;
+    private static GuestUserDetails mGuestUserDetails;
 
     private static final String PREF_X_API_KEY = "com.cheep.xapikey";
     private static final String PREF_FCM_TOKEN = "com.cheep.fcm.tokem";
@@ -159,23 +158,23 @@ public class PreferenceUtility {
     /**
      * Guest user Info
      */
-    public GuestDetails getGuestUserDetails() {
+    public GuestUserDetails getGuestUserDetails() {
         if (mGuestUserDetails != null) {
             return mGuestUserDetails;
         }
         if (mGuestSharedPreferences.contains(PREF_GUEST_USER_INFO)) {
             try {
                 JSONObject jsonObject = new JSONObject(mGuestSharedPreferences.getString(PREF_GUEST_USER_INFO, null));
-                mGuestUserDetails = (GuestDetails) Utility.getObjectFromJsonString(jsonObject.toString(), GuestDetails.class);
+                mGuestUserDetails = (GuestUserDetails) Utility.getObjectFromJsonString(jsonObject.toString(), GuestUserDetails.class);
                 return mGuestUserDetails;
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
-        return mGuestUserDetails == null ? new GuestDetails() : mGuestUserDetails;
+        return mGuestUserDetails == null ? new GuestUserDetails() : mGuestUserDetails;
     }
 
-    public void saveGuestUserDetails(GuestDetails model) {
+    public void saveGuestUserDetails(GuestUserDetails model) {
         Log.d(TAG, "saveUserDetails() called with: model = [" + model + "]");
         mGuestSharedPreferences.edit().putString(PREF_GUEST_USER_INFO, Utility.getJsonStringFromObject(model)).apply();
         mGuestUserDetails = model;

@@ -151,7 +151,6 @@ public class LocationTrackService extends Service implements GoogleApiClient.Con
      */
     public void requestLocationUpdate() {
 
-
         // Check if GoogleAPICilent is still NOTNULL
         if (mGoogleApiClient == null || !mGoogleApiClient.isConnected()) {
             return;

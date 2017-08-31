@@ -1,10 +1,9 @@
 package com.cheep.utils;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.android.volley.Response;
-import com.cheep.model.GuestDetails;
+import com.cheep.model.GuestUserDetails;
 import com.cheep.model.LocationInfo;
 import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
@@ -24,15 +23,16 @@ public class FetchLocationInfoUtility {
      */
     private Context mContext;
     private FetchLocationInfoCallBack mListener;
+    private boolean needToSave;
 
-    public FetchLocationInfoUtility(Context mContext, FetchLocationInfoCallBack mListener) {
+    public FetchLocationInfoUtility(Context mContext, FetchLocationInfoCallBack mListener, boolean needToSave) {
         this.mContext = mContext;
         this.mListener = mListener;
+        this.needToSave = needToSave;
     }
 
-    public static FetchLocationInfoUtility getInstance(Context mContext, FetchLocationInfoCallBack mListener) {
-        FetchLocationInfoUtility mFetchLocationInfoUtility = new FetchLocationInfoUtility(mContext, mListener);
-        return mFetchLocationInfoUtility;
+    public static FetchLocationInfoUtility getInstance(Context mContext, FetchLocationInfoCallBack mListener, boolean needToSave) {
+        return new FetchLocationInfoUtility(mContext, mListener, needToSave);
     }
 
 
@@ -79,14 +79,17 @@ public class FetchLocationInfoUtility {
                                     }
                                 }
                             }
-                            //Save the relavent information to Pref
-                            GuestDetails mGuestDetails = PreferenceUtility.getInstance(mContext).getGuestUserDetails();
-                            mGuestDetails.mLat = mLocationInfo.lat;
-                            mGuestDetails.mLon = mLocationInfo.lon;
-                            mGuestDetails.mCityName = mLocationInfo.City;
-                            mGuestDetails.mCountryName = mLocationInfo.Country;
-                            mGuestDetails.mStateName = mLocationInfo.State;
-                            PreferenceUtility.getInstance(mContext).saveGuestUserDetails(mGuestDetails);
+
+                            if (needToSave) {
+                                // Save the relavent information to Pref
+                                GuestUserDetails mGuestUserDetails = PreferenceUtility.getInstance(mContext).getGuestUserDetails();
+                                mGuestUserDetails.mLat = mLocationInfo.lat;
+                                mGuestUserDetails.mLon = mLocationInfo.lon;
+                                mGuestUserDetails.mCityName = mLocationInfo.City;
+                                mGuestUserDetails.mCountryName = mLocationInfo.Country;
+                                mGuestUserDetails.mStateName = mLocationInfo.State;
+                                PreferenceUtility.getInstance(mContext).saveGuestUserDetails(mGuestUserDetails);
+                            }
 
                             // Send the callback to called activity
                             mListener.onLocationInfoAvailable(mLocationInfo);

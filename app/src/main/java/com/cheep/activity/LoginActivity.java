@@ -2,9 +2,11 @@ package com.cheep.activity;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
@@ -66,7 +68,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by pankaj on 9/26/16.
+ * Created by Bhavesh Patadiya on 9/26/16.
  */
 public class LoginActivity extends BaseAppCompatActivity implements FacebookHelper.FacebookCallbacks {
     private static final String TAG = "LoginActivity";
@@ -81,30 +83,31 @@ public class LoginActivity extends BaseAppCompatActivity implements FacebookHelp
     private String TEMP_TWITTER_APP_ID;
     private String TEMP_GOOGLE_PLUS_APP_ID;
 
-    //Twitter
+    // Twitter
     TwitterAuthClient mTwitterAuthClient;
 
-    //Facebook CallbackManager
+    // Facebook CallbackManager
     CallbackManager mCallbackManager;
     FacebookHelper mFacebookHelper;
 
-    //GoogleAPIclient for using
+    // GoogleAPIclient for using
     GoogleApiClient mGoogleApiClient;
     private static final int RC_SIGN_IN = 9001;
 
+
     public static void newInstance(Context context) {
         Intent intent = new Intent(context, LoginActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+//        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
     }
 
-    public static void newInstance(Context context, boolean isSessionExpire, int action) {
+    /*public static void newInstance(Context context, boolean isSessionExpire, int action) {
         Intent intent = new Intent(context, LoginActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra(Utility.Extra.SESSION_EXPIRE, isSessionExpire);
         intent.putExtra(Utility.Extra.ACTION, action);
         context.startActivity(intent);
-    }
+    }*/
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -122,6 +125,9 @@ public class LoginActivity extends BaseAppCompatActivity implements FacebookHelp
         }
 
         initiateAppsFlyerSDK();
+
+        // Register Broadcast app
+        registerReceiver(mBR_OnLoginSuccess, new IntentFilter(Utility.BR_ON_LOGIN_SUCCESS));
     }
 
     /**
@@ -681,6 +687,11 @@ public class LoginActivity extends BaseAppCompatActivity implements FacebookHelp
     protected void onDestroy() {
         Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.WS.LOGIN);
         Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.WS.FORG0T_PASSWORD);
+        try {
+            unregisterReceiver(mBR_OnLoginSuccess);
+        } catch (Exception e) {
+
+        }
         super.onDestroy();
     }
 
@@ -779,13 +790,17 @@ public class LoginActivity extends BaseAppCompatActivity implements FacebookHelp
                                 * */
                                     startService(new Intent(LoginActivity.this, FierbaseChatService.class));
                                 }
-                                // redirect to Home Screen
-                                HomeActivity.newInstance(mContext);
+
+                                // Send Broadcast
+                                sendBroadcast(new Intent(Utility.BR_ON_LOGIN_SUCCESS));
+
+                                // Finish the activity
                                 finish();
+
+//                                HomeActivity.newInstance(mContext);
+//                                finish();
                             }
                         }
-
-
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
                         // Show Toast
@@ -1084,5 +1099,17 @@ public class LoginActivity extends BaseAppCompatActivity implements FacebookHelp
      *****************************************Webservice Integration [End]**************************************
      *************************************************************************************************************
      */
+
+
+    /**
+     * BroadCast that would restart the screen once login has been done.
+     */
+    private BroadcastReceiver mBR_OnLoginSuccess = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            // Do nothing, just restart the activity
+            finish();
+        }
+    };
 
 }

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="fetching_location">Checking your location, please wait...</string>
+    <string name="label_login">Login</string>
+</resources>

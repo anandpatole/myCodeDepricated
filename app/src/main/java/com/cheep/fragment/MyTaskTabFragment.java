@@ -124,7 +124,7 @@ public class MyTaskTabFragment extends BaseFragment {
         // Update Notification Counter
         updateCounter();
 
-        // Setup Click listener of Notificaiotn
+        // Setup Click listener of Notification
         mFragmentTabMyTaskTabBinding.relNotificationAction.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -199,15 +199,21 @@ public class ProfileTabFragment extends BaseFragment {
     }
 
     private void fillFields(UserDetails userDetails) {
-        //loading rounded image on profile
-        loadImage(userDetails.ProfileImg);
-        loadCoverImage(userDetails.ProfileBanner);
+        if (PreferenceUtility.getInstance(mContext).getUserDetails() != null) {
+            //loading rounded image on profile
+            loadImage(userDetails.ProfileImg);
+            loadCoverImage(userDetails.ProfileBanner);
 
-        //Update Name
-        mFragmentTabProfileBinding.userName.setText(userDetails.UserName);
+            //Update Name
+            mFragmentTabProfileBinding.userName.setText(userDetails.UserName);
 
-        //Update Email
-        mFragmentTabProfileBinding.textEmail.setText(userDetails.Email);
+            //Update Email
+            mFragmentTabProfileBinding.textEmail.setText(userDetails.Email);
+        } else {
+            // Static details for Guest Users
+            mFragmentTabProfileBinding.userName.setText(Utility.GUEST_STATIC_INFO.USERNAME);
+        }
+
     }
 
 
@@ -1588,6 +1594,9 @@ public class ProfileTabFragment extends BaseFragment {
             return;
         }
 
+        if (PreferenceUtility.getInstance(mContext).getUserDetails() == null) {
+            return;
+        }
         //Show Progress
 //        showProgressDialog();
 

@@ -160,16 +160,23 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity {
     /**
      * Show Progress Dialog
      */
-    protected void showProgressDialog() {
+    protected void showProgressDialog(String message) {
         if (mProgressDialog == null) {
             mProgressDialog = new ProgressDialog(mContext);
-            mProgressDialog.setMessage(getString(R.string.label_please_wait));
+            mProgressDialog.setMessage(message);
             mProgressDialog.setIndeterminate(true);
             mProgressDialog.setCancelable(false);
             mProgressDialog.setCanceledOnTouchOutside(false);
             mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         }
         mProgressDialog.show();
+    }
+
+    /**
+     * Show Progress Dialog
+     */
+    protected void showProgressDialog() {
+        showProgressDialog(getString(R.string.label_please_wait));
     }
 
     /**

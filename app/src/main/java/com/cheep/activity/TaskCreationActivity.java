@@ -1,13 +1,17 @@
 package com.cheep.activity;
 
+import android.Manifest;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
@@ -68,6 +72,8 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
         mActivityTaskCreateBinding = DataBindingUtil.setContentView(this, R.layout.activity_task_create);
         initiateUI();
         setListeners();
+
+        registerReceiver(mBR_OnLoginSuccess, new IntentFilter(Utility.BR_ON_LOGIN_SUCCESS));
     }
 
     @Override
@@ -350,8 +356,7 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
     @Override
     public void gpsEnabled() {
         super.gpsEnabled();
-        // Show placepicker activity
-        mTaskCreationPagerAdapter.mEnterTaskDetailFragment.showPlacePickerDialog(true);
+        Log.d(TAG, "gpsEnabled() called");
     }
 
     @Override
@@ -388,6 +393,10 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
             return;
         }
 
+        if (PreferenceUtility.getInstance(mContext).getUserDetails() == null) {
+            LoginActivity.newInstance(mContext);
+            return;
+        }
        /* SuperCalendar superCalendar = SuperCalendar.getInstance();
         superCalendar.setTimeInMillis(mTaskCreationPagerAdapter.mEnterTaskDetailFragment.startDateTimeSuperCalendar.getTimeInMillis());
         superCalendar.setTimeZone(SuperCalendar.SuperTimeZone.GMT.GMT);
@@ -401,7 +410,7 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
         }*/
 
         //Show Progress
-        showProgressDialog();
+        //showProgressDialog();
 
         UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
 
@@ -413,20 +422,57 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
         // Add Params
         Map<String, String> mParams = new HashMap<>();
         mParams.put(NetworkUtility.TAGS.TASK_DESC, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.getTaskDescription());
-        mParams.put(NetworkUtility.TAGS.ADDRESS_ID, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.addressId);
-        mParams.put(NetworkUtility.TAGS.CITY_ID, userDetails.CityID);
+        if (Integer.parseInt(mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.address_id) > 0) {
+            mParams.put(NetworkUtility.TAGS.ADDRESS_ID, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.address_id);
+        } else {
+            // In case its nagative then provide other address information
+            /**
+             * public String address_initials;
+             public String address;
+             public String category; //comes from NetworkUtility.TAGS.ADDRESS_TYPE.
+             public String lat;
+             public String lng;
+             */
+            mParams.put(NetworkUtility.TAGS.ADDRESS_INITIALS, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.address_initials);
+            mParams.put(NetworkUtility.TAGS.ADDRESS, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.address);
+            mParams.put(NetworkUtility.TAGS.CATEGORY, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.category);
+            mParams.put(NetworkUtility.TAGS.LAT, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.lat);
+            mParams.put(NetworkUtility.TAGS.LNG, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.lng);
+            mParams.put(NetworkUtility.TAGS.CITY_NAME, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.cityName);
+        }
+
+        if (userDetails != null) {
+            mParams.put(NetworkUtility.TAGS.CITY_ID, userDetails.CityID);
+        }
         mParams.put(NetworkUtility.TAGS.CAT_ID, mJobCategoryModel.catId);
         mParams.put(NetworkUtility.TAGS.SUBCATEGORY_ID, String.valueOf(mSelectedSubServiceDetailModel.sub_cat_id));
         mParams.put(NetworkUtility.TAGS.START_DATETIME, String.valueOf(mTaskCreationPagerAdapter.mEnterTaskDetailFragment.superCalendar.getTimeInMillis()));
 
+
         // Create Params for AppsFlyer event track
         mTaskCreationParams = new HashMap<>();
-        mParams.put(NetworkUtility.TAGS.TASK_DESC, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.getTaskDescription());
-        mParams.put(NetworkUtility.TAGS.ADDRESS_ID, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.addressId);
-        mParams.put(NetworkUtility.TAGS.CITY_ID, userDetails.CityID);
-        mParams.put(NetworkUtility.TAGS.CAT_ID, mJobCategoryModel.catId);
-        mParams.put(NetworkUtility.TAGS.SUBCATEGORY_ID, String.valueOf(mSelectedSubServiceDetailModel.sub_cat_id));
-        mParams.put(NetworkUtility.TAGS.START_DATETIME, String.valueOf(mTaskCreationPagerAdapter.mEnterTaskDetailFragment.superCalendar.getTimeInMillis()));
+        mTaskCreationParams.put(NetworkUtility.TAGS.TASK_DESC, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.getTaskDescription());
+        if (Integer.parseInt(mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.address_id) > 0) {
+            mTaskCreationParams.put(NetworkUtility.TAGS.ADDRESS_ID, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.address_id);
+        } else {
+            // In case its nagative then provide other address information
+            /**
+             * public String address_initials;
+             public String address;
+             public String category; //comes from NetworkUtility.TAGS.ADDRESS_TYPE.
+             public String lat;
+             public String lng;
+             */
+            mTaskCreationParams.put(NetworkUtility.TAGS.ADDRESS_INITIALS, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.address_initials);
+            mTaskCreationParams.put(NetworkUtility.TAGS.ADDRESS, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.address);
+            mTaskCreationParams.put(NetworkUtility.TAGS.CATEGORY, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.category);
+            mTaskCreationParams.put(NetworkUtility.TAGS.LAT, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.lat);
+            mTaskCreationParams.put(NetworkUtility.TAGS.LNG, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.lng);
+        }
+        mTaskCreationParams.put(NetworkUtility.TAGS.CITY_ID, userDetails.CityID);
+        mTaskCreationParams.put(NetworkUtility.TAGS.CAT_ID, mJobCategoryModel.catId);
+        mTaskCreationParams.put(NetworkUtility.TAGS.SUBCATEGORY_ID, String.valueOf(mSelectedSubServiceDetailModel.sub_cat_id));
+        mTaskCreationParams.put(NetworkUtility.TAGS.START_DATETIME, String.valueOf(mTaskCreationPagerAdapter.mEnterTaskDetailFragment.superCalendar.getTimeInMillis()));
 
 
         // Add Params
@@ -488,7 +534,7 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
                     case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
-                        //Logout and finish the current activity
+                        // Logout and finish the current activity
                         Utility.logout(mContext, true, statusCode);
                         finish();
                         break;
@@ -589,7 +635,6 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
     /////////////////////////////////////Post Task [End] /////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -599,4 +644,31 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
             }
         }
     }
+
+    @Override
+    protected void onDestroy() {
+        Log.d(TAG, "onDestroy() called");
+        try {
+            unregisterReceiver(mBR_OnLoginSuccess);
+        } catch (Exception e) {
+            Log.i(TAG, "onDestroy: ");
+        }
+        super.onDestroy();
+    }
+
+    /**
+     * Location [END]
+     */
+
+    /**
+     * BroadCast that would restart the screen once login has been done.
+     */
+    private BroadcastReceiver mBR_OnLoginSuccess = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.d(TAG, "onReceive() called with: context = [" + context + "], intent = [" + intent + "]");
+            Utility.hideKeyboard(mContext);
+            onPostTaskClicked();
+        }
+    };
 }

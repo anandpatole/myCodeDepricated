@@ -158,6 +158,13 @@ public class AddressRecyclerViewAdapter extends RecyclerView.Adapter<AddressRecy
         }
     }
 
+    public void delete(AddressModel addressModel) {
+        if (mList.size() > 0 && mList.contains(addressModel)) {
+            mList.remove(addressModel);
+            notifyDataSetChanged();
+        }
+    }
+
     public void updateItem(AddressModel addressModel) {
         if (mList.size() > 0 && addressModel != null && !TextUtils.isEmpty(addressModel.address_id)) {
             for (int i = 0; i < mList.size(); i++) {

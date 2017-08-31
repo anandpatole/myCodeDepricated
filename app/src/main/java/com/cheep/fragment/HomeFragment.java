@@ -520,6 +520,11 @@ public class HomeFragment extends BaseFragment {
         }
     }
 
+    public void onLoadHomeScreenWithEarlierSavedAddress() {
+        Log.d(TAG, "onLoadHomeScreenWithEarlierSavedAddress() called");
+        onLocationNotAvailable();
+    }
+
     @Override
     public void onLocationFetched(Location mLocation) {
         super.onLocationFetched(mLocation);

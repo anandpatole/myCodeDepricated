@@ -61,7 +61,6 @@ public class ChatTabFragment extends BaseFragment {
 
     private ErrorLoadingHelper errorLoadingHelper;
     private String formattedSenderId = "";
-
     private boolean hasMoreRecord = true;
 
     public static ChatTabFragment newInstance(DrawerLayoutInteractionListener mListener) {
@@ -95,6 +94,7 @@ public class ChatTabFragment extends BaseFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
         initDATA();
         clearChatNotification();
         initiateUI();
@@ -114,6 +114,9 @@ public class ChatTabFragment extends BaseFragment {
      * Clear unread notification messages
      */
     private void clearChatNotification() {
+        if (PreferenceUtility.getInstance(mContext).getUserDetails() == null) {
+            return;
+        }
         MyFirebaseMessagingService.clearNotification(mContext);
     }
 
@@ -122,6 +125,7 @@ public class ChatTabFragment extends BaseFragment {
      */
     private void initDATA() {
         UserDetails mUserDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
+
         if (mUserDetails != null) {
             formattedSenderId = FirebaseUtils.getPrefixUserId(mUserDetails.UserID);
         }
@@ -208,8 +212,18 @@ public class ChatTabFragment extends BaseFragment {
      * used to get last 10 messages and set message update listener
      */
     public void addMessageListener() {
-        mFragmentTabChatBinding.commonRecyclerView.swipeRefreshLayout.setRefreshing(true);
+
+        if (PreferenceUtility.getInstance(mContext).getUserDetails() == null) {
+            /**
+             * Guest so we need to show empty image.
+             */
+            errorLoadingHelper.failed(null, R.drawable.img_empty_chat, null);
+            mFragmentTabChatBinding.commonRecyclerView.swipeRefreshLayout.setRefreshing(false);
+            return;
+        }
         final DatabaseReference databaseReference = FirebaseHelper.getRecentChatRef(formattedSenderId);
+        mFragmentTabChatBinding.commonRecyclerView.swipeRefreshLayout.setRefreshing(true);
+
         databaseReference.limitToFirst(Utility.CHAT_PAGINATION_RECORD_LIMIT).orderByChild(FirebaseHelper.KEY_TIMESTAMP).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -300,7 +314,6 @@ public class ChatTabFragment extends BaseFragment {
                             }
                         }
                     }
-                    ;
                     taskChatModel.unreadCount = unreadCount;
                     final DatabaseReference databaseReference = FirebaseHelper.getRecentChatRef(formattedSenderId);
                     databaseReference.child(taskChatModel.taskId).child(FirebaseHelper.KEY_UNREADCOUNT).setValue(unreadCount);
@@ -503,6 +516,10 @@ public class ChatTabFragment extends BaseFragment {
     }
 
     private void updateCounter() {
+        if (PreferenceUtility.getInstance(mContext).getUserDetails() == null) {
+            return;
+        }
+
         if (mFragmentTabChatBinding != null) {
             //Updating counter
             int notificationCounter = PreferenceUtility.getInstance(mContext).getUnreadNotificationCounter();
@@ -517,6 +534,10 @@ public class ChatTabFragment extends BaseFragment {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(MessageEvent event) {
+        if (PreferenceUtility.getInstance(mContext).getUserDetails() == null) {
+            return;
+        }
+
         if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.NEW_NOTIFICATION) {
             updateCounter();
         }

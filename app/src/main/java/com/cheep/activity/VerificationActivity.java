@@ -399,7 +399,6 @@ public class VerificationActivity extends BaseAppCompatActivity {
                 chatUserModel.setUserName(mUserDetails.UserName);
                 chatUserModel.setProfileImg(mUserDetails.ProfileImg);
                 FirebaseHelper.getUsersRef(chatUserModel.getUserId()).setValue(chatUserModel);
-
                                 /*
                                 * Start fierbase chat service
                                 * @Sanjay 20 Feb 2016
@@ -407,7 +406,8 @@ public class VerificationActivity extends BaseAppCompatActivity {
                 startService(new Intent(mContext, FierbaseChatService.class));
             }
             // redirect to Home Screen
-            HomeActivity.newInstance(mContext);
+//            HomeActivity.newInstance(mContext);
+            sendBroadcast(new Intent(Utility.BR_ON_LOGIN_SUCCESS));
             finish();
         }
     }
@@ -636,14 +636,18 @@ public class VerificationActivity extends BaseAppCompatActivity {
                             }
                         }
 
-                        new Handler().postDelayed(new Runnable() {
+                        // Send Broadcast
+                        sendBroadcast(new Intent(Utility.BR_ON_LOGIN_SUCCESS));
+                        finish();
+
+                        /*new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                //Redirect user to Home Screen
-                                HomeActivity.newInstance(mContext);
+                                // Send Broadcast
+                                sendBroadcast(new Intent(Utility.BR_ON_LOGIN_SUCCESS));
                                 finish();
                             }
-                        }, 1500);
+                        }, 1500);*/
 
 //                        Utility.showToast(mContext, getString(R.string.label_welcome_message));
                         /*String message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);

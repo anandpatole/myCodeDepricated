@@ -63,7 +63,7 @@ public class SplashActivity extends BaseAppCompatActivity {
         @Override
         public void run() {
 
-            /**
+            /*
              * For Guest Login We would directly redirect the user to HomeScreen
              */
             HomeActivity.newInstance(mContext);

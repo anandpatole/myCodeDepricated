@@ -72,7 +72,6 @@ public class SearchActivity extends BaseAppCompatActivity implements SearchAdapt
             });
         }
 
-
         UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
 
         //Setting search placeholder
@@ -82,7 +81,7 @@ public class SearchActivity extends BaseAppCompatActivity implements SearchAdapt
             mActivitySearchBinding.editSearch.setHint(getString(R.string.hint_search_placeholder, name));
 //            mActivitySearchBinding.editSearch.setHint(getString(R.string.hint_search_placeholder, name.split(" ")[0]));
         } else {
-            mActivitySearchBinding.editSearch.setHint(getString(R.string.hint_search_placeholder, userDetails.UserName));
+            mActivitySearchBinding.editSearch.setHint(getString(R.string.hint_search_placeholder, Utility.GUEST_STATIC_INFO.USERNAME));
         }
 
 
@@ -137,6 +136,6 @@ public class SearchActivity extends BaseAppCompatActivity implements SearchAdapt
     @Override
     public void onCategoryRowClicked(JobCategoryModel model, int position) {
 //        HireNewJobActivity.newInstance(mContext, model);
-        TaskCreationActivity.getInstance(mContext,model);
+        TaskCreationActivity.getInstance(mContext, model);
     }
 }
