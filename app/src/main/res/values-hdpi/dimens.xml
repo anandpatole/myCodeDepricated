@@ -14,5 +14,6 @@
     <dimen name="tv_max_width_provider_name_task_list">70dp</dimen>
     <dimen name="radio_button_padding_for_address">2dp</dimen>
 
+    <dimen name="height_sign_up_btn">40dp</dimen>
 
 </resources>

@@ -39,7 +39,7 @@
     <string name="label_logout">Logout</string>
 
     <string name="hint_username">Username</string>
-    <!--<string name="hint_mobile_number">Please enter your mobile number</string>-->
+    <string name="hint_mobile_number_login">Please enter your mobile number</string>
     <string name="hint_mobile_number">Enter your mobile number</string>
 
     <string name="hint_search_placeholder">Hey %1$s, what are you looking for today?</string>
@@ -457,6 +457,8 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_cancel">Cancel</string>
     <string name="label_address_delete_title">Cheep</string>
     <string name="label_address_delete_message">Are you sure want to delete this address?</string>
+    <!-- new lables for login screen for skip login feature-->
+    <string name="label_almost_there">Hang in, you\'re almost there!</string>
 
 
 </resources>
