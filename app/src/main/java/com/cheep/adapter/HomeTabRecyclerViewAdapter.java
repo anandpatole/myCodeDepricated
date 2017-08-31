@@ -124,6 +124,7 @@ public class HomeTabRecyclerViewAdapter extends RecyclerView.Adapter<HomeTabRecy
             }
         });
 
+
         // Start LIVE tracking and Text changes
         final int liveFeedCounter = model.live_lable_arr != null ? model.live_lable_arr.size() : 0;
         if (liveFeedCounter > 0) {
