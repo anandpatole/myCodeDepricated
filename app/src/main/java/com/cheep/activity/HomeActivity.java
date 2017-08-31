@@ -1828,7 +1828,6 @@ public class HomeActivity extends BaseAppCompatActivity
         }
     }
 
-
     /**
      * Location [END]
      */

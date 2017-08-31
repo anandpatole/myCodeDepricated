@@ -397,6 +397,7 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
             LoginActivity.newInstance(mContext);
             return;
         }
+
        /* SuperCalendar superCalendar = SuperCalendar.getInstance();
         superCalendar.setTimeInMillis(mTaskCreationPagerAdapter.mEnterTaskDetailFragment.startDateTimeSuperCalendar.getTimeInMillis());
         superCalendar.setTimeZone(SuperCalendar.SuperTimeZone.GMT.GMT);
@@ -409,8 +410,8 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
             return;
         }*/
 
-        //Show Progress
-        //showProgressDialog();
+        // Show Progress
+        showProgressDialog();
 
         UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
 
