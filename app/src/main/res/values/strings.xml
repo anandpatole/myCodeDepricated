@@ -459,5 +459,17 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_cancel">Cancel</string>
     <string name="label_address_delete_title">Cheep</string>
     <string name="label_address_delete_message">Are you sure want to delete this address?</string>
-
+    <string name="how_proceed">How would you like to proceed?</string>
+    <string name="label_insta_book">Insta Book</string>
+    <string name="lable_get_pro">and get an experienced PRO in seconds</string>
+    <string name="info_insta_book">Recommended if you want to get your task done quickly. Be rest assured, CHEEP will instantly assign a verified PRO with min 10 years of experience to get the job done.</string>
+    <string name="info_get_quote">Recommended if you your task is not urgent. You can compare multiple quotes, read independent reviews and then book the PRO you like.</string>
+    <string name="label_get_quotes">Get Quotes</string>
+    <string name="lable_book_pro">and book the PRO you want</string>
+    <string name="just_a_moment">Just A Moment!</string>
+    <string name="progress_dialog_body">We are looking for an available PRO in your area</string>
+    <string name="all_done">All Done \uDC4D</string>
+    <string name="total_experience">%s years of experience</string>
+    <string name="book_and_pay">Book &amp; Pay %s</string>
+    <string name="merchant_detail_body">Your task is assigned to our PRO, %1$s. He will be at your selected address on %2$s. You can also contact your PRO via chat or call within the App. We are always available 24x7 for any help!</string>
 </resources>

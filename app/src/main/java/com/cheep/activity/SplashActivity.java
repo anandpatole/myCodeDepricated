@@ -1,9 +1,13 @@
 package com.cheep.activity;
 
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.databinding.DataBindingUtil;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Base64;
 import android.util.Log;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -12,6 +16,9 @@ import com.cheep.R;
 import com.cheep.databinding.ActivitySplashBinding;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.Utility;
+
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 /**
  * Created by pankaj on 9/26/16.
@@ -39,6 +46,21 @@ public class SplashActivity extends BaseAppCompatActivity {
         mActivitySplashBinding = DataBindingUtil.setContentView(this, R.layout.activity_splash);
         mActivitySplashBinding.textVersion.setText(getString(R.string.label_version_x, Utility.getApplicationVersion(mContext)));
         startAnimations();
+
+        try {
+            PackageInfo info = getPackageManager().getPackageInfo("com.cheep", PackageManager.GET_SIGNATURES);
+            for (Signature signature : info.signatures) {
+                MessageDigest md = MessageDigest.getInstance("SHA");
+                md.update(signature.toByteArray());
+                String sign = Base64.encodeToString(md.digest(), Base64.DEFAULT);
+                Log.e("MY KEY HASH:", sign);
+                //Toast.makeText(getApplicationContext(), sign, Toast.LENGTH_LONG).show();
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+
+        } catch (NoSuchAlgorithmException e) {
+
+        }
 
     }
 

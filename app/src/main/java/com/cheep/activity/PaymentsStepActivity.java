@@ -56,6 +56,8 @@ import static com.cheep.utils.Utility.Extra.PAYMENT_VIEW_IS_ADDITIONAL_CHARGE;
 
 public class PaymentsStepActivity extends BaseAppCompatActivity {
 
+    private boolean isInstaBooking = false;
+
     public static void newInstance(Context context, TaskDetailModel taskDetailModel, ProviderModel providerModel, int additional) {
         Intent intent = new Intent(context, PaymentsStepActivity.class);
         intent.putExtra(Utility.Extra.DATA, Utility.getJsonStringFromObject(providerModel));
@@ -89,6 +91,9 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
           when the device runing out of memory we dont want the user to restart the payment. rather we close it and redirect them to previous activity.
          */
         mActivityPaymentDetailBinding = DataBindingUtil.setContentView(this, R.layout.activity_payment_detail);
+
+        isInstaBooking = getIntent().getBooleanExtra("isInsta", false);
+
 
         initiateUI();
         setListeners();
@@ -195,7 +200,7 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
             public void onClick(View view) {
                 mActivityPaymentDetailBinding.textpromocodelabel.setEnabled(true);
                 cheepCode = null;
-                if (TextUtils.isEmpty(actualQuotePrice) == false) {
+                if (!TextUtils.isEmpty(actualQuotePrice)) {
                     providerModel.quotePrice = actualQuotePrice;
                 }
                 actualQuotePrice = null;
@@ -218,19 +223,25 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
             double additionalCharges = 0;
             double promocodeValue = 0;
             double additionalPaidAmount = 0;
-            if (!TextUtils.isEmpty(taskDetailModel.additionalQuoteAmount)) {
-                additionalCharges = getQuotePriceInInteger(taskDetailModel.additionalQuoteAmount);
-            }
 
-            if (!TextUtils.isEmpty(taskDetailModel.task_total_amount)) {
-                double task_total_amount = 0;
-                double taskPaidAmountTotal = 0;
-                if (!TextUtils.isEmpty(taskDetailModel.taskPaidAmount)) {
-                    taskPaidAmountTotal = getQuotePriceInInteger(taskDetailModel.taskPaidAmount);
+            if(isInstaBooking){
+                promocodeValue = 0;
+            } else {
+
+                if (!TextUtils.isEmpty(taskDetailModel.additionalQuoteAmount)) {
+                    additionalCharges = getQuotePriceInInteger(taskDetailModel.additionalQuoteAmount);
                 }
-                task_total_amount = getQuotePriceInInteger(taskDetailModel.task_total_amount);
-                promocodeValue = task_total_amount - taskPaidAmountTotal;
 
+                if (!TextUtils.isEmpty(taskDetailModel.task_total_amount)) {
+                    double task_total_amount = 0;
+                    double taskPaidAmountTotal = 0;
+                    if (!TextUtils.isEmpty(taskDetailModel.taskPaidAmount)) {
+                        taskPaidAmountTotal = getQuotePriceInInteger(taskDetailModel.taskPaidAmount);
+                    }
+                    task_total_amount = getQuotePriceInInteger(taskDetailModel.task_total_amount);
+                    promocodeValue = task_total_amount - taskPaidAmountTotal;
+
+                }
             }
 
             double subTotal = (taskPaidAmount + additionalCharges);
@@ -407,6 +418,42 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
         actualQuotePrice = providerModel.quotePrice;
 
 
+        //Add Header parameters
+        Map<String, String> mHeaderParams = new HashMap<>();
+        mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
+        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, userDetails.UserID);
+
+        //Add Params
+        Map<String, Object> mParams = new HashMap<>();
+        mParams.put(NetworkUtility.TAGS.QUOTE_AMOUNT, providerModel.quotePrice);
+        mParams.put(NetworkUtility.TAGS.TASK_ID, taskDetailModel.taskId);
+        mParams.put(NetworkUtility.TAGS.CHEEPCODE, cheepCode);
+
+        //Url is based on condition if address id is greater then 0 then it means we need to update the existing address
+        VolleyNetworkRequest mVolleyNetworkRequestForSPList = new VolleyNetworkRequest(NetworkUtility.WS.VALIDATE_CHEEP_CODE
+                , mCallValidateCheepCodeWSErrorListener
+                , mCallValidateCheepCodeWSResponseListener
+                , mHeaderParams
+                , mParams
+                , null);
+        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequestForSPList);
+    }
+
+
+    /**
+     * Used for payment
+     */
+    private void validateInstaCheepCode(String cheepCode) {
+        if (!Utility.isConnected(mContext)) {
+            Utility.showSnackBar(getString(R.string.no_internet), mActivityPaymentDetailBinding.getRoot());
+            return;
+        }
+
+        showProgressDialog();
+
+        UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
+
+        actualQuotePrice = providerModel.quotePrice;
         //Add Header parameters
         Map<String, String> mHeaderParams = new HashMap<>();
         mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());

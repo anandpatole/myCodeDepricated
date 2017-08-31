@@ -35,6 +35,9 @@ public class NetworkUtility {
 
         public static final String UPDATE_LOCATION = BASE_URL + "customers/profile/update_location";
         public static final String CREATE_TASK = BASE_URL + "customers/tasks/create";
+
+        public static final String INSTA_BOOKING = BASE_URL + "customers/tasks/getProForInstantBooking";
+
         public static final String SP_LIST = BASE_URL + "customers/sp_list/listing";
         public static final String SP_LIST_FILTER = BASE_URL + "customers/sp_list/filter_sp_list";
 
@@ -281,6 +284,7 @@ public class NetworkUtility {
             public static final String REG_TWITTER = "RegisterWithTwitter";
             public static final String REG_GOOGLE = "RegisterWithGPlus";
             public static final String TASK_CREATE = "TaskCreation";
+            public static final String INSTA_BOOK = "InstaBook";
         }
     }
 

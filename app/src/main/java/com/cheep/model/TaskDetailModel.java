@@ -1,5 +1,7 @@
 package com.cheep.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.Keep;
 
 import com.cheep.strategicpartner.MediaModel;
@@ -117,6 +119,7 @@ public class TaskDetailModel {
     @SerializedName("question_detail")
     public ArrayList<QueAnsModel> mQuesList;
 
+
     public TaskDetailModel() {
 
     }
@@ -131,6 +134,7 @@ public class TaskDetailModel {
         this.categoryName = categoryName;
         this.providerCount = providerCount;
     }
+
 
 
     /*//SP Selected

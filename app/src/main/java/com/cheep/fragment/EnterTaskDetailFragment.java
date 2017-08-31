@@ -77,6 +77,7 @@ import java.util.List;
 import java.util.Map;
 
 import static android.app.Activity.RESULT_OK;
+import static com.cheep.R.id.add;
 import static com.cheep.R.id.edit_address;
 import static com.cheep.R.id.edit_address_initials;
 import static com.cheep.utils.Utility.getObjectFromJsonString;
@@ -190,6 +191,8 @@ public class EnterTaskDetailFragment extends BaseFragment {
         //Update SubCategory
         mFragmentEnterTaskDetailBinding.textSubCategoryName.setText(mTaskCreationActivity.getSelectedSubService().name);
 
+
+
     }
 
     @Override
@@ -260,6 +263,24 @@ public class EnterTaskDetailFragment extends BaseFragment {
 
                 Utility.hideKeyboard(mContext, mFragmentEnterTaskDetailBinding.editTaskDesc);
                 showAddressDialog();
+            }
+        });
+
+        mFragmentEnterTaskDetailBinding.cvInstaBook.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.i("myLog", ""+isTotalVerified);
+                mTaskCreationActivity.onInstaBookClicked();
+            }
+        });
+
+        mFragmentEnterTaskDetailBinding.cvGetQuote.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.i("myLog", ""+isTotalVerified);
+
+                mTaskCreationActivity.onGetQuoteClicked();
+
             }
         });
 
@@ -580,6 +601,7 @@ public class EnterTaskDetailFragment extends BaseFragment {
     private BottomAlertDialog addressDialog;
     private AddressRecyclerViewAdapter addressRecyclerViewAdapter;
     public String addressId = "";
+    public String mAddress = "";
 
     private void showAddressDialog() {
         View view = View.inflate(mContext, R.layout.dialog_choose_address_new_task, null);
@@ -606,6 +628,7 @@ public class EnterTaskDetailFragment extends BaseFragment {
                         }
                         updateWhereLabelWithIcon(true, address);
                         addressId = model.address_id;
+                        mAddress = model.address;
                         updateTaskVerificationFlags();
                         addressDialog.dismiss();
                     }
