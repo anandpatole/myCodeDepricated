@@ -140,5 +140,6 @@
     <dimen name="banner_height_strategic_partner">206dp</dimen>
     <dimen name="tv_max_width_provider_name_task_list">125dp</dimen>
     <dimen name="radio_button_padding_for_address">5dp</dimen>
+    <dimen name="height_sign_up_btn">48dp</dimen>
 
 </resources>
