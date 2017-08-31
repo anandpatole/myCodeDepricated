@@ -191,7 +191,7 @@ public class LoginActivity extends BaseAppCompatActivity implements FacebookHelp
 
     @Override
     protected void initiateUI() {
-        getWindow().setBackgroundDrawableResource(R.drawable.splash_gradient);
+        getWindow().setBackgroundDrawableResource(R.drawable.bg_login_blur_screen);
     }
 
     @Override

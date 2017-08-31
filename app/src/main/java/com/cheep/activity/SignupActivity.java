@@ -42,7 +42,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import static com.cheep.utils.Utility.REQUEST_CODE_IMAGE_CAPTURE_ADD_PROFILE;
@@ -79,7 +78,7 @@ public class SignupActivity extends BaseAppCompatActivity {
     @Override
     protected void initiateUI() {
 
-        getWindow().setBackgroundDrawableResource(R.drawable.splash_gradient);
+        getWindow().setBackgroundDrawableResource(R.drawable.bg_login_blur_screen);
 
         //Setup terms & condition text
         /*SpannableStringBuilder mSpannableStringBuilder = new SpannableStringBuilder(getString(R.string.label_sign_agreement));
