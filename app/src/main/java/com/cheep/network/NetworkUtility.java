@@ -36,7 +36,7 @@ public class NetworkUtility {
         public static final String UPDATE_LOCATION = BASE_URL + "customers/profile/update_location";
         public static final String CREATE_TASK = BASE_URL + "customers/tasks/create";
 
-        public static final String INSTA_BOOKING = BASE_URL + "customers/tasks/getProForInstantBooking";
+        public static final String GET_PRO_FOR_INSTA_BOOKING = BASE_URL + "customers/tasks/getProForInstantBooking";
 
         public static final String SP_LIST = BASE_URL + "customers/sp_list/listing";
         public static final String SP_LIST_FILTER = BASE_URL + "customers/sp_list/filter_sp_list";
@@ -105,6 +105,7 @@ public class NetworkUtility {
 
         // Task Creation for Strategic Partner
         public static final String TASK_CREATE_STRATEGIC_PARTNER = BASE_URL + "customers/tasks/stratagic_partner_task_create";
+        public static final String TASK_CREATE_INSTA_BOOKING = BASE_URL + "customers/tasks/instaBookingTaskCreate";
 
     }
 
@@ -162,6 +163,7 @@ public class NetworkUtility {
         public static final String QUOTE_AMOUNT = "quote_amount";
         public static final String PAYABLE_AMOUNT = "payable_amount";
         public static final String DISCOUNT_AMOUNT = "discount_amount";
+        public static final String PAYABLE_AMOUNT_WITHOUT_GST = "payable_amount_without_gst";
 
         public static final String TASK_DESC = "task_desc";
         public static final String CITY_ID = "city_id";

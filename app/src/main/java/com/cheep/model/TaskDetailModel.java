@@ -1,7 +1,5 @@
 package com.cheep.model;
 
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.support.annotation.Keep;
 
 import com.cheep.strategicpartner.MediaModel;
@@ -91,6 +89,11 @@ public class TaskDetailModel {
 
     @SerializedName("cat_image")
     public String catImage;
+
+    @SerializedName("payable_amount_with_gst")
+    public String payableAmountWithGST;
+
+    public String quoteAmountWithGST;
 
     @SerializedName("cat_image_extra")
     public AttachmentModel catImageExtras;

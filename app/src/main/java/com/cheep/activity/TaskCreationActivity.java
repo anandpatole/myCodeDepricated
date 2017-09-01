@@ -1,7 +1,9 @@
 package com.cheep.activity;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
@@ -23,13 +25,13 @@ import com.cheep.databinding.ActivityTaskCreateBinding;
 import com.cheep.dialogs.AcknowledgementDialogWithoutProfilePic;
 import com.cheep.dialogs.AcknowledgementInteractionListener;
 import com.cheep.dialogs.CustomLoadingDialog;
-import com.cheep.dialogs.InstaBookMerchantDialog;
+import com.cheep.dialogs.InstaBookProDialog;
 import com.cheep.firebase.FirebaseHelper;
 import com.cheep.firebase.FirebaseUtils;
 import com.cheep.firebase.model.ChatTaskModel;
 import com.cheep.fragment.EnterTaskDetailFragment;
 import com.cheep.fragment.SelectSubCategoryFragment;
-import com.cheep.model.InstaBookingMerchantDetail;
+import com.cheep.model.InstaBookingProDetail;
 import com.cheep.model.JobCategoryModel;
 import com.cheep.model.ProviderModel;
 import com.cheep.model.SubServiceDetailModel;
@@ -54,8 +56,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 
-import static com.cheep.utils.Utility.Extra.PAYMENT_VIEW_IS_ADDITIONAL_CHARGE;
-
 /**
  * Created by bhavesh on 26/4/17.
  */
@@ -78,6 +78,7 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mActivityTaskCreateBinding = DataBindingUtil.setContentView(this, R.layout.activity_task_create);
+        mContext.registerReceiver(mBR_OnInstaTaskCreated, new IntentFilter(Utility.BR_ON_TASK_CREATED_FOR_INSTA_BOOKING));
         initiateUI();
         setListeners();
     }
@@ -144,6 +145,20 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
 
     }
 
+    private BroadcastReceiver mBR_OnInstaTaskCreated = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.d(TAG, "onReceive() called with: context = [" + context + "], intent = [" + intent + "]");
+            /*
+              Redirect the user to MYTask Screen
+             */
+            finish();
+
+            //Sending Broadcast to the HomeScreen Screen.
+            Intent newIntent = new Intent(Utility.BR_ON_TASK_CREATED);
+            sendBroadcast(newIntent);
+        }
+    };
 
     @Override
     protected void setListeners() {
@@ -413,7 +428,7 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
         mParams.put(NetworkUtility.TAGS.CAT_ID, mJobCategoryModel.catId);
         mParams.put(NetworkUtility.TAGS.ADDRESS_ID, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.addressId);
         mParams.put(NetworkUtility.TAGS.SUBCATEGORY_ID, String.valueOf(mSelectedSubServiceDetailModel.sub_cat_id));
-        VolleyNetworkRequest mVolleyNetworkRequest = new VolleyNetworkRequest(NetworkUtility.WS.INSTA_BOOKING
+        VolleyNetworkRequest mVolleyNetworkRequest = new VolleyNetworkRequest(NetworkUtility.WS.GET_PRO_FOR_INSTA_BOOKING
                 , mCallInstaBookErrorListener
                 , mCallInstaBookWSResponseListener
                 , mHeaderParams
@@ -442,9 +457,20 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
             return;
         }
 
-        mDialog = new CustomLoadingDialog();
-        mDialog.setCancelable(false);
-        mDialog.show(getSupportFragmentManager(), "loading");
+       /* SuperCalendar superCalendar = SuperCalendar.getInstance();
+        superCalendar.setTimeInMillis(mTaskCreationPagerAdapter.mEnterTaskDetailFragment.startDateTimeSuperCalendar.getTimeInMillis());
+        superCalendar.setTimeZone(SuperCalendar.SuperTimeZone.GMT.GMT);
+
+        // Get date-time for next 3 hours
+        SuperCalendar calAfter3Hours = SuperCalendar.getInstance().getNext3HoursTime();
+
+        if (superCalendar.getTimeInMillis() < calAfter3Hours.getTimeInMillis()) {
+            Utility.showSnackBar(getString(R.string.can_only_start_task_after_3_hours), mActivityTaskCreateBinding.getRoot());
+            return;
+        }*/
+
+        //Show Progress
+        showProgressDialog();
 
         UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
 
@@ -549,7 +575,7 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
         @Override
         public void onResponse(Object response) {
 
-            if(!isFinishing() && mDialog != null){
+            if (!isFinishing() && mDialog != null) {
                 mDialog.dismiss();
             }
             String strResponse = (String) response;
@@ -578,7 +604,11 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
                           Now according to the new flow, once task created
                           app will be redirected to MyTask Detail screen.
                          */
-                        onSuccessInstaBooking(jsonObject);
+                        final InstaBookingProDetail taskDetailModel = (InstaBookingProDetail) Utility.getObjectFromJsonString(jsonObject.optString(NetworkUtility.TAGS.DATA), InstaBookingProDetail.class);
+                        if (taskDetailModel != null && taskDetailModel.spId != null)
+                            onSuccessInstaBooking(taskDetailModel);
+                        else
+                            Utility.showToast(TaskCreationActivity.this, getString(R.string.alert_no_pro_found));
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
                         // Show Toast
@@ -605,14 +635,10 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
     };
 
 
-
-
     /**
      * This method would going to call when task completed successfully
      */
-    private void onSuccessInstaBooking(JSONObject jsonObject) {
-        Log.i("instabooking", "json to string is::"+jsonObject);
-        final InstaBookingMerchantDetail taskDetailModel = (InstaBookingMerchantDetail) Utility.getObjectFromJsonString(jsonObject.optString(NetworkUtility.TAGS.DATA), InstaBookingMerchantDetail.class);
+    private void onSuccessInstaBooking(final InstaBookingProDetail taskDetailModel) {
         if (taskDetailModel != null) {
             Calendar c = Calendar.getInstance();
             c.setTimeInMillis(mTaskCreationPagerAdapter.mEnterTaskDetailFragment.superCalendar.getCalendar().getTimeInMillis());
@@ -622,12 +648,12 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd MMMM", Locale.getDefault());
             String date = simpleDateFormat.format(d);
             int fromHour = c.get(Calendar.HOUR);
-            if(fromHour == 0){
+            if (fromHour == 0) {
                 fromHour = 12;
             }
             c.add(Calendar.HOUR, 1);
             int toHour = c.get(Calendar.HOUR);
-            InstaBookMerchantDialog dialog = InstaBookMerchantDialog.newInstance(this, taskDetailModel, date + " between " + fromHour + "-" + toHour, new AcknowledgementInteractionListener() {
+            InstaBookProDialog dialog = InstaBookProDialog.newInstance(this, taskDetailModel, date + " between " + fromHour + "-" + toHour, new AcknowledgementInteractionListener() {
                 @Override
                 public void onAcknowledgementAccepted() {
 
@@ -638,35 +664,30 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
                     model.subCategoryName = mSelectedSubServiceDetailModel.name;
                     model.taskAddress = mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mAddress;
                     model.taskAddressId = mTaskCreationPagerAdapter.mEnterTaskDetailFragment.addressId;
-                    model.task_total_amount = taskDetailModel.getRate();
+                    model.task_total_amount = taskDetailModel.rate;
                     model.categoryId = mJobCategoryModel.catId;
+                    model.taskDesc = mTaskCreationPagerAdapter.mEnterTaskDetailFragment.getTaskDescription();
                     model.catImage = mJobCategoryModel.catImage;
                     model.taskStartdate = String.valueOf(mTaskCreationPagerAdapter.mEnterTaskDetailFragment.superCalendar.getCalendar().getTimeInMillis());
                     model.subCategoryID = String.valueOf(mSelectedSubServiceDetailModel.sub_cat_id);
                     ProviderModel pModel = new ProviderModel();
-                    pModel.userName = taskDetailModel.getUserName();;
-                    pModel.profileUrl = taskDetailModel.getProfileImg();
-                    pModel.providerId = taskDetailModel.getSpId();
-                    pModel.quotePrice = taskDetailModel.getRate();
+                    pModel.userName = taskDetailModel.userName;
+                    pModel.profileUrl = taskDetailModel.profileImg;
+                    pModel.providerId = taskDetailModel.spId;
+                    pModel.quotePrice = taskDetailModel.rateGST;
+                    pModel.quotePriceWithOutGST = taskDetailModel.rate;
 
-                    Intent intent = new Intent(mContext, PaymentsStepActivity.class);
-                    intent.putExtra(Utility.Extra.DATA, Utility.getJsonStringFromObject(pModel));
-                    intent.putExtra(Utility.Extra.DATA_2, Utility.getJsonStringFromObject(model));
-                    intent.putExtra(PAYMENT_VIEW_IS_ADDITIONAL_CHARGE, 0);
-                    intent.putExtra("isInsta", true);
-                    startActivity(intent);
+                    PaymentsStepActivity.newInstance(TaskCreationActivity.this, model, pModel, 0, true);
 
                     //Log.i("myLog", "tasks:"+mJobCategoryModel.catName+"::"+mSelectedSubServiceDetailModel.name+"::"+mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mAddress);
 
                 }
             });
-            dialog.setCancelable(false);
+            dialog.setCancelable(true);
             dialog.show(getSupportFragmentManager(), "loading");
-        } else{
-
+        } else {
         }
     }
-
 
 
     /**
@@ -737,7 +758,7 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
         public void onErrorResponse(VolleyError error) {
             Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
 
-            if(mDialog != null) {
+            if (mDialog != null) {
                 mDialog.dismiss();
             }
 
@@ -780,5 +801,12 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
                 mLocationTrackService.requestLocationUpdate();
             }
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mContext.unregisterReceiver(mBR_OnInstaTaskCreated);
+
     }
 }

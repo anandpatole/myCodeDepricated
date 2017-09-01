@@ -472,4 +472,5 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="total_experience">%s years of experience</string>
     <string name="book_and_pay">Book &amp; Pay %s</string>
     <string name="merchant_detail_body">Your task is assigned to our PRO, %1$s. He will be at your selected address on %2$s. You can also contact your PRO via chat or call within the App. We are always available 24x7 for any help!</string>
+    <string name="alert_no_pro_found">No pro found in your location for instant booking</string>
 </resources>

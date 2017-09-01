@@ -172,6 +172,7 @@ public class Utility {
 
     //Different Types of Braoadcast Actions
     public static final String BR_ON_TASK_CREATED = "com.cheep.ontaskcreated";
+    public static final String BR_ON_TASK_CREATED_FOR_INSTA_BOOKING = "com.cheep.ontaskcreated.instabooking";
     public static final String BR_ON_TASK_CREATED_FOR_STRATEGIC_PARTNER = "com.cheep.ontaskcreated.strategicpartner";
     public static final String BR_NEW_TASK_ADDED = "com.cheep.newtask.added";
     public static final int CHAT_PAGINATION_RECORD_LIMIT = 20;
@@ -390,6 +391,7 @@ public class Utility {
 
         public static final String CHAT_NOTIFICATION_DATA = "chat_notification_data";
         public static final String PROFILE_FROM_FAVOURITE = "from_favorite";
+        public static final String TASK_TYPE_IS_INSTA = "isInsta";
     }
 
 

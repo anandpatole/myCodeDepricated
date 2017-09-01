@@ -646,7 +646,7 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
                 if (data != null) {
                     Log.d(TAG, "onActivityResult() called with failed: result= [" + data.getStringExtra("result") + "]");
                     //Call update payment service from here with all the response come from service
-                    callTaskCreationWebServiceForStratgicPartner(false, data.getStringExtra("result"));
+//                    callTaskCreationWebServiceForStratgicPartner(false, data.getStringExtra("result"));
                     Utility.showSnackBar(getString(R.string.msg_payment_failed), mFragmentStrategicPartnerPhaseThreeBinding.getRoot());
                 }
             }

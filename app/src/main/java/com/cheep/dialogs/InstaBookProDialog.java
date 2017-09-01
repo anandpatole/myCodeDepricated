@@ -15,25 +15,25 @@ import android.view.ViewGroup;
 import android.view.Window;
 
 import com.cheep.R;
-import com.cheep.databinding.DialogInstabookMerchantInfoBinding;
-import com.cheep.model.InstaBookingMerchantDetail;
+import com.cheep.databinding.DialogInstabookProInfoBinding;
+import com.cheep.model.InstaBookingProDetail;
 import com.cheep.utils.Utility;
 
-public class InstaBookMerchantDialog extends DialogFragment {
+public class InstaBookProDialog extends DialogFragment {
     public static final String TAG = "AcknowledgementDialogWi";
 
-    private DialogInstabookMerchantInfoBinding mDialog;
+    private DialogInstabookProInfoBinding mDialog;
     private AcknowledgementInteractionListener mListener;
     private Context mContext;
-    InstaBookingMerchantDetail merchantDetail;
+    InstaBookingProDetail merchantDetail;
     String date = "";
 
     /**
      * Create a new instance of MyDialogFragment, providing "num"
      * as an argument.
      */
-    public static InstaBookMerchantDialog newInstance(Context mContext, InstaBookingMerchantDetail detail, String date, AcknowledgementInteractionListener listener) {
-        InstaBookMerchantDialog f = new InstaBookMerchantDialog();
+    public static InstaBookProDialog newInstance(Context mContext, InstaBookingProDetail detail, String date, AcknowledgementInteractionListener listener) {
+        InstaBookProDialog f = new InstaBookProDialog();
         f.setListener(listener);
         f.setContext(mContext);
         // Supply num input as an argument.
@@ -77,10 +77,10 @@ public class InstaBookMerchantDialog extends DialogFragment {
             getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         }
 
-        mDialog = DataBindingUtil.inflate(inflater, R.layout.dialog_instabook_merchant_info, container, false);
+        mDialog = DataBindingUtil.inflate(inflater, R.layout.dialog_instabook_pro_info, container, false);
 
-        if (!TextUtils.isEmpty(merchantDetail.getProfileImg())) {
-            Utility.showCircularImageView(mContext, TAG, mDialog.imgProfilePic, merchantDetail.getProfileImg(), R.drawable.ic_cheep_circular_icon, false, 0);
+        if (!TextUtils.isEmpty(merchantDetail.profileImg)) {
+            Utility.showCircularImageView(mContext, TAG, mDialog.imgProfilePic, merchantDetail.profileImg, R.drawable.ic_cheep_circular_icon, false, 0);
         } else {
             mDialog.imgProfilePic.setImageResource(Utility.DEFAULT_CHEEP_LOGO);
         }
@@ -88,35 +88,35 @@ public class InstaBookMerchantDialog extends DialogFragment {
         //Set Header Image
 
         // Set title
-        mDialog.title.setText(merchantDetail.getUserName());
+        mDialog.title.setText(merchantDetail.userName);
 
 
-        if(TextUtils.isEmpty(merchantDetail.getAvgRatings()) || Float.parseFloat(merchantDetail.getAvgRatings()) == 0){
-            mDialog.tvSubtitle.setText(TextUtils.concat(getString(R.string.total_experience, merchantDetail.getExperience())));
+        if(TextUtils.isEmpty(merchantDetail.avgRatings) || Float.parseFloat(merchantDetail.avgRatings) == 0){
+            mDialog.tvSubtitle.setText(TextUtils.concat(getString(R.string.total_experience, merchantDetail.experience)));
             mDialog.tvSubtitle.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
         } else {
 
-            mDialog.tvSubtitle.setText(TextUtils.concat(getString(R.string.total_experience, merchantDetail.getExperience()), " | ", String.format("%.1f", Float.parseFloat(merchantDetail.getAvgRatings()))));
+            mDialog.tvSubtitle.setText(TextUtils.concat(getString(R.string.total_experience, merchantDetail.experience), " | ", String.format("%.1f", Float.parseFloat(merchantDetail.avgRatings))));
         }
-        if(!TextUtils.isEmpty(merchantDetail.getVerified()) && merchantDetail.getVerified().equalsIgnoreCase("yes")){
+        if(!TextUtils.isEmpty(merchantDetail.verified) && merchantDetail.verified.equalsIgnoreCase("yes")){
             mDialog.tvVerified.setVisibility(View.VISIBLE);
         } else{
             mDialog.tvVerified.setVisibility(View.GONE);
         }
 
 
-        if(merchantDetail.getProLevel() != null) {
-            if (merchantDetail.getProLevel().equals(Utility.PRO_LEVEL.PLATINUM))
+        if(merchantDetail.proLevel != null) {
+            if (merchantDetail.proLevel.equals(Utility.PRO_LEVEL.PLATINUM))
                 mDialog.ivBadge.setImageResource(R.drawable.ic_badge_platinum);
-            else if (merchantDetail.getProLevel().equals(Utility.PRO_LEVEL.GOLD))
+            else if (merchantDetail.proLevel.equals(Utility.PRO_LEVEL.GOLD))
                 mDialog.ivBadge.setImageResource(R.drawable.ic_badge_gold);
-            else if (merchantDetail.getProLevel().equals(Utility.PRO_LEVEL.SILVER))
+            else if (merchantDetail.proLevel.equals(Utility.PRO_LEVEL.SILVER))
                 mDialog.ivBadge.setImageResource(R.drawable.ic_badge_silver);
-            else if (merchantDetail.getProLevel().equals(Utility.PRO_LEVEL.BRONZE))
+            else if (merchantDetail.proLevel.equals(Utility.PRO_LEVEL.BRONZE))
                 mDialog.ivBadge.setImageResource(R.drawable.ic_badge_bronze);
         }
-        mDialog.tvBody.setText(getString(R.string.merchant_detail_body, merchantDetail.getUserName(), date));
-        mDialog.tvBook.setText(getString(R.string.book_and_pay, "₹"+merchantDetail.getRate()));
+        mDialog.tvBody.setText(getString(R.string.merchant_detail_body, merchantDetail.userName, date));
+        mDialog.tvBook.setText(getString(R.string.book_and_pay, "₹"+merchantDetail.rate));
         // Click event of Okay button
         mDialog.tvBook.setOnClickListener(new View.OnClickListener() {
             @Override
