@@ -17,6 +17,7 @@ import com.cheep.R;
 import com.cheep.activity.BaseAppCompatActivity;
 import com.cheep.adapter.TaskCreationForStrategicPartnerPagerAdapter;
 import com.cheep.databinding.ActivityTaskCreationForStrategicPartnerBinding;
+import com.cheep.model.AddressModel;
 import com.cheep.model.BannerImageModel;
 import com.cheep.utils.Utility;
 import com.google.android.gms.common.api.Status;
@@ -41,9 +42,10 @@ public class StrategicPartnerTaskCreationAct extends BaseAppCompatActivity {
     private ArrayList<QueAnsModel> mQuestionsList;
     private ArrayList<StrategicPartnerServiceModel> mSelectedServicesList;
     public boolean isSingleSelection = false;
-//    public String date = "";
+    //    public String date = "";
 //    public String time = "";
-    public String address = "";
+//    public String address = "";
+    public AddressModel mSelectedAddressModel;
     public String total = "";
 
     public static void getInstance(Context mContext, BannerImageModel model) {
@@ -72,7 +74,7 @@ public class StrategicPartnerTaskCreationAct extends BaseAppCompatActivity {
             mBannerImageModel = (BannerImageModel) Utility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA), BannerImageModel.class);
             if (mBannerImageModel != null) {
                 // Load PRO image
-                Utility.showCircularImageViewWithColorBorder(mContext, TAG, mActivityTaskCreationForStrategicPartnerBinding.imgLogo, mBannerImageModel.imgCatImageUrl, R.drawable.icon_profile_img_solid,  R.color.dark_blue_variant_1,true);
+                Utility.showCircularImageViewWithColorBorder(mContext, TAG, mActivityTaskCreationForStrategicPartnerBinding.imgLogo, mBannerImageModel.imgCatImageUrl, R.drawable.icon_profile_img_solid, R.color.dark_blue_variant_1, true);
                 Utility.loadImageView(mContext, mActivityTaskCreationForStrategicPartnerBinding.imgService, mBannerImageModel.bannerImage, R.drawable.gradient_black);
                 isSingleSelection = mBannerImageModel.minimum_selection.equalsIgnoreCase("1");
                 mActivityTaskCreationForStrategicPartnerBinding.textTitle.setText(mBannerImageModel.name != null ? mBannerImageModel.name : Utility.EMPTY_STRING);
@@ -357,8 +359,8 @@ public class StrategicPartnerTaskCreationAct extends BaseAppCompatActivity {
     @Override
     public void gpsEnabled() {
         super.gpsEnabled();
-        // Show place picker activity
-        mTaskCreationPagerAdapter.mStrategicPartnerFragPhaseTwo.showPlacePickerDialog(true);
+//        // Show place picker activity
+//        mTaskCreationPagerAdapter.mStrategicPartnerFragPhaseTwo.showPlacePickerDialog(true);
     }
 
     @Override
@@ -374,7 +376,6 @@ public class StrategicPartnerTaskCreationAct extends BaseAppCompatActivity {
             // Ignore the error.
         }
     }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

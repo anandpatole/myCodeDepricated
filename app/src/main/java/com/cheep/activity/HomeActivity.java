@@ -121,7 +121,7 @@ public class HomeActivity extends BaseAppCompatActivity
 
     public static void newInstance(Context context) {
         Intent intent = new Intent(context, HomeActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+//        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
     }
 
@@ -1819,7 +1819,7 @@ public class HomeActivity extends BaseAppCompatActivity
                 /*
                  * Feature: Guest Login.
                  * @Changes by: Bhavesh, on 28th Aug, 2017
-                 *If user doesn't want to enable location from notification pannel, we
+                 * If user doesn't want to enable location from notification pannel, we
                  * can see whether there are any earlier saved address is and if yes, we can load the
                  * data accordingly.
                  */
@@ -1832,6 +1832,7 @@ public class HomeActivity extends BaseAppCompatActivity
      * Location [END]
      */
 
+
     /**
      * BroadCast that would restart the screen once login has been done.
      */
@@ -1840,10 +1841,9 @@ public class HomeActivity extends BaseAppCompatActivity
         public void onReceive(Context context, Intent intent) {
             // Do nothing, just restart the activity
             Utility.hideKeyboard(mContext);
-//            HomeActivity.newInstance(mContext);
-            finish();
+
+            recreate();
         }
     };
-
 
 }

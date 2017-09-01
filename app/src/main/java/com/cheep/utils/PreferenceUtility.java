@@ -31,6 +31,7 @@ public class PreferenceUtility {
     private static final String PREF_USER_INFO = "com.cheep.fcm.userinfo";
     private static final String PREF_NOTIFICATION_COUNTER = "com.cheep.notification_counter";
     private static final String PREF_INTRO_SCREEN_STATUS = "com.cheep.intro.screen.status";
+    private static final String PREF_HOME_SCREEN_VISIBLE = "com.cheep.homescreen.available";
 
     //Guest User Pref
     private static final String PREF_FILE_GUEST = "com.cheep.guest";
@@ -61,6 +62,7 @@ public class PreferenceUtility {
     public void setFCMRegID(String token) {
         mSharedPreferences.edit().putString(PREF_FCM_TOKEN, token).apply();
     }
+
 
     public String getFCMRegID() {
         if (mSharedPreferences.contains(PREF_FCM_TOKEN)) {
@@ -178,5 +180,21 @@ public class PreferenceUtility {
         Log.d(TAG, "saveUserDetails() called with: model = [" + model + "]");
         mGuestSharedPreferences.edit().putString(PREF_GUEST_USER_INFO, Utility.getJsonStringFromObject(model)).apply();
         mGuestUserDetails = model;
+    }
+
+
+    /**
+     * Below would manage HomeScreen availability to properly manage Guest flow
+     */
+
+    public void setHomeScreenVisibility(boolean flag) {
+        mSharedPreferences.edit().putBoolean(PREF_HOME_SCREEN_VISIBLE, flag).apply();
+    }
+
+    public boolean isHomeScreenVisible() {
+        if (mSharedPreferences.contains(PREF_HOME_SCREEN_VISIBLE)) {
+            return mSharedPreferences.getBoolean(PREF_HOME_SCREEN_VISIBLE, true);
+        }
+        return true;
     }
 }

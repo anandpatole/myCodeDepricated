@@ -191,6 +191,7 @@
                     android:textSize="@dimen/text_size_13sp" />
 
                 <View
+                    android:id="@+id/view_divider_one"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/scale_1dp"
                     android:layout_above="@+id/action_layout"
@@ -212,6 +213,7 @@
                     android:textSize="@dimen/text_size_13sp" />
 
                 <View
+                    android:id="@+id/view_divider_two"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/scale_1dp"
                     android:layout_above="@+id/action_layout"

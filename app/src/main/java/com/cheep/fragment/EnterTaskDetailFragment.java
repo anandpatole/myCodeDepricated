@@ -1112,12 +1112,35 @@ public class EnterTaskDetailFragment extends BaseFragment {
      * @param addressType
      * @param address
      */
-
     private void callUpdateAddressWS(String addressId, String addressType,/* String addressName,*/ String address, String addressInitials, LatLng latLng) {
         if (!Utility.isConnected(mContext)) {
             Utility.showSnackBar(getString(R.string.no_internet), mFragmentEnterTaskDetailBinding.getRoot());
             return;
         }
+
+        if (PreferenceUtility.getInstance(mContext).getUserDetails() == null) {
+            GuestUserDetails guestUserDetails = PreferenceUtility.getInstance(mContext).getGuestUserDetails();
+            if (addressRecyclerViewAdapter != null) {
+                AddressModel mAddressModel = addressRecyclerViewAdapter.getSelectedAddress();
+                mAddressModel.category = addressType;
+                mAddressModel.address_id = addressId;
+                mAddressModel.address = address;
+                mAddressModel.address_initials = addressInitials;
+                mAddressModel.lat = String.valueOf(latLng.latitude);
+                mAddressModel.lng = String.valueOf(latLng.longitude);
+                addressRecyclerViewAdapter.updateItem(mAddressModel);
+                // Saving information in sharedpreference
+                guestUserDetails.addressList = addressRecyclerViewAdapter.getmList();
+            }
+            PreferenceUtility.getInstance(mContext).saveGuestUserDetails(guestUserDetails);
+
+            if (addAddressDialog != null) {
+                addAddressDialog.dismiss();
+            }
+
+            return;
+        }
+
 
         //Show Progress
         showProgressDialog();

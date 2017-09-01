@@ -195,6 +195,8 @@ public class ProfileTabFragment extends BaseFragment {
                 .crossFade()
                 .into(mFragmentTabProfileBinding.imgBanner);*/
 
+        showGuestProfile(PreferenceUtility.getInstance(mContext).getUserDetails() == null);
+
         callGetProfileWS();
     }
 
@@ -2355,6 +2357,33 @@ public class ProfileTabFragment extends BaseFragment {
     private void loadCoverImage(String selectedImagePath) {
         Utility.loadImageView(mContext, mFragmentTabProfileBinding.imgBanner, selectedImagePath, 0);
     }
+
+    private void showGuestProfile(boolean flag) {
+        if (flag) {
+            mFragmentTabProfileBinding.textEmergencyContact.setVisibility(View.GONE);
+            mFragmentTabProfileBinding.viewDividerOne.setVisibility(View.GONE);
+            mFragmentTabProfileBinding.textManageAddress.setVisibility(View.GONE);
+            mFragmentTabProfileBinding.viewDividerTwo.setVisibility(View.GONE);
+
+            // Hide Editable Buttons
+            mFragmentTabProfileBinding.imgProfilePhotoEdit.setVisibility(View.GONE);
+            mFragmentTabProfileBinding.imgCoverPhotoEdit.setVisibility(View.GONE);
+            mFragmentTabProfileBinding.imgEditUsername.setVisibility(View.GONE);
+            mFragmentTabProfileBinding.imgEditEmail.setVisibility(View.GONE);
+        } else {
+            mFragmentTabProfileBinding.textEmergencyContact.setVisibility(View.VISIBLE);
+            mFragmentTabProfileBinding.viewDividerOne.setVisibility(View.VISIBLE);
+            mFragmentTabProfileBinding.textManageAddress.setVisibility(View.VISIBLE);
+            mFragmentTabProfileBinding.viewDividerTwo.setVisibility(View.VISIBLE);
+
+            // Show Editable Buttons
+            mFragmentTabProfileBinding.imgProfilePhotoEdit.setVisibility(View.VISIBLE);
+            mFragmentTabProfileBinding.imgCoverPhotoEdit.setVisibility(View.VISIBLE);
+            mFragmentTabProfileBinding.imgEditUsername.setVisibility(View.VISIBLE);
+            mFragmentTabProfileBinding.imgEditEmail.setVisibility(View.VISIBLE);
+        }
+    }
+
 
 /*
     *//*

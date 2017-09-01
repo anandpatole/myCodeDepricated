@@ -1,7 +1,9 @@
 package com.cheep.strategicpartner;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.databinding.DataBindingUtil;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
@@ -27,6 +29,7 @@ import com.cheep.BootstrapConstant;
 import com.cheep.BuildConfig;
 import com.cheep.R;
 import com.cheep.activity.BaseAppCompatActivity;
+import com.cheep.activity.LoginActivity;
 import com.cheep.activity.PaymentsActivity;
 import com.cheep.custom_view.BottomAlertDialog;
 import com.cheep.databinding.FragmentStrategicPartnerPhaseThreeBinding;
@@ -90,6 +93,12 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
         return new StrategicPartnerFragPhaseThree();
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mContext.registerReceiver(mBR_OnLoginSuccess, new IntentFilter(Utility.BR_ON_LOGIN_SUCCESS));
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -151,11 +160,10 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
         spannableStringBuilder.append(getSpannableString(date + ", " + time
                 , ContextCompat.getColor(mStrategicPartnerTaskCreationAct, R.color.splash_gradient_end), true));
         spannableStringBuilder.append(getSpannableString(getString(R.string.label_at), ContextCompat.getColor(mStrategicPartnerTaskCreationAct, R.color.grey_varient_8), false));
-        spannableStringBuilder.append(getSpannableString(mStrategicPartnerTaskCreationAct.address, ContextCompat.getColor(mStrategicPartnerTaskCreationAct, R.color.splash_gradient_end), true));
+        spannableStringBuilder.append(getSpannableString(mStrategicPartnerTaskCreationAct.mSelectedAddressModel.address, ContextCompat.getColor(mStrategicPartnerTaskCreationAct, R.color.splash_gradient_end), true));
         spannableStringBuilder.append(getSpannableString(".", ContextCompat.getColor(mStrategicPartnerTaskCreationAct, R.color.splash_gradient_end), true));
 
         mFragmentStrategicPartnerPhaseThreeBinding.txtdesc.setText(spannableStringBuilder);
-
 
         // get list of selected services from phase 1
         if (mStrategicPartnerTaskCreationAct.getSelectedSubService() != null)
@@ -382,6 +390,11 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
     public void onDetach() {
         super.onDetach();
 //        Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.WS.FETCH_SUB_SERVICE_LIST);
+        try {
+            mContext.unregisterReceiver(mBR_OnLoginSuccess);
+        } catch (Exception e) {
+            Log.i(TAG, "onDestroy: ");
+        }
     }
 
 
@@ -394,6 +407,11 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
     private void payNow() {
         if (!Utility.isConnected(mContext)) {
             Utility.showSnackBar(getString(R.string.no_internet), mFragmentStrategicPartnerPhaseThreeBinding.getRoot());
+            return;
+        }
+
+        if (PreferenceUtility.getInstance(mContext).getUserDetails() == null) {
+            LoginActivity.newInstance(mContext);
             return;
         }
 
@@ -546,7 +564,6 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
         return mTransactionFieldsParams;
     }
 
-
     Response.Listener mCallPaymentWSResponseListener = new Response.Listener() {
         @Override
         public void onResponse(Object response) {
@@ -560,30 +577,7 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
                 hideProgressDialog();
                 switch (statusCode) {
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
-                        /**
-                         * Changes @Bhavesh : 7thJuly,2017
-                         * In case we have to bypass the payment
-                         */
-                        if (BuildConfig.NEED_TO_BYPASS_PAYMENT) {
-//                            PLEASE NOTE: THIS IS JUST TO BYPPASS THE PAYMENT GATEWAY. THIS IS NOT
-//                            GOING TO RUN IN LIVE ENVIRONMENT BUILDS
-                            // Direct bypass the things
-                            callTaskCreationWebServiceForStratgicPartner(true, "Payment has been bypassed for development");
-                        } else {
-                            //TODO: Remove this when release and it is saving cc detail in clipboard only
-                            if ("debug".equalsIgnoreCase(BuildConfig.BUILD_TYPE)) {
-                                //Copy dummy creditcard detail in clipboard
-                                try {
-                                    Utility.setClipboard(mContext, BootstrapConstant.CC_DETAILS);
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                            Intent intent = new Intent(mStrategicPartnerTaskCreationAct, PaymentsActivity.class);
-                            intent.putExtra("url", BuildConfig.PAYUBIZ_HDFC_URL);
-                            intent.putExtra("postData", postData.toString().replaceAll("hash=", "hash=" + jsonObject.optString("hash_string")));
-                            startActivityForResult(intent, Utility.REQUEST_START_PAYMENT);
-                        }
+                        initiatePayment(jsonObject);
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
                         // Show Toast
@@ -608,6 +602,40 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
         }
     };
 
+    /**
+     * This would initiate the payment once fired.
+     *
+     * @param result
+     */
+    private void initiatePayment(JSONObject result) {
+
+
+        /**
+         * Changes @Bhavesh : 7thJuly,2017
+         * In case we have to bypass the payment
+         */
+        if (BuildConfig.NEED_TO_BYPASS_PAYMENT) {
+//                            PLEASE NOTE: THIS IS JUST TO BYPPASS THE PAYMENT GATEWAY. THIS IS NOT
+//                            GOING TO RUN IN LIVE ENVIRONMENT BUILDS
+            // Direct bypass the things
+            callTaskCreationWebServiceForStratgicPartner(true, "Payment has been bypassed for development");
+        } else {
+            //TODO: Remove this when release and it is saving cc detail in clipboard only
+            if ("debug".equalsIgnoreCase(BuildConfig.BUILD_TYPE)) {
+                //Copy dummy creditcard detail in clipboard
+                try {
+                    Utility.setClipboard(mContext, BootstrapConstant.CC_DETAILS);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            Intent intent = new Intent(mStrategicPartnerTaskCreationAct, PaymentsActivity.class);
+            intent.putExtra("url", BuildConfig.PAYUBIZ_HDFC_URL);
+            intent.putExtra("postData", postData.toString().replaceAll("hash=", "hash=" + result.optString("hash_string")));
+            startActivityForResult(intent, Utility.REQUEST_START_PAYMENT);
+        }
+    }
+
     Response.ErrorListener mCallPaymentWSErrorListener = new Response.ErrorListener() {
         @Override
         public void onErrorResponse(final VolleyError error) {
@@ -630,22 +658,22 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == Utility.REQUEST_START_PAYMENT) {
-//            Toast.makeText(mContext, "OnActivityResult called with resultCode:" + resultCode + ", requestCode:" + requestCode, Toast.LENGTH_SHORT).show();
+            // Toast.makeText(mContext, "OnActivityResult called with resultCode:" + resultCode + ", requestCode:" + requestCode, Toast.LENGTH_SHORT).show();
             if (resultCode == mStrategicPartnerTaskCreationAct.RESULT_OK) {
                 mStrategicPartnerTaskCreationAct.setTaskState(mStrategicPartnerTaskCreationAct.STEP_THREE_VERIFIED);
-                //success
+                // success
                 if (data != null) {
                     Log.d(TAG, "onActivityResult() called with success: result= [" + data.getStringExtra("result") + "]");
-                    //Call update payment service from here with all the response come from service
+                    // Call update payment service from here with all the response come from service
                     callTaskCreationWebServiceForStratgicPartner(true, data.getStringExtra("result"));
                 }
             }
             if (resultCode == mStrategicPartnerTaskCreationAct.RESULT_CANCELED) {
                 mStrategicPartnerTaskCreationAct.setTaskState(mStrategicPartnerTaskCreationAct.STEP_THREE_UNVERIFIED);
-                //failed
+                // failed
                 if (data != null) {
                     Log.d(TAG, "onActivityResult() called with failed: result= [" + data.getStringExtra("result") + "]");
-                    //Call update payment service from here with all the response come from service
+                    // Call update payment service from here with all the response come from service
                     callTaskCreationWebServiceForStratgicPartner(false, data.getStringExtra("result"));
                     Utility.showSnackBar(getString(R.string.msg_payment_failed), mFragmentStrategicPartnerPhaseThreeBinding.getRoot());
                 }
@@ -687,13 +715,31 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
 
         String question_detail = getQuestionAnswerDetailsJsonString(mList).toString();
         Map<String, String> mParams = new HashMap<>();
-        mParams.put(NetworkUtility.TAGS.ADDRESS_ID, addressId);
+
+        if (Integer.parseInt(mStrategicPartnerTaskCreationAct.mSelectedAddressModel.address_id) > 0) {
+            mParams.put(NetworkUtility.TAGS.ADDRESS_ID, mStrategicPartnerTaskCreationAct.mSelectedAddressModel.address_id);
+        } else {
+            // In case its Nagative then provide other address information
+            /*
+             public String address_initials;
+             public String address;
+             public String category; //comes from NetworkUtility.TAGS.ADDRESS_TYPE.
+             public String lat;
+             public String lng;
+             */
+            mParams.put(NetworkUtility.TAGS.ADDRESS_INITIALS, mStrategicPartnerTaskCreationAct.mSelectedAddressModel.address_initials);
+            mParams.put(NetworkUtility.TAGS.ADDRESS, mStrategicPartnerTaskCreationAct.mSelectedAddressModel.address);
+            mParams.put(NetworkUtility.TAGS.CATEGORY, mStrategicPartnerTaskCreationAct.mSelectedAddressModel.category);
+            mParams.put(NetworkUtility.TAGS.LAT, mStrategicPartnerTaskCreationAct.mSelectedAddressModel.lat);
+            mParams.put(NetworkUtility.TAGS.LNG, mStrategicPartnerTaskCreationAct.mSelectedAddressModel.lng);
+            mParams.put(NetworkUtility.TAGS.CITY_NAME, mStrategicPartnerTaskCreationAct.mSelectedAddressModel.cityName);
+        }
+
         mParams.put(NetworkUtility.TAGS.CAT_ID, mStrategicPartnerTaskCreationAct.mBannerImageModel.cat_id);
         mParams.put(NetworkUtility.TAGS.START_DATETIME, start_datetime);
         mParams.put(NetworkUtility.TAGS.SUB_CATEGORY_DETAIL, subCategoryDetail);
         mParams.put(NetworkUtility.TAGS.QUESTION_DETAIL, question_detail);
         mParams.put(NetworkUtility.TAGS.QUOTE_AMOUNT, mStrategicPartnerTaskCreationAct.total);
-
         mParams.put(NetworkUtility.TAGS.CHEEPCODE, TextUtils.isEmpty(cheepCode) ? Utility.EMPTY_STRING : cheepCode);
         mParams.put(NetworkUtility.TAGS.PAYABLE_AMOUNT, TextUtils.isEmpty(cheepCode) ? mStrategicPartnerTaskCreationAct.total : payableAmount);
         mParams.put(NetworkUtility.TAGS.TRANSACTION_ID, transaction_Id);
@@ -934,5 +980,16 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
      *********************** [Task Creation API Call ] [End] ********************************
      ***********************************************************************************************/
 
-
+    /**
+     * BroadCast that would restart the screen once login has been done.
+     */
+    private BroadcastReceiver mBR_OnLoginSuccess = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.d(TAG, "onReceive() called with: context = [" + context + "], intent = [" + intent + "]");
+            Utility.hideKeyboard(mContext);
+            // Initiating the payment now
+            payNow();
+        }
+    };
 }

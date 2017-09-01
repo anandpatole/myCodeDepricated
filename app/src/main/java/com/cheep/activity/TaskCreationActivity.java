@@ -356,7 +356,7 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
     @Override
     public void gpsEnabled() {
         super.gpsEnabled();
-        Log.d(TAG, "gpsEnabled() called");
+//        Log.d(TAG, "gpsEnabled() called");
     }
 
     @Override
@@ -427,8 +427,8 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
             mParams.put(NetworkUtility.TAGS.ADDRESS_ID, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.address_id);
         } else {
             // In case its nagative then provide other address information
-            /**
-             * public String address_initials;
+            /*
+             public String address_initials;
              public String address;
              public String category; //comes from NetworkUtility.TAGS.ADDRESS_TYPE.
              public String lat;
@@ -582,9 +582,17 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
                 // Finish the current activity
                 finish();
 
-                //Sending Broadcast to the HomeScreen Screen.
-                Intent intent = new Intent(Utility.BR_ON_TASK_CREATED);
-                sendBroadcast(intent);
+                /**
+                 * If HomeScreen is not available, create new instance and redirect
+                 * to Mytask screen, if yes, we just need to broadcast the same.
+                 */
+                if (PreferenceUtility.getInstance(mContext).isHomeScreenVisible()) {
+                    //Sending Broadcast to the HomeScreen Screen.
+                    Intent intent = new Intent(Utility.BR_ON_TASK_CREATED);
+                    sendBroadcast(intent);
+                } else {
+                    HomeActivity.newInstance(mContext);
+                }
             }
         });
         mAcknowledgementDialogWithoutProfilePic.setCancelable(false);

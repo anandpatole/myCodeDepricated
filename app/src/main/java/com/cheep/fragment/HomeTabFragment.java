@@ -204,6 +204,7 @@ public class HomeTabFragment extends BaseFragment {
          */
         Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.WS.CATEGORY_LIST);
         Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.WS.UPDATE_LOCATION);
+        Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.WS.ALL_BANNER);
 
         if (mFragmentTabHomeBinding != null && mFragmentTabHomeBinding.commonRecyclerView != null && mFragmentTabHomeBinding.swipeRefreshLayout != null)
             mFragmentTabHomeBinding.swipeRefreshLayout.setRefreshing(false);
@@ -627,7 +628,7 @@ public class HomeTabFragment extends BaseFragment {
                 , mHeaderParams
                 , null
                 , null);
-        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequestForCategoryList);
+        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequestForCategoryList, NetworkUtility.WS.ALL_BANNER);
     }
 
     Response.Listener mCallFetchBannerImageWSResponseListener = new Response.Listener() {
@@ -696,6 +697,9 @@ public class HomeTabFragment extends BaseFragment {
         @Override
         public void onErrorResponse(VolleyError error) {
             Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
+            if (mContext == null) {
+                return;
+            }
             mFragmentTabHomeBinding.swipeRefreshLayout.setRefreshing(false);
             errorLoadingHelper.failed(getString(R.string.label_something_went_wrong), 0, onRetryBtnClickListener);
         }

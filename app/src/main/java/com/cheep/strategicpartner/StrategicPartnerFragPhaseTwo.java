@@ -58,11 +58,14 @@ import com.cheep.custom_view.DividerItemDecoration;
 import com.cheep.databinding.FragmentStrategicPartnerPhaseTwoBinding;
 import com.cheep.fragment.BaseFragment;
 import com.cheep.model.AddressModel;
+import com.cheep.model.GuestUserDetails;
+import com.cheep.model.LocationInfo;
 import com.cheep.model.UserDetails;
 import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
 import com.cheep.strategicpartner.recordvideo.RecordVideoNewActivity;
+import com.cheep.utils.FetchLocationInfoUtility;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.SuperCalendar;
 import com.cheep.utils.Utility;
@@ -1111,7 +1114,8 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
 
     private BottomAlertDialog addressDialog;
     private AddressRecyclerViewAdapter addressRecyclerViewAdapter;
-    private String addressId = "";
+    //    private String addressId = "";
+    private AddressModel mSelectedAddressModel;
 
     private void showAddressDialog(final TextView textAns, final TextView textQueNo,
                                    final QueAnsModel queAnsModel) {
@@ -1131,14 +1135,15 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
                 if (addressRecyclerViewAdapter != null && !addressRecyclerViewAdapter.getmList().isEmpty()) {
                     AddressModel model = addressRecyclerViewAdapter.getSelectedAddress();
                     if (model != null) {
-                        String address;
+//                        String address;
+                        mStrategicPartnerTaskCreationAct.mSelectedAddressModel = model;
                         if (!model.address_initials.isEmpty()) {
-                            address = model.address_initials + ", " + model.address;
+                            mStrategicPartnerTaskCreationAct.mSelectedAddressModel.address = model.address_initials + ", " + model.address;
                         } else {
-                            address = model.address;
+                            mStrategicPartnerTaskCreationAct.mSelectedAddressModel.address = model.address;
                         }
-                        mStrategicPartnerTaskCreationAct.address = address;
-                        addressId = model.address_id;
+//                        addressId = model.address_id;
+                        mSelectedAddressModel = model;
                         Log.e(TAG, "category detail >> " + model.category + "");
                         textAns.setBackground(ContextCompat.getDrawable(mStrategicPartnerTaskCreationAct, R.drawable.background_ans_normal));
                         if (model.category.equalsIgnoreCase(NetworkUtility.TAGS.ADDRESS_TYPE.HOME))
@@ -1148,7 +1153,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
                         else
                             textAns.setText(getString(R.string.label_other));
                         textAns.setSelected(true);
-                        queAnsModel.answer = addressId;
+                        queAnsModel.answer = model.address_id;
                         textQueNo.setSelected(true);
                         setBtnBookAndPayBgState(validateAllQueAndAns().isEmpty());
                         addressDialog.dismiss();
@@ -1173,7 +1178,14 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
     private String TEMP_ADDRESS_ID = "";
 
     private boolean fillAddressRecyclerView(RecyclerView recyclerView) {
-        ArrayList<AddressModel> addressList = PreferenceUtility.getInstance(mContext).getUserDetails().addressList;
+        ArrayList<AddressModel> addressList;
+
+        if (PreferenceUtility.getInstance(mContext).getUserDetails() != null) {
+            addressList = PreferenceUtility.getInstance(mContext).getUserDetails().addressList;
+        } else {
+            addressList = PreferenceUtility.getInstance(mContext).getGuestUserDetails().addressList;
+        }
+
         //Setting RecyclerView Adapter
         addressRecyclerViewAdapter = new AddressRecyclerViewAdapter(addressList, new AddressRecyclerViewAdapter.AddressItemInteractionListener() {
             @Override
@@ -1195,7 +1207,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
 
             }
         });
-        addressRecyclerViewAdapter.setSelectedAddressId(addressId);
+        addressRecyclerViewAdapter.setSelectedAddressId(mSelectedAddressModel == null ? Utility.EMPTY_STRING : mSelectedAddressModel.address_id);
         recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         recyclerView.setAdapter(addressRecyclerViewAdapter);
         recyclerView.addItemDecoration(new DividerItemDecoration(mContext, R.drawable.divider_grey_normal, (int) getResources().getDimension(R.dimen.scale_16dp)));
@@ -1215,7 +1227,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
             public void onClick(DialogInterface dialogInterface, int i) {
                 Log.d(TAG, "onClick() called with: dialogInterface = [" + dialogInterface + "], i = [" + i + "]");
                 TEMP_ADDRESS_ID = model.address_id;
-                callDeleteAddressWS(model.address_id);
+                callDeleteAddressWS(model);
             }
         });
         builder.setNegativeButton(getString(R.string.label_cancel), new DialogInterface.OnClickListener() {
@@ -1385,12 +1397,12 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
 
     public void showPlacePickerDialog(boolean isForceShow) {
 
-        if (!isForceShow) {
+        /*if (!isForceShow) {
             if (mStrategicPartnerTaskCreationAct.mLocationTrackService != null) {
                 mStrategicPartnerTaskCreationAct.mLocationTrackService.requestLocationUpdate();
                 return;
             }
-        }
+        }*/
 
         try {
             Utility.hideKeyboard(mContext);
@@ -1421,11 +1433,22 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
     /**
      * Calling delete address Web service
      *
-     * @param addressId selected addressId
+     * @param addressModel selected addressModel
      */
-    private void callDeleteAddressWS(String addressId) {
+    private void callDeleteAddressWS(AddressModel addressModel) {
         if (!Utility.isConnected(mContext)) {
             Utility.showSnackBar(getString(R.string.no_internet), mFragmentStrategicPartnerPhaseTwoBinding.getRoot());
+            return;
+        }
+
+        if (PreferenceUtility.getInstance(mContext).getUserDetails() == null) {
+            GuestUserDetails guestUserDetails = PreferenceUtility.getInstance(mContext).getGuestUserDetails();
+            if (addressRecyclerViewAdapter != null) {
+                addressRecyclerViewAdapter.delete(addressModel);
+                // Saving information in sharedpreference
+                guestUserDetails.addressList = addressRecyclerViewAdapter.getmList();
+            }
+            PreferenceUtility.getInstance(mContext).saveGuestUserDetails(guestUserDetails);
             return;
         }
 
@@ -1439,7 +1462,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
 
         //Add Params
         Map<String, String> mParams = new HashMap<>();
-        mParams.put(NetworkUtility.TAGS.ADDRESS_ID, String.valueOf(addressId));
+        mParams.put(NetworkUtility.TAGS.ADDRESS_ID, String.valueOf(addressModel.address_id));
 
         VolleyNetworkRequest mVolleyNetworkRequest = new VolleyNetworkRequest(NetworkUtility.WS.DELETE_ADDRESS
                 , mCallDeleteAddressWSErrorListener
@@ -1519,6 +1542,28 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
             addressType,/* String addressName,*/ String address, String addressInitials, LatLng latLng) {
         if (!Utility.isConnected(mContext)) {
             Utility.showSnackBar(getString(R.string.no_internet), mFragmentStrategicPartnerPhaseTwoBinding.getRoot());
+            return;
+        }
+
+        if (PreferenceUtility.getInstance(mContext).getUserDetails() == null) {
+            GuestUserDetails guestUserDetails = PreferenceUtility.getInstance(mContext).getGuestUserDetails();
+            if (addressRecyclerViewAdapter != null) {
+                AddressModel mAddressModel = addressRecyclerViewAdapter.getSelectedAddress();
+                mAddressModel.address_id = addressId;
+                mAddressModel.category = addressType;
+                mAddressModel.address = address;
+                mAddressModel.address_initials = addressInitials;
+                mAddressModel.lat = String.valueOf(latLng.latitude);
+                mAddressModel.lng = String.valueOf(latLng.longitude);
+                addressRecyclerViewAdapter.updateItem(mAddressModel);
+                // Saving information in sharedpreference
+                guestUserDetails.addressList = addressRecyclerViewAdapter.getmList();
+            }
+            PreferenceUtility.getInstance(mContext).saveGuestUserDetails(guestUserDetails);
+
+            if (addAddressDialog != null) {
+                addAddressDialog.dismiss();
+            }
             return;
         }
 
@@ -1637,10 +1682,53 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
      * @param addressType home/office/other
      * @param address     address string
      */
-    private void callAddAddressWS(String addressType, /*String addressName,*/ String
-            address, String addressInitials, LatLng latLng) {
+    private void callAddAddressWS(final String addressType, /*String addressName,*/ final String
+            address, final String addressInitials, final LatLng latLng) {
         if (!Utility.isConnected(mContext)) {
             Utility.showSnackBar(getString(R.string.no_internet), mFragmentStrategicPartnerPhaseTwoBinding.getRoot());
+            return;
+        }
+
+        if (PreferenceUtility.getInstance(mContext).getUserDetails() == null) {
+            showProgressDialog();
+            FetchLocationInfoUtility mFetchLocationInfoUtility = new FetchLocationInfoUtility(
+                    mContext,
+                    new FetchLocationInfoUtility.FetchLocationInfoCallBack() {
+                        @Override
+                        public void onLocationInfoAvailable(LocationInfo mLocationIno) {
+                            hideProgressDialog();
+
+                            GuestUserDetails guestUserDetails = PreferenceUtility.getInstance(mContext).getGuestUserDetails();
+
+                            /**
+                             * In case og Guest User we want to save it locally.
+                             */
+                            AddressModel addressModel = new AddressModel();
+                            // Creating Dynamic AddressID but it would be nagative values always to differentiat with logged in users address.
+                            addressModel.address_id = "-" + (guestUserDetails.addressList == null ? "1" : String.valueOf(guestUserDetails.addressList.size() + 1));
+                            addressModel.address = address;
+                            addressModel.cityName = mLocationIno.City;
+                            addressModel.address_initials = addressInitials;
+                            addressModel.category = addressType;
+                            addressModel.lat = String.valueOf(latLng.latitude);
+                            addressModel.lng = String.valueOf(latLng.longitude);
+
+                            if (addressRecyclerViewAdapter != null) {
+                                addressRecyclerViewAdapter.add(addressModel);
+                            }
+
+                            //Saving information in sharedpreference
+                            guestUserDetails.addressList = addressRecyclerViewAdapter.getmList();
+                            PreferenceUtility.getInstance(mContext).saveGuestUserDetails(guestUserDetails);
+
+                            if (addAddressDialog != null) {
+                                addAddressDialog.dismiss();
+                            }
+                        }
+                    },
+                    false
+            );
+            mFetchLocationInfoUtility.getLocationInfo(String.valueOf(latLng.latitude), String.valueOf(latLng.longitude));
             return;
         }
 
@@ -1908,13 +1996,14 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
                 }
             }
             // location is not selected
-            else if (queAnsModel.answerType.equalsIgnoreCase(Utility.TEMPLATE_LOCATION) && addressId.equalsIgnoreCase("")) {
+            else if (queAnsModel.answerType.equalsIgnoreCase(Utility.TEMPLATE_LOCATION)
+                    && mSelectedAddressModel != null && mSelectedAddressModel.address_id.equalsIgnoreCase("")) {
                 message = getString(R.string.alert_select_an_address);
                 return message;
 
             }
         }
-// all necessary questions are answered
+        // all necessary questions are answered
         return "";
     }
 
