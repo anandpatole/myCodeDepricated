@@ -10,6 +10,7 @@ import android.content.IntentFilter;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
+import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
@@ -22,6 +23,7 @@ import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.android.volley.Response;
@@ -67,6 +69,7 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
+
 /**
  * Created by Bhavesh Patadiya on 9/26/16.
  */
@@ -94,12 +97,16 @@ public class LoginActivity extends BaseAppCompatActivity implements FacebookHelp
     GoogleApiClient mGoogleApiClient;
     private static final int RC_SIGN_IN = 9001;
 
-
     public static void newInstance(Context context) {
+        Intent intent = new Intent(context, LoginActivity.class);
+        context.startActivity(intent);
+    }
+
+   /* public static void newInstance(Context context, View blurryView) {
         Intent intent = new Intent(context, LoginActivity.class);
 //        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
-    }
+    }*/
 
     /*public static void newInstance(Context context, boolean isSessionExpire, int action) {
         Intent intent = new Intent(context, LoginActivity.class);
@@ -140,7 +147,6 @@ public class LoginActivity extends BaseAppCompatActivity implements FacebookHelp
         if (!TextUtils.isEmpty(deviceIMEINumber))
             AppsFlyerLib.getInstance().setImeiData(deviceIMEINumber);*/
 
-
         String android_id = Settings.Secure.getString(mContext.getContentResolver(),
                 Settings.Secure.ANDROID_ID);
         AppsFlyerLib.getInstance().setAndroidIdData(android_id);
@@ -172,9 +178,7 @@ public class LoginActivity extends BaseAppCompatActivity implements FacebookHelp
     private void showSessionExpireDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.MyAlertDialogStyle);
         builder.setCancelable(false);
-
         builder.setTitle(getString(R.string.label_force_logout));
-
         if (getIntent().getIntExtra(Utility.Extra.ACTION, NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED) == NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED) {
             builder.setMessage(getString(R.string.desc_user_deleted));
         } else {

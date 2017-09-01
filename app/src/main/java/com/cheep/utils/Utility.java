@@ -1163,8 +1163,6 @@ public class Utility {
 
     public class NOTIFICATION_TYPE {
         public static final String QUOTE_REQUEST = "QUOTE_REQUEST";
-        //        public static final String COMPLITION_REQUEST = "COMPLITION_REQUEST";
-//        public static final String PROGRESS = "PROGRESS";
         public static final String TASK_STATUS_CHANGE = "TASK_STATUS_CHANGE";
         public static final String ADDITIONAL_PAYMENT_REQUESTED = "additional_payment_requested";
         public static final String REQUEST_FOR_DETAIL = "REQUEST_FOR_DETAIL";
