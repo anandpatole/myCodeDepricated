@@ -78,7 +78,7 @@ public class SignupActivity extends BaseAppCompatActivity {
     @Override
     protected void initiateUI() {
 
-        getWindow().setBackgroundDrawableResource(R.drawable.bg_login_blur_screen);
+        getWindow().setBackgroundDrawableResource(R.drawable.login_bg_blur);
 
         //Setup terms & condition text
         /*SpannableStringBuilder mSpannableStringBuilder = new SpannableStringBuilder(getString(R.string.label_sign_agreement));

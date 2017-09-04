@@ -195,13 +195,13 @@ public class LoginActivity extends BaseAppCompatActivity implements FacebookHelp
 
     @Override
     protected void initiateUI() {
-        getWindow().setBackgroundDrawableResource(R.drawable.bg_login_blur_screen);
+        getWindow().setBackgroundDrawableResource(R.drawable.login_bg_blur);
     }
 
     @Override
     protected void setListeners() {
         mActivityLoginBinding.imgLoginSubmit.setOnClickListener(onClickListener);
-        mActivityLoginBinding.layoutSignup.setOnClickListener(onClickListener);
+//        mActivityLoginBinding.layoutSignup.setOnClickListener(onClickListener);
 //        mActivityLoginBinding.textForgotPassword.setOnClickListener(onClickListener);
 
         //Twitter Button Login

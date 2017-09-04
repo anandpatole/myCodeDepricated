@@ -92,7 +92,7 @@ public class VerificationActivity extends BaseAppCompatActivity {
     @Override
     protected void initiateUI() {
 
-        getWindow().setBackgroundDrawableResource(R.drawable.bg_login_blur_screen);
+        getWindow().setBackgroundDrawableResource(R.drawable.login_bg_blur);
         //Check if we got any user details that need to be updated
         if (getIntent().hasExtra(Utility.Extra.USER_DETAILS)) {
             mUserDetails = (UserDetails) Utility.getObjectFromJsonString(getIntent().getExtras().getString(Utility.Extra.USER_DETAILS), UserDetails.class);
