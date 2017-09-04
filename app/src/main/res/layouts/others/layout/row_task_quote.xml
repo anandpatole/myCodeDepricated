@@ -209,8 +209,9 @@
                     android:textSize="@dimen/text_size_11sp"
                     tools:text="20 mins away" />
             </FrameLayout>
-
-            <!--<LinearLayout
+<!-- TODO: uncomment chat feature by giteeka -30 august 2017-->
+<!-- TODO: Only chat is enabled-->
+           <LinearLayout
                 android:id="@+id/ln_chat_call"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -219,7 +220,7 @@
                 android:gravity="center"
                 android:orientation="horizontal">
 
-                <ImageView
+             <!--   <ImageView
                     android:id="@+id/img_call"
                     android:layout_width="@dimen/scale_40dp"
                     android:layout_height="@dimen/scale_40dp"
@@ -227,7 +228,7 @@
                     android:adjustViewBounds="true"
                     android:padding="@dimen/scale_5dp"
                     android:src="@drawable/icon_call_smaller"
-                    tools:ignore="ContentDescription" />
+                    tools:ignore="ContentDescription" />-->
 
                 <RelativeLayout
                     android:id="@+id/rl_chat"
@@ -237,6 +238,7 @@
                     android:gravity="center">
 
                     <ImageView
+                        android:visibility="invisible"
                         android:id="@+id/img_chat"
                         android:layout_width="@dimen/scale_40dp"
                         android:layout_height="@dimen/scale_40dp"
@@ -246,7 +248,7 @@
                         android:src="@drawable/icon_chat_smaller"
                         tools:ignore="ContentDescription" />
 
-                    &lt;!&ndash;<com.cheep.custom_view.CFTextViewRegular
+                 <!--<com.cheep.custom_view.CFTextViewRegular
                         android:id="@+id/text_tab_chat"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -258,7 +260,7 @@
                         android:textAllCaps="false"
                         android:textColor="@drawable/tab_text_color"
                         android:textSize="@dimen/text_size_11sp"
-                        android:visibility="visible" />&ndash;&gt;
+                        android:visibility="visible" />-->
 
                     <com.cheep.custom_view.CFTextViewSemiBold
                         android:id="@+id/tv_chat_unread_count"
@@ -284,16 +286,16 @@
                         tools:text="25" />
                 </RelativeLayout>
 
-                &lt;!&ndash;<ImageView
+               <!--<ImageView
                     android:id="@+id/img_chat"
                     android:layout_width="@dimen/scale_40dp"
                     android:layout_height="@dimen/scale_40dp"
                     android:layout_marginLeft="@dimen/scale_5dp"
                     android:adjustViewBounds="true"
                     android:padding="@dimen/scale_5dp"
-                    android:src="@drawable/icon_chat_smaller" />&ndash;&gt;
+                    android:src="@drawable/icon_chat_smaller" />-->
 
-            </LinearLayout>-->
+            </LinearLayout>
 
             <com.cheep.custom_view.CFTextViewSemiBold
                 android:id="@+id/tvName"

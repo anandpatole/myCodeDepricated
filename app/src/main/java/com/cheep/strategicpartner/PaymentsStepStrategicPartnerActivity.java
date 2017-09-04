@@ -79,7 +79,7 @@ public class PaymentsStepStrategicPartnerActivity extends BaseAppCompatActivity 
             if (taskDetailModel.taskSelectedSubCategoryList != null)
                 mActivityPaymentDetailBinding.recycleSelectedService.setAdapter(new PaymentSummaryAdapter(taskDetailModel.taskSelectedSubCategoryList));
             Utility.loadImageView(mContext, mActivityPaymentDetailBinding.imgService, taskDetailModel.catImage, R.drawable.gradient_black);
-            Utility.showCircularImageViewWithColorBorder(mContext, TAG, mActivityPaymentDetailBinding.imgProfile, taskDetailModel.catImage, R.drawable.icon_profile_img_solid, R.color.dark_blue_variant_1,true);
+            Utility.showCircularImageViewWithColorBorder(mContext, TAG, mActivityPaymentDetailBinding.imgProfile, taskDetailModel.catImage, R.drawable.icon_profile_img_solid, R.color.dark_blue_variant_1, true);
             String dateTime = "";
             if (!TextUtils.isEmpty(taskDetailModel.taskStartdate)) {
                 dateTime = Utility.getDate(Long.parseLong(taskDetailModel.taskStartdate), "dd MMMM, HH:mm a");
@@ -139,10 +139,9 @@ public class PaymentsStepStrategicPartnerActivity extends BaseAppCompatActivity 
     }
 
     public Double getQuotePriceInInteger(String quotePrice) {
-        if (quotePrice == null) {
-            return -1.0;
-        }
-        return Double.parseDouble(quotePrice);
+        if (quotePrice != null && !quotePrice.isEmpty())
+            return Double.parseDouble(quotePrice);
+        return -1.0;
     }
 
 
