@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -13,14 +13,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingBottom="@dimen/scale_10dp"
-            tools:background="@color/black">
+            tools:background="@color/grey_dark_color_2">
 
             <!--<FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">-->
 
-            <android.support.v7.widget.Toolbar
+            <!--<android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -39,31 +38,34 @@
                     android:visibility="gone"
                     app:letterSpacing="0.3"
                     tools:ignore="UnusedAttribute"/>
-            </android.support.v7.widget.Toolbar>
+            </android.support.v7.widget.Toolbar>-->
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="@dimen/scale_40dp"
-                android:layout_marginRight="@dimen/scale_40dp"
+                android:layout_marginLeft="@dimen/login_screen_section_mobile_number_left_right_margin"
+                android:layout_marginRight="@dimen/login_screen_section_mobile_number_left_right_margin"
                 android:gravity="center"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:paddingBottom="@dimen/scale_10dp">
 
                 <ImageView
                     android:layout_width="120dp"
                     android:layout_height="120dp"
                     android:layout_gravity="center_horizontal"
                     android:src="@drawable/icon_cheep_logo"
-                    tools:ignore="ContentDescription"/>
+                    tools:ignore="ContentDescription" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/scale_8dp"
-                    android:layout_marginTop="@dimen/scale_50dp"
+                    android:layout_marginTop="@dimen/signup_screen_spacing_tagline_logo"
                     android:focusableInTouchMode="true"
                     android:gravity="center_vertical"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:paddingLeft="@dimen/login_screen_section_mobile_number_left_right_padding"
+                    android:paddingRight="@dimen/login_screen_section_mobile_number_left_right_padding">
 
                     <com.cheep.custom_view.CFTextViewBold
                         android:layout_width="wrap_content"
@@ -71,7 +73,7 @@
                         android:gravity="center_vertical"
                         android:text="@string/default_country_code"
                         android:textColor="@color/colorPrimary"
-                        android:textSize="@dimen/text_size_17sp"/>
+                        android:textSize="@dimen/text_size_17sp" />
 
                     <com.cheep.custom_view.CFEditTextRegular
                         android:id="@+id/edit_user_mobile_number"
@@ -79,28 +81,30 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="@dimen/scale_10dp"
                         android:layout_weight="1"
                         android:hint="@string/hint_mobile_number"
                         android:inputType="number"
                         android:maxLength="10"
-                        android:padding="@dimen/scale_5dp"
+                        android:paddingBottom="@dimen/scale_5dp"
+                        android:paddingLeft="@dimen/login_screen_section_mobile_number_left_right_padding"
+                        android:paddingRight="@dimen/login_screen_section_mobile_number_left_right_padding"
+                        android:paddingTop="@dimen/scale_5dp"
                         android:textColor="@color/colorPrimary"
                         android:textColorHint="@color/white_translucent_fifty"
                         android:textCursorDrawable="@null"
-                        android:textSize="@dimen/text_size_17sp"/>
+                        android:textSize="@dimen/text_size_17sp" />
                 </LinearLayout>
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/scale_2dp"
                     android:alpha="0.5"
-                    android:background="@color/white"/>
+                    android:background="@color/white" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/scale_20dp"
+                    android:layout_marginTop="@dimen/signup_screen_editable_view_spacing"
                     android:baselineAligned="false"
                     android:focusableInTouchMode="true"
                     android:gravity="center_vertical"
@@ -122,17 +126,17 @@
                             android:layout_marginBottom="@dimen/scale_8dp"
                             android:hint="@string/hint_first_name"
                             android:inputType="text"
-                            android:paddingLeft="@dimen/scale_8dp"
+                            android:paddingLeft="@dimen/login_screen_section_mobile_number_left_right_padding"
                             android:textColor="@color/colorPrimary"
                             android:textColorHint="@color/white_translucent_fifty"
                             android:textCursorDrawable="@null"
-                            android:textSize="@dimen/text_size_17sp"/>
+                            android:textSize="@dimen/text_size_17sp" />
 
                         <View
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/scale_2dp"
                             android:alpha="0.5"
-                            android:background="@color/white"/>
+                            android:background="@color/white" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -151,24 +155,24 @@
                             android:layout_marginBottom="@dimen/scale_8dp"
                             android:hint="@string/hint_last_name"
                             android:inputType="text"
-                            android:paddingLeft="@dimen/scale_8dp"
+                            android:paddingLeft="@dimen/login_screen_section_mobile_number_left_right_padding"
                             android:textColor="@color/colorPrimary"
                             android:textColorHint="@color/white_translucent_fifty"
                             android:textCursorDrawable="@null"
-                            android:textSize="@dimen/text_size_17sp"/>
+                            android:textSize="@dimen/text_size_17sp" />
 
                         <View
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/scale_2dp"
                             android:alpha="0.5"
-                            android:background="@color/white"/>
+                            android:background="@color/white" />
                     </LinearLayout>
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/scale_20dp"
+                    android:layout_marginTop="@dimen/signup_screen_editable_view_spacing"
                     android:orientation="vertical">
 
                     <com.cheep.custom_view.CFEditTextRegular
@@ -180,27 +184,27 @@
                         android:layout_marginBottom="@dimen/scale_8dp"
                         android:hint="@string/hint_email"
                         android:inputType="textEmailAddress"
-                        android:paddingLeft="@dimen/scale_8dp"
+                        android:paddingLeft="@dimen/login_screen_section_mobile_number_left_right_padding"
                         android:textColor="@color/colorPrimary"
                         android:textColorHint="@color/white_translucent_fifty"
                         android:textCursorDrawable="@null"
-                        android:textSize="@dimen/text_size_17sp"/>
+                        android:textSize="@dimen/text_size_17sp" />
 
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/scale_2dp"
                         android:alpha="0.5"
-                        android:background="@color/white"/>
+                        android:background="@color/white" />
                 </LinearLayout>
 
                 <com.cheep.custom_view.CFTextViewRegular
                     android:id="@+id/text_sign_agreement"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/scale_40dp"
+                    android:layout_marginTop="@dimen/scale_30dp"
                     android:text="@string/label_sign_agreement"
                     android:textColor="@color/white_translucent_sixty"
-                    android:textSize="@dimen/text_size_10sp"/>
+                    android:textSize="@dimen/text_size_10sp" />
 
                 <!--<com.cheep.custom_view.AppButton
                     android:id="@+id/btn_go"
@@ -225,7 +229,7 @@
                     android:text="@string/label_you_nearly_there"
                     android:textAllCaps="false"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/text_size_18sp"/>
+                    android:textSize="@dimen/text_size_18sp" />
 
             </LinearLayout>
             <!--</FrameLayout>-->

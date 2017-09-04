@@ -18,13 +18,12 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layoutDirection="ltr"
-                android:text="@string/label_verification"
+                android:text="@string/label_verify_number"
                 android:textAllCaps="false"
                 android:textColor="@color/colorPrimary"
                 android:textSize="@dimen/text_size_20sp"
                 tools:ignore="UnusedAttribute" />
         </android.support.v7.widget.Toolbar>
-
 
         <ScrollView
             android:layout_width="match_parent"
@@ -50,25 +49,25 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="@dimen/scale_20dp"
+                    android:layout_marginTop="@dimen/verification_screen_margin_logo_description"
                     android:gravity="center"
-                    android:paddingLeft="@dimen/scale_40dp"
-                    android:paddingRight="@dimen/scale_40dp"
+                    android:lineSpacingExtra="@dimen/scale_5dp"
+                    android:paddingLeft="@dimen/scale_45dp"
+                    android:paddingRight="@dimen/scale_45dp"
                     android:text="@string/label_sent_otp"
                     android:textColor="@color/colorPrimary"
-                    android:textSize="@dimen/text_size_13sp" />
+                    android:textSize="@dimen/text_size_11sp" />
 
                 <com.cheep.custom_view.CFTextViewRegular
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="@dimen/scale_35dp"
+                    android:layout_marginTop="@dimen/login_screen_section_mobile_number_left_right_margin"
                     android:gravity="center"
-
                     android:text="@string/label_enter_code_here"
                     android:textAllCaps="false"
                     android:textColor="@color/colorPrimary"
-                    android:textSize="@dimen/text_size_12sp" />
+                    android:textSize="@dimen/text_size_15sp" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -183,7 +182,7 @@
                     android:paddingTop="@dimen/scale_30dp"
                     android:text="@string/label_send_otp_again"
                     android:textColor="@color/colorPrimary"
-                    android:textSize="@dimen/text_size_11sp" />
+                    android:textSize="@dimen/text_size_13sp" />
 
                 <!--<com.cheep.custom_view.AppButton
                     android:id="@+id/btn_nearly_there"

@@ -14,7 +14,8 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="vertical"
-            android:paddingBottom="@dimen/scale_15dp">
+            android:paddingBottom="@dimen/scale_15dp"
+            tools:background="@color/grey_dark_color_2">
 
             <!--<LinearLayout
                 android:layout_width="match_parent"
@@ -27,26 +28,26 @@
                 android:layout_width="120dp"
                 android:layout_height="120dp"
                 android:layout_gravity="center_horizontal"
-                android:src="@drawable/icon_cheep_logo_new"
+                android:src="@drawable/icon_cheep_logo"
                 tools:ignore="ContentDescription" />
 
             <com.cheep.custom_view.CFTextViewRegular
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/scale_50dp"
+                android:layout_marginTop="@dimen/login_screen_spacing_tagline_logo"
                 android:gravity="center_horizontal"
                 android:paddingLeft="@dimen/scale_30dp"
                 android:paddingRight="@dimen/scale_30dp"
                 android:text="@string/label_almost_there"
                 android:textColor="@color/white"
-                android:textSize="@dimen/text_size_19sp" />
+                android:textSize="@dimen/text_size_20sp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/scale_10dp"
-                android:layout_marginLeft="@dimen/scale_40dp"
-                android:layout_marginRight="@dimen/scale_40dp"
+                android:layout_marginBottom="@dimen/scale_5dp"
+                android:layout_marginLeft="@dimen/login_screen_section_mobile_number_left_right_margin"
+                android:layout_marginRight="@dimen/login_screen_section_mobile_number_left_right_margin"
                 android:layout_marginTop="@dimen/scale_50dp"
                 android:focusableInTouchMode="true"
                 android:gravity="center_vertical"
@@ -55,6 +56,7 @@
                 <com.cheep.custom_view.CFTextViewBold
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
+                    android:layout_marginLeft="@dimen/login_screen_section_mobile_number_left_right_padding"
                     android:gravity="center_vertical"
                     android:text="@string/default_country_code"
                     android:textColor="@color/colorPrimary"
@@ -66,23 +68,22 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="@dimen/scale_10dp"
                     android:layout_weight="1"
                     android:hint="@string/hint_mobile_number_login"
                     android:inputType="number"
                     android:maxLength="10"
-                    android:padding="@dimen/scale_5dp"
+                    android:padding="@dimen/login_screen_section_mobile_number_left_right_padding"
                     android:textColor="@color/colorPrimary"
                     android:textColorHint="@color/white_translucent_fifty"
                     android:textCursorDrawable="@null"
-                    android:textSize="@dimen/text_size_16sp" />
+                    android:textSize="@dimen/text_size_17sp" />
 
                 <ImageView
                     android:id="@+id/img_login_submit"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:paddingLeft="@dimen/scale_16dp"
-                    android:paddingRight="@dimen/scale_16dp"
+                    android:paddingLeft="@dimen/login_screen_section_mobile_number_left_right_padding"
+                    android:paddingRight="@dimen/login_screen_section_mobile_number_left_right_padding"
                     android:src="@drawable/img_login_proceed"
                     tools:ignore="ContentDescription" />
             </LinearLayout>
@@ -90,8 +91,8 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/scale_2dp"
-                android:layout_marginLeft="@dimen/scale_30dp"
-                android:layout_marginRight="@dimen/scale_30dp"
+                android:layout_marginLeft="@dimen/login_screen_section_mobile_number_left_right_margin"
+                android:layout_marginRight="@dimen/login_screen_section_mobile_number_left_right_margin"
                 android:alpha="0.5"
                 android:background="@color/white" />
 
@@ -99,7 +100,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="@dimen/scale_20dp"
+                android:layout_marginTop="@dimen/login_screen_margin_top_label_or"
                 android:text="@string/label_or"
                 android:textColor="@color/colorPrimary"
                 android:textSize="@dimen/text_size_16sp" />
@@ -108,26 +109,24 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="@dimen/scale_16dp"
+                android:layout_marginTop="@dimen/login_screen_margin_bottom_label_or"
                 android:text="@string/label_connect_using_social_accounts"
                 android:textAllCaps="false"
                 android:textColor="@color/colorPrimary"
-                android:textSize="@dimen/text_size_17sp" />
-
+                android:textSize="@dimen/text_size_16sp" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginTop="@dimen/scale_20dp"
+                android:layout_marginTop="@dimen/login_screen_margin_bottom_label_or"
                 android:orientation="horizontal">
 
                 <ImageView
                     android:id="@+id/iv_fb"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingLeft="@dimen/scale_10dp"
-                    android:paddingRight="@dimen/scale_10dp"
+                    android:paddingRight="@dimen/login_screen_social_icon_left_right_spacing"
                     android:src="@drawable/icon_fb"
                     tools:ignore="ContentDescription" />
 
@@ -135,10 +134,8 @@
                     android:id="@+id/iv_twitter"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/scale_10dp"
-                    android:layout_marginRight="@dimen/scale_10dp"
-                    android:paddingLeft="@dimen/scale_10dp"
-                    android:paddingRight="@dimen/scale_10dp"
+                    android:paddingLeft="@dimen/login_screen_social_icon_left_right_spacing"
+                    android:paddingRight="@dimen/login_screen_social_icon_left_right_spacing"
                     android:src="@drawable/icon_twitter"
                     tools:ignore="ContentDescription" />
 
@@ -146,8 +143,7 @@
                     android:id="@+id/iv_gplus"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingLeft="@dimen/scale_10dp"
-                    android:paddingRight="@dimen/scale_10dp"
+                    android:paddingLeft="@dimen/login_screen_social_icon_left_right_spacing"
                     android:src="@drawable/icon_google_plus"
                     tools:ignore="ContentDescription" />
             </LinearLayout>

@@ -200,7 +200,6 @@ public class EnterTaskDetailFragment extends BaseFragment {
     public void initiateUI() {
         Log.d(TAG, "initiateUI() called");
 
-
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -1605,7 +1604,7 @@ public class EnterTaskDetailFragment extends BaseFragment {
     public void onDetach() {
         super.onDetach();
 
-        // Cancell All Webservice Reqyest
+        // Cancell All Webservice Request
         Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.WS.ADD_ADDRESS);
         Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.WS.EDIT_ADDRESS);
         Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.WS.DELETE_ADDRESS);

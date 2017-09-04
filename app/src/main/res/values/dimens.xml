@@ -142,4 +142,19 @@
     <dimen name="radio_button_padding_for_address">5dp</dimen>
     <dimen name="height_sign_up_btn">48dp</dimen>
 
+    <!--Login Screen-->
+    <dimen name="login_screen_spacing_tagline_logo">58.5dp</dimen>
+    <dimen name="login_screen_section_mobile_number_left_right_margin">33.75dp</dimen>
+    <dimen name="login_screen_section_mobile_number_left_right_padding">11.250dp</dimen>
+    <dimen name="login_screen_margin_top_label_or">25.250dp</dimen>
+    <dimen name="login_screen_margin_bottom_label_or">28dp</dimen>
+    <dimen name="login_screen_social_icon_left_right_spacing">18.250dp</dimen>
+
+    <!--SignUp-->
+    <dimen name="signup_screen_spacing_tagline_logo">67.5dp</dimen>
+    <dimen name="signup_screen_editable_view_spacing">45dp</dimen>
+
+    <!--Verification Screen-->
+    <dimen name="verification_screen_margin_logo_description">28.250dp</dimen>
 </resources>
+

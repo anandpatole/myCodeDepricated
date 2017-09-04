@@ -161,7 +161,7 @@ public class SignupActivity extends BaseAppCompatActivity {
             mActivitySignupBinding.editUserMobileNumber.setEnabled(true);
         }
 
-        //Setting toolbar
+        /*//Setting toolbar
         setSupportActionBar(mActivitySignupBinding.toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -173,7 +173,7 @@ public class SignupActivity extends BaseAppCompatActivity {
                     onBackPressed();
                 }
             });
-        }
+        }*/
 
 
     }

@@ -37,7 +37,6 @@
     <string name="label_terms">T\'s &amp; C\'s</string>
     <string name="label_privacy_policy">Privacy Policy</string>
     <string name="label_logout">Logout</string>
-
     <string name="hint_username">Username</string>
     <string name="hint_mobile_number_login">Please enter your mobile number</string>
     <string name="hint_mobile_number">Enter your mobile number</string>
@@ -460,5 +459,8 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <!-- new lables for login screen for skip login feature-->
     <string name="label_almost_there">Hang in, you\'re almost there!</string>
 
+    <string name="fetching_location">Checking your location, please wait...</string>
+    <string name="label_login">Login</string>
+    <string name="label_verify_number">Verify Number</string>
 
 </resources>
