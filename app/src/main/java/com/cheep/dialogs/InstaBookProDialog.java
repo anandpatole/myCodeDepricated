@@ -71,7 +71,7 @@ public class InstaBookProDialog extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         // Set Window Background as Transparent.
-        if (getDialog() != null) {
+        if (getDialog() != null && getDialog().getWindow() != null) {
             getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             getDialog().getWindow().setGravity(Gravity.CENTER);
             getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
@@ -91,32 +91,38 @@ public class InstaBookProDialog extends DialogFragment {
         mDialog.title.setText(merchantDetail.userName);
 
 
-        if(TextUtils.isEmpty(merchantDetail.avgRatings) || Float.parseFloat(merchantDetail.avgRatings) == 0){
+        if (TextUtils.isEmpty(merchantDetail.avgRatings) || Float.parseFloat(merchantDetail.avgRatings) == 0) {
             mDialog.tvSubtitle.setText(TextUtils.concat(getString(R.string.total_experience, merchantDetail.experience)));
             mDialog.tvSubtitle.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
         } else {
 
             mDialog.tvSubtitle.setText(TextUtils.concat(getString(R.string.total_experience, merchantDetail.experience), " | ", String.format("%.1f", Float.parseFloat(merchantDetail.avgRatings))));
         }
-        if(!TextUtils.isEmpty(merchantDetail.verified) && merchantDetail.verified.equalsIgnoreCase("yes")){
+        if (!TextUtils.isEmpty(merchantDetail.verified) && merchantDetail.verified.equalsIgnoreCase(Utility.BOOLEAN.YES)) {
             mDialog.tvVerified.setVisibility(View.VISIBLE);
-        } else{
+        } else {
             mDialog.tvVerified.setVisibility(View.GONE);
         }
 
 
-        if(merchantDetail.proLevel != null) {
-            if (merchantDetail.proLevel.equals(Utility.PRO_LEVEL.PLATINUM))
-                mDialog.ivBadge.setImageResource(R.drawable.ic_badge_platinum);
-            else if (merchantDetail.proLevel.equals(Utility.PRO_LEVEL.GOLD))
-                mDialog.ivBadge.setImageResource(R.drawable.ic_badge_gold);
-            else if (merchantDetail.proLevel.equals(Utility.PRO_LEVEL.SILVER))
-                mDialog.ivBadge.setImageResource(R.drawable.ic_badge_silver);
-            else if (merchantDetail.proLevel.equals(Utility.PRO_LEVEL.BRONZE))
-                mDialog.ivBadge.setImageResource(R.drawable.ic_badge_bronze);
+        if (merchantDetail.proLevel != null) {
+            switch (merchantDetail.proLevel) {
+                case Utility.PRO_LEVEL.PLATINUM:
+                    mDialog.ivBadge.setImageResource(R.drawable.ic_badge_platinum);
+                    break;
+                case Utility.PRO_LEVEL.GOLD:
+                    mDialog.ivBadge.setImageResource(R.drawable.ic_badge_gold);
+                    break;
+                case Utility.PRO_LEVEL.SILVER:
+                    mDialog.ivBadge.setImageResource(R.drawable.ic_badge_silver);
+                    break;
+                case Utility.PRO_LEVEL.BRONZE:
+                    mDialog.ivBadge.setImageResource(R.drawable.ic_badge_bronze);
+                    break;
+            }
         }
         mDialog.tvBody.setText(getString(R.string.merchant_detail_body, merchantDetail.userName, date));
-        mDialog.tvBook.setText(getString(R.string.book_and_pay, "₹"+merchantDetail.rate));
+        mDialog.tvBook.setText(getString(R.string.book_and_pay, "₹" + merchantDetail.rate));
         // Click event of Okay button
         mDialog.tvBook.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -134,7 +140,9 @@ public class InstaBookProDialog extends DialogFragment {
     @Override
     public void onResume() {
         super.onResume();
-        getDialog().getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        getDialog().getWindow().setGravity(Gravity.CENTER);
+        if (getDialog().getWindow() != null) {
+            getDialog().getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            getDialog().getWindow().setGravity(Gravity.CENTER);
+        }
     }
 }
