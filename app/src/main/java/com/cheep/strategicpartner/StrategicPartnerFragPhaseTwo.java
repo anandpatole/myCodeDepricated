@@ -46,6 +46,9 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.cheep.BootstrapConstant;
@@ -136,18 +139,18 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
             return;
         }
         // calculation of total amount of selected services
-        int total = 0;
+        double total = 0;
         for (StrategicPartnerServiceModel model : mStrategicPartnerTaskCreationAct.getSelectedSubService()) {
             List<AllSubSubCat> allSubSubCats = model.allSubSubCats;
             for (AllSubSubCat allSubSubCat : allSubSubCats) {
                 try {
-                    total += Integer.parseInt(allSubSubCat.price);
+                    total += Double.parseDouble(allSubSubCat.price);
                 } catch (NumberFormatException e) {
                     total += 0;
                 }
             }
         }
-        mFragmentStrategicPartnerPhaseTwoBinding.textContinue.setText("Book & Pay " + getString(R.string.ruppe_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf(total))));
+        mFragmentStrategicPartnerPhaseTwoBinding.textContinue.setText(getString(R.string.book_and_pay_x, "" + Utility.getQuotePriceFormatter(String.valueOf(total))));
         mStrategicPartnerTaskCreationAct.total = String.valueOf(total);
         // Task Description
 
@@ -237,6 +240,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
                 switch (statusCode) {
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
                         // inflate all question ui
+                        mStrategicPartnerTaskCreationAct.setQuestionsList(mList);
                         inflateUI(jsonObject.optString(NetworkUtility.TAGS.DATA));
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
@@ -301,6 +305,8 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
         // top layout
         // get question answer list
         mList = Utility.getObjectListFromJsonString(response, QueAnsModel[].class);        // load list
+
+        mStrategicPartnerTaskCreationAct.setQuestionsList(mList);
         for (QueAnsModel model : mList) {
             // image/video selection UI
             if (model.answerType.equalsIgnoreCase(Utility.TEMPLATE_UPLOAD)) {
@@ -560,7 +566,6 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
                     if (queAnsModel.answerType.equalsIgnoreCase(Utility.TEMPLATE_DATE_PICKER)) {
                         if (queAnsModel.answer != null && !queAnsModel.answer.equalsIgnoreCase("")) {
                             txtAnswer.setSelected(true);
-
                             showTimePickerDialog(txtAnswer, model);
                         } else {
                             txtAnswer.setSelected(false);
@@ -657,36 +662,37 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
 
 
                             if (startDateTimeSuperCalendar.getTimeInMillis() < calAfter3Hours.getTimeInMillis()) {
+                                textView.setText(getString(R.string.label_select_the_time));
+                                textView.setSelected(false);
+                                model.answer = "";
                                 Utility.showSnackBar(getString(R.string.alert_time_must_be_after_3_hour), mFragmentStrategicPartnerPhaseTwoBinding.getRoot());
                             } else {
-                            String selectedDateTime = startDateTimeSuperCalendar.format(Utility.DATE_FORMAT_HH_MM_AM);
+                                String selectedDateTime = startDateTimeSuperCalendar.format(Utility.DATE_FORMAT_HH_MM_AM);
+                                // set selected time to text view
+                                textView.setText(selectedDateTime);
+                                textView.setSelected(false);
 
-
-                            // set selected time to text view
-                            textView.setText(selectedDateTime);
-                            textView.setSelected(false);
-
-                            // this var is for payment summary screen for user task details
+                                // this var is for payment summary screen for user task details
 //                            mStrategicPartnerTaskCreationAct.time = selectedDateTime;
 
-                            // set time zone for start date time
-                            startDateTimeSuperCalendar.setTimeZone(SuperCalendar.SuperTimeZone.GMT.GMT);
+                                // set time zone for start date time
+//                                startDateTimeSuperCalendar.setTimeZone(SuperCalendar.SuperTimeZone.GMT.GMT);
 
-                            // set timestamp as answer for web api
-                            model.answer = String.valueOf(startDateTimeSuperCalendar.getTimeInMillis());
+                                // set timestamp as answer for web api
+                                model.answer = String.valueOf(startDateTimeSuperCalendar.getTimeInMillis());
 
-                            // set background of ques no as answered
-                            mFragmentStrategicPartnerPhaseTwoBinding.linMain.findViewWithTag(model.questionId).setSelected(true);
-                            setBtnBookAndPayBgState(validateAllQueAndAns().isEmpty());
+                                // set background of ques no as answered
+                                mFragmentStrategicPartnerPhaseTwoBinding.linMain.findViewWithTag(model.questionId).setSelected(true);
+                                setBtnBookAndPayBgState(validateAllQueAndAns().isEmpty());
 
 
-                            // enable
-                            TextView txtLocation = mFragmentStrategicPartnerPhaseTwoBinding.linMain.findViewWithTag(Utility.TEMPLATE_LOCATION);
-                            txtLocation.setSelected(true);
-                            txtLocation.setBackground(ContextCompat.getDrawable(mStrategicPartnerTaskCreationAct, R.drawable.background_ans_normal));
+                                // enable
+                                TextView txtLocation = mFragmentStrategicPartnerPhaseTwoBinding.linMain.findViewWithTag(Utility.TEMPLATE_LOCATION);
+                                txtLocation.setSelected(true);
+                                txtLocation.setBackground(ContextCompat.getDrawable(mStrategicPartnerTaskCreationAct, R.drawable.background_ans_normal));
 
+                            }
                         }
-                    }
                     }
                 }, c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE), false);
         timePickerDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
@@ -759,6 +765,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
 
             }
         });
+
         recycleImg.setAdapter(mMediaRecycleAdapter);
 
         ansView.addView(view);
@@ -1786,24 +1793,27 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
             File f = new File(mCurrentPhotoPath);
             Uri contentUri = Uri.fromFile(f);
             mCurrentPhotoPath = Utility.getPath(mStrategicPartnerTaskCreationAct, contentUri);
-            mMediaRecycleAdapter.addImage(new MediaModel(mCurrentPhotoPath, MediaModel.MediaType.TYPE_IMAGE));
-            checkMediaArraySize();
+            uploadFile(mCurrentPhotoPath, MediaModel.MediaType.TYPE_IMAGE);
+//            mMediaRecycleAdapter.addImage(new MediaModel(mCurrentPhotoPath, MediaModel.MediaType.TYPE_IMAGE));
+//            checkMediaArraySize();
         }
 
         // image chosen from gallery result
-        else if (requestCode == Utility.REQUEST_CODE_GET_FILE_ADD_PROFILE_GALLERY && resultCode == Activity.RESULT_OK) {
+        else if (requestCode == Utility.REQUEST_CODE_GET_FILE_ADD_PROFILE_GALLERY && resultCode == Activity.RESULT_OK && data != null) {
             Log.i(TAG, "onActivityResult: " + data.getData().toString());
             mCurrentPhotoPath = Utility.getPath(mStrategicPartnerTaskCreationAct, data.getData());
-            mMediaRecycleAdapter.addImage(new MediaModel(mCurrentPhotoPath, MediaModel.MediaType.TYPE_IMAGE));
-            checkMediaArraySize();
+            uploadFile(mCurrentPhotoPath, MediaModel.MediaType.TYPE_IMAGE);
+//            mMediaRecycleAdapter.addImage(new MediaModel(mCurrentPhotoPath, MediaModel.MediaType.TYPE_IMAGE));
+//            checkMediaArraySize();
         }
 
         // video captured from camera result
         else if (requestCode == Utility.REQUEST_CODE_VIDEO_CAPTURE && resultCode == RESULT_OK && data != null) {
             mCurrentPhotoPath = data.getStringExtra("path");
             Log.e(TAG, "path >> " + mCurrentPhotoPath);
-            mMediaRecycleAdapter.addImage(new MediaModel(mCurrentPhotoPath, MediaModel.MediaType.TYPE_VIDEO));
-            checkMediaArraySize();
+            uploadFile(mCurrentPhotoPath, MediaModel.MediaType.TYPE_VIDEO);
+//            mMediaRecycleAdapter.addImage(new MediaModel(mCurrentPhotoPath, MediaModel.MediaType.TYPE_VIDEO));
+//            checkMediaArraySize();
         }
 
         // video chosen from gallery result
@@ -1811,35 +1821,45 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
             Uri selectedImageUri = data.getData();
             mCurrentPhotoPath = Utility.getPath(mStrategicPartnerTaskCreationAct, selectedImageUri);
 
-            if (mCurrentPhotoPath != null && !selectedImageUri.equals(""))
+            if (mCurrentPhotoPath != null && !mCurrentPhotoPath.equals("")) {
                 if (getDuration(mCurrentPhotoPath) > 10) {
                     Toast.makeText(mStrategicPartnerTaskCreationAct, "Looks like the size of the file is heavy. Please try again.", Toast.LENGTH_SHORT).show();
+                } else if (getDuration(mCurrentPhotoPath) <= 0) {
+                    Toast.makeText(mStrategicPartnerTaskCreationAct, "Looks like there is something wrong with file. Please try again.", Toast.LENGTH_SHORT).show();
                 } else {
                     try {
                         Log.e(TAG, "path >> " + mCurrentPhotoPath);
-                        mMediaRecycleAdapter.addImage(new MediaModel(mCurrentPhotoPath, MediaModel.MediaType.TYPE_VIDEO));
-                        checkMediaArraySize();
+//                        mMediaRecycleAdapter.addImage(new MediaModel(mCurrentPhotoPath, MediaModel.MediaType.TYPE_VIDEO));
+                        uploadFile(mCurrentPhotoPath, MediaModel.MediaType.TYPE_VIDEO);
+//                        checkMediaArraySize();
                     } catch (Throwable throwable) {
                         throwable.printStackTrace();
                     }
                 }
+            }
 
         }
     }
 
     private long getDuration(String selectedImagePath) {
-        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-//        use one of overloaded setDataSource() functions to set your data source
-        retriever.setDataSource(selectedImagePath);
-        String time = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
-        long timeInSec = 0;
         try {
-            timeInSec = Long.parseLong(time) / 1000;
-        } catch (NumberFormatException e) {
-            timeInSec = 0;
+            MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+//        use one of overloaded setDataSource() functions to set your data source
+            retriever.setDataSource(selectedImagePath);
+
+            String time = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+            long timeInSec = 0;
+            try {
+                timeInSec = Long.parseLong(time) / 1000;
+            } catch (NumberFormatException e) {
+                timeInSec = 0;
+            }
+            retriever.release();
+            return timeInSec;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
         }
-        retriever.release();
-        return timeInSec;
     }
 
     /**
@@ -1880,10 +1900,10 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
                     message = getString(R.string.alert_select_date_and_time);
                     return message;
                 }
-                else if (startDateTimeSuperCalendar.getTimeInMillis() < calAfter3Hours.getTimeInMillis()) {
-                    message = "Date Time must be after 3 hour.";
-                    return message;
-                }
+//                else if (startDateTimeSuperCalendar.getTimeInMillis() < calAfter3Hours.getTimeInMillis()) {
+//                    message = "Date Time must be after 3 hour.";
+//                    return message;
+//                }
 
             }
 
@@ -1892,11 +1912,10 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
                 if (TextUtils.isEmpty(queAnsModel.answer)) {
                     message = getString(R.string.alert_select_the_time);
                     return message;
+                } else if (startDateTimeSuperCalendar.getTimeInMillis() < calAfter3Hours.getTimeInMillis()) {
+                    message = getString(R.string.alert_time_must_be_after_3_hour);
+                    return message;
                 }
-//                else if (startDateTimeSuperCalendar.getTimeInMillis() < calAfter3Hours.getTimeInMillis()) {
-//                    message = getString(R.string.alert_time_must_be_after_3_hour);
-//                    return message;
-//                }
             }
             // alert multiple choices option is not selected
             else if (queAnsModel.answerType.equalsIgnoreCase(Utility.TEMPLATE_DROPDOWN)) {
@@ -1922,4 +1941,129 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
                 setBackgroundColor(ContextCompat.getColor(mStrategicPartnerTaskCreationAct, isEnable ? R.color.dark_blue_variant_1 : R.color.grey_varient_12));
     }
 
+
+    ///////////////////////// ********* Amazon code start here*********** //////////////////////////////////
+
+    private void uploadFile(final String path, final String type) {
+        if (path == null || path.equalsIgnoreCase(""))
+        {
+            return;
+        }
+
+        // async task for uploading file on amazon
+
+//        new AsyncTask<Void, Void, Void>() {
+
+        // thumb folder path for s3 amazon
+        String s3PathThumb;
+        // original file folder path for s3 amazon
+        String s3pathOriginal;
+
+        // to show thumbnail in recycler view in after uploading file on s3
+        String localFilePath;
+
+        showProgressDialog();
+
+        File fileOriginal = new File(path);
+
+        String thumbPath = "";
+        // create thumbnail for uploading
+        if (type.equalsIgnoreCase(MediaModel.MediaType.TYPE_VIDEO))
+            thumbPath = AmazonUtils.getVideoThumbPath(mStrategicPartnerTaskCreationAct, path);
+        else
+            thumbPath = AmazonUtils.getImageThumbPath(mStrategicPartnerTaskCreationAct, path);
+        final File fileThumb = new File(thumbPath);
+
+//                this name is for creating s3 url for original and file file
+        String name;
+        String thumbName;
+        String timeStamp = System.currentTimeMillis() + "";
+        if (type.equalsIgnoreCase(MediaModel.MediaType.TYPE_IMAGE)) {
+            name = "AND_IMG_" + timeStamp + AmazonUtils.getExtension(path);
+            thumbName = "AND_IMG_" + timeStamp + ".jpg";
+        } else {
+            name = "AND_VID_" + timeStamp + AmazonUtils.getExtension(path);
+            thumbName = "AND_VID_" + timeStamp + ".jpg";
+        }
+
+        localFilePath = thumbPath;
+        s3pathOriginal = BuildConfig.TASK_ORIGINAL_FOLDER + File.separator + name;
+        s3PathThumb = BuildConfig.TASK_THUMB_FOLDER + File.separator + thumbName;
+        UploadListener listener = new UploadListener(s3PathThumb, s3pathOriginal, type, localFilePath);
+        TransferObserver observer;
+        TransferObserver observer1;
+        observer = AmazonUtils.uploadMedia(mStrategicPartnerTaskCreationAct, fileOriginal, s3pathOriginal, listener);
+        observer1 = AmazonUtils.uploadMedia(mStrategicPartnerTaskCreationAct, fileThumb, s3PathThumb, listener);
+        listener.observer = observer;
+        listener.observer1 = observer1;
+
+    }
+
+    private class UploadListener implements TransferListener {
+        String s3PathThumb, s3pathOriginal, type, localFilePath;
+
+        UploadListener(String s3PathThumb, String s3pathOriginal, String type, String localFilePath) {
+            this.s3PathThumb = s3PathThumb;
+            this.s3pathOriginal = s3pathOriginal;
+            this.type = type;
+            this.localFilePath = localFilePath;
+        }
+
+        // Keep tracks for media uploading
+        TransferObserver observer;
+        TransferObserver observer1;
+
+
+        @Override
+        public void onError(int id, Exception e) {
+            Log.e(TAG, "Error during upload: " + id, e);
+        }
+
+        @Override
+        public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {
+            Log.d(TAG, String.format("onProgressChanged: %d, total: %d, current: %d",
+                    id, bytesTotal, bytesCurrent));
+        }
+
+        @Override
+        public void onStateChanged(int id, TransferState newState) {
+            Log.d(TAG, "onStateChanged: " + id + ", " + newState);
+            Log.d(TAG, "observer: " + observer.getId() + ", " + observer.getState());
+            Log.d(TAG, "observer1: " + observer1.getId() + ", " + observer.getState());
+            if (observer != null && observer1 != null) {
+                if (observer.getState() == TransferState.COMPLETED && observer1.getState() == TransferState.COMPLETED) {
+                    // get s3 urls
+                    String thumbUrl = AmazonUtils.getThumbURL(s3PathThumb);
+                    String originalUrl = AmazonUtils.getOriginalURL(s3pathOriginal);
+
+                    // add image/video model to recycle view
+                    MediaModel mediaModel = new MediaModel();
+                    mediaModel.mediaName = originalUrl;
+                    mediaModel.mediaThumbName = thumbUrl;
+                    Log.e(TAG, "mediaName: " + originalUrl);
+                    Log.e(TAG, "mediaThumbName: " + thumbUrl);
+                    mediaModel.mediaType = type;
+                    mediaModel.localFilePath = localFilePath;
+                    mMediaRecycleAdapter.addImage(mediaModel);
+
+                    // set update media list for strategic partner activity
+                    // for when  user is not creating tasks but he press back buttons
+                    // and goes to home screen that time all uploaded media will be deleted.
+
+                    for (QueAnsModel model : mList)
+                        if (model.answerType.equalsIgnoreCase(Utility.TEMPLATE_UPLOAD)) {
+                            model.medialList = mMediaRecycleAdapter.getList();
+                            break;
+                        }
+
+                    checkMediaArraySize();
+                    // close progress
+                    hideProgressDialog();
+                }
+            }
+        }
+    }
+
+
+    ///////////////////////// ********* Amazon code ends here*********** //////////////////////////////////
 }

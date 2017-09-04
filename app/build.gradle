@@ -15,7 +15,7 @@ android {
         minSdkVersion 16
         targetSdkVersion 25
         versionCode 23
-        versionName "1.0.60" // PLEASE FIRST MAKE SURE MIN-VERSION IS 16.
+        versionName "1.0.64" // PLEASE FIRST MAKE SURE MIN-VERSION IS 16.
         renderscriptTargetApi 18
         renderscriptSupportModeEnabled true
 
@@ -53,6 +53,11 @@ android {
         buildConfigField("String", "CHAT_NODE", getProperty("CHAT_NODE_DEBUG"));
         buildConfigField("String", "PAYUBIZ_HDFC_KEY", getProperty("PAYUBIZ_HDFC_SANDBOX_KEY"))
         buildConfigField("String", "PAYUBIZ_HDFC_URL", getProperty("PAYUBIZ_HDFC_SANDBOX_URL"))
+        buildConfigField("String", "AMAZON_S3_URL", getProperty("AMAZON_S3_URL"))
+        buildConfigField("String", "COGNITO_POOL_ID ", getProperty("COGNITO_POOL_ID"))
+        buildConfigField("String", "BUCKET_NAME ", getProperty("BUCKET_NAME"))
+        buildConfigField("String", "TASK_ORIGINAL_FOLDER ", getProperty("TASK_ORIGINAL_FOLDER"))
+        buildConfigField("String", "TASK_THUMB_FOLDER ", getProperty("TASK_THUMB_FOLDER"))
         buildConfigField("boolean", "NEED_TO_BYPASS_PAYMENT", "true")
 
         // TODO: This needs to change (For Temporary LIVE)
@@ -215,6 +220,9 @@ dependencies {
     compile 'com.payu.magicretry:magicretry:1.0.0'
     compile 'com.github.freshdesk:hotline-android:1.2.4'
     compile 'com.appsflyer:af-android-sdk:4.7.2@aar'
+
+    compile 'com.amazonaws:aws-android-sdk-s3:2.2.+'
+
 //    compile 'com.android.support.constraint:constraint-layout:1.0.2'
 }
 

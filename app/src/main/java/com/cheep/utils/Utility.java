@@ -932,10 +932,15 @@ public class Utility {
             else if (isDownloadsDocument(uri)) {
 
                 final String id = DocumentsContract.getDocumentId(uri);
-                final Uri contentUri = ContentUris.withAppendedId(
-                        Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
+                try {
+                    final Uri contentUri = ContentUris.withAppendedId(
+                            Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
+                    return getDataColumn(context, contentUri, null, null);
+                }
+                catch (NumberFormatException e){
+                    return null;
+                }
 
-                return getDataColumn(context, contentUri, null, null);
             }
             // MediaProvider
             else if (isMediaDocument(uri)) {
@@ -1133,6 +1138,9 @@ public class Utility {
         public static final String STRATEGIC = "strategic"; //1->if task created and only quotes is there, 2-> task created and user paid to sp, but sp not started the task yet.
         public static final String NORMAL = "normal";//if user payed and task is in progress
     }
+    public static final class STRATEGIC_PARTNER_BRAND {
+        public static final String VLCC = "VLCC"; //1->if task created and only quotes is there, 2-> task created and user paid to sp, but sp not started the task yet.
+    }
 
     public static String urlEncodeUTF8(String s) {
         try {
@@ -1239,9 +1247,9 @@ public class Utility {
     public static String getQuotePriceFormatter(String quotePrice) {
 
         if (quotePrice==null || quotePrice.equalsIgnoreCase("null"))
-            return "0";
+            return "0.00";
         if (quotePrice.equalsIgnoreCase("") || quotePrice.equalsIgnoreCase("0") || quotePrice.equalsIgnoreCase("0.0"))
-            return "0";
+            return "0.00";
         DecimalFormat formatter = new DecimalFormat("#,###.00");
         double price = Double.parseDouble(quotePrice);
         return formatter.format(price);

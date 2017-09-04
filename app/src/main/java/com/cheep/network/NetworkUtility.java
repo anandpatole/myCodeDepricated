@@ -107,6 +107,7 @@ public class NetworkUtility {
         public static final String TASK_CREATE_STRATEGIC_PARTNER = BASE_URL + "customers/tasks/stratagic_partner_task_create";
         public static final String TASK_CREATE_INSTA_BOOKING = BASE_URL + "customers/tasks/instaBookingTaskCreate";
 
+        public static final String CURL_NOTIFICATION_TO_SP = BASE_URL + "customers/tasks/curl_for_notification_to_sp";
     }
 
     public static class TAGS {
@@ -213,6 +214,7 @@ public class NetworkUtility {
 
         public static final String SUB_CATEGORY_DETAIL = "sub_category_detail";
         public static final String QUESTION_DETAIL = "question_detail";
+        public static final String MEDIA_FILE = "media_file";
 
         public static class VERSION_CHANGE_TYPE {
             public static final int NORMAL = 0;
@@ -251,6 +253,7 @@ public class NetworkUtility {
         public static final String PAYMENT_STATUS = "payment_status";
         public static final String PAYMENT_LOG = "payment_log";
         public static final String IS_FOR_ADDITIONAL_QUOTE = "isForAdditionalQuote";
+        public static final String RESCHEDULE_DATETIME= "reschedule_datetime";
 
         public static class STATUSCODETYPE {
             public static final int SUCCESS = 200;

@@ -10,9 +10,12 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.text.InputFilter;
 import android.text.Spannable;
+import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
+import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
+import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -43,6 +46,7 @@ import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
 import com.cheep.utils.HotlineHelper;
 import com.cheep.utils.PreferenceUtility;
+import com.cheep.utils.RoundedBackgroundSpan;
 import com.cheep.utils.SuperCalendar;
 import com.cheep.utils.Utility;
 import com.google.firebase.database.DataSnapshot;
@@ -184,7 +188,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
             mActivityTaskSummaryBinding.lnResponseReceived.setVisibility(View.GONE);
             mActivityTaskSummaryBinding.lnProviderProfileSection.setVisibility(View.VISIBLE);
 
-            // Show Payment Summary textview
+            // Show Payment Summary text view
             mActivityTaskSummaryBinding.textViewPaymentSummary.setVisibility(View.VISIBLE);
 
             // Set rating
@@ -192,21 +196,17 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
 
             // Name of Provider
             mActivityTaskSummaryBinding.textProviderName.setText(mTaskDetailModel.categoryName);
+            SpannableString sName = new SpannableString(mTaskDetailModel.categoryName);
 
-            // Distanceof Provider
+            SpannableString sVerified = new SpannableString(" " + mContext.getString(R.string.label_partner_pro) + " ");
+            sVerified.setSpan(new RelativeSizeSpan(0.9f), 0, sVerified.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            sVerified.setSpan(new RoundedBackgroundSpan(ContextCompat.getColor(this, R.color.splash_gradient_end), ContextCompat.getColor(this, R.color.white)), 0, sVerified.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+            mActivityTaskSummaryBinding.textProviderName.setText(TextUtils.concat(sName, " ", sVerified));
+            // Distance of Provider
             mActivityTaskSummaryBinding.textAddressKmAway.setText(mTaskDetailModel.selectedProvider.distance + " away");
 
             // Profile Pic
-//            Utility.showCircularImdageView(mContext, TAG, mActivityTaskSummaryBinding.imgProfile, mTaskDetailModel.selectedProvider.profileUrl, Utility.DEFAULT_PROFILE_SRC, true);
-//            Utility.showCircularImageView(mContext, TAG, mActivityTaskSummaryBinding.imgProfile, mTaskDetailModel.catImageExtras.medium, Utility.DEFAULT_PROFILE_SRC, true);
-            Utility.showCircularImageViewWithColorBorder(this, TAG,mActivityTaskSummaryBinding.imgProfile,mTaskDetailModel.catImageExtras.medium, R.drawable.icon_profile_img_solid, R.color.grey_dark_color, true);
-
-            // Whether Provider Verified or not
-//            if (Utility.BOOLEAN.YES.equalsIgnoreCase(mTaskDetailModel.selectedProvider.isVerified)) {
-//                mActivityTaskSummaryBinding.textProVerified.setVisibility(View.VISIBLE);
-//            } else {
-//                mActivityTaskSummaryBinding.textProVerified.setVisibility(View.GONE);
-//            }
+            Utility.showCircularImageViewWithColorBorder(this, TAG, mActivityTaskSummaryBinding.imgProfile, mTaskDetailModel.catImageExtras.medium, R.drawable.icon_profile_img_solid, R.color.grey_dark_color, true);
 
             // Manage Click events of Call & Chat
             mActivityTaskSummaryBinding.lnCall.setOnClickListener(new View.OnClickListener() {
@@ -250,11 +250,6 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
 
             setSelectedServicesDetails();
         }
-
-        // Set Second Section
-//        mActivityTaskSummaryBinding.textSubCategoryName.setText(mTaskDetailModel.subCategoryName);
-//        mActivityTaskSummaryBinding.textTaskDesc.setText(mTaskDetailModel.taskDesc);
-//        Utility.loadImageView(mContext, mActivityTaskSummaryBinding.imgTaskPicture, mTaskDetailModel.taskImage, 0);
 
 
         // Set Up Third Section WHEN
@@ -340,11 +335,11 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
                 mActivityTaskSummaryBinding.lnTaskDetails.addView(view);
             }
 
-            if (mTaskDetailModel.categoryName.equalsIgnoreCase("VLCC")) {
+            if (mTaskDetailModel.categoryName.equalsIgnoreCase(Utility.STRATEGIC_PARTNER_BRAND.VLCC)) {
                 View view = LayoutInflater.from(this).inflate(R.layout.layout_selected_service_task_summary, null);
                 TextView textSubCategoryName = view.findViewById(R.id.text_sub_category_name);
                 TextView textSubSubCategoryName = view.findViewById(R.id.text_sub_sub_category_name);
-                textSubCategoryName.setText("Service Required For");
+                textSubCategoryName.setText(R.string.label_service_required_for);
 
                 if (mTaskDetailModel.mQuesList != null && !mTaskDetailModel.mQuesList.isEmpty())
                     textSubSubCategoryName.setText(mTaskDetailModel.mQuesList.get(0).answer);
@@ -354,7 +349,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
             View view = LayoutInflater.from(this).inflate(R.layout.layout_selected_service_task_summary, null);
             TextView textSubCategoryName = view.findViewById(R.id.text_sub_category_name);
             TextView textSubSubCategoryName = view.findViewById(R.id.text_sub_sub_category_name);
-            textSubCategoryName.setText("Special Instructions");
+            textSubCategoryName.setText(R.string.special_instructions);
             textSubSubCategoryName.setText(mTaskDetailModel.taskDesc);
             mActivityTaskSummaryBinding.lnTaskDetails.addView(view);
 

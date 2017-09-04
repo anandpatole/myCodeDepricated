@@ -731,6 +731,58 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
         });
         mAcknowledgementDialogWithoutProfilePic.setCancelable(false);
         mAcknowledgementDialogWithoutProfilePic.show(getSupportFragmentManager(), AcknowledgementDialogWithoutProfilePic.TAG);
+
+        /**
+         * @Changes: 2ndAug2017 by Bhavesh
+         * Once any task is created, App is having feature of sending Prefed quotes
+         * so, we will initate once webservice call BUT we will not track the response as
+         * it would be asynchronously managed.
+         */
+        callWSForPrefedQuotes(taskDetailModel.taskId, taskDetailModel.taskAddressId);
+
+    }
+
+
+
+ /**
+     * Initiating Prefed Quotes related Webservice
+     *
+     * @param taskId        Task Id of Method
+     * @param taskAddressId AddressID from which Task is Initiated
+     */
+    private void callWSForPrefedQuotes(String taskId, String taskAddressId) {
+        Log.d(TAG, "callWSForPrefedQuotes() called with: taskId = [" + taskId + "], taskAddressId = [" + taskAddressId + "]");
+
+        UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
+
+        // Add Header parameters
+        Map<String, String> mHeaderParams = new HashMap<>();
+        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, userDetails.UserID);
+        mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
+
+        // Add Params
+        Map<String, String> mParams = new HashMap<>();
+        mParams.put(NetworkUtility.TAGS.TASK_ID, taskId);
+        mParams.put(NetworkUtility.TAGS.ADDRESS_ID, taskAddressId);
+
+        VolleyNetworkRequest mVolleyNetworkRequest = new VolleyNetworkRequest(NetworkUtility.WS.CURL_NOTIFICATION_TO_SP
+                , new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                Log.d(TAG, "onErrorResponse() called with: volleyError = [" + volleyError + "]");
+            }
+        }
+                , new Response.Listener() {
+            @Override
+            public void onResponse(Object o) {
+                Log.d(TAG, "onResponse() called with: o = [" + o + "]");
+            }
+        }
+                , mHeaderParams
+                , mParams
+                , null);
+
+        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest, NetworkUtility.WS.CURL_NOTIFICATION_TO_SP);
     }
 
 

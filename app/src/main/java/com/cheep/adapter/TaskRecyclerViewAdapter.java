@@ -378,15 +378,9 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
                     }
                 });
                 //So swipe adapter (lib method) close any previous opened swipe menu when current swipe is done.
-
-                holder.mUpcomingTaskBinding.swipeLayout.setSwipeEnabled(!model.taskType.equalsIgnoreCase(Utility.TASK_TYPE.STRATEGIC));
+                holder.mUpcomingTaskBinding.swipeLayout.setSwipeEnabled(true);
                 mItemManger.bindView(holder.itemView, position);
 
-//            if (holder.mUpcomingTaskBinding.tvVerified.getVisibility() == View.GONE) {
-//                holder.mUpcomingTaskBinding.tvProviderName.setMaxWidth(((View)(holder.mUpcomingTaskBinding.tvProviderName.getParent())).getWidth());
-//            } else {
-//                holder.mUpcomingTaskBinding.tvProviderName.setMaxWidth(context.getResources().getDimensionPixelOffset(R.dimen.tv_max_width_provider_name_task_list));
-//            }
                 break;
             case VIEW_TYPE_GROUP: {
                 superStartDateTimeCalendar.setTimeZone(SuperCalendar.SuperTimeZone.GMT.GMT);
@@ -629,7 +623,11 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
             for (TaskDetailModel taskDetailModel : mList) {
                 if (taskDetailModel.taskId.equalsIgnoreCase(taskId)) {
 //                    taskDetailModel.taskStartdate = start_datetime;
-                    taskDetailModel.taskStatus = Utility.TASK_STATUS.RESCHEDULE_REQUESTED;
+                    if (taskDetailModel.taskType.equalsIgnoreCase(Utility.TASK_TYPE.STRATEGIC)) {
+                        taskDetailModel.taskStartdate = start_datetime;
+                    } else {
+                        taskDetailModel.taskStatus = Utility.TASK_STATUS.RESCHEDULE_REQUESTED;
+                    }
                     notifyItemChanged(i);
                     break;
                 }
@@ -729,13 +727,15 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
 
     private List<Uri> getURIListFromStringList(List<String> imageUrls) {
         List<Uri> uriList = new ArrayList<>();
-        if (imageUrls == null || imageUrls.size() == 0)
-            return uriList;
-        for (String url : imageUrls) {
-            uriList.add(Uri.parse(url));
+        if (imageUrls != null && !imageUrls.isEmpty()) {
+            for (String url : imageUrls) {
+                if (url != null && !url.isEmpty())
+                    uriList.add(Uri.parse(url));
+            }
         }
         return uriList;
     }
+
 
     class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;

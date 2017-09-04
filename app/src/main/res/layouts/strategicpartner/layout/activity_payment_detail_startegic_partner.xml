@@ -243,12 +243,12 @@
 
 
                         <View
-                            android:visibility="gone"
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/scale_1dp"
                             android:layout_above="@+id/action_layout"
                             android:layout_toRightOf="@+id/profile_layout"
-                            android:background="@color/grey_color"/>
+                            android:background="@color/grey_color"
+                            android:visibility="gone"/>
 
 
                         <RelativeLayout
@@ -296,12 +296,12 @@
                         </RelativeLayout>
 
                         <View
-                            android:visibility="gone"
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/scale_1dp"
                             android:layout_above="@+id/action_layout"
                             android:layout_toRightOf="@+id/profile_layout"
-                            android:background="@color/grey_color"/>
+                            android:background="@color/grey_color"
+                            android:visibility="gone"/>
 
                         <RelativeLayout
                             android:id="@+id/rlsubtotal"
@@ -347,13 +347,13 @@
                         </RelativeLayout>
 
                         <View
-                            android:visibility="gone"
                             android:id="@+id/devicerpromocode"
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/scale_1dp"
                             android:layout_above="@+id/action_layout"
                             android:layout_toRightOf="@+id/profile_layout"
-                            android:background="@color/grey_color"/>
+                            android:background="@color/grey_color"
+                            android:visibility="gone"/>
 
                         <RelativeLayout
                             android:id="@+id/rlpromocode"
@@ -414,6 +414,35 @@
 
 
                         </RelativeLayout>
+
+                        <LinearLayout
+                            android:id="@+id/ln_promo_code_disclaimer"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginLeft="@dimen/scale_15dp"
+                            android:layout_marginRight="@dimen/scale_15dp"
+                            android:layout_marginTop="@dimen/scale_8dp"
+                            android:orientation="horizontal"
+                            android:visibility="visible">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:src="@drawable/ic_shield"
+                                tools:ignore="ContentDescription"/>
+
+                            <com.cheep.custom_view.CFTextViewRegular
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginLeft="@dimen/scale_8dp"
+                                android:gravity="left"
+                                android:lineSpacingExtra="@dimen/scale_2dp"
+                                android:text="@string/disclaimer_promo_code"
+                                android:textColor="@color/task_desclaimer"
+                                android:textSize="@dimen/text_size_12sp"/>
+                        </LinearLayout>
 
                         <View
                             android:layout_width="match_parent"

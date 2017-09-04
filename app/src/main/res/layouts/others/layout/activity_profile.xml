@@ -104,16 +104,14 @@
                             android:layout_centerHorizontal="true"
                             android:src="@drawable/icon_profile_img_solid">
 
-                            <com.cheep.utils.CircularImageView
+                            <ImageView
                                 android:id="@+id/img_profile"
                                 android:layout_width="@dimen/scale_120dp"
                                 android:layout_height="@dimen/scale_120dp"
                                 android:layout_centerHorizontal="true"
                                 android:layout_centerVertical="true"
                                 android:src="@drawable/icon_profile_img_solid"
-                                app:civ_border="true"
-                                app:civ_border_color="@color/splash_gradient_end"
-                                app:civ_border_width="@dimen/scale_1dp" />
+                                />
 
 
                             <ImageView

@@ -15,7 +15,6 @@ import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.LeadingMarginSpan;
 import android.text.style.RelativeSizeSpan;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,22 +22,14 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.cheep.R;
 import com.cheep.custom_view.CFTextViewRegular;
 import com.cheep.custom_view.TypeFaceProvider;
-import com.cheep.firebase.FirebaseHelper;
-import com.cheep.firebase.FirebaseUtils;
 import com.cheep.model.ProviderModel;
 import com.cheep.model.TaskDetailModel;
 import com.cheep.utils.CustomTypefaceSpan;
-import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.RoundedBackgroundSpan;
 import com.cheep.utils.Utility;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.ValueEventListener;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -116,7 +107,7 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
         SpannableString sName = new SpannableString(checkNonNullAndSet(provider.userName));
         SpannableString sVerified = null;
         if (provider.isVerified.equalsIgnoreCase(Utility.BOOLEAN.YES)) {
-            sVerified = new SpannableString(mContext.getString(R.string.label_verified_pro));
+            sVerified = new SpannableString(" " +mContext.getString(R.string.label_verified_pro) + " ");
             sVerified.setSpan(new RoundedBackgroundSpan(mTagBackgroundColor, mTagTextColor), 0, sVerified.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
         }
         holder.tvName.setText(sVerified != null ? TextUtils.concat(sName, " ", sVerified) : sName);
