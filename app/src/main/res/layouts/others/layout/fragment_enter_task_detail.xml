@@ -308,7 +308,7 @@
                         android:layout_marginLeft="@dimen/scale_8dp"
                         android:text="@string/info_insta_book"
                         android:textColor="@color/grey_varient_16"
-                        android:textSize="@dimen/text_size_14sp"/>
+                        android:textSize="@dimen/text_size_10sp"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -423,7 +423,7 @@
                         android:layout_marginLeft="@dimen/scale_8dp"
                         android:text="@string/info_get_quote"
                         android:textColor="@color/grey_varient_16"
-                        android:textSize="@dimen/text_size_14sp"/>
+                        android:textSize="@dimen/text_size_10sp"/>
                 </LinearLayout>
 
 
