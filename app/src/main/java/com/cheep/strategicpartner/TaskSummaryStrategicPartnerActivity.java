@@ -336,11 +336,11 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
                 mActivityTaskSummaryBinding.lnTaskDetails.addView(view);
             }
 
-            if (mTaskDetailModel.categoryName.equalsIgnoreCase("VLCC")) {
+            if (mTaskDetailModel.categoryName.equalsIgnoreCase(Utility.STRATEGIC_PARTNER_BRAND.VLCC)) {
                 View view = LayoutInflater.from(this).inflate(R.layout.layout_selected_service_task_summary, null);
                 TextView textSubCategoryName = view.findViewById(R.id.text_sub_category_name);
                 TextView textSubSubCategoryName = view.findViewById(R.id.text_sub_sub_category_name);
-                textSubCategoryName.setText("Service Required For");
+                textSubCategoryName.setText(R.string.label_service_required_for);
 
                 if (mTaskDetailModel.mQuesList != null && !mTaskDetailModel.mQuesList.isEmpty())
                     textSubSubCategoryName.setText(mTaskDetailModel.mQuesList.get(0).answer);
@@ -350,7 +350,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
             View view = LayoutInflater.from(this).inflate(R.layout.layout_selected_service_task_summary, null);
             TextView textSubCategoryName = view.findViewById(R.id.text_sub_category_name);
             TextView textSubSubCategoryName = view.findViewById(R.id.text_sub_sub_category_name);
-            textSubCategoryName.setText("Special Instructions");
+            textSubCategoryName.setText(R.string.special_instructions);
             textSubSubCategoryName.setText(mTaskDetailModel.taskDesc);
             mActivityTaskSummaryBinding.lnTaskDetails.addView(view);
 

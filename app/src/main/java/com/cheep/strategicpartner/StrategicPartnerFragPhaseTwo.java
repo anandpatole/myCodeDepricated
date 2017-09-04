@@ -1799,7 +1799,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
         }
 
         // image chosen from gallery result
-        else if (requestCode == Utility.REQUEST_CODE_GET_FILE_ADD_PROFILE_GALLERY && resultCode == Activity.RESULT_OK) {
+        else if (requestCode == Utility.REQUEST_CODE_GET_FILE_ADD_PROFILE_GALLERY && resultCode == Activity.RESULT_OK && data != null) {
             Log.i(TAG, "onActivityResult: " + data.getData().toString());
             mCurrentPhotoPath = Utility.getPath(mStrategicPartnerTaskCreationAct, data.getData());
             uploadFile(mCurrentPhotoPath, MediaModel.MediaType.TYPE_IMAGE);
@@ -1945,8 +1945,10 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
     ///////////////////////// ********* Amazon code start here*********** //////////////////////////////////
 
     private void uploadFile(final String path, final String type) {
-        if (path.equalsIgnoreCase(""))
+        if (path == null || path.equalsIgnoreCase(""))
+        {
             return;
+        }
 
         // async task for uploading file on amazon
 

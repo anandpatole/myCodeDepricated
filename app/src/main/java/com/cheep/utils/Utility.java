@@ -1136,6 +1136,9 @@ public class Utility {
         public static final String STRATEGIC = "strategic"; //1->if task created and only quotes is there, 2-> task created and user paid to sp, but sp not started the task yet.
         public static final String NORMAL = "normal";//if user payed and task is in progress
     }
+    public static final class STRATEGIC_PARTNER_BRAND {
+        public static final String VLCC = "VLCC"; //1->if task created and only quotes is there, 2-> task created and user paid to sp, but sp not started the task yet.
+    }
 
     public static String urlEncodeUTF8(String s) {
         try {
