@@ -67,6 +67,7 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
     private SubServiceDetailModel mSelectedSubServiceDetailModel;
     Map<String, Object> mTaskCreationParams;
     CustomLoadingDialog mDialog;
+    private boolean isInstaBooking = false;
 
     public static void getInstance(Context mContext, JobCategoryModel model) {
         Intent intent = new Intent(mContext, TaskCreationActivity.class);
@@ -405,6 +406,7 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
             return;
         }
         if (PreferenceUtility.getInstance(mContext).getUserDetails() == null) {
+            isInstaBooking = true;
             LoginActivity.newInstance(mContext);
             return;
         }
@@ -497,6 +499,7 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
         }
 
         if (PreferenceUtility.getInstance(mContext).getUserDetails() == null) {
+            isInstaBooking = false;
             LoginActivity.newInstance(mContext);
             return;
         }
@@ -544,9 +547,9 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
             mParams.put(NetworkUtility.TAGS.LNG, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.lng);
             mParams.put(NetworkUtility.TAGS.CITY_NAME, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.cityName);
         }
-        /*if (userDetails != null) {
+        if (userDetails != null) {
             mParams.put(NetworkUtility.TAGS.CITY_ID, userDetails.CityID);
-        }*/
+        }
         mParams.put(NetworkUtility.TAGS.CAT_ID, mJobCategoryModel.catId);
         mParams.put(NetworkUtility.TAGS.SUBCATEGORY_ID, String.valueOf(mSelectedSubServiceDetailModel.sub_cat_id));
         mParams.put(NetworkUtility.TAGS.START_DATETIME, String.valueOf(mTaskCreationPagerAdapter.mEnterTaskDetailFragment.superCalendar.getTimeInMillis()));
@@ -963,7 +966,11 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
             Log.d(TAG, "onReceive() called with: context = [" + context + "], intent = [" + intent + "]");
             Utility.hideKeyboard(mContext);
             // TODO : check here for user guest has selected insta booked or get quots
-            onGetQuoteClicked();
+            Log.e(TAG, "isInstaBooking :: " + isInstaBooking);
+            if (isInstaBooking)
+                onInstaBookClicked();
+            else
+                onGetQuoteClicked();
         }
     };
 }
