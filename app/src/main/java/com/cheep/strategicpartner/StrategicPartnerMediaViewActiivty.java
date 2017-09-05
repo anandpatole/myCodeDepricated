@@ -16,6 +16,7 @@ import android.view.View;
 import com.cheep.R;
 import com.cheep.activity.BaseAppCompatActivity;
 import com.cheep.databinding.ActivityMediaViewStrategicPartnerBinding;
+import com.cheep.strategicpartner.model.MediaModel;
 import com.cheep.utils.Utility;
 
 import java.util.ArrayList;

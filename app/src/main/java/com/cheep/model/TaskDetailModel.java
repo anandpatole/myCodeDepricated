@@ -2,10 +2,10 @@ package com.cheep.model;
 
 import android.support.annotation.Keep;
 
-import com.cheep.strategicpartner.MediaModel;
-import com.cheep.strategicpartner.QueAnsModel;
-import com.cheep.strategicpartner.ServiceTaskDetailModel;
-import com.cheep.strategicpartner.StrategicPartnerServiceModel;
+import com.cheep.strategicpartner.model.MediaModel;
+import com.cheep.strategicpartner.model.QueAnsModel;
+import com.cheep.strategicpartner.model.ServiceTaskDetailModel;
+import com.cheep.strategicpartner.model.StrategicPartnerServiceModel;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
@@ -87,8 +87,16 @@ public class TaskDetailModel {
     @SerializedName("task_type")
     public String taskType;
 
+    @SerializedName("payable_amount_with_gst")
+    public String payableAmountWithGST;
+
     @SerializedName("cat_image")
     public String catImage;
+
+    @SerializedName("task_discount_amount")
+    public String taskDiscountAmount;
+
+    public String quoteAmountWithGST;
 
     @SerializedName("cat_image_extra")
     public AttachmentModel catImageExtras;
@@ -117,6 +125,7 @@ public class TaskDetailModel {
     @SerializedName("question_detail")
     public ArrayList<QueAnsModel> mQuesList;
 
+
     public TaskDetailModel() {
 
     }
@@ -131,6 +140,7 @@ public class TaskDetailModel {
         this.categoryName = categoryName;
         this.providerCount = providerCount;
     }
+
 
 
     /*//SP Selected

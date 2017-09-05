@@ -33,4 +33,7 @@ public class NotificationModel {
     @SerializedName("datetime")
     public String datetime;
 
+    @SerializedName("task_type")
+    public String task_type;
+
 }

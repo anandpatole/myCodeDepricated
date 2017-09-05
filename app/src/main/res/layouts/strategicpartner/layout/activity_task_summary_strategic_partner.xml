@@ -113,13 +113,13 @@
                         <!--First Section-->
                         <FrameLayout
                             android:layout_width="match_parent"
-                            android:layout_height="@dimen/scale_100dp">
+                            android:layout_height="wrap_content">
 
                             <!-- Below is the UI for Actions which are reported for particular task. -->
                             <LinearLayout
                                 android:id="@+id/ln_response_received"
                                 android:layout_width="match_parent"
-                                android:layout_height="match_parent"
+                                android:layout_height="@dimen/scale_100dp"
                                 android:gravity="left|center_vertical"
                                 android:orientation="horizontal"
                                 android:padding="@dimen/scale_20dp"
@@ -195,7 +195,7 @@
                             <RelativeLayout
                                 android:id="@+id/ln_provider_profile_section"
                                 android:layout_width="match_parent"
-                                android:layout_height="match_parent"
+                                android:layout_height="wrap_content"
                                 android:orientation="horizontal"
                                 android:paddingBottom="@dimen/scale_16dp"
                                 android:paddingLeft="@dimen/scale_16dp"
@@ -228,11 +228,11 @@
                                             android:id="@+id/text_provider_name"
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
-                                            android:maxLines="2"
                                             android:textColor="@color/splash_gradient_end"
                                             android:textSize="@dimen/text_size_16sp"
-                                            tools:text="Bhavesh Patadiya"/>
+                                            tools:text="Bhavesh Patadiya "/>
 
+<!--
                                         <com.cheep.custom_view.CFTextViewSemiBold
                                             android:id="@+id/text_pro_verified"
                                             android:layout_width="wrap_content"
@@ -246,6 +246,7 @@
                                             android:textColor="@color/white"
                                             android:textSize="@dimen/text_size_10sp"
                                             android:visibility="visible"/>
+-->
                                     </LinearLayout>
 
                                     <RatingBar

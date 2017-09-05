@@ -29,7 +29,9 @@ import com.cheep.dialogs.AcknowledgementDialogWithProfilePic;
 import com.cheep.dialogs.AcknowledgementInteractionListener;
 import com.cheep.firebase.FirebaseHelper;
 import com.cheep.firebase.FirebaseUtils;
+import com.cheep.firebase.model.ChatTaskModel;
 import com.cheep.firebase.model.TaskChatModel;
+import com.cheep.model.AddressModel;
 import com.cheep.model.MessageEvent;
 import com.cheep.model.ProviderModel;
 import com.cheep.model.TaskDetailModel;
@@ -56,10 +58,21 @@ import static com.cheep.utils.Utility.Extra.PAYMENT_VIEW_IS_ADDITIONAL_CHARGE;
 
 public class PaymentsStepActivity extends BaseAppCompatActivity {
 
+
     public static void newInstance(Context context, TaskDetailModel taskDetailModel, ProviderModel providerModel, int additional) {
         Intent intent = new Intent(context, PaymentsStepActivity.class);
         intent.putExtra(Utility.Extra.DATA, Utility.getJsonStringFromObject(providerModel));
         intent.putExtra(Utility.Extra.DATA_2, Utility.getJsonStringFromObject(taskDetailModel));
+        intent.putExtra(PAYMENT_VIEW_IS_ADDITIONAL_CHARGE, additional);
+        context.startActivity(intent);
+    }
+
+    public static void newInstance(Context context, TaskDetailModel taskDetailModel, ProviderModel providerModel, int additional, boolean isInstaBooking, AddressModel mSelectedAddressModel) {
+        Intent intent = new Intent(context, PaymentsStepActivity.class);
+        intent.putExtra(Utility.Extra.DATA, Utility.getJsonStringFromObject(providerModel));
+        intent.putExtra(Utility.Extra.DATA_2, Utility.getJsonStringFromObject(taskDetailModel));
+        intent.putExtra(Utility.Extra.SELECTED_ADDRESS_MODEL, Utility.getJsonStringFromObject(mSelectedAddressModel));
+        intent.putExtra(Utility.Extra.TASK_TYPE_IS_INSTA, isInstaBooking);
         intent.putExtra(PAYMENT_VIEW_IS_ADDITIONAL_CHARGE, additional);
         context.startActivity(intent);
     }
@@ -77,7 +90,12 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
     private TaskDetailModel taskDetailModel;
     Bundle bundle;
     private String actualQuotePrice;
+    private String payableAmount;
     private ActivityPaymentDetailBinding mActivityPaymentDetailBinding;
+
+    //ForInsta Booking
+    private boolean isInstaBooking = false;
+    private AddressModel mSelectedAddressModelForInsta;
 
     private int isAdditional;
 
@@ -118,6 +136,11 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
             taskDetailModel = (TaskDetailModel) Utility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA_2), TaskDetailModel.class);
         }
 
+        if (getIntent().hasExtra(Utility.Extra.TASK_TYPE_IS_INSTA)) {
+            isInstaBooking = getIntent().getBooleanExtra(Utility.Extra.TASK_TYPE_IS_INSTA, false);
+            mSelectedAddressModelForInsta = (AddressModel) Utility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.SELECTED_ADDRESS_MODEL), AddressModel.class);
+        }
+
         if (getIntent().hasExtra(Utility.Extra.PAYMENT_VIEW_IS_ADDITIONAL_CHARGE)) {
             if (taskDetailModel != null) {
                 mActivityPaymentDetailBinding.textTitle.setText(taskDetailModel.categoryName);
@@ -133,6 +156,8 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
                 }
             }
             mActivityPaymentDetailBinding.textpromocodelabel.setEnabled(true);
+            mActivityPaymentDetailBinding.lnPromoCodeDisclaimer.setVisibility(View.GONE);
+
         } else if (getIntent().hasExtra(Utility.Extra.PAYMENT_VIEW)) {
             boolean viewonly = getIntent().getBooleanExtra(Utility.Extra.PAYMENT_VIEW, false);
             if (viewonly) {
@@ -194,8 +219,9 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
             @Override
             public void onClick(View view) {
                 mActivityPaymentDetailBinding.textpromocodelabel.setEnabled(true);
+
                 cheepCode = null;
-                if (TextUtils.isEmpty(actualQuotePrice) == false) {
+                if (!TextUtils.isEmpty(actualQuotePrice)) {
                     providerModel.quotePrice = actualQuotePrice;
                 }
                 actualQuotePrice = null;
@@ -213,34 +239,41 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
     public void resetPromocodeValue() {
         mActivityPaymentDetailBinding.textpromocodelabel.setTextColor(ContextCompat.getColor(this, R.color.splash_gradient_end));
         mActivityPaymentDetailBinding.textpromocodelabel.setText(getResources().getString(R.string.label_enter_promocode));
+        mActivityPaymentDetailBinding.lnPromoCodeDisclaimer.setVisibility(View.GONE);
         if (!TextUtils.isEmpty(providerModel.quotePrice)) {
             double taskPaidAmount = getQuotePriceInInteger(providerModel.quotePrice);
             double additionalCharges = 0;
             double promocodeValue = 0;
             double additionalPaidAmount = 0;
-            if (!TextUtils.isEmpty(taskDetailModel.additionalQuoteAmount)) {
-                additionalCharges = getQuotePriceInInteger(taskDetailModel.additionalQuoteAmount);
-            }
 
-            if (!TextUtils.isEmpty(taskDetailModel.task_total_amount)) {
-                double task_total_amount = 0;
-                double taskPaidAmountTotal = 0;
-                if (!TextUtils.isEmpty(taskDetailModel.taskPaidAmount)) {
-                    taskPaidAmountTotal = getQuotePriceInInteger(taskDetailModel.taskPaidAmount);
+            if (isInstaBooking) {
+                promocodeValue = 0;
+            } else {
+
+                if (!TextUtils.isEmpty(taskDetailModel.additionalQuoteAmount)) {
+                    additionalCharges = getQuotePriceInInteger(taskDetailModel.additionalQuoteAmount);
                 }
-                task_total_amount = getQuotePriceInInteger(taskDetailModel.task_total_amount);
-                promocodeValue = task_total_amount - taskPaidAmountTotal;
 
+                if (!TextUtils.isEmpty(taskDetailModel.task_total_amount)) {
+                    double task_total_amount = 0;
+                    double taskPaidAmountTotal = 0;
+                    if (!TextUtils.isEmpty(taskDetailModel.taskPaidAmount)) {
+                        taskPaidAmountTotal = getQuotePriceInInteger(taskDetailModel.taskPaidAmount);
+                    }
+                    task_total_amount = getQuotePriceInInteger(taskDetailModel.task_total_amount);
+                    promocodeValue = task_total_amount - taskPaidAmountTotal;
+
+                }
             }
 
             double subTotal = (taskPaidAmount + additionalCharges);
             double totalPayment = (taskPaidAmount + additionalCharges) - promocodeValue;
-            mActivityPaymentDetailBinding.txtprofee.setText(getString(R.string.ruppe_symbol_x, "" + taskPaidAmount));
-            mActivityPaymentDetailBinding.txtadditionalcharge.setText(getString(R.string.ruppe_symbol_x, "" + additionalCharges));
-            mActivityPaymentDetailBinding.txtsubtotal.setText(getString(R.string.ruppe_symbol_x, "" + subTotal));
-            mActivityPaymentDetailBinding.txttotal.setText(getString(R.string.ruppe_symbol_x, "" + totalPayment));
-            mActivityPaymentDetailBinding.textPay.setText(getString(R.string.label_pay_fee_v1, "" + totalPayment));
-            mActivityPaymentDetailBinding.txtpromocode.setText(getString(R.string.ruppe_symbol_x, "" + promocodeValue));
+            mActivityPaymentDetailBinding.txtprofee.setText(getString(R.string.ruppe_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf(taskPaidAmount))));
+            mActivityPaymentDetailBinding.txtadditionalcharge.setText(getString(R.string.ruppe_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf(additionalCharges))));
+            mActivityPaymentDetailBinding.txtsubtotal.setText(getString(R.string.ruppe_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf(subTotal))));
+            mActivityPaymentDetailBinding.txttotal.setText(getString(R.string.ruppe_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf(totalPayment))));
+            mActivityPaymentDetailBinding.textPay.setText(getString(R.string.label_pay_fee_v1, "" + Utility.getQuotePriceFormatter(String.valueOf(totalPayment))));
+            mActivityPaymentDetailBinding.txtpromocode.setText(getString(R.string.ruppe_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf(promocodeValue))));
 
             mActivityPaymentDetailBinding.textpromocodelabel.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -258,41 +291,43 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
     public void resetPromocodeValuePreview() {
         mActivityPaymentDetailBinding.textpromocodelabel.setTextColor(ContextCompat.getColor(this, R.color.splash_gradient_end));
         mActivityPaymentDetailBinding.textpromocodelabel.setText(getResources().getString(R.string.label_enter_promocode));
-        if (!TextUtils.isEmpty(providerModel.quotePrice)) {
-            double taskPaidAmount = getQuotePriceInInteger(providerModel.quotePrice);
-            double promocodeValue = 0;
-            double additionalPaidAmount = 0;
-            if (!TextUtils.isEmpty(taskDetailModel.additional_paid_amount)) {
-                additionalPaidAmount = getQuotePriceInInteger(taskDetailModel.additional_paid_amount);
-            }
-
-            if (!TextUtils.isEmpty(taskDetailModel.task_total_amount)) {
-                double task_total_amount = 0;
-                double taskPaidAmountTotal = 0;
-                if (!TextUtils.isEmpty(taskDetailModel.taskPaidAmount)) {
-                    taskPaidAmountTotal = getQuotePriceInInteger(taskDetailModel.taskPaidAmount);
-                }
-                task_total_amount = getQuotePriceInInteger(taskDetailModel.task_total_amount);
-                promocodeValue = task_total_amount - taskPaidAmountTotal;
-
-            }
-
-            double subTotal = (taskPaidAmount + additionalPaidAmount);
-            double totalPayment = (taskPaidAmount + additionalPaidAmount) - promocodeValue;
-            mActivityPaymentDetailBinding.txtprofee.setText(getString(R.string.ruppe_symbol_x, "" + taskPaidAmount));
-            mActivityPaymentDetailBinding.txtadditionalcharge.setText(getString(R.string.ruppe_symbol_x, "" + additionalPaidAmount));
-            mActivityPaymentDetailBinding.txtsubtotal.setText(getString(R.string.ruppe_symbol_x, "" + subTotal));
-            mActivityPaymentDetailBinding.txttotal.setText(getString(R.string.ruppe_symbol_x, "" + totalPayment));
-            mActivityPaymentDetailBinding.textPay.setText(getString(R.string.label_pay_fee_v1, "" + totalPayment));
-            mActivityPaymentDetailBinding.txtpromocode.setText(getString(R.string.ruppe_symbol_x, "" + promocodeValue));
-
-            mActivityPaymentDetailBinding.textpromocodelabel.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    showCheepCodeDialog();
-                }
-            });
+//        if (!TextUtils.isEmpty(providerModel.quotePrice)) {
+        double taskQuoteAmount = getQuotePriceInInteger(providerModel.quotePrice);
+        double taskPaidAmount = getQuotePriceInInteger(taskDetailModel.taskPaidAmount);
+//            double promocodeValue = 0;
+        double additionalPaidAmount = 0;
+        if (!TextUtils.isEmpty(taskDetailModel.additional_paid_amount)) {
+            additionalPaidAmount = getQuotePriceInInteger(taskDetailModel.additional_paid_amount);
         }
+//
+//            if (!TextUtils.isEmpty(taskDetailModel.task_total_amount)) {
+//                double task_total_amount;
+//                double taskPaidAmountTotal = 0;
+//                if (!TextUtils.isEmpty(taskDetailModel.taskPaidAmount)) {
+//                    taskPaidAmountTotal = getQuotePriceInInteger(taskDetailModel.taskPaidAmount);
+//                }
+//                task_total_amount = getQuotePriceInInteger(taskDetailModel.task_total_amount);
+//                promocodeValue = task_total_amount - taskPaidAmountTotal;
+//
+//            }
+//
+        double subTotal = (taskQuoteAmount + additionalPaidAmount);
+        double promocodeValue = getQuotePriceInInteger(taskDetailModel.taskDiscountAmount);
+//            double totalPayment = (taskPaidAmount + additionalPaidAmount) - promocodeValue;
+        mActivityPaymentDetailBinding.txtprofee.setText(getString(R.string.ruppe_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf(taskQuoteAmount))));
+        mActivityPaymentDetailBinding.txtadditionalcharge.setText(getString(R.string.ruppe_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf(additionalPaidAmount))));
+        mActivityPaymentDetailBinding.txtsubtotal.setText(getString(R.string.ruppe_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf(subTotal))));
+        mActivityPaymentDetailBinding.txttotal.setText(getString(R.string.ruppe_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf(taskPaidAmount))));
+        mActivityPaymentDetailBinding.textPay.setText(getString(R.string.label_pay_fee_v1, "" + Utility.getQuotePriceFormatter(String.valueOf(taskPaidAmount))));
+
+        mActivityPaymentDetailBinding.txtpromocode.setText(getString(R.string.ruppe_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf(taskDetailModel.taskDiscountAmount))));
+        mActivityPaymentDetailBinding.lnPromoCodeDisclaimer.setVisibility(promocodeValue == 0 ? View.GONE : View.VISIBLE);
+        mActivityPaymentDetailBinding.textpromocodelabel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showCheepCodeDialog();
+            }
+        });
     }
 
     /**
@@ -305,12 +340,12 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
         if (!TextUtils.isEmpty(taskDetailModel.additionalQuoteAmount)) {
             additionalCharges = getQuotePriceInInteger(taskDetailModel.additionalQuoteAmount);
         }
-        mActivityPaymentDetailBinding.txtadditionalcharge.setText(getString(R.string.ruppe_symbol_x, "" + additionalCharges));
+        mActivityPaymentDetailBinding.txtadditionalcharge.setText(getString(R.string.ruppe_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf(additionalCharges))));
 
         double subTotal = taskPaidAmount + additionalCharges;
-        mActivityPaymentDetailBinding.txtsubtotal.setText(getString(R.string.ruppe_symbol_x, "" + subTotal));
-        mActivityPaymentDetailBinding.txttotal.setText(getString(R.string.ruppe_symbol_x, "" + subTotal));
-        mActivityPaymentDetailBinding.textPay.setText(getString(R.string.label_pay_fee_v1, "" + subTotal));
+        mActivityPaymentDetailBinding.txtsubtotal.setText(getString(R.string.ruppe_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf(subTotal))));
+        mActivityPaymentDetailBinding.txttotal.setText(getString(R.string.ruppe_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf(subTotal))));
+        mActivityPaymentDetailBinding.textPay.setText(getString(R.string.label_pay_fee_v1, "" + Utility.getQuotePriceFormatter(String.valueOf(subTotal))));
         mActivityPaymentDetailBinding.rlprofee.setAlpha(0.5f);
         mActivityPaymentDetailBinding.rlprofee.setAlpha(0.5f);
         mActivityPaymentDetailBinding.rlpromocode.setAlpha(0.5f);
@@ -372,7 +407,11 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
         if (quotePrice == null) {
             return -1.0;
         }
-        return Double.parseDouble(quotePrice);
+        try {
+            return Double.parseDouble(quotePrice);
+        } catch (NumberFormatException e) {
+            return 0.0;
+        }
     }
 
     @Override
@@ -413,6 +452,50 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
 
         //Add Params
         Map<String, Object> mParams = new HashMap<>();
+
+        if (isInstaBooking) {
+            mParams.put(NetworkUtility.TAGS.QUOTE_AMOUNT, providerModel.quotePriceWithOutGST);
+            mParams.put(NetworkUtility.TAGS.CHEEPCODE, cheepCode);
+            mParams.put(NetworkUtility.TAGS.CAT_ID, taskDetailModel.categoryId);
+            mParams.put(NetworkUtility.TAGS.ADDRESS_ID, taskDetailModel.taskAddressId);
+        } else {
+            mParams.put(NetworkUtility.TAGS.QUOTE_AMOUNT, providerModel.quotePrice);
+            mParams.put(NetworkUtility.TAGS.TASK_ID, taskDetailModel.taskId);
+            mParams.put(NetworkUtility.TAGS.CHEEPCODE, cheepCode);
+        }
+        //Url is based on condition if address id is greater then 0 then it means we need to update the existing address
+        String url = isInstaBooking ? NetworkUtility.WS.CHECK_CHEEPCODE_FOR_STRATEGIC_PARTNER : NetworkUtility.WS.VALIDATE_CHEEP_CODE;
+        VolleyNetworkRequest mVolleyNetworkRequestForSPList = new VolleyNetworkRequest(url
+                , mCallValidateCheepCodeWSErrorListener
+                , mCallValidateCheepCodeWSResponseListener
+                , mHeaderParams
+                , mParams
+                , null);
+        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequestForSPList);
+    }
+
+
+    /**
+     * Used for payment
+     */
+    private void validateInstaCheepCode(String cheepCode) {
+        if (!Utility.isConnected(mContext)) {
+            Utility.showSnackBar(getString(R.string.no_internet), mActivityPaymentDetailBinding.getRoot());
+            return;
+        }
+
+        showProgressDialog();
+
+        UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
+
+        actualQuotePrice = providerModel.quotePrice;
+        //Add Header parameters
+        Map<String, String> mHeaderParams = new HashMap<>();
+        mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
+        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, userDetails.UserID);
+
+        //Add Params
+        Map<String, Object> mParams = new HashMap<>();
         mParams.put(NetworkUtility.TAGS.QUOTE_AMOUNT, providerModel.quotePrice);
         mParams.put(NetworkUtility.TAGS.TASK_ID, taskDetailModel.taskId);
         mParams.put(NetworkUtility.TAGS.CHEEPCODE, cheepCode);
@@ -444,14 +527,15 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
 
                         if (edtCheepcode != null) {
                             cheepCode = edtCheepcode.getText().toString().trim();
-
-
                             cheepCodeDialog.dismiss();
 
                             String total = jsonObject.optString(NetworkUtility.TAGS.QUOTE_AMOUNT);
                             String discount = jsonObject.optString(NetworkUtility.TAGS.DISCOUNT_AMOUNT);
-                            String payable = jsonObject.optString(NetworkUtility.TAGS.PAYABLE_AMOUNT);
+
+                            String payable;
+                            payable = jsonObject.optString(NetworkUtility.TAGS.PAYABLE_AMOUNT);
                             updatePaymentBtn(total, discount, payable);
+                            mActivityPaymentDetailBinding.lnPromoCodeDisclaimer.setVisibility(View.VISIBLE);
 
                         }
 
@@ -487,13 +571,16 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
     private void updatePaymentBtn(String total, String discount, String payable) {
         // setting payable amount as quote price to pay.
         providerModel.quotePrice = payable;
+        payableAmount = payable;
 //        mActivityJobSummaryBinding.btnPay.setText(getString(R.string.label_pay_X_X_X, total, discount, payable));
 //        @change only need to show payable amount
-        mActivityPaymentDetailBinding.txtpromocode.setText(getString(R.string.ruppe_symbol_x, "" + discount));
-        mActivityPaymentDetailBinding.txttotal.setText(getString(R.string.ruppe_symbol_x, "" + payable));
-        mActivityPaymentDetailBinding.textPay.setText(getString(R.string.label_pay_fee_v1, payable));
+        mActivityPaymentDetailBinding.txtpromocode.setText(getString(R.string.ruppe_symbol_x, "" + Utility.getQuotePriceFormatter(discount)));
+        mActivityPaymentDetailBinding.txttotal.setText(getString(R.string.ruppe_symbol_x, "" + Utility.getQuotePriceFormatter(payable)));
+        mActivityPaymentDetailBinding.textPay.setText(getString(R.string.label_pay_fee_v1, Utility.getQuotePriceFormatter(payable)));
         mActivityPaymentDetailBinding.textpromocodelabel.setEnabled(false);
-        mActivityPaymentDetailBinding.textpromocodelabel.setText(cheepCode);
+//        mActivityPaymentDetailBinding.textpromocodelabel.setText(cheepCode);
+        mActivityPaymentDetailBinding.textpromocodelabel.setText(getString(R.string.label_promocode_apply));
+        mActivityPaymentDetailBinding.textpromocodelabel.setTextColor(ContextCompat.getColor(this, R.color.black));
 
         mActivityPaymentDetailBinding.imgCheepCodeClose.setVisibility(View.VISIBLE);
     }
@@ -529,9 +616,12 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
 
         //Add Params
         Map<String, Object> mParams;// = new HashMap<String, Object>();
+
         mParams = getPaymentTransactionFields(userDetails, isForAdditionalQuote);
-        mParams.put(NetworkUtility.TAGS.SP_USER_ID, providerModel.providerId);
-        mParams.put(NetworkUtility.TAGS.TASK_ID, taskDetailModel.taskId);
+        if (!isInstaBooking) {
+            mParams.put(NetworkUtility.TAGS.SP_USER_ID, providerModel.providerId);
+            mParams.put(NetworkUtility.TAGS.TASK_ID, taskDetailModel.taskId);
+        }
 
         if (!TextUtils.isEmpty(cheepCode))
             mParams.put(NetworkUtility.TAGS.CHEEPCODE, cheepCode);
@@ -547,6 +637,7 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
 
 
     }
+
 
     /**
      * Asynctask that will do encryption
@@ -589,9 +680,13 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
 
             //calling this to create post data
             getPaymentUrl(userDetails, isForAdditionalQuote);
-
+            String url = "";
+            // if payment is done using insta feature then
+            // post data will be generated like strategic partner feature
+            // call startegic generate hash for payment
+            url = isInstaBooking ? NetworkUtility.WS.GET_PAYMENT_HASH_FOR_STRATEGIC_PARTNER : NetworkUtility.WS.GET_PAYMENT_HASH;
             //Url is based on condition if address id is greater then 0 then it means we need to update the existing address
-            VolleyNetworkRequest mVolleyNetworkRequestForSPList = new VolleyNetworkRequest(NetworkUtility.WS.GET_PAYMENT_HASH
+            VolleyNetworkRequest mVolleyNetworkRequestForSPList = new VolleyNetworkRequest(url
                     , mCallPaymentWSErrorListener
                     , mCallPaymentWSResponseListener
                     , mHeaderParams
@@ -599,14 +694,18 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
                     , null);
             Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequestForSPList);
         }
+
     }
 
+    // if payment is done using insta feature then
+    // post data will be generated like strategic partner feature
+    // as task id will be null && and additional payment will be null
     private String getPaymentUrl(UserDetails userDetails, boolean isAdditionalPayment) {
 
         postData = "&txnid=" + transaction_Id +
                 "&device_type=1" +
                 "&ismobileview=1" +
-                "&productinfo=" + taskDetailModel.taskId +
+                "&productinfo=" + (isInstaBooking ? userDetails.UserID : taskDetailModel.taskId) +
                 "&user_credentials=" + userDetails.Email +
                 "&key=" + BuildConfig.PAYUBIZ_HDFC_KEY +
                 "&instrument_type=" + PreferenceUtility.getInstance(mContext).getFCMRegID() +
@@ -620,7 +719,7 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
 //                "&bankcode=PAYUW" + //for PayU Money
 //                "&pg=WALLET"+//for PayU Money
                 "&udf1=Task Start Date : " + taskDetailModel.taskStartdate +
-                "&udf2=Provider Id : " + providerModel.providerId +
+                "&udf2=" + (isInstaBooking ? Utility.EMPTY_STRING : "Provider Id : " + providerModel.providerId) +
                 "&udf3=" + NetworkUtility.TAGS.PLATFORMTYPE.ANDROID +
                 "&udf4=" + (isAdditionalPayment ? Utility.TASK_STATUS.ADDITIONAL_PAYMENT_REQUESTED : "") +
                 "&udf5=" +
@@ -632,6 +731,9 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
     String postData;
     String transaction_Id;
 
+    // if payment is done using insta feature then
+    // post data will be generated like strategic partner feature
+    // as task id will be null && and additional payment will be null
     private Map<String, Object> getPaymentTransactionFields(UserDetails userDetails, boolean isForAdditionalQuote) {
 
         Map<String, Object> mParams = new HashMap<>();
@@ -641,10 +743,10 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
         mParams.put("amount", isForAdditionalQuote ? taskDetailModel.additionalQuoteAmount : providerModel.quotePrice);
         mParams.put("txnid", transaction_Id);
         mParams.put("email", userDetails.Email);
-        mParams.put("productinfo", taskDetailModel.taskId);
+        mParams.put("productinfo", isInstaBooking ? userDetails.UserID : taskDetailModel.taskId);
         mParams.put("firstname", userDetails.UserName);
         mParams.put("udf1", "Task Start Date : " + taskDetailModel.taskStartdate);
-        mParams.put("udf2", "Provider Id : " + providerModel.providerId);
+        mParams.put("udf2", isInstaBooking ? Utility.EMPTY_STRING : "Provider Id : " + providerModel.providerId);
         mParams.put("udf3", NetworkUtility.TAGS.PLATFORMTYPE.ANDROID);
         mParams.put("udf4", isForAdditionalQuote ? Utility.TASK_STATUS.ADDITIONAL_PAYMENT_REQUESTED : "");
         mParams.put("udf5", "");
@@ -668,7 +770,6 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
                 switch (statusCode) {
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
 
-
                         /**
                          * Changes @Bhavesh : 7thJuly,2017
                          * In case we have to bypass the payment
@@ -677,12 +778,15 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
 //                            PLEASE NOTE: THIS IS JUST TO BYPPASS THE PAYMENT GATEWAY. THIS IS NOT
 //                            GOING TO RUN IN LIVE ENVIRONMENT BUILDS
                             // Direct bypass the things
-                            if (jsonObject.getString(NetworkUtility.TAGS.IS_FOR_ADDITIONAL_QUOTE).equalsIgnoreCase(getString(R.string.label_yes))) {
+                            if (!isInstaBooking && jsonObject.getString(NetworkUtility.TAGS.IS_FOR_ADDITIONAL_QUOTE).equalsIgnoreCase(getString(R.string.label_yes))) {
                                 //Call update payment service from here with all the response come from service
                                 updatePaymentStatus(true, "Payment has been bypassed for development", true);
                             } else {
                                 //Call update payment service from here with all the response come from service
-                                updatePaymentStatus(true, "Payment has been bypassed for development", false);
+                                if (isInstaBooking)
+                                    callCreateInstaBookingTaskWS();
+                                else
+                                    updatePaymentStatus(true, "Payment has been bypassed for development", false);
                             }
                         } else {
                             //TODO: Remove this when release and it is saving cc detail in clipboard only
@@ -697,12 +801,13 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
                             Intent intent = new Intent(PaymentsStepActivity.this, PaymentsActivity.class);
                             intent.putExtra("url", BuildConfig.PAYUBIZ_HDFC_URL);
                             intent.putExtra("postData", postData.replaceAll("hash=", "hash=" + jsonObject.optString("hash_string")));
-
-                            if (jsonObject.getString(NetworkUtility.TAGS.IS_FOR_ADDITIONAL_QUOTE).equalsIgnoreCase(getString(R.string.label_yes))) {
+                            // if task is generated from insta booking feature then addition payment field will not come in response
+                            if (!isInstaBooking && jsonObject.getString(NetworkUtility.TAGS.IS_FOR_ADDITIONAL_QUOTE).equalsIgnoreCase(getString(R.string.label_yes))) {
                                 startActivityForResult(intent, Utility.ADDITIONAL_REQUEST_START_PAYMENT);
                             } else {
                                 startActivityForResult(intent, Utility.REQUEST_START_PAYMENT);
                             }
+
                         }
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
@@ -731,6 +836,7 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
     Response.ErrorListener mCallPaymentWSErrorListener = new Response.ErrorListener() {
         @Override
         public void onErrorResponse(final VolleyError error) {
+            hideProgressDialog();
             Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
 
             // Close Progressbar
@@ -777,6 +883,74 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
         });
     }
 
+
+    private void callCreateInstaBookingTaskWS() {
+        //        TASK_CREATE_INSTA_BOOKING
+
+//        Required Params => task_desc,address_id,city_id,cat_id,start_datetime,
+// media_file,subcategory_id,sp_user_id,txnid,cheepcode,quote_amount,payable_amount
+        if (!Utility.isConnected(mContext)) {
+            Utility.showSnackBar(getString(R.string.no_internet), mActivityPaymentDetailBinding.getRoot());
+            return;
+        }
+        showProgressDialog();
+
+        UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
+        //Add Header parameters
+        Map<String, String> mHeaderParams = new HashMap<>();
+        mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
+        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, userDetails.UserID);
+
+        //Add Params
+        Map<String, Object> mParams = new HashMap<>();
+        mParams.put(NetworkUtility.TAGS.TASK_DESC, taskDetailModel.taskDesc);
+//        mParams.put(NetworkUtility.TAGS.ADDRESS_ID, taskDetailModel.taskAddressId);
+        if (Integer.parseInt(mSelectedAddressModelForInsta.address_id) > 0) {
+            mParams.put(NetworkUtility.TAGS.ADDRESS_ID, mSelectedAddressModelForInsta.address_id);
+        } else {
+            // In case its nagative then provide other address information
+            /**
+             * public String address_initials;
+             public String address;
+             public String category; //comes from NetworkUtility.TAGS.ADDRESS_TYPE.
+             public String lat;
+             public String lng;
+             */
+            mParams.put(NetworkUtility.TAGS.ADDRESS_INITIALS, mSelectedAddressModelForInsta.address_initials);
+            mParams.put(NetworkUtility.TAGS.ADDRESS, mSelectedAddressModelForInsta.address);
+            mParams.put(NetworkUtility.TAGS.CATEGORY, mSelectedAddressModelForInsta.category);
+            mParams.put(NetworkUtility.TAGS.LAT, mSelectedAddressModelForInsta.lat);
+            mParams.put(NetworkUtility.TAGS.LNG, mSelectedAddressModelForInsta.lng);
+            mParams.put(NetworkUtility.TAGS.CITY_NAME, mSelectedAddressModelForInsta.cityName);
+        }
+        mParams.put(NetworkUtility.TAGS.CITY_ID, userDetails.CityID);
+        mParams.put(NetworkUtility.TAGS.CAT_ID, taskDetailModel.categoryId);
+        mParams.put(NetworkUtility.TAGS.START_DATETIME, taskDetailModel.taskStartdate);
+        mParams.put(NetworkUtility.TAGS.SUBCATEGORY_ID, taskDetailModel.subCategoryID);
+        mParams.put(NetworkUtility.TAGS.SP_USER_ID, providerModel.providerId);
+        mParams.put(NetworkUtility.TAGS.TRANSACTION_ID, transaction_Id);
+        if (!TextUtils.isEmpty(cheepCode)) {
+            mParams.put(NetworkUtility.TAGS.CHEEPCODE, cheepCode);
+            mParams.put(NetworkUtility.TAGS.QUOTE_AMOUNT, providerModel.quotePriceWithOutGST);
+            mParams.put(NetworkUtility.TAGS.PAYABLE_AMOUNT, payableAmount);
+        } else {
+            mParams.put(NetworkUtility.TAGS.CHEEPCODE, Utility.EMPTY_STRING);
+            mParams.put(NetworkUtility.TAGS.QUOTE_AMOUNT, providerModel.quotePriceWithOutGST);
+            mParams.put(NetworkUtility.TAGS.PAYABLE_AMOUNT, providerModel.quotePrice);
+        }
+
+        Log.e(TAG, mParams.toString());
+        // Url is based on condition if address id is greater then 0 then it means we need to update the existing address
+        VolleyNetworkRequest mVolleyNetworkRequestForSPList = new VolleyNetworkRequest(NetworkUtility.WS.TASK_CREATE_INSTA_BOOKING
+                , mCallUpdatePaymentStatusWSErrorListener
+                , mCallCreateInstaTaskWSResponseListener
+                , mHeaderParams
+                , mParams
+                , null);
+        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequestForSPList);
+
+    }
+
     /**
      * Used for payment
      */
@@ -788,8 +962,9 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
         showProgressDialog();
 
         UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
-
         //Add Header parameters
+
+
         Map<String, String> mHeaderParams = new HashMap<>();
         mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
         mHeaderParams.put(NetworkUtility.TAGS.USER_ID, userDetails.UserID);
@@ -942,6 +1117,73 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
         }
     };
 
+
+    Response.Listener mCallCreateInstaTaskWSResponseListener = new Response.Listener() {
+        @Override
+        public void onResponse(Object response) {
+
+            String strResponse = (String) response;
+            try {
+                JSONObject jsonObject = new JSONObject(strResponse);
+                Log.i(TAG, "onResponse: " + jsonObject.toString());
+                int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
+                String error_message;
+                hideProgressDialog();
+                switch (statusCode) {
+                    case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
+                        Utility.showToast(PaymentsStepActivity.this, jsonObject.getString(NetworkUtility.TAGS.MESSAGE));
+                        onSuccessfullInstaBookingTaskCompletion(jsonObject);
+                        break;
+                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
+                        // Show Toast
+                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityPaymentDetailBinding.getRoot());
+                        break;
+                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
+                        error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
+                        // Show message
+                        Utility.showSnackBar(error_message, mActivityPaymentDetailBinding.getRoot());
+                        break;
+                    case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
+                    case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
+                        //Logout and finish the current activity
+                        Utility.logout(mContext, true, statusCode);
+                        ;
+                        finish();
+                        break;
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+                mCallUpdatePaymentStatusWSErrorListener.onErrorResponse(new VolleyError(e.getMessage()));
+            }
+
+        }
+    };
+    // check is task is from insta booking or not
+
+    private void onSuccessfullInstaBookingTaskCompletion(JSONObject jsonObject) {
+        TaskDetailModel taskDetailModel = (TaskDetailModel) Utility.getObjectFromJsonString(jsonObject.optString(NetworkUtility.TAGS.DATA), TaskDetailModel.class);
+        if (taskDetailModel != null) {
+            /* * Add new task detail on firebase
+             * @Sanjay 20 Feb 2016
+             */
+            ChatTaskModel chatTaskModel = new ChatTaskModel();
+            chatTaskModel.taskId = FirebaseUtils.getPrefixTaskId(taskDetailModel.taskId);
+            chatTaskModel.taskDesc = taskDetailModel.taskDesc;
+            chatTaskModel.categoryId = taskDetailModel.categoryId;
+            chatTaskModel.categoryName = taskDetailModel.categoryName;
+            chatTaskModel.selectedSPId = "";
+            UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
+            chatTaskModel.userId = FirebaseUtils.getPrefixUserId(userDetails.UserID);
+            FirebaseHelper.getTaskRef(chatTaskModel.taskId).setValue(chatTaskModel);
+        }
+        // finish current activity
+        finish();
+        // br for finished task creation activity
+        Intent intent = new Intent(Utility.BR_ON_TASK_CREATED_FOR_INSTA_BOOKING);
+        sendBroadcast(intent);
+    }
+
+
     private String fetchMessageFromDateOfMonth(int day, SuperCalendar superStartDateTimeCalendar) {
         String date = Utility.EMPTY_STRING;
         String DATE_FORMAT_TASK_HAS_BEEN_PAID_DATE_TH = SuperCalendar.SuperFormatter.DATE + "'th '" + SuperCalendar.SuperFormatter.MONTH_JAN;
@@ -1000,7 +1242,11 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
                 if (data != null) {
                     Log.d(TAG, "onActivityResult() called with success: result= [" + data.getStringExtra("result") + "]");
                     //Call update payment service from here with all the response come from service
-                    updatePaymentStatus(true, data.getStringExtra("result"), false);
+                    // check is task is from insta booking or not
+                    if (isInstaBooking)
+                        callCreateInstaBookingTaskWS();
+                    else
+                        updatePaymentStatus(true, data.getStringExtra("result"), false);
                 }
             }
             if (resultCode == RESULT_CANCELED) {
@@ -1009,7 +1255,11 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
                 if (data != null) {
                     Log.d(TAG, "onActivityResult() called with failed: result= [" + data.getStringExtra("result") + "]");
                     //Call update payment service from here with all the response come from service
-                    updatePaymentStatus(false, data.getStringExtra("result"), false);
+                    // check is task is from insta booking or not
+                    if (isInstaBooking)
+                        Utility.showSnackBar(getString(R.string.msg_payment_failed), mActivityPaymentDetailBinding.getRoot());
+                    else
+                        updatePaymentStatus(false, data.getStringExtra("result"), false);
                     Utility.showSnackBar(getString(R.string.msg_payment_failed), mActivityPaymentDetailBinding.getRoot());
                 }
             }

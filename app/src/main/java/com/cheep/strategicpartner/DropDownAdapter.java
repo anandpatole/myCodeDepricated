@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.cheep.R;
+import com.cheep.strategicpartner.model.QueAnsModel;
 
 import java.util.ArrayList;
 

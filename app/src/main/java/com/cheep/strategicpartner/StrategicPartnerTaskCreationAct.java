@@ -19,6 +19,10 @@ import com.cheep.adapter.TaskCreationForStrategicPartnerPagerAdapter;
 import com.cheep.databinding.ActivityTaskCreationForStrategicPartnerBinding;
 import com.cheep.model.AddressModel;
 import com.cheep.model.BannerImageModel;
+import com.cheep.strategicpartner.model.AllSubSubCat;
+import com.cheep.strategicpartner.model.MediaModel;
+import com.cheep.strategicpartner.model.QueAnsModel;
+import com.cheep.strategicpartner.model.StrategicPartnerServiceModel;
 import com.cheep.utils.Utility;
 import com.google.android.gms.common.api.Status;
 
@@ -47,6 +51,7 @@ public class StrategicPartnerTaskCreationAct extends BaseAppCompatActivity {
 //    public String address = "";
     public AddressModel mSelectedAddressModel;
     public String total = "";
+    public String totalOfBasePrice = "";
 
     public static void getInstance(Context mContext, BannerImageModel model) {
         Intent intent = new Intent(mContext, StrategicPartnerTaskCreationAct.class);
@@ -305,6 +310,23 @@ public class StrategicPartnerTaskCreationAct extends BaseAppCompatActivity {
         if (mActivityTaskCreationForStrategicPartnerBinding.viewpager.getCurrentItem() == 2) {
             gotoStep(STAGE_2);
             return;
+        }
+
+        if (getQuestionsList() != null) {
+            for (QueAnsModel model : getQuestionsList())
+                if (model.answerType.equalsIgnoreCase(Utility.TEMPLATE_UPLOAD)) {
+                    ArrayList<MediaModel> mediaModelArrayList = model.medialList;
+                    if (mediaModelArrayList != null && !mediaModelArrayList.isEmpty()) {
+                        for (MediaModel mediaModel : mediaModelArrayList) {
+                            Log.d(TAG, "onBackPressed() delete");
+                            Log.d(TAG, "onBackPressed() "+mediaModel.mediaName);
+                            Log.d(TAG, "onBackPressed() "+mediaModel.mediaThumbName);
+                            Log.d(TAG, "onBackPressed() ============");
+                            AmazonUtils.deleteFiles(this, mediaModel.mediaName, mediaModel.mediaThumbName);
+                        }
+                        break;
+                    }
+                }
         }
         super.onBackPressed();
     }

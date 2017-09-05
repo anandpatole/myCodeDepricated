@@ -1,4 +1,4 @@
-package com.cheep.strategicpartner;
+package com.cheep.strategicpartner.model;
 
 import android.support.annotation.Keep;
 

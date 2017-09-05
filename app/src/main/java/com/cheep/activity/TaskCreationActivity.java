@@ -1,6 +1,5 @@
 package com.cheep.activity;
 
-import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -11,7 +10,6 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
@@ -26,12 +24,16 @@ import com.cheep.adapter.TaskCreationPagerAdapter;
 import com.cheep.databinding.ActivityTaskCreateBinding;
 import com.cheep.dialogs.AcknowledgementDialogWithoutProfilePic;
 import com.cheep.dialogs.AcknowledgementInteractionListener;
+import com.cheep.dialogs.CustomLoadingDialog;
+import com.cheep.dialogs.InstaBookProDialog;
 import com.cheep.firebase.FirebaseHelper;
 import com.cheep.firebase.FirebaseUtils;
 import com.cheep.firebase.model.ChatTaskModel;
 import com.cheep.fragment.EnterTaskDetailFragment;
 import com.cheep.fragment.SelectSubCategoryFragment;
+import com.cheep.model.InstaBookingProDetail;
 import com.cheep.model.JobCategoryModel;
+import com.cheep.model.ProviderModel;
 import com.cheep.model.SubServiceDetailModel;
 import com.cheep.model.TaskDetailModel;
 import com.cheep.model.UserDetails;
@@ -46,8 +48,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
 
 /**
  * Created by bhavesh on 26/4/17.
@@ -59,6 +66,7 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
     TaskCreationPagerAdapter mTaskCreationPagerAdapter;
     private SubServiceDetailModel mSelectedSubServiceDetailModel;
     Map<String, Object> mTaskCreationParams;
+    CustomLoadingDialog mDialog;
 
     public static void getInstance(Context mContext, JobCategoryModel model) {
         Intent intent = new Intent(mContext, TaskCreationActivity.class);
@@ -70,6 +78,7 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mActivityTaskCreateBinding = DataBindingUtil.setContentView(this, R.layout.activity_task_create);
+        mContext.registerReceiver(mBR_OnInstaTaskCreated, new IntentFilter(Utility.BR_ON_TASK_CREATED_FOR_INSTA_BOOKING));
         initiateUI();
         setListeners();
 
@@ -136,15 +145,22 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
         });
 
 
-        // Post task Click events
-        mActivityTaskCreateBinding.textPostTask.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onPostTaskClicked();
-            }
-        });
     }
 
+    private BroadcastReceiver mBR_OnInstaTaskCreated = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.d(TAG, "onReceive() called with: context = [" + context + "], intent = [" + intent + "]");
+            /*
+              Redirect the user to MYTask Screen
+             */
+            finish();
+
+            //Sending Broadcast to the HomeScreen Screen.
+            Intent newIntent = new Intent(Utility.BR_ON_TASK_CREATED);
+            sendBroadcast(newIntent);
+        }
+    };
 
     @Override
     protected void setListeners() {
@@ -293,22 +309,21 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
     }
 
     public void showPostTaskButton(boolean needsToShow, boolean isEnabled) {
-        if (needsToShow) {
-            mActivityTaskCreateBinding.textPostTask.setVisibility(View.VISIBLE);
+
+        /*if (needsToShow) {
+            mActivityTaskCreateBinding.textPostTask.setVisibility(View.GONE);
         } else {
             mActivityTaskCreateBinding.textPostTask.setVisibility(View.GONE);
         }
 
-        /*
-          If shown make the color change accordingly
-         */
+
         if (isEnabled) {
             mActivityTaskCreateBinding.textPostTask.setSelected(true);
             mActivityTaskCreateBinding.textPostTask.setBackgroundColor(ContextCompat.getColor(mContext, R.color.splash_gradient_end));
         } else {
             mActivityTaskCreateBinding.textPostTask.setSelected(false);
             mActivityTaskCreateBinding.textPostTask.setBackgroundColor(ContextCompat.getColor(mContext, R.color.grey_varient_12));
-        }
+        }*/
     }
 
     public int getPostButtonHeight() {
@@ -373,10 +388,98 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
         }
     }
 
+
+    public void onInstaBookClicked() {
+        if (!isValidationCompleted()) {
+            return;
+        }
+
+        // Check Internet connection
+        if (!Utility.isConnected(mContext)) {
+            Utility.showSnackBar(getString(R.string.no_internet), mActivityTaskCreateBinding.getRoot());
+            return;
+        }
+
+        if (mTaskCreationPagerAdapter.mEnterTaskDetailFragment.superCalendar == null) {
+            Utility.showSnackBar(getString(R.string.can_only_start_task_after_3_hours), mActivityTaskCreateBinding.getRoot());
+            return;
+        }
+        if (PreferenceUtility.getInstance(mContext).getUserDetails() == null) {
+            LoginActivity.newInstance(mContext);
+            return;
+        }
+        mDialog = new CustomLoadingDialog();
+        mDialog.setCancelable(false);
+        mDialog.show(getSupportFragmentManager(), "loading");
+
+
+        UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
+
+        // Add Header parameters
+        Map<String, String> mHeaderParams = new HashMap<>();
+        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, userDetails.UserID);
+        mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
+
+        // Add Params
+        Map<String, String> mParams = new HashMap<>();
+        mParams.put(NetworkUtility.TAGS.CITY_ID, userDetails.CityID);
+        mParams.put(NetworkUtility.TAGS.CAT_ID, mJobCategoryModel.catId);
+        if (Integer.parseInt(mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.address_id) > 0) {
+            mParams.put(NetworkUtility.TAGS.ADDRESS_ID, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.address_id);
+        } else {
+            // In case its nagative then provide other address information
+            /*
+             public String address_initials;
+             public String address;
+             public String category; //comes from NetworkUtility.TAGS.ADDRESS_TYPE.
+             public String lat;
+             public String lng;
+             */
+            mParams.put(NetworkUtility.TAGS.ADDRESS_INITIALS, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.address_initials);
+            mParams.put(NetworkUtility.TAGS.ADDRESS, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.address);
+            mParams.put(NetworkUtility.TAGS.CATEGORY, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.category);
+            mParams.put(NetworkUtility.TAGS.LAT, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.lat);
+            mParams.put(NetworkUtility.TAGS.LNG, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.lng);
+            mParams.put(NetworkUtility.TAGS.CITY_NAME, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.cityName);
+        }
+        mParams.put(NetworkUtility.TAGS.SUBCATEGORY_ID, String.valueOf(mSelectedSubServiceDetailModel.sub_cat_id));
+
+        mTaskCreationParams = new HashMap<>();
+        mTaskCreationParams.put(NetworkUtility.TAGS.CITY_ID, userDetails.CityID);
+        mTaskCreationParams.put(NetworkUtility.TAGS.CAT_ID, mJobCategoryModel.catId);
+        if (Integer.parseInt(mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.address_id) > 0) {
+            mParams.put(NetworkUtility.TAGS.ADDRESS_ID, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.address_id);
+        } else {
+            // In case its nagative then provide other address information
+            /*
+             public String address_initials;
+             public String address;
+             public String category; //comes from NetworkUtility.TAGS.ADDRESS_TYPE.
+             public String lat;
+             public String lng;
+             */
+            mParams.put(NetworkUtility.TAGS.ADDRESS_INITIALS, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.address_initials);
+            mParams.put(NetworkUtility.TAGS.ADDRESS, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.address);
+            mParams.put(NetworkUtility.TAGS.CATEGORY, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.category);
+            mParams.put(NetworkUtility.TAGS.LAT, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.lat);
+            mParams.put(NetworkUtility.TAGS.LNG, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.lng);
+            mParams.put(NetworkUtility.TAGS.CITY_NAME, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.cityName);
+        }
+        mTaskCreationParams.put(NetworkUtility.TAGS.SUBCATEGORY_ID, String.valueOf(mSelectedSubServiceDetailModel.sub_cat_id));
+
+        VolleyNetworkRequest mVolleyNetworkRequest = new VolleyNetworkRequest(NetworkUtility.WS.GET_PRO_FOR_INSTA_BOOKING
+                , mCallGetProInstaBookErrorListener
+                , mCallGetProInstaBookWSResponseListener
+                , mHeaderParams
+                , mParams
+                , null);
+        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest);
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////Post Task [Start] /////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    private void onPostTaskClicked() {
+    public void onGetQuoteClicked() {
         Log.d(TAG, "onPostTaskClicked() called");
         if (!isValidationCompleted()) {
             return;
@@ -546,6 +649,124 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
         }
     };
 
+
+    Response.Listener mCallGetProInstaBookWSResponseListener = new Response.Listener() {
+        @Override
+        public void onResponse(Object response) {
+
+            if (!isFinishing() && mDialog != null) {
+                mDialog.dismiss();
+            }
+            String strResponse = (String) response;
+            try {
+                JSONObject jsonObject = new JSONObject(strResponse);
+                Log.i(TAG, "onResponse: " + jsonObject.toString());
+                int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
+                switch (statusCode) {
+                    case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
+
+                        /*
+                          Below was older approach when app needs to update the same task page.
+                         */
+//                        TaskDetailModel taskDetailModel = (TaskDetailModel) Utility.getObjectFromJsonString(jsonObject.optString(NetworkUtility.TAGS.DATA), TaskDetailModel.class);
+//                        getIntent().putExtra(Utility.Extra.DATA, jsonObject.optString(NetworkUtility.TAGS.DATA));
+//                        getIntent().putExtra(Utility.Extra.IS_FIRST_TIME, true);
+//                        getIntent().setAction(Utility.ACTION_HIRE_PROVIDER);
+//                        initiateUI();
+//                        setListeners();
+
+                        // Send Event tracking for AppsFlyer
+                        AppsFlyerLib.getInstance().trackEvent(mContext, NetworkUtility.TAGS.APPSFLYER_CUSTOM_TRACK_EVENTS.INSTA_BOOK, mTaskCreationParams);
+
+
+                        /*
+                          Now according to the new flow, once task created
+                          app will be redirected to MyTask Detail screen.
+                         */
+                        final InstaBookingProDetail taskDetailModel = (InstaBookingProDetail) Utility.getObjectFromJsonString(jsonObject.optString(NetworkUtility.TAGS.DATA), InstaBookingProDetail.class);
+                        if (taskDetailModel != null && taskDetailModel.spId != null)
+                            onSuccessInstaBooking(taskDetailModel);
+                        else
+                            Utility.showToast(TaskCreationActivity.this, getString(R.string.alert_no_pro_found));
+                        break;
+                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
+                        // Show Toast
+                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityTaskCreateBinding.getRoot());
+                        break;
+                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
+                        String error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
+                        // Show message
+                        Utility.showSnackBar(error_message, mActivityTaskCreateBinding.getRoot());
+                        break;
+                    case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
+                    case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
+                        //Logout and finish the current activity
+                        Utility.logout(mContext, true, statusCode);
+                        finish();
+                        break;
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+                mCallGetProInstaBookErrorListener.onErrorResponse(new VolleyError(e.getMessage()));
+            }
+
+        }
+    };
+
+
+    /**
+     * This method would going to call when task completed successfully
+     */
+    private void onSuccessInstaBooking(final InstaBookingProDetail taskDetailModel) {
+        if (taskDetailModel != null) {
+            Calendar c = Calendar.getInstance();
+            c.setTimeInMillis(mTaskCreationPagerAdapter.mEnterTaskDetailFragment.superCalendar.getCalendar().getTimeInMillis());
+            c.setTimeZone(TimeZone.getDefault());
+
+            Date d = c.getTime();
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd MMMM", Locale.getDefault());
+            String date = simpleDateFormat.format(d);
+            int fromHour = c.get(Calendar.HOUR);
+            if (fromHour == 0) {
+                fromHour = 12;
+            }
+            c.add(Calendar.HOUR, 1);
+            int toHour = c.get(Calendar.HOUR);
+            InstaBookProDialog dialog = InstaBookProDialog.newInstance(this, taskDetailModel, date + " between " + fromHour + "-" + toHour + " hrs", new AcknowledgementInteractionListener() {
+                @Override
+                public void onAcknowledgementAccepted() {
+
+                    TaskDetailModel model = new TaskDetailModel();
+                    model.categoryName = mJobCategoryModel.catName;
+                    model.subCategoryName = mSelectedSubServiceDetailModel.name;
+                    model.taskAddress = mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.address;
+                    model.taskAddressId = mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.address_id;
+                    model.task_total_amount = taskDetailModel.rate;
+                    model.categoryId = mJobCategoryModel.catId;
+                    model.taskDesc = mTaskCreationPagerAdapter.mEnterTaskDetailFragment.getTaskDescription();
+                    model.catImage = mJobCategoryModel.catImage;
+                    model.taskStartdate = String.valueOf(mTaskCreationPagerAdapter.mEnterTaskDetailFragment.superCalendar.getCalendar().getTimeInMillis());
+                    model.subCategoryID = String.valueOf(mSelectedSubServiceDetailModel.sub_cat_id);
+                    ProviderModel pModel = new ProviderModel();
+                    pModel.userName = taskDetailModel.userName;
+                    pModel.profileUrl = taskDetailModel.profileImg;
+                    pModel.providerId = taskDetailModel.spId;
+                    pModel.quotePrice = taskDetailModel.rateGST;
+                    pModel.quotePriceWithOutGST = taskDetailModel.rate;
+
+                    PaymentsStepActivity.newInstance(TaskCreationActivity.this, model, pModel, 0, true, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel);
+
+                    //Log.i("myLog", "tasks:"+mJobCategoryModel.catName+"::"+mSelectedSubServiceDetailModel.name+"::"+mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mAddress);
+
+                }
+            });
+            dialog.setCancelable(true);
+            dialog.show(getSupportFragmentManager(), "loading");
+        } else {
+        }
+    }
+
+
     /**
      * This method would going to call when task completed successfully
      */
@@ -595,6 +816,57 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
         });
         mAcknowledgementDialogWithoutProfilePic.setCancelable(false);
         mAcknowledgementDialogWithoutProfilePic.show(getSupportFragmentManager(), AcknowledgementDialogWithoutProfilePic.TAG);
+
+        /**
+         * @Changes: 2ndAug2017 by Bhavesh
+         * Once any task is created, App is having feature of sending Prefed quotes
+         * so, we will initate once webservice call BUT we will not track the response as
+         * it would be asynchronously managed.
+         */
+        callWSForPrefedQuotes(taskDetailModel.taskId, taskDetailModel.taskAddressId);
+
+    }
+
+
+    /**
+     * Initiating Prefed Quotes related Webservice
+     *
+     * @param taskId        Task Id of Method
+     * @param taskAddressId AddressID from which Task is Initiated
+     */
+    private void callWSForPrefedQuotes(String taskId, String taskAddressId) {
+        Log.d(TAG, "callWSForPrefedQuotes() called with: taskId = [" + taskId + "], taskAddressId = [" + taskAddressId + "]");
+
+        UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
+
+        // Add Header parameters
+        Map<String, String> mHeaderParams = new HashMap<>();
+        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, userDetails.UserID);
+        mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
+
+        // Add Params
+        Map<String, String> mParams = new HashMap<>();
+        mParams.put(NetworkUtility.TAGS.TASK_ID, taskId);
+        mParams.put(NetworkUtility.TAGS.ADDRESS_ID, taskAddressId);
+
+        VolleyNetworkRequest mVolleyNetworkRequest = new VolleyNetworkRequest(NetworkUtility.WS.CURL_NOTIFICATION_TO_SP
+                , new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                Log.d(TAG, "onErrorResponse() called with: volleyError = [" + volleyError + "]");
+            }
+        }
+                , new Response.Listener() {
+            @Override
+            public void onResponse(Object o) {
+                Log.d(TAG, "onResponse() called with: o = [" + o + "]");
+            }
+        }
+                , mHeaderParams
+                , mParams
+                , null);
+
+        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest, NetworkUtility.WS.CURL_NOTIFICATION_TO_SP);
     }
 
 
@@ -616,6 +888,20 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
         }
     };
 
+
+    Response.ErrorListener mCallGetProInstaBookErrorListener = new Response.ErrorListener() {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
+
+            if (mDialog != null) {
+                mDialog.dismiss();
+            }
+
+            // Show Toast
+            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityTaskCreateBinding.getRoot());
+        }
+    };
 
     public boolean isValidationCompleted() {
         // Task Description
@@ -656,6 +942,7 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
     protected void onDestroy() {
         Log.d(TAG, "onDestroy() called");
         try {
+            mContext.unregisterReceiver(mBR_OnInstaTaskCreated);
             unregisterReceiver(mBR_OnLoginSuccess);
         } catch (Exception e) {
             Log.i(TAG, "onDestroy: ");
@@ -675,7 +962,8 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
         public void onReceive(Context context, Intent intent) {
             Log.d(TAG, "onReceive() called with: context = [" + context + "], intent = [" + intent + "]");
             Utility.hideKeyboard(mContext);
-            onPostTaskClicked();
+            // TODO : check here for user guest has selected insta booked or get quots
+            onGetQuoteClicked();
         }
     };
 }

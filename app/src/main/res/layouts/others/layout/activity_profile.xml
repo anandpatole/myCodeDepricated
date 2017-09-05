@@ -104,16 +104,14 @@
                             android:layout_centerHorizontal="true"
                             android:src="@drawable/icon_profile_img_solid">
 
-                            <com.cheep.utils.CircularImageView
+                            <ImageView
                                 android:id="@+id/img_profile"
                                 android:layout_width="@dimen/scale_120dp"
                                 android:layout_height="@dimen/scale_120dp"
                                 android:layout_centerHorizontal="true"
                                 android:layout_centerVertical="true"
                                 android:src="@drawable/icon_profile_img_solid"
-                                app:civ_border="true"
-                                app:civ_border_color="@color/splash_gradient_end"
-                                app:civ_border_width="@dimen/scale_1dp" />
+                                />
 
 
                             <ImageView
@@ -132,7 +130,8 @@
 
                         <!--TODO: We have to uncomment the following in order to enable the -->
                         <!--TODO: chat call feature.-->
-                        <!--<LinearLayout
+                        <!--TODO: Un-commented code by giteeka -30 aug 2017.-->
+                       <LinearLayout
                             android:id="@+id/ln_chat"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -192,7 +191,7 @@
                                 android:textColor="@color/splash_gradient_end"
                                 android:textSize="@dimen/text_size_11sp"
                                 android:visibility="visible" />
-                        </LinearLayout>-->
+                        </LinearLayout>
                     </RelativeLayout>
 
                     <com.cheep.custom_view.CFTextViewSemiBold

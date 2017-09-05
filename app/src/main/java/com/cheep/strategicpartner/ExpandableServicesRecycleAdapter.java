@@ -13,15 +13,16 @@ import com.cheep.R;
 import com.cheep.custom_view.expandablerecycleview.ChildViewHolder;
 import com.cheep.custom_view.expandablerecycleview.ExpandableRecyclerAdapter;
 import com.cheep.custom_view.expandablerecycleview.ParentViewHolder;
+import com.cheep.strategicpartner.model.AllSubSubCat;
+import com.cheep.strategicpartner.model.StrategicPartnerServiceModel;
+import com.cheep.utils.Utility;
 
 import java.util.List;
 
 /**
  * created by Giteeka 24/7/2017
- *
+ * <p>
  * Expandable RecyclerView for service selection in Strategic partner Phase 1
- *
- *
  */
 class ExpandableServicesRecycleAdapter extends ExpandableRecyclerAdapter<StrategicPartnerServiceModel, AllSubSubCat, ExpandableServicesRecycleAdapter.ParentSubCategoryViewHolder, ExpandableServicesRecycleAdapter.ChildSubCategoryViewHolder> {
 
@@ -97,18 +98,18 @@ class ExpandableServicesRecycleAdapter extends ExpandableRecyclerAdapter<Strateg
 
             //     on click of check box parent row
             // select/deselect all child row of parent if parent is select/deselect
-            imgIconCorrect.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
-                    if (!isSingleSelection) {
-                        StrategicPartnerServiceModel recipe = mSubCategoriesList.get(getParentAdapterPosition());
-                        recipe.isSelected = !recipe.isSelected;
-                        setAllChildSelected(recipe);
-                        notifyDataSetChanged();
-                    }
-                }
-            });
+//            imgIconCorrect.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//
+//                    if (!isSingleSelection) {
+//                        StrategicPartnerServiceModel recipe = mSubCategoriesList.get(getParentAdapterPosition());
+//                        recipe.isSelected = !recipe.isSelected;
+//                        setAllChildSelected(recipe);
+//                        notifyDataSetChanged();
+//                    }
+//                }
+//            });
         }
 
         // bind data with view parent row
@@ -196,15 +197,13 @@ class ExpandableServicesRecycleAdapter extends ExpandableRecyclerAdapter<Strateg
         public void bind(@NonNull AllSubSubCat subSubCat) {
 
             textSubCategoryName.setText(subSubCat.subSubCatName);
-            if (subSubCat.package_description != null && !subSubCat.package_description.isEmpty())
-            {
+            if (subSubCat.package_description != null && !subSubCat.package_description.isEmpty()) {
                 textPackageDescription.setText(subSubCat.package_description);
                 textPackageDescription.setVisibility(View.VISIBLE);
-            }
-            else{
+            } else {
                 textPackageDescription.setVisibility(View.GONE);
             }
-            textSubCategoryPrice.setText(itemView.getContext().getString(R.string.ruppe_symbol_x, String.valueOf(subSubCat.price)));
+            textSubCategoryPrice.setText(itemView.getContext().getString(R.string.ruppe_symbol_x, Utility.getQuotePriceFormatter(String.valueOf(subSubCat.price))));
             imgIconCorrect.setSelected(subSubCat.isSelected);
             textSubCategoryPrice.setSelected(subSubCat.isSelected);
         }

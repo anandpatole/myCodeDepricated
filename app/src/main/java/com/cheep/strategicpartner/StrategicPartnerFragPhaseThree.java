@@ -46,6 +46,10 @@ import com.cheep.model.UserDetails;
 import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
+import com.cheep.strategicpartner.model.AllSubSubCat;
+import com.cheep.strategicpartner.model.MediaModel;
+import com.cheep.strategicpartner.model.QueAnsModel;
+import com.cheep.strategicpartner.model.StrategicPartnerServiceModel;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.SuperCalendar;
 import com.cheep.utils.Utility;
@@ -56,7 +60,6 @@ import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -112,6 +115,16 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
         super.onActivityCreated(savedInstanceState);
         initiateUI();
         setListener();
+    }
+
+    @Override
+    public void initiateUI() {
+        Log.d(TAG, "initiateUI() called");
+
+        mFragmentStrategicPartnerPhaseThreeBinding.recycleSelectedService.setLayoutManager(new LinearLayoutManager(mStrategicPartnerTaskCreationAct));
+        mFragmentStrategicPartnerPhaseThreeBinding.recycleSelectedService.setNestedScrollingEnabled(false);
+        if (mStrategicPartnerTaskCreationAct.getSelectedSubService() != null)
+            mFragmentStrategicPartnerPhaseThreeBinding.recycleSelectedService.setAdapter(new PaymentSummaryAdapter(mStrategicPartnerTaskCreationAct.getSelectedSubService()));
     }
 
 
@@ -188,6 +201,7 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
         // Enter promo code UI
         mFragmentStrategicPartnerPhaseThreeBinding.textpromocodelabel.setTextColor(ContextCompat.getColor(mStrategicPartnerTaskCreationAct, R.color.splash_gradient_end));
         mFragmentStrategicPartnerPhaseThreeBinding.textpromocodelabel.setText(getResources().getString(R.string.label_enter_promocode));
+        mFragmentStrategicPartnerPhaseThreeBinding.lnPromoCodeDisclaimer.setVisibility(View.GONE);
 
         mFragmentStrategicPartnerPhaseThreeBinding.textpromocodelabel.setEnabled(true);
         mFragmentStrategicPartnerPhaseThreeBinding.textpromocodelabel.setOnClickListener(new View.OnClickListener() {
@@ -197,7 +211,7 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
             }
         });
         mFragmentStrategicPartnerPhaseThreeBinding.imgCheepCodeClose.setVisibility(View.GONE);
-        mFragmentStrategicPartnerPhaseThreeBinding.txtpromocode.setText(getString(R.string.ruppe_symbol_x, "" + 0));
+        mFragmentStrategicPartnerPhaseThreeBinding.txtpromocode.setText(getString(R.string.ruppe_symbol_x, "" + Utility.getQuotePriceFormatter("0")));
         mFragmentStrategicPartnerPhaseThreeBinding.imgCheepCodeClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -224,6 +238,7 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
         mFragmentStrategicPartnerPhaseThreeBinding.txttotal.setText(getString(R.string.ruppe_symbol_x, "" + Utility.getQuotePriceFormatter(mStrategicPartnerTaskCreationAct.total)));
         mFragmentStrategicPartnerPhaseThreeBinding.textPay.setText(getString(R.string.label_pay_fee_v1, "" + Utility.getQuotePriceFormatter(mStrategicPartnerTaskCreationAct.total)));
         mFragmentStrategicPartnerPhaseThreeBinding.txtpromocode.setText(getString(R.string.ruppe_symbol_x, "" + Utility.getQuotePriceFormatter("0")));
+        mFragmentStrategicPartnerPhaseThreeBinding.lnPromoCodeDisclaimer.setVisibility(View.GONE);
     }
 
 
@@ -265,7 +280,7 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
 
         //Add Params
         Map<String, Object> mParams = new HashMap<>();
-        mParams.put(NetworkUtility.TAGS.QUOTE_AMOUNT, mStrategicPartnerTaskCreationAct.total);
+        mParams.put(NetworkUtility.TAGS.QUOTE_AMOUNT, mStrategicPartnerTaskCreationAct.totalOfBasePrice);
         mParams.put(NetworkUtility.TAGS.CHEEPCODE, cheepCode);
         mParams.put(NetworkUtility.TAGS.CAT_ID, mStrategicPartnerTaskCreationAct.mBannerImageModel.cat_id);
         mParams.put(NetworkUtility.TAGS.ADDRESS_ID, addressId);
@@ -297,11 +312,11 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
                         if (edtCheepCode != null) {
                             cheepCode = edtCheepCode.getText().toString().trim();
                             cheepCodeDialog.dismiss();
-
                             mStrategicPartnerTaskCreationAct.total = jsonObject.optString(NetworkUtility.TAGS.QUOTE_AMOUNT);
 
                             String discount = jsonObject.optString(NetworkUtility.TAGS.DISCOUNT_AMOUNT);
                             String payable = jsonObject.optString(NetworkUtility.TAGS.PAYABLE_AMOUNT);
+                            mFragmentStrategicPartnerPhaseThreeBinding.lnPromoCodeDisclaimer.setVisibility(View.VISIBLE);
                             updatePaymentDetails(discount, payable);
 
                         }
@@ -348,7 +363,8 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
         mFragmentStrategicPartnerPhaseThreeBinding.txttotal.setText(getString(R.string.ruppe_symbol_x, "" + Utility.getQuotePriceFormatter(payable)));
         mFragmentStrategicPartnerPhaseThreeBinding.textPay.setText(getString(R.string.label_pay_fee_v1, "" + Utility.getQuotePriceFormatter(payable)));
         mFragmentStrategicPartnerPhaseThreeBinding.textpromocodelabel.setEnabled(false);
-        mFragmentStrategicPartnerPhaseThreeBinding.textpromocodelabel.setText(cheepCode);
+        mFragmentStrategicPartnerPhaseThreeBinding.textpromocodelabel.setText(getString(R.string.label_promocode_apply));
+        mFragmentStrategicPartnerPhaseThreeBinding.textpromocodelabel.setTextColor(ContextCompat.getColor(mStrategicPartnerTaskCreationAct, R.color.black));
         mFragmentStrategicPartnerPhaseThreeBinding.imgCheepCodeClose.setVisibility(View.VISIBLE);
     }
 
@@ -359,16 +375,6 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
             text.setSpan(new StyleSpan(Typeface.BOLD), 0, string.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
         return text;
-    }
-
-    @Override
-    public void initiateUI() {
-        Log.d(TAG, "initiateUI() called");
-
-        mFragmentStrategicPartnerPhaseThreeBinding.recycleSelectedService.setLayoutManager(new LinearLayoutManager(mStrategicPartnerTaskCreationAct));
-        mFragmentStrategicPartnerPhaseThreeBinding.recycleSelectedService.setNestedScrollingEnabled(false);
-        if (mStrategicPartnerTaskCreationAct.getSelectedSubService() != null)
-            mFragmentStrategicPartnerPhaseThreeBinding.recycleSelectedService.setAdapter(new PaymentSummaryAdapter(mStrategicPartnerTaskCreationAct.getSelectedSubService()));
     }
 
     @Override
@@ -673,8 +679,8 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
                 // failed
                 if (data != null) {
                     Log.d(TAG, "onActivityResult() called with failed: result= [" + data.getStringExtra("result") + "]");
-                    // Call update payment service from here with all the response come from service
-                    callTaskCreationWebServiceForStratgicPartner(false, data.getStringExtra("result"));
+                    //Call update payment service from here with all the response come from service
+//                    callTaskCreationWebServiceForStratgicPartner(false, data.getStringExtra("result"));
                     Utility.showSnackBar(getString(R.string.msg_payment_failed), mFragmentStrategicPartnerPhaseThreeBinding.getRoot());
                 }
             }
@@ -714,6 +720,19 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
         String task_desc = getTaskDescription(mList);
 
         String question_detail = getQuestionAnswerDetailsJsonString(mList).toString();
+        String media_file = "";
+        for (QueAnsModel model : mList)
+            if (model.answerType.equalsIgnoreCase(Utility.TEMPLATE_UPLOAD)) {
+                media_file = getSelectedMediaJsonString(model.medialList).toString();
+                break;
+            }
+        Log.e(TAG, "start dat time " + start_datetime);
+        SuperCalendar superCalendar = SuperCalendar.getInstance();
+        superCalendar.setTimeInMillis(Long.parseLong(start_datetime));
+        superCalendar.setTimeZone(SuperCalendar.SuperTimeZone.GMT.GMT);
+
+        Log.e(TAG, "gmt time " + String.valueOf(superCalendar.getTimeInMillis()));
+
         Map<String, String> mParams = new HashMap<>();
 
         if (Integer.parseInt(mStrategicPartnerTaskCreationAct.mSelectedAddressModel.address_id) > 0) {
@@ -736,15 +755,25 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
         }
 
         mParams.put(NetworkUtility.TAGS.CAT_ID, mStrategicPartnerTaskCreationAct.mBannerImageModel.cat_id);
-        mParams.put(NetworkUtility.TAGS.START_DATETIME, start_datetime);
+        mParams.put(NetworkUtility.TAGS.START_DATETIME, String.valueOf(superCalendar.getTimeInMillis()));
         mParams.put(NetworkUtility.TAGS.SUB_CATEGORY_DETAIL, subCategoryDetail);
         mParams.put(NetworkUtility.TAGS.QUESTION_DETAIL, question_detail);
-        mParams.put(NetworkUtility.TAGS.QUOTE_AMOUNT, mStrategicPartnerTaskCreationAct.total);
+        mParams.put(NetworkUtility.TAGS.QUOTE_AMOUNT, mStrategicPartnerTaskCreationAct.totalOfBasePrice);
+
         mParams.put(NetworkUtility.TAGS.CHEEPCODE, TextUtils.isEmpty(cheepCode) ? Utility.EMPTY_STRING : cheepCode);
         mParams.put(NetworkUtility.TAGS.PAYABLE_AMOUNT, TextUtils.isEmpty(cheepCode) ? mStrategicPartnerTaskCreationAct.total : payableAmount);
         mParams.put(NetworkUtility.TAGS.TRANSACTION_ID, transaction_Id);
         mParams.put(NetworkUtility.TAGS.TASK_DESC, task_desc);
+        // new amazon s3 uploaded file names
+        mParams.put(NetworkUtility.TAGS.MEDIA_FILE, media_file);
 
+        Log.e(TAG, "subCategoryDetail = [ " + subCategoryDetail + " ] ");
+        Log.e(TAG, "question_detail = [ " + question_detail + " ] ");
+        Log.e(TAG, "start_datetime = [ " + start_datetime + " ] ");
+        Log.e(TAG, "total = [ " + mStrategicPartnerTaskCreationAct.total + " ] ");
+        Log.e(TAG, "task_desc= [ " + task_desc + " ] ");
+        Log.e(TAG, "media_file= [ " + media_file + " ] ");
+        Log.e(TAG, "cat_id = [ " + mStrategicPartnerTaskCreationAct.mBannerImageModel.cat_id + " ] ");
 
         // Create Params for AppsFlyer event track
         mTaskCreationParams = new HashMap<>();
@@ -757,33 +786,27 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
         mTaskCreationParams.put(NetworkUtility.TAGS.CHEEPCODE, cheepCode);
         mTaskCreationParams.put(NetworkUtility.TAGS.PAYABLE_AMOUNT, payableAmount);
         mTaskCreationParams.put(NetworkUtility.TAGS.TRANSACTION_ID, transaction_Id);
+        mTaskCreationParams.put(NetworkUtility.TAGS.MEDIA_FILE, media_file);
 
         // Add Params
-        HashMap<String, File> mFileParams = new HashMap<>();
-        // TODO : This needs to be improved after words.
+//        HashMap<String, File> mFileParams = new HashMap<>();
 
-        ArrayList<MediaModel> mFileList = null;
-        for (QueAnsModel model : mList)
-            if (model.answerType.equalsIgnoreCase(Utility.TEMPLATE_UPLOAD)) {
-                mFileList = model.medialList;
-                break;
-            }
 
-        if (mFileList != null && !mFileList.isEmpty())
-            for (int i = 0; i < mFileList.size(); i++) {
-                MediaModel mediaModel = mFileList.get(i);
-                if (!TextUtils.isEmpty(mediaModel.mediaName) && new File(mediaModel.mediaName).exists()) {
-                    Log.e(TAG, "callTaskCreationWebServiceForStratgicPartner: path " + mediaModel.mediaName + "");
-                    mFileParams.put("media_file[" + i + "]", new File(mediaModel.mediaName));
-                }
-            }
+//        if (mFileList != null && !mFileList.isEmpty())
+//            for (int i = 0; i < mFileList.size(); i++) {
+//                MediaModel mediaModel = mFileList.get(i);
+//                if (!TextUtils.isEmpty(mediaModel.mediaName) && new File(mediaModel.mediaName).exists()) {
+//                    Log.e(TAG, "callTaskCreationWebServiceForStratgicPartner: path " + mediaModel.mediaName + "");
+//                    mFileParams.put("media_file[" + i + "]", new File(mediaModel.mediaName));
+//                }
+//            }
 
         VolleyNetworkRequest mVolleyNetworkRequest = new VolleyNetworkRequest(NetworkUtility.WS.TASK_CREATE_STRATEGIC_PARTNER
                 , mCallCreateTaskWSErrorListener
                 , mCallCreateTaskWSResponseListener
                 , mHeaderParams
                 , mParams
-                , mFileParams);
+                , null);
         Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest);
     }
 
@@ -974,6 +997,20 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
             }
         }
         return selectedServiceArray;
+    }
+
+    //    media name will be with extension
+//    [{"media_name" : "5","media_type" : "288"},{"media_name" : "5","media_type" : "288"}]
+    private JsonArray getSelectedMediaJsonString(ArrayList<MediaModel> list) {
+        JsonArray selectedMediaArray = new JsonArray();
+        for (int i = 0; i < list.size(); i++) {
+            MediaModel model = list.get(i);
+            JsonObject obj = new JsonObject();
+            obj.addProperty("media_name", AmazonUtils.getFileNameWithExt(model.mediaName, true));
+            obj.addProperty("media_type", model.mediaType);
+            selectedMediaArray.add(obj);
+        }
+        return selectedMediaArray;
     }
 
     /***********************************************************************************************

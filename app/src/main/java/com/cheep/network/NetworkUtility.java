@@ -35,6 +35,9 @@ public class NetworkUtility {
 
         public static final String UPDATE_LOCATION = BASE_URL + "customers/profile/update_location";
         public static final String CREATE_TASK = BASE_URL + "customers/tasks/create";
+
+        public static final String GET_PRO_FOR_INSTA_BOOKING = BASE_URL + "customers/tasks/getProForInstantBooking";
+
         public static final String SP_LIST = BASE_URL + "customers/sp_list/listing";
         public static final String SP_LIST_FILTER = BASE_URL + "customers/sp_list/filter_sp_list";
 
@@ -102,7 +105,9 @@ public class NetworkUtility {
 
         // Task Creation for Strategic Partner
         public static final String TASK_CREATE_STRATEGIC_PARTNER = BASE_URL + "customers/tasks/stratagic_partner_task_create";
+        public static final String TASK_CREATE_INSTA_BOOKING = BASE_URL + "customers/tasks/instaBookingTaskCreate";
 
+        public static final String CURL_NOTIFICATION_TO_SP = BASE_URL + "customers/tasks/curl_for_notification_to_sp";
     }
 
     public static class TAGS {
@@ -159,6 +164,7 @@ public class NetworkUtility {
         public static final String QUOTE_AMOUNT = "quote_amount";
         public static final String PAYABLE_AMOUNT = "payable_amount";
         public static final String DISCOUNT_AMOUNT = "discount_amount";
+//        public static final String PAYABLE_AMOUNT_WITH_GST = "payable_amount_with_gst";
 
         public static final String TASK_DESC = "task_desc";
         public static final String CITY_ID = "city_id";
@@ -209,6 +215,8 @@ public class NetworkUtility {
         public static final String SUB_CATEGORY_DETAIL = "sub_category_detail";
         public static final String QUESTION_DETAIL = "question_detail";
         public static final String RESULT = "result";
+        public static final String MEDIA_FILE = "media_file";
+        public static final String TASK_TYPE = "task_type";
 
         public static class VERSION_CHANGE_TYPE {
             public static final int NORMAL = 0;
@@ -247,6 +255,7 @@ public class NetworkUtility {
         public static final String PAYMENT_STATUS = "payment_status";
         public static final String PAYMENT_LOG = "payment_log";
         public static final String IS_FOR_ADDITIONAL_QUOTE = "isForAdditionalQuote";
+        public static final String RESCHEDULE_DATETIME = "reschedule_datetime";
 
         public static class STATUSCODETYPE {
             public static final int SUCCESS = 200;
@@ -282,6 +291,7 @@ public class NetworkUtility {
             public static final String REG_TWITTER = "RegisterWithTwitter";
             public static final String REG_GOOGLE = "RegisterWithGPlus";
             public static final String TASK_CREATE = "TaskCreation";
+            public static final String INSTA_BOOK = "InstaBook";
         }
     }
 

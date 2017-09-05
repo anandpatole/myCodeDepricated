@@ -155,6 +155,7 @@ public class HomeFragment extends BaseFragment {
         super.onDestroy();
 
         // Unregister the broadcast receiver in case fragment gets destroyed
+
         mContext.unregisterReceiver(mBR_OnTaskCreated);
 
         EventBus.getDefault().unregister(this);
@@ -264,11 +265,22 @@ public class HomeFragment extends BaseFragment {
     private void updateUnreadCount(DataSnapshot dataSnapshot, boolean isDelete) {
         Log.d(TAG, "updateUnreadCount() called with: dataSnapshot = [" + dataSnapshot + "], isDelete = [" + isDelete + "]");
         if (dataSnapshot.exists() && dataSnapshot.getValue() != null) {
-            TaskChatModel taskChatModel = dataSnapshot.getValue(TaskChatModel.class);
-            if (taskChatModel != null) {
-                if (isDelete || unreadCountIds.contains(taskChatModel.chatId)) {
-                    if (taskChatModel.unreadCount == 0 || isDelete) {
-                        unreadCountIds.remove(taskChatModel.chatId);
+            try {
+                TaskChatModel taskChatModel = dataSnapshot.getValue(TaskChatModel.class);
+                if (taskChatModel != null) {
+                    if (isDelete || unreadCountIds.contains(taskChatModel.chatId)) {
+                        if (taskChatModel.unreadCount == 0 || isDelete) {
+                            unreadCountIds.remove(taskChatModel.chatId);
+                            if (unreadCountIds.size() <= 0) {
+                                mFragmentHomeBinding.tvChatUnreadCount.setVisibility(View.GONE);
+                            } else {
+                                mFragmentHomeBinding.tvChatUnreadCount.setVisibility(View.VISIBLE);
+                                mFragmentHomeBinding.tvChatUnreadCount.setText(String.valueOf(unreadCountIds.size()));
+                            }
+                            Log.e(TAG, "Updated Unread Count :" + unreadCountIds.size());
+                        }
+                    } else if (taskChatModel.unreadCount > 0) {
+                        unreadCountIds.add(taskChatModel.chatId);
                         if (unreadCountIds.size() <= 0) {
                             mFragmentHomeBinding.tvChatUnreadCount.setVisibility(View.GONE);
                         } else {
@@ -277,16 +289,9 @@ public class HomeFragment extends BaseFragment {
                         }
                         Log.e(TAG, "Updated Unread Count :" + unreadCountIds.size());
                     }
-                } else if (taskChatModel.unreadCount > 0) {
-                    unreadCountIds.add(taskChatModel.chatId);
-                    if (unreadCountIds.size() <= 0) {
-                        mFragmentHomeBinding.tvChatUnreadCount.setVisibility(View.GONE);
-                    } else {
-                        mFragmentHomeBinding.tvChatUnreadCount.setVisibility(View.VISIBLE);
-                        mFragmentHomeBinding.tvChatUnreadCount.setText(String.valueOf(unreadCountIds.size()));
-                    }
-                    Log.e(TAG, "Updated Unread Count :" + unreadCountIds.size());
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
     }

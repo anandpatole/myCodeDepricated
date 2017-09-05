@@ -20,6 +20,7 @@ import com.cheep.model.NotificationModel;
 import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
+import com.cheep.strategicpartner.TaskSummaryStrategicPartnerActivity;
 import com.cheep.utils.ErrorLoadingHelper;
 import com.cheep.utils.LoadMoreRecyclerAdapter;
 import com.cheep.utils.PreferenceUtility;
@@ -282,8 +283,10 @@ public class NotificationActivity extends BaseAppCompatActivity implements Notif
             providerModel.providerId = String.valueOf(model.sp_user_id);
 
             JobSummaryActivity.newInstance(mContext, taskDetailModel, providerModel);*/
-
-            TaskSummaryActivity.getInstance(mContext, model.task_id);
+            if (model.task_type.equalsIgnoreCase(Utility.TASK_TYPE.STRATEGIC))
+                TaskSummaryStrategicPartnerActivity.getInstance(mContext, model.task_id);
+            else
+                TaskSummaryActivity.getInstance(mContext, model.task_id);
         }
           /*  }
         });*/

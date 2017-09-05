@@ -55,7 +55,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.cheep.network.NetworkUtility.WS.REVIEW_LIST;
-import static com.facebook.login.widget.ProfilePictureView.TAG;
 
 /**
  * Created by pankaj on 10/6/16.
@@ -204,7 +203,15 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
 
         //loading rounded image on profile
         //  Utility.showCircularImageView(mContext, TAG, mActivityProviderProfileBinding.imgProfile, providerModel.profileUrl, Utility.DEFAULT_PROFILE_SRC, true);
-        Utility.loadImageView(mContext, mActivityProviderProfileBinding.imgProfile, providerModel.profileUrl, Utility.DEFAULT_PROFILE_SRC);
+        Utility.showCircularImageViewWithColorBorder(
+                mContext,
+                TAG,
+                mActivityProviderProfileBinding.imgProfile,
+                providerModel.profileUrl,
+                R.drawable.icon_profile_img_solid,
+                R.color.splash_gradient_end
+                , true);
+//        Utility.loadImageView(mContext, mActivityProviderProfileBinding.imgProfile, providerModel.profileUrl, Utility.DEFAULT_PROFILE_SRC);
 
         if (!TextUtils.isEmpty(providerModel.information)) {
             mActivityProviderProfileBinding.textDesc.setText(providerModel.information);
@@ -241,6 +248,7 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
         /**
          * TODO: If in case in future, need to enable Chat call feature we just need to comment below portion
          */
+        //  TODO: TODO: Un-commented code by giteeka -30 aug 2017 (only chat feature is enabled).
         ////////////////////////////////////////////////////////////////////////////////////////////
         ////////////////////////// Managing Chat Call Icons[Start] ////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////////////////////
@@ -255,7 +263,7 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
                     callTaskDetailRequestAcceptWS(Utility.ACTION_CALL, taskDetailModel.taskId, providerModel);
                 }
             }
-        });
+        });*/
         mActivityProviderProfileBinding.lnChat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -287,7 +295,6 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
         // Set Listner for Unread Counter
         manageUnreadBadgeCounterForChat();
 
-        */
         ////////////////////////////////////////////////////////////////////////////////////////////
         ////////////////////////// Managing Chat Call Icons[End] ///////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////////////////////
@@ -297,8 +304,8 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
 
 //            TODO: If in case in future, need to enable Chat call feature we just need to comment
 //            TODO: below portion
-            /*mActivityProviderProfileBinding.lnCall.setVisibility(View.GONE);
-            mActivityProviderProfileBinding.lnChat.setVisibility(View.GONE);*/
+//            mActivityProviderProfileBinding.lnCall.setVisibility(View.GONE);
+            mActivityProviderProfileBinding.lnChat.setVisibility(View.GONE);
 
 
             mActivityProviderProfileBinding.textCategory.setVisibility(View.GONE);
@@ -320,7 +327,7 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
     ////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////// Managing Chat Call Icons[Start] ////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////
-    /*private void manageUnreadBadgeCounterForChat() {
+    private void manageUnreadBadgeCounterForChat() {
         // Read task chat unread count from firebase
         String t_sp_u_formattedId = FirebaseUtils.get_T_SP_U_FormattedId(taskDetailModel.taskId, providerModel.providerId, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
         FirebaseHelper.getTaskChatRef(FirebaseUtils.getPrefixTaskId(taskDetailModel.taskId)).child(t_sp_u_formattedId).child(FirebaseHelper.KEY_UNREADCOUNT).addValueEventListener(new ValueEventListener() {
@@ -329,7 +336,7 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
                 if (dataSnapshot.exists()) {
                     Integer count = dataSnapshot.getValue(Integer.class);
                     Log.d(TAG, "onDataChange() called with: dataSnapshot = Unread Counter [" + count + "]");
-                    if (count <= 0) {
+                    if (count != null && count <= 0) {
                         mActivityProviderProfileBinding.tvChatUnreadCount.setVisibility(View.GONE);
                     } else {
                         mActivityProviderProfileBinding.tvChatUnreadCount.setVisibility(View.VISIBLE);
@@ -344,6 +351,7 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
             public void onCancelled(DatabaseError databaseError) {
 
             }
+
         });
     }
 
@@ -353,6 +361,9 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
             return;
         }
         if (Utility.SEND_TASK_DETAIL_REQUESTED_STATUS.ALREADY_REQUESTED.equalsIgnoreCase(providerModel.request_detail_status)) {
+            mActivityProviderProfileBinding.imgChat.setVisibility(View.VISIBLE);
+            mActivityProviderProfileBinding.tvChatUnreadCount.setVisibility(View.VISIBLE);
+            mActivityProviderProfileBinding.textChat.setVisibility(View.VISIBLE);
             //chat icon
             Glide.with(mContext)
                     .load(R.drawable.ic_chat_requested_animation_with_counter)
@@ -360,14 +371,24 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
                     .dontAnimate()
                     .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                     .into(mActivityProviderProfileBinding.imgChat);
+        } else if (Utility.SEND_TASK_DETAIL_REQUESTED_STATUS.ACCEPTED.equalsIgnoreCase(providerModel.request_detail_status)) {
+            mActivityProviderProfileBinding.imgChat.setVisibility(View.VISIBLE);
+            mActivityProviderProfileBinding.textChat.setVisibility(View.VISIBLE);
+            mActivityProviderProfileBinding.tvChatUnreadCount.setVisibility(View.VISIBLE);
+            Glide.with(mContext)
+                    .load(R.drawable.icon_chat_smaller)
+                    .into(mActivityProviderProfileBinding.imgChat);
         } else {
+            mActivityProviderProfileBinding.imgChat.setVisibility(View.INVISIBLE);
+            mActivityProviderProfileBinding.tvChatUnreadCount.setVisibility(View.INVISIBLE);
+            mActivityProviderProfileBinding.textChat.setVisibility(View.INVISIBLE);
             Glide.with(mContext)
                     .load(R.drawable.icon_chat_smaller)
                     .into(mActivityProviderProfileBinding.imgChat);
         }
     }
 
-    */
+
     ////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////// Managing Chat Call Icons[End] ///////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////
@@ -1176,7 +1197,7 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
                             EventBus.getDefault().post(messageEvent);
 
                             //TODO: If in case in future, need to enable Chat call feature we just need to comment below portion
-                            //updateChatUIBasedOnCurrentRequestStatus();
+                            updateChatUIBasedOnCurrentRequestStatus();
 
                         } else {
                             providerModel.request_detail_status = requestDatailStatus;
@@ -1191,7 +1212,7 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
                             EventBus.getDefault().post(messageEvent);
 
                             //TODO: If in case in future, need to enable Chat call feature we just need to comment below portion
-                            //updateChatUIBasedOnCurrentRequestStatus();
+                            updateChatUIBasedOnCurrentRequestStatus();
 
                             /*// Update recycler view
                             spRecyclerViewAdapter.removeModelForRequestDetailStatus(spUserID, requestDatailStatus);

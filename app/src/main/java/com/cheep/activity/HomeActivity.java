@@ -205,7 +205,13 @@ public class HomeActivity extends BaseAppCompatActivity
                 ProviderModel providerModel = new ProviderModel();
                 providerModel.providerId = bundle.getString(NetworkUtility.TAGS.SP_USER_ID);
                 JobSummaryActivity.newInstance(mContext, taskDetailModel, providerModel);*/
-                TaskSummaryActivity.getInstance(mContext, bundle.getString(TASK_ID));
+                String taskType = bundle.getString(NetworkUtility.TAGS.TASK_TYPE);
+                String taskId = bundle.getString(NetworkUtility.TAGS.TASK_ID);
+                if (taskId != null && taskType != null)
+                    if (taskType.equalsIgnoreCase(Utility.TASK_TYPE.STRATEGIC))
+                        TaskSummaryStrategicPartnerActivity.getInstance(mContext, taskId);
+                    else
+                        TaskSummaryActivity.getInstance(mContext, taskId);
             }
             // Changed due to the fact that we should allow user goto detail screen in each of the
             // case when notification comes.
@@ -1423,7 +1429,7 @@ public class HomeActivity extends BaseAppCompatActivity
                         MessageEvent messageEvent = new MessageEvent();
                         messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.TASK_RESCHEDULED;
                         messageEvent.id = jData.getString(NetworkUtility.TAGS.TASK_ID);
-//                        messageEvent.taskStartdate = jData.getString(NetworkUtility.TAGS.TASK_STARTDATE);
+                        messageEvent.taskStartdate = jData.getString(NetworkUtility.TAGS.RESCHEDULE_DATETIME);
                         EventBus.getDefault().post(messageEvent);
 
                         break;

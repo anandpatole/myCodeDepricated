@@ -116,7 +116,7 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
         SpannableString sName = new SpannableString(checkNonNullAndSet(provider.userName));
         SpannableString sVerified = null;
         if (provider.isVerified.equalsIgnoreCase(Utility.BOOLEAN.YES)) {
-            sVerified = new SpannableString(mContext.getString(R.string.label_verified_pro));
+            sVerified = new SpannableString(" " + mContext.getString(R.string.label_verified_pro) + " ");
             sVerified.setSpan(new RoundedBackgroundSpan(mTagBackgroundColor, mTagTextColor), 0, sVerified.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
         }
         holder.tvName.setText(sVerified != null ? TextUtils.concat(sName, " ", sVerified) : sName);
@@ -253,14 +253,14 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
             holder.tvOffer.setVisibility(View.GONE);
         }
 
-        /**
-         * TODO: If in case in future, need to enable Chat call feature we just need to comment below portion
-         */
         ////////////////////////////////////////////////////////////////////////////////////////////
         ////////////////////////// Managing Chat Call Icons[Start] ////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////////////////////
 
-        /*if (Utility.SEND_TASK_DETAIL_REQUESTED_STATUS.ALREADY_REQUESTED.equalsIgnoreCase(provider.request_detail_status)) {
+//        TODO: uncomment chat feature by giteeka -30 august 2017
+//          TODO: Only chat is enabled
+
+        if (Utility.SEND_TASK_DETAIL_REQUESTED_STATUS.ALREADY_REQUESTED.equalsIgnoreCase(provider.request_detail_status)) {
             holder.imgChat.setVisibility(View.VISIBLE);
             //chat icon
             Glide.with(mContext)
@@ -269,11 +269,17 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
                     .dontAnimate()
                     .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                     .into(holder.imgChat);
-        } else {
+        } else if (Utility.SEND_TASK_DETAIL_REQUESTED_STATUS.ACCEPTED.equalsIgnoreCase(provider.request_detail_status)) {
+            holder.imgChat.setVisibility(View.VISIBLE);
             Glide.with(mContext)
                     .load(R.drawable.icon_chat_smaller)
                     .into(holder.imgChat);
-        }*/
+        } else {
+            holder.imgChat.setVisibility(View.INVISIBLE);
+            Glide.with(mContext)
+                    .load(R.drawable.icon_chat_smaller)
+                    .into(holder.imgChat);
+        }
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         ////////////////////////// Managing Chat Call Icons[END] ///////////////////////////////////
@@ -343,8 +349,10 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
         ////////////////////////////////////////////////////////////////////////////////////////////
         ////////////////////////// Managing Chat Call Icons[Start] ////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////////////////////
+//        TODO: uncomment chat feature by giteeka -30 august 2017
+//          TODO: Only chat is enabled
 
-        /*// Chat Image click event
+        // Chat Image click event
         holder.imgChat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -353,12 +361,12 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
         });
 
         // Call Image click event
-        holder.imgCall.setOnClickListener(new View.OnClickListener() {
+       /* holder.imgCall.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mListener.onCallClicked(provider);
             }
-        });
+        });*/
 
         // Read task chat unread count from firebase
         String t_sp_u_formattedId = FirebaseUtils.get_T_SP_U_FormattedId(mTaskDetailModel.taskId, provider.providerId, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
@@ -383,7 +391,7 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
             public void onCancelled(DatabaseError databaseError) {
 
             }
-        });*/
+        });
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         ////////////////////////// Managing Chat Call Icons[END] ////////////////////////////////////////
@@ -490,9 +498,9 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
         private ImageView ivFavoriteQuote;
         private RatingBar ratingBar;
         //        private ImageView imgCall;
-//        private ImageView imgChat;
+        private ImageView imgChat;
         private List<AnimatorSet> animators;
-//        private TextView mTvUnreadChatCount;
+        private TextView mTvUnreadChatCount;
 
 
         public void addAnimator(AnimatorSet animator) {
@@ -538,8 +546,8 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
             ivFavoriteQuote = (ImageView) itemView.findViewById(R.id.ivFavoriteQuote);
             ratingBar = (RatingBar) itemView.findViewById(R.id.rating_bar);
 //            imgCall = (ImageView) itemView.findViewById(R.id.img_call);
-//            imgChat = (ImageView) itemView.findViewById(R.id.img_chat);
-//            mTvUnreadChatCount = (TextView) itemView.findViewById(R.id.tv_chat_unread_count);
+            imgChat = (ImageView) itemView.findViewById(R.id.img_chat);
+            mTvUnreadChatCount = (TextView) itemView.findViewById(R.id.tv_chat_unread_count);
 
         }
     }

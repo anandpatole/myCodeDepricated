@@ -194,6 +194,8 @@ public class EnterTaskDetailFragment extends BaseFragment {
         //Update SubCategory
         mFragmentEnterTaskDetailBinding.textSubCategoryName.setText(mTaskCreationActivity.getSelectedSubService().name);
 
+
+
     }
 
     @Override
@@ -279,6 +281,26 @@ public class EnterTaskDetailFragment extends BaseFragment {
                     PreferenceUtility.getInstance(mContext).getGuestUserDetails().mLat,
                     PreferenceUtility.getInstance(mContext).getGuestUserDetails().mLon);
         }
+        mFragmentEnterTaskDetailBinding.cvInstaBook.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.i("myLog", ""+isTotalVerified);
+                mTaskCreationActivity.onInstaBookClicked();
+            }
+        });
+
+        mFragmentEnterTaskDetailBinding.cvGetQuote.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.i("myLog", ""+isTotalVerified);
+
+                mTaskCreationActivity.onGetQuoteClicked();
+
+            }
+        });
+
+        // Update the SP lists
+//        callSPListWS(mTaskCreationActivity.mJobCategoryModel.catId, userDetails.CityID, Utility.EMPTY_STRING);
     }
 
     public void updateHeightOfLinearLayout() {
