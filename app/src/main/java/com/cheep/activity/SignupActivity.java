@@ -1,10 +1,12 @@
 package com.cheep.activity;
 
 import android.Manifest;
+import android.content.BroadcastReceiver;
 import android.content.ClipData;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.databinding.DataBindingUtil;
@@ -73,6 +75,9 @@ public class SignupActivity extends BaseAppCompatActivity {
         mActivitySignupBinding = DataBindingUtil.setContentView(this, R.layout.activity_signup);
         initiateUI();
         setListeners();
+
+        //Register the broadcast receiver.
+        registerReceiver(mBR_OnLoginSuccess, new IntentFilter(Utility.BR_ON_LOGIN_SUCCESS));
     }
 
     @Override
@@ -650,7 +655,6 @@ public class SignupActivity extends BaseAppCompatActivity {
     @Override
     public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
         super.onSaveInstanceState(outState, outPersistentState);
-
         Log.i(TAG, "onSaveInstanceState: ");
     }
 
@@ -658,6 +662,12 @@ public class SignupActivity extends BaseAppCompatActivity {
     protected void onDestroy() {
         Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.WS.SEND_OTP);
         Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.WS.SIGNUP);
+
+        try {
+            unregisterReceiver(mBR_OnLoginSuccess);
+        } catch (Exception e) {
+
+        }
         super.onDestroy();
     }
 
@@ -757,5 +767,15 @@ public class SignupActivity extends BaseAppCompatActivity {
      *************************************************************************************************************
      */
 
+    /**
+     * BroadCast that would restart the screen once login has been done.
+     */
+    private BroadcastReceiver mBR_OnLoginSuccess = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            // Do nothing, just restart the activity
+            finish();
+        }
+    };
 
 }

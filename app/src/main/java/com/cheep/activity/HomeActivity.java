@@ -358,6 +358,16 @@ public class HomeActivity extends BaseAppCompatActivity
             return;
         } else if (slideMenuListModel.title.equals(getString(R.string.label_login))) {
             LoginActivity.newInstance(mContext);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    //reset the current screen to Home screen
+                    Fragment mFragment = getSupportFragmentManager().findFragmentByTag(HomeFragment.TAG);
+                    if (mFragment == null) {
+                        loadFragment(HomeFragment.TAG, HomeFragment.newInstance());
+                    }
+                }
+            }, 1000);
         }/*else if (slideMenuListModel.title.equals(getString(R.string.tab_alert))) {
             showAlertDialog();
 //            LoginActivity.newInstance(mContext);
@@ -1576,6 +1586,7 @@ public class HomeActivity extends BaseAppCompatActivity
      * POST A TASK button from empty screen.
      */
     public void redirectToHomeTab() {
+        Log.d(TAG, "redirectToHomeTab() called");
         Fragment mFragment = getSupportFragmentManager().findFragmentByTag(HomeFragment.TAG);
         if (mFragment != null) {
             HomeFragment homeFragment = (HomeFragment) mFragment;

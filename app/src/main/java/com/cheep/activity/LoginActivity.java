@@ -10,7 +10,6 @@ import android.content.IntentFilter;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
-import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
@@ -196,6 +195,21 @@ public class LoginActivity extends BaseAppCompatActivity implements FacebookHelp
     @Override
     protected void initiateUI() {
         getWindow().setBackgroundDrawableResource(R.drawable.login_bg_blur);
+
+        //Setting toolbar
+        setSupportActionBar(mActivityLoginBinding.toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setTitle(Utility.EMPTY_STRING);
+            mActivityLoginBinding.toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Utility.hideKeyboard(mContext);
+                    onBackPressed();
+                }
+            });
+        }
+
     }
 
     @Override

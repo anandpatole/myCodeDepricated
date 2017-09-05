@@ -32,7 +32,7 @@
                     android:singleLine="true"
                     android:text="@string/label_privacy_policy"
                     android:textAllCaps="false"
-                    android:textColor="@color/splash_gradient_end"
+                    android:textColor="@color/white"
                     android:textSize="@dimen/toolbar_title_text_size"
                     android:transitionName="@string/transition_location"
                     tools:ignore="UnusedAttribute" />

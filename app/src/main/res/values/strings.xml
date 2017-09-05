@@ -67,7 +67,7 @@
     <string name="transition_image_view">transition_image_view</string>
     <string name="transition_location">transition_location</string>
     <string name="label_verification">Verification</string>
-    <string name="label_sent_otp">Did your phone just beep? That\’s us! Enter the code we have texted you and get ready to put your feet up</string>
+    <string name="label_sent_otp">Did your phone just beep? That\’s us! Enter the code you\'ve just received and get ready to put your feet up.</string>
     <string name="label_enter_code_here">Enter Code Here</string>
     <!--<string name="label_send_otp_again">"Didn't receive? Send code again."</string>-->
     <string name="label_send_otp_again">"Not received the code? Click here!"</string>

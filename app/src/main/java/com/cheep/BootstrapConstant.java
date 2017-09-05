@@ -13,10 +13,11 @@ public class BootstrapConstant {
     public static final String LNG = "72.454545";
 
     /*
-    Expiry Date : 05/22
-    CVV : 245
+   Card No:4012 0010 3714 1112
+   Exp:12/17
+   CVV:123
     */
-    public static final String CC_DETAILS = "5123456789012346";
+    public static final String CC_DETAILS = "4012001037141112";
 
 
    /* public static final ArrayList<TaskChatModel> DUMMY_TASK_CHAT_LIST;
