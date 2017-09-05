@@ -381,7 +381,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_formatted_quote_amount">₹ %1$s</string>
     <string name="label_pros_around_you_reviewing_desc">PROs around you are viewing your task currently and shall respond shortly</string>
     <string name="label_task_complete">Task Complete</string>
-    <string name="label_connect_using_social_accounts">Connect using your social accounts</string>
+    <string name="label_connect_using_social_accounts">Connect using social accounts</string>
     <string name="hint_first_name">First Name</string>
     <string name="hint_last_name">Last Name</string>
     <string name="label_go">Go</string>
