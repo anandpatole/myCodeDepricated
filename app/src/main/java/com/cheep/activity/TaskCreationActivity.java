@@ -653,7 +653,7 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
             }
             c.add(Calendar.HOUR, 1);
             int toHour = c.get(Calendar.HOUR);
-            InstaBookProDialog dialog = InstaBookProDialog.newInstance(this, taskDetailModel, date + " between " + fromHour + "-" + toHour, new AcknowledgementInteractionListener() {
+            InstaBookProDialog dialog = InstaBookProDialog.newInstance(this, taskDetailModel, date + " between " + fromHour + "-" + toHour + " hrs", new AcknowledgementInteractionListener() {
                 @Override
                 public void onAcknowledgementAccepted() {
 
@@ -743,8 +743,7 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
     }
 
 
-
- /**
+    /**
      * Initiating Prefed Quotes related Webservice
      *
      * @param taskId        Task Id of Method

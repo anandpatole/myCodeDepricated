@@ -164,7 +164,7 @@ public class NetworkUtility {
         public static final String QUOTE_AMOUNT = "quote_amount";
         public static final String PAYABLE_AMOUNT = "payable_amount";
         public static final String DISCOUNT_AMOUNT = "discount_amount";
-        public static final String PAYABLE_AMOUNT_WITHOUT_GST = "payable_amount_without_gst";
+//        public static final String PAYABLE_AMOUNT_WITH_GST = "payable_amount_with_gst";
 
         public static final String TASK_DESC = "task_desc";
         public static final String CITY_ID = "city_id";
@@ -253,7 +253,7 @@ public class NetworkUtility {
         public static final String PAYMENT_STATUS = "payment_status";
         public static final String PAYMENT_LOG = "payment_log";
         public static final String IS_FOR_ADDITIONAL_QUOTE = "isForAdditionalQuote";
-        public static final String RESCHEDULE_DATETIME= "reschedule_datetime";
+        public static final String RESCHEDULE_DATETIME = "reschedule_datetime";
 
         public static class STATUSCODETYPE {
             public static final int SUCCESS = 200;

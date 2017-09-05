@@ -476,4 +476,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_address_delete_message">Are you sure you want to delete this address?</string>
     <string name="disclaimer_promo_code">The Promo Code discount has been levied on pre tax amount.</string>
     <string name="book_and_pay_x">Book and Pay ₹%1$s</string>
+
+    <string name="label_service_required_for">Service Required For</string>
+    <string name="special_instructions">Special Instructions</string>
 </resources>

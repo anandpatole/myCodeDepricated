@@ -122,7 +122,7 @@ public class InstaBookProDialog extends DialogFragment {
             }
         }
         mDialog.tvBody.setText(getString(R.string.merchant_detail_body, merchantDetail.userName, date));
-        mDialog.tvBook.setText(getString(R.string.book_and_pay, "₹" + merchantDetail.rate));
+        mDialog.tvBook.setText(getString(R.string.book_and_pay, "₹" + merchantDetail.rateGST));
         // Click event of Okay button
         mDialog.tvBook.setOnClickListener(new View.OnClickListener() {
             @Override

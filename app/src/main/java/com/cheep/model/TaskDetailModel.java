@@ -87,11 +87,14 @@ public class TaskDetailModel {
     @SerializedName("task_type")
     public String taskType;
 
+    @SerializedName("payable_amount_with_gst")
+    public String payableAmountWithGST;
+
     @SerializedName("cat_image")
     public String catImage;
 
-    @SerializedName("payable_amount_with_gst")
-    public String payableAmountWithGST;
+    @SerializedName("task_discount_amount")
+    public String taskDiscountAmount;
 
     public String quoteAmountWithGST;
 
