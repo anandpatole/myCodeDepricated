@@ -57,6 +57,7 @@ public class ProviderModel {
 
     @SerializedName("sp_quote_price")
     public String quotePrice;
+
     public String quotePriceWithOutGST;
 
     @SerializedName("request_detail_status")

@@ -585,7 +585,6 @@ public class LoginActivity extends BaseAppCompatActivity implements FacebookHelp
                 signOutFromGoogle();
 
                 //Set temporary address
-
                 TEMP_LOGIN_WITH = NetworkUtility.TAGS.LOGINWITHTYPE.GOOGLEPLUS;
                 TEMP_PHONE_NUMBER = Utility.EMPTY_STRING;
                 TEMP_EMAIL = acct.getEmail();

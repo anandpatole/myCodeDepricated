@@ -291,7 +291,7 @@ public class NetworkUtility {
             public static final String REG_TWITTER = "RegisterWithTwitter";
             public static final String REG_GOOGLE = "RegisterWithGPlus";
             public static final String TASK_CREATE = "TaskCreation";
-            public static final String INSTA_BOOK = "InstaBook";
+//            public static final String INSTA_BOOK = "InstaBook";
         }
     }
 

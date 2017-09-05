@@ -1132,7 +1132,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
     private BottomAlertDialog addressDialog;
     private AddressRecyclerViewAdapter addressRecyclerViewAdapter;
     //    private String addressId = "";
-    private AddressModel mSelectedAddressModel;
+//    private AddressModel mSelectedAddressModel;
 
     private void showAddressDialog(final TextView textAns, final TextView textQueNo,
                                    final QueAnsModel queAnsModel) {
@@ -1154,13 +1154,13 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
                     if (model != null) {
 //                        String address;
                         mStrategicPartnerTaskCreationAct.mSelectedAddressModel = model;
-                        if (!model.address_initials.isEmpty()) {
+                        /*if (!model.address_initials.isEmpty()) {
                             mStrategicPartnerTaskCreationAct.mSelectedAddressModel.address = model.address_initials + ", " + model.address;
                         } else {
                             mStrategicPartnerTaskCreationAct.mSelectedAddressModel.address = model.address;
                         }
 //                        addressId = model.address_id;
-                        mSelectedAddressModel = model;
+                        mSelectedAddressModel = model;*/
                         Log.e(TAG, "category detail >> " + model.category + "");
                         textAns.setBackground(ContextCompat.getDrawable(mStrategicPartnerTaskCreationAct, R.drawable.background_ans_normal));
                         if (model.category.equalsIgnoreCase(NetworkUtility.TAGS.ADDRESS_TYPE.HOME))
@@ -1224,7 +1224,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
 
             }
         });
-        addressRecyclerViewAdapter.setSelectedAddressId(mSelectedAddressModel == null ? Utility.EMPTY_STRING : mSelectedAddressModel.address_id);
+        addressRecyclerViewAdapter.setSelectedAddressId(mStrategicPartnerTaskCreationAct.mSelectedAddressModel == null ? Utility.EMPTY_STRING : mStrategicPartnerTaskCreationAct.mSelectedAddressModel.address_id);
         recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         recyclerView.setAdapter(addressRecyclerViewAdapter);
         recyclerView.addItemDecoration(new DividerItemDecoration(mContext, R.drawable.divider_grey_normal, (int) getResources().getDimension(R.dimen.scale_16dp)));
@@ -2027,7 +2027,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
             }
             // location is not selected
             else if (queAnsModel.answerType.equalsIgnoreCase(Utility.TEMPLATE_LOCATION)
-                    && mSelectedAddressModel != null && mSelectedAddressModel.address_id.equalsIgnoreCase("")) {
+                    && mStrategicPartnerTaskCreationAct.mSelectedAddressModel == null) {
                 message = getString(R.string.alert_select_an_address);
                 return message;
 

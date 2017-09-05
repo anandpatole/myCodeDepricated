@@ -20,6 +20,7 @@ import android.widget.EditText;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.appsflyer.AppsFlyerLib;
 import com.cheep.BootstrapConstant;
 import com.cheep.BuildConfig;
 import com.cheep.R;
@@ -96,6 +97,8 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
     //ForInsta Booking
     private boolean isInstaBooking = false;
     private AddressModel mSelectedAddressModelForInsta;
+    Map<String, Object> mTaskCreationParams;
+
 
     private int isAdditional;
 
@@ -235,7 +238,6 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
     /**
      * Used for Reset Payment Values after applying promocode OR Removing promociod
      */
-
     public void resetPromocodeValue() {
         mActivityPaymentDetailBinding.textpromocodelabel.setTextColor(ContextCompat.getColor(this, R.color.splash_gradient_end));
         mActivityPaymentDetailBinding.textpromocodelabel.setText(getResources().getString(R.string.label_enter_promocode));
@@ -331,7 +333,7 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
     }
 
     /**
-     * Used for Addition payment
+     * Used for Additional payment
      */
     public void setAdditionalPayment() {
         int taskPaidAmount = 0;
@@ -939,7 +941,45 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
             mParams.put(NetworkUtility.TAGS.PAYABLE_AMOUNT, providerModel.quotePrice);
         }
 
-        Log.e(TAG, mParams.toString());
+        // For AppsFlyer
+        mTaskCreationParams = new HashMap<>();
+        mTaskCreationParams.put(NetworkUtility.TAGS.TASK_DESC, taskDetailModel.taskDesc);
+//        mParams.put(NetworkUtility.TAGS.ADDRESS_ID, taskDetailModel.taskAddressId);
+        if (Integer.parseInt(mSelectedAddressModelForInsta.address_id) > 0) {
+            mTaskCreationParams.put(NetworkUtility.TAGS.ADDRESS_ID, mSelectedAddressModelForInsta.address_id);
+        } else {
+            // In case its nagative then provide other address information
+            /**
+             * public String address_initials;
+             public String address;
+             public String category; //comes from NetworkUtility.TAGS.ADDRESS_TYPE.
+             public String lat;
+             public String lng;
+             */
+            mTaskCreationParams.put(NetworkUtility.TAGS.ADDRESS_INITIALS, mSelectedAddressModelForInsta.address_initials);
+            mTaskCreationParams.put(NetworkUtility.TAGS.ADDRESS, mSelectedAddressModelForInsta.address);
+            mTaskCreationParams.put(NetworkUtility.TAGS.CATEGORY, mSelectedAddressModelForInsta.category);
+            mTaskCreationParams.put(NetworkUtility.TAGS.LAT, mSelectedAddressModelForInsta.lat);
+            mTaskCreationParams.put(NetworkUtility.TAGS.LNG, mSelectedAddressModelForInsta.lng);
+            mTaskCreationParams.put(NetworkUtility.TAGS.CITY_NAME, mSelectedAddressModelForInsta.cityName);
+        }
+        mTaskCreationParams.put(NetworkUtility.TAGS.CITY_ID, userDetails.CityID);
+        mTaskCreationParams.put(NetworkUtility.TAGS.CAT_ID, taskDetailModel.categoryId);
+        mTaskCreationParams.put(NetworkUtility.TAGS.START_DATETIME, taskDetailModel.taskStartdate);
+        mTaskCreationParams.put(NetworkUtility.TAGS.SUBCATEGORY_ID, taskDetailModel.subCategoryID);
+        mTaskCreationParams.put(NetworkUtility.TAGS.SP_USER_ID, providerModel.providerId);
+        mTaskCreationParams.put(NetworkUtility.TAGS.TRANSACTION_ID, transaction_Id);
+        if (!TextUtils.isEmpty(cheepCode)) {
+            mTaskCreationParams.put(NetworkUtility.TAGS.CHEEPCODE, cheepCode);
+            mTaskCreationParams.put(NetworkUtility.TAGS.QUOTE_AMOUNT, providerModel.quotePriceWithOutGST);
+            mTaskCreationParams.put(NetworkUtility.TAGS.PAYABLE_AMOUNT, payableAmount);
+        } else {
+            mTaskCreationParams.put(NetworkUtility.TAGS.CHEEPCODE, Utility.EMPTY_STRING);
+            mTaskCreationParams.put(NetworkUtility.TAGS.QUOTE_AMOUNT, providerModel.quotePriceWithOutGST);
+            mTaskCreationParams.put(NetworkUtility.TAGS.PAYABLE_AMOUNT, providerModel.quotePrice);
+        }
+
+
         // Url is based on condition if address id is greater then 0 then it means we need to update the existing address
         VolleyNetworkRequest mVolleyNetworkRequestForSPList = new VolleyNetworkRequest(NetworkUtility.WS.TASK_CREATE_INSTA_BOOKING
                 , mCallUpdatePaymentStatusWSErrorListener
@@ -1132,6 +1172,10 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
                 switch (statusCode) {
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
                         Utility.showToast(PaymentsStepActivity.this, jsonObject.getString(NetworkUtility.TAGS.MESSAGE));
+
+                        // Send Event tracking for AppsFlyer
+                        AppsFlyerLib.getInstance().trackEvent(mContext, NetworkUtility.TAGS.APPSFLYER_CUSTOM_TRACK_EVENTS.TASK_CREATE, mTaskCreationParams);
+
                         onSuccessfullInstaBookingTaskCompletion(jsonObject);
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
@@ -1147,7 +1191,6 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
                     case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
                         //Logout and finish the current activity
                         Utility.logout(mContext, true, statusCode);
-                        ;
                         finish();
                         break;
                 }
@@ -1240,26 +1283,26 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
                 setTaskState(STEP_THREE_VERIFIED);
                 //success
                 if (data != null) {
-                    Log.d(TAG, "onActivityResult() called with success: result= [" + data.getStringExtra("result") + "]");
+                    Log.d(TAG, "onActivityResult() called with success: result= [" + data.getStringExtra("payu_response") + "]");
                     //Call update payment service from here with all the response come from service
                     // check is task is from insta booking or not
                     if (isInstaBooking)
                         callCreateInstaBookingTaskWS();
                     else
-                        updatePaymentStatus(true, data.getStringExtra("result"), false);
+                        updatePaymentStatus(true, data.getStringExtra("payu_response"), false);
                 }
             }
             if (resultCode == RESULT_CANCELED) {
                 setTaskState(STEP_THREE_UNVERIFIED);
                 //failed
                 if (data != null) {
-                    Log.d(TAG, "onActivityResult() called with failed: result= [" + data.getStringExtra("result") + "]");
+                    Log.d(TAG, "onActivityResult() called with failed: result= [" + data.getStringExtra("payu_response") + "]");
                     //Call update payment service from here with all the response come from service
                     // check is task is from insta booking or not
                     if (isInstaBooking)
                         Utility.showSnackBar(getString(R.string.msg_payment_failed), mActivityPaymentDetailBinding.getRoot());
                     else
-                        updatePaymentStatus(false, data.getStringExtra("result"), false);
+                        updatePaymentStatus(false, data.getStringExtra("payu_response"), false);
                     Utility.showSnackBar(getString(R.string.msg_payment_failed), mActivityPaymentDetailBinding.getRoot());
                 }
             }
@@ -1269,18 +1312,18 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
                 setTaskState(STEP_THREE_VERIFIED);
                 //success
                 if (data != null) {
-                    Log.d(TAG, "onActivityResult() called with success: result= [" + data.getStringExtra("result") + "]");
+                    Log.d(TAG, "onActivityResult() called with success: result= [" + data.getStringExtra("payu_response") + "]");
                     //Call update payment service from here with all the response come from service
-                    updatePaymentStatus(true, data.getStringExtra("result"), true);
+                    updatePaymentStatus(true, data.getStringExtra("payu_response"), true);
                 }
             }
             if (resultCode == RESULT_CANCELED) {
                 setTaskState(STEP_THREE_UNVERIFIED);
                 //failed
                 if (data != null) {
-                    Log.d(TAG, "onActivityResult() called with failed: result= [" + data.getStringExtra("result") + "]");
+                    Log.d(TAG, "onActivityResult() called with failed: result= [" + data.getStringExtra("payu_response") + "]");
                     //Call update payment service from here with all the response come from service
-                    updatePaymentStatus(false, data.getStringExtra("result"), true);
+                    updatePaymentStatus(false, data.getStringExtra("payu_response"), true);
                     Utility.showSnackBar(getString(R.string.msg_payment_failed), mActivityPaymentDetailBinding.getRoot());
                 }
             }

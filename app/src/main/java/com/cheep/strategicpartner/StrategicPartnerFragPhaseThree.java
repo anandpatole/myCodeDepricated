@@ -669,16 +669,16 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
                 mStrategicPartnerTaskCreationAct.setTaskState(mStrategicPartnerTaskCreationAct.STEP_THREE_VERIFIED);
                 // success
                 if (data != null) {
-                    Log.d(TAG, "onActivityResult() called with success: result= [" + data.getStringExtra("result") + "]");
+                    Log.d(TAG, "onActivityResult() called with success: result= [" + data.getStringExtra("payu_response") + "]");
                     // Call update payment service from here with all the response come from service
-                    callTaskCreationWebServiceForStratgicPartner(true, data.getStringExtra("result"));
+                    callTaskCreationWebServiceForStratgicPartner(true, data.getStringExtra("payu_response"));
                 }
             }
             if (resultCode == mStrategicPartnerTaskCreationAct.RESULT_CANCELED) {
                 mStrategicPartnerTaskCreationAct.setTaskState(mStrategicPartnerTaskCreationAct.STEP_THREE_UNVERIFIED);
                 // failed
                 if (data != null) {
-                    Log.d(TAG, "onActivityResult() called with failed: result= [" + data.getStringExtra("result") + "]");
+                    Log.d(TAG, "onActivityResult() called with failed: result= [" + data.getStringExtra("payu_response") + "]");
                     //Call update payment service from here with all the response come from service
 //                    callTaskCreationWebServiceForStratgicPartner(false, data.getStringExtra("result"));
                     Utility.showSnackBar(getString(R.string.msg_payment_failed), mFragmentStrategicPartnerPhaseThreeBinding.getRoot());
@@ -777,7 +777,24 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
 
         // Create Params for AppsFlyer event track
         mTaskCreationParams = new HashMap<>();
-        mTaskCreationParams.put(NetworkUtility.TAGS.ADDRESS_ID, addressId);
+        if (Integer.parseInt(mStrategicPartnerTaskCreationAct.mSelectedAddressModel.address_id) > 0) {
+            mTaskCreationParams.put(NetworkUtility.TAGS.ADDRESS_ID, mStrategicPartnerTaskCreationAct.mSelectedAddressModel.address_id);
+        } else {
+            // In case its Nagative then provide other address information
+            /*
+             public String address_initials;
+             public String address;
+             public String category; //comes from NetworkUtility.TAGS.ADDRESS_TYPE.
+             public String lat;
+             public String lng;
+             */
+            mTaskCreationParams.put(NetworkUtility.TAGS.ADDRESS_INITIALS, mStrategicPartnerTaskCreationAct.mSelectedAddressModel.address_initials);
+            mTaskCreationParams.put(NetworkUtility.TAGS.ADDRESS, mStrategicPartnerTaskCreationAct.mSelectedAddressModel.address);
+            mTaskCreationParams.put(NetworkUtility.TAGS.CATEGORY, mStrategicPartnerTaskCreationAct.mSelectedAddressModel.category);
+            mTaskCreationParams.put(NetworkUtility.TAGS.LAT, mStrategicPartnerTaskCreationAct.mSelectedAddressModel.lat);
+            mTaskCreationParams.put(NetworkUtility.TAGS.LNG, mStrategicPartnerTaskCreationAct.mSelectedAddressModel.lng);
+            mTaskCreationParams.put(NetworkUtility.TAGS.CITY_NAME, mStrategicPartnerTaskCreationAct.mSelectedAddressModel.cityName);
+        }
         mTaskCreationParams.put(NetworkUtility.TAGS.CAT_ID, mStrategicPartnerTaskCreationAct.mBannerImageModel.cat_id);
         mTaskCreationParams.put(NetworkUtility.TAGS.START_DATETIME, start_datetime);
         mTaskCreationParams.put(NetworkUtility.TAGS.SUB_CATEGORY_DETAIL, subCategoryDetail);

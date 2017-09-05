@@ -277,7 +277,7 @@ public class TaskFragment extends BaseFragment {
                 , mHeaderParams
                 , mParams
                 , null);
-        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequestForCategoryList);
+        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequestForCategoryList, whichFrg == TAB_PENDING_TASK ? NetworkUtility.WS.PENDING_TASK : PAST_TASK);
     }
 
     Response.Listener mCallPendingTaskWSResponseListener = new Response.Listener() {

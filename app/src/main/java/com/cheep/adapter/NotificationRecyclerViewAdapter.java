@@ -71,7 +71,11 @@ public class NotificationRecyclerViewAdapter extends LoadMoreRecyclerAdapter<Not
             holder.mRowNotificationBinding.imgPhoto.setImageResource(Utility.DEFAULT_CHEEP_LOGO);
         } else {
             // Show Circular image
-            Utility.showCircularImageView(holder.mRowNotificationBinding.imgPhoto.getContext(), TAG, holder.mRowNotificationBinding.imgPhoto, model.sp_profile_image, Utility.DEFAULT_CHEEP_LOGO);
+            if (model.task_type.equalsIgnoreCase(Utility.TASK_TYPE.NORMAL)) {
+                Utility.showCircularImageView(holder.mRowNotificationBinding.imgPhoto.getContext(), TAG, holder.mRowNotificationBinding.imgPhoto, model.sp_profile_image, Utility.DEFAULT_CHEEP_LOGO);
+            } else {
+                Utility.showCircularImageViewWithColorBorder(holder.mRowNotificationBinding.imgPhoto.getContext(), TAG, holder.mRowNotificationBinding.imgPhoto, model.sp_profile_image, Utility.DEFAULT_CHEEP_LOGO, R.color.grey_dark_color, true);
+            }
         }
 
         // Set OnClicklistener
