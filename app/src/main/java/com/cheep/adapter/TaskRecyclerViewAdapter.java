@@ -33,7 +33,7 @@ import com.cheep.fragment.TaskFragment;
 import com.cheep.interfaces.TaskRowDataInteractionListener;
 import com.cheep.model.MessageEvent;
 import com.cheep.model.TaskDetailModel;
-import com.cheep.strategicpartner.ServiceTaskDetailModel;
+import com.cheep.strategicpartner.model.ServiceTaskDetailModel;
 import com.cheep.utils.LoadMoreSwipeRecyclerAdapter;
 import com.cheep.utils.SuperCalendar;
 import com.cheep.utils.Utility;

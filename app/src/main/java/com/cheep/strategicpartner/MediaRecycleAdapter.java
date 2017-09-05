@@ -13,6 +13,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.cheep.R;
+import com.cheep.strategicpartner.model.MediaModel;
 import com.cheep.utils.Utility;
 
 import java.util.ArrayList;

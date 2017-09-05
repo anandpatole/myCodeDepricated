@@ -187,7 +187,13 @@ public class HomeActivity extends BaseAppCompatActivity
                 ProviderModel providerModel = new ProviderModel();
                 providerModel.providerId = bundle.getString(NetworkUtility.TAGS.SP_USER_ID);
                 JobSummaryActivity.newInstance(mContext, taskDetailModel, providerModel);*/
-                TaskSummaryActivity.getInstance(mContext, bundle.getString(TASK_ID));
+                String taskType = bundle.getString(NetworkUtility.TAGS.TASK_TYPE);
+                String taskId = bundle.getString(NetworkUtility.TAGS.TASK_ID);
+                if (taskId != null && taskType != null)
+                    if (taskType.equalsIgnoreCase(Utility.TASK_TYPE.STRATEGIC))
+                        TaskSummaryStrategicPartnerActivity.getInstance(mContext, taskId);
+                    else
+                        TaskSummaryActivity.getInstance(mContext, taskId);
             }
             // Changed due to the fact that we should allow user goto detail screen in each of the
             // case when notification comes.

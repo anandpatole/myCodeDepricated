@@ -18,6 +18,7 @@ import com.bumptech.glide.request.target.Target;
 import com.cheep.R;
 import com.cheep.databinding.FragmentMediaViewBinding;
 import com.cheep.fragment.BaseFragment;
+import com.cheep.strategicpartner.model.MediaModel;
 
 /**
  * Created by Giteeka on 18/8/17.

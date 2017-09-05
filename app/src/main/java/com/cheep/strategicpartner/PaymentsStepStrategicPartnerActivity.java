@@ -106,22 +106,32 @@ public class PaymentsStepStrategicPartnerActivity extends BaseAppCompatActivity 
 
             mActivityPaymentDetailBinding.txtdesc.setText(spannableStringBuilder);
 
-            double promocodeValue = 0;
-            if (!TextUtils.isEmpty(taskDetailModel.task_total_amount)) {
-                double task_total_amount = 0;
-                double taskPaidAmountTotal = 0;
-                if (!TextUtils.isEmpty(taskDetailModel.taskPaidAmount)) {
-                    taskPaidAmountTotal = getQuotePriceInInteger(taskDetailModel.taskPaidAmount);
-                }
-                task_total_amount = getQuotePriceInInteger(taskDetailModel.task_total_amount);
-                promocodeValue = task_total_amount - taskPaidAmountTotal;
+//            double promocodeValue = 0;
+//            if (!TextUtils.isEmpty(taskDetailModel.task_total_amount)) {
+//                double task_total_amount = 0;
+//                double taskPaidAmountTotal = 0;
+//                if (!TextUtils.isEmpty(taskDetailModel.taskPaidAmount)) {
+//                    taskPaidAmountTotal = getQuotePriceInInteger(taskDetailModel.taskPaidAmount);
+//                }
+//                task_total_amount = getQuotePriceInInteger(taskDetailModel.task_total_amount);
+//                promocodeValue = task_total_amount - taskPaidAmountTotal;
+//
+//            }
 
+//            double taskPaidAmount = getQuotePriceInInteger(taskDetailModel.task_total_amount);
+//            double totalPayment = taskPaidAmount - promocodeValue;
+
+            double taskQuoteAmount = getQuotePriceInInteger(taskDetailModel.selectedProvider.quotePrice);
+            double taskPaidAmount = getQuotePriceInInteger(taskDetailModel.taskPaidAmount);
+            double additionalPaidAmount = 0;
+            if (!TextUtils.isEmpty(taskDetailModel.additional_paid_amount)) {
+                additionalPaidAmount = getQuotePriceInInteger(taskDetailModel.additional_paid_amount);
             }
+            double subTotal = (taskQuoteAmount + additionalPaidAmount);
+            double promocodeValue = getQuotePriceInInteger(taskDetailModel.taskDiscountAmount);
 
-            double taskPaidAmount = getQuotePriceInInteger(taskDetailModel.task_total_amount);
-            double totalPayment = taskPaidAmount - promocodeValue;
-            mActivityPaymentDetailBinding.txtsubtotal.setText(getString(R.string.ruppe_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf(taskPaidAmount))));
-            mActivityPaymentDetailBinding.txttotal.setText(getString(R.string.ruppe_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf(totalPayment))));
+            mActivityPaymentDetailBinding.txtsubtotal.setText(getString(R.string.ruppe_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf(subTotal))));
+            mActivityPaymentDetailBinding.txttotal.setText(getString(R.string.ruppe_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf(taskPaidAmount))));
             mActivityPaymentDetailBinding.txtpromocode.setText(getString(R.string.ruppe_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf((promocodeValue)))));
             mActivityPaymentDetailBinding.lnPromoCodeDisclaimer.setVisibility(promocodeValue == 0 ? View.GONE : View.VISIBLE);
         }
@@ -139,11 +149,15 @@ public class PaymentsStepStrategicPartnerActivity extends BaseAppCompatActivity 
     }
 
     public Double getQuotePriceInInteger(String quotePrice) {
-        if (quotePrice != null && !quotePrice.isEmpty())
+        if (quotePrice == null) {
+            return -1.0;
+        }
+        try {
             return Double.parseDouble(quotePrice);
-        return -1.0;
+        } catch (NumberFormatException e) {
+            return 0.0;
+        }
     }
-
 
     public SpannableStringBuilder getSpannableString(String fullstring, int color, boolean isBold) {
         SpannableStringBuilder text = new SpannableStringBuilder(fullstring);

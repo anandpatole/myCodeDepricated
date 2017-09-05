@@ -65,6 +65,10 @@ import com.cheep.model.UserDetails;
 import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
+import com.cheep.strategicpartner.model.AllSubSubCat;
+import com.cheep.strategicpartner.model.MediaModel;
+import com.cheep.strategicpartner.model.QueAnsModel;
+import com.cheep.strategicpartner.model.StrategicPartnerServiceModel;
 import com.cheep.strategicpartner.recordvideo.RecordVideoNewActivity;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.SuperCalendar;
@@ -140,18 +144,22 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
         }
         // calculation of total amount of selected services
         double total = 0;
+        double totalOfBasePrice = 0;
         for (StrategicPartnerServiceModel model : mStrategicPartnerTaskCreationAct.getSelectedSubService()) {
             List<AllSubSubCat> allSubSubCats = model.allSubSubCats;
             for (AllSubSubCat allSubSubCat : allSubSubCats) {
                 try {
                     total += Double.parseDouble(allSubSubCat.price);
+                    totalOfBasePrice += Double.parseDouble(allSubSubCat.basePrice);
                 } catch (NumberFormatException e) {
                     total += 0;
+                    totalOfBasePrice += 0;
                 }
             }
         }
         mFragmentStrategicPartnerPhaseTwoBinding.textContinue.setText(getString(R.string.book_and_pay_x, "" + Utility.getQuotePriceFormatter(String.valueOf(total))));
         mStrategicPartnerTaskCreationAct.total = String.valueOf(total);
+        mStrategicPartnerTaskCreationAct.totalOfBasePrice = String.valueOf(totalOfBasePrice);
         // Task Description
 
         mStrategicPartnerTaskCreationAct.setTaskState(
@@ -1945,8 +1953,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
     ///////////////////////// ********* Amazon code start here*********** //////////////////////////////////
 
     private void uploadFile(final String path, final String type) {
-        if (path == null || path.equalsIgnoreCase(""))
-        {
+        if (path == null || path.equalsIgnoreCase("")) {
             return;
         }
 

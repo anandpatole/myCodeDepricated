@@ -2,10 +2,10 @@ package com.cheep.model;
 
 import android.support.annotation.Keep;
 
-import com.cheep.strategicpartner.MediaModel;
-import com.cheep.strategicpartner.QueAnsModel;
-import com.cheep.strategicpartner.ServiceTaskDetailModel;
-import com.cheep.strategicpartner.StrategicPartnerServiceModel;
+import com.cheep.strategicpartner.model.MediaModel;
+import com.cheep.strategicpartner.model.QueAnsModel;
+import com.cheep.strategicpartner.model.ServiceTaskDetailModel;
+import com.cheep.strategicpartner.model.StrategicPartnerServiceModel;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;

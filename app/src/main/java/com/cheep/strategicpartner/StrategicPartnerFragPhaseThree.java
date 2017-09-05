@@ -43,6 +43,10 @@ import com.cheep.model.UserDetails;
 import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
+import com.cheep.strategicpartner.model.AllSubSubCat;
+import com.cheep.strategicpartner.model.MediaModel;
+import com.cheep.strategicpartner.model.QueAnsModel;
+import com.cheep.strategicpartner.model.StrategicPartnerServiceModel;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.SuperCalendar;
 import com.cheep.utils.Utility;
@@ -268,7 +272,7 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
 
         //Add Params
         Map<String, Object> mParams = new HashMap<>();
-        mParams.put(NetworkUtility.TAGS.QUOTE_AMOUNT, mStrategicPartnerTaskCreationAct.total);
+        mParams.put(NetworkUtility.TAGS.QUOTE_AMOUNT, mStrategicPartnerTaskCreationAct.totalOfBasePrice);
         mParams.put(NetworkUtility.TAGS.CHEEPCODE, cheepCode);
         mParams.put(NetworkUtility.TAGS.CAT_ID, mStrategicPartnerTaskCreationAct.mBannerImageModel.cat_id);
         mParams.put(NetworkUtility.TAGS.ADDRESS_ID, addressId);
@@ -300,7 +304,6 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
                         if (edtCheepCode != null) {
                             cheepCode = edtCheepCode.getText().toString().trim();
                             cheepCodeDialog.dismiss();
-
                             mStrategicPartnerTaskCreationAct.total = jsonObject.optString(NetworkUtility.TAGS.QUOTE_AMOUNT);
 
                             String discount = jsonObject.optString(NetworkUtility.TAGS.DISCOUNT_AMOUNT);
@@ -708,7 +711,7 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
         mParams.put(NetworkUtility.TAGS.START_DATETIME, String.valueOf(superCalendar.getTimeInMillis()));
         mParams.put(NetworkUtility.TAGS.SUB_CATEGORY_DETAIL, subCategoryDetail);
         mParams.put(NetworkUtility.TAGS.QUESTION_DETAIL, question_detail);
-        mParams.put(NetworkUtility.TAGS.QUOTE_AMOUNT, mStrategicPartnerTaskCreationAct.total);
+        mParams.put(NetworkUtility.TAGS.QUOTE_AMOUNT, mStrategicPartnerTaskCreationAct.totalOfBasePrice);
 
         mParams.put(NetworkUtility.TAGS.CHEEPCODE, TextUtils.isEmpty(cheepCode) ? Utility.EMPTY_STRING : cheepCode);
         mParams.put(NetworkUtility.TAGS.PAYABLE_AMOUNT, TextUtils.isEmpty(cheepCode) ? mStrategicPartnerTaskCreationAct.total : payableAmount);

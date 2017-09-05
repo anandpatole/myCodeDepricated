@@ -18,6 +18,10 @@ import com.cheep.activity.BaseAppCompatActivity;
 import com.cheep.adapter.TaskCreationForStrategicPartnerPagerAdapter;
 import com.cheep.databinding.ActivityTaskCreationForStrategicPartnerBinding;
 import com.cheep.model.BannerImageModel;
+import com.cheep.strategicpartner.model.AllSubSubCat;
+import com.cheep.strategicpartner.model.MediaModel;
+import com.cheep.strategicpartner.model.QueAnsModel;
+import com.cheep.strategicpartner.model.StrategicPartnerServiceModel;
 import com.cheep.utils.Utility;
 import com.google.android.gms.common.api.Status;
 
@@ -45,6 +49,7 @@ public class StrategicPartnerTaskCreationAct extends BaseAppCompatActivity {
 //    public String time = "";
     public String address = "";
     public String total = "";
+    public String totalOfBasePrice = "";
 
     public static void getInstance(Context mContext, BannerImageModel model) {
         Intent intent = new Intent(mContext, StrategicPartnerTaskCreationAct.class);

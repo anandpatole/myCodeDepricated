@@ -1,4 +1,4 @@
-package com.cheep.strategicpartner;
+package com.cheep.strategicpartner.model;
 
 import android.support.annotation.Keep;
 
@@ -15,24 +15,24 @@ import java.io.Serializable;
 public class MediaModel implements Serializable {
 
     @SerializedName("media_name")
-    String mediaName = "";
+    public String mediaName = "";
 
     @SerializedName("media_thumb_name")
-    String mediaThumbName = "";
+    public String mediaThumbName = "";
 
     @SerializedName("media_type")
-    String mediaType;
+    public String mediaType;
 
 
-    String localFilePath;
+    public String localFilePath;
 
 
-    class MediaType {
+    public class MediaType {
         public static final String TYPE_IMAGE = "image";
         public static final String TYPE_VIDEO = "video";
     }
 
-    MediaModel() {
+    public MediaModel() {
 
     }
 

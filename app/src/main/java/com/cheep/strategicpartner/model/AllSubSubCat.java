@@ -1,4 +1,4 @@
-package com.cheep.strategicpartner;
+package com.cheep.strategicpartner.model;
 
 import android.support.annotation.Keep;
 
@@ -12,6 +12,9 @@ public class AllSubSubCat {
 
     @SerializedName("price")
     public String price;
+
+    @SerializedName("base_price")
+    public String basePrice;
 
     @SerializedName("sub_sub_cat_id")
     public String subSubCatId;

@@ -306,16 +306,16 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
 //            }
 //
         double subTotal = (taskQuoteAmount + additionalPaidAmount);
+        double promocodeValue = getQuotePriceInInteger(taskDetailModel.taskDiscountAmount);
 //            double totalPayment = (taskPaidAmount + additionalPaidAmount) - promocodeValue;
         mActivityPaymentDetailBinding.txtprofee.setText(getString(R.string.ruppe_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf(taskQuoteAmount))));
         mActivityPaymentDetailBinding.txtadditionalcharge.setText(getString(R.string.ruppe_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf(additionalPaidAmount))));
         mActivityPaymentDetailBinding.txtsubtotal.setText(getString(R.string.ruppe_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf(subTotal))));
         mActivityPaymentDetailBinding.txttotal.setText(getString(R.string.ruppe_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf(taskPaidAmount))));
         mActivityPaymentDetailBinding.textPay.setText(getString(R.string.label_pay_fee_v1, "" + Utility.getQuotePriceFormatter(String.valueOf(taskPaidAmount))));
-        float promocodeValue = 0;
+
         mActivityPaymentDetailBinding.txtpromocode.setText(getString(R.string.ruppe_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf(taskDetailModel.taskDiscountAmount))));
         mActivityPaymentDetailBinding.lnPromoCodeDisclaimer.setVisibility(promocodeValue == 0 ? View.GONE : View.VISIBLE);
-
         mActivityPaymentDetailBinding.textpromocodelabel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -402,7 +402,11 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
         if (quotePrice == null) {
             return -1.0;
         }
-        return Double.parseDouble(quotePrice);
+        try {
+            return Double.parseDouble(quotePrice);
+        } catch (NumberFormatException e) {
+            return 0.0;
+        }
     }
 
     @Override
