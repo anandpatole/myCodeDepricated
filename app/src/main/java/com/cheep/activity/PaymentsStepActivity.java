@@ -143,6 +143,8 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
             isInstaBooking = getIntent().getBooleanExtra(Utility.Extra.TASK_TYPE_IS_INSTA, false);
             mSelectedAddressModelForInsta = (AddressModel) Utility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.SELECTED_ADDRESS_MODEL), AddressModel.class);
         }
+        mActivityPaymentDetailBinding.lnDesclaimer.setVisibility(View.VISIBLE);
+        mActivityPaymentDetailBinding.textMaterialDisclaimer.setVisibility(View.VISIBLE);
 
         if (getIntent().hasExtra(Utility.Extra.PAYMENT_VIEW_IS_ADDITIONAL_CHARGE)) {
             if (taskDetailModel != null) {
@@ -166,6 +168,8 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
             if (viewonly) {
                 if (taskDetailModel != null) {
                     resetPromocodeValuePreview();
+                    mActivityPaymentDetailBinding.lnDesclaimer.setVisibility(View.GONE);
+                    mActivityPaymentDetailBinding.textMaterialDisclaimer.setVisibility(View.GONE);
                     Utility.loadImageView(mContext, mActivityPaymentDetailBinding.imgService, taskDetailModel.catImage, R.drawable.gradient_black);
                 }
                 mActivityPaymentDetailBinding.textLabelTotalPaid.setText(getString(R.string.label_total_paid));
@@ -459,7 +463,18 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
             mParams.put(NetworkUtility.TAGS.QUOTE_AMOUNT, providerModel.quotePriceWithOutGST);
             mParams.put(NetworkUtility.TAGS.CHEEPCODE, cheepCode);
             mParams.put(NetworkUtility.TAGS.CAT_ID, taskDetailModel.categoryId);
-            mParams.put(NetworkUtility.TAGS.ADDRESS_ID, taskDetailModel.taskAddressId);
+            int addressId;
+            try {
+                addressId = Integer.parseInt(mSelectedAddressModelForInsta.address_id);
+            } catch (Exception e) {
+                addressId = 0;
+            }
+            if (addressId <= 0) {
+                mParams.put(NetworkUtility.TAGS.LAT, mSelectedAddressModelForInsta.lat + "");
+                mParams.put(NetworkUtility.TAGS.LNG, mSelectedAddressModelForInsta.lng + "");
+            } else {
+                mParams.put(NetworkUtility.TAGS.ADDRESS_ID, addressId);
+            }
         } else {
             mParams.put(NetworkUtility.TAGS.QUOTE_AMOUNT, providerModel.quotePrice);
             mParams.put(NetworkUtility.TAGS.TASK_ID, taskDetailModel.taskId);
@@ -890,7 +905,7 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
         //        TASK_CREATE_INSTA_BOOKING
 
 //        Required Params => task_desc,address_id,city_id,cat_id,start_datetime,
-// media_file,subcategory_id,sp_user_id,txnid,cheepcode,quote_amount,payable_amount
+// media_file,subcategory_id,spUserId,txnid,cheepcode,quote_amount,payable_amount
         if (!Utility.isConnected(mContext)) {
             Utility.showSnackBar(getString(R.string.no_internet), mActivityPaymentDetailBinding.getRoot());
             return;

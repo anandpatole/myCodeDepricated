@@ -181,6 +181,7 @@
                         tools:text="Bosche"/>
 
                     <LinearLayout
+                        android:id="@+id/ln_desclaimer"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
@@ -522,6 +523,7 @@
                         </RelativeLayout>
 
                         <com.cheep.custom_view.CFTextViewRegular
+                            android:id="@+id/text_material_disclaimer"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:paddingLeft="@dimen/scale_10dp"

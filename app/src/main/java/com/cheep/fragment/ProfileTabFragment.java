@@ -2380,7 +2380,7 @@ public class ProfileTabFragment extends BaseFragment {
             mFragmentTabProfileBinding.imgProfilePhotoEdit.setVisibility(View.VISIBLE);
             mFragmentTabProfileBinding.imgCoverPhotoEdit.setVisibility(View.VISIBLE);
             mFragmentTabProfileBinding.imgEditUsername.setVisibility(View.VISIBLE);
-            mFragmentTabProfileBinding.imgEditEmail.setVisibility(View.VISIBLE);
+            mFragmentTabProfileBinding.imgEditEmail.setVisibility(View.GONE);
         }
     }
 

@@ -293,7 +293,8 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
         updateChatUIBasedOnCurrentRequestStatus();
 
         // Set Listner for Unread Counter
-        manageUnreadBadgeCounterForChat();
+        if (taskDetailModel != null)
+            manageUnreadBadgeCounterForChat();
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         ////////////////////////// Managing Chat Call Icons[End] ///////////////////////////////////

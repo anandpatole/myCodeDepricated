@@ -98,6 +98,7 @@ import java.util.Map;
 
 import static android.app.Activity.RESULT_OK;
 import static com.cheep.network.NetworkUtility.TAGS.CAT_ID;
+import static com.cheep.network.NetworkUtility.TAGS.SP_USER_ID;
 
 /**
  * Created by Giteeka on 25/7/17.
@@ -1153,27 +1154,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
                     AddressModel model = addressRecyclerViewAdapter.getSelectedAddress();
                     if (model != null) {
 //                        String address;
-                        mStrategicPartnerTaskCreationAct.mSelectedAddressModel = model;
-                        /*if (!model.address_initials.isEmpty()) {
-                            mStrategicPartnerTaskCreationAct.mSelectedAddressModel.address = model.address_initials + ", " + model.address;
-                        } else {
-                            mStrategicPartnerTaskCreationAct.mSelectedAddressModel.address = model.address;
-                        }
-//                        addressId = model.address_id;
-                        mSelectedAddressModel = model;*/
-                        Log.e(TAG, "category detail >> " + model.category + "");
-                        textAns.setBackground(ContextCompat.getDrawable(mStrategicPartnerTaskCreationAct, R.drawable.background_ans_normal));
-                        if (model.category.equalsIgnoreCase(NetworkUtility.TAGS.ADDRESS_TYPE.HOME))
-                            textAns.setText(getString(R.string.label_home));
-                        else if (model.category.equalsIgnoreCase(NetworkUtility.TAGS.ADDRESS_TYPE.OFFICE))
-                            textAns.setText(getString(R.string.label_office));
-                        else
-                            textAns.setText(getString(R.string.label_other));
-                        textAns.setSelected(true);
-                        queAnsModel.answer = model.address_id;
-                        textQueNo.setSelected(true);
-                        setBtnBookAndPayBgState(validateAllQueAndAns().isEmpty());
-                        addressDialog.dismiss();
+                        checkStrategicPartnerProAvailability(model, textAns, queAnsModel, textQueNo);
                     }
 
                 }
@@ -1187,6 +1168,121 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
         if (shouldOpenAddAddress) {
             showAddAddressDialog(null);
         }
+    }
+
+    private void checkStrategicPartnerProAvailability(final AddressModel model, final TextView textAns, final QueAnsModel queAnsModel, final TextView textQueNo) {
+
+
+        showProgressDialog();
+
+        //Add Header parameters
+        Map<String, String> mHeaderParams = new HashMap<>();
+        mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
+        if (PreferenceUtility.getInstance(mContext).getUserDetails() != null)
+            mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
+
+        //Add Params
+        Map<String, Object> mParams = new HashMap<>();
+        mParams.put(NetworkUtility.TAGS.CAT_ID, mStrategicPartnerTaskCreationAct.mBannerImageModel.cat_id);
+
+
+        int addressId;
+        try {
+            addressId = Integer.parseInt(model.address_id);
+        } catch (Exception e) {
+            addressId = 0;
+        }
+        if (addressId <= 0) {
+            mParams.put(NetworkUtility.TAGS.LAT, model.lat + "");
+            mParams.put(NetworkUtility.TAGS.LNG, model.lng + "");
+        } else {
+            mParams.put(NetworkUtility.TAGS.ADDRESS_ID, model.address_id);
+        }
+        Utility.hideKeyboard(mContext);
+        VolleyNetworkRequest mVolleyNetworkRequest = new VolleyNetworkRequest(NetworkUtility.WS.CHECK_PRO_AVAILABILITY_FOR_STRATEGIC_TASK
+                , new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
+                // Close Progressbar
+                hideProgressDialog();
+                // Show Toast
+                Utility.showSnackBar(getString(R.string.label_something_went_wrong), mFragmentStrategicPartnerPhaseTwoBinding.getRoot());
+
+            }
+        }
+                , new Response.Listener() {
+            @Override
+            public void onResponse(Object response) {
+                hideProgressDialog();
+                Log.i(TAG, "onResponse: " + response);
+
+                String strResponse = (String) response;
+                try {
+                    JSONObject jsonObject = new JSONObject(strResponse);
+                    Log.i(TAG, "onResponse: " + jsonObject.toString());
+                    int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
+                    String error_message;
+
+                    switch (statusCode) {
+                        case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
+                            JSONObject jsonData = jsonObject.getJSONObject(NetworkUtility.TAGS.DATA);
+                            mStrategicPartnerTaskCreationAct.spUserId = jsonData.optString(SP_USER_ID);
+                            if (mStrategicPartnerTaskCreationAct.spUserId.equalsIgnoreCase(Utility.EMPTY_STRING)) {
+                                Utility.showToast(mStrategicPartnerTaskCreationAct, getString(R.string.alert_strategic_partner_not_available_in_your_location));
+                            } else {
+                                mStrategicPartnerTaskCreationAct.mSelectedAddressModel = model;
+                        /*if (!model.address_initials.isEmpty()) {
+                            mStrategicPartnerTaskCreationAct.mSelectedAddressModel.address = model.address_initials + ", " + model.address;
+                        } else {
+                            mStrategicPartnerTaskCreationAct.mSelectedAddressModel.address = model.address;
+                        }
+//                        addressId = model.address_id;
+                        mSelectedAddressModel = model;*/
+                                Log.e(TAG, "category detail >> " + model.category + "");
+                                textAns.setBackground(ContextCompat.getDrawable(mStrategicPartnerTaskCreationAct, R.drawable.background_ans_normal));
+                                if (model.category.equalsIgnoreCase(NetworkUtility.TAGS.ADDRESS_TYPE.HOME))
+                                    textAns.setText(getString(R.string.label_home));
+                                else if (model.category.equalsIgnoreCase(NetworkUtility.TAGS.ADDRESS_TYPE.OFFICE))
+                                    textAns.setText(getString(R.string.label_office));
+                                else
+                                    textAns.setText(getString(R.string.label_other));
+                                textAns.setSelected(true);
+                                queAnsModel.answer = model.address_id;
+                                textQueNo.setSelected(true);
+                                setBtnBookAndPayBgState(validateAllQueAndAns().isEmpty());
+                                addressDialog.dismiss();
+                            }
+                            break;
+                        case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
+                            // Show Toast
+                            Utility.showToast(mStrategicPartnerTaskCreationAct, getString(R.string.label_something_went_wrong));
+                            break;
+                        case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
+                            error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
+                            // Show message
+                            Utility.showToast(mStrategicPartnerTaskCreationAct, error_message);
+                            break;
+                        case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
+                        case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
+                            //Logout and finish the current activity
+                            Utility.logout(mContext, true, statusCode);
+                            mStrategicPartnerTaskCreationAct.finish();
+                            break;
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    mCallDeleteAddressWSErrorListener.onErrorResponse(new VolleyError(e.getMessage()));
+                }
+                hideProgressDialog();
+            }
+        }
+                , mHeaderParams
+                , mParams
+                , null);
+        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest, NetworkUtility.WS.ADD_ADDRESS);
+
+
     }
 
     /**
