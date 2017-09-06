@@ -260,26 +260,33 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
 //        TODO: uncomment chat feature by giteeka -30 august 2017
 //          TODO: Only chat is enabled
 
+//        if (Utility.SEND_TASK_DETAIL_REQUESTED_STATUS.ALREADY_REQUESTED.equalsIgnoreCase(provider.request_detail_status)) {
+        // TODO : done according to @cheep team suggestion : 06 sept 2017
+        holder.imgChat.setVisibility(View.VISIBLE);
+        //chat icon
         if (Utility.SEND_TASK_DETAIL_REQUESTED_STATUS.ALREADY_REQUESTED.equalsIgnoreCase(provider.request_detail_status)) {
-            holder.imgChat.setVisibility(View.VISIBLE);
-            //chat icon
             Glide.with(mContext)
                     .load(R.drawable.ic_chat_requested_animation_with_counter)
                     .asGif()
                     .dontAnimate()
                     .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                     .into(holder.imgChat);
-        } else if (Utility.SEND_TASK_DETAIL_REQUESTED_STATUS.ACCEPTED.equalsIgnoreCase(provider.request_detail_status)) {
-            holder.imgChat.setVisibility(View.VISIBLE);
-            Glide.with(mContext)
-                    .load(R.drawable.icon_chat_smaller)
-                    .into(holder.imgChat);
         } else {
-            holder.imgChat.setVisibility(View.INVISIBLE);
             Glide.with(mContext)
                     .load(R.drawable.icon_chat_smaller)
                     .into(holder.imgChat);
         }
+//        } else if (Utility.SEND_TASK_DETAIL_REQUESTED_STATUS.ACCEPTED.equalsIgnoreCase(provider.request_detail_status)) {
+//            holder.imgChat.setVisibility(View.VISIBLE);
+//            Glide.with(mContext)
+//                    .load(R.drawable.icon_chat_smaller)
+//                    .into(holder.imgChat);
+//        } else {
+//            holder.imgChat.setVisibility(View.INVISIBLE);
+//            Glide.with(mContext)
+//                    .load(R.drawable.icon_chat_smaller)
+//                    .into(holder.imgChat);
+//    }
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         ////////////////////////// Managing Chat Call Icons[END] ///////////////////////////////////
@@ -290,7 +297,9 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
         boolean hasDistance = provider.distance != null && (provider.distance = provider.distance.trim()).length() > 0;
         boolean hasTime = provider.time != null && (provider.time = provider.time.trim()).length() > 0;
 
-        if (hasDistance && hasTime) {
+        if (hasDistance && hasTime)
+
+        {
             holder.tvDistance.setVisibility(View.VISIBLE);
 
             // Manage default state which is TIME
@@ -324,20 +333,28 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
             });
             distanceAnimation.start();
             holder.addAnimator(distanceAnimation);
-        } else if (hasDistance) {
+        } else if (hasDistance)
+
+        {
             holder.tvDistance.setVisibility(View.VISIBLE);
             holder.tvDistance.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_relative_distance, 0, 0, 0);
             holder.tvDistance.setText(provider.distance);
-        } else if (hasTime) {
+        } else if (hasTime)
+
+        {
             holder.tvDistance.setVisibility(View.VISIBLE);
             holder.tvDistance.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_time_distance, 0, 0, 0);
             holder.tvDistance.setText(provider.time);
-        } else {
+        } else
+
+        {
             holder.tvDistance.setVisibility(View.GONE);
         }
 
         //badge
-        holder.ivBadge.setImageResource(getBadgeResource(provider.pro_level));
+        holder.ivBadge.setImageResource(
+
+                getBadgeResource(provider.pro_level));
 
         //favorite
         holder.ivFavoriteQuote.setSelected(provider.isFavourite.equals(Utility.BOOLEAN.YES));
@@ -353,7 +370,9 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
 //          TODO: Only chat is enabled
 
         // Chat Image click event
-        holder.imgChat.setOnClickListener(new View.OnClickListener() {
+        holder.imgChat.setOnClickListener(new View.OnClickListener()
+
+        {
             @Override
             public void onClick(View v) {
                 mListener.onChatClicked(provider);
@@ -370,28 +389,34 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
 
         // Read task chat unread count from firebase
         String t_sp_u_formattedId = FirebaseUtils.get_T_SP_U_FormattedId(mTaskDetailModel.taskId, provider.providerId, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
-        FirebaseHelper.getTaskChatRef(FirebaseUtils.getPrefixTaskId(mTaskDetailModel.taskId)).child(t_sp_u_formattedId).child(FirebaseHelper.KEY_UNREADCOUNT).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    Integer count = dataSnapshot.getValue(Integer.class);
-                    Log.d(TAG, "onDataChange() called with: dataSnapshot = Unread Counter [" + count + "]");
-                    if (count <= 0) {
-                        holder.mTvUnreadChatCount.setVisibility(View.GONE);
-                    } else {
-                        holder.mTvUnreadChatCount.setVisibility(View.VISIBLE);
-                        holder.mTvUnreadChatCount.setText(String.valueOf(count));
+        FirebaseHelper.getTaskChatRef(FirebaseUtils.getPrefixTaskId(mTaskDetailModel.taskId)).
+
+                child(t_sp_u_formattedId).
+
+                child(FirebaseHelper.KEY_UNREADCOUNT).
+
+                addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.exists()) {
+                            Integer count = dataSnapshot.getValue(Integer.class);
+                            Log.d(TAG, "onDataChange() called with: dataSnapshot = Unread Counter [" + count + "]");
+                            if (count <= 0) {
+                                holder.mTvUnreadChatCount.setVisibility(View.GONE);
+                            } else {
+                                holder.mTvUnreadChatCount.setVisibility(View.VISIBLE);
+                                holder.mTvUnreadChatCount.setText(String.valueOf(count));
+                            }
+                        } else {
+                            holder.mTvUnreadChatCount.setVisibility(View.GONE);
+                        }
                     }
-                } else {
-                    holder.mTvUnreadChatCount.setVisibility(View.GONE);
-                }
-            }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
 
-            }
-        });
+                    }
+                });
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         ////////////////////////// Managing Chat Call Icons[END] ////////////////////////////////////////
