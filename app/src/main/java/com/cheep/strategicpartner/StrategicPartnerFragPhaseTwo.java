@@ -1420,7 +1420,6 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
                 return;
             }
         }*/
-
         try {
             Utility.hideKeyboard(mContext);
             showProgressDialog();
@@ -1431,11 +1430,11 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
 
             //TODO: Adding dummy place when play service is not there
             if (edtAddress != null) {
-                edtAddress.setText("Dummy Address with " + BootstrapConstant.LAT + "," + BootstrapConstant.LNG);
+                edtAddress.setText("Dummy Address with " + Utility.STATIC_LAT + "," + Utility.STATIC_LNG);
                 edtAddress.setFocusable(true);
                 edtAddress.setFocusableInTouchMode(true);
                 try {
-                    edtAddress.setTag(new LatLng(Double.parseDouble(BootstrapConstant.LAT), Double.parseDouble(BootstrapConstant.LNG)));
+                    edtAddress.setTag(new LatLng(Double.parseDouble(Utility.STATIC_LAT), Double.parseDouble(Utility.STATIC_LNG)));
                 } catch (Exception exe) {
                     exe.printStackTrace();
                     edtAddress.setTag(new LatLng(0, 0));

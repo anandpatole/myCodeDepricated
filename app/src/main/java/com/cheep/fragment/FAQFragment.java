@@ -172,7 +172,7 @@ public class FAQFragment extends BaseFragment {
                 , mHeaderParams
                 , null
                 , null);
-        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest);
+        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest,NetworkUtility.WS.FAQS);
 
     }
 

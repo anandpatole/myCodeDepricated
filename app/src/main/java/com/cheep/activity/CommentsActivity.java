@@ -139,7 +139,7 @@ public class CommentsActivity extends BaseAppCompatActivity {
                 , mHeaderParams
                 , mParams
                 , null);
-        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequestForCommentList);
+        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequestForCommentList, NetworkUtility.WS.ADD_COMMENT);
     }
 
     Response.Listener mCallPostCommentWSResponseListener = new Response.Listener() {
@@ -251,7 +251,7 @@ public class CommentsActivity extends BaseAppCompatActivity {
 
     private void reloadCommentsListWS() {
         errorLoadingHelper.showLoading();
-        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequestForCommentList);
+        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequestForCommentList, NetworkUtility.WS.COMMENT_LIST);
     }
 
     private void callCommentsList(String reviewId) {
@@ -283,7 +283,7 @@ public class CommentsActivity extends BaseAppCompatActivity {
                 , mHeaderParams
                 , mParams
                 , null);
-        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequestForCommentList);
+        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequestForCommentList, NetworkUtility.WS.COMMENT_LIST);
     }
 
     View.OnClickListener onRetryBtnClickListener = new View.OnClickListener() {

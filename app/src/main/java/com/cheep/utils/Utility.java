@@ -84,6 +84,9 @@ public class Utility {
         public static final String USERNAME = "Guest";
     }
 
+    public static final String STATIC_LAT = "19.1363246";
+    public static final String STATIC_LNG = "72.82766";
+
     private static final String TAG = "Utility";
     public static final String EMPTY_STRING = "";
     public static final String ZERO_STRING = "0";

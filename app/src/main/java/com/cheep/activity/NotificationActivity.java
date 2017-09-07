@@ -141,7 +141,7 @@ public class NotificationActivity extends BaseAppCompatActivity implements Notif
                 , mParams
                 , null);
 
-        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequestForNotificationList);
+        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequestForNotificationList,NetworkUtility.WS.NOTIFICATION_LIST);
     }
 
     Response.Listener mCallNotificationWSResponseListener = new Response.Listener() {

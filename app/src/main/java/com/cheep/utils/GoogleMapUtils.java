@@ -101,7 +101,6 @@ public class GoogleMapUtils {
                     GooglePlaceModel place = new GooglePlaceModel();
                     if (addresses.size() > 0) {
                         String address = "";
-
                         for (int i = 0; i <= addresses.get(0).getMaxAddressLineIndex(); i++) {
                             if (!TextUtils.isEmpty(addresses.get(0).getAddressLine(i)))
                                 address += addresses.get(0).getAddressLine(i) + ", ";

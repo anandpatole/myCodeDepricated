@@ -159,7 +159,6 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
                     superCalendar.setTimeInMillis(Long.parseLong(start_datetime));
                     time = superCalendar.format(Utility.DATE_FORMAT_HH_MM_AM);
                     date = superCalendar.format(Utility.DATE_FORMAT_DD_MMM_YYYY);
-
                 }
                 if (queAnsModel.answerType.equalsIgnoreCase(Utility.TEMPLATE_LOCATION)) {
                     addressId = queAnsModel.answer;
@@ -227,7 +226,6 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
         payableAmount = Utility.EMPTY_STRING;
     }
 
-
     /**
      * clear promo code details and set original total values
      */
@@ -240,7 +238,6 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
         mFragmentStrategicPartnerPhaseThreeBinding.txtpromocode.setText(getString(R.string.ruppe_symbol_x, "" + Utility.getQuotePriceFormatter("0")));
         mFragmentStrategicPartnerPhaseThreeBinding.lnPromoCodeDisclaimer.setVisibility(View.GONE);
     }
-
 
     private void showCheepCodeDialog() {
 
@@ -351,11 +348,9 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
         public void onErrorResponse(final VolleyError error) {
             Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
             Utility.showToast(mContext, getString(R.string.label_something_went_wrong));
-
         }
 
     };
-
 
     private void updatePaymentDetails(String discount, String payable) {
         payableAmount = payable;

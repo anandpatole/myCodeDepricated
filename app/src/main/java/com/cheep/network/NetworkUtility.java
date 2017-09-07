@@ -156,7 +156,7 @@ public class NetworkUtility {
         public static final String EMERGENCY_DATA = "emergency_data";
         public static final String ADDRESS_ID = "address_id";
         public static final String CITY_NAME = "city_name";
-        public static final String LOCALITY = "locality";
+        public static final String LOCALITY = "mLocality";
         public static final String REQUEST_DETAIL_STATUS = "request_detail_status";
         public static final String vVERSION_TYPE = "vVersionType";
 

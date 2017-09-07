@@ -22,7 +22,6 @@ public class UserDetails {
     @SerializedName("email_address")
     public String Email;
 
-
     @SerializedName("user_info")
     public String UserInfo;
 
@@ -35,24 +34,9 @@ public class UserDetails {
     @SerializedName("phone_number")
     public String PhoneNumber;
 
-    @SerializedName("locality")
-    public String locality;
-
-    public String getLocality() {
-        return TextUtils.isEmpty(locality) ? CityName : locality;
+    public String getDisplayLocationName() {
+        return TextUtils.isEmpty(mLocality) ? mCityName : mLocality;
     }
-
-    @SerializedName("city_id")
-    public String CityID;
-
-    @SerializedName("city_name")
-    public String CityName;
-
-    @SerializedName("user_lat")
-    public String Latitude;
-
-    @SerializedName("user_lng")
-    public String Longitude;
 
     @SerializedName("login_with")
     public String LoginWith;
@@ -75,5 +59,27 @@ public class UserDetails {
 
     @SerializedName("gp_app_id")
     public String gp_app_id;
+
+
+    /**
+     * Location Tracking for User
+     */
+    public String mCountry;
+    public String mStateName;
+
+    @SerializedName("city_id")
+    public String CityID;
+
+    @SerializedName("city_name")
+    public String mCityName;
+
+    @SerializedName("user_lat")
+    public String mLat;
+
+    @SerializedName("user_lng")
+    public String mLng;
+
+    @SerializedName("locality")
+    public String mLocality;
 
 }

@@ -8,9 +8,9 @@ import com.cheep.utils.Utility;
  */
 
 public class BootstrapConstant {
-    //    TODO: Change the lat long
+    /*//    TODO: Change the lat long
     public static final String LAT = "23.454545";
-    public static final String LNG = "72.454545";
+    public static final String LNG = "72.454545";*/
 
     /*
    Card No:4012 0010 3714 1112

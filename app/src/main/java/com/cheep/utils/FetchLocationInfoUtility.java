@@ -5,6 +5,7 @@ import android.content.Context;
 import com.android.volley.Response;
 import com.cheep.model.GuestUserDetails;
 import com.cheep.model.LocationInfo;
+import com.cheep.model.UserDetails;
 import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
 
@@ -35,7 +36,6 @@ public class FetchLocationInfoUtility {
         return new FetchLocationInfoUtility(mContext, mListener, needToSave);
     }
 
-
     private String generateGoogleLocationURL(String lat, String lon) {
         return "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + lat + "," + lon + "&sensor=false&key=AIzaSyDtxYbkO21G_uHSXNXuZayLskeEjFQ6HvY";
     }
@@ -52,7 +52,7 @@ public class FetchLocationInfoUtility {
 //                        Log.d(TAG, "onResponse() called with: o = [" + o.toString() + "]");
                         LocationInfo mLocationInfo = new LocationInfo();
                         mLocationInfo.lat = lat;
-                        mLocationInfo.lon = lon;
+                        mLocationInfo.lng = lon;
                         try {
                             JSONObject jRoot = new JSONObject(o.toString());
                             JSONArray jArrayResults = jRoot.getJSONArray("results");
@@ -61,8 +61,10 @@ public class FetchLocationInfoUtility {
                                 for (int j = 0; j < jArrayAddressComponents.length(); j++) {
                                     JSONArray jArrayTypes = jArrayAddressComponents.getJSONObject(j).getJSONArray("types");
                                     for (int k = 0; k < jArrayTypes.length(); k++) {
-                                        //City
-                                        if (jArrayTypes.get(k).toString().equals("locality")) {
+                                        // City
+                                        if (jArrayTypes.get(k).toString().equals("mLocality")) {
+                                            mLocationInfo.City = jArrayAddressComponents.getJSONObject(j).getString("long_name");
+                                        } else if (jArrayTypes.get(k).toString().equals("administrative_area_level_2")) {
                                             mLocationInfo.City = jArrayAddressComponents.getJSONObject(j).getString("long_name");
                                         }
 
@@ -71,9 +73,14 @@ public class FetchLocationInfoUtility {
                                             mLocationInfo.State = jArrayAddressComponents.getJSONObject(j).getString("long_name");
                                         }
 
-                                        //Country
+                                        // Country
                                         if (jArrayTypes.get(k).toString().equals("country")) {
                                             mLocationInfo.Country = jArrayAddressComponents.getJSONObject(j).getString("long_name");
+                                        }
+
+                                        // Locality
+                                        if (jArrayTypes.get(k).toString().equals("sublocality_level_1")) {
+                                            mLocationInfo.Locality = jArrayAddressComponents.getJSONObject(j).getString("long_name");
                                         }
 
                                     }
@@ -81,14 +88,27 @@ public class FetchLocationInfoUtility {
                             }
 
                             if (needToSave) {
-                                // Save the relavent information to Pref
-                                GuestUserDetails mGuestUserDetails = PreferenceUtility.getInstance(mContext).getGuestUserDetails();
-                                mGuestUserDetails.mLat = mLocationInfo.lat;
-                                mGuestUserDetails.mLon = mLocationInfo.lon;
-                                mGuestUserDetails.mCityName = mLocationInfo.City;
-                                mGuestUserDetails.mCountryName = mLocationInfo.Country;
-                                mGuestUserDetails.mStateName = mLocationInfo.State;
-                                PreferenceUtility.getInstance(mContext).saveGuestUserDetails(mGuestUserDetails);
+                                if (PreferenceUtility.getInstance(mContext).getUserDetails() == null) {
+                                    // Save the relevant information to Pref of Guest
+                                    GuestUserDetails mGuestUserDetails = PreferenceUtility.getInstance(mContext).getGuestUserDetails();
+                                    mGuestUserDetails.mLat = mLocationInfo.lat;
+                                    mGuestUserDetails.mLng = mLocationInfo.lng;
+                                    mGuestUserDetails.mCityName = mLocationInfo.City;
+                                    mGuestUserDetails.mCountryName = mLocationInfo.Country;
+                                    mGuestUserDetails.mStateName = mLocationInfo.State;
+                                    mGuestUserDetails.mLocality = mLocationInfo.Locality;
+                                    PreferenceUtility.getInstance(mContext).saveGuestUserDetails(mGuestUserDetails);
+                                } else {
+                                    // Save the relevant information to Pref of Guest
+                                    UserDetails mUserDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
+                                    mUserDetails.mLat = mLocationInfo.lat;
+                                    mUserDetails.mLng = mLocationInfo.lng;
+                                    mUserDetails.mCityName = mLocationInfo.City;
+                                    mUserDetails.mCountry = mLocationInfo.Country;
+                                    mUserDetails.mStateName = mLocationInfo.State;
+                                    mUserDetails.mLocality = mLocationInfo.Locality;
+                                    PreferenceUtility.getInstance(mContext).saveUserDetails(mUserDetails);
+                                }
                             }
 
                             // Send the callback to called activity

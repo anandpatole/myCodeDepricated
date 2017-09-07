@@ -219,7 +219,7 @@ public class FavouriteFragment extends BaseFragment {
                 , mParams
                 , null);
 
-        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequestForFavSP);
+        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequestForFavSP, NetworkUtility.WS.FAV_SP_LIST);
     }
 
     @Override

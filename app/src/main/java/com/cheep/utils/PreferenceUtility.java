@@ -139,7 +139,10 @@ public class PreferenceUtility {
         mSharedPreferences.edit().remove(PREF_NOTIFICATION_COUNTER).apply();
 
         // Clear all Guest User Details if any
+        mGuestUserDetails = null;
         mGuestSharedPreferences.edit().remove(PREF_GUEST_USER_INFO).apply();
+
+        Log.d(TAG, "onUserLogout() finished");
     }
 
     //For Notification Counter

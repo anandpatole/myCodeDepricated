@@ -76,13 +76,13 @@ public class HomeTabFragment extends BaseFragment {
     private NotificationClickInteractionListener mNotificationClickInteractionListener;
     private CategoryRowInteractionListener mCategoryRowInteractionListener;
     private HomeTabRecyclerViewAdapter homeTabRecyclerViewAdapter;
-    private String tempCityName; // this variables value comes from SelectLocationActivity and onActivityResult of this class
+    //    private String tempCityName; // this variables value comes from SelectLocationActivity and onActivityResult of this class
     private ErrorLoadingHelper errorLoadingHelper;
     //  private boolean mAlreadyLoaded = false;
 
     // Saving Current Location for using them later on
-    private String mLat;
-    private String mLon;
+//    private String mLat;
+//    private String mLng;
 
     // For storing category Cover image list
     private ArrayList<BannerImageModel> bannerImageModelArrayList;
@@ -374,10 +374,6 @@ public class HomeTabFragment extends BaseFragment {
     public void onLocationNotAvailable() {
         super.onLocationNotAvailable();
         Log.d(TAG, "onLocationNotAvailable() called");
-        /*if (!isPreviousLocationPresent()) {
-            // Show Error Screen
-            toggleErrorScreen(true);
-        }*/
         ((HomeActivity) getActivity()).isReadyToLoad = true;
         loadHomeScreenDetails();
     }
@@ -388,32 +384,21 @@ public class HomeTabFragment extends BaseFragment {
         super.onLocationFetched(mLocation);
         Log.d(TAG, "onLocationFetched() called with: mLocation = [" + mLocation + "]");
         ((HomeActivity) getActivity()).isReadyToLoad = true;
-        mLat = String.valueOf(mLocation.getLatitude());
-        mLon = String.valueOf(mLocation.getLongitude());
-        updateLatLongOnServer();
-        /*if (!isPreviousLocationPresent()) {
-            errorLoadingHelper.showLoading();
-            getBannerImageListFromServer();
-        }*/
+        updateLatLongOnServer(String.valueOf(mLocation.getLatitude()), String.valueOf(mLocation.getLongitude()));
     }
 
     public void loadHomeScreenDetails() {
         Log.i(TAG, "loadHomeScreenDetails: ");
-        //Seting Location Name
+        //Setting Location Name
         UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
 
         //Checking if there is city then call the category list else fetch and send current location to server
         if (isPreviousLocationPresent()) {
             toggleErrorScreen(false);
-            mFragmentTabHomeBinding.textLocation.setText(userDetails.getLocality());
+            mFragmentTabHomeBinding.textLocation.setText(userDetails.getDisplayLocationName());
             errorLoadingHelper.showLoading();
-
-            // New Implementation
-            mLat = userDetails.Latitude;
-            mLon = userDetails.Longitude;
             getBannerImageListFromServer();
         } else {
-//            TODO: This needs to be changed after
            /* toggleErrorScreen(true);
             mFragmentTabHomeBinding.textLocation.setText(getString(R.string.hint_select_location));
             //starting to choose location
@@ -429,16 +414,18 @@ public class HomeTabFragment extends BaseFragment {
             if (PreferenceUtility.getInstance(mContext).getGuestUserDetails() != null) {
                 GuestUserDetails mGuestUserDetails = PreferenceUtility.getInstance(mContext).getGuestUserDetails();
                 if (mGuestUserDetails.mLat != null
-                        && mGuestUserDetails.mLon != null) {
-                    mLat = mGuestUserDetails.mLat;
-                    mLon = mGuestUserDetails.mLon;
-                    updateLatLongSuccess(mGuestUserDetails.mCityName);
+                        && mGuestUserDetails.mLng != null) {
+                    updateLatLongSuccess(TextUtils.isEmpty(mGuestUserDetails.mLocality)
+                            ? mGuestUserDetails.mCityName
+                            : mGuestUserDetails.mLocality);
                     return;
                 }
             }
-            mLat = "19.1363246";
-            mLon = "72.82766";
-            updateLatLongOnServer();
+            /**
+             * We couldn't find any location so, load the default one.
+             * Passing null, would do the login
+             */
+            updateLatLongOnServer(null, null);
         }
     }
 
@@ -467,10 +454,16 @@ public class HomeTabFragment extends BaseFragment {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == Utility.REQUEST_CODE_CHANGE_LOCATION && resultCode == AppCompatActivity.RESULT_OK) {
             if (data != null) {
-                mLat = data.getStringExtra(Utility.Extra.LATITUDE);
-                mLon = data.getStringExtra(Utility.Extra.LONGITUDE);
-                tempCityName = data.getStringExtra(Utility.Extra.CITY_NAME);
-                updateLatLongOnServer();
+//                mLat = data.getStringExtra(Utility.Extra.LATITUDE);
+//                mLng = data.getStringExtra(Utility.Extra.LONGITUDE);
+                String displayName = data.getStringExtra(Utility.Extra.CITY_NAME);
+                updateLatLongSuccess(displayName);
+                // We will update location only in case its logged in user otherwise directly refresh the data
+                /*if (PreferenceUtility.getInstance(mContext).getUserDetails() != null) {
+                    // We also need to update latlong for logged in user, we wont wait for the response.
+                    updateLatLongOnServer(PreferenceUtility.getInstance(mContext).getUserDetails().mLat,
+                            PreferenceUtility.getInstance(mContext).getUserDetails().mLng);
+                }*/
             }
 
         }
@@ -483,10 +476,26 @@ public class HomeTabFragment extends BaseFragment {
     /**
      * Update Category list on server
      */
-    private void updateLatLongOnServer() {
-        Log.d(TAG, "updateLatLongOnServer() called");
+    private void updateLatLongOnServer(String lat, String lng) {
+        Log.d(TAG, "updateLatLongOnServer() called with: lat = [" + lat + "], lng = [" + lng + "]");
         errorLoadingHelper.showLoading();
-        if (PreferenceUtility.getInstance(mContext).getUserDetails() == null) {
+        FetchLocationInfoUtility mFetchLocationInfoUtility = new FetchLocationInfoUtility(
+                mContext,
+                new FetchLocationInfoUtility.FetchLocationInfoCallBack() {
+                    @Override
+                    public void onLocationInfoAvailable(LocationInfo mLocationIno) {
+                        Log.d(TAG, "onLocationInfoAvailable() called with: mLocationIno = [" + mLocationIno + "]");
+                        updateLatLongSuccess(TextUtils.isEmpty(mLocationIno.Locality)
+                                ? mLocationIno.City
+                                : mLocationIno.Locality);
+                    }
+                },
+                true
+        );
+        mFetchLocationInfoUtility.getLocationInfo(!TextUtils.isEmpty(lat) ? lat : Utility.STATIC_LAT, !TextUtils.isEmpty(lng) ? lng : Utility.STATIC_LNG);
+
+
+        /*if (PreferenceUtility.getInstance(mContext).getUserDetails() == null) {
             //Its a guest user and hence we need to call google api for ourselves for Guest user.
 //            TODO: Guest User we need to call Webservice for fetching the temporary location data
             FetchLocationInfoUtility mFetchLocationInfoUtility = new FetchLocationInfoUtility(
@@ -495,21 +504,29 @@ public class HomeTabFragment extends BaseFragment {
                         @Override
                         public void onLocationInfoAvailable(LocationInfo mLocationIno) {
                             Log.d(TAG, "onLocationInfoAvailable() called with: mLocationIno = [" + mLocationIno + "]");
-                            updateLatLongSuccess(mLocationIno.City);
+                            updateLatLongSuccess(TextUtils.isEmpty(mLocationIno.Locality)
+                                    ? mLocationIno.City
+                                    : mLocationIno.Locality);
                         }
                     },
                     true
             );
-            mFetchLocationInfoUtility.getLocationInfo(mLat, mLon);
+            GuestUserDetails guestUserDetails = PreferenceUtility.getInstance(mContext).getGuestUserDetails();
+            mFetchLocationInfoUtility.getLocationInfo(!TextUtils.isEmpty(guestUserDetails.mLat) ? guestUserDetails.mLat : Utility.STATIC_LAT, !TextUtils.isEmpty(guestUserDetails.mLng) ? guestUserDetails.mLng : Utility.STATIC_LNG);
             return;
-        }
+        } */
         //Setting RecyclerView Adapter
         /*HomeTabRecyclerViewAdapter homeTabRecyclerViewAdapter = new HomeTabRecyclerViewAdapter(BootstrapConstant.DUMMY_JOB_CATEGORY_MODELS_LIST, mCategoryRowInteractionListener);
         mFragmentTabHomeBinding.commonRecyclerView.recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         mFragmentTabHomeBinding.commonRecyclerView.recyclerView.setAdapter(homeTabRecyclerViewAdapter);
         mFragmentTabHomeBinding.commonRecyclerView.recyclerView.addItemDecoration(new DividerItemDecoration(mContext, R.drawable.divider_white, (int) getResources().getDimension(R.dimen.scale_0dp)));*/
 
-        //Add Header parameters
+
+        /**
+         * TODO: This needs to be called parallel to updating the home screen contents.
+         * Currently We are ommting updating lat long to server, we will do it afterwords
+         */
+        /*//Add Header parameters
         Map<String, String> mHeaderParams = new HashMap<>();
         mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
         mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
@@ -517,7 +534,7 @@ public class HomeTabFragment extends BaseFragment {
         //Add Params
         Map<String, String> mParams = new HashMap<>();
         mParams.put(NetworkUtility.TAGS.LAT, mLat);
-        mParams.put(NetworkUtility.TAGS.LNG, mLon);
+        mParams.put(NetworkUtility.TAGS.LNG, mLng);
 
         VolleyNetworkRequest mVolleyNetworkRequest = new VolleyNetworkRequest(NetworkUtility.WS.UPDATE_LOCATION
                 , mCallUpdateLatLngWSErrorListener
@@ -525,7 +542,7 @@ public class HomeTabFragment extends BaseFragment {
                 , mHeaderParams
                 , mParams
                 , null);
-        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest, NetworkUtility.WS.UPDATE_LOCATION);
+        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest, NetworkUtility.WS.UPDATE_LOCATION);*/
     }
 
     Response.Listener mCallUpdateLatLngWSResponseListener = new Response.Listener() {
@@ -541,22 +558,21 @@ public class HomeTabFragment extends BaseFragment {
                 String error_message;
                 switch (statusCode) {
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
-
-                        Utility.showToast(mContext, "Location updated");
+//                        Utility.showToast(mContext, "Location updated");
                         JSONObject jsonData = jsonObject.optJSONObject(NetworkUtility.TAGS.DATA);
 
-                        // Update City and Address issue and update the same information from
+                        /*// Update City and Address issue and update the same information from
                         UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
                         userDetails.CityID = jsonData.optString(NetworkUtility.TAGS.CITY_ID);
-                        userDetails.CityName = jsonData.optString(NetworkUtility.TAGS.CITY_NAME);
-                        userDetails.locality = jsonData.optString(NetworkUtility.TAGS.LOCALITY);
+                        userDetails.mCityName = jsonData.optString(NetworkUtility.TAGS.CITY_NAME);
+                        userDetails.mLocality = jsonData.optString(NetworkUtility.TAGS.LOCALITY);
                         PreferenceUtility.getInstance(mContext).saveUserDetails(userDetails);
 
-                        updateLatLongSuccess(userDetails.locality);
+                        updateLatLongSuccess(userDetails.mLocality);*/
 
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
-                        mFragmentTabHomeBinding.textLocation.setText(tempCityName);
+//                        mFragmentTabHomeBinding.textLocation.setText(tempCityName);
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
                         break;
@@ -577,6 +593,7 @@ public class HomeTabFragment extends BaseFragment {
     };
 
     private void updateLatLongSuccess(String cityName) {
+        Log.d(TAG, "updateLatLongSuccess() called with: cityName = [" + cityName + "]");
         mFragmentTabHomeBinding.textLocation.setText(cityName);
         getBannerImageListFromServer();
     }
@@ -760,18 +777,18 @@ public class HomeTabFragment extends BaseFragment {
         //Add Params
         Map<String, String> mParams = new HashMap<>();
         if (PreferenceUtility.getInstance(mContext).getUserDetails() != null) {
-            mParams.put(NetworkUtility.TAGS.CITY_NAME, PreferenceUtility.getInstance(mContext).getUserDetails().getLocality());
-            mParams.put(NetworkUtility.TAGS.LAT, mLat);
-            mParams.put(NetworkUtility.TAGS.LNG, mLon);
+            mParams.put(NetworkUtility.TAGS.CITY_NAME, PreferenceUtility.getInstance(mContext).getUserDetails().mCityName);
+            mParams.put(NetworkUtility.TAGS.LAT, PreferenceUtility.getInstance(mContext).getUserDetails().mLat);
+            mParams.put(NetworkUtility.TAGS.LNG, PreferenceUtility.getInstance(mContext).getUserDetails().mLng);
         } else {
             mParams.put(NetworkUtility.TAGS.CITY_NAME, PreferenceUtility.getInstance(mContext).getGuestUserDetails().mCityName);
-            mParams.put(NetworkUtility.TAGS.LAT, mLat);
-            mParams.put(NetworkUtility.TAGS.LNG, mLon);
+            mParams.put(NetworkUtility.TAGS.LAT, PreferenceUtility.getInstance(mContext).getGuestUserDetails().mLat);
+            mParams.put(NetworkUtility.TAGS.LNG, PreferenceUtility.getInstance(mContext).getGuestUserDetails().mLng);
         }
 
         /*if (!TextUtils.isEmpty(mLat)) {
             mParams.put(NetworkUtility.TAGS.LAT, mLat);
-            mParams.put(NetworkUtility.TAGS.LNG, mLon);
+            mParams.put(NetworkUtility.TAGS.LNG, mLng);
         }*/
 
         // Sort Type Params

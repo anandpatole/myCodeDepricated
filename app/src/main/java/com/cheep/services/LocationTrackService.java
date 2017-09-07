@@ -143,7 +143,10 @@ public class LocationTrackService extends Service implements GoogleApiClient.Con
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         Log.d(TAG, "onConnected() called with: bundle = [" + bundle + "]");
-        requestLocationUpdate();
+        /**
+         * No need to call location update, when it needed, activity would going to call this method.
+         */
+//        requestLocationUpdate();
     }
 
     /**

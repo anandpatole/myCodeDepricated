@@ -80,7 +80,6 @@ import java.util.List;
 import java.util.Map;
 
 import static android.app.Activity.RESULT_OK;
-import static com.cheep.R.id.add;
 import static com.cheep.R.id.edit_address;
 import static com.cheep.R.id.edit_address_initials;
 import static com.cheep.utils.Utility.getObjectFromJsonString;
@@ -195,7 +194,6 @@ public class EnterTaskDetailFragment extends BaseFragment {
         mFragmentEnterTaskDetailBinding.textSubCategoryName.setText(mTaskCreationActivity.getSelectedSubService().name);
 
 
-
     }
 
     @Override
@@ -270,21 +268,21 @@ public class EnterTaskDetailFragment extends BaseFragment {
             // Update the SP lists for Normal User
             callSPListWS(mTaskCreationActivity.mJobCategoryModel.catId,
                     null,
-                    PreferenceUtility.getInstance(mContext).getUserDetails().getLocality(),
-                    PreferenceUtility.getInstance(mContext).getUserDetails().Latitude,
-                    PreferenceUtility.getInstance(mContext).getUserDetails().Longitude);
+                    PreferenceUtility.getInstance(mContext).getUserDetails().getDisplayLocationName(),
+                    PreferenceUtility.getInstance(mContext).getUserDetails().mLat,
+                    PreferenceUtility.getInstance(mContext).getUserDetails().mLng);
         } else {
             // Update the SP lists for Normal User
             callSPListWS(mTaskCreationActivity.mJobCategoryModel.catId,
                     null,
                     PreferenceUtility.getInstance(mContext).getGuestUserDetails().mCityName,
                     PreferenceUtility.getInstance(mContext).getGuestUserDetails().mLat,
-                    PreferenceUtility.getInstance(mContext).getGuestUserDetails().mLon);
+                    PreferenceUtility.getInstance(mContext).getGuestUserDetails().mLng);
         }
         mFragmentEnterTaskDetailBinding.cvInstaBook.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.i("myLog", ""+isTotalVerified);
+                Log.i("myLog", "" + isTotalVerified);
                 mTaskCreationActivity.onInstaBookClicked();
             }
         });
@@ -292,7 +290,7 @@ public class EnterTaskDetailFragment extends BaseFragment {
         mFragmentEnterTaskDetailBinding.cvGetQuote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.i("myLog", ""+isTotalVerified);
+                Log.i("myLog", "" + isTotalVerified);
 
                 mTaskCreationActivity.onGetQuoteClicked();
 
@@ -1007,11 +1005,11 @@ public class EnterTaskDetailFragment extends BaseFragment {
 
             //TODO: Adding dummy place when playservice is not there
             if (edtAddress != null) {
-                edtAddress.setText("Dummy Address with " + BootstrapConstant.LAT + "," + BootstrapConstant.LNG);
+                edtAddress.setText("Dummy Address with " + Utility.STATIC_LAT + "," + Utility.STATIC_LNG);
                 edtAddress.setFocusable(true);
                 edtAddress.setFocusableInTouchMode(true);
                 try {
-                    edtAddress.setTag(new LatLng(Double.parseDouble(BootstrapConstant.LAT), Double.parseDouble(BootstrapConstant.LNG)));
+                    edtAddress.setTag(new LatLng(Double.parseDouble(Utility.STATIC_LAT), Double.parseDouble(Utility.STATIC_LNG)));
                 } catch (Exception exe) {
                     exe.printStackTrace();
                     edtAddress.setTag(new LatLng(0, 0));
@@ -1313,7 +1311,6 @@ public class EnterTaskDetailFragment extends BaseFragment {
                             }
 
                             //Saving information in sharedpreference
-
                             guestUserDetails.addressList = addressRecyclerViewAdapter.getmList();
                             PreferenceUtility.getInstance(mContext).saveGuestUserDetails(guestUserDetails);
 
