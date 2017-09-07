@@ -293,7 +293,8 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
         updateChatUIBasedOnCurrentRequestStatus();
 
         // Set Listner for Unread Counter
-        manageUnreadBadgeCounterForChat();
+        if (taskDetailModel != null)
+            manageUnreadBadgeCounterForChat();
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         ////////////////////////// Managing Chat Call Icons[End] ///////////////////////////////////
@@ -360,32 +361,45 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
         if (providerModel == null) {
             return;
         }
+        // TODO : done according to @cheep team suggestion : 06 sept 2017
+
+
+//        if (Utility.SEND_TASK_DETAIL_REQUESTED_STATUS.ALREADY_REQUESTED.equalsIgnoreCase(providerModel.request_detail_status)) {
+//            mActivityProviderProfileBinding.tvChatUnreadCount.setVisibility(View.VISIBLE);
+//        } else {
+//            mActivityProviderProfileBinding.tvChatUnreadCount.setVisibility(View.GONE);
+//        }
+        mActivityProviderProfileBinding.imgChat.setVisibility(View.VISIBLE);
+        mActivityProviderProfileBinding.textChat.setVisibility(View.VISIBLE);
+        //chat icon
         if (Utility.SEND_TASK_DETAIL_REQUESTED_STATUS.ALREADY_REQUESTED.equalsIgnoreCase(providerModel.request_detail_status)) {
-            mActivityProviderProfileBinding.imgChat.setVisibility(View.VISIBLE);
-            mActivityProviderProfileBinding.tvChatUnreadCount.setVisibility(View.VISIBLE);
-            mActivityProviderProfileBinding.textChat.setVisibility(View.VISIBLE);
-            //chat icon
             Glide.with(mContext)
                     .load(R.drawable.ic_chat_requested_animation_with_counter)
                     .asGif()
                     .dontAnimate()
                     .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                     .into(mActivityProviderProfileBinding.imgChat);
-        } else if (Utility.SEND_TASK_DETAIL_REQUESTED_STATUS.ACCEPTED.equalsIgnoreCase(providerModel.request_detail_status)) {
-            mActivityProviderProfileBinding.imgChat.setVisibility(View.VISIBLE);
-            mActivityProviderProfileBinding.textChat.setVisibility(View.VISIBLE);
-            mActivityProviderProfileBinding.tvChatUnreadCount.setVisibility(View.VISIBLE);
-            Glide.with(mContext)
-                    .load(R.drawable.icon_chat_smaller)
-                    .into(mActivityProviderProfileBinding.imgChat);
-        } else {
-            mActivityProviderProfileBinding.imgChat.setVisibility(View.INVISIBLE);
-            mActivityProviderProfileBinding.tvChatUnreadCount.setVisibility(View.INVISIBLE);
-            mActivityProviderProfileBinding.textChat.setVisibility(View.INVISIBLE);
+        }
+        else{
             Glide.with(mContext)
                     .load(R.drawable.icon_chat_smaller)
                     .into(mActivityProviderProfileBinding.imgChat);
         }
+//        } else if (Utility.SEND_TASK_DETAIL_REQUESTED_STATUS.ACCEPTED.equalsIgnoreCase(providerModel.request_detail_status)) {
+//            mActivityProviderProfileBinding.imgChat.setVisibility(View.VISIBLE);
+//            mActivityProviderProfileBinding.textChat.setVisibility(View.VISIBLE);
+//            mActivityProviderProfileBinding.tvChatUnreadCount.setVisibility(View.VISIBLE);
+//            Glide.with(mContext)
+//                    .load(R.drawable.icon_chat_smaller)
+//                    .into(mActivityProviderProfileBinding.imgChat);
+//        } else {
+//            mActivityProviderProfileBinding.imgChat.setVisibility(View.INVISIBLE);
+//            mActivityProviderProfileBinding.tvChatUnreadCount.setVisibility(View.INVISIBLE);
+//            mActivityProviderProfileBinding.textChat.setVisibility(View.INVISIBLE);
+//            Glide.with(mContext)
+//                    .load(R.drawable.icon_chat_smaller)
+//                    .into(mActivityProviderProfileBinding.imgChat);
+//        }
     }
 
 
@@ -493,10 +507,11 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
                 if (diff <= 20) {
                     Log.e("on load more", "load more");
                     int count = reviewsRecyclerViewAdapter.getmList().size();
-                    String reviewId = reviewsRecyclerViewAdapter.getmList().get(count - 1).reviewId;
-                    callLoadMoreReviewList(providerModel.providerId, reviewId);
+                    if (count > 1) {
+                        String reviewId = reviewsRecyclerViewAdapter.getmList().get(count - 1).reviewId;
+                        callLoadMoreReviewList(providerModel.providerId, reviewId);
+                    }
                 }
-
             }
         });
     }
@@ -561,7 +576,7 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
             }
         });
         mActivityProviderProfileBinding.recyclerviewPastWork.setAdapter(myTaskRecyclerViewAdapter);
-        if (mBannerListModels.size() > 0) {
+        if (!mBannerListModels.isEmpty()) {
             mActivityProviderProfileBinding.llpastwork.setVisibility(View.VISIBLE);
         } else {
             mActivityProviderProfileBinding.llpastwork.setVisibility(View.GONE);
@@ -570,7 +585,7 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
 
     @Override
     protected void onDestroy() {
-        if (EventBus.getDefault().isRegistered(this) == true) {
+        if (EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().unregister(this);
         }
 

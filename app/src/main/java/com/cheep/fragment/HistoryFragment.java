@@ -240,8 +240,8 @@ public class HistoryFragment extends BaseFragment {
                         DecimalFormat decimalFormat = new DecimalFormat("0.00");
                         mFragmentHistoryBinding.textPrice.setText(getString(R.string.ruppe_symbol_x, decimalFormat.format(price)));
 
-                        mFragmentHistoryBinding.monthlyEarned.setText(getString(R.string.ruppe_symbol_x, jsonObject.optString(NetworkUtility.TAGS.MONTHLY_TOTAL)));
-                        mFragmentHistoryBinding.monthlySaved.setText(getString(R.string.ruppe_symbol_x, jsonObject.optString(NetworkUtility.TAGS.MONTHLY_SAVED_TOTAL)));
+                        mFragmentHistoryBinding.monthlyEarned.setText(getString(R.string.ruppe_symbol_x, Utility.getQuotePriceFormatter(jsonObject.optString(NetworkUtility.TAGS.MONTHLY_TOTAL))));
+                        mFragmentHistoryBinding.monthlySaved.setText(getString(R.string.ruppe_symbol_x, Utility.getQuotePriceFormatter(jsonObject.optString(NetworkUtility.TAGS.MONTHLY_SAVED_TOTAL))));
 
                         ArrayList<HistoryModel> list = Utility.getObjectListFromJsonString(jsonObject.optString(NetworkUtility.TAGS.DATA), HistoryModel[].class);
                         favouriteRecyclerViewAdapter.setItems(list);

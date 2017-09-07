@@ -27,6 +27,8 @@ public class InstaBookProDialog extends DialogFragment {
     private Context mContext;
     InstaBookingProDetail merchantDetail;
     String date = "";
+    //    unicode for thumbs up U+1F44D
+    int unicode = 0x1F44D;
 
     /**
      * Create a new instance of MyDialogFragment, providing "num"
@@ -85,6 +87,7 @@ public class InstaBookProDialog extends DialogFragment {
             mDialog.imgProfilePic.setImageResource(Utility.DEFAULT_CHEEP_LOGO);
         }
 
+        mDialog.tvTitle.setText(getString(R.string.all_done) + " " + new String(Character.toChars(unicode)));
         //Set Header Image
 
         // Set title

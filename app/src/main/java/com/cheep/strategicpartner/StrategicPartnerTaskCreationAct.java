@@ -46,6 +46,7 @@ public class StrategicPartnerTaskCreationAct extends BaseAppCompatActivity {
     private ArrayList<QueAnsModel> mQuestionsList;
     private ArrayList<StrategicPartnerServiceModel> mSelectedServicesList;
     public boolean isSingleSelection = false;
+    public String spUserId = "";
     //    public String date = "";
 //    public String time = "";
 //    public String address = "";
@@ -319,8 +320,8 @@ public class StrategicPartnerTaskCreationAct extends BaseAppCompatActivity {
                     if (mediaModelArrayList != null && !mediaModelArrayList.isEmpty()) {
                         for (MediaModel mediaModel : mediaModelArrayList) {
                             Log.d(TAG, "onBackPressed() delete");
-                            Log.d(TAG, "onBackPressed() "+mediaModel.mediaName);
-                            Log.d(TAG, "onBackPressed() "+mediaModel.mediaThumbName);
+                            Log.d(TAG, "onBackPressed() " + mediaModel.mediaName);
+                            Log.d(TAG, "onBackPressed() " + mediaModel.mediaThumbName);
                             Log.d(TAG, "onBackPressed() ============");
                             AmazonUtils.deleteFiles(this, mediaModel.mediaName, mediaModel.mediaThumbName);
                         }

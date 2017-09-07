@@ -273,14 +273,27 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
         //Add Header parameters
         Map<String, String> mHeaderParams = new HashMap<>();
         mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
-        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, userDetails.UserID);
+        if (userDetails != null)
+            mHeaderParams.put(NetworkUtility.TAGS.USER_ID, userDetails.UserID);
 
         //Add Params
         Map<String, Object> mParams = new HashMap<>();
         mParams.put(NetworkUtility.TAGS.QUOTE_AMOUNT, mStrategicPartnerTaskCreationAct.totalOfBasePrice);
         mParams.put(NetworkUtility.TAGS.CHEEPCODE, cheepCode);
         mParams.put(NetworkUtility.TAGS.CAT_ID, mStrategicPartnerTaskCreationAct.mBannerImageModel.cat_id);
-        mParams.put(NetworkUtility.TAGS.ADDRESS_ID, addressId);
+        int addressId;
+        try {
+            addressId = Integer.parseInt(mStrategicPartnerTaskCreationAct.mSelectedAddressModel.address_id);
+        } catch (Exception e) {
+            addressId = 0;
+        }
+        if (addressId <= 0) {
+            mParams.put(NetworkUtility.TAGS.LAT, mStrategicPartnerTaskCreationAct.mSelectedAddressModel.lat + "");
+            mParams.put(NetworkUtility.TAGS.LNG, mStrategicPartnerTaskCreationAct.mSelectedAddressModel.lng + "");
+        } else {
+            mParams.put(NetworkUtility.TAGS.ADDRESS_ID, addressId);
+        }
+
 
         //Url is based on condition if address id is greater then 0 then it means we need to update the existing address
         VolleyNetworkRequest mVolleyNetworkRequestForSPList = new VolleyNetworkRequest(NetworkUtility.WS.CHECK_CHEEPCODE_FOR_STRATEGIC_PARTNER
@@ -759,6 +772,7 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
         mParams.put(NetworkUtility.TAGS.PAYABLE_AMOUNT, TextUtils.isEmpty(cheepCode) ? mStrategicPartnerTaskCreationAct.total : payableAmount);
         mParams.put(NetworkUtility.TAGS.TRANSACTION_ID, transaction_Id);
         mParams.put(NetworkUtility.TAGS.TASK_DESC, task_desc);
+        mParams.put(NetworkUtility.TAGS.SP_USER_ID, mStrategicPartnerTaskCreationAct.spUserId);
         // new amazon s3 uploaded file names
         mParams.put(NetworkUtility.TAGS.MEDIA_FILE, media_file);
 
@@ -768,6 +782,7 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
         Log.e(TAG, "total = [ " + mStrategicPartnerTaskCreationAct.total + " ] ");
         Log.e(TAG, "task_desc= [ " + task_desc + " ] ");
         Log.e(TAG, "media_file= [ " + media_file + " ] ");
+        Log.e(TAG, "SP_USER_ID= [ " + mStrategicPartnerTaskCreationAct.spUserId + " ] ");
         Log.e(TAG, "cat_id = [ " + mStrategicPartnerTaskCreationAct.mBannerImageModel.cat_id + " ] ");
 
         // Create Params for AppsFlyer event track
@@ -799,6 +814,7 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
         mTaskCreationParams.put(NetworkUtility.TAGS.PAYABLE_AMOUNT, payableAmount);
         mTaskCreationParams.put(NetworkUtility.TAGS.TRANSACTION_ID, transaction_Id);
         mTaskCreationParams.put(NetworkUtility.TAGS.MEDIA_FILE, media_file);
+        mTaskCreationParams.put(NetworkUtility.TAGS.SP_USER_ID, mStrategicPartnerTaskCreationAct.spUserId);
 
         // Add Params
 //        HashMap<String, File> mFileParams = new HashMap<>();
