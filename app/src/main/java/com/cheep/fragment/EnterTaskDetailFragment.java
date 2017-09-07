@@ -267,17 +267,15 @@ public class EnterTaskDetailFragment extends BaseFragment {
         if (PreferenceUtility.getInstance(mContext).getUserDetails() != null) {
             // Update the SP lists for Normal User
             callSPListWS(mTaskCreationActivity.mJobCategoryModel.catId,
+                    false,
                     null,
-                    PreferenceUtility.getInstance(mContext).getUserDetails().getDisplayLocationName(),
-                    PreferenceUtility.getInstance(mContext).getUserDetails().mLat,
-                    PreferenceUtility.getInstance(mContext).getUserDetails().mLng);
+                    null);
         } else {
             // Update the SP lists for Normal User
             callSPListWS(mTaskCreationActivity.mJobCategoryModel.catId,
+                    false,
                     null,
-                    PreferenceUtility.getInstance(mContext).getGuestUserDetails().mCityName,
-                    PreferenceUtility.getInstance(mContext).getGuestUserDetails().mLat,
-                    PreferenceUtility.getInstance(mContext).getGuestUserDetails().mLng);
+                    null);
         }
         mFragmentEnterTaskDetailBinding.cvInstaBook.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -653,18 +651,14 @@ public class EnterTaskDetailFragment extends BaseFragment {
                     if (Integer.parseInt(mSelectedAddressModel.address_id) < 0) {
                         // Guest User so pass the data accordingly
                         callSPListWS(mTaskCreationActivity.mJobCategoryModel.catId,
+                                true,
                                 null,
-                                model != null ? model.cityName : Utility.EMPTY_STRING,
-                                model != null ? model.lat : Utility.EMPTY_STRING,
-                                model != null ? model.lng : Utility.EMPTY_STRING
-                        );
+                                model);
                     } else {
                         callSPListWS(mTaskCreationActivity.mJobCategoryModel.catId,
+                                true,
                                 mSelectedAddressModel.address_id,
-                                null,
-                                null,
-                                null
-                        );
+                                null);
                     }
 
                 }
@@ -1301,6 +1295,8 @@ public class EnterTaskDetailFragment extends BaseFragment {
                             addressModel.address_id = "-" + (guestUserDetails.addressList == null ? "1" : String.valueOf(guestUserDetails.addressList.size() + 1));
                             addressModel.address = address;
                             addressModel.cityName = mLocationIno.City;
+                            addressModel.countryName = mLocationIno.Country;
+                            addressModel.stateName = mLocationIno.State;
                             addressModel.address_initials = addressInitials;
                             addressModel.category = addressType;
                             addressModel.lat = String.valueOf(latLng.latitude);
@@ -1437,7 +1433,7 @@ public class EnterTaskDetailFragment extends BaseFragment {
     /**
      * Calling Get SP list web service from server
      */
-    private void callSPListWS(String categoryId, String addressId, String cityname, String lat, String lng) {
+    private void callSPListWS(String categoryId, boolean shouldGoForAddress, String addressId, AddressModel addressModel) {
 
         if (!Utility.isConnected(mContext)) {
             Utility.showSnackBar(getString(R.string.no_internet), mFragmentEnterTaskDetailBinding.getRoot());
@@ -1463,14 +1459,20 @@ public class EnterTaskDetailFragment extends BaseFragment {
         // Set Category ID
         mParams.put(NetworkUtility.TAGS.CAT_ID, categoryId);
 
-        if (!TextUtils.isEmpty(addressId)) {
-            mParams.put(NetworkUtility.TAGS.ADDRESS_ID, addressId);
-        } else {
-            mParams.put(NetworkUtility.TAGS.CITY_NAME, cityname);
-            mParams.put(NetworkUtility.TAGS.LAT, lat);
-            mParams.put(NetworkUtility.TAGS.LNG, lng);
+        if (shouldGoForAddress) {
+            if (!TextUtils.isEmpty(addressId)) {
+                mParams.put(NetworkUtility.TAGS.ADDRESS_ID, addressId);
+            } else {
+                mParams.put(NetworkUtility.TAGS.ADDRESS, addressModel.address);
+                mParams.put(NetworkUtility.TAGS.ADDRESS_INITIALS, addressModel.address_initials);
+                mParams.put(NetworkUtility.TAGS.CATEGORY, addressModel.category);
+                mParams.put(NetworkUtility.TAGS.LAT, addressModel.lat);
+                mParams.put(NetworkUtility.TAGS.LNG, addressModel.lng);
+                mParams.put(NetworkUtility.TAGS.COUNTRY, addressModel.countryName);
+                mParams.put(NetworkUtility.TAGS.STATE, addressModel.stateName);
+                mParams.put(NetworkUtility.TAGS.CITY_NAME, addressModel.cityName);
+            }
         }
-
         String url = NetworkUtility.WS.SP_LIST;
 
         //Url is based on condition if address id is greater then 0 then it means we need to update the existing address

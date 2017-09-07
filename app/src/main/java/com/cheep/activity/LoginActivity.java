@@ -36,10 +36,12 @@ import com.cheep.firebase.FierbaseChatService;
 import com.cheep.firebase.FirebaseHelper;
 import com.cheep.firebase.FirebaseUtils;
 import com.cheep.firebase.model.ChatUserModel;
+import com.cheep.model.LocationInfo;
 import com.cheep.model.UserDetails;
 import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
+import com.cheep.utils.FetchLocationInfoUtility;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.Utility;
 import com.facebook.AccessToken;
@@ -95,6 +97,9 @@ public class LoginActivity extends BaseAppCompatActivity implements FacebookHelp
     // GoogleAPIclient for using
     GoogleApiClient mGoogleApiClient;
     private static final int RC_SIGN_IN = 9001;
+
+    // Location Info
+    private LocationInfo mSelectedLocationInfo;
 
     public static void newInstance(Context context) {
         Intent intent = new Intent(context, LoginActivity.class);
@@ -476,9 +481,7 @@ public class LoginActivity extends BaseAppCompatActivity implements FacebookHelp
     private Callback<TwitterSession> mTwitterSessionCallback = new Callback<TwitterSession>() {
         @Override
         public void success(final Result<TwitterSession> result) {
-
             Log.d(TAG, "success() called with: result = [" + result.data.getUserName() + "]");
-
             /*
               This will request added permission
              */
@@ -497,6 +500,7 @@ public class LoginActivity extends BaseAppCompatActivity implements FacebookHelp
                     TEMP_FB_APP_ID = Utility.EMPTY_STRING;
                     TEMP_TWITTER_APP_ID = String.valueOf(result.data.getUserId());
                     TEMP_GOOGLE_PLUS_APP_ID = Utility.EMPTY_STRING;
+
                     callLoginWS(NetworkUtility.TAGS.LOGINWITHTYPE.TWITTER, String.valueOf(result.data.getUserId()));
                 }
 
@@ -715,7 +719,7 @@ public class LoginActivity extends BaseAppCompatActivity implements FacebookHelp
     /**
      * Call Login WS Key Webservice
      */
-    private void callLoginWS(String loginWithTag, String extraInfoBasedOnTag) {
+    private void callLoginWS(final String loginWithTag, final String extraInfoBasedOnTag) {
 
         if (!Utility.isConnected(mContext)) {
             Utility.showSnackBar(getString(R.string.no_internet), mActivityLoginBinding.getRoot());
@@ -743,8 +747,27 @@ public class LoginActivity extends BaseAppCompatActivity implements FacebookHelp
         }
 
         if (mLocationTrackService.mLocation != null && mLocationTrackService.mLocation.getLatitude() != 0 && mLocationTrackService.mLocation.getLongitude() != 0) {
-            mParams.put(NetworkUtility.TAGS.LAT, String.valueOf(mLocationTrackService.mLocation.getLatitude()));
-            mParams.put(NetworkUtility.TAGS.LNG, String.valueOf(mLocationTrackService.mLocation.getLongitude()));
+            if (mSelectedLocationInfo == null) {
+                //Location found so first fetch information and then go ahead.
+                FetchLocationInfoUtility mFetchLocationInfoUtility = new FetchLocationInfoUtility(mContext,
+                        new FetchLocationInfoUtility.FetchLocationInfoCallBack() {
+                            @Override
+                            public void onLocationInfoAvailable(LocationInfo mLocationIno) {
+                                mSelectedLocationInfo = mLocationIno;
+                                callLoginWS(loginWithTag, extraInfoBasedOnTag);
+                            }
+                        },
+                        false);
+                mFetchLocationInfoUtility.getLocationInfo(String.valueOf(mLocationTrackService.mLocation.getLatitude()), String.valueOf(mLocationTrackService.mLocation.getLongitude()));
+                return;
+            } else {
+                mParams.put(NetworkUtility.TAGS.LAT, mSelectedLocationInfo.lat);
+                mParams.put(NetworkUtility.TAGS.LNG, mSelectedLocationInfo.lng);
+                mParams.put(NetworkUtility.TAGS.COUNTRY, mSelectedLocationInfo.Country);
+                mParams.put(NetworkUtility.TAGS.STATE, mSelectedLocationInfo.State);
+                mParams.put(NetworkUtility.TAGS.CITY_NAME, mSelectedLocationInfo.City);
+                mParams.put(NetworkUtility.TAGS.LOCALITY, TextUtils.isEmpty(mSelectedLocationInfo.Locality) ? Utility.EMPTY_STRING : mSelectedLocationInfo.Locality);
+            }
         } else {
             mParams.put(NetworkUtility.TAGS.LAT, Utility.EMPTY_STRING);
             mParams.put(NetworkUtility.TAGS.LNG, Utility.EMPTY_STRING);
@@ -759,7 +782,7 @@ public class LoginActivity extends BaseAppCompatActivity implements FacebookHelp
                 , mHeaderParams
                 , mParams
                 , null);
-        Volley.getInstance(this).addToRequestQueue(mVolleyNetworkRequest);
+        Volley.getInstance(this).addToRequestQueue(mVolleyNetworkRequest, NetworkUtility.WS.LOGIN);
 
     }
 

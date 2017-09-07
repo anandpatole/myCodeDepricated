@@ -16,6 +16,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
@@ -60,6 +61,7 @@ public class SelectLocationActivity extends BaseAppCompatActivity {
     @Override
     protected void onDestroy() {
         ((AppCompatActivity) mContext).overridePendingTransition(0, 0);
+        hideProgressDialog();
         super.onDestroy();
     }
 
@@ -184,19 +186,17 @@ public class SelectLocationActivity extends BaseAppCompatActivity {
                 public void onSuccess(String lat, String lng, Exception exception) {
                     if (exception == null) {
                         onLocationSelected(lat, lng);
-                        /*setLocation(lat, lng, googlePlaceModel.mainString);*/
                     }
                 }
             });
         }
     };
 
-    private void setLocation(String lat, String lng, String name) {
-        Log.d(TAG, "setLocation() called with: lat = [" + lat + "], lng = [" + lng + "], name = [" + name + "]");
+    private void setLocation(LocationInfo mLocationInfo) {
+        Log.d(TAG, "setLocation() called with: mLocationInfo = [" + mLocationInfo + "]");
         Intent data = new Intent();
-        data.putExtra(Utility.Extra.LATITUDE, lat);
-        data.putExtra(Utility.Extra.LONGITUDE, lng);
-        data.putExtra(Utility.Extra.CITY_NAME, name);
+        if (mLocationInfo != null)
+            data.putExtra(Utility.Extra.LOCATION_INFO, Utility.getJsonStringFromObject(mLocationInfo));
         setResult(RESULT_OK, data);
         finish();
     }
@@ -250,12 +250,19 @@ public class SelectLocationActivity extends BaseAppCompatActivity {
                     @Override
                     public void onLocationInfoAvailable(LocationInfo mLocationIno) {
                         Log.d(TAG, "onLocationInfoAvailable() called with: mLocationIno = [" + mLocationIno + "]");
-                        hideProgressDialog();
-                        setLocation(mLocationIno.lat, mLocationIno.lng, mLocationIno.getDisplayLocationName());
+                        if (!TextUtils.isEmpty(mLocationIno.City)) {
+                            hideProgressDialog();
+                            setLocation(mLocationIno);
+                        } else {
+                            setLocation(null);
+                        }
+
                     }
                 },
                 PreferenceUtility.getInstance(mContext).getUserDetails() == null
         );
         mFetchLocationInfoUtility.getLocationInfo(lat, lon);
     }
+
+
 }

@@ -21,6 +21,8 @@ public class AddressModel {
      * This would only be usefull in case of Guest
      */
     public String cityName;
+    public String countryName;
+    public String stateName;
 
     /*public AddressModel(String address_id, *//*String name,*//* String address, String address_initials, String category) {
         this.address_id = address_id;

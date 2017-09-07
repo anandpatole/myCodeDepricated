@@ -309,6 +309,11 @@ public class HomeTabFragment extends BaseFragment {
         mFragmentTabHomeBinding.swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                if (PreferenceUtility.getInstance(mContext).getGuestUserDetails() != null
+                        || PreferenceUtility.getInstance(mContext).getUserDetails() != null) {
+                    mFragmentTabHomeBinding.swipeRefreshLayout.setRefreshing(false);
+                    return;
+                }
                 // Fetch Only Category List from server
                 getCategoryListFromServer();
             }
@@ -454,18 +459,16 @@ public class HomeTabFragment extends BaseFragment {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == Utility.REQUEST_CODE_CHANGE_LOCATION && resultCode == AppCompatActivity.RESULT_OK) {
             if (data != null) {
-//                mLat = data.getStringExtra(Utility.Extra.LATITUDE);
-//                mLng = data.getStringExtra(Utility.Extra.LONGITUDE);
-                String displayName = data.getStringExtra(Utility.Extra.CITY_NAME);
-                updateLatLongSuccess(displayName);
-                // We will update location only in case its logged in user otherwise directly refresh the data
-                /*if (PreferenceUtility.getInstance(mContext).getUserDetails() != null) {
-                    // We also need to update latlong for logged in user, we wont wait for the response.
-                    updateLatLongOnServer(PreferenceUtility.getInstance(mContext).getUserDetails().mLat,
-                            PreferenceUtility.getInstance(mContext).getUserDetails().mLng);
-                }*/
+                LocationInfo mLocationInfo = (LocationInfo) Utility.getObjectFromJsonString(data.getStringExtra(Utility.Extra.LOCATION_INFO), LocationInfo.class);
+                if (mLocationInfo != null) {
+                    updateLatLongSuccess(mLocationInfo.getDisplayLocationName());
+                    if (PreferenceUtility.getInstance(mContext).getUserDetails() != null) {
+                        updateLocationForLoggedInUser(mLocationInfo);
+                    }
+                } else {
+                    Log.e(TAG, "onActivityResult: Location not fetched properly>>");
+                }
             }
-
         }
     }
 
@@ -488,61 +491,45 @@ public class HomeTabFragment extends BaseFragment {
                         updateLatLongSuccess(TextUtils.isEmpty(mLocationIno.Locality)
                                 ? mLocationIno.City
                                 : mLocationIno.Locality);
+                        if (PreferenceUtility.getInstance(mContext).getUserDetails() != null) {
+                            updateLocationForLoggedInUser(mLocationIno);
+                        }
                     }
                 },
                 true
         );
         mFetchLocationInfoUtility.getLocationInfo(!TextUtils.isEmpty(lat) ? lat : Utility.STATIC_LAT, !TextUtils.isEmpty(lng) ? lng : Utility.STATIC_LNG);
+    }
 
-
-        /*if (PreferenceUtility.getInstance(mContext).getUserDetails() == null) {
-            //Its a guest user and hence we need to call google api for ourselves for Guest user.
-//            TODO: Guest User we need to call Webservice for fetching the temporary location data
-            FetchLocationInfoUtility mFetchLocationInfoUtility = new FetchLocationInfoUtility(
-                    mContext,
-                    new FetchLocationInfoUtility.FetchLocationInfoCallBack() {
-                        @Override
-                        public void onLocationInfoAvailable(LocationInfo mLocationIno) {
-                            Log.d(TAG, "onLocationInfoAvailable() called with: mLocationIno = [" + mLocationIno + "]");
-                            updateLatLongSuccess(TextUtils.isEmpty(mLocationIno.Locality)
-                                    ? mLocationIno.City
-                                    : mLocationIno.Locality);
-                        }
-                    },
-                    true
-            );
-            GuestUserDetails guestUserDetails = PreferenceUtility.getInstance(mContext).getGuestUserDetails();
-            mFetchLocationInfoUtility.getLocationInfo(!TextUtils.isEmpty(guestUserDetails.mLat) ? guestUserDetails.mLat : Utility.STATIC_LAT, !TextUtils.isEmpty(guestUserDetails.mLng) ? guestUserDetails.mLng : Utility.STATIC_LNG);
-            return;
-        } */
-        //Setting RecyclerView Adapter
-        /*HomeTabRecyclerViewAdapter homeTabRecyclerViewAdapter = new HomeTabRecyclerViewAdapter(BootstrapConstant.DUMMY_JOB_CATEGORY_MODELS_LIST, mCategoryRowInteractionListener);
-        mFragmentTabHomeBinding.commonRecyclerView.recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
-        mFragmentTabHomeBinding.commonRecyclerView.recyclerView.setAdapter(homeTabRecyclerViewAdapter);
-        mFragmentTabHomeBinding.commonRecyclerView.recyclerView.addItemDecoration(new DividerItemDecoration(mContext, R.drawable.divider_white, (int) getResources().getDimension(R.dimen.scale_0dp)));*/
-
-
+    private void updateLocationForLoggedInUser(LocationInfo mLocationIno) {
+        Log.d(TAG, "updateLocationForLoggedInUser() called with: mLocationIno = [" + mLocationIno + "]");
         /**
-         * TODO: This needs to be called parallel to updating the home screen contents.
-         * Currently We are ommting updating lat long to server, we will do it afterwords
+         * Only call webservice for update location in case user is logged in
          */
-        /*//Add Header parameters
-        Map<String, String> mHeaderParams = new HashMap<>();
-        mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
-        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
+        if (PreferenceUtility.getInstance(mContext).getUserDetails() != null) {
+            // Update User location
+            //Add Header parameters
+            Map<String, String> mHeaderParams = new HashMap<>();
+            mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
+            mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
 
-        //Add Params
-        Map<String, String> mParams = new HashMap<>();
-        mParams.put(NetworkUtility.TAGS.LAT, mLat);
-        mParams.put(NetworkUtility.TAGS.LNG, mLng);
+            //Add Params
+            Map<String, String> mParams = new HashMap<>();
+            mParams.put(NetworkUtility.TAGS.LAT, mLocationIno.lat);
+            mParams.put(NetworkUtility.TAGS.LNG, mLocationIno.lng);
+            mParams.put(NetworkUtility.TAGS.CITY_NAME, mLocationIno.City);
+            mParams.put(NetworkUtility.TAGS.COUNTRY, mLocationIno.Country);
+            mParams.put(NetworkUtility.TAGS.STATE, mLocationIno.State);
+            mParams.put(NetworkUtility.TAGS.LOCALITY, TextUtils.isEmpty(mLocationIno.Locality) ? Utility.EMPTY_STRING : mLocationIno.Locality);
 
-        VolleyNetworkRequest mVolleyNetworkRequest = new VolleyNetworkRequest(NetworkUtility.WS.UPDATE_LOCATION
-                , mCallUpdateLatLngWSErrorListener
-                , mCallUpdateLatLngWSResponseListener
-                , mHeaderParams
-                , mParams
-                , null);
-        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest, NetworkUtility.WS.UPDATE_LOCATION);*/
+            VolleyNetworkRequest mVolleyNetworkRequest = new VolleyNetworkRequest(NetworkUtility.WS.UPDATE_LOCATION
+                    , mCallUpdateLatLngWSErrorListener
+                    , mCallUpdateLatLngWSResponseListener
+                    , mHeaderParams
+                    , mParams
+                    , null);
+            Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest, NetworkUtility.WS.UPDATE_LOCATION);
+        }
     }
 
     Response.Listener mCallUpdateLatLngWSResponseListener = new Response.Listener() {
@@ -561,15 +548,16 @@ public class HomeTabFragment extends BaseFragment {
 //                        Utility.showToast(mContext, "Location updated");
                         JSONObject jsonData = jsonObject.optJSONObject(NetworkUtility.TAGS.DATA);
 
-                        /*// Update City and Address issue and update the same information from
+                        // Update City and Address issue and update the same information from
                         UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
                         userDetails.CityID = jsonData.optString(NetworkUtility.TAGS.CITY_ID);
+                        userDetails.mLat = jsonData.optString(NetworkUtility.TAGS.LAT);
+                        userDetails.mLng = jsonData.optString(NetworkUtility.TAGS.LNG);
+                        userDetails.mStateName = jsonData.optString(NetworkUtility.TAGS.STATE);
                         userDetails.mCityName = jsonData.optString(NetworkUtility.TAGS.CITY_NAME);
+                        userDetails.mCountry = jsonData.optString(NetworkUtility.TAGS.COUNTRY);
                         userDetails.mLocality = jsonData.optString(NetworkUtility.TAGS.LOCALITY);
                         PreferenceUtility.getInstance(mContext).saveUserDetails(userDetails);
-
-                        updateLatLongSuccess(userDetails.mLocality);*/
-
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
 //                        mFragmentTabHomeBinding.textLocation.setText(tempCityName);
@@ -665,7 +653,6 @@ public class HomeTabFragment extends BaseFragment {
 
                         // Call Category listing webservice.
                         getCategoryListFromServer();
-
 
                         /*ArrayList<JobCategoryModel> list;
                         list = Utility.getObjectListFromJsonString(jsonObject.optString(NetworkUtility.TAGS.DATA), JobCategoryModel[].class);
@@ -777,13 +764,17 @@ public class HomeTabFragment extends BaseFragment {
         //Add Params
         Map<String, String> mParams = new HashMap<>();
         if (PreferenceUtility.getInstance(mContext).getUserDetails() != null) {
-            mParams.put(NetworkUtility.TAGS.CITY_NAME, PreferenceUtility.getInstance(mContext).getUserDetails().mCityName);
             mParams.put(NetworkUtility.TAGS.LAT, PreferenceUtility.getInstance(mContext).getUserDetails().mLat);
             mParams.put(NetworkUtility.TAGS.LNG, PreferenceUtility.getInstance(mContext).getUserDetails().mLng);
+            mParams.put(NetworkUtility.TAGS.CITY_NAME, PreferenceUtility.getInstance(mContext).getUserDetails().mCityName);
+            mParams.put(NetworkUtility.TAGS.COUNTRY, PreferenceUtility.getInstance(mContext).getUserDetails().mCountry);
+            mParams.put(NetworkUtility.TAGS.STATE, PreferenceUtility.getInstance(mContext).getUserDetails().mStateName);
         } else {
-            mParams.put(NetworkUtility.TAGS.CITY_NAME, PreferenceUtility.getInstance(mContext).getGuestUserDetails().mCityName);
             mParams.put(NetworkUtility.TAGS.LAT, PreferenceUtility.getInstance(mContext).getGuestUserDetails().mLat);
             mParams.put(NetworkUtility.TAGS.LNG, PreferenceUtility.getInstance(mContext).getGuestUserDetails().mLng);
+            mParams.put(NetworkUtility.TAGS.CITY_NAME, PreferenceUtility.getInstance(mContext).getGuestUserDetails().mCityName);
+            mParams.put(NetworkUtility.TAGS.COUNTRY, PreferenceUtility.getInstance(mContext).getGuestUserDetails().mCountryName);
+            mParams.put(NetworkUtility.TAGS.STATE, PreferenceUtility.getInstance(mContext).getGuestUserDetails().mStateName);
         }
 
         /*if (!TextUtils.isEmpty(mLat)) {

@@ -1193,11 +1193,27 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
             addressId = 0;
         }
         if (addressId <= 0) {
-            mParams.put(NetworkUtility.TAGS.LAT, model.lat + "");
-            mParams.put(NetworkUtility.TAGS.LNG, model.lng + "");
+            // In case its nagative then provide other address information
+            /*
+             public String address_initials;
+             public String address;
+             public String category; //comes from NetworkUtility.TAGS.ADDRESS_TYPE.
+             public String lat;
+             public String lng;
+             */
+            mParams.put(NetworkUtility.TAGS.ADDRESS_INITIALS, model.address_initials);
+            mParams.put(NetworkUtility.TAGS.ADDRESS, model.address);
+            mParams.put(NetworkUtility.TAGS.CATEGORY, model.category);
+            mParams.put(NetworkUtility.TAGS.LAT, model.lat);
+            mParams.put(NetworkUtility.TAGS.LNG, model.lng);
+            mParams.put(NetworkUtility.TAGS.CITY_NAME, model.cityName);
+            mParams.put(NetworkUtility.TAGS.COUNTRY, model.countryName);
+            mParams.put(NetworkUtility.TAGS.STATE, model.stateName);
         } else {
             mParams.put(NetworkUtility.TAGS.ADDRESS_ID, model.address_id);
         }
+
+
         Utility.hideKeyboard(mContext);
         VolleyNetworkRequest mVolleyNetworkRequest = new VolleyNetworkRequest(NetworkUtility.WS.CHECK_PRO_AVAILABILITY_FOR_STRATEGIC_TASK
                 , new Response.ErrorListener() {
@@ -1820,6 +1836,8 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
                             addressModel.address_id = "-" + (guestUserDetails.addressList == null ? "1" : String.valueOf(guestUserDetails.addressList.size() + 1));
                             addressModel.address = address;
                             addressModel.cityName = mLocationIno.City;
+                            addressModel.countryName = mLocationIno.Country;
+                            addressModel.stateName = mLocationIno.State;
                             addressModel.address_initials = addressInitials;
                             addressModel.category = addressType;
                             addressModel.lat = String.valueOf(latLng.latitude);

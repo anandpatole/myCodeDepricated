@@ -1639,7 +1639,7 @@ public class HomeActivity extends BaseAppCompatActivity
                 JSONObject jsonObject = new JSONObject(strResponse);
                 Log.i(TAG, "onResponse: " + jsonObject.toString());
                 int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
-                hideProgressDialog();
+//                hideProgressDialog();
                 switch (statusCode) {
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
                         JSONObject jObjData = jsonObject.getJSONObject(NetworkUtility.TAGS.DATA);
@@ -1720,12 +1720,17 @@ public class HomeActivity extends BaseAppCompatActivity
             if (userDetails != null && !"-1".equalsIgnoreCase(userDetails.CityID)) {
                 loadHomeScreenWithEarlierSavedAddress();
             } else {
-                // In case Guest user details is there
+                /**
+                 * Showing Progress Dialog that, fetching your location
+                 */
+                showProgressDialog(getString(R.string.fetching_location));
+                requestLocationUpdateFromService();
+                /*// In case Guest user details is there
                 if (PreferenceUtility.getInstance(mContext).getGuestUserDetails() != null) {
                     loadHomeScreenWithEarlierSavedAddress();
                 } else {
                     requestLocationUpdateFromService();
-                }
+                }*/
             }
         }
 
@@ -1779,6 +1784,7 @@ public class HomeActivity extends BaseAppCompatActivity
     protected void onLocationNotAvailable() {
         super.onLocationNotAvailable();
         Log.d(TAG, "onLocationNotAvailable() called");
+        hideProgressDialog();
         Fragment mFragment = getSupportFragmentManager().findFragmentById(R.id.content);
         if (mFragment != null && mFragment instanceof BaseFragment) {
             ((BaseFragment) mFragment).onLocationNotAvailable();
@@ -1788,6 +1794,7 @@ public class HomeActivity extends BaseAppCompatActivity
     @Override
     protected void onLocationFetched(Location mLocation) {
         super.onLocationFetched(mLocation);
+        hideProgressDialog();
         Log.d(TAG, "onLocationFetched() called with: mLocation = [" + mLocation + "]");
         Fragment mFragment = getSupportFragmentManager().findFragmentById(R.id.content);
         if (mFragment != null && mFragment instanceof BaseFragment) {
@@ -1802,6 +1809,7 @@ public class HomeActivity extends BaseAppCompatActivity
         super.onLocationSettingsDialogNeedToBeShow(status);
         // Location settings are not satisfied, but this can be fixed
         // by showing the user a dialog.
+        hideProgressDialog();
         try {
             // Show the dialog by calling startResolutionForResult(),
             // and check the result in onActivityResult().
@@ -1818,7 +1826,6 @@ public class HomeActivity extends BaseAppCompatActivity
         if (fragment != null) {
             ((BaseFragment) fragment).gpsEnabled();
         }
-
         fragment = getSupportFragmentManager().findFragmentByTag(ProfileTabFragment.TAG);
         if (fragment != null) {
             ((BaseFragment) fragment).gpsEnabled();

@@ -108,7 +108,7 @@ public class NetworkUtility {
         public static final String TASK_CREATE_INSTA_BOOKING = BASE_URL + "customers/tasks/instaBookingTaskCreate";
 
         public static final String CURL_NOTIFICATION_TO_SP = BASE_URL + "customers/tasks/curl_for_notification_to_sp";
-        public static final String CHECK_PRO_AVAILABILITY_FOR_STRATEGIC_TASK= BASE_URL + "customers/tasks/check_pro_availability_for_Strategic_task";
+        public static final String CHECK_PRO_AVAILABILITY_FOR_STRATEGIC_TASK = BASE_URL + "customers/tasks/check_pro_availability_for_Strategic_task";
     }
 
     public static class TAGS {
@@ -157,7 +157,9 @@ public class NetworkUtility {
         public static final String EMERGENCY_DATA = "emergency_data";
         public static final String ADDRESS_ID = "address_id";
         public static final String CITY_NAME = "city_name";
-        public static final String LOCALITY = "mLocality";
+        public static final String COUNTRY = "country";
+        public static final String STATE = "state";
+        public static final String LOCALITY = "locality";
         public static final String REQUEST_DETAIL_STATUS = "request_detail_status";
         public static final String vVERSION_TYPE = "vVersionType";
 

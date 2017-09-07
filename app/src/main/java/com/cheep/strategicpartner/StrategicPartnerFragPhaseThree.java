@@ -288,12 +288,17 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
             addressId = 0;
         }
         if (addressId <= 0) {
-            mParams.put(NetworkUtility.TAGS.LAT, mStrategicPartnerTaskCreationAct.mSelectedAddressModel.lat + "");
-            mParams.put(NetworkUtility.TAGS.LNG, mStrategicPartnerTaskCreationAct.mSelectedAddressModel.lng + "");
+            mParams.put(NetworkUtility.TAGS.ADDRESS, mStrategicPartnerTaskCreationAct.mSelectedAddressModel.address);
+            mParams.put(NetworkUtility.TAGS.ADDRESS_INITIALS, mStrategicPartnerTaskCreationAct.mSelectedAddressModel.address_initials);
+            mParams.put(NetworkUtility.TAGS.CATEGORY, mStrategicPartnerTaskCreationAct.mSelectedAddressModel.category);
+            mParams.put(NetworkUtility.TAGS.LAT, mStrategicPartnerTaskCreationAct.mSelectedAddressModel.lat);
+            mParams.put(NetworkUtility.TAGS.LNG, mStrategicPartnerTaskCreationAct.mSelectedAddressModel.lng);
+            mParams.put(NetworkUtility.TAGS.COUNTRY, mStrategicPartnerTaskCreationAct.mSelectedAddressModel.countryName);
+            mParams.put(NetworkUtility.TAGS.STATE, mStrategicPartnerTaskCreationAct.mSelectedAddressModel.stateName);
+            mParams.put(NetworkUtility.TAGS.CITY_NAME, mStrategicPartnerTaskCreationAct.mSelectedAddressModel.cityName);
         } else {
             mParams.put(NetworkUtility.TAGS.ADDRESS_ID, addressId);
         }
-
 
         //Url is based on condition if address id is greater then 0 then it means we need to update the existing address
         VolleyNetworkRequest mVolleyNetworkRequestForSPList = new VolleyNetworkRequest(NetworkUtility.WS.CHECK_CHEEPCODE_FOR_STRATEGIC_PARTNER
@@ -760,6 +765,8 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
             mParams.put(NetworkUtility.TAGS.LAT, mStrategicPartnerTaskCreationAct.mSelectedAddressModel.lat);
             mParams.put(NetworkUtility.TAGS.LNG, mStrategicPartnerTaskCreationAct.mSelectedAddressModel.lng);
             mParams.put(NetworkUtility.TAGS.CITY_NAME, mStrategicPartnerTaskCreationAct.mSelectedAddressModel.cityName);
+            mParams.put(NetworkUtility.TAGS.COUNTRY, mStrategicPartnerTaskCreationAct.mSelectedAddressModel.countryName);
+            mParams.put(NetworkUtility.TAGS.STATE, mStrategicPartnerTaskCreationAct.mSelectedAddressModel.stateName);
         }
 
         mParams.put(NetworkUtility.TAGS.CAT_ID, mStrategicPartnerTaskCreationAct.mBannerImageModel.cat_id);
@@ -804,6 +811,8 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
             mTaskCreationParams.put(NetworkUtility.TAGS.LAT, mStrategicPartnerTaskCreationAct.mSelectedAddressModel.lat);
             mTaskCreationParams.put(NetworkUtility.TAGS.LNG, mStrategicPartnerTaskCreationAct.mSelectedAddressModel.lng);
             mTaskCreationParams.put(NetworkUtility.TAGS.CITY_NAME, mStrategicPartnerTaskCreationAct.mSelectedAddressModel.cityName);
+            mTaskCreationParams.put(NetworkUtility.TAGS.COUNTRY, mStrategicPartnerTaskCreationAct.mSelectedAddressModel.countryName);
+            mTaskCreationParams.put(NetworkUtility.TAGS.STATE, mStrategicPartnerTaskCreationAct.mSelectedAddressModel.stateName);
         }
         mTaskCreationParams.put(NetworkUtility.TAGS.CAT_ID, mStrategicPartnerTaskCreationAct.mBannerImageModel.cat_id);
         mTaskCreationParams.put(NetworkUtility.TAGS.START_DATETIME, start_datetime);
