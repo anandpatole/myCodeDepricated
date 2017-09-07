@@ -1263,4 +1263,16 @@ public class Utility {
         return formatter.format(price);
     }
 
+    public static String getExperienceString(String exp) {
+        try {
+            float expFloat = Float.parseFloat(exp);
+            if (expFloat > 1) {
+                return exp + " Years \nExperience";
+            } else {
+                return exp + " Year \nExperience";
+            }
+        } catch (NumberFormatException e) {
+            return exp + " Year \nExperience";
+        }
+    }
 }
