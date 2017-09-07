@@ -41,6 +41,7 @@ import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
 import com.cheep.utils.PreferenceUtility;
+import com.cheep.utils.SuperCalendar;
 import com.cheep.utils.Utility;
 import com.google.android.gms.common.api.Status;
 
@@ -52,9 +53,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
-import java.util.TimeZone;
 
 /**
  * Created by bhavesh on 26/4/17.
@@ -725,20 +724,37 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
      */
     private void onSuccessInstaBooking(final InstaBookingProDetail taskDetailModel) {
         if (taskDetailModel != null) {
-            Calendar c = Calendar.getInstance();
-            c.setTimeInMillis(mTaskCreationPagerAdapter.mEnterTaskDetailFragment.superCalendar.getCalendar().getTimeInMillis());
-            c.setTimeZone(TimeZone.getDefault());
 
-            Date d = c.getTime();
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd MMMM", Locale.getDefault());
-            String date = simpleDateFormat.format(d);
-            int fromHour = c.get(Calendar.HOUR);
-            if (fromHour == 0) {
-                fromHour = 12;
-            }
-            c.add(Calendar.HOUR, 1);
-            int toHour = c.get(Calendar.HOUR);
-            InstaBookProDialog dialog = InstaBookProDialog.newInstance(this, taskDetailModel, date + " between " + fromHour + "-" + toHour + " hrs", new AcknowledgementInteractionListener() {
+            // create calendar for time and date for dialog text
+            SuperCalendar superCalendar = SuperCalendar.getInstance();
+            superCalendar.setTimeInMillis(mTaskCreationPagerAdapter.mEnterTaskDetailFragment.superCalendar.getCalendar().getTimeInMillis());
+
+            Date d = superCalendar.getCalendar().getTime();
+
+            // set time format 24 hours
+            final String timeFormat = SuperCalendar.SuperFormatter.HOUR_24_HOUR + ":" + SuperCalendar.SuperFormatter.MINUTE + "";
+
+            // set date format
+            final String dateFormat = SuperCalendar.SuperFormatter.DATE + " " + SuperCalendar.SuperFormatter.MONTH_JAN;
+
+            // formatter for date and time
+            SimpleDateFormat dateFormatter = new SimpleDateFormat(dateFormat);
+            SimpleDateFormat timeFormatter = new SimpleDateFormat(timeFormat);
+
+            String date = dateFormatter.format(d);
+
+            //time will from selected hour + 1 hour added like 12.11 - 13.11 hrs
+            String fromHour = timeFormatter.format(d);
+
+            // add one hour in selected time
+            superCalendar.getCalendar().add(Calendar.HOUR_OF_DAY, 1);
+
+            Date toDate = superCalendar.getCalendar().getTime();
+
+            // +1 hour
+            String toHour = timeFormatter.format(toDate);
+
+            InstaBookProDialog dialog = InstaBookProDialog.newInstance(this, taskDetailModel, date + " between " + fromHour + " - " + toHour + " hrs", new AcknowledgementInteractionListener() {
                 @Override
                 public void onAcknowledgementAccepted() {
 

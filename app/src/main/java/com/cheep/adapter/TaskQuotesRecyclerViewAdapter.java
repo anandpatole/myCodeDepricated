@@ -142,10 +142,7 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
                 || Utility.ZERO_STRING.equals(provider.experience)) {
             holder.tvExperience.setText(checkNonNullAndSet(mContext.getString(R.string.label_experience_zero)));
         } else {
-            holder.tvExperience.setText(
-                    mContext.getResources().getQuantityString(R.plurals.getTotalExperianceString
-                            , Integer.parseInt(provider.experience)
-                            , Integer.parseInt(provider.experience)));
+            holder.tvExperience.setText(Utility.getExperienceString(provider.experience));
         }
 
         // price - Checking if amount present then show call and paid lables else hide

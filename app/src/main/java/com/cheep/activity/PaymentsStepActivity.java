@@ -874,7 +874,7 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
        * Update finalized sp id on firebase.
        * @Sanjay 20 Feb 2016
        * */
-    private void updateSelectedSpOnFirebase(TaskDetailModel taskDetailModel, ProviderModel providerModel) {
+    private void updateSelectedSpOnFirebase(final TaskDetailModel taskDetailModel, final ProviderModel providerModel) {
         String formattedTaskId = FirebaseUtils.getPrefixTaskId(taskDetailModel.taskId);
         String formattedSpId = FirebaseUtils.getPrefixSPId(providerModel.providerId);
         String formattedUserId = "";
@@ -896,6 +896,22 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
                     TaskChatModel taskChatModel = dataSnapshot.getValue(TaskChatModel.class);
                     taskChatModel.chatId = formattedId;
                     FirebaseHelper.getRecentChatRef(finalFormattedUserId).child(taskChatModel.chatId).setValue(taskChatModel);
+
+                    if (isInstaBooking) {
+        /* * Add new task detail on firebase
+         * @Giteeka sep 7 2017 for insta booking
+         */
+                        ChatTaskModel chatTaskModel = new ChatTaskModel();
+                        chatTaskModel.taskId = FirebaseUtils.getPrefixTaskId(taskDetailModel.taskId);
+                        chatTaskModel.taskDesc = taskDetailModel.taskDesc;
+                        chatTaskModel.categoryId = taskDetailModel.categoryId;
+                        chatTaskModel.categoryName = taskDetailModel.categoryName;
+                        chatTaskModel.selectedSPId = providerModel.providerId;
+                        UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
+                        chatTaskModel.userId = FirebaseUtils.getPrefixUserId(userDetails.UserID);
+                        FirebaseHelper.getTaskRef(chatTaskModel.taskId).setValue(chatTaskModel);
+                    }
+
                 }
             }
 
@@ -1230,20 +1246,13 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
 
     private void onSuccessfullInstaBookingTaskCompletion(JSONObject jsonObject) {
         TaskDetailModel taskDetailModel = (TaskDetailModel) Utility.getObjectFromJsonString(jsonObject.optString(NetworkUtility.TAGS.DATA), TaskDetailModel.class);
-        if (taskDetailModel != null) {
-            /* * Add new task detail on firebase
-             * @Sanjay 20 Feb 2016
-             */
-            ChatTaskModel chatTaskModel = new ChatTaskModel();
-            chatTaskModel.taskId = FirebaseUtils.getPrefixTaskId(taskDetailModel.taskId);
-            chatTaskModel.taskDesc = taskDetailModel.taskDesc;
-            chatTaskModel.categoryId = taskDetailModel.categoryId;
-            chatTaskModel.categoryName = taskDetailModel.categoryName;
-            chatTaskModel.selectedSPId = "";
-            UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
-            chatTaskModel.userId = FirebaseUtils.getPrefixUserId(userDetails.UserID);
-            FirebaseHelper.getTaskRef(chatTaskModel.taskId).setValue(chatTaskModel);
+
+        if (providerModel != null) {
+            // add task and pro entry for firebase
+            updateSelectedSpOnFirebase(taskDetailModel, providerModel);
         }
+
+
         // finish current activity
         finish();
         // br for finished task creation activity
