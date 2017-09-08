@@ -62,7 +62,7 @@ public class FetchLocationInfoUtility {
                                     JSONArray jArrayTypes = jArrayAddressComponents.getJSONObject(j).getJSONArray("types");
                                     for (int k = 0; k < jArrayTypes.length(); k++) {
                                         // City
-                                        if (jArrayTypes.get(k).toString().equals("mLocality")) {
+                                        if (jArrayTypes.get(k).toString().equals("locality")) {
                                             mLocationInfo.City = jArrayAddressComponents.getJSONObject(j).getString("long_name");
                                         } else if (jArrayTypes.get(k).toString().equals("administrative_area_level_2")) {
                                             mLocationInfo.City = jArrayAddressComponents.getJSONObject(j).getString("long_name");

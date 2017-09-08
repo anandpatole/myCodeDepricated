@@ -18,7 +18,7 @@ import com.cheep.R;
  */
 public class BottomAlertDialog {
     BottomAlertDialog bottomAlertDialog;
-    View view;
+    public View view;
     BottomSheetDialog dialog;
 
 //    test
