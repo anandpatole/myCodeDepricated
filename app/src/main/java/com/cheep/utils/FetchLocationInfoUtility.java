@@ -37,7 +37,7 @@ public class FetchLocationInfoUtility {
     }
 
     private String generateGoogleLocationURL(String lat, String lon) {
-        return "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + lat + "," + lon + "&sensor=false&key=AIzaSyDtxYbkO21G_uHSXNXuZayLskeEjFQ6HvY";
+        return "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + lat + "," + lon + "&sensor=false&key=AIzaSyB0mqNvS18CstHtd8u4gTBM4WwVtvJurKA";
     }
 
     @SuppressWarnings("unchecked")
