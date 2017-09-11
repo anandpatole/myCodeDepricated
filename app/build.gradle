@@ -137,7 +137,7 @@ ext {
     supportLibVer = '26.0.2'
 //    supportLibVer = '25.4.0'
     gsonLibVer = '2.7'
-    playServiceVer = '11.0.4'
+    playServiceVer = '11.2.2'
 //    playServiceVer = '10.2.0'
 }
 
@@ -220,7 +220,7 @@ dependencies {
     compile 'com.github.freshdesk:hotline-android:1.2.4'
     compile 'com.appsflyer:af-android-sdk:4.7.2@aar'
 
-    compile 'com.amazonaws:aws-android-sdk-s3:2.2.+'
+    compile 'com.amazonaws:aws-android-sdk-s3:2.2.22'
 
 //    compile 'com.android.support.constraint:constraint-layout:1.0.2'
 }
