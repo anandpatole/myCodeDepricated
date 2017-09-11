@@ -50,6 +50,7 @@ public class StrategicPartnerTaskCreationAct extends BaseAppCompatActivity {
     //    public String date = "";
 //    public String time = "";
 //    public String address = "";
+    @Nullable
     public AddressModel mSelectedAddressModel;
     public String total = "";
     public String totalOfBasePrice = "";

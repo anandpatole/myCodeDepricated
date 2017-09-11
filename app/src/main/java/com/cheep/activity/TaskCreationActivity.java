@@ -50,6 +50,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -990,6 +991,22 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
                 onInstaBookClicked();
             else
                 onGetQuoteClicked();
+
+            /**
+             * As User is currently logged in, we need to add FullAddressModel to existing addresslist.
+             */
+            UserDetails mUserDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
+            if (mUserDetails != null) {
+                if (mUserDetails.addressList.isEmpty()) {
+                    mUserDetails.addressList = new ArrayList<>();
+                }
+
+                // Add additional selected addressmodel here.
+                mUserDetails.addressList.add(mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel);
+
+                // Save the user now.
+                PreferenceUtility.getInstance(mContext).saveUserDetails(mUserDetails);
+            }
         }
     };
 }

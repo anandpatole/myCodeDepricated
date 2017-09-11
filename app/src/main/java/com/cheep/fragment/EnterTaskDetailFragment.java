@@ -39,7 +39,6 @@ import android.widget.TimePicker;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.cheep.BootstrapConstant;
 import com.cheep.BuildConfig;
 import com.cheep.R;
 import com.cheep.activity.BaseAppCompatActivity;
@@ -611,6 +610,7 @@ public class EnterTaskDetailFragment extends BaseFragment {
 
     private BottomAlertDialog addressDialog;
     private AddressRecyclerViewAdapter addressRecyclerViewAdapter;
+    @Nullable
     public AddressModel mSelectedAddressModel;
 
     private void showAddressDialog() {
@@ -648,18 +648,19 @@ public class EnterTaskDetailFragment extends BaseFragment {
 //                    isFilterApplied = false;
 //                    errorLoadingHelper.showLoading();
 //                    final UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
-                    if (Integer.parseInt(mSelectedAddressModel.address_id) < 0) {
-                        // Guest User so pass the data accordingly
-                        callSPListWS(mTaskCreationActivity.mJobCategoryModel.catId,
-                                true,
-                                null,
-                                model);
-                    } else {
-                        callSPListWS(mTaskCreationActivity.mJobCategoryModel.catId,
-                                true,
-                                mSelectedAddressModel.address_id,
-                                null);
-                    }
+                    if (mSelectedAddressModel != null)
+                        if (Integer.parseInt(mSelectedAddressModel.address_id) < 0) {
+                            // Guest User so pass the data accordingly
+                            callSPListWS(mTaskCreationActivity.mJobCategoryModel.catId,
+                                    true,
+                                    null,
+                                    model);
+                        } else {
+                            callSPListWS(mTaskCreationActivity.mJobCategoryModel.catId,
+                                    true,
+                                    mSelectedAddressModel.address_id,
+                                    null);
+                        }
 
                 }
             }
@@ -670,6 +671,7 @@ public class EnterTaskDetailFragment extends BaseFragment {
         addressDialog.showDialog();
 
         if (shouldOpenAddAddress) {
+            addressDialog.view.findViewById(R.id.btn_submit).setVisibility(View.GONE);
             showAddAddressDialog(null);
         }
     }
@@ -1032,6 +1034,15 @@ public class EnterTaskDetailFragment extends BaseFragment {
                 addressRecyclerViewAdapter.delete(addressModel);
                 // Saving information in sharedpreference
                 guestUserDetails.addressList = addressRecyclerViewAdapter.getmList();
+                if (addressRecyclerViewAdapter.getItemCount() == 0)
+                    addressDialog.view.findViewById(R.id.btn_submit).setVisibility(View.GONE);
+
+                if (mSelectedAddressModel != null && mSelectedAddressModel.address_id.equalsIgnoreCase(addressModel.address_id)) {
+                    mSelectedAddressModel = null;
+                    updateWhereLabelWithIcon(false, "");
+                    updateTaskVerificationFlags();
+                }
+
             }
             PreferenceUtility.getInstance(mContext).saveGuestUserDetails(guestUserDetails);
             return;
@@ -1075,11 +1086,20 @@ public class EnterTaskDetailFragment extends BaseFragment {
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
                         if (addressRecyclerViewAdapter != null) {
                             addressRecyclerViewAdapter.delete(TEMP_ADDRESS_ID);
+                            if (addressRecyclerViewAdapter.getItemCount() == 0)
+                                addressDialog.view.findViewById(R.id.btn_submit).setVisibility(View.GONE);
 
                             // Saving information in sharedpreference
                             UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
                             userDetails.addressList = addressRecyclerViewAdapter.getmList();
                             PreferenceUtility.getInstance(mContext).saveUserDetails(userDetails);
+
+
+                            if (mSelectedAddressModel != null && mSelectedAddressModel.address_id.equalsIgnoreCase(TEMP_ADDRESS_ID)) {
+                                mSelectedAddressModel = null;
+                                updateWhereLabelWithIcon(false, "");
+                                updateTaskVerificationFlags();
+                            }
                         }
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
@@ -1304,6 +1324,7 @@ public class EnterTaskDetailFragment extends BaseFragment {
 
                             if (addressRecyclerViewAdapter != null) {
                                 addressRecyclerViewAdapter.add(addressModel);
+                                addressDialog.view.findViewById(R.id.btn_submit).setVisibility(View.VISIBLE);
                             }
 
                             //Saving information in sharedpreference
@@ -1370,6 +1391,7 @@ public class EnterTaskDetailFragment extends BaseFragment {
 
                         if (addressRecyclerViewAdapter != null) {
                             addressRecyclerViewAdapter.add(addressModel);
+                            addressDialog.view.findViewById(R.id.btn_submit).setVisibility(View.VISIBLE);
                         }
 
                         //Saving information in sharedpreference
