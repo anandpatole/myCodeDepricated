@@ -1,6 +1,7 @@
 package com.cheep.utils;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import com.android.volley.Response;
 import com.cheep.model.GuestUserDetails;
@@ -65,7 +66,9 @@ public class FetchLocationInfoUtility {
                                         if (jArrayTypes.get(k).toString().equals("locality")) {
                                             mLocationInfo.City = jArrayAddressComponents.getJSONObject(j).getString("long_name");
                                         } else if (jArrayTypes.get(k).toString().equals("administrative_area_level_2")) {
-                                            mLocationInfo.City = jArrayAddressComponents.getJSONObject(j).getString("long_name");
+                                            if (TextUtils.isEmpty(mLocationInfo.City)) {
+                                                mLocationInfo.City = jArrayAddressComponents.getJSONObject(j).getString("long_name");
+                                            }
                                         }
 
                                         // State

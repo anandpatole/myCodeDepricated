@@ -1078,6 +1078,23 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
             Log.d(TAG, "onReceive() called with: context = [" + context + "], intent = [" + intent + "]");
             Utility.hideKeyboard(mContext);
             // Initiating the payment now
+
+            /**
+             * As User is currently logged in, we need to add FullAddressModel to existing addresslist.
+             */
+            UserDetails mUserDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
+            if (mUserDetails != null) {
+                if (mUserDetails.addressList.isEmpty()) {
+                    mUserDetails.addressList = new ArrayList<>();
+                }
+
+                // Add additional selected addressmodel here.
+                mUserDetails.addressList.add(mStrategicPartnerTaskCreationAct.mSelectedAddressModel);
+
+                // Save the user now.
+                PreferenceUtility.getInstance(mContext).saveUserDetails(mUserDetails);
+            }
+
             payNow();
         }
     };

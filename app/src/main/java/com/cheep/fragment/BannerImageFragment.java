@@ -70,7 +70,7 @@ public class BannerImageFragment extends BaseFragment {
         super.onActivityCreated(savedInstanceState);
         if (bannerImageModel != null) {
             Glide.with(mContext)
-                    .load(bannerImageModel.imgCatImageUrl)
+                    .load(bannerImageModel.bannerImage)
                     .listener(new RequestListener<String, GlideDrawable>() {
                         @Override
                         public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
@@ -91,8 +91,6 @@ public class BannerImageFragment extends BaseFragment {
 
                     if (!processingClick) {
                         processingClick = true;
-
-
                         if (bannerImageModel != null && !bannerImageModel.cat_id.equalsIgnoreCase(Utility.ZERO_STRING)) {
                             StrategicPartnerTaskCreationAct.getInstance(mContext, bannerImageModel);
                         }
