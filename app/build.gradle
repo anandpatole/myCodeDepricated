@@ -173,7 +173,6 @@ dependencies {
 
     // firebase database sdk
     compile "com.google.firebase:firebase-database:$playServiceVer"
-    compile 'com.android.support.constraint:constraint-layout:1.0.2'
 
     //Twitter
     compile('com.twitter.sdk.android:twitter:2.3.2@aar') {
@@ -204,6 +203,9 @@ dependencies {
     //this is gradle path from where CB will be automatically downloaded
 
     // AppsFlyer SDK
+    
+    //    compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.android.support:multidex:1.0.1'
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'com.daimajia.swipelayout:library:1.2.0@aar'
@@ -219,10 +221,7 @@ dependencies {
     compile 'com.payu.magicretry:magicretry:1.0.0'
     compile 'com.github.freshdesk:hotline-android:1.2.4'
     compile 'com.appsflyer:af-android-sdk:4.7.2@aar'
-
     compile 'com.amazonaws:aws-android-sdk-s3:2.2.+'
-
-//    compile 'com.android.support.constraint:constraint-layout:1.0.2'
 }
 
 // Add to the bottom of the file

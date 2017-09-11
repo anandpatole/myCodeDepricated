@@ -168,6 +168,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_office">Office</string>
     <string name="label_add_address">Add Address</string>
     <string name="label_username">Username</string>
+    <string name="label_spread_the_gift_of_happiness">Spread the gift of hapiness</string>
 
     <!--Translation of Below words are left-->
     <string name="label_please_wait">Please wait</string>
@@ -486,5 +487,16 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_service_required_for">Service Required For</string>
     <string name="special_instructions">Special Instructions</string>
     <string name="alert_strategic_partner_not_available_in_your_location">This service is not available in your location</string>
-
+    <string name="label_cheepgo">CHEEPGO</string>
+    <string name="label_share_this_specila_code_with_your_friend_and_family">Share this special code with your friends and family </string>
+    <string name="label_when_they_use_cheep_get_100">When they use CHEEP they get ₹100 off on their first booking &amp; you too get ₹100 off yours. Know more</string>
+    <string name="label_invite_friends">Invite Friends</string>
+    <string name="label_refer_and_earn">Refer &amp; Earn</string>
+    <string name="label_you_have_earned">You have earned: ₹100 from 1 referral</string>
+    <string name="label_about_refer_and_earn">About Refer &amp; Earn</string>
+    <string name="label_dialog_refer_and_earn_body">Everytime a new user books a service on CHEEP with your invite code, they\'ll get ₹100 off on the service. Once they book the service, you\'ll automatically earn ₹100 which you can redeem while booking your next service with CHEEP.</string>
+    <string name="label_dialog_refer_and_earn_info_title">Your current earned balance is ₹300</string>
+    <string name="label_dialog_refer_and_earn_info_body">The maximum redeemable amount fpr one service is ₹100.</string>
+    <string name="label_ok_got_it">Ok, Got It</string>
+    <string name="label_dialog_refer_and_earn_no_payment_body">Earn discounts each time you refer CHEEP to your friends and family. Just share your unique code XXVVXX.</string>
 </resources>
