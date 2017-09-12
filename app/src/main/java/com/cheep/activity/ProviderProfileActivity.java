@@ -208,7 +208,7 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
                 TAG,
                 mActivityProviderProfileBinding.imgProfile,
                 providerModel.profileUrl,
-                R.drawable.icon_profile_img_solid,
+                Utility.DEFAULT_CHEEP_LOGO,
                 R.color.splash_gradient_end
                 , true);
 //        Utility.loadImageView(mContext, mActivityProviderProfileBinding.imgProfile, providerModel.profileUrl, Utility.DEFAULT_PROFILE_SRC);

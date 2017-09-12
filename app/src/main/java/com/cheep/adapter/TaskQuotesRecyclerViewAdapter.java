@@ -110,7 +110,7 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
         holder.removeAnimations();
 
         //image
-        Utility.showCircularImageView(mContext, TAG, holder.ivAvatar, provider.profileUrl, Utility.DEFAULT_PROFILE_SRC);
+        Utility.showCircularImageView(mContext, TAG, holder.ivAvatar, provider.profileUrl, Utility.DEFAULT_CHEEP_LOGO);
 
         //basic info
         SpannableString sName = new SpannableString(checkNonNullAndSet(provider.userName));

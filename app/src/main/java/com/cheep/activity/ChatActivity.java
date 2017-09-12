@@ -63,7 +63,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 
@@ -158,7 +157,7 @@ public class ChatActivity extends BaseAppCompatActivity implements View.OnClickL
         mActivityChatBinding.recyclerView.setAdapter(chatMessageRecyclerViewAdapter);
         mActivityChatBinding.recyclerView.scrollToPosition(chatMessageRecyclerViewAdapter.getItemCount());
 
-        Utility.showCircularImageView(mContext, TAG, mActivityChatBinding.imgProfile, taskChatModel.participantPhotoUrl, Utility.DEFAULT_PROFILE_SRC);
+        Utility.showCircularImageView(mContext, TAG, mActivityChatBinding.imgProfile, taskChatModel.participantPhotoUrl, Utility.DEFAULT_CHEEP_LOGO);
 
         // By Default its YES, so message would be EMPTY STRING.
         enableChatAccess(mCurrentChatStatus, Utility.EMPTY_STRING);
