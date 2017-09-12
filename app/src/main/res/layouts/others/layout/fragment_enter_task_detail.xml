@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools">
 
     <ScrollView
@@ -237,59 +236,68 @@
                     android:textColor="@color/splash_gradient_end"
                     android:textSize="@dimen/text_size_18sp"/>
 
-                <android.support.v7.widget.CardView
+                <!--     <android.support.v7.widget.CardView
+                         android:id="@+id/cvInstaBook"
+                         android:layout_width="match_parent"
+                         android:layout_height="wrap_content"
+                         android:layout_marginTop="@dimen/scale_15dp"
+                         android:clickable="true"
+                         android:foreground="?attr/selectableItemBackground"
+                         app:cardBackgroundColor="@color/splash_gradient_end"
+                         app:cardCornerRadius="@dimen/scale_5dp"
+                         app:cardElevation="@dimen/scale_4dp">-->
+
+                <RelativeLayout
                     android:id="@+id/cvInstaBook"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/scale_15dp"
-                    android:clickable="true"
-                    android:foreground="?attr/selectableItemBackground"
-                    app:cardBackgroundColor="@color/splash_gradient_end">
+                    android:background="@drawable/bg_insta_booking"
+                    android:paddingBottom="@dimen/scale_8dp"
+                    android:paddingLeft="@dimen/scale_10dp"
+                    android:paddingRight="@dimen/scale_10dp"
+                    android:paddingTop="@dimen/scale_8dp">
 
-                    <RelativeLayout
+                    <ImageView
+                        android:id="@+id/ivInstaIcon"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:paddingBottom="@dimen/scale_8dp"
-                        android:paddingLeft="@dimen/scale_10dp"
-                        android:paddingRight="@dimen/scale_10dp"
-                        android:paddingTop="@dimen/scale_8dp">
-
-                        <ImageView
-                            android:id="@+id/ivInstaIcon"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
-                            android:src="@drawable/ic_insta_book"/>
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/ic_insta_book"/>
 
 
-                        <LinearLayout
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_toRightOf="@+id/ivInstaIcon"
+                        android:orientation="vertical">
+
+                        <com.cheep.custom_view.CFTextViewBold
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
-                            android:layout_toRightOf="@+id/ivInstaIcon"
-                            android:orientation="vertical">
+                            android:layout_marginTop="@dimen/scale_5dp"
+                            android:paddingLeft="@dimen/scale_15dp"
+                            android:text="@string/label_insta_book"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/text_size_18sp"/>
 
-                            <com.cheep.custom_view.CFTextViewBold
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:paddingLeft="@dimen/scale_15dp"
-                                android:text="@string/label_insta_book"
-                                android:textColor="@color/white"
-                                android:textSize="@dimen/text_size_18sp"/>
+                        <com.cheep.custom_view.CFTextViewRegular
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/scale_4dp"
+                            android:lines="2"
+                            android:paddingLeft="@dimen/scale_15dp"
+                            android:text="@string/lable_get_pro"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/text_size_14sp"/>
+                    </LinearLayout>
 
-                            <com.cheep.custom_view.CFTextViewRegular
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="@dimen/scale_4dp"
-                                android:paddingLeft="@dimen/scale_15dp"
-                                android:text="@string/lable_get_pro"
-                                android:textColor="@color/white"
-                                android:textSize="@dimen/text_size_14sp"/>
-                        </LinearLayout>
+                </RelativeLayout>
 
-                    </RelativeLayout>
-
-                </android.support.v7.widget.CardView>
+                <!--
+                                </android.support.v7.widget.CardView>
+                -->
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -353,58 +361,67 @@
                 android:paddingTop="@dimen/scale_20dp">
 
 
-                <android.support.v7.widget.CardView
-                    android:id="@+id/cvGetQuote"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:clickable="true"
-                    android:foreground="?attr/selectableItemBackground"
-                    app:cardBackgroundColor="@color/splash_gradient_end">
+                <!-- <android.support.v7.widget.CardView
+                     android:id="@+id/cvGetQuote"
+                     android:layout_width="match_parent"
+                     android:layout_height="wrap_content"
+                     android:clickable="true"
+                     android:foreground="?attr/selectableItemBackground"
+                     app:cardBackgroundColor="@color/splash_gradient_end"
+                     app:cardCornerRadius="@dimen/scale_5dp"
+                     app:cardElevation="@dimen/scale_4dp">-->
 
-                    <RelativeLayout
+                <RelativeLayout
+                    android:id="@+id/cvGetQuote"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/scale_15dp"
+                    android:background="@drawable/bg_insta_booking"
+                    android:paddingBottom="@dimen/scale_8dp"
+                    android:paddingLeft="@dimen/scale_10dp"
+                    android:paddingRight="@dimen/scale_10dp"
+                    android:paddingTop="@dimen/scale_8dp">
+
+                    <ImageView
+                        android:id="@+id/ivQuoteIcon"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:paddingBottom="@dimen/scale_8dp"
-                        android:paddingLeft="@dimen/scale_10dp"
-                        android:paddingRight="@dimen/scale_10dp"
-                        android:paddingTop="@dimen/scale_8dp">
-
-                        <ImageView
-                            android:id="@+id/ivQuoteIcon"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
-                            android:src="@drawable/ic_get_quote"/>
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/ic_get_quote"/>
 
 
-                        <LinearLayout
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_toRightOf="@+id/ivQuoteIcon"
+                        android:orientation="vertical">
+
+                        <com.cheep.custom_view.CFTextViewBold
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
-                            android:layout_toRightOf="@+id/ivQuoteIcon"
-                            android:orientation="vertical">
+                            android:layout_marginTop="@dimen/scale_5dp"
+                            android:paddingLeft="@dimen/scale_15dp"
+                            android:text="@string/label_get_quotes"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/text_size_18sp"/>
 
-                            <com.cheep.custom_view.CFTextViewBold
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:paddingLeft="@dimen/scale_15dp"
-                                android:text="@string/label_get_quotes"
-                                android:textColor="@color/white"
-                                android:textSize="@dimen/text_size_18sp"/>
+                        <com.cheep.custom_view.CFTextViewRegular
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/scale_4dp"
+                            android:lines="2"
+                            android:paddingLeft="@dimen/scale_15dp"
+                            android:text="@string/lable_book_pro"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/text_size_14sp"/>
+                    </LinearLayout>
 
-                            <com.cheep.custom_view.CFTextViewRegular
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="@dimen/scale_4dp"
-                                android:paddingLeft="@dimen/scale_15dp"
-                                android:text="@string/lable_book_pro"
-                                android:textColor="@color/white"
-                                android:textSize="@dimen/text_size_14sp"/>
-                        </LinearLayout>
+                </RelativeLayout>
 
-                    </RelativeLayout>
-
-                </android.support.v7.widget.CardView>
+                <!--
+                            </android.support.v7.widget.CardView>
+                -->
 
                 <LinearLayout
                     android:layout_width="match_parent"

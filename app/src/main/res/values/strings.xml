@@ -405,7 +405,8 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_verified_pro">verified</string>
     <string name="label_partner_pro">Partner</string>
     <string name="label_congratulation">Congratulation</string>
-    <string name="label_brilliant_its_time_to_cheep">Brilliant! Its\' time to CHEEP</string>
+<!--    <string name="label_brilliant_its_time_to_cheep">Brilliant! Its\' time to CHEEP</string>-->
+    <string name="label_brilliant_its_time_to_cheep">Brilliant, Let\'s get CHEEPING!</string>
     <string name="label_alert_not_active">Sorry! Alert will be active only once your task starts.</string>
     <string name="default_country_code">+91</string>
     <string name="number_one">1</string>
