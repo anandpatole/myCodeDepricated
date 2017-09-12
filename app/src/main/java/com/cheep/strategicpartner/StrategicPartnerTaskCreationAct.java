@@ -12,6 +12,8 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 
 import com.cheep.R;
 import com.cheep.activity.BaseAppCompatActivity;
@@ -75,6 +77,9 @@ public class StrategicPartnerTaskCreationAct extends BaseAppCompatActivity {
          */
 
         setTaskState(STEP_ONE_UNVERIFIED);
+
+
+
         if (getIntent().getExtras() != null) {
             // Fetch banner Model
             Log.e(TAG, " data " + getIntent().getStringExtra(Utility.Extra.DATA));
@@ -82,7 +87,7 @@ public class StrategicPartnerTaskCreationAct extends BaseAppCompatActivity {
             if (mBannerImageModel != null) {
                 // Load PRO image
                 Utility.showCircularImageViewWithColorBorder(mContext, TAG, mActivityTaskCreationForStrategicPartnerBinding.imgLogo, mBannerImageModel.imgCatImageUrl, R.drawable.icon_profile_img_solid, R.color.dark_blue_variant_1, true);
-                Utility.loadImageView(mContext, mActivityTaskCreationForStrategicPartnerBinding.imgService, mBannerImageModel.bannerImage, R.drawable.gradient_black);
+
                 isSingleSelection = mBannerImageModel.minimum_selection.equalsIgnoreCase("1");
                 mActivityTaskCreationForStrategicPartnerBinding.textTitle.setText(mBannerImageModel.name != null ? mBannerImageModel.name : Utility.EMPTY_STRING);
             }
@@ -148,6 +153,22 @@ public class StrategicPartnerTaskCreationAct extends BaseAppCompatActivity {
             }
         });
 
+
+        // Calculat Pager Height and Width
+        ViewTreeObserver mViewTreeObserver = mActivityTaskCreationForStrategicPartnerBinding.frameBannerImage.getViewTreeObserver();
+        mViewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                mActivityTaskCreationForStrategicPartnerBinding.frameBannerImage.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                int width = mActivityTaskCreationForStrategicPartnerBinding.frameBannerImage.getMeasuredWidth();
+                ViewGroup.LayoutParams params = mActivityTaskCreationForStrategicPartnerBinding.frameBannerImage.getLayoutParams();
+                params.height = Utility.getHeightFromWidthForTwoOneRatio(width);
+                mActivityTaskCreationForStrategicPartnerBinding.frameBannerImage.setLayoutParams(params);
+
+                // Load the image now.
+                Utility.loadImageView(mContext, mActivityTaskCreationForStrategicPartnerBinding.imgService, mBannerImageModel.bannerImage, R.drawable.gradient_black);
+            }
+        });
 
     }
 
