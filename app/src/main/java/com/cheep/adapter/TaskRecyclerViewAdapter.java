@@ -137,7 +137,7 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
     }
 
     @Override
-    public void onActualBindViewHolder(final ViewHolder holder, int position) {
+    public void onActualBindViewHolder(final ViewHolder holder, final int position) {
         final TaskDetailModel model = mList.get(holder.getAdapterPosition());
 
         holder.removeAnimations();
@@ -197,6 +197,7 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
                 //holder.mUpcomingTaskBinding.gridImageView.createWithUrls(arrayListUri); // just for testing
                 holder.mUpcomingTaskBinding.gridImageView.createWithUrls(getURIListFromStringList(model.profile_img_arr));
 
+
                 if (model.selectedProvider == null) {
                     holder.mUpcomingTaskBinding.layoutIndividualProfile.setVisibility(View.GONE);
                     holder.mUpcomingTaskBinding.layoutGroupProfile.setVisibility(View.VISIBLE);
@@ -213,6 +214,15 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
                     holder.mUpcomingTaskBinding.layoutIndividualProfile.setVisibility(View.VISIBLE);
                     holder.mUpcomingTaskBinding.layoutGroupProfile.setVisibility(View.GONE);
 
+                    holder.mUpcomingTaskBinding.imgFav.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+
+                            listener.onFavClicked(model, !holder.mUpcomingTaskBinding.imgFav.isSelected(), position);
+                            holder.mUpcomingTaskBinding.imgFav.setSelected(!holder.mUpcomingTaskBinding.imgFav.isSelected());
+
+                        }
+                    });
 
                     if (model.taskType.equalsIgnoreCase(Utility.TASK_TYPE.STRATEGIC)) {
                         holder.mUpcomingTaskBinding.tvProviderName.setText(model.categoryName);

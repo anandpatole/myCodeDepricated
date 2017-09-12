@@ -379,8 +379,7 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
                     .dontAnimate()
                     .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                     .into(mActivityProviderProfileBinding.imgChat);
-        }
-        else{
+        } else {
             Glide.with(mContext)
                     .load(R.drawable.icon_chat_smaller)
                     .into(mActivityProviderProfileBinding.imgChat);
@@ -492,6 +491,8 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
                 messageEvent.id = providerModel.providerId;
                 messageEvent.isFav = mActivityProviderProfileBinding.imgFav.isSelected() ? Utility.BOOLEAN.YES : Utility.BOOLEAN.NO;
                 EventBus.getDefault().post(messageEvent);
+
+
             }
         });
 
@@ -759,7 +760,6 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
                     case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
                         //Logout and finish the current activity
                         Utility.logout(mContext, true, statusCode);
-                        ;
                         finish();
                         break;
                 }

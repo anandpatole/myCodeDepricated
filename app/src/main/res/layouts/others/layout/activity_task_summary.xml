@@ -202,12 +202,35 @@
                                 android:paddingTop="@dimen/scale_16dp"
                                 android:visibility="visible">
 
-                                <ImageView
-                                    android:id="@+id/img_profile"
-                                    android:layout_width="@dimen/scale_50dp"
-                                    android:layout_height="@dimen/scale_50dp"
-                                    android:layout_gravity="center_vertical"
-                                    tools:ignore="ContentDescription"/>
+
+                                <FrameLayout
+                                    android:id="@+id/layout_individual_profile"
+                                    android:layout_width="@dimen/chat_profile_layout_width"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginBottom="4dp"
+                                    android:layout_toRightOf="@+id/img_unread"
+                                    android:orientation="vertical"
+                                    android:paddingTop="@dimen/scale_3dp"
+                                    android:visibility="visible">
+
+                                    <ImageView
+                                        android:id="@+id/img_profile"
+                                        android:layout_width="@dimen/scale_50dp"
+                                        android:layout_height="@dimen/scale_50dp"
+                                        android:layout_gravity="center_vertical"
+                                        tools:ignore="ContentDescription"
+                                        tools:src="@drawable/ic_cheep_circular_icon"/>
+
+                                    <ImageView
+                                        android:id="@+id/imgFav"
+                                        android:layout_width="@dimen/scale_20dp"
+                                        android:layout_height="@dimen/scale_20dp"
+                                        android:layout_gravity="right|bottom"
+                                        android:layout_marginRight="@dimen/scale_5dp"
+                                        android:background="@drawable/icon_fav_selector"
+                                        tools:ignore="ContentDescription"/>
+                                </FrameLayout>
+
 
                                 <LinearLayout
                                     android:layout_width="wrap_content"
@@ -215,7 +238,7 @@
                                     android:layout_gravity="center_vertical"
                                     android:layout_marginLeft="@dimen/scale_16dp"
                                     android:layout_toLeftOf="@+id/ln_chat_call"
-                                    android:layout_toRightOf="@id/img_profile"
+                                    android:layout_toRightOf="@id/layout_individual_profile"
                                     android:orientation="vertical">
 
                                     <LinearLayout
@@ -231,21 +254,21 @@
                                             android:textSize="@dimen/text_size_16sp"
                                             tools:text="Bhavesh Patadiya"/>
 
-<!--
-                                        <com.cheep.custom_view.CFTextViewSemiBold
-                                            android:id="@+id/text_pro_verified"
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="wrap_content"
-                                            android:layout_gravity="center_vertical"
-                                            android:layout_marginLeft="@dimen/scale_3dp"
-                                            android:background="@drawable/img_blue_rounded"
-                                            android:padding="@dimen/scale_2dp"
-                                            android:text="@string/label_verified"
-                                            android:textAllCaps="false"
-                                            android:textColor="@color/white"
-                                            android:textSize="@dimen/text_size_10sp"
-                                            android:visibility="visible"/>
--->
+                                        <!--
+                                                                                <com.cheep.custom_view.CFTextViewSemiBold
+                                                                                    android:id="@+id/text_pro_verified"
+                                                                                    android:layout_width="wrap_content"
+                                                                                    android:layout_height="wrap_content"
+                                                                                    android:layout_gravity="center_vertical"
+                                                                                    android:layout_marginLeft="@dimen/scale_3dp"
+                                                                                    android:background="@drawable/img_blue_rounded"
+                                                                                    android:padding="@dimen/scale_2dp"
+                                                                                    android:text="@string/label_verified"
+                                                                                    android:textAllCaps="false"
+                                                                                    android:textColor="@color/white"
+                                                                                    android:textSize="@dimen/text_size_10sp"
+                                                                                    android:visibility="visible"/>
+                                        -->
                                     </LinearLayout>
 
                                     <RatingBar
