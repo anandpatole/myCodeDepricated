@@ -956,7 +956,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
         final RatingBar ratingBar = (RatingBar) view.findViewById(R.id.rating_bar);
         final EditText edtMessage = (EditText) view.findViewById(R.id.edit_message);
         final TextView txtLabel = (TextView) view.findViewById(R.id.text_label);
-        txtLabel.setText(getString(R.string.label_write_a_review, mTaskDetailModel.selectedProvider.userName));
+        txtLabel.setText(getString(R.string.label_write_a_review, mTaskDetailModel.categoryName));
 
         rateDialog = new BottomAlertDialog(mContext);
         view.findViewById(R.id.btn_submit).setOnClickListener(new View.OnClickListener() {

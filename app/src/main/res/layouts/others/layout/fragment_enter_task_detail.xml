@@ -276,7 +276,6 @@
                         <com.cheep.custom_view.CFTextViewBold
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/scale_5dp"
                             android:paddingLeft="@dimen/scale_15dp"
                             android:text="@string/label_insta_book"
                             android:textColor="@color/white"
@@ -286,9 +285,9 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/scale_4dp"
-                            android:lines="2"
+                            android:maxLines="2"
                             android:paddingLeft="@dimen/scale_15dp"
-                            android:text="@string/lable_get_pro"
+                            android:text="@string/lable_insta_get_pro"
                             android:textColor="@color/white"
                             android:textSize="@dimen/text_size_14sp"/>
                     </LinearLayout>
@@ -400,7 +399,6 @@
                         <com.cheep.custom_view.CFTextViewBold
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/scale_5dp"
                             android:paddingLeft="@dimen/scale_15dp"
                             android:text="@string/label_get_quotes"
                             android:textColor="@color/white"
@@ -410,7 +408,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/scale_4dp"
-                            android:lines="2"
+                            android:maxLines="2"
                             android:paddingLeft="@dimen/scale_15dp"
                             android:text="@string/lable_book_pro"
                             android:textColor="@color/white"
