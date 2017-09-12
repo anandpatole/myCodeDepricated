@@ -517,11 +517,13 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
      * @param flag
      */
     private void showChatCallButton(boolean flag) {
-        if (flag) {
-            mActivityTaskSummaryBinding.lnChatCall.setVisibility(View.VISIBLE);
-        } else {
-            mActivityTaskSummaryBinding.lnChatCall.setVisibility(View.GONE);
-        }
+        // TODO :: changed on sept 12
+//        if (flag) {
+//            mActivityTaskSummaryBinding.lnChatCall.setVisibility(View.VISIBLE);
+//        } else {
+        mActivityTaskSummaryBinding.lnChatCall.setVisibility(View.GONE);
+//        }
+
     }
 
     private void showTaskCompletionDialog(boolean flag) {
