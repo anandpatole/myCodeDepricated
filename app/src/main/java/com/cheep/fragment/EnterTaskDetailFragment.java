@@ -1475,7 +1475,7 @@ public class EnterTaskDetailFragment extends BaseFragment {
         // Add Params
         Map<String, Object> mParams = new HashMap<>();
 
-        //for pagination
+        // for pagination
         // Sending @pageNo Hard-Coded for now as it won't required here
         mParams.put(NetworkUtility.TAGS.PAGE_NUM, "0");
         // Set Category ID
@@ -1495,6 +1495,8 @@ public class EnterTaskDetailFragment extends BaseFragment {
                 mParams.put(NetworkUtility.TAGS.CITY_NAME, addressModel.cityName);
             }
         }
+
+
         String url = NetworkUtility.WS.SP_LIST;
 
         //Url is based on condition if address id is greater then 0 then it means we need to update the existing address

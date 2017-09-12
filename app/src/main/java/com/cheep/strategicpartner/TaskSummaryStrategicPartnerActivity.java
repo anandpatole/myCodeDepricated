@@ -20,6 +20,8 @@ import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.RatingBar;
@@ -133,7 +135,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
         mActivityTaskSummaryBinding.textCategoryName.setText(mTaskDetailModel.categoryName != null ? mTaskDetailModel.categoryName : Utility.EMPTY_STRING);
 
         // Set up image
-        Utility.loadImageView(mContext, mActivityTaskSummaryBinding.imgService, mTaskDetailModel.bannerImage);
+//        Utility.loadImageView(mContext, mActivityTaskSummaryBinding.imgService, mTaskDetailModel.bannerImage);
 //        Utility.loadImageView(mContext, mActivityTaskSummaryBinding.imgService, mTaskDetailModel.catImageExtras.thumb);
 
 
@@ -284,6 +286,23 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
             @Override
             public void onClick(View view) {
                 showFullDesc(getString(R.string.label_address), mActivityTaskSummaryBinding.textTaskWhere.getText().toString());
+            }
+        });
+
+        // Update the banner image
+        // Calculat Pager Height and Width
+        ViewTreeObserver mViewTreeObserver = mActivityTaskSummaryBinding.frameBannerImage.getViewTreeObserver();
+        mViewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                mActivityTaskSummaryBinding.frameBannerImage.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                int width = mActivityTaskSummaryBinding.frameBannerImage.getMeasuredWidth();
+                ViewGroup.LayoutParams params = mActivityTaskSummaryBinding.frameBannerImage.getLayoutParams();
+                params.height = Utility.getHeightFromWidthForTwoOneRatio(width);
+                mActivityTaskSummaryBinding.frameBannerImage.setLayoutParams(params);
+
+                // Load the image now.
+                Utility.loadImageView(mContext, mActivityTaskSummaryBinding.imgService, mTaskDetailModel.bannerImage, R.drawable.gradient_black);
             }
         });
     }
