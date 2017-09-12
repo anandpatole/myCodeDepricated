@@ -36,6 +36,7 @@ import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.Display;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -193,6 +194,12 @@ public class Utility {
      */
     public static final float CATEGORY_IMAGE_RATIO = (float) 2.3972;
 
+
+    /**
+     *
+     * Regular expression for mobile number
+     */
+    public static  final String MOBILE_REGREX = "(((\\+*)((0[ -]+)*|(91[- ]+)*)(\\d{12}+|\\d{10}+))|\\d{5}([- ]*)\\d{6})";
 
     /**
      * ongoing user chatId

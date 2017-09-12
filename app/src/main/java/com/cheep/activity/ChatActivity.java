@@ -470,7 +470,7 @@ public class ChatActivity extends BaseAppCompatActivity implements View.OnClickL
         chatMessageModel.chatId = mChatId;
         chatMessageModel.taskId = formattedTaskId;
         if (chatType.equalsIgnoreCase(Utility.CHAT_TYPE_MESSAGE)) {
-            chatMessageModel.message = mActivityChatBinding.editMessage.getText().toString().trim();
+            chatMessageModel.message = mActivityChatBinding.editMessage.getText().toString().replaceAll(Utility.MOBILE_REGREX,Utility.EMPTY_STRING).trim();
         } else if (chatType.equalsIgnoreCase(Utility.CHAT_TYPE_MEDIA)) {
             chatMessageModel.mediaUrl = mediaUrl;
             chatMessageModel.mediaThumbUrl = mediaThumbUrl;
