@@ -15,7 +15,7 @@ android {
         minSdkVersion 16
         targetSdkVersion 25
         versionCode 23
-        versionName "1.0.72" // PLEASE FIRST MAKE SURE MIN-VERSION IS 16.
+        versionName "1.0.73" // PLEASE FIRST MAKE SURE MIN-VERSION IS 16.
         renderscriptTargetApi 18
         renderscriptSupportModeEnabled true
 
@@ -137,7 +137,7 @@ ext {
     supportLibVer = '26.0.2'
 //    supportLibVer = '25.4.0'
     gsonLibVer = '2.7'
-    playServiceVer = '11.0.4'
+    playServiceVer = '11.2.2'
 //    playServiceVer = '10.2.0'
 }
 

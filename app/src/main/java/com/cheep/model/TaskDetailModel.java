@@ -125,6 +125,9 @@ public class TaskDetailModel {
     @SerializedName("question_detail")
     public ArrayList<QueAnsModel> mQuesList;
 
+    @SerializedName("banner_image")
+    public String bannerImage;
+
 
     public TaskDetailModel() {
 

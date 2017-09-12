@@ -88,7 +88,7 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
     private boolean isVerified = false;
     @Nullable
     private String cheepCode;
-
+    private String tempTotalBasePrice = "";
     // After Posting Task, this would hold the details for AppsFlyer
     Map<String, Object> mTaskCreationParams;
 
@@ -331,6 +331,7 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
                         if (edtCheepCode != null) {
                             cheepCode = edtCheepCode.getText().toString().trim();
                             cheepCodeDialog.dismiss();
+                            tempTotalBasePrice = mStrategicPartnerTaskCreationAct.totalOfBasePrice;
                             mStrategicPartnerTaskCreationAct.totalOfBasePrice = jsonObject.optString(NetworkUtility.TAGS.QUOTE_AMOUNT);
                             String discount = jsonObject.optString(NetworkUtility.TAGS.DISCOUNT_AMOUNT);
                             String payable = jsonObject.optString(NetworkUtility.TAGS.PAYABLE_AMOUNT);
@@ -349,6 +350,11 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
                         error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
                         // Show message
 //                        Utility.showSnackBar(error_message, mActivityJobSummaryBinding.getRoot());
+
+                        cheepCode = "";
+                        if (!TextUtils.isEmpty(tempTotalBasePrice))
+                            mStrategicPartnerTaskCreationAct.totalOfBasePrice = tempTotalBasePrice;
+
                         Utility.showToast(mContext, error_message);
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
