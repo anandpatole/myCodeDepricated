@@ -237,7 +237,7 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
                         else
                             holder.mUpcomingTaskBinding.imgFav.setSelected(false);
                     }
-                    Utility.showCircularImageViewWithColorBorder(holder.mUpcomingTaskBinding.imgProfilePic.getContext(), TAG, holder.mUpcomingTaskBinding.imgProfilePic, model.selectedProvider.profileUrl, R.drawable.icon_profile_img_solid, R.color.grey_dark_color, true);
+                    Utility.showCircularImageViewWithColorBorder(holder.mUpcomingTaskBinding.imgProfilePic.getContext(), TAG, holder.mUpcomingTaskBinding.imgProfilePic, model.selectedProvider.profileUrl, Utility.DEFAULT_CHEEP_LOGO, R.color.grey_dark_color, true);
 
                     // Show Rating
                     holder.mUpcomingTaskBinding.ratingBar.setVisibility(View.VISIBLE);
@@ -458,7 +458,7 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
 
 
                 if (model.selectedProvider != null) {
-                    Utility.showCircularImageViewWithColorBorder(holder.mRowTaskBinding.imgProfile.getContext(), TAG, holder.mRowTaskBinding.imgProfile, model.selectedProvider.profileUrl, R.drawable.icon_profile_img_solid, R.color.grey_dark_color, true);
+                    Utility.showCircularImageViewWithColorBorder(holder.mRowTaskBinding.imgProfile.getContext(), TAG, holder.mRowTaskBinding.imgProfile, model.selectedProvider.profileUrl, Utility.DEFAULT_CHEEP_LOGO, R.color.grey_dark_color, true);
 
                     holder.mRowTaskBinding.textTaskApprovedQuote.setText(holder.mRowTaskBinding.imgProfile.getContext().getString(R.string.ruppe_symbol_x_space, Utility.getActualPrice(model.taskPaidAmount, model.selectedProvider.quotePrice)));
                     if (model.taskType.equalsIgnoreCase(Utility.TASK_TYPE.STRATEGIC)) {
@@ -489,7 +489,7 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
                     // Show Rating
                     Utility.showRating(model.selectedProvider.rating, holder.mRowTaskBinding.ratingBar);
                 } else {
-                    Utility.showCircularImageView(holder.mRowTaskBinding.imgProfile.getContext(), TAG, holder.mRowTaskBinding.imgProfile, "", Utility.DEFAULT_PROFILE_SRC);
+                    Utility.showCircularImageView(holder.mRowTaskBinding.imgProfile.getContext(), TAG, holder.mRowTaskBinding.imgProfile, "", Utility.DEFAULT_CHEEP_LOGO);
                     holder.mRowTaskBinding.textTaskApprovedQuote.setText(holder.mRowTaskBinding.imgProfile.getContext().getString(R.string.ruppe_symbol_x_space, Utility.getActualPrice("", "")));
                     holder.mRowTaskBinding.textProviderName.setText("");
                     holder.mRowTaskBinding.imgBadge.setVisibility(View.GONE);

@@ -37,7 +37,6 @@ import android.widget.TextView;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.cheep.BootstrapConstant;
 import com.cheep.BuildConfig;
 import com.cheep.R;
 import com.cheep.activity.HomeActivity;
@@ -2328,7 +2327,7 @@ public class ProfileTabFragment extends BaseFragment {
     }
 
     private void loadImage(String selectedImagePath) {
-        Utility.showCircularImageView(mContext, TAG, mFragmentTabProfileBinding.imgProfile, selectedImagePath, R.drawable.icon_profile_img_solid, true);
+        Utility.showCircularImageView(mContext, TAG, mFragmentTabProfileBinding.imgProfile, selectedImagePath, Utility.DEFAULT_PROFILE_SRC, true);
 
        /* if (!TextUtils.isEmpty(selectedImagePath))
         {

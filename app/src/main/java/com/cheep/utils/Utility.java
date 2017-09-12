@@ -36,7 +36,6 @@ import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.util.Patterns;
 import android.view.Display;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -117,7 +116,7 @@ public class Utility {
 
     public static final int DEFAULT_PROFILE_SRC = R.drawable.icon_profile_img_solid;
     public static final int DEFAULT_CHEEP_LOGO = R.drawable.ic_cheep_circular_icon;
-    public static final String DEFAULT_PROFILE_URL = "http://msz.uniklinikum-dresden.de/zkn/images/mitarbeiter/dummy120_dagobert83_female_user_icon.png";//"http://lorempixel.com/200/200/people/";
+//    public static final String DEFAULT_PROFILE_URL = "http://msz.uniklinikum-dresden.de/zkn/images/mitarbeiter/dummy120_dagobert83_female_user_icon.png";//"http://lorempixel.com/200/200/people/";
 
     public static final String LOCALE_FOR_HINDI = "hi";
     public static final String LOCALE_FOR_ENGLISH = "en";

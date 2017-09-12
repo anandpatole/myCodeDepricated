@@ -553,7 +553,7 @@ public class JobSummaryActivity extends BaseAppCompatActivity {
           Changes on 6thFeb2017, @Bhavesh
           In case PRO doesn't set any Image-URLs, we will display the default Profile PIC.
          */
-        Utility.showCircularImageView(mContext, TAG, mActivityJobSummaryBinding.imgProfile, providerModel.profileUrl, Utility.DEFAULT_PROFILE_SRC, true);
+        Utility.showCircularImageView(mContext, TAG, mActivityJobSummaryBinding.imgProfile, providerModel.profileUrl, Utility.DEFAULT_CHEEP_LOGO, true);
 //        if (!TextUtils.isEmpty(providerModel.profileUrl)) {
 //            //loading rounded image on profile
 //            Utility.showCircularImageView(mContext, TAG, mActivityJobSummaryBinding.imgProfile, providerModel.profileUrl, Utility.DEFAULT_PROFILE_SRC, true);

@@ -210,7 +210,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
             mActivityTaskSummaryBinding.textAddressKmAway.setText(mTaskDetailModel.selectedProvider.distance + " away");
 
             // Profile Pic
-            Utility.showCircularImageViewWithColorBorder(this, TAG, mActivityTaskSummaryBinding.imgProfile, mTaskDetailModel.catImageExtras.medium, R.drawable.icon_profile_img_solid, R.color.grey_dark_color, true);
+            Utility.showCircularImageViewWithColorBorder(this, TAG, mActivityTaskSummaryBinding.imgProfile, mTaskDetailModel.catImageExtras.medium, Utility.DEFAULT_CHEEP_LOGO, R.color.grey_dark_color, true);
 
             // Manage Click events of Call & Chat
             mActivityTaskSummaryBinding.lnCall.setOnClickListener(new View.OnClickListener() {
