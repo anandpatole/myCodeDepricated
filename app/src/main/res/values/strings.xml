@@ -470,7 +470,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
 
     <string name="how_proceed">How would you like to proceed?</string>
     <string name="label_insta_book">Insta Book</string>
-    <string name="lable_get_pro">and get an experienced PRO in seconds</string>
+    <string name="lable_insta_get_pro">and get a PRO instantly</string>
     <string name="info_insta_book">Recommended if you want to get your task done quickly. Be rest assured, CHEEP will instantly assign a verified PRO with min 10 years of experience to get the job done.</string>
     <string name="info_get_quote">Recommended if your task is not urgent. You can compare multiple quotes, read independent reviews and then book the PRO you like.</string>
     <string name="label_get_quotes">Get Quotes</string>
