@@ -23,8 +23,6 @@ import com.cheep.model.TaskDetailModel;
 import com.cheep.utils.SuperCalendar;
 import com.cheep.utils.Utility;
 
-import java.util.Map;
-
 
 public class PaymentsStepStrategicPartnerActivity extends BaseAppCompatActivity {
 
@@ -76,11 +74,10 @@ public class PaymentsStepStrategicPartnerActivity extends BaseAppCompatActivity 
         }
 
         if (taskDetailModel != null) {
-            Utility.loadImageView(mContext, mActivityPaymentDetailBinding.imgService, taskDetailModel.catImage, R.drawable.gradient_black);
             mActivityPaymentDetailBinding.recycleSelectedService.setLayoutManager(new LinearLayoutManager(this));
             if (taskDetailModel.taskSelectedSubCategoryList != null)
                 mActivityPaymentDetailBinding.recycleSelectedService.setAdapter(new PaymentSummaryAdapter(taskDetailModel.taskSelectedSubCategoryList));
-            Utility.loadImageView(mContext, mActivityPaymentDetailBinding.imgService, taskDetailModel.catImage, R.drawable.gradient_black);
+            Utility.loadImageView(mContext, mActivityPaymentDetailBinding.imgService, taskDetailModel.bannerImage, R.drawable.gradient_black);
             Utility.showCircularImageViewWithColorBorder(mContext, TAG, mActivityPaymentDetailBinding.imgProfile, taskDetailModel.catImage, R.drawable.icon_profile_img_solid, R.color.dark_blue_variant_1, true);
             String dateTime = "";
             if (!TextUtils.isEmpty(taskDetailModel.taskStartdate)) {
