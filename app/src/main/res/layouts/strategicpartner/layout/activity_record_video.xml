@@ -23,7 +23,7 @@
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         android:paddingTop="2dp"
-        android:text="10 Sec"
+        android:text="@string/label_10_sec"
         android:textColor="@android:color/black"
         android:textSize="15dp"
         android:textStyle="bold"/>

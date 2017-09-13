@@ -29,9 +29,6 @@ public class CFTextViewRegular extends AppCompatTextView {
     private Context mContext;
 
     private static final String ELLIPSIZE = "... ";
-    private static final String MORE = "Read More";
-    private static final String LESS = "less";
-    private static final String CATEGORY_MORE = "More";
     private String mFullText;
     private int mMaxLines;
 
@@ -118,12 +115,13 @@ public class CFTextViewRegular extends AppCompatTextView {
     }
 
     /**
-     * truncate text and append a clickable {@link #MORE}
+     * truncate text and append a clickable Read More
      */
     private void showLess() {
         Log.i(TAG, "showLess: ");
         int lineEndIndex = getLayout().getLineEnd(mMaxLines - 1);
-        String newText = mFullText.substring(0, lineEndIndex - (ELLIPSIZE.length() + MORE.length() + 1)) + ELLIPSIZE + MORE;
+        String readMore = mContext.getString(R.string.read_more);
+        String newText = mFullText.substring(0, lineEndIndex - (ELLIPSIZE.length() + readMore.length() + 1)) + ELLIPSIZE + readMore;
         SpannableStringBuilder builder = new SpannableStringBuilder(newText);
        /* builder.setSpan(new ClickableSpan() {
             @Override
@@ -131,24 +129,25 @@ public class CFTextViewRegular extends AppCompatTextView {
                 showMore();
             }
         }, newText.length() - MORE.length(), newText.length(), 0);*/
-        builder.setSpan(new ForegroundColorSpan(ContextCompat.getColor(mContext, R.color.splash_gradient_end)), newText.length() - MORE.length(), newText.length(), 0);
-        builder.setSpan(new StyleSpan(Typeface.BOLD), newText.length() - MORE.length(), newText.length(), 0);
+        builder.setSpan(new ForegroundColorSpan(ContextCompat.getColor(mContext, R.color.splash_gradient_end)), newText.length() - readMore.length(), newText.length(), 0);
+        builder.setSpan(new StyleSpan(Typeface.BOLD), newText.length() - readMore.length(), newText.length(), 0);
         setText(builder, BufferType.SPANNABLE);
     }
 
     /**
-     * show full text and append a clickable {@link #LESS}
+     * show full text and append a clickable "less"
      */
     private void showMore() {
-        SpannableStringBuilder builder = new SpannableStringBuilder(mFullText + LESS);
+        String less = mContext.getString(R.string.less);
+        SpannableStringBuilder builder = new SpannableStringBuilder(mFullText + less);
         builder.setSpan(new ClickableSpan() {
             @Override
             public void onClick(View widget) {
                 showLess();
             }
-        }, builder.length() - LESS.length(), builder.length(), 0);
-        builder.setSpan(new ForegroundColorSpan(this.getCurrentTextColor()), builder.length() - LESS.length(), builder.length(), 0);
-        builder.setSpan(new StyleSpan(Typeface.BOLD), builder.length() - LESS.length(), builder.length(), 0);
+        }, builder.length() - less.length(), builder.length(), 0);
+        builder.setSpan(new ForegroundColorSpan(this.getCurrentTextColor()), builder.length() - less.length(), builder.length(), 0);
+        builder.setSpan(new StyleSpan(Typeface.BOLD), builder.length() - less.length(), builder.length(), 0);
         setText(builder, BufferType.SPANNABLE);
     }
 
@@ -166,7 +165,8 @@ public class CFTextViewRegular extends AppCompatTextView {
                     int lineEndIndex = getLayout().getLineEnd(0);
                     String newText;
                     String fulltext = getText().toString();
-                    newText = fulltext.substring(0, lineEndIndex - (ELLIPSIZE.length() + CATEGORY_MORE.length() + 1)) + ELLIPSIZE + CATEGORY_MORE;
+                    String categoryMore = mContext.getString(R.string.category_more);
+                    newText = fulltext.substring(0, lineEndIndex - (ELLIPSIZE.length() + categoryMore.length() + 1)) + ELLIPSIZE + categoryMore;
                     SpannableStringBuilder builder = new SpannableStringBuilder(newText);
                     setText(builder, BufferType.SPANNABLE);
                 } catch (Exception e) {

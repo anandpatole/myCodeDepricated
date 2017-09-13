@@ -42,8 +42,6 @@ public class InstaBookProDialog extends DialogFragment {
         Bundle args = new Bundle();
         args.putParcelable("merchant", detail);
         args.putString("date", date);
-
-
         f.setArguments(args);
         return f;
     }

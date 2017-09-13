@@ -914,7 +914,7 @@ public class Utility {
             clipboard.setText(text);
         } else {
             android.content.ClipboardManager clipboard = (android.content.ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
-            android.content.ClipData clip = android.content.ClipData.newPlainText("Copied Text", text);
+            android.content.ClipData clip = android.content.ClipData.newPlainText(context.getString(R.string.label_copied_text), text);
             clipboard.setPrimaryClip(clip);
         }
     }
@@ -1271,7 +1271,7 @@ public class Utility {
         return formatter.format(price);
     }
 
-    public static String getExperienceString(String exp) {
+  /*  public static String getExperienceString(String exp) {
         try {
             float expFloat = Float.parseFloat(exp);
             if (expFloat > 1) {
@@ -1282,5 +1282,5 @@ public class Utility {
         } catch (NumberFormatException e) {
             return exp + " Year \nExperience";
         }
-    }
+    }*/
 }

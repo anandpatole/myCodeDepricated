@@ -619,7 +619,7 @@ public class JobSummaryActivity extends BaseAppCompatActivity {
 
         //Checking with request type is quote is required then "PAY" title is there else "PAID" title is there
         if (Utility.REQUEST_TYPE.DETAIL_REQUIRED.equalsIgnoreCase(providerModel.requestType)) {
-            mActivityJobSummaryBinding.textPayPaid.setText(getString(R.string.label_pay));
+            mActivityJobSummaryBinding.textPayPaid.setText(getString(R.string.label_book));
         } else {
             mActivityJobSummaryBinding.textPayPaid.setText(getString(R.string.label_paid));
         }
@@ -631,7 +631,7 @@ public class JobSummaryActivity extends BaseAppCompatActivity {
 
         mActivityJobSummaryBinding.textMinToArrive.setText(providerModel.distance);
         mActivityJobSummaryBinding.textPrice.setSelected(true);
-        mActivityJobSummaryBinding.textPrice.setText(getString(R.string.ruppe_symbol_x, Utility.getActualPrice(taskDetailModel.taskPaidAmount, providerModel.quotePrice)));
+        mActivityJobSummaryBinding.textPrice.setText(getString(R.string.rupee_symbol_x, Utility.getActualPrice(taskDetailModel.taskPaidAmount, providerModel.quotePrice)));
         mActivityJobSummaryBinding.textThanksForChoosing.setText(getString(R.string.label_thanks_for_choosing_x_summary, providerModel.userName));
 
         mActivityJobSummaryBinding.imgFav.setSelected(Utility.BOOLEAN.YES.equals(providerModel.isFavourite));
@@ -668,7 +668,7 @@ public class JobSummaryActivity extends BaseAppCompatActivity {
             mActivityJobSummaryBinding.btnPay.setVisibility(View.VISIBLE);
             mActivityJobSummaryBinding.btnPay.setText(getString(R.string.label_pay_X, providerModel.quotePrice));
             mActivityJobSummaryBinding.btnPay.setOnClickListener(onPayClickListener);
-            mActivityJobSummaryBinding.textPayPaid.setText(getString(R.string.label_pay));
+            mActivityJobSummaryBinding.textPayPaid.setText(getString(R.string.label_book));
 
             //cheepcode
             mActivityJobSummaryBinding.dividerPromoCode.setVisibility(View.VISIBLE);
@@ -1049,7 +1049,7 @@ public class JobSummaryActivity extends BaseAppCompatActivity {
             //Enable Additional Payment request module
             mActivityJobSummaryBinding.lnAcceptRejectAdditionalQuote.setVisibility(View.VISIBLE);
             mActivityJobSummaryBinding.tvAdditionalPaymentDesc.setText(getString(R.string.desc_additional_payment_requsted_by_sp, providerModel.userName));
-            mActivityJobSummaryBinding.textAdditionalPaymentQuotePrice.setText(getString(R.string.ruppe_symbol_x_space, taskDetailModel.additionalQuoteAmount));
+            mActivityJobSummaryBinding.textAdditionalPaymentQuotePrice.setText(getString(R.string.rupee_symbol_x_space, taskDetailModel.additionalQuoteAmount));
             mActivityJobSummaryBinding.tvAdditionalQuoteDesclaimer.setVisibility(View.VISIBLE);
 
             mActivityJobSummaryBinding.btnAcceptAdditionalRequest.setOnClickListener(new View.OnClickListener() {
@@ -1992,7 +1992,7 @@ public class JobSummaryActivity extends BaseAppCompatActivity {
                         if (taskStatus.equalsIgnoreCase(Utility.TASK_STATUS.ADDITIONAL_PAYMENT_REQUESTED)) {
                             payNow(true);
                         } else if (taskStatus.equalsIgnoreCase(Utility.TASK_STATUS.COMPLETION_REQUEST)) {
-                            Utility.showSnackBar(getString(R.string.message_additional_payment_can_not_be_done_due_to_task_completion), mActivityJobSummaryBinding.getRoot());
+                            Utility.showSnackBar(getString(R.string.message_no_more_payment_task_completed), mActivityJobSummaryBinding.getRoot());
                             taskDetailModel.taskStatus = Utility.TASK_STATUS.COMPLETION_REQUEST;
                             fillProviderDetails(taskDetailModel.selectedProvider);
                         }

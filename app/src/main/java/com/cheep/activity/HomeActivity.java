@@ -325,7 +325,7 @@ public class HomeActivity extends BaseAppCompatActivity
                 Log.i(TAG, "onSlideMenuListItemClicked: " + slideMenuListModel.title + " is there");
             }
         } else if (slideMenuListModel.title.equals(getString(R.string.label_share_with_friend))) {
-            Utility.showToast(mContext, "Under Development.");
+            Utility.showToast(mContext, getString(R.string.label_under_development));
         } else if (slideMenuListModel.title.equals(getString(R.string.label_help))) {
             showContactDialog();
             //We are returning here so side menu will not close at end of this method
@@ -1149,14 +1149,14 @@ public class HomeActivity extends BaseAppCompatActivity
         final BottomAlertDialog dialog = new BottomAlertDialog(mContext);
         dialog.setTitle(getString(R.string.label_logout));
         dialog.setMessage(getString(R.string.confirmation_logout));
-        dialog.addPositiveButton("Yes", new View.OnClickListener() {
+        dialog.addPositiveButton(getString(R.string.label_yes), new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 callLogoutWS();
                 dialog.dismiss();
             }
         });
-        dialog.addNegativeButton("No", new View.OnClickListener() {
+        dialog.addNegativeButton(getString(R.string.label_no), new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 dialog.dismiss();

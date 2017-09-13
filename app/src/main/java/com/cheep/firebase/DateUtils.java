@@ -6,7 +6,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
 
 /**
  * Created by sanjay on 26/7/16.
@@ -164,32 +163,5 @@ public class DateUtils
             return true;
         }
         return false;
-    }
-
-    // Used to convert 24hr format to 12hr format with AM/PM values
-    public static String getFormatedTime(int hours, int mins) {
-
-        String timeSet = "";
-        if (hours > 12) {
-            hours -= 12;
-            timeSet = "PM";
-        } else if (hours == 0) {
-            hours += 12;
-            timeSet = "AM";
-        } else if (hours == 12)
-            timeSet = "PM";
-        else
-            timeSet = "AM";
-
-        String minutes = "";
-        if (mins < 10)
-            minutes = "0" + mins;
-        else
-            minutes = String.valueOf(mins);
-
-        // Append in a StringBuilder
-        String aTime = String.valueOf(hours) + ':' +
-                minutes + " " + timeSet;
-        return aTime;
     }
 }

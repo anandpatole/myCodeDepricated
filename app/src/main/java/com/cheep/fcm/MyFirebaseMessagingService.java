@@ -55,7 +55,6 @@ import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
 
@@ -310,7 +309,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         privateMessages.add(String.format("%s,%s", chatNotification.title, chatNotification.message));
         mapMessages.put(chatNotification.chatId, privateMessages);
 
-        android.support.v7.app.NotificationCompat.Builder builder = createMessageNotificationBuilder(context, chatNotification);
+        NotificationCompat.Builder builder = createMessageNotificationBuilder(context, chatNotification);
 
         builder.setDefaults(Notification.DEFAULT_LIGHTS
                 | Notification.DEFAULT_VIBRATE);
@@ -326,18 +325,19 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         nm.notify(MESSAGE_NOTIFICATION_ID, builder.build());
     }
 
-    private static android.support.v7.app.NotificationCompat.Builder createMessageNotificationBuilder(Context context, ChatNotification chatNotification) {
-        android.support.v7.app.NotificationCompat.Builder builder = new android.support.v7.app.NotificationCompat.Builder(context);
+    private static NotificationCompat.Builder createMessageNotificationBuilder(Context context, ChatNotification chatNotification) {
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
         if (mapMessages.size() > 1) {
-            String formatedText = String.format(Locale.US, "%d New %s", getActiveMessageCount(), getActiveMessageCount() > 1 ? "Messages" : "Message");
+            String formatedText = String.format(Locale.US, "%d" + context.getString(R.string.new_)+ " %s", getActiveMessageCount(), getActiveMessageCount() > 1
+                    ? context.getString(R.string.messages) : context.getString(R.string.message));
             builder.setContentTitle(formatedText);
         } else {
             builder.setContentTitle(chatNotification.title);
         }
         if (getActiveMessageCount() > 1) {
             builder.setContentText(privateMessages.size()
-                    + " messages from " + mapMessages.size()
-                    + " conversations.");
+                    + context.getString(R.string.messages_from) + mapMessages.size()
+                    + context.getString(R.string.conversations));
         } else {
             SpannableString ss2 = new SpannableString(" " + chatNotification.message);
             ss2.setSpan(new ForegroundColorSpan(ContextCompat.getColor(context, R.color.colorSemiGray)), 0, ss2.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -400,8 +400,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         if ((mapMessages != null) && (getActiveMessageCount() >= 1)) {
             if (getActiveMessageCount() > 1)
                 inboxStyle.setSummaryText(privateMessages.size()
-                        + " messages from " + mapMessages.size()
-                        + " conversations.");
+                        + context.getString(R.string.messages_from) + mapMessages.size()
+                        + context.getString(R.string.conversations));
             builder.setStyle(inboxStyle);
         }
         return builder;

@@ -167,7 +167,7 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
             }
         // set details of partner name user selected date time and address
         SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder();
-        spannableStringBuilder.append(getSpannableString("Your order with ", ContextCompat.getColor(mStrategicPartnerTaskCreationAct, R.color.grey_varient_8), false));
+        spannableStringBuilder.append(getSpannableString(mContext.getString(R.string.label_your_order_with), ContextCompat.getColor(mStrategicPartnerTaskCreationAct, R.color.grey_varient_8), false));
         spannableStringBuilder.append(getSpannableString(mStrategicPartnerTaskCreationAct.mBannerImageModel.name, ContextCompat.getColor(mStrategicPartnerTaskCreationAct, R.color.splash_gradient_end), true));
         spannableStringBuilder.append(getSpannableString(getString(R.string.label_on), ContextCompat.getColor(mStrategicPartnerTaskCreationAct, R.color.grey_varient_8), false));
         spannableStringBuilder.append(getSpannableString(date + ", " + time
@@ -184,9 +184,9 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
             mFragmentStrategicPartnerPhaseThreeBinding.recycleSelectedService.setAdapter(new PaymentSummaryAdapter(mStrategicPartnerTaskCreationAct.getSelectedSubService()));
 
         // set total and sub total details
-        mFragmentStrategicPartnerPhaseThreeBinding.txttotal.setText(getString(R.string.ruppe_symbol_x, "" + Utility.getQuotePriceFormatter(mStrategicPartnerTaskCreationAct.total)));
-        mFragmentStrategicPartnerPhaseThreeBinding.txtsubtotal.setText(getString(R.string.ruppe_symbol_x, "" + Utility.getQuotePriceFormatter(mStrategicPartnerTaskCreationAct.total)));
-        mFragmentStrategicPartnerPhaseThreeBinding.textPay.setText("Pay " + getString(R.string.ruppe_symbol_x, String.valueOf(Utility.getQuotePriceFormatter(mStrategicPartnerTaskCreationAct.total))));
+        mFragmentStrategicPartnerPhaseThreeBinding.txttotal.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(mStrategicPartnerTaskCreationAct.total)));
+        mFragmentStrategicPartnerPhaseThreeBinding.txtsubtotal.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(mStrategicPartnerTaskCreationAct.total)));
+        mFragmentStrategicPartnerPhaseThreeBinding.textPay.setText(getString(R.string.label_pay) + getString(R.string.rupee_symbol_x, String.valueOf(Utility.getQuotePriceFormatter(mStrategicPartnerTaskCreationAct.total))));
 
         // handle clicks for create task web api and payment flow
         mFragmentStrategicPartnerPhaseThreeBinding.textPay.setOnClickListener(new View.OnClickListener() {
@@ -212,7 +212,7 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
             }
         });
         mFragmentStrategicPartnerPhaseThreeBinding.imgCheepCodeClose.setVisibility(View.GONE);
-        mFragmentStrategicPartnerPhaseThreeBinding.txtpromocode.setText(getString(R.string.ruppe_symbol_x, "" + Utility.getQuotePriceFormatter("0")));
+        mFragmentStrategicPartnerPhaseThreeBinding.txtpromocode.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter("0")));
         mFragmentStrategicPartnerPhaseThreeBinding.imgCheepCodeClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -235,10 +235,10 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
     private void resetPromoCodeValue() {
         mFragmentStrategicPartnerPhaseThreeBinding.textpromocodelabel.setTextColor(ContextCompat.getColor(mStrategicPartnerTaskCreationAct, R.color.splash_gradient_end));
         mFragmentStrategicPartnerPhaseThreeBinding.textpromocodelabel.setText(getResources().getString(R.string.label_enter_promocode));
-        mFragmentStrategicPartnerPhaseThreeBinding.txtsubtotal.setText(getString(R.string.ruppe_symbol_x, "" + Utility.getQuotePriceFormatter(mStrategicPartnerTaskCreationAct.total)));
-        mFragmentStrategicPartnerPhaseThreeBinding.txttotal.setText(getString(R.string.ruppe_symbol_x, "" + Utility.getQuotePriceFormatter(mStrategicPartnerTaskCreationAct.total)));
+        mFragmentStrategicPartnerPhaseThreeBinding.txtsubtotal.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(mStrategicPartnerTaskCreationAct.total)));
+        mFragmentStrategicPartnerPhaseThreeBinding.txttotal.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(mStrategicPartnerTaskCreationAct.total)));
         mFragmentStrategicPartnerPhaseThreeBinding.textPay.setText(getString(R.string.label_pay_fee_v1, "" + Utility.getQuotePriceFormatter(mStrategicPartnerTaskCreationAct.total)));
-        mFragmentStrategicPartnerPhaseThreeBinding.txtpromocode.setText(getString(R.string.ruppe_symbol_x, "" + Utility.getQuotePriceFormatter("0")));
+        mFragmentStrategicPartnerPhaseThreeBinding.txtpromocode.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter("0")));
         mFragmentStrategicPartnerPhaseThreeBinding.lnPromoCodeDisclaimer.setVisibility(View.GONE);
     }
 
@@ -381,9 +381,10 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
 
     private void updatePaymentDetails(String discount, String payable) {
         payableAmount = payable;
+        mFragmentStrategicPartnerPhaseThreeBinding.txtpromocode.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(discount)));
+        mFragmentStrategicPartnerPhaseThreeBinding.txttotal.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(payable)));
+
         promocode_price = discount;
-        mFragmentStrategicPartnerPhaseThreeBinding.txtpromocode.setText(getString(R.string.ruppe_symbol_x, "" + Utility.getQuotePriceFormatter(discount)));
-        mFragmentStrategicPartnerPhaseThreeBinding.txttotal.setText(getString(R.string.ruppe_symbol_x, "" + Utility.getQuotePriceFormatter(payable)));
         mFragmentStrategicPartnerPhaseThreeBinding.textPay.setText(getString(R.string.label_pay_fee_v1, "" + Utility.getQuotePriceFormatter(payable)));
         mFragmentStrategicPartnerPhaseThreeBinding.textpromocodelabel.setEnabled(false);
         mFragmentStrategicPartnerPhaseThreeBinding.textpromocodelabel.setText(getString(R.string.label_promocode_apply));
@@ -651,7 +652,7 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
 //                            PLEASE NOTE: THIS IS JUST TO BYPPASS THE PAYMENT GATEWAY. THIS IS NOT
 //                            GOING TO RUN IN LIVE ENVIRONMENT BUILDS
             // Direct bypass the things
-            callTaskCreationWebServiceForStratgicPartner(true, "Payment has been bypassed for development");
+            callTaskCreationWebServiceForStratgicPartner(true, getString(R.string.message_payment_bypassed));
         } else {
             //TODO: Remove this when release and it is saving cc detail in clipboard only
             if ("debug".equalsIgnoreCase(BuildConfig.BUILD_TYPE)) {
@@ -901,14 +902,14 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
 //                        onSuccessfullTaskCreated(jsonObject);
 //                        Utility.showToast(mContext, "Task Created Successfully!!");
 
-                        String title = "Brilliant";
-                        String message = "Your task is confirmed and a PRO from " + mStrategicPartnerTaskCreationAct.mBannerImageModel.name + ", will be there at your location on " +
-                                date + " at " + time;
+                        /*String title = "Brilliant";*/
+                        String message = getString(R.string.label_strategic_task_confirmed, mStrategicPartnerTaskCreationAct.mBannerImageModel.name) +
+                                date + getString(R.string.label_at) + time;
 
                         final AcknowledgementDialogWithProfilePic mAcknowledgementDialogWithProfilePic = AcknowledgementDialogWithProfilePic.newInstance(
                                 mContext,
                                 R.drawable.ic_acknowledgement_dialog_header_background,
-                                title,
+                                getString(R.string.label_brilliant),
                                 message,
                                 mStrategicPartnerTaskCreationAct.mBannerImageModel.imgCatImageUrl,
                                 new AcknowledgementInteractionListener() {
