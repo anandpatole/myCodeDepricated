@@ -20,6 +20,8 @@ import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.RatingBar;
@@ -133,8 +135,8 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
         mActivityTaskSummaryBinding.textCategoryName.setText(mTaskDetailModel.categoryName != null ? mTaskDetailModel.categoryName : Utility.EMPTY_STRING);
 
         // Set up image
-        Utility.loadImageView(mContext, mActivityTaskSummaryBinding.imgService, mTaskDetailModel.catImage);
-        Utility.loadImageView(mContext, mActivityTaskSummaryBinding.imgService, mTaskDetailModel.catImageExtras.thumb);
+//        Utility.loadImageView(mContext, mActivityTaskSummaryBinding.imgService, mTaskDetailModel.bannerImage);
+//        Utility.loadImageView(mContext, mActivityTaskSummaryBinding.imgService, mTaskDetailModel.catImageExtras.thumb);
 
 
         // By Default makethe task completion dialog as gone
@@ -208,7 +210,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
             mActivityTaskSummaryBinding.textAddressKmAway.setText(mTaskDetailModel.selectedProvider.distance + getString(R.string.label_away));
 
             // Profile Pic
-            Utility.showCircularImageViewWithColorBorder(this, TAG, mActivityTaskSummaryBinding.imgProfile, mTaskDetailModel.catImageExtras.medium, R.drawable.icon_profile_img_solid, R.color.grey_dark_color, true);
+            Utility.showCircularImageViewWithColorBorder(this, TAG, mActivityTaskSummaryBinding.imgProfile, mTaskDetailModel.catImageExtras.medium, Utility.DEFAULT_CHEEP_LOGO, R.color.grey_dark_color, true);
 
             // Manage Click events of Call & Chat
             mActivityTaskSummaryBinding.lnCall.setOnClickListener(new View.OnClickListener() {
@@ -284,6 +286,23 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
             @Override
             public void onClick(View view) {
                 showFullDesc(getString(R.string.label_address), mActivityTaskSummaryBinding.textTaskWhere.getText().toString());
+            }
+        });
+
+        // Update the banner image
+        // Calculat Pager Height and Width
+        ViewTreeObserver mViewTreeObserver = mActivityTaskSummaryBinding.frameBannerImage.getViewTreeObserver();
+        mViewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                mActivityTaskSummaryBinding.frameBannerImage.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                int width = mActivityTaskSummaryBinding.frameBannerImage.getMeasuredWidth();
+                ViewGroup.LayoutParams params = mActivityTaskSummaryBinding.frameBannerImage.getLayoutParams();
+                params.height = Utility.getHeightFromWidthForTwoOneRatio(width);
+                mActivityTaskSummaryBinding.frameBannerImage.setLayoutParams(params);
+
+                // Load the image now.
+                Utility.loadImageView(mContext, mActivityTaskSummaryBinding.imgService, mTaskDetailModel.bannerImage, R.drawable.gradient_black);
             }
         });
     }
@@ -517,11 +536,13 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
      * @param flag
      */
     private void showChatCallButton(boolean flag) {
-        if (flag) {
-            mActivityTaskSummaryBinding.lnChatCall.setVisibility(View.VISIBLE);
-        } else {
-            mActivityTaskSummaryBinding.lnChatCall.setVisibility(View.GONE);
-        }
+        // TODO :: changed on sept 12
+//        if (flag) {
+//            mActivityTaskSummaryBinding.lnChatCall.setVisibility(View.VISIBLE);
+//        } else {
+        mActivityTaskSummaryBinding.lnChatCall.setVisibility(View.GONE);
+//        }
+
     }
 
     private void showTaskCompletionDialog(boolean flag) {
@@ -956,7 +977,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
         final RatingBar ratingBar = (RatingBar) view.findViewById(R.id.rating_bar);
         final EditText edtMessage = (EditText) view.findViewById(R.id.edit_message);
         final TextView txtLabel = (TextView) view.findViewById(R.id.text_label);
-        txtLabel.setText(getString(R.string.label_write_a_review, mTaskDetailModel.selectedProvider.userName));
+        txtLabel.setText(getString(R.string.label_write_a_review, mTaskDetailModel.categoryName));
 
         rateDialog = new BottomAlertDialog(mContext);
         view.findViewById(R.id.btn_submit).setOnClickListener(new View.OnClickListener() {

@@ -91,13 +91,11 @@ public class InstaBookProDialog extends DialogFragment {
         // Set title
         mDialog.title.setText(merchantDetail.userName);
 
-
         if (TextUtils.isEmpty(merchantDetail.avgRatings) || Float.parseFloat(merchantDetail.avgRatings) == 0) {
             mDialog.tvSubtitle.setText(TextUtils.concat(getString(R.string.total_experience, merchantDetail.experience)));
             mDialog.tvSubtitle.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
         } else {
-
-            mDialog.tvSubtitle.setText(TextUtils.concat(getString(R.string.total_experience, merchantDetail.experience), " | ", String.format("%.1f", Float.parseFloat(merchantDetail.avgRatings))));
+            mDialog.tvSubtitle.setText(TextUtils.concat(getString(R.string.total_experience, merchantDetail.experience), " | ", merchantDetail.avgRatings));
         }
         if (!TextUtils.isEmpty(merchantDetail.verified) && merchantDetail.verified.equalsIgnoreCase(Utility.BOOLEAN.YES)) {
             mDialog.tvVerified.setVisibility(View.VISIBLE);

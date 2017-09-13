@@ -16,4 +16,9 @@
 
     <dimen name="height_sign_up_btn">40dp</dimen>
 
+
+    <!--For HDPI devices, Strategic partner description for creation pages
+    we would be have differetn margin top-->
+    <dimen name="banner_desc_margin_top">10dp</dimen>
+
 </resources>

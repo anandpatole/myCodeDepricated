@@ -166,6 +166,20 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
             // Set rating
             Utility.showRating(mTaskDetailModel.selectedProvider.rating, mActivityTaskSummaryBinding.providerRating);
 
+            if (Utility.BOOLEAN.YES.equals(mTaskDetailModel.selectedProvider.isFavourite))
+                mActivityTaskSummaryBinding.imgFav.setSelected(true);
+            else
+                mActivityTaskSummaryBinding.imgFav.setSelected(false);
+
+            mActivityTaskSummaryBinding.imgFav.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    callAddToFavWS(mTaskDetailModel.selectedProvider.providerId, !mActivityTaskSummaryBinding.imgFav.isSelected());
+                    mActivityTaskSummaryBinding.imgFav.setSelected(!mActivityTaskSummaryBinding.imgFav.isSelected());
+
+                }
+            });
+
             // Name of Provider
             mActivityTaskSummaryBinding.textProviderName.setText(mTaskDetailModel.selectedProvider.userName);
 
@@ -181,7 +195,7 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
             mActivityTaskSummaryBinding.textAddressKmAway.setText(mTaskDetailModel.selectedProvider.distance + getString(R.string.label_away));
 
             // Profile Pic
-            Utility.showCircularImageView(mContext, TAG, mActivityTaskSummaryBinding.imgProfile, mTaskDetailModel.selectedProvider.profileUrl, Utility.DEFAULT_PROFILE_SRC, true);
+            Utility.showCircularImageView(mContext, TAG, mActivityTaskSummaryBinding.imgProfile, mTaskDetailModel.selectedProvider.profileUrl, Utility.DEFAULT_CHEEP_LOGO, true);
 
 //            // Whether Provider Verified or not
 //            if (Utility.BOOLEAN.YES.equalsIgnoreCase(mTaskDetailModel.selectedProvider.isVerified)) {
@@ -1391,5 +1405,90 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
             }
         });
     }
+
+    /**
+     * Call Add to fav
+     *
+     * @param providerId
+     * @param isAddToFav
+     */
+    private void callAddToFavWS(String providerId, boolean isAddToFav) {
+        if (!Utility.isConnected(mContext)) {
+            Utility.showSnackBar(getString(R.string.no_internet), mActivityTaskSummaryBinding.getRoot());
+            return;
+        }
+
+        //Add Header parameters
+        Map<String, String> mHeaderParams = new HashMap<>();
+        mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
+        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
+
+        //Add Params
+        Map<String, Object> mParams = new HashMap<>();
+        mParams.put(NetworkUtility.TAGS.SP_USER_ID, providerId);
+        mParams.put(NetworkUtility.TAGS.REQ_FOR, isAddToFav ? "add" : "remove");
+
+        //Url is based on condition if address id is greater then 0 then it means we need to update the existing address
+        VolleyNetworkRequest mVolleyNetworkRequestForSPList = new VolleyNetworkRequest(NetworkUtility.WS.SP_ADD_TO_FAV
+                , mCallAddSPToFavWSErrorListener
+                , mCallAddSPToFavWSResponseListener
+                , mHeaderParams
+                , mParams
+                , null);
+        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequestForSPList);
+    }
+
+    Response.Listener mCallAddSPToFavWSResponseListener = new Response.Listener() {
+        @Override
+        public void onResponse(Object response) {
+
+            String strResponse = (String) response;
+            try {
+                JSONObject jsonObject = new JSONObject(strResponse);
+                Log.i(TAG, "onResponse: " + jsonObject.toString());
+                int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
+                String error_message;
+
+                switch (statusCode) {
+                    case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
+
+                        break;
+                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
+                        // Show Toast
+                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityTaskSummaryBinding.getRoot());
+                        break;
+                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
+                        error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
+                        // Show message
+                        Utility.showSnackBar(error_message, mActivityTaskSummaryBinding.getRoot());
+                        break;
+                    case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
+                    case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
+                        //Logout and finish the current activity
+                        Utility.logout(mContext, true, statusCode);
+                        finish();
+                        break;
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+                mCallAddSPToFavWSErrorListener.onErrorResponse(new VolleyError(e.getMessage()));
+            }
+
+        }
+    };
+
+    Response.ErrorListener mCallAddSPToFavWSErrorListener = new Response.ErrorListener() {
+        @Override
+        public void onErrorResponse(final VolleyError error) {
+            Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
+
+            // Close Progressbar
+//            hideProgressDialog();
+
+
+            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityTaskSummaryBinding.getRoot());
+
+        }
+    };
 
 }

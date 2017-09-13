@@ -2327,7 +2327,7 @@ public class ProfileTabFragment extends BaseFragment {
     }
 
     private void loadImage(String selectedImagePath) {
-        Utility.showCircularImageView(mContext, TAG, mFragmentTabProfileBinding.imgProfile, selectedImagePath, R.drawable.icon_profile_img_solid, true);
+        Utility.showCircularImageView(mContext, TAG, mFragmentTabProfileBinding.imgProfile, selectedImagePath, Utility.DEFAULT_PROFILE_SRC, true);
 
        /* if (!TextUtils.isEmpty(selectedImagePath))
         {

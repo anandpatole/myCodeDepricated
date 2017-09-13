@@ -15,10 +15,12 @@ import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 
 import com.cheep.R;
 import com.cheep.activity.BaseAppCompatActivity;
-import com.cheep.databinding.ActivityPaymentDetailStartegicPartnerBinding;
+import com.cheep.databinding.ActivityPaymentDetailStartegicPartnerNewBinding;
 import com.cheep.model.TaskDetailModel;
 import com.cheep.utils.SuperCalendar;
 import com.cheep.utils.Utility;
@@ -35,7 +37,7 @@ public class PaymentsStepStrategicPartnerActivity extends BaseAppCompatActivity 
 
     private static final String TAG = "PaymentsStepActivity";
     private TaskDetailModel taskDetailModel;
-    private ActivityPaymentDetailStartegicPartnerBinding mActivityPaymentDetailBinding;
+    private ActivityPaymentDetailStartegicPartnerNewBinding mActivityPaymentDetailBinding;
 
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
@@ -45,7 +47,7 @@ public class PaymentsStepStrategicPartnerActivity extends BaseAppCompatActivity 
         /*
           when the device runing out of memory we dont want the user to restart the payment. rather we close it and redirect them to previous activity.
          */
-        mActivityPaymentDetailBinding = DataBindingUtil.setContentView(this, R.layout.activity_payment_detail_startegic_partner);
+        mActivityPaymentDetailBinding = DataBindingUtil.setContentView(this, R.layout.activity_payment_detail_startegic_partner_new);
 
         initiateUI();
         setListeners();
@@ -74,12 +76,31 @@ public class PaymentsStepStrategicPartnerActivity extends BaseAppCompatActivity 
         }
 
         if (taskDetailModel != null) {
-            Utility.loadImageView(mContext, mActivityPaymentDetailBinding.imgService, taskDetailModel.catImage, R.drawable.gradient_black);
             mActivityPaymentDetailBinding.recycleSelectedService.setLayoutManager(new LinearLayoutManager(this));
             if (taskDetailModel.taskSelectedSubCategoryList != null)
                 mActivityPaymentDetailBinding.recycleSelectedService.setAdapter(new PaymentSummaryAdapter(taskDetailModel.taskSelectedSubCategoryList));
-            Utility.loadImageView(mContext, mActivityPaymentDetailBinding.imgService, taskDetailModel.catImage, R.drawable.gradient_black);
-            Utility.showCircularImageViewWithColorBorder(mContext, TAG, mActivityPaymentDetailBinding.imgProfile, taskDetailModel.catImage, R.drawable.icon_profile_img_solid, R.color.dark_blue_variant_1, true);
+
+
+//            Utility.loadImageView(mContext, mActivityPaymentDetailBinding.imgService, taskDetailModel.bannerImage, R.drawable.gradient_black);
+
+
+            ViewTreeObserver mViewTreeObserver = mActivityPaymentDetailBinding.frameBannerImage.getViewTreeObserver();
+            mViewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    mActivityPaymentDetailBinding.frameBannerImage.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                    int width = mActivityPaymentDetailBinding.frameBannerImage.getMeasuredWidth();
+                    ViewGroup.LayoutParams params = mActivityPaymentDetailBinding.frameBannerImage.getLayoutParams();
+
+                    params.height = Utility.getHeightFromWidthForTwoOneRatio(width);
+                    mActivityPaymentDetailBinding.frameBannerImage.setLayoutParams(params);
+                    // Load the image now.
+                    Utility.loadImageView(mContext, mActivityPaymentDetailBinding.imgService, taskDetailModel.bannerImage, R.drawable.gradient_black);
+                }
+            });
+
+
+            Utility.showCircularImageViewWithColorBorder(mContext, TAG, mActivityPaymentDetailBinding.imgLogo, taskDetailModel.catImage, Utility.DEFAULT_CHEEP_LOGO, R.color.dark_blue_variant_1, true);
             String dateTime = "";
             if (!TextUtils.isEmpty(taskDetailModel.taskStartdate)) {
                 dateTime = Utility.getDate(Long.parseLong(taskDetailModel.taskStartdate), "dd MMMM, HH:mm a");

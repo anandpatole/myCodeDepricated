@@ -79,7 +79,7 @@ public class CommentsRecyclerViewAdapter extends RecyclerView.Adapter<CommentsRe
             holder.mRowCommentsBinding.textDate.setText(model.comment_date);
         }
 
-        Utility.showCircularImageView(holder.mRowCommentsBinding.textMessage.getContext(), TAG, holder.mRowCommentsBinding.imgProfile, model.commenter_profile_image, Utility.DEFAULT_PROFILE_SRC);
+        Utility.showCircularImageView(holder.mRowCommentsBinding.textMessage.getContext(), TAG, holder.mRowCommentsBinding.imgProfile, model.commenter_profile_image, Utility.DEFAULT_CHEEP_LOGO);
 
     }
 

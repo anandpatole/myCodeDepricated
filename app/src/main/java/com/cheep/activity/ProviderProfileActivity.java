@@ -208,7 +208,7 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
                 TAG,
                 mActivityProviderProfileBinding.imgProfile,
                 providerModel.profileUrl,
-                R.drawable.icon_profile_img_solid,
+                Utility.DEFAULT_CHEEP_LOGO,
                 R.color.splash_gradient_end
                 , true);
 //        Utility.loadImageView(mContext, mActivityProviderProfileBinding.imgProfile, providerModel.profileUrl, Utility.DEFAULT_PROFILE_SRC);
@@ -379,8 +379,7 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
                     .dontAnimate()
                     .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                     .into(mActivityProviderProfileBinding.imgChat);
-        }
-        else{
+        } else {
             Glide.with(mContext)
                     .load(R.drawable.icon_chat_smaller)
                     .into(mActivityProviderProfileBinding.imgChat);
@@ -492,6 +491,8 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
                 messageEvent.id = providerModel.providerId;
                 messageEvent.isFav = mActivityProviderProfileBinding.imgFav.isSelected() ? Utility.BOOLEAN.YES : Utility.BOOLEAN.NO;
                 EventBus.getDefault().post(messageEvent);
+
+
             }
         });
 
@@ -759,7 +760,6 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
                     case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
                         //Logout and finish the current activity
                         Utility.logout(mContext, true, statusCode);
-                        ;
                         finish();
                         break;
                 }

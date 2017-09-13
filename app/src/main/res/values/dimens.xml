@@ -133,6 +133,7 @@
 
 
     <!-- Strategic partner Banner header -->
+    <dimen name="banner_desc_margin_top">25dp</dimen>
     <dimen name="banner_title_text_size">18sp</dimen>
     <dimen name="stra_partner_logo_size">100dp</dimen>
     <dimen name="margin_top_payment_step">60dp</dimen>

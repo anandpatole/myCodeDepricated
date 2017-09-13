@@ -1165,6 +1165,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
 
         if (shouldOpenAddAddress) {
             showAddAddressDialog(null);
+            addressDialog.view.findViewById(R.id.btn_submit).setVisibility(View.GONE);
         }
     }
 
@@ -1241,7 +1242,9 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
                     switch (statusCode) {
                         case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
                             JSONObject jsonData = jsonObject.getJSONObject(NetworkUtility.TAGS.DATA);
+                            // strategic partner pro id for given location
                             mStrategicPartnerTaskCreationAct.spUserId = jsonData.optString(SP_USER_ID);
+
                             if (mStrategicPartnerTaskCreationAct.spUserId.equalsIgnoreCase(Utility.EMPTY_STRING)) {
                                 Utility.showToast(mStrategicPartnerTaskCreationAct, getString(R.string.alert_strategic_partner_unavailable_in_location));
                             } else {
@@ -1573,8 +1576,27 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
                 addressRecyclerViewAdapter.delete(addressModel);
                 // Saving information in sharedpreference
                 guestUserDetails.addressList = addressRecyclerViewAdapter.getmList();
+                PreferenceUtility.getInstance(mContext).saveGuestUserDetails(guestUserDetails);
+
+                // hide That's me button when list is empty
+                if (addressRecyclerViewAdapter.getItemCount() == 0)
+                    addressDialog.view.findViewById(R.id.btn_submit).setVisibility(View.GONE);
+
+                // if selected adress is deleted then reset select an address field  again
+                if (mStrategicPartnerTaskCreationAct.mSelectedAddressModel != null && addressModel.address_id.equalsIgnoreCase(mStrategicPartnerTaskCreationAct.mSelectedAddressModel.address_id)) {
+                    mStrategicPartnerTaskCreationAct.mSelectedAddressModel = null;
+                    ((TextView) mFragmentStrategicPartnerPhaseTwoBinding.linMain.findViewWithTag(Utility.TEMPLATE_LOCATION)).setText(getString(R.string.label_select_an_address));
+                    for (QueAnsModel queAnsModel : mList) {
+                        if (queAnsModel.answerType.equalsIgnoreCase(Utility.TEMPLATE_LOCATION)) {
+                            queAnsModel.answer = "";
+                            break;
+                        }
+                    }
+                    validateAllQueAndAns();
+                }
+
             }
-            PreferenceUtility.getInstance(mContext).saveGuestUserDetails(guestUserDetails);
+
             return;
         }
 
@@ -1619,6 +1641,21 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
                             UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
                             userDetails.addressList = addressRecyclerViewAdapter.getmList();
                             PreferenceUtility.getInstance(mContext).saveUserDetails(userDetails);
+                            if (addressRecyclerViewAdapter.getItemCount() == 0)
+                                addressDialog.view.findViewById(R.id.btn_submit).setVisibility(View.GONE);
+
+                            if (mStrategicPartnerTaskCreationAct.mSelectedAddressModel != null && TEMP_ADDRESS_ID.equalsIgnoreCase(mStrategicPartnerTaskCreationAct.mSelectedAddressModel.address_id)) {
+                                mStrategicPartnerTaskCreationAct.mSelectedAddressModel = null;
+                                ((TextView) mFragmentStrategicPartnerPhaseTwoBinding.linMain.findViewWithTag(Utility.TEMPLATE_LOCATION)).setText(getString(R.string.label_select_an_address));
+                                for (QueAnsModel queAnsModel : mList) {
+                                    if (queAnsModel.answerType.equalsIgnoreCase(Utility.TEMPLATE_LOCATION)) {
+                                        queAnsModel.answer = "";
+                                        break;
+                                    }
+                                }
+                                validateAllQueAndAns();
+                            }
+
                         }
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
@@ -1843,6 +1880,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
 
                             if (addressRecyclerViewAdapter != null) {
                                 addressRecyclerViewAdapter.add(addressModel);
+                                addressDialog.view.findViewById(R.id.btn_submit).setVisibility(View.VISIBLE);
                             }
 
                             //Saving information in sharedpreference
@@ -1918,6 +1956,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
 
                         if (addAddressDialog != null) {
                             addAddressDialog.dismiss();
+                            addressDialog.view.findViewById(R.id.btn_submit).setVisibility(View.VISIBLE);
                         }
 
                         break;

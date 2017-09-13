@@ -78,7 +78,8 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
     private FragmentStrategicPartnerPhaseThreeBinding mFragmentStrategicPartnerPhaseThreeBinding;
     private StrategicPartnerTaskCreationAct mStrategicPartnerTaskCreationAct;
     private String addressId = "";
-    private String payableAmount;
+    private String payableAmount = "";
+    private String promocode_price = "";
     private String start_datetime = "";
     private String date = "";
     private String time = "";
@@ -87,7 +88,7 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
     private boolean isVerified = false;
     @Nullable
     private String cheepCode;
-
+    private String tempTotalBasePrice = "";
     // After Posting Task, this would hold the details for AppsFlyer
     Map<String, Object> mTaskCreationParams;
 
@@ -172,7 +173,8 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
         spannableStringBuilder.append(getSpannableString(date + ", " + time
                 , ContextCompat.getColor(mStrategicPartnerTaskCreationAct, R.color.splash_gradient_end), true));
         spannableStringBuilder.append(getSpannableString(getString(R.string.label_at), ContextCompat.getColor(mStrategicPartnerTaskCreationAct, R.color.grey_varient_8), false));
-        spannableStringBuilder.append(getSpannableString(mStrategicPartnerTaskCreationAct.mSelectedAddressModel.address, ContextCompat.getColor(mStrategicPartnerTaskCreationAct, R.color.splash_gradient_end), true));
+        if (mStrategicPartnerTaskCreationAct.mSelectedAddressModel != null)
+            spannableStringBuilder.append(getSpannableString(mStrategicPartnerTaskCreationAct.mSelectedAddressModel.address, ContextCompat.getColor(mStrategicPartnerTaskCreationAct, R.color.splash_gradient_end), true));
         spannableStringBuilder.append(getSpannableString(".", ContextCompat.getColor(mStrategicPartnerTaskCreationAct, R.color.splash_gradient_end), true));
 
         mFragmentStrategicPartnerPhaseThreeBinding.txtdesc.setText(spannableStringBuilder);
@@ -224,6 +226,7 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
         // reset the values fo Payable Amount
         cheepCode = Utility.EMPTY_STRING;
         payableAmount = Utility.EMPTY_STRING;
+        promocode_price = Utility.EMPTY_STRING;
     }
 
     /**
@@ -281,9 +284,10 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
         mParams.put(NetworkUtility.TAGS.QUOTE_AMOUNT, mStrategicPartnerTaskCreationAct.totalOfBasePrice);
         mParams.put(NetworkUtility.TAGS.CHEEPCODE, cheepCode);
         mParams.put(NetworkUtility.TAGS.CAT_ID, mStrategicPartnerTaskCreationAct.mBannerImageModel.cat_id);
-        int addressId;
+        int addressId = 0;
         try {
-            addressId = Integer.parseInt(mStrategicPartnerTaskCreationAct.mSelectedAddressModel.address_id);
+            if (mStrategicPartnerTaskCreationAct.mSelectedAddressModel != null)
+                addressId = Integer.parseInt(mStrategicPartnerTaskCreationAct.mSelectedAddressModel.address_id);
         } catch (Exception e) {
             addressId = 0;
         }
@@ -327,8 +331,8 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
                         if (edtCheepCode != null) {
                             cheepCode = edtCheepCode.getText().toString().trim();
                             cheepCodeDialog.dismiss();
-                            mStrategicPartnerTaskCreationAct.total = jsonObject.optString(NetworkUtility.TAGS.QUOTE_AMOUNT);
-
+                            tempTotalBasePrice = mStrategicPartnerTaskCreationAct.totalOfBasePrice;
+                            mStrategicPartnerTaskCreationAct.totalOfBasePrice = jsonObject.optString(NetworkUtility.TAGS.QUOTE_AMOUNT);
                             String discount = jsonObject.optString(NetworkUtility.TAGS.DISCOUNT_AMOUNT);
                             String payable = jsonObject.optString(NetworkUtility.TAGS.PAYABLE_AMOUNT);
                             mFragmentStrategicPartnerPhaseThreeBinding.lnPromoCodeDisclaimer.setVisibility(View.VISIBLE);
@@ -346,6 +350,11 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
                         error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
                         // Show message
 //                        Utility.showSnackBar(error_message, mActivityJobSummaryBinding.getRoot());
+
+                        cheepCode = "";
+                        if (!TextUtils.isEmpty(tempTotalBasePrice))
+                            mStrategicPartnerTaskCreationAct.totalOfBasePrice = tempTotalBasePrice;
+
                         Utility.showToast(mContext, error_message);
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
@@ -374,6 +383,8 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
         payableAmount = payable;
         mFragmentStrategicPartnerPhaseThreeBinding.txtpromocode.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(discount)));
         mFragmentStrategicPartnerPhaseThreeBinding.txttotal.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(payable)));
+
+        promocode_price = discount;
         mFragmentStrategicPartnerPhaseThreeBinding.textPay.setText(getString(R.string.label_pay_fee_v1, "" + Utility.getQuotePriceFormatter(payable)));
         mFragmentStrategicPartnerPhaseThreeBinding.textpromocodelabel.setEnabled(false);
         mFragmentStrategicPartnerPhaseThreeBinding.textpromocodelabel.setText(getString(R.string.label_promocode_apply));
@@ -446,10 +457,14 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
 //        mParams.put(NetworkUtility.TAGS.SP_USER_ID, providerModel.providerId);
 //        mParams.put(NetworkUtility.TAGS.TASK_ID, taskDetailModel.taskId);
 
-        if (!TextUtils.isEmpty(cheepCode))
+        if (!TextUtils.isEmpty(cheepCode)) {
             mParams.put(NetworkUtility.TAGS.CHEEPCODE, cheepCode);
-        else
+            mParams.put(NetworkUtility.TAGS.PROMOCODE_PRICE, promocode_price);
+        } else {
             mParams.put(NetworkUtility.TAGS.CHEEPCODE, Utility.EMPTY_STRING);
+            mParams.put(NetworkUtility.TAGS.PROMOCODE_PRICE, "0");
+
+        }
 
         //Create Asynctask that will do the encryption and afterwords call webservice
         AsyncFetchEnryptedString asyncFetchEnryptedString = new AsyncFetchEnryptedString();
@@ -747,11 +762,11 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
         Log.e(TAG, "gmt time " + String.valueOf(superCalendar.getTimeInMillis()));
 
         Map<String, String> mParams = new HashMap<>();
-
-        if (Integer.parseInt(mStrategicPartnerTaskCreationAct.mSelectedAddressModel.address_id) > 0) {
-            mParams.put(NetworkUtility.TAGS.ADDRESS_ID, mStrategicPartnerTaskCreationAct.mSelectedAddressModel.address_id);
-        } else {
-            // In case its Nagative then provide other address information
+        if (mStrategicPartnerTaskCreationAct.mSelectedAddressModel != null)
+            if (Integer.parseInt(mStrategicPartnerTaskCreationAct.mSelectedAddressModel.address_id) > 0) {
+                mParams.put(NetworkUtility.TAGS.ADDRESS_ID, mStrategicPartnerTaskCreationAct.mSelectedAddressModel.address_id);
+            } else {
+                // In case its Nagative then provide other address information
             /*
              public String address_initials;
              public String address;
@@ -759,27 +774,30 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
              public String lat;
              public String lng;
              */
-            mParams.put(NetworkUtility.TAGS.ADDRESS_INITIALS, mStrategicPartnerTaskCreationAct.mSelectedAddressModel.address_initials);
-            mParams.put(NetworkUtility.TAGS.ADDRESS, mStrategicPartnerTaskCreationAct.mSelectedAddressModel.address);
-            mParams.put(NetworkUtility.TAGS.CATEGORY, mStrategicPartnerTaskCreationAct.mSelectedAddressModel.category);
-            mParams.put(NetworkUtility.TAGS.LAT, mStrategicPartnerTaskCreationAct.mSelectedAddressModel.lat);
-            mParams.put(NetworkUtility.TAGS.LNG, mStrategicPartnerTaskCreationAct.mSelectedAddressModel.lng);
-            mParams.put(NetworkUtility.TAGS.CITY_NAME, mStrategicPartnerTaskCreationAct.mSelectedAddressModel.cityName);
-            mParams.put(NetworkUtility.TAGS.COUNTRY, mStrategicPartnerTaskCreationAct.mSelectedAddressModel.countryName);
-            mParams.put(NetworkUtility.TAGS.STATE, mStrategicPartnerTaskCreationAct.mSelectedAddressModel.stateName);
-        }
+                mParams.put(NetworkUtility.TAGS.ADDRESS_INITIALS, mStrategicPartnerTaskCreationAct.mSelectedAddressModel.address_initials);
+                mParams.put(NetworkUtility.TAGS.ADDRESS, mStrategicPartnerTaskCreationAct.mSelectedAddressModel.address);
+                mParams.put(NetworkUtility.TAGS.CATEGORY, mStrategicPartnerTaskCreationAct.mSelectedAddressModel.category);
+                mParams.put(NetworkUtility.TAGS.LAT, mStrategicPartnerTaskCreationAct.mSelectedAddressModel.lat);
+                mParams.put(NetworkUtility.TAGS.LNG, mStrategicPartnerTaskCreationAct.mSelectedAddressModel.lng);
+                mParams.put(NetworkUtility.TAGS.CITY_NAME, mStrategicPartnerTaskCreationAct.mSelectedAddressModel.cityName);
+                mParams.put(NetworkUtility.TAGS.COUNTRY, mStrategicPartnerTaskCreationAct.mSelectedAddressModel.countryName);
+                mParams.put(NetworkUtility.TAGS.STATE, mStrategicPartnerTaskCreationAct.mSelectedAddressModel.stateName);
+            }
 
         mParams.put(NetworkUtility.TAGS.CAT_ID, mStrategicPartnerTaskCreationAct.mBannerImageModel.cat_id);
         mParams.put(NetworkUtility.TAGS.START_DATETIME, String.valueOf(superCalendar.getTimeInMillis()));
         mParams.put(NetworkUtility.TAGS.SUB_CATEGORY_DETAIL, subCategoryDetail);
         mParams.put(NetworkUtility.TAGS.QUESTION_DETAIL, question_detail);
         mParams.put(NetworkUtility.TAGS.QUOTE_AMOUNT, mStrategicPartnerTaskCreationAct.totalOfBasePrice);
+        mParams.put(NetworkUtility.TAGS.PAYMENT_STATUS, isPaymentSuccess ? Utility.PAYMENT_STATUS.COMPLETED : Utility.PAYMENT_STATUS.FAILED);
+        mParams.put(NetworkUtility.TAGS.PAYMENT_LOG, paymentGatewaySummary);
 
         mParams.put(NetworkUtility.TAGS.CHEEPCODE, TextUtils.isEmpty(cheepCode) ? Utility.EMPTY_STRING : cheepCode);
         mParams.put(NetworkUtility.TAGS.PAYABLE_AMOUNT, TextUtils.isEmpty(cheepCode) ? mStrategicPartnerTaskCreationAct.total : payableAmount);
         mParams.put(NetworkUtility.TAGS.TRANSACTION_ID, transaction_Id);
         mParams.put(NetworkUtility.TAGS.TASK_DESC, task_desc);
         mParams.put(NetworkUtility.TAGS.SP_USER_ID, mStrategicPartnerTaskCreationAct.spUserId);
+        mParams.put(NetworkUtility.TAGS.PROMOCODE_PRICE, TextUtils.isEmpty(cheepCode) ? "0" : promocode_price);
         // new amazon s3 uploaded file names
         mParams.put(NetworkUtility.TAGS.MEDIA_FILE, media_file);
 
@@ -794,10 +812,11 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
 
         // Create Params for AppsFlyer event track
         mTaskCreationParams = new HashMap<>();
-        if (Integer.parseInt(mStrategicPartnerTaskCreationAct.mSelectedAddressModel.address_id) > 0) {
-            mTaskCreationParams.put(NetworkUtility.TAGS.ADDRESS_ID, mStrategicPartnerTaskCreationAct.mSelectedAddressModel.address_id);
-        } else {
-            // In case its Nagative then provide other address information
+        if (mStrategicPartnerTaskCreationAct.mSelectedAddressModel != null)
+            if (Integer.parseInt(mStrategicPartnerTaskCreationAct.mSelectedAddressModel.address_id) > 0) {
+                mTaskCreationParams.put(NetworkUtility.TAGS.ADDRESS_ID, mStrategicPartnerTaskCreationAct.mSelectedAddressModel.address_id);
+            } else {
+                // In case its Nagative then provide other address information
             /*
              public String address_initials;
              public String address;
@@ -805,25 +824,28 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
              public String lat;
              public String lng;
              */
-            mTaskCreationParams.put(NetworkUtility.TAGS.ADDRESS_INITIALS, mStrategicPartnerTaskCreationAct.mSelectedAddressModel.address_initials);
-            mTaskCreationParams.put(NetworkUtility.TAGS.ADDRESS, mStrategicPartnerTaskCreationAct.mSelectedAddressModel.address);
-            mTaskCreationParams.put(NetworkUtility.TAGS.CATEGORY, mStrategicPartnerTaskCreationAct.mSelectedAddressModel.category);
-            mTaskCreationParams.put(NetworkUtility.TAGS.LAT, mStrategicPartnerTaskCreationAct.mSelectedAddressModel.lat);
-            mTaskCreationParams.put(NetworkUtility.TAGS.LNG, mStrategicPartnerTaskCreationAct.mSelectedAddressModel.lng);
-            mTaskCreationParams.put(NetworkUtility.TAGS.CITY_NAME, mStrategicPartnerTaskCreationAct.mSelectedAddressModel.cityName);
-            mTaskCreationParams.put(NetworkUtility.TAGS.COUNTRY, mStrategicPartnerTaskCreationAct.mSelectedAddressModel.countryName);
-            mTaskCreationParams.put(NetworkUtility.TAGS.STATE, mStrategicPartnerTaskCreationAct.mSelectedAddressModel.stateName);
-        }
+                mTaskCreationParams.put(NetworkUtility.TAGS.ADDRESS_INITIALS, mStrategicPartnerTaskCreationAct.mSelectedAddressModel.address_initials);
+                mTaskCreationParams.put(NetworkUtility.TAGS.ADDRESS, mStrategicPartnerTaskCreationAct.mSelectedAddressModel.address);
+                mTaskCreationParams.put(NetworkUtility.TAGS.CATEGORY, mStrategicPartnerTaskCreationAct.mSelectedAddressModel.category);
+                mTaskCreationParams.put(NetworkUtility.TAGS.LAT, mStrategicPartnerTaskCreationAct.mSelectedAddressModel.lat);
+                mTaskCreationParams.put(NetworkUtility.TAGS.LNG, mStrategicPartnerTaskCreationAct.mSelectedAddressModel.lng);
+                mTaskCreationParams.put(NetworkUtility.TAGS.CITY_NAME, mStrategicPartnerTaskCreationAct.mSelectedAddressModel.cityName);
+                mTaskCreationParams.put(NetworkUtility.TAGS.COUNTRY, mStrategicPartnerTaskCreationAct.mSelectedAddressModel.countryName);
+                mTaskCreationParams.put(NetworkUtility.TAGS.STATE, mStrategicPartnerTaskCreationAct.mSelectedAddressModel.stateName);
+            }
         mTaskCreationParams.put(NetworkUtility.TAGS.CAT_ID, mStrategicPartnerTaskCreationAct.mBannerImageModel.cat_id);
         mTaskCreationParams.put(NetworkUtility.TAGS.START_DATETIME, start_datetime);
         mTaskCreationParams.put(NetworkUtility.TAGS.SUB_CATEGORY_DETAIL, subCategoryDetail);
         mTaskCreationParams.put(NetworkUtility.TAGS.QUESTION_DETAIL, question_detail);
+        mTaskCreationParams.put(NetworkUtility.TAGS.PAYMENT_STATUS, isPaymentSuccess ? Utility.PAYMENT_STATUS.COMPLETED : Utility.PAYMENT_STATUS.FAILED);
+        mTaskCreationParams.put(NetworkUtility.TAGS.PAYMENT_LOG, paymentGatewaySummary);
         mTaskCreationParams.put(NetworkUtility.TAGS.QUOTE_AMOUNT, mStrategicPartnerTaskCreationAct.total + "");
         mTaskCreationParams.put(NetworkUtility.TAGS.CHEEPCODE, cheepCode);
         mTaskCreationParams.put(NetworkUtility.TAGS.PAYABLE_AMOUNT, payableAmount);
         mTaskCreationParams.put(NetworkUtility.TAGS.TRANSACTION_ID, transaction_Id);
         mTaskCreationParams.put(NetworkUtility.TAGS.MEDIA_FILE, media_file);
         mTaskCreationParams.put(NetworkUtility.TAGS.SP_USER_ID, mStrategicPartnerTaskCreationAct.spUserId);
+        mTaskCreationParams.put(NetworkUtility.TAGS.PROMOCODE_PRICE, TextUtils.isEmpty(cheepCode) ? "0" : promocode_price);
 
         // Add Params
 //        HashMap<String, File> mFileParams = new HashMap<>();
@@ -1063,6 +1085,23 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
             Log.d(TAG, "onReceive() called with: context = [" + context + "], intent = [" + intent + "]");
             Utility.hideKeyboard(mContext);
             // Initiating the payment now
+
+            /**
+             * As User is currently logged in, we need to add FullAddressModel to existing addresslist.
+             */
+            UserDetails mUserDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
+            if (mUserDetails != null) {
+                if (mUserDetails.addressList.isEmpty()) {
+                    mUserDetails.addressList = new ArrayList<>();
+                }
+
+                // Add additional selected addressmodel here.
+                mUserDetails.addressList.add(mStrategicPartnerTaskCreationAct.mSelectedAddressModel);
+
+                // Save the user now.
+                PreferenceUtility.getInstance(mContext).saveUserDetails(mUserDetails);
+            }
+
             payNow();
         }
     };

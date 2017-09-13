@@ -68,7 +68,7 @@ public class ReviewsRecyclerViewAdapter extends RecyclerView.Adapter<ReviewsRecy
     public void onBindViewHolder(final ViewHolder holder, int position) {
 
         final ReviewModel model = mList.get(holder.getAdapterPosition());
-        Utility.showCircularImageView(holder.mView.getContext(), TAG, holder.mRowReviewsBinding.imgProfile, model.reviewerProfileImage, Utility.DEFAULT_PROFILE_SRC);
+        Utility.showCircularImageView(holder.mView.getContext(), TAG, holder.mRowReviewsBinding.imgProfile, model.reviewerProfileImage, Utility.DEFAULT_CHEEP_LOGO);
         holder.mRowReviewsBinding.textName.setText(model.reviewerName);
 
         try {

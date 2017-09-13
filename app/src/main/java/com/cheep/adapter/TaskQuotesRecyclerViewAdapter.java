@@ -110,7 +110,7 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
         holder.removeAnimations();
 
         //image
-        Utility.showCircularImageView(mContext, TAG, holder.ivAvatar, provider.profileUrl, Utility.DEFAULT_PROFILE_SRC);
+        Utility.showCircularImageView(mContext, TAG, holder.ivAvatar, provider.profileUrl, Utility.DEFAULT_CHEEP_LOGO);
 
         //basic info
         SpannableString sName = new SpannableString(checkNonNullAndSet(provider.userName));
@@ -355,6 +355,13 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
 
         //favorite
         holder.ivFavoriteQuote.setSelected(provider.isFavourite.equals(Utility.BOOLEAN.YES));
+        holder.ivFavoriteQuote.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mListener.onFavClicked(provider, !holder.ivFavoriteQuote.isSelected());
+                holder.ivFavoriteQuote.setSelected(!holder.ivFavoriteQuote.isSelected());
+            }
+        });
 
 
         /**
@@ -491,6 +498,22 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
         }
     }
 
+    public void updateFavStatus(String id, String isFav) {
+        if (mQuotesList != null) {
+            boolean isUpdated = false;
+            //we are not breaking this loop because we may need to change status of same selectedProvider in another rows
+            for (ProviderModel providerModel : mQuotesList) {
+                if (providerModel != null && providerModel.providerId.equalsIgnoreCase(id)) {
+                    providerModel.isFavourite = isFav;
+                    isUpdated = true;
+//                    break;
+                }
+            }
+            if (isUpdated)
+                notifyDataSetChanged();
+        }
+    }
+
     public void addAll(List<ProviderModel> providerModels) {
         this.mQuotesList.clear();
         this.mQuotesList.addAll(providerModels);
@@ -584,6 +607,8 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
         void onChatClicked(ProviderModel provider);
 
         void onCallClicked(ProviderModel provider);
+
+        void onFavClicked(ProviderModel provider, boolean flag);
 
         void onQuoteListEmpty();
     }

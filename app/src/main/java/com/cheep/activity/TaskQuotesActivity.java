@@ -476,6 +476,11 @@ public class TaskQuotesActivity extends BaseAppCompatActivity implements TaskQuo
     }
 
     @Override
+    public void onFavClicked(ProviderModel provider, boolean flag) {
+        callAddToFavWS(provider.providerId, flag);
+    }
+
+    @Override
     public void onQuoteListEmpty() {
         // Finish the activity now.
         finish();
@@ -805,7 +810,12 @@ public class TaskQuotesActivity extends BaseAppCompatActivity implements TaskQuo
             if (mTaskDetailModel.taskId.equals(event.id)) {
                 callSPListWS();
             }
-        } /* else if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.QUOTE_REQUESTED_BY_PRO
+        }else if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.UPDATE_FAVOURITE) {
+            if (!TextUtils.isEmpty(event.isFav))
+                mAdapter.updateFavStatus(event.id, event.isFav);
+        }
+
+        /* else if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.QUOTE_REQUESTED_BY_PRO
                 || event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.REQUEST_FOR_DETAIL) {
 
             // Only go ahead if we are in same task detail screen whose notification comes
@@ -816,6 +826,91 @@ public class TaskQuotesActivity extends BaseAppCompatActivity implements TaskQuo
             }
         }*/
     }
+
+    /**
+     * Call Add to fav
+     *
+     * @param providerId
+     * @param isAddToFav
+     */
+    private void callAddToFavWS(String providerId, boolean isAddToFav) {
+        if (!Utility.isConnected(mContext)) {
+            Utility.showSnackBar(getString(R.string.no_internet), mRoot);
+            return;
+        }
+
+        //Add Header parameters
+        Map<String, String> mHeaderParams = new HashMap<>();
+        mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
+        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
+
+        //Add Params
+        Map<String, Object> mParams = new HashMap<>();
+        mParams.put(NetworkUtility.TAGS.SP_USER_ID, providerId);
+        mParams.put(NetworkUtility.TAGS.REQ_FOR, isAddToFav ? "add" : "remove");
+
+        //Url is based on condition if address id is greater then 0 then it means we need to update the existing address
+        VolleyNetworkRequest mVolleyNetworkRequestForSPList = new VolleyNetworkRequest(NetworkUtility.WS.SP_ADD_TO_FAV
+                , mCallAddSPToFavWSErrorListener
+                , mCallAddSPToFavWSResponseListener
+                , mHeaderParams
+                , mParams
+                , null);
+        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequestForSPList);
+    }
+
+    Response.Listener mCallAddSPToFavWSResponseListener = new Response.Listener() {
+        @Override
+        public void onResponse(Object response) {
+
+            String strResponse = (String) response;
+            try {
+                JSONObject jsonObject = new JSONObject(strResponse);
+                Log.i(TAG, "onResponse: " + jsonObject.toString());
+                int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
+                String error_message;
+
+                switch (statusCode) {
+                    case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
+
+                        break;
+                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
+                        // Show Toast
+                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mRoot);
+                        break;
+                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
+                        error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
+                        // Show message
+                        Utility.showSnackBar(error_message, mRoot);
+                        break;
+                    case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
+                    case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
+                        //Logout and finish the current activity
+                        Utility.logout(mContext, true, statusCode);
+                        finish();
+                        break;
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+                mCallAddSPToFavWSErrorListener.onErrorResponse(new VolleyError(e.getMessage()));
+            }
+
+        }
+    };
+
+    Response.ErrorListener mCallAddSPToFavWSErrorListener = new Response.ErrorListener() {
+        @Override
+        public void onErrorResponse(final VolleyError error) {
+            Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
+
+            // Close Progressbar
+//            hideProgressDialog();
+
+
+            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mRoot);
+
+        }
+    };
 
     @Override
     protected void onDestroy() {

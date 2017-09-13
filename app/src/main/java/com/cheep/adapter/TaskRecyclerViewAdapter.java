@@ -137,7 +137,7 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
     }
 
     @Override
-    public void onActualBindViewHolder(final ViewHolder holder, int position) {
+    public void onActualBindViewHolder(final ViewHolder holder, final int position) {
         final TaskDetailModel model = mList.get(holder.getAdapterPosition());
 
         holder.removeAnimations();
@@ -197,6 +197,7 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
                 //holder.mUpcomingTaskBinding.gridImageView.createWithUrls(arrayListUri); // just for testing
                 holder.mUpcomingTaskBinding.gridImageView.createWithUrls(getURIListFromStringList(model.profile_img_arr));
 
+
                 if (model.selectedProvider == null) {
                     holder.mUpcomingTaskBinding.layoutIndividualProfile.setVisibility(View.GONE);
                     holder.mUpcomingTaskBinding.layoutGroupProfile.setVisibility(View.VISIBLE);
@@ -213,6 +214,15 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
                     holder.mUpcomingTaskBinding.layoutIndividualProfile.setVisibility(View.VISIBLE);
                     holder.mUpcomingTaskBinding.layoutGroupProfile.setVisibility(View.GONE);
 
+                    holder.mUpcomingTaskBinding.imgFav.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+
+                            listener.onFavClicked(model, !holder.mUpcomingTaskBinding.imgFav.isSelected(), position);
+                            holder.mUpcomingTaskBinding.imgFav.setSelected(!holder.mUpcomingTaskBinding.imgFav.isSelected());
+
+                        }
+                    });
 
                     if (model.taskType.equalsIgnoreCase(Utility.TASK_TYPE.STRATEGIC)) {
                         holder.mUpcomingTaskBinding.tvProviderName.setText(model.categoryName);
@@ -227,7 +237,7 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
                         else
                             holder.mUpcomingTaskBinding.imgFav.setSelected(false);
                     }
-                    Utility.showCircularImageViewWithColorBorder(holder.mUpcomingTaskBinding.imgProfilePic.getContext(), TAG, holder.mUpcomingTaskBinding.imgProfilePic, model.selectedProvider.profileUrl, R.drawable.icon_profile_img_solid, R.color.grey_dark_color, true);
+                    Utility.showCircularImageViewWithColorBorder(holder.mUpcomingTaskBinding.imgProfilePic.getContext(), TAG, holder.mUpcomingTaskBinding.imgProfilePic, model.selectedProvider.profileUrl, Utility.DEFAULT_CHEEP_LOGO, R.color.grey_dark_color, true);
 
                     // Show Rating
                     holder.mUpcomingTaskBinding.ratingBar.setVisibility(View.VISIBLE);
@@ -448,7 +458,7 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
 
 
                 if (model.selectedProvider != null) {
-                    Utility.showCircularImageViewWithColorBorder(holder.mRowTaskBinding.imgProfile.getContext(), TAG, holder.mRowTaskBinding.imgProfile, model.selectedProvider.profileUrl, R.drawable.icon_profile_img_solid, R.color.grey_dark_color, true);
+                    Utility.showCircularImageViewWithColorBorder(holder.mRowTaskBinding.imgProfile.getContext(), TAG, holder.mRowTaskBinding.imgProfile, model.selectedProvider.profileUrl, Utility.DEFAULT_CHEEP_LOGO, R.color.grey_dark_color, true);
 
                     holder.mRowTaskBinding.textTaskApprovedQuote.setText(holder.mRowTaskBinding.imgProfile.getContext().getString(R.string.rupee_symbol_x_space, Utility.getActualPrice(model.taskPaidAmount, model.selectedProvider.quotePrice)));
                     if (model.taskType.equalsIgnoreCase(Utility.TASK_TYPE.STRATEGIC)) {
@@ -479,8 +489,10 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
                     // Show Rating
                     Utility.showRating(model.selectedProvider.rating, holder.mRowTaskBinding.ratingBar);
                 } else {
+
                     Utility.showCircularImageView(holder.mRowTaskBinding.imgProfile.getContext(), TAG, holder.mRowTaskBinding.imgProfile, "", Utility.DEFAULT_PROFILE_SRC);
                     holder.mRowTaskBinding.textTaskApprovedQuote.setText(holder.mRowTaskBinding.imgProfile.getContext().getString(R.string.rupee_symbol_x_space, Utility.getActualPrice("", "")));
+
                     holder.mRowTaskBinding.textProviderName.setText("");
                     holder.mRowTaskBinding.imgBadge.setVisibility(View.GONE);
                     holder.mRowTaskBinding.textVerified.setVisibility(View.GONE);

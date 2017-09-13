@@ -116,7 +116,7 @@ public class Utility {
 
     public static final int DEFAULT_PROFILE_SRC = R.drawable.icon_profile_img_solid;
     public static final int DEFAULT_CHEEP_LOGO = R.drawable.ic_cheep_circular_icon;
-    public static final String DEFAULT_PROFILE_URL = "http://msz.uniklinikum-dresden.de/zkn/images/mitarbeiter/dummy120_dagobert83_female_user_icon.png";//"http://lorempixel.com/200/200/people/";
+//    public static final String DEFAULT_PROFILE_URL = "http://msz.uniklinikum-dresden.de/zkn/images/mitarbeiter/dummy120_dagobert83_female_user_icon.png";//"http://lorempixel.com/200/200/people/";
 
     public static final String LOCALE_FOR_HINDI = "hi";
     public static final String LOCALE_FOR_ENGLISH = "en";
@@ -193,6 +193,12 @@ public class Utility {
      */
     public static final float CATEGORY_IMAGE_RATIO = (float) 2.3972;
 
+
+    /**
+     *
+     * Regular expression for mobile number
+     */
+    public static  final String MOBILE_REGREX = "(((\\+*)((0[ -]+)*|(91[- ]+)*)(\\d{12}+|\\d{10}+))|\\d{5}([- ]*)\\d{6})";
 
     /**
      * ongoing user chatId

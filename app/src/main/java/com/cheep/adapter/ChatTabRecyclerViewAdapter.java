@@ -184,7 +184,7 @@ public class ChatTabRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                 holder.mRowTabHomeBinding.textDesc.setText(model.taskDesc);
             } else //Single participants
             {
-                Utility.showCircularImageView(holder.mRowTabHomeBinding.imgProfile.getContext(), TAG, holder.mRowTabHomeBinding.imgProfile, model.participantPhotoUrl, Utility.DEFAULT_PROFILE_SRC);
+                Utility.showCircularImageView(holder.mRowTabHomeBinding.imgProfile.getContext(), TAG, holder.mRowTabHomeBinding.imgProfile, model.participantPhotoUrl, Utility.DEFAULT_CHEEP_LOGO);
 
                 holder.mRowTabHomeBinding.textName.setText(model.participantName);
                 holder.mRowTabHomeBinding.imgProfile.setVisibility(View.VISIBLE);

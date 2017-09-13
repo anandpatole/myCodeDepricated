@@ -53,7 +53,7 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecy
 
         final HistoryModel model = mList.get(holder.getAdapterPosition());
 //        Utility.showCircularImageView(holder.mRowHistoryBinding.imgProfile.getContext(), TAG, holder.mRowHistoryBinding.imgProfile, model.sp_profile_image, 0);
-        Utility.showCircularImageView(holder.mRowHistoryBinding.imgProfile.getContext(), TAG, holder.mRowHistoryBinding.imgProfile, model.sp_profile_image, Utility.DEFAULT_PROFILE_SRC, true);
+        Utility.showCircularImageView(holder.mRowHistoryBinding.imgProfile.getContext(), TAG, holder.mRowHistoryBinding.imgProfile, model.sp_profile_image, Utility.DEFAULT_CHEEP_LOGO, true);
         holder.mRowHistoryBinding.textName.setText(model.sp_user_name);
         holder.mRowHistoryBinding.textCategoryName.setText(model.task_category);
 
