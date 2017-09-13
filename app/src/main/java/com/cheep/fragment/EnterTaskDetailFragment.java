@@ -1494,6 +1494,21 @@ public class EnterTaskDetailFragment extends BaseFragment {
                 mParams.put(NetworkUtility.TAGS.STATE, addressModel.stateName);
                 mParams.put(NetworkUtility.TAGS.CITY_NAME, addressModel.cityName);
             }
+        } else {
+            // Check if user is logged in if yes pass the address details accordingly.
+            if (PreferenceUtility.getInstance(mContext).getUserDetails() == null) {
+                mParams.put(NetworkUtility.TAGS.CITY_NAME, PreferenceUtility.getInstance(mContext).getGuestUserDetails().mCityName);
+                mParams.put(NetworkUtility.TAGS.LAT, PreferenceUtility.getInstance(mContext).getGuestUserDetails().mLat);
+                mParams.put(NetworkUtility.TAGS.LNG, PreferenceUtility.getInstance(mContext).getGuestUserDetails().mLng);
+                mParams.put(NetworkUtility.TAGS.COUNTRY, PreferenceUtility.getInstance(mContext).getGuestUserDetails().mCountryName);
+                mParams.put(NetworkUtility.TAGS.STATE, PreferenceUtility.getInstance(mContext).getGuestUserDetails().mStateName);
+            } else {
+                mParams.put(NetworkUtility.TAGS.CITY_NAME, PreferenceUtility.getInstance(mContext).getUserDetails().mCityName);
+                mParams.put(NetworkUtility.TAGS.LAT, PreferenceUtility.getInstance(mContext).getUserDetails().mLat);
+                mParams.put(NetworkUtility.TAGS.LNG, PreferenceUtility.getInstance(mContext).getUserDetails().mLng);
+                mParams.put(NetworkUtility.TAGS.COUNTRY, PreferenceUtility.getInstance(mContext).getUserDetails().mCountry);
+                mParams.put(NetworkUtility.TAGS.STATE, PreferenceUtility.getInstance(mContext).getUserDetails().mStateName);
+            }
         }
 
 
@@ -1527,13 +1542,15 @@ public class EnterTaskDetailFragment extends BaseFragment {
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
                         // Show Toast
-                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mFragmentEnterTaskDetailBinding.getRoot());
+                        updateSPImageStacks(new ArrayList<ProviderModel>());
+//                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mFragmentEnterTaskDetailBinding.getRoot());
 //                        errorLoadingHelper.failed(getString(R.string.label_something_went_wrong), 0, onRetryBtnClickListener);
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
-                        error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
+//                        error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
+                        updateSPImageStacks(new ArrayList<ProviderModel>());
                         // Show message
-                        Utility.showSnackBar(error_message, mFragmentEnterTaskDetailBinding.getRoot());
+//                        Utility.showSnackBar(error_message, mFragmentEnterTaskDetailBinding.getRoot());
 //                        errorLoadingHelper.failed(error_message, 0, onRetryBtnClickListener);
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
@@ -1557,7 +1574,9 @@ public class EnterTaskDetailFragment extends BaseFragment {
         public void onErrorResponse(final VolleyError error) {
             Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
             // Show Toast
-            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mFragmentEnterTaskDetailBinding.getRoot());
+//            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mFragmentEnterTaskDetailBinding.getRoot());
+
+            updateSPImageStacks(new ArrayList<ProviderModel>());
 
             hideProgressDialog();
         }
