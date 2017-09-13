@@ -381,15 +381,17 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
 
     private void updatePaymentDetails(String discount, String payable) {
         payableAmount = payable;
+
         mFragmentStrategicPartnerPhaseThreeBinding.txtpromocode.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(discount)));
         mFragmentStrategicPartnerPhaseThreeBinding.txttotal.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(payable)));
 
         promocode_price = discount;
+
         mFragmentStrategicPartnerPhaseThreeBinding.textPay.setText(getString(R.string.label_pay_fee_v1, "" + Utility.getQuotePriceFormatter(payable)));
         mFragmentStrategicPartnerPhaseThreeBinding.textpromocodelabel.setEnabled(false);
         mFragmentStrategicPartnerPhaseThreeBinding.textpromocodelabel.setText(getString(R.string.label_promocode_apply));
         mFragmentStrategicPartnerPhaseThreeBinding.textpromocodelabel.setTextColor(ContextCompat.getColor(mStrategicPartnerTaskCreationAct, R.color.black));
-        mFragmentStrategicPartnerPhaseThreeBinding.imgCheepCodeClose.setVisibility(View.VISIBLE);
+        mFragmentStrategicPartnerPhaseThreeBinding.imgCheepCodeClose.setVisibility(View.GONE);
     }
 
     private SpannableStringBuilder getSpannableString(String string, int color, boolean isBold) {

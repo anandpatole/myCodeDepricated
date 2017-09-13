@@ -155,7 +155,8 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
 
     <!--Translation of Below words are left-->
     <string name="label_please_wait">Please wait</string>
-    <string name="no_internet">Seems like your internet is not working.</string> <!--Seems like your internet is not working - Try Again (Button)-->
+    <!--  <string name="no_internet">Seems like your internet is not working.</string> --> <!--Seems like your internet is not working - Try Again (Button)-->
+    <string name="no_internet">Hey, we see a problem with your internet🤔. We\'ll wait while you check your connection and try again</string> <!--Seems like your internet is not working - Try Again (Button)-->
     <!--Validate User name-->
     <string name="validate_empty_username">You need to enter a valid username to proceed.</string>
     <string name="validate_username_length">Username must contain more than 3 characters</string>
@@ -341,11 +342,11 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_connect_using_social_accounts">Connect using social accounts</string>
     <string name="hint_first_name">First Name</string>
     <string name="hint_last_name">Last Name</string>
-    <string name="disclaimer_task_creation">Please go ahead and post your task, you are\npaying nothing as yet!</string>
+    <string name="disclaimer_task_creation">Please go ahead and post your task, you are paying nothing as yet!</string>
     <string name="disclaimer_task_completion">When you pay, your funds are held securely by us. You will only be charged, once work is completed to your satisfaction.</string>
     <string name="label_your_task_is_posted">Your task is posted!</string>
     <string name="label_great_choice_x">Great choice %1$s!</string>
-    <string name="desc_task_creation_acknowledgement">Hi %1$s, thank you for posting task. Soon you will receive quotes from verified and insured PROs around you.</string>
+    <string name="desc_task_creation_acknowledgement">Hi %1$s, thank you for posting the task. Soon you will receive multiple quotes from verified and insured PROs around you.</string>
     <string name="desc_task_payment_done_acknowledgement">Your task is confirmed and our CHEEP PRO %1$s, will be there at your location on %2$s.</string>
     <string name="desc_request_for_detail_accepted_acknowledgment">Thanks! %1$s will now get back to you either by chat or call to discuss your task.</string>
     <string name="label_happy_homes">%s Homes Made Happy So Far</string>
@@ -353,7 +354,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_verified_pro">verified</string>
     <string name="label_partner_pro">Partner</string>
     <string name="label_congratulation">Congratulation</string>
-<!--    <string name="label_brilliant_its_time_to_cheep">Brilliant! Its\' time to CHEEP</string>-->
+    <!--    <string name="label_brilliant_its_time_to_cheep">Brilliant! Its\' time to CHEEP</string>-->
     <string name="label_brilliant_its_time_to_cheep">Brilliant, Let\'s get CHEEPING!</string>
     <string name="label_alert_not_active">Sorry! Alert will be active only once your task starts.</string>
     <string name="default_country_code">+91</string>
@@ -378,7 +379,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
 
     <string name="no_pros_in_this_category">No PROs in this category</string>
 
-    <string name="step_1_desc_for_strategic_partner">Please select the services</string>
+    <string name="step_1_desc_for_strategic_partner">Please select as many services you need from the list below</string>
     <string name="step_2_desc_for_strategic_partner">Please share some more information</string>
     <string name="step_3_desc_for_strategic_partner">Please check details below and pay</string>
     <string name="continue_">Continue</string>
@@ -421,7 +422,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_get_quotes">Get Quotes</string>
     <string name="lable_book_pro">and book the PRO you want</string>
     <string name="just_a_moment">Just A Moment!</string>
-    <string name="progress_dialog_body">We are looking for an available PRO in your area</string>
+    <string name="progress_dialog_body">We are searching for a suitable PRO in your neighbourhood.</string>
     <string name="all_done">All Done</string>
     <string name="total_experience">%s years of experience</string>
     <string name="merchant_detail_body">Your task is assigned to our PRO, %1$s. He will be at your selected address on %2$s. You can also contact your PRO via chat or call within the App. We are always available 24x7 for any help!</string>
@@ -429,6 +430,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_address_delete_title">CHEEP</string>
     <string name="label_address_delete_message">Are you sure you want to delete this address?</string>
     <string name="disclaimer_promo_code">The Promo Code discount has been levied on pre tax amount.</string>
+    <string name="disclaimer_promo_code_strategic_partner">5% Promo Code discount has been applied on the pre-tax amount.</string>
     <string name="book_and_pay_x">Book and Pay ₹%1$s</string>
 
     <string name="label_service_required_for">Service Required For</string>
@@ -446,7 +448,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="conversations">\u0020conversations.</string>
     <string name="new_">\u0020New\u0020</string>
     <string name="confirm_cancel_transaction">Do you really want to cancel the transaction?</string>
-    <string name="label_your_order_with">Your order with\u0020</string>
+    <string name="label_your_order_with">Below is your order summary with\u0020</string>
     <string name="label_dummy_address_with">Dummy Address with\u0020</string>
     <string name="label_turn_on_location">For best results, let your device turn on location using Google\'s location service.</string>
     <string name="label_turn_on">Turn On</string>

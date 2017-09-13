@@ -748,8 +748,8 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
             //time will from selected hour + 1 hour added like 12.11 - 13.11 hrs
             String fromHour = timeFormatter.format(d);
 
-            // add one hour in selected time
-            superCalendar.getCalendar().add(Calendar.HOUR_OF_DAY, 1);
+            // add two hour slot (changed on 13 sept 2017)
+            superCalendar.getCalendar().add(Calendar.HOUR_OF_DAY, 2);
 
             Date toDate = superCalendar.getCalendar().getTime();
 

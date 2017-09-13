@@ -208,6 +208,13 @@
                     android:visibility="gone"/>
             </LinearLayout>
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/scale_0_5dp"
+                android:layout_marginLeft="@dimen/scale_10dp"
+                android:layout_marginRight="@dimen/scale_10dp"
+                android:background="@color/grey_varient_11"/>
+
             <LinearLayout
                 android:id="@+id/llInstaProceed"
                 android:layout_width="match_parent"
@@ -227,7 +234,7 @@
                     android:drawablePadding="@dimen/scale_12dp"
                     android:text="@string/how_proceed"
                     android:textColor="@color/splash_gradient_end"
-                    android:textSize="@dimen/text_size_18sp" />
+                    android:textSize="@dimen/text_size_18sp"/>
 
                 <!--     <android.support.v7.widget.CardView
                          android:id="@+id/cvInstaBook"
@@ -256,7 +263,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:src="@drawable/ic_insta_book" />
+                        android:src="@drawable/ic_insta_book"/>
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -271,7 +278,7 @@
                             android:paddingLeft="@dimen/scale_15dp"
                             android:text="@string/label_insta_book"
                             android:textColor="@color/white"
-                            android:textSize="@dimen/text_size_18sp" />
+                            android:textSize="@dimen/text_size_18sp"/>
 
                         <com.cheep.custom_view.CFTextViewRegular
                             android:layout_width="match_parent"
@@ -281,7 +288,7 @@
                             android:paddingLeft="@dimen/scale_15dp"
                             android:text="@string/lable_insta_get_pro"
                             android:textColor="@color/white"
-                            android:textSize="@dimen/text_size_14sp" />
+                            android:textSize="@dimen/text_size_14sp"/>
                     </LinearLayout>
 
                 </RelativeLayout>
@@ -299,7 +306,7 @@
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/ic_info" />
+                        android:src="@drawable/ic_info"/>
 
                     <com.cheep.custom_view.CFTextViewLight
                         android:layout_width="match_parent"
@@ -307,7 +314,7 @@
                         android:layout_marginLeft="@dimen/scale_8dp"
                         android:text="@string/info_insta_book"
                         android:textColor="@color/grey_varient_16"
-                        android:textSize="@dimen/text_size_10sp" />
+                        android:textSize="@dimen/text_size_10sp"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -320,7 +327,7 @@
                         android:layout_height="@dimen/scale_1dp"
                         android:layout_gravity="center_vertical"
                         android:layout_weight="1"
-                        android:background="@color/colorGray" />
+                        android:background="@color/grey_dark_color_2"/>
 
                     <com.cheep.custom_view.CFTextViewRegular
                         android:layout_width="wrap_content"
@@ -329,25 +336,27 @@
                         android:paddingRight="@dimen/scale_15dp"
                         android:text="@string/label_or"
                         android:textAllCaps="true"
-                        android:textColor="@color/colorGray"
-                        android:textSize="@dimen/text_size_18sp" />
+                        android:textColor="@color/grey_dark_color_2"
+                        android:textSize="@dimen/text_size_18sp"/>
 
                     <View
                         android:layout_width="0dp"
                         android:layout_height="@dimen/scale_1dp"
                         android:layout_gravity="center_vertical"
                         android:layout_weight="1"
-                        android:background="@color/colorGray" />
+                        android:background="@color/grey_dark_color_2"/>
 
                 </LinearLayout>
             </LinearLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/scale_0_5dp"
-                android:layout_marginLeft="@dimen/scale_10dp"
-                android:layout_marginRight="@dimen/scale_10dp"
-                android:background="@color/grey_varient_11"/>
+            <!--
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/scale_0_5dp"
+                            android:layout_marginLeft="@dimen/scale_10dp"
+                            android:layout_marginRight="@dimen/scale_10dp"
+                            android:background="@color/grey_varient_11"/>
+            -->
 
             <LinearLayout
                 android:id="@+id/llGetQuotes"

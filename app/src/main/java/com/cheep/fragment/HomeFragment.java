@@ -697,7 +697,8 @@ public class HomeFragment extends BaseFragment {
         }
 
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mFragmentHomeBinding.getRoot());
+            if (mFragmentHomeBinding!= null)
+                Utility.showSnackBar(getString(R.string.no_internet), mFragmentHomeBinding.getRoot());
             return;
         }
 
