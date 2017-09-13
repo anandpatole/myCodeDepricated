@@ -116,7 +116,7 @@ public class CircularImageView extends android.support.v7.widget.AppCompatImageV
     @Override
     public void setScaleType(ScaleType scaleType) {
         if (scaleType != SCALE_TYPE) {
-            throw new IllegalArgumentException(String.format("ScaleType %s not supported. ScaleType.CENTER_CROP is used by default. So you don't need to use ScaleType.", scaleType));
+            throw new IllegalArgumentException(String.format(getContext().getString(R.string.message_cannot_set_scale_type), scaleType));
         }
     }
     //endregion

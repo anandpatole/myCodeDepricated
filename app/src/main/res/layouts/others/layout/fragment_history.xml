@@ -58,7 +58,7 @@
                     android:layout_height="wrap_content"
                     android:background="@color/splash_gradient_end"
                     android:gravity="center_vertical"
-                    android:text="@string/ruppe_symbol_x_space"
+                    android:text="@string/rupee_symbol_x_space"
                     android:textColor="@color/white"
                     android:textSize="@dimen/text_size_19sp" />
             </LinearLayout>

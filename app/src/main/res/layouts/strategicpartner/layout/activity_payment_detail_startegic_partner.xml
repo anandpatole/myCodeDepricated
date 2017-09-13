@@ -208,7 +208,7 @@
                             android:lineSpacingExtra="@dimen/scale_2dp"
                             android:paddingLeft="@dimen/scale_5dp"
                             android:paddingRight="@dimen/scale_5dp"
-                            android:text="@string/desclaimer_task_completion"
+                            android:text="@string/disclaimer_task_completion"
                             android:textColor="@color/task_desclaimer"
                             android:textSize="@dimen/text_size_12sp" />
                     </LinearLayout>
@@ -500,7 +500,7 @@
                             android:layout_height="wrap_content"
                             android:paddingLeft="@dimen/scale_10dp"
                             android:paddingRight="@dimen/scale_10dp"
-                            android:text="@string/label_task_desclaimer"
+                            android:text="@string/label_task_disclaimer"
                             android:textColor="@color/grey_varient_11"
                             android:textSize="@dimen/text_size_10sp"
                             android:visibility="gone" />

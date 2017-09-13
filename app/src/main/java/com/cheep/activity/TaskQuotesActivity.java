@@ -279,12 +279,12 @@ public class TaskQuotesActivity extends BaseAppCompatActivity implements TaskQuo
             mDialogFilterBinding.seekbarCheepest.setPrefix("₹");
 //            mDialogFilterBinding.seekbarCheepest.setMin(100);
             mDialogFilterBinding.seekbarCheepest.setMax(getMaxQuote());
-            mDialogFilterBinding.textLabelMaxPrice.setText(getString(R.string.ruppe_symbol_x, String.valueOf(mDialogFilterBinding.seekbarCheepest.getMax())));
+            mDialogFilterBinding.textLabelMaxPrice.setText(getString(R.string.rupee_symbol_x, String.valueOf(mDialogFilterBinding.seekbarCheepest.getMax())));
             //Distance is max 50km
-            mDialogFilterBinding.seekbarDistance.setSuffix("km");
+            mDialogFilterBinding.seekbarDistance.setSuffix(getString(R.string.label_km));
 //            mDialogFilterBinding.seekbarDistance.setMin(3);
             mDialogFilterBinding.seekbarDistance.setMax(getMaxDistance());
-            mDialogFilterBinding.textLabelMaxDistance.setText(getMaxDistance() + "km");
+            mDialogFilterBinding.textLabelMaxDistance.setText(getMaxDistance() + getString(R.string.label_km));
             mDialogFilterBinding.imgFav.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

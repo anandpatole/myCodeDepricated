@@ -468,7 +468,7 @@
                     android:lineSpacingExtra="@dimen/scale_2dp"
                     android:paddingLeft="@dimen/scale_5dp"
                     android:paddingRight="@dimen/scale_5dp"
-                    android:text="@string/desclaimer_task_creation"
+                    android:text="@string/disclaimer_task_creation"
                     android:textColor="@color/task_desclaimer"
                     android:textSize="@dimen/text_size_12sp"/>
             </LinearLayout>

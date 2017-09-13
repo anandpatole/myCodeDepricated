@@ -116,7 +116,7 @@ public class HistoryFragment extends BaseFragment {
 
         mFragmentHistoryBinding.textTitle.setText(getString(R.string.label_payment_history));
 
-        mFragmentHistoryBinding.textPrice.setText(getString(R.string.ruppe_symbol_x_space, Utility.EMPTY_STRING));
+        mFragmentHistoryBinding.textPrice.setText(getString(R.string.rupee_symbol_x_space, Utility.EMPTY_STRING));
 
         //Setting adapter on recycler view
         favouriteRecyclerViewAdapter = new HistoryRecyclerViewAdapter(mHistoryListener);
@@ -238,10 +238,10 @@ public class HistoryFragment extends BaseFragment {
 //                        mFragmentHistoryBinding.textPrice.setText(getString(R.string.ruppe_symbol_x, jsonObject.optString(NetworkUtility.TAGS.TOTAL_EARNED)));
                         double price = Double.parseDouble(jsonObject.optString(NetworkUtility.TAGS.TOTAL_EARNED));
                         DecimalFormat decimalFormat = new DecimalFormat("0.00");
-                        mFragmentHistoryBinding.textPrice.setText(getString(R.string.ruppe_symbol_x, decimalFormat.format(price)));
+                        mFragmentHistoryBinding.textPrice.setText(getString(R.string.rupee_symbol_x, decimalFormat.format(price)));
 
-                        mFragmentHistoryBinding.monthlyEarned.setText(getString(R.string.ruppe_symbol_x, Utility.getQuotePriceFormatter(jsonObject.optString(NetworkUtility.TAGS.MONTHLY_TOTAL))));
-                        mFragmentHistoryBinding.monthlySaved.setText(getString(R.string.ruppe_symbol_x, Utility.getQuotePriceFormatter(jsonObject.optString(NetworkUtility.TAGS.MONTHLY_SAVED_TOTAL))));
+                        mFragmentHistoryBinding.monthlyEarned.setText(getString(R.string.rupee_symbol_x, Utility.getQuotePriceFormatter(jsonObject.optString(NetworkUtility.TAGS.MONTHLY_TOTAL))));
+                        mFragmentHistoryBinding.monthlySaved.setText(getString(R.string.rupee_symbol_x, Utility.getQuotePriceFormatter(jsonObject.optString(NetworkUtility.TAGS.MONTHLY_SAVED_TOTAL))));
 
                         ArrayList<HistoryModel> list = Utility.getObjectListFromJsonString(jsonObject.optString(NetworkUtility.TAGS.DATA), HistoryModel[].class);
                         favouriteRecyclerViewAdapter.setItems(list);

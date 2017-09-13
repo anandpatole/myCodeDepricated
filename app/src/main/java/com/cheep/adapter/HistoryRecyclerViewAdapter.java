@@ -59,8 +59,8 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecy
 
         holder.mRowHistoryBinding.textDate.setText(model.getPaymentDate());
 
-        holder.mRowHistoryBinding.textSpent.setText(mContext.getString(R.string.ruppe_symbol_x_space, Utility.getQuotePriceFormatter(model.paid_amount)));
-        holder.mRowHistoryBinding.textSaved.setText(mContext.getString(R.string.ruppe_symbol_x_space, Utility.getQuotePriceFormatter(model.saved_amount)));
+        holder.mRowHistoryBinding.textSpent.setText(mContext.getString(R.string.rupee_symbol_x_space, Utility.getQuotePriceFormatter(model.paid_amount)));
+        holder.mRowHistoryBinding.textSaved.setText(mContext.getString(R.string.rupee_symbol_x_space, Utility.getQuotePriceFormatter(model.saved_amount)));
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

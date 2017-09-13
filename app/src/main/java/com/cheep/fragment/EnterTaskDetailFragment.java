@@ -582,7 +582,7 @@ public class EnterTaskDetailFragment extends BaseFragment {
 
                             if (System.currentTimeMillis() < startDateTimeSuperCalendar.getTimeInMillis()) {
                                 String selectedDateTime = startDateTimeSuperCalendar.format(Utility.DATE_FORMAT_DD_MMM)
-                                        + " at "
+                                        + getString(R.string.label_at)
                                         + startDateTimeSuperCalendar.format(Utility.DATE_FORMAT_HH_MM_AM);
                                 mFragmentEnterTaskDetailBinding.textTaskWhen.setText(selectedDateTime);
                                 mFragmentEnterTaskDetailBinding.textTaskWhen.setVisibility(View.VISIBLE);
@@ -1001,7 +1001,8 @@ public class EnterTaskDetailFragment extends BaseFragment {
 
             //TODO: Adding dummy place when playservice is not there
             if (edtAddress != null) {
-                edtAddress.setText("Dummy Address with " + Utility.STATIC_LAT + "," + Utility.STATIC_LNG);
+//                edtAddress.setText("Dummy Address with " + Utility.STATIC_LAT + "," + Utility.STATIC_LNG);
+                edtAddress.setText(getString(R.string.label_dummy_address , Utility.STATIC_LAT,Utility.STATIC_LNG));
                 edtAddress.setFocusable(true);
                 edtAddress.setFocusableInTouchMode(true);
                 try {

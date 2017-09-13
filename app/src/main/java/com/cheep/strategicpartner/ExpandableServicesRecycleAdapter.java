@@ -203,7 +203,7 @@ class ExpandableServicesRecycleAdapter extends ExpandableRecyclerAdapter<Strateg
             } else {
                 textPackageDescription.setVisibility(View.GONE);
             }
-            textSubCategoryPrice.setText(itemView.getContext().getString(R.string.ruppe_symbol_x, Utility.getQuotePriceFormatter(String.valueOf(subSubCat.price))));
+            textSubCategoryPrice.setText(itemView.getContext().getString(R.string.rupee_symbol_x, Utility.getQuotePriceFormatter(String.valueOf(subSubCat.price))));
             imgIconCorrect.setSelected(subSubCat.isSelected);
             textSubCategoryPrice.setSelected(subSubCat.isSelected);
         }

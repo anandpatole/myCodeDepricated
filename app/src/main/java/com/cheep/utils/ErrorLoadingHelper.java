@@ -63,7 +63,7 @@ public class ErrorLoadingHelper {
     }
 
     public void failed(String errorMessage, int errorRes, View.OnClickListener clickListener) {
-        failed(errorMessage, errorRes, "Retry", clickListener);
+        failed(errorMessage, errorRes, Utility.EMPTY_STRING/*"Retry"*/, clickListener);
     }
 
     public void failed(String errorMessage, int errorRes, String btnText, View.OnClickListener clickListener) {

@@ -1,7 +1,6 @@
 package com.cheep.activity;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -84,45 +83,6 @@ public abstract class BaseActivity extends AppCompatActivity implements Act_ImpM
             snackbar.show();
         } else
             Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
-    }
-
-    //test
-    public final void showSnackbar(String msg, int type) {
-        if (!TextUtils.isEmpty(msg)) {
-
-//        Snackbar.make(findViewById(android.R.id.content), msg + "", Snackbar.LENGTH_SHORT).show();
-            if (links(android.R.id.content) != null) {
-                Snackbar snackbar = Snackbar.make(links(android.R.id.content), msg + "", Snackbar.LENGTH_LONG);
-                if (type == MESSAGE_TYPE_SUCCESS) {
-                    snackbar.getView().setBackgroundColor(Color.parseColor("#4F8A10"));
-                } else if (type == MESSAGE_TYPE_WARNING) {
-                    snackbar.getView().setBackgroundColor(Color.parseColor("#9F6000"));
-                } else if (type == MESSAGE_TYPE_ERROR) {
-                    snackbar.getView().setBackgroundColor(Color.parseColor("#D8000C"));
-                }
-                snackbar.show();
-            } else
-                Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    public final void showSnackbar(int id, String msg, int type) {
-
-        if (!TextUtils.isEmpty(msg)) {
-//        Snackbar.make(findViewById(android.R.id.content), msg + "", Snackbar.LENGTH_SHORT).show();
-            if (links(id) != null) {
-                Snackbar snackbar = Snackbar.make(links(id), msg + "", Snackbar.LENGTH_LONG);
-                if (type == MESSAGE_TYPE_SUCCESS) {
-                    snackbar.getView().setBackgroundColor(Color.parseColor("#4F8A10"));
-                } else if (type == MESSAGE_TYPE_WARNING) {
-                    snackbar.getView().setBackgroundColor(Color.parseColor("#9F6000"));
-                } else if (type == MESSAGE_TYPE_ERROR) {
-                    snackbar.getView().setBackgroundColor(Color.parseColor("#D8000C"));
-                }
-                snackbar.show();
-            } else
-                Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
-        }
     }
 
     /*@Override
