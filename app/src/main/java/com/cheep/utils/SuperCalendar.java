@@ -7,7 +7,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
 import java.util.TimeZone;
 
 /**
@@ -155,13 +154,13 @@ public class SuperCalendar {
     public static interface SuperFormatter {
         //COMMON FORMATS, DONT CHANGE THE COMMON FORMATS
         public static final String HOUR_24_HOUR = "HH";
-        public static final String HOUR_12_HOUR_2_DIGIT = "hh";
-        public static final String HOUR_12_HOUR_1_DIGIT = "h";
+//        public static final String HOUR_12_HOUR_2_DIGIT = "hh";
+//        public static final String HOUR_12_HOUR_1_DIGIT = "h";
         public static final String MINUTE = "mm";
         public static final String SECONDS = "ss";
         public static final String MILLISECONDS = "SSS";
 
-        public static final String AM_PM = "a";
+//        public static final String AM_PM = "a";
 
         public static final String DATE = "dd";
 
