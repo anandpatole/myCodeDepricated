@@ -1002,7 +1002,7 @@ public class EnterTaskDetailFragment extends BaseFragment {
             //TODO: Adding dummy place when playservice is not there
             if (edtAddress != null) {
 //                edtAddress.setText("Dummy Address with " + Utility.STATIC_LAT + "," + Utility.STATIC_LNG);
-                edtAddress.setText(getString(R.string.label_dummy_address , Utility.STATIC_LAT,Utility.STATIC_LNG));
+                edtAddress.setText(getString(R.string.label_dummy_address, Utility.STATIC_LAT, Utility.STATIC_LNG));
                 edtAddress.setFocusable(true);
                 edtAddress.setFocusableInTouchMode(true);
                 try {
@@ -1146,70 +1146,93 @@ public class EnterTaskDetailFragment extends BaseFragment {
      * @param addressType
      * @param address
      */
-    private void callUpdateAddressWS(String addressId, String addressType,/* String addressName,*/ String address, String addressInitials, LatLng latLng) {
+    private void callUpdateAddressWS(final String addressId, final String addressType,/* String addressName,*/ final String address, final String addressInitials, LatLng latLng) {
         if (!Utility.isConnected(mContext)) {
             Utility.showSnackBar(getString(R.string.no_internet), mFragmentEnterTaskDetailBinding.getRoot());
             return;
         }
 
         if (PreferenceUtility.getInstance(mContext).getUserDetails() == null) {
-            GuestUserDetails guestUserDetails = PreferenceUtility.getInstance(mContext).getGuestUserDetails();
-            if (addressRecyclerViewAdapter != null) {
-                AddressModel mAddressModel = addressRecyclerViewAdapter.getSelectedAddress();
-                mAddressModel.category = addressType;
-                mAddressModel.address_id = addressId;
-                mAddressModel.address = address;
-                mAddressModel.address_initials = addressInitials;
-                mAddressModel.lat = String.valueOf(latLng.latitude);
-                mAddressModel.lng = String.valueOf(latLng.longitude);
-                addressRecyclerViewAdapter.updateItem(mAddressModel);
-                // Saving information in sharedpreference
-                guestUserDetails.addressList = addressRecyclerViewAdapter.getmList();
-            }
-            PreferenceUtility.getInstance(mContext).saveGuestUserDetails(guestUserDetails);
-
-            if (addAddressDialog != null) {
-                addAddressDialog.dismiss();
-            }
-
+            /**
+             * Guest User so just save it locally & Return.
+             */
+            showProgressDialog();
+            FetchLocationInfoUtility mFetchLocationInfoUtility = new FetchLocationInfoUtility(
+                    mContext,
+                    new FetchLocationInfoUtility.FetchLocationInfoCallBack() {
+                        @Override
+                        public void onLocationInfoAvailable(LocationInfo mLocationIno) {
+                            hideProgressDialog();
+                            GuestUserDetails guestUserDetails = PreferenceUtility.getInstance(mContext).getGuestUserDetails();
+                            if (addressRecyclerViewAdapter != null) {
+                                AddressModel mAddressModel = addressRecyclerViewAdapter.getSelectedAddress();
+                                mAddressModel.address_id = addressId;
+                                mAddressModel.category = addressType;
+                                mAddressModel.address = address;
+                                mAddressModel.address_initials = addressInitials;
+                                mAddressModel.lat = mLocationIno.lat;
+                                mAddressModel.lng = mLocationIno.lng;
+                                mAddressModel.countryName = mLocationIno.Country;
+                                mAddressModel.stateName = mLocationIno.State;
+                                mAddressModel.cityName = mLocationIno.City;
+                                addressRecyclerViewAdapter.updateItem(mAddressModel);
+                                // Saving information in sharedpreference
+                                guestUserDetails.addressList = addressRecyclerViewAdapter.getmList();
+                            }
+                            PreferenceUtility.getInstance(mContext).saveGuestUserDetails(guestUserDetails);
+                            if (addAddressDialog != null) {
+                                addAddressDialog.dismiss();
+                            }
+                        }
+                    },
+                    false
+            );
+            mFetchLocationInfoUtility.getLocationInfo(String.valueOf(latLng.latitude), String.valueOf(latLng.longitude));
             return;
+        } else {
+            /*
+             * For Logged In user,
+             */
+            showProgressDialog();
+            FetchLocationInfoUtility mFetchLocationInfoUtility = new FetchLocationInfoUtility(
+                    mContext,
+                    new FetchLocationInfoUtility.FetchLocationInfoCallBack() {
+                        @Override
+                        public void onLocationInfoAvailable(LocationInfo mLocationIno) {
+                            // Show Progress
+                            showProgressDialog();
+
+                            // Add Header parameters
+                            Map<String, String> mHeaderParams = new HashMap<>();
+                            mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
+                            mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
+
+                            // Add Params
+                            Map<String, Object> mParams = new HashMap<>();
+                            mParams.put(NetworkUtility.TAGS.ADDRESS_ID, addressId);
+                            mParams.put(NetworkUtility.TAGS.CATEGORY, addressType);
+                            mParams.put(NetworkUtility.TAGS.ADDRESS, address);
+                            mParams.put(NetworkUtility.TAGS.ADDRESS_INITIALS, addressInitials);
+                            mParams.put(NetworkUtility.TAGS.LAT, mLocationIno.lat);
+                            mParams.put(NetworkUtility.TAGS.LNG, mLocationIno.lng);
+                            mParams.put(NetworkUtility.TAGS.COUNTRY, mLocationIno.Country);
+                            mParams.put(NetworkUtility.TAGS.STATE, mLocationIno.State);
+                            mParams.put(NetworkUtility.TAGS.CITY_NAME, mLocationIno.City);
+
+                            // Url is based on condition if address id is greater then 0 then it means we need to update the existing address
+                            VolleyNetworkRequest mVolleyNetworkRequest = new VolleyNetworkRequest(NetworkUtility.WS.EDIT_ADDRESS
+                                    , mCallUpdateAddressWSErrorListener
+                                    , mCallUpdateAddressResponseListener
+                                    , mHeaderParams
+                                    , mParams
+                                    , null);
+                            Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest, NetworkUtility.WS.EDIT_ADDRESS);
+                        }
+                    },
+                    false
+            );
+            mFetchLocationInfoUtility.getLocationInfo(String.valueOf(latLng.latitude), String.valueOf(latLng.longitude));
         }
-
-
-        //Show Progress
-        showProgressDialog();
-
-        //Add Header parameters
-        Map<String, String> mHeaderParams = new HashMap<>();
-        mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
-        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
-
-        //Add Params
-        Map<String, Object> mParams = new HashMap<>();
-        mParams.put(NetworkUtility.TAGS.CATEGORY, addressType);
-//        mParams.put(NetworkUtility.TAGS.NAME, addressName);
-        mParams.put(NetworkUtility.TAGS.ADDRESS, address);
-        mParams.put(NetworkUtility.TAGS.ADDRESS_INITIALS, addressInitials);
-
-        if (latLng != null) {
-            mParams.put(NetworkUtility.TAGS.LAT, latLng.latitude + "");
-            mParams.put(NetworkUtility.TAGS.LNG, latLng.longitude + "");
-        }
-
-
-        //if address id is greater then 0 then it means we need to update the existing address so sending address_id as parameter also
-        if (!"0".equalsIgnoreCase(addressId)) {
-            mParams.put(NetworkUtility.TAGS.ADDRESS_ID, String.valueOf(addressId));
-        }
-
-        //Url is based on condition if address id is greater then 0 then it means we need to update the existing address
-        VolleyNetworkRequest mVolleyNetworkRequest = new VolleyNetworkRequest((!"0".equalsIgnoreCase(addressId) ? NetworkUtility.WS.EDIT_ADDRESS : NetworkUtility.WS.ADD_ADDRESS)
-                , mCallUpdateAddressWSErrorListener
-                , mCallUpdateAddressResponseListener
-                , mHeaderParams
-                , mParams
-                , null);
-        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest, (!"0".equalsIgnoreCase(addressId) ? NetworkUtility.WS.EDIT_ADDRESS : NetworkUtility.WS.ADD_ADDRESS));
     }
 
 
@@ -1341,36 +1364,50 @@ public class EnterTaskDetailFragment extends BaseFragment {
             );
             mFetchLocationInfoUtility.getLocationInfo(String.valueOf(latLng.latitude), String.valueOf(latLng.longitude));
             return;
+        } else {
+            /**
+             * Logged In User so first need to fetch other location info and then call add address
+             * Webservice.
+             */
+            showProgressDialog();
+            FetchLocationInfoUtility mFetchLocationInfoUtility = new FetchLocationInfoUtility(
+                    mContext,
+                    new FetchLocationInfoUtility.FetchLocationInfoCallBack() {
+                        @Override
+                        public void onLocationInfoAvailable(LocationInfo mLocationIno) {
+
+                            //Add Header parameters
+                            Map<String, String> mHeaderParams = new HashMap<>();
+                            mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
+                            mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
+
+                            //Add Params
+                            Map<String, Object> mParams = new HashMap<>();
+                            mParams.put(NetworkUtility.TAGS.CATEGORY, addressType);
+                            mParams.put(NetworkUtility.TAGS.ADDRESS, address);
+                            mParams.put(NetworkUtility.TAGS.ADDRESS_INITIALS, addressInitials);
+                            mParams.put(NetworkUtility.TAGS.LAT, mLocationIno.lat);
+                            mParams.put(NetworkUtility.TAGS.LNG, mLocationIno.lng);
+                            mParams.put(NetworkUtility.TAGS.COUNTRY, mLocationIno.Country);
+                            mParams.put(NetworkUtility.TAGS.STATE, mLocationIno.State);
+                            mParams.put(NetworkUtility.TAGS.CITY_NAME, mLocationIno.City);
+
+                            Utility.hideKeyboard(mContext);
+                            //Url is based on condition if address id is greater then 0 then it means we need to update the existing address
+                            VolleyNetworkRequest mVolleyNetworkRequest = new VolleyNetworkRequest(NetworkUtility.WS.ADD_ADDRESS
+                                    , mCallAddAddressWSErrorListener
+                                    , mCallAddAddressResponseListener
+                                    , mHeaderParams
+                                    , mParams
+                                    , null);
+                            Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest, NetworkUtility.WS.ADD_ADDRESS);
+                        }
+                    },
+                    false
+            );
+            mFetchLocationInfoUtility.getLocationInfo(String.valueOf(latLng.latitude), String.valueOf(latLng.longitude));
+            return;
         }
-
-        //Show Progress
-        showProgressDialog();
-
-        //Add Header parameters
-        Map<String, String> mHeaderParams = new HashMap<>();
-        mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
-        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
-
-        //Add Params
-        Map<String, Object> mParams = new HashMap<>();
-        mParams.put(NetworkUtility.TAGS.CATEGORY, addressType);
-//        mParams.put(NetworkUtility.TAGS.NAME, addressName);
-        mParams.put(NetworkUtility.TAGS.ADDRESS, address);
-        mParams.put(NetworkUtility.TAGS.ADDRESS_INITIALS, addressInitials);
-
-        if (latLng != null) {
-            mParams.put(NetworkUtility.TAGS.LAT, latLng.latitude + "");
-            mParams.put(NetworkUtility.TAGS.LNG, latLng.longitude + "");
-        }
-        Utility.hideKeyboard(mContext);
-        //Url is based on condition if address id is greater then 0 then it means we need to update the existing address
-        VolleyNetworkRequest mVolleyNetworkRequest = new VolleyNetworkRequest(NetworkUtility.WS.ADD_ADDRESS
-                , mCallAddAddressWSErrorListener
-                , mCallAddAddressResponseListener
-                , mHeaderParams
-                , mParams
-                , null);
-        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest, NetworkUtility.WS.ADD_ADDRESS);
     }
 
 
