@@ -183,7 +183,7 @@
                             android:layout_marginLeft="@dimen/scale_8dp"
                             android:gravity="left"
                             android:lineSpacingExtra="@dimen/scale_2dp"
-                            android:text="@string/desclaimer_task_completion_strategic_partner"
+                            android:text="@string/disclaimer_task_completion_strategic_partner"
                             android:textColor="@color/task_desclaimer"
                             android:textSize="@dimen/text_size_12sp"/>
                     </LinearLayout>
@@ -399,7 +399,7 @@
                             android:layout_marginBottom="@dimen/scale_10dp"
                             android:layout_marginLeft="@dimen/scale_22dp"
                             android:layout_marginRight="@dimen/scale_22dp"
-                            android:text="@string/label_task_desclaimer"
+                            android:text="@string/label_task_disclaimer"
                             android:textColor="@color/grey_varient_11"
                             android:textSize="@dimen/text_size_10sp"/>
 
