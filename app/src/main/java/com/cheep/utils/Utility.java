@@ -408,6 +408,7 @@ public class Utility {
         public static final String TASK_TYPE_IS_INSTA = "isInsta";
         public static final String SELECTED_ADDRESS_MODEL = "selectedAddressModel";
         public static final String LOCATION_INFO = "location_info";
+        public static final String IS_INSTA_BOOKING_TASK = "isInstaBookingTask";
     }
 
 

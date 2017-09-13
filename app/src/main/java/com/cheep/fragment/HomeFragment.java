@@ -19,6 +19,7 @@ import android.widget.TextView;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.cheep.R;
+import com.cheep.activity.TaskQuotesActivity;
 import com.cheep.custom_view.BottomAlertDialog;
 import com.cheep.databinding.FragmentHomeBinding;
 import com.cheep.firebase.FirebaseHelper;
@@ -26,6 +27,7 @@ import com.cheep.firebase.FirebaseUtils;
 import com.cheep.firebase.model.TaskChatModel;
 import com.cheep.interfaces.DrawerLayoutInteractionListener;
 import com.cheep.model.MessageEvent;
+import com.cheep.model.TaskDetailModel;
 import com.cheep.model.UserDetails;
 import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
@@ -555,6 +557,15 @@ public class HomeFragment extends BaseFragment {
             /*
               Redirect the user to MYTask Screen
              */
+
+            // By giteeka on create task re direct screen to pre fed quotes activity sept 13
+
+            if (intent.hasExtra(Utility.Extra.IS_INSTA_BOOKING_TASK))
+                if (!intent.getBooleanExtra(Utility.Extra.IS_INSTA_BOOKING_TASK, false)) {
+                    TaskDetailModel mTaskDetailModel = (TaskDetailModel) Utility.getObjectFromJsonString(intent.getStringExtra(Utility.Extra.DATA), TaskDetailModel.class);
+                    TaskQuotesActivity.newInstance(mContext, mTaskDetailModel, false);
+                }
+
             setCurrentTab(TAB_MY_TASK);
         }
     };

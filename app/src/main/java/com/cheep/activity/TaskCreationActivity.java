@@ -159,6 +159,7 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
 
             //Sending Broadcast to the HomeScreen Screen.
             Intent newIntent = new Intent(Utility.BR_ON_TASK_CREATED);
+            newIntent.putExtra(Utility.Extra.IS_INSTA_BOOKING_TASK, true);
             sendBroadcast(newIntent);
         }
     };
@@ -794,7 +795,7 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
      * This method would going to call when task completed successfully
      */
     private void onSuccessfullTaskCompletion(JSONObject jsonObject) {
-        TaskDetailModel taskDetailModel = (TaskDetailModel) Utility.getObjectFromJsonString(jsonObject.optString(NetworkUtility.TAGS.DATA), TaskDetailModel.class);
+        final TaskDetailModel taskDetailModel = (TaskDetailModel) Utility.getObjectFromJsonString(jsonObject.optString(NetworkUtility.TAGS.DATA), TaskDetailModel.class);
         if (taskDetailModel != null) {
             /* * Add new task detail on firebase
              * @Sanjay 20 Feb 2016
@@ -831,6 +832,8 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
                 if (PreferenceUtility.getInstance(mContext).isHomeScreenVisible()) {
                     //Sending Broadcast to the HomeScreen Screen.
                     Intent intent = new Intent(Utility.BR_ON_TASK_CREATED);
+                    intent.putExtra(Utility.Extra.DATA, Utility.getJsonStringFromObject(taskDetailModel));
+                    intent.putExtra(Utility.Extra.IS_INSTA_BOOKING_TASK, false);
                     sendBroadcast(intent);
                 } else {
                     HomeActivity.newInstance(mContext);
