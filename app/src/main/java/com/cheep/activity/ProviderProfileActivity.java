@@ -174,7 +174,7 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
 
     public void setData() {
         mActivityProviderProfileBinding.textName.setText(providerModel.userName);
-        mActivityProviderProfileBinding.textExpectedTime.setText(providerModel.sp_locality + ", " + providerModel.distance + " away");
+        mActivityProviderProfileBinding.textExpectedTime.setText(providerModel.sp_locality + ", " + providerModel.distance + getString(R.string.label_away));
         mActivityProviderProfileBinding.textExpectedTime.setSelected(true);
 
         if (taskDetailModel != null) {
@@ -194,7 +194,7 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
         mActivityProviderProfileBinding.textVerifiedTotalJobs.setText(mActivityProviderProfileBinding.textVerifiedTotalJobs.getText().toString() + " | " + Utility.getJobs(mContext, providerModel.jobsCount));*/
 
         if (!TextUtils.isEmpty(providerModel.reviews) && Double.parseDouble(providerModel.reviews) > 0) {
-            mActivityProviderProfileBinding.textTotalReviews.setText(getString(R.string.label_basedon, providerModel.reviews));
+            mActivityProviderProfileBinding.textTotalReviews.setText(getString(R.string.label_based_on, providerModel.reviews));
             mActivityProviderProfileBinding.layoutReview.setVisibility(View.VISIBLE);
         } else {
             mActivityProviderProfileBinding.layoutReview.setVisibility(View.GONE);

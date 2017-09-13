@@ -299,7 +299,7 @@
                             <com.cheep.custom_view.CFTextViewRegular
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/label_pay"
+                                android:text="@string/label_book"
                                 android:textAllCaps="false"
                                 android:textColor="@color/splash_gradient_end"
                                 android:textSize="@dimen/text_size_11sp" />

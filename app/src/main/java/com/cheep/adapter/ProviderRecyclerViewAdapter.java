@@ -113,7 +113,7 @@ public class ProviderRecyclerViewAdapter extends LoadMoreRecyclerAdapter<Provide
                 || Utility.ZERO_STRING.equals(model.experience)) {
             holder.mRowProviderBinding.textExperience.setText(context.getString(R.string.label_experience_zero));
         } else {
-            holder.mRowProviderBinding.textExperience.setText(Utility.getExperienceString(model.experience));
+            holder.mRowProviderBinding.textExperience.setText(holder.mView.getContext().getResources().getQuantityString(R.plurals.getExperienceString, Integer.parseInt(model.experience), model.experience));
         }
 
 
@@ -121,9 +121,9 @@ public class ProviderRecyclerViewAdapter extends LoadMoreRecyclerAdapter<Provide
         if (model.distance != null) {
             holder.mRowProviderBinding.textMinToArrive.setVisibility(View.VISIBLE);
             if (model.sp_locality != null) {
-                holder.mRowProviderBinding.textMinToArrive.setText(model.sp_locality + ", " + model.distance + " away");
+                holder.mRowProviderBinding.textMinToArrive.setText(model.sp_locality + ", " + model.distance + holder.mView.getContext().getString(R.string.label_away));
             } else {
-                holder.mRowProviderBinding.textMinToArrive.setText(model.distance + " away");
+                holder.mRowProviderBinding.textMinToArrive.setText(model.distance + holder.mView.getContext().getString(R.string.label_away));
             }
         } else {
             holder.mRowProviderBinding.textMinToArrive.setVisibility(View.GONE);

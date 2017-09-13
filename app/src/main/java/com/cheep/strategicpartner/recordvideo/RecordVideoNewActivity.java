@@ -13,7 +13,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
-import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
@@ -94,13 +93,13 @@ public class RecordVideoNewActivity extends AppCompatActivity implements View.On
     public void onResume() {
         super.onResume();
         if (!hasCamera(RecordVideoNewActivity.this)) {
-            showToast(RecordVideoNewActivity.this, "Sorry, your phone does not have a camera!");
+            showToast(RecordVideoNewActivity.this, getString(R.string.message_no_camera));
             finish();
         }
         if (mCamera == null) {
             // if the front facing camera does not exist
             if (findFrontFacingCamera() < 0) {
-                showToast(RecordVideoNewActivity.this, "No front facing camera found.");
+                showToast(RecordVideoNewActivity.this, getString(R.string.message_no_front_camera));
                 ivSwitchCamera.setVisibility(View.GONE);
             }
             try {
@@ -229,7 +228,7 @@ public class RecordVideoNewActivity extends AppCompatActivity implements View.On
                         releaseCamera();
                         chooseCamera();
                     } else {
-                        showToast(RecordVideoNewActivity.this, "Sorry, your phone has only one camera!");
+                        showToast(RecordVideoNewActivity.this, getString(R.string.message_one_camera));
                     }
                 }
                 break;
@@ -250,7 +249,7 @@ public class RecordVideoNewActivity extends AppCompatActivity implements View.On
     private void startMediaRecorder() {
         try {
             if (!prepareMediaRecorder()) {
-                Toast.makeText(RecordVideoNewActivity.this, "Fail in prepareMediaRecorder()!\n - Ended -", Toast.LENGTH_LONG).show();
+                /*Toast.makeText(RecordVideoNewActivity.this, "Fail in prepareMediaRecorder()!\n - Ended -", Toast.LENGTH_LONG).show();*/
                 finish();
             }
             // work on UiThread for better performance
@@ -263,7 +262,7 @@ public class RecordVideoNewActivity extends AppCompatActivity implements View.On
                         recording = true;
                         ivCapture.setImageResource(R.drawable.ic_stop);
                     } catch (final Exception ex) {
-                        showToast(RecordVideoNewActivity.this, "Recording fail.");
+                        showToast(RecordVideoNewActivity.this, getString(R.string.message_recording_failed));
                     }
                 }
             });
@@ -447,7 +446,7 @@ public class RecordVideoNewActivity extends AppCompatActivity implements View.On
         public void onTick(long millisUntilFinished) {
             //Update text
             int remaining_seconds = (int) millisUntilFinished / DURATION_SECOND;
-            tvCounter.setText(String.format("%d Sec", remaining_seconds));
+            tvCounter.setText(String.format("%d"+getString(R.string.sec), remaining_seconds));
         }
 
         @Override

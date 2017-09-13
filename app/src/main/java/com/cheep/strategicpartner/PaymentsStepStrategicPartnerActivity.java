@@ -23,8 +23,6 @@ import com.cheep.model.TaskDetailModel;
 import com.cheep.utils.SuperCalendar;
 import com.cheep.utils.Utility;
 
-import java.util.Map;
-
 
 public class PaymentsStepStrategicPartnerActivity extends BaseAppCompatActivity {
 
@@ -85,7 +83,7 @@ public class PaymentsStepStrategicPartnerActivity extends BaseAppCompatActivity 
             String dateTime = "";
             if (!TextUtils.isEmpty(taskDetailModel.taskStartdate)) {
                 dateTime = Utility.getDate(Long.parseLong(taskDetailModel.taskStartdate), "dd MMMM, HH:mm a");
-                dateTime = dateTime.replace("AM", "am").replace("PM", "pm");
+                dateTime = dateTime.replace(getString(R.string.label_am_caps), getString(R.string.label_am_small)).replace(getString(R.string.label_pm_caps), getString(R.string.label_pm_small));
             }
             SuperCalendar superStartDateTimeCalendar = SuperCalendar.getInstance();
             superStartDateTimeCalendar.setTimeZone(SuperCalendar.SuperTimeZone.GMT.GMT);
@@ -96,7 +94,7 @@ public class PaymentsStepStrategicPartnerActivity extends BaseAppCompatActivity 
             // String description = "You are booking "+providerModel.userName + " to "+taskDetailModel.subCategoryName + " on "+dateTime+ " at "+taskDetailModel.taskAddress;
             // set details of partner name user selected date time and address
             SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder();
-            spannableStringBuilder.append(getSpannableString("Your order with ", ContextCompat.getColor(this, R.color.grey_varient_8), false));
+            spannableStringBuilder.append(getSpannableString(getString(R.string.label_your_order_with), ContextCompat.getColor(this, R.color.grey_varient_8), false));
             spannableStringBuilder.append(getSpannableString(taskDetailModel.categoryName, ContextCompat.getColor(this, R.color.splash_gradient_end), true));
             spannableStringBuilder.append(getSpannableString(getString(R.string.label_on), ContextCompat.getColor(this, R.color.grey_varient_8), false));
             spannableStringBuilder.append(getSpannableString(selectedDate + ", " + selectedTime
@@ -132,9 +130,9 @@ public class PaymentsStepStrategicPartnerActivity extends BaseAppCompatActivity 
             double subTotal = (taskQuoteAmount + additionalPaidAmount);
             double promocodeValue = getQuotePriceInInteger(taskDetailModel.taskDiscountAmount);
 
-            mActivityPaymentDetailBinding.txtsubtotal.setText(getString(R.string.ruppe_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf(subTotal))));
-            mActivityPaymentDetailBinding.txttotal.setText(getString(R.string.ruppe_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf(taskPaidAmount))));
-            mActivityPaymentDetailBinding.txtpromocode.setText(getString(R.string.ruppe_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf((promocodeValue)))));
+            mActivityPaymentDetailBinding.txtsubtotal.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf(subTotal))));
+            mActivityPaymentDetailBinding.txttotal.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf(taskPaidAmount))));
+            mActivityPaymentDetailBinding.txtpromocode.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf((promocodeValue)))));
             mActivityPaymentDetailBinding.lnPromoCodeDisclaimer.setVisibility(promocodeValue == 0 ? View.GONE : View.VISIBLE);
         }
         mActivityPaymentDetailBinding.textLabelTotalPaid.setText(getString(R.string.label_total_paid));

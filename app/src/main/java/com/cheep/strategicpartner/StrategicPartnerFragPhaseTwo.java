@@ -44,14 +44,12 @@ import android.widget.PopupWindow;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.cheep.BootstrapConstant;
 import com.cheep.BuildConfig;
 import com.cheep.R;
 import com.cheep.activity.BaseAppCompatActivity;
@@ -791,7 +789,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
     private void showMediaChooserDialog() {
         Log.d(TAG, "showPictureChooserDialog() called");
         AlertDialog.Builder builder = new AlertDialog.Builder(mStrategicPartnerTaskCreationAct);
-        builder.setTitle("Choose media")
+        builder.setTitle(getString(R.string.choose_media))
                 .setItems(R.array.choose_media_type, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         // The 'which' argument contains the index position
@@ -814,7 +812,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
     private void showVideoChooserDialog() {
         Log.d(TAG, "showPictureChooserDialog() called");
         AlertDialog.Builder builder = new AlertDialog.Builder(mStrategicPartnerTaskCreationAct);
-        builder.setTitle("Choose video")
+        builder.setTitle(getString(R.string.choose_video))
                 .setItems(R.array.choose_video_options, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         // The 'which' argument contains the index position
@@ -923,7 +921,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
     private void showPictureChooserDialog() {
         Log.d(TAG, "showPictureChooserDialog() called");
         AlertDialog.Builder builder = new AlertDialog.Builder(mStrategicPartnerTaskCreationAct);
-        builder.setTitle("Choose image")
+        builder.setTitle(getString(R.string.choose_image))
                 .setItems(R.array.choose_image_options, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         // The 'which' argument contains the index position
@@ -1213,8 +1211,8 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
             mParams.put(NetworkUtility.TAGS.ADDRESS_ID, model.address_id);
         }
 
-
         Utility.hideKeyboard(mContext);
+        @SuppressWarnings("unchecked")
         VolleyNetworkRequest mVolleyNetworkRequest = new VolleyNetworkRequest(NetworkUtility.WS.CHECK_PRO_AVAILABILITY_FOR_STRATEGIC_TASK
                 , new Response.ErrorListener() {
             @Override
@@ -1245,7 +1243,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
                             JSONObject jsonData = jsonObject.getJSONObject(NetworkUtility.TAGS.DATA);
                             mStrategicPartnerTaskCreationAct.spUserId = jsonData.optString(SP_USER_ID);
                             if (mStrategicPartnerTaskCreationAct.spUserId.equalsIgnoreCase(Utility.EMPTY_STRING)) {
-                                Utility.showToast(mStrategicPartnerTaskCreationAct, getString(R.string.alert_strategic_partner_not_available_in_your_location));
+                                Utility.showToast(mStrategicPartnerTaskCreationAct, getString(R.string.alert_strategic_partner_unavailable_in_location));
                             } else {
                                 mStrategicPartnerTaskCreationAct.mSelectedAddressModel = model;
                         /*if (!model.address_initials.isEmpty()) {
@@ -1542,7 +1540,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
 
             //TODO: Adding dummy place when play service is not there
             if (edtAddress != null) {
-                edtAddress.setText("Dummy Address with " + Utility.STATIC_LAT + "," + Utility.STATIC_LNG);
+                edtAddress.setText(getString(R.string.label_dummy_address , Utility.STATIC_LAT,Utility.STATIC_LNG));
                 edtAddress.setFocusable(true);
                 edtAddress.setFocusableInTouchMode(true);
                 try {
@@ -2036,9 +2034,9 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
 
             if (mCurrentPhotoPath != null && !mCurrentPhotoPath.equals("")) {
                 if (getDuration(mCurrentPhotoPath) > 10) {
-                    Toast.makeText(mStrategicPartnerTaskCreationAct, "Looks like the size of the file is heavy. Please try again.", Toast.LENGTH_SHORT).show();
+                    Utility.showToast(mContext, getString(R.string.message_file_heavy));
                 } else if (getDuration(mCurrentPhotoPath) <= 0) {
-                    Toast.makeText(mStrategicPartnerTaskCreationAct, "Looks like there is something wrong with file. Please try again.", Toast.LENGTH_SHORT).show();
+                    Utility.showToast(mContext, getString(R.string.message_file_something_wrong));
                 } else {
                     try {
                         Log.e(TAG, "path >> " + mCurrentPhotoPath);

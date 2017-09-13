@@ -754,7 +754,7 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
             // +1 hour
             String toHour = timeFormatter.format(toDate);
 
-            InstaBookProDialog dialog = InstaBookProDialog.newInstance(this, taskDetailModel, date + " between " + fromHour + " - " + toHour + " hrs", new AcknowledgementInteractionListener() {
+            InstaBookProDialog dialog = InstaBookProDialog.newInstance(this, taskDetailModel, date + getString(R.string.label_between) + fromHour + " - " + toHour + getString(R.string.label_hrs), new AcknowledgementInteractionListener() {
                 @Override
                 public void onAcknowledgementAccepted() {
 

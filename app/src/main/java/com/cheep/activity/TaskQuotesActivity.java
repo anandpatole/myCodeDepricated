@@ -4,12 +4,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
@@ -21,7 +17,6 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -284,12 +279,12 @@ public class TaskQuotesActivity extends BaseAppCompatActivity implements TaskQuo
             mDialogFilterBinding.seekbarCheepest.setPrefix("₹");
 //            mDialogFilterBinding.seekbarCheepest.setMin(100);
             mDialogFilterBinding.seekbarCheepest.setMax(getMaxQuote());
-            mDialogFilterBinding.textLabelMaxPrice.setText(getString(R.string.ruppe_symbol_x, String.valueOf(mDialogFilterBinding.seekbarCheepest.getMax())));
+            mDialogFilterBinding.textLabelMaxPrice.setText(getString(R.string.rupee_symbol_x, String.valueOf(mDialogFilterBinding.seekbarCheepest.getMax())));
             //Distance is max 50km
-            mDialogFilterBinding.seekbarDistance.setSuffix("km");
+            mDialogFilterBinding.seekbarDistance.setSuffix(getString(R.string.label_km));
 //            mDialogFilterBinding.seekbarDistance.setMin(3);
             mDialogFilterBinding.seekbarDistance.setMax(getMaxDistance());
-            mDialogFilterBinding.textLabelMaxDistance.setText(getMaxDistance() + "km");
+            mDialogFilterBinding.textLabelMaxDistance.setText(getMaxDistance() + getString(R.string.label_km));
             mDialogFilterBinding.imgFav.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

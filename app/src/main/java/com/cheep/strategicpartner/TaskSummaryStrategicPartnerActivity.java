@@ -205,7 +205,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
             sVerified.setSpan(new RoundedBackgroundSpan(ContextCompat.getColor(this, R.color.splash_gradient_end), ContextCompat.getColor(this, R.color.white)), 0, sVerified.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
             mActivityTaskSummaryBinding.textProviderName.setText(TextUtils.concat(sName, " ", sVerified));
             // Distance of Provider
-            mActivityTaskSummaryBinding.textAddressKmAway.setText(mTaskDetailModel.selectedProvider.distance + " away");
+            mActivityTaskSummaryBinding.textAddressKmAway.setText(mTaskDetailModel.selectedProvider.distance + getString(R.string.label_away));
 
             // Profile Pic
             Utility.showCircularImageViewWithColorBorder(this, TAG, mActivityTaskSummaryBinding.imgProfile, mTaskDetailModel.catImageExtras.medium, R.drawable.icon_profile_img_solid, R.color.grey_dark_color, true);
@@ -215,7 +215,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     Log.i(TAG, "onClick: Call");
-                    Utility.showToast(TaskSummaryStrategicPartnerActivity.this, "Work in progress");
+                    Utility.showToast(TaskSummaryStrategicPartnerActivity.this, getString(R.string.label_wrok_in_progress));
 //                    Utility.openCustomerCareCallDialer(mContext, mTaskDetailModel.selectedProvider.sp_phone_number);
                 }
             });
@@ -223,7 +223,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     Log.i(TAG, "onClick: Chat");
-                    Utility.showToast(TaskSummaryStrategicPartnerActivity.this, "Work in progress");
+                    Utility.showToast(TaskSummaryStrategicPartnerActivity.this, getString(R.string.label_wrok_in_progress));
 //                    TaskChatModel taskChatModel = new TaskChatModel();
 //                    taskChatModel.categoryName = mTaskDetailModel.categoryName;
 //                    taskChatModel.taskDesc = mTaskDetailModel.taskDesc;
@@ -451,7 +451,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
                 e.printStackTrace();
             }
             superCalendar.setLocaleTimeZone();
-            String task_reschedule_date_time = superCalendar.format(Utility.DATE_FORMAT_DD_MMM + " at " + Utility.DATE_FORMAT_HH_MM_AM);
+            String task_reschedule_date_time = superCalendar.format(Utility.DATE_FORMAT_DD_MMM + getString(R.string.label_at) + Utility.DATE_FORMAT_HH_MM_AM);
             String message = getString(R.string.label_reschedule_desc, task_reschedule_date_time);
             mActivityTaskSummaryBinding.textTaskRescheduleRequestDesc.setText(message);
 
@@ -486,7 +486,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
 
             mActivityTaskSummaryBinding.lnTaskAdditionalQuoteRequested.setVisibility(View.VISIBLE);
 
-            String additionalQuoteAmount = getString(R.string.ruppe_symbol_x, mTaskDetailModel.additionalQuoteAmount);
+            String additionalQuoteAmount = getString(R.string.rupee_symbol_x, mTaskDetailModel.additionalQuoteAmount);
             mActivityTaskSummaryBinding.textAdditionalPaymentDesc.setText(getString(R.string.label_additional_payment_desc, additionalQuoteAmount));
 
             mActivityTaskSummaryBinding.textAdditionalPaymentAccept.setOnClickListener(new View.OnClickListener() {
@@ -1399,7 +1399,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
                             // payNow(true);
 //                            PaymentsStepActivity.newInstance(mContext, mTaskDetailModel, mTaskDetailModel.selectedProvider, 1);
                         } else if (taskStatus.equalsIgnoreCase(Utility.TASK_STATUS.COMPLETION_REQUEST)) {
-                            Utility.showSnackBar(getString(R.string.message_additional_payment_can_not_be_done_due_to_task_completion), mActivityTaskSummaryBinding.getRoot());
+                            Utility.showSnackBar(getString(R.string.message_no_more_payment_task_completed), mActivityTaskSummaryBinding.getRoot());
                             mTaskDetailModel.taskStatus = Utility.TASK_STATUS.COMPLETION_REQUEST;
                             setUpTaskDetails(mTaskDetailModel);
 

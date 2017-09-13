@@ -37,7 +37,6 @@ import android.widget.TextView;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.cheep.BootstrapConstant;
 import com.cheep.BuildConfig;
 import com.cheep.R;
 import com.cheep.activity.HomeActivity;
@@ -1023,7 +1022,7 @@ public class ProfileTabFragment extends BaseFragment {
 
             //TODO: Adding dummy place when playservice is not there
             if (edtAddress != null) {
-                edtAddress.setText("Dummy Address with " + Utility.STATIC_LAT + "," + Utility.STATIC_LNG);
+                edtAddress.setText(getString(R.string.label_dummy_address_with) + Utility.STATIC_LAT + "," + Utility.STATIC_LNG);
                 edtAddress.setFocusable(true);
                 edtAddress.setFocusableInTouchMode(true);
                 try {
@@ -1087,8 +1086,8 @@ public class ProfileTabFragment extends BaseFragment {
         });
         builder.show();
         final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);*/
-        builder.setMessage("For best results, let your device turn on location using Google's location service.")
-                .setPositiveButton("Turn On", new DialogInterface.OnClickListener() {
+        builder.setMessage(getString(R.string.label_turn_on_location))
+                .setPositiveButton(getString(R.string.label_turn_on), new DialogInterface.OnClickListener() {
                     public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
                         startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
                         dialog.cancel();
@@ -1896,8 +1895,8 @@ public class ProfileTabFragment extends BaseFragment {
             Utility.showToast(mContext, getString(R.string.validate_empty_password));
             return;
         } else if (!newPassword.equalsIgnoreCase(confirmPassword)) {
-            Utility.showSnackBar(getString(R.string.validate_confirm_pasword), mFragmentTabProfileBinding.getRoot());
-            Utility.showToast(mContext, getString(R.string.validate_confirm_pasword));
+            Utility.showSnackBar(getString(R.string.validate_confirm_password), mFragmentTabProfileBinding.getRoot());
+            Utility.showToast(mContext, getString(R.string.validate_confirm_password));
             return;
         }
         //Length validation

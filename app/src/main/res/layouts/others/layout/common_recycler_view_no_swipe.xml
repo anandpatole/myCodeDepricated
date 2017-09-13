@@ -77,8 +77,8 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:gravity="center_horizontal"
-                    android:text="@string/empty_favourited_list_2"
                     android:textColor="@color/black"
+                    android:text="@string/empty_favourited_list_2"
                     android:textSize="@dimen/text_size_15sp" />
             </LinearLayout>
 

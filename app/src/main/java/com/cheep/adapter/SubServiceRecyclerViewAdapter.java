@@ -86,7 +86,7 @@ public class SubServiceRecyclerViewAdapter extends RecyclerView.Adapter<SubServi
         }
     }
 
-    public void addList(ArrayList<SubServiceDetailModel> list) {
+    public void addList(ArrayList<SubServiceDetailModel> list, String otherSubService) {
         Log.d(TAG, "addList() called with: list = [" + list.size() + "]");
         if (list == null) {
             list = new ArrayList<>();
@@ -96,7 +96,7 @@ public class SubServiceRecyclerViewAdapter extends RecyclerView.Adapter<SubServi
         SubServiceDetailModel subServiceDetailModel = new SubServiceDetailModel();
         subServiceDetailModel.sub_cat_id = -1;
         subServiceDetailModel.catId = -1;
-        subServiceDetailModel.name = "Let me tell you what I need";
+        subServiceDetailModel.name = otherSubService;
         this.mList.add(subServiceDetailModel);
         notifyDataSetChanged();
     }
