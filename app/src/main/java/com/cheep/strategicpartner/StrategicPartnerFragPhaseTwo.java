@@ -1170,8 +1170,8 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
         }
     }
 
+    @SuppressWarnings("unchecked")
     private void checkStrategicPartnerProAvailability(final AddressModel model, final TextView textAns, final QueAnsModel queAnsModel, final TextView textQueNo) {
-
 
         showProgressDialog();
 
@@ -1298,7 +1298,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
                 , mHeaderParams
                 , mParams
                 , null);
-        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest, NetworkUtility.WS.ADD_ADDRESS);
+        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest, NetworkUtility.WS.CHECK_PRO_AVAILABILITY_FOR_STRATEGIC_TASK);
 
 
     }
@@ -1868,7 +1868,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
                              * In case og Guest User we want to save it locally.
                              */
                             AddressModel addressModel = new AddressModel();
-                            // Creating Dynamic AddressID but it would be nagative values always to differentiat with logged in users address.
+                            // Creating Dynamic AddressID but it would be nagative values always to differentiate with logged in users address.
                             addressModel.address_id = "-" + (guestUserDetails.addressList == null ? "1" : String.valueOf(guestUserDetails.addressList.size() + 1));
                             addressModel.address = address;
                             addressModel.cityName = mLocationIno.City;
