@@ -152,7 +152,7 @@ public class FAQFragment extends BaseFragment {
     private void callFetchContentWS() {
 
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mFragmentFaqBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mFragmentFaqBinding.getRoot());
             return;
         }
 

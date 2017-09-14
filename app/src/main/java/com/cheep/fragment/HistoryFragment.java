@@ -179,7 +179,7 @@ public class HistoryFragment extends BaseFragment {
     private void callHistoryWS(long timestamp) {
 
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mFragmentHistoryBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mFragmentHistoryBinding.getRoot());
             return;
         }
 

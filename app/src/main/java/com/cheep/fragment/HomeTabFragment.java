@@ -482,7 +482,7 @@ public class HomeTabFragment extends BaseFragment {
     private void updateLatLongOnServer(String lat, String lng) {
         Log.d(TAG, "updateLatLongOnServer() called with: lat = [" + lat + "], lng = [" + lng + "]");
         if (!Utility.isConnected(mContext)) {
-            errorLoadingHelper.failed(getString(R.string.no_internet), 0, onRetryBtnClickListener);
+            errorLoadingHelper.failed(Utility.NO_INTERNET_CONNECTION, 0, onRetryBtnClickListener);
         }
         errorLoadingHelper.showLoading();
         FetchLocationInfoUtility mFetchLocationInfoUtility = new FetchLocationInfoUtility(
@@ -501,7 +501,7 @@ public class HomeTabFragment extends BaseFragment {
 
                     @Override
                     public void internetConnectionNotFound() {
-                        errorLoadingHelper.failed(getString(R.string.no_internet), 0, onRetryBtnClickListener);
+                        errorLoadingHelper.failed(Utility.NO_INTERNET_CONNECTION, 0, onRetryBtnClickListener);
                     }
                 },
                 true
@@ -619,7 +619,7 @@ public class HomeTabFragment extends BaseFragment {
         ((HomeActivity) getActivity()).isReadyToLoad = true;
 
         if (!Utility.isConnected(mContext)) {
-            errorLoadingHelper.failed(getString(R.string.no_internet), 0, onRetryBtnClickListener);
+            errorLoadingHelper.failed(Utility.NO_INTERNET_CONNECTION, 0, onRetryBtnClickListener);
             return;
         }
 
@@ -753,7 +753,7 @@ public class HomeTabFragment extends BaseFragment {
 
         if (!Utility.isConnected(mContext)) {
 //            Utility.showSnackBar(getString(R.string.no_internet), mFragmentTabHomeBinding.getRoot());
-            errorLoadingHelper.failed(getString(R.string.no_internet), 0, onRetryBtnClickListener);
+            errorLoadingHelper.failed(Utility.NO_INTERNET_CONNECTION, 0, onRetryBtnClickListener);
             return;
         }
 
@@ -1187,7 +1187,7 @@ public class HomeTabFragment extends BaseFragment {
         }
 
         if (!Utility.isConnected(mContext)) {
-            Utility.showToast(mContext, getString(R.string.no_internet));
+            Utility.showToast(mContext,Utility.NO_INTERNET_CONNECTION);
             return;
         }
 

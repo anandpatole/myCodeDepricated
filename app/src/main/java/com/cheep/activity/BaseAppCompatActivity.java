@@ -232,7 +232,7 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity {
 
     public void emuCall(final View view, String sp_user_id, boolean isAdminCall) {
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), view);
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, view);
             return;
         }
 

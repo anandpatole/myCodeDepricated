@@ -136,8 +136,8 @@ public class InfoFragment extends BaseFragment {
     private void callFetchContentWS() {
 
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mFragmentInfoBinding.getRoot());
-            showErrorMessage(getString(R.string.no_internet));
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mFragmentInfoBinding.getRoot());
+            showErrorMessage(Utility.NO_INTERNET_CONNECTION);
             return;
         }
 
@@ -265,6 +265,7 @@ public class InfoFragment extends BaseFragment {
      */
     private void showErrorMessage(String message) {
         mFragmentInfoBinding.progressBar.setVisibility(View.GONE);
+        mFragmentInfoBinding.tvErrorMessage.setText(Utility.NO_INTERNET_CONNECTION);
         mFragmentInfoBinding.tvErrorMessage.setVisibility(View.VISIBLE);
         mFragmentInfoBinding.tvErrorMessage.setText(message);
         mFragmentInfoBinding.webview.setVisibility(View.GONE);

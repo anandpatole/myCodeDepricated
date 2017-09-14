@@ -458,7 +458,7 @@ public class ChatActivity extends BaseAppCompatActivity implements View.OnClickL
 
     public void sendMessage(String chatType, String mediaUrl, String mediaThumbUrl) {
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mActivityChatBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityChatBinding.getRoot());
             if (chatType.equalsIgnoreCase(Utility.CHAT_TYPE_MEDIA)) {
                 mSelectedMediaPath = "";
             }
@@ -724,7 +724,7 @@ public class ChatActivity extends BaseAppCompatActivity implements View.OnClickL
 
     public void uploadImage(String imagePath) {
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mActivityChatBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityChatBinding.getRoot());
             return;
         }
 
@@ -805,7 +805,7 @@ public class ChatActivity extends BaseAppCompatActivity implements View.OnClickL
 
     public void checkTaskStatus(String taskID, String spUserID) {
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mActivityChatBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityChatBinding.getRoot());
             return;
         }
 

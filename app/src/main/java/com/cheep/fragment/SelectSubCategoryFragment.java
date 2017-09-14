@@ -153,7 +153,7 @@ public class SelectSubCategoryFragment extends BaseFragment {
     private void fetchListOfSubCategory(String catId) {
         Log.d(TAG, "fetchListOfSubCategory() called with: catId = [" + catId + "]");
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mFragmentSelectSubserviceBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mFragmentSelectSubserviceBinding.getRoot());
             return;
         }
 

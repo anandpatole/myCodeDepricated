@@ -398,7 +398,7 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
 
         // Check Internet connection
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mActivityTaskCreateBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityTaskCreateBinding.getRoot());
             return;
         }
 
@@ -490,7 +490,7 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
 
         // Check Internet connection
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mActivityTaskCreateBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityTaskCreateBinding.getRoot());
             return;
         }
 

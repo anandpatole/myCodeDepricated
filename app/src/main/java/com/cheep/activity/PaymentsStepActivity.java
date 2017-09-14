@@ -441,7 +441,7 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
      */
     private void validateCheepCode(String cheepCode) {
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mActivityPaymentDetailBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityPaymentDetailBinding.getRoot());
             return;
         }
 
@@ -504,7 +504,7 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
      */
     private void validateInstaCheepCode(String cheepCode) {
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mActivityPaymentDetailBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityPaymentDetailBinding.getRoot());
             return;
         }
 
@@ -631,7 +631,7 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
      */
     private void payNow(boolean isForAdditionalQuote) {
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mActivityPaymentDetailBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityPaymentDetailBinding.getRoot());
             return;
         }
 
@@ -934,7 +934,7 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
 //        Required Params => task_desc,address_id,city_id,cat_id,start_datetime,
 // media_file,subcategory_id,spUserId,txnid,cheepcode,quote_amount,payable_amount
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mActivityPaymentDetailBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityPaymentDetailBinding.getRoot());
             return;
         }
         showProgressDialog();
@@ -1052,7 +1052,7 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
      */
     private void updatePaymentStatus(boolean isSuccess, String response, boolean isAdditionalPayment) {
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mActivityPaymentDetailBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityPaymentDetailBinding.getRoot());
             return;
         }
         showProgressDialog();

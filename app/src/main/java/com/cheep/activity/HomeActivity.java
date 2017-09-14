@@ -537,7 +537,7 @@ public class HomeActivity extends BaseAppCompatActivity
         this.taskId = taskId;
         //Validation
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mActivityHomeBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityHomeBinding.getRoot());
             return;
         }
 
@@ -701,7 +701,7 @@ public class HomeActivity extends BaseAppCompatActivity
         this.taskId = taskId;
         //Validation
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mActivityHomeBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityHomeBinding.getRoot());
             return;
         }
 
@@ -1052,7 +1052,7 @@ public class HomeActivity extends BaseAppCompatActivity
      */
     private void callAddToFavWS(String providerId, boolean isAddToFav) {
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mActivityHomeBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityHomeBinding.getRoot());
             return;
         }
 
@@ -1384,7 +1384,7 @@ public class HomeActivity extends BaseAppCompatActivity
 
         //Validation
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mActivityHomeBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityHomeBinding.getRoot());
             return;
         }
 
@@ -1485,7 +1485,7 @@ public class HomeActivity extends BaseAppCompatActivity
     public void callUpdateLanguage(String language) {
 
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mActivityHomeBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityHomeBinding.getRoot());
             return;
         }
 

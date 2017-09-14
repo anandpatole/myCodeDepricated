@@ -237,7 +237,7 @@ public class VerificationActivity extends BaseAppCompatActivity {
     private void callVerifyOTPWS(String phoneNumber) {
 
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mActivityVerificationBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityVerificationBinding.getRoot());
             return;
         }
 
@@ -416,7 +416,7 @@ public class VerificationActivity extends BaseAppCompatActivity {
      ************************************************************************************************************/
     private void proceedWithSignUp() {
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mActivityVerificationBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityVerificationBinding.getRoot());
             return;
         }
 
@@ -433,7 +433,7 @@ public class VerificationActivity extends BaseAppCompatActivity {
 
                             @Override
                             public void internetConnectionNotFound() {
-                                Utility.showSnackBar(getString(R.string.no_internet), mActivityVerificationBinding.getRoot());
+                                Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityVerificationBinding.getRoot());
                             }
                         },
                         false);
@@ -475,7 +475,7 @@ public class VerificationActivity extends BaseAppCompatActivity {
     private void callSignUpWS() {
 
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mActivityVerificationBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityVerificationBinding.getRoot());
             return;
         }
 
@@ -541,7 +541,7 @@ public class VerificationActivity extends BaseAppCompatActivity {
             mParams.put(NetworkUtility.TAGS.COUNTRY, mSelectedLocationInfo.Country);
             mParams.put(NetworkUtility.TAGS.STATE, mSelectedLocationInfo.State);
             mParams.put(NetworkUtility.TAGS.CITY_NAME, mSelectedLocationInfo.City);
-            mParams.put(NetworkUtility.TAGS.LOCALITY, TextUtils.isEmpty(mSelectedLocationInfo.Locality)?Utility.EMPTY_STRING:mSelectedLocationInfo.Locality);
+            mParams.put(NetworkUtility.TAGS.LOCALITY, TextUtils.isEmpty(mSelectedLocationInfo.Locality) ? Utility.EMPTY_STRING : mSelectedLocationInfo.Locality);
         } else {
             mParams.put(NetworkUtility.TAGS.LAT, Utility.EMPTY_STRING);
             mParams.put(NetworkUtility.TAGS.LNG, Utility.EMPTY_STRING);
@@ -715,7 +715,7 @@ public class VerificationActivity extends BaseAppCompatActivity {
     private void callResendOTPWSForChangePassword(String phoneNumber) {
 
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mActivityVerificationBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityVerificationBinding.getRoot());
             return;
         }
 
@@ -764,7 +764,7 @@ public class VerificationActivity extends BaseAppCompatActivity {
     private void callResendOTPWS() {
 
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mActivityVerificationBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityVerificationBinding.getRoot());
             return;
         }
 

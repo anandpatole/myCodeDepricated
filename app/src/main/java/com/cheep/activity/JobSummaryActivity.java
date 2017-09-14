@@ -244,7 +244,7 @@ public class JobSummaryActivity extends BaseAppCompatActivity {
      */
     private void validateCheepCode(String cheepCode) {
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mActivityJobSummaryBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityJobSummaryBinding.getRoot());
             return;
         }
 
@@ -348,7 +348,7 @@ public class JobSummaryActivity extends BaseAppCompatActivity {
      */
     private void payNow(boolean isForAdditionalQuote) {
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mActivityJobSummaryBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityJobSummaryBinding.getRoot());
             return;
         }
 
@@ -1241,7 +1241,7 @@ public class JobSummaryActivity extends BaseAppCompatActivity {
      */
     private void callTaskDetailWS() {
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mActivityJobSummaryBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityJobSummaryBinding.getRoot());
             return;
         }
 
@@ -1336,7 +1336,7 @@ public class JobSummaryActivity extends BaseAppCompatActivity {
      */
     private void callAddToFavWS(String providerId, boolean isAddToFav) {
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mActivityJobSummaryBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityJobSummaryBinding.getRoot());
             return;
         }
 
@@ -1418,7 +1418,7 @@ public class JobSummaryActivity extends BaseAppCompatActivity {
 
         //Validation
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mActivityJobSummaryBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityJobSummaryBinding.getRoot());
             return;
         }
 
@@ -1512,7 +1512,7 @@ public class JobSummaryActivity extends BaseAppCompatActivity {
 
         //Validation
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mActivityJobSummaryBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityJobSummaryBinding.getRoot());
             return;
         }
 
@@ -1622,7 +1622,7 @@ public class JobSummaryActivity extends BaseAppCompatActivity {
      */
     private void updatePaymentStatus(boolean isSuccess, String response, boolean isAdditionalPayment) {
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mActivityJobSummaryBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityJobSummaryBinding.getRoot());
             return;
         }
         showProgressDialog();
@@ -1849,7 +1849,7 @@ public class JobSummaryActivity extends BaseAppCompatActivity {
     private void callDeclineAdditionalPaymentRequest() {
         //Validation
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mActivityJobSummaryBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityJobSummaryBinding.getRoot());
             return;
         }
 
@@ -1947,7 +1947,7 @@ public class JobSummaryActivity extends BaseAppCompatActivity {
     private void callCheckingTaskStatus() {
         //Validation
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mActivityJobSummaryBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityJobSummaryBinding.getRoot());
             return;
         }
 

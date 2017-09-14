@@ -1025,7 +1025,7 @@ public class EnterTaskDetailFragment extends BaseFragment {
      */
     private void callDeleteAddressWS(AddressModel addressModel) {
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mFragmentEnterTaskDetailBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mFragmentEnterTaskDetailBinding.getRoot());
             return;
         }
 
@@ -1148,7 +1148,7 @@ public class EnterTaskDetailFragment extends BaseFragment {
      */
     private void callUpdateAddressWS(final String addressId, final String addressType,/* String addressName,*/ final String address, final String addressInitials, LatLng latLng) {
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mFragmentEnterTaskDetailBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mFragmentEnterTaskDetailBinding.getRoot());
             return;
         }
 
@@ -1188,7 +1188,7 @@ public class EnterTaskDetailFragment extends BaseFragment {
                         @Override
                         public void internetConnectionNotFound() {
                             hideProgressDialog();
-                            Utility.showSnackBar(getString(R.string.no_internet), mFragmentEnterTaskDetailBinding.getRoot());
+                            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mFragmentEnterTaskDetailBinding.getRoot());
                         }
                     },
                     false
@@ -1238,7 +1238,7 @@ public class EnterTaskDetailFragment extends BaseFragment {
                         @Override
                         public void internetConnectionNotFound() {
                             hideProgressDialog();
-                            Utility.showSnackBar(getString(R.string.no_internet), mFragmentEnterTaskDetailBinding.getRoot());
+                            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mFragmentEnterTaskDetailBinding.getRoot());
                         }
                     },
                     false
@@ -1328,7 +1328,7 @@ public class EnterTaskDetailFragment extends BaseFragment {
      */
     private void callAddAddressWS(final String addressType, /*String addressName,*/ final String address, final String addressInitials, final LatLng latLng) {
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mFragmentEnterTaskDetailBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mFragmentEnterTaskDetailBinding.getRoot());
             return;
         }
 
@@ -1375,7 +1375,7 @@ public class EnterTaskDetailFragment extends BaseFragment {
                         @Override
                         public void internetConnectionNotFound() {
                             hideProgressDialog();
-                            Utility.showSnackBar(getString(R.string.no_internet), mFragmentEnterTaskDetailBinding.getRoot());
+                            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mFragmentEnterTaskDetailBinding.getRoot());
                         }
                     },
                     false
@@ -1424,7 +1424,7 @@ public class EnterTaskDetailFragment extends BaseFragment {
                         @Override
                         public void internetConnectionNotFound() {
                             hideProgressDialog();
-                            Utility.showSnackBar(getString(R.string.no_internet), mFragmentEnterTaskDetailBinding.getRoot());
+                            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mFragmentEnterTaskDetailBinding.getRoot());
                         }
                     },
                     false
@@ -1520,7 +1520,7 @@ public class EnterTaskDetailFragment extends BaseFragment {
     private void callSPListWS(String categoryId, boolean shouldGoForAddress, String addressId, AddressModel addressModel) {
 
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mFragmentEnterTaskDetailBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mFragmentEnterTaskDetailBinding.getRoot());
             return;
         }
 

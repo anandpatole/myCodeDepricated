@@ -607,7 +607,7 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
      */
     private void callReportSPWS(boolean addToAbuse) {
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mActivityProviderProfileBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityProviderProfileBinding.getRoot());
             return;
         }
 
@@ -708,7 +708,7 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
      */
     private void callAddToFavWS(String providerId, boolean isAddToFav) {
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mActivityProviderProfileBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityProviderProfileBinding.getRoot());
             return;
         }
 
@@ -792,7 +792,7 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
 
     private void callSPProfileDetailWS(String providerId) {
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mActivityProviderProfileBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityProviderProfileBinding.getRoot());
             return;
         }
 
@@ -931,7 +931,7 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
     private void callReviewList(String providerId) {
         if (!Utility.isConnected(mContext)) {
 //            Utility.showSnackBar(getString(R.string.no_internet), mActivityProviderProfileBinding.getRoot());
-            errorLoadingHelper.failed(getString(R.string.no_internet), 0, onRetryBtnClickListener);
+            errorLoadingHelper.failed(Utility.NO_INTERNET_CONNECTION, 0, onRetryBtnClickListener);
             return;
         }
 
@@ -967,7 +967,7 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
     private void callLoadMoreReviewList(String providerId, String reviewId) {
         if (!Utility.isConnected(mContext)) {
 //            Utility.showSnackBar(getString(R.string.no_internet), mActivityProviderProfileBinding.getRoot());
-            errorLoadingHelper.failed(getString(R.string.no_internet), 0, onRetryBtnClickListener);
+            errorLoadingHelper.failed(Utility.NO_INTERNET_CONNECTION, 0, onRetryBtnClickListener);
             return;
         }
 
@@ -1149,7 +1149,7 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
      */
     private void callTaskDetailRequestAcceptRejectWS(String requestDetailStatus, String taskID, String spUserID) {
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mActivityProviderProfileBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityProviderProfileBinding.getRoot());
             return;
         }
 
@@ -1284,7 +1284,7 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
      */
     private void callTaskDetailRequestAcceptWS(final String action, String taskID, final ProviderModel providerModel) {
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mActivityProviderProfileBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityProviderProfileBinding.getRoot());
             return;
         }
 
@@ -1375,7 +1375,7 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
      */
     private void callTaskDetailWS(String mTaskId, String providerId) {
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mActivityProviderProfileBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityProviderProfileBinding.getRoot());
             return;
         }
 

@@ -376,6 +376,9 @@ public class Utility {
         return String.valueOf(System.currentTimeMillis());
     }
 
+
+    public static final String NO_INTERNET_CONNECTION = "Hey, we see a problem with your internet" + new String(Character.toChars(0x1f914)) + ". We\'ll wait while you check your connection and try again";
+
     //Bundle Extra parameters
     public static class Extra {
         public static final String WHICH_FRAG = "which_frag";

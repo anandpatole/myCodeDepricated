@@ -172,7 +172,7 @@ public class TaskQuotesActivity extends BaseAppCompatActivity implements TaskQuo
 
     private void callSPListWS() {
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), null);
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, null);
             return;
         }
 
@@ -524,7 +524,7 @@ public class TaskQuotesActivity extends BaseAppCompatActivity implements TaskQuo
      */
     private void callTaskDetailRequestAcceptWS(final String action, String taskID, final ProviderModel providerModel) {
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mRoot);
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mRoot);
             return;
         }
 
@@ -650,7 +650,7 @@ public class TaskQuotesActivity extends BaseAppCompatActivity implements TaskQuo
      */
     private void callTaskDetailRequestAcceptRejectWS(String requestDetailStatus, String taskID, String spUserID) {
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mRoot);
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mRoot);
             return;
         }
 
@@ -835,7 +835,7 @@ public class TaskQuotesActivity extends BaseAppCompatActivity implements TaskQuo
      */
     private void callAddToFavWS(String providerId, boolean isAddToFav) {
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mRoot);
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mRoot);
             return;
         }
 

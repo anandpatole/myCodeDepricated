@@ -605,7 +605,7 @@ public class HomeFragment extends BaseFragment {
     private void callEmergencyAlert() {
 
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mFragmentHomeBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mFragmentHomeBinding.getRoot());
             return;
         }
 
@@ -698,7 +698,7 @@ public class HomeFragment extends BaseFragment {
 
         if (!Utility.isConnected(mContext)) {
             if (mFragmentHomeBinding!= null)
-                Utility.showSnackBar(getString(R.string.no_internet), mFragmentHomeBinding.getRoot());
+                Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mFragmentHomeBinding.getRoot());
             return;
         }
 

@@ -582,7 +582,7 @@ public class SignupActivity extends BaseAppCompatActivity {
      ************************************************************************************************************/
     private void onClickOnSignUp() {
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mActivitySignupBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivitySignupBinding.getRoot());
             return;
         }
 
@@ -677,7 +677,7 @@ public class SignupActivity extends BaseAppCompatActivity {
     private void callsendOTPWS() {
 
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mActivitySignupBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivitySignupBinding.getRoot());
             return;
         }
 

@@ -411,7 +411,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <!-- new labels for login screen for skip login feature-->
     <string name="label_almost_there">Hang in, you\'re almost there!</string>
 
-    <string name="fetching_location">Checking your location, please wait&#2830;</string>
+    <string name="fetching_location">Checking your location, please wait...</string>
     <string name="label_login">Login</string>
     <string name="label_verify_number">Verify Number</string>
 

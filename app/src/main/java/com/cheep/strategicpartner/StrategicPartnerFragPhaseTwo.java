@@ -214,7 +214,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
     private void fetchListOfQuestions(String catId) {
         Log.d(TAG, "fetchListOfQuestions() called with: catId = [" + catId + "]");
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mFragmentStrategicPartnerPhaseTwoBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mFragmentStrategicPartnerPhaseTwoBinding.getRoot());
             return;
         }
 
@@ -1566,7 +1566,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
      */
     private void callDeleteAddressWS(AddressModel addressModel) {
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mFragmentStrategicPartnerPhaseTwoBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mFragmentStrategicPartnerPhaseTwoBinding.getRoot());
             return;
         }
 
@@ -1704,7 +1704,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
     private void callUpdateAddressWS(final String addressId, final String
             addressType,/* String addressName,*/ final String address, final String addressInitials, final LatLng latLng) {
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mFragmentStrategicPartnerPhaseTwoBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mFragmentStrategicPartnerPhaseTwoBinding.getRoot());
             return;
         }
 
@@ -1744,7 +1744,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
                         @Override
                         public void internetConnectionNotFound() {
                             hideProgressDialog();
-                            Utility.showSnackBar(getString(R.string.no_internet), mFragmentStrategicPartnerPhaseTwoBinding.getRoot());
+                            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mFragmentStrategicPartnerPhaseTwoBinding.getRoot());
                         }
                     },
                     false
@@ -1794,7 +1794,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
                         @Override
                         public void internetConnectionNotFound() {
                             hideProgressDialog();
-                            Utility.showSnackBar(getString(R.string.no_internet), mFragmentStrategicPartnerPhaseTwoBinding.getRoot());
+                            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mFragmentStrategicPartnerPhaseTwoBinding.getRoot());
                         }
                     },
                     false
@@ -1887,7 +1887,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
     private void callAddAddressWS(final String addressType, /*String addressName,*/ final String
             address, final String addressInitials, final LatLng latLng) {
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mFragmentStrategicPartnerPhaseTwoBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mFragmentStrategicPartnerPhaseTwoBinding.getRoot());
             return;
         }
 
@@ -1937,7 +1937,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
                         @Override
                         public void internetConnectionNotFound() {
                             hideProgressDialog();
-                            Utility.showSnackBar(getString(R.string.no_internet), mFragmentStrategicPartnerPhaseTwoBinding.getRoot());
+                            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mFragmentStrategicPartnerPhaseTwoBinding.getRoot());
                         }
                     },
                     false
@@ -1986,7 +1986,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
                         @Override
                         public void internetConnectionNotFound() {
                             hideProgressDialog();
-                            Utility.showSnackBar(getString(R.string.no_internet), mFragmentStrategicPartnerPhaseTwoBinding.getRoot());
+                            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mFragmentStrategicPartnerPhaseTwoBinding.getRoot());
                         }
                     },
                     false

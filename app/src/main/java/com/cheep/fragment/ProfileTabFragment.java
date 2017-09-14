@@ -263,14 +263,14 @@ public class ProfileTabFragment extends BaseFragment {
 //
                         showPictureChooserDialog(false);
                     } else {
-                        Utility.showSnackBar(getString(R.string.no_internet), mFragmentTabProfileBinding.getRoot());
+                        Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mFragmentTabProfileBinding.getRoot());
                     }
                     break;
                 case R.id.img_cover_photo_edit:
                     if (Utility.isConnected(mContext)) {
                         showPictureChooserDialog(true);
                     } else {
-                        Utility.showSnackBar(getString(R.string.no_internet), mFragmentTabProfileBinding.getRoot());
+                        Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mFragmentTabProfileBinding.getRoot());
                     }
                     break;
             }
@@ -1155,7 +1155,7 @@ public class ProfileTabFragment extends BaseFragment {
 
     private void callUpdateProfileWS(Map<String, String> mParams, HashMap<String, File> mFileParams) {
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mFragmentTabProfileBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mFragmentTabProfileBinding.getRoot());
             return;
         }
 
@@ -1256,7 +1256,7 @@ public class ProfileTabFragment extends BaseFragment {
      */
     private void callDeleteAddressWS(String addressId) {
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mFragmentTabProfileBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mFragmentTabProfileBinding.getRoot());
             return;
         }
 
@@ -1351,7 +1351,7 @@ public class ProfileTabFragment extends BaseFragment {
     @SuppressWarnings("unchecked")
     private void callUpdateAddressWS(final String addressId, final String addressType,/* String addressName,*/ final String address, final String addressInitials, LatLng latLng) {
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mFragmentTabProfileBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mFragmentTabProfileBinding.getRoot());
             return;
         }
 
@@ -1394,7 +1394,7 @@ public class ProfileTabFragment extends BaseFragment {
 
                     @Override
                     public void internetConnectionNotFound() {
-                        Utility.showSnackBar(getString(R.string.no_internet), mFragmentTabProfileBinding.getRoot());
+                        Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mFragmentTabProfileBinding.getRoot());
                     }
                 },
                 false
@@ -1487,7 +1487,7 @@ public class ProfileTabFragment extends BaseFragment {
      */
     private void callAddAddressWS(final String addressType, /*String addressName,*/ final String address, final String addressInitials, LatLng latLng) {
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mFragmentTabProfileBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mFragmentTabProfileBinding.getRoot());
             return;
         }
 
@@ -1531,7 +1531,7 @@ public class ProfileTabFragment extends BaseFragment {
 
                     @Override
                     public void internetConnectionNotFound() {
-                        Utility.showSnackBar(getString(R.string.no_internet), mFragmentTabProfileBinding.getRoot());
+                        Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mFragmentTabProfileBinding.getRoot());
                     }
                 },
                 false
@@ -1623,7 +1623,7 @@ public class ProfileTabFragment extends BaseFragment {
      */
     private void callGetProfileWS() {
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mFragmentTabProfileBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mFragmentTabProfileBinding.getRoot());
             return;
         }
 
@@ -1721,7 +1721,7 @@ public class ProfileTabFragment extends BaseFragment {
      */
     private void updateEmergencyContact(JSONArray jsonArrayEmergencyContact) {
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mFragmentTabProfileBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mFragmentTabProfileBinding.getRoot());
             return;
         }
 
@@ -1821,7 +1821,7 @@ public class ProfileTabFragment extends BaseFragment {
 
 
         if (!Utility.isConnected(mContext)) {
-            Utility.showToast(mContext, getString(R.string.no_internet));
+            Utility.showToast(mContext,Utility.NO_INTERNET_CONNECTION);
             return;
         }
 
@@ -1947,8 +1947,8 @@ public class ProfileTabFragment extends BaseFragment {
         }
 
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mFragmentTabProfileBinding.getRoot());
-            Utility.showToast(mContext, getString(R.string.no_internet));
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mFragmentTabProfileBinding.getRoot());
+            Utility.showToast(mContext, Utility.NO_INTERNET_CONNECTION);
             return;
         }
 

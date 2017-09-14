@@ -170,7 +170,7 @@ public class FavouriteFragment extends BaseFragment {
 
     private void reloadFavSPListFromServer() {
         if (!Utility.isConnected(mContext)) {
-            errorLoadingHelper.failed(getString(R.string.no_internet), 0, onRetryBtnClickListener);
+            errorLoadingHelper.failed(Utility.NO_INTERNET_CONNECTION, 0, onRetryBtnClickListener);
             mFragmentFavouriteFragment.commonRecyclerView.swipeRefreshLayout.setRefreshing(false);
             return;
         }
@@ -182,7 +182,7 @@ public class FavouriteFragment extends BaseFragment {
 
         if (!Utility.isConnected(mContext)) {
 //            Utility.showSnackBar(getString(R.string.no_internet), mFragmentFavouriteFragment.getRoot());
-            errorLoadingHelper.failed(getString(R.string.no_internet), 0, onRetryBtnClickListener);
+            errorLoadingHelper.failed(Utility.NO_INTERNET_CONNECTION, 0, onRetryBtnClickListener);
             return;
         }
 

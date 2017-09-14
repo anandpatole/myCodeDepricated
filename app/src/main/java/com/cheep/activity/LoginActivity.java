@@ -22,7 +22,6 @@ import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.android.volley.Response;
@@ -371,7 +370,7 @@ public class LoginActivity extends BaseAppCompatActivity implements FacebookHelp
      ************************************************************************************************************/
     private void onClickOfFacebook() {
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mActivityLoginBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityLoginBinding.getRoot());
             return;
         }
         showProgressDialog();
@@ -466,7 +465,7 @@ public class LoginActivity extends BaseAppCompatActivity implements FacebookHelp
 
     private void onClickOfTwitter() {
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mActivityLoginBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityLoginBinding.getRoot());
             return;
         }
 
@@ -534,7 +533,7 @@ public class LoginActivity extends BaseAppCompatActivity implements FacebookHelp
      ************************************************************************************************************/
     private void onClickOfGoogle() {
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mActivityLoginBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityLoginBinding.getRoot());
             return;
         }
         showProgressDialog();
@@ -640,7 +639,7 @@ public class LoginActivity extends BaseAppCompatActivity implements FacebookHelp
      ************************************************************************************************************/
     private void onClickOnSignIn() {
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mActivityLoginBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityLoginBinding.getRoot());
             return;
         }
 
@@ -722,7 +721,7 @@ public class LoginActivity extends BaseAppCompatActivity implements FacebookHelp
     private void callLoginWS(final String loginWithTag, final String extraInfoBasedOnTag) {
 
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mActivityLoginBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityLoginBinding.getRoot());
             return;
         }
 
@@ -759,7 +758,7 @@ public class LoginActivity extends BaseAppCompatActivity implements FacebookHelp
 
                             @Override
                             public void internetConnectionNotFound() {
-                                Utility.showSnackBar(getString(R.string.no_internet), mActivityLoginBinding.getRoot());
+                                Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityLoginBinding.getRoot());
                             }
                         },
                         false);

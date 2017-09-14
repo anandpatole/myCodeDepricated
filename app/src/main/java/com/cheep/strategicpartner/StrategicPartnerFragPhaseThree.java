@@ -266,7 +266,7 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
     private void validateCheepCode(String s) {
         cheepCode = s;
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mFragmentStrategicPartnerPhaseThreeBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mFragmentStrategicPartnerPhaseThreeBinding.getRoot());
             return;
         }
         showProgressDialog();
@@ -438,7 +438,7 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
      */
     private void payNow() {
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mFragmentStrategicPartnerPhaseThreeBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mFragmentStrategicPartnerPhaseThreeBinding.getRoot());
             return;
         }
 
@@ -730,7 +730,7 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
 
         // Check Internet connection
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mFragmentStrategicPartnerPhaseThreeBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mFragmentStrategicPartnerPhaseThreeBinding.getRoot());
             return;
         }
 
