@@ -481,6 +481,9 @@ public class HomeTabFragment extends BaseFragment {
      */
     private void updateLatLongOnServer(String lat, String lng) {
         Log.d(TAG, "updateLatLongOnServer() called with: lat = [" + lat + "], lng = [" + lng + "]");
+        if (!Utility.isConnected(mContext)) {
+            errorLoadingHelper.failed(getString(R.string.no_internet), 0, onRetryBtnClickListener);
+        }
         errorLoadingHelper.showLoading();
         FetchLocationInfoUtility mFetchLocationInfoUtility = new FetchLocationInfoUtility(
                 mContext,
@@ -494,6 +497,11 @@ public class HomeTabFragment extends BaseFragment {
                         if (PreferenceUtility.getInstance(mContext).getUserDetails() != null) {
                             updateLocationForLoggedInUser(mLocationIno);
                         }
+                    }
+
+                    @Override
+                    public void internetConnectionNotFound() {
+                        errorLoadingHelper.failed(getString(R.string.no_internet), 0, onRetryBtnClickListener);
                     }
                 },
                 true

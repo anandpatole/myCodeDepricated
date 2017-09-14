@@ -1184,6 +1184,12 @@ public class EnterTaskDetailFragment extends BaseFragment {
                                 addAddressDialog.dismiss();
                             }
                         }
+
+                        @Override
+                        public void internetConnectionNotFound() {
+                            hideProgressDialog();
+                            Utility.showSnackBar(getString(R.string.no_internet), mFragmentEnterTaskDetailBinding.getRoot());
+                        }
                     },
                     false
             );
@@ -1227,6 +1233,12 @@ public class EnterTaskDetailFragment extends BaseFragment {
                                     , mParams
                                     , null);
                             Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest, NetworkUtility.WS.EDIT_ADDRESS);
+                        }
+
+                        @Override
+                        public void internetConnectionNotFound() {
+                            hideProgressDialog();
+                            Utility.showSnackBar(getString(R.string.no_internet), mFragmentEnterTaskDetailBinding.getRoot());
                         }
                     },
                     false
@@ -1359,6 +1371,12 @@ public class EnterTaskDetailFragment extends BaseFragment {
                                 addAddressDialog.dismiss();
                             }
                         }
+
+                        @Override
+                        public void internetConnectionNotFound() {
+                            hideProgressDialog();
+                            Utility.showSnackBar(getString(R.string.no_internet), mFragmentEnterTaskDetailBinding.getRoot());
+                        }
                     },
                     false
             );
@@ -1401,6 +1419,12 @@ public class EnterTaskDetailFragment extends BaseFragment {
                                     , mParams
                                     , null);
                             Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest, NetworkUtility.WS.ADD_ADDRESS);
+                        }
+
+                        @Override
+                        public void internetConnectionNotFound() {
+                            hideProgressDialog();
+                            Utility.showSnackBar(getString(R.string.no_internet), mFragmentEnterTaskDetailBinding.getRoot());
                         }
                     },
                     false

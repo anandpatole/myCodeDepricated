@@ -756,6 +756,11 @@ public class LoginActivity extends BaseAppCompatActivity implements FacebookHelp
                                 mSelectedLocationInfo = mLocationIno;
                                 callLoginWS(loginWithTag, extraInfoBasedOnTag);
                             }
+
+                            @Override
+                            public void internetConnectionNotFound() {
+                                Utility.showSnackBar(getString(R.string.no_internet), mActivityLoginBinding.getRoot());
+                            }
                         },
                         false);
                 mFetchLocationInfoUtility.getLocationInfo(String.valueOf(mLocationTrackService.mLocation.getLatitude()), String.valueOf(mLocationTrackService.mLocation.getLongitude()));

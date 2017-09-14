@@ -430,6 +430,11 @@ public class VerificationActivity extends BaseAppCompatActivity {
                                 mSelectedLocationInfo = mLocationIno;
                                 callSignUpWS();
                             }
+
+                            @Override
+                            public void internetConnectionNotFound() {
+                                Utility.showSnackBar(getString(R.string.no_internet), mActivityVerificationBinding.getRoot());
+                            }
                         },
                         false);
                 mFetchLocationInfoUtility.getLocationInfo(String.valueOf(mLocationTrackService.mLocation.getLatitude()), String.valueOf(mLocationTrackService.mLocation.getLongitude()));

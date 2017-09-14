@@ -1391,6 +1391,11 @@ public class ProfileTabFragment extends BaseFragment {
                                 , null);
                         Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest, NetworkUtility.WS.EDIT_ADDRESS);
                     }
+
+                    @Override
+                    public void internetConnectionNotFound() {
+                        Utility.showSnackBar(getString(R.string.no_internet), mFragmentTabProfileBinding.getRoot());
+                    }
                 },
                 false
         );
@@ -1522,6 +1527,11 @@ public class ProfileTabFragment extends BaseFragment {
                                 , mParams
                                 , null);
                         Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest, NetworkUtility.WS.ADD_ADDRESS);
+                    }
+
+                    @Override
+                    public void internetConnectionNotFound() {
+                        Utility.showSnackBar(getString(R.string.no_internet), mFragmentTabProfileBinding.getRoot());
                     }
                 },
                 false

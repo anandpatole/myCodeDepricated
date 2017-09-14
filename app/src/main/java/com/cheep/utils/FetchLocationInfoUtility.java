@@ -43,7 +43,10 @@ public class FetchLocationInfoUtility {
 
     @SuppressWarnings("unchecked")
     public void getLocationInfo(final String lat, final String lon) {
-
+        if (!Utility.isConnected(mContext)) {
+            mListener.internetConnectionNotFound();
+            return;
+        }
         VolleyNetworkRequest mVolleyNetworkRequest = new VolleyNetworkRequest(
                 generateGoogleLocationURL(lat, lon),
                 null,
@@ -130,6 +133,8 @@ public class FetchLocationInfoUtility {
 
     public interface FetchLocationInfoCallBack {
         void onLocationInfoAvailable(LocationInfo mLocationIno);
+
+        void internetConnectionNotFound();
     }
 
 }

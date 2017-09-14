@@ -256,7 +256,12 @@ public class SelectLocationActivity extends BaseAppCompatActivity {
                         } else {
                             setLocation(null);
                         }
+                    }
 
+                    @Override
+                    public void internetConnectionNotFound() {
+                        setResult(RESULT_CANCELED, new Intent());
+                        finish();
                     }
                 },
                 PreferenceUtility.getInstance(mContext).getUserDetails() == null

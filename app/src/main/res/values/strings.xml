@@ -156,7 +156,8 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <!--Translation of Below words are left-->
     <string name="label_please_wait">Please wait</string>
     <!--  <string name="no_internet">Seems like your internet is not working.</string> --> <!--Seems like your internet is not working - Try Again (Button)-->
-    <string name="no_internet">Hey, we see a problem with your internet🤔. We\'ll wait while you check your connection and try again</string> <!--Seems like your internet is not working - Try Again (Button)-->
+    <string name="no_internet">Hey, we see a problem with your internet. We\'ll wait while you check your connection and try again</string> <!--Seems like your internet is not working - Try Again (Button)-->
+    <!--<string name="no_internet">Hey, we see a problem with your internet🤔. We\'ll wait while you check your connection and try again</string> &lt;!&ndash;Seems like your internet is not working - Try Again (Button)&ndash;&gt;-->
     <!--Validate User name-->
     <string name="validate_empty_username">You need to enter a valid username to proceed.</string>
     <string name="validate_username_length">Username must contain more than 3 characters</string>
@@ -415,7 +416,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_verify_number">Verify Number</string>
 
     <string name="how_proceed">How would you like to proceed?</string>
-    <string name="label_insta_book">Insta Book</string>
+    <string name="label_insta_book">InstaBook</string>
     <string name="lable_insta_get_pro">and get a PRO instantly</string>
     <string name="info_insta_book">Recommended if you want to get your task done quickly. Be rest assured, CHEEP will instantly assign a verified PRO with min 10 years of experience to get the job done.</string>
     <string name="info_get_quote">Recommended if your task is not urgent. You can compare multiple quotes, read independent reviews and then book the PRO you like.</string>

@@ -1740,6 +1740,12 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
                                 addAddressDialog.dismiss();
                             }
                         }
+
+                        @Override
+                        public void internetConnectionNotFound() {
+                            hideProgressDialog();
+                            Utility.showSnackBar(getString(R.string.no_internet), mFragmentStrategicPartnerPhaseTwoBinding.getRoot());
+                        }
                     },
                     false
             );
@@ -1783,6 +1789,12 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
                                     , mParams
                                     , null);
                             Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest, NetworkUtility.WS.EDIT_ADDRESS);
+                        }
+
+                        @Override
+                        public void internetConnectionNotFound() {
+                            hideProgressDialog();
+                            Utility.showSnackBar(getString(R.string.no_internet), mFragmentStrategicPartnerPhaseTwoBinding.getRoot());
                         }
                     },
                     false
@@ -1921,6 +1933,12 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
                                 addAddressDialog.dismiss();
                             }
                         }
+
+                        @Override
+                        public void internetConnectionNotFound() {
+                            hideProgressDialog();
+                            Utility.showSnackBar(getString(R.string.no_internet), mFragmentStrategicPartnerPhaseTwoBinding.getRoot());
+                        }
                     },
                     false
             );
@@ -1964,6 +1982,12 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
                                     , null);
                             Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest, NetworkUtility.WS.ADD_ADDRESS);
                         }
+
+                        @Override
+                        public void internetConnectionNotFound() {
+                            hideProgressDialog();
+                            Utility.showSnackBar(getString(R.string.no_internet), mFragmentStrategicPartnerPhaseTwoBinding.getRoot());
+                        }
                     },
                     false
             );
@@ -1971,7 +1995,6 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
             return;
         }
     }
-
 
     private Response.Listener mCallAddAddressResponseListener = new Response.Listener() {
         @Override
