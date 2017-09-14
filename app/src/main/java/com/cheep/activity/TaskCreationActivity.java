@@ -833,7 +833,7 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
                     //Sending Broadcast to the HomeScreen Screen.
                     Intent intent = new Intent(Utility.BR_ON_TASK_CREATED);
                     intent.putExtra(Utility.Extra.DATA, Utility.getJsonStringFromObject(taskDetailModel));
-                    intent.putExtra(Utility.Extra.IS_INSTA_BOOKING_TASK, false);
+                    intent.putExtra(Utility.Extra.IS_INSTA_BOOKING_TASK,!mTaskCreationPagerAdapter.mEnterTaskDetailFragment.isProAvailableForGivenAddress);
                     sendBroadcast(intent);
                 } else {
                     HomeActivity.newInstance(mContext);

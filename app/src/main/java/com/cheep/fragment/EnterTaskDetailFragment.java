@@ -96,6 +96,7 @@ public class EnterTaskDetailFragment extends BaseFragment {
     public boolean isTaskDescriptionVerified = false;
     public boolean isTaskWhenVerified = false;
     public boolean isTaskWhereVerified = false;
+    public boolean isProAvailableForGivenAddress = true;
 
     // For When
     public SuperCalendar startDateTimeSuperCalendar = SuperCalendar.getInstance();
@@ -1600,6 +1601,10 @@ public class EnterTaskDetailFragment extends BaseFragment {
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
                         ArrayList<ProviderModel> list = Utility.getObjectListFromJsonString(jsonObject.getString(NetworkUtility.TAGS.DATA), ProviderModel[].class);
                         Log.i(TAG, "onResponse: size>>" + list.size());
+                        if (list == null || list.isEmpty()) {
+                            isProAvailableForGivenAddress = false;
+                            showNoProForAddressDialog();
+                        }
                         updateSPImageStacks(list);
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
@@ -1629,6 +1634,21 @@ public class EnterTaskDetailFragment extends BaseFragment {
 
         }
     };
+
+    private void showNoProForAddressDialog() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(mTaskCreationActivity, R.style.MyAlertDialogStyle);
+        builder.setCancelable(false);
+        builder.setTitle("CHEEP");
+        builder.setMessage("No Pro is available for this address");
+        builder.setPositiveButton(getString(R.string.label_Ok), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                Log.d(TAG, "onClick() called with: dialogInterface = [" + dialogInterface + "], i = [" + i + "]");
+                dialogInterface.dismiss();
+            }
+        });
+        builder.show();
+    }
 
 
     Response.ErrorListener mCallSPListWSErrorListener = new Response.ErrorListener() {
