@@ -128,6 +128,9 @@ public class TaskDetailModel {
     @SerializedName("banner_image")
     public String bannerImage;
 
+    @SerializedName("is_prefed_quote")
+    public String isPrefedQuote;
+
 
     public TaskDetailModel() {
 

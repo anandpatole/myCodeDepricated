@@ -2,6 +2,7 @@ package com.cheep.activity;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.IntentSender;
@@ -12,6 +13,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -811,48 +813,83 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
             FirebaseHelper.getTaskRef(chatTaskModel.taskId).setValue(chatTaskModel);
         }
 
+
+        if (Utility.BOOLEAN.NO.equalsIgnoreCase(taskDetailModel.isPrefedQuote)) {
+            final AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.MyAlertDialogStyle);
+            builder.setCancelable(false);
+            builder.setTitle(getString(R.string.no_pro_available_title));
+            builder.setMessage(getString(R.string.no_pro_available_description));
+            builder.setPositiveButton(getString(R.string.label_Ok), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    Log.d(TAG, "onClick() called with: dialogInterface = [" + dialogInterface + "], i = [" + i + "]");
+                    /**
+                     * If HomeScreen is not available, create new instance and redirect
+                     * to Mytask screen, if yes, we just need to broadcast the same.
+                     */
+                    if (PreferenceUtility.getInstance(mContext).isHomeScreenVisible()) {
+                        //Sending Broadcast to the HomeScreen Screen.
+                        Intent intent = new Intent(Utility.BR_ON_TASK_CREATED);
+                        intent.putExtra(Utility.Extra.DATA, Utility.getJsonStringFromObject(taskDetailModel));
+                        Log.d(TAG, "onAcknowledgementAccepted: prefed >>>>> " + taskDetailModel.isPrefedQuote);
+                        intent.putExtra(Utility.Extra.IS_INSTA_BOOKING_TASK, Utility.BOOLEAN.NO.equalsIgnoreCase(taskDetailModel.isPrefedQuote));
+                        sendBroadcast(intent);
+                    } else {
+                        HomeActivity.newInstance(mContext);
+                    }
+                    dialogInterface.dismiss();
+                    finish();
+
+                }
+            });
+            builder.show();
+        }
+
         // Update the name of User
        /* mDialogFragmentTaskCreationBinding.textTaskCreationAcknowledgment
                 .setText(mDialogFragmentTaskCreationBinding.getRoot().getContext().getString(R.string.desc_task_creation_acknowledgement, mUserName));
         */
-        String message = mContext.getString(R.string.desc_task_creation_acknowledgement
-                , PreferenceUtility.getInstance(mContext).getUserDetails().UserName);
-        String title = mContext.getString(R.string.label_your_task_is_posted);
-        AcknowledgementDialogWithoutProfilePic mAcknowledgementDialogWithoutProfilePic = AcknowledgementDialogWithoutProfilePic.newInstance(R.drawable.ic_bird_with_heart_illustration, title, message, new AcknowledgementInteractionListener() {
+        else {
+            String message = mContext.getString(R.string.desc_task_creation_acknowledgement
+                    , PreferenceUtility.getInstance(mContext).getUserDetails().UserName);
+            String title = mContext.getString(R.string.label_your_task_is_posted);
+            AcknowledgementDialogWithoutProfilePic mAcknowledgementDialogWithoutProfilePic = AcknowledgementDialogWithoutProfilePic.newInstance(R.drawable.ic_bird_with_heart_illustration, title, message, new AcknowledgementInteractionListener() {
 
-            @Override
-            public void onAcknowledgementAccepted() {
-                // Finish the current activity
-                finish();
+                @Override
+                public void onAcknowledgementAccepted() {
+                    // Finish the current activity
+                    finish();
 
-                /**
-                 * If HomeScreen is not available, create new instance and redirect
-                 * to Mytask screen, if yes, we just need to broadcast the same.
-                 */
-                if (PreferenceUtility.getInstance(mContext).isHomeScreenVisible()) {
-                    //Sending Broadcast to the HomeScreen Screen.
-                    Intent intent = new Intent(Utility.BR_ON_TASK_CREATED);
-                    intent.putExtra(Utility.Extra.DATA, Utility.getJsonStringFromObject(taskDetailModel));
-                    intent.putExtra(Utility.Extra.IS_INSTA_BOOKING_TASK,!mTaskCreationPagerAdapter.mEnterTaskDetailFragment.isProAvailableForGivenAddress);
-                    sendBroadcast(intent);
-                } else {
-                    HomeActivity.newInstance(mContext);
+                    /**
+                     * If HomeScreen is not available, create new instance and redirect
+                     * to Mytask screen, if yes, we just need to broadcast the same.
+                     */
+                    if (PreferenceUtility.getInstance(mContext).isHomeScreenVisible()) {
+                        //Sending Broadcast to the HomeScreen Screen.
+                        Intent intent = new Intent(Utility.BR_ON_TASK_CREATED);
+                        intent.putExtra(Utility.Extra.DATA, Utility.getJsonStringFromObject(taskDetailModel));
+                        Log.d(TAG, "onAcknowledgementAccepted: prefed >>>>> " + taskDetailModel.isPrefedQuote);
+                        intent.putExtra(Utility.Extra.IS_INSTA_BOOKING_TASK, Utility.BOOLEAN.NO.equalsIgnoreCase(taskDetailModel.isPrefedQuote));
+                        sendBroadcast(intent);
+                    } else {
+                        HomeActivity.newInstance(mContext);
+                    }
                 }
-            }
-        });
-        mAcknowledgementDialogWithoutProfilePic.setCancelable(false);
-        mAcknowledgementDialogWithoutProfilePic.show(getSupportFragmentManager(), AcknowledgementDialogWithoutProfilePic.TAG);
+            });
+            mAcknowledgementDialogWithoutProfilePic.setCancelable(false);
+            mAcknowledgementDialogWithoutProfilePic.show(getSupportFragmentManager(), AcknowledgementDialogWithoutProfilePic.TAG);
 
-        /**
-         * @Changes: 2ndAug2017 by Bhavesh
-         * Once any task is created, App is having feature of sending Prefed quotes
-         * so, we will initate once webservice call BUT we will not track the response as
-         * it would be asynchronously managed.
-         */
-        callWSForPrefedQuotes(taskDetailModel.taskId, taskDetailModel.taskAddressId);
+            /**
+             * @Changes: 2ndAug2017 by Bhavesh
+             * Once any task is created, App is having feature of sending Prefed quotes
+             * so, we will initate once webservice call BUT we will not track the response as
+             * it would be asynchronously managed.
+             */
+            callWSForPrefedQuotes(taskDetailModel.taskId, taskDetailModel.taskAddressId);
+
+        }
 
     }
-
 
     /**
      * Initiating Prefed Quotes related Webservice
@@ -860,6 +897,7 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
      * @param taskId        Task Id of Method
      * @param taskAddressId AddressID from which Task is Initiated
      */
+
     private void callWSForPrefedQuotes(String taskId, String taskAddressId) {
         Log.d(TAG, "callWSForPrefedQuotes() called with: taskId = [" + taskId + "], taskAddressId = [" + taskAddressId + "]");
 

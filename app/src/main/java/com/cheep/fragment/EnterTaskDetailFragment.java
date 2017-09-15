@@ -96,7 +96,6 @@ public class EnterTaskDetailFragment extends BaseFragment {
     public boolean isTaskDescriptionVerified = false;
     public boolean isTaskWhenVerified = false;
     public boolean isTaskWhereVerified = false;
-    public boolean isProAvailableForGivenAddress = true;
 
     // For When
     public SuperCalendar startDateTimeSuperCalendar = SuperCalendar.getInstance();
@@ -1601,10 +1600,10 @@ public class EnterTaskDetailFragment extends BaseFragment {
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
                         ArrayList<ProviderModel> list = Utility.getObjectListFromJsonString(jsonObject.getString(NetworkUtility.TAGS.DATA), ProviderModel[].class);
                         Log.i(TAG, "onResponse: size>>" + list.size());
-                        if (list == null || list.isEmpty()) {
-                            isProAvailableForGivenAddress = false;
-                            showNoProForAddressDialog();
-                        }
+//                        if (list == null || list.isEmpty()) {
+//                            isProAvailableForGivenAddress = false;
+//                            showNoProForAddressDialog();
+//                        }
                         updateSPImageStacks(list);
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
