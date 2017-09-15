@@ -367,8 +367,9 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
                 e.printStackTrace();
             }
             superCalendar.setLocaleTimeZone();
-            String task_reschedule_date_time = superCalendar.format(Utility.DATE_FORMAT_DD_MMM + getString(R.string.label_at) + Utility.DATE_FORMAT_HH_MM_AM);
-            String message = getString(R.string.label_reschedule_desc, task_reschedule_date_time);
+            String task_reschedule_date= superCalendar.format(Utility.DATE_FORMAT_DD_MMM );
+            String task_reschedule_time = superCalendar.format(Utility.DATE_FORMAT_HH_MM_AM);
+            String message = getString(R.string.label_reschedule_desc, task_reschedule_date + getString(R.string.label_at)+task_reschedule_time);
             mActivityTaskSummaryBinding.textTaskRescheduleRequestDesc.setText(message);
 
         }
