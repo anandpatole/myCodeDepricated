@@ -205,6 +205,7 @@ public class Utility {
      * Regular expression for mobile number
      */
     public static final String MOBILE_REGREX = "(((\\+*)((0[ -]+)*|(91[- ]+)*)(\\d{12}+|\\d{10}+))|\\d{5}([- ]*)\\d{6})";
+//    public static final String MOBILE_REGREX_IOS = "\"(?\\+\\d\\d\\s+)?((?:\\(\\d\\d\\)|\\d\\d)\\s+)?)(\\d{4,10}\\-?\\d{4})\"";
 
     /**
      * ongoing user chatId
