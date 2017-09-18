@@ -16,7 +16,6 @@ import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.View;
-import android.widget.EditText;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -25,6 +24,7 @@ import com.cheep.BootstrapConstant;
 import com.cheep.BuildConfig;
 import com.cheep.R;
 import com.cheep.custom_view.BottomAlertDialog;
+import com.cheep.custom_view.CFEditTextRegular;
 import com.cheep.databinding.ActivityPaymentDetailBinding;
 import com.cheep.dialogs.AcknowledgementDialogWithProfilePic;
 import com.cheep.dialogs.AcknowledgementInteractionListener;
@@ -387,13 +387,13 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
         }
     };
 
-    EditText edtCheepcode;
+    CFEditTextRegular edtCheepcode;
     BottomAlertDialog cheepCodeDialog;
 
     private void showCheepCodeDialog() {
 
         View view = View.inflate(mContext, R.layout.dialog_add_promocode, null);
-        edtCheepcode = (EditText) view.findViewById(R.id.edit_cheepcode);
+        edtCheepcode = view.findViewById(R.id.edit_cheepcode);
         cheepCodeDialog = new BottomAlertDialog(mContext);
         view.findViewById(R.id.btn_apply).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -499,41 +499,6 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
     }
 
 
-    /**
-     * Used for payment
-     */
-    private void validateInstaCheepCode(String cheepCode) {
-        if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityPaymentDetailBinding.getRoot());
-            return;
-        }
-
-        showProgressDialog();
-
-        UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
-
-        actualQuotePrice = providerModel.quotePrice;
-        //Add Header parameters
-        Map<String, String> mHeaderParams = new HashMap<>();
-        mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
-        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, userDetails.UserID);
-
-        //Add Params
-        Map<String, Object> mParams = new HashMap<>();
-        mParams.put(NetworkUtility.TAGS.QUOTE_AMOUNT, providerModel.quotePrice);
-        mParams.put(NetworkUtility.TAGS.TASK_ID, taskDetailModel.taskId);
-        mParams.put(NetworkUtility.TAGS.CHEEPCODE, cheepCode);
-
-        //Url is based on condition if address id is greater then 0 then it means we need to update the existing address
-        VolleyNetworkRequest mVolleyNetworkRequestForSPList = new VolleyNetworkRequest(NetworkUtility.WS.VALIDATE_CHEEP_CODE
-                , mCallValidateCheepCodeWSErrorListener
-                , mCallValidateCheepCodeWSResponseListener
-                , mHeaderParams
-                , mParams
-                , null);
-        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequestForSPList);
-    }
-
     private String cheepCode;
     Response.Listener mCallValidateCheepCodeWSResponseListener = new Response.Listener() {
         @Override
@@ -541,6 +506,7 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
 
             String strResponse = (String) response;
             try {
+                Utility.hideKeyboard(PaymentsStepActivity.this, edtCheepcode);
                 JSONObject jsonObject = new JSONObject(strResponse);
                 Log.i(TAG, "onResponse: " + jsonObject.toString());
                 int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
@@ -619,6 +585,7 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
 //            hideProgressDialog();
 
 //            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityJobSummaryBinding.getRoot());
+            Utility.hideKeyboard(PaymentsStepActivity.this, edtCheepcode);
             Utility.showToast(mContext, getString(R.string.label_something_went_wrong));
 
         }

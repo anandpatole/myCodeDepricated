@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
 
     <com.cheep.custom_view.CFEditTextRegular
         android:id="@+id/edit_cheepcode"
@@ -14,12 +14,12 @@
         android:background="@color/transparent"
         android:gravity="center"
         android:hint="@string/label_enter_cheepcode"
-        android:inputType="textCapCharacters"
+        android:inputType="textCapCharacters|textNoSuggestions"
         android:maxLength="20"
         android:padding="@dimen/scale_10dp"
         android:textColor="@color/black"
         android:textSize="@dimen/text_size_15sp"
-        android:theme="@style/EditTextWhiteBG" />
+        android:theme="@style/EditTextWhiteBG"/>
 
     <View
         android:id="@+id/divider"
@@ -29,7 +29,7 @@
         android:layout_marginLeft="@dimen/scale_22dp"
         android:layout_marginRight="@dimen/scale_22dp"
         android:layout_toRightOf="@+id/profile_layout"
-        android:background="@color/grey_varient_3" />
+        android:background="@color/grey_varient_3"/>
 
     <com.cheep.custom_view.CFButtonRegular
         android:id="@+id/btn_apply"
@@ -37,9 +37,9 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/scale_22dp"
         android:background="@color/splash_gradient_end"
-        android:textSize="@dimen/text_size_16sp"
         android:text="@string/label_apply"
         android:textAllCaps="false"
         android:textColor="@color/white"
-         />
+        android:textSize="@dimen/text_size_16sp"
+        />
 </LinearLayout>
