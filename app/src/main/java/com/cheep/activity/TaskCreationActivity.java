@@ -815,7 +815,27 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
 
 
         if (Utility.BOOLEAN.NO.equalsIgnoreCase(taskDetailModel.isPrefedQuote)) {
-            final AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.MyAlertDialogStyle);
+
+            /**
+             * If HomeScreen is not available, create new instance and redirect
+             * to Mytask screen, if yes, we just need to broadcast the same.
+             */
+//            if (PreferenceUtility.getInstance(mContext).isHomeScreenVisible()) {
+//                //Sending Broadcast to the HomeScreen Screen.
+//                Intent intent = new Intent(Utility.BR_ON_TASK_CREATED);
+//                intent.putExtra(Utility.Extra.DATA, Utility.getJsonStringFromObject(taskDetailModel));
+//                Log.d(TAG, "onAcknowledgementAccepted: prefed >>>>> " + taskDetailModel.isPrefedQuote);
+//                intent.putExtra(Utility.Extra.IS_INSTA_BOOKING_TASK, Utility.BOOLEAN.NO.equalsIgnoreCase(taskDetailModel.isPrefedQuote));
+//                sendBroadcast(intent);
+//            } else {
+//                HomeActivity.newInstance(mContext);
+//            }
+//            finish();
+
+            /**
+             * Below can be uncommented in case we need to show dialog.
+             */
+            /*final AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.MyAlertDialogStyle);
             builder.setCancelable(false);
             builder.setTitle(getString(R.string.no_pro_available_title));
             builder.setMessage(getString(R.string.no_pro_available_description));
@@ -823,33 +843,28 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
                     Log.d(TAG, "onClick() called with: dialogInterface = [" + dialogInterface + "], i = [" + i + "]");
-                    /**
-                     * If HomeScreen is not available, create new instance and redirect
-                     * to Mytask screen, if yes, we just need to broadcast the same.
-                     */
-                    if (PreferenceUtility.getInstance(mContext).isHomeScreenVisible()) {
-                        //Sending Broadcast to the HomeScreen Screen.
-                        Intent intent = new Intent(Utility.BR_ON_TASK_CREATED);
-                        intent.putExtra(Utility.Extra.DATA, Utility.getJsonStringFromObject(taskDetailModel));
-                        Log.d(TAG, "onAcknowledgementAccepted: prefed >>>>> " + taskDetailModel.isPrefedQuote);
-                        intent.putExtra(Utility.Extra.IS_INSTA_BOOKING_TASK, Utility.BOOLEAN.NO.equalsIgnoreCase(taskDetailModel.isPrefedQuote));
-                        sendBroadcast(intent);
-                    } else {
-                        HomeActivity.newInstance(mContext);
-                    }
-                    dialogInterface.dismiss();
-                    finish();
-
+                if (PreferenceUtility.getInstance(mContext).isHomeScreenVisible()) {
+                //Sending Broadcast to the HomeScreen Screen.
+                Intent intent = new Intent(Utility.BR_ON_TASK_CREATED);
+                intent.putExtra(Utility.Extra.DATA, Utility.getJsonStringFromObject(taskDetailModel));
+                Log.d(TAG, "onAcknowledgementAccepted: prefed >>>>> " + taskDetailModel.isPrefedQuote);
+                intent.putExtra(Utility.Extra.IS_INSTA_BOOKING_TASK, Utility.BOOLEAN.NO.equalsIgnoreCase(taskDetailModel.isPrefedQuote));
+                sendBroadcast(intent);
+            } else {
+                HomeActivity.newInstance(mContext);
+            }
+            dialogInterface.dismiss();
+            finish();
                 }
             });
-            builder.show();
+            builder.show();*/
         }
 
         // Update the name of User
        /* mDialogFragmentTaskCreationBinding.textTaskCreationAcknowledgment
                 .setText(mDialogFragmentTaskCreationBinding.getRoot().getContext().getString(R.string.desc_task_creation_acknowledgement, mUserName));
         */
-        else {
+//        else {
             String message = mContext.getString(R.string.desc_task_creation_acknowledgement
                     , PreferenceUtility.getInstance(mContext).getUserDetails().UserName);
             String title = mContext.getString(R.string.label_your_task_is_posted);
@@ -887,7 +902,7 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
              */
             callWSForPrefedQuotes(taskDetailModel.taskId, taskDetailModel.taskAddressId);
 
-        }
+//        }
 
     }
 

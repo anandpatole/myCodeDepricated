@@ -213,7 +213,6 @@ public class TaskQuotesActivity extends BaseAppCompatActivity implements TaskQuo
                     && !mParams.containsKey(NetworkUtility.TAGS.DISTANCE)
                     && !mParams.containsKey(NetworkUtility.TAGS.RATINGS)) {
                 // None of the filter is applied so dont need to go ahead.
-
                 resetFilterFields(mDialogFilterBinding);
                 mFilterDialog.dismiss();
                 mErrorLoadingHelper.showLoading();
@@ -380,12 +379,11 @@ public class TaskQuotesActivity extends BaseAppCompatActivity implements TaskQuo
 //                        mQuotesList.addAll(response.quoteList);
 //                        mAdapter.notifyDataSetChanged();
                         mAdapter.addAll(response.quoteList);
-
                         mErrorLoadingHelper.success();
                     } else {
-                        mErrorLoadingHelper.failed(getString(R.string.label_no_quotes_available), 0, null, null);
+                        mErrorLoadingHelper.failed(Utility.EMPTY_STRING, 0, null, null);
+//                        mErrorLoadingHelper.failed(getString(R.string.label_no_quotes_available), 0, null, null);
                     }
-
                     populateGridImageView();
                     break;
                 case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
@@ -810,7 +808,7 @@ public class TaskQuotesActivity extends BaseAppCompatActivity implements TaskQuo
             if (mTaskDetailModel.taskId.equals(event.id)) {
                 callSPListWS();
             }
-        }else if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.UPDATE_FAVOURITE) {
+        } else if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.UPDATE_FAVOURITE) {
             if (!TextUtils.isEmpty(event.isFav))
                 mAdapter.updateFavStatus(event.id, event.isFav);
         }
