@@ -17,9 +17,12 @@ import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.widget.TextView;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -255,6 +258,23 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
                     return;
                 }
                 validateCheepCode(edtCheepCode.getText().toString());
+            }
+        });
+        edtCheepCode.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
+                switch (actionId) {
+                    case EditorInfo.IME_ACTION_DONE:
+                        if (TextUtils.isEmpty(edtCheepCode.getText().toString())) {
+                            Utility.showToast(mContext, getString(R.string.validate_cheepcode));
+                            break;
+                        }
+                        validateCheepCode(edtCheepCode.getText().toString());
+                        break;
+                    default:
+                        break;
+                }
+                return false;
             }
         });
         cheepCodeDialog.setTitle(getString(R.string.label_cheepcode));

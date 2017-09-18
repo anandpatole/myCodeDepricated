@@ -15,7 +15,10 @@ import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.widget.TextView;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -342,7 +345,7 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
      */
     public void setAdditionalPayment() {
         int taskPaidAmount = 0;
-        mActivityPaymentDetailBinding.txtprofee.setText(getString(R.string.rupee_symbol_x, "" + 0));
+        mActivityPaymentDetailBinding.txtprofee.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter("0")));
         double additionalCharges = 0;
         if (!TextUtils.isEmpty(taskDetailModel.additionalQuoteAmount)) {
             additionalCharges = getQuotePriceInInteger(taskDetailModel.additionalQuoteAmount);
@@ -357,6 +360,8 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
         mActivityPaymentDetailBinding.rlprofee.setAlpha(0.5f);
         mActivityPaymentDetailBinding.rlpromocode.setAlpha(0.5f);
         mActivityPaymentDetailBinding.textpromocodelabel.setEnabled(false);
+        mActivityPaymentDetailBinding.textpromocodelabel.setText(R.string.label_enter_promocode);
+        mActivityPaymentDetailBinding.txtpromocode.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter("0")));
 
         /*mActivityPaymentDetailBinding.devicerpromocode.setVisibility(View.GONE);
         mActivityPaymentDetailBinding.rlpromocode.setVisibility(View.GONE);*/
@@ -403,6 +408,23 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
                     return;
                 }
                 validateCheepCode(edtCheepcode.getText().toString());
+            }
+        });
+        edtCheepcode.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
+                switch (actionId) {
+                    case EditorInfo.IME_ACTION_DONE:
+                        if (TextUtils.isEmpty(edtCheepcode.getText().toString())) {
+                            Utility.showToast(mContext, getString(R.string.validate_cheepcode));
+                            break;
+                        }
+                        validateCheepCode(edtCheepcode.getText().toString());
+                        break;
+                    default:
+                        break;
+                }
+                return false;
             }
         });
         cheepCodeDialog.setTitle(getString(R.string.label_cheepcode));
