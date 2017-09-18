@@ -34,24 +34,44 @@
                     android:textSize="@dimen/toolbar_title_text_size" />
             </android.support.v7.widget.Toolbar>
         </android.support.design.widget.AppBarLayout>
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-           <LinearLayout
-               android:layout_width="match_parent"
-               android:layout_height="match_parent"
-               android:orientation="vertical">
+
 
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="@dimen/height_banner_refer_and_earn"
             android:background="@color/blue_varient_3" />
-
         <View
             android:layout_width="match_parent"
             android:layout_height="@dimen/scale_5dp"
             android:layout_gravity="bottom"
             android:background="@drawable/shadow_transparent_grey" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <com.cheep.custom_view.CFTextViewSemiBold
+                android:id="@+id/tv_invite_friends"
+                android:layout_alignParentBottom="true"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/scale_40dp"
+                android:layout_marginLeft="@dimen/scale_22dp"
+                android:layout_marginRight="@dimen/scale_22dp"
+                android:background="@drawable/background_blue_refer_and_earn_bottom"
+                android:text="@string/label_invite_friends"
+                android:gravity="center"
+                android:textSize="@dimen/text_size_16sp"
+                android:textColor="@color/white"
+                android:layout_marginTop="@dimen/scale_10dp"
+                android:layout_marginBottom="@dimen/scale_20dp"/>
+        <ScrollView
+            android:layout_above="@id/tv_invite_friends"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+
 
         <com.cheep.custom_view.CFTextViewSemiBold
             android:layout_width="match_parent"
@@ -105,20 +125,10 @@
            android:textColor="@color/grey_varient_8"
            android:textSize="@dimen/text_size_14sp"
            android:gravity="center"
-           android:layout_marginBottom="@dimen/scale_20dp"/>
-        <com.cheep.custom_view.CFTextViewSemiBold
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/scale_40dp"
-            android:layout_marginLeft="@dimen/scale_22dp"
-            android:layout_marginRight="@dimen/scale_22dp"
-            android:background="@drawable/background_blue_refer_and_earn_bottom"
-            android:text="@string/label_invite_friends"
-            android:gravity="center"
-            android:textSize="@dimen/text_size_16sp"
-            android:textColor="@color/white"
-            android:layout_marginBottom="@dimen/scale_20dp"/>
+           android:layout_marginBottom="@dimen/scale_10dp"/>
+
            </LinearLayout>
         </ScrollView>
-
+        </RelativeLayout>
     </LinearLayout>
 </layout>

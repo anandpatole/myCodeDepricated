@@ -1,11 +1,14 @@
 package com.cheep.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.appcompat.BuildConfig;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.Html;
 import android.text.Spannable;
@@ -115,8 +118,8 @@ public class ReferAndEarnFragment extends BaseFragment {
 
 
         SpannableStringBuilder know_more = new SpannableStringBuilder(getString(R.string.label_when_they_use_cheep_get_100));
-        know_more.setSpan(new RelativeSizeSpan(.7f), know_more.length()-9, know_more.length(), 0);
-        know_more.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.splash_gradient_end)), know_more.length()-9, know_more.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+        know_more.setSpan(new RelativeSizeSpan(.7f), know_more.length() - 9, know_more.length(), 0);
+        know_more.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.splash_gradient_end)), know_more.length() - 9, know_more.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
         ClickableSpan clickableSpan = new ClickableSpan() {
             @Override
             public void onClick(View view) {
@@ -126,7 +129,7 @@ public class ReferAndEarnFragment extends BaseFragment {
 
             }
         };
-        know_more.setSpan(clickableSpan, know_more.length()-9, know_more.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        know_more.setSpan(clickableSpan, know_more.length() - 9, know_more.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         mfragmentReferAndEarnBinding.tvUserGetMoney.setText(know_more, TextView.BufferType.SPANNABLE);
         mfragmentReferAndEarnBinding.tvUserGetMoney.setMovementMethod(LinkMovementMethod.getInstance());
@@ -136,7 +139,16 @@ public class ReferAndEarnFragment extends BaseFragment {
 
     @Override
     public void setListener() {
-
+        mfragmentReferAndEarnBinding.tvInviteFriends.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+                sharingIntent.setType("text/plain");
+                sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, getString(R.string.label_share_subject));
+                sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, getString(R.string.label_refer_and_earn_share_body, com.cheep.BuildConfig.APPLICATION_ID, "GOCHEEP"));
+                startActivity(Intent.createChooser(sharingIntent, getString(R.string.label_share_via)));
+            }
+        });
     }
 
     /*************************************************************************************************************
@@ -149,8 +161,6 @@ public class ReferAndEarnFragment extends BaseFragment {
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////// PageContent[START]/////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
 
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////

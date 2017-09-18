@@ -356,9 +356,9 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <!--<string name="label_highest_rated_strip">Book the most highly rated PRO in your neighbourhood</string>-->
     <string name="label_highest_rated_strip">Book the most highly experienced PRO in your neighbourhood</string>
 
-<!--
-    <string name="label_pro_fee">PRO\'s Fees</string>
--->
+    <!--
+        <string name="label_pro_fee">PRO\'s Fees</string>
+    -->
     <string name="label_pro_fee">PRO\'s Charge</string>
     <string name="label_additional_charges">Additional Charge</string>
     <string name="label_sub_total">Sub Total</string>
@@ -499,4 +499,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_dialog_refer_and_earn_info_body">The maximum redeemable amount fpr one service is ₹100.</string>
     <string name="label_ok_got_it">Ok, Got It</string>
     <string name="label_dialog_refer_and_earn_no_payment_body">Earn discounts each time you refer CHEEP to your friends and family. Just share your unique code XXVVXX.</string>
+    <string name="label_share_via">Share via</string>
+    <string name="label_refer_and_earn_share_body">Please download CHEEP app from this link https://play.google.com/store/apps/details?id=%1$s and use this referral code %2$s for payment.</string>
+    <string name="label_share_subject">Refer &amp; Earn</string>
 </resources>
