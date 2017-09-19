@@ -63,6 +63,7 @@
     <color name="white_translucent_line">#33FFFFFF</color>
     <color name="white_translucent">#77FFFFFF</color>
     <color name="white_translucent_ninety">#E6FFFFFF</color>
+    <color name="white_translucent_ninety_eight">#F5FFFFFF</color>
     <color name="white_translucent_fifty">#80FFFFFF</color>
     <color name="white_translucent_sixty">#99FFFFFF</color>
     <color name="black_translucent">#80000000</color>

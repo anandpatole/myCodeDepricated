@@ -62,7 +62,7 @@
                 android:background="@drawable/btn_blue_rounded_border_bottom"
                 android:gravity="center"
                 android:padding="@dimen/scale_10dp"
-                android:text="@string/label_pay"
+                android:text="@string/label_book"
                 android:textAllCaps="false"
                 android:textColor="@color/white" />
         </LinearLayout>

@@ -247,7 +247,7 @@
                             android:id="@+id/text_pay_paid"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/label_pay"
+                            android:text="@string/label_book"
                             android:textAllCaps="false"
                             android:textColor="@color/black"
                             android:textSize="@dimen/text_size_11sp" />
@@ -621,7 +621,7 @@
                         android:gravity="left"
                         android:paddingBottom="@dimen/scale_5dp"
                         android:paddingTop="@dimen/scale_5dp"
-                        android:text="@string/label_task_desclaimer"
+                        android:text="@string/label_task_disclaimer"
                         android:textColor="@color/grey_varient_9"
                         android:textSize="@dimen/text_size_11sp"
                         android:visibility="gone" />
@@ -802,7 +802,7 @@
                             android:layout_marginBottom="@dimen/scale_10dp"
                             android:gravity="left"
                             android:padding="@dimen/scale_5dp"
-                            android:text="@string/label_task_desclaimer"
+                            android:text="@string/label_task_disclaimer"
                             android:textColor="@color/splash_gradient_end"
                             android:textSize="@dimen/text_size_11sp"
                             android:visibility="visible" />

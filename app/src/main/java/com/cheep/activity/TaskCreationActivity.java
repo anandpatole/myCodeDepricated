@@ -2,6 +2,7 @@ package com.cheep.activity;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.IntentSender;
@@ -12,6 +13,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -41,6 +43,7 @@ import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
 import com.cheep.utils.PreferenceUtility;
+import com.cheep.utils.SuperCalendar;
 import com.cheep.utils.Utility;
 import com.google.android.gms.common.api.Status;
 
@@ -49,12 +52,11 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
-import java.util.TimeZone;
 
 /**
  * Created by bhavesh on 26/4/17.
@@ -159,6 +161,7 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
 
             //Sending Broadcast to the HomeScreen Screen.
             Intent newIntent = new Intent(Utility.BR_ON_TASK_CREATED);
+            newIntent.putExtra(Utility.Extra.IS_INSTA_BOOKING_TASK, true);
             sendBroadcast(newIntent);
         }
     };
@@ -384,7 +387,7 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
             // Show the dialog by calling startResolutionForResult(),
             // and check the result in onActivityResult().
             locationRequest.startResolutionForResult(TaskCreationActivity.this, Utility.REQUEST_CODE_CHECK_LOCATION_SETTINGS);
-        } catch (IntentSender.SendIntentException e) {
+        } catch (Exception e) {
             // Ignore the error.
         }
     }
@@ -397,7 +400,7 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
 
         // Check Internet connection
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mActivityTaskCreateBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityTaskCreateBinding.getRoot());
             return;
         }
 
@@ -443,6 +446,8 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
             mParams.put(NetworkUtility.TAGS.LAT, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.lat);
             mParams.put(NetworkUtility.TAGS.LNG, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.lng);
             mParams.put(NetworkUtility.TAGS.CITY_NAME, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.cityName);
+            mParams.put(NetworkUtility.TAGS.COUNTRY, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.countryName);
+            mParams.put(NetworkUtility.TAGS.STATE, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.stateName);
         }
         mParams.put(NetworkUtility.TAGS.SUBCATEGORY_ID, String.valueOf(mSelectedSubServiceDetailModel.sub_cat_id));
 
@@ -460,12 +465,14 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
              public String lat;
              public String lng;
              */
-            mParams.put(NetworkUtility.TAGS.ADDRESS_INITIALS, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.address_initials);
-            mParams.put(NetworkUtility.TAGS.ADDRESS, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.address);
-            mParams.put(NetworkUtility.TAGS.CATEGORY, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.category);
-            mParams.put(NetworkUtility.TAGS.LAT, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.lat);
-            mParams.put(NetworkUtility.TAGS.LNG, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.lng);
-            mParams.put(NetworkUtility.TAGS.CITY_NAME, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.cityName);
+            mTaskCreationParams.put(NetworkUtility.TAGS.ADDRESS_INITIALS, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.address_initials);
+            mTaskCreationParams.put(NetworkUtility.TAGS.ADDRESS, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.address);
+            mTaskCreationParams.put(NetworkUtility.TAGS.CATEGORY, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.category);
+            mTaskCreationParams.put(NetworkUtility.TAGS.LAT, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.lat);
+            mTaskCreationParams.put(NetworkUtility.TAGS.LNG, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.lng);
+            mTaskCreationParams.put(NetworkUtility.TAGS.CITY_NAME, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.cityName);
+            mTaskCreationParams.put(NetworkUtility.TAGS.COUNTRY, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.countryName);
+            mTaskCreationParams.put(NetworkUtility.TAGS.STATE, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.stateName);
         }
         mTaskCreationParams.put(NetworkUtility.TAGS.SUBCATEGORY_ID, String.valueOf(mSelectedSubServiceDetailModel.sub_cat_id));
 
@@ -489,7 +496,7 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
 
         // Check Internet connection
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mActivityTaskCreateBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityTaskCreateBinding.getRoot());
             return;
         }
 
@@ -546,6 +553,8 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
             mParams.put(NetworkUtility.TAGS.LAT, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.lat);
             mParams.put(NetworkUtility.TAGS.LNG, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.lng);
             mParams.put(NetworkUtility.TAGS.CITY_NAME, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.cityName);
+            mParams.put(NetworkUtility.TAGS.COUNTRY, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.countryName);
+            mParams.put(NetworkUtility.TAGS.STATE, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.stateName);
         }
         if (userDetails != null) {
             mParams.put(NetworkUtility.TAGS.CITY_ID, userDetails.CityID);
@@ -567,6 +576,9 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
              public String category; //comes from NetworkUtility.TAGS.ADDRESS_TYPE.
              public String lat;
              public String lng;
+             public String cityName;
+             public String countryName;
+             public String stateName;
              */
             mTaskCreationParams.put(NetworkUtility.TAGS.ADDRESS_INITIALS, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.address_initials);
             mTaskCreationParams.put(NetworkUtility.TAGS.ADDRESS, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.address);
@@ -574,6 +586,8 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
             mTaskCreationParams.put(NetworkUtility.TAGS.LAT, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.lat);
             mTaskCreationParams.put(NetworkUtility.TAGS.LNG, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.lng);
             mTaskCreationParams.put(NetworkUtility.TAGS.CITY_NAME, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.cityName);
+            mTaskCreationParams.put(NetworkUtility.TAGS.COUNTRY, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.countryName);
+            mTaskCreationParams.put(NetworkUtility.TAGS.STATE, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.stateName);
         }
 //        mTaskCreationParams.put(NetworkUtility.TAGS.CITY_ID, userDetails.CityID);
         mTaskCreationParams.put(NetworkUtility.TAGS.CAT_ID, mJobCategoryModel.catId);
@@ -627,6 +641,7 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
                           app will be redirected to MyTask Detail screen.
                          */
                         onSuccessfullTaskCompletion(jsonObject);
+
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
                         // Show Toast
@@ -718,20 +733,37 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
      */
     private void onSuccessInstaBooking(final InstaBookingProDetail taskDetailModel) {
         if (taskDetailModel != null) {
-            Calendar c = Calendar.getInstance();
-            c.setTimeInMillis(mTaskCreationPagerAdapter.mEnterTaskDetailFragment.superCalendar.getCalendar().getTimeInMillis());
-            c.setTimeZone(TimeZone.getDefault());
 
-            Date d = c.getTime();
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd MMMM", Locale.getDefault());
-            String date = simpleDateFormat.format(d);
-            int fromHour = c.get(Calendar.HOUR);
-            if (fromHour == 0) {
-                fromHour = 12;
-            }
-            c.add(Calendar.HOUR, 1);
-            int toHour = c.get(Calendar.HOUR);
-            InstaBookProDialog dialog = InstaBookProDialog.newInstance(this, taskDetailModel, date + " between " + fromHour + "-" + toHour + " hrs", new AcknowledgementInteractionListener() {
+            // create calendar for time and date for dialog text
+            SuperCalendar superCalendar = SuperCalendar.getInstance();
+            superCalendar.setTimeInMillis(mTaskCreationPagerAdapter.mEnterTaskDetailFragment.superCalendar.getCalendar().getTimeInMillis());
+
+            Date d = superCalendar.getCalendar().getTime();
+
+            // set time format 24 hours
+            final String timeFormat = SuperCalendar.SuperFormatter.HOUR_24_HOUR + ":" + SuperCalendar.SuperFormatter.MINUTE + "";
+
+            // set date format
+            final String dateFormat = SuperCalendar.SuperFormatter.DATE + " " + SuperCalendar.SuperFormatter.MONTH_JAN;
+
+            // formatter for date and time
+            SimpleDateFormat dateFormatter = new SimpleDateFormat(dateFormat);
+            SimpleDateFormat timeFormatter = new SimpleDateFormat(timeFormat);
+
+            String date = dateFormatter.format(d);
+
+            //time will from selected hour + 1 hour added like 12.11 - 13.11 hrs
+            String fromHour = timeFormatter.format(d);
+
+            // add two hour slot (changed on 13 sept 2017)
+            superCalendar.getCalendar().add(Calendar.HOUR_OF_DAY, 2);
+
+            Date toDate = superCalendar.getCalendar().getTime();
+
+            // +1 hour
+            String toHour = timeFormatter.format(toDate);
+
+            InstaBookProDialog dialog = InstaBookProDialog.newInstance(this, taskDetailModel, date + getString(R.string.label_between) + fromHour + " - " + toHour + getString(R.string.label_hrs), new AcknowledgementInteractionListener() {
                 @Override
                 public void onAcknowledgementAccepted() {
 
@@ -770,7 +802,7 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
      * This method would going to call when task completed successfully
      */
     private void onSuccessfullTaskCompletion(JSONObject jsonObject) {
-        TaskDetailModel taskDetailModel = (TaskDetailModel) Utility.getObjectFromJsonString(jsonObject.optString(NetworkUtility.TAGS.DATA), TaskDetailModel.class);
+        final TaskDetailModel taskDetailModel = (TaskDetailModel) Utility.getObjectFromJsonString(jsonObject.optString(NetworkUtility.TAGS.DATA), TaskDetailModel.class);
         if (taskDetailModel != null) {
             /* * Add new task detail on firebase
              * @Sanjay 20 Feb 2016
@@ -786,10 +818,58 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
             FirebaseHelper.getTaskRef(chatTaskModel.taskId).setValue(chatTaskModel);
         }
 
+
+        if (Utility.BOOLEAN.NO.equalsIgnoreCase(taskDetailModel.isPrefedQuote)) {
+
+            /**
+             * If HomeScreen is not available, create new instance and redirect
+             * to Mytask screen, if yes, we just need to broadcast the same.
+             */
+//            if (PreferenceUtility.getInstance(mContext).isHomeScreenVisible()) {
+//                //Sending Broadcast to the HomeScreen Screen.
+//                Intent intent = new Intent(Utility.BR_ON_TASK_CREATED);
+//                intent.putExtra(Utility.Extra.DATA, Utility.getJsonStringFromObject(taskDetailModel));
+//                Log.d(TAG, "onAcknowledgementAccepted: prefed >>>>> " + taskDetailModel.isPrefedQuote);
+//                intent.putExtra(Utility.Extra.IS_INSTA_BOOKING_TASK, Utility.BOOLEAN.NO.equalsIgnoreCase(taskDetailModel.isPrefedQuote));
+//                sendBroadcast(intent);
+//            } else {
+//                HomeActivity.newInstance(mContext);
+//            }
+//            finish();
+
+            /**
+             * Below can be uncommented in case we need to show dialog.
+             */
+            /*final AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.MyAlertDialogStyle);
+            builder.setCancelable(false);
+            builder.setTitle(getString(R.string.no_pro_available_title));
+            builder.setMessage(getString(R.string.no_pro_available_description));
+            builder.setPositiveButton(getString(R.string.label_Ok), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    Log.d(TAG, "onClick() called with: dialogInterface = [" + dialogInterface + "], i = [" + i + "]");
+                if (PreferenceUtility.getInstance(mContext).isHomeScreenVisible()) {
+                //Sending Broadcast to the HomeScreen Screen.
+                Intent intent = new Intent(Utility.BR_ON_TASK_CREATED);
+                intent.putExtra(Utility.Extra.DATA, Utility.getJsonStringFromObject(taskDetailModel));
+                Log.d(TAG, "onAcknowledgementAccepted: prefed >>>>> " + taskDetailModel.isPrefedQuote);
+                intent.putExtra(Utility.Extra.IS_INSTA_BOOKING_TASK, Utility.BOOLEAN.NO.equalsIgnoreCase(taskDetailModel.isPrefedQuote));
+                sendBroadcast(intent);
+            } else {
+                HomeActivity.newInstance(mContext);
+            }
+            dialogInterface.dismiss();
+            finish();
+                }
+            });
+            builder.show();*/
+        }
+
         // Update the name of User
        /* mDialogFragmentTaskCreationBinding.textTaskCreationAcknowledgment
                 .setText(mDialogFragmentTaskCreationBinding.getRoot().getContext().getString(R.string.desc_task_creation_acknowledgement, mUserName));
         */
+//        else {
         String message = mContext.getString(R.string.desc_task_creation_acknowledgement
                 , PreferenceUtility.getInstance(mContext).getUserDetails().UserName);
         String title = mContext.getString(R.string.label_your_task_is_posted);
@@ -807,6 +887,9 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
                 if (PreferenceUtility.getInstance(mContext).isHomeScreenVisible()) {
                     //Sending Broadcast to the HomeScreen Screen.
                     Intent intent = new Intent(Utility.BR_ON_TASK_CREATED);
+                    intent.putExtra(Utility.Extra.DATA, Utility.getJsonStringFromObject(taskDetailModel));
+                    Log.d(TAG, "onAcknowledgementAccepted: prefed >>>>> " + taskDetailModel.isPrefedQuote);
+                    intent.putExtra(Utility.Extra.IS_INSTA_BOOKING_TASK, Utility.BOOLEAN.NO.equalsIgnoreCase(taskDetailModel.isPrefedQuote));
                     sendBroadcast(intent);
                 } else {
                     HomeActivity.newInstance(mContext);
@@ -824,8 +907,9 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
          */
         callWSForPrefedQuotes(taskDetailModel.taskId, taskDetailModel.taskAddressId);
 
-    }
+//        }
 
+    }
 
     /**
      * Initiating Prefed Quotes related Webservice
@@ -833,6 +917,7 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
      * @param taskId        Task Id of Method
      * @param taskAddressId AddressID from which Task is Initiated
      */
+    @SuppressWarnings("unchecked")
     private void callWSForPrefedQuotes(String taskId, String taskAddressId) {
         Log.d(TAG, "callWSForPrefedQuotes() called with: taskId = [" + taskId + "], taskAddressId = [" + taskAddressId + "]");
 
@@ -868,12 +953,9 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
         Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest, NetworkUtility.WS.CURL_NOTIFICATION_TO_SP);
     }
 
-
     /**
      * Create Dialog which would going to show on successful completion
      */
-
-
     Response.ErrorListener mCallCreateTaskWSErrorListener = new Response.ErrorListener() {
         @Override
         public void onErrorResponse(VolleyError error) {
@@ -967,6 +1049,22 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
                 onInstaBookClicked();
             else
                 onGetQuoteClicked();
+
+            /**
+             * As User is currently logged in, we need to add FullAddressModel to existing addresslist.
+             */
+            UserDetails mUserDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
+            if (mUserDetails != null) {
+                if (mUserDetails.addressList.isEmpty()) {
+                    mUserDetails.addressList = new ArrayList<>();
+                }
+
+                // Add additional selected addressmodel here.
+                mUserDetails.addressList.add(mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel);
+
+                // Save the user now.
+                PreferenceUtility.getInstance(mContext).saveUserDetails(mUserDetails);
+            }
         }
     };
 }

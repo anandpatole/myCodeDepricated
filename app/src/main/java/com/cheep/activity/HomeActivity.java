@@ -544,7 +544,7 @@ public class HomeActivity extends BaseAppCompatActivity
         this.taskId = taskId;
         //Validation
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mActivityHomeBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityHomeBinding.getRoot());
             return;
         }
 
@@ -708,7 +708,7 @@ public class HomeActivity extends BaseAppCompatActivity
         this.taskId = taskId;
         //Validation
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mActivityHomeBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityHomeBinding.getRoot());
             return;
         }
 
@@ -1059,7 +1059,7 @@ public class HomeActivity extends BaseAppCompatActivity
      */
     private void callAddToFavWS(String providerId, boolean isAddToFav) {
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mActivityHomeBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityHomeBinding.getRoot());
             return;
         }
 
@@ -1156,14 +1156,14 @@ public class HomeActivity extends BaseAppCompatActivity
         final BottomAlertDialog dialog = new BottomAlertDialog(mContext);
         dialog.setTitle(getString(R.string.label_logout));
         dialog.setMessage(getString(R.string.confirmation_logout));
-        dialog.addPositiveButton("Yes", new View.OnClickListener() {
+        dialog.addPositiveButton(getString(R.string.label_yes), new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 callLogoutWS();
                 dialog.dismiss();
             }
         });
-        dialog.addNegativeButton("No", new View.OnClickListener() {
+        dialog.addNegativeButton(getString(R.string.label_no), new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 dialog.dismiss();
@@ -1391,7 +1391,7 @@ public class HomeActivity extends BaseAppCompatActivity
 
         //Validation
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mActivityHomeBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityHomeBinding.getRoot());
             return;
         }
 
@@ -1432,10 +1432,13 @@ public class HomeActivity extends BaseAppCompatActivity
                 switch (statusCode) {
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
                         JSONObject jData = jsonObject.getJSONObject(NetworkUtility.TAGS.DATA);
-//                        Utility.showSnackBar(getString(R.string.msg_task_cancelled), mActivityHomeBinding.getRoot());
+                        String pro_username = jData.optString(NetworkUtility.TAGS.SP_USER_NAME);
+                        Log.i(TAG, "onResponse: Pro name" + pro_username);
+                        Utility.showToast(mContext, getString(R.string.task_reschedule_task_success, pro_username));
                         MessageEvent messageEvent = new MessageEvent();
                         messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.TASK_RESCHEDULED;
                         messageEvent.id = jData.getString(NetworkUtility.TAGS.TASK_ID);
+
                         messageEvent.taskStartdate = jData.getString(NetworkUtility.TAGS.RESCHEDULE_DATETIME);
                         EventBus.getDefault().post(messageEvent);
 
@@ -1492,7 +1495,7 @@ public class HomeActivity extends BaseAppCompatActivity
     public void callUpdateLanguage(String language) {
 
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mActivityHomeBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityHomeBinding.getRoot());
             return;
         }
 
@@ -1646,7 +1649,7 @@ public class HomeActivity extends BaseAppCompatActivity
                 JSONObject jsonObject = new JSONObject(strResponse);
                 Log.i(TAG, "onResponse: " + jsonObject.toString());
                 int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
-                hideProgressDialog();
+//                hideProgressDialog();
                 switch (statusCode) {
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
                         JSONObject jObjData = jsonObject.getJSONObject(NetworkUtility.TAGS.DATA);
@@ -1727,12 +1730,17 @@ public class HomeActivity extends BaseAppCompatActivity
             if (userDetails != null && !"-1".equalsIgnoreCase(userDetails.CityID)) {
                 loadHomeScreenWithEarlierSavedAddress();
             } else {
-                // In case Guest user details is there
+                /**
+                 * Showing Progress Dialog that, fetching your location
+                 */
+                showProgressDialog(getString(R.string.fetching_location));
+                requestLocationUpdateFromService();
+                /*// In case Guest user details is there
                 if (PreferenceUtility.getInstance(mContext).getGuestUserDetails() != null) {
                     loadHomeScreenWithEarlierSavedAddress();
                 } else {
                     requestLocationUpdateFromService();
-                }
+                }*/
             }
         }
 
@@ -1786,6 +1794,7 @@ public class HomeActivity extends BaseAppCompatActivity
     protected void onLocationNotAvailable() {
         super.onLocationNotAvailable();
         Log.d(TAG, "onLocationNotAvailable() called");
+        hideProgressDialog();
         Fragment mFragment = getSupportFragmentManager().findFragmentById(R.id.content);
         if (mFragment != null && mFragment instanceof BaseFragment) {
             ((BaseFragment) mFragment).onLocationNotAvailable();
@@ -1795,6 +1804,7 @@ public class HomeActivity extends BaseAppCompatActivity
     @Override
     protected void onLocationFetched(Location mLocation) {
         super.onLocationFetched(mLocation);
+        hideProgressDialog();
         Log.d(TAG, "onLocationFetched() called with: mLocation = [" + mLocation + "]");
         Fragment mFragment = getSupportFragmentManager().findFragmentById(R.id.content);
         if (mFragment != null && mFragment instanceof BaseFragment) {
@@ -1809,6 +1819,7 @@ public class HomeActivity extends BaseAppCompatActivity
         super.onLocationSettingsDialogNeedToBeShow(status);
         // Location settings are not satisfied, but this can be fixed
         // by showing the user a dialog.
+        hideProgressDialog();
         try {
             // Show the dialog by calling startResolutionForResult(),
             // and check the result in onActivityResult().
@@ -1825,7 +1836,6 @@ public class HomeActivity extends BaseAppCompatActivity
         if (fragment != null) {
             ((BaseFragment) fragment).gpsEnabled();
         }
-
         fragment = getSupportFragmentManager().findFragmentByTag(ProfileTabFragment.TAG);
         if (fragment != null) {
             ((BaseFragment) fragment).gpsEnabled();

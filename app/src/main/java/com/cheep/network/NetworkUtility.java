@@ -35,7 +35,6 @@ public class NetworkUtility {
 
         public static final String UPDATE_LOCATION = BASE_URL + "customers/profile/update_location";
         public static final String CREATE_TASK = BASE_URL + "customers/tasks/create";
-
         public static final String GET_PRO_FOR_INSTA_BOOKING = BASE_URL + "customers/tasks/getProForInstantBooking";
 
         public static final String SP_LIST = BASE_URL + "customers/sp_list/listing";
@@ -76,7 +75,6 @@ public class NetworkUtility {
         public static final String PAYMENT_HISTORY = BASE_URL + "customers/payment/payment_history";
         public static final String EMERGENCY_ALERT = BASE_URL + "customers//sp_profile/emergency_alert";
         public static final String CHECK_PROCESSING_TASK = BASE_URL + "customers/tasks/check_processing_task";
-
 
         // Chat Image upload
         public static final String IMAGE_UPLOAD_FOR_CHAT = BASE_URL + "customers/profile/imageUploadForChat";
@@ -161,7 +159,9 @@ public class NetworkUtility {
         public static final String EMERGENCY_DATA = "emergency_data";
         public static final String ADDRESS_ID = "address_id";
         public static final String CITY_NAME = "city_name";
-        public static final String LOCALITY = "mLocality";
+        public static final String COUNTRY = "country";
+        public static final String STATE = "state";
+        public static final String LOCALITY = "locality";
         public static final String REQUEST_DETAIL_STATUS = "request_detail_status";
         public static final String vVERSION_TYPE = "vVersionType";
 
@@ -184,6 +184,7 @@ public class NetworkUtility {
         public static final String SP_USER_NAME = "sp_user_name";
         public static final String REQ_FOR = "req_for";
         public static final String TASK_ID = "task_id";
+
         public static final String TASK_STARTDATE = "task_startdate";
 
         public static final String LAST_ID = "last_id";
@@ -222,6 +223,7 @@ public class NetworkUtility {
         public static final String RESULT = "result";
         public static final String MEDIA_FILE = "media_file";
         public static final String TASK_TYPE = "task_type";
+        public static final String PROMOCODE_PRICE = "promocode_price";
 
         public static class VERSION_CHANGE_TYPE {
             public static final int NORMAL = 0;

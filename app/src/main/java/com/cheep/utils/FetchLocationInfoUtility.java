@@ -1,6 +1,7 @@
 package com.cheep.utils;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import com.android.volley.Response;
 import com.cheep.model.GuestUserDetails;
@@ -37,12 +38,15 @@ public class FetchLocationInfoUtility {
     }
 
     private String generateGoogleLocationURL(String lat, String lon) {
-        return "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + lat + "," + lon + "&sensor=false&key=AIzaSyDtxYbkO21G_uHSXNXuZayLskeEjFQ6HvY";
+        return "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + lat + "," + lon + "&sensor=false&key=AIzaSyB0mqNvS18CstHtd8u4gTBM4WwVtvJurKA";
     }
 
     @SuppressWarnings("unchecked")
     public void getLocationInfo(final String lat, final String lon) {
-
+        if (!Utility.isConnected(mContext)) {
+            mListener.internetConnectionNotFound();
+            return;
+        }
         VolleyNetworkRequest mVolleyNetworkRequest = new VolleyNetworkRequest(
                 generateGoogleLocationURL(lat, lon),
                 null,
@@ -62,10 +66,12 @@ public class FetchLocationInfoUtility {
                                     JSONArray jArrayTypes = jArrayAddressComponents.getJSONObject(j).getJSONArray("types");
                                     for (int k = 0; k < jArrayTypes.length(); k++) {
                                         // City
-                                        if (jArrayTypes.get(k).toString().equals("mLocality")) {
+                                        if (jArrayTypes.get(k).toString().equals("locality")) {
                                             mLocationInfo.City = jArrayAddressComponents.getJSONObject(j).getString("long_name");
                                         } else if (jArrayTypes.get(k).toString().equals("administrative_area_level_2")) {
-                                            mLocationInfo.City = jArrayAddressComponents.getJSONObject(j).getString("long_name");
+                                            if (TextUtils.isEmpty(mLocationInfo.City)) {
+                                                mLocationInfo.City = jArrayAddressComponents.getJSONObject(j).getString("long_name");
+                                            }
                                         }
 
                                         // State
@@ -127,6 +133,8 @@ public class FetchLocationInfoUtility {
 
     public interface FetchLocationInfoCallBack {
         void onLocationInfoAvailable(LocationInfo mLocationIno);
+
+        void internetConnectionNotFound();
     }
 
 }

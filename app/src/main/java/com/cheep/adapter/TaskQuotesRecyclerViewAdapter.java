@@ -67,8 +67,8 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
 
     //saves the upcoming state for time/time_distance animation
     private Map<String, Integer> mTimeDistanceStateMap;
-    //saves the index of the upcoming offer to display
-    private Map<String, Integer> mOfferIndexMap;
+    //    //saves the index of the upcoming offer to display
+//    private Map<String, Integer> mOfferIndexMap;
     private TaskDetailModel mTaskDetailModel;
 
     public TaskQuotesRecyclerViewAdapter(Context context, TaskDetailModel mTaskDetailModel, /*List<ProviderModel> quotesList,*/ OnInteractionListener listener) {
@@ -85,7 +85,6 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
         mTagTextColor = ContextCompat.getColor(context, R.color.white);
         mSemiBoldTypeface = TypeFaceProvider.get(mContext, mContext.getResources().getString(R.string.font_semi_bold));
         mTimeDistanceStateMap = new HashMap<>();
-        mOfferIndexMap = new HashMap<>();
     }
 
     @Override
@@ -95,7 +94,7 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
 
     @Override
     public void onBindViewHolder(final QuoteViewHolder holder, final int position) {
-        final ProviderModel provider = mQuotesList.get(position);
+        final ProviderModel provider = mQuotesList.get(holder.getAdapterPosition());
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -110,7 +109,7 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
         holder.removeAnimations();
 
         //image
-        Utility.showCircularImageView(mContext, TAG, holder.ivAvatar, provider.profileUrl, Utility.DEFAULT_PROFILE_SRC);
+        Utility.showCircularImageView(mContext, TAG, holder.ivAvatar, provider.profileUrl, Utility.DEFAULT_CHEEP_LOGO);
 
         //basic info
         SpannableString sName = new SpannableString(checkNonNullAndSet(provider.userName));
@@ -138,14 +137,11 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
         Utility.showRating(provider.rating, holder.ratingBar);
 
         //experience
-        if (TextUtils.isEmpty(provider.experience)
+        if (!TextUtils.isEmpty(provider.experience)
                 || Utility.ZERO_STRING.equals(provider.experience)) {
             holder.tvExperience.setText(checkNonNullAndSet(mContext.getString(R.string.label_experience_zero)));
         } else {
-            holder.tvExperience.setText(
-                    mContext.getResources().getQuantityString(R.plurals.getTotalExperianceString
-                            , Integer.parseInt(provider.experience)
-                            , Integer.parseInt(provider.experience)));
+            holder.tvExperience.setText(holder.mView.getContext().getResources().getQuantityString(R.plurals.getExperienceString, Integer.parseInt(provider.experience), provider.experience));
         }
 
         // price - Checking if amount present then show call and paid lables else hide
@@ -220,28 +216,35 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
 
         //offer
         final int offerCount = provider.offerList != null ? provider.offerList.size() : 0;
+        //saves the index of the upcoming offer to display
+        final Map<String, Integer> mOfferIndexMap = new HashMap<>();
         if (offerCount > 0) {
+            // Make the text visible
             holder.ivLiveAnimated.setVisibility(View.VISIBLE);
             holder.tvOffer.setVisibility(View.VISIBLE);
 
+            // Start the LIVE animation
             holder.ivLiveAnimated.setBackgroundResource(R.drawable.ic_live);
             ((AnimationDrawable) holder.ivLiveAnimated.getBackground()).start();
 
-            AnimatorSet offerAnimation = loadBannerScrollAnimation(holder.tvOffer, 2000, 100, new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    super.onAnimationEnd(animation);
-                    int offerIndex = mOfferIndexMap.containsKey(provider.providerId) ? mOfferIndexMap.get(provider.providerId) : 0;
-                    SpannableString labelOffer = new SpannableString(provider.offerList.get(offerIndex));
-                    labelOffer.setSpan(new LeadingMarginSpan.Standard(mLiveIconOffset, 0), 0, labelOffer.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-                    holder.tvOffer.setText(labelOffer);
-                    offerIndex = (offerIndex == (offerCount - 1) ? 0 : offerIndex + 1);
-                    mOfferIndexMap.put(provider.providerId, offerIndex);
-                }
-            });
+            // Manage animation listners
+            AnimatorSet offerAnimation = loadBannerScrollAnimation(holder.tvOffer,
+                    2000,
+                    100,
+                    new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            super.onAnimationEnd(animation);
+                            int offerIndex = mOfferIndexMap.containsKey(provider.providerId) ? mOfferIndexMap.get(provider.providerId) : 0;
+                            SpannableString labelOffer = new SpannableString(provider.offerList.get(offerIndex));
+                            labelOffer.setSpan(new LeadingMarginSpan.Standard(mLiveIconOffset, 0), 0, labelOffer.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+                            holder.tvOffer.setText(labelOffer);
+                            offerIndex = (offerIndex == (offerCount - 1) ? 0 : offerIndex + 1);
+                            mOfferIndexMap.put(provider.providerId, offerIndex);
+                        }
+                    });
             offerAnimation.start();
             holder.addAnimator(offerAnimation);
-
             int offerIndex = mOfferIndexMap.containsKey(provider.providerId) ? mOfferIndexMap.get(provider.providerId) : 0;
             SpannableString labelOffer = new SpannableString(provider.offerList.get(offerIndex));
             labelOffer.setSpan(new LeadingMarginSpan.Standard(mLiveIconOffset, 0), 0, labelOffer.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
@@ -358,6 +361,13 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
 
         //favorite
         holder.ivFavoriteQuote.setSelected(provider.isFavourite.equals(Utility.BOOLEAN.YES));
+        holder.ivFavoriteQuote.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mListener.onFavClicked(provider, !holder.ivFavoriteQuote.isSelected());
+                holder.ivFavoriteQuote.setSelected(!holder.ivFavoriteQuote.isSelected());
+            }
+        });
 
 
         /**
@@ -494,6 +504,22 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
         }
     }
 
+    public void updateFavStatus(String id, String isFav) {
+        if (mQuotesList != null) {
+            boolean isUpdated = false;
+            //we are not breaking this loop because we may need to change status of same selectedProvider in another rows
+            for (ProviderModel providerModel : mQuotesList) {
+                if (providerModel != null && providerModel.providerId.equalsIgnoreCase(id)) {
+                    providerModel.isFavourite = isFav;
+                    isUpdated = true;
+//                    break;
+                }
+            }
+            if (isUpdated)
+                notifyDataSetChanged();
+        }
+    }
+
     public void addAll(List<ProviderModel> providerModels) {
         this.mQuotesList.clear();
         this.mQuotesList.addAll(providerModels);
@@ -505,6 +531,7 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
     }
 
     static class QuoteViewHolder extends RecyclerView.ViewHolder {
+        private View mView;
         private TextView tvBanner;
         private TextView tvName;
         private TextView tvLocation;
@@ -553,6 +580,7 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
         }
 
         private void initViews(View itemView) {
+            mView = itemView;
             tvBanner = (TextView) itemView.findViewById(R.id.tvBanner);
             tvName = (TextView) itemView.findViewById(R.id.tvName);
             tvLocation = (TextView) itemView.findViewById(R.id.tvLocation);
@@ -585,6 +613,8 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
         void onChatClicked(ProviderModel provider);
 
         void onCallClicked(ProviderModel provider);
+
+        void onFavClicked(ProviderModel provider, boolean flag);
 
         void onQuoteListEmpty();
     }

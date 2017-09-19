@@ -20,6 +20,8 @@ import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.RatingBar;
@@ -133,8 +135,8 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
         mActivityTaskSummaryBinding.textCategoryName.setText(mTaskDetailModel.categoryName != null ? mTaskDetailModel.categoryName : Utility.EMPTY_STRING);
 
         // Set up image
-        Utility.loadImageView(mContext, mActivityTaskSummaryBinding.imgService, mTaskDetailModel.catImage);
-        Utility.loadImageView(mContext, mActivityTaskSummaryBinding.imgService, mTaskDetailModel.catImageExtras.thumb);
+//        Utility.loadImageView(mContext, mActivityTaskSummaryBinding.imgService, mTaskDetailModel.bannerImage);
+//        Utility.loadImageView(mContext, mActivityTaskSummaryBinding.imgService, mTaskDetailModel.catImageExtras.thumb);
 
 
         // By Default makethe task completion dialog as gone
@@ -205,17 +207,17 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
             sVerified.setSpan(new RoundedBackgroundSpan(ContextCompat.getColor(this, R.color.splash_gradient_end), ContextCompat.getColor(this, R.color.white)), 0, sVerified.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
             mActivityTaskSummaryBinding.textProviderName.setText(TextUtils.concat(sName, " ", sVerified));
             // Distance of Provider
-            mActivityTaskSummaryBinding.textAddressKmAway.setText(mTaskDetailModel.selectedProvider.distance + " away");
+            mActivityTaskSummaryBinding.textAddressKmAway.setText(mTaskDetailModel.selectedProvider.distance + getString(R.string.label_away));
 
             // Profile Pic
-            Utility.showCircularImageViewWithColorBorder(this, TAG, mActivityTaskSummaryBinding.imgProfile, mTaskDetailModel.catImageExtras.medium, R.drawable.icon_profile_img_solid, R.color.grey_dark_color, true);
+            Utility.showCircularImageViewWithColorBorder(this, TAG, mActivityTaskSummaryBinding.imgProfile, mTaskDetailModel.catImageExtras.medium, Utility.DEFAULT_CHEEP_LOGO, R.color.grey_dark_color, true);
 
             // Manage Click events of Call & Chat
             mActivityTaskSummaryBinding.lnCall.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Log.i(TAG, "onClick: Call");
-                    Utility.showToast(TaskSummaryStrategicPartnerActivity.this, "Work in progress");
+                    Utility.showToast(TaskSummaryStrategicPartnerActivity.this, getString(R.string.label_wrok_in_progress));
 //                    Utility.openCustomerCareCallDialer(mContext, mTaskDetailModel.selectedProvider.sp_phone_number);
                 }
             });
@@ -223,7 +225,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     Log.i(TAG, "onClick: Chat");
-                    Utility.showToast(TaskSummaryStrategicPartnerActivity.this, "Work in progress");
+                    Utility.showToast(TaskSummaryStrategicPartnerActivity.this, getString(R.string.label_wrok_in_progress));
 //                    TaskChatModel taskChatModel = new TaskChatModel();
 //                    taskChatModel.categoryName = mTaskDetailModel.categoryName;
 //                    taskChatModel.taskDesc = mTaskDetailModel.taskDesc;
@@ -284,6 +286,23 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
             @Override
             public void onClick(View view) {
                 showFullDesc(getString(R.string.label_address), mActivityTaskSummaryBinding.textTaskWhere.getText().toString());
+            }
+        });
+
+        // Update the banner image
+        // Calculat Pager Height and Width
+        ViewTreeObserver mViewTreeObserver = mActivityTaskSummaryBinding.frameBannerImage.getViewTreeObserver();
+        mViewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                mActivityTaskSummaryBinding.frameBannerImage.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                int width = mActivityTaskSummaryBinding.frameBannerImage.getMeasuredWidth();
+                ViewGroup.LayoutParams params = mActivityTaskSummaryBinding.frameBannerImage.getLayoutParams();
+                params.height = Utility.getHeightFromWidthForTwoOneRatio(width);
+                mActivityTaskSummaryBinding.frameBannerImage.setLayoutParams(params);
+
+                // Load the image now.
+                Utility.loadImageView(mContext, mActivityTaskSummaryBinding.imgService, mTaskDetailModel.bannerImage, R.drawable.gradient_black);
             }
         });
     }
@@ -451,8 +470,11 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
                 e.printStackTrace();
             }
             superCalendar.setLocaleTimeZone();
-            String task_reschedule_date_time = superCalendar.format(Utility.DATE_FORMAT_DD_MMM + " at " + Utility.DATE_FORMAT_HH_MM_AM);
-            String message = getString(R.string.label_reschedule_desc, task_reschedule_date_time);
+            String task_reschedule_date= superCalendar.format(Utility.DATE_FORMAT_DD_MMM );
+            String task_reschedule_time = superCalendar.format(Utility.DATE_FORMAT_HH_MM_AM);
+            String message = getString(R.string.label_reschedule_desc, task_reschedule_date + getString(R.string.label_at)+task_reschedule_time);
+
+
             mActivityTaskSummaryBinding.textTaskRescheduleRequestDesc.setText(message);
 
         }
@@ -486,7 +508,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
 
             mActivityTaskSummaryBinding.lnTaskAdditionalQuoteRequested.setVisibility(View.VISIBLE);
 
-            String additionalQuoteAmount = getString(R.string.ruppe_symbol_x, mTaskDetailModel.additionalQuoteAmount);
+            String additionalQuoteAmount = getString(R.string.rupee_symbol_x, mTaskDetailModel.additionalQuoteAmount);
             mActivityTaskSummaryBinding.textAdditionalPaymentDesc.setText(getString(R.string.label_additional_payment_desc, additionalQuoteAmount));
 
             mActivityTaskSummaryBinding.textAdditionalPaymentAccept.setOnClickListener(new View.OnClickListener() {
@@ -517,11 +539,13 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
      * @param flag
      */
     private void showChatCallButton(boolean flag) {
-        if (flag) {
-            mActivityTaskSummaryBinding.lnChatCall.setVisibility(View.VISIBLE);
-        } else {
-            mActivityTaskSummaryBinding.lnChatCall.setVisibility(View.GONE);
-        }
+        // TODO :: changed on sept 12
+//        if (flag) {
+//            mActivityTaskSummaryBinding.lnChatCall.setVisibility(View.VISIBLE);
+//        } else {
+        mActivityTaskSummaryBinding.lnChatCall.setVisibility(View.GONE);
+//        }
+
     }
 
     private void showTaskCompletionDialog(boolean flag) {
@@ -688,7 +712,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
      */
     private void callTaskDetailWS(String taskId) {
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mActivityTaskSummaryBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityTaskSummaryBinding.getRoot());
             return;
         }
 
@@ -798,7 +822,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
 
         //Validation
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mActivityTaskSummaryBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityTaskSummaryBinding.getRoot());
             return;
         }
 
@@ -956,7 +980,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
         final RatingBar ratingBar = (RatingBar) view.findViewById(R.id.rating_bar);
         final EditText edtMessage = (EditText) view.findViewById(R.id.edit_message);
         final TextView txtLabel = (TextView) view.findViewById(R.id.text_label);
-        txtLabel.setText(getString(R.string.label_write_a_review, mTaskDetailModel.selectedProvider.userName));
+        txtLabel.setText(getString(R.string.label_write_a_review, mTaskDetailModel.categoryName));
 
         rateDialog = new BottomAlertDialog(mContext);
         view.findViewById(R.id.btn_submit).setOnClickListener(new View.OnClickListener() {
@@ -982,7 +1006,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
 
         //Validation
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mActivityTaskSummaryBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityTaskSummaryBinding.getRoot());
             return;
         }
 
@@ -1118,7 +1142,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
     private void callDeclineAdditionalPaymentRequest(String reason) {
         //Validation
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mActivityTaskSummaryBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityTaskSummaryBinding.getRoot());
             return;
         }
 
@@ -1259,7 +1283,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
      */
     private void callTaskDetailRequestAcceptWS(final String action, String taskID, final ProviderModel providerModel) {
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mActivityTaskSummaryBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityTaskSummaryBinding.getRoot());
             return;
         }
 
@@ -1353,7 +1377,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
     private void callCheckingTaskStatus() {
         //Validation
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mActivityTaskSummaryBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityTaskSummaryBinding.getRoot());
             return;
         }
 
@@ -1399,7 +1423,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
                             // payNow(true);
 //                            PaymentsStepActivity.newInstance(mContext, mTaskDetailModel, mTaskDetailModel.selectedProvider, 1);
                         } else if (taskStatus.equalsIgnoreCase(Utility.TASK_STATUS.COMPLETION_REQUEST)) {
-                            Utility.showSnackBar(getString(R.string.message_additional_payment_can_not_be_done_due_to_task_completion), mActivityTaskSummaryBinding.getRoot());
+                            Utility.showSnackBar(getString(R.string.message_no_more_payment_task_completed), mActivityTaskSummaryBinding.getRoot());
                             mTaskDetailModel.taskStatus = Utility.TASK_STATUS.COMPLETION_REQUEST;
                             setUpTaskDetails(mTaskDetailModel);
 

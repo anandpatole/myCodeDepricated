@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:background="@null"
         android:cursorVisible="false"
-        android:hint="Type Here"
+        android:hint="@string/label_type_here"
         android:maxLength="50"
         android:paddingBottom="@dimen/scale_5dp"
         android:paddingRight="@dimen/scale_15dp"

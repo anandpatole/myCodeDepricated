@@ -174,7 +174,7 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
 
     public void setData() {
         mActivityProviderProfileBinding.textName.setText(providerModel.userName);
-        mActivityProviderProfileBinding.textExpectedTime.setText(providerModel.sp_locality + ", " + providerModel.distance + " away");
+        mActivityProviderProfileBinding.textExpectedTime.setText(providerModel.sp_locality + ", " + providerModel.distance + getString(R.string.label_away));
         mActivityProviderProfileBinding.textExpectedTime.setSelected(true);
 
         if (taskDetailModel != null) {
@@ -194,7 +194,7 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
         mActivityProviderProfileBinding.textVerifiedTotalJobs.setText(mActivityProviderProfileBinding.textVerifiedTotalJobs.getText().toString() + " | " + Utility.getJobs(mContext, providerModel.jobsCount));*/
 
         if (!TextUtils.isEmpty(providerModel.reviews) && Double.parseDouble(providerModel.reviews) > 0) {
-            mActivityProviderProfileBinding.textTotalReviews.setText(getString(R.string.label_basedon, providerModel.reviews));
+            mActivityProviderProfileBinding.textTotalReviews.setText(getString(R.string.label_based_on, providerModel.reviews));
             mActivityProviderProfileBinding.layoutReview.setVisibility(View.VISIBLE);
         } else {
             mActivityProviderProfileBinding.layoutReview.setVisibility(View.GONE);
@@ -208,7 +208,7 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
                 TAG,
                 mActivityProviderProfileBinding.imgProfile,
                 providerModel.profileUrl,
-                R.drawable.icon_profile_img_solid,
+                Utility.DEFAULT_CHEEP_LOGO,
                 R.color.splash_gradient_end
                 , true);
 //        Utility.loadImageView(mContext, mActivityProviderProfileBinding.imgProfile, providerModel.profileUrl, Utility.DEFAULT_PROFILE_SRC);
@@ -379,8 +379,7 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
                     .dontAnimate()
                     .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                     .into(mActivityProviderProfileBinding.imgChat);
-        }
-        else{
+        } else {
             Glide.with(mContext)
                     .load(R.drawable.icon_chat_smaller)
                     .into(mActivityProviderProfileBinding.imgChat);
@@ -492,6 +491,8 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
                 messageEvent.id = providerModel.providerId;
                 messageEvent.isFav = mActivityProviderProfileBinding.imgFav.isSelected() ? Utility.BOOLEAN.YES : Utility.BOOLEAN.NO;
                 EventBus.getDefault().post(messageEvent);
+
+
             }
         });
 
@@ -606,7 +607,7 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
      */
     private void callReportSPWS(boolean addToAbuse) {
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mActivityProviderProfileBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityProviderProfileBinding.getRoot());
             return;
         }
 
@@ -707,7 +708,7 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
      */
     private void callAddToFavWS(String providerId, boolean isAddToFav) {
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mActivityProviderProfileBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityProviderProfileBinding.getRoot());
             return;
         }
 
@@ -759,7 +760,6 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
                     case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
                         //Logout and finish the current activity
                         Utility.logout(mContext, true, statusCode);
-                        ;
                         finish();
                         break;
                 }
@@ -792,7 +792,7 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
 
     private void callSPProfileDetailWS(String providerId) {
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mActivityProviderProfileBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityProviderProfileBinding.getRoot());
             return;
         }
 
@@ -931,7 +931,7 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
     private void callReviewList(String providerId) {
         if (!Utility.isConnected(mContext)) {
 //            Utility.showSnackBar(getString(R.string.no_internet), mActivityProviderProfileBinding.getRoot());
-            errorLoadingHelper.failed(getString(R.string.no_internet), 0, onRetryBtnClickListener);
+            errorLoadingHelper.failed(Utility.NO_INTERNET_CONNECTION, 0, onRetryBtnClickListener);
             return;
         }
 
@@ -967,7 +967,7 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
     private void callLoadMoreReviewList(String providerId, String reviewId) {
         if (!Utility.isConnected(mContext)) {
 //            Utility.showSnackBar(getString(R.string.no_internet), mActivityProviderProfileBinding.getRoot());
-            errorLoadingHelper.failed(getString(R.string.no_internet), 0, onRetryBtnClickListener);
+            errorLoadingHelper.failed(Utility.NO_INTERNET_CONNECTION, 0, onRetryBtnClickListener);
             return;
         }
 
@@ -1149,7 +1149,7 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
      */
     private void callTaskDetailRequestAcceptRejectWS(String requestDetailStatus, String taskID, String spUserID) {
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mActivityProviderProfileBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityProviderProfileBinding.getRoot());
             return;
         }
 
@@ -1284,7 +1284,7 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
      */
     private void callTaskDetailRequestAcceptWS(final String action, String taskID, final ProviderModel providerModel) {
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mActivityProviderProfileBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityProviderProfileBinding.getRoot());
             return;
         }
 
@@ -1375,7 +1375,7 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
      */
     private void callTaskDetailWS(String mTaskId, String providerId) {
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mActivityProviderProfileBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityProviderProfileBinding.getRoot());
             return;
         }
 

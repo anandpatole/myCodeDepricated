@@ -166,22 +166,36 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
             // Set rating
             Utility.showRating(mTaskDetailModel.selectedProvider.rating, mActivityTaskSummaryBinding.providerRating);
 
+            if (Utility.BOOLEAN.YES.equals(mTaskDetailModel.selectedProvider.isFavourite))
+                mActivityTaskSummaryBinding.imgFav.setSelected(true);
+            else
+                mActivityTaskSummaryBinding.imgFav.setSelected(false);
+
+            mActivityTaskSummaryBinding.imgFav.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    callAddToFavWS(mTaskDetailModel.selectedProvider.providerId, !mActivityTaskSummaryBinding.imgFav.isSelected());
+                    mActivityTaskSummaryBinding.imgFav.setSelected(!mActivityTaskSummaryBinding.imgFav.isSelected());
+
+                }
+            });
+
             // Name of Provider
             mActivityTaskSummaryBinding.textProviderName.setText(mTaskDetailModel.selectedProvider.userName);
 
             SpannableString sName = new SpannableString(mTaskDetailModel.selectedProvider.userName);
             SpannableString sVerified = null;
             if (Utility.BOOLEAN.YES.equalsIgnoreCase(mTaskDetailModel.selectedProvider.isVerified)) {
-                sVerified = new SpannableString( " " + mContext.getString(R.string.label_verified_pro)+" " );
+                sVerified = new SpannableString(" " + mContext.getString(R.string.label_verified_pro) + " ");
                 sVerified.setSpan(new RelativeSizeSpan(0.9f), 0, sVerified.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 sVerified.setSpan(new RoundedBackgroundSpan(ContextCompat.getColor(this, R.color.splash_gradient_end), ContextCompat.getColor(this, R.color.white)), 0, sVerified.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
                 mActivityTaskSummaryBinding.textProviderName.setText(sVerified != null ? TextUtils.concat(sName, " ", sVerified) : sName);
             }
             // Distanceof Provider
-            mActivityTaskSummaryBinding.textAddressKmAway.setText(mTaskDetailModel.selectedProvider.distance + " away");
+            mActivityTaskSummaryBinding.textAddressKmAway.setText(mTaskDetailModel.selectedProvider.distance + getString(R.string.label_away));
 
             // Profile Pic
-            Utility.showCircularImageView(mContext, TAG, mActivityTaskSummaryBinding.imgProfile, mTaskDetailModel.selectedProvider.profileUrl, Utility.DEFAULT_PROFILE_SRC, true);
+            Utility.showCircularImageView(mContext, TAG, mActivityTaskSummaryBinding.imgProfile, mTaskDetailModel.selectedProvider.profileUrl, Utility.DEFAULT_CHEEP_LOGO, true);
 
 //            // Whether Provider Verified or not
 //            if (Utility.BOOLEAN.YES.equalsIgnoreCase(mTaskDetailModel.selectedProvider.isVerified)) {
@@ -353,8 +367,9 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
                 e.printStackTrace();
             }
             superCalendar.setLocaleTimeZone();
-            String task_reschedule_date_time = superCalendar.format(Utility.DATE_FORMAT_DD_MMM + " at " + Utility.DATE_FORMAT_HH_MM_AM);
-            String message = getString(R.string.label_reschedule_desc, task_reschedule_date_time);
+            String task_reschedule_date= superCalendar.format(Utility.DATE_FORMAT_DD_MMM );
+            String task_reschedule_time = superCalendar.format(Utility.DATE_FORMAT_HH_MM_AM);
+            String message = getString(R.string.label_reschedule_desc, task_reschedule_date + getString(R.string.label_at)+task_reschedule_time);
             mActivityTaskSummaryBinding.textTaskRescheduleRequestDesc.setText(message);
 
         }
@@ -388,7 +403,7 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
 
             mActivityTaskSummaryBinding.lnTaskAdditionalQuoteRequested.setVisibility(View.VISIBLE);
 
-            String additionalQuoteAmount = getString(R.string.ruppe_symbol_x, mTaskDetailModel.additionalQuoteAmount);
+            String additionalQuoteAmount = getString(R.string.rupee_symbol_x, mTaskDetailModel.additionalQuoteAmount);
             mActivityTaskSummaryBinding.textAdditionalPaymentDesc.setText(getString(R.string.label_additional_payment_desc, additionalQuoteAmount));
 
             mActivityTaskSummaryBinding.textAdditionalPaymentAccept.setOnClickListener(new View.OnClickListener() {
@@ -601,7 +616,7 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
      */
     private void callTaskDetailWS(String taskId) {
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mActivityTaskSummaryBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityTaskSummaryBinding.getRoot());
             return;
         }
 
@@ -711,7 +726,7 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
 
         //Validation
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mActivityTaskSummaryBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityTaskSummaryBinding.getRoot());
             return;
         }
 
@@ -895,7 +910,7 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
 
         //Validation
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mActivityTaskSummaryBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityTaskSummaryBinding.getRoot());
             return;
         }
 
@@ -1031,7 +1046,7 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
     private void callDeclineAdditionalPaymentRequest(String reason) {
         //Validation
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mActivityTaskSummaryBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityTaskSummaryBinding.getRoot());
             return;
         }
 
@@ -1172,7 +1187,7 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
      */
     private void callTaskDetailRequestAcceptWS(final String action, String taskID, final ProviderModel providerModel) {
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mActivityTaskSummaryBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityTaskSummaryBinding.getRoot());
             return;
         }
 
@@ -1265,7 +1280,7 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
     private void callCheckingTaskStatus() {
         //Validation
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mActivityTaskSummaryBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityTaskSummaryBinding.getRoot());
             return;
         }
 
@@ -1311,7 +1326,7 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
                             // payNow(true);
                             PaymentsStepActivity.newInstance(mContext, mTaskDetailModel, mTaskDetailModel.selectedProvider, 1);
                         } else if (taskStatus.equalsIgnoreCase(Utility.TASK_STATUS.COMPLETION_REQUEST)) {
-                            Utility.showSnackBar(getString(R.string.message_additional_payment_can_not_be_done_due_to_task_completion), mActivityTaskSummaryBinding.getRoot());
+                            Utility.showSnackBar(getString(R.string.message_no_more_payment_task_completed), mActivityTaskSummaryBinding.getRoot());
                             mTaskDetailModel.taskStatus = Utility.TASK_STATUS.COMPLETION_REQUEST;
                             setUpTaskDetails(mTaskDetailModel);
 
@@ -1391,5 +1406,90 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
             }
         });
     }
+
+    /**
+     * Call Add to fav
+     *
+     * @param providerId
+     * @param isAddToFav
+     */
+    private void callAddToFavWS(String providerId, boolean isAddToFav) {
+        if (!Utility.isConnected(mContext)) {
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityTaskSummaryBinding.getRoot());
+            return;
+        }
+
+        //Add Header parameters
+        Map<String, String> mHeaderParams = new HashMap<>();
+        mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
+        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
+
+        //Add Params
+        Map<String, Object> mParams = new HashMap<>();
+        mParams.put(NetworkUtility.TAGS.SP_USER_ID, providerId);
+        mParams.put(NetworkUtility.TAGS.REQ_FOR, isAddToFav ? "add" : "remove");
+
+        //Url is based on condition if address id is greater then 0 then it means we need to update the existing address
+        VolleyNetworkRequest mVolleyNetworkRequestForSPList = new VolleyNetworkRequest(NetworkUtility.WS.SP_ADD_TO_FAV
+                , mCallAddSPToFavWSErrorListener
+                , mCallAddSPToFavWSResponseListener
+                , mHeaderParams
+                , mParams
+                , null);
+        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequestForSPList);
+    }
+
+    Response.Listener mCallAddSPToFavWSResponseListener = new Response.Listener() {
+        @Override
+        public void onResponse(Object response) {
+
+            String strResponse = (String) response;
+            try {
+                JSONObject jsonObject = new JSONObject(strResponse);
+                Log.i(TAG, "onResponse: " + jsonObject.toString());
+                int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
+                String error_message;
+
+                switch (statusCode) {
+                    case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
+
+                        break;
+                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
+                        // Show Toast
+                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityTaskSummaryBinding.getRoot());
+                        break;
+                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
+                        error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
+                        // Show message
+                        Utility.showSnackBar(error_message, mActivityTaskSummaryBinding.getRoot());
+                        break;
+                    case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
+                    case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
+                        //Logout and finish the current activity
+                        Utility.logout(mContext, true, statusCode);
+                        finish();
+                        break;
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+                mCallAddSPToFavWSErrorListener.onErrorResponse(new VolleyError(e.getMessage()));
+            }
+
+        }
+    };
+
+    Response.ErrorListener mCallAddSPToFavWSErrorListener = new Response.ErrorListener() {
+        @Override
+        public void onErrorResponse(final VolleyError error) {
+            Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
+
+            // Close Progressbar
+//            hideProgressDialog();
+
+
+            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityTaskSummaryBinding.getRoot());
+
+        }
+    };
 
 }

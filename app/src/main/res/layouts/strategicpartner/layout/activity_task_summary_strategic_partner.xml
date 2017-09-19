@@ -17,6 +17,7 @@
                 android:layout_height="wrap_content">
 
                 <FrameLayout
+                    android:id="@+id/frame_banner_image"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/scale_170dp"
                     android:background="@color/white">
@@ -25,7 +26,6 @@
                         android:id="@+id/img_service"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:scaleType="centerCrop"
                         tools:ignore="ContentDescription"/>
 
                     <View

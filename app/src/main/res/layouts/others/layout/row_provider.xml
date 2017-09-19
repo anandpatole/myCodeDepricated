@@ -322,7 +322,7 @@
                     android:layout_height="match_parent"
                     android:layout_gravity="center_horizontal"
                     android:gravity="bottom"
-                    android:text="@string/label_pay"
+                    android:text="@string/label_book"
                     android:textAllCaps="false"
                     android:textColor="@color/white"
                     android:textSize="@dimen/text_size_11sp" />

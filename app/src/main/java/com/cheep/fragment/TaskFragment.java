@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.databinding.DataBindingUtil;
-import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -173,15 +172,20 @@ public class TaskFragment extends BaseFragment {
     public void onMessageEvent(MessageEvent event) {
         Log.d(TAG, "onMessageEvent() called with: event = [" + event.BROADCAST_ACTION + "]");
         if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.UPDATE_FAVOURITE) {
-            if (!TextUtils.isEmpty(event.isFav))
-                taskRecyclerViewAdapter.updateFavStatus(event.id, event.isFav);
+            if (!TextUtils.isEmpty(event.isFav)) {
+                if (taskRecyclerViewAdapter != null)
+                    taskRecyclerViewAdapter.updateFavStatus(event.id, event.isFav);
+            }
         } else if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.TASK_PAID
                 || event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.TASK_PROCESSING) {
-            nextPageId = null;
-            taskRecyclerViewAdapter.enableLoadMore();
-            reloadTaskListFromServer();
+            if (taskRecyclerViewAdapter != null) {
+                nextPageId = null;
+                taskRecyclerViewAdapter.enableLoadMore();
+                reloadTaskListFromServer();
+            }
         } else if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.TASK_RATED) {
-            taskRecyclerViewAdapter.updateRatedStatus(event.id);
+            if (taskRecyclerViewAdapter != null)
+                taskRecyclerViewAdapter.updateRatedStatus(event.id);
         } else if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.TASK_CANCELED) {
             if (taskRecyclerViewAdapter.cancelTask(event.id, event.taskStatus) == 0) {
                 errorLoadingHelper.failed(null,
@@ -191,17 +195,23 @@ public class TaskFragment extends BaseFragment {
                         onMakeAPostClickListener);
             }
         } else if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.TASK_RESCHEDULED) {
-            taskRecyclerViewAdapter.rescheduleTask(event.id, event.taskStartdate);
+            if (taskRecyclerViewAdapter != null)
+                taskRecyclerViewAdapter.rescheduleTask(event.id, event.taskStartdate);
         } else if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.QUOTE_REQUESTED_BY_PRO) {
-            taskRecyclerViewAdapter.updateOnNewQuoteRequested(event.id, event.max_quote_price, event.sp_counts, event.quoted_sp_image_url);
+            if (taskRecyclerViewAdapter != null)
+                taskRecyclerViewAdapter.updateOnNewQuoteRequested(event.id, event.max_quote_price, event.sp_counts, event.quoted_sp_image_url);
         } else if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.REQUEST_FOR_DETAIL) {
-            taskRecyclerViewAdapter.updateOnNewDetailRequested(event.id, event.sp_counts, event.quoted_sp_image_url);
+            if (taskRecyclerViewAdapter != null)
+                taskRecyclerViewAdapter.updateOnNewDetailRequested(event.id, event.sp_counts, event.quoted_sp_image_url);
         } else if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.TASK_STATUS_CHANGE) {
-            taskRecyclerViewAdapter.updateTaskStatus(event);
+            if (taskRecyclerViewAdapter != null)
+                taskRecyclerViewAdapter.updateTaskStatus(event);
         } else if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.ADDITIONAL_PAYMENT_REQUESTED) {
-            taskRecyclerViewAdapter.updateOnAdditionalPaymentRequested(event);
+            if (taskRecyclerViewAdapter != null)
+                taskRecyclerViewAdapter.updateOnAdditionalPaymentRequested(event);
         } else if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.DETAIL_REQUEST_REJECTED) {
-            taskRecyclerViewAdapter.updateOnDetailRequestRejected(event);
+            if (taskRecyclerViewAdapter != null)
+                taskRecyclerViewAdapter.updateOnDetailRequestRejected(event);
         }
     }
 
@@ -254,7 +264,7 @@ public class TaskFragment extends BaseFragment {
 
         if (!Utility.isConnected(mContext)) {
 //            Utility.showSnackBar(getString(R.string.no_internet), mFragmentFavouriteFragment.getRoot());
-            errorLoadingHelper.failed(getString(R.string.no_internet), 0, onRetryBtnClickListener);
+            errorLoadingHelper.failed(Utility.NO_INTERNET_CONNECTION, 0, onRetryBtnClickListener);
             return;
         }
 

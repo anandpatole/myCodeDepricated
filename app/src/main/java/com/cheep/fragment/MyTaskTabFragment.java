@@ -155,8 +155,8 @@ public class MyTaskTabFragment extends BaseFragment {
      */
     private void setupHomeViewPager(ViewPager pager) {
         MyTaskTabPagerAdapter mHomeFragmentPagerAdater = new MyTaskTabPagerAdapter(getChildFragmentManager());
-        mHomeFragmentPagerAdater.addFragment(getString(R.string.lable_upcoming));
-        mHomeFragmentPagerAdater.addFragment(getString(R.string.lable_past_tasks));
+        mHomeFragmentPagerAdater.addFragment(getString(R.string.label_upcoming_tasks));
+        mHomeFragmentPagerAdater.addFragment(getString(R.string.label_past_tasks));
         pager.setAdapter(mHomeFragmentPagerAdater);
         mFragmentTabMyTaskTabBinding.tabs.setupWithViewPager(pager, true);
     }

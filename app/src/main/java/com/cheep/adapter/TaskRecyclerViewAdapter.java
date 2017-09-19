@@ -63,8 +63,8 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
     SuperCalendar superStartDateTimeCalendar;
     private int mLiveIconOffset;
 
-    //saves the index of the upcoming offer to display
-    private Map<String, Integer> mOfferIndexMap;
+//    //saves the index of the upcoming offer to display
+//    private Map<String, Integer> mOfferIndexMap;
 
 
     /*private Uri[] urls = new Uri[]{Uri.parse("http://www.animated-gifs.eu/category_leisure/avatars-100x100-music/0016.gif"), Uri.parse("http://www.smailikai.com/avatar/skelet/avatar_4348.gif"), Uri.parse("http://www.boorp.com/avatars_100x100_for_myspace/25.png")*//*, Uri.parse("http://www.boorp.com/avatars_100x100_for_myspace/25.png"), Uri.parse("http://www.boorp.com/avatars_100x100_for_myspace/25.png")*//*};
@@ -79,7 +79,7 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
         int offset = context.getResources().getDimensionPixelSize(R.dimen.scale_4dp);
         mLiveIconOffset = context.getResources().getDimensionPixelSize(R.dimen.icon_live_width) + offset;
         //arrayListUri.addAll(Arrays.asList(urls));
-        mOfferIndexMap = new HashMap<>();
+//        mOfferIndexMap = new HashMap<>();
     }
 
     public TaskRecyclerViewAdapter(ArrayList<TaskDetailModel> mList, TaskRowDataInteractionListener listener, int whichFrag) {
@@ -137,7 +137,7 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
     }
 
     @Override
-    public void onActualBindViewHolder(final ViewHolder holder, int position) {
+    public void onActualBindViewHolder(final ViewHolder holder, final int position) {
         final TaskDetailModel model = mList.get(holder.getAdapterPosition());
 
         holder.removeAnimations();
@@ -153,6 +153,7 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
 
                 // Start LIVE tracking and Text changes
                 final int liveFeedCounter = model.live_lable_arr != null ? model.live_lable_arr.size() : 0;
+                final Map<String, Integer> mOfferIndexMap = new HashMap<>();
                 if (liveFeedCounter > 0) {
                     holder.mUpcomingTaskBinding.ivLiveAnimated.setVisibility(View.VISIBLE);
                     holder.mUpcomingTaskBinding.tvLiveFeed.setVisibility(View.VISIBLE);
@@ -165,7 +166,6 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
                         @Override
                         public void onAnimationEnd(Animator animation) {
                             super.onAnimationEnd(animation);
-
                             int offerIndex = mOfferIndexMap.containsKey(model.taskId) ? mOfferIndexMap.get(model.taskId) : 0;
                             if (offerIndex == model.live_lable_arr.size()) {
                                 Log.i(TAG, "onAnimationEnd: Issue Caught Here>>>>>>>>>>>>>>>>>>>");
@@ -180,7 +180,6 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
                     });
                     offerAnimation.start();
                     holder.addAnimator(offerAnimation);
-
                     int offerIndex = mOfferIndexMap.containsKey(model.taskId) ? mOfferIndexMap.get(model.taskId) : 0;
                     SpannableString labelOffer = new SpannableString(model.live_lable_arr.get(offerIndex));
                     labelOffer.setSpan(new LeadingMarginSpan.Standard(mLiveIconOffset, 0), 0, labelOffer.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
@@ -213,6 +212,15 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
                     holder.mUpcomingTaskBinding.layoutIndividualProfile.setVisibility(View.VISIBLE);
                     holder.mUpcomingTaskBinding.layoutGroupProfile.setVisibility(View.GONE);
 
+                    holder.mUpcomingTaskBinding.imgFav.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+
+                            listener.onFavClicked(model, !holder.mUpcomingTaskBinding.imgFav.isSelected(), position);
+                            holder.mUpcomingTaskBinding.imgFav.setSelected(!holder.mUpcomingTaskBinding.imgFav.isSelected());
+
+                        }
+                    });
 
                     if (model.taskType.equalsIgnoreCase(Utility.TASK_TYPE.STRATEGIC)) {
                         holder.mUpcomingTaskBinding.tvProviderName.setText(model.categoryName);
@@ -227,7 +235,7 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
                         else
                             holder.mUpcomingTaskBinding.imgFav.setSelected(false);
                     }
-                    Utility.showCircularImageViewWithColorBorder(holder.mUpcomingTaskBinding.imgProfilePic.getContext(), TAG, holder.mUpcomingTaskBinding.imgProfilePic, model.selectedProvider.profileUrl, R.drawable.icon_profile_img_solid, R.color.grey_dark_color, true);
+                    Utility.showCircularImageViewWithColorBorder(holder.mUpcomingTaskBinding.imgProfilePic.getContext(), TAG, holder.mUpcomingTaskBinding.imgProfilePic, model.selectedProvider.profileUrl, Utility.DEFAULT_CHEEP_LOGO, R.color.grey_dark_color, true);
 
                     // Show Rating
                     holder.mUpcomingTaskBinding.ratingBar.setVisibility(View.VISIBLE);
@@ -448,9 +456,9 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
 
 
                 if (model.selectedProvider != null) {
-                    Utility.showCircularImageViewWithColorBorder(holder.mRowTaskBinding.imgProfile.getContext(), TAG, holder.mRowTaskBinding.imgProfile, model.selectedProvider.profileUrl, R.drawable.icon_profile_img_solid, R.color.grey_dark_color, true);
+                    Utility.showCircularImageViewWithColorBorder(holder.mRowTaskBinding.imgProfile.getContext(), TAG, holder.mRowTaskBinding.imgProfile, model.selectedProvider.profileUrl, Utility.DEFAULT_CHEEP_LOGO, R.color.grey_dark_color, true);
 
-                    holder.mRowTaskBinding.textTaskApprovedQuote.setText(holder.mRowTaskBinding.imgProfile.getContext().getString(R.string.ruppe_symbol_x_space, Utility.getActualPrice(model.taskPaidAmount, model.selectedProvider.quotePrice)));
+                    holder.mRowTaskBinding.textTaskApprovedQuote.setText(holder.mRowTaskBinding.imgProfile.getContext().getString(R.string.rupee_symbol_x_space, Utility.getActualPrice(model.taskPaidAmount, model.selectedProvider.quotePrice)));
                     if (model.taskType.equalsIgnoreCase(Utility.TASK_TYPE.STRATEGIC)) {
                         holder.mRowTaskBinding.textProviderName.setText(model.categoryName);
                         holder.mRowTaskBinding.imgBadge.setVisibility(View.VISIBLE);
@@ -479,8 +487,10 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
                     // Show Rating
                     Utility.showRating(model.selectedProvider.rating, holder.mRowTaskBinding.ratingBar);
                 } else {
+
                     Utility.showCircularImageView(holder.mRowTaskBinding.imgProfile.getContext(), TAG, holder.mRowTaskBinding.imgProfile, "", Utility.DEFAULT_PROFILE_SRC);
-                    holder.mRowTaskBinding.textTaskApprovedQuote.setText(holder.mRowTaskBinding.imgProfile.getContext().getString(R.string.ruppe_symbol_x_space, Utility.getActualPrice("", "")));
+                    holder.mRowTaskBinding.textTaskApprovedQuote.setText(holder.mRowTaskBinding.imgProfile.getContext().getString(R.string.rupee_symbol_x_space, Utility.getActualPrice("", "")));
+
                     holder.mRowTaskBinding.textProviderName.setText("");
                     holder.mRowTaskBinding.imgBadge.setVisibility(View.GONE);
                     holder.mRowTaskBinding.textVerified.setVisibility(View.GONE);
@@ -573,6 +583,7 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
 
     // Update the list in case new quote requested by any of the PRO
     public void updateOnNewQuoteRequested(String task_id, String max_quote_price, String sp_counts, String quoted_sp_image_url) {
+        Log.d(TAG, "updateOnNewQuoteRequested() called with: task_id = [" + task_id + "], max_quote_price = [" + max_quote_price + "], sp_counts = [" + sp_counts + "], quoted_sp_image_url = [" + quoted_sp_image_url + "]");
         if (mList != null) {
             for (TaskDetailModel providerModel : mList) {
                 if (providerModel.taskId.equalsIgnoreCase(task_id)) {
@@ -581,7 +592,7 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
                     if (providerModel.profile_img_arr == null)
                         providerModel.profile_img_arr = new ArrayList<>();
                     // Only add if already not added.
-                    if (!providerModel.profile_img_arr.contains(quoted_sp_image_url)) {
+                    if (quoted_sp_image_url != null && !providerModel.profile_img_arr.contains(quoted_sp_image_url)) {
                         providerModel.profile_img_arr.add(quoted_sp_image_url);
                     } else {
                         Log.i(TAG, "updateOnNewQuoteRequested: Image URL Already added");

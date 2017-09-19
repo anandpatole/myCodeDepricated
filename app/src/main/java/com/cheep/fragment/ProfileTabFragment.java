@@ -37,7 +37,6 @@ import android.widget.TextView;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.cheep.BootstrapConstant;
 import com.cheep.BuildConfig;
 import com.cheep.R;
 import com.cheep.activity.HomeActivity;
@@ -52,10 +51,12 @@ import com.cheep.firebase.FirebaseUtils;
 import com.cheep.firebase.model.ChatUserModel;
 import com.cheep.interfaces.DrawerLayoutInteractionListener;
 import com.cheep.model.AddressModel;
+import com.cheep.model.LocationInfo;
 import com.cheep.model.UserDetails;
 import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
+import com.cheep.utils.FetchLocationInfoUtility;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.Utility;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
@@ -262,14 +263,14 @@ public class ProfileTabFragment extends BaseFragment {
 //
                         showPictureChooserDialog(false);
                     } else {
-                        Utility.showSnackBar(getString(R.string.no_internet), mFragmentTabProfileBinding.getRoot());
+                        Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mFragmentTabProfileBinding.getRoot());
                     }
                     break;
                 case R.id.img_cover_photo_edit:
                     if (Utility.isConnected(mContext)) {
                         showPictureChooserDialog(true);
                     } else {
-                        Utility.showSnackBar(getString(R.string.no_internet), mFragmentTabProfileBinding.getRoot());
+                        Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mFragmentTabProfileBinding.getRoot());
                     }
                     break;
             }
@@ -1023,7 +1024,7 @@ public class ProfileTabFragment extends BaseFragment {
 
             //TODO: Adding dummy place when playservice is not there
             if (edtAddress != null) {
-                edtAddress.setText("Dummy Address with " + Utility.STATIC_LAT + "," + Utility.STATIC_LNG);
+                edtAddress.setText(getString(R.string.label_dummy_address_with) + Utility.STATIC_LAT + "," + Utility.STATIC_LNG);
                 edtAddress.setFocusable(true);
                 edtAddress.setFocusableInTouchMode(true);
                 try {
@@ -1087,8 +1088,8 @@ public class ProfileTabFragment extends BaseFragment {
         });
         builder.show();
         final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);*/
-        builder.setMessage("For best results, let your device turn on location using Google's location service.")
-                .setPositiveButton("Turn On", new DialogInterface.OnClickListener() {
+        builder.setMessage(getString(R.string.label_turn_on_location))
+                .setPositiveButton(getString(R.string.label_turn_on), new DialogInterface.OnClickListener() {
                     public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
                         startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
                         dialog.cancel();
@@ -1154,7 +1155,7 @@ public class ProfileTabFragment extends BaseFragment {
 
     private void callUpdateProfileWS(Map<String, String> mParams, HashMap<String, File> mFileParams) {
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mFragmentTabProfileBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mFragmentTabProfileBinding.getRoot());
             return;
         }
 
@@ -1255,7 +1256,7 @@ public class ProfileTabFragment extends BaseFragment {
      */
     private void callDeleteAddressWS(String addressId) {
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mFragmentTabProfileBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mFragmentTabProfileBinding.getRoot());
             return;
         }
 
@@ -1347,46 +1348,58 @@ public class ProfileTabFragment extends BaseFragment {
      * @param addressType //     * @param addressName
      * @param address
      */
-    private void callUpdateAddressWS(String addressId, String addressType,/* String addressName,*/ String address, String addressInitials, LatLng latLng) {
+    @SuppressWarnings("unchecked")
+    private void callUpdateAddressWS(final String addressId, final String addressType,/* String addressName,*/ final String address, final String addressInitials, LatLng latLng) {
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mFragmentTabProfileBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mFragmentTabProfileBinding.getRoot());
             return;
         }
 
         //Show Progress
         showProgressDialog();
+        FetchLocationInfoUtility mFetchLocationInfoUtility = new FetchLocationInfoUtility(
+                mContext,
+                new FetchLocationInfoUtility.FetchLocationInfoCallBack() {
+                    @Override
+                    public void onLocationInfoAvailable(LocationInfo mLocationIno) {
+                        // Show Progress
+                        showProgressDialog();
 
-        //Add Header parameters
-        Map<String, String> mHeaderParams = new HashMap<>();
-        mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
-        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
+                        // Add Header parameters
+                        Map<String, String> mHeaderParams = new HashMap<>();
+                        mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
+                        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
 
-        //Add Params
-        Map<String, Object> mParams = new HashMap<>();
-        mParams.put(NetworkUtility.TAGS.CATEGORY, addressType);
-//        mParams.put(NetworkUtility.TAGS.NAME, addressName);
-        mParams.put(NetworkUtility.TAGS.ADDRESS, address);
-        mParams.put(NetworkUtility.TAGS.ADDRESS_INITIALS, addressInitials);
+                        // Add Params
+                        Map<String, Object> mParams = new HashMap<>();
+                        mParams.put(NetworkUtility.TAGS.ADDRESS_ID, addressId);
+                        mParams.put(NetworkUtility.TAGS.CATEGORY, addressType);
+                        mParams.put(NetworkUtility.TAGS.ADDRESS, address);
+                        mParams.put(NetworkUtility.TAGS.ADDRESS_INITIALS, addressInitials);
+                        mParams.put(NetworkUtility.TAGS.LAT, mLocationIno.lat);
+                        mParams.put(NetworkUtility.TAGS.LNG, mLocationIno.lng);
+                        mParams.put(NetworkUtility.TAGS.COUNTRY, mLocationIno.Country);
+                        mParams.put(NetworkUtility.TAGS.STATE, mLocationIno.State);
+                        mParams.put(NetworkUtility.TAGS.CITY_NAME, mLocationIno.City);
 
-        if (latLng != null) {
-            mParams.put(NetworkUtility.TAGS.LAT, latLng.latitude + "");
-            mParams.put(NetworkUtility.TAGS.LNG, latLng.longitude + "");
-        }
+                        // Url is based on condition if address id is greater then 0 then it means we need to update the existing address
+                        VolleyNetworkRequest mVolleyNetworkRequest = new VolleyNetworkRequest(NetworkUtility.WS.EDIT_ADDRESS
+                                , mCallUpdateAddressWSErrorListener
+                                , mCallUpdateAddressResponseListener
+                                , mHeaderParams
+                                , mParams
+                                , null);
+                        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest, NetworkUtility.WS.EDIT_ADDRESS);
+                    }
 
-
-        //if address id is greater then 0 then it means we need to update the existing address so sending address_id as parameter also
-        if (!"0".equalsIgnoreCase(addressId)) {
-            mParams.put(NetworkUtility.TAGS.ADDRESS_ID, String.valueOf(addressId));
-        }
-
-        //Url is based on condition if address id is greater then 0 then it means we need to update the existing address
-        VolleyNetworkRequest mVolleyNetworkRequest = new VolleyNetworkRequest((!"0".equalsIgnoreCase(addressId) ? NetworkUtility.WS.EDIT_ADDRESS : NetworkUtility.WS.ADD_ADDRESS)
-                , mCallUpdateAddressWSErrorListener
-                , mCallUpdateAddressResponseListener
-                , mHeaderParams
-                , mParams
-                , null);
-        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest);
+                    @Override
+                    public void internetConnectionNotFound() {
+                        Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mFragmentTabProfileBinding.getRoot());
+                    }
+                },
+                false
+        );
+        mFetchLocationInfoUtility.getLocationInfo(String.valueOf(latLng.latitude), String.valueOf(latLng.longitude));
     }
 
     /**
@@ -1472,40 +1485,58 @@ public class ProfileTabFragment extends BaseFragment {
      * @param addressType //     * @param addressName
      * @param address
      */
-    private void callAddAddressWS(String addressType, /*String addressName,*/ String address, String addressInitials, LatLng latLng) {
+    private void callAddAddressWS(final String addressType, /*String addressName,*/ final String address, final String addressInitials, LatLng latLng) {
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mFragmentTabProfileBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mFragmentTabProfileBinding.getRoot());
             return;
         }
 
-        //Show Progress
+        /**
+         * Logged In User so first need to fetch other location info and then call add address
+         * Webservice.
+         */
         showProgressDialog();
+        FetchLocationInfoUtility mFetchLocationInfoUtility = new FetchLocationInfoUtility(
+                mContext,
+                new FetchLocationInfoUtility.FetchLocationInfoCallBack() {
+                    @Override
+                    public void onLocationInfoAvailable(LocationInfo mLocationIno) {
 
-        //Add Header parameters
-        Map<String, String> mHeaderParams = new HashMap<>();
-        mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
-        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
+                        //Add Header parameters
+                        Map<String, String> mHeaderParams = new HashMap<>();
+                        mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
+                        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
 
-        //Add Params
-        Map<String, Object> mParams = new HashMap<>();
-        mParams.put(NetworkUtility.TAGS.CATEGORY, addressType);
-//      mParams.put(NetworkUtility.TAGS.NAME, addressName);
-        mParams.put(NetworkUtility.TAGS.ADDRESS, address);
-        mParams.put(NetworkUtility.TAGS.ADDRESS_INITIALS, addressInitials);
+                        //Add Params
+                        Map<String, Object> mParams = new HashMap<>();
+                        mParams.put(NetworkUtility.TAGS.CATEGORY, addressType);
+                        mParams.put(NetworkUtility.TAGS.ADDRESS, address);
+                        mParams.put(NetworkUtility.TAGS.ADDRESS_INITIALS, addressInitials);
+                        mParams.put(NetworkUtility.TAGS.LAT, mLocationIno.lat);
+                        mParams.put(NetworkUtility.TAGS.LNG, mLocationIno.lng);
+                        mParams.put(NetworkUtility.TAGS.COUNTRY, mLocationIno.Country);
+                        mParams.put(NetworkUtility.TAGS.STATE, mLocationIno.State);
+                        mParams.put(NetworkUtility.TAGS.CITY_NAME, mLocationIno.City);
 
-        if (latLng != null) {
-            mParams.put(NetworkUtility.TAGS.LAT, latLng.latitude + "");
-            mParams.put(NetworkUtility.TAGS.LNG, latLng.longitude + "");
-        }
-        Utility.hideKeyboard(mContext);
-        //Url is based on condition if address id is greater then 0 then it means we need to update the existing address
-        VolleyNetworkRequest mVolleyNetworkRequest = new VolleyNetworkRequest(NetworkUtility.WS.ADD_ADDRESS
-                , mCallAddAddressWSErrorListener
-                , mCallAddAddressResponseListener
-                , mHeaderParams
-                , mParams
-                , null);
-        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest);
+                        Utility.hideKeyboard(mContext);
+                        //Url is based on condition if address id is greater then 0 then it means we need to update the existing address
+                        VolleyNetworkRequest mVolleyNetworkRequest = new VolleyNetworkRequest(NetworkUtility.WS.ADD_ADDRESS
+                                , mCallAddAddressWSErrorListener
+                                , mCallAddAddressResponseListener
+                                , mHeaderParams
+                                , mParams
+                                , null);
+                        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest, NetworkUtility.WS.ADD_ADDRESS);
+                    }
+
+                    @Override
+                    public void internetConnectionNotFound() {
+                        Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mFragmentTabProfileBinding.getRoot());
+                    }
+                },
+                false
+        );
+        mFetchLocationInfoUtility.getLocationInfo(String.valueOf(latLng.latitude), String.valueOf(latLng.longitude));
     }
 
     /**
@@ -1592,7 +1623,7 @@ public class ProfileTabFragment extends BaseFragment {
      */
     private void callGetProfileWS() {
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mFragmentTabProfileBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mFragmentTabProfileBinding.getRoot());
             return;
         }
 
@@ -1690,7 +1721,7 @@ public class ProfileTabFragment extends BaseFragment {
      */
     private void updateEmergencyContact(JSONArray jsonArrayEmergencyContact) {
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mFragmentTabProfileBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mFragmentTabProfileBinding.getRoot());
             return;
         }
 
@@ -1790,7 +1821,7 @@ public class ProfileTabFragment extends BaseFragment {
 
 
         if (!Utility.isConnected(mContext)) {
-            Utility.showToast(mContext, getString(R.string.no_internet));
+            Utility.showToast(mContext,Utility.NO_INTERNET_CONNECTION);
             return;
         }
 
@@ -1896,8 +1927,8 @@ public class ProfileTabFragment extends BaseFragment {
             Utility.showToast(mContext, getString(R.string.validate_empty_password));
             return;
         } else if (!newPassword.equalsIgnoreCase(confirmPassword)) {
-            Utility.showSnackBar(getString(R.string.validate_confirm_pasword), mFragmentTabProfileBinding.getRoot());
-            Utility.showToast(mContext, getString(R.string.validate_confirm_pasword));
+            Utility.showSnackBar(getString(R.string.validate_confirm_password), mFragmentTabProfileBinding.getRoot());
+            Utility.showToast(mContext, getString(R.string.validate_confirm_password));
             return;
         }
         //Length validation
@@ -1916,8 +1947,8 @@ public class ProfileTabFragment extends BaseFragment {
         }
 
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mFragmentTabProfileBinding.getRoot());
-            Utility.showToast(mContext, getString(R.string.no_internet));
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mFragmentTabProfileBinding.getRoot());
+            Utility.showToast(mContext, Utility.NO_INTERNET_CONNECTION);
             return;
         }
 
@@ -2328,7 +2359,7 @@ public class ProfileTabFragment extends BaseFragment {
     }
 
     private void loadImage(String selectedImagePath) {
-        Utility.showCircularImageView(mContext, TAG, mFragmentTabProfileBinding.imgProfile, selectedImagePath, R.drawable.icon_profile_img_solid, true);
+        Utility.showCircularImageView(mContext, TAG, mFragmentTabProfileBinding.imgProfile, selectedImagePath, Utility.DEFAULT_PROFILE_SRC, true);
 
        /* if (!TextUtils.isEmpty(selectedImagePath))
         {

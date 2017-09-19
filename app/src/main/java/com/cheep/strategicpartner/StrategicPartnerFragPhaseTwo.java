@@ -44,14 +44,12 @@ import android.widget.PopupWindow;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.cheep.BootstrapConstant;
 import com.cheep.BuildConfig;
 import com.cheep.R;
 import com.cheep.activity.BaseAppCompatActivity;
@@ -216,7 +214,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
     private void fetchListOfQuestions(String catId) {
         Log.d(TAG, "fetchListOfQuestions() called with: catId = [" + catId + "]");
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mFragmentStrategicPartnerPhaseTwoBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mFragmentStrategicPartnerPhaseTwoBinding.getRoot());
             return;
         }
 
@@ -380,17 +378,19 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
         final TextView txtAnswer = viewInflated.findViewById(R.id.txtQueAnswer);
 
         // by default first option will be selected
-        txtAnswer.setText(model.dropDownList.get(0).dropdown_answer);
-        model.dropDownList.get(0).isSelected = true;
-        model.answer = model.dropDownList.get(0).dropdown_answer;
-        txtQueNo.setSelected(true);
-        // open menu onClick of ans text
-        txtAnswer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showDropDownMenu(txtAnswer, model);
-            }
-        });
+        if (!model.dropDownList.isEmpty()) {
+            txtAnswer.setText(model.dropDownList.get(0).dropdown_answer);
+            model.dropDownList.get(0).isSelected = true;
+            model.answer = model.dropDownList.get(0).dropdown_answer;
+            txtQueNo.setSelected(true);
+            // open menu onClick of ans text
+            txtAnswer.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    showDropDownMenu(txtAnswer, model);
+                }
+            });
+        }
 
         ansView.addView(viewInflated);
     }
@@ -791,7 +791,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
     private void showMediaChooserDialog() {
         Log.d(TAG, "showPictureChooserDialog() called");
         AlertDialog.Builder builder = new AlertDialog.Builder(mStrategicPartnerTaskCreationAct);
-        builder.setTitle("Choose media")
+        builder.setTitle(getString(R.string.choose_media))
                 .setItems(R.array.choose_media_type, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         // The 'which' argument contains the index position
@@ -814,7 +814,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
     private void showVideoChooserDialog() {
         Log.d(TAG, "showPictureChooserDialog() called");
         AlertDialog.Builder builder = new AlertDialog.Builder(mStrategicPartnerTaskCreationAct);
-        builder.setTitle("Choose video")
+        builder.setTitle(getString(R.string.choose_video))
                 .setItems(R.array.choose_video_options, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         // The 'which' argument contains the index position
@@ -923,7 +923,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
     private void showPictureChooserDialog() {
         Log.d(TAG, "showPictureChooserDialog() called");
         AlertDialog.Builder builder = new AlertDialog.Builder(mStrategicPartnerTaskCreationAct);
-        builder.setTitle("Choose image")
+        builder.setTitle(getString(R.string.choose_image))
                 .setItems(R.array.choose_image_options, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         // The 'which' argument contains the index position
@@ -1167,11 +1167,12 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
 
         if (shouldOpenAddAddress) {
             showAddAddressDialog(null);
+            addressDialog.view.findViewById(R.id.btn_submit).setVisibility(View.GONE);
         }
     }
 
+    @SuppressWarnings("unchecked")
     private void checkStrategicPartnerProAvailability(final AddressModel model, final TextView textAns, final QueAnsModel queAnsModel, final TextView textQueNo) {
-
 
         showProgressDialog();
 
@@ -1193,12 +1194,28 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
             addressId = 0;
         }
         if (addressId <= 0) {
-            mParams.put(NetworkUtility.TAGS.LAT, model.lat + "");
-            mParams.put(NetworkUtility.TAGS.LNG, model.lng + "");
+            // In case its nagative then provide other address information
+            /*
+             public String address_initials;
+             public String address;
+             public String category; //comes from NetworkUtility.TAGS.ADDRESS_TYPE.
+             public String lat;
+             public String lng;
+             */
+            mParams.put(NetworkUtility.TAGS.ADDRESS_INITIALS, model.address_initials);
+            mParams.put(NetworkUtility.TAGS.ADDRESS, model.address);
+            mParams.put(NetworkUtility.TAGS.CATEGORY, model.category);
+            mParams.put(NetworkUtility.TAGS.LAT, model.lat);
+            mParams.put(NetworkUtility.TAGS.LNG, model.lng);
+            mParams.put(NetworkUtility.TAGS.CITY_NAME, model.cityName);
+            mParams.put(NetworkUtility.TAGS.COUNTRY, model.countryName);
+            mParams.put(NetworkUtility.TAGS.STATE, model.stateName);
         } else {
             mParams.put(NetworkUtility.TAGS.ADDRESS_ID, model.address_id);
         }
+
         Utility.hideKeyboard(mContext);
+        @SuppressWarnings("unchecked")
         VolleyNetworkRequest mVolleyNetworkRequest = new VolleyNetworkRequest(NetworkUtility.WS.CHECK_PRO_AVAILABILITY_FOR_STRATEGIC_TASK
                 , new Response.ErrorListener() {
             @Override
@@ -1227,9 +1244,11 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
                     switch (statusCode) {
                         case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
                             JSONObject jsonData = jsonObject.getJSONObject(NetworkUtility.TAGS.DATA);
+                            // strategic partner pro id for given location
                             mStrategicPartnerTaskCreationAct.spUserId = jsonData.optString(SP_USER_ID);
+
                             if (mStrategicPartnerTaskCreationAct.spUserId.equalsIgnoreCase(Utility.EMPTY_STRING)) {
-                                Utility.showToast(mStrategicPartnerTaskCreationAct, getString(R.string.alert_strategic_partner_not_available_in_your_location));
+                                Utility.showToast(mStrategicPartnerTaskCreationAct, getString(R.string.alert_strategic_partner_unavailable_in_location));
                             } else {
                                 mStrategicPartnerTaskCreationAct.mSelectedAddressModel = model;
                         /*if (!model.address_initials.isEmpty()) {
@@ -1280,7 +1299,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
                 , mHeaderParams
                 , mParams
                 , null);
-        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest, NetworkUtility.WS.ADD_ADDRESS);
+        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest, NetworkUtility.WS.CHECK_PRO_AVAILABILITY_FOR_STRATEGIC_TASK);
 
 
     }
@@ -1526,7 +1545,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
 
             //TODO: Adding dummy place when play service is not there
             if (edtAddress != null) {
-                edtAddress.setText("Dummy Address with " + Utility.STATIC_LAT + "," + Utility.STATIC_LNG);
+                edtAddress.setText(getString(R.string.label_dummy_address, Utility.STATIC_LAT, Utility.STATIC_LNG));
                 edtAddress.setFocusable(true);
                 edtAddress.setFocusableInTouchMode(true);
                 try {
@@ -1549,7 +1568,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
      */
     private void callDeleteAddressWS(AddressModel addressModel) {
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mFragmentStrategicPartnerPhaseTwoBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mFragmentStrategicPartnerPhaseTwoBinding.getRoot());
             return;
         }
 
@@ -1559,8 +1578,27 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
                 addressRecyclerViewAdapter.delete(addressModel);
                 // Saving information in sharedpreference
                 guestUserDetails.addressList = addressRecyclerViewAdapter.getmList();
+                PreferenceUtility.getInstance(mContext).saveGuestUserDetails(guestUserDetails);
+
+                // hide That's me button when list is empty
+                if (addressRecyclerViewAdapter.getItemCount() == 0)
+                    addressDialog.view.findViewById(R.id.btn_submit).setVisibility(View.GONE);
+
+                // if selected adress is deleted then reset select an address field  again
+                if (mStrategicPartnerTaskCreationAct.mSelectedAddressModel != null && addressModel.address_id.equalsIgnoreCase(mStrategicPartnerTaskCreationAct.mSelectedAddressModel.address_id)) {
+                    mStrategicPartnerTaskCreationAct.mSelectedAddressModel = null;
+                    ((TextView) mFragmentStrategicPartnerPhaseTwoBinding.linMain.findViewWithTag(Utility.TEMPLATE_LOCATION)).setText(getString(R.string.label_select_an_address));
+                    for (QueAnsModel queAnsModel : mList) {
+                        if (queAnsModel.answerType.equalsIgnoreCase(Utility.TEMPLATE_LOCATION)) {
+                            queAnsModel.answer = "";
+                            break;
+                        }
+                    }
+                    validateAllQueAndAns();
+                }
+
             }
-            PreferenceUtility.getInstance(mContext).saveGuestUserDetails(guestUserDetails);
+
             return;
         }
 
@@ -1605,6 +1643,21 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
                             UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
                             userDetails.addressList = addressRecyclerViewAdapter.getmList();
                             PreferenceUtility.getInstance(mContext).saveUserDetails(userDetails);
+                            if (addressRecyclerViewAdapter.getItemCount() == 0)
+                                addressDialog.view.findViewById(R.id.btn_submit).setVisibility(View.GONE);
+
+                            if (mStrategicPartnerTaskCreationAct.mSelectedAddressModel != null && TEMP_ADDRESS_ID.equalsIgnoreCase(mStrategicPartnerTaskCreationAct.mSelectedAddressModel.address_id)) {
+                                mStrategicPartnerTaskCreationAct.mSelectedAddressModel = null;
+                                ((TextView) mFragmentStrategicPartnerPhaseTwoBinding.linMain.findViewWithTag(Utility.TEMPLATE_LOCATION)).setText(getString(R.string.label_select_an_address));
+                                for (QueAnsModel queAnsModel : mList) {
+                                    if (queAnsModel.answerType.equalsIgnoreCase(Utility.TEMPLATE_LOCATION)) {
+                                        queAnsModel.answer = "";
+                                        break;
+                                    }
+                                }
+                                validateAllQueAndAns();
+                            }
+
                         }
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
@@ -1650,69 +1703,108 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
      * @param addressType home/office/other
      * @param address     address string
      */
-    private void callUpdateAddressWS(String addressId, String
-            addressType,/* String addressName,*/ String address, String addressInitials, LatLng latLng) {
+    private void callUpdateAddressWS(final String addressId, final String
+            addressType,/* String addressName,*/ final String address, final String addressInitials, final LatLng latLng) {
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mFragmentStrategicPartnerPhaseTwoBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mFragmentStrategicPartnerPhaseTwoBinding.getRoot());
             return;
         }
 
         if (PreferenceUtility.getInstance(mContext).getUserDetails() == null) {
-            GuestUserDetails guestUserDetails = PreferenceUtility.getInstance(mContext).getGuestUserDetails();
-            if (addressRecyclerViewAdapter != null) {
-                AddressModel mAddressModel = addressRecyclerViewAdapter.getSelectedAddress();
-                mAddressModel.address_id = addressId;
-                mAddressModel.category = addressType;
-                mAddressModel.address = address;
-                mAddressModel.address_initials = addressInitials;
-                mAddressModel.lat = String.valueOf(latLng.latitude);
-                mAddressModel.lng = String.valueOf(latLng.longitude);
-                addressRecyclerViewAdapter.updateItem(mAddressModel);
-                // Saving information in sharedpreference
-                guestUserDetails.addressList = addressRecyclerViewAdapter.getmList();
-            }
-            PreferenceUtility.getInstance(mContext).saveGuestUserDetails(guestUserDetails);
+            /**
+             * Guest User so just save it locally & Return.
+             */
+            showProgressDialog();
+            FetchLocationInfoUtility mFetchLocationInfoUtility = new FetchLocationInfoUtility(
+                    mContext,
+                    new FetchLocationInfoUtility.FetchLocationInfoCallBack() {
+                        @Override
+                        public void onLocationInfoAvailable(LocationInfo mLocationIno) {
+                            hideProgressDialog();
+                            GuestUserDetails guestUserDetails = PreferenceUtility.getInstance(mContext).getGuestUserDetails();
+                            if (addressRecyclerViewAdapter != null) {
+                                AddressModel mAddressModel = addressRecyclerViewAdapter.getSelectedAddress();
+                                mAddressModel.address_id = addressId;
+                                mAddressModel.category = addressType;
+                                mAddressModel.address = address;
+                                mAddressModel.address_initials = addressInitials;
+                                mAddressModel.lat = mLocationIno.lat;
+                                mAddressModel.lng = mLocationIno.lng;
+                                mAddressModel.countryName = mLocationIno.Country;
+                                mAddressModel.stateName = mLocationIno.State;
+                                mAddressModel.cityName = mLocationIno.City;
+                                addressRecyclerViewAdapter.updateItem(mAddressModel);
+                                // Saving information in sharedpreference
+                                guestUserDetails.addressList = addressRecyclerViewAdapter.getmList();
+                            }
+                            PreferenceUtility.getInstance(mContext).saveGuestUserDetails(guestUserDetails);
+                            if (addAddressDialog != null) {
+                                addAddressDialog.dismiss();
+                            }
+                        }
 
-            if (addAddressDialog != null) {
-                addAddressDialog.dismiss();
-            }
+                        @Override
+                        public void internetConnectionNotFound() {
+                            hideProgressDialog();
+                            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mFragmentStrategicPartnerPhaseTwoBinding.getRoot());
+                        }
+                    },
+                    false
+            );
+            mFetchLocationInfoUtility.getLocationInfo(String.valueOf(latLng.latitude), String.valueOf(latLng.longitude));
             return;
+        } else {
+            /*
+             * For Logged In user,
+             */
+            showProgressDialog();
+            FetchLocationInfoUtility mFetchLocationInfoUtility = new FetchLocationInfoUtility(
+                    mContext,
+                    new FetchLocationInfoUtility.FetchLocationInfoCallBack() {
+                        @Override
+                        public void onLocationInfoAvailable(LocationInfo mLocationIno) {
+                            // Show Progress
+                            showProgressDialog();
+
+                            // Add Header parameters
+                            Map<String, String> mHeaderParams = new HashMap<>();
+                            mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
+                            mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
+
+                            // Add Params
+                            Map<String, Object> mParams = new HashMap<>();
+                            mParams.put(NetworkUtility.TAGS.ADDRESS_ID, addressId);
+                            mParams.put(NetworkUtility.TAGS.CATEGORY, addressType);
+                            mParams.put(NetworkUtility.TAGS.ADDRESS, address);
+                            mParams.put(NetworkUtility.TAGS.ADDRESS_INITIALS, addressInitials);
+                            mParams.put(NetworkUtility.TAGS.LAT, mLocationIno.lat);
+                            mParams.put(NetworkUtility.TAGS.LNG, mLocationIno.lng);
+                            mParams.put(NetworkUtility.TAGS.COUNTRY, mLocationIno.Country);
+                            mParams.put(NetworkUtility.TAGS.STATE, mLocationIno.State);
+                            mParams.put(NetworkUtility.TAGS.CITY_NAME, mLocationIno.City);
+
+                            // Url is based on condition if address id is greater then 0 then it means we need to update the existing address
+                            VolleyNetworkRequest mVolleyNetworkRequest = new VolleyNetworkRequest(NetworkUtility.WS.EDIT_ADDRESS
+                                    , mCallUpdateAddressWSErrorListener
+                                    , mCallUpdateAddressResponseListener
+                                    , mHeaderParams
+                                    , mParams
+                                    , null);
+                            Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest, NetworkUtility.WS.EDIT_ADDRESS);
+                        }
+
+                        @Override
+                        public void internetConnectionNotFound() {
+                            hideProgressDialog();
+                            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mFragmentStrategicPartnerPhaseTwoBinding.getRoot());
+                        }
+                    },
+                    false
+            );
+            mFetchLocationInfoUtility.getLocationInfo(String.valueOf(latLng.latitude), String.valueOf(latLng.longitude));
         }
 
-        //Show Progress
-        showProgressDialog();
 
-        //Add Header parameters
-        Map<String, String> mHeaderParams = new HashMap<>();
-        mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
-        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
-
-        //Add Params
-        Map<String, Object> mParams = new HashMap<>();
-        mParams.put(NetworkUtility.TAGS.CATEGORY, addressType);
-//        mParams.put(NetworkUtility.TAGS.NAME, addressName);
-        mParams.put(NetworkUtility.TAGS.ADDRESS, address);
-        mParams.put(NetworkUtility.TAGS.ADDRESS_INITIALS, addressInitials);
-
-        if (latLng != null) {
-            mParams.put(NetworkUtility.TAGS.LAT, latLng.latitude + "");
-            mParams.put(NetworkUtility.TAGS.LNG, latLng.longitude + "");
-        }
-
-
-        //if address id is greater then 0 then it means we need to update the existing address so sending addressId as parameter also
-        if (!"0".equalsIgnoreCase(addressId)) {
-            mParams.put(NetworkUtility.TAGS.ADDRESS_ID, String.valueOf(addressId));
-        }
-
-        //Url is based on condition if address id is greater then 0 then it means we need to update the existing address
-        VolleyNetworkRequest mVolleyNetworkRequest = new VolleyNetworkRequest((!"0".equalsIgnoreCase(addressId) ? NetworkUtility.WS.EDIT_ADDRESS : NetworkUtility.WS.ADD_ADDRESS)
-                , mCallUpdateAddressWSErrorListener
-                , mCallUpdateAddressResponseListener
-                , mHeaderParams
-                , mParams
-                , null);
-        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest, (!"0".equalsIgnoreCase(addressId) ? NetworkUtility.WS.EDIT_ADDRESS : NetworkUtility.WS.ADD_ADDRESS));
     }
 
 
@@ -1797,11 +1889,14 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
     private void callAddAddressWS(final String addressType, /*String addressName,*/ final String
             address, final String addressInitials, final LatLng latLng) {
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mFragmentStrategicPartnerPhaseTwoBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mFragmentStrategicPartnerPhaseTwoBinding.getRoot());
             return;
         }
 
         if (PreferenceUtility.getInstance(mContext).getUserDetails() == null) {
+            /**
+             * Guest User so just save it locally & Return.
+             */
             showProgressDialog();
             FetchLocationInfoUtility mFetchLocationInfoUtility = new FetchLocationInfoUtility(
                     mContext,
@@ -1816,10 +1911,12 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
                              * In case og Guest User we want to save it locally.
                              */
                             AddressModel addressModel = new AddressModel();
-                            // Creating Dynamic AddressID but it would be nagative values always to differentiat with logged in users address.
+                            // Creating Dynamic AddressID but it would be nagative values always to differentiate with logged in users address.
                             addressModel.address_id = "-" + (guestUserDetails.addressList == null ? "1" : String.valueOf(guestUserDetails.addressList.size() + 1));
                             addressModel.address = address;
                             addressModel.cityName = mLocationIno.City;
+                            addressModel.countryName = mLocationIno.Country;
+                            addressModel.stateName = mLocationIno.State;
                             addressModel.address_initials = addressInitials;
                             addressModel.category = addressType;
                             addressModel.lat = String.valueOf(latLng.latitude);
@@ -1827,6 +1924,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
 
                             if (addressRecyclerViewAdapter != null) {
                                 addressRecyclerViewAdapter.add(addressModel);
+                                addressDialog.view.findViewById(R.id.btn_submit).setVisibility(View.VISIBLE);
                             }
 
                             //Saving information in sharedpreference
@@ -1837,43 +1935,68 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
                                 addAddressDialog.dismiss();
                             }
                         }
+
+                        @Override
+                        public void internetConnectionNotFound() {
+                            hideProgressDialog();
+                            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mFragmentStrategicPartnerPhaseTwoBinding.getRoot());
+                        }
+                    },
+                    false
+            );
+            mFetchLocationInfoUtility.getLocationInfo(String.valueOf(latLng.latitude), String.valueOf(latLng.longitude));
+            return;
+        } else {
+            /**
+             * Logged In User so first need to fetch other location info and then call add address
+             * Webservice.
+             */
+            showProgressDialog();
+            FetchLocationInfoUtility mFetchLocationInfoUtility = new FetchLocationInfoUtility(
+                    mContext,
+                    new FetchLocationInfoUtility.FetchLocationInfoCallBack() {
+                        @Override
+                        public void onLocationInfoAvailable(LocationInfo mLocationIno) {
+
+                            //Add Header parameters
+                            Map<String, String> mHeaderParams = new HashMap<>();
+                            mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
+                            mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
+
+                            //Add Params
+                            Map<String, Object> mParams = new HashMap<>();
+                            mParams.put(NetworkUtility.TAGS.CATEGORY, addressType);
+                            mParams.put(NetworkUtility.TAGS.ADDRESS, address);
+                            mParams.put(NetworkUtility.TAGS.ADDRESS_INITIALS, addressInitials);
+                            mParams.put(NetworkUtility.TAGS.LAT, mLocationIno.lat);
+                            mParams.put(NetworkUtility.TAGS.LNG, mLocationIno.lng);
+                            mParams.put(NetworkUtility.TAGS.COUNTRY, mLocationIno.Country);
+                            mParams.put(NetworkUtility.TAGS.STATE, mLocationIno.State);
+                            mParams.put(NetworkUtility.TAGS.CITY_NAME, mLocationIno.City);
+
+                            Utility.hideKeyboard(mContext);
+                            //Url is based on condition if address id is greater then 0 then it means we need to update the existing address
+                            VolleyNetworkRequest mVolleyNetworkRequest = new VolleyNetworkRequest(NetworkUtility.WS.ADD_ADDRESS
+                                    , mCallAddAddressWSErrorListener
+                                    , mCallAddAddressResponseListener
+                                    , mHeaderParams
+                                    , mParams
+                                    , null);
+                            Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest, NetworkUtility.WS.ADD_ADDRESS);
+                        }
+
+                        @Override
+                        public void internetConnectionNotFound() {
+                            hideProgressDialog();
+                            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mFragmentStrategicPartnerPhaseTwoBinding.getRoot());
+                        }
                     },
                     false
             );
             mFetchLocationInfoUtility.getLocationInfo(String.valueOf(latLng.latitude), String.valueOf(latLng.longitude));
             return;
         }
-
-        //Show Progress
-        showProgressDialog();
-
-        //Add Header parameters
-        Map<String, String> mHeaderParams = new HashMap<>();
-        mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
-        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
-
-        //Add Params
-        Map<String, Object> mParams = new HashMap<>();
-        mParams.put(NetworkUtility.TAGS.CATEGORY, addressType);
-//        mParams.put(NetworkUtility.TAGS.NAME, addressName);
-        mParams.put(NetworkUtility.TAGS.ADDRESS, address);
-        mParams.put(NetworkUtility.TAGS.ADDRESS_INITIALS, addressInitials);
-
-        if (latLng != null) {
-            mParams.put(NetworkUtility.TAGS.LAT, latLng.latitude + "");
-            mParams.put(NetworkUtility.TAGS.LNG, latLng.longitude + "");
-        }
-        Utility.hideKeyboard(mContext);
-        //Url is based on condition if address id is greater then 0 then it means we need to update the existing address
-        VolleyNetworkRequest mVolleyNetworkRequest = new VolleyNetworkRequest(NetworkUtility.WS.ADD_ADDRESS
-                , mCallAddAddressWSErrorListener
-                , mCallAddAddressResponseListener
-                , mHeaderParams
-                , mParams
-                , null);
-        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest, NetworkUtility.WS.ADD_ADDRESS);
     }
-
 
     private Response.Listener mCallAddAddressResponseListener = new Response.Listener() {
         @Override
@@ -1902,6 +2025,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
 
                         if (addAddressDialog != null) {
                             addAddressDialog.dismiss();
+                            addressDialog.view.findViewById(R.id.btn_submit).setVisibility(View.VISIBLE);
                         }
 
                         break;
@@ -2018,9 +2142,9 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
 
             if (mCurrentPhotoPath != null && !mCurrentPhotoPath.equals("")) {
                 if (getDuration(mCurrentPhotoPath) > 10) {
-                    Toast.makeText(mStrategicPartnerTaskCreationAct, "Looks like the size of the file is heavy. Please try again.", Toast.LENGTH_SHORT).show();
+                    Utility.showToast(mContext, getString(R.string.message_file_heavy));
                 } else if (getDuration(mCurrentPhotoPath) <= 0) {
-                    Toast.makeText(mStrategicPartnerTaskCreationAct, "Looks like there is something wrong with file. Please try again.", Toast.LENGTH_SHORT).show();
+                    Utility.showToast(mContext, getString(R.string.message_file_something_wrong));
                 } else {
                     try {
                         Log.e(TAG, "path >> " + mCurrentPhotoPath);

@@ -153,7 +153,7 @@ public class SelectSubCategoryFragment extends BaseFragment {
     private void fetchListOfSubCategory(String catId) {
         Log.d(TAG, "fetchListOfSubCategory() called with: catId = [" + catId + "]");
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mFragmentSelectSubserviceBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mFragmentSelectSubserviceBinding.getRoot());
             return;
         }
 
@@ -191,7 +191,7 @@ public class SelectSubCategoryFragment extends BaseFragment {
                 switch (statusCode) {
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
                         ArrayList<SubServiceDetailModel> list = Utility.getObjectListFromJsonString(jsonObject.optString(NetworkUtility.TAGS.DATA), SubServiceDetailModel[].class);
-                        mSubServiceRecyclerViewAdapter.addList(list);
+                        mSubServiceRecyclerViewAdapter.addList(list, getString(R.string.label_other_sub_service));
                         errorLoadingHelper.success();
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:

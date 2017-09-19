@@ -7,15 +7,14 @@ repositories {
 }
 
 android {
-
     compileSdkVersion 26
     buildToolsVersion "26.0.1"
     defaultConfig {
         applicationId "com.cheep"
         minSdkVersion 16
         targetSdkVersion 25
-        versionCode 23
-        versionName "1.0.67" // PLEASE FIRST MAKE SURE MIN-VERSION IS 16.
+        versionCode 24
+        versionName "1.0.86" // PLEASE FIRST MAKE SURE MIN-VERSION IS 16.
         renderscriptTargetApi 18
         renderscriptSupportModeEnabled true
 
@@ -58,7 +57,7 @@ android {
         buildConfigField("String", "BUCKET_NAME ", getProperty("BUCKET_NAME"))
         buildConfigField("String", "TASK_ORIGINAL_FOLDER ", getProperty("TASK_ORIGINAL_FOLDER"))
         buildConfigField("String", "TASK_THUMB_FOLDER ", getProperty("TASK_THUMB_FOLDER"))
-        buildConfigField("boolean", "NEED_TO_BYPASS_PAYMENT", "true")
+        buildConfigField("boolean", "NEED_TO_BYPASS_PAYMENT", "false")
 
         // TODO: This needs to change (For Temporary LIVE)
 //        buildConfigField("String", "BASE_URL", getProperty("LIVE_BASE_URL"));
@@ -86,6 +85,16 @@ android {
         debug {
             versionNameSuffix "-SNAPSHOT"
         }
+        staging {
+            versionNameSuffix "-STAGING"
+            // Below Key value pairs would get change based on Buildtype
+            buildConfigField("String", "BASE_URL", getProperty("STAGING_BASE_URL"));
+            buildConfigField("String", "CHAT_NODE", getProperty("CHAT_NODE_DEBUG"));
+            buildConfigField("String", "PAYUBIZ_HDFC_KEY", getProperty("PAYUBIZ_HDFC_SANDBOX_KEY"))
+            buildConfigField("String", "PAYUBIZ_HDFC_URL", getProperty("PAYUBIZ_HDFC_SANDBOX_URL"))
+            buildConfigField("boolean", "NEED_TO_BYPASS_PAYMENT", "true")
+            signingConfig signingConfigs.debug
+        }
         live {
             versionNameSuffix "-LIVE"
             buildConfigField("String", "BASE_URL", getProperty("LIVE_BASE_URL"));
@@ -101,8 +110,7 @@ android {
             buildConfigField("String", "PAYUBIZ_HDFC_KEY", getProperty("PAYUBIZ_HDFC_LIVE_KEY"))
             buildConfigField("String", "PAYUBIZ_HDFC_URL", getProperty("PAYUBIZ_HDFC_LIVE_URL"))
             buildConfigField("boolean", "NEED_TO_BYPASS_PAYMENT", "false")
-            signingConfig signingConfigs.debug
-            minifyEnabled true
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -134,25 +142,26 @@ configurations {
 
 // Description
 ext {
-//    supportLibVer = '26.0.0'
-    supportLibVer = '25.4.0'
+    supportLibVer = '26.0.2'
+//    supportLibVer = '25.4.0'
     gsonLibVer = '2.7'
-    playServiceVer = '11.0.2'
+    playServiceVer = '11.0.4'
 //    playServiceVer = '10.2.0'
 }
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
-    // Support Library
+    // V7 Compat library, it also included v4 libraries under the hood.
     compile "com.android.support:appcompat-v7:$supportLibVer"
+
+    // Design Support Library, it also included Multidex library support, So there is no need to provide
+    // another library here.
     compile "com.android.support:design:$supportLibVer"
-    //    compile 'com.android.support.constraint:constraint-layout:1.0.0-beta5'
+    compile 'com.android.support:multidex:1.0.1'
 
     // Gson Library
     compile "com.google.code.gson:gson:$gsonLibVer"
-
-    // Glide Library
 
     //For Getting Location
     compile "com.google.android.gms:play-services-location:$playServiceVer"
@@ -179,16 +188,24 @@ dependencies {
         transitive = true;
     }
 
+    // Glide Library
+    compile 'com.github.bumptech.glide:glide:3.7.0'
+
     // Swipe layout library This is Test Experiment
+    compile 'com.daimajia.swipelayout:library:1.2.0@aar'
 
     //Volley Library
+    compile 'com.android.volley:volley:1.0.0'
 
     //Apache Library
+    compile 'org.apache.httpcomponents:httpmime:4.3.6'
+    compile 'org.apache.httpcomponents:httpclient-android:4.3.5.1'
 
     //Facebook
+    compile 'com.facebook.android:facebook-android-sdk:4.16.1'
 
     //For Image Cropping
-//    compile 'com.theartofdev.edmodo:android-image-cropper:2.3.1'
+    compile 'com.theartofdev.edmodo:android-image-cropper:2.3.1'
 
     //For Circular indicator with viewpager
 
@@ -215,10 +232,19 @@ dependencies {
     compile 'com.facebook.android:facebook-android-sdk:4.16.1'
     compile 'com.theartofdev.edmodo:android-image-cropper:2.3.1'
     compile 'me.relex:circleindicator:1.2.2@aar'
+
+    // For Broadcasting
     compile 'org.greenrobot:eventbus:3.0.0'
+
+    // For PayUMoney payment integration
     compile 'com.payu.india:payu-sdk:4.3.9'
     compile 'com.payu.custombrowser:payu-custom-browser:5.3.7'
     compile 'com.payu.magicretry:magicretry:1.0.0'
+//    compile 'com.payu.india:payu-sdk:4.4.1'
+//    compile 'com.payu.custombrowser:payu-custom-browser:6.1.1'
+//    compile 'com.payu.magicretry:magicretry:1.0.4'
+
+    //HotLine integration(For Chat to Cheep Admin)
     compile 'com.github.freshdesk:hotline-android:1.2.4'
     compile 'com.appsflyer:af-android-sdk:4.7.2@aar'
     compile 'com.amazonaws:aws-android-sdk-s3:2.2.+'

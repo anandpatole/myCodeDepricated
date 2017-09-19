@@ -29,9 +29,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.AppCompatEditText;
-import android.support.v8.renderscript.Allocation;
-import android.support.v8.renderscript.RenderScript;
-import android.support.v8.renderscript.ScriptIntrinsicBlur;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.util.DisplayMetrics;
@@ -70,7 +67,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import static android.support.v8.renderscript.Allocation.createFromBitmap;
 import static com.cheep.utils.SuperCalendar.SuperFormatter;
 
 
@@ -104,11 +100,18 @@ public class Utility {
     public static final String DATE_FORMAT_DD_MM_YY = SuperFormatter.DATE + "/" + SuperFormatter.MONTH_NUMBER + "/" + SuperFormatter.YEAR_4_DIGIT;
     public static final String DATE_FORMAT_DD_MMM = SuperFormatter.DATE + " " + SuperFormatter.MONTH_JAN;
     public static final String DATE_FORMAT_DD_MMM_YYYY = SuperFormatter.DATE + " " + SuperFormatter.MONTH_JAN + " " + SuperFormatter.YEAR_4_DIGIT;
-    public static final String DATE_FORMAT_HH_MM_AM = SuperFormatter.HOUR_12_HOUR_2_DIGIT + ":" + SuperFormatter.MINUTE + " " + SuperFormatter.AM_PM;
-    public static final String DATE_FORMAT_DD_MMM_HH_MM_AM = SuperFormatter.DATE + " " + SuperFormatter.MONTH_JAN + " " + SuperFormatter.HOUR_12_HOUR_2_DIGIT + ":" + SuperFormatter.MINUTE + "" + SuperFormatter.AM_PM;
+    //TODO :: commented on 13 sept 2017 as per 24 hours formation
+//    public static final String DATE_FORMAT_HH_MM_AM = SuperFormatter.HOUR_12_HOUR_2_DIGIT + ":" + SuperFormatter.MINUTE + " " + SuperFormatter.AM_PM;
+//    public static final String DATE_FORMAT_DD_MMM_HH_MM_AM = SuperFormatter.DATE + " " + SuperFormatter.MONTH_JAN + " " + SuperFormatter.HOUR_12_HOUR_2_DIGIT + ":" + SuperFormatter.MINUTE + "" + SuperFormatter.AM_PM;
+//    public static final String DATE_FORMAT_TASK_HAS_BEEN_PAID_TIME = SuperFormatter.HOUR_12_HOUR_2_DIGIT + ":" + SuperFormatter.MINUTE + "" + SuperFormatter.AM_PM;
+
+    public static final String DATE_FORMAT_HH_MM_AM = SuperFormatter.HOUR_24_HOUR + ":" + SuperFormatter.MINUTE + " ";
+    public static final String DATE_FORMAT_DD_MMM_HH_MM_AM = SuperFormatter.DATE + " " + SuperFormatter.MONTH_JAN + " " + SuperFormatter.HOUR_24_HOUR + ":" + SuperFormatter.MINUTE + "";
     public static final String DATE_FORMAT_TASK_HAS_BEEN_PAID_DATE = SuperFormatter.DATE + " " + SuperFormatter.MONTH_JAN;
-    public static final String DATE_FORMAT_TASK_HAS_BEEN_PAID_TIME = SuperFormatter.HOUR_12_HOUR_2_DIGIT + ":" + SuperFormatter.MINUTE + "" + SuperFormatter.AM_PM;
+    public static final String DATE_FORMAT_TASK_HAS_BEEN_PAID_TIME = SuperFormatter.HOUR_24_HOUR + ":" + SuperFormatter.MINUTE + "";
     public static final String DATE_TIME_FORMAT_SERVICE_YEAR = SuperFormatter.YEAR_4_DIGIT + "-" + SuperFormatter.MONTH_NUMBER + "-" + SuperFormatter.DATE + " " + SuperFormatter.HOUR_24_HOUR + ":" + SuperFormatter.MINUTE + ":" + SuperFormatter.SECONDS;
+    //    dd MMMM, HH:mm a
+    public static final String DATE_TIME_DD_MMMM_HH_MM = SuperFormatter.DATE + " " + SuperFormatter.MONTH_JANUARY + " " + SuperFormatter.HOUR_24_HOUR + ":" + SuperFormatter.MINUTE + "";
     public static final String DATE_FORMAT_FULL_DATE = SuperFormatter.FULL_DATE;
 
     public static final int PASSWORD_MIN_LENGTH = 6;
@@ -116,7 +119,7 @@ public class Utility {
 
     public static final int DEFAULT_PROFILE_SRC = R.drawable.icon_profile_img_solid;
     public static final int DEFAULT_CHEEP_LOGO = R.drawable.ic_cheep_circular_icon;
-    public static final String DEFAULT_PROFILE_URL = "http://msz.uniklinikum-dresden.de/zkn/images/mitarbeiter/dummy120_dagobert83_female_user_icon.png";//"http://lorempixel.com/200/200/people/";
+//    public static final String DEFAULT_PROFILE_URL = "http://msz.uniklinikum-dresden.de/zkn/images/mitarbeiter/dummy120_dagobert83_female_user_icon.png";//"http://lorempixel.com/200/200/people/";
 
     public static final String LOCALE_FOR_HINDI = "hi";
     public static final String LOCALE_FOR_ENGLISH = "en";
@@ -193,6 +196,12 @@ public class Utility {
      */
     public static final float CATEGORY_IMAGE_RATIO = (float) 2.3972;
 
+
+    /**
+     * Regular expression for mobile number
+     */
+    public static final String MOBILE_REGREX = "(((\\+*)((0[ -]+)*|(91[- ]+)*)(\\d{12}+|\\d{10}+))|\\d{5}([- ]*)\\d{6})";
+//    public static final String MOBILE_REGREX_IOS = "\"(?\\+\\d\\d\\s+)?((?:\\(\\d\\d\\)|\\d\\d)\\s+)?)(\\d{4,10}\\-?\\d{4})\"";
 
     /**
      * ongoing user chatId
@@ -364,6 +373,9 @@ public class Utility {
         return String.valueOf(System.currentTimeMillis());
     }
 
+
+    public static final String NO_INTERNET_CONNECTION = "Hey, we see a problem with your internet" + new String(Character.toChars(0x1f914)) + ". We\'ll wait while you check your connection and try again";
+
     //Bundle Extra parameters
     public static class Extra {
         public static final String WHICH_FRAG = "which_frag";
@@ -401,6 +413,8 @@ public class Utility {
         public static final String FROM_WHERE = "from_where";
         public static final String TASK_TYPE_IS_INSTA = "isInsta";
         public static final String SELECTED_ADDRESS_MODEL = "selectedAddressModel";
+        public static final String LOCATION_INFO = "location_info";
+        public static final String IS_INSTA_BOOKING_TASK = "isInstaBookingTask";
     }
 
 
@@ -508,14 +522,6 @@ public class Utility {
         return "0.0.0";
     }
 
-    /*
-   * get formated date from Date
-   * */
-    public static String getFormatedDate(long timeStamp) {
-        Date date = new Date(timeStamp);
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("hh:mm aa"/*, Locale.US*/);
-        return simpleDateFormat.format(date);
-    }
 
     public static String getDate(long milliSeconds, String dateFormat) {
         String finalDate = "";
@@ -885,20 +891,6 @@ public class Utility {
     }
 
 
-    public static Bitmap BlurImage(Bitmap input, Context mContext) {
-        RenderScript rsScript = RenderScript.create(mContext);
-        Allocation alloc = createFromBitmap(rsScript, input);
-        ScriptIntrinsicBlur blur = ScriptIntrinsicBlur.create(rsScript, alloc.getElement());
-        blur.setRadius(12);
-        blur.setInput(alloc);
-        Bitmap result = Bitmap.createBitmap(input.getWidth(), input.getHeight(), input.getConfig());
-        Allocation outAlloc = createFromBitmap(rsScript, result);
-        blur.forEach(outAlloc);
-        outAlloc.copyTo(result);
-        rsScript.destroy();
-        return result;
-    }
-
     // copy text to clipboard
     public static void setClipboard(Context context, String text) {
         if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB) {
@@ -906,7 +898,7 @@ public class Utility {
             clipboard.setText(text);
         } else {
             android.content.ClipboardManager clipboard = (android.content.ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
-            android.content.ClipData clip = android.content.ClipData.newPlainText("Copied Text", text);
+            android.content.ClipData clip = android.content.ClipData.newPlainText(context.getString(R.string.label_copied_text), text);
             clipboard.setPrimaryClip(clip);
         }
     }
@@ -1263,4 +1255,16 @@ public class Utility {
         return formatter.format(price);
     }
 
+  /*  public static String getExperienceString(String exp) {
+        try {
+            float expFloat = Float.parseFloat(exp);
+            if (expFloat > 1) {
+                return exp + " Years \nExperience";
+            } else {
+                return exp + " Year \nExperience";
+            }
+        } catch (NumberFormatException e) {
+            return exp + " Year \nExperience";
+        }
+    }*/
 }

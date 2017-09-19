@@ -125,6 +125,12 @@ public class TaskDetailModel {
     @SerializedName("question_detail")
     public ArrayList<QueAnsModel> mQuesList;
 
+    @SerializedName("banner_image")
+    public String bannerImage;
+
+    @SerializedName("is_prefed_quote")
+    public String isPrefedQuote;
+
 
     public TaskDetailModel() {
 
