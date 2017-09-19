@@ -4,6 +4,7 @@ import android.content.Context;
 import android.text.TextUtils;
 
 import com.android.volley.Cache;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Network;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -68,6 +69,7 @@ public class Volley {
     private static final String TAG = "Volley";
     private static Volley mInstance;
     private RequestQueue mRequestQueue;
+    public static final int NETWORK_RESPONSE_TIME_OUT = 20000;
 
     private Volley(Context context) {
         if (mRequestQueue == null) {
@@ -99,10 +101,16 @@ public class Volley {
     }
 
     public <T> void addToRequestQueue(Request<T> req) {
+//        req.setRetryPolicy(new DefaultRetryPolicy(NETWORK_RESPONSE_TIME_OUT,
+//                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+//                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         mRequestQueue.add(req);
     }
 
     public <T> void addToRequestQueue(Request<T> req, String tag) {
+//        req.setRetryPolicy(new DefaultRetryPolicy(NETWORK_RESPONSE_TIME_OUT,
+//                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+//                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         // set the default tag if tag is empty
         req.setTag(TextUtils.isEmpty(tag) ? TAG : tag);
         mRequestQueue.add(req);

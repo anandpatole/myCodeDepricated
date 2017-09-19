@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -26,7 +26,7 @@
 
                 android:textColor="@color/colorPrimary"
                 android:textSize="@dimen/text_size_18sp"
-                tools:ignore="UnusedAttribute" />
+                tools:ignore="UnusedAttribute"/>
 
             <ImageView
                 android:id="@+id/img_report"
@@ -35,13 +35,14 @@
                 android:layout_gravity="right"
                 android:paddingRight="@dimen/scale_15dp"
                 android:src="@drawable/icon_flag"
-                tools:ignore="ContentDescription" />
+                tools:ignore="ContentDescription"/>
         </android.support.v7.widget.Toolbar>
 
         <android.support.v4.widget.SwipeRefreshLayout
             android:id="@+id/swipeRefreshLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_above="@+id/layout_pay"
             android:layout_below="@+id/toolbar">
 
             <android.support.v4.widget.NestedScrollView
@@ -123,7 +124,7 @@
                                 android:layout_marginBottom="@dimen/scale_20dp"
                                 android:layout_marginRight="@dimen/scale_20dp"
                                 android:background="@drawable/icon_fav_selector"
-                                tools:ignore="ContentDescription" />
+                                tools:ignore="ContentDescription"/>
 
                         </RelativeLayout>
 
@@ -131,7 +132,7 @@
                         <!--TODO: We have to uncomment the following in order to enable the -->
                         <!--TODO: chat call feature.-->
                         <!--TODO: Un-commented code by giteeka -30 aug 2017.-->
-                       <LinearLayout
+                        <LinearLayout
                             android:id="@+id/ln_chat"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -153,7 +154,7 @@
                                     android:adjustViewBounds="true"
                                     android:padding="@dimen/scale_5dp"
                                     android:src="@drawable/icon_chat_smaller"
-                                    tools:ignore="ContentDescription" />
+                                    tools:ignore="ContentDescription"/>
 
                                 <com.cheep.custom_view.CFTextViewSemiBold
                                     android:id="@+id/tv_chat_unread_count"
@@ -176,7 +177,7 @@
                                     android:textColor="@color/white"
                                     android:textSize="@dimen/text_size_10sp"
                                     android:visibility="visible"
-                                    tools:text="25" />
+                                    tools:text="25"/>
                             </RelativeLayout>
 
                             <com.cheep.custom_view.CFTextViewRegular
@@ -190,7 +191,7 @@
                                 android:text="@string/label_chat"
                                 android:textColor="@color/splash_gradient_end"
                                 android:textSize="@dimen/text_size_11sp"
-                                android:visibility="visible" />
+                                android:visibility="visible"/>
                         </LinearLayout>
                     </RelativeLayout>
 
@@ -203,7 +204,7 @@
                         android:gravity="center"
                         android:textColor="@color/splash_gradient_end"
                         android:textSize="@dimen/text_size_18sp"
-                        tools:text="@string/dummy_name" />
+                        tools:text="@string/dummy_name"/>
 
                     <com.cheep.custom_view.CFTextViewRegular
                         android:id="@+id/text_verified"
@@ -221,7 +222,7 @@
                         android:paddingTop="@dimen/scale_2dp"
                         android:text="@string/label_verified"
                         android:textColor="@color/white"
-                        android:textSize="@dimen/text_size_10sp" />
+                        android:textSize="@dimen/text_size_10sp"/>
 
                     <com.cheep.custom_view.CFTextViewRegular
                         android:id="@+id/text_category"
@@ -238,7 +239,7 @@
                         android:paddingTop="@dimen/scale_5dp"
                         android:textColor="@color/splash_gradient_end"
                         android:textSize="@dimen/text_size_11sp"
-                        tools:text="Plumber" />
+                        tools:text="Plumber"/>
 
                     <com.cheep.custom_view.CFTextViewSemiBold
                         android:id="@+id/text_contact_request"
@@ -256,7 +257,7 @@
                         android:text="@string/label_contact_requested"
                         android:textColor="@color/white"
                         android:textSize="@dimen/text_size_14sp"
-                        android:visibility="gone" />
+                        android:visibility="gone"/>
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -285,7 +286,7 @@
                                 android:isIndicator="true"
                                 android:progressDrawable="@drawable/rating_bar_blue_selector_s5"
                                 android:rating="0"
-                                android:stepSize="1" />
+                                android:stepSize="1"/>
 
                             <com.cheep.custom_view.CFTextViewSemiBold
                                 android:id="@+id/text_total_reviews"
@@ -297,7 +298,7 @@
                                 android:textColor="@color/splash_gradient_end"
                                 android:textSize="@dimen/text_size_14sp"
                                 android:visibility="visible"
-                                tools:text="Based on 38 user ratings" />
+                                tools:text="Based on 38 user ratings"/>
                         </LinearLayout>
 
                         <com.cheep.custom_view.CFTextViewSemiBold
@@ -312,7 +313,7 @@
                             android:textColor="@color/grey_varient_8"
                             android:textSize="@dimen/text_size_14sp"
                             android:visibility="visible"
-                            tools:text="Juhu 1.8 km away" />
+                            tools:text="Juhu 1.8 km away"/>
 
                         <com.cheep.custom_view.CFTextViewRegular
                             android:id="@+id/text_desc"
@@ -325,7 +326,7 @@
                             android:textColor="@color/grey_varient_8"
                             android:textSize="@dimen/text_size_14sp"
                             android:visibility="visible"
-                            tools:text="Lorel ipsum" />
+                            tools:text="Lorel ipsum"/>
 
 
                         <LinearLayout
@@ -346,7 +347,7 @@
                                 android:text="@string/label_past_work"
                                 android:textColor="@color/grey_varient_8"
                                 android:textSize="@dimen/text_size_14sp"
-                                android:visibility="visible" />
+                                android:visibility="visible"/>
 
                             <android.support.v7.widget.RecyclerView
                                 android:id="@+id/recyclerviewPastWork"
@@ -369,7 +370,7 @@
                             android:paddingLeft="@dimen/scale_15dp"
                             android:paddingTop="@dimen/scale_5dp"
                             android:text="@string/label_reviews"
-                            android:textColor="@color/grey_varient_8" />
+                            android:textColor="@color/grey_varient_8"/>
 
                         <FrameLayout
                             android:layout_width="match_parent"
@@ -379,7 +380,7 @@
                                 android:id="@+id/recycler_view"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                app:layoutManager="LinearLayoutManager" />
+                                app:layoutManager="LinearLayoutManager"/>
 
 
                             <LinearLayout
@@ -393,7 +394,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center"
-                                    android:visibility="gone" />
+                                    android:visibility="gone"/>
 
                                 <ImageView
                                     android:id="@+id/img_error"
@@ -402,14 +403,14 @@
                                     android:adjustViewBounds="true"
                                     android:src="@drawable/img_empty_category"
                                     android:visibility="gone"
-                                    tools:ignore="ContentDescription" />
+                                    tools:ignore="ContentDescription"/>
 
                                 <com.cheep.custom_view.CFTextViewRegular
                                     android:id="@+id/text_error"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:visibility="gone"
-                                    tools:text="lskjdflsdjf;skdjfl;sdkjf;lkadjadfasdf" />
+                                    tools:text="lskjdflsdjf;skdjfl;sdkjf;lkadjadfasdf"/>
 
                                 <com.cheep.custom_view.CFTextViewRegular
                                     android:id="@+id/text_error_action"
@@ -422,7 +423,7 @@
                                     android:text="@string/label_retry"
                                     android:textAllCaps="false"
                                     android:textColor="@color/white"
-                                    android:visibility="gone" />
+                                    android:visibility="gone"/>
                             </LinearLayout>
                         </FrameLayout>
                     </LinearLayout>
@@ -452,7 +453,7 @@
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_size_16sp"
                 android:visibility="visible"
-                tools:text="Book &amp; Pay 250" />
+                tools:text="Book &amp; Pay 250"/>
 
 
         </LinearLayout>

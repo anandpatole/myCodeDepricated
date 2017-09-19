@@ -16,22 +16,12 @@ public class AddressModel {
     public String category; //comes from NetworkUtility.TAGS.ADDRESS_TYPE.
     public String lat;
     public String lng;
-
     /**
      * This would only be usefull in case of Guest
      */
     public String cityName;
     public String countryName;
     public String stateName;
-
-    /*public AddressModel(String address_id, *//*String name,*//* String address, String address_initials, String category) {
-        this.address_id = address_id;
-        this.address = address;
-        this.address_initials = address_initials;
-        this.category = category;
-        this.lat = "";
-        this.lng = "";
-    }*/
 
     public LatLng getLatLng() {
         try {

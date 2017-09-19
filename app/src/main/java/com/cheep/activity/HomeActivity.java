@@ -1447,10 +1447,13 @@ public class HomeActivity extends BaseAppCompatActivity
                 switch (statusCode) {
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
                         JSONObject jData = jsonObject.getJSONObject(NetworkUtility.TAGS.DATA);
-//                        Utility.showSnackBar(getString(R.string.msg_task_cancelled), mActivityHomeBinding.getRoot());
+                        String pro_username = jData.optString(NetworkUtility.TAGS.SP_USER_NAME);
+                        Log.i(TAG, "onResponse: Pro name" + pro_username);
+                        Utility.showToast(mContext, getString(R.string.task_reschedule_task_success, pro_username));
                         MessageEvent messageEvent = new MessageEvent();
                         messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.TASK_RESCHEDULED;
                         messageEvent.id = jData.getString(NetworkUtility.TAGS.TASK_ID);
+
                         messageEvent.taskStartdate = jData.getString(NetworkUtility.TAGS.RESCHEDULE_DATETIME);
                         EventBus.getDefault().post(messageEvent);
 

@@ -387,7 +387,7 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
             // Show the dialog by calling startResolutionForResult(),
             // and check the result in onActivityResult().
             locationRequest.startResolutionForResult(TaskCreationActivity.this, Utility.REQUEST_CODE_CHECK_LOCATION_SETTINGS);
-        } catch (IntentSender.SendIntentException e) {
+        } catch (Exception e) {
             // Ignore the error.
         }
     }
@@ -446,6 +446,8 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
             mParams.put(NetworkUtility.TAGS.LAT, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.lat);
             mParams.put(NetworkUtility.TAGS.LNG, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.lng);
             mParams.put(NetworkUtility.TAGS.CITY_NAME, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.cityName);
+            mParams.put(NetworkUtility.TAGS.COUNTRY, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.countryName);
+            mParams.put(NetworkUtility.TAGS.STATE, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.stateName);
         }
         mParams.put(NetworkUtility.TAGS.SUBCATEGORY_ID, String.valueOf(mSelectedSubServiceDetailModel.sub_cat_id));
 
@@ -463,12 +465,14 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
              public String lat;
              public String lng;
              */
-            mParams.put(NetworkUtility.TAGS.ADDRESS_INITIALS, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.address_initials);
-            mParams.put(NetworkUtility.TAGS.ADDRESS, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.address);
-            mParams.put(NetworkUtility.TAGS.CATEGORY, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.category);
-            mParams.put(NetworkUtility.TAGS.LAT, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.lat);
-            mParams.put(NetworkUtility.TAGS.LNG, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.lng);
-            mParams.put(NetworkUtility.TAGS.CITY_NAME, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.cityName);
+            mTaskCreationParams.put(NetworkUtility.TAGS.ADDRESS_INITIALS, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.address_initials);
+            mTaskCreationParams.put(NetworkUtility.TAGS.ADDRESS, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.address);
+            mTaskCreationParams.put(NetworkUtility.TAGS.CATEGORY, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.category);
+            mTaskCreationParams.put(NetworkUtility.TAGS.LAT, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.lat);
+            mTaskCreationParams.put(NetworkUtility.TAGS.LNG, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.lng);
+            mTaskCreationParams.put(NetworkUtility.TAGS.CITY_NAME, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.cityName);
+            mTaskCreationParams.put(NetworkUtility.TAGS.COUNTRY, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.countryName);
+            mTaskCreationParams.put(NetworkUtility.TAGS.STATE, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.stateName);
         }
         mTaskCreationParams.put(NetworkUtility.TAGS.SUBCATEGORY_ID, String.valueOf(mSelectedSubServiceDetailModel.sub_cat_id));
 
@@ -637,6 +641,7 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
                           app will be redirected to MyTask Detail screen.
                          */
                         onSuccessfullTaskCompletion(jsonObject);
+
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
                         // Show Toast
@@ -815,7 +820,27 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
 
 
         if (Utility.BOOLEAN.NO.equalsIgnoreCase(taskDetailModel.isPrefedQuote)) {
-            final AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.MyAlertDialogStyle);
+
+            /**
+             * If HomeScreen is not available, create new instance and redirect
+             * to Mytask screen, if yes, we just need to broadcast the same.
+             */
+//            if (PreferenceUtility.getInstance(mContext).isHomeScreenVisible()) {
+//                //Sending Broadcast to the HomeScreen Screen.
+//                Intent intent = new Intent(Utility.BR_ON_TASK_CREATED);
+//                intent.putExtra(Utility.Extra.DATA, Utility.getJsonStringFromObject(taskDetailModel));
+//                Log.d(TAG, "onAcknowledgementAccepted: prefed >>>>> " + taskDetailModel.isPrefedQuote);
+//                intent.putExtra(Utility.Extra.IS_INSTA_BOOKING_TASK, Utility.BOOLEAN.NO.equalsIgnoreCase(taskDetailModel.isPrefedQuote));
+//                sendBroadcast(intent);
+//            } else {
+//                HomeActivity.newInstance(mContext);
+//            }
+//            finish();
+
+            /**
+             * Below can be uncommented in case we need to show dialog.
+             */
+            /*final AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.MyAlertDialogStyle);
             builder.setCancelable(false);
             builder.setTitle(getString(R.string.no_pro_available_title));
             builder.setMessage(getString(R.string.no_pro_available_description));
@@ -823,71 +848,66 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
                     Log.d(TAG, "onClick() called with: dialogInterface = [" + dialogInterface + "], i = [" + i + "]");
-                    /**
-                     * If HomeScreen is not available, create new instance and redirect
-                     * to Mytask screen, if yes, we just need to broadcast the same.
-                     */
-                    if (PreferenceUtility.getInstance(mContext).isHomeScreenVisible()) {
-                        //Sending Broadcast to the HomeScreen Screen.
-                        Intent intent = new Intent(Utility.BR_ON_TASK_CREATED);
-                        intent.putExtra(Utility.Extra.DATA, Utility.getJsonStringFromObject(taskDetailModel));
-                        Log.d(TAG, "onAcknowledgementAccepted: prefed >>>>> " + taskDetailModel.isPrefedQuote);
-                        intent.putExtra(Utility.Extra.IS_INSTA_BOOKING_TASK, Utility.BOOLEAN.NO.equalsIgnoreCase(taskDetailModel.isPrefedQuote));
-                        sendBroadcast(intent);
-                    } else {
-                        HomeActivity.newInstance(mContext);
-                    }
-                    dialogInterface.dismiss();
-                    finish();
-
+                if (PreferenceUtility.getInstance(mContext).isHomeScreenVisible()) {
+                //Sending Broadcast to the HomeScreen Screen.
+                Intent intent = new Intent(Utility.BR_ON_TASK_CREATED);
+                intent.putExtra(Utility.Extra.DATA, Utility.getJsonStringFromObject(taskDetailModel));
+                Log.d(TAG, "onAcknowledgementAccepted: prefed >>>>> " + taskDetailModel.isPrefedQuote);
+                intent.putExtra(Utility.Extra.IS_INSTA_BOOKING_TASK, Utility.BOOLEAN.NO.equalsIgnoreCase(taskDetailModel.isPrefedQuote));
+                sendBroadcast(intent);
+            } else {
+                HomeActivity.newInstance(mContext);
+            }
+            dialogInterface.dismiss();
+            finish();
                 }
             });
-            builder.show();
+            builder.show();*/
         }
 
         // Update the name of User
        /* mDialogFragmentTaskCreationBinding.textTaskCreationAcknowledgment
                 .setText(mDialogFragmentTaskCreationBinding.getRoot().getContext().getString(R.string.desc_task_creation_acknowledgement, mUserName));
         */
-        else {
-            String message = mContext.getString(R.string.desc_task_creation_acknowledgement
-                    , PreferenceUtility.getInstance(mContext).getUserDetails().UserName);
-            String title = mContext.getString(R.string.label_your_task_is_posted);
-            AcknowledgementDialogWithoutProfilePic mAcknowledgementDialogWithoutProfilePic = AcknowledgementDialogWithoutProfilePic.newInstance(R.drawable.ic_bird_with_heart_illustration, title, message, new AcknowledgementInteractionListener() {
+//        else {
+        String message = mContext.getString(R.string.desc_task_creation_acknowledgement
+                , PreferenceUtility.getInstance(mContext).getUserDetails().UserName);
+        String title = mContext.getString(R.string.label_your_task_is_posted);
+        AcknowledgementDialogWithoutProfilePic mAcknowledgementDialogWithoutProfilePic = AcknowledgementDialogWithoutProfilePic.newInstance(R.drawable.ic_bird_with_heart_illustration, title, message, new AcknowledgementInteractionListener() {
 
-                @Override
-                public void onAcknowledgementAccepted() {
-                    // Finish the current activity
-                    finish();
+            @Override
+            public void onAcknowledgementAccepted() {
+                // Finish the current activity
+                finish();
 
-                    /**
-                     * If HomeScreen is not available, create new instance and redirect
-                     * to Mytask screen, if yes, we just need to broadcast the same.
-                     */
-                    if (PreferenceUtility.getInstance(mContext).isHomeScreenVisible()) {
-                        //Sending Broadcast to the HomeScreen Screen.
-                        Intent intent = new Intent(Utility.BR_ON_TASK_CREATED);
-                        intent.putExtra(Utility.Extra.DATA, Utility.getJsonStringFromObject(taskDetailModel));
-                        Log.d(TAG, "onAcknowledgementAccepted: prefed >>>>> " + taskDetailModel.isPrefedQuote);
-                        intent.putExtra(Utility.Extra.IS_INSTA_BOOKING_TASK, Utility.BOOLEAN.NO.equalsIgnoreCase(taskDetailModel.isPrefedQuote));
-                        sendBroadcast(intent);
-                    } else {
-                        HomeActivity.newInstance(mContext);
-                    }
+                /**
+                 * If HomeScreen is not available, create new instance and redirect
+                 * to Mytask screen, if yes, we just need to broadcast the same.
+                 */
+                if (PreferenceUtility.getInstance(mContext).isHomeScreenVisible()) {
+                    //Sending Broadcast to the HomeScreen Screen.
+                    Intent intent = new Intent(Utility.BR_ON_TASK_CREATED);
+                    intent.putExtra(Utility.Extra.DATA, Utility.getJsonStringFromObject(taskDetailModel));
+                    Log.d(TAG, "onAcknowledgementAccepted: prefed >>>>> " + taskDetailModel.isPrefedQuote);
+                    intent.putExtra(Utility.Extra.IS_INSTA_BOOKING_TASK, Utility.BOOLEAN.NO.equalsIgnoreCase(taskDetailModel.isPrefedQuote));
+                    sendBroadcast(intent);
+                } else {
+                    HomeActivity.newInstance(mContext);
                 }
-            });
-            mAcknowledgementDialogWithoutProfilePic.setCancelable(false);
-            mAcknowledgementDialogWithoutProfilePic.show(getSupportFragmentManager(), AcknowledgementDialogWithoutProfilePic.TAG);
+            }
+        });
+        mAcknowledgementDialogWithoutProfilePic.setCancelable(false);
+        mAcknowledgementDialogWithoutProfilePic.show(getSupportFragmentManager(), AcknowledgementDialogWithoutProfilePic.TAG);
 
-            /**
-             * @Changes: 2ndAug2017 by Bhavesh
-             * Once any task is created, App is having feature of sending Prefed quotes
-             * so, we will initate once webservice call BUT we will not track the response as
-             * it would be asynchronously managed.
-             */
-            callWSForPrefedQuotes(taskDetailModel.taskId, taskDetailModel.taskAddressId);
+        /**
+         * @Changes: 2ndAug2017 by Bhavesh
+         * Once any task is created, App is having feature of sending Prefed quotes
+         * so, we will initate once webservice call BUT we will not track the response as
+         * it would be asynchronously managed.
+         */
+        callWSForPrefedQuotes(taskDetailModel.taskId, taskDetailModel.taskAddressId);
 
-        }
+//        }
 
     }
 
@@ -897,7 +917,7 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
      * @param taskId        Task Id of Method
      * @param taskAddressId AddressID from which Task is Initiated
      */
-
+    @SuppressWarnings("unchecked")
     private void callWSForPrefedQuotes(String taskId, String taskAddressId) {
         Log.d(TAG, "callWSForPrefedQuotes() called with: taskId = [" + taskId + "], taskAddressId = [" + taskAddressId + "]");
 
@@ -933,12 +953,9 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
         Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest, NetworkUtility.WS.CURL_NOTIFICATION_TO_SP);
     }
 
-
     /**
      * Create Dialog which would going to show on successful completion
      */
-
-
     Response.ErrorListener mCallCreateTaskWSErrorListener = new Response.ErrorListener() {
         @Override
         public void onErrorResponse(VolleyError error) {

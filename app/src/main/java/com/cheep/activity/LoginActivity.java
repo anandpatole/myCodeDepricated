@@ -745,7 +745,7 @@ public class LoginActivity extends BaseAppCompatActivity implements FacebookHelp
             mParams.put(NetworkUtility.TAGS.GOOGLE_PLUS_APP_ID, extraInfoBasedOnTag);
         }
 
-        if (mLocationTrackService.mLocation != null && mLocationTrackService.mLocation.getLatitude() != 0 && mLocationTrackService.mLocation.getLongitude() != 0) {
+        if (mLocationTrackService != null && mLocationTrackService.mLocation != null && mLocationTrackService.mLocation.getLatitude() != 0 && mLocationTrackService.mLocation.getLongitude() != 0) {
             if (mSelectedLocationInfo == null) {
                 //Location found so first fetch information and then go ahead.
                 FetchLocationInfoUtility mFetchLocationInfoUtility = new FetchLocationInfoUtility(mContext,

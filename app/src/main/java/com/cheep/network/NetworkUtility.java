@@ -35,7 +35,7 @@ public class NetworkUtility {
 
         public static final String UPDATE_LOCATION = BASE_URL + "customers/profile/update_location";
         public static final String CREATE_TASK = BASE_URL + "customers/tasks/create";
-
+        public static final String CURL_NOTIFICATION_TO_SP = BASE_URL + "customers/tasks/curl_for_notification_to_sp";
         public static final String GET_PRO_FOR_INSTA_BOOKING = BASE_URL + "customers/tasks/getProForInstantBooking";
 
         public static final String SP_LIST = BASE_URL + "customers/sp_list/listing";
@@ -77,7 +77,6 @@ public class NetworkUtility {
         public static final String EMERGENCY_ALERT = BASE_URL + "customers//sp_profile/emergency_alert";
         public static final String CHECK_PROCESSING_TASK = BASE_URL + "customers/tasks/check_processing_task";
 
-
         // Chat Image upload
         public static final String IMAGE_UPLOAD_FOR_CHAT = BASE_URL + "customers/profile/imageUploadForChat";
 
@@ -107,7 +106,6 @@ public class NetworkUtility {
         public static final String TASK_CREATE_STRATEGIC_PARTNER = BASE_URL + "customers/tasks/stratagic_partner_task_create";
         public static final String TASK_CREATE_INSTA_BOOKING = BASE_URL + "customers/tasks/instaBookingTaskCreate";
 
-        public static final String CURL_NOTIFICATION_TO_SP = BASE_URL + "customers/tasks/curl_for_notification_to_sp";
         public static final String CHECK_PRO_AVAILABILITY_FOR_STRATEGIC_TASK = BASE_URL + "customers/tasks/check_pro_availability_for_Strategic_task";
     }
 
@@ -210,6 +208,7 @@ public class NetworkUtility {
         public static final String SP_USER_NAME = "sp_user_name";
         public static final String REQ_FOR = "req_for";
         public static final String TASK_ID = "task_id";
+
         public static final String TASK_STARTDATE = "task_startdate";
 
         public static final String LAST_ID = "last_id";

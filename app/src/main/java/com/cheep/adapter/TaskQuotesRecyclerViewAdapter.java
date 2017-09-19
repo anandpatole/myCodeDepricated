@@ -67,8 +67,8 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
 
     //saves the upcoming state for time/time_distance animation
     private Map<String, Integer> mTimeDistanceStateMap;
-    //saves the index of the upcoming offer to display
-    private Map<String, Integer> mOfferIndexMap;
+    //    //saves the index of the upcoming offer to display
+//    private Map<String, Integer> mOfferIndexMap;
     private TaskDetailModel mTaskDetailModel;
 
     public TaskQuotesRecyclerViewAdapter(Context context, TaskDetailModel mTaskDetailModel, /*List<ProviderModel> quotesList,*/ OnInteractionListener listener) {
@@ -85,7 +85,6 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
         mTagTextColor = ContextCompat.getColor(context, R.color.white);
         mSemiBoldTypeface = TypeFaceProvider.get(mContext, mContext.getResources().getString(R.string.font_semi_bold));
         mTimeDistanceStateMap = new HashMap<>();
-        mOfferIndexMap = new HashMap<>();
     }
 
     @Override
@@ -95,7 +94,7 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
 
     @Override
     public void onBindViewHolder(final QuoteViewHolder holder, final int position) {
-        final ProviderModel provider = mQuotesList.get(position);
+        final ProviderModel provider = mQuotesList.get(holder.getAdapterPosition());
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -217,28 +216,35 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
 
         //offer
         final int offerCount = provider.offerList != null ? provider.offerList.size() : 0;
+        //saves the index of the upcoming offer to display
+        final Map<String, Integer> mOfferIndexMap = new HashMap<>();
         if (offerCount > 0) {
+            // Make the text visible
             holder.ivLiveAnimated.setVisibility(View.VISIBLE);
             holder.tvOffer.setVisibility(View.VISIBLE);
 
+            // Start the LIVE animation
             holder.ivLiveAnimated.setBackgroundResource(R.drawable.ic_live);
             ((AnimationDrawable) holder.ivLiveAnimated.getBackground()).start();
 
-            AnimatorSet offerAnimation = loadBannerScrollAnimation(holder.tvOffer, 2000, 100, new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    super.onAnimationEnd(animation);
-                    int offerIndex = mOfferIndexMap.containsKey(provider.providerId) ? mOfferIndexMap.get(provider.providerId) : 0;
-                    SpannableString labelOffer = new SpannableString(provider.offerList.get(offerIndex));
-                    labelOffer.setSpan(new LeadingMarginSpan.Standard(mLiveIconOffset, 0), 0, labelOffer.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-                    holder.tvOffer.setText(labelOffer);
-                    offerIndex = (offerIndex == (offerCount - 1) ? 0 : offerIndex + 1);
-                    mOfferIndexMap.put(provider.providerId, offerIndex);
-                }
-            });
+            // Manage animation listners
+            AnimatorSet offerAnimation = loadBannerScrollAnimation(holder.tvOffer,
+                    2000,
+                    100,
+                    new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            super.onAnimationEnd(animation);
+                            int offerIndex = mOfferIndexMap.containsKey(provider.providerId) ? mOfferIndexMap.get(provider.providerId) : 0;
+                            SpannableString labelOffer = new SpannableString(provider.offerList.get(offerIndex));
+                            labelOffer.setSpan(new LeadingMarginSpan.Standard(mLiveIconOffset, 0), 0, labelOffer.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+                            holder.tvOffer.setText(labelOffer);
+                            offerIndex = (offerIndex == (offerCount - 1) ? 0 : offerIndex + 1);
+                            mOfferIndexMap.put(provider.providerId, offerIndex);
+                        }
+                    });
             offerAnimation.start();
             holder.addAnimator(offerAnimation);
-
             int offerIndex = mOfferIndexMap.containsKey(provider.providerId) ? mOfferIndexMap.get(provider.providerId) : 0;
             SpannableString labelOffer = new SpannableString(provider.offerList.get(offerIndex));
             labelOffer.setSpan(new LeadingMarginSpan.Standard(mLiveIconOffset, 0), 0, labelOffer.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);

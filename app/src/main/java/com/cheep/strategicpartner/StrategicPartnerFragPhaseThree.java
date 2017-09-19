@@ -17,10 +17,12 @@ import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
+import android.view.inputmethod.EditorInfo;
+import android.widget.TextView;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -32,6 +34,7 @@ import com.cheep.activity.BaseAppCompatActivity;
 import com.cheep.activity.LoginActivity;
 import com.cheep.activity.PaymentsActivity;
 import com.cheep.custom_view.BottomAlertDialog;
+import com.cheep.custom_view.CFEditTextRegular;
 import com.cheep.databinding.FragmentStrategicPartnerPhaseThreeBinding;
 import com.cheep.dialogs.AcknowledgementDialogWithProfilePic;
 import com.cheep.dialogs.AcknowledgementDialogWithoutProfilePic;
@@ -83,7 +86,7 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
     private String start_datetime = "";
     private String date = "";
     private String time = "";
-    private EditText edtCheepCode;
+    private CFEditTextRegular edtCheepCode;
     private BottomAlertDialog cheepCodeDialog;
     private boolean isVerified = false;
     @Nullable
@@ -257,6 +260,23 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
                 validateCheepCode(edtCheepCode.getText().toString());
             }
         });
+        edtCheepCode.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
+                switch (actionId) {
+                    case EditorInfo.IME_ACTION_DONE:
+                        if (TextUtils.isEmpty(edtCheepCode.getText().toString())) {
+                            Utility.showToast(mContext, getString(R.string.validate_cheepcode));
+                            break;
+                        }
+                        validateCheepCode(edtCheepCode.getText().toString());
+                        break;
+                    default:
+                        break;
+                }
+                return false;
+            }
+        });
         cheepCodeDialog.setTitle(getString(R.string.label_cheepcode));
         cheepCodeDialog.setCustomView(view);
         cheepCodeDialog.showDialog();
@@ -320,6 +340,7 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
 
             String strResponse = (String) response;
             try {
+                Utility.hideKeyboard(mStrategicPartnerTaskCreationAct, edtCheepCode);
                 JSONObject jsonObject = new JSONObject(strResponse);
                 Log.i(TAG, "onResponse: " + jsonObject.toString());
                 int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
@@ -374,6 +395,7 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
         @Override
         public void onErrorResponse(final VolleyError error) {
             Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
+            Utility.hideKeyboard(mStrategicPartnerTaskCreationAct, edtCheepCode);
             Utility.showToast(mContext, getString(R.string.label_something_went_wrong));
         }
 
