@@ -109,6 +109,10 @@ public class NetworkUtility {
 
         public static final String CURL_NOTIFICATION_TO_SP = BASE_URL + "customers/tasks/curl_for_notification_to_sp";
         public static final String CHECK_PRO_AVAILABILITY_FOR_STRATEGIC_TASK= BASE_URL + "customers/tasks/check_pro_availability_for_Strategic_task";
+
+        //Refer and Earn
+        public static final String VALIDATE_REFER_CODE = BASE_URL + "customers/profile/validateReferCode";
+        public static final String REFER_BALANCE = BASE_URL + "customers/profile/getReferBalance";
     }
 
     public static class TAGS {

@@ -33,7 +33,7 @@ import com.android.volley.VolleyError;
 import com.cheep.R;
 import com.cheep.activity.HomeActivity;
 import com.cheep.adapter.FAQRecyclerViewAdapter;
-import com.cheep.databinding.FragmentFaqBinding;
+
 import com.cheep.databinding.FragmentReferAndEarnBinding;
 import com.cheep.dialogs.AcknowledgementDialogWithoutProfilePic;
 import com.cheep.dialogs.ReferAndEarnDialogKnowMore;
