@@ -96,7 +96,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/NoAnimTheme" />
         <activity
-            android:name=".activity.PaymentsActivity"
+            android:name=".activity.HDFCPaymentGatewayActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.ChatActivity"
@@ -130,9 +130,9 @@
             android:name=".activity.IntroScreenActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.PaymentsStepActivity"
+            android:name=".activity.PaymentDetailsActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustPan" />
 
         <!-- For Cropping -->
         <activity

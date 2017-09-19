@@ -401,7 +401,7 @@ public class JobSummaryActivity extends BaseAppCompatActivity {
                             }
                         }
 
-                        Intent intent = new Intent(JobSummaryActivity.this, PaymentsActivity.class);
+                        Intent intent = new Intent(JobSummaryActivity.this, HDFCPaymentGatewayActivity.class);
                         intent.putExtra("url", BuildConfig.PAYUBIZ_HDFC_URL);
                         intent.putExtra("postData", postData.replaceAll("hash=", "hash=" + jsonObject.optString("hash_string")));
 

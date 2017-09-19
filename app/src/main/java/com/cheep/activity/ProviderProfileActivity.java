@@ -231,7 +231,7 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
         mActivityProviderProfileBinding.layoutPay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                PaymentsStepActivity.newInstance(mContext, taskDetailModel, providerModel, 0);
+                PaymentDetailsActivity.newInstance(mContext, taskDetailModel, providerModel, 0);
             }
         });
 

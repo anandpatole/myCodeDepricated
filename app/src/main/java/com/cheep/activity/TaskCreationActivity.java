@@ -2,10 +2,8 @@ package com.cheep.activity;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
@@ -13,7 +11,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -35,6 +32,7 @@ import com.cheep.fragment.EnterTaskDetailFragment;
 import com.cheep.fragment.SelectSubCategoryFragment;
 import com.cheep.model.InstaBookingProDetail;
 import com.cheep.model.JobCategoryModel;
+import com.cheep.model.MessageEvent;
 import com.cheep.model.ProviderModel;
 import com.cheep.model.SubServiceDetailModel;
 import com.cheep.model.TaskDetailModel;
@@ -47,6 +45,9 @@ import com.cheep.utils.SuperCalendar;
 import com.cheep.utils.Utility;
 import com.google.android.gms.common.api.Status;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -81,10 +82,9 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mActivityTaskCreateBinding = DataBindingUtil.setContentView(this, R.layout.activity_task_create);
-        mContext.registerReceiver(mBR_OnInstaTaskCreated, new IntentFilter(Utility.BR_ON_TASK_CREATED_FOR_INSTA_BOOKING));
         initiateUI();
         setListeners();
-
+        EventBus.getDefault().register(this);
         registerReceiver(mBR_OnLoginSuccess, new IntentFilter(Utility.BR_ON_LOGIN_SUCCESS));
     }
 
@@ -150,21 +150,6 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
 
     }
 
-    private BroadcastReceiver mBR_OnInstaTaskCreated = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            Log.d(TAG, "onReceive() called with: context = [" + context + "], intent = [" + intent + "]");
-            /*
-              Redirect the user to MYTask Screen
-             */
-            finish();
-
-            //Sending Broadcast to the HomeScreen Screen.
-            Intent newIntent = new Intent(Utility.BR_ON_TASK_CREATED);
-            newIntent.putExtra(Utility.Extra.IS_INSTA_BOOKING_TASK, true);
-            sendBroadcast(newIntent);
-        }
-    };
 
     @Override
     protected void setListeners() {
@@ -785,7 +770,7 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
                     pModel.quotePrice = taskDetailModel.rateGST;
                     pModel.quotePriceWithOutGST = taskDetailModel.rate;
 
-                    PaymentsStepActivity.newInstance(TaskCreationActivity.this, model, pModel, 0, true, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel);
+                    PaymentDetailsActivity.newInstance(TaskCreationActivity.this, model, pModel, 0, true, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel);
 
                     //Log.i("myLog", "tasks:"+mJobCategoryModel.catName+"::"+mSelectedSubServiceDetailModel.name+"::"+mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mAddress);
 
@@ -819,57 +804,6 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
         }
 
 
-        if (Utility.BOOLEAN.NO.equalsIgnoreCase(taskDetailModel.isPrefedQuote)) {
-
-            /**
-             * If HomeScreen is not available, create new instance and redirect
-             * to Mytask screen, if yes, we just need to broadcast the same.
-             */
-//            if (PreferenceUtility.getInstance(mContext).isHomeScreenVisible()) {
-//                //Sending Broadcast to the HomeScreen Screen.
-//                Intent intent = new Intent(Utility.BR_ON_TASK_CREATED);
-//                intent.putExtra(Utility.Extra.DATA, Utility.getJsonStringFromObject(taskDetailModel));
-//                Log.d(TAG, "onAcknowledgementAccepted: prefed >>>>> " + taskDetailModel.isPrefedQuote);
-//                intent.putExtra(Utility.Extra.IS_INSTA_BOOKING_TASK, Utility.BOOLEAN.NO.equalsIgnoreCase(taskDetailModel.isPrefedQuote));
-//                sendBroadcast(intent);
-//            } else {
-//                HomeActivity.newInstance(mContext);
-//            }
-//            finish();
-
-            /**
-             * Below can be uncommented in case we need to show dialog.
-             */
-            /*final AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.MyAlertDialogStyle);
-            builder.setCancelable(false);
-            builder.setTitle(getString(R.string.no_pro_available_title));
-            builder.setMessage(getString(R.string.no_pro_available_description));
-            builder.setPositiveButton(getString(R.string.label_Ok), new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    Log.d(TAG, "onClick() called with: dialogInterface = [" + dialogInterface + "], i = [" + i + "]");
-                if (PreferenceUtility.getInstance(mContext).isHomeScreenVisible()) {
-                //Sending Broadcast to the HomeScreen Screen.
-                Intent intent = new Intent(Utility.BR_ON_TASK_CREATED);
-                intent.putExtra(Utility.Extra.DATA, Utility.getJsonStringFromObject(taskDetailModel));
-                Log.d(TAG, "onAcknowledgementAccepted: prefed >>>>> " + taskDetailModel.isPrefedQuote);
-                intent.putExtra(Utility.Extra.IS_INSTA_BOOKING_TASK, Utility.BOOLEAN.NO.equalsIgnoreCase(taskDetailModel.isPrefedQuote));
-                sendBroadcast(intent);
-            } else {
-                HomeActivity.newInstance(mContext);
-            }
-            dialogInterface.dismiss();
-            finish();
-                }
-            });
-            builder.show();*/
-        }
-
-        // Update the name of User
-       /* mDialogFragmentTaskCreationBinding.textTaskCreationAcknowledgment
-                .setText(mDialogFragmentTaskCreationBinding.getRoot().getContext().getString(R.string.desc_task_creation_acknowledgement, mUserName));
-        */
-//        else {
         String message = mContext.getString(R.string.desc_task_creation_acknowledgement
                 , PreferenceUtility.getInstance(mContext).getUserDetails().UserName);
         String title = mContext.getString(R.string.label_your_task_is_posted);
@@ -907,7 +841,6 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
          */
         callWSForPrefedQuotes(taskDetailModel.taskId, taskDetailModel.taskAddressId);
 
-//        }
 
     }
 
@@ -1023,13 +956,25 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
     protected void onDestroy() {
         Log.d(TAG, "onDestroy() called");
         try {
-            mContext.unregisterReceiver(mBR_OnInstaTaskCreated);
             unregisterReceiver(mBR_OnLoginSuccess);
+            EventBus.getDefault().unregister(this);
+
         } catch (Exception e) {
             Log.i(TAG, "onDestroy: ");
         }
+
         super.onDestroy();
     }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(MessageEvent event) {
+        if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.TASK_PAID_FOR_INSTA_BOOKING) {
+            // br for finished task creation activity
+            finish();
+        }
+
+    }
+
 
     /**
      * Location [END]

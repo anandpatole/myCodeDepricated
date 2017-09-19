@@ -31,8 +31,8 @@ import com.cheep.BootstrapConstant;
 import com.cheep.BuildConfig;
 import com.cheep.R;
 import com.cheep.activity.BaseAppCompatActivity;
+import com.cheep.activity.HDFCPaymentGatewayActivity;
 import com.cheep.activity.LoginActivity;
-import com.cheep.activity.PaymentsActivity;
 import com.cheep.custom_view.BottomAlertDialog;
 import com.cheep.custom_view.CFEditTextRegular;
 import com.cheep.databinding.FragmentStrategicPartnerPhaseThreeBinding;
@@ -687,7 +687,7 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
                     e.printStackTrace();
                 }
             }
-            Intent intent = new Intent(mStrategicPartnerTaskCreationAct, PaymentsActivity.class);
+            Intent intent = new Intent(mStrategicPartnerTaskCreationAct, HDFCPaymentGatewayActivity.class);
             intent.putExtra("url", BuildConfig.PAYUBIZ_HDFC_URL);
             intent.putExtra("postData", postData.toString().replaceAll("hash=", "hash=" + result.optString("hash_string")));
             startActivityForResult(intent, Utility.REQUEST_START_PAYMENT);

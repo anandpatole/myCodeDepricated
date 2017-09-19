@@ -132,6 +132,9 @@ public class TaskDetailModel {
     public String isPrefedQuote;
 
 
+    // This is for payment choice screen
+    public String cheepCode ;
+
     public TaskDetailModel() {
 
     }

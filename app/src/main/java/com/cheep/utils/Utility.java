@@ -1094,6 +1094,9 @@ public class Utility {
 
         //When Payment has been paid by the user, Need to redirect the user to MyTask Screen
         public static final int PAYMENT_COMPLETED_NEED_TO_REDIRECT_TO_MY_TASK_SCREEN = 16;
+
+        // when payment is done for insta booked task and complete
+        public static final int TASK_PAID_FOR_INSTA_BOOKING = 17;
     }
 
     public static final class REQUEST_TYPE {

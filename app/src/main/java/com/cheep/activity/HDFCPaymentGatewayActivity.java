@@ -33,7 +33,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-public class PaymentsActivity extends AppCompatActivity implements MagicRetryFragment.ActivityCallback {
+public class HDFCPaymentGatewayActivity extends AppCompatActivity implements MagicRetryFragment.ActivityCallback {
 
     Bundle bundle;
 
@@ -177,7 +177,7 @@ public class PaymentsActivity extends AppCompatActivity implements MagicRetryFra
 //                        try {
 //                            JSONObject cvvObject = new JSONObject(result);
 //                            // store the cvv in shared preferences.
-//                            mPayuUtils.storeInSharedPreferences(PaymentsActivity.this, cvvObject.getString(PayuConstants.CARD_TOKEN), cvvObject.getString(PayuConstants.MERCHANT_HASH));
+//                            mPayuUtils.storeInSharedPreferences(HDFCPaymentGatewayActivity.this, cvvObject.getString(PayuConstants.CARD_TOKEN), cvvObject.getString(PayuConstants.MERCHANT_HASH));
 //                        } catch (JSONException e) {
 //                            e.printStackTrace();
 //                        }
