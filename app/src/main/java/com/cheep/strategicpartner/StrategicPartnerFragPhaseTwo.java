@@ -378,17 +378,19 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
         final TextView txtAnswer = viewInflated.findViewById(R.id.txtQueAnswer);
 
         // by default first option will be selected
-        txtAnswer.setText(model.dropDownList.get(0).dropdown_answer);
-        model.dropDownList.get(0).isSelected = true;
-        model.answer = model.dropDownList.get(0).dropdown_answer;
-        txtQueNo.setSelected(true);
-        // open menu onClick of ans text
-        txtAnswer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showDropDownMenu(txtAnswer, model);
-            }
-        });
+        if (!model.dropDownList.isEmpty()) {
+            txtAnswer.setText(model.dropDownList.get(0).dropdown_answer);
+            model.dropDownList.get(0).isSelected = true;
+            model.answer = model.dropDownList.get(0).dropdown_answer;
+            txtQueNo.setSelected(true);
+            // open menu onClick of ans text
+            txtAnswer.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    showDropDownMenu(txtAnswer, model);
+                }
+            });
+        }
 
         ansView.addView(viewInflated);
     }

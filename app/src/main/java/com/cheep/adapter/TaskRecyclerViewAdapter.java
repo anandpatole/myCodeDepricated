@@ -63,8 +63,8 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
     SuperCalendar superStartDateTimeCalendar;
     private int mLiveIconOffset;
 
-    //saves the index of the upcoming offer to display
-    private Map<String, Integer> mOfferIndexMap;
+//    //saves the index of the upcoming offer to display
+//    private Map<String, Integer> mOfferIndexMap;
 
 
     /*private Uri[] urls = new Uri[]{Uri.parse("http://www.animated-gifs.eu/category_leisure/avatars-100x100-music/0016.gif"), Uri.parse("http://www.smailikai.com/avatar/skelet/avatar_4348.gif"), Uri.parse("http://www.boorp.com/avatars_100x100_for_myspace/25.png")*//*, Uri.parse("http://www.boorp.com/avatars_100x100_for_myspace/25.png"), Uri.parse("http://www.boorp.com/avatars_100x100_for_myspace/25.png")*//*};
@@ -79,7 +79,7 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
         int offset = context.getResources().getDimensionPixelSize(R.dimen.scale_4dp);
         mLiveIconOffset = context.getResources().getDimensionPixelSize(R.dimen.icon_live_width) + offset;
         //arrayListUri.addAll(Arrays.asList(urls));
-        mOfferIndexMap = new HashMap<>();
+//        mOfferIndexMap = new HashMap<>();
     }
 
     public TaskRecyclerViewAdapter(ArrayList<TaskDetailModel> mList, TaskRowDataInteractionListener listener, int whichFrag) {
@@ -153,6 +153,7 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
 
                 // Start LIVE tracking and Text changes
                 final int liveFeedCounter = model.live_lable_arr != null ? model.live_lable_arr.size() : 0;
+                final Map<String, Integer> mOfferIndexMap = new HashMap<>();
                 if (liveFeedCounter > 0) {
                     holder.mUpcomingTaskBinding.ivLiveAnimated.setVisibility(View.VISIBLE);
                     holder.mUpcomingTaskBinding.tvLiveFeed.setVisibility(View.VISIBLE);
@@ -165,7 +166,6 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
                         @Override
                         public void onAnimationEnd(Animator animation) {
                             super.onAnimationEnd(animation);
-
                             int offerIndex = mOfferIndexMap.containsKey(model.taskId) ? mOfferIndexMap.get(model.taskId) : 0;
                             if (offerIndex == model.live_lable_arr.size()) {
                                 Log.i(TAG, "onAnimationEnd: Issue Caught Here>>>>>>>>>>>>>>>>>>>");
@@ -180,7 +180,6 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
                     });
                     offerAnimation.start();
                     holder.addAnimator(offerAnimation);
-
                     int offerIndex = mOfferIndexMap.containsKey(model.taskId) ? mOfferIndexMap.get(model.taskId) : 0;
                     SpannableString labelOffer = new SpannableString(model.live_lable_arr.get(offerIndex));
                     labelOffer.setSpan(new LeadingMarginSpan.Standard(mLiveIconOffset, 0), 0, labelOffer.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
@@ -196,7 +195,6 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
                 holder.mUpcomingTaskBinding.gridImageView.clear();
                 //holder.mUpcomingTaskBinding.gridImageView.createWithUrls(arrayListUri); // just for testing
                 holder.mUpcomingTaskBinding.gridImageView.createWithUrls(getURIListFromStringList(model.profile_img_arr));
-
 
                 if (model.selectedProvider == null) {
                     holder.mUpcomingTaskBinding.layoutIndividualProfile.setVisibility(View.GONE);

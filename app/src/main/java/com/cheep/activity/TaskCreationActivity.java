@@ -446,6 +446,8 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
             mParams.put(NetworkUtility.TAGS.LAT, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.lat);
             mParams.put(NetworkUtility.TAGS.LNG, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.lng);
             mParams.put(NetworkUtility.TAGS.CITY_NAME, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.cityName);
+            mParams.put(NetworkUtility.TAGS.COUNTRY, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.countryName);
+            mParams.put(NetworkUtility.TAGS.STATE, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.stateName);
         }
         mParams.put(NetworkUtility.TAGS.SUBCATEGORY_ID, String.valueOf(mSelectedSubServiceDetailModel.sub_cat_id));
 
@@ -463,12 +465,14 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
              public String lat;
              public String lng;
              */
-            mParams.put(NetworkUtility.TAGS.ADDRESS_INITIALS, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.address_initials);
-            mParams.put(NetworkUtility.TAGS.ADDRESS, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.address);
-            mParams.put(NetworkUtility.TAGS.CATEGORY, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.category);
-            mParams.put(NetworkUtility.TAGS.LAT, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.lat);
-            mParams.put(NetworkUtility.TAGS.LNG, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.lng);
-            mParams.put(NetworkUtility.TAGS.CITY_NAME, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.cityName);
+            mTaskCreationParams.put(NetworkUtility.TAGS.ADDRESS_INITIALS, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.address_initials);
+            mTaskCreationParams.put(NetworkUtility.TAGS.ADDRESS, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.address);
+            mTaskCreationParams.put(NetworkUtility.TAGS.CATEGORY, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.category);
+            mTaskCreationParams.put(NetworkUtility.TAGS.LAT, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.lat);
+            mTaskCreationParams.put(NetworkUtility.TAGS.LNG, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.lng);
+            mTaskCreationParams.put(NetworkUtility.TAGS.CITY_NAME, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.cityName);
+            mTaskCreationParams.put(NetworkUtility.TAGS.COUNTRY, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.countryName);
+            mTaskCreationParams.put(NetworkUtility.TAGS.STATE, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.stateName);
         }
         mTaskCreationParams.put(NetworkUtility.TAGS.SUBCATEGORY_ID, String.valueOf(mSelectedSubServiceDetailModel.sub_cat_id));
 
