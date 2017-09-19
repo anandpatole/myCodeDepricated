@@ -486,7 +486,11 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_0km">0km</string>
     <string name="label_50km">50km</string>
     <string name="label_type_here">Type Here</string>
-
+    <string name="label_choose_payment_option">Choose your preferred payment option below</string>
+    <string name="label_wallet">Wallet</string>
+    <string name="label_mobikwik">MobiKwik</string>
+    <string name="label_paytm">Paytm</string>
+    <string name="discount_cashback_text">%1s% Cashback upto ₹%2s. Valid once per user.</string>
 
     <string name="no_pro_available_title"/>
     <string name="no_pro_available_description">No PROs is available for this address</string>

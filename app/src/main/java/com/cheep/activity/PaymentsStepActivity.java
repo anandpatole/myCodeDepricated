@@ -812,7 +812,7 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
                             } else {
                                 //Call update payment service from here with all the response come from service
                                 if (isInstaBooking)
-                                    callCreateInstaBookingTaskWS(true, "Payment has been bypassed for development");
+                                    callCreateInstaBookingTaskWS(true, getString(R.string.message_payment_bypassed));
                                 else
                                     updatePaymentStatus(true, getString(R.string.message_payment_bypassed), false);
                             }

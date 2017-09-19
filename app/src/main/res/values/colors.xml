@@ -28,6 +28,7 @@
     <color name="grey_varient_14">#6C6C6C</color>
     <color name="grey_varient_15">#999999</color>
     <color name="grey_varient_16">#535353</color>
+    <color name="grey_variant_17">#F6F6F6</color>
 
     <color name="brown_varient_1">#f0f0f0</color>
 
@@ -95,6 +96,8 @@
     <color name="task_quote_relative_time_color">#f82e2e</color>
     <color name="task_quote_offer_color">#22a27c</color>
     <color name="happyHomeColor">#FE8417</color>
+
+    <color name="c_4B4B4B">#4B4B4B</color>
     <!--test-->
     <!--<color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>

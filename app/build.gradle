@@ -60,6 +60,19 @@ android {
         buildConfigField("String", "TASK_THUMB_FOLDER ", getProperty("TASK_THUMB_FOLDER"))
         buildConfigField("boolean", "NEED_TO_BYPASS_PAYMENT", "false")
 
+        //Paytm
+        buildConfigField("String", "PAYTM_OAUTH_BASE_URL", getProperty("PAYTM_OAUTH_STAGING_BASE_URL"));
+        buildConfigField("String", "PAYTM_WALLET_BASE_URL", getProperty("PAYTM_WALLET_STAGING_BASE_URL"));
+        buildConfigField("String", "PAYTM_CHECK_BALANCE_STAGING_URL", getProperty("PAYTM_CHECK_BALANCE_STAGING_URL"));
+        buildConfigField("String", "SANDBOX_MERCHANT_ID", getProperty("SANDBOX_MERCHANT_ID"));
+        buildConfigField("String", "MERCHANT_KEY", getProperty("MERCHANT_KEY"));
+        buildConfigField("String", "CLIENT_ID", getProperty("CLIENT_ID"));
+        buildConfigField("String", "CHANNEL_ID", getProperty("CHANNEL_ID"));
+        buildConfigField("String", "INDUSTRY_TYPE_ID", getProperty("INDUSTRY_TYPE_ID"));
+        buildConfigField("String", "CLIENT_SECRET", getProperty("CLIENT_SECRET"));
+        buildConfigField("String", "WEBSITE", getProperty("WEBSITE"));
+        //Paytm
+
         // TODO: This needs to change (For Temporary LIVE)
 //        buildConfigField("String", "BASE_URL", getProperty("LIVE_BASE_URL"));
 //        buildConfigField("String", "CHAT_NODE", getProperty("CHAT_NODE_LIVE"));
@@ -93,6 +106,10 @@ android {
             buildConfigField("String", "PAYUBIZ_HDFC_KEY", getProperty("PAYUBIZ_HDFC_LIVE_KEY"))
             buildConfigField("String", "PAYUBIZ_HDFC_URL", getProperty("PAYUBIZ_HDFC_LIVE_URL"))
             buildConfigField("boolean", "NEED_TO_BYPASS_PAYMENT", "false")
+            //Paytm production url
+            buildConfigField("String", "PAYTM_OAUTH_BASE_URL", getProperty("PAYTM_OAUTH_PRODUCTION_BASE_URL"))
+            buildConfigField("String", "PAYTM_WALLET_BASE_URL", getProperty("PAYTM_WALLET_PRODUCTION_BASE_URL"))
+            buildConfigField("String", "PAYTM_CHECK_BALANCE_PRODUCTION_URL", getProperty("PAYTM_CHECK_BALANCE_PRODUCTION_URL"))
             signingConfig signingConfigs.debug
         }
         release {
@@ -101,6 +118,10 @@ android {
             buildConfigField("String", "PAYUBIZ_HDFC_KEY", getProperty("PAYUBIZ_HDFC_LIVE_KEY"))
             buildConfigField("String", "PAYUBIZ_HDFC_URL", getProperty("PAYUBIZ_HDFC_LIVE_URL"))
             buildConfigField("boolean", "NEED_TO_BYPASS_PAYMENT", "false")
+            //Paytm production url
+            buildConfigField("String", "PAYTM_OAUTH_BASE_URL", getProperty("PAYTM_OAUTH_PRODUCTION_BASE_URL"))
+            buildConfigField("String", "PAYTM_WALLET_BASE_URL", getProperty("PAYTM_WALLET_PRODUCTION_BASE_URL"))
+            buildConfigField("String", "PAYTM_CHECK_BALANCE_PRODUCTION_URL", getProperty("PAYTM_CHECK_BALANCE_PRODUCTION_URL"))
             signingConfig signingConfigs.debug
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
