@@ -1,16 +1,23 @@
 package com.cheep.activity;
 
+import android.Manifest;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.IntentSender;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.databinding.DataBindingUtil;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -69,6 +76,7 @@ import com.cheep.model.UserDetails;
 import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
+import com.cheep.strategicpartner.TaskSummaryStrategicPartnerActivity;
 import com.cheep.utils.HotlineHelper;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.SuperCalendar;
@@ -85,7 +93,6 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-import static com.cheep.network.NetworkUtility.TAGS.LOGINWITH;
 import static com.cheep.network.NetworkUtility.TAGS.TASK_ID;
 
 /**
@@ -104,9 +111,17 @@ public class HomeActivity extends BaseAppCompatActivity
     private ActivityHomeBinding mActivityHomeBinding;
     private NavHeaderHomeBinding navHeaderHomeBinding;
 
+    /**
+     * We will only load the listing once we have proper lat-long or Location.
+     * So, once we get the location from Service we can manage this flow via
+     * mentioned boolean.
+     * This would be used by @{@link HomeTabFragment}
+     */
+    public boolean isReadyToLoad = false;
+
     public static void newInstance(Context context) {
         Intent intent = new Intent(context, HomeActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+//        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
     }
 
@@ -129,18 +144,22 @@ public class HomeActivity extends BaseAppCompatActivity
         initDATA();
         getWindow().setBackgroundDrawable(null);
 
+        /*
+        Earlier, we were not allowing the user to Login
         //finishing activity because no user registered
         if (PreferenceUtility.getInstance(getApplicationContext()).getUserDetails() == null) {
             finish();
-        }
+        }*/
 
         mActivityHomeBinding = DataBindingUtil.setContentView(this, R.layout.activity_home);
 
         //For managing notification redirect to job summary
         onNewIntent(getIntent());
-
         initiateUI();
         setListeners();
+
+        //Register BroadCast
+        registerReceiver(mBR_OnLoginSuccess, new IntentFilter(Utility.BR_ON_LOGIN_SUCCESS));
 
     }
 
@@ -151,13 +170,12 @@ public class HomeActivity extends BaseAppCompatActivity
         // Check Application version
         checkVersionOfApp();
 
-
     }
 
     private void manageNotificationRedirection(Intent intent) {
         if (PreferenceUtility.getInstance(mContext).getUserDetails() == null) {
-            LoginActivity.newInstance(mContext);
-            finish();
+//            LoginActivity.newInstance(mContext);
+//            finish();
             return;
         }
 
@@ -187,7 +205,13 @@ public class HomeActivity extends BaseAppCompatActivity
                 ProviderModel providerModel = new ProviderModel();
                 providerModel.providerId = bundle.getString(NetworkUtility.TAGS.SP_USER_ID);
                 JobSummaryActivity.newInstance(mContext, taskDetailModel, providerModel);*/
-                TaskSummaryActivity.getInstance(mContext, bundle.getString(TASK_ID));
+                String taskType = bundle.getString(NetworkUtility.TAGS.TASK_TYPE);
+                String taskId = bundle.getString(NetworkUtility.TAGS.TASK_ID);
+                if (taskId != null && taskType != null)
+                    if (taskType.equalsIgnoreCase(Utility.TASK_TYPE.STRATEGIC))
+                        TaskSummaryStrategicPartnerActivity.getInstance(mContext, taskId);
+                    else
+                        TaskSummaryActivity.getInstance(mContext, taskId);
             }
             // Changed due to the fact that we should allow user goto detail screen in each of the
             // case when notification comes.
@@ -239,33 +263,6 @@ public class HomeActivity extends BaseAppCompatActivity
 
     }
 
-    @Override
-    public void onLocationSettingsDialogNeedToBeShow(Status locationRequest) {
-        super.onLocationSettingsDialogNeedToBeShow(locationRequest);
-        Fragment fragment = getSupportFragmentManager().findFragmentByTag(HomeFragment.TAG);
-        if (fragment != null) {
-            ((BaseFragment) fragment).onLocationSettingsDialogNeedToBeShow(locationRequest);
-        }
-
-        fragment = getSupportFragmentManager().findFragmentByTag(ProfileTabFragment.TAG);
-        if (fragment != null) {
-            ((BaseFragment) fragment).onLocationSettingsDialogNeedToBeShow(locationRequest);
-        }
-    }
-
-    @Override
-    public void gpsEnabled() {
-        super.gpsEnabled();
-        Fragment fragment = getSupportFragmentManager().findFragmentByTag(HomeFragment.TAG);
-        if (fragment != null) {
-            ((BaseFragment) fragment).gpsEnabled();
-        }
-
-        fragment = getSupportFragmentManager().findFragmentByTag(ProfileTabFragment.TAG);
-        if (fragment != null) {
-            ((BaseFragment) fragment).gpsEnabled();
-        }
-    }
 
     @Override
     protected void setListeners() {
@@ -289,7 +286,11 @@ public class HomeActivity extends BaseAppCompatActivity
         list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.label_rate_this_app), R.drawable.icon_rate, false, false));
         list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.label_terms), R.drawable.icon_privacy, false, false));
 //        list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.label_privacy_policy), R.drawable.icon_privacy, false, false));
-        list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.label_logout), R.drawable.icon_logout, false, true));
+        if (PreferenceUtility.getInstance(mContext).getUserDetails() != null) {
+            list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.label_logout), R.drawable.icon_logout, false, true));
+        } else {
+            list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.label_login), R.drawable.icon_logout, false, true));
+        }
 //        list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.tab_alert), R.drawable.icon_logout, false, true));
 
         return list;
@@ -324,7 +325,7 @@ public class HomeActivity extends BaseAppCompatActivity
                 Log.i(TAG, "onSlideMenuListItemClicked: " + slideMenuListModel.title + " is there");
             }
         } else if (slideMenuListModel.title.equals(getString(R.string.label_share_with_friend))) {
-            Utility.showToast(mContext, "Under Development.");
+            Utility.showToast(mContext, getString(R.string.label_under_development));
         } else if (slideMenuListModel.title.equals(getString(R.string.label_help))) {
             showContactDialog();
             //We are returning here so side menu will not close at end of this method
@@ -361,7 +362,19 @@ public class HomeActivity extends BaseAppCompatActivity
 //            finish();
             // We are returning here so side menu will not close at end of this method
             return;
-        } /*else if (slideMenuListModel.title.equals(getString(R.string.tab_alert))) {
+        } else if (slideMenuListModel.title.equals(getString(R.string.label_login))) {
+            LoginActivity.newInstance(mContext);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    //reset the current screen to Home screen
+                    Fragment mFragment = getSupportFragmentManager().findFragmentByTag(HomeFragment.TAG);
+                    if (mFragment == null) {
+                        loadFragment(HomeFragment.TAG, HomeFragment.newInstance());
+                    }
+                }
+            }, 1000);
+        }/*else if (slideMenuListModel.title.equals(getString(R.string.tab_alert))) {
             showAlertDialog();
 //            LoginActivity.newInstance(mContext);
 //            finish();
@@ -436,7 +449,10 @@ public class HomeActivity extends BaseAppCompatActivity
             }
         } else {
 //            JobSummaryActivity.newInstance(mContext, taskDetailModel, taskDetailModel.selectedProvider);
-            TaskSummaryActivity.getInstance(mContext, taskDetailModel.taskId);
+            if (taskDetailModel.taskType.equalsIgnoreCase(Utility.TASK_TYPE.STRATEGIC))
+                TaskSummaryStrategicPartnerActivity.getInstance(mContext, taskDetailModel.taskId);
+            else
+                TaskSummaryActivity.getInstance(mContext, taskDetailModel.taskId);
         }
     }
 
@@ -521,7 +537,7 @@ public class HomeActivity extends BaseAppCompatActivity
         this.taskId = taskId;
         //Validation
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mActivityHomeBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityHomeBinding.getRoot());
             return;
         }
 
@@ -652,9 +668,9 @@ public class HomeActivity extends BaseAppCompatActivity
     private void showRateDialog(String userName, final String taskId, final String providerId) {
 
         View view = View.inflate(mContext, R.layout.dialog_rate, null);
+
         final RatingBar ratingBar = (RatingBar) view.findViewById(R.id.rating_bar);
         final EditText edtMessage = (EditText) view.findViewById(R.id.edit_message);
-
         final TextView txtLabel = (TextView) view.findViewById(R.id.text_label);
         txtLabel.setText(getString(R.string.label_write_a_review, userName));
 
@@ -685,7 +701,7 @@ public class HomeActivity extends BaseAppCompatActivity
         this.taskId = taskId;
         //Validation
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mActivityHomeBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityHomeBinding.getRoot());
             return;
         }
 
@@ -949,8 +965,13 @@ public class HomeActivity extends BaseAppCompatActivity
                     Utility.showCircularImageView(mContext, TAG, navHeaderHomeBinding.imgProfile, userDetails.ProfileImg, R.drawable.icon_profile_img, true);
 
                 //Update the name
-                if (userDetails != null && !TextUtils.isEmpty(userDetails.UserName) && userDetails.UserName.trim().length() > 1)
+                if (userDetails != null && !TextUtils.isEmpty(userDetails.UserName) && userDetails.UserName.trim().length() > 1) {
                     navHeaderHomeBinding.textName.setText(userDetails.UserName.substring(0, 1).toUpperCase() + userDetails.UserName.substring(1));
+                } else {
+                    if (PreferenceUtility.getInstance(mContext).getUserDetails() == null) {
+                        navHeaderHomeBinding.textName.setText(Utility.GUEST_STATIC_INFO.USERNAME);
+                    }
+                }
 
 //                navHeaderHomeBinding.textName.setText(userDetails.UserName);
 
@@ -1009,11 +1030,17 @@ public class HomeActivity extends BaseAppCompatActivity
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////
     @Override
     protected void onDestroy() {
+        Log.d(TAG, "onDestroy() called");
         Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.WS.SP_ADD_TO_FAV);
         Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.WS.LOGOUT);
         Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.WS.ADD_REVIEW);
         Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.WS.CANCEL_TASK);
         Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.WS.CHECK_APP_VERSION);
+        try {
+            unregisterReceiver(mBR_OnLoginSuccess);
+        } catch (Exception e) {
+
+        }
         super.onDestroy();
     }
 
@@ -1025,7 +1052,7 @@ public class HomeActivity extends BaseAppCompatActivity
      */
     private void callAddToFavWS(String providerId, boolean isAddToFav) {
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mActivityHomeBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityHomeBinding.getRoot());
             return;
         }
 
@@ -1122,14 +1149,14 @@ public class HomeActivity extends BaseAppCompatActivity
         final BottomAlertDialog dialog = new BottomAlertDialog(mContext);
         dialog.setTitle(getString(R.string.label_logout));
         dialog.setMessage(getString(R.string.confirmation_logout));
-        dialog.addPositiveButton("Yes", new View.OnClickListener() {
+        dialog.addPositiveButton(getString(R.string.label_yes), new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 callLogoutWS();
                 dialog.dismiss();
             }
         });
-        dialog.addNegativeButton("No", new View.OnClickListener() {
+        dialog.addNegativeButton(getString(R.string.label_no), new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 dialog.dismiss();
@@ -1151,8 +1178,9 @@ public class HomeActivity extends BaseAppCompatActivity
             //Finish the current activity
             finish();
 
-            //Redirect user to Home Screen
-            LoginActivity.newInstance(mContext);
+            // Redirect user to Home Screen
+//          LoginActivity.newInstance(mContext);
+            HomeActivity.newInstance(mContext);
             return;
         }
 
@@ -1201,7 +1229,8 @@ public class HomeActivity extends BaseAppCompatActivity
             finish();
 
             //Redirect user to Home Screen
-            LoginActivity.newInstance(mContext);
+//            LoginActivity.newInstance(mContext);
+            HomeActivity.newInstance(mContext);
 
             /*String strResponse = (String) response;
             try {
@@ -1251,7 +1280,8 @@ public class HomeActivity extends BaseAppCompatActivity
             finish();
 
             //Redirect user to Home Screen
-            LoginActivity.newInstance(mContext);
+//            LoginActivity.newInstance(mContext);
+            HomeActivity.newInstance(mContext);
 
             // Show Toast
 //            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityHomeBinding.getRoot());
@@ -1267,140 +1297,6 @@ public class HomeActivity extends BaseAppCompatActivity
      * *****************************************Webservice Integration [End]**************************************
      * *************************************************************************************************************
      ************************************************************************************************************/
-
-
-    @Override
-    public void onBindLocationTrackService() {
-        super.onBindLocationTrackService();
-        Log.d(TAG, "onBindLocationTrackService() called");
-        if (mLocationTrackService.mLocation != null) {
-            double latitude = mLocationTrackService.mLocation.getLatitude();
-            double longitude = mLocationTrackService.mLocation.getLongitude();
-
-            Fragment mFragment = getSupportFragmentManager().findFragmentById(R.id.content);
-            if (mFragment != null && mFragment instanceof BaseFragment) {
-                ((BaseFragment) mFragment).onLocationFetched(mLocationTrackService.mLocation);
-            }
-
-        } else {
-
-            Fragment mFragment = getSupportFragmentManager().findFragmentById(R.id.content);
-            if (mFragment != null && mFragment instanceof BaseFragment) {
-                ((BaseFragment) mFragment).onLocationNotAvailable();
-            }
-            mLocationTrackService.requestLocationUpdate();
-        }
-    }
-
-    @Override
-    protected void onLocationNotAvailable() {
-        super.onLocationNotAvailable();
-        Log.d(TAG, "onLocationNotAvailable() called");
-        Fragment mFragment = getSupportFragmentManager().findFragmentById(R.id.content);
-        if (mFragment != null && mFragment instanceof BaseFragment) {
-            ((BaseFragment) mFragment).onLocationNotAvailable();
-        }
-    }
-
-    @Override
-    protected void onLocationFetched(Location mLocation) {
-        super.onLocationFetched(mLocation);
-        Log.d(TAG, "onLocationFetched() called with: mLocation = [" + mLocation + "]");
-        Fragment mFragment = getSupportFragmentManager().findFragmentById(R.id.content);
-        if (mFragment != null && mFragment instanceof BaseFragment) {
-            ((BaseFragment) mFragment).onLocationFetched(mLocation);
-        }
-    }
-
-    /**
-     * Update Category list on server
-     *
-     * @param lat
-     * @param lng
-     */
-    private void updateLatLongOnServer(String lat, String lng) {
-        //Setting RecyclerView Adapter
-        /*HomeTabRecyclerViewAdapter adapter = new HomeTabRecyclerViewAdapter(BootstrapConstant.DUMMY_JOB_CATEGORY_MODELS_LIST, mCategoryRowInteractionListener);
-        mFragmentTabHomeBinding.commonRecyclerView.recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
-        mFragmentTabHomeBinding.commonRecyclerView.recyclerView.setAdapter(adapter);
-        mFragmentTabHomeBinding.commonRecyclerView.recyclerView.addItemDecoration(new DividerItemDecoration(mContext, R.drawable.divider_white, (int) getResources().getDimension(R.dimen.scale_0dp)));*/
-
-        //Add Header parameters
-        Map<String, String> mHeaderParams = new HashMap<>();
-        mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
-        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
-
-        //Add Params
-        Map<String, String> mParams = new HashMap<>();
-        mParams.put(NetworkUtility.TAGS.LAT, lat);
-        mParams.put(NetworkUtility.TAGS.LNG, lng);
-
-        VolleyNetworkRequest mVolleyNetworkRequest = new VolleyNetworkRequest(NetworkUtility.WS.UPDATE_LOCATION
-                , mCallUpdateLatLngWSErrorListener
-                , mCallUpdateLatLngWSResponseListener
-                , mHeaderParams
-                , mParams
-                , null);
-        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest);
-    }
-
-    Response.Listener mCallUpdateLatLngWSResponseListener = new Response.Listener() {
-        @Override
-        public void onResponse(Object response) {
-            Log.d(TAG, "onResponse() called with: response = [" + response + "]");
-
-            String strResponse = (String) response;
-            try {
-                JSONObject jsonObject = new JSONObject(strResponse);
-                Log.i(TAG, "onResponse: " + jsonObject.toString());
-                int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
-                String error_message;
-                switch (statusCode) {
-                    case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
-
-                        Utility.showToast(mContext, "Location updated");
-                        JSONObject jsonData = jsonObject.optJSONObject(NetworkUtility.TAGS.DATA);
-
-                        UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
-                        userDetails.CityID = jsonData.optString(NetworkUtility.TAGS.CITY_ID);
-                        userDetails.CityName = jsonData.optString(NetworkUtility.TAGS.CITY_NAME);
-                        userDetails.locality = jsonData.optString(NetworkUtility.TAGS.LOCALITY);
-                        PreferenceUtility.getInstance(mContext).saveUserDetails(userDetails);
-                        // Show message
-                        break;
-                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
-                        // Show Toast
-//                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mFragmentTabHomeBinding.getRoot());
-
-                        break;
-                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
-                        error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
-                        // Show message
-//                        Utility.showSnackBar(error_message, mFragmentTabHomeBinding.getRoot());
-                        break;
-                    case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
-                    case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
-                        //Logout and finish the current activity
-                        Utility.logout(mContext, true, statusCode);
-                        break;
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-                mCallUpdateLatLngWSErrorListener.onErrorResponse(new VolleyError(e.getMessage()));
-            }
-
-        }
-    };
-
-    Response.ErrorListener mCallUpdateLatLngWSErrorListener = new Response.ErrorListener() {
-        @Override
-        public void onErrorResponse(VolleyError error) {
-            Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
-
-            // Show Toast
-//            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mFragmentTabHomeBinding.getRoot());
-        }
-    };
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1488,7 +1384,7 @@ public class HomeActivity extends BaseAppCompatActivity
 
         //Validation
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mActivityHomeBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityHomeBinding.getRoot());
             return;
         }
 
@@ -1529,11 +1425,14 @@ public class HomeActivity extends BaseAppCompatActivity
                 switch (statusCode) {
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
                         JSONObject jData = jsonObject.getJSONObject(NetworkUtility.TAGS.DATA);
-//                        Utility.showSnackBar(getString(R.string.msg_task_cancelled), mActivityHomeBinding.getRoot());
+                        String pro_username = jData.optString(NetworkUtility.TAGS.SP_USER_NAME);
+                        Log.i(TAG, "onResponse: Pro name" + pro_username);
+                        Utility.showToast(mContext, getString(R.string.task_reschedule_task_success, pro_username));
                         MessageEvent messageEvent = new MessageEvent();
                         messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.TASK_RESCHEDULED;
                         messageEvent.id = jData.getString(NetworkUtility.TAGS.TASK_ID);
-//                        messageEvent.taskStartdate = jData.getString(NetworkUtility.TAGS.TASK_STARTDATE);
+
+                        messageEvent.taskStartdate = jData.getString(NetworkUtility.TAGS.RESCHEDULE_DATETIME);
                         EventBus.getDefault().post(messageEvent);
 
                         break;
@@ -1589,7 +1488,7 @@ public class HomeActivity extends BaseAppCompatActivity
     public void callUpdateLanguage(String language) {
 
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mActivityHomeBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityHomeBinding.getRoot());
             return;
         }
 
@@ -1696,6 +1595,7 @@ public class HomeActivity extends BaseAppCompatActivity
      * POST A TASK button from empty screen.
      */
     public void redirectToHomeTab() {
+        Log.d(TAG, "redirectToHomeTab() called");
         Fragment mFragment = getSupportFragmentManager().findFragmentByTag(HomeFragment.TAG);
         if (mFragment != null) {
             HomeFragment homeFragment = (HomeFragment) mFragment;
@@ -1742,7 +1642,7 @@ public class HomeActivity extends BaseAppCompatActivity
                 JSONObject jsonObject = new JSONObject(strResponse);
                 Log.i(TAG, "onResponse: " + jsonObject.toString());
                 int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
-                hideProgressDialog();
+//                hideProgressDialog();
                 switch (statusCode) {
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
                         JSONObject jObjData = jsonObject.getJSONObject(NetworkUtility.TAGS.DATA);
@@ -1800,5 +1700,177 @@ public class HomeActivity extends BaseAppCompatActivity
     /////////////////////////////////WebService [Ends]//////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////
 
+    /**
+     * Location [Start]
+     */
+    @Override
+    public void onBindLocationTrackService() {
+        super.onBindLocationTrackService();
+        Log.d(TAG, "onBindLocationTrackService() called");
+         /*
+          Check if Location service is enabled or not, if not ask for user to accept it and stop the ongoing service
+         */
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            //Let the activity know that location permission not granted
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_COARSE_LOCATION)) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, Utility.REQUEST_CODE_PERMISSION_LOCATION);
+            } else {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, Utility.REQUEST_CODE_PERMISSION_LOCATION);
+            }
+        } else {
+            UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
+            // In case user is logged in and we have stored CityID
+            if (userDetails != null && !"-1".equalsIgnoreCase(userDetails.CityID)) {
+                loadHomeScreenWithEarlierSavedAddress();
+            } else {
+                /**
+                 * Showing Progress Dialog that, fetching your location
+                 */
+                showProgressDialog(getString(R.string.fetching_location));
+                requestLocationUpdateFromService();
+                /*// In case Guest user details is there
+                if (PreferenceUtility.getInstance(mContext).getGuestUserDetails() != null) {
+                    loadHomeScreenWithEarlierSavedAddress();
+                } else {
+                    requestLocationUpdateFromService();
+                }*/
+            }
+        }
+
+        /*if (mLocationTrackService.mLocation != null) {
+            double latitude = mLocationTrackService.mLocation.getLatitude();
+            double longitude = mLocationTrackService.mLocation.getLongitude();
+
+            Fragment mFragment = getSupportFragmentManager().findFragmentById(R.id.content);
+            if (mFragment != null && mFragment instanceof BaseFragment) {
+                ((BaseFragment) mFragment).onLocationFetched(mLocationTrackService.mLocation);
+            }
+
+        } else {
+            Fragment mFragment = getSupportFragmentManager().findFragmentById(R.id.content);
+            if (mFragment != null && mFragment instanceof BaseFragment) {
+                ((BaseFragment) mFragment).onLocationNotAvailable();
+            }
+            mLocationTrackService.requestLocationUpdate();
+        }*/
+    }
+
+    private void loadHomeScreenWithEarlierSavedAddress() {
+        // Do Nothing as app would load the earlier saved Guest locations
+        Fragment mFragment = getSupportFragmentManager().findFragmentById(R.id.content);
+        if (mFragment != null && mFragment instanceof HomeFragment) {
+            ((HomeFragment) mFragment).onLoadHomeScreenWithEarlierSavedAddress();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == Utility.REQUEST_CODE_PERMISSION_LOCATION) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Log.i(TAG, "onRequestPermissionsResult: Permission Granted");
+                //So, ask service to fetch the location now
+                requestLocationUpdateFromService();
+                /**
+                 * Showing Progress Dialog that, fetching your location
+                 */
+                showProgressDialog(getString(R.string.fetching_location));
+            } else if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_DENIED) {
+                Log.i(TAG, "onRequestPermissionsResult: Permission Denied");
+//                Snackbar.make(mActivityHomeBinding.getRoot(), getString(R.string.permission_denied_location), 3000).show();
+                onLocationNotAvailable();
+            }
+        }
+    }
+
+    @Override
+    protected void onLocationNotAvailable() {
+        super.onLocationNotAvailable();
+        Log.d(TAG, "onLocationNotAvailable() called");
+        hideProgressDialog();
+        Fragment mFragment = getSupportFragmentManager().findFragmentById(R.id.content);
+        if (mFragment != null && mFragment instanceof BaseFragment) {
+            ((BaseFragment) mFragment).onLocationNotAvailable();
+        }
+    }
+
+    @Override
+    protected void onLocationFetched(Location mLocation) {
+        super.onLocationFetched(mLocation);
+        hideProgressDialog();
+        Log.d(TAG, "onLocationFetched() called with: mLocation = [" + mLocation + "]");
+        Fragment mFragment = getSupportFragmentManager().findFragmentById(R.id.content);
+        if (mFragment != null && mFragment instanceof BaseFragment) {
+            ((BaseFragment) mFragment).onLocationFetched(mLocation);
+        }
+        // Now There is no need to start the service so stop it.
+
+    }
+
+    @Override
+    public void onLocationSettingsDialogNeedToBeShow(Status status) {
+        super.onLocationSettingsDialogNeedToBeShow(status);
+        // Location settings are not satisfied, but this can be fixed
+        // by showing the user a dialog.
+        hideProgressDialog();
+        try {
+            // Show the dialog by calling startResolutionForResult(),
+            // and check the result in onActivityResult().
+            status.startResolutionForResult(this, Utility.REQUEST_CODE_CHECK_LOCATION_SETTINGS);
+        } catch (IntentSender.SendIntentException e) {
+            // Ignore the error.
+        }
+    }
+
+    @Override
+    public void gpsEnabled() {
+        super.gpsEnabled();
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(HomeFragment.TAG);
+        if (fragment != null) {
+            ((BaseFragment) fragment).gpsEnabled();
+        }
+        fragment = getSupportFragmentManager().findFragmentByTag(ProfileTabFragment.TAG);
+        if (fragment != null) {
+            ((BaseFragment) fragment).gpsEnabled();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == Utility.REQUEST_CODE_CHECK_LOCATION_SETTINGS) {
+            if (resultCode == RESULT_OK) {
+                onBindLocationTrackService();
+            } else {
+                /*
+                 * Feature: Guest Login.
+                 * @Changes by: Bhavesh, on 28th Aug, 2017
+                 * If user doesn't want to enable location from notification pannel, we
+                 * can see whether there are any earlier saved address is and if yes, we can load the
+                 * data accordingly.
+                 */
+                onLocationNotAvailable();
+            }
+        }
+    }
+
+    /**
+     * Location [END]
+     */
+
+
+    /**
+     * BroadCast that would restart the screen once login has been done.
+     */
+    private BroadcastReceiver mBR_OnLoginSuccess = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            // Do nothing, just restart the activity
+            Utility.hideKeyboard(mContext);
+
+            recreate();
+        }
+    };
 
 }

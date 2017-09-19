@@ -1,10 +1,5 @@
 apply plugin: 'com.android.application'
 
-/*repositories {
-    maven { url 'https://maven.fabric.io/public' }
-//    maven { url 'https://github.com/500px/500px-android-blur/raw/master/releases/' }
-}*/
-
 repositories {
     maven {
         url 'https://maven.fabric.io/public'
@@ -12,21 +7,20 @@ repositories {
 }
 
 android {
-
     compileSdkVersion 26
     buildToolsVersion "26.0.1"
     defaultConfig {
         applicationId "com.cheep"
         minSdkVersion 16
         targetSdkVersion 25
-        versionCode 22
-        versionName "1.0.51" // PLEASE FIRST MAKE SURE MIN-VERSION IS 16.
+        versionCode 24
+        versionName "1.0.86" // PLEASE FIRST MAKE SURE MIN-VERSION IS 16.
+        renderscriptTargetApi 18
+        renderscriptSupportModeEnabled true
 
         // Enabling multidex support.
         multiDexEnabled true
 
-        /*renderscriptTargetApi 19
-        renderscriptSupportModeEnabled true*/
         buildConfigField("String", "FILE_PROVIDER_URL", getProperty("FILE_PROVIDER_URL"))
 
         buildConfigField("String", "HOTLINE_APP_ID", getProperty("HOTLINE_APP_ID"))
@@ -58,6 +52,11 @@ android {
         buildConfigField("String", "CHAT_NODE", getProperty("CHAT_NODE_DEBUG"));
         buildConfigField("String", "PAYUBIZ_HDFC_KEY", getProperty("PAYUBIZ_HDFC_SANDBOX_KEY"))
         buildConfigField("String", "PAYUBIZ_HDFC_URL", getProperty("PAYUBIZ_HDFC_SANDBOX_URL"))
+        buildConfigField("String", "AMAZON_S3_URL", getProperty("AMAZON_S3_URL"))
+        buildConfigField("String", "COGNITO_POOL_ID ", getProperty("COGNITO_POOL_ID"))
+        buildConfigField("String", "BUCKET_NAME ", getProperty("BUCKET_NAME"))
+        buildConfigField("String", "TASK_ORIGINAL_FOLDER ", getProperty("TASK_ORIGINAL_FOLDER"))
+        buildConfigField("String", "TASK_THUMB_FOLDER ", getProperty("TASK_THUMB_FOLDER"))
         buildConfigField("boolean", "NEED_TO_BYPASS_PAYMENT", "false")
 
         // TODO: This needs to change (For Temporary LIVE)
@@ -65,6 +64,18 @@ android {
 //        buildConfigField("String", "CHAT_NODE", getProperty("CHAT_NODE_LIVE"));
 //        buildConfigField("String", "PAYUBIZ_HDFC_KEY", getProperty("PAYUBIZ_HDFC_LIVE_KEY"))
 //        buildConfigField("String", "PAYUBIZ_HDFC_URL", getProperty("PAYUBIZ_HDFC_LIVE_URL"))
+    }
+
+    // Source Sets
+    sourceSets {
+        main {
+            res.srcDirs = [
+                    'src/main/res/layouts/strategicpartner',
+                    'src/main/res/layouts/others',
+                    'src/main/res/layouts',
+                    'src/main/res'
+            ]
+        }
     }
 
     // We are using apache library for MultiPart portion so, have to use below line to make apache library accessible on API LEVEL >=23
@@ -90,7 +101,7 @@ android {
             buildConfigField("String", "CHAT_NODE", getProperty("CHAT_NODE_LIVE"));
             buildConfigField("String", "PAYUBIZ_HDFC_KEY", getProperty("PAYUBIZ_HDFC_LIVE_KEY"))
             buildConfigField("String", "PAYUBIZ_HDFC_URL", getProperty("PAYUBIZ_HDFC_LIVE_URL"))
-            buildConfigField("boolean", "NEED_TO_BYPASS_PAYMENT", "true")
+            buildConfigField("boolean", "NEED_TO_BYPASS_PAYMENT", "false")
             signingConfig signingConfigs.debug
         }
         release {
@@ -99,7 +110,6 @@ android {
             buildConfigField("String", "PAYUBIZ_HDFC_KEY", getProperty("PAYUBIZ_HDFC_LIVE_KEY"))
             buildConfigField("String", "PAYUBIZ_HDFC_URL", getProperty("PAYUBIZ_HDFC_LIVE_URL"))
             buildConfigField("boolean", "NEED_TO_BYPASS_PAYMENT", "false")
-            signingConfig signingConfigs.debug
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
@@ -132,8 +142,8 @@ configurations {
 
 // Description
 ext {
-//    supportLibVer = '26.0.0'
-    supportLibVer = '25.4.0'
+    supportLibVer = '26.0.2'
+//    supportLibVer = '25.4.0'
     gsonLibVer = '2.7'
     playServiceVer = '11.0.4'
 //    playServiceVer = '10.2.0'
@@ -172,6 +182,7 @@ dependencies {
 
     // firebase database sdk
     compile "com.google.firebase:firebase-database:$playServiceVer"
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
 
     //Twitter
     compile('com.twitter.sdk.android:twitter:2.3.2@aar') {
@@ -216,6 +227,9 @@ dependencies {
 
     // AppsFlyer SDK
     compile 'com.appsflyer:af-android-sdk:4.7.2@aar'
+
+    compile 'com.amazonaws:aws-android-sdk-s3:2.2.22'
+//    compile 'com.android.support.constraint:constraint-layout:1.0.2'
 }
 
 // Add to the bottom of the file

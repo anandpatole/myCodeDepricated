@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="horizontal">
+
+    <RelativeLayout
+        android:layout_width="@dimen/scale_50dp"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/txtVerticalLine"
+            android:layout_width="2dp"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/txtQueNo"
+            android:layout_centerHorizontal="true"
+            android:background="@color/grey_varient_15"/>
+
+        <TextView
+            android:id="@+id/txtQueNo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/background_text_que_num_selector"
+            android:paddingBottom="@dimen/scale_5dp"
+            android:paddingLeft="@dimen/scale_10dp"
+            android:paddingRight="@dimen/scale_10dp"
+            android:paddingTop="@dimen/scale_5dp"
+            android:textColor="@color/selector_text_color_que_no"
+            android:textSize="@dimen/text_size_12sp"
+            tools:text="1"/>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/scale_15dp"
+        android:layout_marginRight="@dimen/scale_15dp"
+        android:orientation="vertical">
+
+        <com.cheep.custom_view.CFTextViewRegular
+            android:id="@+id/txtQueStr"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/grey_dark_color_2"
+            android:textSize="@dimen/text_size_16sp"
+            tools:text="asdasd"/>
+
+        <LinearLayout
+            android:id="@+id/relAnsView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/scale_11dp"
+            android:orientation="horizontal"/>
+    </LinearLayout>
+
+</LinearLayout>

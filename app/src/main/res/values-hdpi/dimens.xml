@@ -6,4 +6,19 @@
 
 
     <dimen name="home_screen_pro_available_text_size">10sp</dimen>
+    <dimen name="banner_title_text_size">16sp</dimen>
+    <dimen name="stra_partner_logo_size">80dp</dimen>
+    <dimen name="margin_top_payment_step">50dp</dimen>
+    <dimen name="margin_top_partner_logo">-40dp</dimen>
+    <dimen name="banner_height_strategic_partner">190dp</dimen>
+    <dimen name="tv_max_width_provider_name_task_list">70dp</dimen>
+    <dimen name="radio_button_padding_for_address">2dp</dimen>
+
+    <dimen name="height_sign_up_btn">40dp</dimen>
+
+
+    <!--For HDPI devices, Strategic partner description for creation pages
+    we would be have differetn margin top-->
+    <dimen name="banner_desc_margin_top">10dp</dimen>
+
 </resources>

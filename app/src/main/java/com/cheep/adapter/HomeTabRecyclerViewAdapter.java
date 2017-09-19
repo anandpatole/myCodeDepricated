@@ -40,14 +40,13 @@ public class HomeTabRecyclerViewAdapter extends RecyclerView.Adapter<HomeTabRecy
     ArrayList<JobCategoryModel> mList;
     HomeTabFragment.CategoryRowInteractionListener mListener;
     Context mContext;
-    //saves the index of the upcoming offer to display
-    private Map<String, Integer> mOfferIndexMap;
+//    //saves the index of the upcoming offer to display
+//    private Map<String, Integer> mOfferIndexMap;
 
     public HomeTabRecyclerViewAdapter(ArrayList<JobCategoryModel> mList, HomeTabFragment.CategoryRowInteractionListener mListener) {
         this.mList = mList != null ? mList : new ArrayList<JobCategoryModel>();
         this.mListener = mListener;
-        mOfferIndexMap = new HashMap<>();
-
+//        mOfferIndexMap = new HashMap<>();
     }
 
     /**
@@ -127,6 +126,7 @@ public class HomeTabRecyclerViewAdapter extends RecyclerView.Adapter<HomeTabRecy
 
         // Start LIVE tracking and Text changes
         final int liveFeedCounter = model.live_lable_arr != null ? model.live_lable_arr.size() : 0;
+        final Map<String, Integer> mOfferIndexMap = new HashMap<>();
         if (liveFeedCounter > 0) {
             holder.mRowTabHomeBinding.ivLiveAnimated.setVisibility(View.VISIBLE);
             holder.mRowTabHomeBinding.tvLiveFeed.setVisibility(View.VISIBLE);
@@ -332,7 +332,7 @@ public class HomeTabRecyclerViewAdapter extends RecyclerView.Adapter<HomeTabRecy
                         TypedValue.COMPLEX_UNIT_PX,
                         mContext.getResources().getDimension(R.dimen.home_screen_extra_category_count_text_size_three_digits));
             }
-            
+
             mRowTabHomeBinding.extraProCount.setVisibility(View.VISIBLE);
             mRowTabHomeBinding.extraProCount.setText("+" + String.valueOf(extra_count));
         } else {

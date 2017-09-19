@@ -107,7 +107,7 @@ public class MyTaskTabFragment extends BaseFragment {
     }
 
     @Override
-    void initiateUI() {
+    public void initiateUI() {
         if (((AppCompatActivity) mContext).getSupportActionBar() != null) {
             //Setting up toolbar
             ((AppCompatActivity) mContext).setSupportActionBar(mFragmentTabMyTaskTabBinding.toolbar);
@@ -124,7 +124,7 @@ public class MyTaskTabFragment extends BaseFragment {
         // Update Notification Counter
         updateCounter();
 
-        // Setup Click listener of Notificaiotn
+        // Setup Click listener of Notification
         mFragmentTabMyTaskTabBinding.relNotificationAction.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -145,7 +145,7 @@ public class MyTaskTabFragment extends BaseFragment {
     }
 
     @Override
-    void setListener() {
+    public void setListener() {
     }
 
     /**
@@ -155,8 +155,8 @@ public class MyTaskTabFragment extends BaseFragment {
      */
     private void setupHomeViewPager(ViewPager pager) {
         MyTaskTabPagerAdapter mHomeFragmentPagerAdater = new MyTaskTabPagerAdapter(getChildFragmentManager());
-        mHomeFragmentPagerAdater.addFragment(getString(R.string.lable_upcoming));
-        mHomeFragmentPagerAdater.addFragment(getString(R.string.lable_past_tasks));
+        mHomeFragmentPagerAdater.addFragment(getString(R.string.label_upcoming_tasks));
+        mHomeFragmentPagerAdater.addFragment(getString(R.string.label_past_tasks));
         pager.setAdapter(mHomeFragmentPagerAdater);
         mFragmentTabMyTaskTabBinding.tabs.setupWithViewPager(pager, true);
     }

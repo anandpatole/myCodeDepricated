@@ -1,5 +1,14 @@
 <resources>
 
-    <!--Home Screen Alignments for xxhdpi & xxxhdpi devices-->
-    <dimen name="home_screen_filter_text_width">89.50dp</dimen>
+    <!--Home Screen Alignments-->
+    <dimen name="home_screen_filter_text_width">103dp</dimen>
+    <dimen name="banner_title_text_size">17sp</dimen>
+    <dimen name="stra_partner_logo_size">80dp</dimen>
+    <dimen name="margin_top_payment_step">50dp</dimen>
+    <dimen name="margin_top_partner_logo">-40dp</dimen>
+    <dimen name="banner_height_strategic_partner">190dp</dimen>
+    <dimen name="tv_max_width_provider_name_task_list">90dp</dimen>
+    <dimen name="radio_button_padding_for_address">5dp</dimen>
+    <dimen name="height_sign_up_btn">45dp</dimen>
+
 </resources>

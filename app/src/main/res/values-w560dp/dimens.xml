@@ -1,0 +1,30 @@
+<resources>
+
+    <!--Home Screen Alignments for xxhdpi & xxxhdpi devices-->
+    <dimen name="home_screen_filter_text_width">102.2dp</dimen>
+
+
+    <!---new designs-->
+    122
+    <dimen name="w_step_circle_strategic_partner_act">34.85dp</dimen>
+    125
+    <dimen name="h_step_circle_strategic_partner_act">35.71dp</dimen>
+    560
+    <dimen name="w_text_view_picker">170dp</dimen>
+    136
+    <dimen name="h_text_view_picker">38.85dp</dimen>
+    300
+    <dimen name="h_camera_que_fragment">85.71dp</dimen>
+    183
+    <dimen name="h_book_and_pay">52.28dp</dimen>
+
+    <dimen name="banner_title_text_size">18sp</dimen>
+    <dimen name="stra_partner_logo_size">100dp</dimen>
+    <dimen name="margin_top_payment_step">60dp</dimen>
+    <dimen name="margin_top_partner_logo">-50dp</dimen>
+    <dimen name="banner_height_strategic_partner">206dp</dimen>
+    <dimen name="tv_max_width_provider_name_task_list">125dp</dimen>
+    <dimen name="radio_button_padding_for_address">5dp</dimen>
+    <dimen name="height_sign_up_btn">48dp</dimen>
+
+</resources>

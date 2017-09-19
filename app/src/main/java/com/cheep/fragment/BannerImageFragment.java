@@ -3,7 +3,6 @@ package com.cheep.fragment;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,8 +15,9 @@ import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.cheep.R;
+import com.cheep.strategicpartner.StrategicPartnerTaskCreationAct;
 import com.cheep.model.BannerImageModel;
-import com.cheep.model.CoverImageModel;
+import com.cheep.utils.Utility;
 
 public class BannerImageFragment extends BaseFragment {
     private static final String TAG = "BannerImageFragment";
@@ -30,12 +30,12 @@ public class BannerImageFragment extends BaseFragment {
     }
 
     @Override
-    void initiateUI() {
+    public void initiateUI() {
 
     }
 
     @Override
-    void setListener() {
+    public void setListener() {
 
     }
 
@@ -63,13 +63,14 @@ public class BannerImageFragment extends BaseFragment {
         progress = (ProgressBar) view.findViewById(R.id.progress);
         return view;
     }
+    boolean processingClick = false;
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         if (bannerImageModel != null) {
             Glide.with(mContext)
-                    .load(bannerImageModel.imgCatImageUrl)
+                    .load(bannerImageModel.bannerImage)
                     .listener(new RequestListener<String, GlideDrawable>() {
                         @Override
                         public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
@@ -83,6 +84,20 @@ public class BannerImageFragment extends BaseFragment {
                         }
                     })
                     .into(img_cover);
+
+            img_cover.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    if (!processingClick) {
+                        processingClick = true;
+                        if (bannerImageModel != null && !bannerImageModel.cat_id.equalsIgnoreCase(Utility.ZERO_STRING)) {
+                            StrategicPartnerTaskCreationAct.getInstance(mContext, bannerImageModel);
+                        }
+                    }
+                }
+            });
+
         } else {
             progress.setVisibility(View.GONE);
         }
@@ -91,6 +106,7 @@ public class BannerImageFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
+        processingClick = false;
     }
 
     @Override

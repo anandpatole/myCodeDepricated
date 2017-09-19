@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import com.cheep.model.GuestUserDetails;
 import com.cheep.model.UserDetails;
 
 import org.json.JSONException;
@@ -23,16 +24,23 @@ public class PreferenceUtility {
     private Context context;
     //    private static PreferenceUtility mPreferenceUtility;
     private static UserDetails mUserDetails;
+    private static GuestUserDetails mGuestUserDetails;
 
     private static final String PREF_X_API_KEY = "com.cheep.xapikey";
     private static final String PREF_FCM_TOKEN = "com.cheep.fcm.tokem";
     private static final String PREF_USER_INFO = "com.cheep.fcm.userinfo";
     private static final String PREF_NOTIFICATION_COUNTER = "com.cheep.notification_counter";
-
     private static final String PREF_INTRO_SCREEN_STATUS = "com.cheep.intro.screen.status";
+    private static final String PREF_HOME_SCREEN_VISIBLE = "com.cheep.homescreen.available";
+
+    //Guest User Pref
+    private static final String PREF_FILE_GUEST = "com.cheep.guest";
+    private static final String PREF_GUEST_USER_INFO = "com.cheep.guest.userinfo";
+    private SharedPreferences mGuestSharedPreferences;
 
     private PreferenceUtility(Context mContext) {
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
+        mGuestSharedPreferences = mContext.getSharedPreferences(PREF_FILE_GUEST, Context.MODE_PRIVATE);
         context = mContext;
     }
 
@@ -54,6 +62,7 @@ public class PreferenceUtility {
     public void setFCMRegID(String token) {
         mSharedPreferences.edit().putString(PREF_FCM_TOKEN, token).apply();
     }
+
 
     public String getFCMRegID() {
         if (mSharedPreferences.contains(PREF_FCM_TOKEN)) {
@@ -128,6 +137,12 @@ public class PreferenceUtility {
 
         // Clear Unread otification counter
         mSharedPreferences.edit().remove(PREF_NOTIFICATION_COUNTER).apply();
+
+        // Clear all Guest User Details if any
+        mGuestUserDetails = null;
+        mGuestSharedPreferences.edit().remove(PREF_GUEST_USER_INFO).apply();
+
+        Log.d(TAG, "onUserLogout() finished");
     }
 
     //For Notification Counter
@@ -142,5 +157,47 @@ public class PreferenceUtility {
 
     public void clearUnreadNotificationCounter() {
         mSharedPreferences.edit().putInt(PREF_NOTIFICATION_COUNTER, 0).apply();
+    }
+
+
+    /**
+     * Guest user Info
+     */
+    public GuestUserDetails getGuestUserDetails() {
+        if (mGuestUserDetails != null) {
+            return mGuestUserDetails;
+        }
+        if (mGuestSharedPreferences.contains(PREF_GUEST_USER_INFO)) {
+            try {
+                JSONObject jsonObject = new JSONObject(mGuestSharedPreferences.getString(PREF_GUEST_USER_INFO, null));
+                mGuestUserDetails = (GuestUserDetails) Utility.getObjectFromJsonString(jsonObject.toString(), GuestUserDetails.class);
+                return mGuestUserDetails;
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return mGuestUserDetails == null ? new GuestUserDetails() : mGuestUserDetails;
+    }
+
+    public void saveGuestUserDetails(GuestUserDetails model) {
+        Log.d(TAG, "saveUserDetails() called with: model = [" + model + "]");
+        mGuestSharedPreferences.edit().putString(PREF_GUEST_USER_INFO, Utility.getJsonStringFromObject(model)).apply();
+        mGuestUserDetails = model;
+    }
+
+
+    /**
+     * Below would manage HomeScreen availability to properly manage Guest flow
+     */
+
+    public void setHomeScreenVisibility(boolean flag) {
+        mSharedPreferences.edit().putBoolean(PREF_HOME_SCREEN_VISIBLE, flag).apply();
+    }
+
+    public boolean isHomeScreenVisible() {
+        if (mSharedPreferences.contains(PREF_HOME_SCREEN_VISIBLE)) {
+            return mSharedPreferences.getBoolean(PREF_HOME_SCREEN_VISIBLE, true);
+        }
+        return true;
     }
 }

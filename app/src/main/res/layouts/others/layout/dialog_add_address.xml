@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/scale_22dp"
+        android:layout_marginRight="@dimen/scale_22dp"
+        android:layout_marginTop="@dimen/scale_16dp"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/radio_home"
+            style="@style/AppRadioButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/checkbox_address_home_drawable_selector"
+            android:drawablePadding="@dimen/radio_button_padding_for_address"
+            android:padding="@dimen/radio_button_padding_for_address"
+            android:text="@string/label_home"
+            android:textColor="@drawable/checkbox_text_color_selector"
+            android:textSize="@dimen/text_size_12sp"/>
+
+        <RadioButton
+            android:id="@+id/radio_office"
+            style="@style/AppRadioButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/scale_10dp"
+            android:drawableLeft="@drawable/checkbox_address_office_drawable_selector"
+            android:drawablePadding="@dimen/radio_button_padding_for_address"
+            android:padding="@dimen/radio_button_padding_for_address"
+            android:text="@string/label_office"
+            android:textColor="@drawable/checkbox_text_color_selector"
+            android:textSize="@dimen/text_size_12sp"/>
+
+        <RadioButton
+            android:id="@+id/radio_other"
+            style="@style/AppRadioButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/scale_10dp"
+            android:drawableLeft="@drawable/checkbox_address_other_drawable_selector"
+            android:drawablePadding="@dimen/radio_button_padding_for_address"
+            android:padding="@dimen/radio_button_padding_for_address"
+            android:text="@string/label_other"
+            android:textColor="@drawable/checkbox_text_color_selector"
+            android:textSize="@dimen/text_size_12sp"/>
+
+
+    </RadioGroup>
+
+    <!--<com.cheep.custom_view.CFEditTextRegular
+        android:id="@+id/edit_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/scale_22dp"
+        android:layout_marginRight="@dimen/scale_22dp"
+        android:background="@color/transparent"
+        android:gravity="left"
+        android:hint="@string/label_name"
+        android:lines="1"
+        android:paddingBottom="@dimen/scale_15dp"
+        android:paddingLeft="@dimen/scale_10dp"
+        android:paddingRight="@dimen/scale_10dp"
+        android:paddingTop="@dimen/scale_15dp"
+        android:singleLine="true"
+        android:textColor="@color/black"
+        android:textSize="@dimen/text_size_16sp"
+        android:theme="@style/EditTextWhiteBG" />-->
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/scale_1dp"
+        android:layout_above="@+id/action_layout"
+        android:layout_marginLeft="@dimen/scale_22dp"
+        android:layout_marginRight="@dimen/scale_22dp"
+        android:layout_toRightOf="@+id/profile_layout"
+        android:background="@color/grey_varient_3"/>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/ln_address_row"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="visible">
+
+            <com.cheep.custom_view.CFTextViewRegular
+                android:id="@+id/edit_address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/scale_22dp"
+                android:layout_marginRight="@dimen/scale_22dp"
+                android:background="@color/transparent"
+                android:gravity="left|top"
+                android:hint="@string/label_address_hint"
+                android:inputType="textPostalAddress|textNoSuggestions|textMultiLine"
+                android:lines="3"
+                android:maxLines="3"
+                android:padding="@dimen/scale_10dp"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_16sp"
+                android:theme="@style/EditTextWhiteBG"/>
+
+            <!-- <com.cheep.custom_view.CFEditTextRegular
+                 android:id="@+id/edit_address"
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content"
+                 android:layout_marginLeft="@dimen/scale_22dp"
+                 android:layout_marginRight="@dimen/scale_22dp"
+                 android:background="@color/transparent"
+                 android:drawableRight="@drawable/ic_map_black"
+                 android:gravity="left|top"
+                 android:hint="@string/label_address_hint"
+                 android:inputType="textPostalAddress|textNoSuggestions|textMultiLine"
+                 android:lines="3"
+                 android:maxLines="3"
+                 android:padding="@dimen/scale_10dp"
+                 android:textColor="@color/black"
+                 android:textSize="@dimen/text_size_16sp"
+                 android:theme="@style/EditTextWhiteBG" />-->
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/scale_1dp"
+                android:layout_above="@+id/action_layout"
+                android:layout_marginLeft="@dimen/scale_22dp"
+                android:layout_marginRight="@dimen/scale_22dp"
+                android:layout_toRightOf="@+id/profile_layout"
+                android:background="@color/grey_varient_3"/>
+
+            <com.cheep.custom_view.CFEditTextRegular
+                android:id="@+id/edit_address_initials"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/scale_22dp"
+                android:layout_marginRight="@dimen/scale_22dp"
+                android:layout_marginTop="@dimen/scale_10dp"
+                android:background="@color/transparent"
+                android:gravity="left"
+                android:hint="@string/hint_address_initials"
+                android:lines="1"
+                android:maxLines="1"
+                android:padding="@dimen/scale_10dp"
+                android:singleLine="true"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_15sp"
+                android:theme="@style/EditTextWhiteBG"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/scale_1dp"
+                android:layout_above="@+id/action_layout"
+                android:layout_marginLeft="@dimen/scale_22dp"
+                android:layout_marginRight="@dimen/scale_22dp"
+                android:layout_toRightOf="@+id/profile_layout"
+                android:background="@color/grey_varient_3"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ln_pick_your_location"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/scale_16dp"
+            android:layout_marginLeft="@dimen/scale_22dp"
+            android:layout_marginRight="@dimen/scale_22dp"
+            android:layout_marginTop="@dimen/scale_16dp"
+            android:background="@drawable/img_blue_edges_rounded"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/ic_icon_pick_your_location"
+                tools:ignore="ContentDescription"/>
+
+            <com.cheep.custom_view.CFTextViewSemiBold
+                android:id="@+id/btn_pick_your_location"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/scale_8dp"
+                android:gravity="center"
+                android:paddingBottom="@dimen/scale_12dp"
+                android:paddingTop="@dimen/scale_12dp"
+                android:text="@string/label_pick_your_location"
+                android:textAllCaps="false"
+                android:textColor="@color/splash_gradient_end"
+                android:textSize="@dimen/text_size_14sp"/>
+        </LinearLayout>
+    </FrameLayout>
+
+    <com.cheep.custom_view.CFButtonRegular
+        android:id="@+id/btn_add"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/scale_22dp"
+        android:background="@drawable/img_grey_rounded"
+        android:text="@string/label_add"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_size_16sp"/>
+</LinearLayout>

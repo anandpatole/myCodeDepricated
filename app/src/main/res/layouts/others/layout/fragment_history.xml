@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <android.support.design.widget.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/AppTheme.AppBarWhite">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.cheep.custom_view.CFTextViewSemiBold
+                    android:id="@+id/text_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="@android:color/transparent"
+                    android:gravity="center"
+                    android:lines="1"
+                    android:maxLines="1"
+                    android:padding="@dimen/scale_10dp"
+                    android:singleLine="true"
+                    android:text="@string/label_payment_history"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/toolbar_title_text_size" />
+            </android.support.v7.widget.Toolbar>
+
+            <LinearLayout
+                android:id="@+id/ln_total_money_spent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/splash_gradient_end"
+                android:orientation="horizontal"
+                android:padding="@dimen/scale_16dp">
+
+                <com.cheep.custom_view.CFTextViewRegular
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="@string/label_total_money_spent"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_size_16sp" />
+
+                <com.cheep.custom_view.CFTextViewRegular
+                    android:id="@+id/text_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@color/splash_gradient_end"
+                    android:gravity="center_vertical"
+                    android:text="@string/rupee_symbol_x_space"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_size_19sp" />
+            </LinearLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_month_selector"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:gravity="center">
+
+                <android.support.v4.widget.Space
+                    android:id="@+id/space"
+                    android:layout_width="@dimen/scale_0dp"
+                    android:layout_height="@dimen/scale_0dp"
+                    android:layout_centerInParent="true" />
+
+                <ImageView
+                    android:id="@+id/icon_left"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/month_view"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerVertical="true"
+                    android:layout_toLeftOf="@+id/space"
+                    android:padding="@dimen/scale_15dp"
+                    android:src="@drawable/icon_payment_arrow_left"
+                    tools:ignore="ContentDescription" />
+
+                <ImageView
+                    android:id="@+id/icon_right"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/month_view"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerVertical="true"
+                    android:layout_toRightOf="@+id/space"
+                    android:padding="@dimen/scale_15dp"
+                    android:src="@drawable/icon_payment_arrow_right"
+                    tools:ignore="ContentDescription" />
+
+                <LinearLayout
+                    android:id="@+id/month_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:paddingBottom="@dimen/scale_5dp"
+                    android:paddingTop="@dimen/scale_5dp">
+
+                    <com.cheep.custom_view.CFTextViewSemiBold
+                        android:id="@+id/text_month"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:letterSpacing="0.3"
+                        android:textAllCaps="false"
+                        android:textColor="@color/splash_gradient_end"
+                        android:textSize="@dimen/text_size_16sp"
+                        app:letterSpacing="0.3"
+                        tools:ignore="UnusedAttribute"
+                        tools:text="May" />
+
+                    <com.cheep.custom_view.CFTextViewRegular
+                        android:id="@+id/text_year"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/text_month"
+                        android:gravity="center"
+                        android:textColor="@color/splash_gradient_end"
+                        android:textSize="@dimen/text_size_11sp"
+                        app:letterSpacing="0.3"
+                        tools:text="2016" />
+                </LinearLayout>
+
+            </RelativeLayout>
+        </android.support.design.widget.AppBarLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/light_grey_color"
+            android:padding="@dimen/scale_10dp">
+
+            <com.cheep.custom_view.CFTextViewRegular
+                android:layout_width="@dimen/scale_0dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/text_month"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/label_task"
+                android:textAllCaps="false"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_11sp" />
+
+            <com.cheep.custom_view.CFTextViewRegular
+                android:layout_width="@dimen/scale_0dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/text_month"
+                android:layout_weight="0.5"
+                android:gravity="center"
+                android:text="@string/label_spent"
+                android:textAllCaps="false"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_11sp" />
+
+            <com.cheep.custom_view.CFTextViewRegular
+                android:layout_width="@dimen/scale_0dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/text_month"
+                android:layout_weight="0.5"
+                android:gravity="center"
+                android:text="@string/label_saved"
+                android:textAllCaps="false"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_11sp" />
+        </LinearLayout>
+
+        <include
+            android:id="@+id/common_recycler_view"
+            layout="@layout/common_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/scale_2dp"
+            android:layout_gravity="bottom"
+            android:background="@drawable/shadow_transparent_grey" />
+
+        <LinearLayout
+            android:id="@+id/layout_summary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/scale_10dp">
+
+            <com.cheep.custom_view.CFTextViewRegular
+                android:layout_width="@dimen/scale_0dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/text_month"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/label_total"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_16sp" />
+
+            <LinearLayout
+                android:layout_width="@dimen/scale_0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <com.cheep.custom_view.CFTextViewSemiBold
+                    android:id="@+id/monthly_earned"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/text_month"
+                    android:gravity="center"
+                    android:textAllCaps="false"
+                    android:textColor="@color/splash_gradient_end"
+                    android:textSize="@dimen/text_size_12sp"
+                    tools:text="₹ 68074" />
+
+                <com.cheep.custom_view.CFTextViewRegular
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/text_month"
+                    android:layout_gravity="center_horizontal"
+                    android:text="@string/label_spent"
+                    android:textAllCaps="false"
+                    android:textColor="@color/grey_varient_2"
+                    android:textSize="@dimen/text_size_11sp" />
+            </LinearLayout>
+
+            <LinearLayout
+
+                android:layout_width="@dimen/scale_0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <com.cheep.custom_view.CFTextViewSemiBold
+                    android:id="@+id/monthly_saved"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_below="@+id/text_month"
+                    android:layout_weight="0.5"
+                    android:gravity="center"
+                    android:textAllCaps="false"
+                    android:textColor="@color/splash_gradient_end"
+                    android:textSize="@dimen/text_size_12sp"
+                    tools:text="₹ 3600" />
+
+                <com.cheep.custom_view.CFTextViewRegular
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/text_month"
+                    android:layout_gravity="center_horizontal"
+                    android:text="@string/label_saved"
+                    android:textAllCaps="false"
+                    android:textColor="@color/grey_varient_2"
+                    android:textSize="@dimen/text_size_11sp" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</layout>

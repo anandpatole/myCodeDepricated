@@ -1,5 +1,6 @@
 package com.cheep.model;
 
+import android.support.annotation.Keep;
 import android.text.TextUtils;
 
 import com.google.gson.annotations.SerializedName;
@@ -9,6 +10,7 @@ import java.util.List;
 /**
  * Created by pankaj on 10/6/16.
  */
+@Keep
 public class ProviderModel {
 
     @SerializedName("sp_id")
@@ -55,6 +57,8 @@ public class ProviderModel {
 
     @SerializedName("sp_quote_price")
     public String quotePrice;
+
+    public String quotePriceWithOutGST;
 
     @SerializedName("request_detail_status")
     public String request_detail_status;

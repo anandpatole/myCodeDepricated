@@ -36,6 +36,8 @@ public class NetworkUtility {
         public static final String UPDATE_LOCATION = BASE_URL + "customers/profile/update_location";
         public static final String CREATE_TASK = BASE_URL + "customers/tasks/create";
         public static final String CURL_NOTIFICATION_TO_SP = BASE_URL + "customers/tasks/curl_for_notification_to_sp";
+        public static final String GET_PRO_FOR_INSTA_BOOKING = BASE_URL + "customers/tasks/getProForInstantBooking";
+
         public static final String SP_LIST = BASE_URL + "customers/sp_list/listing";
         public static final String SP_LIST_FILTER = BASE_URL + "customers/sp_list/filter_sp_list";
 
@@ -69,11 +71,11 @@ public class NetworkUtility {
 
         public static final String VALIDATE_CHEEP_CODE = BASE_URL + "customers/payment/check_cheepcode";
         public static final String GET_PAYMENT_HASH = BASE_URL + "customers/payment/generate_hash";
+        public static final String GET_PAYMENT_HASH_FOR_STRATEGIC_PARTNER = BASE_URL + "customers/payment/generate_hash_for_stratagic_partner";
         public static final String PAYMENT = BASE_URL + "customers/payment/pay_money";
         public static final String PAYMENT_HISTORY = BASE_URL + "customers/payment/payment_history";
         public static final String EMERGENCY_ALERT = BASE_URL + "customers//sp_profile/emergency_alert";
         public static final String CHECK_PROCESSING_TASK = BASE_URL + "customers/tasks/check_processing_task";
-
 
         // Chat Image upload
         public static final String IMAGE_UPLOAD_FOR_CHAT = BASE_URL + "customers/profile/imageUploadForChat";
@@ -92,6 +94,19 @@ public class NetworkUtility {
 
         // Check Task Status
         public static final String CHECK_TASK_STATUS = BASE_URL + "customers/tasks/check_task_status";
+
+        // Fetch list of all strategic partber services and sub categories
+        public static final String FETCH_SUB_CATS_STRATEGIC_PARTNER_LIST = BASE_URL + "customers/category/all_sub_cats_strategic_partner";
+
+        // Fetch list of all strategic partner services and sub categories
+        public static final String FETCH_SUB_CATEGORIES_QUESTIONNAIRE = BASE_URL + "customers/category/categories_questionnaire";
+        public static final String CHECK_CHEEPCODE_FOR_STRATEGIC_PARTNER = BASE_URL + "customers/payment/check_cheepcode_for_strategic_partner";
+
+        // Task Creation for Strategic Partner
+        public static final String TASK_CREATE_STRATEGIC_PARTNER = BASE_URL + "customers/tasks/stratagic_partner_task_create";
+        public static final String TASK_CREATE_INSTA_BOOKING = BASE_URL + "customers/tasks/instaBookingTaskCreate";
+
+        public static final String CHECK_PRO_AVAILABILITY_FOR_STRATEGIC_TASK = BASE_URL + "customers/tasks/check_pro_availability_for_Strategic_task";
     }
 
     public static class TAGS {
@@ -140,6 +155,8 @@ public class NetworkUtility {
         public static final String EMERGENCY_DATA = "emergency_data";
         public static final String ADDRESS_ID = "address_id";
         public static final String CITY_NAME = "city_name";
+        public static final String COUNTRY = "country";
+        public static final String STATE = "state";
         public static final String LOCALITY = "locality";
         public static final String REQUEST_DETAIL_STATUS = "request_detail_status";
         public static final String vVERSION_TYPE = "vVersionType";
@@ -148,6 +165,7 @@ public class NetworkUtility {
         public static final String QUOTE_AMOUNT = "quote_amount";
         public static final String PAYABLE_AMOUNT = "payable_amount";
         public static final String DISCOUNT_AMOUNT = "discount_amount";
+//        public static final String PAYABLE_AMOUNT_WITH_GST = "payable_amount_with_gst";
 
         public static final String TASK_DESC = "task_desc";
         public static final String CITY_ID = "city_id";
@@ -162,6 +180,7 @@ public class NetworkUtility {
         public static final String SP_USER_NAME = "sp_user_name";
         public static final String REQ_FOR = "req_for";
         public static final String TASK_ID = "task_id";
+
         public static final String TASK_STARTDATE = "task_startdate";
 
         public static final String LAST_ID = "last_id";
@@ -194,6 +213,13 @@ public class NetworkUtility {
 
         public static final String ADD = "add";
         public static final String REMOVE = "remove";
+
+        public static final String SUB_CATEGORY_DETAIL = "sub_category_detail";
+        public static final String QUESTION_DETAIL = "question_detail";
+        public static final String RESULT = "result";
+        public static final String MEDIA_FILE = "media_file";
+        public static final String TASK_TYPE = "task_type";
+        public static final String PROMOCODE_PRICE = "promocode_price";
 
         public static class VERSION_CHANGE_TYPE {
             public static final int NORMAL = 0;
@@ -232,6 +258,7 @@ public class NetworkUtility {
         public static final String PAYMENT_STATUS = "payment_status";
         public static final String PAYMENT_LOG = "payment_log";
         public static final String IS_FOR_ADDITIONAL_QUOTE = "isForAdditionalQuote";
+        public static final String RESCHEDULE_DATETIME = "reschedule_datetime";
 
         public static class STATUSCODETYPE {
             public static final int SUCCESS = 200;
@@ -267,6 +294,7 @@ public class NetworkUtility {
             public static final String REG_TWITTER = "RegisterWithTwitter";
             public static final String REG_GOOGLE = "RegisterWithGPlus";
             public static final String TASK_CREATE = "TaskCreation";
+//            public static final String INSTA_BOOK = "InstaBook";
         }
     }
 

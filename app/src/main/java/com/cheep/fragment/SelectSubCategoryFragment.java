@@ -93,7 +93,7 @@ public class SelectSubCategoryFragment extends BaseFragment {
     }
 
     @Override
-    void initiateUI() {
+    public void initiateUI() {
         Log.d(TAG, "initiateUI() called");
 
         //Setting recycler view
@@ -108,7 +108,7 @@ public class SelectSubCategoryFragment extends BaseFragment {
     }
 
     @Override
-    void setListener() {
+    public void setListener() {
         Log.d(TAG, "setListener() called");
     }
 
@@ -153,14 +153,16 @@ public class SelectSubCategoryFragment extends BaseFragment {
     private void fetchListOfSubCategory(String catId) {
         Log.d(TAG, "fetchListOfSubCategory() called with: catId = [" + catId + "]");
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mFragmentSelectSubserviceBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mFragmentSelectSubserviceBinding.getRoot());
             return;
         }
 
         //Add Header parameters
         Map<String, String> mHeaderParams = new HashMap<>();
         mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
-        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
+        if (PreferenceUtility.getInstance(mContext).getUserDetails() != null) {
+            mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
+        }
 
         //Add Params
         Map<String, String> mParams = new HashMap<>();
@@ -189,7 +191,7 @@ public class SelectSubCategoryFragment extends BaseFragment {
                 switch (statusCode) {
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
                         ArrayList<SubServiceDetailModel> list = Utility.getObjectListFromJsonString(jsonObject.optString(NetworkUtility.TAGS.DATA), SubServiceDetailModel[].class);
-                        mSubServiceRecyclerViewAdapter.addList(list);
+                        mSubServiceRecyclerViewAdapter.addList(list, getString(R.string.label_other_sub_service));
                         errorLoadingHelper.success();
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:

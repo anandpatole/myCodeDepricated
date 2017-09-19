@@ -108,7 +108,7 @@ public class CommentsActivity extends BaseAppCompatActivity {
     private void sendComment(String comment) {
 
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mActivityCommentsBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityCommentsBinding.getRoot());
             return;
         }
 
@@ -139,7 +139,7 @@ public class CommentsActivity extends BaseAppCompatActivity {
                 , mHeaderParams
                 , mParams
                 , null);
-        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequestForCommentList);
+        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequestForCommentList, NetworkUtility.WS.ADD_COMMENT);
     }
 
     Response.Listener mCallPostCommentWSResponseListener = new Response.Listener() {
@@ -251,13 +251,13 @@ public class CommentsActivity extends BaseAppCompatActivity {
 
     private void reloadCommentsListWS() {
         errorLoadingHelper.showLoading();
-        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequestForCommentList);
+        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequestForCommentList, NetworkUtility.WS.COMMENT_LIST);
     }
 
     private void callCommentsList(String reviewId) {
         if (!Utility.isConnected(mContext)) {
 //            Utility.showSnackBar(getString(R.string.no_internet), mActivityCommentsBinding.getRoot());
-            errorLoadingHelper.failed(getString(R.string.no_internet), 0, onRetryBtnClickListener);
+            errorLoadingHelper.failed(Utility.NO_INTERNET_CONNECTION, 0, onRetryBtnClickListener);
             return;
         }
 
@@ -283,7 +283,7 @@ public class CommentsActivity extends BaseAppCompatActivity {
                 , mHeaderParams
                 , mParams
                 , null);
-        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequestForCommentList);
+        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequestForCommentList, NetworkUtility.WS.COMMENT_LIST);
     }
 
     View.OnClickListener onRetryBtnClickListener = new View.OnClickListener() {

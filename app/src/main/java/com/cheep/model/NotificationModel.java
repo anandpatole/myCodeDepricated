@@ -1,11 +1,13 @@
 package com.cheep.model;
 
+import android.support.annotation.Keep;
+
 import com.google.gson.annotations.SerializedName;
 
 /**
  * Created by pankaj on 10/5/16.
  */
-
+@Keep
 public class NotificationModel {
 
     @SerializedName("type")
@@ -30,5 +32,8 @@ public class NotificationModel {
 
     @SerializedName("datetime")
     public String datetime;
+
+    @SerializedName("task_type")
+    public String task_type;
 
 }

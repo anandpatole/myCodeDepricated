@@ -93,12 +93,12 @@ public class HistoryFragment extends BaseFragment {
         mListener = null;
         super.onDetach();
 
-        // Cancele the asynctask so it won't crash in case fragment is getting destroyed
+        // Cancel the asynctask so it won't crash in case fragment is getting destroyed
         Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.WS.PAYMENT_HISTORY);
     }
 
     @Override
-    void initiateUI() {
+    public void initiateUI() {
 
         if (((AppCompatActivity) mContext).getSupportActionBar() != null) {
             //Setting up toolbar
@@ -116,7 +116,7 @@ public class HistoryFragment extends BaseFragment {
 
         mFragmentHistoryBinding.textTitle.setText(getString(R.string.label_payment_history));
 
-        mFragmentHistoryBinding.textPrice.setText(getString(R.string.ruppe_symbol_x_space, Utility.EMPTY_STRING));
+        mFragmentHistoryBinding.textPrice.setText(getString(R.string.rupee_symbol_x_space, Utility.EMPTY_STRING));
 
         //Setting adapter on recycler view
         favouriteRecyclerViewAdapter = new HistoryRecyclerViewAdapter(mHistoryListener);
@@ -142,7 +142,7 @@ public class HistoryFragment extends BaseFragment {
     }
 
     @Override
-    void setListener() {
+    public void setListener() {
         mFragmentHistoryBinding.iconLeft.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -179,8 +179,20 @@ public class HistoryFragment extends BaseFragment {
     private void callHistoryWS(long timestamp) {
 
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mFragmentHistoryBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mFragmentHistoryBinding.getRoot());
             return;
+        }
+
+        if (PreferenceUtility.getInstance(mContext).getUserDetails() == null) {
+            mFragmentHistoryBinding.lnTotalMoneySpent.setVisibility(View.GONE);
+            mFragmentHistoryBinding.rlMonthSelector.setVisibility(View.GONE);
+            mFragmentHistoryBinding.layoutTitle.setVisibility(View.GONE);
+            mFragmentHistoryBinding.layoutSummary.setVisibility(View.GONE);
+            errorLoadingHelper.failed(null, R.drawable.img_empty_history, null, null);
+            return;
+        } else {
+            mFragmentHistoryBinding.lnTotalMoneySpent.setVisibility(View.VISIBLE);
+            mFragmentHistoryBinding.rlMonthSelector.setVisibility(View.VISIBLE);
         }
 
         if (calendarChanger == null)
@@ -226,10 +238,10 @@ public class HistoryFragment extends BaseFragment {
 //                        mFragmentHistoryBinding.textPrice.setText(getString(R.string.ruppe_symbol_x, jsonObject.optString(NetworkUtility.TAGS.TOTAL_EARNED)));
                         double price = Double.parseDouble(jsonObject.optString(NetworkUtility.TAGS.TOTAL_EARNED));
                         DecimalFormat decimalFormat = new DecimalFormat("0.00");
-                        mFragmentHistoryBinding.textPrice.setText(getString(R.string.ruppe_symbol_x, decimalFormat.format(price)));
+                        mFragmentHistoryBinding.textPrice.setText(getString(R.string.rupee_symbol_x, decimalFormat.format(price)));
 
-                        mFragmentHistoryBinding.monthlyEarned.setText(getString(R.string.ruppe_symbol_x, jsonObject.optString(NetworkUtility.TAGS.MONTHLY_TOTAL)));
-                        mFragmentHistoryBinding.monthlySaved.setText(getString(R.string.ruppe_symbol_x, jsonObject.optString(NetworkUtility.TAGS.MONTHLY_SAVED_TOTAL)));
+                        mFragmentHistoryBinding.monthlyEarned.setText(getString(R.string.rupee_symbol_x, Utility.getQuotePriceFormatter(jsonObject.optString(NetworkUtility.TAGS.MONTHLY_TOTAL))));
+                        mFragmentHistoryBinding.monthlySaved.setText(getString(R.string.rupee_symbol_x, Utility.getQuotePriceFormatter(jsonObject.optString(NetworkUtility.TAGS.MONTHLY_SAVED_TOTAL))));
 
                         ArrayList<HistoryModel> list = Utility.getObjectListFromJsonString(jsonObject.optString(NetworkUtility.TAGS.DATA), HistoryModel[].class);
                         favouriteRecyclerViewAdapter.setItems(list);
@@ -262,7 +274,6 @@ public class HistoryFragment extends BaseFragment {
                     case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
                         // Logout and finish the current activity
                         Utility.logout(mContext, true, statusCode);
-                        ;
                         if (getActivity() != null)
                             getActivity().finish();
                         break;

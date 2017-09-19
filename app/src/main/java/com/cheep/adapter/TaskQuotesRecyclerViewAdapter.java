@@ -67,8 +67,8 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
 
     //saves the upcoming state for time/time_distance animation
     private Map<String, Integer> mTimeDistanceStateMap;
-    //saves the index of the upcoming offer to display
-    private Map<String, Integer> mOfferIndexMap;
+    //    //saves the index of the upcoming offer to display
+//    private Map<String, Integer> mOfferIndexMap;
     private TaskDetailModel mTaskDetailModel;
 
     public TaskQuotesRecyclerViewAdapter(Context context, TaskDetailModel mTaskDetailModel, /*List<ProviderModel> quotesList,*/ OnInteractionListener listener) {
@@ -85,7 +85,6 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
         mTagTextColor = ContextCompat.getColor(context, R.color.white);
         mSemiBoldTypeface = TypeFaceProvider.get(mContext, mContext.getResources().getString(R.string.font_semi_bold));
         mTimeDistanceStateMap = new HashMap<>();
-        mOfferIndexMap = new HashMap<>();
     }
 
     @Override
@@ -95,7 +94,7 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
 
     @Override
     public void onBindViewHolder(final QuoteViewHolder holder, final int position) {
-        final ProviderModel provider = mQuotesList.get(position);
+        final ProviderModel provider = mQuotesList.get(holder.getAdapterPosition());
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -110,13 +109,13 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
         holder.removeAnimations();
 
         //image
-        Utility.showCircularImageView(mContext, TAG, holder.ivAvatar, provider.profileUrl, Utility.DEFAULT_PROFILE_SRC);
+        Utility.showCircularImageView(mContext, TAG, holder.ivAvatar, provider.profileUrl, Utility.DEFAULT_CHEEP_LOGO);
 
         //basic info
         SpannableString sName = new SpannableString(checkNonNullAndSet(provider.userName));
         SpannableString sVerified = null;
         if (provider.isVerified.equalsIgnoreCase(Utility.BOOLEAN.YES)) {
-            sVerified = new SpannableString(mContext.getString(R.string.label_verified_pro));
+            sVerified = new SpannableString(" " + mContext.getString(R.string.label_verified_pro) + " ");
             sVerified.setSpan(new RoundedBackgroundSpan(mTagBackgroundColor, mTagTextColor), 0, sVerified.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
         }
         holder.tvName.setText(sVerified != null ? TextUtils.concat(sName, " ", sVerified) : sName);
@@ -138,14 +137,11 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
         Utility.showRating(provider.rating, holder.ratingBar);
 
         //experience
-        if (TextUtils.isEmpty(provider.experience)
+        if (!TextUtils.isEmpty(provider.experience)
                 || Utility.ZERO_STRING.equals(provider.experience)) {
             holder.tvExperience.setText(checkNonNullAndSet(mContext.getString(R.string.label_experience_zero)));
         } else {
-            holder.tvExperience.setText(
-                    mContext.getResources().getQuantityString(R.plurals.getTotalExperianceString
-                            , Integer.parseInt(provider.experience)
-                            , Integer.parseInt(provider.experience)));
+            holder.tvExperience.setText(holder.mView.getContext().getResources().getQuantityString(R.plurals.getExperienceString, Integer.parseInt(provider.experience), provider.experience));
         }
 
         // price - Checking if amount present then show call and paid lables else hide
@@ -220,28 +216,35 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
 
         //offer
         final int offerCount = provider.offerList != null ? provider.offerList.size() : 0;
+        //saves the index of the upcoming offer to display
+        final Map<String, Integer> mOfferIndexMap = new HashMap<>();
         if (offerCount > 0) {
+            // Make the text visible
             holder.ivLiveAnimated.setVisibility(View.VISIBLE);
             holder.tvOffer.setVisibility(View.VISIBLE);
 
+            // Start the LIVE animation
             holder.ivLiveAnimated.setBackgroundResource(R.drawable.ic_live);
             ((AnimationDrawable) holder.ivLiveAnimated.getBackground()).start();
 
-            AnimatorSet offerAnimation = loadBannerScrollAnimation(holder.tvOffer, 2000, 100, new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    super.onAnimationEnd(animation);
-                    int offerIndex = mOfferIndexMap.containsKey(provider.providerId) ? mOfferIndexMap.get(provider.providerId) : 0;
-                    SpannableString labelOffer = new SpannableString(provider.offerList.get(offerIndex));
-                    labelOffer.setSpan(new LeadingMarginSpan.Standard(mLiveIconOffset, 0), 0, labelOffer.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-                    holder.tvOffer.setText(labelOffer);
-                    offerIndex = (offerIndex == (offerCount - 1) ? 0 : offerIndex + 1);
-                    mOfferIndexMap.put(provider.providerId, offerIndex);
-                }
-            });
+            // Manage animation listners
+            AnimatorSet offerAnimation = loadBannerScrollAnimation(holder.tvOffer,
+                    2000,
+                    100,
+                    new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            super.onAnimationEnd(animation);
+                            int offerIndex = mOfferIndexMap.containsKey(provider.providerId) ? mOfferIndexMap.get(provider.providerId) : 0;
+                            SpannableString labelOffer = new SpannableString(provider.offerList.get(offerIndex));
+                            labelOffer.setSpan(new LeadingMarginSpan.Standard(mLiveIconOffset, 0), 0, labelOffer.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+                            holder.tvOffer.setText(labelOffer);
+                            offerIndex = (offerIndex == (offerCount - 1) ? 0 : offerIndex + 1);
+                            mOfferIndexMap.put(provider.providerId, offerIndex);
+                        }
+                    });
             offerAnimation.start();
             holder.addAnimator(offerAnimation);
-
             int offerIndex = mOfferIndexMap.containsKey(provider.providerId) ? mOfferIndexMap.get(provider.providerId) : 0;
             SpannableString labelOffer = new SpannableString(provider.offerList.get(offerIndex));
             labelOffer.setSpan(new LeadingMarginSpan.Standard(mLiveIconOffset, 0), 0, labelOffer.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
@@ -253,16 +256,18 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
             holder.tvOffer.setVisibility(View.GONE);
         }
 
-        /**
-         * TODO: If in case in future, need to enable Chat call feature we just need to comment below portion
-         */
         ////////////////////////////////////////////////////////////////////////////////////////////
         ////////////////////////// Managing Chat Call Icons[Start] ////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////////////////////
 
-        /*if (Utility.SEND_TASK_DETAIL_REQUESTED_STATUS.ALREADY_REQUESTED.equalsIgnoreCase(provider.request_detail_status)) {
-            holder.imgChat.setVisibility(View.VISIBLE);
-            //chat icon
+//        TODO: uncomment chat feature by giteeka -30 august 2017
+//          TODO: Only chat is enabled
+
+//        if (Utility.SEND_TASK_DETAIL_REQUESTED_STATUS.ALREADY_REQUESTED.equalsIgnoreCase(provider.request_detail_status)) {
+        // TODO : done according to @cheep team suggestion : 06 sept 2017
+        holder.imgChat.setVisibility(View.VISIBLE);
+        //chat icon
+        if (Utility.SEND_TASK_DETAIL_REQUESTED_STATUS.ALREADY_REQUESTED.equalsIgnoreCase(provider.request_detail_status)) {
             Glide.with(mContext)
                     .load(R.drawable.ic_chat_requested_animation_with_counter)
                     .asGif()
@@ -273,7 +278,18 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
             Glide.with(mContext)
                     .load(R.drawable.icon_chat_smaller)
                     .into(holder.imgChat);
-        }*/
+        }
+//        } else if (Utility.SEND_TASK_DETAIL_REQUESTED_STATUS.ACCEPTED.equalsIgnoreCase(provider.request_detail_status)) {
+//            holder.imgChat.setVisibility(View.VISIBLE);
+//            Glide.with(mContext)
+//                    .load(R.drawable.icon_chat_smaller)
+//                    .into(holder.imgChat);
+//        } else {
+//            holder.imgChat.setVisibility(View.INVISIBLE);
+//            Glide.with(mContext)
+//                    .load(R.drawable.icon_chat_smaller)
+//                    .into(holder.imgChat);
+//    }
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         ////////////////////////// Managing Chat Call Icons[END] ///////////////////////////////////
@@ -284,7 +300,9 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
         boolean hasDistance = provider.distance != null && (provider.distance = provider.distance.trim()).length() > 0;
         boolean hasTime = provider.time != null && (provider.time = provider.time.trim()).length() > 0;
 
-        if (hasDistance && hasTime) {
+        if (hasDistance && hasTime)
+
+        {
             holder.tvDistance.setVisibility(View.VISIBLE);
 
             // Manage default state which is TIME
@@ -318,23 +336,38 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
             });
             distanceAnimation.start();
             holder.addAnimator(distanceAnimation);
-        } else if (hasDistance) {
+        } else if (hasDistance)
+
+        {
             holder.tvDistance.setVisibility(View.VISIBLE);
             holder.tvDistance.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_relative_distance, 0, 0, 0);
             holder.tvDistance.setText(provider.distance);
-        } else if (hasTime) {
+        } else if (hasTime)
+
+        {
             holder.tvDistance.setVisibility(View.VISIBLE);
             holder.tvDistance.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_time_distance, 0, 0, 0);
             holder.tvDistance.setText(provider.time);
-        } else {
+        } else
+
+        {
             holder.tvDistance.setVisibility(View.GONE);
         }
 
         //badge
-        holder.ivBadge.setImageResource(getBadgeResource(provider.pro_level));
+        holder.ivBadge.setImageResource(
+
+                getBadgeResource(provider.pro_level));
 
         //favorite
         holder.ivFavoriteQuote.setSelected(provider.isFavourite.equals(Utility.BOOLEAN.YES));
+        holder.ivFavoriteQuote.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mListener.onFavClicked(provider, !holder.ivFavoriteQuote.isSelected());
+                holder.ivFavoriteQuote.setSelected(!holder.ivFavoriteQuote.isSelected());
+            }
+        });
 
 
         /**
@@ -343,9 +376,13 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
         ////////////////////////////////////////////////////////////////////////////////////////////
         ////////////////////////// Managing Chat Call Icons[Start] ////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////////////////////
+//        TODO: uncomment chat feature by giteeka -30 august 2017
+//          TODO: Only chat is enabled
 
-        /*// Chat Image click event
-        holder.imgChat.setOnClickListener(new View.OnClickListener() {
+        // Chat Image click event
+        holder.imgChat.setOnClickListener(new View.OnClickListener()
+
+        {
             @Override
             public void onClick(View v) {
                 mListener.onChatClicked(provider);
@@ -353,37 +390,43 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
         });
 
         // Call Image click event
-        holder.imgCall.setOnClickListener(new View.OnClickListener() {
+       /* holder.imgCall.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mListener.onCallClicked(provider);
             }
-        });
+        });*/
 
         // Read task chat unread count from firebase
         String t_sp_u_formattedId = FirebaseUtils.get_T_SP_U_FormattedId(mTaskDetailModel.taskId, provider.providerId, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
-        FirebaseHelper.getTaskChatRef(FirebaseUtils.getPrefixTaskId(mTaskDetailModel.taskId)).child(t_sp_u_formattedId).child(FirebaseHelper.KEY_UNREADCOUNT).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    Integer count = dataSnapshot.getValue(Integer.class);
-                    Log.d(TAG, "onDataChange() called with: dataSnapshot = Unread Counter [" + count + "]");
-                    if (count <= 0) {
-                        holder.mTvUnreadChatCount.setVisibility(View.GONE);
-                    } else {
-                        holder.mTvUnreadChatCount.setVisibility(View.VISIBLE);
-                        holder.mTvUnreadChatCount.setText(String.valueOf(count));
+        FirebaseHelper.getTaskChatRef(FirebaseUtils.getPrefixTaskId(mTaskDetailModel.taskId)).
+
+                child(t_sp_u_formattedId).
+
+                child(FirebaseHelper.KEY_UNREADCOUNT).
+
+                addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.exists()) {
+                            Integer count = dataSnapshot.getValue(Integer.class);
+                            Log.d(TAG, "onDataChange() called with: dataSnapshot = Unread Counter [" + count + "]");
+                            if (count <= 0) {
+                                holder.mTvUnreadChatCount.setVisibility(View.GONE);
+                            } else {
+                                holder.mTvUnreadChatCount.setVisibility(View.VISIBLE);
+                                holder.mTvUnreadChatCount.setText(String.valueOf(count));
+                            }
+                        } else {
+                            holder.mTvUnreadChatCount.setVisibility(View.GONE);
+                        }
                     }
-                } else {
-                    holder.mTvUnreadChatCount.setVisibility(View.GONE);
-                }
-            }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
 
-            }
-        });*/
+                    }
+                });
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         ////////////////////////// Managing Chat Call Icons[END] ////////////////////////////////////////
@@ -461,6 +504,22 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
         }
     }
 
+    public void updateFavStatus(String id, String isFav) {
+        if (mQuotesList != null) {
+            boolean isUpdated = false;
+            //we are not breaking this loop because we may need to change status of same selectedProvider in another rows
+            for (ProviderModel providerModel : mQuotesList) {
+                if (providerModel != null && providerModel.providerId.equalsIgnoreCase(id)) {
+                    providerModel.isFavourite = isFav;
+                    isUpdated = true;
+//                    break;
+                }
+            }
+            if (isUpdated)
+                notifyDataSetChanged();
+        }
+    }
+
     public void addAll(List<ProviderModel> providerModels) {
         this.mQuotesList.clear();
         this.mQuotesList.addAll(providerModels);
@@ -472,6 +531,7 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
     }
 
     static class QuoteViewHolder extends RecyclerView.ViewHolder {
+        private View mView;
         private TextView tvBanner;
         private TextView tvName;
         private TextView tvLocation;
@@ -490,9 +550,9 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
         private ImageView ivFavoriteQuote;
         private RatingBar ratingBar;
         //        private ImageView imgCall;
-//        private ImageView imgChat;
+        private ImageView imgChat;
         private List<AnimatorSet> animators;
-//        private TextView mTvUnreadChatCount;
+        private TextView mTvUnreadChatCount;
 
 
         public void addAnimator(AnimatorSet animator) {
@@ -520,6 +580,7 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
         }
 
         private void initViews(View itemView) {
+            mView = itemView;
             tvBanner = (TextView) itemView.findViewById(R.id.tvBanner);
             tvName = (TextView) itemView.findViewById(R.id.tvName);
             tvLocation = (TextView) itemView.findViewById(R.id.tvLocation);
@@ -538,8 +599,8 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
             ivFavoriteQuote = (ImageView) itemView.findViewById(R.id.ivFavoriteQuote);
             ratingBar = (RatingBar) itemView.findViewById(R.id.rating_bar);
 //            imgCall = (ImageView) itemView.findViewById(R.id.img_call);
-//            imgChat = (ImageView) itemView.findViewById(R.id.img_chat);
-//            mTvUnreadChatCount = (TextView) itemView.findViewById(R.id.tv_chat_unread_count);
+            imgChat = (ImageView) itemView.findViewById(R.id.img_chat);
+            mTvUnreadChatCount = (TextView) itemView.findViewById(R.id.tv_chat_unread_count);
 
         }
     }
@@ -552,6 +613,8 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
         void onChatClicked(ProviderModel provider);
 
         void onCallClicked(ProviderModel provider);
+
+        void onFavClicked(ProviderModel provider, boolean flag);
 
         void onQuoteListEmpty();
     }

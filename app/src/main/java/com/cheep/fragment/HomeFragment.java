@@ -19,6 +19,7 @@ import android.widget.TextView;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.cheep.R;
+import com.cheep.activity.TaskQuotesActivity;
 import com.cheep.custom_view.BottomAlertDialog;
 import com.cheep.databinding.FragmentHomeBinding;
 import com.cheep.firebase.FirebaseHelper;
@@ -26,6 +27,7 @@ import com.cheep.firebase.FirebaseUtils;
 import com.cheep.firebase.model.TaskChatModel;
 import com.cheep.interfaces.DrawerLayoutInteractionListener;
 import com.cheep.model.MessageEvent;
+import com.cheep.model.TaskDetailModel;
 import com.cheep.model.UserDetails;
 import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
@@ -103,7 +105,6 @@ public class HomeFragment extends BaseFragment {
     public void onResume() {
         super.onResume();
         Log.i(TAG, "onResume: ");
-
     }
 
     @Override
@@ -156,6 +157,7 @@ public class HomeFragment extends BaseFragment {
         super.onDestroy();
 
         // Unregister the broadcast receiver in case fragment gets destroyed
+
         mContext.unregisterReceiver(mBR_OnTaskCreated);
 
         EventBus.getDefault().unregister(this);
@@ -169,7 +171,7 @@ public class HomeFragment extends BaseFragment {
     }
 
     @Override
-    void initiateUI() {
+    public void initiateUI() {
 
         mFragments = new HashMap<>();
         mFragmentsStackTags = new ArrayList<>();
@@ -188,7 +190,7 @@ public class HomeFragment extends BaseFragment {
     }
 
     @Override
-    void setListener() {
+    public void setListener() {
 
         //Setting listener to tabs
         mFragmentHomeBinding.textTabHome.setOnClickListener(tabClickListener);
@@ -201,6 +203,10 @@ public class HomeFragment extends BaseFragment {
 
     public void addUnreadCountListener() {
         Log.d(TAG, "addUnreadCountListener() called");
+        if (PreferenceUtility.getInstance(mContext).getUserDetails() == null) {
+            return;
+        }
+
         final DatabaseReference databaseReference = FirebaseHelper.getRecentChatRef(formattedSenderId);
         databaseReference.orderByChild(FirebaseHelper.KEY_TIMESTAMP).addChildEventListener(mChildEventListener);
         databaseReference.orderByChild(FirebaseHelper.KEY_TIMESTAMP).addValueEventListener(new ValueEventListener() {
@@ -223,6 +229,10 @@ public class HomeFragment extends BaseFragment {
      */
     public void removeUnreadCountListener() {
         Log.d(TAG, "removeUnreadCountListener() called");
+        if (PreferenceUtility.getInstance(mContext).getUserDetails() == null) {
+            return;
+        }
+
         DatabaseReference databaseReference = FirebaseHelper.getRecentChatRef(formattedSenderId);
         databaseReference.removeEventListener(mChildEventListener);
     }
@@ -257,11 +267,22 @@ public class HomeFragment extends BaseFragment {
     private void updateUnreadCount(DataSnapshot dataSnapshot, boolean isDelete) {
         Log.d(TAG, "updateUnreadCount() called with: dataSnapshot = [" + dataSnapshot + "], isDelete = [" + isDelete + "]");
         if (dataSnapshot.exists() && dataSnapshot.getValue() != null) {
-            TaskChatModel taskChatModel = dataSnapshot.getValue(TaskChatModel.class);
-            if (taskChatModel != null) {
-                if (isDelete || unreadCountIds.contains(taskChatModel.chatId)) {
-                    if (taskChatModel.unreadCount == 0 || isDelete) {
-                        unreadCountIds.remove(taskChatModel.chatId);
+            try {
+                TaskChatModel taskChatModel = dataSnapshot.getValue(TaskChatModel.class);
+                if (taskChatModel != null) {
+                    if (isDelete || unreadCountIds.contains(taskChatModel.chatId)) {
+                        if (taskChatModel.unreadCount == 0 || isDelete) {
+                            unreadCountIds.remove(taskChatModel.chatId);
+                            if (unreadCountIds.size() <= 0) {
+                                mFragmentHomeBinding.tvChatUnreadCount.setVisibility(View.GONE);
+                            } else {
+                                mFragmentHomeBinding.tvChatUnreadCount.setVisibility(View.VISIBLE);
+                                mFragmentHomeBinding.tvChatUnreadCount.setText(String.valueOf(unreadCountIds.size()));
+                            }
+                            Log.e(TAG, "Updated Unread Count :" + unreadCountIds.size());
+                        }
+                    } else if (taskChatModel.unreadCount > 0) {
+                        unreadCountIds.add(taskChatModel.chatId);
                         if (unreadCountIds.size() <= 0) {
                             mFragmentHomeBinding.tvChatUnreadCount.setVisibility(View.GONE);
                         } else {
@@ -270,16 +291,9 @@ public class HomeFragment extends BaseFragment {
                         }
                         Log.e(TAG, "Updated Unread Count :" + unreadCountIds.size());
                     }
-                } else if (taskChatModel.unreadCount > 0) {
-                    unreadCountIds.add(taskChatModel.chatId);
-                    if (unreadCountIds.size() <= 0) {
-                        mFragmentHomeBinding.tvChatUnreadCount.setVisibility(View.GONE);
-                    } else {
-                        mFragmentHomeBinding.tvChatUnreadCount.setVisibility(View.VISIBLE);
-                        mFragmentHomeBinding.tvChatUnreadCount.setText(String.valueOf(unreadCountIds.size()));
-                    }
-                    Log.e(TAG, "Updated Unread Count :" + unreadCountIds.size());
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
     }
@@ -513,6 +527,11 @@ public class HomeFragment extends BaseFragment {
         }
     }
 
+    public void onLoadHomeScreenWithEarlierSavedAddress() {
+        Log.d(TAG, "onLoadHomeScreenWithEarlierSavedAddress() called");
+        onLocationNotAvailable();
+    }
+
     @Override
     public void onLocationFetched(Location mLocation) {
         super.onLocationFetched(mLocation);
@@ -538,6 +557,15 @@ public class HomeFragment extends BaseFragment {
             /*
               Redirect the user to MYTask Screen
              */
+
+            // By giteeka on create task re direct screen to pre fed quotes activity sept 13
+
+            if (intent.hasExtra(Utility.Extra.IS_INSTA_BOOKING_TASK))
+                if (!intent.getBooleanExtra(Utility.Extra.IS_INSTA_BOOKING_TASK, false)) {
+                    TaskDetailModel mTaskDetailModel = (TaskDetailModel) Utility.getObjectFromJsonString(intent.getStringExtra(Utility.Extra.DATA), TaskDetailModel.class);
+                    TaskQuotesActivity.newInstance(mContext, mTaskDetailModel, false);
+                }
+
             setCurrentTab(TAB_MY_TASK);
         }
     };
@@ -577,7 +605,7 @@ public class HomeFragment extends BaseFragment {
     private void callEmergencyAlert() {
 
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mFragmentHomeBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mFragmentHomeBinding.getRoot());
             return;
         }
 
@@ -661,8 +689,16 @@ public class HomeFragment extends BaseFragment {
 
     private void checkOngoingTaskCounter() {
         Log.d(TAG, "checkOngoingTaskCounter() called");
+        /**
+         * In case of Guest User we need to return from here.
+         */
+        if (PreferenceUtility.getInstance(mContext).getUserDetails() == null) {
+            return;
+        }
+
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mFragmentHomeBinding.getRoot());
+            if (mFragmentHomeBinding!= null)
+                Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mFragmentHomeBinding.getRoot());
             return;
         }
 

@@ -20,6 +20,7 @@ import com.cheep.model.NotificationModel;
 import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
+import com.cheep.strategicpartner.TaskSummaryStrategicPartnerActivity;
 import com.cheep.utils.ErrorLoadingHelper;
 import com.cheep.utils.LoadMoreRecyclerAdapter;
 import com.cheep.utils.PreferenceUtility;
@@ -111,14 +112,22 @@ public class NotificationActivity extends BaseAppCompatActivity implements Notif
 
         if (!Utility.isConnected(mContext)) {
 //            Utility.showSnackBar(getString(R.string.no_internet), mActivityNotificationBinding.getRoot());
-            errorLoadingHelper.failed(getString(R.string.no_internet), 0, onRetryBtnClickListener);
+            errorLoadingHelper.failed(Utility.NO_INTERNET_CONNECTION, 0, onRetryBtnClickListener);
+            return;
+        }
+
+        if (PreferenceUtility.getInstance(mContext).getUserDetails() == null) {
+            mActivityNotificationBinding.commonRecyclerView.swipeRefreshLayout.setRefreshing(false);
+            errorLoadingHelper.failed(null, R.drawable.img_empty_notifications, null);
             return;
         }
 
 //Add Header parameters
         Map<String, String> mHeaderParams = new HashMap<>();
         mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
-        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
+        if (PreferenceUtility.getInstance(mContext).getUserDetails() != null) {
+            mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
+        }
 
         //Add Params
         Map<String, String> mParams = new HashMap<>();
@@ -132,7 +141,7 @@ public class NotificationActivity extends BaseAppCompatActivity implements Notif
                 , mParams
                 , null);
 
-        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequestForNotificationList);
+        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequestForNotificationList,NetworkUtility.WS.NOTIFICATION_LIST);
     }
 
     Response.Listener mCallNotificationWSResponseListener = new Response.Listener() {
@@ -274,8 +283,10 @@ public class NotificationActivity extends BaseAppCompatActivity implements Notif
             providerModel.providerId = String.valueOf(model.sp_user_id);
 
             JobSummaryActivity.newInstance(mContext, taskDetailModel, providerModel);*/
-
-            TaskSummaryActivity.getInstance(mContext, model.task_id);
+            if (model.task_type.equalsIgnoreCase(Utility.TASK_TYPE.STRATEGIC))
+                TaskSummaryStrategicPartnerActivity.getInstance(mContext, model.task_id);
+            else
+                TaskSummaryActivity.getInstance(mContext, model.task_id);
         }
           /*  }
         });*/

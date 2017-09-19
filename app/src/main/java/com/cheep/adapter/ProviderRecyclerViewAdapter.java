@@ -88,7 +88,7 @@ public class ProviderRecyclerViewAdapter extends LoadMoreRecyclerAdapter<Provide
             holder.mRowProviderBinding.textCheapest.setVisibility(View.GONE);
         }
 
-        Utility.showCircularImageView(holder.mRowProviderBinding.imgProfile.getContext(), TAG, holder.mRowProviderBinding.imgProfile, model.profileUrl, Utility.DEFAULT_PROFILE_SRC);
+        Utility.showCircularImageView(holder.mRowProviderBinding.imgProfile.getContext(), TAG, holder.mRowProviderBinding.imgProfile, model.profileUrl, Utility.DEFAULT_CHEEP_LOGO);
         holder.mRowProviderBinding.textName.setText(model.userName);
         holder.mRowProviderBinding.textTotalJobs.setText(Utility.getJobs(context, model.jobsCount));
 //        holder.mRowProviderBinding.textTotalReviews.setText(context.getString(R.string.label_x_reviews, model.reviews));
@@ -113,10 +113,7 @@ public class ProviderRecyclerViewAdapter extends LoadMoreRecyclerAdapter<Provide
                 || Utility.ZERO_STRING.equals(model.experience)) {
             holder.mRowProviderBinding.textExperience.setText(context.getString(R.string.label_experience_zero));
         } else {
-            holder.mRowProviderBinding.textExperience.setText(
-                    context.getResources().getQuantityString(R.plurals.getTotalExperianceString
-                            , Integer.parseInt(model.experience)
-                            , Integer.parseInt(model.experience)));
+            holder.mRowProviderBinding.textExperience.setText(holder.mView.getContext().getResources().getQuantityString(R.plurals.getExperienceString, Integer.parseInt(model.experience), model.experience));
         }
 
 
@@ -124,9 +121,9 @@ public class ProviderRecyclerViewAdapter extends LoadMoreRecyclerAdapter<Provide
         if (model.distance != null) {
             holder.mRowProviderBinding.textMinToArrive.setVisibility(View.VISIBLE);
             if (model.sp_locality != null) {
-                holder.mRowProviderBinding.textMinToArrive.setText(model.sp_locality + ", " + model.distance + " away");
+                holder.mRowProviderBinding.textMinToArrive.setText(model.sp_locality + ", " + model.distance + holder.mView.getContext().getString(R.string.label_away));
             } else {
-                holder.mRowProviderBinding.textMinToArrive.setText(model.distance + " away");
+                holder.mRowProviderBinding.textMinToArrive.setText(model.distance + holder.mView.getContext().getString(R.string.label_away));
             }
         } else {
             holder.mRowProviderBinding.textMinToArrive.setVisibility(View.GONE);

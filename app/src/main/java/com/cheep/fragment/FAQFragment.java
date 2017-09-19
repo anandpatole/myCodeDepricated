@@ -93,7 +93,7 @@ public class FAQFragment extends BaseFragment {
     }
 
     @Override
-    void initiateUI() {
+    public void initiateUI() {
         //Setting up toolbar
         if (((AppCompatActivity) mContext).getSupportActionBar() != null) {
             ((AppCompatActivity) mContext).setSupportActionBar(mFragmentFaqBinding.toolbar);
@@ -114,15 +114,11 @@ public class FAQFragment extends BaseFragment {
     }
 
     @Override
-    void setListener()
-    {
-        mFragmentFaqBinding.btnCall.setOnClickListener(new View.OnClickListener()
-        {
+    public void setListener() {
+        mFragmentFaqBinding.btnCall.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view)
-            {
-                if(mContext instanceof HomeActivity)
-                {
+            public void onClick(View view) {
+                if (mContext instanceof HomeActivity) {
                     /*HomeActivity homeActivity= (HomeActivity) mContext;
                     homeActivity.callToCheepAdmin(mFragmentFaqBinding.getRoot());*/
                     Utility.initiateCallToCheepHelpLine(mContext);
@@ -156,7 +152,7 @@ public class FAQFragment extends BaseFragment {
     private void callFetchContentWS() {
 
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mFragmentFaqBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mFragmentFaqBinding.getRoot());
             return;
         }
 
@@ -165,8 +161,10 @@ public class FAQFragment extends BaseFragment {
 
         //Add Header parameters
         Map<String, String> mHeaderParams = new HashMap<>();
-        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
         mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
+        if (PreferenceUtility.getInstance(mContext).getUserDetails() != null) {
+            mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
+        }
 
         VolleyNetworkRequest mVolleyNetworkRequest = new VolleyNetworkRequest(NetworkUtility.WS.FAQS
                 , mCallFetchContentWSErrorListener
@@ -174,7 +172,7 @@ public class FAQFragment extends BaseFragment {
                 , mHeaderParams
                 , null
                 , null);
-        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest);
+        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest,NetworkUtility.WS.FAQS);
 
     }
 

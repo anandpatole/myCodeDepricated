@@ -80,7 +80,7 @@ public class FavouriteRecyclerViewAdapter extends RecyclerView.Adapter<Favourite
     public void onBindViewHolder(final ViewHolder holder, int position) {
 
         final ProviderModel model = mList.get(holder.getAdapterPosition());
-        Utility.showCircularImageView(holder.mRowFavouriteBinding.imgProfile.getContext(), TAG, holder.mRowFavouriteBinding.imgProfile, model.profileUrl, R.drawable.icon_profile_img_solid);
+        Utility.showCircularImageView(holder.mRowFavouriteBinding.imgProfile.getContext(), TAG, holder.mRowFavouriteBinding.imgProfile, model.profileUrl,Utility.DEFAULT_CHEEP_LOGO);
         holder.mRowFavouriteBinding.textName.setText(model.userName);
 
         holder.mRowFavouriteBinding.textTotalReviews.setText(context.getString(R.string.label_x_reviews, model.reviews));

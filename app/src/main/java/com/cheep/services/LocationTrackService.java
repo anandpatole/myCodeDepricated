@@ -98,7 +98,6 @@ public class LocationTrackService extends Service implements GoogleApiClient.Con
         //Connect with Google API Client
         mGoogleApiClient.connect();
 
-
         //Initiate Handler
         mHandler = new MyHandler(this, mCallBacks);
     }
@@ -135,29 +134,32 @@ public class LocationTrackService extends Service implements GoogleApiClient.Con
      */
     protected synchronized void buildGoogleApiClient() {
         mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addApi(LocationServices.API)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
-                .addApi(LocationServices.API)
                 .build();
     }
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         Log.d(TAG, "onConnected() called with: bundle = [" + bundle + "]");
-        requestLocationUpdate();
+        /**
+         * No need to call location update, when it needed, activity would going to call this method.
+         */
+//        requestLocationUpdate();
     }
 
     /**
      * requestLocationUpdate
      */
     public void requestLocationUpdate() {
-        Log.d(TAG, "requestLocationUpdate() called");
 
         // Check if GoogleAPICilent is still NOTNULL
         if (mGoogleApiClient == null || !mGoogleApiClient.isConnected()) {
             return;
         }
 
+        Log.d(TAG, "requestLocationUpdate() called");
         /*
           Check if LocationSettings can be managed if not available
          */
@@ -219,11 +221,9 @@ public class LocationTrackService extends Service implements GoogleApiClient.Con
     public void onDestroy() {
         Log.d(TAG, "onDestroy() called");
 
-
-        //Remove location update
-        LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, mLocationListener);
-
         if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
+            //Remove location update
+            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, mLocationListener);
             mGoogleApiClient.disconnect();
         }
         super.onDestroy();
@@ -313,7 +313,8 @@ public class LocationTrackService extends Service implements GoogleApiClient.Con
         mLocationRequest.setInterval(LOCATION_REQUEST_INTERVAL);
         mLocationRequest.setFastestInterval(LOCATION_REQUEST_FASTEST_INTERVAL);
         mLocationRequest.setSmallestDisplacement(LOCATION_REQUEST_SMALLEST_DISPLACEMENT);
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_LOW_POWER);
+//        mLocationRequest.setPriority(LocationRequest.PRIORITY_LOW_POWER);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         return mLocationRequest;
     }
 

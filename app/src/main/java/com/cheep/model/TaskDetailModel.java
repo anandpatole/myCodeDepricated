@@ -1,5 +1,11 @@
 package com.cheep.model;
 
+import android.support.annotation.Keep;
+
+import com.cheep.strategicpartner.model.MediaModel;
+import com.cheep.strategicpartner.model.QueAnsModel;
+import com.cheep.strategicpartner.model.ServiceTaskDetailModel;
+import com.cheep.strategicpartner.model.StrategicPartnerServiceModel;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
@@ -8,7 +14,7 @@ import java.util.List;
 /**
  * Created by pankaj on 11/15/16.
  */
-
+@Keep
 public class TaskDetailModel {
     @SerializedName("task_id")
     public String taskId;
@@ -78,8 +84,19 @@ public class TaskDetailModel {
     @SerializedName("task_address_id")
     public String taskAddressId;
 
+    @SerializedName("task_type")
+    public String taskType;
+
+    @SerializedName("payable_amount_with_gst")
+    public String payableAmountWithGST;
+
     @SerializedName("cat_image")
     public String catImage;
+
+    @SerializedName("task_discount_amount")
+    public String taskDiscountAmount;
+
+    public String quoteAmountWithGST;
 
     @SerializedName("cat_image_extra")
     public AttachmentModel catImageExtras;
@@ -97,6 +114,24 @@ public class TaskDetailModel {
     @SerializedName("quoted_sp_list")
     public ArrayList<ProviderModel> mQuotedSPList;
 
+    @SerializedName("task_sub_sub_category")
+    public ArrayList<ServiceTaskDetailModel> subSubCategoryList;
+
+
+    @SerializedName("task_selected_sub_category")
+    public ArrayList<StrategicPartnerServiceModel> taskSelectedSubCategoryList;
+    @SerializedName("media_detail")
+    public ArrayList<MediaModel> mMediaModelList;
+    @SerializedName("question_detail")
+    public ArrayList<QueAnsModel> mQuesList;
+
+    @SerializedName("banner_image")
+    public String bannerImage;
+
+    @SerializedName("is_prefed_quote")
+    public String isPrefedQuote;
+
+
     public TaskDetailModel() {
 
     }
@@ -111,6 +146,7 @@ public class TaskDetailModel {
         this.categoryName = categoryName;
         this.providerCount = providerCount;
     }
+
 
 
     /*//SP Selected

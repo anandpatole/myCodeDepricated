@@ -2,9 +2,11 @@ package com.cheep.activity;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
@@ -33,10 +35,12 @@ import com.cheep.firebase.FierbaseChatService;
 import com.cheep.firebase.FirebaseHelper;
 import com.cheep.firebase.FirebaseUtils;
 import com.cheep.firebase.model.ChatUserModel;
+import com.cheep.model.LocationInfo;
 import com.cheep.model.UserDetails;
 import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
+import com.cheep.utils.FetchLocationInfoUtility;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.Utility;
 import com.facebook.AccessToken;
@@ -65,8 +69,9 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
+
 /**
- * Created by pankaj on 9/26/16.
+ * Created by Bhavesh Patadiya on 9/26/16.
  */
 public class LoginActivity extends BaseAppCompatActivity implements FacebookHelper.FacebookCallbacks {
     private static final String TAG = "LoginActivity";
@@ -81,30 +86,38 @@ public class LoginActivity extends BaseAppCompatActivity implements FacebookHelp
     private String TEMP_TWITTER_APP_ID;
     private String TEMP_GOOGLE_PLUS_APP_ID;
 
-    //Twitter
+    // Twitter
     TwitterAuthClient mTwitterAuthClient;
 
-    //Facebook CallbackManager
+    // Facebook CallbackManager
     CallbackManager mCallbackManager;
     FacebookHelper mFacebookHelper;
 
-    //GoogleAPIclient for using
+    // GoogleAPIclient for using
     GoogleApiClient mGoogleApiClient;
     private static final int RC_SIGN_IN = 9001;
 
+    // Location Info
+    private LocationInfo mSelectedLocationInfo;
+
     public static void newInstance(Context context) {
         Intent intent = new Intent(context, LoginActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
     }
 
-    public static void newInstance(Context context, boolean isSessionExpire, int action) {
+   /* public static void newInstance(Context context, View blurryView) {
+        Intent intent = new Intent(context, LoginActivity.class);
+//        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
+    }*/
+
+    /*public static void newInstance(Context context, boolean isSessionExpire, int action) {
         Intent intent = new Intent(context, LoginActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra(Utility.Extra.SESSION_EXPIRE, isSessionExpire);
         intent.putExtra(Utility.Extra.ACTION, action);
         context.startActivity(intent);
-    }
+    }*/
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -122,6 +135,9 @@ public class LoginActivity extends BaseAppCompatActivity implements FacebookHelp
         }
 
         initiateAppsFlyerSDK();
+
+        // Register Broadcast app
+        registerReceiver(mBR_OnLoginSuccess, new IntentFilter(Utility.BR_ON_LOGIN_SUCCESS));
     }
 
     /**
@@ -133,7 +149,6 @@ public class LoginActivity extends BaseAppCompatActivity implements FacebookHelp
         String deviceIMEINumber = telephonyManager.getDeviceId();
         if (!TextUtils.isEmpty(deviceIMEINumber))
             AppsFlyerLib.getInstance().setImeiData(deviceIMEINumber);*/
-
 
         String android_id = Settings.Secure.getString(mContext.getContentResolver(),
                 Settings.Secure.ANDROID_ID);
@@ -166,9 +181,7 @@ public class LoginActivity extends BaseAppCompatActivity implements FacebookHelp
     private void showSessionExpireDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.MyAlertDialogStyle);
         builder.setCancelable(false);
-
         builder.setTitle(getString(R.string.label_force_logout));
-
         if (getIntent().getIntExtra(Utility.Extra.ACTION, NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED) == NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED) {
             builder.setMessage(getString(R.string.desc_user_deleted));
         } else {
@@ -185,13 +198,28 @@ public class LoginActivity extends BaseAppCompatActivity implements FacebookHelp
 
     @Override
     protected void initiateUI() {
-        getWindow().setBackgroundDrawableResource(R.drawable.splash_gradient);
+        getWindow().setBackgroundDrawableResource(R.drawable.login_bg_blur);
+
+        //Setting toolbar
+        setSupportActionBar(mActivityLoginBinding.toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setTitle(Utility.EMPTY_STRING);
+            mActivityLoginBinding.toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Utility.hideKeyboard(mContext);
+                    onBackPressed();
+                }
+            });
+        }
+
     }
 
     @Override
     protected void setListeners() {
         mActivityLoginBinding.imgLoginSubmit.setOnClickListener(onClickListener);
-        mActivityLoginBinding.layoutSignup.setOnClickListener(onClickListener);
+//        mActivityLoginBinding.layoutSignup.setOnClickListener(onClickListener);
 //        mActivityLoginBinding.textForgotPassword.setOnClickListener(onClickListener);
 
         //Twitter Button Login
@@ -289,20 +317,6 @@ public class LoginActivity extends BaseAppCompatActivity implements FacebookHelp
         Log.d(TAG, "onLocationFetched() called with: mLocation = [" + mLocation + "]");
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == Utility.REQUEST_CODE_PERMISSION_LOCATION) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Log.i(TAG, "onRequestPermissionsResult: Permission Granted");
-                //So, ask service to fetch the location now
-                requestLocationUpdateFromService();
-            } else if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_DENIED) {
-                Log.i(TAG, "onRequestPermissionsResult: Permission Denied");
-                Snackbar.make(mActivityLoginBinding.getRoot(), getString(R.string.permission_denied_location), 3000).show();
-            }
-        }
-    }
 
     @Override
     public void onLocationSettingsDialogNeedToBeShow(Status status) {
@@ -336,12 +350,27 @@ public class LoginActivity extends BaseAppCompatActivity implements FacebookHelp
         }
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == Utility.REQUEST_CODE_PERMISSION_LOCATION) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Log.i(TAG, "onRequestPermissionsResult: Permission Granted");
+                //So, ask service to fetch the location now
+                requestLocationUpdateFromService();
+            } else if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_DENIED) {
+                Log.i(TAG, "onRequestPermissionsResult: Permission Denied");
+                Snackbar.make(mActivityLoginBinding.getRoot(), getString(R.string.permission_denied_location), 3000).show();
+            }
+        }
+    }
+
     /**************************************************************************************************************
      * *****************************************Facebook SignIn[Start]*******************************************************
      ************************************************************************************************************/
     private void onClickOfFacebook() {
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mActivityLoginBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityLoginBinding.getRoot());
             return;
         }
         showProgressDialog();
@@ -436,7 +465,7 @@ public class LoginActivity extends BaseAppCompatActivity implements FacebookHelp
 
     private void onClickOfTwitter() {
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mActivityLoginBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityLoginBinding.getRoot());
             return;
         }
 
@@ -451,9 +480,7 @@ public class LoginActivity extends BaseAppCompatActivity implements FacebookHelp
     private Callback<TwitterSession> mTwitterSessionCallback = new Callback<TwitterSession>() {
         @Override
         public void success(final Result<TwitterSession> result) {
-
             Log.d(TAG, "success() called with: result = [" + result.data.getUserName() + "]");
-
             /*
               This will request added permission
              */
@@ -472,6 +499,7 @@ public class LoginActivity extends BaseAppCompatActivity implements FacebookHelp
                     TEMP_FB_APP_ID = Utility.EMPTY_STRING;
                     TEMP_TWITTER_APP_ID = String.valueOf(result.data.getUserId());
                     TEMP_GOOGLE_PLUS_APP_ID = Utility.EMPTY_STRING;
+
                     callLoginWS(NetworkUtility.TAGS.LOGINWITHTYPE.TWITTER, String.valueOf(result.data.getUserId()));
                 }
 
@@ -505,7 +533,7 @@ public class LoginActivity extends BaseAppCompatActivity implements FacebookHelp
      ************************************************************************************************************/
     private void onClickOfGoogle() {
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mActivityLoginBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityLoginBinding.getRoot());
             return;
         }
         showProgressDialog();
@@ -560,7 +588,6 @@ public class LoginActivity extends BaseAppCompatActivity implements FacebookHelp
                 signOutFromGoogle();
 
                 //Set temporary address
-
                 TEMP_LOGIN_WITH = NetworkUtility.TAGS.LOGINWITHTYPE.GOOGLEPLUS;
                 TEMP_PHONE_NUMBER = Utility.EMPTY_STRING;
                 TEMP_EMAIL = acct.getEmail();
@@ -612,7 +639,7 @@ public class LoginActivity extends BaseAppCompatActivity implements FacebookHelp
      ************************************************************************************************************/
     private void onClickOnSignIn() {
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mActivityLoginBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityLoginBinding.getRoot());
             return;
         }
 
@@ -680,16 +707,21 @@ public class LoginActivity extends BaseAppCompatActivity implements FacebookHelp
     protected void onDestroy() {
         Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.WS.LOGIN);
         Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.WS.FORG0T_PASSWORD);
+        try {
+            unregisterReceiver(mBR_OnLoginSuccess);
+        } catch (Exception e) {
+
+        }
         super.onDestroy();
     }
 
     /**
      * Call Login WS Key Webservice
      */
-    private void callLoginWS(String loginWithTag, String extraInfoBasedOnTag) {
+    private void callLoginWS(final String loginWithTag, final String extraInfoBasedOnTag) {
 
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mActivityLoginBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityLoginBinding.getRoot());
             return;
         }
 
@@ -713,9 +745,33 @@ public class LoginActivity extends BaseAppCompatActivity implements FacebookHelp
             mParams.put(NetworkUtility.TAGS.GOOGLE_PLUS_APP_ID, extraInfoBasedOnTag);
         }
 
-        if (mLocationTrackService.mLocation != null && mLocationTrackService.mLocation.getLatitude() != 0 && mLocationTrackService.mLocation.getLongitude() != 0) {
-            mParams.put(NetworkUtility.TAGS.LAT, String.valueOf(mLocationTrackService.mLocation.getLatitude()));
-            mParams.put(NetworkUtility.TAGS.LNG, String.valueOf(mLocationTrackService.mLocation.getLongitude()));
+        if (mLocationTrackService != null && mLocationTrackService.mLocation != null && mLocationTrackService.mLocation.getLatitude() != 0 && mLocationTrackService.mLocation.getLongitude() != 0) {
+            if (mSelectedLocationInfo == null) {
+                //Location found so first fetch information and then go ahead.
+                FetchLocationInfoUtility mFetchLocationInfoUtility = new FetchLocationInfoUtility(mContext,
+                        new FetchLocationInfoUtility.FetchLocationInfoCallBack() {
+                            @Override
+                            public void onLocationInfoAvailable(LocationInfo mLocationIno) {
+                                mSelectedLocationInfo = mLocationIno;
+                                callLoginWS(loginWithTag, extraInfoBasedOnTag);
+                            }
+
+                            @Override
+                            public void internetConnectionNotFound() {
+                                Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityLoginBinding.getRoot());
+                            }
+                        },
+                        false);
+                mFetchLocationInfoUtility.getLocationInfo(String.valueOf(mLocationTrackService.mLocation.getLatitude()), String.valueOf(mLocationTrackService.mLocation.getLongitude()));
+                return;
+            } else {
+                mParams.put(NetworkUtility.TAGS.LAT, mSelectedLocationInfo.lat);
+                mParams.put(NetworkUtility.TAGS.LNG, mSelectedLocationInfo.lng);
+                mParams.put(NetworkUtility.TAGS.COUNTRY, mSelectedLocationInfo.Country);
+                mParams.put(NetworkUtility.TAGS.STATE, mSelectedLocationInfo.State);
+                mParams.put(NetworkUtility.TAGS.CITY_NAME, mSelectedLocationInfo.City);
+                mParams.put(NetworkUtility.TAGS.LOCALITY, TextUtils.isEmpty(mSelectedLocationInfo.Locality) ? Utility.EMPTY_STRING : mSelectedLocationInfo.Locality);
+            }
         } else {
             mParams.put(NetworkUtility.TAGS.LAT, Utility.EMPTY_STRING);
             mParams.put(NetworkUtility.TAGS.LNG, Utility.EMPTY_STRING);
@@ -730,7 +786,7 @@ public class LoginActivity extends BaseAppCompatActivity implements FacebookHelp
                 , mHeaderParams
                 , mParams
                 , null);
-        Volley.getInstance(this).addToRequestQueue(mVolleyNetworkRequest);
+        Volley.getInstance(this).addToRequestQueue(mVolleyNetworkRequest, NetworkUtility.WS.LOGIN);
 
     }
 
@@ -778,13 +834,17 @@ public class LoginActivity extends BaseAppCompatActivity implements FacebookHelp
                                 * */
                                     startService(new Intent(LoginActivity.this, FierbaseChatService.class));
                                 }
-                                // redirect to Home Screen
-                                HomeActivity.newInstance(mContext);
+
+                                // Send Broadcast
+                                sendBroadcast(new Intent(Utility.BR_ON_LOGIN_SUCCESS));
+
+                                // Finish the activity
                                 finish();
+
+//                                HomeActivity.newInstance(mContext);
+//                                finish();
                             }
                         }
-
-
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
                         // Show Toast
@@ -1084,5 +1144,16 @@ public class LoginActivity extends BaseAppCompatActivity implements FacebookHelp
      *************************************************************************************************************
      */
 
+
+    /**
+     * BroadCast that would restart the screen once login has been done.
+     */
+    private BroadcastReceiver mBR_OnLoginSuccess = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            // Do nothing, just restart the activity
+            finish();
+        }
+    };
 
 }

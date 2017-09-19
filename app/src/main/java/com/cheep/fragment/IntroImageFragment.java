@@ -11,51 +11,45 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import com.cheep.R;
+import com.cheep.activity.HomeActivity;
 import com.cheep.activity.LoginActivity;
 import com.cheep.utils.PreferenceUtility;
 
-public class IntroImageFragment extends BaseFragment
-{
+public class IntroImageFragment extends BaseFragment {
     private static final String TAG = "CoverImageFragment";
     private ImageView img_intro;
     private ImageView img_get_started;
     private int introImage;
 
-    public IntroImageFragment()
-    {
+    public IntroImageFragment() {
         // Required empty public constructor
     }
 
     @Override
-    void initiateUI()
-    {
+    public void initiateUI() {
         img_intro.setImageResource(introImage);
         img_get_started.setVisibility(View.GONE);
-        if(introImage==R.drawable.img_intro_5)
-        {
+        if (introImage == R.drawable.img_intro_5) {
             img_get_started.setVisibility(View.VISIBLE);
         }
     }
 
     @Override
-    void setListener()
-    {
-        img_get_started.setOnClickListener(new View.OnClickListener()
-        {
+    public void setListener() {
+        img_get_started.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view)
-            {
+            public void onClick(View view) {
                 PreferenceUtility.getInstance(mContext).updateIntroScreenStatus(true);
                 //Start the Login activity
-                LoginActivity.newInstance(mContext);
+//                LoginActivity.newInstance(mContext);
+                HomeActivity.newInstance(mContext);
                 getActivity().finish();
             }
         });
     }
 
     @SuppressLint("ValidFragment")
-    private IntroImageFragment(int introImage)
-    {
+    private IntroImageFragment(int introImage) {
         // Required empty public constructor
         this.introImage = introImage;
     }
@@ -71,15 +65,14 @@ public class IntroImageFragment extends BaseFragment
         // Inflate the layout for this fragment
         FrameLayout view = (FrameLayout) inflater.inflate(R.layout.fragment_intro_image, container, false);
         img_intro = (ImageView) view.findViewById(R.id.img_intro);
-        img_get_started= (ImageView) view.findViewById(R.id.img_get_started);
+        img_get_started = (ImageView) view.findViewById(R.id.img_get_started);
         initiateUI();
         setListener();
         return view;
     }
 
     @Override
-    public void onResume()
-    {
+    public void onResume() {
         super.onResume();
     }
 

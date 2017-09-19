@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.os.Handler;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -23,10 +22,12 @@ import com.cheep.firebase.FierbaseChatService;
 import com.cheep.firebase.FirebaseHelper;
 import com.cheep.firebase.FirebaseUtils;
 import com.cheep.firebase.model.ChatUserModel;
+import com.cheep.model.LocationInfo;
 import com.cheep.model.UserDetails;
 import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
+import com.cheep.utils.FetchLocationInfoUtility;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.Utility;
 
@@ -46,19 +47,15 @@ import java.util.Map;
 public class VerificationActivity extends BaseAppCompatActivity {
     private static final String TAG = "VerificationActivity";
     private ActivityVerificationBinding mActivityVerificationBinding;
-
     private UserDetails mUserDetails;
-    //    private String password;
     private String selectedImagePath;
-//    private String correctOTP;
+    private LocationInfo mSelectedLocationInfo;
 
     public static void newInstance(Context context, UserDetails userDetails, String password, String selectedImagePath, String correctOTP) {
         Intent intent = new Intent(context, VerificationActivity.class);
         intent.putExtra(Utility.Extra.USER_DETAILS, Utility.getJsonStringFromObject(userDetails));
-//        intent.putExtra(Utility.Extra.PASSWORD, password);
         intent.putExtra(Utility.Extra.SELECTED_IMAGE_PATH, selectedImagePath);
         intent.putExtra(Utility.Extra.PHONE_NUMBER, userDetails.PhoneNumber);
-//        intent.putExtra(Utility.Extra.CORRECT_OTP, correctOTP);
         intent.putExtra(Utility.Extra.INFO_TYPE, Utility.ACTION_REGISTER);
         context.startActivity(intent);
     }
@@ -93,7 +90,7 @@ public class VerificationActivity extends BaseAppCompatActivity {
     @Override
     protected void initiateUI() {
 
-        getWindow().setBackgroundDrawableResource(R.drawable.splash_gradient);
+        getWindow().setBackgroundDrawableResource(R.drawable.login_bg_blur);
         //Check if we got any user details that need to be updated
         if (getIntent().hasExtra(Utility.Extra.USER_DETAILS)) {
             mUserDetails = (UserDetails) Utility.getObjectFromJsonString(getIntent().getExtras().getString(Utility.Extra.USER_DETAILS), UserDetails.class);
@@ -240,7 +237,7 @@ public class VerificationActivity extends BaseAppCompatActivity {
     private void callVerifyOTPWS(String phoneNumber) {
 
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mActivityVerificationBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityVerificationBinding.getRoot());
             return;
         }
 
@@ -399,7 +396,6 @@ public class VerificationActivity extends BaseAppCompatActivity {
                 chatUserModel.setUserName(mUserDetails.UserName);
                 chatUserModel.setProfileImg(mUserDetails.ProfileImg);
                 FirebaseHelper.getUsersRef(chatUserModel.getUserId()).setValue(chatUserModel);
-
                                 /*
                                 * Start fierbase chat service
                                 * @Sanjay 20 Feb 2016
@@ -407,7 +403,8 @@ public class VerificationActivity extends BaseAppCompatActivity {
                 startService(new Intent(mContext, FierbaseChatService.class));
             }
             // redirect to Home Screen
-            HomeActivity.newInstance(mContext);
+//            HomeActivity.newInstance(mContext);
+            sendBroadcast(new Intent(Utility.BR_ON_LOGIN_SUCCESS));
             finish();
         }
     }
@@ -419,12 +416,32 @@ public class VerificationActivity extends BaseAppCompatActivity {
      ************************************************************************************************************/
     private void proceedWithSignUp() {
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mActivityVerificationBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityVerificationBinding.getRoot());
             return;
         }
 
         if (isValidate()) {
-            callSignUpWS();
+            if (mLocationTrackService.mLocation != null && mLocationTrackService.mLocation.getLatitude() != 0 && mLocationTrackService.mLocation.getLongitude() != 0) {
+                //Location found so first fetch information and then go ahead.
+                FetchLocationInfoUtility mFetchLocationInfoUtility = new FetchLocationInfoUtility(mContext,
+                        new FetchLocationInfoUtility.FetchLocationInfoCallBack() {
+                            @Override
+                            public void onLocationInfoAvailable(LocationInfo mLocationIno) {
+                                mSelectedLocationInfo = mLocationIno;
+                                callSignUpWS();
+                            }
+
+                            @Override
+                            public void internetConnectionNotFound() {
+                                Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityVerificationBinding.getRoot());
+                            }
+                        },
+                        false);
+                mFetchLocationInfoUtility.getLocationInfo(String.valueOf(mLocationTrackService.mLocation.getLatitude()), String.valueOf(mLocationTrackService.mLocation.getLongitude()));
+            } else {
+                // Location not found so can go ahead without any issues.
+                callSignUpWS();
+            }
         }
     }
 
@@ -439,6 +456,7 @@ public class VerificationActivity extends BaseAppCompatActivity {
             Utility.showSnackBar(getString(R.string.validate_otp_empty), mActivityVerificationBinding.getRoot());
             return false;
         }
+
 
         //No Need to check otp locally as we are checking otp with webservice
 
@@ -457,7 +475,7 @@ public class VerificationActivity extends BaseAppCompatActivity {
     private void callSignUpWS() {
 
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mActivityVerificationBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityVerificationBinding.getRoot());
             return;
         }
 
@@ -518,15 +536,16 @@ public class VerificationActivity extends BaseAppCompatActivity {
 //        mParams.put(NetworkUtility.TAGS.PASSWORD, password);
 
         if (mLocationTrackService.mLocation != null && mLocationTrackService.mLocation.getLatitude() != 0 && mLocationTrackService.mLocation.getLongitude() != 0) {
-            mParams.put(NetworkUtility.TAGS.LAT, String.valueOf(mLocationTrackService.mLocation.getLatitude()));
-            mParams.put(NetworkUtility.TAGS.LNG, String.valueOf(mLocationTrackService.mLocation.getLongitude()));
+            mParams.put(NetworkUtility.TAGS.LAT, mSelectedLocationInfo.lat);
+            mParams.put(NetworkUtility.TAGS.LNG, mSelectedLocationInfo.lng);
+            mParams.put(NetworkUtility.TAGS.COUNTRY, mSelectedLocationInfo.Country);
+            mParams.put(NetworkUtility.TAGS.STATE, mSelectedLocationInfo.State);
+            mParams.put(NetworkUtility.TAGS.CITY_NAME, mSelectedLocationInfo.City);
+            mParams.put(NetworkUtility.TAGS.LOCALITY, TextUtils.isEmpty(mSelectedLocationInfo.Locality) ? Utility.EMPTY_STRING : mSelectedLocationInfo.Locality);
         } else {
             mParams.put(NetworkUtility.TAGS.LAT, Utility.EMPTY_STRING);
             mParams.put(NetworkUtility.TAGS.LNG, Utility.EMPTY_STRING);
         }
-
-        /*mParams.put(NetworkUtility.TAGS.LAT, mLocationTrackService.mLocation != null ? String.valueOf(mLocationTrackService.mLocation.getLatitude()) : BootstrapConstant.LAT);
-        mParams.put(NetworkUtility.TAGS.LNG, mLocationTrackService.mLocation != null ? String.valueOf(mLocationTrackService.mLocation.getLongitude()) : BootstrapConstant.LNG);*/
 
         mParams.put(NetworkUtility.TAGS.PLATFORM, NetworkUtility.TAGS.PLATFORMTYPE.ANDROID);
         mParams.put(NetworkUtility.TAGS.DEVICE_TOKEN, PreferenceUtility.getInstance(mContext).getFCMRegID());
@@ -557,7 +576,6 @@ public class VerificationActivity extends BaseAppCompatActivity {
         }
 
 //        mParams.put(NetworkUtility.TAGS.PASSWORD, password);
-
         if (mLocationTrackService.mLocation != null && mLocationTrackService.mLocation.getLatitude() != 0 && mLocationTrackService.mLocation.getLongitude() != 0) {
             mParams.put(NetworkUtility.TAGS.LAT, String.valueOf(mLocationTrackService.mLocation.getLatitude()));
             mParams.put(NetworkUtility.TAGS.LNG, String.valueOf(mLocationTrackService.mLocation.getLongitude()));
@@ -636,14 +654,18 @@ public class VerificationActivity extends BaseAppCompatActivity {
                             }
                         }
 
-                        new Handler().postDelayed(new Runnable() {
+                        // Send Broadcast
+                        sendBroadcast(new Intent(Utility.BR_ON_LOGIN_SUCCESS));
+                        finish();
+
+                        /*new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                //Redirect user to Home Screen
-                                HomeActivity.newInstance(mContext);
+                                // Send Broadcast
+                                sendBroadcast(new Intent(Utility.BR_ON_LOGIN_SUCCESS));
                                 finish();
                             }
-                        }, 1500);
+                        }, 1500);*/
 
 //                        Utility.showToast(mContext, getString(R.string.label_welcome_message));
                         /*String message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
@@ -693,7 +715,7 @@ public class VerificationActivity extends BaseAppCompatActivity {
     private void callResendOTPWSForChangePassword(String phoneNumber) {
 
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mActivityVerificationBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityVerificationBinding.getRoot());
             return;
         }
 
@@ -742,7 +764,7 @@ public class VerificationActivity extends BaseAppCompatActivity {
     private void callResendOTPWS() {
 
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mActivityVerificationBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityVerificationBinding.getRoot());
             return;
         }
 

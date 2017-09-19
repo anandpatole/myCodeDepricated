@@ -9,7 +9,15 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
+import android.graphics.RectF;
+import android.media.MediaMetadataRetriever;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -18,6 +26,7 @@ import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.AppCompatEditText;
 import android.text.TextUtils;
@@ -35,7 +44,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestListener;
 import com.cheep.BuildConfig;
 import com.cheep.R;
-import com.cheep.activity.LoginActivity;
+import com.cheep.activity.HomeActivity;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -48,6 +57,7 @@ import org.cryptonode.jncryptor.JNCryptor;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -59,11 +69,20 @@ import java.util.Map;
 
 import static com.cheep.utils.SuperCalendar.SuperFormatter;
 
+
 /**
  * Created by pankaj on 9/26/16.
+ * common utilities methods
  */
 
 public class Utility {
+    public static final class GUEST_STATIC_INFO {
+        public static final String USERNAME = "Guest";
+    }
+
+    public static final String STATIC_LAT = "19.1363246";
+    public static final String STATIC_LNG = "72.82766";
+
     private static final String TAG = "Utility";
     public static final String EMPTY_STRING = "";
     public static final String ZERO_STRING = "0";
@@ -80,11 +99,19 @@ public class Utility {
     //Date Formats
     public static final String DATE_FORMAT_DD_MM_YY = SuperFormatter.DATE + "/" + SuperFormatter.MONTH_NUMBER + "/" + SuperFormatter.YEAR_4_DIGIT;
     public static final String DATE_FORMAT_DD_MMM = SuperFormatter.DATE + " " + SuperFormatter.MONTH_JAN;
-    public static final String DATE_FORMAT_HH_MM_AM = SuperFormatter.HOUR_12_HOUR_2_DIGIT + ":" + SuperFormatter.MINUTE + " " + SuperFormatter.AM_PM;
-    public static final String DATE_FORMAT_DD_MMM_HH_MM_AM = SuperFormatter.DATE + " " + SuperFormatter.MONTH_JAN + " " + SuperFormatter.HOUR_12_HOUR_2_DIGIT + ":" + SuperFormatter.MINUTE + "" + SuperFormatter.AM_PM;
+    public static final String DATE_FORMAT_DD_MMM_YYYY = SuperFormatter.DATE + " " + SuperFormatter.MONTH_JAN + " " + SuperFormatter.YEAR_4_DIGIT;
+    //TODO :: commented on 13 sept 2017 as per 24 hours formation
+//    public static final String DATE_FORMAT_HH_MM_AM = SuperFormatter.HOUR_12_HOUR_2_DIGIT + ":" + SuperFormatter.MINUTE + " " + SuperFormatter.AM_PM;
+//    public static final String DATE_FORMAT_DD_MMM_HH_MM_AM = SuperFormatter.DATE + " " + SuperFormatter.MONTH_JAN + " " + SuperFormatter.HOUR_12_HOUR_2_DIGIT + ":" + SuperFormatter.MINUTE + "" + SuperFormatter.AM_PM;
+//    public static final String DATE_FORMAT_TASK_HAS_BEEN_PAID_TIME = SuperFormatter.HOUR_12_HOUR_2_DIGIT + ":" + SuperFormatter.MINUTE + "" + SuperFormatter.AM_PM;
+
+    public static final String DATE_FORMAT_HH_MM_AM = SuperFormatter.HOUR_24_HOUR + ":" + SuperFormatter.MINUTE + " ";
+    public static final String DATE_FORMAT_DD_MMM_HH_MM_AM = SuperFormatter.DATE + " " + SuperFormatter.MONTH_JAN + " " + SuperFormatter.HOUR_24_HOUR + ":" + SuperFormatter.MINUTE + "";
     public static final String DATE_FORMAT_TASK_HAS_BEEN_PAID_DATE = SuperFormatter.DATE + " " + SuperFormatter.MONTH_JAN;
-    public static final String DATE_FORMAT_TASK_HAS_BEEN_PAID_TIME = SuperFormatter.HOUR_12_HOUR_2_DIGIT + ":" + SuperFormatter.MINUTE + "" + SuperFormatter.AM_PM;
+    public static final String DATE_FORMAT_TASK_HAS_BEEN_PAID_TIME = SuperFormatter.HOUR_24_HOUR + ":" + SuperFormatter.MINUTE + "";
     public static final String DATE_TIME_FORMAT_SERVICE_YEAR = SuperFormatter.YEAR_4_DIGIT + "-" + SuperFormatter.MONTH_NUMBER + "-" + SuperFormatter.DATE + " " + SuperFormatter.HOUR_24_HOUR + ":" + SuperFormatter.MINUTE + ":" + SuperFormatter.SECONDS;
+    //    dd MMMM, HH:mm a
+    public static final String DATE_TIME_DD_MMMM_HH_MM = SuperFormatter.DATE + " " + SuperFormatter.MONTH_JANUARY + " " + SuperFormatter.HOUR_24_HOUR + ":" + SuperFormatter.MINUTE + "";
     public static final String DATE_FORMAT_FULL_DATE = SuperFormatter.FULL_DATE;
 
     public static final int PASSWORD_MIN_LENGTH = 6;
@@ -92,7 +119,7 @@ public class Utility {
 
     public static final int DEFAULT_PROFILE_SRC = R.drawable.icon_profile_img_solid;
     public static final int DEFAULT_CHEEP_LOGO = R.drawable.ic_cheep_circular_icon;
-    public static final String DEFAULT_PROFILE_URL = "http://msz.uniklinikum-dresden.de/zkn/images/mitarbeiter/dummy120_dagobert83_female_user_icon.png";//"http://lorempixel.com/200/200/people/";
+//    public static final String DEFAULT_PROFILE_URL = "http://msz.uniklinikum-dresden.de/zkn/images/mitarbeiter/dummy120_dagobert83_female_user_icon.png";//"http://lorempixel.com/200/200/people/";
 
     public static final String LOCALE_FOR_HINDI = "hi";
     public static final String LOCALE_FOR_ENGLISH = "en";
@@ -127,6 +154,8 @@ public class Utility {
     public static final int REQUEST_CODE_READ_EXTERNAL_STORAGE_ADD_PROFILE_GALLERY = 116;
     public static final int PLACE_PICKER_REQUEST = 117;
     public static final int REQUEST_CODE_ADD_PROFILE_CAMERA = 118;
+    public static final int REQUEST_CODE_VIDEO_CAPTURE = 119;
+    public static final int REQUEST_CODE_GET_VIDEO_GALLERY = 120;
 
     /*
     * @Sanjay
@@ -152,7 +181,10 @@ public class Utility {
 
     //Different Types of Braoadcast Actions
     public static final String BR_ON_TASK_CREATED = "com.cheep.ontaskcreated";
+    public static final String BR_ON_TASK_CREATED_FOR_INSTA_BOOKING = "com.cheep.ontaskcreated.instabooking";
+    public static final String BR_ON_TASK_CREATED_FOR_STRATEGIC_PARTNER = "com.cheep.ontaskcreated.strategicpartner";
     public static final String BR_NEW_TASK_ADDED = "com.cheep.newtask.added";
+    public static final String BR_ON_LOGIN_SUCCESS = "com.cheep.login.success";
     public static final int CHAT_PAGINATION_RECORD_LIMIT = 20;
 
     public static final int X_RATIO = 16;
@@ -164,6 +196,12 @@ public class Utility {
      */
     public static final float CATEGORY_IMAGE_RATIO = (float) 2.3972;
 
+
+    /**
+     * Regular expression for mobile number
+     */
+    public static final String MOBILE_REGREX = "(((\\+*)((0[ -]+)*|(91[- ]+)*)(\\d{12}+|\\d{10}+))|\\d{5}([- ]*)\\d{6})";
+//    public static final String MOBILE_REGREX_IOS = "\"(?\\+\\d\\d\\s+)?((?:\\(\\d\\d\\)|\\d\\d)\\s+)?)(\\d{4,10}\\-?\\d{4})\"";
 
     /**
      * ongoing user chatId
@@ -314,8 +352,8 @@ public class Utility {
     }*/
 
     public static int getHeightFromWidthForTwoOneRatio(int width) {
-        Log.d(TAG, "getHeightFromWidthForTwoOneRatio() called with: width = [" + width + "]");
-        Log.d(TAG, "getHeightFromWidthForTwoOneRatio() returned: " + (width / 2));
+//        Log.d(TAG, "getHeightFromWidthForTwoOneRatio() called with: width = [" + width + "]");
+//        Log.d(TAG, "getHeightFromWidthForTwoOneRatio() returned: " + (width / 2));
         return (width / 2);
     }
 
@@ -330,6 +368,13 @@ public class Utility {
 //        Log.d(TAG, "getHeightCategoryImageBasedOnRatio() called with: width = [" + Math.round((width / CATEGORY_IMAGE_RATIO)) + "]");
         return Math.round((width / CATEGORY_IMAGE_RATIO));
     }
+
+    public static String getUniqueTransactionId() {
+        return String.valueOf(System.currentTimeMillis());
+    }
+
+
+    public static final String NO_INTERNET_CONNECTION = "Hey, we see a problem with your internet" + new String(Character.toChars(0x1f914)) + ". We\'ll wait while you check your connection and try again";
 
     //Bundle Extra parameters
     public static class Extra {
@@ -365,6 +410,11 @@ public class Utility {
 
         public static final String CHAT_NOTIFICATION_DATA = "chat_notification_data";
         public static final String PROFILE_FROM_FAVOURITE = "from_favorite";
+        public static final String FROM_WHERE = "from_where";
+        public static final String TASK_TYPE_IS_INSTA = "isInsta";
+        public static final String SELECTED_ADDRESS_MODEL = "selectedAddressModel";
+        public static final String LOCATION_INFO = "location_info";
+        public static final String IS_INSTA_BOOKING_TASK = "isInstaBookingTask";
     }
 
 
@@ -433,7 +483,8 @@ public class Utility {
         PreferenceUtility.getInstance(mContext).onUserLogout();
 
         //Redirect user to Home Screen
-        LoginActivity.newInstance(mContext, isSessionExpire, action);
+//        LoginActivity.newInstance(mContext, isSessionExpire, action);
+        HomeActivity.newInstance(mContext);
     }
 
     //Method to get Device width and height in array, [0] = width, [1] = height
@@ -471,14 +522,6 @@ public class Utility {
         return "0.0.0";
     }
 
-    /*
-   * get formated date from Date
-   * */
-    public static String getFormatedDate(long timeStamp) {
-        Date date = new Date(timeStamp);
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("hh:mm aa"/*, Locale.US*/);
-        return simpleDateFormat.format(date);
-    }
 
     public static String getDate(long milliSeconds, String dateFormat) {
         String finalDate = "";
@@ -636,6 +679,7 @@ public class Utility {
     }
 
     public static void showCircularImageView(Context context, String tag, ImageView img, String imageToLoad, int placeholderRes, boolean isRounded) {
+//        Log.d(TAG, "showCircularImageView() called with: context = [" + context + "], tag = [" + tag + "], img = [" + img + "], imageToLoad = [" + imageToLoad + "], placeholderRes = [" + placeholderRes + "], isRounded = [" + isRounded + "]");
         if (!isActivityCorrectForGlide(context)) {
             return;
         }
@@ -643,6 +687,56 @@ public class Utility {
                 .with(context)
                 .load(imageToLoad)
                 .transform(new CircleTransform(context, isRounded, Color.WHITE, 5, imageToLoad, tag))
+                .placeholder(placeholderRes)
+                .error(placeholderRes)
+                .crossFade()
+                .into(img);
+    }
+
+    public static Bitmap getRoundedCornerBitmap(Bitmap bitmap, Context context) {
+//int color, int cornerDips, int borderDips,
+        Bitmap output = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(),
+                Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(output);
+//
+//        final int borderSizePx = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, (float) R.dimen.scale_2dp,
+//                context.getResources().getDisplayMetrics());
+//        final int cornerSizePx = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, (float) R.dimen.scale_5dp,
+//                context.getResources().getDisplayMetrics());
+        final Paint paint = new Paint();
+        final Rect rect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
+        final RectF rectF = new RectF(rect);
+
+        // prepare canvas for transfer
+        paint.setAntiAlias(true);
+        paint.setColor(0xFFFFFFFF);
+        paint.setStyle(Paint.Style.FILL);
+        canvas.drawARGB(0, 0, 0, 0);
+        canvas.drawRoundRect(rectF, 15, 15, paint);
+
+        // draw bitmap
+        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+        canvas.drawBitmap(bitmap, rect, rect, paint);
+
+        // draw border
+        paint.setColor(ContextCompat.getColor(context, R.color.grey_varient_1));
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setStrokeWidth((float) 15);
+        canvas.drawRoundRect(rectF, 15, 15, paint);
+
+        return output;
+    }
+
+
+    public static void showCircularImageViewWithColorBorder(Context context, String tag, ImageView img, String imageToLoad, int placeholderRes, int color, boolean isRounded) {
+//        Log.d(TAG, "showCircularImageView() called with: context = [" + context + "], tag = [" + tag + "], img = [" + img + "], imageToLoad = [" + imageToLoad + "], placeholderRes = [" + placeholderRes + "], isRounded = [" + isRounded + "]");
+        if (!isActivityCorrectForGlide(context)) {
+            return;
+        }
+        Glide
+                .with(context)
+                .load(imageToLoad)
+                .transform(new CircleTransform(context, isRounded, ContextCompat.getColor(context, color), 5, imageToLoad, tag))
                 .placeholder(placeholderRes)
                 .error(placeholderRes)
                 .crossFade()
@@ -673,6 +767,17 @@ public class Utility {
                 .load(imageToLoad)
                 .placeholder(placeholderRes)
                 .error(placeholderRes)
+                .crossFade()
+                .into(img);
+    }
+
+    public static void loadImageView(Context context, ImageView img, String imageToLoad) {
+        if (!isActivityCorrectForGlide(context)) {
+            return;
+        }
+        Glide
+                .with(context)
+                .load(imageToLoad)
                 .crossFade()
                 .into(img);
     }
@@ -786,28 +891,6 @@ public class Utility {
     }
 
 
-    /**
-     * Blur the provided Image
-     * Note: We are not using this for our app.
-     *
-     * @param input    Bitmap of the image
-     * @param mContext Context of the activity
-     * @return blurred bitmap file based on provided bitmap
-     */
-    /*public static Bitmap BlurImage(Bitmap input, Context mContext) {
-        RenderScript rsScript = RenderScript.create(mContext);
-        Allocation alloc = createFromBitmap(rsScript, input);
-        ScriptIntrinsicBlur blur = ScriptIntrinsicBlur.create(rsScript, alloc.getElement());
-        blur.setRadius(12);
-        blur.setInput(alloc);
-        Bitmap result = Bitmap.createBitmap(input.getWidth(), input.getHeight(), input.getConfig());
-        Allocation outAlloc = createFromBitmap(rsScript, result);
-        blur.forEach(outAlloc);
-        outAlloc.copyTo(result);
-        rsScript.destroy();
-        return result;
-    }*/
-
     // copy text to clipboard
     public static void setClipboard(Context context, String text) {
         if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB) {
@@ -815,7 +898,7 @@ public class Utility {
             clipboard.setText(text);
         } else {
             android.content.ClipboardManager clipboard = (android.content.ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
-            android.content.ClipData clip = android.content.ClipData.newPlainText("Copied Text", text);
+            android.content.ClipData clip = android.content.ClipData.newPlainText(context.getString(R.string.label_copied_text), text);
             clipboard.setPrimaryClip(clip);
         }
     }
@@ -851,10 +934,14 @@ public class Utility {
             else if (isDownloadsDocument(uri)) {
 
                 final String id = DocumentsContract.getDocumentId(uri);
-                final Uri contentUri = ContentUris.withAppendedId(
-                        Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
+                try {
+                    final Uri contentUri = ContentUris.withAppendedId(
+                            Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
+                    return getDataColumn(context, contentUri, null, null);
+                } catch (NumberFormatException e) {
+                    return null;
+                }
 
-                return getDataColumn(context, contentUri, null, null);
             }
             // MediaProvider
             else if (isMediaDocument(uri)) {
@@ -1048,6 +1135,15 @@ public class Utility {
 
     }
 
+    public static final class TASK_TYPE {
+        public static final String STRATEGIC = "strategic"; //1->if task created and only quotes is there, 2-> task created and user paid to sp, but sp not started the task yet.
+        public static final String NORMAL = "normal";//if user payed and task is in progress
+    }
+
+    public static final class STRATEGIC_PARTNER_BRAND {
+        public static final String VLCC = "VLCC"; //1->if task created and only quotes is there, 2-> task created and user paid to sp, but sp not started the task yet.
+    }
+
     public static String urlEncodeUTF8(String s) {
         try {
             return URLEncoder.encode(s, "UTF-8");
@@ -1072,8 +1168,6 @@ public class Utility {
 
     public class NOTIFICATION_TYPE {
         public static final String QUOTE_REQUEST = "QUOTE_REQUEST";
-        //        public static final String COMPLITION_REQUEST = "COMPLITION_REQUEST";
-//        public static final String PROGRESS = "PROGRESS";
         public static final String TASK_STATUS_CHANGE = "TASK_STATUS_CHANGE";
         public static final String ADDITIONAL_PAYMENT_REQUESTED = "additional_payment_requested";
         public static final String REQUEST_FOR_DETAIL = "REQUEST_FOR_DETAIL";
@@ -1107,4 +1201,70 @@ public class Utility {
             context.startActivity(intent);
         }
     }
+
+    /**
+     * @param p_videoPath path of video file
+     * @return returns bitmap thumbnail for video
+     * @throws Throwable exception
+     */
+    public static Bitmap getVideoThumbnail(String p_videoPath)
+            throws Throwable {
+        Bitmap m_bitmap = null;
+        MediaMetadataRetriever m_mediaMetadataRetriever = null;
+        try {
+            m_mediaMetadataRetriever = new MediaMetadataRetriever();
+            m_mediaMetadataRetriever.setDataSource(p_videoPath);
+            m_bitmap = m_mediaMetadataRetriever.getFrameAtTime();
+        } catch (Exception m_e) {
+            throw new Throwable(
+                    "Exception in getVideoThumbnail(String p_videoPath)"
+                            + m_e.getMessage());
+        } finally {
+            if (m_mediaMetadataRetriever != null) {
+                m_mediaMetadataRetriever.release();
+            }
+        }
+        return m_bitmap;
+    }
+
+    /**
+     * Tags for Strategic Partner Questionnary screen
+     **/
+    public static String TEMPLATE_DATE_PICKER = "calendar";
+    public static String TEMPLATE_TIME_PICKER = "timepicker";
+    public static String TEMPLATE_UPLOAD = "upload";
+    public static String TEMPLATE_LOCATION = "location";
+    public static String TEMPLATE_TEXT_FIELD = "textbox";
+    public static String TEMPLATE_DROPDOWN = "dropdown";
+
+
+    /**
+     * get decimal value to show price
+     *
+     * @param quotePrice string value
+     * @return decimal value
+     */
+    public static String getQuotePriceFormatter(String quotePrice) {
+
+        if (quotePrice == null || quotePrice.equalsIgnoreCase("null"))
+            return "0.00";
+        if (quotePrice.equalsIgnoreCase("") || quotePrice.equalsIgnoreCase("0") || quotePrice.equalsIgnoreCase("0.0"))
+            return "0.00";
+        DecimalFormat formatter = new DecimalFormat("#,###.00");
+        double price = Double.parseDouble(quotePrice);
+        return formatter.format(price);
+    }
+
+  /*  public static String getExperienceString(String exp) {
+        try {
+            float expFloat = Float.parseFloat(exp);
+            if (expFloat > 1) {
+                return exp + " Years \nExperience";
+            } else {
+                return exp + " Year \nExperience";
+            }
+        } catch (NumberFormatException e) {
+            return exp + " Year \nExperience";
+        }
+    }*/
 }

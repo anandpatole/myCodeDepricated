@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:id="@+id/ln_selected_services"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              android:paddingBottom="@dimen/scale_12dp"
+              android:paddingLeft="@dimen/scale_16dp"
+              android:paddingRight="@dimen/scale_16dp"
+              android:paddingTop="@dimen/scale_12dp">
+
+    <LinearLayout
+        android:id="@+id/ln_sub_category"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/img_icon_correct"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/ic_tick"
+            tools:ignore="ContentDescription"/>
+
+        <com.cheep.custom_view.CFTextViewSemiBold
+            android:id="@+id/text_sub_category_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/scale_15dp"
+            android:textColor="@color/splash_gradient_end"
+            android:textSize="@dimen/text_size_18sp"
+            tools:text="Restaurant"/>
+    </LinearLayout>
+
+    <com.cheep.custom_view.CFTextViewRegular
+        android:id="@+id/text_sub_sub_category_name"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="@dimen/scale_32dp"
+        android:background="@color/transparent"
+        android:gravity="start"
+        android:lineSpacingExtra="@dimen/scale_5dp"
+        android:paddingRight="@dimen/scale_8dp"
+        android:paddingTop="@dimen/scale_8dp"
+        android:textColor="@color/grey_dark_color_2"
+        android:textColorHint="@color/grey_dark_color_2"
+        android:textSize="@dimen/text_size_14sp"
+        tools:text="asdas asd asdasdasd asd  asd as d asd asd asdasd     dasd  asd  asd as das d asdasd asd asd "/>
+
+</LinearLayout>

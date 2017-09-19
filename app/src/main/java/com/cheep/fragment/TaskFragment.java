@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.databinding.DataBindingUtil;
-import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -96,7 +95,6 @@ public class TaskFragment extends BaseFragment {
         return commonRecyclerViewBinding.getRoot();
     }
 
-    Paint p = new Paint();
 
     @Override
     public void onAttach(Context context) {
@@ -117,7 +115,7 @@ public class TaskFragment extends BaseFragment {
     }
 
     @Override
-    void initiateUI() {
+    public void initiateUI() {
         //Setting recycler view
         errorLoadingHelper = new ErrorLoadingHelper(commonRecyclerViewBinding.recyclerView);
 
@@ -158,7 +156,7 @@ public class TaskFragment extends BaseFragment {
 
 
     @Override
-    void setListener() {
+    public void setListener() {
         taskRecyclerViewAdapter.setIsLoadMoreEnabled(true, R.layout.load_more_progress, commonRecyclerViewBinding.recyclerView, new LoadMoreSwipeRecyclerAdapter.OnLoadMoreListener() {
             @Override
             public void onLoadMore() {
@@ -189,8 +187,12 @@ public class TaskFragment extends BaseFragment {
             if (taskRecyclerViewAdapter != null)
                 taskRecyclerViewAdapter.updateRatedStatus(event.id);
         } else if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.TASK_CANCELED) {
-            if (taskRecyclerViewAdapter != null && taskRecyclerViewAdapter.cancelTask(event.id, event.taskStatus) == 0) {
-                errorLoadingHelper.failed(null, R.drawable.img_empty_pending_task, null, null, onMakeAPostClickListener);
+            if (taskRecyclerViewAdapter.cancelTask(event.id, event.taskStatus) == 0) {
+                errorLoadingHelper.failed(null,
+                        R.drawable.img_empty_pending_task,
+                        null,
+                        null,
+                        onMakeAPostClickListener);
             }
         } else if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.TASK_RESCHEDULED) {
             if (taskRecyclerViewAdapter != null)
@@ -250,9 +252,19 @@ public class TaskFragment extends BaseFragment {
 
     private void callTasksWS() {
 
+        if (PreferenceUtility.getInstance(mContext).getUserDetails() == null) {
+            errorLoadingHelper.failed(null,
+                    R.drawable.img_empty_pending_task,
+                    null,
+                    null,
+                    onMakeAPostClickListener);
+            commonRecyclerViewBinding.swipeRefreshLayout.setRefreshing(false);
+            return;
+        }
+
         if (!Utility.isConnected(mContext)) {
 //            Utility.showSnackBar(getString(R.string.no_internet), mFragmentFavouriteFragment.getRoot());
-            errorLoadingHelper.failed(getString(R.string.no_internet), 0, onRetryBtnClickListener);
+            errorLoadingHelper.failed(Utility.NO_INTERNET_CONNECTION, 0, onRetryBtnClickListener);
             return;
         }
 
@@ -275,7 +287,7 @@ public class TaskFragment extends BaseFragment {
                 , mHeaderParams
                 , mParams
                 , null);
-        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequestForCategoryList);
+        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequestForCategoryList, whichFrg == TAB_PENDING_TASK ? NetworkUtility.WS.PENDING_TASK : PAST_TASK);
     }
 
     Response.Listener mCallPendingTaskWSResponseListener = new Response.Listener() {
@@ -320,7 +332,11 @@ public class TaskFragment extends BaseFragment {
 
                                 }
                             });*/
-                            errorLoadingHelper.failed(null, R.drawable.img_empty_pending_task, null, null, onMakeAPostClickListener);
+                            errorLoadingHelper.failed(null,
+                                    R.drawable.img_empty_pending_task,
+                                    null,
+                                    null,
+                                    onMakeAPostClickListener);
                         }
 
                         break;

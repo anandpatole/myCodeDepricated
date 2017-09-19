@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white_translucent_ninety_eight">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/text_continue">
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clipToPadding="false"
+                android:paddingBottom="10dp">
+
+                <LinearLayout
+                    android:id="@+id/lin_main"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:background="@android:color/transparent"
+                    android:orientation="vertical"/>
+
+            </ScrollView>
+
+        </FrameLayout>
+
+        <com.cheep.custom_view.CFTextViewSemiBold
+            android:id="@+id/text_continue"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/h_book_and_pay"
+            android:layout_alignParentBottom="true"
+            android:layout_gravity="bottom"
+            android:background="@color/grey_varient_12"
+            android:gravity="center"
+            android:padding="@dimen/scale_10dp"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_17sp"
+            android:visibility="visible"/>
+
+    </RelativeLayout>
+</layout>

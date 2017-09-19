@@ -406,8 +406,8 @@ public class PaymentsActivity extends AppCompatActivity implements MagicRetryFra
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
         ;
         alertDialog.setCancelable(false);
-        alertDialog.setMessage("Do you really want to cancel the transaction ?");
-        alertDialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+        alertDialog.setMessage(getString(R.string.confirm_cancel_transaction));
+        alertDialog.setPositiveButton(getString(R.string.label_Ok_small), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 cancelTransaction = true;
@@ -415,7 +415,7 @@ public class PaymentsActivity extends AppCompatActivity implements MagicRetryFra
                 onBackPressed();
             }
         });
-        alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        alertDialog.setNegativeButton(getString(R.string.label_cancel), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
@@ -459,7 +459,7 @@ public class PaymentsActivity extends AppCompatActivity implements MagicRetryFra
                 // Hide fragment
                 ft.hide(magicRetryFragment).commitAllowingStateLoss();
                 // ft.hide(magicRetryFragment);
-                Log.v("#### PAYU", "hidhing magic retry");
+                Log.v("#### PAYU", "hiding magic retry");
             }
         }
     }

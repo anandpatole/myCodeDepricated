@@ -147,7 +147,7 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity {
     public void bindLocationTrackService() {
         //Bind service
         Intent intent = new Intent(mContext, LocationTrackService.class);
-        startService(intent);
+//        startService(intent);
         bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
     }
 
@@ -160,16 +160,23 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity {
     /**
      * Show Progress Dialog
      */
-    protected void showProgressDialog() {
+    protected void showProgressDialog(String message) {
         if (mProgressDialog == null) {
             mProgressDialog = new ProgressDialog(mContext);
-            mProgressDialog.setMessage(getString(R.string.label_please_wait));
+            mProgressDialog.setMessage(message);
             mProgressDialog.setIndeterminate(true);
             mProgressDialog.setCancelable(false);
             mProgressDialog.setCanceledOnTouchOutside(false);
             mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         }
         mProgressDialog.show();
+    }
+
+    /**
+     * Show Progress Dialog
+     */
+    protected void showProgressDialog() {
+        showProgressDialog(getString(R.string.label_please_wait));
     }
 
     /**
@@ -225,7 +232,7 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity {
 
     public void emuCall(final View view, String sp_user_id, boolean isAdminCall) {
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), view);
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, view);
             return;
         }
 

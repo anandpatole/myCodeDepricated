@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="horizontal"
+    >
+
+    <com.cheep.custom_view.CFTextViewRegular
+        android:id="@+id/txtQueAnswer"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/h_text_view_picker"
+        android:background="@drawable/background_ans_normal"
+        android:drawablePadding="@dimen/scale_10dp"
+        android:drawableRight="@drawable/ic_arrow_down_white"
+        android:gravity="center_vertical"
+        android:paddingLeft="@dimen/scale_10dp"
+        android:maxLines="2"
+        android:ellipsize="end"
+        android:paddingRight="@dimen/scale_10dp"
+        android:paddingBottom="@dimen/scale_2dp"
+        android:paddingTop="@dimen/scale_2dp"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_size_15sp"
+        tools:text="Pick Time"/>
+
+</LinearLayout>

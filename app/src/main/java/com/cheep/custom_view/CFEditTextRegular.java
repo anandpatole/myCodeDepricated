@@ -9,6 +9,7 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ScaleXSpan;
 import android.util.AttributeSet;
+import android.view.KeyEvent;
 
 import com.cheep.R;
 
@@ -77,6 +78,23 @@ public class CFEditTextRegular extends AppCompatEditText {
             }
         }
         super.setText(finalText, BufferType.SPANNABLE);
+    }
+
+    /**
+     * Below method needs to be override in order to fix the bug mentioned below.
+     * <p>
+     * https://stackoverflow.com/questions/15317157/android-adjustpan-not-working-after-the-first-time/26017060#26017060
+     *
+     * @param keyCode
+     * @param event
+     * @return
+     */
+    @Override
+    public boolean onKeyPreIme(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            clearFocus();
+        }
+        return super.onKeyPreIme(keyCode, event);
     }
 }
 

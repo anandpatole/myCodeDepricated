@@ -100,7 +100,7 @@ public class FavouriteFragment extends BaseFragment {
     }
 
     @Override
-    void initiateUI() {
+    public void initiateUI() {
 
         errorLoadingHelper = new ErrorLoadingHelper(mFragmentFavouriteFragment.commonRecyclerView.recyclerView);
 
@@ -170,11 +170,10 @@ public class FavouriteFragment extends BaseFragment {
 
     private void reloadFavSPListFromServer() {
         if (!Utility.isConnected(mContext)) {
-            errorLoadingHelper.failed(getString(R.string.no_internet), 0, onRetryBtnClickListener);
+            errorLoadingHelper.failed(Utility.NO_INTERNET_CONNECTION, 0, onRetryBtnClickListener);
             mFragmentFavouriteFragment.commonRecyclerView.swipeRefreshLayout.setRefreshing(false);
             return;
         }
-
 
         Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequestForFavSP);
     }
@@ -183,14 +182,27 @@ public class FavouriteFragment extends BaseFragment {
 
         if (!Utility.isConnected(mContext)) {
 //            Utility.showSnackBar(getString(R.string.no_internet), mFragmentFavouriteFragment.getRoot());
-            errorLoadingHelper.failed(getString(R.string.no_internet), 0, onRetryBtnClickListener);
+            errorLoadingHelper.failed(Utility.NO_INTERNET_CONNECTION, 0, onRetryBtnClickListener);
             return;
         }
+
+        if (PreferenceUtility.getInstance(mContext).getUserDetails() == null) {
+            /**
+             * As user is guest user, we need to show only Empty screen.
+             */
+            mFragmentFavouriteFragment.commonRecyclerView.swipeRefreshLayout.setEnabled(false);
+            mFragmentFavouriteFragment.commonRecyclerView.swipeRefreshLayout.setRefreshing(false);
+            errorLoadingHelper.failed(null, R.drawable.img_empty_favourite, null);
+
+        }
+
 
         //Add Header parameters
         Map<String, String> mHeaderParams = new HashMap<>();
         mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
-        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
+        if (PreferenceUtility.getInstance(mContext).getUserDetails() != null) {
+            mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
+        }
 
         //Add Params
         Map<String, String> mParams = new HashMap<>();
@@ -207,11 +219,11 @@ public class FavouriteFragment extends BaseFragment {
                 , mParams
                 , null);
 
-        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequestForFavSP);
+        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequestForFavSP, NetworkUtility.WS.FAV_SP_LIST);
     }
 
     @Override
-    void setListener() {
+    public void setListener() {
 
     }
 

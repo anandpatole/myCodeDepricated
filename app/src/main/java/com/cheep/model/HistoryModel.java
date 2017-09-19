@@ -1,5 +1,6 @@
 package com.cheep.model;
 
+import android.support.annotation.Keep;
 import android.util.Log;
 
 import com.cheep.utils.Utility;
@@ -14,7 +15,7 @@ import java.util.TimeZone;
 /**
  * Created by pankaj on 10/12/16.
  */
-
+@Keep
 public class HistoryModel {
     private static final String TAG = "HistoryModel";
     @SerializedName("sp_user_id")

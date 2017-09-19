@@ -4,12 +4,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
@@ -21,7 +17,6 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -177,7 +172,7 @@ public class TaskQuotesActivity extends BaseAppCompatActivity implements TaskQuo
 
     private void callSPListWS() {
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), null);
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, null);
             return;
         }
 
@@ -186,7 +181,6 @@ public class TaskQuotesActivity extends BaseAppCompatActivity implements TaskQuo
         } else {
             mErrorLoadingHelper.showLoading();
         }
-
 
         //Add Header parameters
         Map<String, String> mHeaderParams = new HashMap<>();
@@ -219,7 +213,6 @@ public class TaskQuotesActivity extends BaseAppCompatActivity implements TaskQuo
                     && !mParams.containsKey(NetworkUtility.TAGS.DISTANCE)
                     && !mParams.containsKey(NetworkUtility.TAGS.RATINGS)) {
                 // None of the filter is applied so dont need to go ahead.
-
                 resetFilterFields(mDialogFilterBinding);
                 mFilterDialog.dismiss();
                 mErrorLoadingHelper.showLoading();
@@ -285,12 +278,12 @@ public class TaskQuotesActivity extends BaseAppCompatActivity implements TaskQuo
             mDialogFilterBinding.seekbarCheepest.setPrefix("₹");
 //            mDialogFilterBinding.seekbarCheepest.setMin(100);
             mDialogFilterBinding.seekbarCheepest.setMax(getMaxQuote());
-            mDialogFilterBinding.textLabelMaxPrice.setText(getString(R.string.ruppe_symbol_x, String.valueOf(mDialogFilterBinding.seekbarCheepest.getMax())));
+            mDialogFilterBinding.textLabelMaxPrice.setText(getString(R.string.rupee_symbol_x, String.valueOf(mDialogFilterBinding.seekbarCheepest.getMax())));
             //Distance is max 50km
-            mDialogFilterBinding.seekbarDistance.setSuffix("km");
+            mDialogFilterBinding.seekbarDistance.setSuffix(getString(R.string.label_km));
 //            mDialogFilterBinding.seekbarDistance.setMin(3);
             mDialogFilterBinding.seekbarDistance.setMax(getMaxDistance());
-            mDialogFilterBinding.textLabelMaxDistance.setText(getMaxDistance() + "km");
+            mDialogFilterBinding.textLabelMaxDistance.setText(getMaxDistance() + getString(R.string.label_km));
             mDialogFilterBinding.imgFav.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -386,12 +379,11 @@ public class TaskQuotesActivity extends BaseAppCompatActivity implements TaskQuo
 //                        mQuotesList.addAll(response.quoteList);
 //                        mAdapter.notifyDataSetChanged();
                         mAdapter.addAll(response.quoteList);
-
                         mErrorLoadingHelper.success();
                     } else {
-                        mErrorLoadingHelper.failed(getString(R.string.label_no_quotes_available), 0, null, null);
+                        mErrorLoadingHelper.failed(Utility.EMPTY_STRING, 0, null, null);
+//                        mErrorLoadingHelper.failed(getString(R.string.label_no_quotes_available), 0, null, null);
                     }
-
                     populateGridImageView();
                     break;
                 case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
@@ -482,6 +474,11 @@ public class TaskQuotesActivity extends BaseAppCompatActivity implements TaskQuo
     }
 
     @Override
+    public void onFavClicked(ProviderModel provider, boolean flag) {
+        callAddToFavWS(provider.providerId, flag);
+    }
+
+    @Override
     public void onQuoteListEmpty() {
         // Finish the activity now.
         finish();
@@ -525,7 +522,7 @@ public class TaskQuotesActivity extends BaseAppCompatActivity implements TaskQuo
      */
     private void callTaskDetailRequestAcceptWS(final String action, String taskID, final ProviderModel providerModel) {
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mRoot);
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mRoot);
             return;
         }
 
@@ -651,7 +648,7 @@ public class TaskQuotesActivity extends BaseAppCompatActivity implements TaskQuo
      */
     private void callTaskDetailRequestAcceptRejectWS(String requestDetailStatus, String taskID, String spUserID) {
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mRoot);
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mRoot);
             return;
         }
 
@@ -811,7 +808,12 @@ public class TaskQuotesActivity extends BaseAppCompatActivity implements TaskQuo
             if (mTaskDetailModel.taskId.equals(event.id)) {
                 callSPListWS();
             }
-        } /* else if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.QUOTE_REQUESTED_BY_PRO
+        } else if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.UPDATE_FAVOURITE) {
+            if (!TextUtils.isEmpty(event.isFav))
+                mAdapter.updateFavStatus(event.id, event.isFav);
+        }
+
+        /* else if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.QUOTE_REQUESTED_BY_PRO
                 || event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.REQUEST_FOR_DETAIL) {
 
             // Only go ahead if we are in same task detail screen whose notification comes
@@ -822,6 +824,91 @@ public class TaskQuotesActivity extends BaseAppCompatActivity implements TaskQuo
             }
         }*/
     }
+
+    /**
+     * Call Add to fav
+     *
+     * @param providerId
+     * @param isAddToFav
+     */
+    private void callAddToFavWS(String providerId, boolean isAddToFav) {
+        if (!Utility.isConnected(mContext)) {
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mRoot);
+            return;
+        }
+
+        //Add Header parameters
+        Map<String, String> mHeaderParams = new HashMap<>();
+        mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
+        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
+
+        //Add Params
+        Map<String, Object> mParams = new HashMap<>();
+        mParams.put(NetworkUtility.TAGS.SP_USER_ID, providerId);
+        mParams.put(NetworkUtility.TAGS.REQ_FOR, isAddToFav ? "add" : "remove");
+
+        //Url is based on condition if address id is greater then 0 then it means we need to update the existing address
+        VolleyNetworkRequest mVolleyNetworkRequestForSPList = new VolleyNetworkRequest(NetworkUtility.WS.SP_ADD_TO_FAV
+                , mCallAddSPToFavWSErrorListener
+                , mCallAddSPToFavWSResponseListener
+                , mHeaderParams
+                , mParams
+                , null);
+        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequestForSPList);
+    }
+
+    Response.Listener mCallAddSPToFavWSResponseListener = new Response.Listener() {
+        @Override
+        public void onResponse(Object response) {
+
+            String strResponse = (String) response;
+            try {
+                JSONObject jsonObject = new JSONObject(strResponse);
+                Log.i(TAG, "onResponse: " + jsonObject.toString());
+                int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
+                String error_message;
+
+                switch (statusCode) {
+                    case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
+
+                        break;
+                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
+                        // Show Toast
+                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mRoot);
+                        break;
+                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
+                        error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
+                        // Show message
+                        Utility.showSnackBar(error_message, mRoot);
+                        break;
+                    case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
+                    case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
+                        //Logout and finish the current activity
+                        Utility.logout(mContext, true, statusCode);
+                        finish();
+                        break;
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+                mCallAddSPToFavWSErrorListener.onErrorResponse(new VolleyError(e.getMessage()));
+            }
+
+        }
+    };
+
+    Response.ErrorListener mCallAddSPToFavWSErrorListener = new Response.ErrorListener() {
+        @Override
+        public void onErrorResponse(final VolleyError error) {
+            Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
+
+            // Close Progressbar
+//            hideProgressDialog();
+
+
+            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mRoot);
+
+        }
+    };
 
     @Override
     protected void onDestroy() {

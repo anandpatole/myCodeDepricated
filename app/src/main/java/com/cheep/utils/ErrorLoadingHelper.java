@@ -13,7 +13,6 @@ import com.cheep.R;
 /**
  * Created by pankaj on 11/10/16.
  */
-
 public class ErrorLoadingHelper {
 
     private RecyclerView recyclerView;
@@ -64,7 +63,7 @@ public class ErrorLoadingHelper {
     }
 
     public void failed(String errorMessage, int errorRes, View.OnClickListener clickListener) {
-        failed(errorMessage, errorRes, "Retry", clickListener);
+        failed(errorMessage, errorRes, Utility.EMPTY_STRING/*"Retry"*/, clickListener);
     }
 
     public void failed(String errorMessage, int errorRes, String btnText, View.OnClickListener clickListener) {
@@ -88,7 +87,7 @@ public class ErrorLoadingHelper {
         if (mEmptyFavouriteLayout != null)
             mEmptyFavouriteLayout.setVisibility(View.GONE);
 
-        //Changing it to null so retry button is not visible
+        // Changing it to null so retry button is not visible
         clickListener = null;
 
         recyclerView.setVisibility(View.GONE);

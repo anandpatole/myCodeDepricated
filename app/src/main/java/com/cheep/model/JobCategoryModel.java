@@ -1,5 +1,7 @@
 package com.cheep.model;
 
+import android.support.annotation.Keep;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -9,7 +11,7 @@ import java.util.List;
 /**
  * Created by pankaj on 9/27/16.
  */
-
+@Keep
 public class JobCategoryModel {
 
     @SerializedName("cat_id")

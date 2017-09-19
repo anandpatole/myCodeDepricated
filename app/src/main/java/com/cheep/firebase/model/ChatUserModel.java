@@ -1,5 +1,6 @@
 package com.cheep.firebase.model;
 
+import android.support.annotation.Keep;
 import android.text.TextUtils;
 
 import com.google.firebase.database.IgnoreExtraProperties;
@@ -10,6 +11,7 @@ import java.io.Serializable;
  * Created by sanjay on 27/7/16.
  */
 @IgnoreExtraProperties
+@Keep
 public class ChatUserModel implements Serializable
 {
     private String userId;
