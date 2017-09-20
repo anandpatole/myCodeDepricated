@@ -22,6 +22,7 @@ import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
 import com.cheep.utils.ErrorLoadingHelper;
+import com.cheep.utils.LogUtils;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.Utility;
 
@@ -33,20 +34,35 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.cheep.utils.LogUtils.LOGD;
+import static com.cheep.utils.LogUtils.LOGI;
+import static com.cheep.utils.LogUtils.makeLogTag;
+
 
 /**
- * Created by pankaj on 10/5/16.
+ * Created by Bhavesh Patadiya on 10/5/16.
+ * This class involves code regarding listing of comments(reviews) user provided to particular PROs.
+ * It can be initiated from @{@link ProviderProfileActivity}
  */
 public class CommentsActivity extends BaseAppCompatActivity {
-
-    private static final String TAG = "CommentsActivity";
+    // Constants
+    private static final String TAG = makeLogTag(CommentsActivity.class);
 
     private ActivityCommentsBinding mActivityCommentsBinding;
     private ReviewModel reviewModel;
     private ErrorLoadingHelper errorLoadingHelper;
     private CommentsRecyclerViewAdapter commentsRecyclerViewAdapter;
+
     private boolean isRefresh = true;
 
+    /**
+     * Static method that would start @{@link CommentsActivity} and would required @{@link ReviewModel}
+     * & Username
+     *
+     * @param context     context of the activity
+     * @param reviewModel ReviewModel information
+     * @param name        user name
+     */
     public static void newInstance(Context context, ReviewModel reviewModel, String name) {
         Intent intent = new Intent(context, CommentsActivity.class);
         intent.putExtra(Utility.Extra.DATA, Utility.getJsonStringFromObject(reviewModel));
@@ -64,61 +80,91 @@ public class CommentsActivity extends BaseAppCompatActivity {
 
     @Override
     protected void initiateUI() {
+        // Setup ActiionBar/Toolbar
         setSupportActionBar(mActivityCommentsBinding.toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setTitle(Utility.EMPTY_STRING);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
+        // Manage event when back arrow from @android.support.v7.widget.Toolbar pressed.
         mActivityCommentsBinding.toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 onBackPressed();
             }
         });
+
+        // Set Title of the activity
         mActivityCommentsBinding.textTitle.setText(getString(R.string.label_comments));
 
+        // Initialize Error loading helper
         errorLoadingHelper = new ErrorLoadingHelper(mActivityCommentsBinding.recyclerView);
 
+        // Fetch the contents from Intents
         reviewModel = (ReviewModel) Utility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA), ReviewModel.class);
+
+        // Setting up hint for comment label
+        mActivityCommentsBinding.editComment.setHint(getString(R.string.hint_comments_edit_text, getIntent().getStringExtra(Utility.Extra.USER_NAME)));
 
         //Setting adapter on recycler view
         commentsRecyclerViewAdapter = new CommentsRecyclerViewAdapter();
         LinearLayoutManager layoutManager = new LinearLayoutManager(mContext);
-//        layoutManager.setStackFromEnd(true);
         mActivityCommentsBinding.recyclerView.setLayoutManager(layoutManager);
         mActivityCommentsBinding.recyclerView.setAdapter(commentsRecyclerViewAdapter);
-//        mActivityCommentsBinding.recyclerView.smoothScrollToPosition(commentsRecyclerViewAdapter.getItemCount());
         mActivityCommentsBinding.recyclerView.addItemDecoration(new DividerItemDecoration(mContext, R.drawable.divider_grey_normal, (int) getResources().getDimension(R.dimen.scale_20dp)));
 
-        mActivityCommentsBinding.editComment.setHint(getString(R.string.hint_comments_edit_text, getIntent().getStringExtra(Utility.Extra.USER_NAME)));
+        /**
+         * This call would eventually a network call that would fetch comments based on @reviewId provided.
+         */
         callCommentsList(reviewModel.reviewId);
     }
 
     @Override
     protected void setListeners() {
+        /**
+         * Manage click event of Send Button.
+         */
         mActivityCommentsBinding.textSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // Sending the comment to server
                 sendComment(mActivityCommentsBinding.editComment.getText().toString().trim());
+
+                // Reset the value of edit label.
                 mActivityCommentsBinding.editComment.setText(Utility.EMPTY_STRING);
             }
         });
     }
 
-    private void sendComment(String comment) {
+    @Override
+    protected void onDestroy() {
+        Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.WS.COMMENT_LIST);
+        Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.WS.ADD_COMMENT);
+        super.onDestroy();
+    }
 
+
+    /***********************************************************************************************
+     *********************** [Send Comment API Call] [Start] ******************************
+     ***********************************************************************************************/
+    /**
+     * Network call for sending the comment to server
+     *
+     * @param comment Message user wants to send.
+     */
+    @SuppressWarnings("unchecked")
+    private void sendComment(String comment) {
+        // Check Internet Connectivity
         if (!Utility.isConnected(mContext)) {
             Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityCommentsBinding.getRoot());
             return;
         }
 
+        // Validation in case comment provided is empty.
         if (TextUtils.isEmpty(comment)) {
-//            Utility.showSnackBar(getString(R.string.validate_comment), mActivityCommentsBinding.getRoot());
+            Utility.showSnackBar(getString(R.string.validate_comment), mActivityCommentsBinding.getRoot());
             return;
         }
-
-        //Show Progress
-//        showProgressDialog();
 
         //Add Header parameters
         Map<String, String> mHeaderParams = new HashMap<>();
@@ -130,9 +176,10 @@ public class CommentsActivity extends BaseAppCompatActivity {
         mParams.put(NetworkUtility.TAGS.TASK_ID, reviewModel.taskId);
         mParams.put(NetworkUtility.TAGS.REVIEW_ID, reviewModel.reviewId);
         mParams.put(NetworkUtility.TAGS.COMMENT, comment);
-//        mParams.put(NetworkUtility.TAGS.LAST_ID, providerId); //for pagination
 
-        //Url is based on condition if address id is greater then 0 then it means we need to update the existing address
+        /**
+         * Url is based on condition if address id is greater then 0 then it means we need to update the existing address
+         */
         mVolleyNetworkRequestForCommentList = new VolleyNetworkRequest(NetworkUtility.WS.ADD_COMMENT
                 , mCallPostCommentWSErrorListener
                 , mCallPostCommentWSResponseListener
@@ -142,6 +189,9 @@ public class CommentsActivity extends BaseAppCompatActivity {
         Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequestForCommentList, NetworkUtility.WS.ADD_COMMENT);
     }
 
+    /**
+     * Implementing @{@link com.android.volley.Response.Listener} for managing success response.
+     */
     Response.Listener mCallPostCommentWSResponseListener = new Response.Listener() {
         @Override
         public void onResponse(Object response) {
@@ -149,7 +199,7 @@ public class CommentsActivity extends BaseAppCompatActivity {
             String strResponse = (String) response;
             try {
                 JSONObject jsonObject = new JSONObject(strResponse);
-                Log.i(TAG, "onResponse: " + jsonObject.toString());
+                LOGI(TAG, "onResponse: " + jsonObject.toString());
                 int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
                 String error_message;
 
@@ -218,29 +268,26 @@ public class CommentsActivity extends BaseAppCompatActivity {
         }
     };
 
+    /**
+     * Implementing @{@link com.android.volley.Response.ErrorListener}
+     */
     Response.ErrorListener mCallPostCommentWSErrorListener = new Response.ErrorListener() {
         @Override
         public void onErrorResponse(final VolleyError error) {
-            Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
-
-            // Close Progressbar
-//            hideProgressDialog();
-
-            // Show Toast
-
+            LOGI(TAG, "onErrorResponse() called with: error = [" + error + "]");
             Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityCommentsBinding.getRoot());
-
             hideProgressDialog();
         }
     };
 
-    @Override
-    protected void onDestroy() {
-        Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.WS.COMMENT_LIST);
-        Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.WS.ADD_COMMENT);
-        super.onDestroy();
-    }
+    /***********************************************************************************************
+     *********************** [Send Comment API Call] [End] ********************************
+     ***********************************************************************************************/
 
+
+    /***********************************************************************************************
+     *********************** [Reload Comment Listing] [Start] ******************************
+     ***********************************************************************************************/
     /**
      * Calling Get SP list web service from server
      *
@@ -286,12 +333,22 @@ public class CommentsActivity extends BaseAppCompatActivity {
         Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequestForCommentList, NetworkUtility.WS.COMMENT_LIST);
     }
 
+    /**
+     * Managing Click event of Retry button.
+     * Note: Currently @{@link ErrorLoadingHelper} is forcefully not showing Retry button so
+     * it would not going to show. If it requires in future, it needs to be managed from @{@link ErrorLoadingHelper}
+     * class.
+     */
     View.OnClickListener onRetryBtnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
             reloadCommentsListWS();
         }
     };
+
+    /**
+     * Implementing @{@link com.android.volley.Response.Listener} for managing success response.
+     */
     Response.Listener mCallCommentListWSResponseListener = new Response.Listener() {
         @Override
         public void onResponse(Object response) {
@@ -299,10 +356,9 @@ public class CommentsActivity extends BaseAppCompatActivity {
             String strResponse = (String) response;
             try {
                 JSONObject jsonObject = new JSONObject(strResponse);
-                Log.i(TAG, "onResponse: " + jsonObject.toString());
+                LOGI(TAG, "onResponse: " + jsonObject.toString());
                 int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
                 String error_message;
-
                 switch (statusCode) {
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
                         ArrayList<CommentsModel> reviewList = Utility.getObjectListFromJsonString(jsonObject.getString(NetworkUtility.TAGS.DATA), CommentsModel[].class);
@@ -312,13 +368,16 @@ public class CommentsActivity extends BaseAppCompatActivity {
                             commentsRecyclerViewAdapter = new CommentsRecyclerViewAdapter();
                         }
 
-
                         //For Pull to refresh
-                        if (isRefresh)
+                        if (isRefresh) {
                             commentsRecyclerViewAdapter.setList(reviewList);
-                        else { //for load more and
+                        } else {
+                            //for load more and
                             commentsRecyclerViewAdapter.addToList(reviewList);
                         }
+
+                        // In order to scroll @recyclerView properly need to smoothscroll after some delay to
+                        // avoid junking operations so that recyclerview in meantime can load the updated contents.
                         mActivityCommentsBinding.recyclerView.postDelayed(new Runnable() {
                             @Override
                             public void run() {
@@ -326,29 +385,21 @@ public class CommentsActivity extends BaseAppCompatActivity {
                                 mActivityCommentsBinding.recyclerView.scrollToPosition(commentsRecyclerViewAdapter.getItemCount());
                             }
                         }, 200);
-
-//                        mActivityCommentsBinding.recyclerView.getLayoutManager().scrollToPosition(commentsRecyclerViewAdapter.getItemCount());
-
-
                         isRefresh = false;
 
+                        // If fetched lists is empty, need to show default image
                         if (commentsRecyclerViewAdapter.getmList() != null && !commentsRecyclerViewAdapter.getmList().isEmpty()) {
                             errorLoadingHelper.success();
                         } else {
-//                            errorLoadingHelper.failed(getString(R.string.label_no_comment), 0, getString(R.string.label_refresh), onRetryBtnClickListener);
                             errorLoadingHelper.failed(null, R.drawable.img_empty_comments, null, null);
                         }
 
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
-                        // Show Toast
-//                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityProviderProfileBinding.getRoot());
                         errorLoadingHelper.failed(getString(R.string.label_something_went_wrong), 0, onRetryBtnClickListener);
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
                         error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
-                        // Show message
-//                        Utility.showSnackBar(error_message, mActivityProviderProfileBinding.getRoot());
                         errorLoadingHelper.failed(error_message, 0, onRetryBtnClickListener);
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
@@ -366,21 +417,18 @@ public class CommentsActivity extends BaseAppCompatActivity {
         }
     };
 
+    /**
+     * Implementing @{@link com.android.volley.Response.ErrorListener}
+     */
     Response.ErrorListener mCallCommentListWSErrorListener = new Response.ErrorListener() {
         @Override
         public void onErrorResponse(final VolleyError error) {
-            Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
-
-            // Close Progressbar
-//            hideProgressDialog();
-
-            // Show Toast
-//            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityProviderProfileBinding.getRoot());
-
-
+            LOGD(TAG, "onErrorResponse() called with: error = [" + error + "]");
             errorLoadingHelper.failed(getString(R.string.label_something_went_wrong), 0, onRetryBtnClickListener);
-
-
         }
     };
+    /***********************************************************************************************
+     *********************** [Reload Comment Listing] [End] ********************************
+     ***********************************************************************************************/
+
 }

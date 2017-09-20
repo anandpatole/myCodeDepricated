@@ -6,7 +6,8 @@ import android.os.Bundle;
 import android.support.multidex.MultiDexApplication;
 
 /**
- * Created by @Bhavesh.V.Patadiya on 9/14/16.
+ * Created by Bhavesh V Patadiya on 9/14/16.
+ * This class would track activity creation and lifecycle callbacks.
  */
 @SuppressLint("Registered")
 public class ApplicationLifeCycle extends MultiDexApplication {
@@ -25,7 +26,6 @@ public class ApplicationLifeCycle extends MultiDexApplication {
     @Override
     public void onCreate() {
         super.onCreate();
-
         // Register @ActivityLifecycleCallbacks
         registerActivityLifecycleCallbacks(activityLifecycleCallbacks);
     }
@@ -34,7 +34,6 @@ public class ApplicationLifeCycle extends MultiDexApplication {
     public void onTerminate() {
         //Unregister @ActivityLifecycleCallbacks
         unregisterActivityLifecycleCallbacks(activityLifecycleCallbacks);
-
         super.onTerminate();
     }
 

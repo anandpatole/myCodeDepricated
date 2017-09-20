@@ -7,7 +7,6 @@ import com.google.android.gms.common.api.Status;
 /**
  * Created by bhavesh on 12/10/16.
  */
-
 public interface LocationTrackServiceInteractionListener {
     void onLocationNotAvailable();
 
