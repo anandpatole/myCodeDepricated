@@ -8,11 +8,6 @@
         android:name="android.hardware.camera"
         android:required="true" />
 
-    <!--
-         <uses-permission
-         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
-         android:maxSdkVersion="18" />
-    -->
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -28,21 +23,22 @@
     <!-- AppsFlyer SDK(Optional- But we provided) -->
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 
-    <!-- <uses-permission android:name="android.permission.READ_PHONE_STATE" /> -->
     <application
         android:name=".App"
         android:allowBackup="false"
+        android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+        <!-- Activities -->
         <activity
             android:name=".activity.SplashActivity"
             android:screenOrientation="portrait"
             android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -133,6 +129,10 @@
             android:name=".activity.PaymentDetailsActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".activity.TaskQuotesActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden" />
 
         <!-- For Cropping -->
         <activity
@@ -155,7 +155,7 @@
             android:enabled="true"
             android:exported="false" />
 
-        <!-- [START gcm_listener] -->
+        <!-- [START gcm_listener for Push Notification] -->
         <service
             android:name=".fcm.MyFirebaseMessagingService"
             android:exported="false">
@@ -163,7 +163,7 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-        <!-- [END gcm_listener] -->
+        <!-- [END gcm_listener for Push Notification] -->
 
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
@@ -188,6 +188,7 @@
             android:name=".fcm.RegistrationIntentService"
             android:exported="false" />
 
+        <!--For Fabric API-->
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="50533e46aadf44b1a02395ec21663bdaf1111763" />
@@ -252,19 +253,6 @@
                 <action android:name="com.android.vending.INSTALL_REFERRER" />
             </intent-filter>
         </receiver>
-
-        <activity
-            android:name=".activity.TaskQuotesActivity"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden">
-
-            <!-- <intent-filter> -->
-            <!-- <action android:name="android.intent.action.MAIN" /> -->
-
-
-            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
-            <!-- </intent-filter> -->
-        </activity>
 
         <service
             android:name="com.amazonaws.mobileconnectors.s3.transferutility.TransferService"

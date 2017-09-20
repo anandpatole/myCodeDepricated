@@ -131,9 +131,13 @@ public class TaskDetailModel {
     @SerializedName("is_prefed_quote")
     public String isPrefedQuote;
 
+    // this is for payment choice activity for strategic partner
+    public String totalStrategicPartner;
+    public String payableAmountStrategicPartner;
+
 
     // This is for payment choice screen
-    public String cheepCode ;
+    public String cheepCode;
 
     public TaskDetailModel() {
 

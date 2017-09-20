@@ -17,12 +17,12 @@ import com.cheep.BuildConfig;
 import com.cheep.R;
 import com.cheep.databinding.ActivityPaymentChoiceBinding;
 import com.cheep.dialogs.AcknowledgementDialogWithProfilePic;
-import com.cheep.dialogs.AcknowledgementDialogWithoutProfilePic;
 import com.cheep.dialogs.AcknowledgementInteractionListener;
 import com.cheep.firebase.FirebaseHelper;
 import com.cheep.firebase.FirebaseUtils;
 import com.cheep.firebase.model.ChatTaskModel;
 import com.cheep.firebase.model.TaskChatModel;
+import com.cheep.fragment.BaseFragment;
 import com.cheep.model.AddressModel;
 import com.cheep.model.MessageEvent;
 import com.cheep.model.ProviderModel;
@@ -31,8 +31,6 @@ import com.cheep.model.UserDetails;
 import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
-import com.cheep.strategicpartner.StrategicPartnerFragPhaseThree;
-import com.cheep.strategicpartner.model.QueAnsModel;
 import com.cheep.utils.HDFCPaymentUtility;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.SuperCalendar;
@@ -45,7 +43,6 @@ import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -73,6 +70,13 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity {
         context.startActivity(intent);
     }
 
+    public static void newInstance(BaseFragment baseFragment, TaskDetailModel taskDetailModel, boolean isStrategicPartner) {
+        Intent intent = new Intent(baseFragment.getActivity(), PaymentChoiceActivity.class);
+        intent.putExtra(Utility.Extra.DATA_2, Utility.getJsonStringFromObject(taskDetailModel));
+        intent.putExtra(Utility.Extra.TASK_TYPE_IS_STRATEGIC, true);
+        baseFragment.startActivity(intent);
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,9 +91,10 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity {
         if (getIntent().hasExtra(Utility.Extra.DATA)) {
             providerModel = (ProviderModel) Utility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA), ProviderModel.class);
             //This is only when provider profile view for specific task (provider gives quote to specific task)
+        }
+        if (getIntent().hasExtra(Utility.Extra.DATA_2)) {
             taskDetailModel = (TaskDetailModel) Utility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA_2), TaskDetailModel.class);
         }
-
         if (getIntent().hasExtra(Utility.Extra.TASK_TYPE_IS_INSTA)) {
             isInstaBooking = getIntent().getBooleanExtra(Utility.Extra.TASK_TYPE_IS_INSTA, false);
             mSelectedAddressModelForInsta = (AddressModel) Utility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.SELECTED_ADDRESS_MODEL), AddressModel.class);
@@ -97,6 +102,10 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity {
 
         if (getIntent().hasExtra(Utility.Extra.PAYMENT_VIEW_IS_ADDITIONAL_CHARGE)) {
             isAdditional = getIntent().getIntExtra(Utility.Extra.PAYMENT_VIEW_IS_ADDITIONAL_CHARGE, 0);
+        }
+
+        if (getIntent().hasExtra(Utility.Extra.TASK_TYPE_IS_STRATEGIC)) {
+            isStrategicPartner = getIntent().getBooleanExtra(Utility.Extra.TASK_TYPE_IS_STRATEGIC, false);
         }
     }
 
@@ -113,10 +122,13 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity {
             Log.d(TAG, "onClick: of HDFC PAYMENT");
             if (isAdditional == 0) {
                 // Go for regular payment gateway
-                payNow(false);
+                payNowForNormalTask(false);
+            } else if (isStrategicPartner) {
+                // Go for regular payment gateway strategic partner
+                payNowForStrategicPartner();
             } else {
                 // Go for regular payment gateway
-                payNow(true);
+                payNowForNormalTask(true);
             }
 
 
@@ -128,7 +140,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity {
     /**
      * Used for payment
      */
-    private void payNow(final boolean isForAdditionalQuote) {
+    private void payNowForNormalTask(final boolean isForAdditionalQuote) {
         if (!Utility.isConnected(mContext)) {
             Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityPaymentChoiceBinding.getRoot());
             return;
@@ -233,6 +245,8 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity {
                                 //Call update payment service from here with all the response come from service
                                 if (isInstaBooking)
                                     callCreateInstaBookingTaskWS(true, getString(R.string.message_payment_bypassed));
+                                else if (isStrategicPartner)
+                                    onSuccessPaymentOfStrategicPartner(true, getString(R.string.message_payment_bypassed));
                                 else
                                     updatePaymentStatus(true, getString(R.string.message_payment_bypassed), false);
                             }
@@ -247,8 +261,13 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity {
                                 }
                             }
 
+                            if (isStrategicPartner) {
+                                HDFCPaymentGatewayActivity.newInstance(
+                                        PaymentChoiceActivity.this,
+                                        HDFCPaymentUtility.getPaymentUrl(mTransactionParams, jsonObject.optString(NetworkUtility.TAGS.HASH_STRING)),
+                                        Utility.REQUEST_START_PAYMENT_FOR_STRATEGIC_PARTNER);
 
-                            if (!isInstaBooking && jsonObject.getString(NetworkUtility.TAGS.IS_FOR_ADDITIONAL_QUOTE).equalsIgnoreCase(getString(R.string.label_yes))) {
+                            } else if (!isInstaBooking && jsonObject.getString(NetworkUtility.TAGS.IS_FOR_ADDITIONAL_QUOTE).equalsIgnoreCase(getString(R.string.label_yes))) {
                                 HDFCPaymentGatewayActivity.newInstance(
                                         PaymentChoiceActivity.this,
                                         HDFCPaymentUtility.getPaymentUrl(mTransactionParams, jsonObject.optString(NetworkUtility.TAGS.HASH_STRING)),
@@ -528,7 +547,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity {
                 if (data != null) {
                     Log.d(TAG, "onActivityResult() called with success: result= [" + data.getStringExtra("payu_response") + "]");
                     // Call update payment service from here with all the response come from service
-                    callTaskCreationWebServiceForStrategicPartner(true, data.getStringExtra("payu_response"));
+
                 }
             }
             if (resultCode == Activity.RESULT_CANCELED) {
@@ -540,6 +559,14 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity {
                 }
             }
         }
+    }
+
+    public void onSuccessPaymentOfStrategicPartner(boolean isPaymentSuccessful, String payuResponse) {
+        Intent intent = new Intent();
+        intent.putExtra(Utility.Extra.IS_PAYMENT_SUCCESSFUL, isPaymentSuccessful);
+        intent.putExtra(Utility.Extra.PAYU_RESPONSE, payuResponse);
+        setResult(RESULT_OK);
+        finish();
     }
 
     /**
@@ -838,7 +865,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity {
     /**
      * Used for payment
      */
-    private void payNow() {
+    private void payNowForStrategicPartner() {
         if (!Utility.isConnected(mContext)) {
             Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityPaymentChoiceBinding.getRoot());
             return;
@@ -856,18 +883,18 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity {
         //Add Params
         mTransactionParams = HDFCPaymentUtility.getPaymentTransactionFieldsForStrategicPartner(PreferenceUtility.getInstance(this).getFCMRegID(),
                 userDetails,
-                cheepCode,
-                mStrategicPartnerTaskCreationAct.total,
-                payableAmount,
-                start_datetime);
+                taskDetailModel.cheepCode,
+                taskDetailModel.totalStrategicPartner,
+                taskDetailModel.payableAmountStrategicPartner,
+                taskDetailModel.taskStartdate);
 
         // We do not need to pass PROID and TaskID in Strategic partner as it still not finalized
         //mParams.put(NetworkUtility.TAGS.SP_USER_ID, providerModel.providerId);
         //mParams.put(NetworkUtility.TAGS.TASK_ID, taskDetailModel.taskId);
 
-        if (!TextUtils.isEmpty(cheepCode)) {
-            mTransactionParams.put(NetworkUtility.TAGS.CHEEPCODE, cheepCode);
-            mTransactionParams.put(NetworkUtility.TAGS.PROMOCODE_PRICE, promocode_price);
+        if (!TextUtils.isEmpty(taskDetailModel.cheepCode)) {
+            mTransactionParams.put(NetworkUtility.TAGS.CHEEPCODE, taskDetailModel.cheepCode);
+            mTransactionParams.put(NetworkUtility.TAGS.PROMOCODE_PRICE, taskDetailModel.taskDiscountAmount);
         } else {
             mTransactionParams.put(NetworkUtility.TAGS.CHEEPCODE, Utility.EMPTY_STRING);
             mTransactionParams.put(NetworkUtility.TAGS.PROMOCODE_PRICE, Utility.ZERO_STRING);
@@ -903,404 +930,6 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity {
             }
         }).execute(new JSONObject(mTransactionParams).toString());
     }
-
-
-    Response.Listener mCallGenerateHashWSResponseListener = new Response.Listener() {
-        @Override
-        public void onResponse(Object response) {
-
-            String strResponse = (String) response;
-            try {
-                JSONObject jsonObject = new JSONObject(strResponse);
-                Log.i(TAG, "onResponse: " + jsonObject.toString());
-                int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
-                String error_message;
-                hideProgressDialog();
-                switch (statusCode) {
-                    case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
-                        initiatePayment(jsonObject);
-                        break;
-                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
-                        // Show Toast
-                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityPaymentChoiceBinding.getRoot());
-                        break;
-                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
-                        error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
-                        // Show message
-                        Utility.showSnackBar(error_message, mActivityPaymentChoiceBinding.getRoot());
-                        break;
-                    case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
-                    case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
-                        //Logout and finish the current activity
-                        Utility.logout(mContext, true, statusCode);
-                        mStrategicPartnerTaskCreationAct.finish();
-                        break;
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-                mCallGenerateHashWSErrorListener.onErrorResponse(new VolleyError(e.getMessage()));
-            }
-        }
-    };
-
-
-    /**
-     * This would initiate the payment once fired.
-     *
-     * @param result JSONObject
-     */
-    private void initiatePayment(JSONObject result) {
-
-
-        /*
-         * Changes @Bhavesh : 7thJuly,2017
-         * In case we have to bypass the payment
-         */
-        if (BuildConfig.NEED_TO_BYPASS_PAYMENT) {
-//                            PLEASE NOTE: THIS IS JUST TO BYPPASS THE PAYMENT GATEWAY. THIS IS NOT
-//                            GOING TO RUN IN LIVE ENVIRONMENT BUILDS
-            // Direct bypass the things
-            callTaskCreationWebServiceForStratgicPartner(true, getString(R.string.message_payment_bypassed));
-        } else {
-            //TODO: Remove this when release and it is saving cc detail in clipboard only
-            if ("debug".equalsIgnoreCase(BuildConfig.BUILD_TYPE)) {
-                //Copy dummy creditcard detail in clipboard
-                try {
-                    Utility.setClipboard(mContext, BootstrapConstant.CC_DETAILS);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-            HDFCPaymentGatewayActivity.newInstance(
-                    StrategicPartnerFragPhaseThree.this,
-                    HDFCPaymentUtility.getPaymentUrl(mTransactionParams, result.optString(NetworkUtility.TAGS.HASH_STRING)),
-                    Utility.REQUEST_START_PAYMENT);
-        }
-    }
-
-    Response.ErrorListener mCallGenerateHashWSErrorListener = new Response.ErrorListener() {
-        @Override
-        public void onErrorResponse(final VolleyError error) {
-            Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
-
-            // Close Progressbar
-//            hideProgressDialog();
-
-            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityPaymentChoiceBinding.getRoot());
-
-        }
-    };
-
-    /***********************************************************************************************
-     *********************** [Generate Hash Code For Payment] [End] *************************************
-     ***********************************************************************************************/
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-
-    }
-
-    /*
-     **********************************************************************************************
-     *********************** [Task Creation API Call ] [Start] ******************************
-     **********************************************************************************************/
-
-    /**
-     * @param isPaymentSuccess      boolean
-     * @param paymentGatewaySummary String
-     */
-    @SuppressWarnings("unchecked")
-    private void callTaskCreationWebServiceForStrategicPartner(boolean isPaymentSuccess, String paymentGatewaySummary) {
-
-        // Check Internet connection
-        if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityPaymentChoiceBinding.getRoot());
-            return;
-        }
-
-        //Show Progress
-        showProgressDialog();
-
-        UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
-
-        // Add Header parameters
-        Map<String, String> mHeaderParams = new HashMap<>();
-        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, userDetails.UserID);
-        mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
-
-        // Add Params
-        ArrayList<QueAnsModel> mList = mStrategicPartnerTaskCreationAct.getQuestionsList();
-        String subCategoryDetail = getSelectedServicesJsonString().toString();
-        String task_desc = getTaskDescription(mList);
-
-        String question_detail = getQuestionAnswerDetailsJsonString(mList).toString();
-        String media_file = "";
-        for (QueAnsModel model : mList)
-            if (model.answerType.equalsIgnoreCase(Utility.TEMPLATE_UPLOAD)) {
-                media_file = getSelectedMediaJsonString(model.medialList).toString();
-                break;
-            }
-        Log.e(TAG, "start dat time " + start_datetime);
-        SuperCalendar superCalendar = SuperCalendar.getInstance();
-        superCalendar.setTimeInMillis(Long.parseLong(start_datetime));
-        superCalendar.setTimeZone(SuperCalendar.SuperTimeZone.GMT.GMT);
-
-        Log.e(TAG, "gmt time " + String.valueOf(superCalendar.getTimeInMillis()));
-
-        Map<String, String> mParams = new HashMap<>();
-        if (mSelectedAddressModelForInsta != null)
-            if (Integer.parseInt(mSelectedAddressModelForInsta.address_id) > 0) {
-                mParams.put(NetworkUtility.TAGS.ADDRESS_ID, mSelectedAddressModelForInsta.address_id);
-            } else {
-                mParams.put(NetworkUtility.TAGS.ADDRESS_INITIALS, mSelectedAddressModelForInsta.address_initials);
-                mParams.put(NetworkUtility.TAGS.ADDRESS, mSelectedAddressModelForInsta.address);
-                mParams.put(NetworkUtility.TAGS.CATEGORY, mSelectedAddressModelForInsta.category);
-                mParams.put(NetworkUtility.TAGS.LAT, mSelectedAddressModelForInsta.lat);
-                mParams.put(NetworkUtility.TAGS.LNG, mSelectedAddressModelForInsta.lng);
-                mParams.put(NetworkUtility.TAGS.CITY_NAME, mSelectedAddressModelForInsta.cityName);
-                mParams.put(NetworkUtility.TAGS.COUNTRY, mSelectedAddressModelForInsta.countryName);
-                mParams.put(NetworkUtility.TAGS.STATE, mSelectedAddressModelForInsta.stateName);
-            }
-
-        mParams.put(NetworkUtility.TAGS.CAT_ID, mStrategicPartnerTaskCreationAct.mBannerImageModel.cat_id);
-        mParams.put(NetworkUtility.TAGS.START_DATETIME, String.valueOf(superCalendar.getTimeInMillis()));
-        mParams.put(NetworkUtility.TAGS.SUB_CATEGORY_DETAIL, subCategoryDetail);
-        mParams.put(NetworkUtility.TAGS.QUESTION_DETAIL, question_detail);
-        mParams.put(NetworkUtility.TAGS.QUOTE_AMOUNT, mStrategicPartnerTaskCreationAct.totalOfBasePrice);
-        mParams.put(NetworkUtility.TAGS.PAYMENT_STATUS, isPaymentSuccess ? Utility.PAYMENT_STATUS.COMPLETED : Utility.PAYMENT_STATUS.FAILED);
-        mParams.put(NetworkUtility.TAGS.PAYMENT_LOG, paymentGatewaySummary);
-
-        mParams.put(NetworkUtility.TAGS.CHEEPCODE, TextUtils.isEmpty(cheepCode) ? Utility.EMPTY_STRING : cheepCode);
-        mParams.put(NetworkUtility.TAGS.PAYABLE_AMOUNT, TextUtils.isEmpty(cheepCode) ? mStrategicPartnerTaskCreationAct.total : payableAmount);
-        mParams.put(NetworkUtility.TAGS.TRANSACTION_ID, mTransactionParams.get(HDFCPaymentUtility.TXN_ID));
-        mParams.put(NetworkUtility.TAGS.TASK_DESC, task_desc);
-        mParams.put(NetworkUtility.TAGS.SP_USER_ID, mStrategicPartnerTaskCreationAct.spUserId);
-        mParams.put(NetworkUtility.TAGS.PROMOCODE_PRICE, TextUtils.isEmpty(cheepCode) ? Utility.ZERO_STRING : promocode_price);
-        // new amazon s3 uploaded file names
-        mParams.put(NetworkUtility.TAGS.MEDIA_FILE, media_file);
-
-        Log.e(TAG, "subCategoryDetail = [ " + subCategoryDetail + " ] ");
-        Log.e(TAG, "question_detail = [ " + question_detail + " ] ");
-        Log.e(TAG, "start_datetime = [ " + start_datetime + " ] ");
-        Log.e(TAG, "total = [ " + mStrategicPartnerTaskCreationAct.total + " ] ");
-        Log.e(TAG, "task_desc= [ " + task_desc + " ] ");
-        Log.e(TAG, "media_file= [ " + media_file + " ] ");
-        Log.e(TAG, "SP_USER_ID= [ " + mStrategicPartnerTaskCreationAct.spUserId + " ] ");
-        Log.e(TAG, "cat_id = [ " + mStrategicPartnerTaskCreationAct.mBannerImageModel.cat_id + " ] ");
-
-        // Create Params for AppsFlyer event track
-        mTaskCreationParams = new HashMap<>();
-        if (mSelectedAddressModelForInsta != null)
-            if (Integer.parseInt(mSelectedAddressModelForInsta.address_id) > 0) {
-                mTaskCreationParams.put(NetworkUtility.TAGS.ADDRESS_ID, mSelectedAddressModelForInsta.address_id);
-            } else {
-                // In case its Nagative then provide other address information
-            /*
-             public String address_initials;
-             public String address;
-             public String category; //comes from NetworkUtility.TAGS.ADDRESS_TYPE.
-             public String lat;
-             public String lng;
-             */
-                mTaskCreationParams.put(NetworkUtility.TAGS.ADDRESS_INITIALS, mSelectedAddressModelForInsta.address_initials);
-                mTaskCreationParams.put(NetworkUtility.TAGS.ADDRESS, mSelectedAddressModelForInsta.address);
-                mTaskCreationParams.put(NetworkUtility.TAGS.CATEGORY, mSelectedAddressModelForInsta.category);
-                mTaskCreationParams.put(NetworkUtility.TAGS.LAT, mSelectedAddressModelForInsta.lat);
-                mTaskCreationParams.put(NetworkUtility.TAGS.LNG, mSelectedAddressModelForInsta.lng);
-                mTaskCreationParams.put(NetworkUtility.TAGS.CITY_NAME, mSelectedAddressModelForInsta.cityName);
-                mTaskCreationParams.put(NetworkUtility.TAGS.COUNTRY, mSelectedAddressModelForInsta.countryName);
-                mTaskCreationParams.put(NetworkUtility.TAGS.STATE, mSelectedAddressModelForInsta.stateName);
-            }
-        mTaskCreationParams.put(NetworkUtility.TAGS.CAT_ID, mStrategicPartnerTaskCreationAct.mBannerImageModel.cat_id);
-        mTaskCreationParams.put(NetworkUtility.TAGS.START_DATETIME, start_datetime);
-        mTaskCreationParams.put(NetworkUtility.TAGS.SUB_CATEGORY_DETAIL, subCategoryDetail);
-        mTaskCreationParams.put(NetworkUtility.TAGS.QUESTION_DETAIL, question_detail);
-        mTaskCreationParams.put(NetworkUtility.TAGS.PAYMENT_STATUS, isPaymentSuccess ? Utility.PAYMENT_STATUS.COMPLETED : Utility.PAYMENT_STATUS.FAILED);
-        mTaskCreationParams.put(NetworkUtility.TAGS.PAYMENT_LOG, paymentGatewaySummary);
-        mTaskCreationParams.put(NetworkUtility.TAGS.QUOTE_AMOUNT, mStrategicPartnerTaskCreationAct.total + "");
-        mTaskCreationParams.put(NetworkUtility.TAGS.CHEEPCODE, cheepCode);
-        mTaskCreationParams.put(NetworkUtility.TAGS.PAYABLE_AMOUNT, payableAmount);
-        mTaskCreationParams.put(NetworkUtility.TAGS.TRANSACTION_ID, mTransactionParams.get(HDFCPaymentUtility.TXN_ID));
-        mTaskCreationParams.put(NetworkUtility.TAGS.MEDIA_FILE, media_file);
-        mTaskCreationParams.put(NetworkUtility.TAGS.SP_USER_ID, mStrategicPartnerTaskCreationAct.spUserId);
-        mTaskCreationParams.put(NetworkUtility.TAGS.PROMOCODE_PRICE, TextUtils.isEmpty(cheepCode) ? Utility.ZERO_STRING : promocode_price);
-
-        // Add Params
-//        HashMap<String, File> mFileParams = new HashMap<>();
-
-
-//        if (mFileList != null && !mFileList.isEmpty())
-//            for (int i = 0; i < mFileList.size(); i++) {
-//                MediaModel mediaModel = mFileList.get(i);
-//                if (!TextUtils.isEmpty(mediaModel.mediaName) && new File(mediaModel.mediaName).exists()) {
-//                    Log.e(TAG, "callTaskCreationWebServiceForStratgicPartner: path " + mediaModel.mediaName + "");
-//                    mFileParams.put("media_file[" + i + "]", new File(mediaModel.mediaName));
-//                }
-//            }
-
-        VolleyNetworkRequest mVolleyNetworkRequest = new VolleyNetworkRequest(NetworkUtility.WS.TASK_CREATE_STRATEGIC_PARTNER
-                , mCallCreateTaskWSErrorListener
-                , mCallCreateTaskWSResponseListener
-                , mHeaderParams
-                , mParams
-                , null);
-        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest);
-    }
-
-    private String getTaskDescription(ArrayList<QueAnsModel> mList) {
-        for (int i = 0; i < mList.size(); i++) {
-            QueAnsModel queAnsModel = mList.get(i);
-            if (queAnsModel.answerType.equalsIgnoreCase(Utility.TEMPLATE_TEXT_FIELD)) {
-                return queAnsModel.answer == null || queAnsModel.answer.equalsIgnoreCase("") ? "" : queAnsModel.answer;
-            }
-        }
-        return "";
-    }
-
-    Response.Listener mCallCreateTaskWSResponseListener = new Response.Listener() {
-        @Override
-        public void onResponse(Object response) {
-
-            String strResponse = (String) response;
-            try {
-                JSONObject jsonObject = new JSONObject(strResponse);
-                Log.i(TAG, "onResponse: " + jsonObject.toString());
-                int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
-                switch (statusCode) {
-                    case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
-
-                        // Send Event tracking for AppsFlyer
-                        AppsFlyerLib.getInstance().trackEvent(mContext, NetworkUtility.TAGS.APPSFLYER_CUSTOM_TRACK_EVENTS.TASK_CREATE, mTaskCreationParams);
-
-                        /*
-                          Now according to the new flow, once task created
-                          app will be redirected to MyTask Detail screen.
-                         */
-//                        TODO:This needs to be updated.
-//                        onSuccessfullTaskCreated(jsonObject);
-//                        Utility.showToast(mContext, "Task Created Successfully!!");
-
-                        /*String title = "Brilliant";*/
-                        String message = getString(R.string.label_strategic_task_confirmed, mStrategicPartnerTaskCreationAct.mBannerImageModel.name) +
-                                date + getString(R.string.label_at) + time;
-
-                        final AcknowledgementDialogWithProfilePic mAcknowledgementDialogWithProfilePic = AcknowledgementDialogWithProfilePic.newInstance(
-                                mContext,
-                                R.drawable.ic_acknowledgement_dialog_header_background,
-                                getString(R.string.label_brilliant),
-                                message,
-                                mStrategicPartnerTaskCreationAct.mBannerImageModel.imgCatImageUrl,
-                                new AcknowledgementInteractionListener() {
-
-                                    @Override
-                                    public void onAcknowledgementAccepted() {
-                                        // Finish the activity
-                                        mStrategicPartnerTaskCreationAct.finish();
-                                        // Payment is been done now, so broadcast this specific case to relavent activities
-                                        MessageEvent messageEvent = new MessageEvent();
-                                        messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.PAYMENT_COMPLETED_NEED_TO_REDIRECT_TO_MY_TASK_SCREEN;
-                                        EventBus.getDefault().post(messageEvent);
-                                    }
-                                });
-                        mAcknowledgementDialogWithProfilePic.setCancelable(false);
-                        mAcknowledgementDialogWithProfilePic.show(mStrategicPartnerTaskCreationAct.getSupportFragmentManager(), AcknowledgementDialogWithProfilePic.TAG);
-
-
-                        // Finish the current activity
-//                        mStrategicPartnerTaskCreationAct.finish();
-
-                        //Sending Broadcast to the HomeScreen Screen.
-                        Intent intent = new Intent(Utility.BR_ON_TASK_CREATED_FOR_STRATEGIC_PARTNER);
-                        mStrategicPartnerTaskCreationAct.sendBroadcast(intent);
-
-                        break;
-                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
-                        // Show Toast
-                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityPaymentChoiceBinding.getRoot());
-                        break;
-                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
-                        String error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
-                        // Show message
-                        Utility.showSnackBar(error_message, mActivityPaymentChoiceBinding.getRoot());
-                        break;
-                    case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
-                    case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
-                        //Logout and finish the current activity
-                        Utility.logout(mContext, true, statusCode);
-                        mStrategicPartnerTaskCreationAct.finish();
-                        break;
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-                mCallCreateTaskWSErrorListener.onErrorResponse(new VolleyError(e.getMessage()));
-            }
-            hideProgressDialog();
-        }
-    };
-
-    /**
-     * This method would going to call when task created successfully
-     */
-
-    private void onSuccessfullTaskCreated(JSONObject jsonObject) {
-        TaskDetailModel taskDetailModel = (TaskDetailModel) Utility.getObjectFromJsonString(jsonObject.optString(NetworkUtility.TAGS.DATA), TaskDetailModel.class);
-        if (taskDetailModel != null) {
-            /* * Add new task detail on firebase
-             * @Sanjay 20 Feb 2016
-             */
-            ChatTaskModel chatTaskModel = new ChatTaskModel();
-            chatTaskModel.taskId = FirebaseUtils.getPrefixTaskId(taskDetailModel.taskId);
-            chatTaskModel.taskDesc = taskDetailModel.taskDesc;
-            chatTaskModel.categoryId = taskDetailModel.categoryId;
-            chatTaskModel.categoryName = taskDetailModel.categoryName;
-            chatTaskModel.selectedSPId = "";
-            UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
-            chatTaskModel.userId = FirebaseUtils.getPrefixUserId(userDetails.UserID);
-            FirebaseHelper.getTaskRef(chatTaskModel.taskId).setValue(chatTaskModel);
-        }
-
-        // Update the name of User
-       /* mDialogFragmentTaskCreationBinding.textTaskCreationAcknowledgment
-                .setText(mDialogFragmentTaskCreationBinding.getRoot().getContext().getString(R.string.desc_task_creation_acknowledgement, mUserName));
-        */
-        String message = mContext.getString(R.string.desc_task_creation_acknowledgement
-                , PreferenceUtility.getInstance(mContext).getUserDetails().UserName);
-        String title = mContext.getString(R.string.label_your_task_is_posted);
-        AcknowledgementDialogWithoutProfilePic mAcknowledgementDialogWithoutProfilePic = AcknowledgementDialogWithoutProfilePic.newInstance(R.drawable.ic_bird_with_heart_illustration, title, message, new AcknowledgementInteractionListener() {
-
-            @Override
-            public void onAcknowledgementAccepted() {
-                // Finish the current activity
-                mStrategicPartnerTaskCreationAct.finish();
-
-                //Sending Broadcast to the HomeScreen Screen.
-                Intent intent = new Intent(Utility.BR_ON_TASK_CREATED_FOR_STRATEGIC_PARTNER);
-                mStrategicPartnerTaskCreationAct.sendBroadcast(intent);
-            }
-        });
-        mAcknowledgementDialogWithoutProfilePic.setCancelable(false);
-        mAcknowledgementDialogWithoutProfilePic.show(getActivity().getSupportFragmentManager(), AcknowledgementDialogWithoutProfilePic.TAG);
-    }
-
-    /**
-     * Create Dialog which would going to show on error completion
-     */
-    Response.ErrorListener mCallCreateTaskWSErrorListener = new Response.ErrorListener() {
-        @Override
-        public void onErrorResponse(VolleyError error) {
-            Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
-
-            // Close Progressbar
-            hideProgressDialog();
-
-            // Show Toast
-            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityPaymentChoiceBinding.getRoot());
-        }
-    };
-
-//////////////////////////////////////////////////////////////////    Strategic partner PAYMENT METHOD [Start] ///////////////////////////////////////////////////////
 
 
 }

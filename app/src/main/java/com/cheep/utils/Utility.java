@@ -211,10 +211,7 @@ public class Utility {
     public static Boolean IS_FROM_NOTIFICATION = false;
 
     public static boolean isValidPhoneNumber(String phoneNumber) {
-        if (phoneNumber.length() == Utility.PHONE_MIN_LENGTH) {
-            return true;
-        }
-        return false;
+        return phoneNumber.length() == Utility.PHONE_MIN_LENGTH;
     }
 
     public static int parseInt(String integer) {
@@ -378,44 +375,47 @@ public class Utility {
     public static final String NO_INTERNET_CONNECTION = "Hey, we see a problem with your internet" + new String(Character.toChars(0x1f914)) + ". We\'ll wait while you check your connection and try again";
 
     //Bundle Extra parameters
-    public static class Extra {
-        public static final String WHICH_FRAG = "which_frag";
-        public static final String USER_DETAILS = "userdetails";
-        public static final String INFO_TYPE = "infoType";
-        public static final String DATA = "DATA";
-        public static final String IS_FIRST_TIME = "isFirstTime";
-        public static final String DATA_2 = "DATA_2";
-        public static final String PASSWORD = "password";
-        public static final String SELECTED_IMAGE_PATH = "selectedImagePath";
-        public static final String CORRECT_OTP = "correctOTP";
-        public static final String CATEGORY = "category";
-        public static final String PHONE_NUMBER = "phone_number";
-        public static final String LATITUDE = "latitude";
-        public static final String LONGITUDE = "longitude";
-        public static final String CITY_NAME = "city_name";
-        public static final String SESSION_EXPIRE = "session_expire";
-        public static final String IMAGE_URL = "image_url";
-        public static final String ACTION = "action";
-        public static final String USER_NAME = "user_name";
-        public static final String ADDRESS_ID = "address_id";
-        public static final String ADDRESS_TEXT = "address_text";
-        public static final String CATEGORY_ID = "category_id";
-        public static final String IS_DATE_SELECTED = "is_date_selected";
-        public static final String DATE_TIME = "date_time";
-        public static final String TASK_DETAIL = "task_detail";
-        public static final String TASK_STATUS = "task_status";
-        public static final String TASK_DETAIL_MODEL = "task_detail_model";
-        public static final String TASK_ID = "task_id";
-        public static final String PAYMENT_VIEW = "payment_view";
-        public static final String PAYMENT_VIEW_IS_ADDITIONAL_CHARGE = "isAdditional";
+    public interface Extra {
+        String WHICH_FRAG = "which_frag";
+        String USER_DETAILS = "userdetails";
+        String INFO_TYPE = "infoType";
+        String DATA = "DATA";
+        String IS_FIRST_TIME = "isFirstTime";
+        String DATA_2 = "DATA_2";
+        String PASSWORD = "password";
+        String SELECTED_IMAGE_PATH = "selectedImagePath";
+        String CORRECT_OTP = "correctOTP";
+        String CATEGORY = "category";
+        String PHONE_NUMBER = "phone_number";
+        String LATITUDE = "latitude";
+        String LONGITUDE = "longitude";
+        String CITY_NAME = "city_name";
+        String SESSION_EXPIRE = "session_expire";
+        String IMAGE_URL = "image_url";
+        String ACTION = "action";
+        String USER_NAME = "user_name";
+        String ADDRESS_ID = "address_id";
+        String ADDRESS_TEXT = "address_text";
+        String CATEGORY_ID = "category_id";
+        String IS_DATE_SELECTED = "is_date_selected";
+        String DATE_TIME = "date_time";
+        String TASK_DETAIL = "task_detail";
+        String TASK_STATUS = "task_status";
+        String TASK_DETAIL_MODEL = "task_detail_model";
+        String TASK_ID = "task_id";
+        String PAYMENT_VIEW = "payment_view";
+        String PAYMENT_VIEW_IS_ADDITIONAL_CHARGE = "isAdditional";
 
-        public static final String CHAT_NOTIFICATION_DATA = "chat_notification_data";
-        public static final String PROFILE_FROM_FAVOURITE = "from_favorite";
-        public static final String FROM_WHERE = "from_where";
-        public static final String TASK_TYPE_IS_INSTA = "isInsta";
-        public static final String SELECTED_ADDRESS_MODEL = "selectedAddressModel";
-        public static final String LOCATION_INFO = "location_info";
-        public static final String IS_INSTA_BOOKING_TASK = "isInstaBookingTask";
+        String CHAT_NOTIFICATION_DATA = "chat_notification_data";
+        String PROFILE_FROM_FAVOURITE = "from_favorite";
+        String FROM_WHERE = "from_where";
+        String TASK_TYPE_IS_INSTA = "isInsta";
+        String TASK_TYPE_IS_STRATEGIC = "isStrategic";
+        String SELECTED_ADDRESS_MODEL = "selectedAddressModel";
+        String LOCATION_INFO = "location_info";
+        String IS_INSTA_BOOKING_TASK = "isInstaBookingTask";
+        String IS_PAYMENT_SUCCESSFUL = "isPaymentSuccessful";
+        String PAYU_RESPONSE = "payu_response";
     }
 
 
@@ -423,7 +423,7 @@ public class Utility {
     2 for Gold
     3 for Silver
     4 for bronze*/
-    public static class PRO_LEVEL {
+    public interface PRO_LEVEL {
         public static final String PLATINUM = "1";
         public static final String GOLD = "2";
         public static final String SILVER = "3";
@@ -856,7 +856,8 @@ public class Utility {
     /**
      * Check whether device is having google playservice up to date or note
      *
-     * @return
+     * @param context Context of activity
+     * @return true if device is having google playservice up to date, false if not.
      */
     public static int checkGooglePlayService(Context context) {
         //Check if Google PLayservice is available
@@ -1118,24 +1119,67 @@ public class Utility {
         public static final String FAILED = "failed";
     }
 
-
     public static final class TASK_STATUS {
-        public static final String PENDING = "pending"; //1->if task created and only quotes is there, 2-> task created and user paid to sp, but sp not started the task yet.
-        public static final String PAID = "paid";//if user payed and task is in progress
-        public static final String PROCESSING = "processing";// if user starts task on my home
+        /**
+         * 1->If task created and only quotes is there.
+         * 2->Task created and user paid to sp, but sp not started the task yet.
+         */
+        public static final String PENDING = "pending";
 
-        public static final String RESCHEDULE_REQUESTED = "reschedule_requested";// if user tries to reschdule the task.
-        public static final String RESCHEDULE_REQUEST_REJECTED = "reschedule_request_rejected";// if Task's Reschedule Request has been cancelled by User
+        /**
+         * If user Payed and task is in progress
+         */
+        public static final String PAID = "paid";
 
-        public static final String COMPLETION_REQUEST = "completion_request";// if tasks completed by SP
-        public static final String COMPLETION_CONFIRM = "completion_confirm";// if tasks completed confirmed by User
+        /**
+         * If user starts task on my home
+         */
+        public static final String PROCESSING = "processing";
 
-        public static final String CANCELLED_CUSTOMER = "cancel_by_customer";// if user starts task on my home
-        public static final String CANCELLED_SP = "cancel_by_sp";// if user starts task on my home
+        /**
+         * If user tries to reschdule the task.
+         */
+        public static final String RESCHEDULE_REQUESTED = "reschedule_requested";
 
-        public static final String DISPUTED = "dispute";// if Task is Disputed
-        public static final String ELAPSED = "elapsed";// if Task is Elapsed
-        public static final String ADDITIONAL_PAYMENT_REQUESTED = "additional_payment_requested";// if Additional Payment is Requested by SP
+        /**
+         * If Task's Reschedule Request has been cancelled by User
+         */
+        public static final String RESCHEDULE_REQUEST_REJECTED = "reschedule_request_rejected";
+
+        /**
+         * If tasks completed by SP
+         */
+        public static final String COMPLETION_REQUEST = "completion_request";
+
+        /**
+         * If tasks completed confirmed by User
+         */
+        public static final String COMPLETION_CONFIRM = "completion_confirm";
+
+        /**
+         * If user starts task on my home
+         */
+        public static final String CANCELLED_CUSTOMER = "cancel_by_customer";
+
+        /**
+         * If user starts task on my home
+         */
+        public static final String CANCELLED_SP = "cancel_by_sp";
+
+        /**
+         * If Task is Disputed
+         */
+        public static final String DISPUTED = "dispute";
+
+        /**
+         * If Task is Elapsed
+         */
+        public static final String ELAPSED = "elapsed";
+
+        /**
+         * If Additional Payment is Requested by SP
+         */
+        public static final String ADDITIONAL_PAYMENT_REQUESTED = "additional_payment_requested";
 
     }
 
@@ -1177,7 +1221,6 @@ public class Utility {
         public static final String REQUEST_FOR_DETAIL = "REQUEST_FOR_DETAIL";
         public static final String CHAT_MESSAGE = "FIREBASE";
         public static final String TASK_CREATE = "TASK_CREATE";
-        public static final String PAYMENT_NOTIFICATION = "PAYMENT_NOTIFICATION";
         public static final String TASK_START_ALERT = "TASK_START_ALERT";
         public static final String WEB_CUSTOM_NOTIFICATION = "WEB_CUSTOM_NOTIFICATION";
     }

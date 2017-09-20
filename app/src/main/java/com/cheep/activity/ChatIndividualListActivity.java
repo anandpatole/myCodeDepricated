@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
@@ -36,11 +37,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by pankaj on 10/5/16.
+ * Created by Bhavesh Patadiya on 10/5/16.
+ * Activity @BaseAppCompatActivity which would show list of chats for particular tasks.
  */
-
-public class ChatIndividualListActivity extends BaseAppCompatActivity implements NotificationRecyclerViewAdapter.NotificationItemInteractionListener, ChatTabRecyclerViewAdapter.ChatItemInteractionListener {
-
+public class ChatIndividualListActivity extends BaseAppCompatActivity implements ChatTabRecyclerViewAdapter.ChatItemInteractionListener {
+    // Constants
     private static final String TAG = "ChatIndividualListActivity";
 
     private ChatTabRecyclerViewAdapter chatTabRecyclerViewAdapter;
@@ -48,13 +49,17 @@ public class ChatIndividualListActivity extends BaseAppCompatActivity implements
     private TaskChatModel taskChatModel;
     private ActivityChatIndividualListBinding mActivityChatIndividualListBinding;
 
-    private EndlessRecyclerOnScrollListener mEndlessRecyclerOnScrollListener;
-    private UserDetails mUserDetails;
-    private String formattedSenderId = "";
-    private String formattedTaskId = "";
+    private String formattedSenderId = Utility.EMPTY_STRING;
+    private String formattedTaskId = Utility.EMPTY_STRING;
 
     private boolean hasMoreRecord = true;
 
+    /**
+     * Starting @{@link ChatIndividualListActivity} with @{@link TaskChatModel}
+     *
+     * @param context       context of the activity
+     * @param taskChatModel object of @{@link TaskChatModel}
+     */
     public static void newInstance(Context context, TaskChatModel taskChatModel) {
         Intent intent = new Intent(context, ChatIndividualListActivity.class);
         intent.putExtra(Utility.Extra.DATA, Utility.getJsonStringFromObject(taskChatModel));
@@ -71,8 +76,66 @@ public class ChatIndividualListActivity extends BaseAppCompatActivity implements
         addMessageListener();
     }
 
+
+    @Override
+    protected void initiateUI() {
+        // Setup ActionBar/Toolbar
+        setSupportActionBar(mActivityChatIndividualListBinding.toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle(Utility.EMPTY_STRING);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+        // Manage event when back arrow from @android.support.v7.widget.Toolbar pressed.
+        mActivityChatIndividualListBinding.toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
+
+        // Manage title text from @taskChatModel
+        if (taskChatModel != null && !TextUtils.isEmpty(taskChatModel.categoryName)) {
+            mActivityChatIndividualListBinding.textTitle.setText(taskChatModel.categoryName);
+        } else
+            mActivityChatIndividualListBinding.textTitle.setText(Utility.EMPTY_STRING);
+
+
+        //Setting up RecyclerView Adapter & android.support.v4.widget.SwipeRefreshLayout
+        mActivityChatIndividualListBinding.commonRecyclerView.swipeRefreshLayout.setEnabled(false);
+        chatTabRecyclerViewAdapter = new ChatTabRecyclerViewAdapter(ChatIndividualListActivity.this, this);
+        mLinearLayoutManager = new LinearLayoutManager(mContext);
+        mActivityChatIndividualListBinding.commonRecyclerView.recyclerView.setLayoutManager(mLinearLayoutManager);
+        mActivityChatIndividualListBinding.commonRecyclerView.recyclerView.setAdapter(chatTabRecyclerViewAdapter);
+        mActivityChatIndividualListBinding.commonRecyclerView.recyclerView.addItemDecoration(new DividerItemDecoration(mContext, R.drawable.divider_grey_normal, (int) getResources().getDimension(R.dimen.scale_0dp)));
+    }
+
+    @Override
+    protected void setListeners() {
+        /**
+         * set @{@link EndlessRecyclerOnScrollListener} to {@link RecyclerView} to manage loading more content on
+         * scrolling the chat downwards
+         */
+        EndlessRecyclerOnScrollListener mEndlessRecyclerOnScrollListener = new EndlessRecyclerOnScrollListener(mLinearLayoutManager) {
+            @Override
+            public void onLoadMore() {
+                if (hasMoreRecord) {
+                    long lastTimestamp = chatTabRecyclerViewAdapter.getLastTimestamp();
+                    loadMoreData(lastTimestamp);
+                }
+            }
+        };
+        mActivityChatIndividualListBinding.commonRecyclerView.recyclerView.addOnScrollListener(mEndlessRecyclerOnScrollListener);
+    }
+
+
+    @Override
+    public void onChatItemClicked(TaskChatModel model, int position) {
+        //Opening chat activity
+        ChatActivity.newInstance(mContext, model);
+    }
+
     /**
-     * Initialized data
+     * Initialized data by fetching some information fetched by @intent.
      */
     private void initDATA() {
         Bundle bundle = getIntent().getExtras();
@@ -88,126 +151,64 @@ public class ChatIndividualListActivity extends BaseAppCompatActivity implements
         }
     }
 
-    @Override
-    protected void initiateUI() {
-        setSupportActionBar(mActivityChatIndividualListBinding.toolbar);
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setTitle(Utility.EMPTY_STRING);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
-        mActivityChatIndividualListBinding.toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onBackPressed();
-            }
-        });
-
-        if (taskChatModel != null && !TextUtils.isEmpty(taskChatModel.categoryName)) {
-            mActivityChatIndividualListBinding.textTitle.setText(taskChatModel.categoryName);
-        } else
-            mActivityChatIndividualListBinding.textTitle.setText(Utility.EMPTY_STRING);
-
-        mActivityChatIndividualListBinding.commonRecyclerView.swipeRefreshLayout.setEnabled(false);
-
-        //Setting RecyclerView Adapter
-        chatTabRecyclerViewAdapter = new ChatTabRecyclerViewAdapter(ChatIndividualListActivity.this, this);
-        mLinearLayoutManager = new LinearLayoutManager(mContext);
-        mActivityChatIndividualListBinding.commonRecyclerView.recyclerView.setLayoutManager(mLinearLayoutManager);
-        mActivityChatIndividualListBinding.commonRecyclerView.recyclerView.setAdapter(chatTabRecyclerViewAdapter);
-        mActivityChatIndividualListBinding.commonRecyclerView.recyclerView.addItemDecoration(new DividerItemDecoration(mContext, R.drawable.divider_grey_normal, (int) getResources().getDimension(R.dimen.scale_0dp)));
-    }
-
-    @Override
-    protected void setListeners() {
-        mEndlessRecyclerOnScrollListener = new EndlessRecyclerOnScrollListener(mLinearLayoutManager) {
-            @Override
-            public void onLoadMore() {
-                if (hasMoreRecord) {
-                    long lastTimestamp = chatTabRecyclerViewAdapter.getLastTimestamp();
-                    loadMoreData(lastTimestamp);
-                }
-            }
-        };
-        mActivityChatIndividualListBinding.commonRecyclerView.recyclerView.addOnScrollListener(mEndlessRecyclerOnScrollListener);
-    }
-
-    @Override
-    public void onNotificationRowClicked(NotificationModel model, int position) {
-        View view = View.inflate(mContext, R.layout.dialog_information, null);
-        ((TextView) view.findViewById(R.id.text_message)).setText(getString(R.string.label_reschedule_inform, model.message));
-        final BottomAlertDialog dialog = new BottomAlertDialog(mContext);
-
-        view.findViewById(R.id.btn_ok).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog.dismiss();
-            }
-        });
-
-        dialog.setTitle(model.notificationType);
-        dialog.setCustomView(view);
-        dialog.showDialog();
-    }
-
-    @Override
-    public void onChatItemClicked(TaskChatModel model, int position) {
-        //Opening chat activity
-        ChatActivity.newInstance(mContext, model);
-    }
-
     /**
-     * used to get last 10 messages and set message update listener
+     * This method would provide last 10 messages and add them in listings.
      */
     public void addMessageListener() {
         mActivityChatIndividualListBinding.commonRecyclerView.swipeRefreshLayout.setRefreshing(true);
+
         final DatabaseReference databaseReference = FirebaseHelper.getTaskChatRef(formattedTaskId);
+        databaseReference.limitToFirst(Utility.CHAT_PAGINATION_RECORD_LIMIT)
+                .orderByChild(FirebaseHelper.KEY_TIMESTAMP)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        mActivityChatIndividualListBinding.commonRecyclerView.swipeRefreshLayout.setRefreshing(false);
+                        mActivityChatIndividualListBinding.commonRecyclerView.swipeRefreshLayout.setEnabled(false);
 
-        databaseReference.limitToFirst(Utility.CHAT_PAGINATION_RECORD_LIMIT).orderByChild(FirebaseHelper.KEY_TIMESTAMP).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                mActivityChatIndividualListBinding.commonRecyclerView.swipeRefreshLayout.setRefreshing(false);
-                mActivityChatIndividualListBinding.commonRecyclerView.swipeRefreshLayout.setEnabled(false);
-                if (dataSnapshot.getValue() != null && dataSnapshot.getChildrenCount() > 0) {
-                    hasMoreRecord = true;
-                    if (dataSnapshot.getChildrenCount() < Utility.CHAT_PAGINATION_RECORD_LIMIT) {
-                        hasMoreRecord = false;
-                    }
-                    int count = 0;
-                    for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                        if (ds.exists() && ds.getValue() != null) {
-                            count += 1;
-                            TaskChatModel taskChatModel = ds.getValue(TaskChatModel.class);
-                            if (taskChatModel != null) {
-                                if (count == dataSnapshot.getChildrenCount()) {
-                                    mActivityChatIndividualListBinding.commonRecyclerView.recyclerView.smoothScrollToPosition(0);
-                                    final Long mLastTimestamp = taskChatModel.timestamp;
+                        if (dataSnapshot.getValue() != null && dataSnapshot.getChildrenCount() > 0) {
+                            hasMoreRecord = dataSnapshot.getChildrenCount() >= Utility.CHAT_PAGINATION_RECORD_LIMIT;
+                            int count = 0;
+                            for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                                if (ds.exists() && ds.getValue() != null) {
+                                    count += 1;
+                                    TaskChatModel taskChatModel = ds.getValue(TaskChatModel.class);
+                                    if (taskChatModel != null) {
+                                        if (count == dataSnapshot.getChildrenCount()) {
+                                            mActivityChatIndividualListBinding.commonRecyclerView.recyclerView.smoothScrollToPosition(0);
+                                            final Long mLastTimestamp = taskChatModel.timestamp;
 
-                                    final DatabaseReference databaseReference = FirebaseHelper.getTaskChatRef(formattedTaskId);
+                                            final DatabaseReference databaseReference = FirebaseHelper.getTaskChatRef(formattedTaskId);
 
-                                    Query query = databaseReference.orderByChild(FirebaseHelper.KEY_TIMESTAMP).startAt(mLastTimestamp + 1);
-                                    query.addChildEventListener(messageChildEventListener);
+                                            Query query = databaseReference.orderByChild(FirebaseHelper.KEY_TIMESTAMP).startAt(mLastTimestamp + 1);
+                                            query.addChildEventListener(messageChildEventListener);
 
-                                    Query query2 = databaseReference.orderByChild(FirebaseHelper.KEY_TIMESTAMP).startAt(chatTabRecyclerViewAdapter.getFirstTimestamp()).endAt(mLastTimestamp);
-                                    query2.addChildEventListener(childEventListener);
+                                            Query query2 = databaseReference.orderByChild(FirebaseHelper.KEY_TIMESTAMP).startAt(chatTabRecyclerViewAdapter.getFirstTimestamp()).endAt(mLastTimestamp);
+                                            query2.addChildEventListener(childEventListener);
+                                        }
+                                        loadTaskDetail(taskChatModel);
+                                    }
                                 }
-                                loadTaskDetail(taskChatModel);
                             }
+                        } else {
+                            Query query = databaseReference.orderByChild(FirebaseHelper.KEY_TIMESTAMP);
+                            query.addChildEventListener(messageChildEventListener);
                         }
                     }
-                } else {
-                    Query query = databaseReference.orderByChild(FirebaseHelper.KEY_TIMESTAMP);
-                    query.addChildEventListener(messageChildEventListener);
-                }
-            }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                mActivityChatIndividualListBinding.commonRecyclerView.swipeRefreshLayout.setRefreshing(false);
-                mActivityChatIndividualListBinding.commonRecyclerView.swipeRefreshLayout.setEnabled(false);
-            }
-        });
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        mActivityChatIndividualListBinding.commonRecyclerView.swipeRefreshLayout.setRefreshing(false);
+                        mActivityChatIndividualListBinding.commonRecyclerView.swipeRefreshLayout.setEnabled(false);
+                    }
+                });
     }
 
+    /**
+     * This would setup TaskDetails for particular chat.
+     *
+     * @param taskChatModel Object of taskChatModel
+     */
     private void loadTaskDetail(final TaskChatModel taskChatModel) {
         final DatabaseReference databaseReference = FirebaseHelper.getTaskRef(taskChatModel.taskId);
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -215,7 +216,7 @@ public class ChatIndividualListActivity extends BaseAppCompatActivity implements
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     ChatTaskModel taskModel = dataSnapshot.getValue(ChatTaskModel.class);
-                    if (taskModel != null && taskChatModel != null) {
+                    if (taskModel != null) {
                         taskChatModel.taskDesc = taskModel.taskDesc;
                         taskChatModel.categoryName = taskModel.categoryName;
                         loadServiceProviderDetail(taskChatModel);
@@ -230,6 +231,11 @@ public class ChatIndividualListActivity extends BaseAppCompatActivity implements
         });
     }
 
+    /**
+     * This method would load ServiceProvider details
+     *
+     * @param taskChatModel object of @{@link TaskChatModel}
+     */
     private void loadServiceProviderDetail(final TaskChatModel taskChatModel) {
         String otherUserId = "";
         if (taskChatModel.senderId.equalsIgnoreCase(formattedSenderId)) {
@@ -243,7 +249,7 @@ public class ChatIndividualListActivity extends BaseAppCompatActivity implements
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     ChatServiceProviderModel spModel = dataSnapshot.getValue(ChatServiceProviderModel.class);
-                    if (spModel != null && taskChatModel != null) {
+                    if (spModel != null) {
                         taskChatModel.participantName = spModel.getSpName();
                         taskChatModel.participantPhotoUrl = spModel.getProfileImg();
                         chatTabRecyclerViewAdapter.updateMessage(taskChatModel);
@@ -259,7 +265,7 @@ public class ChatIndividualListActivity extends BaseAppCompatActivity implements
     }
 
     /**
-     * used to remove message listener
+     * Remove earliat set message listener
      */
     public void removeMessageListener() {
         DatabaseReference databaseReference = FirebaseHelper.getRecentChatRef(formattedSenderId);
@@ -267,9 +273,15 @@ public class ChatIndividualListActivity extends BaseAppCompatActivity implements
         databaseReference.removeEventListener(childEventListener);
     }
 
+
+    /**
+     * Implementation of {@link ChildEventListener} for message which would provide callback on specific events
+     * This would also update the UI Accordingly.
+     */
     ChildEventListener messageChildEventListener = new ChildEventListener() {
         @Override
         public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+            // Check whether its null or not.
             if (dataSnapshot.getValue() != null) {
                 TaskChatModel model = dataSnapshot.getValue(TaskChatModel.class);
                 if (model != null) {
@@ -280,6 +292,7 @@ public class ChatIndividualListActivity extends BaseAppCompatActivity implements
 
         @Override
         public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+            // Check whether its null or not.
             if (dataSnapshot.getValue() != null) {
                 TaskChatModel model = dataSnapshot.getValue(TaskChatModel.class);
                 if (model != null) {
@@ -290,6 +303,7 @@ public class ChatIndividualListActivity extends BaseAppCompatActivity implements
 
         @Override
         public void onChildRemoved(DataSnapshot dataSnapshot) {
+            // Check whether its null or not.
             if (dataSnapshot.getValue() != null) {
                 final TaskChatModel model = dataSnapshot.getValue(TaskChatModel.class);
                 if (model != null && !TextUtils.isEmpty(model.messageId)) {
@@ -300,15 +314,19 @@ public class ChatIndividualListActivity extends BaseAppCompatActivity implements
 
         @Override
         public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
+            // Do nothing
         }
 
         @Override
         public void onCancelled(DatabaseError databaseError) {
-
+            // Do nothing
         }
     };
 
+    /**
+     * Implementation of {@link ChildEventListener} which would provide callback on specific events
+     * This would also update the UI Accordingly.
+     */
     ChildEventListener childEventListener = new ChildEventListener() {
         @Override
         public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -326,19 +344,26 @@ public class ChatIndividualListActivity extends BaseAppCompatActivity implements
 
         @Override
         public void onChildRemoved(DataSnapshot dataSnapshot) {
+            // Do nothing
         }
 
         @Override
         public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
+            // Do nothing
         }
 
         @Override
         public void onCancelled(DatabaseError databaseError) {
-
+            // Do nothing
         }
     };
 
+    /**
+     * Load mode data to @{@link RecyclerView} when it scrolled upwards.
+     *
+     * @param lastTimestamp time stamp of last fetched chat.
+     *                      it would fetch earlier chat before mentioned timestamp.
+     */
     private void loadMoreData(final long lastTimestamp) {
         if (lastTimestamp > 0) {
             chatTabRecyclerViewAdapter.showProgressBar();
@@ -350,10 +375,7 @@ public class ChatIndividualListActivity extends BaseAppCompatActivity implements
                     chatTabRecyclerViewAdapter.hideProgressBar();
                     if (dataSnapshot.exists()) {
                         if (dataSnapshot.getChildrenCount() > 0) {
-                            hasMoreRecord = true;
-                            if (dataSnapshot.getChildrenCount() < Utility.CHAT_PAGINATION_RECORD_LIMIT) {
-                                hasMoreRecord = false;
-                            }
+                            hasMoreRecord = dataSnapshot.getChildrenCount() >= Utility.CHAT_PAGINATION_RECORD_LIMIT;
                             List<TaskChatModel> taskChatModelList = new ArrayList<>();
                             for (DataSnapshot ds : dataSnapshot.getChildren()) {
                                 if (ds.exists() && ds.getValue() != null) {
@@ -382,7 +404,9 @@ public class ChatIndividualListActivity extends BaseAppCompatActivity implements
 
     @Override
     public void onDestroy() {
+        // Remove earlier set listeners(via Firebase)
         removeMessageListener();
+
         super.onDestroy();
     }
 }

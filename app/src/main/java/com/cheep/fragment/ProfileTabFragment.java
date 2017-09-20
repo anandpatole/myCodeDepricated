@@ -626,10 +626,7 @@ public class ProfileTabFragment extends BaseFragment {
         recyclerView.addItemDecoration(new DividerItemDecoration(mContext, R.drawable.divider_grey_normal, (int) getResources().getDimension(R.dimen.scale_16dp)));
 
         //Here we are checking if address is not there then open add address dialog immediatly
-        if (addressList == null || (addressList != null && addressList.isEmpty())) {
-            return true;
-        }
-        return false;
+        return addressList == null || (addressList != null && addressList.isEmpty());
     }
 
     private BottomAlertDialog addAddressDialog;
@@ -2082,30 +2079,34 @@ public class ProfileTabFragment extends BaseFragment {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == Utility.REQUEST_CODE_READ_EXTERNAL_STORAGE_ADD_COVER) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Log.i(TAG, "onRequestPermissionsResult: Permission Granted");
-                startIntentFileChooser(Utility.REQUEST_CODE_GET_FILE_ADD_COVER);
-            } else if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_DENIED) {
-                Log.i(TAG, "onRequestPermissionsResult: Permission Denied");
-                Utility.showSnackBar(getString(R.string.permission_denied_read), mFragmentTabProfileBinding.getRoot());
-            }
-        } else if (requestCode == Utility.REQUEST_CODE_READ_EXTERNAL_STORAGE_ADD_PROFILE_GALLERY) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Log.i(TAG, "onRequestPermissionsResult: Permission Granted");
-                startIntentFileChooser(Utility.REQUEST_CODE_GET_FILE_ADD_PROFILE_GALLERY);
-            } else if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_DENIED) {
-                Log.i(TAG, "onRequestPermissionsResult: Permission Denied");
-                Utility.showSnackBar(getString(R.string.permission_denied_read), mFragmentTabProfileBinding.getRoot());
-            }
-        } else if (requestCode == Utility.REQUEST_CODE_ADD_PROFILE_CAMERA) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Log.i(TAG, "onRequestPermissionsResult: Permission Granted");
-                startCameraCaptureChooser(Utility.REQUEST_CODE_IMAGE_CAPTURE_ADD_PROFILE);
-            } else if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_DENIED) {
-                Log.i(TAG, "onRequestPermissionsResult: Permission Denied Camera");
-                Utility.showSnackBar(getString(R.string.permission_denied_camera), mFragmentTabProfileBinding.getRoot());
-            }
+        switch (requestCode) {
+            case Utility.REQUEST_CODE_READ_EXTERNAL_STORAGE_ADD_COVER:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Log.i(TAG, "onRequestPermissionsResult: Permission Granted");
+                    startIntentFileChooser(Utility.REQUEST_CODE_GET_FILE_ADD_COVER);
+                } else if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_DENIED) {
+                    Log.i(TAG, "onRequestPermissionsResult: Permission Denied");
+                    Utility.showSnackBar(getString(R.string.permission_denied_read), mFragmentTabProfileBinding.getRoot());
+                }
+                break;
+            case Utility.REQUEST_CODE_READ_EXTERNAL_STORAGE_ADD_PROFILE_GALLERY:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Log.i(TAG, "onRequestPermissionsResult: Permission Granted");
+                    startIntentFileChooser(Utility.REQUEST_CODE_GET_FILE_ADD_PROFILE_GALLERY);
+                } else if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_DENIED) {
+                    Log.i(TAG, "onRequestPermissionsResult: Permission Denied");
+                    Utility.showSnackBar(getString(R.string.permission_denied_read), mFragmentTabProfileBinding.getRoot());
+                }
+                break;
+            case Utility.REQUEST_CODE_ADD_PROFILE_CAMERA:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Log.i(TAG, "onRequestPermissionsResult: Permission Granted");
+                    startCameraCaptureChooser(Utility.REQUEST_CODE_IMAGE_CAPTURE_ADD_PROFILE);
+                } else if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_DENIED) {
+                    Log.i(TAG, "onRequestPermissionsResult: Permission Denied Camera");
+                    Utility.showSnackBar(getString(R.string.permission_denied_camera), mFragmentTabProfileBinding.getRoot());
+                }
+                break;
         }
     }
 

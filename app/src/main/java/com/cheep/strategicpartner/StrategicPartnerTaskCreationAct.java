@@ -53,7 +53,8 @@ public class StrategicPartnerTaskCreationAct extends BaseAppCompatActivity {
 
     @Nullable
     public AddressModel mSelectedAddressModel;
-    public String total = "";
+    //
+    public String totalOfGSTPrice = "";
     public String totalOfBasePrice = "";
 
     public static void getInstance(Context mContext, BannerImageModel model) {

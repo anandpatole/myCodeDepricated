@@ -160,7 +160,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
             }
         }
         mFragmentStrategicPartnerPhaseTwoBinding.textContinue.setText(getString(R.string.book_and_pay_x, "" + Utility.getQuotePriceFormatter(String.valueOf(total))));
-        mStrategicPartnerTaskCreationAct.total = String.valueOf(total);
+        mStrategicPartnerTaskCreationAct.totalOfGSTPrice = String.valueOf(total);
         mStrategicPartnerTaskCreationAct.totalOfBasePrice = String.valueOf(totalOfBasePrice);
         // Task Description
 
