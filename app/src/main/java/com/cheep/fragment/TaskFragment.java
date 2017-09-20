@@ -171,47 +171,54 @@ public class TaskFragment extends BaseFragment {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(MessageEvent event) {
         Log.d(TAG, "onMessageEvent() called with: event = [" + event.BROADCAST_ACTION + "]");
-        if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.UPDATE_FAVOURITE) {
-            if (!TextUtils.isEmpty(event.isFav)) {
+        switch (event.BROADCAST_ACTION) {
+            case Utility.BROADCAST_TYPE.UPDATE_FAVOURITE:
+                if (!TextUtils.isEmpty(event.isFav)) {
+                    if (taskRecyclerViewAdapter != null)
+                        taskRecyclerViewAdapter.updateFavStatus(event.id, event.isFav);
+                }
+                break;
+            case Utility.BROADCAST_TYPE.TASK_PAID:
+            case Utility.BROADCAST_TYPE.TASK_PROCESSING:
+                if (taskRecyclerViewAdapter != null) {
+                    nextPageId = null;
+                    taskRecyclerViewAdapter.enableLoadMore();
+                    reloadTaskListFromServer();
+                }
+                break;
+            case Utility.BROADCAST_TYPE.TASK_RATED:
                 if (taskRecyclerViewAdapter != null)
-                    taskRecyclerViewAdapter.updateFavStatus(event.id, event.isFav);
-            }
-        } else if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.TASK_PAID
-                || event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.TASK_PROCESSING) {
-            if (taskRecyclerViewAdapter != null) {
-                nextPageId = null;
-                taskRecyclerViewAdapter.enableLoadMore();
-                reloadTaskListFromServer();
-            }
-        } else if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.TASK_RATED) {
-            if (taskRecyclerViewAdapter != null)
-                taskRecyclerViewAdapter.updateRatedStatus(event.id);
-        } else if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.TASK_CANCELED) {
-            if (taskRecyclerViewAdapter.cancelTask(event.id, event.taskStatus) == 0) {
-                errorLoadingHelper.failed(null,
-                        R.drawable.img_empty_pending_task,
-                        null,
-                        null,
-                        onMakeAPostClickListener);
-            }
-        } else if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.TASK_RESCHEDULED) {
-            if (taskRecyclerViewAdapter != null)
-                taskRecyclerViewAdapter.rescheduleTask(event.id, event.taskStartdate);
-        } else if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.QUOTE_REQUESTED_BY_PRO) {
-            if (taskRecyclerViewAdapter != null)
-                taskRecyclerViewAdapter.updateOnNewQuoteRequested(event.id, event.max_quote_price, event.sp_counts, event.quoted_sp_image_url);
-        } else if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.REQUEST_FOR_DETAIL) {
-            if (taskRecyclerViewAdapter != null)
-                taskRecyclerViewAdapter.updateOnNewDetailRequested(event.id, event.sp_counts, event.quoted_sp_image_url);
-        } else if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.TASK_STATUS_CHANGE) {
-            if (taskRecyclerViewAdapter != null)
-                taskRecyclerViewAdapter.updateTaskStatus(event);
-        } else if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.ADDITIONAL_PAYMENT_REQUESTED) {
-            if (taskRecyclerViewAdapter != null)
-                taskRecyclerViewAdapter.updateOnAdditionalPaymentRequested(event);
-        } else if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.DETAIL_REQUEST_REJECTED) {
-            if (taskRecyclerViewAdapter != null)
-                taskRecyclerViewAdapter.updateOnDetailRequestRejected(event);
+                    taskRecyclerViewAdapter.updateRatedStatus(event.id);
+                break;
+            case Utility.BROADCAST_TYPE.TASK_CANCELED:
+                if (taskRecyclerViewAdapter != null && taskRecyclerViewAdapter.cancelTask(event.id, event.taskStatus) == 0) {
+                    errorLoadingHelper.failed(null, R.drawable.img_empty_pending_task, null, null, onMakeAPostClickListener);
+                }
+                break;
+            case Utility.BROADCAST_TYPE.TASK_RESCHEDULED:
+                if (taskRecyclerViewAdapter != null)
+                    taskRecyclerViewAdapter.rescheduleTask(event.id, event.taskStartdate);
+                break;
+            case Utility.BROADCAST_TYPE.QUOTE_REQUESTED_BY_PRO:
+                if (taskRecyclerViewAdapter != null)
+                    taskRecyclerViewAdapter.updateOnNewQuoteRequested(event.id, event.max_quote_price, event.sp_counts, event.quoted_sp_image_url);
+                break;
+            case Utility.BROADCAST_TYPE.REQUEST_FOR_DETAIL:
+                if (taskRecyclerViewAdapter != null)
+                    taskRecyclerViewAdapter.updateOnNewDetailRequested(event.id, event.sp_counts, event.quoted_sp_image_url);
+                break;
+            case Utility.BROADCAST_TYPE.TASK_STATUS_CHANGE:
+                if (taskRecyclerViewAdapter != null)
+                    taskRecyclerViewAdapter.updateTaskStatus(event);
+                break;
+            case Utility.BROADCAST_TYPE.ADDITIONAL_PAYMENT_REQUESTED:
+                if (taskRecyclerViewAdapter != null)
+                    taskRecyclerViewAdapter.updateOnAdditionalPaymentRequested(event);
+                break;
+            case Utility.BROADCAST_TYPE.DETAIL_REQUEST_REJECTED:
+                if (taskRecyclerViewAdapter != null)
+                    taskRecyclerViewAdapter.updateOnDetailRequestRejected(event);
+                break;
         }
     }
 
