@@ -39,6 +39,7 @@ import com.cheep.dialogs.AcknowledgementDialogWithoutProfilePic;
 import com.cheep.dialogs.ReferAndEarnDialogKnowMore;
 import com.cheep.interfaces.DrawerLayoutInteractionListener;
 import com.cheep.model.FAQModel;
+import com.cheep.model.UserDetails;
 import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
@@ -63,6 +64,8 @@ public class ReferAndEarnFragment extends BaseFragment {
 
     private DrawerLayoutInteractionListener mListener;
     private FragmentReferAndEarnBinding mfragmentReferAndEarnBinding;
+    private UserDetails mUserDetails;
+
 
     public static ReferAndEarnFragment newInstance() {
         ReferAndEarnFragment fragment = new ReferAndEarnFragment();
@@ -142,14 +145,56 @@ public class ReferAndEarnFragment extends BaseFragment {
         mfragmentReferAndEarnBinding.tvInviteFriends.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
-                sharingIntent.setType("text/plain");
-                sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, getString(R.string.label_share_subject));
-                sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, getString(R.string.label_refer_and_earn_share_body, com.cheep.BuildConfig.APPLICATION_ID, "GOCHEEP"));
-                startActivity(Intent.createChooser(sharingIntent, getString(R.string.label_share_via)));
+                if (PreferenceUtility.getInstance(mContext).getUserDetails() != null) {
+                    callValidateReferCode();
+                    Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+                    sharingIntent.setType("text/plain");
+                    sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, getString(R.string.label_share_subject));
+                    sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, getString(R.string.label_refer_and_earn_share_body, com.cheep.BuildConfig.APPLICATION_ID, PreferenceUtility.getInstance(mContext).getUserDetails().refer_code));
+                    startActivity(Intent.createChooser(sharingIntent, getString(R.string.label_share_via)));
+                }
+
             }
         });
     }
+
+    private void callValidateReferCode() {
+        Map<String, String> mHeaderParams = new HashMap<>();
+        mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
+        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
+
+        Map<String,String> mParams = new HashMap<>();
+        mParams.put(NetworkUtility.TAGS.VALID_REFER_CODE,PreferenceUtility.getInstance(mContext).getUserDetails().refer_code);
+
+        VolleyNetworkRequest mVolleyNetworkRequest = new VolleyNetworkRequest(NetworkUtility.WS.VALIDATE_REFER_CODE
+                , mCallValidateReferCodeWSErrorListener
+                , mCallValidateReferCodeWSResponseListener
+                , mHeaderParams
+                , mParams
+                , null);
+    }
+
+    Response.Listener mCallValidateReferCodeWSResponseListener = new Response.Listener() {
+        @Override
+        public void onResponse(Object response) {
+            String strResponse = (String) response;
+            try {
+                JSONObject jsonObject = new JSONObject(strResponse);
+                Log.i(TAG, "onResponse: " + jsonObject.toString());
+        }
+            catch (JSONException e) {
+                e.printStackTrace();
+                mCallValidateReferCodeWSResponseListener.onResponse(new VolleyError(e.getMessage()));
+            }
+    }
+    };
+
+     Response.ErrorListener mCallValidateReferCodeWSErrorListener = new Response.ErrorListener() {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
+        }
+    };
 
     /*************************************************************************************************************
      *************************************************************************************************************

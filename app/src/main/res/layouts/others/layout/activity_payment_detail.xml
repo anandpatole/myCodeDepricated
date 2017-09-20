@@ -235,7 +235,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:paddingBottom="@dimen/scale_5dp"
-                            android:paddingLeft="@dimen/scale_10dp"
+                            android:paddingLeft="@dimen/scale_25dp"
                             android:paddingRight="@dimen/scale_10dp"
                             android:paddingTop="@dimen/scale_5dp">
 
@@ -287,7 +287,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:paddingBottom="@dimen/scale_5dp"
-                            android:paddingLeft="@dimen/scale_10dp"
+                            android:paddingLeft="@dimen/scale_25dp"
                             android:paddingRight="@dimen/scale_10dp"
                             android:paddingTop="@dimen/scale_5dp">
 
@@ -337,7 +337,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:paddingBottom="@dimen/scale_5dp"
-                            android:paddingLeft="@dimen/scale_10dp"
+                            android:paddingLeft="@dimen/scale_25dp"
                             android:paddingRight="@dimen/scale_10dp"
                             android:paddingTop="@dimen/scale_5dp">
 
@@ -382,30 +382,98 @@
                             android:layout_above="@+id/action_layout"
                             android:layout_toRightOf="@+id/profile_layout"
                             android:background="@color/grey_color"/>
+                        <RelativeLayout
+                            android:id="@+id/rlreferraldiscount"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingBottom="@dimen/scale_5dp"
+                            android:paddingRight="@dimen/scale_10dp"
+                            android:paddingTop="@dimen/scale_5dp">
+                            <ImageView
+                                android:id="@+id/ivreferraldiscount"
+                                android:layout_width="@dimen/scale_20dp"
+                                android:layout_height="@dimen/scale_20dp"
+                                android:gravity="center_vertical"
+                                android:background="@drawable/ic_tick_unselected"
+                                android:layout_marginTop="@dimen/scale_5dp"
+                                android:layout_marginBottom="@dimen/scale_5dp"
+                                android:layout_marginRight="@dimen/scale_5dp"/>
+
+                            <com.cheep.custom_view.CFTextViewRegular
+                                android:id="@+id/CFTreferraldiscount"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="left|center_vertical"
+                                android:gravity="center_vertical"
+                                android:layout_toRightOf="@id/ivreferraldiscount"
+                                android:drawablePadding="@dimen/scale_5dp"
+                                android:paddingBottom="@dimen/scale_5dp"
+                                android:paddingTop="@dimen/scale_5dp"
+                                android:text="@string/label_referral_discount"
+                                android:textColor="@color/splash_gradient_end"
+                                android:drawableRight="@drawable/ic_info"
+                                android:textSize="@dimen/text_size_14sp"/>
+
+                            <com.cheep.custom_view.CFTextViewSemiBold
+                                android:id="@+id/txtreferraldiscount"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentRight="true"
+                                android:layout_toEndOf="@+id/CFTreferraldiscount"
+                                android:layout_toRightOf="@+id/CFTreferraldiscount"
+                                android:drawablePadding="@dimen/scale_5dp"
+                                android:ellipsize="marquee"
+                                android:gravity="right"
+                                android:marqueeRepeatLimit="marquee_forever"
+                                android:maxLines="1"
+                                android:paddingBottom="@dimen/scale_5dp"
+                                android:paddingTop="@dimen/scale_5dp"
+                                android:singleLine="true"
+                                android:textColor="@color/grey_varient_17"
+                                android:textSize="@dimen/text_size_14sp"
+                                tools:text="₹ 300"/>
+
+                        </RelativeLayout>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/scale_1dp"
+                            android:layout_above="@+id/action_layout"
+                            android:layout_toRightOf="@+id/profile_layout"
+                            android:background="@color/grey_color"/>
 
                         <RelativeLayout
                             android:id="@+id/rlpromocode"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:paddingBottom="@dimen/scale_5dp"
-                            android:paddingLeft="@dimen/scale_10dp"
                             android:paddingRight="@dimen/scale_10dp"
                             android:paddingTop="@dimen/scale_5dp"
                             android:visibility="visible">
-
+                            <ImageView
+                                android:id="@+id/ivpromocode"
+                                android:layout_width="@dimen/scale_20dp"
+                                android:layout_height="@dimen/scale_20dp"
+                                android:gravity="center_vertical"
+                                android:background="@drawable/ic_tick_unselected"
+                                android:layout_marginTop="@dimen/scale_5dp"
+                                android:layout_marginBottom="@dimen/scale_5dp"
+                                android:layout_marginRight="@dimen/scale_5dp"/>
 
                             <com.cheep.custom_view.CFTextViewRegular
                                 android:id="@+id/textpromocodelabel"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_centerVertical="true"
+                                android:layout_toRightOf="@id/ivpromocode"
                                 android:layout_gravity="left|center_vertical"
                                 android:drawablePadding="@dimen/scale_5dp"
                                 android:gravity="center_vertical"
                                 android:paddingBottom="@dimen/scale_5dp"
                                 android:paddingTop="@dimen/scale_5dp"
                                 android:text="@string/label_promocode_apply"
-                                android:textColor="@color/black"
+                                android:textColor="@color/splash_gradient_end"
+                                android:drawableRight="@drawable/ic_info"
                                 android:textSize="@dimen/text_size_14sp"/>
 
                             <ImageView

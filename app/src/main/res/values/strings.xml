@@ -322,6 +322,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_pro_fee">PRO\'s Charge</string>
     <string name="label_additional_charges">Additional Charge</string>
     <string name="label_sub_total">Sub Total</string>
+    <string name="label_referral_discount">Claim Referral Discount</string>
     <string name="label_promocode_apply">Promo Code Applied</string>
     <string name="label_total_paid">Total Paid</string>
 
@@ -332,7 +333,8 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
 
     <string name="label_you_nearly_there">You\'re nearly there</string>
     <string name="label_please_chk_detail">Please check details below and pay</string>
-    <string name="label_enter_promocode">Enter Promo Code</string>
+    <string name="label_enter_promocode">Apply Promo Code</string>
+    <!--<string name="label_enter_promocode">Enter Promo Code</string>-->
     <string name="label_by">&#160;by&#160;</string>
     <string name="label_on">&#160;on&#160;</string>
     <string name="label_at">&#160;at&#160;</string>

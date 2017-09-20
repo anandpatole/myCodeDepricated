@@ -64,6 +64,7 @@ public class PreferenceUtility {
     }
 
 
+
     public String getFCMRegID() {
         if (mSharedPreferences.contains(PREF_FCM_TOKEN)) {
             return mSharedPreferences.getString(PREF_FCM_TOKEN, null);
@@ -134,6 +135,7 @@ public class PreferenceUtility {
         mUserDetails = null;
         mSharedPreferences.edit().remove(PREF_USER_INFO).apply();
         mSharedPreferences.edit().remove(PREF_X_API_KEY).apply();
+
 
         // Clear Unread otification counter
         mSharedPreferences.edit().remove(PREF_NOTIFICATION_COUNTER).apply();

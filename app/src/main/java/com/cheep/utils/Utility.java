@@ -83,6 +83,7 @@ public class Utility {
     public static final String STATIC_LAT = "19.1363246";
     public static final String STATIC_LNG = "72.82766";
 
+    //public static String REFER_CODE=null;
     private static final String TAG = "Utility";
     public static final String EMPTY_STRING = "";
     public static final String ZERO_STRING = "0";
@@ -415,6 +416,7 @@ public class Utility {
         public static final String SELECTED_ADDRESS_MODEL = "selectedAddressModel";
         public static final String LOCATION_INFO = "location_info";
         public static final String IS_INSTA_BOOKING_TASK = "isInstaBookingTask";
+        public static String REFER_CODE="refer_code";
     }
 
 

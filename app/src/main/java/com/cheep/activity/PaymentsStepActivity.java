@@ -94,7 +94,6 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
     private TaskDetailModel taskDetailModel;
     Bundle bundle;
     private String actualQuotePrice;
-    private String payableAmount;
     private String promocode_price;
     private ActivityPaymentDetailBinding mActivityPaymentDetailBinding;
 
@@ -577,13 +576,16 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
         }
     };
 
+
+
+
+
     /**
      * Updating payemnt btn text to show the discounted price and payable amount
      */
     private void updatePaymentBtn(String total, String discount, String payable) {
         // setting payable amount as quote price to pay.
         providerModel.quotePrice = payable;
-        payableAmount = payable;
         promocode_price = discount;
 //        mActivityJobSummaryBinding.btnPay.setText(getString(R.string.label_pay_X_X_X, total, discount, payable));
 //        @change only need to show payable amount
@@ -969,7 +971,7 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
         if (!TextUtils.isEmpty(cheepCode)) {
             mParams.put(NetworkUtility.TAGS.CHEEPCODE, cheepCode);
             mParams.put(NetworkUtility.TAGS.QUOTE_AMOUNT, providerModel.quotePriceWithOutGST);
-            mParams.put(NetworkUtility.TAGS.PAYABLE_AMOUNT, payableAmount);
+            mParams.put(NetworkUtility.TAGS.PAYABLE_AMOUNT, providerModel.quotePrice);
             mParams.put(NetworkUtility.TAGS.PROMOCODE_PRICE, promocode_price);
         } else {
             mParams.put(NetworkUtility.TAGS.CHEEPCODE, Utility.EMPTY_STRING);
@@ -1013,7 +1015,7 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
         if (!TextUtils.isEmpty(cheepCode)) {
             mTaskCreationParams.put(NetworkUtility.TAGS.CHEEPCODE, cheepCode);
             mTaskCreationParams.put(NetworkUtility.TAGS.QUOTE_AMOUNT, providerModel.quotePriceWithOutGST);
-            mTaskCreationParams.put(NetworkUtility.TAGS.PAYABLE_AMOUNT, payableAmount);
+            mTaskCreationParams.put(NetworkUtility.TAGS.PAYABLE_AMOUNT, providerModel.quotePrice);
             mTaskCreationParams.put(NetworkUtility.TAGS.PROMOCODE_PRICE, promocode_price);
 
 

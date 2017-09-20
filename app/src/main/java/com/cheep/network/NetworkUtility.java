@@ -225,6 +225,9 @@ public class NetworkUtility {
         public static final String TASK_TYPE = "task_type";
         public static final String PROMOCODE_PRICE = "promocode_price";
 
+        public static final String REFER_CODE = "refer_code";
+        public static final String VALID_REFER_CODE = "valid_refer_code";
+
         public static class VERSION_CHANGE_TYPE {
             public static final int NORMAL = 0;
             public static final int RECOMMENDED_TO_UPGRADE = 1;
