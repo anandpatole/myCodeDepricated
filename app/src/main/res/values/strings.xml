@@ -380,7 +380,6 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="empty_favourited_list_2">If you like a service which you often use,\njust tap the heart on it.</string>
 
     <string name="no_pros_in_this_category">No PROs in this category</string>
-
     <string name="step_1_desc_for_strategic_partner">Please select as many services you need from the list below</string>
     <string name="step_2_desc_for_strategic_partner">Please share some more information</string>
     <string name="step_3_desc_for_strategic_partner">Please check details below and pay</string>
@@ -501,6 +500,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_link_account">Link account</string>
     <string name="label_card_netbanking_info">Either method below will redirect you to the online payment gateway</string>
 
-    <string name="no_pro_available_title"/>
+    <string name="no_pro_available_title" />
     <string name="no_pro_available_description">No PROs is available for this address</string>
+    <string name="validate_comment">Please provide valid comment.</string>
 </resources>

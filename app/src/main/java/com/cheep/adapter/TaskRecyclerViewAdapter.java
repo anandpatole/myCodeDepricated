@@ -82,11 +82,11 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
 //        mOfferIndexMap = new HashMap<>();
     }
 
-    public TaskRecyclerViewAdapter(ArrayList<TaskDetailModel> mList, TaskRowDataInteractionListener listener, int whichFrag) {
+    /*public TaskRecyclerViewAdapter(ArrayList<TaskDetailModel> mList, TaskRowDataInteractionListener listener, int whichFrag) {
         this.mList = mList;
         this.listener = listener;
         this.whichFrag = whichFrag;
-    }
+    }*/
 
     public void setItem(ArrayList<TaskDetailModel> mList) {
         this.mList = mList;
@@ -141,7 +141,7 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
         final TaskDetailModel model = mList.get(holder.getAdapterPosition());
 
         holder.removeAnimations();
-        Log.d(TAG, "onActualBindViewHolder: position :: >> " + position);
+
         int viewType = getItemViewType(holder.getAdapterPosition());
         switch (viewType) {
             case VIEW_TYPE_UPCOMING:
@@ -322,12 +322,7 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
                         , superStartDateTimeCalendar.format(Utility.DATE_FORMAT_DD_MMM_HH_MM_AM));
                 holder.mUpcomingTaskBinding.tvTaskBookedDateTime.setText(mBookingDate);
 
-            /*String mStartTime = holder.mView.getContext().getString(R.string.format_task_start_time
-                    , Utility.getDateDifference(superStartDateTimeCalendar.format(Utility.DATE_FORMAT_FULL_DATE)));*/
-            /*String mStartTime = holder.mView.getContext().getString(R.string.format_task_start_time
-                    , Utility.getDateDifference(holder.mView.getContext(), superStartDateTimeCalendar.format(Utility.DATE_FORMAT_FULL_DATE)));*/
                 holder.mUpcomingTaskBinding.tvTaskStartedTime.setText(Utility.getDateDifference(holder.mView.getContext(), superStartDateTimeCalendar.format(Utility.DATE_FORMAT_FULL_DATE)));
-
                 holder.mUpcomingTaskBinding.textDelete.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -360,15 +355,6 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
                         listener.onTaskDelete(whichFrag, model, holder.mUpcomingTaskBinding);
                     }
                 });
-
-           /* holder.mUpcomingTaskBinding.textReschedule.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (listener != null) {
-                        listener.onTaskReschedule(whichFrag, model, holder.mUpcomingTaskBinding);
-                    }
-                }
-            });*/
 
                 holder.mUpcomingTaskBinding.tvViewQuotes.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -442,7 +428,6 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
             }
             default: {
                 //======Individual item(when sp is selected for task)=====
-
                 superStartDateTimeCalendar.setTimeZone(SuperCalendar.SuperTimeZone.GMT.GMT);
                 superStartDateTimeCalendar.setTimeInMillis(Long.parseLong(model.taskStartdate));
                 superStartDateTimeCalendar.setLocaleTimeZone();
@@ -453,7 +438,6 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
                 holder.mRowTaskBinding.textDateTime.setText(date_time);
 
                 holder.mRowTaskBinding.textDesc.setText(model.taskDesc);
-
 
                 if (model.selectedProvider != null) {
                     Utility.showCircularImageViewWithColorBorder(holder.mRowTaskBinding.imgProfile.getContext(), TAG, holder.mRowTaskBinding.imgProfile, model.selectedProvider.profileUrl, Utility.DEFAULT_CHEEP_LOGO, R.color.grey_dark_color, true);
@@ -514,7 +498,6 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
                 if (Utility.TASK_STATUS.CANCELLED_CUSTOMER.equalsIgnoreCase(model.taskStatus)) {
                     holder.mRowTaskBinding.textTaskStatus.setText(context.getString(R.string.label_cancelled));
                 } else if (Utility.TASK_STATUS.RESCHEDULE_REQUEST_REJECTED.equalsIgnoreCase(model.taskStatus)) {
-
                     holder.mRowTaskBinding.textTaskStatus.setText(context.getString(R.string.label_reschedule_rejected));
                 } else if (Utility.TASK_STATUS.CANCELLED_SP.equalsIgnoreCase(model.taskStatus)) {
                     holder.mRowTaskBinding.textTaskStatus.setText(context.getString(R.string.label_cancelled));

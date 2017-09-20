@@ -67,11 +67,7 @@ public class SlideMenuAdapter extends BaseAdapter {
 
     private void changeSelectionAtIndex(int index) {
         for (int i = 0; i < list.size(); i++) {
-            if (i == index) {
-                list.get(i).isSelected = true;
-            } else {
-                list.get(i).isSelected = false;
-            }
+            list.get(i).isSelected = i == index;
         }
         notifyDataSetChanged();
     }

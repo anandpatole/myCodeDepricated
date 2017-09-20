@@ -319,18 +319,22 @@ public class HomeTabRecyclerViewAdapter extends RecyclerView.Adapter<HomeTabRecy
             // Set size of textview based on number of digits, to make sure it looks proper in
             // In all devices(specifically for hdpi) devices.
             int digit_length = String.valueOf(extra_count).length();
-            if (digit_length == 1) {
-                mRowTabHomeBinding.extraProCount.setTextSize(
-                        TypedValue.COMPLEX_UNIT_PX,
-                        mContext.getResources().getDimension(R.dimen.home_screen_extra_category_count_text_size_one_digits));
-            } else if (digit_length == 2) {
-                mRowTabHomeBinding.extraProCount.setTextSize(
-                        TypedValue.COMPLEX_UNIT_PX,
-                        mContext.getResources().getDimension(R.dimen.home_screen_extra_category_count_text_size_two_digits));
-            } else {
-                mRowTabHomeBinding.extraProCount.setTextSize(
-                        TypedValue.COMPLEX_UNIT_PX,
-                        mContext.getResources().getDimension(R.dimen.home_screen_extra_category_count_text_size_three_digits));
+            switch (digit_length) {
+                case 1:
+                    mRowTabHomeBinding.extraProCount.setTextSize(
+                            TypedValue.COMPLEX_UNIT_PX,
+                            mContext.getResources().getDimension(R.dimen.home_screen_extra_category_count_text_size_one_digits));
+                    break;
+                case 2:
+                    mRowTabHomeBinding.extraProCount.setTextSize(
+                            TypedValue.COMPLEX_UNIT_PX,
+                            mContext.getResources().getDimension(R.dimen.home_screen_extra_category_count_text_size_two_digits));
+                    break;
+                default:
+                    mRowTabHomeBinding.extraProCount.setTextSize(
+                            TypedValue.COMPLEX_UNIT_PX,
+                            mContext.getResources().getDimension(R.dimen.home_screen_extra_category_count_text_size_three_digits));
+                    break;
             }
 
             mRowTabHomeBinding.extraProCount.setVisibility(View.VISIBLE);

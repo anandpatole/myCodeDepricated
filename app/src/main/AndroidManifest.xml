@@ -3,7 +3,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.cheep">
 
+<<<<<<< HEAD
     <!-- camera permission -->
+=======
+    <!-- versionName and versionCode are specified in build.gradle -->
+    <!-- min and target sdk are defined in build.gradle -->
+
+    <!-- Legacy permissions, required due to minSdk level.
+         Newer devices will use runtime permisisons. -->
+>>>>>>> CheepUser-Android
     <uses-feature
         android:name="android.hardware.camera"
         android:required="true" />
@@ -11,8 +19,12 @@
     <!--
          <uses-permission
          android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+<<<<<<< HEAD
          android:maxSdkVersion="18" />
     -->
+=======
+         android:maxSdkVersion="18" />-->
+>>>>>>> CheepUser-Android
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -28,21 +40,29 @@
     <!-- AppsFlyer SDK(Optional- But we provided) -->
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 
-    <!-- <uses-permission android:name="android.permission.READ_PHONE_STATE" /> -->
     <application
         android:name=".App"
         android:allowBackup="false"
+        android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+<<<<<<< HEAD
+=======
+
+        <!-- Activities -->
+>>>>>>> CheepUser-Android
         <activity
             android:name=".activity.SplashActivity"
             android:screenOrientation="portrait"
             android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+<<<<<<< HEAD
 
+=======
+>>>>>>> CheepUser-Android
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -133,6 +153,13 @@
             android:name=".activity.PaymentDetailsActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
+<<<<<<< HEAD
+=======
+        <activity
+            android:name=".activity.TaskQuotesActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+>>>>>>> CheepUser-Android
 
         <!-- For Cropping -->
         <activity
@@ -155,7 +182,7 @@
             android:enabled="true"
             android:exported="false" />
 
-        <!-- [START gcm_listener] -->
+        <!-- [START gcm_listener for Push Notification] -->
         <service
             android:name=".fcm.MyFirebaseMessagingService"
             android:exported="false">
@@ -163,7 +190,7 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-        <!-- [END gcm_listener] -->
+        <!-- [END gcm_listener for Push Notification] -->
 
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
@@ -188,6 +215,7 @@
             android:name=".fcm.RegistrationIntentService"
             android:exported="false" />
 
+        <!--For Fabric API-->
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="50533e46aadf44b1a02395ec21663bdaf1111763" />
@@ -252,6 +280,7 @@
                 <action android:name="com.android.vending.INSTALL_REFERRER" />
             </intent-filter>
         </receiver>
+<<<<<<< HEAD
 
         <activity
             android:name=".activity.TaskQuotesActivity"
@@ -271,6 +300,11 @@
             android:enabled="true" />
 
         <activity android:name=".activity.PaymentChoiceActivity"></activity>
+=======
+        <service
+            android:name="com.amazonaws.mobileconnectors.s3.transferutility.TransferService"
+            android:enabled="true" />
+>>>>>>> CheepUser-Android
     </application>
 
 </manifest>
