@@ -43,6 +43,7 @@ android {
         // Payment Success URL
         buildConfigField("String", "PAYUBIZ_SUCCESS_URL", getProperty("PAYUBIZ_SUCCESS_URL"))
         buildConfigField("String", "PAYUBIZ_FAIL_URL", getProperty("PAYUBIZ_FAIL_URL"))
+        buildConfigField("String", "PAYUBIZ_INSTRUMENT_ID", getProperty("PAYUBIZ_INSTRUMENT_ID"))
 
         //AppsFlyer
         buildConfigField("String", "APPSFLYER_DEV_KEY", getProperty("APPSFLYER_DEV_KEY"))

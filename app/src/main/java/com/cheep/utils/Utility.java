@@ -175,6 +175,7 @@ public class Utility {
 
     public static final int REQUEST_START_PAYMENT = 200;
     public static final int ADDITIONAL_REQUEST_START_PAYMENT = 300;
+    public static final int REQUEST_START_PAYMENT_FOR_STRATEGIC_PARTNER = 400;
 
     public static final String REMOVE = "remove";
     public static final String ADD = "add";

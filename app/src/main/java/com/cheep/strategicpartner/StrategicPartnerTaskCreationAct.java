@@ -42,16 +42,15 @@ import java.util.ArrayList;
  */
 public class StrategicPartnerTaskCreationAct extends BaseAppCompatActivity {
     private static final String TAG = "TaskCreationForSPScreen";
+    private TaskCreationForStrategicPartnerPagerAdapter mTaskCreationPagerAdapter;
+
     private ActivityTaskCreationForStrategicPartnerBinding mActivityTaskCreationForStrategicPartnerBinding;
     public BannerImageModel mBannerImageModel;
-    private TaskCreationForStrategicPartnerPagerAdapter mTaskCreationPagerAdapter;
     private ArrayList<QueAnsModel> mQuestionsList;
     private ArrayList<StrategicPartnerServiceModel> mSelectedServicesList;
     public boolean isSingleSelection = false;
     public String spUserId = "";
-    //    public String date = "";
-//    public String time = "";
-//    public String address = "";
+
     @Nullable
     public AddressModel mSelectedAddressModel;
     public String total = "";
@@ -77,7 +76,6 @@ public class StrategicPartnerTaskCreationAct extends BaseAppCompatActivity {
          */
 
         setTaskState(STEP_ONE_UNVERIFIED);
-
 
 
         if (getIntent().getExtras() != null) {

@@ -248,6 +248,7 @@ public class NetworkUtility {
         public static final String MEDIA_FILE = "media_file";
         public static final String TASK_TYPE = "task_type";
         public static final String PROMOCODE_PRICE = "promocode_price";
+        public static final String HASH_STRING = "hash_string";
 
         public static class VERSION_CHANGE_TYPE {
             public static final int NORMAL = 0;
