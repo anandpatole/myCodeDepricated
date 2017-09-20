@@ -5,8 +5,10 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.android.volley.Response;
@@ -75,6 +77,15 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity {
         setListeners();
     }
 
+    private void setupActionbar() {
+        mActivityPaymentChoiceBinding.textTitle.setText(getString(R.string.label_please_pay_x, providerModel.quotePrice));
+        setSupportActionBar(mActivityPaymentChoiceBinding.toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setTitle(Utility.EMPTY_STRING);
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setDefaultDisplayHomeAsUpEnabled(true);
+    }
+
     @Override
     protected void initiateUI() {
         if (getIntent().hasExtra(Utility.Extra.DATA)) {
@@ -91,30 +102,49 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity {
         if (getIntent().hasExtra(Utility.Extra.PAYMENT_VIEW_IS_ADDITIONAL_CHARGE)) {
             isAdditional = getIntent().getIntExtra(Utility.Extra.PAYMENT_VIEW_IS_ADDITIONAL_CHARGE, 0);
         }
+        setupActionbar();
     }
 
     @Override
     protected void setListeners() {
-        mActivityPaymentChoiceBinding.tvCard.setOnClickListener(OnCardNetBankingPayListener);
-        mActivityPaymentChoiceBinding.tvNetbanking.setOnClickListener(OnCardNetBankingPayListener);
+        mActivityPaymentChoiceBinding.rlCard.setOnClickListener(mOnClickListener);
+        mActivityPaymentChoiceBinding.rlNetbanking.setOnClickListener(mOnClickListener);
     }
 
-    View.OnClickListener OnCardNetBankingPayListener = new View.OnClickListener() {
+    View.OnClickListener mOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
 
-            Log.d(TAG, "onClick: of HDFC PAYMENT");
-            if (isAdditional == 0) {
-                // Go for regular payment gateway
-                payNow(false);
-            } else {
-                // Go for regular payment gateway
-                payNow(true);
-            }
+            switch (view.getId()) {
+                case R.id.rl_card:
+                case R.id.rl_netbanking:
+                    Log.d(TAG, "onClick: of HDFC PAYMENT");
+                    if (isAdditional == 0) {
+                        // Go for regular payment gateway
+                        payNow(false);
+                    } else {
+                        // Go for regular payment gateway
+                        payNow(true);
+                    }
+                    break;
+                case R.id.rl_paytm:
 
+                    break;
+            }
 
         }
     };
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            default:
+                return false;
+        }
+    }
 
 //////////////////////////////////////////////////////////////////    NORMAL TASK PAYMENT METHOD [START] ///////////////////////////////////////////////////////
 

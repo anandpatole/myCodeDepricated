@@ -497,6 +497,9 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_pay_at_loaction">Pay at Location</string>
     <string name="label_pay_by_cash">Pay by Cash</string>
     <string name="discount_cashback_text">%1$s Cashback upto ₹%2$s. Valid once per user.</string>
+    <string name="label_please_pay_x">Please pay ₹%1s</string>
+    <string name="label_link_account">Link account</string>
+    <string name="label_card_netbanking_info">Either method below will redirect you to the online payment gateway</string>
 
     <string name="no_pro_available_title"/>
     <string name="no_pro_available_description">No PROs is available for this address</string>
