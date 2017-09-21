@@ -38,7 +38,10 @@
     <dimen name="scale_18dp">18dp</dimen>
     <dimen name="scale_19dp">19dp</dimen>
     <dimen name="scale_20dp">20dp</dimen>
+    <dimen name="scale_21dp">21dp</dimen>
     <dimen name="scale_40dp">40dp</dimen>
+    <dimen name="scale_41dp">41dp</dimen>
+    <dimen name="scale_44dp">44dp</dimen>
     <dimen name="scale_46dp">46dp</dimen>
     <dimen name="scale_22dp">22dp</dimen>
     <dimen name="scale_25dp">25dp</dimen>
@@ -87,6 +90,7 @@
     <dimen name="toolbar_title_text_size">18sp</dimen>
     <dimen name="scale_45dp">45dp</dimen>
     <dimen name="scale_60dp">60dp</dimen>
+    <dimen name="scale_62dp">62dp</dimen>
     <dimen name="scale_70dp">70dp</dimen>
     <dimen name="scale_76dp">76dp</dimen>
     <dimen name="text_size_23sp">23sp</dimen>

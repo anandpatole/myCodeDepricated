@@ -32,6 +32,7 @@ import com.cheep.model.UserDetails;
 import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
+import com.cheep.utils.LogUtils;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.SuperCalendar;
 import com.cheep.utils.Utility;
@@ -47,10 +48,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-public class PaymentChoiceActivity extends BaseAppCompatActivity {
+public class PaymentChoiceActivity extends BaseAppCompatActivity implements View.OnClickListener{
 
+    private static final String TAG = LogUtils.makeLogTag(PaymentChoiceActivity.class);
     private ActivityPaymentChoiceBinding mActivityPaymentChoiceBinding;
-    private static final String TAG = "PaymentChoiceActivity";
     private ProviderModel providerModel;
     private TaskDetailModel taskDetailModel;
     private boolean isInstaBooking = false;
@@ -77,15 +78,6 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity {
         setListeners();
     }
 
-    private void setupActionbar() {
-        mActivityPaymentChoiceBinding.textTitle.setText(getString(R.string.label_please_pay_x, providerModel.quotePrice));
-        setSupportActionBar(mActivityPaymentChoiceBinding.toolbar);
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setTitle(Utility.EMPTY_STRING);
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setDefaultDisplayHomeAsUpEnabled(true);
-    }
-
     @Override
     protected void initiateUI() {
         if (getIntent().hasExtra(Utility.Extra.DATA)) {
@@ -102,38 +94,45 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity {
         if (getIntent().hasExtra(Utility.Extra.PAYMENT_VIEW_IS_ADDITIONAL_CHARGE)) {
             isAdditional = getIntent().getIntExtra(Utility.Extra.PAYMENT_VIEW_IS_ADDITIONAL_CHARGE, 0);
         }
+        mActivityPaymentChoiceBinding.tvPaytmLinkAccount.setText(getString(R.string.label_link_x, getString(R.string.label_account)));
         setupActionbar();
+    }
+
+    private void setupActionbar() {
+        mActivityPaymentChoiceBinding.textTitle.setText(getString(R.string.label_please_pay_x, providerModel.quotePrice));
+        setSupportActionBar(mActivityPaymentChoiceBinding.toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setTitle(Utility.EMPTY_STRING);
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setDefaultDisplayHomeAsUpEnabled(true);
     }
 
     @Override
     protected void setListeners() {
-        mActivityPaymentChoiceBinding.rlCard.setOnClickListener(mOnClickListener);
-        mActivityPaymentChoiceBinding.rlNetbanking.setOnClickListener(mOnClickListener);
+        mActivityPaymentChoiceBinding.rlCard.setOnClickListener(this);
+        mActivityPaymentChoiceBinding.rlNetbanking.setOnClickListener(this);
+        mActivityPaymentChoiceBinding.rlPaytm.setOnClickListener(this);
     }
 
-    View.OnClickListener mOnClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-
-            switch (view.getId()) {
-                case R.id.rl_card:
-                case R.id.rl_netbanking:
-                    Log.d(TAG, "onClick: of HDFC PAYMENT");
-                    if (isAdditional == 0) {
-                        // Go for regular payment gateway
-                        payNow(false);
-                    } else {
-                        // Go for regular payment gateway
-                        payNow(true);
-                    }
-                    break;
-                case R.id.rl_paytm:
-
-                    break;
-            }
-
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.rl_card:
+            case R.id.rl_netbanking:
+                LogUtils.LOGD(TAG, "onClick: of HDFC PAYMENT");
+                if (isAdditional == 0) {
+                    // Go for regular payment gateway
+                    payNow(false);
+                } else {
+                    // Go for regular payment gateway
+                    payNow(true);
+                }
+                break;
+            case R.id.rl_paytm:
+                WalletLinkActivity.newInstance(mContext,true);
+                break;
         }
-    };
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -146,7 +145,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity {
         }
     }
 
-//////////////////////////////////////////////////////////////////    NORMAL TASK PAYMENT METHOD [START] ///////////////////////////////////////////////////////
+///////////////////////////////////////////////////////    NORMAL TASK PAYMENT METHOD [START] ///////////////////////////////////////////////////////
 
     /**
      * Used for payment
@@ -389,7 +388,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity {
         @Override
         public void onErrorResponse(final VolleyError error) {
             hideProgressDialog();
-            Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
+            LogUtils.LOGD(TAG, "onErrorResponse() called with: error = [" + error + "]");
 
             // Close Progressbar
 //            hideProgressDialog();
@@ -581,7 +580,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity {
             if (resultCode == RESULT_OK) {
                 //success
                 if (data != null) {
-                    Log.d(TAG, "onActivityResult() called with success: result= [" + data.getStringExtra("payu_response") + "]");
+                    LogUtils.LOGD(TAG, "onActivityResult() called with success: result= [" + data.getStringExtra("payu_response") + "]");
                     //Call update payment service from here with all the response come from service
                     // check is task is from insta booking or not
                     if (isInstaBooking)
@@ -593,7 +592,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity {
             if (resultCode == RESULT_CANCELED) {
                 //failed
                 if (data != null) {
-                    Log.d(TAG, "onActivityResult() called with failed: result= [" + data.getStringExtra("payu_response") + "]");
+                    LogUtils.LOGD(TAG, "onActivityResult() called with failed: result= [" + data.getStringExtra("payu_response") + "]");
                     //Call update payment service from here with all the response come from service
                     // check is task is from insta booking or not
                     if (isInstaBooking)
@@ -608,7 +607,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity {
             if (resultCode == RESULT_OK) {
                 //success
                 if (data != null) {
-                    Log.d(TAG, "onActivityResult() called with success: result= [" + data.getStringExtra("payu_response") + "]");
+                    LogUtils.LOGD(TAG, "onActivityResult() called with success: result= [" + data.getStringExtra("payu_response") + "]");
                     //Call update payment service from here with all the response come from service
                     updatePaymentStatus(true, data.getStringExtra("payu_response"), true);
                 }
@@ -616,7 +615,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity {
             if (resultCode == RESULT_CANCELED) {
                 //failed
                 if (data != null) {
-                    Log.d(TAG, "onActivityResult() called with failed: result= [" + data.getStringExtra("payu_response") + "]");
+                    LogUtils.LOGD(TAG, "onActivityResult() called with failed: result= [" + data.getStringExtra("payu_response") + "]");
                     //Call update payment service from here with all the response come from service
                     updatePaymentStatus(false, data.getStringExtra("payu_response"), true);
                     Utility.showSnackBar(getString(R.string.msg_payment_failed), mActivityPaymentChoiceBinding.getRoot());
@@ -900,7 +899,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity {
     Response.ErrorListener mCallUpdatePaymentStatusWSErrorListener = new Response.ErrorListener() {
         @Override
         public void onErrorResponse(final VolleyError error) {
-            Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
+            LogUtils.LOGD(TAG, "onErrorResponse() called with: error = [" + error + "]");
 
             // Close Progressbar
             hideProgressDialog();
@@ -911,5 +910,5 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity {
     };
 
 
-//////////////////////////////////////////////////////////////////    NORMAL TASK PAYMENT METHOD [END] ///////////////////////////////////////////////////////
+///////////////////////////////////////////////////////    NORMAL TASK PAYMENT METHOD [END] ///////////////////////////////////////////////////////
 }

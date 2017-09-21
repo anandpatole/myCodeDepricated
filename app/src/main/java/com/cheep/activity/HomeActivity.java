@@ -265,27 +265,7 @@ public class HomeActivity extends BaseAppCompatActivity
 
     @Override
     protected void setListeners() {
-////        Log.d(TAG, "setListeners: Paytm test request");
-//        Map<String, String> mParams = new HashMap<>();
-//
-//        mParams.put("email", "parekhkruti26@gmail.com");
-//        mParams.put("phone", "9429910138");
-//        mParams.put("clientId", "merchant-cheep-staging");
-//        mParams.put("scope", "wallet");
-//        mParams.put("responseType", "token");
-//
-//        PaytmNetworkRequest paytmNetworkRequest = new PaytmNetworkRequest(Request.Method.POST, NetworkUtility.PAYTM.OAUTH_APIS.SEND_OTP, new Response.Listener<String>() {
-//            @Override
-//            public void onResponse(String response) {
-//                Log.d(TAG, "onResponse() called with: response = [" + response + "]");
-//            }
-//        }, new Response.ErrorListener() {
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-//                Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
-//            }
-//        }, null, mParams);
-//        Volley.getInstance(mContext).addToRequestQueue(paytmNetworkRequest, NetworkUtility.PAYTM.OAUTH_APIS.SEND_OTP);
+
     }
 
     /**

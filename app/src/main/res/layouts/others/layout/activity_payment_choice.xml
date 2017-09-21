@@ -68,6 +68,7 @@
                     android:id="@+id/ll_wallet"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/scale_20dp"
                     android:layout_marginLeft="@dimen/scale_11dp"
                     android:layout_marginRight="@dimen/scale_11dp"
                     android:background="@color/white"
@@ -156,7 +157,7 @@
                             android:textSize="@dimen/text_size_14sp" />
 
                         <com.cheep.custom_view.CFTextViewRegular
-                            android:id="@+id/tv_paytm_discount"
+                            android:id="@+id/tv_paytm_link_account"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignBottom="@id/tv_paytm"
@@ -165,7 +166,6 @@
                             android:drawablePadding="@dimen/scale_6dp"
                             android:drawableStart="@drawable/ic_link_blue"
                             android:paddingRight="@dimen/scale_36dp"
-                            android:text="@string/label_link_account"
                             android:textColor="@color/splash_gradient_end"
                             android:textSize="@dimen/text_size_11sp" />
                     </RelativeLayout>
@@ -176,9 +176,9 @@
                     android:id="@+id/ll_card_netbanking"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/scale_20dp"
                     android:layout_marginLeft="@dimen/scale_11dp"
                     android:layout_marginRight="@dimen/scale_11dp"
-                    android:layout_marginTop="@dimen/scale_20dp"
                     android:background="@color/white"
                     android:orientation="vertical">
 
@@ -196,7 +196,7 @@
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/scale_26dp"
+                        android:layout_marginBottom="@dimen/scale_20dp"
                         android:layout_marginLeft="@dimen/scale_27dp">
 
                         <ImageView
@@ -211,6 +211,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_toRightOf="@id/iv_info_icon"
+                            android:paddingRight="@dimen/scale_34dp"
                             android:text="@string/label_card_netbanking_info"
                             android:textColor="@color/grey_varient_16" />
 
@@ -312,9 +313,9 @@
                     android:id="@+id/ll_cash_payment"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/scale_20dp"
                     android:layout_marginLeft="@dimen/scale_11dp"
                     android:layout_marginRight="@dimen/scale_11dp"
-                    android:layout_marginTop="@dimen/scale_20dp"
                     android:background="@color/white"
                     android:orientation="vertical">
 
