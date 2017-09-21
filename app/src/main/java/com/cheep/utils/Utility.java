@@ -95,7 +95,7 @@ public class Utility {
     public static final String ACTION_REGISTER = "action_register";
     public static final String ACTION_LOGIN = "action_login";
     public static final String ACTION_CHANGE_PHONE_NUMBER = "action_change_phone_number";
-    public static final String CLICK = "click";
+    public static final String CLICK = "Click";
 
     //Date Formats
     public static final String DATE_FORMAT_DD_MM_YY = SuperFormatter.DATE + "/" + SuperFormatter.MONTH_NUMBER + "/" + SuperFormatter.YEAR_4_DIGIT;

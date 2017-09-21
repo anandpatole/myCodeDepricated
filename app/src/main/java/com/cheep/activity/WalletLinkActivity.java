@@ -5,13 +5,15 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.view.GravityCompat;
 import android.support.v7.app.ActionBar;
-import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
 import android.text.Spanned;
+import android.text.TextPaint;
 import android.text.TextUtils;
+import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 
@@ -30,12 +32,10 @@ import com.cheep.utils.Utility;
 import java.util.HashMap;
 import java.util.Map;
 
-import static android.view.Gravity.CENTER;
-
 
 public class WalletLinkActivity extends BaseAppCompatActivity implements View.OnClickListener {
 
-    private static final String TAG = LogUtils.makeLogTag(ChatActivity.class);
+    private static final String TAG = LogUtils.makeLogTag(WalletLinkActivity.class);
     private ActivityWalletLinkBinding mActivityWalletLinkBinding;
     private boolean isPaytm;
 
@@ -89,11 +89,49 @@ public class WalletLinkActivity extends BaseAppCompatActivity implements View.On
             case R.id.tv_send_otp:
                 if (isValidated(true)) {
                     String mobileNumber = mActivityWalletLinkBinding.etMobileNumber.getText().toString();
-                    sendOTP(mobileNumber);
+//                    sendOTP(mobileNumber);
                     updateUI(mobileNumber);
                 }
                 break;
         }
+    }
+
+    private void updateUI(final String mobileNumber) {
+        String sendOTPString = getString(R.string.label_send_otp_again);
+        mActivityWalletLinkBinding.tvEnterNoLinkXAccount.setText(getString(R.string.label_enter_otp_sent_on_x, mActivityWalletLinkBinding.etMobileNumber.getText()));
+        mActivityWalletLinkBinding.tvSendOtp.setText(getString(R.string.label_proceed));
+        mActivityWalletLinkBinding.ivMobile.setVisibility(View.GONE);
+        mActivityWalletLinkBinding.tvDefaultCountryCode.setVisibility(View.GONE);
+        mActivityWalletLinkBinding.etMobileNumber.setGravity(Gravity.CENTER);
+        mActivityWalletLinkBinding.etMobileNumber.setText(Utility.EMPTY_STRING);
+        mActivityWalletLinkBinding.etMobileNumber.setHint(getString(R.string.label_enter_otp));
+        SpannableStringBuilder sendOTPSpannableStringBuilder = new SpannableStringBuilder(sendOTPString);
+
+        int clickIndex = sendOTPString.indexOf(Utility.CLICK);
+
+        if (clickIndex < 0) {
+            LogUtils.LOGD(TAG, "\"click\" case changed in strings.xml");
+            return;
+        }
+
+        LogUtils.LOGD(TAG, "clickIndex: " + clickIndex);
+
+        sendOTPSpannableStringBuilder.setSpan(new ClickableSpan() {
+            @Override
+            public void onClick(View view) {
+                sendOTP(mobileNumber);
+            }
+
+            @Override
+            public void updateDrawState(TextPaint ds) {
+                ds.setUnderlineText(false);
+            }
+        }, clickIndex, sendOTPSpannableStringBuilder.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        sendOTPSpannableStringBuilder.setSpan(new ForegroundColorSpan(ContextCompat.getColor(mContext, R.color.splash_gradient_end)),
+                clickIndex, sendOTPSpannableStringBuilder.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        mActivityWalletLinkBinding.tvWeCreateXWallet.setText(sendOTPSpannableStringBuilder);
+        mActivityWalletLinkBinding.tvWeCreateXWallet.setMovementMethod(LinkMovementMethod.getInstance());
     }
 
     private void sendOTP(String mobileNumber) {
@@ -113,40 +151,35 @@ public class WalletLinkActivity extends BaseAppCompatActivity implements View.On
         mParams.put("scope", "wallet");
         mParams.put("responseType", "token");
 
-        PaytmNetworkRequest paytmNetworkRequest = new PaytmNetworkRequest(Request.Method.POST, NetworkUtility.PAYTM.OAUTH_APIS.SEND_OTP, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                LogUtils.LOGD(TAG, "onResponse() called with: response = [" + response + "]");
-                hideProgressDialog();
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                LogUtils.LOGD(TAG, "onErrorResponse() called with: error = [" + error + "]");
-                hideProgressDialog();
-            }
-        }, null, mParams);
+        PaytmNetworkRequest paytmNetworkRequest = new PaytmNetworkRequest(
+                Request.Method.POST,
+                NetworkUtility.PAYTM.OAUTH_APIS.SEND_OTP,
+                mSendOTPResponseListener,
+                mSendOTPErrorListener,
+                null,
+                mParams);
         Volley.getInstance(mContext).addToRequestQueue(paytmNetworkRequest, NetworkUtility.PAYTM.OAUTH_APIS.SEND_OTP);
     }
 
-    private void updateUI(final String mobileNumber) {
-        String sendOTPString = getString(R.string.label_send_otp_again);
-        mActivityWalletLinkBinding.tvEnterNoLinkXAccount.setText(getString(R.string.label_enter_otp_sent_on_x, mActivityWalletLinkBinding.etMobileNumber));
-        mActivityWalletLinkBinding.tvWeCreateXWallet.setText(sendOTPString);
-        mActivityWalletLinkBinding.tvSendOtp.setText(getString(R.string.label_proceed));
-        mActivityWalletLinkBinding.ivMobile.setVisibility(View.GONE);
-        mActivityWalletLinkBinding.tvDefaultCountryCode.setVisibility(View.GONE);
-        mActivityWalletLinkBinding.etMobileNumber.setGravity(Gravity.CENTER);
-        SpannableString sendOTPSpannableString = new SpannableString(sendOTPString);
-        sendOTPSpannableString.setSpan(new ClickableSpan() {
-            @Override
-            public void onClick(View view) {
-                sendOTP(mobileNumber);
-            }
-        }, sendOTPString.indexOf(Utility.CLICK), sendOTPString.length() - 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        sendOTPSpannableString.setSpan(new ForegroundColorSpan(ContextCompat.getColor(mContext, R.color.splash_gradient_end)),
-                sendOTPString.indexOf(Utility.CLICK), sendOTPString.length() - 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-    }
+    Response.ErrorListener mSendOTPErrorListener = new Response.ErrorListener() {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            LogUtils.LOGD(TAG, "onErrorResponse() called with: error = [" + error + "]");
+            hideProgressDialog();
+
+            // Show Toast
+            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityWalletLinkBinding.getRoot());
+        }
+    };
+
+    Response.Listener<String> mSendOTPResponseListener = new Response.Listener<String>() {
+        @Override
+        public void onResponse(String response) {
+            LogUtils.LOGD(TAG, "onResponse() called with: response = [" + response + "]");
+
+            hideProgressDialog();
+        }
+    };
 
     private boolean isValidated(boolean isSendOTP) {
 
