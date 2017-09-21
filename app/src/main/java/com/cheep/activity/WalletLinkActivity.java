@@ -6,15 +6,17 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
+import android.text.Editable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextPaint;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
-import android.util.Log;
 import android.view.Gravity;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.android.volley.Request;
@@ -29,6 +31,9 @@ import com.cheep.network.Volley;
 import com.cheep.utils.LogUtils;
 import com.cheep.utils.Utility;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -38,6 +43,8 @@ public class WalletLinkActivity extends BaseAppCompatActivity implements View.On
     private static final String TAG = LogUtils.makeLogTag(WalletLinkActivity.class);
     private ActivityWalletLinkBinding mActivityWalletLinkBinding;
     private boolean isPaytm;
+    private String mState;
+    private String mobileNumber;
 
     public static void newInstance(Context context, boolean isPaytm) {
         Intent intent = new Intent(context, WalletLinkActivity.class);
@@ -60,6 +67,7 @@ public class WalletLinkActivity extends BaseAppCompatActivity implements View.On
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle(Utility.EMPTY_STRING);
         actionBar.setDisplayHomeAsUpEnabled(true);
+        //noinspection RestrictedApi
         actionBar.setDefaultDisplayHomeAsUpEnabled(true);
     }
 
@@ -87,19 +95,36 @@ public class WalletLinkActivity extends BaseAppCompatActivity implements View.On
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_send_otp:
-                if (isValidated(true)) {
-                    String mobileNumber = mActivityWalletLinkBinding.etMobileNumber.getText().toString();
-//                    sendOTP(mobileNumber);
-                    updateUI(mobileNumber);
+                if (isValidated(mActivityWalletLinkBinding.tvSendOtp.getText().toString())) {
+                    mobileNumber = mActivityWalletLinkBinding.etMobileNumber.getText().toString();
+                    sendOTP();
                 }
                 break;
         }
     }
 
-    private void updateUI(final String mobileNumber) {
+    private void updateUI() {
         String sendOTPString = getString(R.string.label_send_otp_again);
         mActivityWalletLinkBinding.tvEnterNoLinkXAccount.setText(getString(R.string.label_enter_otp_sent_on_x, mActivityWalletLinkBinding.etMobileNumber.getText()));
         mActivityWalletLinkBinding.tvSendOtp.setText(getString(R.string.label_proceed));
+        mActivityWalletLinkBinding.tvSendOtp.setEnabled(false);
+        mActivityWalletLinkBinding.etMobileNumber.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                mActivityWalletLinkBinding.tvSendOtp.setEnabled(charSequence.length() > 3);
+                mActivityWalletLinkBinding.tvSendOtp.setOnClickListener(charSequence.length() > 3 ? WalletLinkActivity.this : null);
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
         mActivityWalletLinkBinding.ivMobile.setVisibility(View.GONE);
         mActivityWalletLinkBinding.tvDefaultCountryCode.setVisibility(View.GONE);
         mActivityWalletLinkBinding.etMobileNumber.setGravity(Gravity.CENTER);
@@ -119,7 +144,7 @@ public class WalletLinkActivity extends BaseAppCompatActivity implements View.On
         sendOTPSpannableStringBuilder.setSpan(new ClickableSpan() {
             @Override
             public void onClick(View view) {
-                sendOTP(mobileNumber);
+                sendOTP();
             }
 
             @Override
@@ -134,7 +159,7 @@ public class WalletLinkActivity extends BaseAppCompatActivity implements View.On
         mActivityWalletLinkBinding.tvWeCreateXWallet.setMovementMethod(LinkMovementMethod.getInstance());
     }
 
-    private void sendOTP(String mobileNumber) {
+    private void sendOTP() {
         if (!Utility.isConnected(mContext)) {
             Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityWalletLinkBinding.getRoot());
             return;
@@ -146,10 +171,10 @@ public class WalletLinkActivity extends BaseAppCompatActivity implements View.On
         Map<String, String> mParams = new HashMap<>();
 
 //        mParams.put("email", "parekhkruti26@gmail.com");
-        mParams.put("phone", mobileNumber);
-        mParams.put("clientId", BuildConfig.CLIENT_ID);
-        mParams.put("scope", "wallet");
-        mParams.put("responseType", "token");
+        mParams.put(NetworkUtility.PAYTM.PARAMETERS.PHONE, mobileNumber);
+        mParams.put(NetworkUtility.PAYTM.PARAMETERS.CLIENT_ID, BuildConfig.CLIENT_ID);
+        mParams.put(NetworkUtility.PAYTM.PARAMETERS.SCOPE, "wallet");
+        mParams.put(NetworkUtility.PAYTM.PARAMETERS.RESPONSE_TYPE, "token");
 
         PaytmNetworkRequest paytmNetworkRequest = new PaytmNetworkRequest(
                 Request.Method.POST,
@@ -165,6 +190,8 @@ public class WalletLinkActivity extends BaseAppCompatActivity implements View.On
         @Override
         public void onErrorResponse(VolleyError error) {
             LogUtils.LOGD(TAG, "onErrorResponse() called with: error = [" + error + "]");
+
+            //hide ProgressDialog
             hideProgressDialog();
 
             // Show Toast
@@ -176,14 +203,46 @@ public class WalletLinkActivity extends BaseAppCompatActivity implements View.On
         @Override
         public void onResponse(String response) {
             LogUtils.LOGD(TAG, "onResponse() called with: response = [" + response + "]");
+            JSONObject jsonObject;
+            try {
+                jsonObject = new JSONObject(response);
+                String responseCode = jsonObject.getString(NetworkUtility.PAYTM.PARAMETERS.RESPONSE_CODE);
+                switch (responseCode) {
+                    case NetworkUtility.PAYTM.RESPONSE_CODES.LOGIN:
+                    case NetworkUtility.PAYTM.RESPONSE_CODES.REGISTER:
+                        mState = jsonObject.getString(NetworkUtility.PAYTM.PARAMETERS.STATE);
+                        updateUI();
+                        break;
+                    case NetworkUtility.PAYTM.RESPONSE_CODES.INVALID_AUTHORIZATION:
+                    case NetworkUtility.PAYTM.RESPONSE_CODES.BAD_REQUEST:
+                    case NetworkUtility.PAYTM.RESPONSE_CODES.LOGIN_FAILED:
+                        // Show Toast
+                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityWalletLinkBinding.getRoot());
+                        break;
+                    //invalid email not handled as email is not mandatory and we are not sending email
+                    case NetworkUtility.PAYTM.RESPONSE_CODES.INVALID_EMAIL:
+                        break;
+                    case NetworkUtility.PAYTM.RESPONSE_CODES.INVALID_MOBILE:
+                        // Show Toast
+                        Utility.showSnackBar(getString(R.string.validate_phone_number_length), mActivityWalletLinkBinding.getRoot());
+                        break;
+                    case NetworkUtility.PAYTM.RESPONSE_CODES.ACCOUNT_BLOCKED:
+                        //TODO: snackbar message to be changed in case required. now displaying generalized message of something went wrong
+                        // Show Toast
+                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityWalletLinkBinding.getRoot());
+                        break;
+                }
 
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
             hideProgressDialog();
         }
     };
 
-    private boolean isValidated(boolean isSendOTP) {
+    private boolean isValidated(String isSendOTP) {
 
-        if (isSendOTP) {
+        if (isSendOTP.equalsIgnoreCase(getString(R.string.label_send_otp))) {
             if (TextUtils.isEmpty(mActivityWalletLinkBinding.etMobileNumber.getText())) {
                 Utility.showSnackBar(getString(R.string.validate_phone_number), mActivityWalletLinkBinding.getRoot());
                 return false;
@@ -195,13 +254,30 @@ public class WalletLinkActivity extends BaseAppCompatActivity implements View.On
                 return false;
             }
             return true;
-        } else {
+        } else if (isSendOTP.equalsIgnoreCase(getString(R.string.label_proceed))) {
             if (TextUtils.isEmpty(mActivityWalletLinkBinding.etMobileNumber.getText())) {
                 Utility.showSnackBar(getString(R.string.validate_otp_empty), mActivityWalletLinkBinding.getRoot());
                 return false;
             }
             return true;
+        } else if (isSendOTP.equalsIgnoreCase(getString(R.string.label_add_amount))) {
+            if (TextUtils.isEmpty(mActivityWalletLinkBinding.etMobileNumber.getText())) {
+                Utility.showSnackBar(getString(R.string.validate_empty_amount), mActivityWalletLinkBinding.getRoot());
+                return false;
+            }
+            return true;
         }
+        return false;
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            default:
+                return false;
+        }
+    }
 }

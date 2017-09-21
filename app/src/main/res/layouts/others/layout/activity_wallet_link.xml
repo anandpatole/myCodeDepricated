@@ -61,13 +61,38 @@
                     android:id="@+id/tv_enter_no_link_x_account"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/scale_62dp"
                     android:gravity="center"
                     android:paddingLeft="@dimen/scale_80dp"
                     android:paddingRight="@dimen/scale_80dp"
                     android:textColor="@color/grey_varient_8"
+                    android:layout_marginBottom="@dimen/scale_79dp"
                     android:textSize="@dimen/text_size_16sp"
                     tools:text="Enter your number and link to your MobiKwik wallet" />
+
+                <com.cheep.custom_view.CFTextViewSemiBold
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/scale_15dp"
+                    android:layout_marginLeft="@dimen/scale_17dp"
+                    android:layout_marginRight="@dimen/scale_17dp"
+                    android:layout_marginTop="@dimen/scale_15dp"
+                    android:gravity="center"
+                    android:text="₹300"
+                    android:visibility="gone"
+                    android:textColor="@color/grey_varient_8"
+                    android:textSize="@dimen/text_size_19sp" />
+
+                <com.cheep.custom_view.CFTextViewSemiBold
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/scale_28dp"
+                    android:layout_marginLeft="@dimen/scale_17dp"
+                    android:layout_marginRight="@dimen/scale_17dp"
+                    android:gravity="center"
+                    android:text="@string/label_low_balance_add_money"
+                    android:visibility="gone"
+                    android:textColor="@color/grey_varient_8"
+                    android:textSize="@dimen/text_size_14sp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -130,12 +155,14 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/scale_34dp"
                     android:layout_marginRight="@dimen/scale_34dp"
-                    android:background="@drawable/background_ans_normal"
+                    android:background="@drawable/verify_otp_btn_selector"
+                    android:enabled="true"
                     android:gravity="center"
                     android:padding="@dimen/scale_17dp"
                     android:text="@string/label_send_otp"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/text_size_14sp" />
+                    android:textSize="@dimen/text_size_14sp"
+                    tools:background="@color/splash_gradient_end" />
             </LinearLayout>
         </ScrollView>
     </LinearLayout>
