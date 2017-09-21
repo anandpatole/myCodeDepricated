@@ -507,6 +507,9 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_enter_otp_sent_on_x">Enter OTP received on +91 %1s</string>
     <string name="label_proceed">Proceed</string>
     <string name="label_enter_otp">Enter OTP</string>
+    <string name="label_add_amount">Add Amount</string>
+    <string name="validate_empty_amount">Whoops! Something is wrong, please enter a valid amount to be added.</string>
+    <string name="label_low_balance_add_money">Low Balance.\nPlease add funds to wallet to continue</string>
 
     <string name="no_pro_available_title" />
     <string name="no_pro_available_description">No PROs is available for this address</string>

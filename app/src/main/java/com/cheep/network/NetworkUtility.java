@@ -132,7 +132,43 @@ public class NetworkUtility {
 
         public static final String CHECK_BALANCE_API = BuildConfig.PAYTM_CHECK_BALANCE_STAGING_URL;
 
-        public static final class TAGS {
+        public static final class PARAMETERS {
+
+            public static final String PHONE = "phone";
+            public static final String CLIENT_ID = "clientId";
+            public static final String SCOPE = "scope";
+            public static final String RESPONSE_TYPE = "responseType";
+            public static final String RESPONSE_CODE = "responseCode";
+            public static final String STATE = "state";
+        }
+
+        public static final class RESPONSE_CODES {
+            //Send OTP API response codes
+            public static final String LOGIN = "01";
+            public static final String REGISTER = "02";
+            public static final String INVALID_AUTHORIZATION = "430";
+            public static final String INVALID_MOBILE = "431";
+            public static final String LOGIN_FAILED = "432";
+            public static final String ACCOUNT_BLOCKED = "433";
+            public static final String BAD_REQUEST = "434";
+            public static final String INVALID_EMAIL = "465";
+
+            //verify OTP/get access token API response codes
+            public static final String INVALID_OTP = "403";
+            public static final String INVALID_CODE = "513";
+
+            //Get User Info / validate token API response codes
+            public static final String INVALID_TOKEN = "530";
+
+            //Check Balance API response codes
+            public static final String USER_DOESNOT_EXISTS = "404";
+            public static final String UNKNOWN_ERROR = "GE_0001";
+            public static final String UNAUTHORIZED_ACCESS = "403";
+            public static final String REQUEST_TIMED_OUT = "408";
+            public static final String INTERNAL_SERVER_ERROR = "500";
+            public static final String INCORRECT_MERCHANT_DETAILS = "CBM_1001";
+            public static final String INCORRECT_PAYEE_DETAILS = "CBM_1002";
+            public static final String PLEASE_TRY_AGAIN = "AM_1001";
 
         }
     }

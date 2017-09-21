@@ -7,6 +7,7 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.text.TextUtils;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.android.volley.Response;
@@ -46,8 +47,6 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import retrofit2.http.HEAD;
 
 
 public class PaymentChoiceActivity extends BaseAppCompatActivity implements View.OnClickListener {
@@ -129,7 +128,8 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle(Utility.EMPTY_STRING);
         actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setDefaultDisplayHomeAsUpEnabled(true);
+        //no inspection RestrictedApi
+//        actionBar.setDefaultDisplayHomeAsUpEnabled(true);
     }
 
     @Override
@@ -926,6 +926,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
 
                 //calling this to create post data
                 //Url is based on condition if address id is greater then 0 then it means we need to update the existing address
+                @SuppressWarnings("unchecked")
                 VolleyNetworkRequest mVolleyNetworkRequestForSPList = new VolleyNetworkRequest(NetworkUtility.WS.GET_PAYMENT_HASH_FOR_STRATEGIC_PARTNER
                         , mCallGenerateHashWSErrorListener
                         , mCallGenerateHashWSResponseListener
@@ -939,5 +940,15 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
         }).execute(new JSONObject(mTransactionParams).toString());
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            default:
+                return false;
+        }
+    }
 
 }
