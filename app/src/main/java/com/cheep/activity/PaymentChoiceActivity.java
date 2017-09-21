@@ -701,7 +701,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
 
 //                        callTaskDetailWS();
 
-                        if (Utility.TASK_STATUS.PAID.equalsIgnoreCase(taskStatus)) {
+                        if (Utility.TASK_STATUS.COD.equalsIgnoreCase(taskStatus) || Utility.TASK_STATUS.PAID.equalsIgnoreCase(taskStatus)) {
                             //We are commenting it because from here we are intiating a payment flow and
                             // after that we need to call update payment status on server
                             String taskPaidAmount = jsonData.optString(NetworkUtility.TAGS.TASK_PAID_AMOUNT);

@@ -428,7 +428,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
                 });
                 updateHeightOfLinearLayout(true);
             }
-        } else if (Utility.TASK_STATUS.PAID.equalsIgnoreCase(mTaskDetailModel.taskStatus)) {
+        } else if (Utility.TASK_STATUS.COD.equalsIgnoreCase(mTaskDetailModel.taskStatus) || Utility.TASK_STATUS.PAID.equalsIgnoreCase(mTaskDetailModel.taskStatus)) {
             mActivityTaskSummaryBinding.textTaskStatusTop.setText(getString(R.string.task_confirmed));
         } else if (Utility.TASK_STATUS.CANCELLED_CUSTOMER.equalsIgnoreCase(mTaskDetailModel.taskStatus)) {
             mActivityTaskSummaryBinding.textTaskStatusTop.setText(getString(R.string.msg_task_cancelled_title));
@@ -470,9 +470,9 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
                 e.printStackTrace();
             }
             superCalendar.setLocaleTimeZone();
-            String task_reschedule_date= superCalendar.format(Utility.DATE_FORMAT_DD_MMM );
+            String task_reschedule_date = superCalendar.format(Utility.DATE_FORMAT_DD_MMM);
             String task_reschedule_time = superCalendar.format(Utility.DATE_FORMAT_HH_MM_AM);
-            String message = getString(R.string.label_reschedule_desc, task_reschedule_date + getString(R.string.label_at)+task_reschedule_time);
+            String message = getString(R.string.label_reschedule_desc, task_reschedule_date + getString(R.string.label_at) + task_reschedule_time);
 
 
             mActivityTaskSummaryBinding.textTaskRescheduleRequestDesc.setText(message);

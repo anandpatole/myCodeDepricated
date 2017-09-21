@@ -1124,6 +1124,7 @@ public class Utility {
          * If user Payed and task is in progress
          */
         String PAID = "paid";
+        String COD = "cod";
 
         /**
          * If user starts task on my home

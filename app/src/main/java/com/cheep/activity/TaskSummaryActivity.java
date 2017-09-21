@@ -325,7 +325,7 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
                 });
                 updateHeightOfLinearLayout(true);
             }
-        } else if (Utility.TASK_STATUS.PAID.equalsIgnoreCase(mTaskDetailModel.taskStatus)) {
+        } else if (Utility.TASK_STATUS.COD.equalsIgnoreCase(mTaskDetailModel.taskStatus) || Utility.TASK_STATUS.PAID.equalsIgnoreCase(mTaskDetailModel.taskStatus)) {
             mActivityTaskSummaryBinding.textTaskStatusTop.setText(getString(R.string.task_confirmed));
         } else if (Utility.TASK_STATUS.CANCELLED_CUSTOMER.equalsIgnoreCase(mTaskDetailModel.taskStatus)) {
             mActivityTaskSummaryBinding.textTaskStatusTop.setText(getString(R.string.msg_task_cancelled_title));
