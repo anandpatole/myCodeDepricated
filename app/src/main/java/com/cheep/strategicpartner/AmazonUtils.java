@@ -27,7 +27,7 @@ import java.io.IOException;
  * Created by giteeka on 24/8/17.
  */
 
-class AmazonUtils {
+public class AmazonUtils {
     private static AmazonS3Client sS3Client;
     private static CognitoCachingCredentialsProvider sCredProvider;
     private static TransferUtility sTransferUtility;
@@ -76,7 +76,7 @@ class AmazonUtils {
         return observer;
     }
 
-    static String getFileNameWithExt(String mFilePath, boolean withExt) {
+    public static String getFileNameWithExt(String mFilePath, boolean withExt) {
         if (!TextUtils.isEmpty(mFilePath)) {
             if (withExt)
                 return mFilePath.substring(mFilePath.lastIndexOf("/") + 1);

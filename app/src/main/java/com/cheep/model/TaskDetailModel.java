@@ -134,6 +134,7 @@ public class TaskDetailModel {
     // this is for payment choice activity for strategic partner
     public String totalStrategicPartner;
     public String payableAmountStrategicPartner;
+    public String quoteAmountStrategicPartner;
 
 
     // This is for payment choice screen

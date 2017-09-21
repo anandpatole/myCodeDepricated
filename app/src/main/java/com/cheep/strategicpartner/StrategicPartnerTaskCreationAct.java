@@ -10,6 +10,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -20,6 +21,7 @@ import com.cheep.adapter.TaskCreationForStrategicPartnerPagerAdapter;
 import com.cheep.databinding.ActivityTaskCreationForStrategicPartnerBinding;
 import com.cheep.model.AddressModel;
 import com.cheep.model.BannerImageModel;
+import com.cheep.model.MessageEvent;
 import com.cheep.strategicpartner.model.AllSubSubCat;
 import com.cheep.strategicpartner.model.MediaModel;
 import com.cheep.strategicpartner.model.QueAnsModel;
@@ -27,6 +29,10 @@ import com.cheep.strategicpartner.model.StrategicPartnerServiceModel;
 import com.cheep.utils.LogUtils;
 import com.cheep.utils.Utility;
 import com.google.android.gms.common.api.Status;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 
@@ -66,6 +72,7 @@ public class StrategicPartnerTaskCreationAct extends BaseAppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mActivityTaskCreationForStrategicPartnerBinding = DataBindingUtil.setContentView(this, R.layout.activity_task_creation_for_strategic_partner);
+        EventBus.getDefault().register(this);
         initiateUI();
     }
 
@@ -440,5 +447,22 @@ public class StrategicPartnerTaskCreationAct extends BaseAppCompatActivity {
 
     public ArrayList<QueAnsModel> getQuestionsList() {
         return mQuestionsList;
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(MessageEvent event) {
+        Log.d(TAG, "onMessageEvent() called with: event = [" + event.BROADCAST_ACTION + "]");
+        switch (event.BROADCAST_ACTION) {
+            case Utility.BROADCAST_TYPE.PAYMENT_COMPLETED_NEED_TO_REDIRECT_TO_MY_TASK_SCREEN:
+                // Finish this activity
+                finish();
+                break;
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        EventBus.getDefault().unregister(this);
+        super.onDestroy();
     }
 }
