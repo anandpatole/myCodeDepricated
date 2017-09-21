@@ -32,7 +32,6 @@ import android.support.v7.widget.AppCompatEditText;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -76,7 +75,7 @@ import static com.cheep.utils.SuperCalendar.SuperFormatter;
  */
 
 public class Utility {
-    public static final class GUEST_STATIC_INFO {
+    public interface GUEST_STATIC_INFO {
         public static final String USERNAME = "Guest";
     }
 
@@ -116,7 +115,7 @@ public class Utility {
     public static final String DATE_FORMAT_FULL_DATE = SuperFormatter.FULL_DATE;
 
     public static final int PASSWORD_MIN_LENGTH = 6;
-    public static final int PHONE_MIN_LENGTH = 10;
+    private static final int PHONE_MIN_LENGTH = 10;
 
     public static final int DEFAULT_PROFILE_SRC = R.drawable.icon_profile_img_solid;
     public static final int DEFAULT_CHEEP_LOGO = R.drawable.ic_cheep_circular_icon;
@@ -176,6 +175,8 @@ public class Utility {
 
     public static final int REQUEST_START_PAYMENT = 200;
     public static final int ADDITIONAL_REQUEST_START_PAYMENT = 300;
+    public static final int REQUEST_START_PAYMENT_FOR_STRATEGIC_PARTNER = 400;
+    public static final int REQUEST_CODE_TASK_CREATE_FOR_STRATEGIC_PARTNER = 401;
 
     public static final String REMOVE = "remove";
     public static final String ADD = "add";
@@ -324,7 +325,7 @@ public class Utility {
             return EMPTY_STRING;
         }
         String encryptedText = Base64.encodeBytes(encryptedtextInBytes);
-        Log.i("TAG", "applyAESEncryption: Encrypted Text" + encryptedText);
+        LogUtils.LOGI("TAG", "applyAESEncryption: Encrypted Text" + encryptedText);
 
         // Decrypt it
        /* byte[] decryptedTextInBytes = null;
@@ -337,37 +338,37 @@ public class Utility {
 
         if (decryptedTextInBytes != null) {
             String decryptedText = new String(decryptedTextInBytes);
-            Log.i("TAG", "applyAESEncryption: decrypted Text" + decryptedText);
+            LogUtils.LOGI("TAG", "applyAESEncryption: decrypted Text" + decryptedText);
         }*/
 
         return encryptedText;
     }
 
     /*public static int getHeightFromWidthForSixteenNineRatio(int width) {
-        Log.d(TAG, "getHeightFromWidthForSixteenNineRatio() called with: width = [" + width + "]");
-        Log.d(TAG, "getHeightFromWidthForSixteenNineRatio() returned: " + ((width * 9) / 16));
+        LogUtils.LOGD(TAG, "getHeightFromWidthForSixteenNineRatio() called with: width = [" + width + "]");
+        LogUtils.LOGD(TAG, "getHeightFromWidthForSixteenNineRatio() returned: " + ((width * 9) / 16));
         return ((width * 9) / 16);
     }*/
 
     public static int getHeightFromWidthForTwoOneRatio(int width) {
-//        Log.d(TAG, "getHeightFromWidthForTwoOneRatio() called with: width = [" + width + "]");
-//        Log.d(TAG, "getHeightFromWidthForTwoOneRatio() returned: " + (width / 2));
+//        LogUtils.LOGD(TAG, "getHeightFromWidthForTwoOneRatio() called with: width = [" + width + "]");
+//        LogUtils.LOGD(TAG, "getHeightFromWidthForTwoOneRatio() returned: " + (width / 2));
         return (width / 2);
     }
 
     /**
      * Below would provide dynamic height of image based on #Utility.CATEGORY_IMAGE_RATIO
      *
-     * @param width
-     * @return
+     * @param width int
+     * @return round value
      */
     public static int getHeightCategoryImageBasedOnRatio(int width) {
-//        Log.d(TAG, "getHeightCategoryImageBasedOnRatio() called with: width = [" + width + "]");
-//        Log.d(TAG, "getHeightCategoryImageBasedOnRatio() called with: width = [" + Math.round((width / CATEGORY_IMAGE_RATIO)) + "]");
+//        LogUtils.LOGD(TAG, "getHeightCategoryImageBasedOnRatio() called with: width = [" + width + "]");
+//        LogUtils.LOGD(TAG, "getHeightCategoryImageBasedOnRatio() called with: width = [" + Math.round((width / CATEGORY_IMAGE_RATIO)) + "]");
         return Math.round((width / CATEGORY_IMAGE_RATIO));
     }
 
-    public static String getUniqueTransactionId() {
+    static String getUniqueTransactionId() {
         return String.valueOf(System.currentTimeMillis());
     }
 
@@ -375,44 +376,48 @@ public class Utility {
     public static final String NO_INTERNET_CONNECTION = "Hey, we see a problem with your internet" + new String(Character.toChars(0x1f914)) + ". We\'ll wait while you check your connection and try again";
 
     //Bundle Extra parameters
-    public static class Extra {
-        public static final String WHICH_FRAG = "which_frag";
-        public static final String USER_DETAILS = "userdetails";
-        public static final String INFO_TYPE = "infoType";
-        public static final String DATA = "DATA";
-        public static final String IS_FIRST_TIME = "isFirstTime";
-        public static final String DATA_2 = "DATA_2";
-        public static final String PASSWORD = "password";
-        public static final String SELECTED_IMAGE_PATH = "selectedImagePath";
-        public static final String CORRECT_OTP = "correctOTP";
-        public static final String CATEGORY = "category";
-        public static final String PHONE_NUMBER = "phone_number";
-        public static final String LATITUDE = "latitude";
-        public static final String LONGITUDE = "longitude";
-        public static final String CITY_NAME = "city_name";
-        public static final String SESSION_EXPIRE = "session_expire";
-        public static final String IMAGE_URL = "image_url";
-        public static final String ACTION = "action";
-        public static final String USER_NAME = "user_name";
-        public static final String ADDRESS_ID = "address_id";
-        public static final String ADDRESS_TEXT = "address_text";
-        public static final String CATEGORY_ID = "category_id";
-        public static final String IS_DATE_SELECTED = "is_date_selected";
-        public static final String DATE_TIME = "date_time";
-        public static final String TASK_DETAIL = "task_detail";
-        public static final String TASK_STATUS = "task_status";
-        public static final String TASK_DETAIL_MODEL = "task_detail_model";
-        public static final String TASK_ID = "task_id";
-        public static final String PAYMENT_VIEW = "payment_view";
-        public static final String PAYMENT_VIEW_IS_ADDITIONAL_CHARGE = "isAdditional";
+    public interface Extra {
+        String WHICH_FRAG = "which_frag";
+        String USER_DETAILS = "userdetails";
+        String INFO_TYPE = "infoType";
+        String DATA = "DATA";
+        String IS_FIRST_TIME = "isFirstTime";
+        String DATA_2 = "DATA_2";
+        String PASSWORD = "password";
+        String SELECTED_IMAGE_PATH = "selectedImagePath";
+        String CORRECT_OTP = "correctOTP";
+        String CATEGORY = "category";
+        String PHONE_NUMBER = "phone_number";
+        String LATITUDE = "latitude";
+        String LONGITUDE = "longitude";
+        String CITY_NAME = "city_name";
+        String SESSION_EXPIRE = "session_expire";
+        String IMAGE_URL = "image_url";
+        String ACTION = "action";
+        String USER_NAME = "user_name";
+        String ADDRESS_ID = "address_id";
+        String ADDRESS_TEXT = "address_text";
+        String CATEGORY_ID = "category_id";
+        String IS_DATE_SELECTED = "is_date_selected";
+        String DATE_TIME = "date_time";
+        String TASK_DETAIL = "task_detail";
+        String TASK_STATUS = "task_status";
+        String TASK_DETAIL_MODEL = "task_detail_model";
+        String TASK_ID = "task_id";
+        String PAYMENT_VIEW = "payment_view";
+        String PAYMENT_VIEW_IS_ADDITIONAL_CHARGE = "isAdditional";
 
-        public static final String CHAT_NOTIFICATION_DATA = "chat_notification_data";
-        public static final String PROFILE_FROM_FAVOURITE = "from_favorite";
-        public static final String FROM_WHERE = "from_where";
-        public static final String TASK_TYPE_IS_INSTA = "isInsta";
-        public static final String SELECTED_ADDRESS_MODEL = "selectedAddressModel";
-        public static final String LOCATION_INFO = "location_info";
-        public static final String IS_INSTA_BOOKING_TASK = "isInstaBookingTask";
+        String CHAT_NOTIFICATION_DATA = "chat_notification_data";
+        String PROFILE_FROM_FAVOURITE = "from_favorite";
+        String FROM_WHERE = "from_where";
+        String TASK_TYPE_IS_INSTA = "isInsta";
+        String TASK_TYPE_IS_STRATEGIC = "isStrategic";
+        String SELECTED_ADDRESS_MODEL = "selectedAddressModel";
+        String LOCATION_INFO = "location_info";
+        String IS_INSTA_BOOKING_TASK = "isInstaBookingTask";
+        String IS_PAYMENT_SUCCESSFUL = "isPaymentSuccessful";
+        String PAYU_RESPONSE = "payu_response";
+        String TRANSACTION_ID = "transactionId";
     }
 
 
@@ -420,7 +425,7 @@ public class Utility {
     2 for Gold
     3 for Silver
     4 for bronze*/
-    public static class PRO_LEVEL {
+    public interface PRO_LEVEL {
         public static final String PLATINUM = "1";
         public static final String GOLD = "2";
         public static final String SILVER = "3";
@@ -573,7 +578,7 @@ public class Utility {
 
         Date mFutureDate = com.cheep.firebase.DateUtils.getFormatedDate(date, Utility.DATE_FORMAT_FULL_DATE);
         String timespan = DateUtils.getRelativeTimeSpanString(mFutureDate.getTime()).toString();
-        Log.d(TAG, "getDateDifference() returned: " + timespan);
+        LogUtils.LOGE(TAG, "getDateDifference() returned: " + timespan);
         return timespan;
         /*String sCurrentDt = DateUtils.getFormatedDate(Calendar.getInstance().getTime(), Utility.DATE_FORMAT_FULL_DATE);
         Date mCurrentDate=DateUtils.getFormatedDate(sCurrentDt,Utility.DATE_FORMAT_FULL_DATE);
@@ -607,7 +612,7 @@ public class Utility {
         long diff = mFutureDate.getTime() - mCurrentDate.getTime();
 
         String timespan = DateUtils.getRelativeTimeSpanString(mFutureDate.getTime(), System.currentTimeMillis(), DateUtils.SECOND_IN_MILLIS).toString();
-        Log.d(TAG, "getDateDifference() returned: " + timespan);
+        LogUtils.LOGD(TAG, "getDateDifference() returned: " + timespan);
         if (diff > 0) {
             return mContext.getString(R.string.format_task_start_time, timespan);
         } else {
@@ -677,7 +682,7 @@ public class Utility {
     }
 
     public static void showCircularImageView(Context context, String tag, ImageView img, String imageToLoad, int placeholderRes, boolean isRounded) {
-//        Log.d(TAG, "showCircularImageView() called with: context = [" + context + "], tag = [" + tag + "], img = [" + img + "], imageToLoad = [" + imageToLoad + "], placeholderRes = [" + placeholderRes + "], isRounded = [" + isRounded + "]");
+//        LogUtils.LOGD(TAG, "showCircularImageView() called with: context = [" + context + "], tag = [" + tag + "], img = [" + img + "], imageToLoad = [" + imageToLoad + "], placeholderRes = [" + placeholderRes + "], isRounded = [" + isRounded + "]");
         if (!isActivityCorrectForGlide(context)) {
             return;
         }
@@ -727,7 +732,7 @@ public class Utility {
 
 
     public static void showCircularImageViewWithColorBorder(Context context, String tag, ImageView img, String imageToLoad, int placeholderRes, int color, boolean isRounded) {
-//        Log.d(TAG, "showCircularImageView() called with: context = [" + context + "], tag = [" + tag + "], img = [" + img + "], imageToLoad = [" + imageToLoad + "], placeholderRes = [" + placeholderRes + "], isRounded = [" + isRounded + "]");
+//        LogUtils.LOGD(TAG, "showCircularImageView() called with: context = [" + context + "], tag = [" + tag + "], img = [" + img + "], imageToLoad = [" + imageToLoad + "], placeholderRes = [" + placeholderRes + "], isRounded = [" + isRounded + "]");
         if (!isActivityCorrectForGlide(context)) {
             return;
         }

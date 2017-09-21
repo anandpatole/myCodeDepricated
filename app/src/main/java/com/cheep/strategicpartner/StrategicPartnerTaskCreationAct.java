@@ -10,7 +10,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -25,6 +24,7 @@ import com.cheep.strategicpartner.model.AllSubSubCat;
 import com.cheep.strategicpartner.model.MediaModel;
 import com.cheep.strategicpartner.model.QueAnsModel;
 import com.cheep.strategicpartner.model.StrategicPartnerServiceModel;
+import com.cheep.utils.LogUtils;
 import com.cheep.utils.Utility;
 import com.google.android.gms.common.api.Status;
 
@@ -42,19 +42,18 @@ import java.util.ArrayList;
  */
 public class StrategicPartnerTaskCreationAct extends BaseAppCompatActivity {
     private static final String TAG = "TaskCreationForSPScreen";
+
     private ActivityTaskCreationForStrategicPartnerBinding mActivityTaskCreationForStrategicPartnerBinding;
     public BannerImageModel mBannerImageModel;
-    private TaskCreationForStrategicPartnerPagerAdapter mTaskCreationPagerAdapter;
     private ArrayList<QueAnsModel> mQuestionsList;
     private ArrayList<StrategicPartnerServiceModel> mSelectedServicesList;
     public boolean isSingleSelection = false;
     public String spUserId = "";
-    //    public String date = "";
-//    public String time = "";
-//    public String address = "";
+
     @Nullable
     public AddressModel mSelectedAddressModel;
-    public String total = "";
+    //
+    public String totalOfGSTPrice = "";
     public String totalOfBasePrice = "";
 
     public static void getInstance(Context mContext, BannerImageModel model) {
@@ -79,10 +78,9 @@ public class StrategicPartnerTaskCreationAct extends BaseAppCompatActivity {
         setTaskState(STEP_ONE_UNVERIFIED);
 
 
-
         if (getIntent().getExtras() != null) {
             // Fetch banner Model
-            Log.e(TAG, " data " + getIntent().getStringExtra(Utility.Extra.DATA));
+            LogUtils.LOGE(TAG, " data " + getIntent().getStringExtra(Utility.Extra.DATA));
             mBannerImageModel = (BannerImageModel) Utility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA), BannerImageModel.class);
             if (mBannerImageModel != null) {
                 // Load PRO image
@@ -185,12 +183,12 @@ public class StrategicPartnerTaskCreationAct extends BaseAppCompatActivity {
      * @param pager view pager for 3 steps
      */
     private void setupViewPager(ViewPager pager) {
-        mTaskCreationPagerAdapter = new TaskCreationForStrategicPartnerPagerAdapter(getSupportFragmentManager());
-        mTaskCreationPagerAdapter.addFragment(StrategicPartnerFragPhaseOne.TAG);
-        mTaskCreationPagerAdapter.addFragment(StrategicPartnerFragPhaseTwo.TAG);
-        mTaskCreationPagerAdapter.addFragment(StrategicPartnerFragPhaseThree.TAG);
+        TaskCreationForStrategicPartnerPagerAdapter taskCreationPagerAdapter = new TaskCreationForStrategicPartnerPagerAdapter(getSupportFragmentManager());
+        taskCreationPagerAdapter.addFragment(StrategicPartnerFragPhaseOne.TAG);
+        taskCreationPagerAdapter.addFragment(StrategicPartnerFragPhaseTwo.TAG);
+        taskCreationPagerAdapter.addFragment(StrategicPartnerFragPhaseThree.TAG);
         pager.setOffscreenPageLimit(2);
-        pager.setAdapter(mTaskCreationPagerAdapter);
+        pager.setAdapter(taskCreationPagerAdapter);
     }
 
     /**
@@ -341,10 +339,10 @@ public class StrategicPartnerTaskCreationAct extends BaseAppCompatActivity {
                     ArrayList<MediaModel> mediaModelArrayList = model.medialList;
                     if (mediaModelArrayList != null && !mediaModelArrayList.isEmpty()) {
                         for (MediaModel mediaModel : mediaModelArrayList) {
-                            Log.d(TAG, "onBackPressed() delete");
-                            Log.d(TAG, "onBackPressed() " + mediaModel.mediaName);
-                            Log.d(TAG, "onBackPressed() " + mediaModel.mediaThumbName);
-                            Log.d(TAG, "onBackPressed() ============");
+                            LogUtils.LOGD(TAG, "onBackPressed() delete");
+                            LogUtils.LOGD(TAG, "onBackPressed() " + mediaModel.mediaName);
+                            LogUtils.LOGD(TAG, "onBackPressed() " + mediaModel.mediaThumbName);
+                            LogUtils.LOGD(TAG, "onBackPressed() ============");
                             AmazonUtils.deleteFiles(this, mediaModel.mediaName, mediaModel.mediaThumbName);
                         }
                         break;
@@ -357,11 +355,11 @@ public class StrategicPartnerTaskCreationAct extends BaseAppCompatActivity {
 
     public void setSelectedSubService(ArrayList<StrategicPartnerServiceModel> mSelectedServicesList) {
         this.mSelectedServicesList = mSelectedServicesList;
-        Log.e(TAG, " on continue click");
+        LogUtils.LOGE(TAG, " on continue click");
         for (StrategicPartnerServiceModel model : mSelectedServicesList) {
-            Log.e(TAG, " Item Name " + model.name);
+            LogUtils.LOGE(TAG, " Item Name " + model.name);
             for (AllSubSubCat allSubSubCat : model.allSubSubCats) {
-                Log.e(TAG, " Item  sub name " + allSubSubCat.subSubCatName);
+                LogUtils.LOGE(TAG, " Item  sub name " + allSubSubCat.subSubCatName);
             }
         }
     }
@@ -373,28 +371,28 @@ public class StrategicPartnerTaskCreationAct extends BaseAppCompatActivity {
         switch (requestCode) {
             case Utility.REQUEST_CODE_READ_EXTERNAL_STORAGE_ADD_COVER:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Log.i(TAG, "onRequestPermissionsResult: Permission Granted");
+                    LogUtils.LOGI(TAG, "onRequestPermissionsResult: Permission Granted");
                     //startIntentFileChooser(Utility.REQUEST_CODE_GET_FILE_ADD_COVER);
                 } else if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_DENIED) {
-                    Log.i(TAG, "onRequestPermissionsResult: Permission Denied");
+                    LogUtils.LOGI(TAG, "onRequestPermissionsResult: Permission Denied");
                     Utility.showSnackBar(getString(R.string.permission_denied_read), mActivityTaskCreationForStrategicPartnerBinding.getRoot());
                 }
                 break;
             case Utility.REQUEST_CODE_READ_EXTERNAL_STORAGE_ADD_PROFILE_GALLERY:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Log.i(TAG, "onRequestPermissionsResult: Permission Granted");
+                    LogUtils.LOGI(TAG, "onRequestPermissionsResult: Permission Granted");
                     // startIntentFileChooser(Utility.REQUEST_CODE_GET_FILE_ADD_PROFILE_GALLERY);
                 } else if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_DENIED) {
-                    Log.i(TAG, "onRequestPermissionsResult: Permission Denied");
+                    LogUtils.LOGI(TAG, "onRequestPermissionsResult: Permission Denied");
                     Utility.showSnackBar(getString(R.string.permission_denied_read), mActivityTaskCreationForStrategicPartnerBinding.getRoot());
                 }
                 break;
             case Utility.REQUEST_CODE_ADD_PROFILE_CAMERA:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Log.i(TAG, "onRequestPermissionsResult: Permission Granted");
+                    LogUtils.LOGI(TAG, "onRequestPermissionsResult: Permission Granted");
                     //  startCameraCaptureChooser(Utility.REQUEST_CODE_IMAGE_CAPTURE_ADD_PROFILE);
                 } else if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_DENIED) {
-                    Log.i(TAG, "onRequestPermissionsResult: Permission Denied Camera");
+                    LogUtils.LOGI(TAG, "onRequestPermissionsResult: Permission Denied Camera");
                     Utility.showSnackBar(getString(R.string.permission_denied_camera), mActivityTaskCreationForStrategicPartnerBinding.getRoot());
                 }
                 break;

@@ -2,7 +2,6 @@ package com.cheep.strategicpartner;
 
 import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +13,7 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.cheep.R;
 import com.cheep.strategicpartner.model.MediaModel;
+import com.cheep.utils.LogUtils;
 import com.cheep.utils.Utility;
 
 import java.util.ArrayList;
@@ -89,7 +89,7 @@ class MediaRecycleAdapter extends RecyclerView.Adapter<MediaRecycleAdapter.MyVie
         }
 
         void bind(final MediaModel mediaModel) {
-            Log.i(TAG, "bind:>>  " + mediaModel.mediaName);
+            LogUtils.LOGI(TAG, "bind:>>  " + mediaModel.mediaName);
 
 //            Utility.loadImageView(mView.getContext(), mImgThumb, mediaModel.mediaThumbName);
 //             set image thumbnails with rounder grey border around image view
