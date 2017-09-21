@@ -32,7 +32,6 @@ import android.support.v7.widget.AppCompatEditText;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -76,7 +75,7 @@ import static com.cheep.utils.SuperCalendar.SuperFormatter;
  */
 
 public class Utility {
-    public static final class GUEST_STATIC_INFO {
+    public interface GUEST_STATIC_INFO {
         public static final String USERNAME = "Guest";
     }
 
@@ -115,7 +114,7 @@ public class Utility {
     public static final String DATE_FORMAT_FULL_DATE = SuperFormatter.FULL_DATE;
 
     public static final int PASSWORD_MIN_LENGTH = 6;
-    public static final int PHONE_MIN_LENGTH = 10;
+    private static final int PHONE_MIN_LENGTH = 10;
 
     public static final int DEFAULT_PROFILE_SRC = R.drawable.icon_profile_img_solid;
     public static final int DEFAULT_CHEEP_LOGO = R.drawable.ic_cheep_circular_icon;
@@ -176,6 +175,7 @@ public class Utility {
     public static final int REQUEST_START_PAYMENT = 200;
     public static final int ADDITIONAL_REQUEST_START_PAYMENT = 300;
     public static final int REQUEST_START_PAYMENT_FOR_STRATEGIC_PARTNER = 400;
+    public static final int REQUEST_CODE_TASK_CREATE_FOR_STRATEGIC_PARTNER = 401;
 
     public static final String REMOVE = "remove";
     public static final String ADD = "add";
@@ -324,7 +324,7 @@ public class Utility {
             return EMPTY_STRING;
         }
         String encryptedText = Base64.encodeBytes(encryptedtextInBytes);
-        Log.i("TAG", "applyAESEncryption: Encrypted Text" + encryptedText);
+        LogUtils.LOGI("TAG", "applyAESEncryption: Encrypted Text" + encryptedText);
 
         // Decrypt it
        /* byte[] decryptedTextInBytes = null;
@@ -337,37 +337,37 @@ public class Utility {
 
         if (decryptedTextInBytes != null) {
             String decryptedText = new String(decryptedTextInBytes);
-            Log.i("TAG", "applyAESEncryption: decrypted Text" + decryptedText);
+            LogUtils.LOGI("TAG", "applyAESEncryption: decrypted Text" + decryptedText);
         }*/
 
         return encryptedText;
     }
 
     /*public static int getHeightFromWidthForSixteenNineRatio(int width) {
-        Log.d(TAG, "getHeightFromWidthForSixteenNineRatio() called with: width = [" + width + "]");
-        Log.d(TAG, "getHeightFromWidthForSixteenNineRatio() returned: " + ((width * 9) / 16));
+        LogUtils.LOGD(TAG, "getHeightFromWidthForSixteenNineRatio() called with: width = [" + width + "]");
+        LogUtils.LOGD(TAG, "getHeightFromWidthForSixteenNineRatio() returned: " + ((width * 9) / 16));
         return ((width * 9) / 16);
     }*/
 
     public static int getHeightFromWidthForTwoOneRatio(int width) {
-//        Log.d(TAG, "getHeightFromWidthForTwoOneRatio() called with: width = [" + width + "]");
-//        Log.d(TAG, "getHeightFromWidthForTwoOneRatio() returned: " + (width / 2));
+//        LogUtils.LOGD(TAG, "getHeightFromWidthForTwoOneRatio() called with: width = [" + width + "]");
+//        LogUtils.LOGD(TAG, "getHeightFromWidthForTwoOneRatio() returned: " + (width / 2));
         return (width / 2);
     }
 
     /**
      * Below would provide dynamic height of image based on #Utility.CATEGORY_IMAGE_RATIO
      *
-     * @param width
-     * @return
+     * @param width int
+     * @return round value
      */
     public static int getHeightCategoryImageBasedOnRatio(int width) {
-//        Log.d(TAG, "getHeightCategoryImageBasedOnRatio() called with: width = [" + width + "]");
-//        Log.d(TAG, "getHeightCategoryImageBasedOnRatio() called with: width = [" + Math.round((width / CATEGORY_IMAGE_RATIO)) + "]");
+//        LogUtils.LOGD(TAG, "getHeightCategoryImageBasedOnRatio() called with: width = [" + width + "]");
+//        LogUtils.LOGD(TAG, "getHeightCategoryImageBasedOnRatio() called with: width = [" + Math.round((width / CATEGORY_IMAGE_RATIO)) + "]");
         return Math.round((width / CATEGORY_IMAGE_RATIO));
     }
 
-    public static String getUniqueTransactionId() {
+    static String getUniqueTransactionId() {
         return String.valueOf(System.currentTimeMillis());
     }
 
@@ -416,6 +416,7 @@ public class Utility {
         String IS_INSTA_BOOKING_TASK = "isInstaBookingTask";
         String IS_PAYMENT_SUCCESSFUL = "isPaymentSuccessful";
         String PAYU_RESPONSE = "payu_response";
+        String TRANSACTION_ID = "transactionId";
     }
 
 
@@ -576,7 +577,7 @@ public class Utility {
 
         Date mFutureDate = com.cheep.firebase.DateUtils.getFormatedDate(date, Utility.DATE_FORMAT_FULL_DATE);
         String timespan = DateUtils.getRelativeTimeSpanString(mFutureDate.getTime()).toString();
-        Log.d(TAG, "getDateDifference() returned: " + timespan);
+        LogUtils.LOGE(TAG, "getDateDifference() returned: " + timespan);
         return timespan;
         /*String sCurrentDt = DateUtils.getFormatedDate(Calendar.getInstance().getTime(), Utility.DATE_FORMAT_FULL_DATE);
         Date mCurrentDate=DateUtils.getFormatedDate(sCurrentDt,Utility.DATE_FORMAT_FULL_DATE);
@@ -610,7 +611,7 @@ public class Utility {
         long diff = mFutureDate.getTime() - mCurrentDate.getTime();
 
         String timespan = DateUtils.getRelativeTimeSpanString(mFutureDate.getTime(), System.currentTimeMillis(), DateUtils.SECOND_IN_MILLIS).toString();
-        Log.d(TAG, "getDateDifference() returned: " + timespan);
+        LogUtils.LOGD(TAG, "getDateDifference() returned: " + timespan);
         if (diff > 0) {
             return mContext.getString(R.string.format_task_start_time, timespan);
         } else {
@@ -680,7 +681,7 @@ public class Utility {
     }
 
     public static void showCircularImageView(Context context, String tag, ImageView img, String imageToLoad, int placeholderRes, boolean isRounded) {
-//        Log.d(TAG, "showCircularImageView() called with: context = [" + context + "], tag = [" + tag + "], img = [" + img + "], imageToLoad = [" + imageToLoad + "], placeholderRes = [" + placeholderRes + "], isRounded = [" + isRounded + "]");
+//        LogUtils.LOGD(TAG, "showCircularImageView() called with: context = [" + context + "], tag = [" + tag + "], img = [" + img + "], imageToLoad = [" + imageToLoad + "], placeholderRes = [" + placeholderRes + "], isRounded = [" + isRounded + "]");
         if (!isActivityCorrectForGlide(context)) {
             return;
         }
@@ -730,7 +731,7 @@ public class Utility {
 
 
     public static void showCircularImageViewWithColorBorder(Context context, String tag, ImageView img, String imageToLoad, int placeholderRes, int color, boolean isRounded) {
-//        Log.d(TAG, "showCircularImageView() called with: context = [" + context + "], tag = [" + tag + "], img = [" + img + "], imageToLoad = [" + imageToLoad + "], placeholderRes = [" + placeholderRes + "], isRounded = [" + isRounded + "]");
+//        LogUtils.LOGD(TAG, "showCircularImageView() called with: context = [" + context + "], tag = [" + tag + "], img = [" + img + "], imageToLoad = [" + imageToLoad + "], placeholderRes = [" + placeholderRes + "], isRounded = [" + isRounded + "]");
         if (!isActivityCorrectForGlide(context)) {
             return;
         }

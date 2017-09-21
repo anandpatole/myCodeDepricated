@@ -2,7 +2,6 @@ package com.cheep.utils;
 
 import android.os.AsyncTask;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.cheep.BuildConfig;
 import com.cheep.model.ProviderModel;
@@ -100,7 +99,7 @@ public class HDFCPaymentUtility {
                                                                                      String payableAmount,
                                                                                      String start_datetime) {
 
-        Map<String, String> mTransactionFieldsParams = new HashMap<>();
+        Map<String, String> mTransactionFieldsParams;
         mTransactionFieldsParams = new HashMap<>();
         // Create Unique Transaction ID
         String transaction_Id = Utility.getUniqueTransactionId();
@@ -140,7 +139,7 @@ public class HDFCPaymentUtility {
     /**
      * Asynctask that will do encryption
      *
-     * @Dated : 6th Feb 2017
+     * @Date : 6th Feb 2017
      * input: String that needs to be converted
      * output: String after Encryption completed
      */
@@ -155,8 +154,7 @@ public class HDFCPaymentUtility {
         @Override
         protected String doInBackground(String... params) {
             try {
-                String result = Utility.applyAESEncryption(new JSONObject(params[0]).toString());
-                return result;
+                return Utility.applyAESEncryption(new JSONObject(params[0]).toString());
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -175,7 +173,7 @@ public class HDFCPaymentUtility {
         for (String key : mTransactionFieldsParams.keySet()) {
             postData = postData.append("&").append(key).append("=").append(mTransactionFieldsParams.get(key));
         }
-        Log.d(TAG, "getPaymentUrl() returned: " + postData.toString());
+        LogUtils.LOGE(TAG, "getPaymentUrl() returned: " + postData.toString());
         return postData.toString().replaceAll("hash=", "hash=" + hashString);
     }
 

@@ -71,6 +71,7 @@ import com.cheep.strategicpartner.model.QueAnsModel;
 import com.cheep.strategicpartner.model.StrategicPartnerServiceModel;
 import com.cheep.strategicpartner.recordvideo.RecordVideoNewActivity;
 import com.cheep.utils.FetchLocationInfoUtility;
+import com.cheep.utils.LogUtils;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.SuperCalendar;
 import com.cheep.utils.Utility;
@@ -140,7 +141,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        Log.d(TAG, "setUserVisibleHint() called with: isVisibleToUser = [" + isVisibleToUser + "]");
+        LogUtils.LOGD(TAG, "setUserVisibleHint() called with: isVisibleToUser = [" + isVisibleToUser + "]");
         if (!isVisibleToUser || mStrategicPartnerTaskCreationAct == null) {
             return;
         }
@@ -174,7 +175,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
 
     @Override
     public void initiateUI() {
-        Log.d(TAG, "initiateUI() called");
+        LogUtils.LOGD(TAG, "initiateUI() called");
 
         // handle click of bottom button (book and pay)
         mFragmentStrategicPartnerPhaseTwoBinding.textContinue.setOnClickListener(new View.OnClickListener() {
@@ -212,7 +213,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
 
     /////////////////////////////////////// WEB CALL FOR QUESTIONNARY ////////////////////////////////
     private void fetchListOfQuestions(String catId) {
-        Log.d(TAG, "fetchListOfQuestions() called with: catId = [" + catId + "]");
+        LogUtils.LOGD(TAG, "fetchListOfQuestions() called with: catId = [" + catId + "]");
         if (!Utility.isConnected(mContext)) {
             Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mFragmentStrategicPartnerPhaseTwoBinding.getRoot());
             return;
@@ -242,7 +243,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
     private Response.Listener mCallFetchAllSubCateSPListingWSResponseListener = new Response.Listener() {
         @Override
         public void onResponse(Object response) {
-            Log.d(TAG, "onResponse() called with: response = [" + response + "]");
+            LogUtils.LOGD(TAG, "onResponse() called with: response = [" + response + "]");
             String strResponse = (String) response;
             try {
                 JSONObject jsonObject = new JSONObject(strResponse);
@@ -284,7 +285,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
     private Response.ErrorListener mCallFetchAllSubCateSPListingWSErrorListener = new Response.ErrorListener() {
         @Override
         public void onErrorResponse(VolleyError error) {
-            Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
+            LogUtils.LOGD(TAG, "onErrorResponse() called with: error = [" + error + "]");
             Utility.showSnackBar(getString(R.string.label_something_went_wrong), mFragmentStrategicPartnerPhaseTwoBinding.getRoot());
         }
     };
@@ -292,7 +293,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
 
     @Override
     public void setListener() {
-        Log.d(TAG, "setListener() called");
+        LogUtils.LOGD(TAG, "setListener() called");
     }
 
 
@@ -497,7 +498,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
                     @Override
                     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                         if (view.isShown()) {
-                            Log.d(TAG, "onDateSet() called with: view = [" + view + "], year = [" + year + "], monthOfYear = [" + monthOfYear + "], dayOfMonth = [" + dayOfMonth + "]");
+                            LogUtils.LOGD(TAG, "onDateSet() called with: view = [" + view + "], year = [" + year + "], monthOfYear = [" + monthOfYear + "], dayOfMonth = [" + dayOfMonth + "]");
                             startDateTimeSuperCalendar = SuperCalendar.getInstance();
                             startDateTimeSuperCalendar.set(Calendar.YEAR, year);
                             startDateTimeSuperCalendar.set(Calendar.MONTH, monthOfYear);
@@ -667,7 +668,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                         if (view.isShown()) {
 
-                            Log.d(TAG, "onTimeSet() called with: view = [" + view + "], hourOfDay = [" + hourOfDay + "], minute = [" + minute + "]");
+                            LogUtils.LOGD(TAG, "onTimeSet() called with: view = [" + view + "], hourOfDay = [" + hourOfDay + "], minute = [" + minute + "]");
 
 
                             startDateTimeSuperCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
@@ -789,7 +790,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
     }
 
     private void showMediaChooserDialog() {
-        Log.d(TAG, "showPictureChooserDialog() called");
+        LogUtils.LOGD(TAG, "showPictureChooserDialog() called");
         AlertDialog.Builder builder = new AlertDialog.Builder(mStrategicPartnerTaskCreationAct);
         builder.setTitle(getString(R.string.choose_media))
                 .setItems(R.array.choose_media_type, new DialogInterface.OnClickListener() {
@@ -812,7 +813,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
     }
 
     private void showVideoChooserDialog() {
-        Log.d(TAG, "showPictureChooserDialog() called");
+        LogUtils.LOGD(TAG, "showPictureChooserDialog() called");
         AlertDialog.Builder builder = new AlertDialog.Builder(mStrategicPartnerTaskCreationAct);
         builder.setTitle(getString(R.string.choose_video))
                 .setItems(R.array.choose_video_options, new DialogInterface.OnClickListener() {
@@ -897,7 +898,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
     }
 
     private void chooseVideoFromGallery(int requestFileChooserCode, int requestPermissionCode) {
-        Log.d(TAG, "choosePictureFromGallery() called with: requestFileChooserCode = [" + requestFileChooserCode + "], requestPermissionCode = [" + requestPermissionCode + "]");
+        LogUtils.LOGD(TAG, "choosePictureFromGallery() called with: requestFileChooserCode = [" + requestFileChooserCode + "], requestPermissionCode = [" + requestPermissionCode + "]");
         if (ContextCompat.checkSelfPermission(mStrategicPartnerTaskCreationAct, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             if (ActivityCompat.shouldShowRequestPermissionRationale(mStrategicPartnerTaskCreationAct, Manifest.permission.READ_EXTERNAL_STORAGE)) {
                 ActivityCompat.requestPermissions(mStrategicPartnerTaskCreationAct, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, requestPermissionCode);
@@ -921,7 +922,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
     /////////////////////////////////////////////////////////////////////////////////////////////
 
     private void showPictureChooserDialog() {
-        Log.d(TAG, "showPictureChooserDialog() called");
+        LogUtils.LOGD(TAG, "showPictureChooserDialog() called");
         AlertDialog.Builder builder = new AlertDialog.Builder(mStrategicPartnerTaskCreationAct);
         builder.setTitle(getString(R.string.choose_image))
                 .setItems(R.array.choose_image_options, new DialogInterface.OnClickListener() {
@@ -1041,7 +1042,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
 
     //// Gallery /////
     private void choosePictureFromGallery(int requestFileChooserCode, int requestPermissionCode) {
-        Log.d(TAG, "choosePictureFromGallery() called with: requestFileChooserCode = [" + requestFileChooserCode + "], requestPermissionCode = [" + requestPermissionCode + "]");
+        LogUtils.LOGD(TAG, "choosePictureFromGallery() called with: requestFileChooserCode = [" + requestFileChooserCode + "], requestPermissionCode = [" + requestPermissionCode + "]");
         if (ContextCompat.checkSelfPermission(mStrategicPartnerTaskCreationAct, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             if (ActivityCompat.shouldShowRequestPermissionRationale(mStrategicPartnerTaskCreationAct, Manifest.permission.READ_EXTERNAL_STORAGE)) {
                 ActivityCompat.requestPermissions(mStrategicPartnerTaskCreationAct, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, requestPermissionCode);
@@ -1144,7 +1145,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
             @Override
             public void onClick(View view) {
                 showAddAddressDialog(null);
-//                addAddressDialog.dismiss();
+//                addAddressDiaLogUtils.LOGDismiss();
             }
         });
         view.findViewById(R.id.btn_submit).setOnClickListener(new View.OnClickListener() {
@@ -1220,7 +1221,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
                 , new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
+                LogUtils.LOGD(TAG, "onErrorResponse() called with: error = [" + error + "]");
                 // Close Progressbar
                 hideProgressDialog();
                 // Show Toast
@@ -1258,7 +1259,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
                         }
 //                        addressId = model.address_id;
                         mSelectedAddressModel = model;*/
-                                Log.e(TAG, "category detail >> " + model.category + "");
+                                LogUtils.LOGE(TAG, "category detail >> " + model.category + "");
                                 textAns.setBackground(ContextCompat.getDrawable(mStrategicPartnerTaskCreationAct, R.drawable.background_ans_normal));
                                 if (model.category.equalsIgnoreCase(NetworkUtility.TAGS.ADDRESS_TYPE.HOME))
                                     textAns.setText(getString(R.string.label_home));
@@ -1357,7 +1358,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
         builder.setPositiveButton(getString(R.string.label_Ok), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                Log.d(TAG, "onClick() called with: dialogInterface = [" + dialogInterface + "], i = [" + i + "]");
+                LogUtils.LOGD(TAG, "onClick() called with: dialogInterface = [" + dialogInterface + "], i = [" + i + "]");
                 TEMP_ADDRESS_ID = model.address_id;
                 callDeleteAddressWS(model);
             }
@@ -1365,7 +1366,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
         builder.setNegativeButton(getString(R.string.label_cancel), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                Log.d(TAG, "onClick() called with: dialogInterface = [" + dialogInterface + "], i = [" + i + "]");
+                LogUtils.LOGD(TAG, "onClick() called with: dialogInterface = [" + dialogInterface + "], i = [" + i + "]");
             }
         });
         builder.show();
@@ -1687,7 +1688,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
     private Response.ErrorListener mCallDeleteAddressWSErrorListener = new Response.ErrorListener() {
         @Override
         public void onErrorResponse(VolleyError error) {
-            Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
+            LogUtils.LOGD(TAG, "onErrorResponse() called with: error = [" + error + "]");
 
             // Close Progressbar
             hideProgressDialog();
@@ -1869,7 +1870,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
     private Response.ErrorListener mCallUpdateAddressWSErrorListener = new Response.ErrorListener() {
         @Override
         public void onErrorResponse(VolleyError error) {
-            Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
+            LogUtils.LOGD(TAG, "onErrorResponse() called with: error = [" + error + "]");
 
             // Close Progressbar
             hideProgressDialog();
@@ -2058,7 +2059,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
     private Response.ErrorListener mCallAddAddressWSErrorListener = new Response.ErrorListener() {
         @Override
         public void onErrorResponse(VolleyError error) {
-            Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
+            LogUtils.LOGD(TAG, "onErrorResponse() called with: error = [" + error + "]");
 
             // Close Progressbar
             hideProgressDialog();
@@ -2129,7 +2130,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
         // video captured from camera result
         else if (requestCode == Utility.REQUEST_CODE_VIDEO_CAPTURE && resultCode == RESULT_OK && data != null) {
             mCurrentPhotoPath = data.getStringExtra("path");
-            Log.e(TAG, "path >> " + mCurrentPhotoPath);
+            LogUtils.LOGE(TAG, "path >> " + mCurrentPhotoPath);
             uploadFile(mCurrentPhotoPath, MediaModel.MediaType.TYPE_VIDEO);
 //            mMediaRecycleAdapter.addImage(new MediaModel(mCurrentPhotoPath, MediaModel.MediaType.TYPE_VIDEO));
 //            checkMediaArraySize();
@@ -2147,7 +2148,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
                     Utility.showToast(mContext, getString(R.string.message_file_something_wrong));
                 } else {
                     try {
-                        Log.e(TAG, "path >> " + mCurrentPhotoPath);
+                        LogUtils.LOGE(TAG, "path >> " + mCurrentPhotoPath);
 //                        mMediaRecycleAdapter.addImage(new MediaModel(mCurrentPhotoPath, MediaModel.MediaType.TYPE_VIDEO));
                         uploadFile(mCurrentPhotoPath, MediaModel.MediaType.TYPE_VIDEO);
 //                        checkMediaArraySize();
@@ -2335,20 +2336,20 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
 
         @Override
         public void onError(int id, Exception e) {
-            Log.e(TAG, "Error during upload: " + id, e);
+            LogUtils.LOGE(TAG, "Error during upload: " + id, e);
         }
 
         @Override
         public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {
-            Log.d(TAG, String.format("onProgressChanged: %d, total: %d, current: %d",
+            LogUtils.LOGD(TAG, String.format("onProgressChanged: %d, total: %d, current: %d",
                     id, bytesTotal, bytesCurrent));
         }
 
         @Override
         public void onStateChanged(int id, TransferState newState) {
-            Log.d(TAG, "onStateChanged: " + id + ", " + newState);
-            Log.d(TAG, "observer: " + observer.getId() + ", " + observer.getState());
-            Log.d(TAG, "observer1: " + observer1.getId() + ", " + observer.getState());
+            LogUtils.LOGD(TAG, "onStateChanged: " + id + ", " + newState);
+            LogUtils.LOGD(TAG, "observer: " + observer.getId() + ", " + observer.getState());
+            LogUtils.LOGD(TAG, "observer1: " + observer1.getId() + ", " + observer.getState());
             if (observer != null && observer1 != null) {
                 if (observer.getState() == TransferState.COMPLETED && observer1.getState() == TransferState.COMPLETED) {
                     // get s3 urls
@@ -2359,8 +2360,8 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
                     MediaModel mediaModel = new MediaModel();
                     mediaModel.mediaName = originalUrl;
                     mediaModel.mediaThumbName = thumbUrl;
-                    Log.e(TAG, "mediaName: " + originalUrl);
-                    Log.e(TAG, "mediaThumbName: " + thumbUrl);
+                    LogUtils.LOGE(TAG, "mediaName: " + originalUrl);
+                    LogUtils.LOGE(TAG, "mediaThumbName: " + thumbUrl);
                     mediaModel.mediaType = type;
                     mediaModel.localFilePath = localFilePath;
                     mMediaRecycleAdapter.addImage(mediaModel);

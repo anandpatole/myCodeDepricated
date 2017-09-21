@@ -6,7 +6,6 @@ import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +18,7 @@ import com.cheep.R;
 import com.cheep.databinding.FragmentMediaViewBinding;
 import com.cheep.fragment.BaseFragment;
 import com.cheep.strategicpartner.model.MediaModel;
+import com.cheep.utils.LogUtils;
 
 /**
  * Created by Giteeka on 18/8/17.
@@ -60,13 +60,13 @@ public class MediaViewFragment extends BaseFragment {
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        Log.d(TAG, "setUserVisibleHint() called with: isVisibleToUser = [" + isVisibleToUser + "]");
+        LogUtils.LOGD(TAG, "setUserVisibleHint() called with: isVisibleToUser = [" + isVisibleToUser + "]");
     }
 
 
     @Override
     public void initiateUI() {
-        Log.d(TAG, "initiateUI() called");
+        LogUtils.LOGD(TAG, "initiateUI() called");
         if (getArguments() != null && getArguments().getSerializable("model") != null) {
             mMediaModel = (MediaModel) getArguments().getSerializable("model");
 
@@ -86,13 +86,13 @@ public class MediaViewFragment extends BaseFragment {
                         }
                     })
                     .into(mFragmentMediaViewBinding.imgThumb);
-            Log.d(TAG, "initiateUI() returned: thumbImage " + mMediaModel.mediaThumbName);
-            Log.d(TAG, "initiateUI() returned: type " + mMediaModel.mediaType);
+            LogUtils.LOGD(TAG, "initiateUI() returned: thumbImage " + mMediaModel.mediaThumbName);
+            LogUtils.LOGD(TAG, "initiateUI() returned: type " + mMediaModel.mediaType);
             mFragmentMediaViewBinding.imgPlay.setVisibility(mMediaModel.mediaType.equalsIgnoreCase(MediaModel.MediaType.TYPE_VIDEO) ? View.VISIBLE : View.GONE);
             mFragmentMediaViewBinding.imgPlay.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Log.d(TAG, "onClick() returned mMediaModel.path: " + mMediaModel.mediaName);
+                    LogUtils.LOGD(TAG, "onClick() returned mMediaModel.path: " + mMediaModel.mediaName);
                     Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(mMediaModel.mediaName));
                     intent.setDataAndType(Uri.parse(mMediaModel.mediaName), "video/*");
                     startActivity(intent);
@@ -105,7 +105,7 @@ public class MediaViewFragment extends BaseFragment {
 
     @Override
     public void setListener() {
-        Log.d(TAG, "setListener() called");
+        LogUtils.LOGD(TAG, "setListener() called");
     }
 
 

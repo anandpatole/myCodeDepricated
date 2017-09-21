@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 
 import com.android.volley.Response;
@@ -32,6 +31,7 @@ import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
 import com.cheep.utils.HDFCPaymentUtility;
+import com.cheep.utils.LogUtils;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.SuperCalendar;
 import com.cheep.utils.Utility;
@@ -70,11 +70,11 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity {
         context.startActivity(intent);
     }
 
-    public static void newInstance(BaseFragment baseFragment, TaskDetailModel taskDetailModel, boolean isStrategicPartner) {
+    public static void newInstance(BaseFragment baseFragment, TaskDetailModel taskDetailModel, boolean isStrategicPartner, int resultCode) {
         Intent intent = new Intent(baseFragment.getActivity(), PaymentChoiceActivity.class);
         intent.putExtra(Utility.Extra.DATA_2, Utility.getJsonStringFromObject(taskDetailModel));
-        intent.putExtra(Utility.Extra.TASK_TYPE_IS_STRATEGIC, true);
-        baseFragment.startActivity(intent);
+        intent.putExtra(Utility.Extra.TASK_TYPE_IS_STRATEGIC, isStrategicPartner);
+        baseFragment.startActivityForResult(intent, resultCode);
     }
 
 
@@ -119,13 +119,13 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity {
         @Override
         public void onClick(View view) {
 
-            Log.d(TAG, "onClick: of HDFC PAYMENT");
-            if (isAdditional == 0) {
-                // Go for regular payment gateway
-                payNowForNormalTask(false);
-            } else if (isStrategicPartner) {
+            LogUtils.LOGE(TAG, "onClick: of HDFC PAYMENT");
+            if (isStrategicPartner) {
                 // Go for regular payment gateway strategic partner
                 payNowForStrategicPartner();
+            } else if (isAdditional == 0) {
+                // Go for regular payment gateway
+                payNowForNormalTask(false);
             } else {
                 // Go for regular payment gateway
                 payNowForNormalTask(true);
@@ -151,7 +151,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity {
         UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
 
         //Add Params
-        ;// = new HashMap<String, Object>();
+        // = new HashMap<String, Object>();
 
         mTransactionParams = HDFCPaymentUtility.getPaymentTransactionFieldsForNormalTask(PreferenceUtility.getInstance(this).getFCMRegID(), userDetails, isForAdditionalQuote, isInstaBooking, taskDetailModel, providerModel);
 
@@ -168,7 +168,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity {
                 mFinalParams.put(NetworkUtility.TAGS.DATA, encryptedData);
 
 //                getPaymentUrl(userDetails, isForAdditionalQuote);
-                String url = "";
+                String url;
                 // if payment is done using insta feature then
                 // post data will be generated like strategic partner feature
                 // call startegic generate hash for payment
@@ -223,14 +223,14 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity {
             String strResponse = (String) response;
             try {
                 JSONObject jsonObject = new JSONObject(strResponse);
-                Log.i(TAG, "onResponse: " + jsonObject.toString());
+                LogUtils.LOGE(TAG, "onResponse: " + jsonObject.toString());
                 int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
                 String error_message;
                 hideProgressDialog();
                 switch (statusCode) {
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
 
-                        /**
+                        /*
                          * Changes @Bhavesh : 7thJuly,2017
                          * In case we have to bypass the payment
                          */
@@ -244,9 +244,9 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity {
                             } else {
                                 //Call update payment service from here with all the response come from service
                                 if (isInstaBooking)
-                                    callCreateInstaBookingTaskWS(true, getString(R.string.message_payment_bypassed));
+                                    callCreateInstaBookingTaskWS(getString(R.string.message_payment_bypassed));
                                 else if (isStrategicPartner)
-                                    onSuccessPaymentOfStrategicPartner(true, getString(R.string.message_payment_bypassed));
+                                    onSuccessPaymentOfStrategicPartner(getString(R.string.message_payment_bypassed));
                                 else
                                     updatePaymentStatus(true, getString(R.string.message_payment_bypassed), false);
                             }
@@ -308,7 +308,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity {
         @Override
         public void onErrorResponse(final VolleyError error) {
             hideProgressDialog();
-            Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
+            LogUtils.LOGE(TAG, "onErrorResponse() called with: error = [" + error + "]");
 
             // Close Progressbar
 //            hideProgressDialog();
@@ -342,8 +342,12 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists() && dataSnapshot.getValue() != null) {
                     TaskChatModel taskChatModel = dataSnapshot.getValue(TaskChatModel.class);
-                    taskChatModel.chatId = formattedId;
-                    FirebaseHelper.getRecentChatRef(finalFormattedUserId).child(taskChatModel.chatId).setValue(taskChatModel);
+                    if (taskChatModel != null) {
+                        taskChatModel.chatId = formattedId;
+                    }
+                    if (taskChatModel != null) {
+                        FirebaseHelper.getRecentChatRef(finalFormattedUserId).child(taskChatModel.chatId).setValue(taskChatModel);
+                    }
 
                     if (isInstaBooking) {
         /* * Add new task detail on firebase
@@ -370,7 +374,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity {
         });
     }
 
-    private void callCreateInstaBookingTaskWS(boolean isSuccess, String response) {
+    private void callCreateInstaBookingTaskWS(String response) {
         //        TASK_CREATE_INSTA_BOOKING
 
 //        Required Params => task_desc,address_id,city_id,cat_id,start_datetime,
@@ -395,7 +399,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity {
             mParams.put(NetworkUtility.TAGS.ADDRESS_ID, mSelectedAddressModelForInsta.address_id);
         } else {
             // In case its nagative then provide other address information
-            /**
+            /*
              * public String address_initials;
              public String address;
              public String category; //comes from NetworkUtility.TAGS.ADDRESS_TYPE.
@@ -417,10 +421,10 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity {
         mParams.put(NetworkUtility.TAGS.SUBCATEGORY_ID, taskDetailModel.subCategoryID);
         mParams.put(NetworkUtility.TAGS.SP_USER_ID, providerModel.providerId);
         mParams.put(NetworkUtility.TAGS.TRANSACTION_ID, mTransactionParams.get(HDFCPaymentUtility.TXN_ID));
-        mParams.put(NetworkUtility.TAGS.PAYMENT_STATUS, isSuccess ? Utility.PAYMENT_STATUS.COMPLETED : Utility.PAYMENT_STATUS.FAILED);
+        mParams.put(NetworkUtility.TAGS.PAYMENT_STATUS, Utility.PAYMENT_STATUS.COMPLETED);
         mParams.put(NetworkUtility.TAGS.PAYMENT_LOG, response);
-        Log.i(TAG, "payNow: cheepCode " + taskDetailModel.cheepCode);
-        Log.i(TAG, "payNow: dicount " + taskDetailModel.taskDiscountAmount);
+        LogUtils.LOGE(TAG, "payNow: cheepCode " + taskDetailModel.cheepCode);
+        LogUtils.LOGE(TAG, "payNow: dicount " + taskDetailModel.taskDiscountAmount);
 
         if (!TextUtils.isEmpty(taskDetailModel.cheepCode)) {
             mParams.put(NetworkUtility.TAGS.CHEEPCODE, taskDetailModel.cheepCode);
@@ -440,7 +444,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity {
             mTaskCreationParams.put(NetworkUtility.TAGS.ADDRESS_ID, mSelectedAddressModelForInsta.address_id);
         } else {
             // In case its nagative then provide other address information
-            /**
+            /*
              * public String address_initials;
              public String address;
              public String category; //comes from NetworkUtility.TAGS.ADDRESS_TYPE.
@@ -459,14 +463,14 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity {
         mTaskCreationParams.put(NetworkUtility.TAGS.CITY_ID, userDetails.CityID);
         mTaskCreationParams.put(NetworkUtility.TAGS.CAT_ID, taskDetailModel.categoryId);
         mTaskCreationParams.put(NetworkUtility.TAGS.START_DATETIME, taskDetailModel.taskStartdate);
-        mTaskCreationParams.put(NetworkUtility.TAGS.PAYMENT_STATUS, isSuccess ? Utility.PAYMENT_STATUS.COMPLETED : Utility.PAYMENT_STATUS.FAILED);
+        mTaskCreationParams.put(NetworkUtility.TAGS.PAYMENT_STATUS, Utility.PAYMENT_STATUS.COMPLETED);
         mTaskCreationParams.put(NetworkUtility.TAGS.PAYMENT_LOG, response);
         mTaskCreationParams.put(NetworkUtility.TAGS.SUBCATEGORY_ID, taskDetailModel.subCategoryID);
         mTaskCreationParams.put(NetworkUtility.TAGS.SP_USER_ID, providerModel.providerId);
         mTaskCreationParams.put(NetworkUtility.TAGS.TRANSACTION_ID, mTransactionParams.get(HDFCPaymentUtility.TXN_ID));
 
-        Log.i(TAG, "payNow: cheepCode " + taskDetailModel.cheepCode);
-        Log.i(TAG, "payNow: dicount " + taskDetailModel.taskDiscountAmount);
+        LogUtils.LOGE(TAG, "payNow: cheepCode " + taskDetailModel.cheepCode);
+        LogUtils.LOGE(TAG, "payNow: dicount " + taskDetailModel.taskDiscountAmount);
 
         if (!TextUtils.isEmpty(taskDetailModel.cheepCode)) {
             mTaskCreationParams.put(NetworkUtility.TAGS.CHEEPCODE, taskDetailModel.cheepCode);
@@ -495,77 +499,82 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == Utility.REQUEST_START_PAYMENT) {
+        switch (requestCode) {
+            case Utility.REQUEST_START_PAYMENT:
 //            Toast.makeText(mContext, "OnActivityResult called with resultCode:" + resultCode + ", requestCode:" + requestCode, Toast.LENGTH_SHORT).show();
-            if (resultCode == RESULT_OK) {
-                //success
-                if (data != null) {
-                    Log.d(TAG, "onActivityResult() called with success: result= [" + data.getStringExtra("payu_response") + "]");
-                    //Call update payment service from here with all the response come from service
-                    // check is task is from insta booking or not
-                    if (isInstaBooking)
-                        callCreateInstaBookingTaskWS(true, data.getStringExtra("payu_response"));
-                    else
-                        updatePaymentStatus(true, data.getStringExtra("payu_response"), false);
+                if (resultCode == RESULT_OK) {
+                    //success
+                    if (data != null) {
+                        LogUtils.LOGE(TAG, "onActivityResult() called with success: result= [" + data.getStringExtra("payu_response") + "]");
+                        //Call update payment service from here with all the response come from service
+                        // check is task is from insta booking or not
+                        if (isInstaBooking)
+                            callCreateInstaBookingTaskWS(data.getStringExtra("payu_response"));
+                        else
+                            updatePaymentStatus(true, data.getStringExtra("payu_response"), false);
+                    }
                 }
-            }
-            if (resultCode == RESULT_CANCELED) {
-                //failed
-                if (data != null) {
-                    Log.d(TAG, "onActivityResult() called with failed: result= [" + data.getStringExtra("payu_response") + "]");
-                    //Call update payment service from here with all the response come from service
-                    // check is task is from insta booking or not
-                    if (isInstaBooking)
+                if (resultCode == RESULT_CANCELED) {
+                    //failed
+                    if (data != null) {
+                        LogUtils.LOGE(TAG, "onActivityResult() called with failed: result= [" + data.getStringExtra("payu_response") + "]");
+                        //Call update payment service from here with all the response come from service
+                        // check is task is from insta booking or not
+                        if (isInstaBooking)
+                            Utility.showSnackBar(getString(R.string.msg_payment_failed), mActivityPaymentChoiceBinding.getRoot());
+                        else
+                            updatePaymentStatus(false, data.getStringExtra("payu_response"), false);
                         Utility.showSnackBar(getString(R.string.msg_payment_failed), mActivityPaymentChoiceBinding.getRoot());
-                    else
-                        updatePaymentStatus(false, data.getStringExtra("payu_response"), false);
-                    Utility.showSnackBar(getString(R.string.msg_payment_failed), mActivityPaymentChoiceBinding.getRoot());
+                    }
                 }
-            }
-        } else if (requestCode == Utility.ADDITIONAL_REQUEST_START_PAYMENT) {
+                break;
+            case Utility.ADDITIONAL_REQUEST_START_PAYMENT:
 //            Toast.makeText(mContext, "OnActivityResult called with resultCode:" + resultCode + ", requestCode:" + requestCode, Toast.LENGTH_SHORT).show();
-            if (resultCode == RESULT_OK) {
-                //success
-                if (data != null) {
-                    Log.d(TAG, "onActivityResult() called with success: result= [" + data.getStringExtra("payu_response") + "]");
-                    //Call update payment service from here with all the response come from service
-                    updatePaymentStatus(true, data.getStringExtra("payu_response"), true);
+                if (resultCode == RESULT_OK) {
+                    //success
+                    if (data != null) {
+                        LogUtils.LOGE(TAG, "onActivityResult() called with success: result= [" + data.getStringExtra("payu_response") + "]");
+                        //Call update payment service from here with all the response come from service
+                        updatePaymentStatus(true, data.getStringExtra("payu_response"), true);
+                    }
                 }
-            }
-            if (resultCode == RESULT_CANCELED) {
-                //failed
-                if (data != null) {
-                    Log.d(TAG, "onActivityResult() called with failed: result= [" + data.getStringExtra("payu_response") + "]");
-                    //Call update payment service from here with all the response come from service
-                    updatePaymentStatus(false, data.getStringExtra("payu_response"), true);
-                    Utility.showSnackBar(getString(R.string.msg_payment_failed), mActivityPaymentChoiceBinding.getRoot());
+                if (resultCode == RESULT_CANCELED) {
+                    //failed
+                    if (data != null) {
+                        LogUtils.LOGE(TAG, "onActivityResult() called with failed: result= [" + data.getStringExtra("payu_response") + "]");
+                        //Call update payment service from here with all the response come from service
+                        updatePaymentStatus(false, data.getStringExtra("payu_response"), true);
+                        Utility.showSnackBar(getString(R.string.msg_payment_failed), mActivityPaymentChoiceBinding.getRoot());
+                    }
                 }
-            }
-        } else if (requestCode == Utility.REQUEST_START_PAYMENT_FOR_STRATEGIC_PARTNER) {
-            if (resultCode == Activity.RESULT_OK) {
-                // success
-                if (data != null) {
-                    Log.d(TAG, "onActivityResult() called with success: result= [" + data.getStringExtra("payu_response") + "]");
-                    // Call update payment service from here with all the response come from service
-
+                break;
+            case Utility.REQUEST_START_PAYMENT_FOR_STRATEGIC_PARTNER:
+                if (resultCode == Activity.RESULT_OK) {
+                    // success
+                    if (data != null) {
+                        LogUtils.LOGE(TAG, "onActivityResult() called with success: result= [" + data.getStringExtra("payu_response") + "]");
+                        // Call update payment service from here with all the response come from service
+                        onSuccessPaymentOfStrategicPartner(data.getStringExtra("payu_response"));
+                    }
                 }
-            }
-            if (resultCode == Activity.RESULT_CANCELED) {
-                if (data != null) {
-                    Log.d(TAG, "onActivityResult() called with failed: result= [" + data.getStringExtra("payu_response") + "]");
-                    //Call update payment service from here with all the response come from service
+                if (resultCode == Activity.RESULT_CANCELED) {
+                    if (data != null) {
+                        LogUtils.LOGE(TAG, "onActivityResult() called with failed: result= [" + data.getStringExtra("payu_response") + "]");
+                        //Call update payment service from here with all the response come from service
 //                    callTaskCreationWebServiceForStratgicPartner(false, data.getStringExtra("result"));
-                    Utility.showSnackBar(getString(R.string.msg_payment_failed), mActivityPaymentChoiceBinding.getRoot());
+                        Utility.showSnackBar(getString(R.string.msg_payment_failed), mActivityPaymentChoiceBinding.getRoot());
+                    }
                 }
-            }
+                break;
         }
     }
 
-    public void onSuccessPaymentOfStrategicPartner(boolean isPaymentSuccessful, String payuResponse) {
+    public void onSuccessPaymentOfStrategicPartner(String payuResponse) {
         Intent intent = new Intent();
-        intent.putExtra(Utility.Extra.IS_PAYMENT_SUCCESSFUL, isPaymentSuccessful);
+        intent.putExtra(Utility.Extra.IS_PAYMENT_SUCCESSFUL, true);
         intent.putExtra(Utility.Extra.PAYU_RESPONSE, payuResponse);
-        setResult(RESULT_OK);
+        intent.putExtra(Utility.Extra.TRANSACTION_ID, mTransactionParams.get(HDFCPaymentUtility.TXN_ID));
+        setResult(RESULT_OK, intent);
         finish();
     }
 
@@ -623,7 +632,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity {
             String strResponse = (String) response;
             try {
                 JSONObject jsonObject = new JSONObject(strResponse);
-                Log.i(TAG, "onResponse: " + jsonObject.toString());
+                LogUtils.LOGE(TAG, "onResponse: " + jsonObject.toString());
                 int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
                 String error_message;
                 hideProgressDialog();
@@ -729,7 +738,6 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity {
                     case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
                         //Logout and finish the current activity
                         Utility.logout(mContext, true, statusCode);
-                        ;
                         finish();
                         break;
                 }
@@ -749,7 +757,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity {
             String strResponse = (String) response;
             try {
                 JSONObject jsonObject = new JSONObject(strResponse);
-                Log.i(TAG, "onResponse: " + jsonObject.toString());
+                LogUtils.LOGE(TAG, "onResponse: " + jsonObject.toString());
                 int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
                 String error_message;
                 hideProgressDialog();
@@ -807,7 +815,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity {
     }
 
     private String fetchMessageFromDateOfMonth(int day, SuperCalendar superStartDateTimeCalendar) {
-        String date = Utility.EMPTY_STRING;
+        String date;
         String DATE_FORMAT_TASK_HAS_BEEN_PAID_DATE_TH = SuperCalendar.SuperFormatter.DATE + getString(R.string.label_th_date) + SuperCalendar.SuperFormatter.MONTH_JAN;
         String DATE_FORMAT_TASK_HAS_BEEN_PAID_DATE_ST = SuperCalendar.SuperFormatter.DATE + getString(R.string.label_st_date) + SuperCalendar.SuperFormatter.MONTH_JAN;
         String DATE_FORMAT_TASK_HAS_BEEN_PAID_DATE_RD = SuperCalendar.SuperFormatter.DATE + getString(R.string.label_rd_date) + SuperCalendar.SuperFormatter.MONTH_JAN;
@@ -844,7 +852,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity {
     Response.ErrorListener mCallUpdatePaymentStatusWSErrorListener = new Response.ErrorListener() {
         @Override
         public void onErrorResponse(final VolleyError error) {
-            Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
+            LogUtils.LOGE(TAG, "onErrorResponse() called with: error = [" + error + "]");
 
             // Close Progressbar
             hideProgressDialog();
@@ -907,16 +915,13 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity {
 
                 //Add Header parameters
                 Map<String, String> mHeaderParams = new HashMap<>();
-                mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).
-
-                        getXAPIKey());
+                mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
                 mHeaderParams.put(NetworkUtility.TAGS.USER_ID, userDetails.UserID);
 
                 Map<String, Object> mFinalParams = new HashMap<>();
                 mFinalParams.put(NetworkUtility.TAGS.DATA, encryptedData);
 
                 //calling this to create post data
-
                 //Url is based on condition if address id is greater then 0 then it means we need to update the existing address
                 VolleyNetworkRequest mVolleyNetworkRequestForSPList = new VolleyNetworkRequest(NetworkUtility.WS.GET_PAYMENT_HASH_FOR_STRATEGIC_PARTNER
                         , mCallGenerateHashWSErrorListener

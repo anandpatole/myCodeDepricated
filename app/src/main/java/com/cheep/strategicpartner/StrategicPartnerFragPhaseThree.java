@@ -1,5 +1,6 @@
 package com.cheep.strategicpartner;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -15,7 +16,6 @@ import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -49,7 +49,7 @@ import com.cheep.strategicpartner.model.AllSubSubCat;
 import com.cheep.strategicpartner.model.MediaModel;
 import com.cheep.strategicpartner.model.QueAnsModel;
 import com.cheep.strategicpartner.model.StrategicPartnerServiceModel;
-import com.cheep.utils.HDFCPaymentUtility;
+import com.cheep.utils.LogUtils;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.SuperCalendar;
 import com.cheep.utils.Utility;
@@ -77,7 +77,6 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
     public static final String TAG = "StrategicPartnerFragPha";
     private FragmentStrategicPartnerPhaseThreeBinding mFragmentStrategicPartnerPhaseThreeBinding;
     private StrategicPartnerTaskCreationAct mStrategicPartnerTaskCreationAct;
-    private String addressId = "";
     private String payableAmount = "";
     private String promocode_price = "";
     private String start_datetime = "";
@@ -85,13 +84,11 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
     private String time = "";
     private CFEditTextRegular edtCheepCode;
     private BottomAlertDialog cheepCodeDialog;
-    private boolean isVerified = false;
     @Nullable
     private String cheepCode;
     private String tempTotalBasePrice = "";
     // After Posting Task, this would hold the details for AppsFlyer
     Map<String, Object> mTaskCreationParams;
-    private Map<String, String> mTransactionParams;
 
     @SuppressWarnings("unused")
     public static StrategicPartnerFragPhaseThree newInstance() {
@@ -121,7 +118,7 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
 
     @Override
     public void initiateUI() {
-        Log.d(TAG, "initiateUI() called");
+        LogUtils.LOGD(TAG, "initiateUI() called");
 
         mFragmentStrategicPartnerPhaseThreeBinding.recycleSelectedService.setLayoutManager(new LinearLayoutManager(mStrategicPartnerTaskCreationAct));
         mFragmentStrategicPartnerPhaseThreeBinding.recycleSelectedService.setNestedScrollingEnabled(false);
@@ -133,15 +130,11 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        Log.d(TAG, "setUserVisibleHint() called with: isVisibleToUser = [" + isVisibleToUser + "]");
+        LogUtils.LOGD(TAG, "setUserVisibleHint() called with: isVisibleToUser = [" + isVisibleToUser + "]");
         if (!isVisibleToUser || mStrategicPartnerTaskCreationAct == null) {
             return;
         }
-        mStrategicPartnerTaskCreationAct.setTaskState(
-                isVerified ?
-                        StrategicPartnerTaskCreationAct.STEP_THREE_VERIFIED :
-                        StrategicPartnerTaskCreationAct.STEP_THREE_NORMAL);
-
+        mStrategicPartnerTaskCreationAct.setTaskState(StrategicPartnerTaskCreationAct.STEP_THREE_NORMAL);
 
         // force to scroll up the view for strategic partner logo
         mFragmentStrategicPartnerPhaseThreeBinding.scrollView.postDelayed(new Runnable() {
@@ -161,9 +154,6 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
                     superCalendar.setTimeInMillis(Long.parseLong(start_datetime));
                     time = superCalendar.format(Utility.DATE_FORMAT_HH_MM_AM);
                     date = superCalendar.format(Utility.DATE_FORMAT_DD_MMM_YYYY);
-                }
-                if (queAnsModel.answerType.equalsIgnoreCase(Utility.TEMPLATE_LOCATION)) {
-                    addressId = queAnsModel.answer;
                 }
             }
         // set details of partner name user selected date time and address
@@ -342,7 +332,7 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
             try {
                 Utility.hideKeyboard(mStrategicPartnerTaskCreationAct, edtCheepCode);
                 JSONObject jsonObject = new JSONObject(strResponse);
-                Log.i(TAG, "onResponse: " + jsonObject.toString());
+                LogUtils.LOGI(TAG, "onResponse: " + jsonObject.toString());
                 int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
                 String error_message;
                 hideProgressDialog();
@@ -394,7 +384,7 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
     private Response.ErrorListener mCallValidateCheepCodeWSErrorListener = new Response.ErrorListener() {
         @Override
         public void onErrorResponse(final VolleyError error) {
-            Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
+            LogUtils.LOGD(TAG, "onErrorResponse() called with: error = [" + error + "]");
             Utility.hideKeyboard(mStrategicPartnerTaskCreationAct, edtCheepCode);
             Utility.showToast(mContext, getString(R.string.label_something_went_wrong));
         }
@@ -428,7 +418,7 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
 
     @Override
     public void setListener() {
-        Log.d(TAG, "setListener() called");
+        LogUtils.LOGD(TAG, "setListener() called");
     }
 
 
@@ -448,7 +438,7 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
         try {
             mContext.unregisterReceiver(mBR_OnLoginSuccess);
         } catch (Exception e) {
-            Log.i(TAG, "onDestroy: ");
+            LogUtils.LOGI(TAG, "onDestroy: ");
         }
     }
 
@@ -461,11 +451,11 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
      **********************************************************************************************/
 
     /**
-     * @param isPaymentSuccess      boolean
      * @param paymentGatewaySummary String
+     * @param transactionId         String
      */
     @SuppressWarnings("unchecked")
-    private void callTaskCreationWebServiceForStrategicPartner(boolean isPaymentSuccess, String paymentGatewaySummary) {
+    private void callTaskCreationWebServiceForStrategicPartner(String paymentGatewaySummary, String transactionId) {
 
         // Check Internet connection
         if (!Utility.isConnected(mContext)) {
@@ -495,12 +485,12 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
                 media_file = getSelectedMediaJsonString(model.medialList).toString();
                 break;
             }
-        Log.e(TAG, "start dat time " + start_datetime);
+        LogUtils.LOGE(TAG, "start dat time " + start_datetime);
         SuperCalendar superCalendar = SuperCalendar.getInstance();
         superCalendar.setTimeInMillis(Long.parseLong(start_datetime));
         superCalendar.setTimeZone(SuperCalendar.SuperTimeZone.GMT.GMT);
 
-        Log.e(TAG, "gmt time " + String.valueOf(superCalendar.getTimeInMillis()));
+        LogUtils.LOGE(TAG, "gmt time " + String.valueOf(superCalendar.getTimeInMillis()));
 
         Map<String, String> mParams = new HashMap<>();
         if (mStrategicPartnerTaskCreationAct.mSelectedAddressModel != null)
@@ -522,27 +512,27 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
         mParams.put(NetworkUtility.TAGS.SUB_CATEGORY_DETAIL, subCategoryDetail);
         mParams.put(NetworkUtility.TAGS.QUESTION_DETAIL, question_detail);
         mParams.put(NetworkUtility.TAGS.QUOTE_AMOUNT, mStrategicPartnerTaskCreationAct.totalOfBasePrice);
-        mParams.put(NetworkUtility.TAGS.PAYMENT_STATUS, isPaymentSuccess ? Utility.PAYMENT_STATUS.COMPLETED : Utility.PAYMENT_STATUS.FAILED);
+        mParams.put(NetworkUtility.TAGS.PAYMENT_STATUS, Utility.PAYMENT_STATUS.COMPLETED);
         mParams.put(NetworkUtility.TAGS.PAYMENT_LOG, paymentGatewaySummary);
 
         mParams.put(NetworkUtility.TAGS.CHEEPCODE, TextUtils.isEmpty(cheepCode) ? Utility.EMPTY_STRING : cheepCode);
-        mParams.put(NetworkUtility.TAGS.PAYABLE_AMOUNT, TextUtils.isEmpty(cheepCode) ? mStrategicPartnerTaskCreationAct.totalOfBasePrice
+        mParams.put(NetworkUtility.TAGS.PAYABLE_AMOUNT, TextUtils.isEmpty(cheepCode) ? mStrategicPartnerTaskCreationAct.totalOfGSTPrice
                 : payableAmount);
-        mParams.put(NetworkUtility.TAGS.TRANSACTION_ID, mTransactionParams.get(HDFCPaymentUtility.TXN_ID));
+        mParams.put(NetworkUtility.TAGS.TRANSACTION_ID, transactionId);
         mParams.put(NetworkUtility.TAGS.TASK_DESC, task_desc);
         mParams.put(NetworkUtility.TAGS.SP_USER_ID, mStrategicPartnerTaskCreationAct.spUserId);
         mParams.put(NetworkUtility.TAGS.PROMOCODE_PRICE, TextUtils.isEmpty(cheepCode) ? Utility.ZERO_STRING : promocode_price);
         // new amazon s3 uploaded file names
         mParams.put(NetworkUtility.TAGS.MEDIA_FILE, media_file);
 
-        Log.e(TAG, "subCategoryDetail = [ " + subCategoryDetail + " ] ");
-        Log.e(TAG, "question_detail = [ " + question_detail + " ] ");
-        Log.e(TAG, "start_datetime = [ " + start_datetime + " ] ");
-        Log.e(TAG, "total = [ " + mStrategicPartnerTaskCreationAct.totalOfBasePrice + " ] ");
-        Log.e(TAG, "task_desc= [ " + task_desc + " ] ");
-        Log.e(TAG, "media_file= [ " + media_file + " ] ");
-        Log.e(TAG, "SP_USER_ID= [ " + mStrategicPartnerTaskCreationAct.spUserId + " ] ");
-        Log.e(TAG, "cat_id = [ " + mStrategicPartnerTaskCreationAct.mBannerImageModel.cat_id + " ] ");
+        LogUtils.LOGE(TAG, "subCategoryDetail = [ " + subCategoryDetail + " ] ");
+        LogUtils.LOGE(TAG, "question_detail = [ " + question_detail + " ] ");
+        LogUtils.LOGE(TAG, "start_datetime = [ " + start_datetime + " ] ");
+        LogUtils.LOGE(TAG, "total = [ " + mStrategicPartnerTaskCreationAct.totalOfBasePrice + " ] ");
+        LogUtils.LOGE(TAG, "task_desc= [ " + task_desc + " ] ");
+        LogUtils.LOGE(TAG, "media_file= [ " + media_file + " ] ");
+        LogUtils.LOGE(TAG, "SP_USER_ID= [ " + mStrategicPartnerTaskCreationAct.spUserId + " ] ");
+        LogUtils.LOGE(TAG, "cat_id = [ " + mStrategicPartnerTaskCreationAct.mBannerImageModel.cat_id + " ] ");
 
         // Create Params for AppsFlyer event track
         mTaskCreationParams = new HashMap<>();
@@ -571,12 +561,13 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
         mTaskCreationParams.put(NetworkUtility.TAGS.START_DATETIME, start_datetime);
         mTaskCreationParams.put(NetworkUtility.TAGS.SUB_CATEGORY_DETAIL, subCategoryDetail);
         mTaskCreationParams.put(NetworkUtility.TAGS.QUESTION_DETAIL, question_detail);
-        mTaskCreationParams.put(NetworkUtility.TAGS.PAYMENT_STATUS, isPaymentSuccess ? Utility.PAYMENT_STATUS.COMPLETED : Utility.PAYMENT_STATUS.FAILED);
+        mTaskCreationParams.put(NetworkUtility.TAGS.PAYMENT_STATUS, Utility.PAYMENT_STATUS.COMPLETED);
         mTaskCreationParams.put(NetworkUtility.TAGS.PAYMENT_LOG, paymentGatewaySummary);
         mTaskCreationParams.put(NetworkUtility.TAGS.QUOTE_AMOUNT, mStrategicPartnerTaskCreationAct.totalOfBasePrice + "");
         mTaskCreationParams.put(NetworkUtility.TAGS.CHEEPCODE, cheepCode);
-        mTaskCreationParams.put(NetworkUtility.TAGS.PAYABLE_AMOUNT, payableAmount);
-        mTaskCreationParams.put(NetworkUtility.TAGS.TRANSACTION_ID, mTransactionParams.get(HDFCPaymentUtility.TXN_ID));
+        mTaskCreationParams.put(NetworkUtility.TAGS.PAYABLE_AMOUNT, TextUtils.isEmpty(cheepCode) ? mStrategicPartnerTaskCreationAct.totalOfGSTPrice
+                : payableAmount);
+        mTaskCreationParams.put(NetworkUtility.TAGS.TRANSACTION_ID, transactionId);
         mTaskCreationParams.put(NetworkUtility.TAGS.MEDIA_FILE, media_file);
         mTaskCreationParams.put(NetworkUtility.TAGS.SP_USER_ID, mStrategicPartnerTaskCreationAct.spUserId);
         mTaskCreationParams.put(NetworkUtility.TAGS.PROMOCODE_PRICE, TextUtils.isEmpty(cheepCode) ? Utility.ZERO_STRING : promocode_price);
@@ -589,7 +580,7 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
 //            for (int i = 0; i < mFileList.size(); i++) {
 //                MediaModel mediaModel = mFileList.get(i);
 //                if (!TextUtils.isEmpty(mediaModel.mediaName) && new File(mediaModel.mediaName).exists()) {
-//                    Log.e(TAG, "callTaskCreationWebServiceForStratgicPartner: path " + mediaModel.mediaName + "");
+//                    LogUtils.LOGE(TAG, "callTaskCreationWebServiceForStratgicPartner: path " + mediaModel.mediaName + "");
 //                    mFileParams.put("media_file[" + i + "]", new File(mediaModel.mediaName));
 //                }
 //            }
@@ -620,7 +611,7 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
             String strResponse = (String) response;
             try {
                 JSONObject jsonObject = new JSONObject(strResponse);
-                Log.i(TAG, "onResponse: " + jsonObject.toString());
+                LogUtils.LOGI(TAG, "onResponse: " + jsonObject.toString());
                 int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
                 switch (statusCode) {
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
@@ -698,7 +689,8 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
      * This method would going to call when task created successfully
      */
 
-    private void onSuccessfullTaskCreated(JSONObject jsonObject) {
+    @SuppressWarnings("unused")
+    private void onSuccessOfTaskCreated(JSONObject jsonObject) {
         TaskDetailModel taskDetailModel = (TaskDetailModel) Utility.getObjectFromJsonString(jsonObject.optString(NetworkUtility.TAGS.DATA), TaskDetailModel.class);
         if (taskDetailModel != null) {
             /* * Add new task detail on firebase
@@ -744,7 +736,7 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
     Response.ErrorListener mCallCreateTaskWSErrorListener = new Response.ErrorListener() {
         @Override
         public void onErrorResponse(VolleyError error) {
-            Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
+            LogUtils.LOGD(TAG, "onErrorResponse() called with: error = [" + error + "]");
 
             // Close Progressbar
             hideProgressDialog();
@@ -817,7 +809,7 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
     private BroadcastReceiver mBR_OnLoginSuccess = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.d(TAG, "onReceive() called with: context = [" + context + "], intent = [" + intent + "]");
+            LogUtils.LOGD(TAG, "onReceive() called with: context = [" + context + "], intent = [" + intent + "]");
             Utility.hideKeyboard(mContext);
             // Initiating the payment now
 
@@ -847,7 +839,36 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
         taskDetailModel.taskDiscountAmount = promocode_price;
         taskDetailModel.totalStrategicPartner = mStrategicPartnerTaskCreationAct.totalOfGSTPrice;
         taskDetailModel.payableAmountStrategicPartner = payableAmount;
-        PaymentChoiceActivity.newInstance(this, taskDetailModel, true);
+        PaymentChoiceActivity.newInstance(this, taskDetailModel, true, Utility.REQUEST_CODE_TASK_CREATE_FOR_STRATEGIC_PARTNER);
 
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == Utility.REQUEST_CODE_TASK_CREATE_FOR_STRATEGIC_PARTNER) {
+            // Toast.makeText(mContext, "OnActivityResult called with resultCode:" + resultCode + ", requestCode:" + requestCode, Toast.LENGTH_SHORT).show();
+            if (resultCode == Activity.RESULT_OK) {
+                mStrategicPartnerTaskCreationAct.setTaskState(StrategicPartnerTaskCreationAct.STEP_THREE_VERIFIED);
+                // success
+                if (data != null) {
+                    boolean isPaymentSuccessful = data.getBooleanExtra(Utility.Extra.IS_PAYMENT_SUCCESSFUL, false);
+                    if (isPaymentSuccessful)
+                        callTaskCreationWebServiceForStrategicPartner(data.getStringExtra(Utility.Extra.PAYU_RESPONSE), data.getStringExtra(Utility.Extra.TRANSACTION_ID));
+                    else
+                        mStrategicPartnerTaskCreationAct.setTaskState(StrategicPartnerTaskCreationAct.STEP_THREE_UNVERIFIED);
+                } else {
+                    Utility.showSnackBar(getString(R.string.msg_payment_failed), mFragmentStrategicPartnerPhaseThreeBinding.getRoot());
+                }
+            }
+            if (resultCode == Activity.RESULT_CANCELED) {
+                mStrategicPartnerTaskCreationAct.setTaskState(StrategicPartnerTaskCreationAct.STEP_THREE_UNVERIFIED);
+                if (data != null) {
+                    Utility.showSnackBar(getString(R.string.msg_payment_failed), mFragmentStrategicPartnerPhaseThreeBinding.getRoot());
+                }
+            }
+        }
+    }
+
 }

@@ -16,7 +16,6 @@ import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -27,6 +26,7 @@ import android.widget.Toast;
 
 import com.cheep.BuildConfig;
 import com.cheep.R;
+import com.cheep.utils.LogUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -267,7 +267,7 @@ public class RecordVideoNewActivity extends AppCompatActivity implements View.On
                 }
             });
         } catch (Exception exp) {
-            Log.e(TAG, " startMediaRecorder() : " + exp.getMessage());
+            LogUtils.LOGE(TAG, " startMediaRecorder() : " + exp.getMessage());
         }
     }
 
@@ -288,7 +288,7 @@ public class RecordVideoNewActivity extends AppCompatActivity implements View.On
             setResult(RESULT_OK, sendData);
             finish();
         } catch (Exception exp) {
-            Log.e(TAG, " stopMediaRecorder() : " + exp.getMessage());
+            LogUtils.LOGE(TAG, " stopMediaRecorder() : " + exp.getMessage());
         }
     }
 
@@ -307,7 +307,7 @@ public class RecordVideoNewActivity extends AppCompatActivity implements View.On
             setResult(RESULT_CANCELED, getIntent());
             finish();
         } catch (Exception exp) {
-            Log.e(TAG, " cancelMediaRecorder() : " + exp.getMessage());
+            LogUtils.LOGE(TAG, " cancelMediaRecorder() : " + exp.getMessage());
         }
     }
 
@@ -321,7 +321,7 @@ public class RecordVideoNewActivity extends AppCompatActivity implements View.On
                 mCamera.lock(); // lock camera for later use
             }
         } catch (Exception exp) {
-            Log.e(TAG, "releaseMediaRecorder() : " + exp.getMessage());
+            LogUtils.LOGE(TAG, "releaseMediaRecorder() : " + exp.getMessage());
         }
     }
 
@@ -342,25 +342,25 @@ public class RecordVideoNewActivity extends AppCompatActivity implements View.On
 
         if (numCameras > 1) {
             if (CamcorderProfile.hasProfile(CamcorderProfile.QUALITY_480P)) {
-                Log.e(TAG, "QUALITY_480P");
+                LogUtils.LOGE(TAG, "QUALITY_480P");
                 CamcorderProfile profile = CamcorderProfile.get(CamcorderProfile.QUALITY_480P);
                 mediaRecorder.setProfile(CamcorderProfile.get(Camera.CameraInfo.CAMERA_FACING_FRONT, CamcorderProfile.QUALITY_480P));
                 mediaRecorder.setVideoSize(profile.videoFrameWidth, profile.videoFrameHeight);
             } else {
                 CamcorderProfile profile = CamcorderProfile.get(CamcorderProfile.QUALITY_LOW);
-                Log.e(TAG, "QUALITY_480P not supported.");
+                LogUtils.LOGE(TAG, "QUALITY_480P not supported.");
                 mediaRecorder.setProfile(CamcorderProfile.get(Camera.CameraInfo.CAMERA_FACING_FRONT, CamcorderProfile.QUALITY_LOW));
                 mediaRecorder.setVideoSize(profile.videoFrameWidth, profile.videoFrameHeight);
             }
         } else {
             if (CamcorderProfile.hasProfile(CamcorderProfile.QUALITY_480P)) {
-                Log.e(TAG, "QUALITY_480P");
+                LogUtils.LOGE(TAG, "QUALITY_480P");
                 CamcorderProfile profile = CamcorderProfile.get(CamcorderProfile.QUALITY_480P);
                 mediaRecorder.setProfile(CamcorderProfile.get(Camera.CameraInfo.CAMERA_FACING_BACK, CamcorderProfile.QUALITY_480P));
                 mediaRecorder.setVideoSize(profile.videoFrameWidth, profile.videoFrameHeight);
             } else {
                 CamcorderProfile profile = CamcorderProfile.get(CamcorderProfile.QUALITY_LOW);
-                Log.e(TAG, "QUALITY_480P not supported.");
+                LogUtils.LOGE(TAG, "QUALITY_480P not supported.");
                 mediaRecorder.setProfile(CamcorderProfile.get(Camera.CameraInfo.CAMERA_FACING_BACK, CamcorderProfile.QUALITY_LOW));
                 mediaRecorder.setVideoSize(profile.videoFrameWidth, profile.videoFrameHeight);
             }
