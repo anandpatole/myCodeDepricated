@@ -10,5 +10,7 @@ public class BootstrapConstant {
    Exp:12/17
    CVV:123
     */
+
+    // card detail for bank
     public static final String CC_DETAILS = "4012001037141112";
 }
