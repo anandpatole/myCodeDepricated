@@ -15,9 +15,12 @@ import android.text.TextWatcher;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -45,6 +48,11 @@ public class WalletLinkActivity extends BaseAppCompatActivity implements View.On
     private boolean isPaytm;
     private String mState;
     private String mobileNumber;
+    private final int BTN_IS_SEND_OTP = 0;
+    private final int BTN_IS_PROCEED = 1;
+    private final int BTN_IS_ADD_AMOUNT = 2;
+    private final int BTN_IS_CONFIRM = 3;
+    private int BTN_WHICH = -1;
 
     public static void newInstance(Context context, boolean isPaytm) {
         Intent intent = new Intent(context, WalletLinkActivity.class);
@@ -95,68 +103,99 @@ public class WalletLinkActivity extends BaseAppCompatActivity implements View.On
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_send_otp:
-                if (isValidated(mActivityWalletLinkBinding.tvSendOtp.getText().toString())) {
-                    mobileNumber = mActivityWalletLinkBinding.etMobileNumber.getText().toString();
-                    sendOTP();
+                if (mActivityWalletLinkBinding.tvSendOtp.getText().toString().equalsIgnoreCase(getString(R.string.label_send_otp))) {
+                    BTN_WHICH = BTN_IS_SEND_OTP;
+                } else if (mActivityWalletLinkBinding.tvSendOtp.getText().toString().equalsIgnoreCase(getString(R.string.label_proceed))) {
+                    BTN_WHICH = BTN_IS_PROCEED;
+                } else if (mActivityWalletLinkBinding.tvSendOtp.getText().toString().equalsIgnoreCase(getString(R.string.label_add_amount))) {
+                    BTN_WHICH = BTN_IS_ADD_AMOUNT;
+                } else if (mActivityWalletLinkBinding.tvSendOtp.getText().toString().equalsIgnoreCase(getString(R.string.label_confirm))) {
+                    BTN_WHICH = BTN_IS_CONFIRM;
+                }
+                mobileNumber = mActivityWalletLinkBinding.etMobileNumber.getText().toString();
+                if (isValidated()) {
+                    if (BTN_WHICH == BTN_IS_SEND_OTP) {
+                        sendOTP();
+                    }
                 }
                 break;
         }
     }
 
     private void updateUI() {
-        String sendOTPString = getString(R.string.label_send_otp_again);
-        mActivityWalletLinkBinding.tvEnterNoLinkXAccount.setText(getString(R.string.label_enter_otp_sent_on_x, mActivityWalletLinkBinding.etMobileNumber.getText()));
-        mActivityWalletLinkBinding.tvSendOtp.setText(getString(R.string.label_proceed));
-        mActivityWalletLinkBinding.tvSendOtp.setEnabled(false);
-        mActivityWalletLinkBinding.etMobileNumber.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        if (BTN_WHICH == BTN_IS_SEND_OTP) {
+            String sendOTPString = getString(R.string.label_send_otp_again);
+            mActivityWalletLinkBinding.tvEnterNoLinkXAccount.setText(getString(R.string.label_enter_otp_sent_on_x, mActivityWalletLinkBinding.etMobileNumber.getText()));
+            mActivityWalletLinkBinding.tvSendOtp.setText(getString(R.string.label_proceed));
+            mActivityWalletLinkBinding.tvSendOtp.setEnabled(false);
+            mActivityWalletLinkBinding.etMobileNumber.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
+                }
+
+                @Override
+                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                    mActivityWalletLinkBinding.tvSendOtp.setEnabled(charSequence.length() > 3);
+                    mActivityWalletLinkBinding.tvSendOtp.setOnClickListener(charSequence.length() > 3 ? WalletLinkActivity.this : null);
+                }
+
+                @Override
+                public void afterTextChanged(Editable editable) {
+
+                }
+            });
+            mActivityWalletLinkBinding.ivMobile.setVisibility(View.GONE);
+            mActivityWalletLinkBinding.tvDefaultCountryCode.setVisibility(View.GONE);
+            mActivityWalletLinkBinding.etMobileNumber.setGravity(Gravity.CENTER);
+            mActivityWalletLinkBinding.etMobileNumber.setText(Utility.EMPTY_STRING);
+            mActivityWalletLinkBinding.etMobileNumber.setHint(getString(R.string.label_enter_otp));
+            SpannableStringBuilder sendOTPSpannableStringBuilder = new SpannableStringBuilder(sendOTPString);
+
+            int clickIndex = sendOTPString.indexOf(Utility.CLICK);
+
+            if (clickIndex < 0) {
+                LogUtils.LOGD(TAG, "\"click\" case changed in strings.xml");
+                return;
             }
 
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                mActivityWalletLinkBinding.tvSendOtp.setEnabled(charSequence.length() > 3);
-                mActivityWalletLinkBinding.tvSendOtp.setOnClickListener(charSequence.length() > 3 ? WalletLinkActivity.this : null);
-            }
+            LogUtils.LOGD(TAG, "clickIndex: " + clickIndex);
 
-            @Override
-            public void afterTextChanged(Editable editable) {
+            sendOTPSpannableStringBuilder.setSpan(new ClickableSpan() {
+                @Override
+                public void onClick(View view) {
+                    sendOTP();
+                }
 
-            }
-        });
-        mActivityWalletLinkBinding.ivMobile.setVisibility(View.GONE);
-        mActivityWalletLinkBinding.tvDefaultCountryCode.setVisibility(View.GONE);
-        mActivityWalletLinkBinding.etMobileNumber.setGravity(Gravity.CENTER);
-        mActivityWalletLinkBinding.etMobileNumber.setText(Utility.EMPTY_STRING);
-        mActivityWalletLinkBinding.etMobileNumber.setHint(getString(R.string.label_enter_otp));
-        SpannableStringBuilder sendOTPSpannableStringBuilder = new SpannableStringBuilder(sendOTPString);
+                @Override
+                public void updateDrawState(TextPaint ds) {
+                    ds.setUnderlineText(false);
+                }
+            }, clickIndex, sendOTPSpannableStringBuilder.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            sendOTPSpannableStringBuilder.setSpan(new ForegroundColorSpan(ContextCompat.getColor(mContext, R.color.splash_gradient_end)),
+                    clickIndex, sendOTPSpannableStringBuilder.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-        int clickIndex = sendOTPString.indexOf(Utility.CLICK);
+            mActivityWalletLinkBinding.tvWeCreateXWallet.setText(sendOTPSpannableStringBuilder);
+            mActivityWalletLinkBinding.tvWeCreateXWallet.setMovementMethod(LinkMovementMethod.getInstance());
 
-        if (clickIndex < 0) {
-            LogUtils.LOGD(TAG, "\"click\" case changed in strings.xml");
-            return;
+            LinearLayout.LayoutParams tvEnterNoLinkXAccountLayoutParams =
+                    new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            tvEnterNoLinkXAccountLayoutParams.setMargins(0,0,0,0);
+
+            mActivityWalletLinkBinding.tvEnterNoLinkXAccount.setLayoutParams(tvEnterNoLinkXAccountLayoutParams);
+
+        }  else if (BTN_WHICH == BTN_IS_PROCEED) {
+            LinearLayout.LayoutParams tvEnterNoLinkXAccountLayoutParams =
+                    new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            tvEnterNoLinkXAccountLayoutParams.setMargins(0,0,0,0);
+
+            mActivityWalletLinkBinding.tvEnterNoLinkXAccount.setLayoutParams(tvEnterNoLinkXAccountLayoutParams);
+
+        } else if (BTN_WHICH == BTN_IS_ADD_AMOUNT) {
+            Log.d(TAG, "updateUI: ");
+        } else if (BTN_WHICH == BTN_IS_CONFIRM){
+            Log.d(TAG, "updateUI: ");
         }
-
-        LogUtils.LOGD(TAG, "clickIndex: " + clickIndex);
-
-        sendOTPSpannableStringBuilder.setSpan(new ClickableSpan() {
-            @Override
-            public void onClick(View view) {
-                sendOTP();
-            }
-
-            @Override
-            public void updateDrawState(TextPaint ds) {
-                ds.setUnderlineText(false);
-            }
-        }, clickIndex, sendOTPSpannableStringBuilder.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        sendOTPSpannableStringBuilder.setSpan(new ForegroundColorSpan(ContextCompat.getColor(mContext, R.color.splash_gradient_end)),
-                clickIndex, sendOTPSpannableStringBuilder.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-        mActivityWalletLinkBinding.tvWeCreateXWallet.setText(sendOTPSpannableStringBuilder);
-        mActivityWalletLinkBinding.tvWeCreateXWallet.setMovementMethod(LinkMovementMethod.getInstance());
     }
 
     private void sendOTP() {
@@ -240,9 +279,9 @@ public class WalletLinkActivity extends BaseAppCompatActivity implements View.On
         }
     };
 
-    private boolean isValidated(String isSendOTP) {
+    private boolean isValidated() {
 
-        if (isSendOTP.equalsIgnoreCase(getString(R.string.label_send_otp))) {
+        if (BTN_WHICH == BTN_IS_SEND_OTP) {
             if (TextUtils.isEmpty(mActivityWalletLinkBinding.etMobileNumber.getText())) {
                 Utility.showSnackBar(getString(R.string.validate_phone_number), mActivityWalletLinkBinding.getRoot());
                 return false;
@@ -254,18 +293,20 @@ public class WalletLinkActivity extends BaseAppCompatActivity implements View.On
                 return false;
             }
             return true;
-        } else if (isSendOTP.equalsIgnoreCase(getString(R.string.label_proceed))) {
+        } else if (BTN_WHICH == BTN_IS_PROCEED) {
             if (TextUtils.isEmpty(mActivityWalletLinkBinding.etMobileNumber.getText())) {
                 Utility.showSnackBar(getString(R.string.validate_otp_empty), mActivityWalletLinkBinding.getRoot());
                 return false;
             }
             return true;
-        } else if (isSendOTP.equalsIgnoreCase(getString(R.string.label_add_amount))) {
+        } else if (BTN_WHICH == BTN_IS_ADD_AMOUNT) {
             if (TextUtils.isEmpty(mActivityWalletLinkBinding.etMobileNumber.getText())) {
                 Utility.showSnackBar(getString(R.string.validate_empty_amount), mActivityWalletLinkBinding.getRoot());
                 return false;
             }
             return true;
+        } else if (BTN_WHICH == BTN_IS_CONFIRM){
+            
         }
         return false;
     }
