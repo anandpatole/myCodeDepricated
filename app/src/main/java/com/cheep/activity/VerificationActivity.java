@@ -532,9 +532,9 @@ public class VerificationActivity extends BaseAppCompatActivity {
         if (!TextUtils.isEmpty(mUserDetails.gp_app_id)) {
             mParams.put(NetworkUtility.TAGS.GOOGLE_PLUS_APP_ID, mUserDetails.gp_app_id);
         }
-        if(!TextUtils.isEmpty(mUserDetails.refer_code)){
-            mParams.put(NetworkUtility.TAGS.VALID_REFER_CODE,PreferenceUtility.getInstance(mContext).getUserDetails().refer_code);
-        }
+//        if(!TextUtils.isEmpty(mUserDetails.refer_code)){
+//            mParams.put(NetworkUtility.TAGS.VALID_REFER_CODE,PreferenceUtility.getInstance(mContext).getUserDetails().refer_code);
+//        }
 
 //        mParams.put(NetworkUtility.TAGS.PASSWORD, password);
 

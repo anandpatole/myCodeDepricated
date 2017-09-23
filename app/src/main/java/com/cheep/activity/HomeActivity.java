@@ -282,6 +282,7 @@ public class HomeActivity extends BaseAppCompatActivity
         list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.tab_me), R.drawable.icon_logout, false, false));
         list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.label_history), R.drawable.icon_history, false, false));
         // TODO: Icon change Refer And Earn
+        if (PreferenceUtility.getInstance(mContext).getUserDetails() != null)
         list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.label_refer_and_earn), R.drawable.icon_help, false, false));
         list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.label_help), R.drawable.icon_help, false, true));
         list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.label_faq), R.drawable.icon_faq, false, false));
@@ -326,8 +327,8 @@ public class HomeActivity extends BaseAppCompatActivity
             } else {
                 Log.i(TAG, "onSlideMenuListItemClicked: " + slideMenuListModel.title + " is there");
             }
-        } else if (slideMenuListModel.title.equals(getString(R.string.label_refer_and_earn))) {
-            Fragment mFragment = getSupportFragmentManager().findFragmentByTag(HistoryFragment.TAG);
+        } else if (slideMenuListModel.title.equals(getString(R.string.label_refer_and_earn)) &&  PreferenceUtility.getInstance(mContext).getUserDetails() != null) {
+            Fragment mFragment = getSupportFragmentManager().findFragmentByTag(ReferAndEarnFragment.TAG);
             if (mFragment == null) {
                 loadFragment(ReferAndEarnFragment.TAG, ReferAndEarnFragment.newInstance());
             } else {

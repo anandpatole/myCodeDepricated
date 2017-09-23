@@ -83,7 +83,6 @@ public class Utility {
     public static final String STATIC_LAT = "19.1363246";
     public static final String STATIC_LNG = "72.82766";
 
-    //public static String REFER_CODE=null;
     private static final String TAG = "Utility";
     public static final String EMPTY_STRING = "";
     public static final String ZERO_STRING = "0";
@@ -1290,7 +1289,7 @@ public class Utility {
 
         if (quotePrice == null || quotePrice.equalsIgnoreCase("null"))
             return "0.00";
-        if (quotePrice.equalsIgnoreCase("") || quotePrice.equalsIgnoreCase("0") || quotePrice.equalsIgnoreCase("0.0"))
+        if (quotePrice.equalsIgnoreCase("") || quotePrice.equalsIgnoreCase("0") || quotePrice.equalsIgnoreCase("0.0") || quotePrice.equalsIgnoreCase("0.00"))
             return "0.00";
         DecimalFormat formatter = new DecimalFormat("#,###.00");
         double price = Double.parseDouble(quotePrice);

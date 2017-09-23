@@ -96,6 +96,19 @@ public class TaskDetailModel {
     @SerializedName("task_discount_amount")
     public String taskDiscountAmount;
 
+    @SerializedName("is_refer_code")
+    public String isReferCode;
+
+    @SerializedName("is_promo_code")
+    public String isPromoCode;
+
+    @SerializedName("is_wallet_used")
+    public String isWalletUsed;
+
+
+    @SerializedName("used_wallet_amount")
+    public String usedWalletAmount;
+
     public String quoteAmountWithGST;
 
     @SerializedName("cat_image_extra")

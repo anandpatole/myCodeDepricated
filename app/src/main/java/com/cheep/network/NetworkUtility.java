@@ -109,8 +109,9 @@ public class NetworkUtility {
         public static final String CHECK_PRO_AVAILABILITY_FOR_STRATEGIC_TASK= BASE_URL + "customers/tasks/check_pro_availability_for_Strategic_task";
 
         //Refer and Earn
-        public static final String VALIDATE_REFER_CODE = BASE_URL + "customers/profile/validateReferCode";
+       // public static final String VALIDATE_REFER_CODE = BASE_URL + "customers/profile/validateReferCode";
         public static final String REFER_BALANCE = BASE_URL + "customers/profile/getReferBalance";
+        public static final String GET_AMOUNT_WITH_GST = BASE_URL + "customers/payment/getAmountWithGST";
     }
 
     public static class TAGS {
@@ -227,6 +228,12 @@ public class NetworkUtility {
 
         public static final String REFER_CODE = "refer_code";
         public static final String VALID_REFER_CODE = "valid_refer_code";
+        public static final String WALLET_BALANCE="wallet_balance";
+        public static final String REFER_COUNT ="refer_count";
+        public static final String IS_REFER_CODE ="is_refer_code";
+        public static final String MAX_REFER_DISCOUNT ="max_refer_discount";
+        public static final String USED_WALLET_BALANCE ="used_wallet_balance";
+        public static final String IS_INSTA_BOOKING ="is_insta_booking";
 
         public static class VERSION_CHANGE_TYPE {
             public static final int NORMAL = 0;
@@ -264,8 +271,11 @@ public class NetworkUtility {
 
         public static final String PAYMENT_STATUS = "payment_status";
         public static final String PAYMENT_LOG = "payment_log";
+        public static final String PAYMENT_METHOD = "payment_method";
         public static final String IS_FOR_ADDITIONAL_QUOTE = "isForAdditionalQuote";
         public static final String RESCHEDULE_DATETIME = "reschedule_datetime";
+        public static final String PAYMENT_METHOD_PAYU = "payu";
+        public static final String PAYMENT_METHOD_FREE = "free";
 
         public static class STATUSCODETYPE {
             public static final int SUCCESS = 200;

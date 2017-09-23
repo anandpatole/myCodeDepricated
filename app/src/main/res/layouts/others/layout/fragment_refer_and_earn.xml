@@ -36,15 +36,8 @@
         </android.support.design.widget.AppBarLayout>
 
 
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/height_banner_refer_and_earn"
-            android:background="@color/blue_varient_3" />
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/scale_5dp"
-            android:layout_gravity="bottom"
-            android:background="@drawable/shadow_transparent_grey" />
+
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -65,13 +58,17 @@
         <ScrollView
             android:layout_above="@id/tv_invite_friends"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:scrollbars="none">
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
-
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/ic_pro_with_van" />
 
         <com.cheep.custom_view.CFTextViewSemiBold
             android:layout_width="match_parent"
@@ -84,10 +81,11 @@
             android:textSize="@dimen/text_size_18sp" />
 
         <com.cheep.custom_view.CFTextViewSemiBold
+            android:id="@+id/tv_referral_code"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:background="@drawable/dotted_blue_border"
+            android:background="@drawable/ic_dash_border_without_shadow"
             android:gravity="center"
             android:text="@string/label_cheepgo"
             android:textColor="@color/splash_gradient_end"
@@ -119,13 +117,15 @@
             android:layout_marginRight="@dimen/scale_35dp"
             android:layout_marginBottom="@dimen/scale_20dp"/>
        <com.cheep.custom_view.CFTextViewSemiBold
+           android:id="@+id/refere_balance_and_count"
            android:layout_width="match_parent"
            android:layout_height="wrap_content"
            android:text="@string/label_you_have_earned"
            android:textColor="@color/grey_varient_8"
            android:textSize="@dimen/text_size_14sp"
            android:gravity="center"
-           android:layout_marginBottom="@dimen/scale_10dp"/>
+           android:layout_marginBottom="@dimen/scale_10dp"
+           android:visibility="gone"/>
 
            </LinearLayout>
         </ScrollView>

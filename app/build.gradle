@@ -25,7 +25,7 @@ android {
 
         buildConfigField("String", "HOTLINE_APP_ID", getProperty("HOTLINE_APP_ID"))
         buildConfigField("String", "HOTLINE_APP_KEY", getProperty("HOTLINE_APP_KEY"))
-        //Google Places API Key for PlacesAutoCompletion
+        //Google Places API Key for PlacesAutoCompletiontask_discount_amount
         buildConfigField("String", "PLACES_API_KEY", getProperty("PLACES_API_KEY"))
         // Fetch DEFAULT X-API-KEY value from gradle.properties
         buildConfigField("String", "X_API_KEY", getProperty("X_API_KEY"));
@@ -57,7 +57,7 @@ android {
         buildConfigField("String", "BUCKET_NAME ", getProperty("BUCKET_NAME"))
         buildConfigField("String", "TASK_ORIGINAL_FOLDER ", getProperty("TASK_ORIGINAL_FOLDER"))
         buildConfigField("String", "TASK_THUMB_FOLDER ", getProperty("TASK_THUMB_FOLDER"))
-        buildConfigField("boolean", "NEED_TO_BYPASS_PAYMENT", "false")
+        buildConfigField("boolean", "NEED_TO_BYPASS_PAYMENT", "true")
 
         // TODO: This needs to change (For Temporary LIVE)
 //        buildConfigField("String", "BASE_URL", getProperty("LIVE_BASE_URL"));
