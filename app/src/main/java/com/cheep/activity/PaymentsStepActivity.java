@@ -349,7 +349,7 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
                 }
                 actualQuotePrice = null;
                 mActivityPaymentDetailBinding.txttotal.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(providerModel.quotePrice)));
-                mActivityPaymentDetailBinding.textreferraldiscountlabel.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(referralBalance)));
+                mActivityPaymentDetailBinding.txtreferraldiscount.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(referralBalance)));
                 mActivityPaymentDetailBinding.lnPromoCodeDisclaimer.setVisibility(View.GONE);
                 mActivityPaymentDetailBinding.textPay.setText(getString(R.string.label_pay_fee_v1, Utility.getQuotePriceFormatter(providerModel.quotePrice)));
             }
