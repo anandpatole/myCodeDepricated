@@ -135,20 +135,33 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="@dimen/scale_23dp">
 
-                        <ImageView
-                            android:id="@+id/iv_paytm"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                        <FrameLayout
+                            android:id="@+id/fl_paytm_image_container"
+                            android:layout_width="42dp"
+                            android:layout_height="42dp"
                             android:layout_marginLeft="@dimen/scale_16dp"
-                            android:layout_marginRight="@dimen/scale_16dp"
-                            android:src="@drawable/payment_screen_circle_shadow" />
+                            android:layout_marginRight="@dimen/scale_16dp">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:src="@drawable/payment_screen_circle_shadow" />
+
+                            <ImageView
+                                android:id="@+id/iv_paytm"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:paddingLeft="@dimen/scale_6dp"
+                                android:paddingRight="@dimen/scale_6dp"
+                                android:src="@drawable/ic_paytm_logo" />
+                        </FrameLayout>
 
                         <com.cheep.custom_view.CFTextViewSemiBold
                             android:id="@+id/tv_paytm"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_toEndOf="@id/iv_paytm"
-                            android:layout_toRightOf="@id/iv_paytm"
+                            android:layout_toEndOf="@id/fl_paytm_image_container"
+                            android:layout_toRightOf="@id/fl_paytm_image_container"
                             android:paddingEnd="@dimen/scale_34dp"
                             android:paddingRight="@dimen/scale_34dp"
                             android:paddingTop="@dimen/scale_12dp"

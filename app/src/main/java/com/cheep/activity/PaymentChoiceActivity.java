@@ -71,6 +71,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
     private String paymentMethod;
     private Map<String, Object> mTaskCreationParams;
     private Map<String, String> mTransactionParams;
+    private String amount;
 
     public static void newInstance(Context context, TaskDetailModel taskDetailModel, ProviderModel providerModel, int isAdditionalPayment, boolean isInstaBooking, AddressModel mSelectedAddressModel) {
         Intent intent = new Intent(context, PaymentChoiceActivity.class);
@@ -127,7 +128,6 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
     }
 
     private void setupActionbar() {
-        String amount;
         if (isStrategicPartner) {
             if (taskDetailModel.cheepCode.isEmpty())
                 amount = Utility.getQuotePriceFormatter(taskDetailModel.totalStrategicPartner);
@@ -177,7 +177,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
                 break;
             case R.id.rl_paytm:
                 paymentMethod = NetworkUtility.TAGS.PAYMENT_METHOD_TYPE.PAYTM;
-                WalletLinkActivity.newInstance(mContext, true);
+                WalletLinkActivity.newInstance(mContext, true, amount);
                 break;
 
             case R.id.rl_cash_payment:

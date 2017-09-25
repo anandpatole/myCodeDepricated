@@ -74,6 +74,7 @@ import static com.cheep.utils.SuperCalendar.SuperFormatter;
  */
 
 public class Utility {
+
     public interface GUEST_STATIC_INFO {
         public static final String USERNAME = "Guest";
     }
@@ -94,6 +95,9 @@ public class Utility {
     public static final String ACTION_LOGIN = "action_login";
     public static final String ACTION_CHANGE_PHONE_NUMBER = "action_change_phone_number";
     public static final String CLICK = "Click";
+    public static final String BASIC = "Basic";
+    public static final String COLON = ":";
+    public static final String ADD_MONEY = "ADD_MONEY";
 
     //Date Formats
     public static final String DATE_FORMAT_DD_MM_YY = SuperFormatter.DATE + "/" + SuperFormatter.MONTH_NUMBER + "/" + SuperFormatter.YEAR_4_DIGIT;
@@ -416,6 +420,7 @@ public class Utility {
         String IS_INSTA_BOOKING_TASK = "isInstaBookingTask";
         String IS_PAYMENT_SUCCESSFUL = "isPaymentSuccessful";
         String PAYU_RESPONSE = "payu_response";
+        String AMOUNT = "amount";
     }
 
 

@@ -107,6 +107,9 @@ public class NetworkUtility {
         public static final String TASK_CREATE_INSTA_BOOKING = BASE_URL + "customers/tasks/instaBookingTaskCreate";
 
         public static final String CHECK_PRO_AVAILABILITY_FOR_STRATEGIC_TASK = BASE_URL + "customers/tasks/check_pro_availability_for_Strategic_task";
+
+        //get checksum needed for paytm
+        public static final String GET_CHECKSUM_HASH = BASE_URL + "/customers/payment/getPaytmChecksum";
     }
 
     public static class PAYTM {
@@ -134,16 +137,45 @@ public class NetworkUtility {
 
         public static final class PARAMETERS {
 
-            public static final String PHONE = "phone";
-            public static final String CLIENT_ID = "clientId";
-            public static final String SCOPE = "scope";
-            public static final String RESPONSE_TYPE = "responseType";
-            public static final String RESPONSE_CODE = "responseCode";
-            public static final String STATE = "state";
+            public static final String phone = "phone";
+            public static final String clientId = "clientId";
+            public static final String scope = "scope";
+            public static final String responseType = "responseType";
+            public static final String responseCode = "responseCode";
+            public static final String state = "state";
+            public static final String Authorization = "Authorization";
+            public static final String otp = "otp";
+            public static final String access_token = "access_token";
+            public static final String expires = "expires";
+            public static final String resourceOwnerId = "resourceOwnerId";
+            public static final String session_token = "session_token";
+            public static final String merchantGuid = "merchantGuid";
+            public static final String mid = "mid";
+            public static final String request = "request";
+            public static final String ssotoken = "ssotoken";
+            public static final String statusCode = "statusCode";
+            public static final String requestGuid = "requestGuid";
+            public static final String orderId = "orderId";
+            public static final String paytmWalletBalance = "paytmWalletBalance";
+            public static final String totalBalance = "totalBalance";
+            public static final String response = "response";
+            public static final String ownerGuid = "ownerGuid";
+            public static final String walletGrade = "walletGrade";
+            public static final String ssoId = "ssoId";
+            public static final String MID = "MID";
+            public static final String REQUEST_TYPE = "REQUEST_TYPE";
+            public static final String ORDER_ID = "ORDER_ID";
+            public static final String CUST_ID = "CUST_ID";
+            public static final String TXN_AMOUNT = "TXN_AMOUNT";
+            public static final String CHANNEL_ID = "CHANNEL_ID";
+            public static final String INDUSTRY_TYPE_ID = "INDUSTRY_TYPE_ID";
+            public static final String WEBSITE = "WEBSITE";
+            public static final String SSO_TOKEN = "SSO_TOKEN";
+            public static final String CHECKSUMHASH = "CHECKSUMHASH";
         }
 
         public static final class RESPONSE_CODES {
-            //Send OTP API response codes
+            //Send otp API response codes
             public static final String LOGIN = "01";
             public static final String REGISTER = "02";
             public static final String INVALID_AUTHORIZATION = "430";
@@ -153,7 +185,7 @@ public class NetworkUtility {
             public static final String BAD_REQUEST = "434";
             public static final String INVALID_EMAIL = "465";
 
-            //verify OTP/get access token API response codes
+            //verify otp/get access token API response codes
             public static final String INVALID_OTP = "403";
             public static final String INVALID_CODE = "513";
 
@@ -161,6 +193,7 @@ public class NetworkUtility {
             public static final String INVALID_TOKEN = "530";
 
             //Check Balance API response codes
+            public static final String SUCCESS = "SUCCESS";
             public static final String USER_DOESNOT_EXISTS = "404";
             public static final String UNKNOWN_ERROR = "GE_0001";
             public static final String UNAUTHORIZED_ACCESS = "403";
@@ -286,6 +319,10 @@ public class NetworkUtility {
         String PROMOCODE_PRICE = "promocode_price";
         String HASH_STRING = "hash_string";
         String PAYMENT_METHOD = "payment_method";
+        String ORDER_ID = "ORDER_ID";
+        String TXN_AMOUNT = "TXN_AMOUNT";
+        String CUST_ID = "CUST_ID";
+        String CHECKSUMHASH = "CHECKSUMHASH";
 
         interface VERSION_CHANGE_TYPE {
             int NORMAL = 0;

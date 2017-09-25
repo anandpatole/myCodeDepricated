@@ -511,6 +511,11 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="validate_empty_amount">Whoops! Something is wrong, please enter a valid amount to be added.</string>
     <string name="label_low_balance_add_money">Low Balance.\nPlease add funds to wallet to continue</string>
     <string name="label_confirm">Confirm</string>
+    <string name="label_invalid_otp">Sorry, the OTP you entered is incorrect.</string>
+    <string name="label_current_balance">Current Balance: ₹%1s</string>
+    <string name="label_enter_amount">Enter Amount</string>
+    <string name="label_amount_payable">Amount Payable</string>
+    <string name="label_notify_paying_by_wallet">You are about to pay using your %1s wallet</string>
 
     <string name="no_pro_available_title" />
     <string name="no_pro_available_description">No PROs is available for this address</string>
