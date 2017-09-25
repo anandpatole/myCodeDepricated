@@ -54,8 +54,9 @@
                     android:gravity="left"
                     android:text="@string/label_dialog_refer_and_earn_body"
                     android:padding="@dimen/scale_8dp"
+                    android:lineSpacingExtra="@dimen/scale_1dp"
                     android:textColor="@color/grey_dark_color_2"
-                    android:textSize="@dimen/text_size_14sp"/>
+                    android:textSize="@dimen/text_size_11sp"/>
 
                 <View
                     android:layout_width="match_parent"
@@ -63,7 +64,7 @@
                     android:layout_marginLeft="@dimen/scale_8dp"
                     android:layout_marginRight="@dimen/scale_8dp"
                     android:layout_marginTop="@dimen/scale_15dp"
-                    android:background="@color/grey_dark_color_2"/>
+                    android:background="@color/grey_varient_18"/>
 
                 <com.cheep.custom_view.CFTextViewSemiBold
                     android:id="@+id/tvOk"

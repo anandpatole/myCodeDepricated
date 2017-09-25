@@ -1211,19 +1211,19 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
         mParams.put(NetworkUtility.TAGS.TRANSACTION_ID, TextUtils.isEmpty(transaction_Id) ? Utility.ZERO_STRING : transaction_Id);
         if (!TextUtils.isEmpty(cheepCode)) {
             mParams.put(NetworkUtility.TAGS.CHEEPCODE, cheepCode);
-            mParams.put(NetworkUtility.TAGS.QUOTE_AMOUNT, providerModel.spWithoutGstQuotePrice);
             mParams.put(NetworkUtility.TAGS.PAYABLE_AMOUNT, providerModel.quotePrice);
             mParams.put(NetworkUtility.TAGS.PROMOCODE_PRICE, promocode_price);
             // new field for refer and earn functionality
             mParams.put(NetworkUtility.TAGS.IS_REFER_CODE, isReferCode);
         } else {
             mParams.put(NetworkUtility.TAGS.CHEEPCODE, Utility.EMPTY_STRING);
-            mParams.put(NetworkUtility.TAGS.QUOTE_AMOUNT, providerModel.spWithoutGstQuotePrice);
             mParams.put(NetworkUtility.TAGS.PAYABLE_AMOUNT, providerModel.quotePrice);
             mParams.put(NetworkUtility.TAGS.PROMOCODE_PRICE, "0");
             // new field for refer and earn functionality
             mParams.put(NetworkUtility.TAGS.IS_REFER_CODE, Utility.BOOLEAN.NO);
         }
+        mParams.put(NetworkUtility.TAGS.QUOTE_AMOUNT, TextUtils.isEmpty(actualQuotePrice) ? providerModel.quotePrice : actualQuotePrice);
+        LogUtils.LOGE(TAG, "Quote Amout : " + mParams.get(NetworkUtility.TAGS.QUOTE_AMOUNT));
         mParams.put(NetworkUtility.TAGS.USED_WALLET_BALANCE, usedWalletBalance);
 
         // For AppsFlyer

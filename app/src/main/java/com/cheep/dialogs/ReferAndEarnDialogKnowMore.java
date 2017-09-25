@@ -34,12 +34,13 @@ public class ReferAndEarnDialogKnowMore extends DialogFragment {
         // Set Window Background as Transparent.
         if (getDialog() != null) {
             getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            getDialog().setCanceledOnTouchOutside(false);
             //getDialog().getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
             //getDialog().getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         }
 
-        mDialogReferEarnKnowMoreBinding = DataBindingUtil.inflate(inflater, R.layout.dialog_refer_earn_know_more, container, false);
 
+        mDialogReferEarnKnowMoreBinding = DataBindingUtil.inflate(inflater, R.layout.dialog_refer_earn_know_more, container, false);
         mDialogReferEarnKnowMoreBinding.tvOk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

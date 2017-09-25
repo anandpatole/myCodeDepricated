@@ -175,13 +175,11 @@ public class TaskQuotesActivity extends BaseAppCompatActivity implements TaskQuo
             Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, null);
             return;
         }
+        mErrorLoadingHelper.showLoading();
 
         if (!mSwipeRefreshLayout.isRefreshing()) {
             mSwipeRefreshLayout.setEnabled(false);
-        } else {
-            mErrorLoadingHelper.showLoading();
         }
-
         //Add Header parameters
         Map<String, String> mHeaderParams = new HashMap<>();
         mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());

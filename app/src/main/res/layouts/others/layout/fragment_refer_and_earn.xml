@@ -79,6 +79,12 @@
             android:text="@string/label_spread_the_gift_of_happiness"
             android:textColor="@color/splash_gradient_end"
             android:textSize="@dimen/text_size_18sp" />
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:layout_gravity="center">
 
         <com.cheep.custom_view.CFTextViewSemiBold
             android:id="@+id/tv_referral_code"
@@ -93,8 +99,13 @@
             android:paddingTop="@dimen/scale_10dp"
             android:paddingBottom="@dimen/scale_10dp"
             android:paddingLeft="@dimen/scale_20dp"
-            android:paddingRight="@dimen/scale_20dp"
-            android:layout_marginBottom="@dimen/scale_22dp"/>
+            android:paddingRight="@dimen/scale_20dp"/>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/scale_10dp"
+                    android:background="@drawable/refer_and_earn_gradient"
+                    android:layout_marginBottom="@dimen/scale_12dp"/>
+                </LinearLayout>
         <com.cheep.custom_view.CFTextViewSemiBold
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
