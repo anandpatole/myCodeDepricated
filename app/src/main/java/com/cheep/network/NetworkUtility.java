@@ -319,10 +319,18 @@ public class NetworkUtility {
         String PROMOCODE_PRICE = "promocode_price";
         String HASH_STRING = "hash_string";
         String PAYMENT_METHOD = "payment_method";
+
+        // paytm params
         String ORDER_ID = "ORDER_ID";
         String TXN_AMOUNT = "TXN_AMOUNT";
         String CUST_ID = "CUST_ID";
         String CHECKSUMHASH = "CHECKSUMHASH";
+
+
+        // refer and earn params
+        String IS_REFER_CODE ="is_refer_code";
+        String MAX_REFER_DISCOUNT ="max_refer_discount";
+        String USED_WALLET_BALANCE ="used_wallet_balance";
 
         interface VERSION_CHANGE_TYPE {
             int NORMAL = 0;
