@@ -152,7 +152,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_office">Office</string>
     <string name="label_add_address">Add Address</string>
     <string name="label_username">Username</string>
-    <string name="label_spread_the_gift_of_happiness">Spread the gift of hapiness</string>
+    <string name="label_spread_the_gift_of_happiness">Spread the gift of happiness</string>
 
     <!--Translation of Below words are left-->
     <string name="label_please_wait">Please wait</string>
@@ -327,6 +327,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_total_paid">Total Paid</string>
 
     <string name="label_pay_fee_v1">Pay ₹%1$s</string>
+    <string name="label_book_now_for_rupees">Book now for Rs. %1$s</string>
     <string name="label_payment_summary">Payment Summary</string>
     <string name="label_enter_reason">Enter Reason</string>
     <string name="label_reason">Reason</string>
@@ -510,4 +511,5 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="no_pro_available_title" />
     <string name="no_pro_available_description">No PROs is available for this address</string>
     <string name="validate_comment">Please provide valid comment.</string>
+    <string name="title_booking_confimation">Booking Confirmation</string>
 </resources>

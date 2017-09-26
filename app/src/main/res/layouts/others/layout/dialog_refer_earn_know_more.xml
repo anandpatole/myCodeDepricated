@@ -54,7 +54,7 @@
                     android:gravity="left"
                     android:text="@string/label_dialog_refer_and_earn_body"
                     android:padding="@dimen/scale_8dp"
-                    android:lineSpacingExtra="@dimen/scale_1dp"
+                    android:lineSpacingExtra="@dimen/scale_2dp"
                     android:textColor="@color/grey_dark_color_2"
                     android:textSize="@dimen/text_size_11sp"/>
 

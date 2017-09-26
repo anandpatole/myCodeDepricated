@@ -395,36 +395,43 @@
                             android:paddingRight="@dimen/scale_10dp"
                             android:paddingTop="@dimen/scale_5dp">
 
-                            <ImageView
-                                android:id="@+id/ivreferraldiscount"
-                                android:layout_width="@dimen/scale_20dp"
-                                android:layout_height="@dimen/scale_20dp"
-                                android:layout_marginBottom="@dimen/scale_5dp"
-                                android:layout_marginRight="@dimen/scale_5dp"
-                                android:layout_marginTop="@dimen/scale_5dp"
-                                android:background="@drawable/ic_tick_selector"
-                                android:gravity="center_vertical" />
-
-                            <com.cheep.custom_view.CFTextViewRegular
-                                android:id="@+id/textreferraldiscountlabel"
+                            <LinearLayout
+                                android:id="@+id/llclaimreferral"
                                 android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="left|center_vertical"
-                                android:layout_toRightOf="@id/ivreferraldiscount"
-                                android:gravity="center_vertical"
-                                android:paddingBottom="@dimen/scale_5dp"
-                                android:paddingTop="@dimen/scale_5dp"
-                                android:text="@string/label_referral_discount"
-                                android:textColor="@color/splash_gradient_end"
-                                android:textSize="@dimen/text_size_14sp" />
+                                android:layout_height="wrap_content">
+
+                                <ImageView
+                                    android:id="@+id/ivreferraldiscount"
+                                    android:layout_width="@dimen/scale_18dp"
+                                    android:layout_height="@dimen/scale_18dp"
+                                    android:layout_marginBottom="@dimen/scale_5dp"
+                                    android:layout_marginRight="@dimen/scale_5dp"
+                                    android:layout_marginTop="@dimen/scale_5dp"
+                                    android:background="@drawable/ic_tick_selector"
+                                    android:layout_gravity="center_vertical" />
+
+                                <com.cheep.custom_view.CFTextViewRegular
+                                    android:id="@+id/textreferraldiscountlabel"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="left|center_vertical"
+                                    android:layout_toRightOf="@id/ivreferraldiscount"
+                                    android:gravity="center_vertical"
+                                    android:paddingBottom="@dimen/scale_5dp"
+                                    android:paddingTop="@dimen/scale_5dp"
+                                    android:layout_marginLeft="@dimen/scale_2dp"
+                                    android:text="@string/label_referral_discount"
+                                    android:textColor="@color/splash_gradient_end"
+                                    android:textSize="@dimen/text_size_12sp" />
+                            </LinearLayout>
 
                             <com.cheep.custom_view.CFTextViewSemiBold
                                 android:id="@+id/txtreferraldiscount"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentRight="true"
-                                android:layout_toEndOf="@+id/textreferraldiscountlabel"
-                                android:layout_toRightOf="@+id/textreferraldiscountlabel"
+                                android:layout_toEndOf="@+id/llclaimreferral"
+                                android:layout_toRightOf="@+id/llclaimreferral"
                                 android:drawablePadding="@dimen/scale_5dp"
                                 android:ellipsize="marquee"
                                 android:gravity="right"
@@ -433,9 +440,9 @@
                                 android:paddingBottom="@dimen/scale_5dp"
                                 android:paddingTop="@dimen/scale_5dp"
                                 android:singleLine="true"
-                                tools:text="₹ 300"
                                 android:textColor="@drawable/textcolor_paymentsummary_selector"
-                                android:textSize="@dimen/text_size_14sp" />
+                                android:textSize="@dimen/text_size_14sp"
+                                tools:text="₹ 300" />
 
                         </RelativeLayout>
 
@@ -456,30 +463,36 @@
                             android:paddingTop="@dimen/scale_5dp"
                             android:visibility="visible">
 
-                            <ImageView
-                                android:id="@+id/ivpromocode"
-                                android:layout_width="@dimen/scale_20dp"
-                                android:layout_height="@dimen/scale_20dp"
-                                android:layout_marginBottom="@dimen/scale_5dp"
-                                android:layout_marginRight="@dimen/scale_5dp"
-                                android:layout_marginTop="@dimen/scale_5dp"
-                                android:background="@drawable/ic_tick_selector"
-                                android:gravity="center_vertical" />
-
-                            <com.cheep.custom_view.CFTextViewRegular
-                                android:id="@+id/textpromocodelabel"
+                            <LinearLayout
+                                android:id="@+id/llpromocode"
                                 android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_centerVertical="true"
-                                android:layout_gravity="left|center_vertical"
-                                android:layout_toRightOf="@id/ivpromocode"
-                                android:gravity="center_vertical"
-                                android:paddingBottom="@dimen/scale_5dp"
-                                android:paddingTop="@dimen/scale_5dp"
-                                android:text="@string/label_promocode_apply"
-                                android:textColor="@color/splash_gradient_end"
-                                android:textSize="@dimen/text_size_14sp" />
+                                android:layout_height="wrap_content">
 
+                                <ImageView
+                                    android:id="@+id/ivpromocode"
+                                    android:layout_width="@dimen/scale_18dp"
+                                    android:layout_height="@dimen/scale_18dp"
+                                    android:layout_marginBottom="@dimen/scale_5dp"
+                                    android:layout_marginRight="@dimen/scale_5dp"
+                                    android:layout_marginTop="@dimen/scale_5dp"
+                                    android:background="@drawable/ic_tick_selector"
+                                    android:gravity="center_vertical" />
+
+                                <com.cheep.custom_view.CFTextViewRegular
+                                    android:id="@+id/textpromocodelabel"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_centerVertical="true"
+                                    android:layout_gravity="left|center_vertical"
+                                    android:layout_toRightOf="@id/ivpromocode"
+                                    android:gravity="center_vertical"
+                                    android:paddingBottom="@dimen/scale_5dp"
+                                    android:paddingTop="@dimen/scale_5dp"
+                                    android:text="@string/label_promocode_apply"
+                                    android:layout_marginLeft="@dimen/scale_2dp"
+                                    android:textColor="@color/splash_gradient_end"
+                                    android:textSize="@dimen/text_size_12sp" />
+                            </LinearLayout>
 
                             <ImageView
                                 android:id="@+id/img_cheep_code_close"
@@ -487,7 +500,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_centerVertical="true"
                                 android:layout_gravity="right|center_vertical"
-                                android:layout_toRightOf="@+id/textpromocodelabel"
+                                android:layout_toRightOf="@+id/llpromocode"
                                 android:padding="@dimen/scale_5dp"
                                 android:src="@drawable/icon_cross_blue"
                                 android:visibility="gone"
@@ -499,8 +512,8 @@
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentRight="true"
                                 android:layout_centerVertical="true"
-                                android:layout_toEndOf="@+id/textpromocodelabel"
-                                android:layout_toRightOf="@+id/textpromocodelabel"
+                                android:layout_toEndOf="@+id/llpromocode"
+                                android:layout_toRightOf="@+id/llpromocode"
                                 android:drawablePadding="@dimen/scale_5dp"
                                 android:ellipsize="marquee"
                                 android:gravity="right"
@@ -624,7 +637,7 @@
                                 android:padding="@dimen/scale_5dp"
                                 android:text="@string/label_terms"
                                 android:textColor="@color/splash_gradient_end"
-                                android:textSize="@dimen/text_size_15sp" />
+                                android:textSize="@dimen/text_size_12sp" />
 
                         </LinearLayout>
 

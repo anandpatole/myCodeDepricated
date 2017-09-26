@@ -57,7 +57,7 @@ android {
         buildConfigField("String", "BUCKET_NAME ", getProperty("BUCKET_NAME"))
         buildConfigField("String", "TASK_ORIGINAL_FOLDER ", getProperty("TASK_ORIGINAL_FOLDER"))
         buildConfigField("String", "TASK_THUMB_FOLDER ", getProperty("TASK_THUMB_FOLDER"))
-        buildConfigField("boolean", "NEED_TO_BYPASS_PAYMENT", "false")
+        buildConfigField("boolean", "NEED_TO_BYPASS_PAYMENT", "true")
 
         // TODO: This needs to change (For Temporary LIVE)
 //        buildConfigField("String", "BASE_URL", getProperty("LIVE_BASE_URL"));
