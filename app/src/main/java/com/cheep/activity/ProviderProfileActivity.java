@@ -683,6 +683,7 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
+                hideProgressDialog();
                 mCallReportSPWSErrorListener.onErrorResponse(new VolleyError(e.getMessage()));
             }
 
@@ -695,9 +696,7 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
             Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
 
             // Close Progressbar
-//            hideProgressDialog();
-
-
+            hideProgressDialog();
 //            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityProviderProfileBinding.getRoot());
             Utility.showToast(mContext, getString(R.string.label_something_went_wrong));
 

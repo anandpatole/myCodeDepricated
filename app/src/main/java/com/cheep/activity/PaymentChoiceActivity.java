@@ -72,6 +72,8 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
     private Map<String, Object> mTaskCreationParams;
     private Map<String, String> mTransactionParams;
     private String amount;
+    private String isReferCode = Utility.ZERO_STRING;
+    private double usedWalletBalance = 0;
 
     public static void newInstance(Context context, TaskDetailModel taskDetailModel, ProviderModel providerModel, int isAdditionalPayment, boolean isInstaBooking, AddressModel mSelectedAddressModel) {
         Intent intent = new Intent(context, PaymentChoiceActivity.class);
@@ -473,11 +475,13 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
         if (!TextUtils.isEmpty(taskDetailModel.cheepCode)) {
             mParams.put(NetworkUtility.TAGS.CHEEPCODE, taskDetailModel.cheepCode);
             mParams.put(NetworkUtility.TAGS.PROMOCODE_PRICE, taskDetailModel.taskDiscountAmount);
+            mParams.put(NetworkUtility.TAGS.IS_REFER_CODE, isReferCode);
         } else {
             mParams.put(NetworkUtility.TAGS.CHEEPCODE, Utility.EMPTY_STRING);
             mParams.put(NetworkUtility.TAGS.PROMOCODE_PRICE, Utility.ZERO_STRING);
+            mParams.put(NetworkUtility.TAGS.IS_REFER_CODE, Utility.BOOLEAN.NO);
         }
-
+        mParams.put(NetworkUtility.TAGS.USED_WALLET_BALANCE, usedWalletBalance);
         mParams.put(NetworkUtility.TAGS.QUOTE_AMOUNT, providerModel.quotePriceWithOutGST);
         mParams.put(NetworkUtility.TAGS.PAYABLE_AMOUNT, providerModel.quotePrice);
         mParams.put(NetworkUtility.TAGS.PAYMENT_LOG, response);
