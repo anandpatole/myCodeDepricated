@@ -67,6 +67,7 @@
                     android:orientation="vertical">
 
                     <ImageView
+                        android:id="@+id/imageView2"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@drawable/ic_pro_with_van" />
@@ -75,8 +76,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
-                        android:layout_marginBottom="@dimen/scale_22dp"
-                        android:layout_marginTop="@dimen/scale_25dp"
+                        android:layout_marginBottom="@dimen/scale_15dp"
+                        android:layout_marginTop="@dimen/scale_20dp"
                         android:gravity="center"
                         android:text="@string/label_spread_the_gift_of_happiness"
                         android:textColor="@color/splash_gradient_end"
@@ -107,11 +108,11 @@
                     <com.cheep.custom_view.CFTextViewSemiBold
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/scale_22dp"
-                        android:layout_marginLeft="@dimen/scale_70dp"
-                        android:layout_marginRight="@dimen/scale_70dp"
-                        android:layout_marginTop="@dimen/scale_12dp"
+                        android:layout_marginBottom="@dimen/scale_15dp"
+                        android:layout_marginLeft="@dimen/scale_20dp"
+                        android:layout_marginRight="@dimen/scale_20dp"
                         android:gravity="center"
+                        android:layout_gravity="center_horizontal"
                         android:text="@string/label_share_this_specila_code_with_your_friend_and_family"
                         android:textColor="@color/grey_varient_8"
                         android:textSize="@dimen/text_size_16sp" />
@@ -120,9 +121,10 @@
                         android:id="@+id/tv_user_get_money"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/scale_20dp"
-                        android:layout_marginLeft="@dimen/scale_35dp"
-                        android:layout_marginRight="@dimen/scale_35dp"
+                        android:layout_marginBottom="@dimen/scale_15dp"
+                        android:layout_marginLeft="@dimen/scale_20dp"
+                        android:layout_marginRight="@dimen/scale_20dp"
+                        android:layout_gravity="center_horizontal"
                         android:gravity="center"
                         android:text="@string/label_when_they_use_cheep_get_100"
                         android:textColor="@color/grey_varient_8"

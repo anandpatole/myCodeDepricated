@@ -187,10 +187,13 @@ public class ReferAndEarnFragment extends BaseFragment {
                 JSONObject jsonObject = new JSONObject(strResponse);
                 String REFERRAL_BALANCE = (jsonObject.optJSONObject(NetworkUtility.TAGS.DATA)).optString( NetworkUtility.TAGS.WALLET_BALANCE);
                 String REFERRAL_COUNT = (jsonObject.optJSONObject(NetworkUtility.TAGS.DATA)).optString( NetworkUtility.TAGS.REFER_COUNT);
-                if(Double.parseDouble(REFERRAL_BALANCE)>0)
-                {
+                 if(Double.parseDouble(REFERRAL_BALANCE)>0){
                     mfragmentReferAndEarnBinding.refereBalanceAndCount.setVisibility(View.VISIBLE);
-                    mfragmentReferAndEarnBinding.refereBalanceAndCount.setText(getString(R.string.label_you_have_earned, REFERRAL_BALANCE, REFERRAL_COUNT));
+                    if( Integer.parseInt(REFERRAL_COUNT)==1 || Integer.parseInt(REFERRAL_COUNT)==0){
+                        mfragmentReferAndEarnBinding.refereBalanceAndCount.setText(getString(R.string.label_you_have_earned, REFERRAL_BALANCE, REFERRAL_COUNT,"referral"));
+                    }
+                    else
+                    mfragmentReferAndEarnBinding.refereBalanceAndCount.setText(getString(R.string.label_you_have_earned, REFERRAL_BALANCE, REFERRAL_COUNT,"referrals"));
                 }
                 Log.e(TAG, REFERRAL_BALANCE );
                 Log.e(TAG, REFERRAL_COUNT );

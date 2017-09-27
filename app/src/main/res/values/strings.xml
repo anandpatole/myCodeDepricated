@@ -445,7 +445,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_when_they_use_cheep_get_100">When they use CHEEP they get ₹100 off on their first booking &amp; you too get ₹100 off yours. Know more</string>
     <string name="label_invite_friends">Invite Friends</string>
     <string name="label_refer_and_earn">Refer &amp; Earn</string>
-    <string name="label_you_have_earned">You have earned: ₹ %1$s from %2$s referral</string>
+    <string name="label_you_have_earned">You have earned: ₹ %1$s from %2$s %3$s</string>
     <string name="label_about_refer_and_earn">About Refer &amp; Earn</string>
     <string name="label_dialog_refer_and_earn_body">Everytime a new user books a service on CHEEP with your invite code, they\'ll get ₹100 off on the service. Once they book the service, you\'ll automatically earn ₹100 which you can redeem while booking your next service with CHEEP.</string>
     <string name="label_dialog_refer_and_earn_info_title">Your current earned balance is ₹300</string>
@@ -454,7 +454,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_ok_got_it">Ok, Got It</string>
     <string name="label_dialog_refer_and_earn_no_payment_body">Earn discounts each time you refer CHEEP to your friends and family. Just go to menu screen, click on Refer &amp; Earn and share your special code with them.</string>
     <string name="label_share_via">Share via</string>
-    <string name="label_refer_and_earn_share_body">Please download CHEEP app from this link https://play.google.com/store/apps/details?id=%1$s and use this referral code %2$s for payment.</string>
+    <string name="label_refer_and_earn_share_body">Please download CHEEP app from this http://onelink.to/x8vxmj and use this referral code %2$s for payment.</string>
     <string name="label_share_subject">Refer &amp; Earn</string>
     <string name="alert_strategic_partner_unavailable_in_location">This service is not available in your location</string>
 

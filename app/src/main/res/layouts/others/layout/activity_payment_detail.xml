@@ -392,8 +392,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:paddingBottom="@dimen/scale_5dp"
-                            android:paddingRight="@dimen/scale_10dp"
-                            android:paddingTop="@dimen/scale_5dp">
+                            android:paddingRight="@dimen/scale_10dp">
 
                             <LinearLayout
                                 android:id="@+id/llclaimreferral"
@@ -402,8 +401,8 @@
 
                                 <ImageView
                                     android:id="@+id/ivreferraldiscount"
-                                    android:layout_width="@dimen/scale_18dp"
-                                    android:layout_height="@dimen/scale_18dp"
+                                    android:layout_width="@dimen/scale_15dp"
+                                    android:layout_height="@dimen/scale_15dp"
                                     android:layout_marginBottom="@dimen/scale_5dp"
                                     android:layout_marginRight="@dimen/scale_5dp"
                                     android:layout_marginTop="@dimen/scale_5dp"
@@ -419,7 +418,7 @@
                                     android:gravity="center_vertical"
                                     android:paddingBottom="@dimen/scale_5dp"
                                     android:paddingTop="@dimen/scale_5dp"
-                                    android:layout_marginLeft="@dimen/scale_2dp"
+                                    android:layout_marginLeft="@dimen/scale_5dp"
                                     android:text="@string/label_referral_discount"
                                     android:textColor="@color/splash_gradient_end"
                                     android:textSize="@dimen/text_size_12sp" />
@@ -458,9 +457,7 @@
                             android:id="@+id/rlpromocode"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:paddingBottom="@dimen/scale_5dp"
                             android:paddingRight="@dimen/scale_10dp"
-                            android:paddingTop="@dimen/scale_5dp"
                             android:visibility="visible">
 
                             <LinearLayout
@@ -470,8 +467,8 @@
 
                                 <ImageView
                                     android:id="@+id/ivpromocode"
-                                    android:layout_width="@dimen/scale_18dp"
-                                    android:layout_height="@dimen/scale_18dp"
+                                    android:layout_width="@dimen/scale_15dp"
+                                    android:layout_height="@dimen/scale_15dp"
                                     android:layout_marginBottom="@dimen/scale_5dp"
                                     android:layout_marginRight="@dimen/scale_5dp"
                                     android:layout_marginTop="@dimen/scale_5dp"
@@ -489,7 +486,7 @@
                                     android:paddingBottom="@dimen/scale_5dp"
                                     android:paddingTop="@dimen/scale_5dp"
                                     android:text="@string/label_promocode_apply"
-                                    android:layout_marginLeft="@dimen/scale_2dp"
+                                    android:layout_marginLeft="@dimen/scale_5dp"
                                     android:textColor="@color/splash_gradient_end"
                                     android:textSize="@dimen/text_size_12sp" />
                             </LinearLayout>
@@ -569,7 +566,6 @@
                         <RelativeLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:paddingBottom="@dimen/scale_5dp"
                             android:paddingLeft="@dimen/scale_25dp"
                             android:paddingRight="@dimen/scale_10dp"
                             android:paddingTop="@dimen/scale_5dp">
@@ -612,10 +608,8 @@
                             android:id="@+id/lltermsandcondition"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:paddingBottom="@dimen/scale_5dp"
                             android:paddingLeft="@dimen/scale_25dp"
-                            android:paddingRight="@dimen/scale_10dp"
-                            android:paddingTop="@dimen/scale_5dp">
+                            android:paddingRight="@dimen/scale_10dp">
 
                             <ImageView
                                 android:id="@+id/iv_terms_tick"
@@ -624,7 +618,6 @@
                                 android:layout_gravity="left|center_vertical"
                                 android:background="@drawable/selector_checked_tandc"
                                 android:gravity="center_vertical"
-                                android:paddingBottom="@dimen/scale_5dp"
                                 android:paddingTop="@dimen/scale_5dp" />
 
                             <com.cheep.custom_view.CFTextViewSemiBold
@@ -636,7 +629,7 @@
                                 android:gravity="center_vertical"
                                 android:padding="@dimen/scale_5dp"
                                 android:text="@string/label_terms"
-                                android:textColor="@color/splash_gradient_end"
+                                android:textColor="@color/grey_varient_17"
                                 android:textSize="@dimen/text_size_12sp" />
 
                         </LinearLayout>
