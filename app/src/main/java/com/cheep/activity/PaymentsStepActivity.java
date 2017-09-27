@@ -291,6 +291,7 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
         public void onClick(View view) {
             mActivityPaymentDetailBinding.ivreferraldiscount.setSelected(!mActivityPaymentDetailBinding.ivreferraldiscount.isSelected());
             mActivityPaymentDetailBinding.txtreferraldiscount.setSelected(mActivityPaymentDetailBinding.ivreferraldiscount.isSelected());
+            mActivityPaymentDetailBinding.llpromocode.setEnabled(true);
 
             if (mActivityPaymentDetailBinding.ivpromocode.isSelected()) {
                 mActivityPaymentDetailBinding.ivpromocode.setSelected(false);
@@ -356,13 +357,15 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
     };
 
     private void onClickOfClosePromoCode() {
-
+        mActivityPaymentDetailBinding.ivpromocode.setVisibility(View.VISIBLE);
+        mActivityPaymentDetailBinding.ivpromocode.setSelected(false);
         cheepCode = null;
         if (!TextUtils.isEmpty(actualQuotePrice)) {
             providerModel.quotePrice = actualQuotePrice;
         }
         actualQuotePrice = null;
         mActivityPaymentDetailBinding.imgCheepCodeClose.setVisibility(View.GONE);
+        mActivityPaymentDetailBinding.llpromocode.setEnabled(true);
         resetPromocodeValue();
     }
 
@@ -816,6 +819,8 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
         mActivityPaymentDetailBinding.textpromocodelabel.setTextColor(ContextCompat.getColor(this, R.color.black));
 
         mActivityPaymentDetailBinding.imgCheepCodeClose.setVisibility(View.VISIBLE);
+        mActivityPaymentDetailBinding.llpromocode.setEnabled(false);
+        mActivityPaymentDetailBinding.ivpromocode.setVisibility(View.INVISIBLE);
     }
 
     Response.ErrorListener mCallValidateCheepCodeWSErrorListener = new Response.ErrorListener() {
