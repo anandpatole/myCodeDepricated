@@ -1,11 +1,13 @@
 package com.cheep.activity;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
@@ -22,14 +24,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.cheep.BuildConfig;
 import com.cheep.R;
 import com.cheep.databinding.ActivityWalletLinkBinding;
 import com.cheep.network.NetworkUtility;
-import com.cheep.network.PaytmNetworkRequest;
 import com.cheep.network.Volley;
 import com.cheep.utils.LogUtils;
 import com.cheep.utils.PaytmUtility;
@@ -37,16 +34,24 @@ import com.cheep.utils.Utility;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Attributes;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
-import java.util.HashMap;
-import java.util.Map;
+import static com.cheep.network.NetworkUtility.PAYTM.PARAMETERS.orderId;
+import static com.cheep.network.NetworkUtility.PAYTM.PARAMETERS.response;
 
 
 public class WalletLinkActivity extends BaseAppCompatActivity implements View.OnClickListener,
         PaytmUtility.SendOtpResponseListener,
         PaytmUtility.VerifyOtpResponseListener,
         PaytmUtility.CheckBalanceResponseListener,
-        PaytmUtility.GetChecksumResponseListener{
+        PaytmUtility.GetChecksumResponseListener,
+        PaytmUtility.AddMoneyResponseListener,
+        PaytmUtility.SavePaytmUserResponseListener,
+        PaytmUtility.WithdrawMoneyResponseListener {
 
     private static final String TAG = LogUtils.makeLogTag(WalletLinkActivity.class);
     private ActivityWalletLinkBinding mActivityWalletLinkBinding;
@@ -72,12 +77,14 @@ public class WalletLinkActivity extends BaseAppCompatActivity implements View.On
 
     //returned in response of check balance api
     private String requestGuid;
-    private String orderId;
+    private String paytmReturnedOrderId;
     private double totalBalance;
     private double paytmWalletBalance;
     private String ownerGuid;
     private String walletGrade;
     private String ssoId;
+    private String generatedOrderId;
+    private String mMobileNumber;
 
     public static void newInstance(Context context, boolean isPaytm, String amount) {
         Intent intent = new Intent(context, WalletLinkActivity.class);
@@ -135,8 +142,10 @@ public class WalletLinkActivity extends BaseAppCompatActivity implements View.On
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_send_otp:
+                mEtText = mActivityWalletLinkBinding.etMobileNumber.getText().toString();
                 if (mActivityWalletLinkBinding.tvSendOtp.getText().toString().equalsIgnoreCase(getString(R.string.label_send_otp))) {
                     BTN_WHICH = BTN_IS_SEND_OTP;
+                    mMobileNumber = mEtText;
                 } else if (mActivityWalletLinkBinding.tvSendOtp.getText().toString().equalsIgnoreCase(getString(R.string.label_proceed))) {
                     BTN_WHICH = BTN_IS_PROCEED;
                 } else if (mActivityWalletLinkBinding.tvSendOtp.getText().toString().equalsIgnoreCase(getString(R.string.label_add_amount))) {
@@ -144,7 +153,6 @@ public class WalletLinkActivity extends BaseAppCompatActivity implements View.On
                 } else if (mActivityWalletLinkBinding.tvSendOtp.getText().toString().equalsIgnoreCase(getString(R.string.label_confirm))) {
                     BTN_WHICH = BTN_IS_CONFIRM;
                 }
-                mEtText = mActivityWalletLinkBinding.etMobileNumber.getText().toString();
                 if (isValidated()) {
                     if (BTN_WHICH == BTN_IS_SEND_OTP) {
                         sendOTP();
@@ -152,6 +160,8 @@ public class WalletLinkActivity extends BaseAppCompatActivity implements View.On
                         verifyOTP();
                     } else if (BTN_WHICH == BTN_IS_ADD_AMOUNT) {
                         addMoney();
+                    } else if (BTN_WHICH == BTN_IS_CONFIRM) {
+                        withdrawMoney();
                     }
                 }
                 break;
@@ -296,9 +306,22 @@ public class WalletLinkActivity extends BaseAppCompatActivity implements View.On
         hideProgressDialog();
     }
 
+    //This method is called when access token expires early due to some reason and we need to do whole OAuth process again
+    @Override
+    public void paytmInvalidAuthorization() {
+        //TODO: implement that if accessToken is valid i.e. 1 month is not due directly call checkBalance API.
+    }
+
     @Override
     public void volleyError() {
         Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityWalletLinkBinding.getRoot());
+        hideProgressDialog();
+    }
+
+
+    @Override
+    public void showSpecificErrorMessage(String errorMessage) {
+        Utility.showSnackBar(errorMessage, mActivityWalletLinkBinding.getRoot());
         hideProgressDialog();
     }
     //////////////////////////////////////////////Paytm API call Generalized response methods ends//////////////////////////////////////////////
@@ -332,8 +355,9 @@ public class WalletLinkActivity extends BaseAppCompatActivity implements View.On
         mResourceOwnerCustomerId = resourceOwnerCustomerId;
         /**
          * have not called getUserDetails API as whatever this API returns, we already get it in response of this API
-         * do not hideProgressDialog as we need to call 2 (would be 3 in case we call getUserDetails API) APIs back to back
+         * do not hideProgressDialog as we need to call 3 (would be 4 in case we call getUserDetails API) APIs back to back
          */
+        savePaytmUserDetails();
         checkBalance();
     }
 
@@ -362,9 +386,9 @@ public class WalletLinkActivity extends BaseAppCompatActivity implements View.On
     public void paytmCheckBalanceSuccessResponse(JSONObject jsonObject) {
         try {
             requestGuid = jsonObject.getString(NetworkUtility.PAYTM.PARAMETERS.requestGuid);
-            orderId = jsonObject.getString(NetworkUtility.PAYTM.PARAMETERS.orderId);
+            paytmReturnedOrderId = jsonObject.getString(orderId);
 
-            JSONObject responseParamJson = jsonObject.getJSONObject(NetworkUtility.PAYTM.PARAMETERS.response);
+            JSONObject responseParamJson = jsonObject.getJSONObject(response);
             totalBalance = responseParamJson.getDouble(NetworkUtility.PAYTM.PARAMETERS.totalBalance);
             paytmWalletBalance = responseParamJson.getDouble(NetworkUtility.PAYTM.PARAMETERS.paytmWalletBalance);
             ownerGuid = responseParamJson.getString(NetworkUtility.PAYTM.PARAMETERS.ownerGuid);
@@ -372,6 +396,10 @@ public class WalletLinkActivity extends BaseAppCompatActivity implements View.On
             ssoId = responseParamJson.getString(NetworkUtility.PAYTM.PARAMETERS.ssoId);
         } catch (JSONException e) {
             e.printStackTrace();
+        }
+
+        if (amount.contains(Utility.COMMA)) {
+            amount = amount.replace(Utility.COMMA, Utility.EMPTY_STRING);
         }
 
         if (paytmWalletBalance < Double.parseDouble(amount)) {
@@ -399,6 +427,63 @@ public class WalletLinkActivity extends BaseAppCompatActivity implements View.On
 
 
     ///////////////////////////////////////////////////////////Paytm Add Money API call starts///////////////////////////////////////////////////////////
+
+    @Override
+    public void paytmAddMoneySuccessResponse(String htmlResponse) {
+        mActivityWalletLinkBinding.webView.loadData(htmlResponse, "", "");
+        mActivityWalletLinkBinding.svMainLayout.setVisibility(View.GONE);
+        mActivityWalletLinkBinding.webView.setVisibility(View.VISIBLE);
+
+        Document document = Jsoup.parse(htmlResponse);
+        Log.d(TAG, "paytmAddMoneySuccessResponse: document :: " + document);
+        Elements inputElements = document.getElementsByTag("INPUT");
+        for (int i = 0; i < inputElements.size(); i++) {
+            Element element = inputElements.get(i);
+
+            Attributes attributes = element.attributes();
+
+            if (attributes.hasKeyIgnoreCase("NAME")) {
+                String value = attributes.getIgnoreCase("VALUE");
+                switch (attributes.getIgnoreCase("NAME")) {
+                    case NetworkUtility.PAYTM.PARAMETERS.RESPCODE:
+                        Log.d("RESPCODE", value);
+                        if (value.equals("802")) {
+                            Utility.showSnackBar(document.getElementsByAttributeValue("NAME", "RESPMSG").get(0).attr("VALUE"), mActivityWalletLinkBinding.getRoot());
+//                            mActivityWalletLinkBinding.webView.loadData(document.getElementsByAttributeValue("NAME", "STATUS").get(0).attr("VALUE"),"","");
+                            AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+                            builder.setTitle("Transaction status");
+                            builder.setMessage(document.getElementsByAttributeValue("NAME", "STATUS").get(0).attr("VALUE"));
+                            builder.setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    finish();
+                                }
+                            });
+                            builder.create().show();
+                        }
+                        break;
+                    case NetworkUtility.PAYTM.PARAMETERS.RESPMSG:
+                        Log.d("RESPMSG", value);
+                        break;
+                    case NetworkUtility.PAYTM.PARAMETERS.STATUS:
+                        Log.d("STATUS", value);
+                        break;
+                    case NetworkUtility.PAYTM.PARAMETERS.MID:
+                        Log.d("MID", value);
+                        break;
+                    case NetworkUtility.PAYTM.PARAMETERS.TXNAMOUNT:
+                        Log.d("TXNAMOUNT", value);
+                        break;
+                    case NetworkUtility.PAYTM.PARAMETERS.ORDERID:
+                        Log.d("ORDERID", value);
+                        break;
+                }
+            }
+        }
+
+        hideProgressDialog();
+    }
+
     private void addMoney() {
         if (!Utility.isConnected(mContext)) {
             Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityWalletLinkBinding.getRoot());
@@ -408,95 +493,86 @@ public class WalletLinkActivity extends BaseAppCompatActivity implements View.On
         //Show Progress
         showProgressDialog();
 
-        Map<String, String> bodyParams = new HashMap<>();
-        bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.MID, BuildConfig.SANDBOX_MERCHANT_ID);
-        bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.REQUEST_TYPE, Utility.ADD_MONEY);
-        bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.ORDER_ID, orderId);
-        bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.CUST_ID, mResourceOwnerCustomerId);
-        bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.TXN_AMOUNT, mEtText);
-        bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.CHANNEL_ID, BuildConfig.CHANNEL_ID);
-        bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.INDUSTRY_TYPE_ID, BuildConfig.INDUSTRY_TYPE_ID);
-        bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.WEBSITE, BuildConfig.WEBSITE);
-        bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.SSO_TOKEN, mAccessToken);
-        bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.CHECKSUMHASH, mChecksumHash);
+        PaytmUtility.addMoney(mContext, generatedOrderId, mAccessToken, mEtText, mChecksumHash, mResourceOwnerCustomerId, mMobileNumber, this);
+    }
+    ///////////////////////////////////////////////////////////Paytm Add Money API call ends///////////////////////////////////////////////////////////
 
-        final String requestString = new JSONObject(bodyParams).toString();
 
-        PaytmNetworkRequest paytmNetworkRequest = new PaytmNetworkRequest(
-                Request.Method.POST,
-                NetworkUtility.PAYTM.WALLET_APIS.ADD_MONEY,
-                mAddMoneyResponseListener,
-                mAddMoneyErrorListener,
-                null,
-                requestString);
-        Volley.getInstance(mContext).addToRequestQueue(paytmNetworkRequest, NetworkUtility.PAYTM.WALLET_APIS.ADD_MONEY);
+    ///////////////////////////////////////////////////////////Paytm Withdraw Money API call starts///////////////////////////////////////////////////////////
+    @Override
+    public void paytmWithdrawMoneySuccessResponse(String htmlResponse) {
+        mActivityWalletLinkBinding.webView.loadData(htmlResponse, "", "");
+        mActivityWalletLinkBinding.svMainLayout.setVisibility(View.GONE);
+        mActivityWalletLinkBinding.webView.setVisibility(View.VISIBLE);
+
+        Document document = Jsoup.parse(htmlResponse);
+        Log.d(TAG, "paytmAddMoneySuccessResponse: document :: " + document);
+        Elements inputElements = document.getElementsByTag("INPUT");
+        for (int i = 0; i < inputElements.size(); i++) {
+            Element element = inputElements.get(i);
+
+            Attributes attributes = element.attributes();
+
+            if (attributes.hasKeyIgnoreCase("NAME")) {
+                String value = attributes.getIgnoreCase("VALUE");
+                switch (attributes.getIgnoreCase("NAME")) {
+                    case NetworkUtility.PAYTM.PARAMETERS.RESPCODE:
+                        Log.d("RESPCODE", value);
+                        if (value.equals("802")) {
+                            Utility.showSnackBar(document.getElementsByAttributeValue("NAME", "RESPMSG").get(0).attr("VALUE"), mActivityWalletLinkBinding.getRoot());
+//                            mActivityWalletLinkBinding.webView.loadData(document.getElementsByAttributeValue("NAME", "STATUS").get(0).attr("VALUE"),"","");
+                            AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+                            builder.setTitle("Transaction status");
+                            builder.setMessage(document.getElementsByAttributeValue("NAME", "STATUS").get(0).attr("VALUE"));
+                            builder.setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    finish();
+                                }
+                            });
+                            builder.create().show();
+                        }
+                        break;
+                    case NetworkUtility.PAYTM.PARAMETERS.RESPMSG:
+                        Log.d("RESPMSG", value);
+                        break;
+                    case NetworkUtility.PAYTM.PARAMETERS.STATUS:
+                        Log.d("STATUS", value);
+                        break;
+                    case NetworkUtility.PAYTM.PARAMETERS.MID:
+                        Log.d("MID", value);
+                        break;
+                    case NetworkUtility.PAYTM.PARAMETERS.TXNAMOUNT:
+                        Log.d("TXNAMOUNT", value);
+                        break;
+                    case NetworkUtility.PAYTM.PARAMETERS.ORDERID:
+                        Log.d("ORDERID", value);
+                        break;
+                }
+            }
+        }
+
+        hideProgressDialog();
     }
 
-    Response.ErrorListener mAddMoneyErrorListener = new Response.ErrorListener() {
-        @Override
-        public void onErrorResponse(VolleyError error) {
-            LogUtils.LOGD(TAG, "onErrorResponse() called with: error = [" + error + "]");
-
-            //hide ProgressDialog
-            hideProgressDialog();
-
-            // Show Toast
-            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityWalletLinkBinding.getRoot());
+    private void withdrawMoney() {
+        if (!Utility.isConnected(mContext)) {
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityWalletLinkBinding.getRoot());
+            return;
         }
-    };
 
-    Response.Listener<String> mAddMoneyResponseListener = new Response.Listener<String>() {
-        @Override
-        public void onResponse(String response) {
-            LogUtils.LOGD(TAG, "onResponse() of add money called with: response = [" + response + "]");
-            JSONObject jsonObject;
-            try {
-                jsonObject = new JSONObject(response);
-//                String responseCode = jsonObject.getString(NetworkUtility.PAYTM.PARAMETERS.responseCode);
-//                switch (responseCode) {
-//                    case NetworkUtility.PAYTM.RESPONSE_CODES.LOGIN:
-//                    case NetworkUtility.PAYTM.RESPONSE_CODES.REGISTER:
-//                        mState = jsonObject.getString(NetworkUtility.PAYTM.PARAMETERS.state);
-//                        updateUI();
-//                        break;
-//                    case NetworkUtility.PAYTM.RESPONSE_CODES.INVALID_AUTHORIZATION:
-//                    case NetworkUtility.PAYTM.RESPONSE_CODES.BAD_REQUEST:
-//                    case NetworkUtility.PAYTM.RESPONSE_CODES.LOGIN_FAILED:
-//                        // Show Toast
-//                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityWalletLinkBinding.getRoot());
-//                        break;
-//                    //invalid email not handled as email is not mandatory and we are not sending email
-//                    case NetworkUtility.PAYTM.RESPONSE_CODES.INVALID_EMAIL:
-//                        break;
-//                    case NetworkUtility.PAYTM.RESPONSE_CODES.INVALID_MOBILE:
-//                        // Show Toast
-//                        Utility.showSnackBar(getString(R.string.validate_phone_number_length), mActivityWalletLinkBinding.getRoot());
-//                        break;
-//                    case NetworkUtility.PAYTM.RESPONSE_CODES.ACCOUNT_BLOCKED:
-//                        //TODO: snackbar message to be changed in case required. now displaying generalized message of something went wrong
-//                        // Show Toast
-//                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityWalletLinkBinding.getRoot());
-//                        break;
-//                }
+        //Show Progress
+        showProgressDialog();
 
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            hideProgressDialog();
-        }
-    };
-    ///////////////////////////////////////////////////////////Paytm Add Money API call ends///////////////////////////////////////////////////////////
+        PaytmUtility.withdrawMoney(mContext, generatedOrderId, mAccessToken, mEtText, mChecksumHash, mResourceOwnerCustomerId, mMobileNumber, this);
+    }
+    ///////////////////////////////////////////////////////////Paytm Withdraw Money API call ends///////////////////////////////////////////////////////////
+
 
     ///////////////////////////////////////////////////////////Volley Get Checksum Hash Web call starts///////////////////////////////////////////////////////////
     @Override
     public void volleyGetChecksumSuccessResponse(String checksumHash) {
         mChecksumHash = checksumHash;
-        hideProgressDialog();
-    }
-
-    @Override
-    public void showSpecificErrorMessage(String errorMessage) {
-        Utility.showSnackBar(errorMessage, mActivityWalletLinkBinding.getRoot());
         hideProgressDialog();
     }
 
@@ -508,9 +584,29 @@ public class WalletLinkActivity extends BaseAppCompatActivity implements View.On
 
         showProgressDialog();
 
-       PaytmUtility.getChecksum(mContext, String.valueOf(0), mResourceOwnerCustomerId, this);
+        generatedOrderId = PaytmUtility.getChecksum(mContext, String.valueOf(0), mResourceOwnerCustomerId, this);
     }
     ///////////////////////////////////////////////////////////Volley Get Checksum Hash Web call ends///////////////////////////////////////////////////////////
+
+    ///////////////////////////////////////////////////////////Volley save paytm user Web call starts///////////////////////////////////////////////////////////
+
+    @Override
+    public void volleySavePaytmUserSuccessResponse() {
+        Log.d(TAG, "volleySavePaytmUserSuccessResponse: user successfully saved");
+        hideProgressDialog();
+    }
+
+    private void savePaytmUserDetails() {
+        if (!Utility.isConnected(mContext)) {
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityWalletLinkBinding.getRoot());
+            return;
+        }
+
+        showProgressDialog();
+
+        PaytmUtility.savePaytmUserDetails(mContext, mResourceOwnerCustomerId, mAccessToken, mMobileNumber, this);
+    }
+    ///////////////////////////////////////////////////////////Volley save paytm user Web call ends///////////////////////////////////////////////////////////
 
     ///////////////////////////////////////////////////////////Paytm API call ends///////////////////////////////////////////////////////////
 
@@ -540,6 +636,8 @@ public class WalletLinkActivity extends BaseAppCompatActivity implements View.On
                 return false;
             }
             return true;
+        } else if (BTN_WHICH == BTN_IS_CONFIRM){
+            return true;
         }
         return false;
     }
@@ -565,6 +663,8 @@ public class WalletLinkActivity extends BaseAppCompatActivity implements View.On
         Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.PAYTM.CHECK_BALANCE_API);
         Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.WS.GET_CHECKSUM_HASH);
         Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.PAYTM.WALLET_APIS.ADD_MONEY);
+        Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.WS.SAVE_PAYTM_USER_DETAILS);
+        Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.PAYTM.WALLET_APIS.WITHDRAW_MONEY);
         super.onDestroy();
     }
 }

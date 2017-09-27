@@ -108,8 +108,10 @@ public class NetworkUtility {
 
         public static final String CHECK_PRO_AVAILABILITY_FOR_STRATEGIC_TASK = BASE_URL + "customers/tasks/check_pro_availability_for_Strategic_task";
 
-        //get checksum needed for paytm
-        public static final String GET_CHECKSUM_HASH = BASE_URL + "/customers/payment/getPaytmChecksum";
+        //checksum needed for paytm
+        public static final String GET_CHECKSUM_HASH = BASE_URL + "customers/payment/getPaytmChecksum";
+        public static final String VERIFY_CHECKSUM = BASE_URL + "customers/Verifychecksum";
+        public static final String SAVE_PAYTM_USER_DETAILS = BASE_URL + "customers/payment/storePaytmData";
     }
 
     public static class PAYTM {
@@ -172,6 +174,28 @@ public class NetworkUtility {
             public static final String WEBSITE = "WEBSITE";
             public static final String SSO_TOKEN = "SSO_TOKEN";
             public static final String CHECKSUMHASH = "CHECKSUMHASH";
+            public static final String MOBILE_NO = "MOBILE_NO";
+            public static final String EMAIL = "EMAIL";
+            public static final String CALLBACK_URL = "http://35.154.147.32/admin/v9/customers/Verifychecksum";
+            public static final String RESPCODE = "RESPCODE";
+            public static final String RESPMSG = "RESPMSG";
+            public static final String STATUS = "STATUS";
+            public static final String TXNAMOUNT = "TXNAMOUNT";
+            public static final String ORDERID = "ORDERID";
+            public static final String ReqType = "ReqType";
+            public static final String TxnAmount = "TxnAmount";
+            public static final String AppIP = "AppIP";
+            public static final String OrderId = "OrderId";
+            public static final String Currency = "Currency";
+            public static final String DeviceId = "DeviceId";
+            public static final String SSOToken = "SSOToken";
+            public static final String PaymentMode = "PaymentMode";
+            public static final String CustId = "CustId";
+            public static final String IndustryType = "IndustryType";
+            public static final String Channel = "Channel";
+            public static final String AuthMode = "AuthMode";
+            public static final String CheckSum = "CheckSum";
+            public static final String JsonData = "JsonData";
         }
 
         public static final class RESPONSE_CODES {
@@ -323,6 +347,9 @@ public class NetworkUtility {
         String TXN_AMOUNT = "TXN_AMOUNT";
         String CUST_ID = "CUST_ID";
         String CHECKSUMHASH = "CHECKSUMHASH";
+        String PAYTM_CUST_ID = "paytm_cust_id";
+        String PAYTM_ACCESS_TOKEN = "paytm_access_token";
+        String PAYTM_PHONE_NUMBER = "paytm_phone_number";
 
         interface VERSION_CHANGE_TYPE {
             int NORMAL = 0;

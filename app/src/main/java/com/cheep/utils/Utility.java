@@ -54,6 +54,8 @@ import org.cryptonode.jncryptor.CryptorException;
 import org.cryptonode.jncryptor.JNCryptor;
 
 import java.io.UnsupportedEncodingException;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
 import java.net.URLEncoder;
 import java.text.DecimalFormat;
 import java.text.ParseException;
@@ -61,6 +63,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -98,6 +101,12 @@ public class Utility {
     public static final String BASIC = "Basic";
     public static final String COLON = ":";
     public static final String ADD_MONEY = "ADD_MONEY";
+    public static final String WITHDRAW = "WITHDRAW";
+    public static final String DEFAULT = "DEFAULT";
+    public static final String COMMA = ",";
+    public static final String INR = "INR";
+    public static final String PPI = "PPI";
+    public static final String USRPWD = "USRPWD";
 
     //Date Formats
     public static final String DATE_FORMAT_DD_MM_YY = SuperFormatter.DATE + "/" + SuperFormatter.MONTH_NUMBER + "/" + SuperFormatter.YEAR_4_DIGIT;
@@ -186,7 +195,7 @@ public class Utility {
 
     //Different Types of Braoadcast Actions
     public static final String BR_ON_TASK_CREATED = "com.cheep.ontaskcreated";
-//    public static final String BR_ON_TASK_CREATED_FOR_INSTA_BOOKING = "com.cheep.ontaskcreated.instabooking";
+    //    public static final String BR_ON_TASK_CREATED_FOR_INSTA_BOOKING = "com.cheep.ontaskcreated.instabooking";
 //    public static final String BR_ON_TASK_CREATED_FOR_STRATEGIC_PARTNER = "com.cheep.ontaskcreated.strategicpartner";
     public static final String BR_NEW_TASK_ADDED = "com.cheep.newtask.added";
     public static final String BR_ON_LOGIN_SUCCESS = "com.cheep.login.success";
@@ -1276,6 +1285,41 @@ public class Utility {
         DecimalFormat formatter = new DecimalFormat("#,###.00");
         double price = Double.parseDouble(quotePrice);
         return formatter.format(price);
+    }
+
+    /**
+     * Get IP address from first non-localhost interface
+     *
+     * @param useIPv4 true=return ipv4, false=return ipv6
+     * @return address or empty string
+     */
+    public static String getIPAddress(boolean useIPv4) {
+        try {
+            List<NetworkInterface> interfaces = Collections.list(NetworkInterface.getNetworkInterfaces());
+            for (NetworkInterface intf : interfaces) {
+                List<InetAddress> addrs = Collections.list(intf.getInetAddresses());
+                for (InetAddress addr : addrs) {
+                    if (!addr.isLoopbackAddress()) {
+                        String sAddr = addr.getHostAddress();
+                        //boolean isIPv4 = InetAddressUtils.isIPv4Address(sAddr);
+                        boolean isIPv4 = sAddr.indexOf(':') < 0;
+
+                        if (useIPv4) {
+                            if (isIPv4)
+                                return sAddr;
+                        } else {
+                            if (!isIPv4) {
+                                int delim = sAddr.indexOf('%'); // drop ip6 zone suffix
+                                return delim < 0 ? sAddr.toUpperCase() : sAddr.substring(0, delim).toUpperCase();
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 
   /*  public static String getExperienceString(String exp) {
