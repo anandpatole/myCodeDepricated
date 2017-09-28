@@ -239,6 +239,13 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
         mActivityPaymentDetailBinding.llpromocode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                mActivityPaymentDetailBinding.ivpromocode.setVisibility(View.VISIBLE);
+                mActivityPaymentDetailBinding.ivpromocode.setSelected(false);
+                mActivityPaymentDetailBinding.txtpromocode.setSelected(false);
+                mActivityPaymentDetailBinding.imgCheepCodeClose.setVisibility(View.GONE);
+                mActivityPaymentDetailBinding.llpromocode.setEnabled(true);
+                resetPromocodeValue();
+
                 mActivityPaymentDetailBinding.ivpromocode.setSelected(!mActivityPaymentDetailBinding.ivpromocode.isSelected());
                 mActivityPaymentDetailBinding.txtpromocode.setSelected(mActivityPaymentDetailBinding.ivpromocode.isSelected());
                 mActivityPaymentDetailBinding.lnPromoCodeDisclaimer.setVisibility(View.GONE);
@@ -359,6 +366,7 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
     private void onClickOfClosePromoCode() {
         mActivityPaymentDetailBinding.ivpromocode.setVisibility(View.VISIBLE);
         mActivityPaymentDetailBinding.ivpromocode.setSelected(false);
+        mActivityPaymentDetailBinding.txtpromocode.setSelected(false);
         cheepCode = null;
         if (!TextUtils.isEmpty(actualQuotePrice)) {
             providerModel.quotePrice = actualQuotePrice;
@@ -451,6 +459,7 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
         mActivityPaymentDetailBinding.txtsubtotal.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf(subTotal))));
         mActivityPaymentDetailBinding.txttotal.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf(taskPaidAmount))));
         mActivityPaymentDetailBinding.textPay.setText(getString(R.string.label_book_now_for_rupees, "" + Utility.getQuotePriceFormatter(String.valueOf(taskPaidAmount))));
+        mActivityPaymentDetailBinding.textreferraldiscountlabel.setText(getString(R.string.label_referral_discount_paymentsumaary));
 
         mActivityPaymentDetailBinding.txtpromocode.setSelected(true);
         mActivityPaymentDetailBinding.txtreferraldiscount.setSelected(true);
@@ -465,7 +474,7 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
                     {
                         mActivityPaymentDetailBinding.txtreferraldiscount.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf(promocodeValue))));
                         mActivityPaymentDetailBinding.txtpromocode.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(Utility.ZERO_STRING)));
-                        mActivityPaymentDetailBinding.lnPromoCodeDisclaimer.setVisibility(View.GONE);
+                        mActivityPaymentDetailBinding.lnPromoCodeDisclaimer.setVisibility(View.VISIBLE);
                     }
                 } else {
                     mActivityPaymentDetailBinding.txtreferraldiscount.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(Utility.ZERO_STRING)));
@@ -556,6 +565,8 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
         View view = View.inflate(mContext, R.layout.dialog_add_promocode, null);
         edtCheepcode = view.findViewById(R.id.edit_cheepcode);
         cheepCodeDialog = new BottomAlertDialog(mContext);
+        mActivityPaymentDetailBinding.ivpromocode.setSelected(false);
+        mActivityPaymentDetailBinding.txtpromocode.setSelected(false);
         view.findViewById(R.id.btn_apply).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -768,7 +779,7 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
 
                         String payable;
                         payable = jsonObject.optString(NetworkUtility.TAGS.PAYABLE_AMOUNT);
-                        mActivityPaymentDetailBinding.lnPromoCodeDisclaimer.setVisibility(View.GONE);
+                        mActivityPaymentDetailBinding.lnPromoCodeDisclaimer.setVisibility(View.VISIBLE);
 
                         // setting payable amount as quote price to pay.
                         providerModel.quotePrice = payable;
@@ -812,6 +823,7 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
         usedWalletBalance = 0;
 //        mActivityJobSummaryBinding.btnPay.setText(getString(R.string.label_pay_X_X_X, total, discount, payable));
 //        @change only need to show payable amount
+        mActivityPaymentDetailBinding.txtpromocode.setSelected(true);
         mActivityPaymentDetailBinding.txtpromocode.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(discount)));
         mActivityPaymentDetailBinding.txttotal.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(payable)));
         mActivityPaymentDetailBinding.textPay.setText(getString(R.string.label_book_now_for_rupees, Utility.getQuotePriceFormatter(payable)));

@@ -565,6 +565,7 @@ public class EnterTaskDetailFragment extends BaseFragment {
                             if (superCalendar.getTimeInMillis() < calAfter3Hours.getTimeInMillis()) {
                                 Utility.showSnackBar(getString(R.string.can_only_start_task_after_3_hours), mFragmentEnterTaskDetailBinding.getRoot());
                                 mFragmentEnterTaskDetailBinding.textTaskWhen.setText(Utility.EMPTY_STRING);
+                                mFragmentEnterTaskDetailBinding.textTaskWhen.setVisibility(View.GONE);
                                 updateTaskVerificationFlags();
                                 return;
                             }

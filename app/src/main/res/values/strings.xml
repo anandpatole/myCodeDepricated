@@ -323,6 +323,8 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_additional_charges">Additional Charge</string>
     <string name="label_sub_total">Sub Total</string>
     <string name="label_referral_discount">Claim Referral Discount</string>
+    <string name="label_referral_discount_paymentsumaary">Referral Discount Applied</string>
+
     <string name="label_promocode_apply">Promo Code Applied</string>
     <string name="label_total_paid">Total Paid</string>
 
