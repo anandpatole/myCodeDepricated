@@ -10,6 +10,7 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.EditText;
 
 import com.android.volley.Response;
@@ -83,6 +84,9 @@ public class VerificationActivity extends BaseAppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mActivityVerificationBinding = DataBindingUtil.setContentView(this, R.layout.activity_verification);
+      /*  getWindow().setSoftInputMode(
+                WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+*/
         initiateUI();
         setListeners();
     }

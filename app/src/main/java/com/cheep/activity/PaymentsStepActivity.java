@@ -227,8 +227,37 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
             spannableStringBuilder.append(getSpannableString(dateTime, ContextCompat.getColor(this, R.color.splash_gradient_end), true));
             spannableStringBuilder.append(getSpannableString(getString(R.string.label_at), ContextCompat.getColor(this, R.color.grey_varient_8), false));
             spannableStringBuilder.append(getSpannableString(taskDetailModel.taskAddress, ContextCompat.getColor(this, R.color.splash_gradient_end), true));*/
+            double taskPaidAmount = getQuotePriceInInteger(providerModel.quotePrice);
+            double additionalCharges = 0;
+            double promocodeValue = 0;
+            double additionalPaidAmount = 0;
 
+            if (isInstaBooking) {
+                promocodeValue = 0;
+            } else {
+
+                if (!TextUtils.isEmpty(taskDetailModel.additionalQuoteAmount)) {
+                    additionalCharges = getQuotePriceInInteger(taskDetailModel.additionalQuoteAmount);
+                }
+
+                if (!TextUtils.isEmpty(taskDetailModel.task_total_amount)) {
+                    double task_total_amount = 0;
+                    double taskPaidAmountTotal = 0;
+                    if (!TextUtils.isEmpty(taskDetailModel.taskPaidAmount)) {
+                        taskPaidAmountTotal = getQuotePriceInInteger(taskDetailModel.taskPaidAmount);
+                    }
+                    task_total_amount = getQuotePriceInInteger(taskDetailModel.task_total_amount);
+                    promocodeValue = task_total_amount - taskPaidAmountTotal;
+
+                }
+            }
+
+            double subTotal = (taskPaidAmount + additionalCharges);
+            double totalPayment = (taskPaidAmount + additionalCharges) - promocodeValue;
             mActivityPaymentDetailBinding.txtdesc.setText(spannableStringBuilder);
+            mActivityPaymentDetailBinding.txtprofee.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf(taskPaidAmount))));
+            mActivityPaymentDetailBinding.txtadditionalcharge.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf(additionalCharges))));
+            mActivityPaymentDetailBinding.txtsubtotal.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf(subTotal))));
         }
 
         //Referrral discount image click listener
@@ -299,12 +328,8 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
             mActivityPaymentDetailBinding.ivreferraldiscount.setSelected(!mActivityPaymentDetailBinding.ivreferraldiscount.isSelected());
             mActivityPaymentDetailBinding.txtreferraldiscount.setSelected(mActivityPaymentDetailBinding.ivreferraldiscount.isSelected());
             mActivityPaymentDetailBinding.llpromocode.setEnabled(true);
-
-            if (mActivityPaymentDetailBinding.ivpromocode.isSelected()) {
-                mActivityPaymentDetailBinding.ivpromocode.setSelected(false);
-                mActivityPaymentDetailBinding.txtpromocode.setSelected(false);
                 onClickOfClosePromoCode();
-            }
+
 
             if (mActivityPaymentDetailBinding.ivreferraldiscount.isSelected()) {
                 isReferCode = Utility.BOOLEAN.NO;
@@ -414,9 +439,9 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
 
             double subTotal = (taskPaidAmount + additionalCharges);
             double totalPayment = (taskPaidAmount + additionalCharges) - promocodeValue;
-            mActivityPaymentDetailBinding.txtprofee.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf(taskPaidAmount))));
-            mActivityPaymentDetailBinding.txtadditionalcharge.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf(additionalCharges))));
-            mActivityPaymentDetailBinding.txtsubtotal.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf(subTotal))));
+       //     mActivityPaymentDetailBinding.txtprofee.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf(taskPaidAmount))));
+        //    mActivityPaymentDetailBinding.txtadditionalcharge.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf(additionalCharges))));
+        //    mActivityPaymentDetailBinding.txtsubtotal.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf(subTotal))));
             mActivityPaymentDetailBinding.txttotal.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf(totalPayment))));
             mActivityPaymentDetailBinding.textPay.setText(getString(R.string.label_book_now_for_rupees, "" + Utility.getQuotePriceFormatter(String.valueOf(totalPayment))));
             mActivityPaymentDetailBinding.txtpromocode.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf(promocodeValue))));
