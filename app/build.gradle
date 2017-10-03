@@ -81,6 +81,15 @@ android {
     // We are using apache library for MultiPart portion so, have to use below line to make apache library accessible on API LEVEL >=23
     useLibrary 'org.apache.http.legacy'
 
+//    productFlavors{
+//
+//
+//        malasiya
+//        {
+//            versionCode 1
+//            versionName "1.0" // PLEASE FIRST MAKE SURE MIN-VERSION IS 16.
+//        }
+//    }
     buildTypes {
         debug {
             versionNameSuffix "-SNAPSHOT"
@@ -95,6 +104,18 @@ android {
             buildConfigField("boolean", "NEED_TO_BYPASS_PAYMENT", "true")
             signingConfig signingConfigs.debug
         }
+
+        DebugMalaysia {
+            versionNameSuffix "-MALASIYA"
+          // Below Key value pairs would get change based on Buildtype
+            buildConfigField("String", "BASE_URL", getProperty("MALAYSIA_BASE_URL"));
+            buildConfigField("String", "CHAT_NODE", getProperty("CHAT_NODE_DEBUG"));
+            buildConfigField("String", "PAYUBIZ_HDFC_KEY", getProperty("PAYUBIZ_HDFC_SANDBOX_KEY"))
+            buildConfigField("String", "PAYUBIZ_HDFC_URL", getProperty("PAYUBIZ_HDFC_SANDBOX_URL"))
+            buildConfigField("boolean", "NEED_TO_BYPASS_PAYMENT", "false")
+            signingConfig signingConfigs.debug
+        }
+
         live {
             versionNameSuffix "-LIVE"
             buildConfigField("String", "BASE_URL", getProperty("LIVE_BASE_URL"));
