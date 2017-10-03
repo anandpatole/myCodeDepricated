@@ -564,7 +564,7 @@ public class WalletLinkActivity extends BaseAppCompatActivity implements View.On
         //Show Progress
         showProgressDialog();
 
-        PaytmUtility.withdrawMoney(mContext, generatedOrderId, mAccessToken, mEtText, mChecksumHash, mResourceOwnerCustomerId, mMobileNumber, this);
+        PaytmUtility.withdrawMoney(mContext, generatedOrderId, mAccessToken, amount, mChecksumHash, mResourceOwnerCustomerId, mMobileNumber, this);
     }
     ///////////////////////////////////////////////////////////Paytm Withdraw Money API call ends///////////////////////////////////////////////////////////
 
@@ -584,7 +584,7 @@ public class WalletLinkActivity extends BaseAppCompatActivity implements View.On
 
         showProgressDialog();
 
-        generatedOrderId = PaytmUtility.getChecksum(mContext, String.valueOf(0), mResourceOwnerCustomerId, this);
+        generatedOrderId = PaytmUtility.getChecksum(mContext, paytmWalletBalance < Double.parseDouble(amount), amount, mAccessToken, mMobileNumber, mResourceOwnerCustomerId, this);
     }
     ///////////////////////////////////////////////////////////Volley Get Checksum Hash Web call ends///////////////////////////////////////////////////////////
 
@@ -636,7 +636,7 @@ public class WalletLinkActivity extends BaseAppCompatActivity implements View.On
                 return false;
             }
             return true;
-        } else if (BTN_WHICH == BTN_IS_CONFIRM){
+        } else if (BTN_WHICH == BTN_IS_CONFIRM) {
             return true;
         }
         return false;
