@@ -49,7 +49,7 @@ public class PaytmUtility {
         Response.ErrorListener mSendOTPErrorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                LogUtils.LOGD(TAG, "onErrorResponse() called with: error = [" + error + "]");
+                LogUtils.LOGE(TAG, "onErrorResponse() called with: error = [" + error + "]");
                 listener.volleyError();
             }
         };
@@ -289,7 +289,7 @@ public class PaytmUtility {
     ///////////////////////////////////////////////////////Paytm Check Balance API call ends///////////////////////////////////////////////////////
 
 
-    ///////////////////////////////////////////////////////Paytm Add Money API call ends///////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////Paytm Add Money API call starts///////////////////////////////////////////////////////
     public interface AddMoneyResponseListener {
         void paytmAddMoneySuccessResponse(String htmlResponse);
 
@@ -363,7 +363,7 @@ public class PaytmUtility {
     }
 
 
-    public static String getChecksum(Context mContext, String txnAmount, String mResourceOwnerCustomerId, final GetChecksumResponseListener listener) {
+    public static String getChecksum(Context mContext, boolean isAddMoney, String txnAmount, String mAccessToken, String mMobileNumber, String mResourceOwnerCustomerId, final GetChecksumResponseListener listener) {
         final Response.ErrorListener mGetChecksumErrorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
@@ -401,8 +401,32 @@ public class PaytmUtility {
 
         Map<String, String> bodyParams = new HashMap<>();
         bodyParams.put(NetworkUtility.TAGS.ORDER_ID, orderID);
-        bodyParams.put(NetworkUtility.TAGS.TXN_AMOUNT, String.valueOf(0));
+        bodyParams.put(NetworkUtility.TAGS.TXN_AMOUNT, txnAmount);
         bodyParams.put(NetworkUtility.TAGS.CUST_ID, mResourceOwnerCustomerId);
+        if (isAddMoney) {
+            bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.CHANNEL_ID, BuildConfig.CHANNEL_ID);
+            bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.WEBSITE, BuildConfig.WEBSITE);
+            bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.INDUSTRY_TYPE_ID, BuildConfig.INDUSTRY_TYPE_ID);
+            bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.CALLBACK_URL, NetworkUtility.WS.VERIFY_CHECKSUM);
+            bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.SSO_TOKEN, mAccessToken);
+            bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.REQUEST_TYPE, Utility.ADD_MONEY);
+            bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.MID, BuildConfig.SANDBOX_MERCHANT_ID);
+            bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.MOBILE_NO, mMobileNumber);
+            bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.EMAIL, PreferenceUtility.getInstance(mContext).getUserDetails().Email);
+        } else {
+            bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.MID, BuildConfig.MERCHANT_KEY);
+            bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.ReqType, Utility.WITHDRAW);
+            bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.AppIP, Utility.getIPAddress(true));
+            bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.Currency, Utility.INR);
+            bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.DeviceId, mMobileNumber);
+            bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.SSOToken, mAccessToken);
+            //PPI payment mode is for wallets
+            bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.PaymentMode, Utility.PPI);
+            bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.IndustryType, BuildConfig.INDUSTRY_TYPE_ID);
+            bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.Channel, BuildConfig.CHANNEL_ID);
+            //USRPWD authMode – for Wallet.
+            bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.AuthMode, Utility.USRPWD);
+        }
 
         @SuppressWarnings("unchecked")
         VolleyNetworkRequest volleyNetworkRequest = new VolleyNetworkRequest(
@@ -430,7 +454,7 @@ public class PaytmUtility {
     }
 
 
-    public static void savePaytmUserDetails(Context mContext,String mResourceOwnerCustomerId, String mAccessToken, String mobileNumber, final SavePaytmUserResponseListener listener) {
+    public static void savePaytmUserDetails(Context mContext, String mResourceOwnerCustomerId, String mAccessToken, String mobileNumber, final SavePaytmUserResponseListener listener) {
 
         final Response.ErrorListener mSavePaytmUserErrorListener = new Response.ErrorListener() {
             @Override
@@ -487,7 +511,7 @@ public class PaytmUtility {
     }
     ///////////////////////////////////////////////////////Volley save user details Web call ends///////////////////////////////////////////////////////
 
-    ///////////////////////////////////////////////////////Paytm Withdraw Money API call ends///////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////Paytm Withdraw Money API call starts///////////////////////////////////////////////////////
     public interface WithdrawMoneyResponseListener {
         void paytmWithdrawMoneySuccessResponse(String htmlResponse);
 
@@ -495,13 +519,13 @@ public class PaytmUtility {
     }
 
     public static void withdrawMoney(Context mContext,
-                                String generatedOrderId,
-                                String mAccessToken,
-                                String mEtText,
-                                String mChecksumHash,
-                                String mResourceOwnerCustomerId,
-                                String mMobileNumber,
-                                final WithdrawMoneyResponseListener listener) {
+                                     String generatedOrderId,
+                                     String mAccessToken,
+                                     String amount,
+                                     String mChecksumHash,
+                                     String mResourceOwnerCustomerId,
+                                     String mMobileNumber,
+                                     final WithdrawMoneyResponseListener listener) {
 
         Response.ErrorListener mWithdrawMoneyErrorListener = new Response.ErrorListener() {
             @Override
@@ -522,7 +546,7 @@ public class PaytmUtility {
         Map<String, String> bodyParamValue = new HashMap<>();
         bodyParamValue.put(NetworkUtility.PAYTM.PARAMETERS.MID, BuildConfig.SANDBOX_MERCHANT_ID);
         bodyParamValue.put(NetworkUtility.PAYTM.PARAMETERS.ReqType, Utility.WITHDRAW);
-        bodyParamValue.put(NetworkUtility.PAYTM.PARAMETERS.TxnAmount, mEtText);
+        bodyParamValue.put(NetworkUtility.PAYTM.PARAMETERS.TxnAmount, amount);
         bodyParamValue.put(NetworkUtility.PAYTM.PARAMETERS.AppIP, Utility.getIPAddress(true));
         bodyParamValue.put(NetworkUtility.PAYTM.PARAMETERS.OrderId, generatedOrderId);
         bodyParamValue.put(NetworkUtility.PAYTM.PARAMETERS.Currency, Utility.INR);
@@ -535,7 +559,7 @@ public class PaytmUtility {
         bodyParamValue.put(NetworkUtility.PAYTM.PARAMETERS.Channel, BuildConfig.CHANNEL_ID);
         //USRPWD authMode – for Wallet.
         bodyParamValue.put(NetworkUtility.PAYTM.PARAMETERS.AuthMode, Utility.USRPWD);
-        bodyParamValue.put(NetworkUtility.PAYTM.PARAMETERS.CheckSum, mChecksumHash);
+        bodyParamValue.put(NetworkUtility.PAYTM.PARAMETERS.CheckSum, Base64.encodeBytes(mChecksumHash.getBytes()));
 //        bodyParamValue.put(NetworkUtility.PAYTM.PARAMETERS.CALLBACK_URL, NetworkUtility.WS.VERIFY_CHECKSUM);
 //        bodyParamValue.put(NetworkUtility.PAYTM.PARAMETERS.EMAIL, PreferenceUtility.getInstance(mContext).getUserDetails().Email);
 
@@ -556,4 +580,70 @@ public class PaytmUtility {
         Volley.getInstance(mContext).addToRequestQueue(paytmNetworkRequest, NetworkUtility.PAYTM.WALLET_APIS.WITHDRAW_MONEY);
     }
     ///////////////////////////////////////////////////////Paytm Withdraw Money API call ends///////////////////////////////////////////////////////
+
+    ///////////////////////////////////////////////////////Paytm Get Txn Status API call starts///////////////////////////////////////////////////////
+    public interface GetTxnStatusResponseListener {
+        void paytmGetTxnStatusSuccessResponse(String htmlResponse);
+
+        void volleyError();
+    }
+
+    public static void getTxnStatus(Context mContext,
+                                    String generatedOrderId,
+                                    String mChecksumHash,
+                                    final WithdrawMoneyResponseListener listener) {
+
+        Response.ErrorListener mGetTxnStatusErrorListener = new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                LogUtils.LOGD(TAG, "onErrorResponse() called with: error = [" + error + "]");
+                listener.volleyError();
+            }
+        };
+
+        Response.Listener<String> mGetTxnStatusResponseListener = new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                LogUtils.LOGD(TAG, "onResponse() of add money called with: response = [" + response + "]");
+                listener.paytmWithdrawMoneySuccessResponse(response);
+            }
+        };
+
+        Map<String, String> bodyParamValue = new HashMap<>();
+        bodyParamValue.put(NetworkUtility.PAYTM.PARAMETERS.MID, BuildConfig.SANDBOX_MERCHANT_ID);
+//        bodyParamValue.put(NetworkUtility.PAYTM.PARAMETERS.ReqType, Utility.WITHDRAW);
+//        bodyParamValue.put(NetworkUtility.PAYTM.PARAMETERS.TxnAmount, mEtText);
+//        bodyParamValue.put(NetworkUtility.PAYTM.PARAMETERS.AppIP, Utility.getIPAddress(true));
+        bodyParamValue.put(NetworkUtility.PAYTM.PARAMETERS.ORDERID, generatedOrderId);
+//        bodyParamValue.put(NetworkUtility.PAYTM.PARAMETERS.Currency, Utility.INR);
+//        bodyParamValue.put(NetworkUtility.PAYTM.PARAMETERS.DeviceId, mMobileNumber);
+//        bodyParamValue.put(NetworkUtility.PAYTM.PARAMETERS.SSOToken, mAccessToken);
+        //PPI payment mode is for wallets
+//        bodyParamValue.put(NetworkUtility.PAYTM.PARAMETERS.PaymentMode, Utility.PPI);
+//        bodyParamValue.put(NetworkUtility.PAYTM.PARAMETERS.CustId, mResourceOwnerCustomerId);
+//        bodyParamValue.put(NetworkUtility.PAYTM.PARAMETERS.IndustryType, BuildConfig.INDUSTRY_TYPE_ID);
+//        bodyParamValue.put(NetworkUtility.PAYTM.PARAMETERS.Channel, BuildConfig.CHANNEL_ID);
+        //USRPWD authMode – for Wallet.
+//        bodyParamValue.put(NetworkUtility.PAYTM.PARAMETERS.AuthMode, Utility.USRPWD);
+        bodyParamValue.put(NetworkUtility.PAYTM.PARAMETERS.CHECKSUMHASH, mChecksumHash);
+//        bodyParamValue.put(NetworkUtility.PAYTM.PARAMETERS.CALLBACK_URL, NetworkUtility.WS.VERIFY_CHECKSUM);
+//        bodyParamValue.put(NetworkUtility.PAYTM.PARAMETERS.EMAIL, PreferenceUtility.getInstance(mContext).getUserDetails().Email);
+
+        Map<String, JSONObject> bodyParam = new HashMap<>();
+        bodyParam.put(NetworkUtility.PAYTM.PARAMETERS.JsonData, new JSONObject(bodyParamValue));
+
+        final String requestString = new JSONObject(bodyParam).toString();
+
+        @SuppressWarnings("unchecked")
+        PaytmNetworkRequest paytmNetworkRequest = new PaytmNetworkRequest(
+                true,
+                Request.Method.POST,
+                NetworkUtility.PAYTM.WALLET_APIS.WITHDRAW_MONEY,
+                mGetTxnStatusResponseListener,
+                mGetTxnStatusErrorListener,
+                null,
+                requestString);
+        Volley.getInstance(mContext).addToRequestQueue(paytmNetworkRequest, NetworkUtility.PAYTM.WALLET_APIS.WITHDRAW_MONEY);
+    }
+    ///////////////////////////////////////////////////////Paytm Get Txn Status API call ends///////////////////////////////////////////////////////
 }

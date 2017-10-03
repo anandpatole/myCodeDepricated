@@ -589,7 +589,7 @@ public class WalletLinkActivity extends BaseAppCompatActivity implements View.On
 
         showProgressDialog();
 
-        generatedOrderId = PaytmUtility.getChecksum(mContext, String.valueOf(0), mResourceOwnerCustomerId, this);
+        generatedOrderId = PaytmUtility.getChecksum(mContext, paytmWalletBalance < Double.parseDouble(amount), amount, mAccessToken, mMobileNumber, mResourceOwnerCustomerId, this);
     }
     ///////////////////////////////////////////////////////////Volley Get Checksum Hash Web call ends///////////////////////////////////////////////////////////
 
