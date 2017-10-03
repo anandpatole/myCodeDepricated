@@ -93,7 +93,6 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
         baseFragment.startActivity(intent);
     }
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -257,7 +256,6 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
 
 
     }
-
 
     Response.Listener mCallGenerateHashWSResponseListener = new Response.Listener() {
         @Override

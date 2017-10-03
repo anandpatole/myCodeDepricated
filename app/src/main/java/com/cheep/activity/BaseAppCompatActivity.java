@@ -11,26 +11,14 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.text.TextUtils;
-import android.util.Log;
-import android.view.View;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.cheep.R;
 import com.cheep.interfaces.LocationTrackServiceInteractionListener;
-import com.cheep.network.NetworkUtility;
-import com.cheep.network.Volley;
-import com.cheep.network.VolleyNetworkRequest;
 import com.cheep.services.LocationTrackService;
-import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.Utility;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.Status;
-
-import java.util.HashMap;
-import java.util.Map;
 
 
 /**
@@ -276,11 +264,12 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity {
     }
 
 
-    /***********************************************************************************************
-     *********************** [Call to Users using Ameyo API] [Start] ******************************
+    /************************************************************************************************
+     *********************** [Call to Users using Ameyo API] [Start] ********************************
      * According to Previous flow app uses Ameyo API in order to call to other users. However, after*
      * new flow discussed with @cheep team, app is not using anymore. In case in future, we need to *
      * use it we can uncomment the below code. ******************************************************
+     * **********************************************************************************************
      ***********************************************************************************************/
     /*public void callToCheepAdmin(View view) {
         if (view == null)
