@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
@@ -24,6 +25,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import com.cheep.BootstrapConstant;
+import com.cheep.BuildConfig;
 import com.cheep.R;
 import com.cheep.databinding.ActivityWalletLinkBinding;
 import com.cheep.network.NetworkUtility;
@@ -200,8 +203,10 @@ public class WalletLinkActivity extends BaseAppCompatActivity implements View.On
             mActivityWalletLinkBinding.etMobileNumber.setText(Utility.EMPTY_STRING);
             mActivityWalletLinkBinding.etMobileNumber.setTextColor(ContextCompat.getColor(mContext, R.color.grey_varient_8));
             mActivityWalletLinkBinding.etMobileNumber.setHint(getString(R.string.label_enter_otp));
+          /*  if (BuildConfig.BUILD_TYPE.equalsIgnoreCase(Utility.DEBUG)) {
+                mActivityWalletLinkBinding.etMobileNumber.setText(BootstrapConstant.PAYTM_STAGING_MOBILE_NUMBER);
+            }*/
             SpannableStringBuilder sendOTPSpannableStringBuilder = new SpannableStringBuilder(sendOTPString);
-
             int clickIndex = sendOTPString.indexOf(Utility.CLICK);
 
             if (clickIndex < 0) {
