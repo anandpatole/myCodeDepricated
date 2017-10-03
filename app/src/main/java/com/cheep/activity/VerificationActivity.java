@@ -10,7 +10,6 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.EditText;
 
 import com.android.volley.Response;
@@ -138,7 +137,8 @@ public class VerificationActivity extends BaseAppCompatActivity {
             mActivityVerificationBinding.btnNearlyThere.setAllCaps(false);
             mActivityVerificationBinding.btnNearlyThere.setText(getString(R.string.label_brilliant_its_time_to_cheep));
         }
-
+        // to open keyboard automatically when activity opens
+        mActivityVerificationBinding.editOtp1.requestFocus();
     }
 
     private ArrayList<EditText> sequenceList;

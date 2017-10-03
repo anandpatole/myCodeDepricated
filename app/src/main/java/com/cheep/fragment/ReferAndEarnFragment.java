@@ -3,55 +3,41 @@ package com.cheep.fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
-import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.appcompat.BuildConfig;
-import android.support.v7.widget.LinearLayoutManager;
-import android.text.Html;
 import android.text.Spannable;
-import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextPaint;
 import android.text.method.LinkMovementMethod;
-import android.text.style.BackgroundColorSpan;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
-import android.text.style.ImageSpan;
 import android.text.style.RelativeSizeSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.cheep.BuildConfig;
 import com.cheep.R;
-import com.cheep.activity.HomeActivity;
-import com.cheep.adapter.FAQRecyclerViewAdapter;
-
 import com.cheep.databinding.FragmentReferAndEarnBinding;
 import com.cheep.dialogs.AcknowledgementDialogWithoutProfilePic;
 import com.cheep.dialogs.ReferAndEarnDialogKnowMore;
 import com.cheep.interfaces.DrawerLayoutInteractionListener;
-import com.cheep.model.FAQModel;
 import com.cheep.model.UserDetails;
 import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
-import com.cheep.utils.HotlineHelper;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.Utility;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -144,7 +130,6 @@ public class ReferAndEarnFragment extends BaseFragment {
         mfragmentReferAndEarnBinding.tvUserGetMoney.setMovementMethod(LinkMovementMethod.getInstance());
 
 
-
     }
 
     @Override
@@ -157,7 +142,7 @@ public class ReferAndEarnFragment extends BaseFragment {
                     Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
                     sharingIntent.setType("text/plain");
                     sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, getString(R.string.label_share_subject));
-                    sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, getString(R.string.label_refer_and_earn_share_body, com.cheep.BuildConfig.APPLICATION_ID, PreferenceUtility.getInstance(mContext).getUserDetails().refer_code));
+                    sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, getString(R.string.label_refer_and_earn_share_body, BuildConfig.REFER_AND_SHARE_APP_URL, PreferenceUtility.getInstance(mContext).getUserDetails().refer_code));
                     startActivity(Intent.createChooser(sharingIntent, getString(R.string.label_share_via)));
                 }
 
@@ -169,7 +154,7 @@ public class ReferAndEarnFragment extends BaseFragment {
         Map<String, String> mHeaderParams = new HashMap<>();
         mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
         mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
-        Map<String,String> mParams = new HashMap<>();
+        Map<String, String> mParams = new HashMap<>();
         VolleyNetworkRequest mVolleyNetworkRequest = new VolleyNetworkRequest(NetworkUtility.WS.REFER_BALANCE
                 , mCallGetReferBalanceErrorListener
                 , mCallGetReferBalanceWSResponseListener
@@ -179,27 +164,26 @@ public class ReferAndEarnFragment extends BaseFragment {
         Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest, NetworkUtility.WS.REFER_BALANCE);
 
     }
+
     Response.Listener mCallGetReferBalanceWSResponseListener = new Response.Listener() {
         @Override
         public void onResponse(Object response) {
             String strResponse = (String) response;
             try {
                 JSONObject jsonObject = new JSONObject(strResponse);
-                String REFERRAL_BALANCE = (jsonObject.optJSONObject(NetworkUtility.TAGS.DATA)).optString( NetworkUtility.TAGS.WALLET_BALANCE);
-                String REFERRAL_COUNT = (jsonObject.optJSONObject(NetworkUtility.TAGS.DATA)).optString( NetworkUtility.TAGS.REFER_COUNT);
-                 if(Double.parseDouble(REFERRAL_BALANCE)>0){
+                String REFERRAL_BALANCE = (jsonObject.optJSONObject(NetworkUtility.TAGS.DATA)).optString(NetworkUtility.TAGS.WALLET_BALANCE);
+                String REFERRAL_COUNT = (jsonObject.optJSONObject(NetworkUtility.TAGS.DATA)).optString(NetworkUtility.TAGS.REFER_COUNT);
+                if (Double.parseDouble(REFERRAL_BALANCE) > 0) {
                     mfragmentReferAndEarnBinding.refereBalanceAndCount.setVisibility(View.VISIBLE);
-                    if( Integer.parseInt(REFERRAL_COUNT)==1 || Integer.parseInt(REFERRAL_COUNT)==0){
-                        mfragmentReferAndEarnBinding.refereBalanceAndCount.setText(getString(R.string.label_you_have_earned, REFERRAL_BALANCE, REFERRAL_COUNT,"referral"));
-                    }
-                    else
-                    mfragmentReferAndEarnBinding.refereBalanceAndCount.setText(getString(R.string.label_you_have_earned, REFERRAL_BALANCE, REFERRAL_COUNT,"referrals"));
+                    if (Integer.parseInt(REFERRAL_COUNT) == 1 || Integer.parseInt(REFERRAL_COUNT) == 0) {
+                        mfragmentReferAndEarnBinding.refereBalanceAndCount.setText(getString(R.string.label_you_have_earned, REFERRAL_BALANCE, REFERRAL_COUNT, "referral"));
+                    } else
+                        mfragmentReferAndEarnBinding.refereBalanceAndCount.setText(getString(R.string.label_you_have_earned, REFERRAL_BALANCE, REFERRAL_COUNT, "referrals"));
                 }
-                Log.e(TAG, REFERRAL_BALANCE );
-                Log.e(TAG, REFERRAL_COUNT );
+                Log.e(TAG, REFERRAL_BALANCE);
+                Log.e(TAG, REFERRAL_COUNT);
                 Log.i(TAG, "onResponse: " + jsonObject.toString());
-            }
-            catch (JSONException e) {
+            } catch (JSONException e) {
                 e.printStackTrace();
                 mCallGetReferBalanceWSResponseListener.onResponse(new VolleyError(e.getMessage()));
             }
