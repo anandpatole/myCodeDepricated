@@ -73,6 +73,7 @@ public class ParentViewHolder<P extends Parent<C>, C> extends RecyclerView.ViewH
      * RecyclerView.Adapter.notifyDataSetChanged() has been called after the last
      * layout pass or the ViewHolder has already been recycled.
      */
+    // test
     @UiThread
     public int getParentAdapterPosition() {
         int flatPosition = getAdapterPosition();
