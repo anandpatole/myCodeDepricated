@@ -176,7 +176,7 @@ public class NetworkUtility {
             public static final String CHECKSUMHASH = "CHECKSUMHASH";
             public static final String MOBILE_NO = "MOBILE_NO";
             public static final String EMAIL = "EMAIL";
-            public static final String CALLBACK_URL = "http://35.154.147.32/admin/v9/customers/Verifychecksum";
+            public static final String CALLBACK_URL = "CALLBACK_URL";
             public static final String RESPCODE = "RESPCODE";
             public static final String RESPMSG = "RESPMSG";
             public static final String STATUS = "STATUS";

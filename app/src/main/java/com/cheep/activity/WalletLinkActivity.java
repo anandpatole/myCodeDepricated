@@ -165,7 +165,8 @@ public class WalletLinkActivity extends BaseAppCompatActivity implements View.On
                     } else if (BTN_WHICH == BTN_IS_PROCEED) {
                         verifyOTP();
                     } else if (BTN_WHICH == BTN_IS_ADD_AMOUNT) {
-                        addMoney();
+                        callgetChecksum();
+//                        addMoney();
                     } else if (BTN_WHICH == BTN_IS_CONFIRM) {
                         withdrawMoney();
                     }
@@ -410,12 +411,12 @@ public class WalletLinkActivity extends BaseAppCompatActivity implements View.On
             amount = amount.replace(Utility.COMMA, Utility.EMPTY_STRING);
         }
 
-        if (paytmWalletBalance < Double.parseDouble(amount)) {
+        if (paytmWalletBalance > Double.parseDouble(amount)) {
             BTN_WHICH = BTN_IS_ADD_AMOUNT;
         } else {
             BTN_WHICH = BTN_IS_CONFIRM;
+            callgetChecksum();
         }
-        callgetChecksum();
         updateUI();
         hideProgressDialog();
     }
@@ -584,6 +585,9 @@ public class WalletLinkActivity extends BaseAppCompatActivity implements View.On
         // encode the checksum
         try {
             mChecksumHash = new String(Base64.decode(checksumHash));
+            if (paytmWalletBalance > Double.parseDouble(amount)){
+                addMoney();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -599,7 +603,13 @@ public class WalletLinkActivity extends BaseAppCompatActivity implements View.On
 
         showProgressDialog();
 
-        generatedOrderId = PaytmUtility.getChecksum(mContext, paytmWalletBalance < Double.parseDouble(amount), amount, mAccessToken, mMobileNumber, mResourceOwnerCustomerId, this);
+        generatedOrderId = PaytmUtility.getChecksum(mContext,
+                paytmWalletBalance > Double.parseDouble(amount),
+                paytmWalletBalance > Double.parseDouble(amount) ? mEtText : amount,
+                mAccessToken,
+                mMobileNumber,
+                mResourceOwnerCustomerId,
+                this);
     }
     ///////////////////////////////////////////////////////////Volley Get Checksum Hash Web call ends///////////////////////////////////////////////////////////
 
