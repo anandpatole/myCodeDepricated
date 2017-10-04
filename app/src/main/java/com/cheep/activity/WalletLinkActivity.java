@@ -34,6 +34,7 @@ import com.cheep.network.Volley;
 import com.cheep.utils.LogUtils;
 import com.cheep.utils.PaytmUtility;
 import com.cheep.utils.Utility;
+import com.mixpanel.android.java_websocket.util.Base64;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -42,6 +43,8 @@ import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+
+import java.io.IOException;
 
 import static com.cheep.network.NetworkUtility.PAYTM.PARAMETERS.orderId;
 import static com.cheep.network.NetworkUtility.PAYTM.PARAMETERS.response;
@@ -577,8 +580,15 @@ public class WalletLinkActivity extends BaseAppCompatActivity implements View.On
     ///////////////////////////////////////////////////////////Volley Get Checksum Hash Web call starts///////////////////////////////////////////////////////////
     @Override
     public void volleyGetChecksumSuccessResponse(String checksumHash) {
-        mChecksumHash = checksumHash;
+        Log.d(TAG, "volleyGetChecksumSuccessResponse() called with: checksumHash = [" + checksumHash + "]");
+        // encode the checksum
+        try {
+            mChecksumHash = new String(Base64.decode(checksumHash));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         hideProgressDialog();
+        Log.i(TAG, "volleyGetChecksumSuccessResponse: Output: " + mChecksumHash);
     }
 
     private void callgetChecksum() {

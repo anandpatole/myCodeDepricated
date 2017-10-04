@@ -562,7 +562,7 @@ public class PaytmUtility {
         bodyParamValue.put(NetworkUtility.PAYTM.PARAMETERS.Channel, BuildConfig.CHANNEL_ID);
         //USRPWD authMode – for Wallet.
         bodyParamValue.put(NetworkUtility.PAYTM.PARAMETERS.AuthMode, Utility.USRPWD);
-        bodyParamValue.put(NetworkUtility.PAYTM.PARAMETERS.CheckSum, Base64.encodeBytes(mChecksumHash.getBytes()));
+        bodyParamValue.put(NetworkUtility.PAYTM.PARAMETERS.CheckSum, mChecksumHash);
 //        bodyParamValue.put(NetworkUtility.PAYTM.PARAMETERS.CALLBACK_URL, NetworkUtility.WS.VERIFY_CHECKSUM);
 //        bodyParamValue.put(NetworkUtility.PAYTM.PARAMETERS.EMAIL, PreferenceUtility.getInstance(mContext).getUserDetails().Email);
 

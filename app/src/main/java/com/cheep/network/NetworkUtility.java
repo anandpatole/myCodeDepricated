@@ -109,8 +109,8 @@ public class NetworkUtility {
         public static final String CHECK_PRO_AVAILABILITY_FOR_STRATEGIC_TASK = BASE_URL + "customers/tasks/check_pro_availability_for_Strategic_task";
 
         //checksum needed for paytm
-        public static final String GET_CHECKSUM_HASH = BASE_URL + "customers/payment/getPaytmChecksum";
-        public static final String VERIFY_CHECKSUM = BASE_URL + "customers/Verifychecksum";
+        public static final String GET_CHECKSUM_HASH = "https://www.cheep.co.in/admin/api/customers/payment/getPaytmChecksum";
+        public static final String VERIFY_CHECKSUM = "https://www.cheep.co.in/admin/api/customers/Verifychecksum";
         public static final String SAVE_PAYTM_USER_DETAILS = BASE_URL + "customers/payment/storePaytmData";
     }
 
@@ -355,9 +355,9 @@ public class NetworkUtility {
 
 
         // refer and earn params
-        String IS_REFER_CODE ="is_refer_code";
-        String MAX_REFER_DISCOUNT ="max_refer_discount";
-        String USED_WALLET_BALANCE ="used_wallet_balance";
+        String IS_REFER_CODE = "is_refer_code";
+        String MAX_REFER_DISCOUNT = "max_refer_discount";
+        String USED_WALLET_BALANCE = "used_wallet_balance";
 
         interface VERSION_CHANGE_TYPE {
             int NORMAL = 0;
@@ -376,7 +376,7 @@ public class NetworkUtility {
             String IOS = "ios";
         }
 
-         interface PAYMENT_METHOD_TYPE {
+        interface PAYMENT_METHOD_TYPE {
             String MOBIKWIK = "mobikwik";
             String PAYTM = "paytm";
             String PAYU = "payu";
