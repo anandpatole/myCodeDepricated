@@ -335,6 +335,7 @@ public class PaytmUtility {
         bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.CUST_ID, mResourceOwnerCustomerId);
         bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.MOBILE_NO, mMobileNumber);
         bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.EMAIL, PreferenceUtility.getInstance(mContext).getUserDetails().Email);
+        bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.THEME, "merchant");
 
         final String requestString = new JSONObject(bodyParams).toString();
 
@@ -413,6 +414,7 @@ public class PaytmUtility {
             bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.MID, BuildConfig.SANDBOX_MERCHANT_ID);
             bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.MOBILE_NO, mMobileNumber);
             bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.EMAIL, PreferenceUtility.getInstance(mContext).getUserDetails().Email);
+            bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.THEME, "merchant");
         } else {
             bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.AppIP, Utility.getIPAddress(true));
             bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.AuthMode, Utility.USRPWD);

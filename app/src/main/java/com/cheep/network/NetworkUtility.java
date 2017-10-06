@@ -200,6 +200,7 @@ public class NetworkUtility {
             public static final String AuthMode = "AuthMode";
             public static final String CheckSum = "CheckSum";
             public static final String JsonData = "JsonData";
+            public static final String THEME="THEME";
         }
 
         public static final class RESPONSE_CODES {
