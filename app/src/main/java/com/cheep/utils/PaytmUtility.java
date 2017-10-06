@@ -400,10 +400,10 @@ public class PaytmUtility {
         String orderID = String.valueOf(System.currentTimeMillis());
 
         Map<String, String> bodyParams = new HashMap<>();
-        bodyParams.put(NetworkUtility.TAGS.ORDER_ID, orderID);
-        bodyParams.put(NetworkUtility.TAGS.TXN_AMOUNT, txnAmount);
-        bodyParams.put(NetworkUtility.TAGS.CUST_ID, mResourceOwnerCustomerId);
         if (isAddMoney) {
+            bodyParams.put(NetworkUtility.TAGS.ORDER_ID, orderID);
+            bodyParams.put(NetworkUtility.TAGS.TXN_AMOUNT, txnAmount);
+            bodyParams.put(NetworkUtility.TAGS.CUST_ID, mResourceOwnerCustomerId);
             bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.CHANNEL_ID, BuildConfig.CHANNEL_ID);
             bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.WEBSITE, BuildConfig.WEBSITE);
             bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.INDUSTRY_TYPE_ID, BuildConfig.INDUSTRY_TYPE_ID);
@@ -414,18 +414,21 @@ public class PaytmUtility {
             bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.MOBILE_NO, mMobileNumber);
             bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.EMAIL, PreferenceUtility.getInstance(mContext).getUserDetails().Email);
         } else {
-            bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.MID, BuildConfig.MERCHANT_KEY);
-            bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.ReqType, Utility.WITHDRAW);
             bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.AppIP, Utility.getIPAddress(true));
+            bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.AuthMode, Utility.USRPWD);
+            bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.Channel, BuildConfig.CHANNEL_ID);
             bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.Currency, Utility.INR);
+            bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.CustId, mResourceOwnerCustomerId);
             bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.DeviceId, mMobileNumber);
+            bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.IndustryType, BuildConfig.INDUSTRY_TYPE_ID);
+            bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.MID, BuildConfig.SANDBOX_MERCHANT_ID);
+            bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.OrderId, orderID);
+            bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.PaymentMode, Utility.PPI);
+            bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.ReqType, Utility.WITHDRAW);
+            bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.TxnAmount, txnAmount);
             bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.SSOToken, mAccessToken);
             //PPI payment mode is for wallets
-            bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.PaymentMode, Utility.PPI);
-            bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.IndustryType, BuildConfig.INDUSTRY_TYPE_ID);
-            bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.Channel, BuildConfig.CHANNEL_ID);
             //USRPWD authMode – for Wallet.
-            bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.AuthMode, Utility.USRPWD);
         }
 
         @SuppressWarnings("unchecked")
@@ -559,7 +562,7 @@ public class PaytmUtility {
         bodyParamValue.put(NetworkUtility.PAYTM.PARAMETERS.Channel, BuildConfig.CHANNEL_ID);
         //USRPWD authMode – for Wallet.
         bodyParamValue.put(NetworkUtility.PAYTM.PARAMETERS.AuthMode, Utility.USRPWD);
-        bodyParamValue.put(NetworkUtility.PAYTM.PARAMETERS.CheckSum, Base64.encodeBytes(mChecksumHash.getBytes()));
+        bodyParamValue.put(NetworkUtility.PAYTM.PARAMETERS.CheckSum, mChecksumHash);
 //        bodyParamValue.put(NetworkUtility.PAYTM.PARAMETERS.CALLBACK_URL, NetworkUtility.WS.VERIFY_CHECKSUM);
 //        bodyParamValue.put(NetworkUtility.PAYTM.PARAMETERS.EMAIL, PreferenceUtility.getInstance(mContext).getUserDetails().Email);
 

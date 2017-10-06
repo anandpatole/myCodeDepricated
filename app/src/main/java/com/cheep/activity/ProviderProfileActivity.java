@@ -358,7 +358,7 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
 
     public void updateChatUIBasedOnCurrentRequestStatus() {
         Log.d(TAG, "updateChatUIBasedOnCurrentRequestStatus() called");
-        if (providerModel == null) {
+        if (providerModel == null || mContext == null) {
             return;
         }
         // TODO : done according to @cheep team suggestion : 06 sept 2017
