@@ -23,6 +23,10 @@ import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebChromeClient;
+import android.webkit.WebResourceRequest;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.LinearLayout;
 
 import com.cheep.BootstrapConstant;
@@ -75,7 +79,7 @@ public class WalletLinkActivity extends BaseAppCompatActivity implements View.On
     //returned in response of send otp api
     private String mState;
 
-    //returned in response of verify otp api
+    // returned in response of verify otp api
     private String mAccessToken;
     private long mExpires;
     private String mResourceOwnerCustomerId;
@@ -91,6 +95,7 @@ public class WalletLinkActivity extends BaseAppCompatActivity implements View.On
     private String ssoId;
     private String generatedOrderId;
     private String mMobileNumber;
+    private boolean isLowBalance;
 
     public static void newInstance(Context context, boolean isPaytm, String amount) {
         Intent intent = new Intent(context, WalletLinkActivity.class);
@@ -411,7 +416,8 @@ public class WalletLinkActivity extends BaseAppCompatActivity implements View.On
             amount = amount.replace(Utility.COMMA, Utility.EMPTY_STRING);
         }
 
-        if (paytmWalletBalance > Double.parseDouble(amount)) {
+        isLowBalance = paytmWalletBalance > Double.parseDouble(amount);
+        if (isLowBalance) {
             BTN_WHICH = BTN_IS_ADD_AMOUNT;
         } else {
             BTN_WHICH = BTN_IS_CONFIRM;
@@ -439,6 +445,23 @@ public class WalletLinkActivity extends BaseAppCompatActivity implements View.On
 
     @Override
     public void paytmAddMoneySuccessResponse(String htmlResponse) {
+        mActivityWalletLinkBinding.webView.setWebChromeClient(new WebChromeClient() {
+
+        });
+        mActivityWalletLinkBinding.webView.setWebViewClient(new WebViewClient() {
+            /*@Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                view.loadUrl(url);
+                return true;
+            }*/
+
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+                view.loadUrl(view.getUrl());
+                return true;
+            }
+        });
+        mActivityWalletLinkBinding.webView.getSettings().setJavaScriptEnabled(true);
         mActivityWalletLinkBinding.webView.loadData(htmlResponse, "", "");
         mActivityWalletLinkBinding.svMainLayout.setVisibility(View.GONE);
         mActivityWalletLinkBinding.webView.setVisibility(View.VISIBLE);
@@ -585,7 +608,7 @@ public class WalletLinkActivity extends BaseAppCompatActivity implements View.On
         // encode the checksum
         try {
             mChecksumHash = new String(Base64.decode(checksumHash));
-            if (paytmWalletBalance > Double.parseDouble(amount)){
+            if (isLowBalance) {
                 addMoney();
             }
         } catch (IOException e) {
@@ -604,8 +627,8 @@ public class WalletLinkActivity extends BaseAppCompatActivity implements View.On
         showProgressDialog();
 
         generatedOrderId = PaytmUtility.getChecksum(mContext,
-                paytmWalletBalance > Double.parseDouble(amount),
-                paytmWalletBalance > Double.parseDouble(amount) ? mEtText : amount,
+                isLowBalance,
+                isLowBalance ? mEtText : amount,
                 mAccessToken,
                 mMobileNumber,
                 mResourceOwnerCustomerId,
