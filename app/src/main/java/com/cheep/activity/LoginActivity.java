@@ -8,9 +8,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.IntentSender;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
 import android.location.Location;
+import android.net.http.LoggingEventHandler;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
@@ -85,6 +87,7 @@ public class LoginActivity extends BaseAppCompatActivity implements FacebookHelp
     private String TEMP_FB_APP_ID;
     private String TEMP_TWITTER_APP_ID;
     private String TEMP_GOOGLE_PLUS_APP_ID;
+    private SharedPreferences mSharedPreferences;
 
     // Twitter
     TwitterAuthClient mTwitterAuthClient;
@@ -845,6 +848,9 @@ public class LoginActivity extends BaseAppCompatActivity implements FacebookHelp
 //                                finish();
                             }
                         }
+                       // PreferenceUtility.REFER_CODE = jsonObject.getJSONObject(NetworkUtility.TAGS.DATA).getString(NetworkUtility.TAGS.REFER_CODE);
+                        //PreferenceUtility.getInstance(mContext).setReferenceCode(jsonObject.getJSONObject(NetworkUtility.TAGS.DATA).getString(NetworkUtility.TAGS.REFER_CODE));
+                        //Log.e(TAG, jsonObject.getJSONObject(NetworkUtility.TAGS.DATA).getString(NetworkUtility.TAGS.REFER_CODE) );
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
                         // Show Toast

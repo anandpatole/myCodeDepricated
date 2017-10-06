@@ -152,6 +152,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_office">Office</string>
     <string name="label_add_address">Add Address</string>
     <string name="label_username">Username</string>
+    <string name="label_spread_the_gift_of_happiness">Spread the gift of happiness</string>
 
     <!--Translation of Below words are left-->
     <string name="label_please_wait">Please wait</string>
@@ -321,17 +322,22 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_pro_fee">PRO\'s Charge</string>
     <string name="label_additional_charges">Additional Charge</string>
     <string name="label_sub_total">Sub Total</string>
+    <string name="label_referral_discount">Claim Referral Discount</string>
+    <string name="label_referral_discount_paymentsumaary">Referral Discount Applied</string>
+
     <string name="label_promocode_apply">Promo Code Applied</string>
     <string name="label_total_paid">Total Paid</string>
 
     <string name="label_pay_fee_v1">Pay ₹%1$s</string>
+    <string name="label_book_now_for_rupees">Book now for Rs. %1$s</string>
     <string name="label_payment_summary">Payment Summary</string>
     <string name="label_enter_reason">Enter Reason</string>
     <string name="label_reason">Reason</string>
 
     <string name="label_you_nearly_there">You\'re nearly there</string>
     <string name="label_please_chk_detail">Please check details below and pay</string>
-    <string name="label_enter_promocode">Enter Promo Code</string>
+    <string name="label_enter_promocode">Apply Promo Code</string>
+    <!--<string name="label_enter_promocode">Enter Promo Code</string>-->
     <string name="label_by">&#160;by&#160;</string>
     <string name="label_on">&#160;on&#160;</string>
     <string name="label_at">&#160;at&#160;</string>
@@ -436,6 +442,22 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
 
     <string name="label_service_required_for">Service Required For</string>
     <string name="special_instructions">Special Instructions</string>
+    <string name="label_cheepgo">CHEEPGO</string>
+    <string name="label_share_this_specila_code_with_your_friend_and_family">Share this special code with your friends and family </string>
+    <string name="label_when_they_use_cheep_get_100">When they use CHEEP they get ₹100 off on their first booking &amp; you too get ₹100 off yours. Know more</string>
+    <string name="label_invite_friends">Invite Friends</string>
+    <string name="label_refer_and_earn">Refer &amp; Earn</string>
+    <string name="label_you_have_earned">You have earned: ₹ %1$s from %2$s %3$s</string>
+    <string name="label_about_refer_and_earn">About Refer &amp; Earn</string>
+    <string name="label_dialog_refer_and_earn_body">Everytime a new user books a service on CHEEP with your invite code, they\'ll get ₹100 off on the service. Once they book the service, you\'ll automatically earn ₹100 which you can redeem while booking your next service with CHEEP.</string>
+    <string name="label_dialog_refer_and_earn_info_title">Your current earned balance is ₹300</string>
+    <string name="label_refer_and_earn_dialog_info_body">The maximum redeemable amount for one service is ₹100. \nTo earn discounts, just go to the menu screen and click on Refer &amp; Earn. Share your special code with your friends &amp; family.</string>
+    <string name="label_dialog_refer_and_earn_info_body">The maximum redeemable amount fpr one service is ₹100.</string>
+    <string name="label_ok_got_it">Ok, Got It</string>
+    <string name="label_dialog_refer_and_earn_no_payment_body">Earn discounts each time you refer CHEEP to your friends and family. Just go to menu screen, click on Refer &amp; Earn and share your special code with them.</string>
+    <string name="label_share_via">Share via</string>
+    <string name="label_refer_and_earn_share_body">Please download CHEEP app from this %1$s and use this referral code %2$s for payment.</string>
+    <string name="label_share_subject">Refer &amp; Earn</string>
     <string name="alert_strategic_partner_unavailable_in_location">This service is not available in your location</string>
 
     <string name="read_more">Read More</string>
@@ -520,4 +542,5 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="no_pro_available_title" />
     <string name="no_pro_available_description">No PROs is available for this address</string>
     <string name="validate_comment">Please provide valid comment.</string>
+    <string name="title_booking_confimation">Booking Confirmation</string>
 </resources>

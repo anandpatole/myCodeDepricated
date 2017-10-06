@@ -418,7 +418,6 @@ public class Utility {
         String TASK_ID = "task_id";
         String PAYMENT_VIEW = "payment_view";
         String PAYMENT_VIEW_IS_ADDITIONAL_CHARGE = "isAdditional";
-
         String CHAT_NOTIFICATION_DATA = "chat_notification_data";
         String PROFILE_FROM_FAVOURITE = "from_favorite";
         String FROM_WHERE = "from_where";
@@ -430,6 +429,7 @@ public class Utility {
         String IS_PAYMENT_SUCCESSFUL = "isPaymentSuccessful";
         String PAYU_RESPONSE = "payu_response";
         String AMOUNT = "amount";
+        String REFER_CODE = "refer_code";
     }
 
 
@@ -1280,7 +1280,7 @@ public class Utility {
 
         if (quotePrice == null || quotePrice.equalsIgnoreCase("null"))
             return "0.00";
-        if (quotePrice.equalsIgnoreCase("") || quotePrice.equalsIgnoreCase("0") || quotePrice.equalsIgnoreCase("0.0"))
+        if (quotePrice.equalsIgnoreCase("") || quotePrice.equalsIgnoreCase("0") || quotePrice.equalsIgnoreCase("0.0") || quotePrice.equalsIgnoreCase("0.00"))
             return "0.00";
         DecimalFormat formatter = new DecimalFormat("#,###.00");
         double price = Double.parseDouble(quotePrice);

@@ -35,7 +35,6 @@ public class NetworkUtility {
 
         public static final String UPDATE_LOCATION = BASE_URL + "customers/profile/update_location";
         public static final String CREATE_TASK = BASE_URL + "customers/tasks/create";
-        public static final String CURL_NOTIFICATION_TO_SP = BASE_URL + "customers/tasks/curl_for_notification_to_sp";
         public static final String GET_PRO_FOR_INSTA_BOOKING = BASE_URL + "customers/tasks/getProForInstantBooking";
 
         public static final String SP_LIST = BASE_URL + "customers/sp_list/listing";
@@ -106,12 +105,17 @@ public class NetworkUtility {
         public static final String TASK_CREATE_STRATEGIC_PARTNER = BASE_URL + "customers/tasks/stratagic_partner_task_create";
         public static final String TASK_CREATE_INSTA_BOOKING = BASE_URL + "customers/tasks/instaBookingTaskCreate";
 
+        public static final String CURL_NOTIFICATION_TO_SP = BASE_URL + "customers/tasks/curl_for_notification_to_sp";
         public static final String CHECK_PRO_AVAILABILITY_FOR_STRATEGIC_TASK = BASE_URL + "customers/tasks/check_pro_availability_for_Strategic_task";
 
         //checksum needed for paytm
         public static final String GET_CHECKSUM_HASH = "https://www.cheep.co.in/admin/api/customers/payment/getPaytmChecksum";
         public static final String VERIFY_CHECKSUM = "https://www.cheep.co.in/admin/api/customers/Verifychecksum";
         public static final String SAVE_PAYTM_USER_DETAILS = BASE_URL + "customers/payment/storePaytmData";
+
+        //Refer and Earn
+        public static final String REFER_BALANCE = BASE_URL + "customers/profile/getReferBalance";
+        public static final String GET_AMOUNT_WITH_GST = BASE_URL + "customers/payment/getAmountWithGST";
     }
 
     public static class PAYTM {
@@ -353,12 +357,13 @@ public class NetworkUtility {
         String PAYTM_ACCESS_TOKEN = "paytm_access_token";
         String PAYTM_PHONE_NUMBER = "paytm_phone_number";
 
-
         // refer and earn params
         String IS_REFER_CODE = "is_refer_code";
+        String WALLET_BALANCE = "wallet_balance";
         String MAX_REFER_DISCOUNT = "max_refer_discount";
         String USED_WALLET_BALANCE = "used_wallet_balance";
-
+        String IS_INSTA_BOOKING = "is_insta_booking";
+        public static final String REFER_COUNT ="refer_count";
         interface VERSION_CHANGE_TYPE {
             int NORMAL = 0;
             int RECOMMENDED_TO_UPGRADE = 1;
@@ -381,6 +386,7 @@ public class NetworkUtility {
             String PAYTM = "paytm";
             String PAYU = "payu";
             String COD = "cod";
+            String FREE = "free";
         }
 
         String DEVICE_TOKEN = "device_token";
@@ -405,6 +411,7 @@ public class NetworkUtility {
         String IS_FOR_ADDITIONAL_QUOTE = "isForAdditionalQuote";
         String RESCHEDULE_DATETIME = "reschedule_datetime";
 
+
         interface STATUSCODETYPE {
             int SUCCESS = 200;
             int DISPLAY_GENERALIZE_MESSAGE = 400; //Something went wrong
@@ -412,6 +419,7 @@ public class NetworkUtility {
             int SIGNUP_REQUIRED = 445;
             int FORCE_LOGOUT_REQUIRED = 446;
             int USER_DELETED = 447;
+
         }
 
         String MESSAGE = "message";

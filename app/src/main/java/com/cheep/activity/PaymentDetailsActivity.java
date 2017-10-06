@@ -86,7 +86,8 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
     private boolean isInstaBooking = false;
     private String actualQuotePrice;
     private AddressModel mSelectedAddressModelForInsta;
-
+    private double usedWalletBalance = 0;
+    private String promocode_price;
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
     @Override
@@ -133,7 +134,7 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
             mSelectedAddressModelForInsta = (AddressModel) Utility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.SELECTED_ADDRESS_MODEL), AddressModel.class);
         }
         mActivityPaymentDetailBinding.lnDesclaimer.setVisibility(View.VISIBLE);
-        mActivityPaymentDetailBinding.textMaterialDisclaimer.setVisibility(View.VISIBLE);
+//        mActivityPaymentDetailBinding.textMaterialDisclaimer.setVisibility(View.VISIBLE);
 
         if (getIntent().hasExtra(Utility.Extra.PAYMENT_VIEW_IS_ADDITIONAL_CHARGE)) {
             if (taskDetailModel != null) {
@@ -143,22 +144,22 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
             if (isAdditional == 0) {
                 if (taskDetailModel != null) {
                     resetPromocodeValue();
+                    callGetReferBalance();
+
                 }
             } else {
                 if (taskDetailModel != null) {
                     setAdditionalPayment();
                 }
             }
-            mActivityPaymentDetailBinding.textpromocodelabel.setEnabled(true);
             mActivityPaymentDetailBinding.lnPromoCodeDisclaimer.setVisibility(View.GONE);
-
         } else if (getIntent().hasExtra(Utility.Extra.PAYMENT_VIEW)) {
             boolean viewonly = getIntent().getBooleanExtra(Utility.Extra.PAYMENT_VIEW, false);
             if (viewonly) {
                 if (taskDetailModel != null) {
                     resetPromocodeValuePreview();
                     mActivityPaymentDetailBinding.lnDesclaimer.setVisibility(View.GONE);
-                    mActivityPaymentDetailBinding.textMaterialDisclaimer.setVisibility(View.GONE);
+//                    mActivityPaymentDetailBinding.textMaterialDisclaimer.setVisibility(View.GONE);
                     Utility.loadImageView(mContext, mActivityPaymentDetailBinding.imgService, taskDetailModel.catImage, R.drawable.gradient_black);
                 }
                 mActivityPaymentDetailBinding.textLabelTotalPaid.setText(getString(R.string.label_total_paid));
@@ -168,9 +169,11 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
                 mActivityPaymentDetailBinding.textpromocodelabel.setTextColor(ContextCompat.getColor(this, R.color.black));
                 mActivityPaymentDetailBinding.lnstep.setVisibility(View.GONE);
                 mActivityPaymentDetailBinding.textStepDesc.setVisibility(View.GONE);
+                mActivityPaymentDetailBinding.lltermsandcondition.setVisibility(View.GONE);
+                mActivityPaymentDetailBinding.ivreferraldiscount.setVisibility(View.INVISIBLE);
+                mActivityPaymentDetailBinding.ivpromocode.setVisibility(View.INVISIBLE);
 
             }
-            mActivityPaymentDetailBinding.textpromocodelabel.setEnabled(false);
         }
 
         if (taskDetailModel != null) {
@@ -207,30 +210,189 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
             spannableStringBuilder.append(getSpannableString(getString(R.string.label_at), ContextCompat.getColor(this, R.color.grey_varient_8), false));
             spannableStringBuilder.append(getSpannableString(taskDetailModel.taskAddress, ContextCompat.getColor(this, R.color.splash_gradient_end), true));*/
 
-            mActivityPaymentDetailBinding.txtdesc.setText(spannableStringBuilder);
-        }
+            double taskPaidAmount = getQuotePriceInInteger(providerModel.quotePrice);
+            double additionalCharges = 0;
+            double promocodeValue = 0;
+            double additionalPaidAmount = 0;
 
+            if (isInstaBooking) {
+                promocodeValue = 0;
+            } else {
+
+                if (!TextUtils.isEmpty(taskDetailModel.additionalQuoteAmount)) {
+                    additionalCharges = getQuotePriceInInteger(taskDetailModel.additionalQuoteAmount);
+                }
+
+                if (!TextUtils.isEmpty(taskDetailModel.task_total_amount)) {
+                    double task_total_amount = 0;
+                    double taskPaidAmountTotal = 0;
+                    if (!TextUtils.isEmpty(taskDetailModel.taskPaidAmount)) {
+                        taskPaidAmountTotal = getQuotePriceInInteger(taskDetailModel.taskPaidAmount);
+                    }
+                    task_total_amount = getQuotePriceInInteger(taskDetailModel.task_total_amount);
+                    promocodeValue = task_total_amount - taskPaidAmountTotal;
+
+                }
+            }
+
+            double subTotal = (taskPaidAmount + additionalCharges);
+            double totalPayment = (taskPaidAmount + additionalCharges) - promocodeValue;
+            mActivityPaymentDetailBinding.txtdesc.setText(spannableStringBuilder);
+            mActivityPaymentDetailBinding.txtprofee.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf(taskPaidAmount))));
+            mActivityPaymentDetailBinding.txtadditionalcharge.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf(additionalCharges))));
+            mActivityPaymentDetailBinding.txtsubtotal.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf(subTotal))));
+
+        }
+        mActivityPaymentDetailBinding.llclaimreferral.setOnClickListener(OnClaimOfRefereCodeClickListener);
+        mActivityPaymentDetailBinding.llpromocode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mActivityPaymentDetailBinding.ivpromocode.setVisibility(View.VISIBLE);
+                mActivityPaymentDetailBinding.ivpromocode.setSelected(false);
+                mActivityPaymentDetailBinding.txtpromocode.setSelected(false);
+                mActivityPaymentDetailBinding.imgCheepCodeClose.setVisibility(View.GONE);
+                mActivityPaymentDetailBinding.llpromocode.setEnabled(true);
+                resetPromocodeValue();
+
+                mActivityPaymentDetailBinding.ivpromocode.setSelected(!mActivityPaymentDetailBinding.ivpromocode.isSelected());
+                mActivityPaymentDetailBinding.txtpromocode.setSelected(mActivityPaymentDetailBinding.ivpromocode.isSelected());
+                mActivityPaymentDetailBinding.lnPromoCodeDisclaimer.setVisibility(View.GONE);
+
+                if (mActivityPaymentDetailBinding.ivreferraldiscount.isSelected()) {
+                    mActivityPaymentDetailBinding.txtreferraldiscount.setSelected(false);
+                    mActivityPaymentDetailBinding.ivreferraldiscount.setSelected(false);
+                }
+
+                if (mActivityPaymentDetailBinding.ivpromocode.isSelected()) {
+
+                    showCheepCodeDialog();
+                    usedWalletBalance = 0;
+                    mActivityPaymentDetailBinding.txtreferraldiscount.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(referralBalance)));
+                    if (!TextUtils.isEmpty(actualQuotePrice)) {
+                        providerModel.quotePrice = actualQuotePrice;
+                    }
+                    actualQuotePrice = null;
+                    mActivityPaymentDetailBinding.txttotal.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(providerModel.quotePrice)));
+                    mActivityPaymentDetailBinding.textPay.setText(getString(R.string.label_book_now_for_rupees, Utility.getQuotePriceFormatter(providerModel.quotePrice)));
+                }
+
+            }
+        });
         // Add Desclaimer
         mActivityPaymentDetailBinding.imgCheepCodeClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mActivityPaymentDetailBinding.textpromocodelabel.setEnabled(true);
-
-                cheepCode = null;
-                if (!TextUtils.isEmpty(actualQuotePrice)) {
-                    providerModel.quotePrice = actualQuotePrice;
-                }
-                if (taskDetailModel != null) {
-                    taskDetailModel.cheepCode = Utility.EMPTY_STRING;
-                    taskDetailModel.taskDiscountAmount = Utility.ZERO_STRING;
-
-                }
-                actualQuotePrice = null;
-                mActivityPaymentDetailBinding.imgCheepCodeClose.setVisibility(View.GONE);
-                resetPromocodeValue();
+                onClickOfClosePromoCode();
+            }
+        });
+//terms and condition click listener
+        mActivityPaymentDetailBinding.ivTermsTick.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mActivityPaymentDetailBinding.ivTermsTick.setSelected(!mActivityPaymentDetailBinding.ivTermsTick.isSelected());
+                mActivityPaymentDetailBinding.textPay.setSelected(mActivityPaymentDetailBinding.ivTermsTick.isSelected());
+                mActivityPaymentDetailBinding.textPay.setEnabled(mActivityPaymentDetailBinding.ivTermsTick.isSelected());
             }
         });
 
+    }
+
+    View.OnClickListener OnClaimOfRefereCodeClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            mActivityPaymentDetailBinding.ivreferraldiscount.setSelected(!mActivityPaymentDetailBinding.ivreferraldiscount.isSelected());
+            mActivityPaymentDetailBinding.txtreferraldiscount.setSelected(mActivityPaymentDetailBinding.ivreferraldiscount.isSelected());
+            mActivityPaymentDetailBinding.llpromocode.setEnabled(true);
+            onClickOfClosePromoCode();
+
+
+            if (mActivityPaymentDetailBinding.ivreferraldiscount.isSelected()) {
+                taskDetailModel.isReferCode = Utility.BOOLEAN.NO;
+                Log.e(TAG, "  providerModel.spWithoutGstQuotePrice  :: " + providerModel.spWithoutGstQuotePrice);
+                Log.e(TAG, "  maxReferDiscount  :: " + maxReferDiscount);
+                Log.e(TAG, " referralBalance  :: " + referralBalance);
+
+                try {
+                    actualQuotePrice = providerModel.quotePrice;
+                    double quoteAmount = Double.parseDouble(providerModel.spWithoutGstQuotePrice);
+                    double maxDiscountAmt = Double.parseDouble(maxReferDiscount);
+                    double referralBal = Double.parseDouble(referralBalance);
+//                double payableAmount = 0;
+                    usedWalletBalance = 0;
+
+
+                    if (referralBal > maxDiscountAmt) {
+                        if (quoteAmount >= maxDiscountAmt) {
+//                        payableAmount = quoteAmount - maxDiscountAmt;
+                            usedWalletBalance = maxDiscountAmt;
+                        } else {
+//                        payableAmount = 0;
+                            usedWalletBalance = quoteAmount;
+                        }
+                    } else {
+                        if (quoteAmount >= referralBal) {
+//                        payableAmount = quoteAmount - referralBal;
+                            usedWalletBalance = referralBal;
+                        } else {
+//                        payableAmount = 0;
+                            usedWalletBalance = quoteAmount;
+                        }
+                    }
+
+                    getAmountWithGstWS(String.valueOf(usedWalletBalance));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+//                providerModel.quotePrice = payableAmount + "";
+//                mActivityPaymentDetailBinding.txttotal.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(payableAmount + "")));
+//                mActivityPaymentDetailBinding.textPay.setText(getString(R.string.label_pay_fee_v1, Utility.getQuotePriceFormatter(payableAmount + "")));
+
+            } else {
+                usedWalletBalance = 0;
+
+                if (!TextUtils.isEmpty(actualQuotePrice)) {
+                    providerModel.quotePrice = actualQuotePrice;
+                }
+                actualQuotePrice = null;
+                mActivityPaymentDetailBinding.txttotal.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(providerModel.quotePrice)));
+                mActivityPaymentDetailBinding.txtreferraldiscount.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(referralBalance)));
+                mActivityPaymentDetailBinding.lnPromoCodeDisclaimer.setVisibility(View.GONE);
+                mActivityPaymentDetailBinding.textPay.setText(getString(R.string.label_book_now_for_rupees, Utility.getQuotePriceFormatter(providerModel.quotePrice)));
+            }
+        }
+    };
+
+    private void getAmountWithGstWS(String discountAmout) {
+        showProgressDialog();
+        Map<String, String> mHeaderParams = new HashMap<>();
+        mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
+        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
+        Map<String, String> mParams = new HashMap<>();
+
+        mParams.put(NetworkUtility.TAGS.QUOTE_AMOUNT, providerModel.quotePrice);
+        mParams.put(NetworkUtility.TAGS.DISCOUNT_AMOUNT, discountAmout);
+        VolleyNetworkRequest mVolleyNetworkRequest = new VolleyNetworkRequest(NetworkUtility.WS.GET_AMOUNT_WITH_GST
+                , mCallValidateCheepCodeWSErrorListener
+                , mCallGetAmoutWithGSTWSResponseListener
+                , mHeaderParams
+                , mParams
+                , null);
+        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest, NetworkUtility.WS.GET_AMOUNT_WITH_GST);
+    }
+
+    private void onClickOfClosePromoCode() {
+        mActivityPaymentDetailBinding.ivpromocode.setVisibility(View.VISIBLE);
+        mActivityPaymentDetailBinding.ivpromocode.setSelected(false);
+        mActivityPaymentDetailBinding.txtpromocode.setSelected(false);
+        cheepCode = null;
+        if (!TextUtils.isEmpty(actualQuotePrice)) {
+            providerModel.quotePrice = actualQuotePrice;
+        }
+        actualQuotePrice = null;
+        mActivityPaymentDetailBinding.imgCheepCodeClose.setVisibility(View.GONE);
+        mActivityPaymentDetailBinding.llpromocode.setEnabled(true);
+        resetPromocodeValue();
     }
 
     /**
@@ -240,6 +402,8 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
         mActivityPaymentDetailBinding.textpromocodelabel.setTextColor(ContextCompat.getColor(this, R.color.splash_gradient_end));
         mActivityPaymentDetailBinding.textpromocodelabel.setText(getResources().getString(R.string.label_enter_promocode));
         mActivityPaymentDetailBinding.lnPromoCodeDisclaimer.setVisibility(View.GONE);
+        taskDetailModel.isReferCode = Utility.BOOLEAN.NO;
+
         if (!TextUtils.isEmpty(providerModel.quotePrice)) {
             double taskPaidAmount = getQuotePriceInInteger(providerModel.quotePrice);
             double additionalCharges = 0;
@@ -268,19 +432,13 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
 
             double subTotal = (taskPaidAmount + additionalCharges);
             double totalPayment = (taskPaidAmount + additionalCharges) - promocodeValue;
-            mActivityPaymentDetailBinding.txtprofee.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf(taskPaidAmount))));
-            mActivityPaymentDetailBinding.txtadditionalcharge.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf(additionalCharges))));
-            mActivityPaymentDetailBinding.txtsubtotal.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf(subTotal))));
+            //     mActivityPaymentDetailBinding.txtprofee.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf(taskPaidAmount))));
+            //    mActivityPaymentDetailBinding.txtadditionalcharge.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf(additionalCharges))));
+            //    mActivityPaymentDetailBinding.txtsubtotal.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf(subTotal))));
             mActivityPaymentDetailBinding.txttotal.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf(totalPayment))));
-            mActivityPaymentDetailBinding.textPay.setText(getString(R.string.label_pay_fee_v1, "" + Utility.getQuotePriceFormatter(String.valueOf(totalPayment))));
+            mActivityPaymentDetailBinding.textPay.setText(getString(R.string.label_book_now_for_rupees, "" + Utility.getQuotePriceFormatter(String.valueOf(totalPayment))));
             mActivityPaymentDetailBinding.txtpromocode.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf(promocodeValue))));
 
-            mActivityPaymentDetailBinding.textpromocodelabel.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    showCheepCodeDialog();
-                }
-            });
         }
     }
 
@@ -318,16 +476,39 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
         mActivityPaymentDetailBinding.txtadditionalcharge.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf(additionalPaidAmount))));
         mActivityPaymentDetailBinding.txtsubtotal.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf(subTotal))));
         mActivityPaymentDetailBinding.txttotal.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf(taskPaidAmount))));
-        mActivityPaymentDetailBinding.textPay.setText(getString(R.string.label_pay_fee_v1, "" + Utility.getQuotePriceFormatter(String.valueOf(taskPaidAmount))));
+        mActivityPaymentDetailBinding.textPay.setText(getString(R.string.label_book_now_for_rupees, "" + Utility.getQuotePriceFormatter(String.valueOf(taskPaidAmount))));
+        mActivityPaymentDetailBinding.textreferraldiscountlabel.setText(getString(R.string.label_referral_discount_paymentsumaary));
 
-        mActivityPaymentDetailBinding.txtpromocode.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf(taskDetailModel.taskDiscountAmount))));
-        mActivityPaymentDetailBinding.lnPromoCodeDisclaimer.setVisibility(promocodeValue == 0 ? View.GONE : View.VISIBLE);
-        mActivityPaymentDetailBinding.textpromocodelabel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showCheepCodeDialog();
+        mActivityPaymentDetailBinding.txtpromocode.setSelected(true);
+        mActivityPaymentDetailBinding.txtreferraldiscount.setSelected(true);
+
+        try {
+            if (promocodeValue != 0) {
+                if (taskDetailModel.isReferCode.equalsIgnoreCase(Utility.BOOLEAN.YES) || taskDetailModel.isPromoCode.equalsIgnoreCase(Utility.BOOLEAN.YES)) {
+                    mActivityPaymentDetailBinding.txtpromocode.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf(promocodeValue))));
+                    mActivityPaymentDetailBinding.txtreferraldiscount.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(Utility.ZERO_STRING)));
+                    mActivityPaymentDetailBinding.lnPromoCodeDisclaimer.setVisibility(View.VISIBLE);
+                } else if (taskDetailModel.isWalletUsed.equalsIgnoreCase(Utility.BOOLEAN.YES)) {
+                    {
+                        mActivityPaymentDetailBinding.txtreferraldiscount.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf(promocodeValue))));
+                        mActivityPaymentDetailBinding.txtpromocode.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(Utility.ZERO_STRING)));
+                        mActivityPaymentDetailBinding.lnPromoCodeDisclaimer.setVisibility(View.VISIBLE);
+                    }
+                } else {
+                    mActivityPaymentDetailBinding.txtreferraldiscount.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(Utility.ZERO_STRING)));
+                    mActivityPaymentDetailBinding.txtpromocode.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(Utility.ZERO_STRING)));
+                    mActivityPaymentDetailBinding.lnPromoCodeDisclaimer.setVisibility(View.GONE);
+                }
+            } else {
+                mActivityPaymentDetailBinding.txtreferraldiscount.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(Utility.ZERO_STRING)));
+                mActivityPaymentDetailBinding.txtpromocode.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(Utility.ZERO_STRING)));
+                mActivityPaymentDetailBinding.lnPromoCodeDisclaimer.setVisibility(View.GONE);
             }
-        });
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+        }
+
+
     }
 
     /**
@@ -335,7 +516,7 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
      */
     public void setAdditionalPayment() {
         int taskPaidAmount = 0;
-        mActivityPaymentDetailBinding.txtprofee.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(Utility.ZERO_STRING)));
+        mActivityPaymentDetailBinding.txtprofee.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter("0")));
         double additionalCharges = 0;
         if (!TextUtils.isEmpty(taskDetailModel.additionalQuoteAmount)) {
             additionalCharges = getQuotePriceInInteger(taskDetailModel.additionalQuoteAmount);
@@ -347,12 +528,15 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
         mActivityPaymentDetailBinding.txttotal.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf(subTotal))));
         mActivityPaymentDetailBinding.textPay.setText(getString(R.string.label_pay_fee_v1, "" + Utility.getQuotePriceFormatter(String.valueOf(subTotal))));
         mActivityPaymentDetailBinding.rlprofee.setAlpha(0.5f);
-        mActivityPaymentDetailBinding.rlprofee.setAlpha(0.5f);
+        mActivityPaymentDetailBinding.rlreferraldiscount.setAlpha(0.5f);
         mActivityPaymentDetailBinding.rlpromocode.setAlpha(0.5f);
-        mActivityPaymentDetailBinding.textpromocodelabel.setEnabled(false);
+        mActivityPaymentDetailBinding.rlpromocode.setAlpha(0.5f);
+        mActivityPaymentDetailBinding.llpromocode.setEnabled(false);
+        mActivityPaymentDetailBinding.llclaimreferral.setEnabled(false);
         mActivityPaymentDetailBinding.textpromocodelabel.setText(R.string.label_enter_promocode);
         mActivityPaymentDetailBinding.txtpromocode.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(Utility.ZERO_STRING)));
-
+        mActivityPaymentDetailBinding.txtreferraldiscount.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(Utility.ZERO_STRING)));
+        mActivityPaymentDetailBinding.textPay.setSelected(mActivityPaymentDetailBinding.ivTermsTick.isSelected());
         /*mActivityPaymentDetailBinding.devicerpromocode.setVisibility(View.GONE);
         mActivityPaymentDetailBinding.rlpromocode.setVisibility(View.GONE);*/
 
@@ -386,6 +570,8 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
         View view = View.inflate(mContext, R.layout.dialog_add_promocode, null);
         edtCheepcode = view.findViewById(R.id.edit_cheepcode);
         cheepCodeDialog = new BottomAlertDialog(mContext);
+        mActivityPaymentDetailBinding.ivpromocode.setSelected(false);
+        mActivityPaymentDetailBinding.txtpromocode.setSelected(false);
         view.findViewById(R.id.btn_apply).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -471,9 +657,10 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
         Map<String, Object> mParams = new HashMap<>();
 
         if (isInstaBooking) {
-            mParams.put(NetworkUtility.TAGS.QUOTE_AMOUNT, providerModel.quotePriceWithOutGST);
+            mParams.put(NetworkUtility.TAGS.QUOTE_AMOUNT, providerModel.spWithoutGstQuotePrice);
             mParams.put(NetworkUtility.TAGS.CHEEPCODE, cheepCode);
             mParams.put(NetworkUtility.TAGS.CAT_ID, taskDetailModel.categoryId);
+            mParams.put(NetworkUtility.TAGS.IS_INSTA_BOOKING, Utility.BOOLEAN.YES);
             int addressId;
             try {
                 addressId = Integer.parseInt(mSelectedAddressModelForInsta.address_id);
@@ -510,6 +697,7 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
 
 
     private String cheepCode;
+//    private String isReferCode = Utility.BOOLEAN.NO;
     Response.Listener mCallValidateCheepCodeWSResponseListener = new Response.Listener() {
         @Override
         public void onResponse(Object response) {
@@ -527,11 +715,12 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
 
                         if (edtCheepcode != null) {
                             cheepCode = edtCheepcode.getText().toString().trim();
-
                             cheepCodeDialog.dismiss();
 
                             String total = jsonObject.optString(NetworkUtility.TAGS.QUOTE_AMOUNT);
                             String discount = jsonObject.optString(NetworkUtility.TAGS.DISCOUNT_AMOUNT);
+                            // new field for refer and earn functionality
+                            taskDetailModel.isReferCode = jsonObject.optString(NetworkUtility.TAGS.IS_REFER_CODE);
 
                             String payable;
                             payable = jsonObject.optString(NetworkUtility.TAGS.PAYABLE_AMOUNT);
@@ -572,21 +761,20 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
     private void updatePaymentBtn(String total, String discount, String payable) {
         // setting payable amount as quote price to pay.
         providerModel.quotePrice = payable;
-
-        taskDetailModel.cheepCode = cheepCode;
-        taskDetailModel.taskDiscountAmount = discount;
-
+        promocode_price = discount;
+        usedWalletBalance = 0;
 //        mActivityJobSummaryBinding.btnPay.setText(getString(R.string.label_pay_X_X_X, total, discount, payable));
 //        @change only need to show payable amount
+        mActivityPaymentDetailBinding.txtpromocode.setSelected(true);
         mActivityPaymentDetailBinding.txtpromocode.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(discount)));
         mActivityPaymentDetailBinding.txttotal.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(payable)));
-        mActivityPaymentDetailBinding.textPay.setText(getString(R.string.label_pay_fee_v1, Utility.getQuotePriceFormatter(payable)));
-        mActivityPaymentDetailBinding.textpromocodelabel.setEnabled(false);
-//        mActivityPaymentDetailBinding.textpromocodelabel.setText(cheepCode);
+        mActivityPaymentDetailBinding.textPay.setText(getString(R.string.label_book_now_for_rupees, Utility.getQuotePriceFormatter(payable)));
         mActivityPaymentDetailBinding.textpromocodelabel.setText(getString(R.string.label_promocode_apply));
         mActivityPaymentDetailBinding.textpromocodelabel.setTextColor(ContextCompat.getColor(this, R.color.black));
 
         mActivityPaymentDetailBinding.imgCheepCodeClose.setVisibility(View.VISIBLE);
+        mActivityPaymentDetailBinding.llpromocode.setEnabled(false);
+        mActivityPaymentDetailBinding.ivpromocode.setVisibility(View.INVISIBLE);
     }
 
     Response.ErrorListener mCallValidateCheepCodeWSErrorListener = new Response.ErrorListener() {
@@ -717,6 +905,135 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
             finish();
         }
     }
+
+    private void callGetReferBalance() {
+        showProgressDialog();
+        Map<String, String> mHeaderParams = new HashMap<>();
+        mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
+        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
+        Map<String, String> mParams = new HashMap<>();
+        VolleyNetworkRequest mVolleyNetworkRequest = new VolleyNetworkRequest(NetworkUtility.WS.REFER_BALANCE
+                , mCallGetReferBalanceErrorListener
+                , mCallGetReferBalanceWSResponseListener
+                , mHeaderParams
+                , mParams
+                , null);
+        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest, NetworkUtility.WS.REFER_BALANCE);
+
+    }
+
+    private String referralBalance;
+    private String maxReferDiscount;
+    Response.Listener mCallGetReferBalanceWSResponseListener = new Response.Listener() {
+        @Override
+        public void onResponse(Object response) {
+            hideProgressDialog();
+            String strResponse = (String) response;
+            try {
+                JSONObject jsonObject = new JSONObject(strResponse);
+                Log.i(TAG, "onResponse: " + jsonObject.toString());
+                int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
+                String error_message;
+                hideProgressDialog();
+                switch (statusCode) {
+                    case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
+                        referralBalance = (jsonObject.optJSONObject(NetworkUtility.TAGS.DATA)).optString(NetworkUtility.TAGS.WALLET_BALANCE);
+                        maxReferDiscount = (jsonObject.optJSONObject(NetworkUtility.TAGS.DATA)).optString(NetworkUtility.TAGS.MAX_REFER_DISCOUNT);
+                        mActivityPaymentDetailBinding.txtreferraldiscount.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(referralBalance)));
+                        Log.i(TAG, "onResponse: " + jsonObject.toString());
+                        break;
+                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
+                        // Show Toast
+                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityPaymentDetailBinding.getRoot());
+                        break;
+                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
+                        error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
+                        // Show message
+                        Utility.showSnackBar(error_message, mActivityPaymentDetailBinding.getRoot());
+                        break;
+                    case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
+                    case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
+                        //Logout and finish the current activity
+                        Utility.logout(mContext, true, statusCode);
+                        finish();
+                        break;
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+                mCallValidateCheepCodeWSErrorListener.onErrorResponse(new VolleyError(e.getMessage()));
+            }
+
+        }
+    };
+    Response.ErrorListener mCallGetReferBalanceErrorListener = new Response.ErrorListener() {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
+            hideProgressDialog();
+        }
+    };
+    Response.Listener mCallGetAmoutWithGSTWSResponseListener = new Response.Listener() {
+        @Override
+        public void onResponse(Object response) {
+            hideProgressDialog();
+            String strResponse = (String) response;
+            try {
+                Utility.hideKeyboard(PaymentDetailsActivity.this, edtCheepcode);
+                JSONObject jsonObject = new JSONObject(strResponse);
+                Log.i(TAG, "onResponse: " + jsonObject.toString());
+                int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
+                String error_message;
+                hideProgressDialog();
+                switch (statusCode) {
+                    case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
+
+
+                        String total = jsonObject.optString(NetworkUtility.TAGS.QUOTE_AMOUNT);
+                        String discount = jsonObject.optString(NetworkUtility.TAGS.DISCOUNT_AMOUNT);
+                        double discountAmount = 0;
+                        double balance = 0;
+                        if (!TextUtils.isEmpty(discount) && !TextUtils.isEmpty(discount)) {
+                            discountAmount = Double.parseDouble(discount);
+                            balance = Double.parseDouble(referralBalance);
+                            mActivityPaymentDetailBinding.txtreferraldiscount.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf(balance - discountAmount))));
+                        }
+                        // new field for refer and earn functionality
+                        taskDetailModel.isReferCode = jsonObject.optString(NetworkUtility.TAGS.IS_REFER_CODE);
+
+                        String payable;
+                        payable = jsonObject.optString(NetworkUtility.TAGS.PAYABLE_AMOUNT);
+                        mActivityPaymentDetailBinding.lnPromoCodeDisclaimer.setVisibility(View.VISIBLE);
+
+                        // setting payable amount as quote price to pay.
+                        providerModel.quotePrice = payable;
+                        mActivityPaymentDetailBinding.txttotal.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(payable)));
+
+                        mActivityPaymentDetailBinding.textPay.setText(getString(R.string.label_book_now_for_rupees, Utility.getQuotePriceFormatter(payable)));
+                        break;
+                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
+                        // Show Toast
+//                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityJobSummaryBinding.getRoot());
+                        Utility.showToast(mContext, getString(R.string.label_something_went_wrong));
+                        break;
+                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
+                        error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
+                        // Show message
+//                        Utility.showSnackBar(error_message, mActivityJobSummaryBinding.getRoot());
+                        Utility.showToast(mContext, error_message);
+                        break;
+                    case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
+                    case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
+                        //Logout and finish the current activity
+                        Utility.logout(mContext, true, statusCode);
+                        finish();
+                        break;
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+                mCallValidateCheepCodeWSErrorListener.onErrorResponse(new VolleyError(e.getMessage()));
+            }
+        }
+    };
 
 
 }

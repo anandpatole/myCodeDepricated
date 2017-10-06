@@ -14,7 +14,7 @@ android {
         minSdkVersion 16
         targetSdkVersion 25
         versionCode 24
-        versionName "1.0.86" // PLEASE FIRST MAKE SURE MIN-VERSION IS 16.
+        versionName "1.0.93" // PLEASE FIRST MAKE SURE MIN-VERSION IS 16.
         renderscriptTargetApi 18
         renderscriptSupportModeEnabled true
 
@@ -25,7 +25,7 @@ android {
 
         buildConfigField("String", "HOTLINE_APP_ID", getProperty("HOTLINE_APP_ID"))
         buildConfigField("String", "HOTLINE_APP_KEY", getProperty("HOTLINE_APP_KEY"))
-        //Google Places API Key for PlacesAutoCompletion
+        //Google Places API Key for PlacesAutoCompletiontask_discount_amount
         buildConfigField("String", "PLACES_API_KEY", getProperty("PLACES_API_KEY"))
         // Fetch DEFAULT X-API-KEY value from gradle.properties
         buildConfigField("String", "X_API_KEY", getProperty("X_API_KEY"));
@@ -58,6 +58,7 @@ android {
         buildConfigField("String", "BUCKET_NAME ", getProperty("BUCKET_NAME"))
         buildConfigField("String", "TASK_ORIGINAL_FOLDER ", getProperty("TASK_ORIGINAL_FOLDER"))
         buildConfigField("String", "TASK_THUMB_FOLDER ", getProperty("TASK_THUMB_FOLDER"))
+        buildConfigField("String", "REFER_AND_SHARE_APP_URL", getProperty("REFER_AND_SHARE_APP_URL"))
         buildConfigField("boolean", "NEED_TO_BYPASS_PAYMENT", "false")
 
         //Paytm
@@ -209,7 +210,6 @@ dependencies {
 
     // firebase database sdk
     compile "com.google.firebase:firebase-database:$playServiceVer"
-    compile 'com.android.support.constraint:constraint-layout:1.0.2'
 
     //Twitter
     compile('com.twitter.sdk.android:twitter:2.3.2@aar') {
@@ -236,6 +236,29 @@ dependencies {
     compile 'com.theartofdev.edmodo:android-image-cropper:2.3.1'
 
     //For Circular indicator with viewpager
+
+    // For broadcasting
+
+    // payumoney
+
+    //HotLine integration(For Chat to Cheep Admin)
+
+    // HDFC Payment PayU
+    //    compile 'com.payu.custombrowser:payu-custom-browser:6.1.1'
+    //this is gradle path from where CB will be automatically downloaded
+
+    // AppsFlyer SDK
+
+    //    compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    compile 'com.android.support:multidex:1.0.1'
+    compile 'com.github.bumptech.glide:glide:3.7.0'
+    compile 'com.daimajia.swipelayout:library:1.2.0@aar'
+    compile 'com.android.volley:volley:1.0.0'
+    compile 'org.apache.httpcomponents:httpmime:4.3.6'
+    compile 'org.apache.httpcomponents:httpclient-android:4.3.5.1'
+    compile 'com.facebook.android:facebook-android-sdk:4.16.1'
+    compile 'com.theartofdev.edmodo:android-image-cropper:2.3.1'
     compile 'me.relex:circleindicator:1.2.2@aar'
 
     // For Broadcasting
@@ -251,10 +274,7 @@ dependencies {
 
     //HotLine integration(For Chat to Cheep Admin)
     compile 'com.github.freshdesk:hotline-android:1.2.4'
-
-    // AppsFlyer SDK
     compile 'com.appsflyer:af-android-sdk:4.7.2@aar'
-
     compile 'com.amazonaws:aws-android-sdk-s3:2.2.22'
 //    compile 'com.android.support.constraint:constraint-layout:1.0.2'
 

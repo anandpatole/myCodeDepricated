@@ -82,4 +82,7 @@ public class UserDetails {
     @SerializedName("locality")
     public String mLocality;
 
+    @SerializedName("refer_code")
+    public String refer_code;
+
 }

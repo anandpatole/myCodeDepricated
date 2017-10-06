@@ -78,6 +78,7 @@
                     android:layout_marginRight="@dimen/scale_30dp"
                     android:layout_marginTop="@dimen/scale_10dp"
                     android:gravity="center_vertical"
+                    android:focusableInTouchMode="true"
                     android:orientation="horizontal">
 
                     <com.cheep.custom_view.CFEditTextRegular
