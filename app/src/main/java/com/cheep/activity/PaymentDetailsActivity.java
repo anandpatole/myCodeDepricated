@@ -87,7 +87,7 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
     private String actualQuotePrice;
     private AddressModel mSelectedAddressModelForInsta;
     private double usedWalletBalance = 0;
-    private String promocode_price;
+//    private String promocode_price;
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
     @Override
@@ -286,6 +286,9 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
             }
         });
 //terms and condition click listener
+        mActivityPaymentDetailBinding.ivTermsTick.setSelected(true);
+        mActivityPaymentDetailBinding.textPay.setSelected(true);
+
         mActivityPaymentDetailBinding.ivTermsTick.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -389,6 +392,10 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
         if (!TextUtils.isEmpty(actualQuotePrice)) {
             providerModel.quotePrice = actualQuotePrice;
         }
+        if (taskDetailModel != null) {
+            taskDetailModel.cheepCode = Utility.EMPTY_STRING;
+            taskDetailModel.taskDiscountAmount = Utility.ZERO_STRING;
+        }
         actualQuotePrice = null;
         mActivityPaymentDetailBinding.imgCheepCodeClose.setVisibility(View.GONE);
         mActivityPaymentDetailBinding.llpromocode.setEnabled(true);
@@ -478,6 +485,9 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
         mActivityPaymentDetailBinding.txttotal.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf(taskPaidAmount))));
         mActivityPaymentDetailBinding.textPay.setText(getString(R.string.label_book_now_for_rupees, "" + Utility.getQuotePriceFormatter(String.valueOf(taskPaidAmount))));
         mActivityPaymentDetailBinding.textreferraldiscountlabel.setText(getString(R.string.label_referral_discount_paymentsumaary));
+        mActivityPaymentDetailBinding.textreferraldiscountlabel.setTextColor(ContextCompat.getColor(this, R.color.black));
+        mActivityPaymentDetailBinding.llclaimreferral.setEnabled(false);
+        mActivityPaymentDetailBinding.llpromocode.setEnabled(false);
 
         mActivityPaymentDetailBinding.txtpromocode.setSelected(true);
         mActivityPaymentDetailBinding.txtreferraldiscount.setSelected(true);
@@ -558,6 +568,7 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
             setTaskState(STEP_THREE_VERIFIED);
             int isAdditionalPayment = getIntent().getIntExtra(Utility.Extra.PAYMENT_VIEW_IS_ADDITIONAL_CHARGE, 0);
             // Open payment method activity on payment as per new flow
+            taskDetailModel.usedWalletAmount = String.valueOf(usedWalletBalance);
             PaymentChoiceActivity.newInstance(mContext, taskDetailModel, providerModel, isAdditionalPayment, isInstaBooking, mSelectedAddressModelForInsta);
         }
     };
@@ -697,7 +708,7 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
 
 
     private String cheepCode;
-//    private String isReferCode = Utility.BOOLEAN.NO;
+    //    private String isReferCode = Utility.BOOLEAN.NO;
     Response.Listener mCallValidateCheepCodeWSResponseListener = new Response.Listener() {
         @Override
         public void onResponse(Object response) {
@@ -761,7 +772,8 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
     private void updatePaymentBtn(String total, String discount, String payable) {
         // setting payable amount as quote price to pay.
         providerModel.quotePrice = payable;
-        promocode_price = discount;
+        taskDetailModel.taskDiscountAmount = discount;
+        taskDetailModel.cheepCode = cheepCode;
         usedWalletBalance = 0;
 //        mActivityJobSummaryBinding.btnPay.setText(getString(R.string.label_pay_X_X_X, total, discount, payable));
 //        @change only need to show payable amount
