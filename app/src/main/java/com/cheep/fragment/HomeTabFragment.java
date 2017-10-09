@@ -611,7 +611,9 @@ public class HomeTabFragment extends BaseFragment {
         /*if (PreferenceUtility.getInstance(mContext).getUserDetails() == null) {
             return;
         }*/
-        ((HomeActivity) getActivity()).isReadyToLoad = true;
+        if (mContext == null)
+            return;
+        ((HomeActivity) mContext).isReadyToLoad = true;
 
         if (!Utility.isConnected(mContext)) {
             errorLoadingHelper.failed(Utility.NO_INTERNET_CONNECTION, 0, onRetryBtnClickListener);

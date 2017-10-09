@@ -417,7 +417,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <!-- new labels for login screen for skip login feature-->
     <string name="label_almost_there">Hang in, you\'re almost there!</string>
 
-    <string name="fetching_location">Checking your location, please wait...</string>
+    <string name="fetching_location">Checking your location, please wait…</string>
     <string name="label_login">Login</string>
     <string name="label_verify_number">Verify Number</string>
 
@@ -444,16 +444,17 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="special_instructions">Special Instructions</string>
     <string name="label_cheepgo">CHEEPGO</string>
     <string name="label_share_this_specila_code_with_your_friend_and_family">Share this special code with your friends and family </string>
-    <string name="label_when_they_use_cheep_get_100">When they use CHEEP they get ₹100 off on their first booking &amp; you too get ₹100 off yours. Know more</string>
+    <string name="label_when_they_use_cheep_get_50">When they book and pay for their first service, they will get ₹50 off and you will earn ₹50 yours. Know more</string>
     <string name="label_invite_friends">Invite Friends</string>
     <string name="label_refer_and_earn">Refer &amp; Earn</string>
-    <string name="label_you_have_earned">You have earned: ₹ %1$s from %2$s %3$s</string>
+    <string name="label_you_have_earned">Your Earnings Till Date : ₹%1$s from %2$s %3$s</string>
+    <string name="label_your_current_balance">(Your Current Balance: ₹%1$s)</string>
     <string name="label_about_refer_and_earn">About Refer &amp; Earn</string>
-    <string name="label_dialog_refer_and_earn_body">Everytime a new user books a service on CHEEP with your invite code, they\'ll get ₹100 off on the service. Once they book the service, you\'ll automatically earn ₹100 which you can redeem while booking your next service with CHEEP.</string>
+    <string name="label_dialog_refer_and_earn_body">Share your unique referral code with friends, and you both will earn ₹50 when they book and pay for their first task. The more friends you send the code to, the more you earn. It\'s so simple. So go on, spread the love and make tons of money at your friends\'s cost</string>
     <string name="label_dialog_refer_and_earn_info_title">Your current earned balance is ₹300</string>
     <string name="label_refer_and_earn_dialog_info_body">The maximum redeemable amount for one service is ₹100. \nTo earn discounts, just go to the menu screen and click on Refer &amp; Earn. Share your special code with your friends &amp; family.</string>
     <string name="label_dialog_refer_and_earn_info_body">The maximum redeemable amount fpr one service is ₹100.</string>
-    <string name="label_ok_got_it">Ok, Got It</string>
+    <string name="label_ok_got_it" tools:ignore="Typos">Ok, Got It</string>
     <string name="label_dialog_refer_and_earn_no_payment_body">Earn discounts each time you refer CHEEP to your friends and family. Just go to menu screen, click on Refer &amp; Earn and share your special code with them.</string>
     <string name="label_share_via">Share via</string>
     <string name="label_refer_and_earn_share_body">Please download CHEEP app from this %1$s and use this referral code %2$s for payment.</string>
@@ -510,7 +511,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_type_here">Type Here</string>
 
 
-    <string name="no_pro_available_title" />
+    <string name="no_pro_available_title"/>
     <string name="no_pro_available_description">No PROs is available for this address</string>
     <string name="validate_comment">Please provide valid comment.</string>
     <string name="title_booking_confimation">Booking Confirmation</string>
