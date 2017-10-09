@@ -2,10 +2,8 @@ package com.cheep.activity;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
@@ -13,7 +11,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -703,7 +700,7 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
                          */
                         final InstaBookingProDetail taskDetailModel = (InstaBookingProDetail) Utility.getObjectFromJsonString(jsonObject.optString(NetworkUtility.TAGS.DATA), InstaBookingProDetail.class);
                         if (taskDetailModel != null && taskDetailModel.spId != null)
-                            onSuccessInstaBooking(taskDetailModel);
+                            onSuccessOfGetProForInstaBooking(taskDetailModel);
                         else
                             Utility.showToast(TaskCreationActivity.this, getString(R.string.alert_no_pro_found));
                         break;
@@ -735,7 +732,7 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
     /**
      * This method would going to call when task completed successfully
      */
-    private void onSuccessInstaBooking(final InstaBookingProDetail taskDetailModel) {
+    private void onSuccessOfGetProForInstaBooking(final InstaBookingProDetail taskDetailModel) {
         if (taskDetailModel != null) {
 
             // create calendar for time and date for dialog text
@@ -782,6 +779,7 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
                     model.catImage = mJobCategoryModel.catImage;
                     model.taskStartdate = String.valueOf(mTaskCreationPagerAdapter.mEnterTaskDetailFragment.superCalendar.getCalendar().getTimeInMillis());
                     model.subCategoryID = String.valueOf(mSelectedSubServiceDetailModel.sub_cat_id);
+                    model.taskImage = mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mCurrentPhotoPath;
                     ProviderModel pModel = new ProviderModel();
                     pModel.userName = taskDetailModel.userName;
                     pModel.profileUrl = taskDetailModel.profileImg;

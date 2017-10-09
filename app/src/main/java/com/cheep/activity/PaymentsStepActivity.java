@@ -55,6 +55,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -1293,6 +1294,11 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
         mTaskCreationParams.put(NetworkUtility.TAGS.USED_WALLET_BALANCE, usedWalletBalance);
         mTaskCreationParams.put(NetworkUtility.TAGS.QUOTE_AMOUNT, providerModel.spWithoutGstQuotePrice);
 
+        HashMap<String, File> mFileParams = new HashMap<>();
+        if (!TextUtils.isEmpty(taskDetailModel.taskImage)
+                && new File(taskDetailModel.taskImage).exists()) {
+            mFileParams.put(NetworkUtility.TAGS.MEDIA_FILE, new File(taskDetailModel.taskImage));
+        }
 
         // Url is based on condition if address id is greater then 0 then it means we need to update the existing address
         VolleyNetworkRequest mVolleyNetworkRequestForSPList = new VolleyNetworkRequest(NetworkUtility.WS.TASK_CREATE_INSTA_BOOKING
@@ -1300,7 +1306,7 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
                 , mCallCreateInstaTaskWSResponseListener
                 , mHeaderParams
                 , mParams
-                , null);
+                , mFileParams);
         Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequestForSPList);
 
     }
