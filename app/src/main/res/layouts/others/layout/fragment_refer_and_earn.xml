@@ -67,11 +67,19 @@
                     android:orientation="vertical">
 
                     <ImageView
+                        android:id="@+id/ivReferAndEarnBanner"
                         tools:ignore="contentDescription"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:background="@drawable/ic_refer_and_earn_with_friend"/>
+<!--
+                    <ImageView
+                        tools:ignore="contentDescription"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/scale_15dp"
                         android:scaleType="fitXY"
-                        android:src="@drawable/ic_refer_and_earn_with_friend"/>
+                        android:src="@drawable/ic_shadow_bottom_new"/>
+-->
 
                     <com.cheep.custom_view.CFTextViewSemiBold
                         android:layout_width="wrap_content"

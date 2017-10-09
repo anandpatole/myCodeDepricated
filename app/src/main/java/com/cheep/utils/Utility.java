@@ -342,11 +342,11 @@ public class Utility {
         return encryptedText;
     }
 
-    /*public static int getHeightFromWidthForSixteenNineRatio(int width) {
+    public static int getHeightFromWidthForSixteenNineRatio(int width) {
         Log.d(TAG, "getHeightFromWidthForSixteenNineRatio() called with: width = [" + width + "]");
         Log.d(TAG, "getHeightFromWidthForSixteenNineRatio() returned: " + ((width * 9) / 16));
         return ((width * 9) / 16);
-    }*/
+    }
 
     public static int getHeightFromWidthForTwoOneRatio(int width) {
 //        Log.d(TAG, "getHeightFromWidthForTwoOneRatio() called with: width = [" + width + "]");

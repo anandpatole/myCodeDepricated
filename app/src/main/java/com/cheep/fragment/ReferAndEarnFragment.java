@@ -3,6 +3,8 @@ package com.cheep.fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -18,6 +20,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.TextView;
 
 import com.android.volley.Response;
@@ -31,6 +34,7 @@ import com.cheep.interfaces.DrawerLayoutInteractionListener;
 import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
+import com.cheep.utils.LogUtils;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.Utility;
 
@@ -128,7 +132,26 @@ public class ReferAndEarnFragment extends BaseFragment {
         know_more.setSpan(clickableSpan, know_more.length() - 9, know_more.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
         mfragmentReferAndEarnBinding.tvUserGetMoney.setText(know_more, TextView.BufferType.SPANNABLE);
         mfragmentReferAndEarnBinding.tvUserGetMoney.setMovementMethod(LinkMovementMethod.getInstance());
+        ViewTreeObserver mViewTreeObserver = mfragmentReferAndEarnBinding.ivReferAndEarnBanner.getViewTreeObserver();
 
+
+        // set image in propertional fit
+        mViewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+//                Log.d(TAG, "onGlobalLayout() called");
+                mfragmentReferAndEarnBinding.ivReferAndEarnBanner.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                int width = mfragmentReferAndEarnBinding.ivReferAndEarnBanner.getMeasuredWidth();
+                int height = mfragmentReferAndEarnBinding.ivReferAndEarnBanner.getMeasuredHeight();
+//                Log.d(TAG, "onGlobalLayout() called==> " + width + "*" + height);
+                Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ic_refer_and_earn_with_friend);
+
+                ViewGroup.LayoutParams params = mfragmentReferAndEarnBinding.ivReferAndEarnBanner.getLayoutParams();
+                params.height = bitmap.getHeight() * width / bitmap.getWidth();
+                LogUtils.LOGD(TAG, "onGlobalLayout: height & widht :: " + params.height + " || " + params.width);
+                mfragmentReferAndEarnBinding.ivReferAndEarnBanner.setLayoutParams(params);
+            }
+        });
     }
 
     @Override
