@@ -71,7 +71,7 @@
                         tools:ignore="contentDescription"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/ic_refer_and_earn_with_friend"/>
+                        android:background="@drawable/ic_refer_and_earn_with_friends"/>
 <!--
                     <ImageView
                         tools:ignore="contentDescription"

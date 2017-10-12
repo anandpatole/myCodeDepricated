@@ -12,6 +12,7 @@ import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextPaint;
+import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
@@ -109,7 +110,7 @@ public class ReferAndEarnFragment extends BaseFragment {
         mfragmentReferAndEarnBinding.textTitle.setText(getString(R.string.label_refer_and_earn));
 
         mfragmentReferAndEarnBinding.tvReferralCode.setText(PreferenceUtility.getInstance(mContext).getUserDetails().refer_code);
-        callGetReferBalance();
+        callGetReferBalanceWS();
 
         // set clickable spannable for know more button
         SpannableStringBuilder know_more = new SpannableStringBuilder(getString(R.string.label_when_they_use_cheep_get_50));
@@ -144,7 +145,7 @@ public class ReferAndEarnFragment extends BaseFragment {
                 int width = mfragmentReferAndEarnBinding.ivReferAndEarnBanner.getMeasuredWidth();
                 int height = mfragmentReferAndEarnBinding.ivReferAndEarnBanner.getMeasuredHeight();
 //                Log.d(TAG, "onGlobalLayout() called==> " + width + "*" + height);
-                Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ic_refer_and_earn_with_friend);
+                Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ic_refer_and_earn_with_friends);
 
                 ViewGroup.LayoutParams params = mfragmentReferAndEarnBinding.ivReferAndEarnBanner.getLayoutParams();
                 params.height = bitmap.getHeight() * width / bitmap.getWidth();
@@ -176,7 +177,7 @@ public class ReferAndEarnFragment extends BaseFragment {
     /**
      * Get user refer balance and refer counting and earning
      */
-    private void callGetReferBalance() {
+    private void callGetReferBalanceWS() {
         Map<String, String> mHeaderParams = new HashMap<>();
         mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
         mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
@@ -210,20 +211,21 @@ public class ReferAndEarnFragment extends BaseFragment {
                         String referralBalance = (jsonObject.optJSONObject(NetworkUtility.TAGS.DATA)).optString(NetworkUtility.TAGS.WALLET_BALANCE);
                         String referralCount = (jsonObject.optJSONObject(NetworkUtility.TAGS.DATA)).optString(NetworkUtility.TAGS.REFER_COUNT);
                         String maxDiscountAmount = (jsonObject.optJSONObject(NetworkUtility.TAGS.DATA)).optString(NetworkUtility.TAGS.MAX_REFER_DISCOUNT);
-                        if (Double.parseDouble(referralBalance) > 0) {
-                            mfragmentReferAndEarnBinding.tvRefereBalanceAndCount.setVisibility(View.VISIBLE);
-                            mfragmentReferAndEarnBinding.tvUserBalance.setVisibility(View.VISIBLE);
+                        if (Double.parseDouble(referralCount) > 0) {
                             double totalEarning = 0;
                             try {
                                 totalEarning = Double.parseDouble(referralCount) * Double.parseDouble(maxDiscountAmount);
+                                if (Integer.parseInt(referralCount) == 1 || Integer.parseInt(referralCount) == 0) {
+                                    mfragmentReferAndEarnBinding.tvRefereBalanceAndCount.setText(getString(R.string.label_you_have_earned, (int) totalEarning + "", referralCount, "referral"));
+                                } else {
+                                    mfragmentReferAndEarnBinding.tvRefereBalanceAndCount.setText(getString(R.string.label_you_have_earned, (int) totalEarning + "", referralCount, "referrals"));
+                                }
+                                if (!TextUtils.isEmpty(referralBalance))
+                                    mfragmentReferAndEarnBinding.tvUserBalance.setText(getString(R.string.label_your_current_balance, (int) Double.parseDouble(referralBalance) + ""));
+                                mfragmentReferAndEarnBinding.tvRefereBalanceAndCount.setVisibility(View.VISIBLE);
+                                mfragmentReferAndEarnBinding.tvUserBalance.setVisibility(View.VISIBLE);
                             } catch (NumberFormatException ignored) {
                             }
-                            if (Integer.parseInt(referralCount) == 1 || Integer.parseInt(referralCount) == 0) {
-                                mfragmentReferAndEarnBinding.tvRefereBalanceAndCount.setText(getString(R.string.label_you_have_earned, totalEarning + "", referralCount, "referral"));
-                            } else {
-                                mfragmentReferAndEarnBinding.tvRefereBalanceAndCount.setText(getString(R.string.label_you_have_earned, totalEarning + "", referralCount, "referrals"));
-                            }
-                            mfragmentReferAndEarnBinding.tvUserBalance.setText(getString(R.string.label_your_current_balance, referralBalance));
                         }
                         Log.e(TAG, referralBalance);
                         Log.e(TAG, referralCount);

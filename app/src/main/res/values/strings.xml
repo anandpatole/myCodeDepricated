@@ -437,6 +437,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_address_delete_title">CHEEP</string>
     <string name="label_address_delete_message">Are you sure you want to delete this address?</string>
     <string name="disclaimer_promo_code">The Promo Code discount has been levied on pre tax amount.</string>
+    <string name="disclaimer_referral">The Referral discount has been levied on pre tax amount.</string>
     <string name="disclaimer_promo_code_strategic_partner">5% Promo Code discount has been applied on the pre-tax amount.</string>
     <string name="book_and_pay_x">Book and Pay ₹%1$s</string>
 
@@ -444,7 +445,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="special_instructions">Special Instructions</string>
     <string name="label_cheepgo">CHEEPGO</string>
     <string name="label_share_this_specila_code_with_your_friend_and_family">Share this special code with your friends and family </string>
-    <string name="label_when_they_use_cheep_get_50">When they book and pay for their first service, they will get ₹50 off and you will earn ₹50 yours. Know more</string>
+    <string name="label_when_they_use_cheep_get_50">When they book and pay for their first service, they will get ₹50 off and you will earn ₹50 yourself. Know more</string>
     <string name="label_invite_friends">Invite Friends</string>
     <string name="label_refer_and_earn">Refer &amp; Earn</string>
     <string name="label_you_have_earned">Your Earnings Till Date : ₹%1$s from %2$s %3$s</string>

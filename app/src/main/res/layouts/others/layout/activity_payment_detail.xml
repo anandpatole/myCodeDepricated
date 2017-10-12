@@ -544,6 +544,7 @@
                                 tools:ignore="ContentDescription" />
 
                             <com.cheep.custom_view.CFTextViewRegular
+                                android:id="@+id/txt_promo_code_disclaimer"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_vertical"
