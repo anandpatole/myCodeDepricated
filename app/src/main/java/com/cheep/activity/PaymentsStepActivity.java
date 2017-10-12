@@ -168,7 +168,7 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
                 }
             } else {
                 if (taskDetailModel != null) {
-                    resetPromocodeValue();
+//                    resetPromocodeValue();
                     setAdditionalPayment();
                 }
             }
@@ -226,10 +226,10 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
                     additionalCharges = getQuotePriceInInteger(taskDetailModel.additionalQuoteAmount);
                 }
 
-                double subTotal = (taskPaidAmount + additionalCharges);
+//                double subTotal = (taskPaidAmount + additionalCharges);
                 mActivityPaymentDetailBinding.txtprofee.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf(taskPaidAmount))));
                 mActivityPaymentDetailBinding.txtadditionalcharge.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf(additionalCharges))));
-                mActivityPaymentDetailBinding.txtsubtotal.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf(subTotal))));
+//                mActivityPaymentDetailBinding.txtsubtotal.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf(subTotal))));
             }
         }
 
