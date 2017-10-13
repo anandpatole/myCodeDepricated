@@ -4,11 +4,13 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -22,6 +24,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import com.cheep.BuildConfig;
 import com.cheep.R;
 import com.payu.custombrowser.Bank;
 import com.payu.custombrowser.PayUWebChromeClient;
@@ -33,7 +36,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-public class PaymentsActivity extends AppCompatActivity implements MagicRetryFragment.ActivityCallback {
+public class HDFCPaymentGatewayActivity extends AppCompatActivity implements MagicRetryFragment.ActivityCallback {
 
     Bundle bundle;
 
@@ -54,6 +57,24 @@ public class PaymentsActivity extends AppCompatActivity implements MagicRetryFra
     MagicRetryFragment magicRetryFragment;
     String txnId = null;
 
+
+    public static void newInstance(Context context, String postData, int requestCode) {
+
+        Intent intent = new Intent(context, HDFCPaymentGatewayActivity.class);
+        intent.putExtra("url", BuildConfig.PAYUBIZ_HDFC_URL);
+        intent.putExtra("postData", postData);
+        // if task is generated from insta booking feature then addition payment field will not come in response
+        ((AppCompatActivity) context).startActivityForResult(intent, requestCode);
+    }
+
+    public static void newInstance(Fragment fragment, String postData, int requestCode) {
+
+        Intent intent = new Intent(fragment.getActivity(), HDFCPaymentGatewayActivity.class);
+        intent.putExtra("url", BuildConfig.PAYUBIZ_HDFC_URL);
+        intent.putExtra("postData", postData);
+        // if task is generated from insta booking feature then addition payment field will not come in response
+        fragment.startActivityForResult(intent, requestCode);
+    }
 
    /* Bank bank = new Bank() {
         @Override
@@ -177,7 +198,7 @@ public class PaymentsActivity extends AppCompatActivity implements MagicRetryFra
 //                        try {
 //                            JSONObject cvvObject = new JSONObject(result);
 //                            // store the cvv in shared preferences.
-//                            mPayuUtils.storeInSharedPreferences(PaymentsActivity.this, cvvObject.getString(PayuConstants.CARD_TOKEN), cvvObject.getString(PayuConstants.MERCHANT_HASH));
+//                            mPayuUtils.storeInSharedPreferences(HDFCPaymentGatewayActivity.this, cvvObject.getString(PayuConstants.CARD_TOKEN), cvvObject.getString(PayuConstants.MERCHANT_HASH));
 //                        } catch (JSONException e) {
 //                            e.printStackTrace();
 //                        }

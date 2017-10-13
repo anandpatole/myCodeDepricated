@@ -7,7 +7,6 @@ import android.media.ThumbnailUtils;
 import android.os.AsyncTask;
 import android.provider.MediaStore;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.amazonaws.auth.CognitoCachingCredentialsProvider;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener;
@@ -18,6 +17,7 @@ import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.cheep.BuildConfig;
+import com.cheep.utils.LogUtils;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -27,7 +27,7 @@ import java.io.IOException;
  * Created by giteeka on 24/8/17.
  */
 
-class AmazonUtils {
+public class AmazonUtils {
     private static AmazonS3Client sS3Client;
     private static CognitoCachingCredentialsProvider sCredProvider;
     private static TransferUtility sTransferUtility;
@@ -76,13 +76,13 @@ class AmazonUtils {
         return observer;
     }
 
-    static String getFileNameWithExt(String mFilePath, boolean withExt) {
+    public static String getFileNameWithExt(String mFilePath, boolean withExt) {
         if (!TextUtils.isEmpty(mFilePath)) {
             if (withExt)
                 return mFilePath.substring(mFilePath.lastIndexOf("/") + 1);
             else {
                 String name = mFilePath.substring(mFilePath.lastIndexOf("/") + 1, mFilePath.lastIndexOf("."));
-                Log.i(TAG, "getNameFronPath: name : " + name);
+                LogUtils.LOGI(TAG, "getNameFronPath: name : " + name);
                 return name;
             }
         }
@@ -92,7 +92,7 @@ class AmazonUtils {
     static String getExtension(String mFilePath) {
         if (!TextUtils.isEmpty(mFilePath)) {
             String ext = mFilePath.substring(mFilePath.lastIndexOf("."), mFilePath.length());
-            Log.d(TAG, "getExtension() called with: ext = [" + ext + "]");
+            LogUtils.LOGD(TAG, "getExtension() called with: ext = [" + ext + "]");
             return ext;
         }
         return "";
@@ -147,7 +147,7 @@ class AmazonUtils {
                 return file.getAbsolutePath();
             }
         } catch (Exception e) {
-            Log.i("TAG", "Exception while creating temp file" + e.toString());
+           LogUtils.LOGI("TAG", "Exception while creating temp file" + e.toString());
             return "";
         }
         return "";

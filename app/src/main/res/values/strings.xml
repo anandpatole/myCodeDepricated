@@ -514,7 +514,36 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_0km">0km</string>
     <string name="label_50km">50km</string>
     <string name="label_type_here">Type Here</string>
-
+    <string name="label_choose_payment_option">Choose your preferred payment option below</string>
+    <string name="label_wallet">Wallet</string>
+    <string name="label_card_netbanking">Card / Netbanking</string>
+    <string name="label_mobikwik">MobiKwik</string>
+    <string name="label_credit_debit_card">Credit / Debit Card</string>
+    <string name="label_paytm">Paytm</string>
+    <string name="label_netbanking">Netbanking</string>
+    <string name="label_pay_at_loaction">Pay at Location</string>
+    <string name="label_pay_by_cash">Pay by Cash</string>
+    <string name="discount_cashback_text">%1$s Cashback upto ₹%2$s. Valid once per user.</string>
+    <string name="label_please_pay_x">Please pay ₹%1s</string>
+    <string name="label_link_x">Link %1s</string>
+    <string name="label_card_netbanking_info">Either method below will redirect you to the online payment gateway</string>
+    <string name="label_enter_number_link_account">Enter your number and link to your %1s wallet</string>
+    <string name="label_mobile_number">Mobile Number</string>
+    <string name="label_we_create_wallet">If you don\'t have a %1s wallet, we will create one for you</string>
+    <string name="label_send_otp">Send OTP</string>
+    <string name="label_account">Account</string>
+    <string name="label_enter_otp_sent_on_x">Enter OTP received on +91 %1s</string>
+    <string name="label_proceed">Proceed</string>
+    <string name="label_enter_otp">Enter OTP</string>
+    <string name="label_add_amount">Add Amount</string>
+    <string name="validate_empty_amount">Whoops! Something is wrong, please enter a valid amount to be added.</string>
+    <string name="label_low_balance_add_money">Low Balance.\nPlease add funds to wallet to continue</string>
+    <string name="label_confirm">Confirm</string>
+    <string name="label_invalid_otp">Sorry, the OTP you entered is incorrect.</string>
+    <string name="label_current_balance">Current Balance: ₹%1s</string>
+    <string name="label_enter_amount">Enter Amount</string>
+    <string name="label_amount_payable">Amount Payable</string>
+    <string name="label_notify_paying_by_wallet">You are about to pay using your %1s wallet</string>
 
     <string name="no_pro_available_title"/>
     <string name="no_pro_available_description">No PROs is available for this address</string>
