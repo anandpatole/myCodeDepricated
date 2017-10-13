@@ -787,7 +787,7 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
                     pModel.quotePrice = taskDetailModel.rateGST;
                     pModel.spWithoutGstQuotePrice = taskDetailModel.rate;
 
-                    PaymentsStepActivity.newInstance(TaskCreationActivity.this, model, pModel, 0, true, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel);
+                    PaymentDetailsActivity.newInstance(TaskCreationActivity.this, model, pModel, 0, true, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel);
 
                     //Log.i("myLog", "tasks:"+mJobCategoryModel.catName+"::"+mSelectedSubServiceDetailModel.name+"::"+mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mAddress);
 

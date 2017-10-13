@@ -62,13 +62,13 @@ import java.util.Map;
 import static com.cheep.utils.Utility.Extra.PAYMENT_VIEW_IS_ADDITIONAL_CHARGE;
 
 
-public class PaymentsStepActivity extends BaseAppCompatActivity {
+public class PaymentDetailsActivity extends BaseAppCompatActivity {
 
 
     private double usedWalletBalance = 0;
 
     public static void newInstance(Context context, TaskDetailModel taskDetailModel, ProviderModel providerModel, int additional) {
-        Intent intent = new Intent(context, PaymentsStepActivity.class);
+        Intent intent = new Intent(context, PaymentDetailsActivity.class);
         intent.putExtra(Utility.Extra.DATA, Utility.getJsonStringFromObject(providerModel));
         intent.putExtra(Utility.Extra.DATA_2, Utility.getJsonStringFromObject(taskDetailModel));
         intent.putExtra(PAYMENT_VIEW_IS_ADDITIONAL_CHARGE, additional);
@@ -76,7 +76,7 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
     }
 
     public static void newInstance(Context context, TaskDetailModel taskDetailModel, ProviderModel providerModel, int additional, boolean isInstaBooking, AddressModel mSelectedAddressModel) {
-        Intent intent = new Intent(context, PaymentsStepActivity.class);
+        Intent intent = new Intent(context, PaymentDetailsActivity.class);
         intent.putExtra(Utility.Extra.DATA, Utility.getJsonStringFromObject(providerModel));
         intent.putExtra(Utility.Extra.DATA_2, Utility.getJsonStringFromObject(taskDetailModel));
         intent.putExtra(Utility.Extra.SELECTED_ADDRESS_MODEL, Utility.getJsonStringFromObject(mSelectedAddressModel));
@@ -86,14 +86,14 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
     }
 
     public static void newInstance(Context context, TaskDetailModel taskDetailModel, ProviderModel providerModel, boolean viewonly) {
-        Intent intent = new Intent(context, PaymentsStepActivity.class);
+        Intent intent = new Intent(context, PaymentDetailsActivity.class);
         intent.putExtra(Utility.Extra.DATA, Utility.getJsonStringFromObject(providerModel));
         intent.putExtra(Utility.Extra.DATA_2, Utility.getJsonStringFromObject(taskDetailModel));
         intent.putExtra(Utility.Extra.PAYMENT_VIEW, viewonly);
         context.startActivity(intent);
     }
 
-    private static final String TAG = "PaymentsStepActivity";
+    private static final String TAG = "PaymentDetailsActivity";
     private ProviderModel providerModel;
     private TaskDetailModel taskDetailModel;
     Bundle bundle;
@@ -686,7 +686,7 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
 
             String strResponse = (String) response;
             try {
-                Utility.hideKeyboard(PaymentsStepActivity.this, edtCheepcode);
+                Utility.hideKeyboard(PaymentDetailsActivity.this, edtCheepcode);
                 JSONObject jsonObject = new JSONObject(strResponse);
                 Log.i(TAG, "onResponse: " + jsonObject.toString());
                 int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
@@ -745,7 +745,7 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
             hideProgressDialog();
             String strResponse = (String) response;
             try {
-                Utility.hideKeyboard(PaymentsStepActivity.this, edtCheepcode);
+                Utility.hideKeyboard(PaymentDetailsActivity.this, edtCheepcode);
                 JSONObject jsonObject = new JSONObject(strResponse);
                 Log.i(TAG, "onResponse: " + jsonObject.toString());
                 int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
@@ -835,7 +835,7 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
             hideProgressDialog();
 
 //            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityJobSummaryBinding.getRoot());
-            Utility.hideKeyboard(PaymentsStepActivity.this, edtCheepcode);
+            Utility.hideKeyboard(PaymentDetailsActivity.this, edtCheepcode);
             Utility.showToast(mContext, getString(R.string.label_something_went_wrong));
 
         }
@@ -1044,7 +1044,7 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
                                     e.printStackTrace();
                                 }
                             }
-                            Intent intent = new Intent(PaymentsStepActivity.this, PaymentsActivity.class);
+                            Intent intent = new Intent(PaymentDetailsActivity.this, PaymentsActivity.class);
                             intent.putExtra("url", BuildConfig.PAYUBIZ_HDFC_URL);
                             intent.putExtra("postData", postData.replaceAll("hash=", "hash=" + jsonObject.optString("hash_string")));
                             // if task is generated from insta booking feature then addition payment field will not come in response
@@ -1101,7 +1101,7 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
         String formattedTaskId = FirebaseUtils.getPrefixTaskId(taskDetailModel.taskId);
         String formattedSpId = FirebaseUtils.getPrefixSPId(providerModel.providerId);
         String formattedUserId = "";
-        final UserDetails userDetails = PreferenceUtility.getInstance(PaymentsStepActivity.this).getUserDetails();
+        final UserDetails userDetails = PreferenceUtility.getInstance(PaymentDetailsActivity.this).getUserDetails();
         if (userDetails != null) {
             formattedUserId = FirebaseUtils.getPrefixUserId(userDetails.UserID);
         }
@@ -1466,7 +1466,7 @@ public class PaymentsStepActivity extends BaseAppCompatActivity {
                 hideProgressDialog();
                 switch (statusCode) {
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
-//                        Utility.showToast(PaymentsStepActivity.this, jsonObject.getString(NetworkUtility.TAGS.MESSAGE));
+//                        Utility.showToast(PaymentDetailsActivity.this, jsonObject.getString(NetworkUtility.TAGS.MESSAGE));
 
                         // Send Event tracking for AppsFlyer
                         AppsFlyerLib.getInstance().trackEvent(mContext, NetworkUtility.TAGS.APPSFLYER_CUSTOM_TRACK_EVENTS.TASK_CREATE, mTaskCreationParams);

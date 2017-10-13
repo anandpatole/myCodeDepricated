@@ -233,7 +233,7 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     // Redirect the user to Payment Summary screen.
-                    PaymentsStepActivity.newInstance(TaskSummaryActivity.this, mTaskDetailModel, mTaskDetailModel.selectedProvider, true);
+                    PaymentDetailsActivity.newInstance(TaskSummaryActivity.this, mTaskDetailModel, mTaskDetailModel.selectedProvider, true);
                 }
             });
 
@@ -1329,7 +1329,7 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
 
                         if (taskStatus.equalsIgnoreCase(Utility.TASK_STATUS.ADDITIONAL_PAYMENT_REQUESTED)) {
                             // payNow(true);
-                            PaymentsStepActivity.newInstance(mContext, mTaskDetailModel, mTaskDetailModel.selectedProvider, 1);
+                            PaymentDetailsActivity.newInstance(mContext, mTaskDetailModel, mTaskDetailModel.selectedProvider, 1);
                         } else if (taskStatus.equalsIgnoreCase(Utility.TASK_STATUS.COMPLETION_REQUEST)) {
                             Utility.showSnackBar(getString(R.string.message_no_more_payment_task_completed), mActivityTaskSummaryBinding.getRoot());
                             mTaskDetailModel.taskStatus = Utility.TASK_STATUS.COMPLETION_REQUEST;
