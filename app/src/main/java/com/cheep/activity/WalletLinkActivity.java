@@ -20,6 +20,7 @@ import android.text.TextWatcher;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
+import android.util.EventLog;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
@@ -36,6 +37,7 @@ import com.cheep.BootstrapConstant;
 import com.cheep.BuildConfig;
 import com.cheep.R;
 import com.cheep.databinding.ActivityWalletLinkBinding;
+import com.cheep.model.MessageEvent;
 import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
 import com.cheep.utils.LogUtils;
@@ -45,6 +47,7 @@ import com.cheep.utils.Utility;
 import com.mixpanel.android.java_websocket.util.Base64;
 
 import org.apache.http.util.EncodingUtils;
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
@@ -69,8 +72,7 @@ public class WalletLinkActivity extends BaseAppCompatActivity implements View.On
         PaytmUtility.CheckBalanceResponseListener,
         PaytmUtility.GetChecksumResponseListener,
         PaytmUtility.AddMoneyResponseListener,
-        PaytmUtility.SavePaytmUserResponseListener,
-        PaytmUtility.WithdrawMoneyResponseListener {
+        PaytmUtility.SavePaytmUserResponseListener {
 
     private static final String TAG = LogUtils.makeLogTag(WalletLinkActivity.class);
     private ActivityWalletLinkBinding mActivityWalletLinkBinding;
@@ -106,6 +108,184 @@ public class WalletLinkActivity extends BaseAppCompatActivity implements View.On
     private String mMobileNumber;
     private boolean isLowBalance;
     private double payableAmount;
+
+    /**
+     * Callbacks (Verify Transaction) for Add Money
+     */
+    private final PaytmUtility.VerifyTransactionMoneyResponseListener mVerifyTransactionMoneyResponseListener = new PaytmUtility.VerifyTransactionMoneyResponseListener() {
+        @Override
+        public void paytmVerifyTransactionMoneyResponse(String responseInJson) {
+            Log.d(TAG, "paytmVerifyTransactionMoneyResponse() called with: responseInJson = [" + responseInJson + "]");
+            try {
+
+                // Hide the progresDialog
+                hideProgressDialog();
+
+                /**
+                 * If its empty, we just need to redirect the user with failure message
+                 */
+                if (TextUtils.isEmpty(responseInJson)) {
+                    // Create the message event and sent the broadcast to @PaymentChoiceActivity
+                    MessageEvent messageEvent = new MessageEvent();
+                    messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.PAYTM_RESPONSE;
+                    MessageEvent.PaytmResponse paytmResponse = new MessageEvent.PaytmResponse();
+                    paytmResponse.isSuccess = false;
+                    messageEvent.paytmResponse = paytmResponse;
+
+                    // Send the event
+                    EventBus.getDefault().post(messageEvent);
+                }
+
+                final JSONObject mRoot = new JSONObject(responseInJson);
+                JSONObject mData = mRoot.getJSONObject(NetworkUtility.TAGS.DATA);
+                JSONObject mCallbackResponse = mData.getJSONObject(NetworkUtility.TAGS.CallbackResponse);
+                String responseCode = mCallbackResponse.optString(NetworkUtility.PAYTM.PARAMETERS.RESPCODE);
+
+                MessageEvent.PaytmResponse paytmResponse = new MessageEvent.PaytmResponse();
+                paytmResponse.ResponseCode = responseCode;
+                paytmResponse.ResponsePayLoad = mCallbackResponse.toString();
+                if (!TextUtils.isEmpty(responseCode) && responseCode.equalsIgnoreCase(NetworkUtility.PAYTM.RESPONSE_CODES.LOGIN)) {
+                    // Close the screen and pass the success message to @com.cheep.activity.PaymentChoiceActivity
+                    paytmResponse.isSuccess = true;
+                } else {
+                    // Close the screen and pass the failure message to @com.cheep.activity.PaymentChoiceActivity
+                    paytmResponse.isSuccess = false;
+                }
+
+                // Create the message event and sent the broadcast to @PaymentChoiceActivity
+                MessageEvent messageEvent = new MessageEvent();
+                messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.PAYTM_RESPONSE;
+                messageEvent.paytmResponse = paytmResponse;
+
+                // Send the event
+                EventBus.getDefault().post(messageEvent);
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+
+                // Create the message event and sent the broadcast to @PaymentChoiceActivity
+                MessageEvent messageEvent = new MessageEvent();
+                messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.PAYTM_RESPONSE;
+                MessageEvent.PaytmResponse paytmResponse = new MessageEvent.PaytmResponse();
+                paytmResponse.isSuccess = false;
+                messageEvent.paytmResponse = paytmResponse;
+
+                // Send the event
+                EventBus.getDefault().post(messageEvent);
+            }
+
+            // Finish the activity at the end
+            finish();
+        }
+
+        @Override
+        public void volleyError() {
+            Log.d(TAG, "volleyError() called");
+            hideProgressDialog();
+
+            // Create the message event and sent the broadcast to @PaymentChoiceActivity
+            MessageEvent messageEvent = new MessageEvent();
+            messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.PAYTM_RESPONSE;
+            MessageEvent.PaytmResponse paytmResponse = new MessageEvent.PaytmResponse();
+            paytmResponse.isSuccess = false;
+            messageEvent.paytmResponse = paytmResponse;
+
+            // Send the event
+            EventBus.getDefault().post(messageEvent);
+
+            // Finish the activity at the end
+            finish();
+        }
+    };
+
+
+    /**
+     * Callbacks (Verify Transaction) for Add Money
+     */
+    private final PaytmUtility.WithdrawMoneyResponseListener mWithdrawMoneyResponseListener = new PaytmUtility.WithdrawMoneyResponseListener() {
+        @Override
+        public void paytmWithdrawMoneySuccessResponse(String responseInJsonOrInHTML) {
+            // Hide the progresDialog
+            hideProgressDialog();
+
+            /*
+             * If its empty, we just need to redirect the user with failure message
+             */
+            if (TextUtils.isEmpty(responseInJsonOrInHTML)) {
+                // Create the message event and sent the broadcast to @PaymentChoiceActivity
+                MessageEvent messageEvent = new MessageEvent();
+                messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.PAYTM_RESPONSE;
+                MessageEvent.PaytmResponse paytmResponse = new MessageEvent.PaytmResponse();
+                paytmResponse.isSuccess = false;
+                messageEvent.paytmResponse = paytmResponse;
+
+                // Send the event
+                EventBus.getDefault().post(messageEvent);
+            }
+
+
+            // Parse the data and revert back with response accordingly
+            try {
+                final JSONObject mRoot = new JSONObject(responseInJsonOrInHTML);
+                String responseCode = mRoot.optString(NetworkUtility.PAYTM.PARAMETERS.ResponseCode);
+
+                MessageEvent.PaytmResponse paytmResponse = new MessageEvent.PaytmResponse();
+                paytmResponse.ResponseCode = responseCode;
+                paytmResponse.ResponsePayLoad = responseInJsonOrInHTML;
+                if (!TextUtils.isEmpty(responseCode) && responseCode.equalsIgnoreCase(NetworkUtility.PAYTM.RESPONSE_CODES.LOGIN)) {
+                    // Close the screen and pass the success message to @com.cheep.activity.PaymentChoiceActivity
+                    paytmResponse.isSuccess = true;
+                } else {
+                    // Close the screen and pass the failure message to @com.cheep.activity.PaymentChoiceActivity
+                    paytmResponse.isSuccess = false;
+                }
+
+                // Create the message event and sent the broadcast to @PaymentChoiceActivity
+                MessageEvent messageEvent = new MessageEvent();
+                messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.PAYTM_RESPONSE;
+                messageEvent.paytmResponse = paytmResponse;
+
+                // Send the event
+                EventBus.getDefault().post(messageEvent);
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+
+                // Create the message event and sent the broadcast to @PaymentChoiceActivity
+                MessageEvent messageEvent = new MessageEvent();
+                messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.PAYTM_RESPONSE;
+                MessageEvent.PaytmResponse paytmResponse = new MessageEvent.PaytmResponse();
+                paytmResponse.isSuccess = false;
+                messageEvent.paytmResponse = paytmResponse;
+
+                // Send the event
+                EventBus.getDefault().post(messageEvent);
+            }
+
+            // Finish the activity at the end
+            finish();
+        }
+
+        @Override
+        public void volleyError() {
+            Log.d(TAG, "volleyError() called");
+            hideProgressDialog();
+
+            // Create the message event and sent the broadcast to @PaymentChoiceActivity
+            MessageEvent messageEvent = new MessageEvent();
+            messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.PAYTM_RESPONSE;
+            MessageEvent.PaytmResponse paytmResponse = new MessageEvent.PaytmResponse();
+            paytmResponse.isSuccess = false;
+            messageEvent.paytmResponse = paytmResponse;
+
+            // Send the event
+            EventBus.getDefault().post(messageEvent);
+
+            // Finish the activity at the end
+            finish();
+        }
+    };
+
 
     public static void newInstance(Context context, boolean isPaytm, String amount) {
         Intent intent = new Intent(context, WalletLinkActivity.class);
@@ -612,62 +792,6 @@ public class WalletLinkActivity extends BaseAppCompatActivity implements View.On
 
 
     ///////////////////////////////////////////////////////////Paytm Withdraw Money API call starts///////////////////////////////////////////////////////////
-    @Override
-    public void paytmWithdrawMoneySuccessResponse(String htmlResponse) {
-        mActivityWalletLinkBinding.webView.loadData(htmlResponse, "", "");
-        mActivityWalletLinkBinding.svMainLayout.setVisibility(View.GONE);
-        mActivityWalletLinkBinding.webView.setVisibility(View.VISIBLE);
-
-        Document document = Jsoup.parse(htmlResponse);
-        Log.d(TAG, "paytmAddMoneySuccessResponse: document :: " + document);
-        Elements inputElements = document.getElementsByTag("INPUT");
-        for (int i = 0; i < inputElements.size(); i++) {
-            Element element = inputElements.get(i);
-
-            Attributes attributes = element.attributes();
-
-            if (attributes.hasKeyIgnoreCase("NAME")) {
-                String value = attributes.getIgnoreCase("VALUE");
-                switch (attributes.getIgnoreCase("NAME")) {
-                    case NetworkUtility.PAYTM.PARAMETERS.RESPCODE:
-                        Log.d("RESPCODE", value);
-                        if (value.equals("802")) {
-                            Utility.showSnackBar(document.getElementsByAttributeValue("NAME", "RESPMSG").get(0).attr("VALUE"), mActivityWalletLinkBinding.getRoot());
-//                            mActivityWalletLinkBinding.webView.loadData(document.getElementsByAttributeValue("NAME", "STATUS").get(0).attr("VALUE"),"","");
-                            AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-                            builder.setTitle("Transaction status");
-                            builder.setMessage(document.getElementsByAttributeValue("NAME", "STATUS").get(0).attr("VALUE"));
-                            builder.setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                    finish();
-                                }
-                            });
-                            builder.create().show();
-                        }
-                        break;
-                    case NetworkUtility.PAYTM.PARAMETERS.RESPMSG:
-                        Log.d("RESPMSG", value);
-                        break;
-                    case NetworkUtility.PAYTM.PARAMETERS.STATUS:
-                        Log.d("STATUS", value);
-                        break;
-                    case NetworkUtility.PAYTM.PARAMETERS.MID:
-                        Log.d("MID", value);
-                        break;
-                    case NetworkUtility.PAYTM.PARAMETERS.TXNAMOUNT:
-                        Log.d("TXNAMOUNT", value);
-                        break;
-                    case NetworkUtility.PAYTM.PARAMETERS.ORDERID:
-                        Log.d("ORDERID", value);
-                        break;
-                }
-            }
-        }
-
-        hideProgressDialog();
-    }
-
     private void withdrawMoney() {
         if (!Utility.isConnected(mContext)) {
             Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityWalletLinkBinding.getRoot());
@@ -677,7 +801,7 @@ public class WalletLinkActivity extends BaseAppCompatActivity implements View.On
         //Show Progress
         showProgressDialog();
 
-        PaytmUtility.withdrawMoney(mContext, generatedOrderId, mAccessToken, amount, mChecksumHash, mResourceOwnerCustomerId, mMobileNumber, this);
+        PaytmUtility.withdrawMoney(mContext, generatedOrderId, mAccessToken, amount, mChecksumHash, mResourceOwnerCustomerId, mMobileNumber, mWithdrawMoneyResponseListener);
     }
     ///////////////////////////////////////////////////////////Paytm Withdraw Money API call ends///////////////////////////////////////////////////////////
 
@@ -804,11 +928,21 @@ public class WalletLinkActivity extends BaseAppCompatActivity implements View.On
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
             Log.d(TAG, "onPageStarted() called with: view = [" + view + "], url = [" + url + "], favicon = [" + favicon + "]");
             super.onPageStarted(view, url, favicon);
+            mActivityWalletLinkBinding.progress.setVisibility(View.VISIBLE);
         }
 
         @Override
         public void onPageFinished(WebView view, String url) {
             Log.d(TAG, "onPageFinished() called with: view = [" + view + "], url = [" + url + "]");
+            mActivityWalletLinkBinding.progress.setVisibility(View.GONE);
+            /*
+            Check if the callback url comes and go ahead
+             */
+            if (url.equalsIgnoreCase(NetworkUtility.WS.VERIFY_CHECKSUM)) {
+                showProgressDialog();
+                ///Call Webservice from here
+                PaytmUtility.callVerifyOrderTransaction(mContext, generatedOrderId, mVerifyTransactionMoneyResponseListener);
+            }
             super.onPageFinished(view, url);
         }
 
@@ -831,4 +965,6 @@ public class WalletLinkActivity extends BaseAppCompatActivity implements View.On
         }
 
     };
+
+
 }

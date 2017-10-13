@@ -116,6 +116,9 @@ public class NetworkUtility {
         //Refer and Earn
         public static final String REFER_BALANCE = BASE_URL + "customers/profile/getReferBalance";
         public static final String GET_AMOUNT_WITH_GST = BASE_URL + "customers/payment/getAmountWithGST";
+
+        // Paytm Verify Transaction based on Order
+        public static final String FETCH_CALLBACK_RESPONSE_FROM_PAYTM = "https://www.cheep.co.in/admin/api/customers/payment/getCallBackResponse";
     }
 
     public static class PAYTM {
@@ -171,6 +174,7 @@ public class NetworkUtility {
             public static final String MID = "MID";
             public static final String REQUEST_TYPE = "REQUEST_TYPE";
             public static final String ORDER_ID = "ORDER_ID";
+            public static final String order_id = "order_id";
             public static final String CUST_ID = "CUST_ID";
             public static final String TXN_AMOUNT = "TXN_AMOUNT";
             public static final String CHANNEL_ID = "CHANNEL_ID";
@@ -200,7 +204,8 @@ public class NetworkUtility {
             public static final String AuthMode = "AuthMode";
             public static final String CheckSum = "CheckSum";
             public static final String JsonData = "JsonData";
-            public static final String THEME="THEME";
+            public static final String THEME = "THEME";
+            public static final String ResponseCode = "ResponseCode";
         }
 
         public static final class RESPONSE_CODES {
@@ -236,7 +241,7 @@ public class NetworkUtility {
     }
 
     public interface TAGS {
-
+        String CallbackResponse = "callbackresponse";
         String vVERSION = "vVersion";
         String ePLATFORM = "ePlatform";
         String eUSERTYPE = "eUserType";
@@ -364,7 +369,8 @@ public class NetworkUtility {
         String MAX_REFER_DISCOUNT = "max_refer_discount";
         String USED_WALLET_BALANCE = "used_wallet_balance";
         String IS_INSTA_BOOKING = "is_insta_booking";
-        public static final String REFER_COUNT ="refer_count";
+        public static final String REFER_COUNT = "refer_count";
+
         interface VERSION_CHANGE_TYPE {
             int NORMAL = 0;
             int RECOMMENDED_TO_UPGRADE = 1;

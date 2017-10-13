@@ -650,5 +650,52 @@ public class PaytmUtility {
                 requestString);
         Volley.getInstance(mContext).addToRequestQueue(paytmNetworkRequest, NetworkUtility.PAYTM.WALLET_APIS.WITHDRAW_MONEY);
     }
+
     ///////////////////////////////////////////////////////Paytm Get Txn Status API call ends///////////////////////////////////////////////////////
+
+
+    /////////////////////////////////////////////////////// On Paytm Transaction response(Call to Our Server) ///////////////////////////////////////
+    public interface VerifyTransactionMoneyResponseListener {
+        void paytmVerifyTransactionMoneyResponse(String responseInJson);
+
+        void volleyError();
+    }
+
+    public static void callVerifyOrderTransaction(Context mContext,
+                                                  String generatedOrderId,
+                                                  final VerifyTransactionMoneyResponseListener listener) {
+
+        // Erro Listener
+        Response.ErrorListener mVerifyTransactionMoneyErrorListener = new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
+                listener.volleyError();
+            }
+        };
+
+        // Response Listener
+        Response.Listener mVerifyTransactionMoneyResponseListener = new Response.Listener() {
+            @Override
+            public void onResponse(Object response) {
+                Log.d(TAG, "onResponse() called with: response = [" + response + "]");
+                listener.paytmVerifyTransactionMoneyResponse(response.toString());
+            }
+        };
+
+        // Generate Parameters
+        Map<String, String> params = new HashMap<>();
+        params.put(NetworkUtility.PAYTM.PARAMETERS.order_id, generatedOrderId);
+
+        @SuppressWarnings("unchecked")
+        VolleyNetworkRequest paytmNetworkRequest = new VolleyNetworkRequest(
+                NetworkUtility.WS.FETCH_CALLBACK_RESPONSE_FROM_PAYTM,
+                mVerifyTransactionMoneyErrorListener,
+                mVerifyTransactionMoneyResponseListener,
+                null,
+                params,
+                null);
+        Volley.getInstance(mContext).addToRequestQueue(paytmNetworkRequest, NetworkUtility.WS.FETCH_CALLBACK_RESPONSE_FROM_PAYTM);
+    }
+/////////////////////////////////////////////////////// On Paytm Transaction response(Call to Our Server) ///////////////////////////////////////
 }
