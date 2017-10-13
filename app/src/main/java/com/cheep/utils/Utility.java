@@ -1092,6 +1092,9 @@ public class Utility {
 
         // when payment is done for insta booked task and complete
         int TASK_PAID_FOR_INSTA_BOOKING = 17;
+
+        // When Payment response comes from Paytm
+        int PAYTM_RESPONSE = 18;
     }
 
     public interface REQUEST_TYPE {

@@ -29,4 +29,22 @@ public class MessageEvent {
     // Used for Making Alert Enable/Disable
     public String total_ongoing_task;
 
+
+    // class that would going to store the details we will get from Paytm Response
+    public PaytmResponse paytmResponse;
+
+    /**
+     * Hold the data for Paytm Transaction response
+     */
+    public static class PaytmResponse {
+        // Decide whether the transaction is true or false
+        public boolean isSuccess;
+
+        // Response code in interger "01", "02",..
+        public String ResponseCode;
+
+        // This would be in JSON Formate
+        public String ResponsePayLoad; // In JSON Format
+    }
 }
+

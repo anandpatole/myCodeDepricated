@@ -7,6 +7,7 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -50,6 +51,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -97,6 +100,9 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
         mActivityPaymentChoiceBinding = DataBindingUtil.setContentView(this, R.layout.activity_payment_choice);
         initiateUI();
         setListeners();
+
+        // Register and Event Buss to get callback from various payment gateways
+        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -531,7 +537,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
             mTaskCreationParams.put(NetworkUtility.TAGS.PROMOCODE_PRICE, Utility.ZERO_STRING);
         }
 
-        mTaskCreationParams.put(NetworkUtility.TAGS.QUOTE_AMOUNT,  providerModel.spWithoutGstQuotePrice);
+        mTaskCreationParams.put(NetworkUtility.TAGS.QUOTE_AMOUNT, providerModel.spWithoutGstQuotePrice);
         mTaskCreationParams.put(NetworkUtility.TAGS.PAYABLE_AMOUNT, providerModel.quotePrice);
         mTaskCreationParams.put(NetworkUtility.TAGS.PAYMENT_LOG, response);
         mTaskCreationParams.put(NetworkUtility.TAGS.PAYMENT_METHOD, paymentMethod);
@@ -1344,4 +1350,33 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        // Unregister the listerners you register in OnCreate method
+        try {
+            EventBus.getDefault().unregister(this);
+        } catch (Exception e) {
+
+        }
+        super.onDestroy();
+
+    }
+
+    /**
+     * Event Bus Callbacks
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(MessageEvent event) {
+        Log.d(TAG, "onMessageEvent() called with: event = [" + event.BROADCAST_ACTION + "]");
+        if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.PAYTM_RESPONSE) {
+            // Check the response <code></code>
+            if (event.paytmResponse.isSuccess) {
+                // show dialog
+                Utility.showToast(mContext, "Paytm Puru have giteeka na hawale vatan sathio!!!!! :) ");
+//                TODO: Need to start the task from here
+            } else {
+                Utility.showToast(mContext, getString(R.string.msg_payment_failed));
+            }
+        }
+    }
 }
