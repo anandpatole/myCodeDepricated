@@ -462,7 +462,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
 <!--
     <string name="label_refer_and_earn_share_body">Please download CHEEP app from this %1$s and use this referral code %2$s for payment.</string>
 -->
-    <string name="label_refer_and_earn_share_body">Check out this awesome new app, the best place for service professionals, &amp; get Rs. 50 off! Just download it %1$s, use the code %2$s</string>
+    <string name="label_refer_and_earn_share_body">Check out this awesome new app, the best place for service professionals &amp; get Rs. 50 off! Just download it from %1$s, use the code %2$s</string>
     <string name="label_share_subject">Refer &amp; Earn</string>
     <string name="alert_strategic_partner_unavailable_in_location">This service is not available in your location</string>
 
