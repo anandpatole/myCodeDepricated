@@ -338,21 +338,6 @@ public class Utility {
         }
         String encryptedText = Base64.encodeBytes(encryptedtextInBytes);
         LogUtils.LOGI("TAG", "applyAESEncryption: Encrypted Text" + encryptedText);
-
-        // Decrypt it
-       /* byte[] decryptedTextInBytes = null;
-        try {
-            decryptedTextInBytes = cryptor.decryptData(encryptedText.getBytes(), password.toCharArray());
-        } catch (CryptorException e) {
-            // Something went wrong
-            e.printStackTrace();
-        }
-
-        if (decryptedTextInBytes != null) {
-            String decryptedText = new String(decryptedTextInBytes);
-            LogUtils.LOGI("TAG", "applyAESEncryption: decrypted Text" + decryptedText);
-        }*/
-
         return encryptedText;
     }
 

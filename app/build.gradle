@@ -158,7 +158,6 @@ android {
         exclude 'META-INF/NOTICE'
         exclude 'META-INF/LICENSE'
     }
-
 }
 
 //Added to resolve this error
@@ -173,7 +172,7 @@ ext {
     supportLibVer = '26.0.2'
 //    supportLibVer = '25.4.0'
     gsonLibVer = '2.7'
-    playServiceVer = '11.2.2'
+    playServiceVer = '11.4.2'
 //    playServiceVer = '10.2.0'
 }
 
@@ -246,8 +245,8 @@ dependencies {
     compile 'com.payu.custombrowser:payu-custom-browser:5.3.7'
     compile 'com.payu.magicretry:magicretry:1.0.0'
 
-    //HotLine integration(For Chat to Cheep Admin)
-    compile 'com.github.freshdesk:hotline-android:1.2.4'
+    // HotLine integration(For Chat to Cheep Admin)
+    compile 'com.github.freshdesk:hotline-android:1.2.5'
     compile 'com.appsflyer:af-android-sdk:4.7.2@aar'
     compile 'com.amazonaws:aws-android-sdk-s3:2.2.22'
 

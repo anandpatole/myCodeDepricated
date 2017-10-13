@@ -4,11 +4,13 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
+import android.support.v8.renderscript.Double2;
 import android.text.Editable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
@@ -25,6 +27,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.LinearLayout;
@@ -37,9 +40,11 @@ import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
 import com.cheep.utils.LogUtils;
 import com.cheep.utils.PaytmUtility;
+import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.Utility;
 import com.mixpanel.android.java_websocket.util.Base64;
 
+import org.apache.http.util.EncodingUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
@@ -49,6 +54,10 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.HashMap;
+import java.util.Map;
 
 import static com.cheep.network.NetworkUtility.PAYTM.PARAMETERS.orderId;
 import static com.cheep.network.NetworkUtility.PAYTM.PARAMETERS.response;
@@ -96,6 +105,7 @@ public class WalletLinkActivity extends BaseAppCompatActivity implements View.On
     private String generatedOrderId;
     private String mMobileNumber;
     private boolean isLowBalance;
+    private double payableAmount;
 
     public static void newInstance(Context context, boolean isPaytm, String amount) {
         Intent intent = new Intent(context, WalletLinkActivity.class);
@@ -166,13 +176,29 @@ public class WalletLinkActivity extends BaseAppCompatActivity implements View.On
                 }
                 if (isValidated()) {
                     if (BTN_WHICH == BTN_IS_SEND_OTP) {
+                        /**
+                         * Hide the Keyboard if it opened
+                         */
+                        Utility.hideKeyboard(this);
                         sendOTP();
                     } else if (BTN_WHICH == BTN_IS_PROCEED) {
+                        /**
+                         * Hide the Keyboard if it opened
+                         */
+                        Utility.hideKeyboard(this);
                         verifyOTP();
                     } else if (BTN_WHICH == BTN_IS_ADD_AMOUNT) {
+                        /**
+                         * Hide the Keyboard if it opened
+                         */
+                        Utility.hideKeyboard(this);
                         callgetChecksum();
 //                        addMoney();
                     } else if (BTN_WHICH == BTN_IS_CONFIRM) {
+                        /**
+                         * Hide the Keyboard if it opened
+                         */
+                        Utility.hideKeyboard(this);
                         withdrawMoney();
                     }
                 }
@@ -260,6 +286,8 @@ public class WalletLinkActivity extends BaseAppCompatActivity implements View.On
             mActivityWalletLinkBinding.etMobileNumber.setText(Utility.EMPTY_STRING);
             mActivityWalletLinkBinding.etMobileNumber.setTextColor(ContextCompat.getColor(mContext, R.color.splash_gradient_end));
             mActivityWalletLinkBinding.etMobileNumber.setHint(getString(R.string.label_enter_amount));
+            mActivityWalletLinkBinding.etMobileNumber.setText(String.valueOf(payableAmount));
+            mActivityWalletLinkBinding.etMobileNumber.setEnabled(false);
             mActivityWalletLinkBinding.etMobileNumber.setGravity(Gravity.CENTER);
             mActivityWalletLinkBinding.tvSendOtp.setText(getString(R.string.label_add_amount));
             mActivityWalletLinkBinding.tvSendOtp.setOnClickListener(this);
@@ -310,7 +338,7 @@ public class WalletLinkActivity extends BaseAppCompatActivity implements View.On
 
     @Override
     public void paytmInvalidMobileNumber() {
-        Utility.showSnackBar(getString(R.string.validate_phone_number_length), mActivityWalletLinkBinding.getRoot());
+        Utility.showSnackBar(getString(R.string.validate_phone_number), mActivityWalletLinkBinding.getRoot());
         hideProgressDialog();
     }
 
@@ -331,7 +359,6 @@ public class WalletLinkActivity extends BaseAppCompatActivity implements View.On
         Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityWalletLinkBinding.getRoot());
         hideProgressDialog();
     }
-
 
     @Override
     public void showSpecificErrorMessage(String errorMessage) {
@@ -401,7 +428,6 @@ public class WalletLinkActivity extends BaseAppCompatActivity implements View.On
         try {
             requestGuid = jsonObject.getString(NetworkUtility.PAYTM.PARAMETERS.requestGuid);
             paytmReturnedOrderId = jsonObject.getString(orderId);
-
             JSONObject responseParamJson = jsonObject.getJSONObject(response);
             totalBalance = responseParamJson.getDouble(NetworkUtility.PAYTM.PARAMETERS.totalBalance);
             paytmWalletBalance = responseParamJson.getDouble(NetworkUtility.PAYTM.PARAMETERS.paytmWalletBalance);
@@ -415,10 +441,11 @@ public class WalletLinkActivity extends BaseAppCompatActivity implements View.On
         if (amount.contains(Utility.COMMA)) {
             amount = amount.replace(Utility.COMMA, Utility.EMPTY_STRING);
         }
+        isLowBalance = paytmWalletBalance < Double.parseDouble(amount);
 
-        isLowBalance = paytmWalletBalance > Double.parseDouble(amount);
         if (isLowBalance) {
             BTN_WHICH = BTN_IS_ADD_AMOUNT;
+            payableAmount = Math.ceil(Double.parseDouble(amount) - paytmWalletBalance);
         } else {
             BTN_WHICH = BTN_IS_CONFIRM;
             callgetChecksum();
@@ -445,6 +472,7 @@ public class WalletLinkActivity extends BaseAppCompatActivity implements View.On
 
     @Override
     public void paytmAddMoneySuccessResponse(String htmlResponse) {
+
         mActivityWalletLinkBinding.webView.setWebChromeClient(new WebChromeClient() {
 
         });
@@ -457,12 +485,14 @@ public class WalletLinkActivity extends BaseAppCompatActivity implements View.On
 
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+                Log.d(TAG, "shouldOverrideUrlLoading() called with: view = [" + view + "], request = [" + request + "]");
                 view.loadUrl(view.getUrl());
                 return true;
             }
         });
         mActivityWalletLinkBinding.webView.getSettings().setJavaScriptEnabled(true);
-        mActivityWalletLinkBinding.webView.loadData(htmlResponse, "", "");
+        mActivityWalletLinkBinding.webView.loadDataWithBaseURL(NetworkUtility.PAYTM.WALLET_APIS.ADD_MONEY, htmlResponse, "text/html", "UTF-8", null);
+//        mActivityWalletLinkBinding.webView.loadData(htmlResponse, "text/html", "UTF-8");
         mActivityWalletLinkBinding.svMainLayout.setVisibility(View.GONE);
         mActivityWalletLinkBinding.webView.setVisibility(View.VISIBLE);
 
@@ -525,7 +555,58 @@ public class WalletLinkActivity extends BaseAppCompatActivity implements View.On
         //Show Progress
         showProgressDialog();
 
-        PaytmUtility.addMoney(mContext, generatedOrderId, mAccessToken, mEtText, mChecksumHash, mResourceOwnerCustomerId, mMobileNumber, this);
+        /**
+         * We need to call Webview with provided POST datas
+         */
+        Map<String, String> bodyParams = new HashMap<>();
+        bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.CHANNEL_ID, BuildConfig.CHANNEL_ID);
+        bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.WEBSITE, BuildConfig.WEBSITE);
+        bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.ORDER_ID, generatedOrderId);
+        bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.INDUSTRY_TYPE_ID, BuildConfig.INDUSTRY_TYPE_ID);
+        bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.CALLBACK_URL, NetworkUtility.WS.VERIFY_CHECKSUM);
+        bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.SSO_TOKEN, mAccessToken);
+        bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.REQUEST_TYPE, Utility.ADD_MONEY);
+        bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.TXN_AMOUNT, mEtText);
+        bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.CHECKSUMHASH, mChecksumHash);
+        bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.MID, BuildConfig.SANDBOX_MERCHANT_ID);
+        bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.CUST_ID, mResourceOwnerCustomerId);
+        bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.MOBILE_NO, mMobileNumber);
+        bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.EMAIL, PreferenceUtility.getInstance(mContext).getUserDetails().Email);
+        bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.THEME, "merchant");
+
+        String postData = generatePostDataString(bodyParams); //"username=" + URLEncoder.encode(my_username, "UTF-8") + "&password=" + URLEncoder.encode(my_password, "UTF-8");
+
+        if (Build.VERSION.SDK_INT >= 21) {
+            mActivityWalletLinkBinding.webView.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
+        }
+        mActivityWalletLinkBinding.webView.setWebViewClient(mWebViewClient);
+        mActivityWalletLinkBinding.webView.getSettings().setJavaScriptEnabled(true);
+        mActivityWalletLinkBinding.webView.postUrl(NetworkUtility.PAYTM.WALLET_APIS.ADD_MONEY, postData.getBytes());
+
+        // Show the webview
+        mActivityWalletLinkBinding.svMainLayout.setVisibility(View.GONE);
+        mActivityWalletLinkBinding.webView.setVisibility(View.VISIBLE);
+
+//        PaytmUtility.addMoney(mContext, generatedOrderId, mAccessToken, mEtText, mChecksumHash, mResourceOwnerCustomerId, mMobileNumber, this);
+    }
+
+    private String generatePostDataString(Map<String, String> bodyParams) {
+        StringBuilder postData = new StringBuilder();
+        if (bodyParams == null) {
+            return postData.toString();
+        }
+        for (String key : bodyParams.keySet()) {
+            if (!postData.toString().isEmpty()) {
+                postData = postData.append("&");
+            }
+            try {
+                postData = postData.append(key).append("=").append(URLEncoder.encode(bodyParams.get(key), "UTF-8"));
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+        }
+        Log.d(TAG, "generatePostDataString() returned: " + postData.toString());
+        return postData.toString();
     }
     ///////////////////////////////////////////////////////////Paytm Add Money API call ends///////////////////////////////////////////////////////////
 
@@ -641,7 +722,6 @@ public class WalletLinkActivity extends BaseAppCompatActivity implements View.On
     @Override
     public void volleySavePaytmUserSuccessResponse() {
         Log.d(TAG, "volleySavePaytmUserSuccessResponse: user successfully saved");
-        hideProgressDialog();
     }
 
     private void savePaytmUserDetails() {
@@ -715,4 +795,40 @@ public class WalletLinkActivity extends BaseAppCompatActivity implements View.On
         Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.PAYTM.WALLET_APIS.WITHDRAW_MONEY);
         super.onDestroy();
     }
+
+    /**
+     * Customized webview client for Payment Webview
+     */
+    private WebViewClient mWebViewClient = new WebViewClient() {
+        @Override
+        public void onPageStarted(WebView view, String url, Bitmap favicon) {
+            Log.d(TAG, "onPageStarted() called with: view = [" + view + "], url = [" + url + "], favicon = [" + favicon + "]");
+            super.onPageStarted(view, url, favicon);
+        }
+
+        @Override
+        public void onPageFinished(WebView view, String url) {
+            Log.d(TAG, "onPageFinished() called with: view = [" + view + "], url = [" + url + "]");
+            super.onPageFinished(view, url);
+        }
+
+        @Override
+        public void onPageCommitVisible(WebView view, String url) {
+            Log.d(TAG, "onPageCommitVisible() called with: view = [" + view + "], url = [" + url + "]");
+            super.onPageCommitVisible(view, url);
+        }
+
+        @Override
+        public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+            Log.d(TAG, "shouldOverrideUrlLoading() called with: view = [" + view + "], request = [" + request + "]");
+            return false;
+        }
+
+        @Override
+        public boolean shouldOverrideUrlLoading(WebView view, String url) {
+            Log.d(TAG, "shouldOverrideUrlLoading() called with: view = [" + view + "], url = [" + url + "]");
+            return false;
+        }
+
+    };
 }

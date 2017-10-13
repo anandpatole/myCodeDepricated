@@ -204,7 +204,7 @@ public class NetworkUtility {
         }
 
         public static final class RESPONSE_CODES {
-            //Send otp API response codes
+            // Send otp API response codes
             public static final String LOGIN = "01";
             public static final String REGISTER = "02";
             public static final String INVALID_AUTHORIZATION = "430";
@@ -214,14 +214,14 @@ public class NetworkUtility {
             public static final String BAD_REQUEST = "434";
             public static final String INVALID_EMAIL = "465";
 
-            //verify otp/get access token API response codes
+            // Verify otp/get access token API response codes
             public static final String INVALID_OTP = "403";
             public static final String INVALID_CODE = "513";
 
-            //Get User Info / validate token API response codes
+            // Get User Info / validate token API response codes
             public static final String INVALID_TOKEN = "530";
 
-            //Check Balance API response codes
+            // Check Balance API response codes
             public static final String SUCCESS = "SUCCESS";
             public static final String USER_DOESNOT_EXISTS = "404";
             public static final String UNKNOWN_ERROR = "GE_0001";

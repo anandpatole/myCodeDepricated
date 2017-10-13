@@ -55,7 +55,6 @@ import java.util.Map;
 /**
  * Created by pankaj on 9/27/16.
  */
-
 public class HomeFragment extends BaseFragment {
     public static final String TAG = "HomeFragment";
 

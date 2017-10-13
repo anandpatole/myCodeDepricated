@@ -61,7 +61,7 @@ public class PaytmNetworkRequest extends StringRequest {
                                Response.ErrorListener errorListener,
                                Map<String, String> headerParams,
                                String bodyParams,
-                                Map<String, File> fileParams) {
+                               Map<String, File> fileParams) {
         super(method, url, listener, errorListener);
         Log.d(TAG, "PaytmNetworkRequest() called with: method = [" + method + "], url = [" + url + "], listener = [" + listener + "], errorListener = [" + errorListener + "], headerParams = [" + headerParams + "], bodyParams = [" + bodyParams + "]");
         setRetryPolicy(new DefaultRetryPolicy(DEFAULT_TIMEOUT_MS,
@@ -109,14 +109,14 @@ public class PaytmNetworkRequest extends StringRequest {
 
     @Override
     protected Map<String, String> getParams() throws AuthFailureError {
-        if (mIsWalletApi){
+        if (mIsWalletApi) {
             HashMap<String, String> map = new HashMap<>();
             JSONObject jObject = null;
             try {
                 jObject = new JSONObject(mBodyParams);
                 Iterator<?> keys = jObject.keys();
 
-                while( keys.hasNext() ) {
+                while (keys.hasNext()) {
                     String key = (String) keys.next();
                     String value = jObject.getString(key);
                     map.put(key, value);
@@ -125,8 +125,7 @@ public class PaytmNetworkRequest extends StringRequest {
                 e.printStackTrace();
             }
             return map;
-        }
-        else {
+        } else {
             return super.getParams();
         }
     }
