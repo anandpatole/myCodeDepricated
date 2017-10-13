@@ -32,6 +32,7 @@ import com.cheep.databinding.FragmentReferAndEarnBinding;
 import com.cheep.dialogs.AcknowledgementDialogWithoutProfilePic;
 import com.cheep.dialogs.ReferAndEarnDialogKnowMore;
 import com.cheep.interfaces.DrawerLayoutInteractionListener;
+import com.cheep.model.UserDetails;
 import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
@@ -211,6 +212,10 @@ public class ReferAndEarnFragment extends BaseFragment {
                         String referralBalance = (jsonObject.optJSONObject(NetworkUtility.TAGS.DATA)).optString(NetworkUtility.TAGS.WALLET_BALANCE);
                         String referralCount = (jsonObject.optJSONObject(NetworkUtility.TAGS.DATA)).optString(NetworkUtility.TAGS.REFER_COUNT);
                         String maxDiscountAmount = (jsonObject.optJSONObject(NetworkUtility.TAGS.DATA)).optString(NetworkUtility.TAGS.MAX_REFER_DISCOUNT);
+                        String referCode = (jsonObject.optJSONObject(NetworkUtility.TAGS.DATA)).optString(NetworkUtility.TAGS.REFER_CODE);
+                        UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
+                        userDetails.refer_code = referCode;
+                        mfragmentReferAndEarnBinding.tvReferralCode.setText(PreferenceUtility.getInstance(mContext).getUserDetails().refer_code);
                         if (Double.parseDouble(referralCount) > 0) {
                             double totalEarning = 0;
                             try {

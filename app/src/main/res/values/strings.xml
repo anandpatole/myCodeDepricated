@@ -387,6 +387,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
 
     <string name="no_pros_in_this_category">No PROs in this category</string>
     <string name="step_1_desc_for_strategic_partner">Please select as many services you need from the list below</string>
+    <string name="validation_step_1_desc_for_strategic_partner">Oops! Please select a service from the above list to continue</string>
     <string name="step_2_desc_for_strategic_partner">Please share some more information</string>
     <string name="step_3_desc_for_strategic_partner">Please check details below and pay</string>
     <string name="continue_">Continue</string>

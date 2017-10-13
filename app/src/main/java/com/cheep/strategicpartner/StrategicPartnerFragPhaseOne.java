@@ -142,7 +142,7 @@ public class StrategicPartnerFragPhaseOne extends BaseFragment {
                             }
                         }, 500);
                     } else {
-                        Utility.showSnackBar(getString(R.string.step_1_desc_for_strategic_partner), mFragmentStrategicPartnerPhaseOneBinding.getRoot());
+                        Utility.showSnackBar(getString(R.string.validation_step_1_desc_for_strategic_partner), mFragmentStrategicPartnerPhaseOneBinding.getRoot());
                     }
                 }
 
