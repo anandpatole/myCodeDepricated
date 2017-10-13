@@ -345,7 +345,7 @@ public class Utility {
         LogUtils.LOGD(TAG, "getHeightFromWidthForSixteenNineRatio() called with: width = [" + width + "]");
         LogUtils.LOGD(TAG, "getHeightFromWidthForSixteenNineRatio() returned: " + ((width * 9) / 16));
         return ((width * 9) / 16);
-    }
+    }*/
 
     public static int getHeightFromWidthForTwoOneRatio(int width) {
 //        LogUtils.LOGD(TAG, "getHeightFromWidthForTwoOneRatio() called with: width = [" + width + "]");

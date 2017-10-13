@@ -348,7 +348,7 @@ public class NetworkUtility {
         String PROMOCODE_PRICE = "promocode_price";
         String HASH_STRING = "hash_string";
         String PAYMENT_METHOD = "payment_method";
-
+       String REFER_CODE = "refer_code";
         // paytm params
         String ORDER_ID = "ORDER_ID";
         String TXN_AMOUNT = "TXN_AMOUNT";
