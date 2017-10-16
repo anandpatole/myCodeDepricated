@@ -708,7 +708,8 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
 
 //                        callTaskDetailWS();
 
-                        if (Utility.TASK_STATUS.COD.equalsIgnoreCase(taskStatus) || Utility.TASK_STATUS.PAID.equalsIgnoreCase(taskStatus)) {
+                        if (Utility.TASK_STATUS.COD.equalsIgnoreCase(taskStatus)
+                                || Utility.TASK_STATUS.PAID.equalsIgnoreCase(taskStatus)) {
                             //We are commenting it because from here we are intiating a payment flow and
                             // after that we need to call update payment status on server
                             String taskPaidAmount = jsonData.optString(NetworkUtility.TAGS.TASK_PAID_AMOUNT);
@@ -1372,8 +1373,9 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
             // Check the response <code></code>
             if (event.paytmResponse.isSuccess) {
                 // show dialog
-                Utility.showToast(mContext, "Paytm Puru have giteeka na hawale vatan sathio!!!!! :) ");
+//                Utility.showToast(mContext, "Paytm Puru have giteeka na hawale vatan sathio!!!!! :) ");
 //                TODO: Need to start the task from here
+                updatePaymentStatus(true, event.paytmResponse.ResponsePayLoad, isAdditional != 0);
             } else {
                 Utility.showToast(mContext, getString(R.string.msg_payment_failed));
             }
