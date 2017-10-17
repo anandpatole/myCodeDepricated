@@ -1360,7 +1360,6 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
 
         }
         super.onDestroy();
-
     }
 
     /**

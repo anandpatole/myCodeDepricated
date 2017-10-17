@@ -64,7 +64,7 @@ android {
         //Paytm
         buildConfigField("String", "PAYTM_OAUTH_BASE_URL", getProperty("PAYTM_OAUTH_STAGING_BASE_URL"));
         buildConfigField("String", "PAYTM_WALLET_BASE_URL", getProperty("PAYTM_WALLET_STAGING_BASE_URL"));
-        buildConfigField("String", "PAYTM_CHECK_BALANCE_STAGING_URL", getProperty("PAYTM_CHECK_BALANCE_STAGING_URL"));
+        buildConfigField("String", "PAYTM_CHECK_BALANCE_URL", getProperty("PAYTM_CHECK_BALANCE_STAGING_URL"));
         buildConfigField("String", "SANDBOX_MERCHANT_ID", getProperty("SANDBOX_MERCHANT_ID"));
         buildConfigField("String", "MERCHANT_KEY", getProperty("MERCHANT_KEY"));
         buildConfigField("String", "CLIENT_ID", getProperty("CLIENT_ID"));
@@ -109,6 +109,7 @@ android {
         debug {
             versionNameSuffix "-SNAPSHOT"
         }
+
         staging {
             versionNameSuffix "-STAGING"
             // Below Key value pairs would get change based on Buildtype
@@ -120,7 +121,7 @@ android {
             //Paytm production url
             buildConfigField("String", "PAYTM_OAUTH_BASE_URL", getProperty("PAYTM_OAUTH_PRODUCTION_BASE_URL"))
             buildConfigField("String", "PAYTM_WALLET_BASE_URL", getProperty("PAYTM_WALLET_PRODUCTION_BASE_URL"))
-            buildConfigField("String", "PAYTM_CHECK_BALANCE_PRODUCTION_URL", getProperty("PAYTM_CHECK_BALANCE_PRODUCTION_URL"))
+            buildConfigField("String", "PAYTM_CHECK_BALANCE_URL", getProperty("PAYTM_CHECK_BALANCE_PRODUCTION_URL"))
             signingConfig signingConfigs.debug
         }
 
@@ -145,7 +146,7 @@ android {
             //Paytm production url
             buildConfigField("String", "PAYTM_OAUTH_BASE_URL", getProperty("PAYTM_OAUTH_PRODUCTION_BASE_URL"))
             buildConfigField("String", "PAYTM_WALLET_BASE_URL", getProperty("PAYTM_WALLET_PRODUCTION_BASE_URL"))
-            buildConfigField("String", "PAYTM_CHECK_BALANCE_PRODUCTION_URL", getProperty("PAYTM_CHECK_BALANCE_PRODUCTION_URL"))
+            buildConfigField("String", "PAYTM_CHECK_BALANCE_URL", getProperty("PAYTM_CHECK_BALANCE_PRODUCTION_URL"))
             signingConfig signingConfigs.debug
         }
         release {
@@ -157,7 +158,7 @@ android {
             //Paytm production url
             buildConfigField("String", "PAYTM_OAUTH_BASE_URL", getProperty("PAYTM_OAUTH_PRODUCTION_BASE_URL"))
             buildConfigField("String", "PAYTM_WALLET_BASE_URL", getProperty("PAYTM_WALLET_PRODUCTION_BASE_URL"))
-            buildConfigField("String", "PAYTM_CHECK_BALANCE_PRODUCTION_URL", getProperty("PAYTM_CHECK_BALANCE_PRODUCTION_URL"))
+            buildConfigField("String", "PAYTM_CHECK_BALANCE_URL", getProperty("PAYTM_CHECK_BALANCE_PRODUCTION_URL"))
             signingConfig signingConfigs.debug
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
