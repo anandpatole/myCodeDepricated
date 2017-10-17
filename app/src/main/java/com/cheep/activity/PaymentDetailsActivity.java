@@ -21,7 +21,6 @@ import android.widget.TextView;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.cheep.BuildConfig;
 import com.cheep.R;
 import com.cheep.custom_view.BottomAlertDialog;
 import com.cheep.custom_view.CFEditTextRegular;
@@ -43,7 +42,6 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -249,7 +247,7 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
 
             }
         });
-        // Add Desclaimer
+        // Add Declaimer
         mActivityPaymentDetailBinding.imgCheepCodeClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

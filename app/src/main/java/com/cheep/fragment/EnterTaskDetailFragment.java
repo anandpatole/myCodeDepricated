@@ -147,12 +147,14 @@ public class EnterTaskDetailFragment extends BaseFragment {
         if (mTaskCreationActivity == null) {
             return;
         }
-        // Task Description
-        if (mTaskCreationActivity.getSelectedSubService().sub_cat_id != -1) {
-            isTaskDescriptionVerified = true;
-        } else {
-            isTaskDescriptionVerified = !TextUtils.isEmpty(mFragmentEnterTaskDetailBinding.editTaskDesc.getText().toString().trim());
+
+        if (mTaskCreationActivity.getSelectedSubService() == null) {
+            return;
         }
+
+        // Task Description
+        isTaskDescriptionVerified = mTaskCreationActivity.getSelectedSubService().sub_cat_id != -1 ||
+                !TextUtils.isEmpty(mFragmentEnterTaskDetailBinding.editTaskDesc.getText().toString().trim());
 
         // When Verification
         isTaskWhenVerified = !TextUtils.isEmpty(mFragmentEnterTaskDetailBinding.textTaskWhen.getText().toString().trim());
