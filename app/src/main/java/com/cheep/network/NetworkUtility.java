@@ -369,6 +369,7 @@ public class NetworkUtility {
         String MAX_REFER_DISCOUNT = "max_refer_discount";
         String USED_WALLET_BALANCE = "used_wallet_balance";
         String IS_INSTA_BOOKING = "is_insta_booking";
+        String AMOUNT= "amount";
         public static final String REFER_COUNT = "refer_count";
 
         interface VERSION_CHANGE_TYPE {

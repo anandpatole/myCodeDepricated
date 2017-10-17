@@ -679,6 +679,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
         mParams.put(NetworkUtility.TAGS.PAYMENT_STATUS, isSuccess ? Utility.PAYMENT_STATUS.COMPLETED : Utility.PAYMENT_STATUS.FAILED);
         mParams.put(NetworkUtility.TAGS.PAYMENT_LOG, response);
         mParams.put(NetworkUtility.TAGS.USED_WALLET_BALANCE, taskDetailModel.usedWalletAmount);
+        mParams.put(NetworkUtility.TAGS.PAYABLE_AMOUNT, isAdditional != 0 ? taskDetailModel.additionalQuoteAmount : providerModel.quotePrice);
         // Url is based on condition if address id is greater then 0 then it means we need to update the existing address
         VolleyNetworkRequest mVolleyNetworkRequestForSPList = new VolleyNetworkRequest(NetworkUtility.WS.PAYMENT
                 , mCallUpdatePaymentStatusWSErrorListener
@@ -1375,7 +1376,16 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
                 // show dialog
 //                Utility.showToast(mContext, "Paytm Puru have giteeka na hawale vatan sathio!!!!! :) ");
 //                TODO: Need to start the task from here
-                updatePaymentStatus(true, event.paytmResponse.ResponsePayLoad, isAdditional != 0);
+
+                if (isStrategicPartner)
+                    callCreateStrategicPartnerTaskWS(event.paytmResponse.ResponsePayLoad);
+                else if (isInstaBooking)
+                    callCreateInstaBookingTaskWS(event.paytmResponse.ResponsePayLoad);
+                else if (isAdditional != 0)
+                    updatePaymentStatus(true, event.paytmResponse.ResponsePayLoad, true);
+                else
+                    updatePaymentStatus(true, event.paytmResponse.ResponsePayLoad, false);
+
             } else {
                 Utility.showToast(mContext, getString(R.string.msg_payment_failed));
             }
