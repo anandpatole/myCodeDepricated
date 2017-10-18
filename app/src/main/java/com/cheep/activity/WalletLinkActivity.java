@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
-import android.support.v8.renderscript.Double2;
 import android.text.Editable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
@@ -20,7 +19,6 @@ import android.text.TextWatcher;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
-import android.util.EventLog;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
@@ -33,7 +31,6 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.LinearLayout;
 
-import com.cheep.BootstrapConstant;
 import com.cheep.BuildConfig;
 import com.cheep.R;
 import com.cheep.databinding.ActivityWalletLinkBinding;
@@ -46,7 +43,6 @@ import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.Utility;
 import com.mixpanel.android.java_websocket.util.Base64;
 
-import org.apache.http.util.EncodingUtils;
 import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -147,18 +143,37 @@ public class WalletLinkActivity extends BaseAppCompatActivity implements View.On
                 if (!TextUtils.isEmpty(responseCode) && responseCode.equalsIgnoreCase(NetworkUtility.PAYTM.RESPONSE_CODES.LOGIN)) {
                     // Close the screen and pass the success message to @com.cheep.activity.PaymentChoiceActivity
                     paytmResponse.isSuccess = true;
+
+                    // TODO : Here we need to call withdraw api
+//                    callASasagetChecksum();
+
+//                    TODO : Once withdraw api called, need to remove below code
+                    // Create the message event and sent the broadcast to @PaymentChoiceActivity
+                    MessageEvent messageEvent = new MessageEvent();
+                    messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.PAYTM_RESPONSE;
+                    messageEvent.paytmResponse = paytmResponse;
+
+                    // Send the event
+                    EventBus.getDefault().post(messageEvent);
+
+                    // Finish the activity at the end
+                    finish();
+
                 } else {
                     // Close the screen and pass the failure message to @com.cheep.activity.PaymentChoiceActivity
                     paytmResponse.isSuccess = false;
+
+                    // Create the message event and sent the broadcast to @PaymentChoiceActivity
+                    MessageEvent messageEvent = new MessageEvent();
+                    messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.PAYTM_RESPONSE;
+                    messageEvent.paytmResponse = paytmResponse;
+
+                    // Send the event
+                    EventBus.getDefault().post(messageEvent);
+
+                    // Finish the activity at the end
+                    finish();
                 }
-
-                // Create the message event and sent the broadcast to @PaymentChoiceActivity
-                MessageEvent messageEvent = new MessageEvent();
-                messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.PAYTM_RESPONSE;
-                messageEvent.paytmResponse = paytmResponse;
-
-                // Send the event
-                EventBus.getDefault().post(messageEvent);
 
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -172,10 +187,12 @@ public class WalletLinkActivity extends BaseAppCompatActivity implements View.On
 
                 // Send the event
                 EventBus.getDefault().post(messageEvent);
+
+                // Finish the activity at the end
+                finish();
             }
 
-            // Finish the activity at the end
-            finish();
+
         }
 
         @Override
