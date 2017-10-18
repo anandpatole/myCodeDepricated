@@ -382,7 +382,7 @@ public class WalletLinkActivity extends BaseAppCompatActivity implements View.On
 
     private void setupActionbar() {
         if (isPaytm)
-            mActivityWalletLinkBinding.textTitle.setText(getString(R.string.label_link_x, getString(R.string.label_paytm)));
+            mActivityWalletLinkBinding.textTitle.setText(getString(R.string.label_recharge_wallet));
         else
             mActivityWalletLinkBinding.textTitle.setText(getString(R.string.label_link_x, getString(R.string.label_mobikwik)));
         setSupportActionBar(mActivityWalletLinkBinding.toolbar);
@@ -524,7 +524,7 @@ public class WalletLinkActivity extends BaseAppCompatActivity implements View.On
                     clickIndex, sendOTPSpannableStringBuilder.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
             mActivityWalletLinkBinding.tvWeCreateXWallet.setText(sendOTPSpannableStringBuilder);
-            mActivityWalletLinkBinding.tvWeCreateXWallet.setGravity(Gravity.START);
+            mActivityWalletLinkBinding.tvWeCreateXWallet.setGravity(Gravity.CENTER);
             mActivityWalletLinkBinding.tvWeCreateXWallet.setMovementMethod(LinkMovementMethod.getInstance());
 
         } else if (BTN_WHICH == BTN_IS_PROCEED) {

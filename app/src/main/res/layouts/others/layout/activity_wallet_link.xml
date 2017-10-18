@@ -85,8 +85,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="@dimen/scale_79dp"
                         android:gravity="center"
-                        android:paddingLeft="@dimen/scale_80dp"
-                        android:paddingRight="@dimen/scale_80dp"
+                        android:paddingLeft="@dimen/scale_65dp"
+                        android:paddingRight="@dimen/scale_65dp"
                         android:textColor="@color/grey_varient_8"
                         android:textSize="@dimen/text_size_16sp"
                         tools:text="Enter your number and link to your MobiKwik wallet" />
@@ -113,6 +113,7 @@
                         android:layout_marginLeft="@dimen/scale_34dp"
                         android:layout_marginRight="@dimen/scale_34dp"
                         android:gravity="center"
+                        android:lineSpacingExtra="@dimen/scale_2dp"
                         android:text="@string/label_low_balance_add_money"
                         android:textColor="@color/grey_varient_8"
                         android:textSize="@dimen/text_size_14sp"
