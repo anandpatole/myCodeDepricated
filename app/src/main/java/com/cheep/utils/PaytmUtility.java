@@ -494,7 +494,7 @@ public class PaytmUtility {
         void volleyError();
     }
 
-    ///////////////////////////////////////////////////////Volley Get Checksum Hash Web call starts///////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////// Volley Checksum For Withdraw Money ///////////////////////////////////////////////////////
     public interface GetChecksumResponseListener {
         void volleyGetChecksumSuccessResponse(String checksumhash);
 
@@ -506,7 +506,7 @@ public class PaytmUtility {
     }
 
 
-    public static String getChecksum(Context mContext, boolean isAddMoney, String txnAmount, String mAccessToken, String mMobileNumber, String mResourceOwnerCustomerId, final GetChecksumResponseListener listener) {
+    public static String getChecksumForWithdrawMoney(Context mContext, String txnAmount, String mAccessToken, String mMobileNumber, String mResourceOwnerCustomerId, final GetChecksumResponseListener listener) {
         final Response.ErrorListener mGetChecksumErrorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
@@ -543,37 +543,22 @@ public class PaytmUtility {
         String orderID = String.valueOf(System.currentTimeMillis());
 
         Map<String, String> bodyParams = new HashMap<>();
-        if (isAddMoney) {
-            bodyParams.put(NetworkUtility.TAGS.ORDER_ID, orderID);
-            bodyParams.put(NetworkUtility.TAGS.TXN_AMOUNT, txnAmount);
-            bodyParams.put(NetworkUtility.TAGS.CUST_ID, mResourceOwnerCustomerId);
-            bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.CHANNEL_ID, BuildConfig.CHANNEL_ID);
-            bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.WEBSITE, BuildConfig.WEBSITE);
-            bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.INDUSTRY_TYPE_ID, BuildConfig.INDUSTRY_TYPE_ID);
-            bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.CALLBACK_URL, NetworkUtility.WS.VERIFY_CHECKSUM);
-            bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.SSO_TOKEN, mAccessToken);
-            bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.REQUEST_TYPE, Utility.ADD_MONEY);
-            bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.MID, BuildConfig.SANDBOX_MERCHANT_ID);
-            bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.MOBILE_NO, mMobileNumber);
-            bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.EMAIL, PreferenceUtility.getInstance(mContext).getUserDetails().Email);
-            bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.THEME, "merchant");
-        } else {
-            bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.AppIP, Utility.getIPAddress(true));
-            bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.AuthMode, Utility.USRPWD);
-            bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.Channel, BuildConfig.CHANNEL_ID);
-            bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.Currency, Utility.INR);
-            bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.CustId, mResourceOwnerCustomerId);
-            bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.DeviceId, mMobileNumber);
-            bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.IndustryType, BuildConfig.INDUSTRY_TYPE_ID);
-            bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.MID, BuildConfig.SANDBOX_MERCHANT_ID);
-            bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.OrderId, orderID);
-            bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.PaymentMode, Utility.PPI);
-            bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.ReqType, Utility.WITHDRAW);
-            bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.TxnAmount, txnAmount);
-            bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.SSOToken, mAccessToken);
-            //PPI payment mode is for wallets
-            //USRPWD authMode – for Wallet.
-        }
+
+        bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.AppIP, Utility.getIPAddress(true));
+        bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.AuthMode, Utility.USRPWD);
+        bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.Channel, BuildConfig.CHANNEL_ID);
+        bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.Currency, Utility.INR);
+        bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.CustId, mResourceOwnerCustomerId);
+        bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.DeviceId, mMobileNumber);
+        bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.IndustryType, BuildConfig.INDUSTRY_TYPE_ID);
+        bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.MID, BuildConfig.SANDBOX_MERCHANT_ID);
+        bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.OrderId, orderID);
+        bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.PaymentMode, Utility.PPI);
+        bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.ReqType, Utility.WITHDRAW);
+        bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.TxnAmount, txnAmount);
+        bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.SSOToken, mAccessToken);
+        //PPI payment mode is for wallets
+        //USRPWD authMode – for Wallet.
 
         @SuppressWarnings("unchecked")
         VolleyNetworkRequest volleyNetworkRequest = new VolleyNetworkRequest(
@@ -586,7 +571,73 @@ public class PaytmUtility {
         Volley.getInstance(mContext).addToRequestQueue(volleyNetworkRequest, NetworkUtility.WS.GET_CHECKSUM_HASH);
         return orderID;
     }
-    ///////////////////////////////////////////////////////Volley Get Checksum Hash Web call ends///////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////Volley Checksum For Withdraw Money///////////////////////////////////////////////////////
+
+    /////////////////////////////////////////////////////// Volley Checksum For Add Money ///////////////////////////////////////////////////////
+
+    public static String getChecksumForAddMoney(Context mContext, String txnAmount, String mAccessToken, String mMobileNumber, String mResourceOwnerCustomerId, final GetChecksumResponseListener listener) {
+        final Response.ErrorListener mGetChecksumErrorListener = new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
+                listener.volleyError();
+            }
+        };
+
+        final Response.Listener mGetChecksumResponseListener = new Response.Listener() {
+            @Override
+            public void onResponse(Object response) {
+                String strResponse = (String) response;
+                try {
+                    JSONObject jsonObject = new JSONObject(strResponse);
+                    LogUtils.LOGD(TAG, "onResponse: " + jsonObject.toString());
+                    int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
+                    switch (statusCode) {
+                        case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
+                            listener.volleyGetChecksumSuccessResponse(jsonObject.getJSONObject(NetworkUtility.TAGS.DATA).getString(NetworkUtility.TAGS.CHECKSUMHASH));
+                            break;
+                        case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
+                            listener.showGeneralizedErrorMessage();
+                            break;
+                        case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
+                            listener.showSpecificErrorMessage(jsonObject.getString(NetworkUtility.TAGS.MESSAGE));
+                            break;
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        String orderID = String.valueOf(System.currentTimeMillis());
+
+        Map<String, String> bodyParams = new HashMap<>();
+        bodyParams.put(NetworkUtility.TAGS.ORDER_ID, orderID);
+        bodyParams.put(NetworkUtility.TAGS.TXN_AMOUNT, txnAmount);
+        bodyParams.put(NetworkUtility.TAGS.CUST_ID, mResourceOwnerCustomerId);
+        bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.CHANNEL_ID, BuildConfig.CHANNEL_ID);
+        bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.WEBSITE, BuildConfig.WEBSITE);
+        bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.INDUSTRY_TYPE_ID, BuildConfig.INDUSTRY_TYPE_ID);
+        bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.CALLBACK_URL, NetworkUtility.WS.VERIFY_CHECKSUM);
+        bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.SSO_TOKEN, mAccessToken);
+        bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.REQUEST_TYPE, Utility.ADD_MONEY);
+        bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.MID, BuildConfig.SANDBOX_MERCHANT_ID);
+        bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.MOBILE_NO, mMobileNumber);
+        bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.EMAIL, PreferenceUtility.getInstance(mContext).getUserDetails().Email);
+        bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.THEME, "merchant");
+
+        @SuppressWarnings("unchecked")
+        VolleyNetworkRequest volleyNetworkRequest = new VolleyNetworkRequest(
+                NetworkUtility.WS.GET_CHECKSUM_HASH,
+                mGetChecksumErrorListener,
+                mGetChecksumResponseListener,
+                null,
+                bodyParams,
+                null);
+        Volley.getInstance(mContext).addToRequestQueue(volleyNetworkRequest, NetworkUtility.WS.GET_CHECKSUM_HASH);
+        return orderID;
+    }
+    /////////////////////////////////////////////////////// Volley Checksum For Add Money ///////////////////////////////////////////////////////
 
 
     ///////////////////////////////////////////////////////Volley save user details Web call starts///////////////////////////////////////////////////////
