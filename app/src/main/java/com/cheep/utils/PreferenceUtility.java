@@ -17,7 +17,6 @@ import static com.facebook.FacebookSdk.getApplicationContext;
 /**
  * Created by bhavesh on 13/10/16.
  */
-
 public class PreferenceUtility {
     private static final String TAG = "PreferenceUtility";
     private SharedPreferences mSharedPreferences;
@@ -64,7 +63,6 @@ public class PreferenceUtility {
     }
 
 
-
     public String getFCMRegID() {
         if (mSharedPreferences.contains(PREF_FCM_TOKEN)) {
             return mSharedPreferences.getString(PREF_FCM_TOKEN, null);
@@ -82,7 +80,7 @@ public class PreferenceUtility {
     }
 
     /**
-     * It may be usefull in future so it is remain as private
+     * It may be useful in future so it is remain as private
      *
      * @param model
      */
@@ -186,7 +184,6 @@ public class PreferenceUtility {
         mGuestSharedPreferences.edit().putString(PREF_GUEST_USER_INFO, Utility.getJsonStringFromObject(model)).apply();
         mGuestUserDetails = model;
     }
-
 
     /**
      * Below would manage HomeScreen availability to properly manage Guest flow

@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
-import android.support.v8.renderscript.Double2;
 import android.text.Editable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
@@ -20,7 +19,6 @@ import android.text.TextWatcher;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
-import android.util.EventLog;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
@@ -33,7 +31,6 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.LinearLayout;
 
-import com.cheep.BootstrapConstant;
 import com.cheep.BuildConfig;
 import com.cheep.R;
 import com.cheep.databinding.ActivityWalletLinkBinding;
@@ -46,7 +43,6 @@ import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.Utility;
 import com.mixpanel.android.java_websocket.util.Base64;
 
-import org.apache.http.util.EncodingUtils;
 import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -70,7 +66,6 @@ public class WalletLinkActivity extends BaseAppCompatActivity implements View.On
         PaytmUtility.SendOtpResponseListener,
         PaytmUtility.VerifyOtpResponseListener,
         PaytmUtility.CheckBalanceResponseListener,
-        PaytmUtility.GetChecksumResponseListener,
         PaytmUtility.AddMoneyResponseListener,
         PaytmUtility.SavePaytmUserResponseListener {
 
@@ -147,18 +142,38 @@ public class WalletLinkActivity extends BaseAppCompatActivity implements View.On
                 if (!TextUtils.isEmpty(responseCode) && responseCode.equalsIgnoreCase(NetworkUtility.PAYTM.RESPONSE_CODES.LOGIN)) {
                     // Close the screen and pass the success message to @com.cheep.activity.PaymentChoiceActivity
                     paytmResponse.isSuccess = true;
+
+                    // TODO : Here we need to call withdraw api
+                    callgetChecksumForWithdrawMoney();
+
+
+//                    TODO : Once withdraw api called, need to remove below code
+                   /* // Create the message event and sent the broadcast to @PaymentChoiceActivity
+                    MessageEvent messageEvent = new MessageEvent();
+                    messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.PAYTM_RESPONSE;
+                    messageEvent.paytmResponse = paytmResponse;
+
+                    // Send the event
+                    EventBus.getDefault().post(messageEvent);
+
+                    // Finish the activity at the end
+                    finish();*/
+
                 } else {
                     // Close the screen and pass the failure message to @com.cheep.activity.PaymentChoiceActivity
                     paytmResponse.isSuccess = false;
+
+                    // Create the message event and sent the broadcast to @PaymentChoiceActivity
+                    MessageEvent messageEvent = new MessageEvent();
+                    messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.PAYTM_RESPONSE;
+                    messageEvent.paytmResponse = paytmResponse;
+
+                    // Send the event
+                    EventBus.getDefault().post(messageEvent);
+
+                    // Finish the activity at the end
+                    finish();
                 }
-
-                // Create the message event and sent the broadcast to @PaymentChoiceActivity
-                MessageEvent messageEvent = new MessageEvent();
-                messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.PAYTM_RESPONSE;
-                messageEvent.paytmResponse = paytmResponse;
-
-                // Send the event
-                EventBus.getDefault().post(messageEvent);
 
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -172,10 +187,12 @@ public class WalletLinkActivity extends BaseAppCompatActivity implements View.On
 
                 // Send the event
                 EventBus.getDefault().post(messageEvent);
+
+                // Finish the activity at the end
+                finish();
             }
 
-            // Finish the activity at the end
-            finish();
+
         }
 
         @Override
@@ -286,6 +303,67 @@ public class WalletLinkActivity extends BaseAppCompatActivity implements View.On
         }
     };
 
+    // Add Money Checksum Callback
+    PaytmUtility.GetChecksumResponseListener mGetChecksumResponseListenerForAddMoney = new PaytmUtility.GetChecksumResponseListener() {
+        @Override
+        public void volleyGetChecksumSuccessResponse(String checksumHash) {
+            Log.d(TAG, "volleyGetChecksumSuccessResponse() called with: checksumHash = [" + checksumHash + "]");
+            // encode the checksum
+            try {
+                mChecksumHash = new String(Base64.decode(checksumHash));
+                addMoney();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            hideProgressDialog();
+            Log.i(TAG, "volleyGetChecksumSuccessResponse: Output: " + mChecksumHash);
+        }
+
+        @Override
+        public void showSpecificErrorMessage(String errorMessage) {
+
+        }
+
+        @Override
+        public void showGeneralizedErrorMessage() {
+
+        }
+
+        @Override
+        public void volleyError() {
+
+        }
+    };
+
+    // Add Money Checksum Callback
+    PaytmUtility.GetChecksumResponseListener mGetChecksumResponseListenerForWithdrawMoney = new PaytmUtility.GetChecksumResponseListener() {
+        @Override
+        public void volleyGetChecksumSuccessResponse(String checksumHash) {
+            Log.d(TAG, "volleyGetChecksumSuccessResponse() called with: checksumHash = [" + checksumHash + "]");
+            try {
+                mChecksumHash = new String(Base64.decode(checksumHash));
+                withdrawMoney();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        @Override
+        public void showSpecificErrorMessage(String errorMessage) {
+
+        }
+
+        @Override
+        public void showGeneralizedErrorMessage() {
+
+        }
+
+        @Override
+        public void volleyError() {
+
+        }
+    };
+
 
     public static void newInstance(Context context, boolean isPaytm, String amount) {
         Intent intent = new Intent(context, WalletLinkActivity.class);
@@ -372,14 +450,15 @@ public class WalletLinkActivity extends BaseAppCompatActivity implements View.On
                          * Hide the Keyboard if it opened
                          */
                         Utility.hideKeyboard(this);
-                        callgetChecksum();
+                        callgetChecksumForAddMoney();
 //                        addMoney();
                     } else if (BTN_WHICH == BTN_IS_CONFIRM) {
                         /**
                          * Hide the Keyboard if it opened
                          */
                         Utility.hideKeyboard(this);
-                        withdrawMoney();
+                        callgetChecksumForWithdrawMoney();
+
                     }
                 }
                 break;
@@ -622,13 +701,11 @@ public class WalletLinkActivity extends BaseAppCompatActivity implements View.On
             amount = amount.replace(Utility.COMMA, Utility.EMPTY_STRING);
         }
         isLowBalance = paytmWalletBalance < Double.parseDouble(amount);
-
         if (isLowBalance) {
             BTN_WHICH = BTN_IS_ADD_AMOUNT;
             payableAmount = Math.ceil(Double.parseDouble(amount) - paytmWalletBalance);
         } else {
             BTN_WHICH = BTN_IS_CONFIRM;
-            callgetChecksum();
         }
         updateUI();
         hideProgressDialog();
@@ -722,7 +799,6 @@ public class WalletLinkActivity extends BaseAppCompatActivity implements View.On
                 }
             }
         }
-
         hideProgressDialog();
     }
 
@@ -766,8 +842,6 @@ public class WalletLinkActivity extends BaseAppCompatActivity implements View.On
         // Show the webview
         mActivityWalletLinkBinding.svMainLayout.setVisibility(View.GONE);
         mActivityWalletLinkBinding.webView.setVisibility(View.VISIBLE);
-
-//        PaytmUtility.addMoney(mContext, generatedOrderId, mAccessToken, mEtText, mChecksumHash, mResourceOwnerCustomerId, mMobileNumber, this);
     }
 
     private String generatePostDataString(Map<String, String> bodyParams) {
@@ -807,23 +881,8 @@ public class WalletLinkActivity extends BaseAppCompatActivity implements View.On
 
 
     ///////////////////////////////////////////////////////////Volley Get Checksum Hash Web call starts///////////////////////////////////////////////////////////
-    @Override
-    public void volleyGetChecksumSuccessResponse(String checksumHash) {
-        Log.d(TAG, "volleyGetChecksumSuccessResponse() called with: checksumHash = [" + checksumHash + "]");
-        // encode the checksum
-        try {
-            mChecksumHash = new String(Base64.decode(checksumHash));
-            if (isLowBalance) {
-                addMoney();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        hideProgressDialog();
-        Log.i(TAG, "volleyGetChecksumSuccessResponse: Output: " + mChecksumHash);
-    }
 
-    private void callgetChecksum() {
+    private void callgetChecksumForAddMoney() {
         if (!Utility.isConnected(mContext)) {
             Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityWalletLinkBinding.getRoot());
             return;
@@ -831,13 +890,28 @@ public class WalletLinkActivity extends BaseAppCompatActivity implements View.On
 
         showProgressDialog();
 
-        generatedOrderId = PaytmUtility.getChecksum(mContext,
-                isLowBalance,
-                isLowBalance ? mEtText : amount,
+        generatedOrderId = PaytmUtility.getChecksumForAddMoney(mContext,
+                mEtText,
                 mAccessToken,
                 mMobileNumber,
                 mResourceOwnerCustomerId,
-                this);
+                mGetChecksumResponseListenerForAddMoney);
+    }
+
+    private void callgetChecksumForWithdrawMoney() {
+        if (!Utility.isConnected(mContext)) {
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityWalletLinkBinding.getRoot());
+            return;
+        }
+
+        showProgressDialog();
+
+        generatedOrderId = PaytmUtility.getChecksumForWithdrawMoney(mContext,
+                amount,
+                mAccessToken,
+                mMobileNumber,
+                mResourceOwnerCustomerId,
+                mGetChecksumResponseListenerForWithdrawMoney);
     }
     ///////////////////////////////////////////////////////////Volley Get Checksum Hash Web call ends///////////////////////////////////////////////////////////
 

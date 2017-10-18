@@ -10,6 +10,8 @@ public class NetworkUtility {
 
     public static final class WS {
         private static final String BASE_URL = BuildConfig.BASE_URL;
+        private static final String BASE_URL_API = BuildConfig.BASE_URL_API;
+
 
         // Endpoints
         public static final String LOGIN = BASE_URL + "customers/auth/cheep_login";
@@ -108,17 +110,21 @@ public class NetworkUtility {
         public static final String CURL_NOTIFICATION_TO_SP = BASE_URL + "customers/tasks/curl_for_notification_to_sp";
         public static final String CHECK_PRO_AVAILABILITY_FOR_STRATEGIC_TASK = BASE_URL + "customers/tasks/check_pro_availability_for_Strategic_task";
 
-        //checksum needed for paytm
-        public static final String GET_CHECKSUM_HASH = "https://www.cheep.co.in/admin/api/customers/payment/getPaytmChecksum";
-        public static final String VERIFY_CHECKSUM = "https://www.cheep.co.in/admin/api/customers/Verifychecksum";
-        public static final String SAVE_PAYTM_USER_DETAILS = BASE_URL + "customers/payment/storePaytmData";
-
         //Refer and Earn
         public static final String REFER_BALANCE = BASE_URL + "customers/profile/getReferBalance";
         public static final String GET_AMOUNT_WITH_GST = BASE_URL + "customers/payment/getAmountWithGST";
 
         // Paytm Verify Transaction based on Order
-        public static final String FETCH_CALLBACK_RESPONSE_FROM_PAYTM = "https://www.cheep.co.in/admin/api/customers/payment/getCallBackResponse";
+        // Save Paytm user details
+        public static final String SAVE_PAYTM_USER_DETAILS = BASE_URL_API + "customers/payment/storePaytmData";
+        public static final String GET_CHECKSUM_HASH = BASE_URL_API + "customers/payment/getPaytmChecksum";
+        public static final String VERIFY_CHECKSUM = BASE_URL_API + "customers/Verifychecksum";
+        public static final String FETCH_CALLBACK_RESPONSE_FROM_PAYTM = BASE_URL_API + "customers/payment/getCallBackResponse";
+        public static final String PAYTM_GENERATE_OTP = BASE_URL_API + "customers/payment/generateOTP";
+        public static final String PAYTM_VERIFY_OTP = BASE_URL_API + "customers/payment/verifyOTP";
+        public static final String PAYTM_CHECK_BALANCE = BASE_URL_API + "customers/payment/checkPaytmBalance";
+        public static final String PAYTM_WITHDRAW_MONEY = BASE_URL_API + "customers/payment/withdrawMoney";
+
     }
 
     public static class PAYTM {
@@ -162,6 +168,7 @@ public class NetworkUtility {
             public static final String mid = "mid";
             public static final String request = "request";
             public static final String ssotoken = "ssotoken";
+            public static final String token = "token";
             public static final String statusCode = "statusCode";
             public static final String requestGuid = "requestGuid";
             public static final String orderId = "orderId";
@@ -369,8 +376,9 @@ public class NetworkUtility {
         String MAX_REFER_DISCOUNT = "max_refer_discount";
         String USED_WALLET_BALANCE = "used_wallet_balance";
         String IS_INSTA_BOOKING = "is_insta_booking";
-        String AMOUNT= "amount";
+        String AMOUNT = "amount";
         public static final String REFER_COUNT = "refer_count";
+        String PAYTM_RESPONSE_DATA = "paytmResponseData";
 
         interface VERSION_CHANGE_TYPE {
             int NORMAL = 0;
@@ -427,7 +435,6 @@ public class NetworkUtility {
             int SIGNUP_REQUIRED = 445;
             int FORCE_LOGOUT_REQUIRED = 446;
             int USER_DELETED = 447;
-
         }
 
         String MESSAGE = "message";
