@@ -146,7 +146,6 @@ public class WalletLinkActivity extends BaseAppCompatActivity implements View.On
                     // TODO : Here we need to call withdraw api
                     callgetChecksumForWithdrawMoney();
 
-
 //                    TODO : Once withdraw api called, need to remove below code
                    /* // Create the message event and sent the broadcast to @PaymentChoiceActivity
                     MessageEvent messageEvent = new MessageEvent();
@@ -642,7 +641,7 @@ public class WalletLinkActivity extends BaseAppCompatActivity implements View.On
         //Show Progress
         showProgressDialog();
 
-        PaytmUtility.sendOTP(mContext, mEtText, this);
+        PaytmUtility.sendOTP(mContext, mMobileNumber, this);
     }
     ///////////////////////////////////////////////////////////Paytm Send OTP API call ends///////////////////////////////////////////////////////////
 
