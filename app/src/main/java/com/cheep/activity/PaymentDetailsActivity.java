@@ -147,6 +147,15 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
                 if (taskDetailModel != null) {
                     resetPromocodeValue();
                     callGetReferBalance();
+                    double taskPaidAmount = getQuotePriceInInteger(providerModel.quotePrice);
+                    double additionalCharges = 0;
+                    if (!TextUtils.isEmpty(taskDetailModel.additionalQuoteAmount)) {
+                        additionalCharges = getQuotePriceInInteger(taskDetailModel.additionalQuoteAmount);
+                    }
+                    mActivityPaymentDetailBinding.txtprofee.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf(taskPaidAmount))));
+                    mActivityPaymentDetailBinding.txtadditionalcharge.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf(additionalCharges))));
+                    mActivityPaymentDetailBinding.txtsubtotal.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf(taskPaidAmount))));
+
                 }
             } else {
                 if (taskDetailModel != null) {
@@ -181,7 +190,6 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
             Utility.loadImageView(mContext, mActivityPaymentDetailBinding.imgService, taskDetailModel.catImage, R.drawable.gradient_black);
         }
         if (providerModel != null) {
-
             Utility.showCircularImageViewWithColorBorder(mContext, TAG, mActivityPaymentDetailBinding.imgProfile, providerModel.profileUrl, Utility.DEFAULT_CHEEP_LOGO, R.color.dark_blue_variant_1, true);
             String dateTime = "";
             if (!TextUtils.isEmpty(taskDetailModel.taskStartdate)) {
@@ -199,21 +207,13 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
             spannableStringBuilder.append(getSpannableString(getString(R.string.label_at), ContextCompat.getColor(this, R.color.grey_varient_8), false));
             spannableStringBuilder.append(getSpannableString(taskDetailModel.taskAddress, ContextCompat.getColor(this, R.color.splash_gradient_end), true));
             mActivityPaymentDetailBinding.txtdesc.setText(spannableStringBuilder);
-            boolean viewonly = getIntent().getBooleanExtra(Utility.Extra.PAYMENT_VIEW, false);
-            if (!viewonly) {
-                double taskPaidAmount = getQuotePriceInInteger(providerModel.quotePrice);
-                double additionalCharges = 0;
-                    if (!TextUtils.isEmpty(taskDetailModel.additionalQuoteAmount)) {
-                        additionalCharges = getQuotePriceInInteger(taskDetailModel.additionalQuoteAmount);
-                    }
 
-                    mActivityPaymentDetailBinding.txtprofee.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf(taskPaidAmount))));
-                    mActivityPaymentDetailBinding.txtadditionalcharge.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf(additionalCharges))));
-                }
-            }
+        }
 
         mActivityPaymentDetailBinding.llclaimreferral.setOnClickListener(OnClaimOfRefereCodeClickListener);
-        mActivityPaymentDetailBinding.llpromocode.setOnClickListener(new View.OnClickListener() {
+        mActivityPaymentDetailBinding.llpromocode.setOnClickListener(new View.OnClickListener()
+
+        {
             @Override
             public void onClick(View view) {
                 mActivityPaymentDetailBinding.ivpromocode.setVisibility(View.VISIBLE);
@@ -273,8 +273,6 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
             mActivityPaymentDetailBinding.txtreferraldiscount.setSelected(mActivityPaymentDetailBinding.ivreferraldiscount.isSelected());
             mActivityPaymentDetailBinding.llpromocode.setEnabled(true);
             onClickOfClosePromoCode();
-
-
             if (mActivityPaymentDetailBinding.ivreferraldiscount.isSelected()) {
                 taskDetailModel.isReferCode = Utility.BOOLEAN.NO;
                 Log.e(TAG, "  providerModel.spWithoutGstQuotePrice  :: " + providerModel.spWithoutGstQuotePrice);
@@ -312,11 +310,6 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
-//                providerModel.quotePrice = payableAmount + "";
-//                mActivityPaymentDetailBinding.txttotal.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(payableAmount + "")));
-//                mActivityPaymentDetailBinding.textPay.setText(getString(R.string.label_pay_fee_v1, Utility.getQuotePriceFormatter(payableAmount + "")));
-
             } else {
                 usedWalletBalance = 0;
 
@@ -482,15 +475,14 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
      * Used for Additional payment
      */
     public void setAdditionalPayment() {
-        int taskPaidAmount = 0;
-        mActivityPaymentDetailBinding.txtprofee.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter("0")));
+        mActivityPaymentDetailBinding.txtprofee.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(providerModel.quotePrice)));
         double additionalCharges = 0;
         if (!TextUtils.isEmpty(taskDetailModel.additionalQuoteAmount)) {
             additionalCharges = getQuotePriceInInteger(taskDetailModel.additionalQuoteAmount);
         }
         mActivityPaymentDetailBinding.txtadditionalcharge.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf(additionalCharges))));
 
-        double subTotal = taskPaidAmount + additionalCharges;
+        double subTotal = additionalCharges;
         mActivityPaymentDetailBinding.txtsubtotal.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf(subTotal))));
         mActivityPaymentDetailBinding.txttotal.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf(subTotal))));
         mActivityPaymentDetailBinding.textPay.setText(getString(R.string.label_pay_fee_v1, "" + Utility.getQuotePriceFormatter(String.valueOf(subTotal))));
@@ -723,7 +715,6 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
             }
         }
     };
-
 
 
     /**
