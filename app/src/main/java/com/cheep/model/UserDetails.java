@@ -89,6 +89,7 @@ public class UserDetails {
     public PaytmUserDetail mPaytmUserDetail;
 
 
+    @Keep
     public static class PaytmUserDetail {
 
         @SerializedName("paytm_access_token")
