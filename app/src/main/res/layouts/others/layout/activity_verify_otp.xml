@@ -85,8 +85,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="@dimen/scale_79dp"
                         android:gravity="center"
-                        android:paddingLeft="@dimen/scale_40dp"
-                        android:paddingRight="@dimen/scale_40dp"
+                        android:paddingLeft="@dimen/scale_10dp"
+                        android:paddingRight="@dimen/scale_10dp"
                         android:textColor="@color/grey_varient_8"
                         android:textSize="@dimen/text_size_16sp"
                         tools:text="Enter your number and link to your MobiKwik wallet" />

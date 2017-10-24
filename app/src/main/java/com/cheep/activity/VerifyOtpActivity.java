@@ -22,7 +22,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.cheep.R;
-import com.cheep.databinding.ActivitySendOtpBinding;
+import com.cheep.databinding.ActivityVerifyOtpBinding;
 import com.cheep.model.MessageEvent;
 import com.cheep.model.UserDetails;
 import com.cheep.network.NetworkUtility;
@@ -43,7 +43,6 @@ import static com.cheep.network.NetworkUtility.PAYTM.PARAMETERS.response;
 public class VerifyOtpActivity extends BaseAppCompatActivity {
 
     private static final String TAG = VerifyOtpActivity.class.getSimpleName();
-    private ActivitySendOtpBinding mActivitySendOtpBinding;
     private CountDownTimer timer;
     boolean isTimerOnGoing = false;
     long currentMilliSeconds = 0;
@@ -75,6 +74,7 @@ public class VerifyOtpActivity extends BaseAppCompatActivity {
     private boolean isLowBalance;
 
     private double payableAmount;
+    private ActivityVerifyOtpBinding mActivityVerifyOtpBinding;
 
     public static void newInstance(Context context, String mobileNumber, String state, boolean isPaytm, String amount) {
         Intent intent = new Intent(context, VerifyOtpActivity.class);
@@ -88,7 +88,7 @@ public class VerifyOtpActivity extends BaseAppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mActivitySendOtpBinding = DataBindingUtil.setContentView(this, R.layout.activity_send_otp);
+        mActivityVerifyOtpBinding = DataBindingUtil.setContentView(this, R.layout.activity_verify_otp);
         initiateUI();
         setupActionbar();
         EventBus.getDefault().register(this);
@@ -97,10 +97,10 @@ public class VerifyOtpActivity extends BaseAppCompatActivity {
 
     private void setupActionbar() {
         if (isPaytm)
-            mActivitySendOtpBinding.textTitle.setText(getString(R.string.label_link_x, getString(R.string.label_paytm)));
+            mActivityVerifyOtpBinding.textTitle.setText(getString(R.string.label_link_x, getString(R.string.label_paytm)));
         else
-            mActivitySendOtpBinding.textTitle.setText(getString(R.string.label_link_x, getString(R.string.label_mobikwik)));
-        setSupportActionBar(mActivitySendOtpBinding.toolbar);
+            mActivityVerifyOtpBinding.textTitle.setText(getString(R.string.label_link_x, getString(R.string.label_mobikwik)));
+        setSupportActionBar(mActivityVerifyOtpBinding.toolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle(Utility.EMPTY_STRING);
         actionBar.setDisplayHomeAsUpEnabled(true);
@@ -119,37 +119,36 @@ public class VerifyOtpActivity extends BaseAppCompatActivity {
         }
 
 
-
         String sendOTPString = getString(R.string.label_send_otp_again);
         String formattednumber = mMobileNumber.substring(0, 5) + " " + mMobileNumber.substring(5);
-        mActivitySendOtpBinding.tvEnterNoLinkXAccount.setText(getString(R.string.label_enter_otp_sent_on_x, formattednumber));
-//                mActivitySendOtpBinding.tvSendOtp.setText(getString(R.string.label_proceed));
-        mActivitySendOtpBinding.tvSendOtp.setEnabled(false);
-        mActivitySendOtpBinding.tvWeCreateXWallet.setVisibility(View.INVISIBLE);
+        mActivityVerifyOtpBinding.tvEnterNoLinkXAccount.setText(getString(R.string.label_enter_otp_sent_on_x, formattednumber));
+//                mActivityVerifyOtpBinding.tvSendOtp.setText(getString(R.string.label_proceed));
+        mActivityVerifyOtpBinding.tvSendOtp.setEnabled(false);
+        mActivityVerifyOtpBinding.tvWeCreateXWallet.setVisibility(View.INVISIBLE);
         timer = new CountDownTimer(60000, 1000) {
 
             public void onTick(long millisUntilFinished) {
                 currentMilliSeconds = millisUntilFinished;
                 isTimerOnGoing = true;
-                if (!mActivitySendOtpBinding.etMobileNumber.getText().toString().isEmpty()) {
-                    mActivitySendOtpBinding.tvSendOtp.setSelected(true);
-                    mActivitySendOtpBinding.tvSendOtp.setText(getString(R.string.label_proceed));
+                if (!mActivityVerifyOtpBinding.etMobileNumber.getText().toString().isEmpty()) {
+                    mActivityVerifyOtpBinding.tvSendOtp.setSelected(true);
+                    mActivityVerifyOtpBinding.tvSendOtp.setText(getString(R.string.label_proceed));
                 } else {
-                    mActivitySendOtpBinding.tvSendOtp.setSelected(false);
-                    mActivitySendOtpBinding.tvSendOtp.setText(String.format("00:" + "%02d", (int) millisUntilFinished / 1000));
+                    mActivityVerifyOtpBinding.tvSendOtp.setSelected(false);
+                    mActivityVerifyOtpBinding.tvSendOtp.setText(String.format("00:" + "%02d", (int) millisUntilFinished / 1000));
                 }
             }
 
             public void onFinish() {
                 isTimerOnGoing = false;
-                if (!mActivitySendOtpBinding.etMobileNumber.getText().toString().isEmpty()) {
-                    mActivitySendOtpBinding.tvSendOtp.setSelected(true);
-                    mActivitySendOtpBinding.tvSendOtp.setText(getString(R.string.label_proceed));
+                if (!mActivityVerifyOtpBinding.etMobileNumber.getText().toString().isEmpty()) {
+                    mActivityVerifyOtpBinding.tvSendOtp.setSelected(true);
+                    mActivityVerifyOtpBinding.tvSendOtp.setText(getString(R.string.label_proceed));
                 } else {
-                    mActivitySendOtpBinding.tvSendOtp.setSelected(false);
-                    mActivitySendOtpBinding.tvSendOtp.setText(String.format("00:" + "%02d", 0));
+                    mActivityVerifyOtpBinding.tvSendOtp.setSelected(false);
+                    mActivityVerifyOtpBinding.tvSendOtp.setText(String.format("00:" + "%02d", 0));
                 }
-                mActivitySendOtpBinding.tvWeCreateXWallet.setVisibility(View.VISIBLE);
+                mActivityVerifyOtpBinding.tvWeCreateXWallet.setVisibility(View.VISIBLE);
             }
 
         }.start();
@@ -162,17 +161,17 @@ public class VerifyOtpActivity extends BaseAppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                mActivitySendOtpBinding.tvSendOtp.setEnabled(charSequence.length() > 0);
-                mActivitySendOtpBinding.tvSendOtp.setOnClickListener(charSequence.length() > 0 ? mOnClickListener : null);
-                if (!mActivitySendOtpBinding.etMobileNumber.getText().toString().isEmpty()) {
-                    mActivitySendOtpBinding.tvSendOtp.setSelected(true);
-                    mActivitySendOtpBinding.tvSendOtp.setText(getString(R.string.label_proceed));
+                mActivityVerifyOtpBinding.tvSendOtp.setEnabled(charSequence.length() > 0);
+                mActivityVerifyOtpBinding.tvSendOtp.setOnClickListener(charSequence.length() > 0 ? mOnClickListener : null);
+                if (!mActivityVerifyOtpBinding.etMobileNumber.getText().toString().isEmpty()) {
+                    mActivityVerifyOtpBinding.tvSendOtp.setSelected(true);
+                    mActivityVerifyOtpBinding.tvSendOtp.setText(getString(R.string.label_proceed));
                 } else if (!isTimerOnGoing) {
-                    mActivitySendOtpBinding.tvSendOtp.setSelected(false);
-                    mActivitySendOtpBinding.tvSendOtp.setText(String.format("00:" + "%02d", 0));
+                    mActivityVerifyOtpBinding.tvSendOtp.setSelected(false);
+                    mActivityVerifyOtpBinding.tvSendOtp.setText(String.format("00:" + "%02d", 0));
                 } else {
-                    mActivitySendOtpBinding.tvSendOtp.setSelected(false);
-                    mActivitySendOtpBinding.tvSendOtp.setText(String.format("00:" + "%02d", (int) currentMilliSeconds / 1000));
+                    mActivityVerifyOtpBinding.tvSendOtp.setSelected(false);
+                    mActivityVerifyOtpBinding.tvSendOtp.setText(String.format("00:" + "%02d", (int) currentMilliSeconds / 1000));
 
                 }
             }
@@ -183,15 +182,15 @@ public class VerifyOtpActivity extends BaseAppCompatActivity {
             }
         };
 
-        mActivitySendOtpBinding.etMobileNumber.addTextChangedListener(textWatcher);
-        mActivitySendOtpBinding.ivMobile.setVisibility(View.GONE);
-        mActivitySendOtpBinding.tvDefaultCountryCode.setVisibility(View.GONE);
-        mActivitySendOtpBinding.etMobileNumber.setGravity(Gravity.CENTER);
-        mActivitySendOtpBinding.etMobileNumber.setText(Utility.EMPTY_STRING);
-        mActivitySendOtpBinding.etMobileNumber.setTextColor(ContextCompat.getColor(mContext, R.color.grey_varient_8));
-        mActivitySendOtpBinding.etMobileNumber.setHint(getString(R.string.label_enter_otp));
+        mActivityVerifyOtpBinding.etMobileNumber.addTextChangedListener(textWatcher);
+        mActivityVerifyOtpBinding.ivMobile.setVisibility(View.GONE);
+        mActivityVerifyOtpBinding.tvDefaultCountryCode.setVisibility(View.GONE);
+        mActivityVerifyOtpBinding.etMobileNumber.setGravity(Gravity.CENTER);
+        mActivityVerifyOtpBinding.etMobileNumber.setText(Utility.EMPTY_STRING);
+        mActivityVerifyOtpBinding.etMobileNumber.setTextColor(ContextCompat.getColor(mContext, R.color.grey_varient_8));
+        mActivityVerifyOtpBinding.etMobileNumber.setHint(getString(R.string.label_enter_otp));
           /*  if (BuildConfig.BUILD_TYPE.equalsIgnoreCase(Utility.DEBUG)) {
-                mActivitySendOtpBinding.etMobileNumber.setText(BootstrapConstant.PAYTM_STAGING_MOBILE_NUMBER);
+                mActivityVerifyOtpBinding.etMobileNumber.setText(BootstrapConstant.PAYTM_STAGING_MOBILE_NUMBER);
             }*/
         SpannableStringBuilder sendOTPSpannableStringBuilder = new SpannableStringBuilder(sendOTPString);
         int clickIndex = sendOTPString.indexOf(Utility.CLICK);
@@ -217,9 +216,9 @@ public class VerifyOtpActivity extends BaseAppCompatActivity {
         sendOTPSpannableStringBuilder.setSpan(new ForegroundColorSpan(ContextCompat.getColor(mContext, R.color.splash_gradient_end)),
                 clickIndex, sendOTPSpannableStringBuilder.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-        mActivitySendOtpBinding.tvWeCreateXWallet.setText(sendOTPSpannableStringBuilder);
-        mActivitySendOtpBinding.tvWeCreateXWallet.setGravity(Gravity.CENTER);
-        mActivitySendOtpBinding.tvWeCreateXWallet.setMovementMethod(LinkMovementMethod.getInstance());
+        mActivityVerifyOtpBinding.tvWeCreateXWallet.setText(sendOTPSpannableStringBuilder);
+        mActivityVerifyOtpBinding.tvWeCreateXWallet.setGravity(Gravity.CENTER);
+        mActivityVerifyOtpBinding.tvWeCreateXWallet.setMovementMethod(LinkMovementMethod.getInstance());
     }
 
     @Override
@@ -240,7 +239,7 @@ public class VerifyOtpActivity extends BaseAppCompatActivity {
 
     private void sendOTP(boolean isRegenerated) {
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivitySendOtpBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityVerifyOtpBinding.getRoot());
             return;
         }
         //Show Progress
@@ -262,25 +261,25 @@ public class VerifyOtpActivity extends BaseAppCompatActivity {
 
         @Override
         public void showGeneralizedErrorMessage() {
-            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivitySendOtpBinding.getRoot());
+            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityVerifyOtpBinding.getRoot());
             hideProgressDialog();
         }
 
         @Override
         public void paytmInvalidMobileNumber() {
-            Utility.showSnackBar(getString(R.string.validate_phone_number), mActivitySendOtpBinding.getRoot());
+            Utility.showSnackBar(getString(R.string.validate_phone_number), mActivityVerifyOtpBinding.getRoot());
             hideProgressDialog();
         }
 
         @Override
         public void paytmAccountBlocked() {
-            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivitySendOtpBinding.getRoot());
+            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityVerifyOtpBinding.getRoot());
             hideProgressDialog();
         }
 
         @Override
         public void volleyError() {
-            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivitySendOtpBinding.getRoot());
+            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityVerifyOtpBinding.getRoot());
             hideProgressDialog();
         }
     };
@@ -305,12 +304,12 @@ public class VerifyOtpActivity extends BaseAppCompatActivity {
 
     @Override
     public void paytmVerifyOtpInvalidOtp() {
-        Utility.showSnackBar(getString(R.string.label_invalid_otp), mActivitySendOtpBinding.getRoot());
+        Utility.showSnackBar(getString(R.string.label_invalid_otp), mActivityVerifyOtpBinding.getRoot());
         hideProgressDialog();
     }*/
     private void verifyOTP() {
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivitySendOtpBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityVerifyOtpBinding.getRoot());
             return;
         }
 
@@ -337,19 +336,19 @@ public class VerifyOtpActivity extends BaseAppCompatActivity {
 
         @Override
         public void showGeneralizedErrorMessage() {
-            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivitySendOtpBinding.getRoot());
+            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityVerifyOtpBinding.getRoot());
             hideProgressDialog();
         }
 
         @Override
         public void paytmVerifyOtpInvalidOtp() {
-            Utility.showSnackBar(getString(R.string.label_invalid_otp), mActivitySendOtpBinding.getRoot());
+            Utility.showSnackBar(getString(R.string.label_invalid_otp), mActivityVerifyOtpBinding.getRoot());
             hideProgressDialog();
         }
 
         @Override
         public void volleyError() {
-            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivitySendOtpBinding.getRoot());
+            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityVerifyOtpBinding.getRoot());
             hideProgressDialog();
         }
     };
@@ -365,7 +364,7 @@ public class VerifyOtpActivity extends BaseAppCompatActivity {
 
     private void savePaytmUserDetails() {
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivitySendOtpBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityVerifyOtpBinding.getRoot());
             return;
         }
 
@@ -394,10 +393,10 @@ public class VerifyOtpActivity extends BaseAppCompatActivity {
                         PreferenceUtility.getInstance(VerifyOtpActivity.this).saveUserDetails(userDetails);
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
-                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivitySendOtpBinding.getRoot());
+                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityVerifyOtpBinding.getRoot());
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
-                        Utility.showSnackBar(jsonObject.getString(NetworkUtility.TAGS.MESSAGE), mActivitySendOtpBinding.getRoot());
+                        Utility.showSnackBar(jsonObject.getString(NetworkUtility.TAGS.MESSAGE), mActivityVerifyOtpBinding.getRoot());
                         break;
                 }
             } catch (JSONException e) {
@@ -407,19 +406,19 @@ public class VerifyOtpActivity extends BaseAppCompatActivity {
 
         @Override
         public void showSpecificErrorMessage(String errorMessage) {
-            Utility.showSnackBar(errorMessage, mActivitySendOtpBinding.getRoot());
+            Utility.showSnackBar(errorMessage, mActivityVerifyOtpBinding.getRoot());
             hideProgressDialog();
         }
 
         @Override
         public void showGeneralizedErrorMessage() {
-            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivitySendOtpBinding.getRoot());
+            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityVerifyOtpBinding.getRoot());
             hideProgressDialog();
         }
 
         @Override
         public void volleyError() {
-            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivitySendOtpBinding.getRoot());
+            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityVerifyOtpBinding.getRoot());
             hideProgressDialog();
         }
     };
@@ -429,7 +428,7 @@ public class VerifyOtpActivity extends BaseAppCompatActivity {
 
     private void checkBalance() {
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivitySendOtpBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityVerifyOtpBinding.getRoot());
             return;
         }
 
@@ -480,25 +479,25 @@ public class VerifyOtpActivity extends BaseAppCompatActivity {
 
         @Override
         public void showGeneralizedErrorMessage() {
-            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivitySendOtpBinding.getRoot());
+            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityVerifyOtpBinding.getRoot());
             hideProgressDialog();
         }
 
         @Override
         public void paytmInvalidMobileNumber() {
-            Utility.showSnackBar(getString(R.string.validate_phone_number), mActivitySendOtpBinding.getRoot());
+            Utility.showSnackBar(getString(R.string.validate_phone_number), mActivityVerifyOtpBinding.getRoot());
             hideProgressDialog();
         }
 
         @Override
         public void paytmAccountBlocked() {
-            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivitySendOtpBinding.getRoot());
+            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityVerifyOtpBinding.getRoot());
             hideProgressDialog();
         }
 
         @Override
         public void volleyError() {
-            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivitySendOtpBinding.getRoot());
+            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityVerifyOtpBinding.getRoot());
             hideProgressDialog();
         }
     };
@@ -507,7 +506,7 @@ public class VerifyOtpActivity extends BaseAppCompatActivity {
     private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            mEtText = mActivitySendOtpBinding.etMobileNumber.getText().toString();
+            mEtText = mActivityVerifyOtpBinding.etMobileNumber.getText().toString();
             if (isValidated()) {
                 switch (v.getId()) {
                     case R.id.tv_send_otp:
@@ -525,8 +524,8 @@ public class VerifyOtpActivity extends BaseAppCompatActivity {
     private boolean isValidated() {
         LogUtils.LOGD(TAG, "isValidated() ");
 
-        if (TextUtils.isEmpty(mActivitySendOtpBinding.etMobileNumber.getText())) {
-            Utility.showSnackBar(getString(R.string.validate_otp_empty), mActivitySendOtpBinding.getRoot());
+        if (TextUtils.isEmpty(mActivityVerifyOtpBinding.etMobileNumber.getText())) {
+            Utility.showSnackBar(getString(R.string.validate_otp_empty), mActivityVerifyOtpBinding.getRoot());
             return false;
         }
         return true;

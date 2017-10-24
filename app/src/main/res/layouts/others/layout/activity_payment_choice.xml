@@ -185,10 +185,24 @@
                                 android:paddingEnd="@dimen/scale_34dp"
                                 android:paddingRight="@dimen/scale_34dp"
                                 android:paddingTop="@dimen/scale_12dp"
-                                tools:text="(1000)"
-                                android:visibility="gone"
                                 android:textColor="@color/grey_varient_15"
-                                android:textSize="@dimen/text_size_14sp"/>
+                                android:textSize="@dimen/text_size_14sp"
+                                android:visibility="gone"
+                                tools:text="(1000)"/>
+
+
+                            <com.cheep.custom_view.CFTextViewRegular
+                                android:id="@+id/tv_low_balance_paytm"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@id/tv_paytm"
+                                android:layout_toRightOf="@id/fl_paytm_image_container"
+                                android:paddingRight="@dimen/scale_34dp"
+                                android:paddingTop="@dimen/scale_5dp"
+                                android:textColor="@color/red"
+                                android:textSize="@dimen/text_size_10sp"
+                                android:visibility="gone"
+                                tools:text="15% Cashback upto ₹50. Valid once per user."/>
 
                             <com.cheep.custom_view.CFTextViewRegular
                                 android:id="@+id/tv_paytm_link_account"
@@ -203,18 +217,14 @@
                                 android:textColor="@color/splash_gradient_end"
                                 android:textSize="@dimen/text_size_11sp"/>
 
-                            <com.cheep.custom_view.CFTextViewRegular
-                                android:id="@+id/tv_low_balance_paytm"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_below="@id/tv_paytm"
-                                android:layout_toRightOf="@id/fl_paytm_image_container"
-                                android:paddingRight="@dimen/scale_34dp"
-                                android:paddingTop="@dimen/scale_5dp"
-                                android:textColor="@color/red"
-                                android:textSize="@dimen/text_size_10sp"
-                                android:visibility="gone"
-                                tools:text="15% Cashback upto ₹50. Valid once per user."/>
+                            <ProgressBar
+                                android:id="@+id/progress"
+                                android:layout_marginRight="@dimen/scale_5dp"
+                                android:layout_width="@dimen/scale_30dp"
+                                android:layout_height="@dimen/scale_30dp"
+                                android:layout_alignParentRight="true"
+                                android:layout_centerVertical="true"
+                                android:visibility="gone"/>
                         </RelativeLayout>
 
                     </LinearLayout>
