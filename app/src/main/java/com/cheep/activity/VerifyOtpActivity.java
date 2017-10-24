@@ -3,11 +3,13 @@ package com.cheep.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.text.Editable;
+import android.text.InputFilter;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextPaint;
@@ -178,10 +180,17 @@ public class VerifyOtpActivity extends BaseAppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable editable) {
-
+                if (mActivityVerifyOtpBinding.etMobileNumber.getText().toString().trim().length() > 0) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        mActivityVerifyOtpBinding.etMobileNumber.setLetterSpacing(0.5f);
+                    }
+                } else {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        mActivityVerifyOtpBinding.etMobileNumber.setLetterSpacing(0);
+                    }
+                }
             }
         };
-
         mActivityVerifyOtpBinding.etMobileNumber.addTextChangedListener(textWatcher);
         mActivityVerifyOtpBinding.ivMobile.setVisibility(View.GONE);
         mActivityVerifyOtpBinding.tvDefaultCountryCode.setVisibility(View.GONE);
