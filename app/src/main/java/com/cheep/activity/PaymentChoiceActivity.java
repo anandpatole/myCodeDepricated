@@ -888,6 +888,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
     // check is task is from insta booking or not
 
     private void onSuccessfullInstaBookingTaskCompletion(JSONObject jsonObject) {
+        Utility.showToast(PaymentChoiceActivity.this,getString(R.string.label_task_created_successfully));
         TaskDetailModel taskDetailModel = (TaskDetailModel) Utility.getObjectFromJsonString(jsonObject.optString(NetworkUtility.TAGS.DATA), TaskDetailModel.class);
 
         if (providerModel != null) {
@@ -1401,9 +1402,9 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
                 if (accessTokenExpiresTimeStamp < System.currentTimeMillis()) {
                     // access token has been expired
                     userDetails.mPaytmUserDetail = null;
+                    PreferenceUtility.getInstance(PaymentChoiceActivity.this).saveUserDetails(userDetails);
                     mActivityPaymentChoiceBinding.tvPaytmLinkAccount.setText(getString(R.string.label_link_x, getString(R.string.label_account)));
                     mActivityPaymentChoiceBinding.tvPaytmLinkAccount.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_link_blue, 0, 0, 0);
-                    PreferenceUtility.getInstance(PaymentChoiceActivity.this).saveUserDetails(userDetails);
                     PAYTM_STEP = PAYTM_SEND_OTP;
 
                 } else {
@@ -1415,6 +1416,11 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
             } catch (NumberFormatException e) {
 
             }
+        } else {
+            mActivityPaymentChoiceBinding.tvPaytmLinkAccount.setText(getString(R.string.label_link_x, getString(R.string.label_account)));
+            mActivityPaymentChoiceBinding.tvPaytmLinkAccount.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_link_blue, 0, 0, 0);
+            PAYTM_STEP = PAYTM_SEND_OTP;
+
         }
     }
 

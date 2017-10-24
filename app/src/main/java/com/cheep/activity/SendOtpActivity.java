@@ -999,7 +999,7 @@ public class SendOtpActivity extends BaseAppCompatActivity implements View.OnCli
         LogUtils.LOGD(TAG, "isValidated() which button clicked " + BTN_WHICH);
         if (BTN_WHICH == BTN_IS_SEND_OTP) {
             if (TextUtils.isEmpty(mActivitySendOtpBinding.etMobileNumber.getText())) {
-                Utility.showSnackBar(getString(R.string.validate_phone_number), mActivitySendOtpBinding.getRoot());
+                Utility.showSnackBar(getString(R.string.validate_phone_number_wallet), mActivitySendOtpBinding.getRoot());
                 return false;
             }
 

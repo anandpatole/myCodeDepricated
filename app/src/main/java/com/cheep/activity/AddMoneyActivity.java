@@ -37,6 +37,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -105,7 +106,7 @@ public class AddMoneyActivity extends BaseAppCompatActivity {
         mActivitySendOtpBinding.tvLowBalance.setVisibility(View.VISIBLE);
         mActivitySendOtpBinding.etMobileNumber.setTextColor(ContextCompat.getColor(mContext, R.color.splash_gradient_end));
         mActivitySendOtpBinding.etMobileNumber.setHint(getString(R.string.label_enter_amount));
-        mActivitySendOtpBinding.etMobileNumber.setText(String.valueOf(payableAmount));
+        mActivitySendOtpBinding.etMobileNumber.setText(formatAmount(String.valueOf(payableAmount)));
         mActivitySendOtpBinding.etMobileNumber.setEnabled(true);
         mActivitySendOtpBinding.etMobileNumber.setGravity(Gravity.CENTER);
         mActivitySendOtpBinding.etMobileNumber.setSelection(mActivitySendOtpBinding.etMobileNumber.getText().toString().length());
@@ -114,8 +115,12 @@ public class AddMoneyActivity extends BaseAppCompatActivity {
         mActivitySendOtpBinding.tvSendOtp.setOnClickListener(mOnClickListener);
         mActivitySendOtpBinding.tvSendOtp.setEnabled(true);
 //                mActivitySendOtpBinding.etMobileNumber.removeTextChangedListener(textWatcher);
-        mActivitySendOtpBinding.tvWeCreateXWallet.setText(getString(R.string.label_current_balance, String.valueOf(paytmWalletBalance)));
+        mActivitySendOtpBinding.tvWeCreateXWallet.setText(getString(R.string.label_current_balance, formatAmount(String.valueOf(paytmWalletBalance))));
         mActivitySendOtpBinding.tvWeCreateXWallet.setGravity(Gravity.CENTER);
+    }
+
+    private String formatAmount(String amount) {
+        return new DecimalFormat("##.##").format(amount);
     }
 
     @Override

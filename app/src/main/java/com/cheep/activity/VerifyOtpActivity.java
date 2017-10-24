@@ -244,7 +244,6 @@ public class VerifyOtpActivity extends BaseAppCompatActivity {
         }
         //Show Progress
         showProgressDialog();
-
         PaytmUtility.sendOTP(mContext, mMobileNumber, mSendOtpResponseListener, isRegenerated);
     }
 
@@ -252,10 +251,7 @@ public class VerifyOtpActivity extends BaseAppCompatActivity {
         @Override
         public void paytmSendOtpSuccessResponse(String state, boolean isRegenerated) {
             mState = state;
-        /*if (!isRegenerated)
-            updateUI();
-        else
-            timer.start();*/
+            timer.start();
             hideProgressDialog();
         }
 
