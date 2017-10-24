@@ -22,7 +22,7 @@ import android.widget.LinearLayout;
 
 import com.cheep.BuildConfig;
 import com.cheep.R;
-import com.cheep.databinding.ActivitySendOtpBinding;
+import com.cheep.databinding.ActivityAddMoneyBinding;
 import com.cheep.model.MessageEvent;
 import com.cheep.network.NetworkUtility;
 import com.cheep.utils.PaytmUtility;
@@ -37,13 +37,14 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
 
 public class AddMoneyActivity extends BaseAppCompatActivity {
 
     private static final String TAG = AddMoneyActivity.class.getSimpleName();
-    private ActivitySendOtpBinding mActivitySendOtpBinding;
+    private ActivityAddMoneyBinding mActivitySendOtpBinding;
     private String mEtText;
 
     private String amount;
@@ -74,7 +75,7 @@ public class AddMoneyActivity extends BaseAppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mActivitySendOtpBinding = DataBindingUtil.setContentView(this, R.layout.activity_send_otp);
+        mActivitySendOtpBinding = DataBindingUtil.setContentView(this, R.layout.activity_add_money);
         initiateUI();
         setupActionbar();
     }
@@ -82,7 +83,7 @@ public class AddMoneyActivity extends BaseAppCompatActivity {
     @Override
     protected void initiateUI() {
 
-        if (getIntent().hasExtra(Utility.Extra.AMOUNT)){
+        if (getIntent().hasExtra(Utility.Extra.AMOUNT)) {
             amount = getIntent().getExtras().getString(Utility.Extra.AMOUNT);
             payableAmount = getIntent().getExtras().getDouble(Utility.Extra.PAYABLE_AMOUNT);
             mAccessToken = getIntent().getExtras().getString(Utility.Extra.ACCESS_TOKEN);
@@ -103,18 +104,23 @@ public class AddMoneyActivity extends BaseAppCompatActivity {
         mActivitySendOtpBinding.tvAmount.setText(getString(R.string.rupee_symbol_x, amount));
         mActivitySendOtpBinding.tvAmount.setVisibility(View.VISIBLE);
         mActivitySendOtpBinding.tvLowBalance.setVisibility(View.VISIBLE);
-        mActivitySendOtpBinding.etMobileNumber.setText(Utility.EMPTY_STRING);
         mActivitySendOtpBinding.etMobileNumber.setTextColor(ContextCompat.getColor(mContext, R.color.splash_gradient_end));
         mActivitySendOtpBinding.etMobileNumber.setHint(getString(R.string.label_enter_amount));
-        mActivitySendOtpBinding.etMobileNumber.setText(String.valueOf(payableAmount));
+        mActivitySendOtpBinding.etMobileNumber.setText(formatAmount(String.valueOf(payableAmount)));
         mActivitySendOtpBinding.etMobileNumber.setEnabled(true);
         mActivitySendOtpBinding.etMobileNumber.setGravity(Gravity.CENTER);
+        mActivitySendOtpBinding.etMobileNumber.setSelection(mActivitySendOtpBinding.etMobileNumber.getText().toString().length());
+
         mActivitySendOtpBinding.tvSendOtp.setText(getString(R.string.label_add_amount));
         mActivitySendOtpBinding.tvSendOtp.setOnClickListener(mOnClickListener);
         mActivitySendOtpBinding.tvSendOtp.setEnabled(true);
 //                mActivitySendOtpBinding.etMobileNumber.removeTextChangedListener(textWatcher);
-        mActivitySendOtpBinding.tvWeCreateXWallet.setText(getString(R.string.label_current_balance, String.valueOf(paytmWalletBalance)));
+        mActivitySendOtpBinding.tvWeCreateXWallet.setText(getString(R.string.label_current_balance, formatAmount(String.valueOf(paytmWalletBalance))));
         mActivitySendOtpBinding.tvWeCreateXWallet.setGravity(Gravity.CENTER);
+    }
+
+    private String formatAmount(String amount) {
+        return new DecimalFormat("##.##").format(amount);
     }
 
     @Override

@@ -83,7 +83,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
     public static final int PAYTM_ADD_MONEY = 1;
     public static final int PAYTM_WITHDRAW = 2;
 
-    private int PAYTM_STEP = 0;
+    private int PAYTM_STEP = -1;
 
 
     public static void newInstance(Context context, TaskDetailModel taskDetailModel, ProviderModel providerModel, int isAdditionalPayment, boolean isInstaBooking, AddressModel mSelectedAddressModel) {
@@ -888,6 +888,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
     // check is task is from insta booking or not
 
     private void onSuccessfullInstaBookingTaskCompletion(JSONObject jsonObject) {
+        Utility.showToast(PaymentChoiceActivity.this,getString(R.string.label_task_created_successfully));
         TaskDetailModel taskDetailModel = (TaskDetailModel) Utility.getObjectFromJsonString(jsonObject.optString(NetworkUtility.TAGS.DATA), TaskDetailModel.class);
 
         if (providerModel != null) {
@@ -1401,20 +1402,25 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
                 if (accessTokenExpiresTimeStamp < System.currentTimeMillis()) {
                     // access token has been expired
                     userDetails.mPaytmUserDetail = null;
+                    PreferenceUtility.getInstance(PaymentChoiceActivity.this).saveUserDetails(userDetails);
                     mActivityPaymentChoiceBinding.tvPaytmLinkAccount.setText(getString(R.string.label_link_x, getString(R.string.label_account)));
                     mActivityPaymentChoiceBinding.tvPaytmLinkAccount.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_link_blue, 0, 0, 0);
-                    PreferenceUtility.getInstance(PaymentChoiceActivity.this).saveUserDetails(userDetails);
                     PAYTM_STEP = PAYTM_SEND_OTP;
 
                 } else {
                     // show linked account balace
-                    mActivityPaymentChoiceBinding.tvPaytmLinkAccount.setText(Utility.EMPTY_STRING);
-                    mActivityPaymentChoiceBinding.tvPaytmLinkAccount.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_right_arrow_blue, 0, 0, 0);
+                    mActivityPaymentChoiceBinding.tvPaytmLinkAccount.setVisibility(View.GONE);
+
                     checkBalance(userDetails.mPaytmUserDetail.paytmAccessToken);
                 }
             } catch (NumberFormatException e) {
 
             }
+        } else {
+            mActivityPaymentChoiceBinding.tvPaytmLinkAccount.setText(getString(R.string.label_link_x, getString(R.string.label_account)));
+            mActivityPaymentChoiceBinding.tvPaytmLinkAccount.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_link_blue, 0, 0, 0);
+            PAYTM_STEP = PAYTM_SEND_OTP;
+
         }
     }
 
@@ -1455,8 +1461,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
         }
 
         //Show Progress
-        showProgressDialog();
-
+        mActivityPaymentChoiceBinding.progress.setVisibility(View.VISIBLE);
         PaytmUtility.checkBalance(mContext, mAccessToken, mCheckBalanceResponseListener);
     }
 
@@ -1484,7 +1489,11 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
             boolean isLowBalance = paytmWalletBalance < Double.parseDouble(amount);
             payableAmount = Math.ceil(Double.parseDouble(amount) - paytmWalletBalance);
             mActivityPaymentChoiceBinding.tvPaytmBalance.setVisibility(View.VISIBLE);
+
             mActivityPaymentChoiceBinding.tvPaytmBalance.setText("(" + getString(R.string.rupee_symbol_x, String.valueOf(paytmWalletBalance)) + ")");
+            mActivityPaymentChoiceBinding.tvPaytmLinkAccount.setVisibility(View.VISIBLE);
+            mActivityPaymentChoiceBinding.tvPaytmLinkAccount.setText(Utility.EMPTY_STRING);
+            mActivityPaymentChoiceBinding.tvPaytmLinkAccount.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_right_arrow_blue, 0, 0, 0);
             if (isLowBalance) {
 //            BTN_WHICH = BTN_IS_ADD_AMOUNT;
                 //TODO: add amount
@@ -1498,7 +1507,9 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
                 //TODO: withdraw money
                 PAYTM_STEP = PAYTM_WITHDRAW;
             }
-            hideProgressDialog();
+
+            mActivityPaymentChoiceBinding.progress.setVisibility(View.GONE);
+
         }
 
 
@@ -1511,25 +1522,25 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
         @Override
         public void showGeneralizedErrorMessage() {
             Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityPaymentChoiceBinding.getRoot());
-            hideProgressDialog();
+            mActivityPaymentChoiceBinding.progress.setVisibility(View.GONE);
         }
 
         @Override
         public void paytmInvalidMobileNumber() {
+            mActivityPaymentChoiceBinding.progress.setVisibility(View.GONE);
             Utility.showSnackBar(getString(R.string.validate_phone_number), mActivityPaymentChoiceBinding.getRoot());
-            hideProgressDialog();
         }
 
         @Override
         public void paytmAccountBlocked() {
+            mActivityPaymentChoiceBinding.progress.setVisibility(View.GONE);
             Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityPaymentChoiceBinding.getRoot());
-            hideProgressDialog();
         }
 
         @Override
         public void volleyError() {
+            mActivityPaymentChoiceBinding.progress.setVisibility(View.GONE);
             Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityPaymentChoiceBinding.getRoot());
-            hideProgressDialog();
         }
     };
     ///////////////////////////////////////////////////////////Paytm Check Balance API call ends///////////////////////////////////////////////////////////

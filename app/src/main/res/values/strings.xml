@@ -551,5 +551,6 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="title_booking_confimation">Booking Confirmation</string>
     <string name="label_recharge_wallet">Recharge Wallet</string>
     <string name="validate_phone_number_wallet">Please Enter a valid Mobile Number</string>
+    <string name="label_task_created_successfully">Task Created Successfully</string>
 
 </resources>
