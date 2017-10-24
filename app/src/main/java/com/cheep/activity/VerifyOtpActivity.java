@@ -118,8 +118,11 @@ public class VerifyOtpActivity extends BaseAppCompatActivity {
             amount = getIntent().getExtras().getString(Utility.Extra.AMOUNT);
         }
 
+
+
         String sendOTPString = getString(R.string.label_send_otp_again);
-        mActivitySendOtpBinding.tvEnterNoLinkXAccount.setText(getString(R.string.label_enter_otp_sent_on_x, mMobileNumber));
+        String formattednumber = mMobileNumber.substring(0, 5) + " " + mMobileNumber.substring(5);
+        mActivitySendOtpBinding.tvEnterNoLinkXAccount.setText(getString(R.string.label_enter_otp_sent_on_x, formattednumber));
 //                mActivitySendOtpBinding.tvSendOtp.setText(getString(R.string.label_proceed));
         mActivitySendOtpBinding.tvSendOtp.setEnabled(false);
         mActivitySendOtpBinding.tvWeCreateXWallet.setVisibility(View.INVISIBLE);

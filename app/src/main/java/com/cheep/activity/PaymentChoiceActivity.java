@@ -1490,7 +1490,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
                 //TODO: add amount
                 mActivityPaymentChoiceBinding.tvLowBalancePaytm.setVisibility(View.VISIBLE);
                 mActivityPaymentChoiceBinding.tvLowBalancePaytm.setText("Low balance. You need " +
-                        getString(R.string.rupee_symbol_x, String.valueOf(payableAmount)));
+                        getString(R.string.rupee_symbol_x, Utility.getQuotePriceFormatter(String.valueOf(payableAmount))) + "...");
                 PAYTM_STEP = PAYTM_ADD_MONEY;
 
             } else {
