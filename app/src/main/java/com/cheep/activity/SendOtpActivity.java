@@ -27,6 +27,7 @@ import com.cheep.BuildConfig;
 import com.cheep.R;
 import com.cheep.databinding.ActivitySendOtpBinding;
 import com.cheep.model.MessageEvent;
+import com.cheep.model.UserDetails;
 import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
 import com.cheep.utils.LogUtils;
@@ -951,10 +952,33 @@ public class SendOtpActivity extends BaseAppCompatActivity implements View.OnCli
     ///////////////////////////////////////////////////////////Volley Get Checksum Hash Web call ends///////////////////////////////////////////////////////////
 
     ///////////////////////////////////////////////////////////Volley save paytm user Web call starts///////////////////////////////////////////////////////////
-
     @Override
-    public void volleySavePaytmUserSuccessResponse() {
+    public void volleySavePaytmUserSuccessResponse(String responseString) {
         Log.d(TAG, "volleySavePaytmUserSuccessResponse: user successfully saved");
+        //TODO: save paytm data in userDetails class
+
+        try {
+            JSONObject jsonObject = new JSONObject(responseString);
+            LogUtils.LOGD(TAG, "onResponse: " + jsonObject.toString());
+            int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
+            switch (statusCode) {
+                case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
+                    // save paytm data in preferences user details
+                    String paytmData = jsonObject.getJSONObject(NetworkUtility.TAGS.DATA).getJSONObject(NetworkUtility.TAGS.PAYMENT_GATEWAY_DATA).toString();
+                    UserDetails userDetails = PreferenceUtility.getInstance(SendOtpActivity.this).getUserDetails();
+                    userDetails.mPaytmUserDetail = (UserDetails.PaytmUserDetail) Utility.getObjectFromJsonString(paytmData, UserDetails.PaytmUserDetail.class);
+                    PreferenceUtility.getInstance(SendOtpActivity.this).saveUserDetails(userDetails);
+                    break;
+                case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
+                    Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivitySendOtpBinding.getRoot());
+                    break;
+                case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
+                    Utility.showSnackBar(jsonObject.getString(NetworkUtility.TAGS.MESSAGE), mActivitySendOtpBinding.getRoot());
+                    break;
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     private void savePaytmUserDetails() {
@@ -965,7 +989,7 @@ public class SendOtpActivity extends BaseAppCompatActivity implements View.OnCli
 
         showProgressDialog();
 
-        PaytmUtility.savePaytmUserDetails(mContext, mResourceOwnerCustomerId, mAccessToken, mMobileNumber, this, NetworkUtility.TAGS.PAYMENT_METHOD_TYPE.PAYTM);
+        PaytmUtility.savePaytmUserDetails(mContext, mResourceOwnerCustomerId, mAccessToken, mMobileNumber, this, NetworkUtility.TAGS.PAYMENT_METHOD_TYPE.PAYTM, String.valueOf(mExpires));
     }
     ///////////////////////////////////////////////////////////Volley save paytm user Web call ends///////////////////////////////////////////////////////////
 

@@ -41,6 +41,7 @@ import com.cheep.strategicpartner.model.QueAnsModel;
 import com.cheep.strategicpartner.model.StrategicPartnerServiceModel;
 import com.cheep.utils.HDFCPaymentUtility;
 import com.cheep.utils.LogUtils;
+import com.cheep.utils.PaytmUtility;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.SuperCalendar;
 import com.cheep.utils.Utility;
@@ -60,6 +61,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.cheep.network.NetworkUtility.PAYTM.PARAMETERS.orderId;
+import static com.cheep.network.NetworkUtility.PAYTM.PARAMETERS.response;
+
 
 public class PaymentChoiceActivity extends BaseAppCompatActivity implements View.OnClickListener {
 
@@ -75,6 +79,12 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
     private Map<String, Object> mTaskCreationParams;
     private Map<String, String> mTransactionParams;
     private String amount;
+    public static final int PAYTM_SEND_OTP = 0;
+    public static final int PAYTM_ADD_MONEY = 1;
+    public static final int PAYTM_WITHDRAW = 2;
+
+    private int PAYTM_STEP = 0;
+
 
     public static void newInstance(Context context, TaskDetailModel taskDetailModel, ProviderModel providerModel, int isAdditionalPayment, boolean isInstaBooking, AddressModel mSelectedAddressModel) {
         Intent intent = new Intent(context, PaymentChoiceActivity.class);
@@ -182,7 +192,23 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
                 break;
             case R.id.rl_paytm:
                 paymentMethod = NetworkUtility.TAGS.PAYMENT_METHOD_TYPE.PAYTM;
-                SendOtpActivity.newInstance(mContext, true, amount);
+                UserDetails userDetails = PreferenceUtility.getInstance(PaymentChoiceActivity.this).getUserDetails();
+                UserDetails.PaytmUserDetail paytmUserDetail = userDetails.mPaytmUserDetail;
+
+                switch (PAYTM_STEP) {
+                    case PAYTM_SEND_OTP:
+                        SendOtpActivity.newInstance(mContext, true, amount);
+                        break;
+                    case PAYTM_ADD_MONEY:
+                        AddMoneyActivity.newInstance(mContext, amount, payableAmount, paytmUserDetail.paytmAccessToken,
+                                paytmUserDetail.paytmphoneNumber, paytmUserDetail.paytmCustId, paytmWalletBalance);
+                        break;
+                    case PAYTM_WITHDRAW:
+                        WithdrawMoneyActivity.newInstance(mContext, amount, payableAmount, paytmUserDetail.paytmAccessToken,
+                                paytmUserDetail.paytmphoneNumber, paytmUserDetail.paytmCustId, paytmWalletBalance, true);
+                        break;
+                }
+
                 break;
 
             case R.id.rl_cash_payment:
@@ -1364,6 +1390,34 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
         super.onDestroy();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // check paytm access token is still valid and show linked account balance
+        UserDetails userDetails = PreferenceUtility.getInstance(PaymentChoiceActivity.this).getUserDetails();
+        if (userDetails != null && userDetails.mPaytmUserDetail != null) {
+            try {
+                long accessTokenExpiresTimeStamp = Long.parseLong(userDetails.mPaytmUserDetail.accessTokenExpiresTimestamp);
+                if (accessTokenExpiresTimeStamp < System.currentTimeMillis()) {
+                    // access token has been expired
+                    userDetails.mPaytmUserDetail = null;
+                    mActivityPaymentChoiceBinding.tvPaytmLinkAccount.setText(getString(R.string.label_link_x, getString(R.string.label_account)));
+                    mActivityPaymentChoiceBinding.tvPaytmLinkAccount.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_link_blue, 0, 0, 0);
+                    PreferenceUtility.getInstance(PaymentChoiceActivity.this).saveUserDetails(userDetails);
+                    PAYTM_STEP = PAYTM_SEND_OTP;
+
+                } else {
+                    // show linked account balace
+                    mActivityPaymentChoiceBinding.tvPaytmLinkAccount.setText(Utility.EMPTY_STRING);
+                    mActivityPaymentChoiceBinding.tvPaytmLinkAccount.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_right_arrow_blue, 0, 0, 0);
+                    checkBalance(userDetails.mPaytmUserDetail.paytmAccessToken);
+                }
+            } catch (NumberFormatException e) {
+
+            }
+        }
+    }
+
     /**
      * Event Bus Callbacks
      */
@@ -1391,4 +1445,93 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
             }
         }
     }
+
+    ///////////////////////////////////////////////////////////Paytm Check Balance API call starts///////////////////////////////////////////////////////////
+
+    private void checkBalance(String mAccessToken) {
+        if (!Utility.isConnected(mContext)) {
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityPaymentChoiceBinding.getRoot());
+            return;
+        }
+
+        //Show Progress
+        showProgressDialog();
+
+        PaytmUtility.checkBalance(mContext, mAccessToken, mCheckBalanceResponseListener);
+    }
+
+    double paytmWalletBalance;
+    private double payableAmount = 0;
+    private final PaytmUtility.CheckBalanceResponseListener mCheckBalanceResponseListener = new PaytmUtility.CheckBalanceResponseListener() {
+        @Override
+        public void paytmCheckBalanceSuccessResponse(JSONObject jsonObject) {
+            try {
+//                requestGuid = jsonObject.getString(NetworkUtility.PAYTM.PARAMETERS.requestGuid);
+                String paytmReturnedOrderId = jsonObject.getString(orderId);
+                JSONObject responseParamJson = jsonObject.getJSONObject(response);
+                double totalBalance = responseParamJson.getDouble(NetworkUtility.PAYTM.PARAMETERS.totalBalance);
+                paytmWalletBalance = responseParamJson.getDouble(NetworkUtility.PAYTM.PARAMETERS.paytmWalletBalance);
+                String ownerGuid = responseParamJson.getString(NetworkUtility.PAYTM.PARAMETERS.ownerGuid);
+                String walletGrade = responseParamJson.getString(NetworkUtility.PAYTM.PARAMETERS.walletGrade);
+                String ssoId = responseParamJson.getString(NetworkUtility.PAYTM.PARAMETERS.ssoId);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            if (amount.contains(Utility.COMMA)) {
+                amount = amount.replace(Utility.COMMA, Utility.EMPTY_STRING);
+            }
+            boolean isLowBalance = paytmWalletBalance < Double.parseDouble(amount);
+            payableAmount = Math.ceil(Double.parseDouble(amount) - paytmWalletBalance);
+            mActivityPaymentChoiceBinding.tvPaytmBalance.setVisibility(View.VISIBLE);
+            mActivityPaymentChoiceBinding.tvPaytmBalance.setText("(" + getString(R.string.rupee_symbol_x, String.valueOf(paytmWalletBalance)) + ")");
+            if (isLowBalance) {
+//            BTN_WHICH = BTN_IS_ADD_AMOUNT;
+                //TODO: add amount
+                mActivityPaymentChoiceBinding.tvLowBalancePaytm.setVisibility(View.VISIBLE);
+                mActivityPaymentChoiceBinding.tvLowBalancePaytm.setText("Low balance. You need " +
+                        getString(R.string.rupee_symbol_x, String.valueOf(payableAmount)));
+                PAYTM_STEP = PAYTM_ADD_MONEY;
+
+            } else {
+//            BTN_WHICH = BTN_IS_CONFIRM;
+                //TODO: withdraw money
+                PAYTM_STEP = PAYTM_WITHDRAW;
+            }
+            hideProgressDialog();
+        }
+
+
+        //This method is called when access token expires early due to some reason and we need to do whole OAuth process again
+        @Override
+        public void paytmInvalidAuthorization() {
+            //TODO: implement that if accessToken is valid i.e. 1 month is not due directly call checkBalance API.
+        }
+
+        @Override
+        public void showGeneralizedErrorMessage() {
+            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityPaymentChoiceBinding.getRoot());
+            hideProgressDialog();
+        }
+
+        @Override
+        public void paytmInvalidMobileNumber() {
+            Utility.showSnackBar(getString(R.string.validate_phone_number), mActivityPaymentChoiceBinding.getRoot());
+            hideProgressDialog();
+        }
+
+        @Override
+        public void paytmAccountBlocked() {
+            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityPaymentChoiceBinding.getRoot());
+            hideProgressDialog();
+        }
+
+        @Override
+        public void volleyError() {
+            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityPaymentChoiceBinding.getRoot());
+            hideProgressDialog();
+        }
+    };
+    ///////////////////////////////////////////////////////////Paytm Check Balance API call ends///////////////////////////////////////////////////////////
+
 }

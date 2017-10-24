@@ -24,9 +24,11 @@ import android.view.View;
 import com.cheep.R;
 import com.cheep.databinding.ActivitySendOtpBinding;
 import com.cheep.model.MessageEvent;
+import com.cheep.model.UserDetails;
 import com.cheep.network.NetworkUtility;
 import com.cheep.utils.LogUtils;
 import com.cheep.utils.PaytmUtility;
+import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.Utility;
 
 import org.greenrobot.eventbus.EventBus;
@@ -367,14 +369,37 @@ public class VerifyOtpActivity extends BaseAppCompatActivity {
         showProgressDialog();
 
         PaytmUtility.savePaytmUserDetails(mContext, mResourceOwnerCustomerId, mAccessToken, mMobileNumber
-                , mSavePaytmUserResponseListener, NetworkUtility.TAGS.PAYMENT_METHOD_TYPE.PAYTM);
+                , mSavePaytmUserResponseListener, NetworkUtility.TAGS.PAYMENT_METHOD_TYPE.PAYTM, String.valueOf(mExpires));
     }
 
     private final PaytmUtility.SavePaytmUserResponseListener mSavePaytmUserResponseListener = new PaytmUtility.SavePaytmUserResponseListener() {
         @Override
-        public void volleySavePaytmUserSuccessResponse() {
+        public void volleySavePaytmUserSuccessResponse(String responseString) {
             Log.d(TAG, "volleySavePaytmUserSuccessResponse: user successfully saved");
             //TODO: save paytm data in userDetails class
+
+            try {
+                JSONObject jsonObject = new JSONObject(responseString);
+                LogUtils.LOGD(TAG, "onResponse: " + jsonObject.toString());
+                int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
+                switch (statusCode) {
+                    case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
+                        // save paytm data in preferences user details
+                        String paytmData = jsonObject.getJSONObject(NetworkUtility.TAGS.DATA).getJSONObject(NetworkUtility.TAGS.PAYMENT_GATEWAY_DATA).toString();
+                        UserDetails userDetails = PreferenceUtility.getInstance(VerifyOtpActivity.this).getUserDetails();
+                        userDetails.mPaytmUserDetail = (UserDetails.PaytmUserDetail) Utility.getObjectFromJsonString(paytmData, UserDetails.PaytmUserDetail.class);
+                        PreferenceUtility.getInstance(VerifyOtpActivity.this).saveUserDetails(userDetails);
+                        break;
+                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
+                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivitySendOtpBinding.getRoot());
+                        break;
+                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
+                        Utility.showSnackBar(jsonObject.getString(NetworkUtility.TAGS.MESSAGE), mActivitySendOtpBinding.getRoot());
+                        break;
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
 
         @Override

@@ -216,7 +216,7 @@ public class PaytmUtility {
 //                if (PaytmNetworkRequest.HttpResponseCodeDeliverer.mHttpResponseCode == 200) {
                     if (paytmResponseData.has(NetworkUtility.PAYTM.PARAMETERS.access_token)) {
                         String mAccessToken = paytmResponseData.getString(NetworkUtility.PAYTM.PARAMETERS.access_token);
-                        long mExpires = paytmResponseData.getInt(NetworkUtility.PAYTM.PARAMETERS.expires);
+                        long mExpires = paytmResponseData.getLong(NetworkUtility.PAYTM.PARAMETERS.expires);
                         String mResourceOwnerCustomerId = paytmResponseData.getString(NetworkUtility.PAYTM.PARAMETERS.resourceOwnerId);
                         listener.paytmVerifyOtpSuccessResponse(mAccessToken, mExpires, mResourceOwnerCustomerId);
                     } else {
@@ -541,6 +541,10 @@ public class PaytmUtility {
 
         String orderID = String.valueOf(System.currentTimeMillis());
 
+        Map<String, String> mHeaderParams = new HashMap<>();
+        mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
+        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
+
         Map<String, String> bodyParams = new HashMap<>();
 
         bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.AppIP, Utility.getIPAddress(true));
@@ -564,7 +568,7 @@ public class PaytmUtility {
                 NetworkUtility.WS.GET_CHECKSUM_HASH,
                 mGetChecksumErrorListener,
                 mGetChecksumResponseListener,
-                null,
+                mHeaderParams,
                 bodyParams,
                 null);
         Volley.getInstance(mContext).addToRequestQueue(volleyNetworkRequest, NetworkUtility.WS.GET_CHECKSUM_HASH);
@@ -610,6 +614,12 @@ public class PaytmUtility {
 
         String orderID = String.valueOf(System.currentTimeMillis());
 
+
+        Map<String, String> mHeaderParams = new HashMap<>();
+        mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
+        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
+
+
         Map<String, String> bodyParams = new HashMap<>();
         bodyParams.put(NetworkUtility.TAGS.ORDER_ID, orderID);
         bodyParams.put(NetworkUtility.TAGS.TXN_AMOUNT, txnAmount);
@@ -630,7 +640,7 @@ public class PaytmUtility {
                 NetworkUtility.WS.GET_CHECKSUM_HASH,
                 mGetChecksumErrorListener,
                 mGetChecksumResponseListener,
-                null,
+                mHeaderParams,
                 bodyParams,
                 null);
         Volley.getInstance(mContext).addToRequestQueue(volleyNetworkRequest, NetworkUtility.WS.GET_CHECKSUM_HASH);
@@ -641,7 +651,7 @@ public class PaytmUtility {
 
     ///////////////////////////////////////////////////////Volley save user details Web call starts///////////////////////////////////////////////////////
     public interface SavePaytmUserResponseListener {
-        void volleySavePaytmUserSuccessResponse();
+        void volleySavePaytmUserSuccessResponse(String responseString);
 
         void showSpecificErrorMessage(String errorMessage);
 
@@ -651,7 +661,7 @@ public class PaytmUtility {
     }
 
 
-    public static void savePaytmUserDetails(Context mContext, String mResourceOwnerCustomerId, String mAccessToken, String mobileNumber, final SavePaytmUserResponseListener listener, String methodType) {
+    public static void savePaytmUserDetails(Context mContext, String mResourceOwnerCustomerId, String mAccessToken, String mobileNumber, final SavePaytmUserResponseListener listener, String methodType, String expiresTimeStamp) {
 
         final Response.ErrorListener mSavePaytmUserErrorListener = new Response.ErrorListener() {
             @Override
@@ -671,7 +681,7 @@ public class PaytmUtility {
                     int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
                     switch (statusCode) {
                         case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
-                            listener.volleySavePaytmUserSuccessResponse();
+                            listener.volleySavePaytmUserSuccessResponse(strResponse);
                             break;
                         case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
                             listener.showGeneralizedErrorMessage();
@@ -696,6 +706,7 @@ public class PaytmUtility {
         bodyParams.put(NetworkUtility.TAGS.PAYTM_ACCESS_TOKEN, mAccessToken);
         bodyParams.put(NetworkUtility.TAGS.PAYTM_PHONE_NUMBER, mobileNumber);
         bodyParams.put(NetworkUtility.TAGS.PAYMENT_METHOD_TYPE_TAG, methodType);
+        bodyParams.put(NetworkUtility.TAGS.ACCESS_TOKEN_EXPIRES_TIMESTAMP, expiresTimeStamp);
 
         @SuppressWarnings("unchecked")
         VolleyNetworkRequest volleyNetworkRequest = new VolleyNetworkRequest(
@@ -932,6 +943,11 @@ public class PaytmUtility {
             }
         };
 
+        Map<String, String> mHeaderParams = new HashMap<>();
+        mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
+        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
+
+
         // Generate Parameters
         Map<String, String> params = new HashMap<>();
         params.put(NetworkUtility.PAYTM.PARAMETERS.order_id, generatedOrderId);
@@ -941,7 +957,7 @@ public class PaytmUtility {
                 NetworkUtility.WS.FETCH_CALLBACK_RESPONSE_FROM_PAYTM,
                 mVerifyTransactionMoneyErrorListener,
                 mVerifyTransactionMoneyResponseListener,
-                null,
+                mHeaderParams ,
                 params,
                 null);
         Volley.getInstance(mContext).addToRequestQueue(paytmNetworkRequest, NetworkUtility.WS.FETCH_CALLBACK_RESPONSE_FROM_PAYTM);
