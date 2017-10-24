@@ -1356,6 +1356,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
     protected void onDestroy() {
         // Unregister the listerners you register in OnCreate method
         try {
+            Volley.getInstance(PaymentChoiceActivity.this).getRequestQueue().cancelAll(NetworkUtility.WS.PAYMENT);
             EventBus.getDefault().unregister(this);
         } catch (Exception e) {
 

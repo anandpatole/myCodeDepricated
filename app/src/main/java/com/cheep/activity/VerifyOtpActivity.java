@@ -23,11 +23,15 @@ import android.view.View;
 
 import com.cheep.R;
 import com.cheep.databinding.ActivitySendOtpBinding;
+import com.cheep.model.MessageEvent;
 import com.cheep.network.NetworkUtility;
 import com.cheep.utils.LogUtils;
 import com.cheep.utils.PaytmUtility;
 import com.cheep.utils.Utility;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -85,6 +89,8 @@ public class VerifyOtpActivity extends BaseAppCompatActivity {
         mActivitySendOtpBinding = DataBindingUtil.setContentView(this, R.layout.activity_send_otp);
         initiateUI();
         setupActionbar();
+        EventBus.getDefault().register(this);
+
     }
 
     private void setupActionbar() {
@@ -320,8 +326,8 @@ public class VerifyOtpActivity extends BaseAppCompatActivity {
              * do not hideProgressDialog as we need to call 3 (would be 4 in case we call getUserDetails API) APIs back to back
              */
         /*timer.cancel();*/
-        savePaytmUserDetails();
-        checkBalance();
+            savePaytmUserDetails();
+            checkBalance();
         }
 
         @Override
@@ -505,6 +511,31 @@ public class VerifyOtpActivity extends BaseAppCompatActivity {
                 return true;
             default:
                 return false;
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        try {
+            EventBus.getDefault().unregister(this);
+        } catch (Exception e) {
+
+        }
+        super.onDestroy();
+
+    }
+
+    /**
+     * Event Bus Callbacks
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(MessageEvent event) {
+        Log.d(TAG, "onMessageEvent() called with: event = [" + event.BROADCAST_ACTION + "]");
+        if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.PAYTM_RESPONSE) {
+            // Check the response <code></code>
+            if (event.paytmResponse.isSuccess) {
+                finish();
+            }
         }
     }
 }

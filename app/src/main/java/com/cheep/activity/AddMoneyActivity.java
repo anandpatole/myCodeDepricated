@@ -397,6 +397,7 @@ public class AddMoneyActivity extends BaseAppCompatActivity {
 
                     // Send the event
                     EventBus.getDefault().post(messageEvent);
+
                 }
 
                 final JSONObject mRoot = new JSONObject(responseInJson);

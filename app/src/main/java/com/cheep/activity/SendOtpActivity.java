@@ -36,6 +36,8 @@ import com.cheep.utils.Utility;
 import com.mixpanel.android.java_websocket.util.Base64;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -364,6 +366,7 @@ public class SendOtpActivity extends BaseAppCompatActivity implements View.OnCli
         initiateUI();
         setListeners();
         setupActionbar();
+        EventBus.getDefault().register(this);
     }
 
     private void setupActionbar() {
@@ -1023,6 +1026,12 @@ public class SendOtpActivity extends BaseAppCompatActivity implements View.OnCli
         Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.PAYTM.WALLET_APIS.ADD_MONEY);
         Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.WS.SAVE_PAYTM_USER_DETAILS);
         Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.PAYTM.WALLET_APIS.WITHDRAW_MONEY);
+        try {
+            EventBus.getDefault().unregister(this);
+
+        } catch (Exception e) {
+
+        }
         super.onDestroy();
     }
 
@@ -1072,5 +1081,18 @@ public class SendOtpActivity extends BaseAppCompatActivity implements View.OnCli
 
     };
 
+    /**
+     * Event Bus Callbacks
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(MessageEvent event) {
+        Log.d(TAG, "onMessageEvent() called with: event = [" + event.BROADCAST_ACTION + "]");
+        if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.PAYTM_RESPONSE) {
+            // Check the response <code></code>
+            if (event.paytmResponse.isSuccess) {
+                finish();
+            }
+        }
+    }
 
 }
