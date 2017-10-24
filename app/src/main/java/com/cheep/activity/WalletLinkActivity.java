@@ -7,6 +7,7 @@ import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
@@ -29,6 +30,7 @@ import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 
 import com.cheep.BuildConfig;
@@ -74,6 +76,7 @@ public class WalletLinkActivity extends BaseAppCompatActivity implements View.On
     private boolean isPaytm;
     private String mEtText;
     private TextWatcher textWatcher;
+    private TextWatcher mobileNumberTextWatcher;
     private String mChecksumHash;
 
     private final int BTN_IS_SEND_OTP = 0;
@@ -362,6 +365,7 @@ public class WalletLinkActivity extends BaseAppCompatActivity implements View.On
 
         }
     };
+    private CountDownTimer timer;
 
 
     public static void newInstance(Context context, boolean isPaytm, String amount) {
@@ -402,6 +406,63 @@ public class WalletLinkActivity extends BaseAppCompatActivity implements View.On
         if (intent.hasExtra(Utility.Extra.AMOUNT)) {
             amount = intent.getExtras().getString(Utility.Extra.AMOUNT);
         }
+        mobileNumberTextWatcher = new TextWatcher() {
+            public EditText ET = mActivityWalletLinkBinding.etMobileNumber;
+            //we need to know if the user is erasing or inputing some new character
+            private boolean backspacingFlag = false;
+            //we need to block the :afterTextChanges method to be called again after we just replaced the EditText text
+            private boolean editedFlag = false;
+            //we need to mark the cursor position and restore it after the edition
+            private int cursorComplement;
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                //we store the cursor local relative to the end of the string in the EditText before the edition
+                cursorComplement = s.length() - ET.getSelectionStart();
+                //we check if the user ir inputing or erasing a character
+                backspacingFlag = count > after;
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // nothing to do here =D
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String string = s.toString();
+                String phone = string.replaceAll("[^\\d]", "");
+                //what matters are the phone digits beneath the mask, so we always work with a raw string with only digits
+
+                //if the text was just edited, :afterTextChanged is called another time... so we need to verify the flag of edition
+                //if the flag is false, this is a original user-typed entry. so we go on and do some magic
+                if (!editedFlag) {
+
+                    //we start verifying the worst case, many characters mask need to be added
+                    //example: 999999999 <- 6+ digits already typed
+                    // masked: (999) 999-999
+                    if (phone.length() >= 5 && !backspacingFlag) {
+                        //we will edit. next call on this textWatcher will be ignored
+                        phone.replace(" ", "");
+                        editedFlag = true;
+                        //here is the core. we substring the raw digits and add the mask as convenient
+                        String ans = phone.substring(0, 5) + " " + phone.substring(5);
+                        ET.setText(ans);
+                        //we deliver the cursor to its original position relative to the end of the string
+                        ET.setSelection(ET.getText().length() - cursorComplement);
+
+                        //we end at the most simple case, when just one character mask is needed
+                        //example: 99999 <- 3+ digits already typed
+                        // masked: (999) 99
+                    }
+                    // We just edited the field, ignoring this cicle of the watcher and getting ready for the next
+                } else {
+                    editedFlag = false;
+                }
+            }
+        };
+        mActivityWalletLinkBinding.etMobileNumber.addTextChangedListener(mobileNumberTextWatcher);
+
         if (isPaytm) {
             mActivityWalletLinkBinding.tvEnterNoLinkXAccount.setText(getString(R.string.label_enter_number_link_account, getString(R.string.label_paytm)));
             mActivityWalletLinkBinding.tvWeCreateXWallet.setText(getString(R.string.label_we_create_wallet, getString(R.string.label_paytm)));
@@ -423,7 +484,7 @@ public class WalletLinkActivity extends BaseAppCompatActivity implements View.On
                 mEtText = mActivityWalletLinkBinding.etMobileNumber.getText().toString();
                 if (mActivityWalletLinkBinding.tvSendOtp.getText().toString().equalsIgnoreCase(getString(R.string.label_send_otp))) {
                     BTN_WHICH = BTN_IS_SEND_OTP;
-                    mMobileNumber = mEtText;
+                    mMobileNumber = mEtText.replace(" ", "");
                 } else if (mActivityWalletLinkBinding.tvSendOtp.getText().toString().equalsIgnoreCase(getString(R.string.label_proceed))) {
                     BTN_WHICH = BTN_IS_PROCEED;
                 } else if (mActivityWalletLinkBinding.tvSendOtp.getText().toString().equalsIgnoreCase(getString(R.string.label_add_amount))) {
@@ -432,156 +493,209 @@ public class WalletLinkActivity extends BaseAppCompatActivity implements View.On
                     BTN_WHICH = BTN_IS_CONFIRM;
                 }
                 if (isValidated()) {
-                    if (BTN_WHICH == BTN_IS_SEND_OTP) {
-                        /**
+                    switch (BTN_WHICH) {
+                        case BTN_IS_SEND_OTP:
+                        /*
                          * Hide the Keyboard if it opened
                          */
-                        Utility.hideKeyboard(this);
-                        sendOTP();
-                    } else if (BTN_WHICH == BTN_IS_PROCEED) {
-                        /**
+                            Utility.hideKeyboard(this);
+                            sendOTP(false);
+                            break;
+                        case BTN_IS_PROCEED:
+                        /*
                          * Hide the Keyboard if it opened
                          */
-                        Utility.hideKeyboard(this);
-                        verifyOTP();
-                    } else if (BTN_WHICH == BTN_IS_ADD_AMOUNT) {
-                        /**
+                            Utility.hideKeyboard(this);
+                            verifyOTP();
+                            break;
+                        case BTN_IS_ADD_AMOUNT:
+                        /*
                          * Hide the Keyboard if it opened
                          */
-                        Utility.hideKeyboard(this);
-                        callgetChecksumForAddMoney();
+                            Utility.hideKeyboard(this);
+                            callgetChecksumForAddMoney();
 //                        addMoney();
-                    } else if (BTN_WHICH == BTN_IS_CONFIRM) {
-                        /**
+                            break;
+                        case BTN_IS_CONFIRM:
+                        /*
                          * Hide the Keyboard if it opened
                          */
-                        Utility.hideKeyboard(this);
-                        callgetChecksumForWithdrawMoney();
+                            Utility.hideKeyboard(this);
+                            callgetChecksumForWithdrawMoney();
 
+                            break;
                     }
                 }
                 break;
         }
     }
 
+    boolean isTimerOnGoing = false;
+    long currentMilliSeconds = 0;
+
     private void updateUI() {
-        if (BTN_WHICH == BTN_IS_SEND_OTP) {
-            String sendOTPString = getString(R.string.label_send_otp_again);
-            mActivityWalletLinkBinding.tvEnterNoLinkXAccount.setText(getString(R.string.label_enter_otp_sent_on_x, mActivityWalletLinkBinding.etMobileNumber.getText()));
-            mActivityWalletLinkBinding.tvSendOtp.setText(getString(R.string.label_proceed));
-            mActivityWalletLinkBinding.tvSendOtp.setEnabled(false);
+        switch (BTN_WHICH) {
+            case BTN_IS_SEND_OTP:
+                String sendOTPString = getString(R.string.label_send_otp_again);
+                mActivityWalletLinkBinding.tvEnterNoLinkXAccount.setText(getString(R.string.label_enter_otp_sent_on_x, mActivityWalletLinkBinding.etMobileNumber.getText()));
+//                mActivityWalletLinkBinding.tvSendOtp.setText(getString(R.string.label_proceed));
+                mActivityWalletLinkBinding.tvSendOtp.setEnabled(false);
+                mActivityWalletLinkBinding.tvWeCreateXWallet.setVisibility(View.INVISIBLE);
+                timer = new CountDownTimer(60000, 1000) {
 
-            textWatcher = new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                    public void onTick(long millisUntilFinished) {
+                        currentMilliSeconds = millisUntilFinished;
+                        isTimerOnGoing = true;
+                        if (!mActivityWalletLinkBinding.etMobileNumber.getText().toString().isEmpty()) {
+                            mActivityWalletLinkBinding.tvSendOtp.setSelected(true);
+                            mActivityWalletLinkBinding.tvSendOtp.setText(getString(R.string.label_proceed));
+                        } else {
+                            mActivityWalletLinkBinding.tvSendOtp.setSelected(false);
+                            mActivityWalletLinkBinding.tvSendOtp.setText(String.format("00:" + "%02d", (int) millisUntilFinished / 1000));
+                        }
+                    }
 
-                }
+                    public void onFinish() {
+                        isTimerOnGoing = false;
+                        if (!mActivityWalletLinkBinding.etMobileNumber.getText().toString().isEmpty()) {
+                            mActivityWalletLinkBinding.tvSendOtp.setSelected(true);
+                            mActivityWalletLinkBinding.tvSendOtp.setText(getString(R.string.label_proceed));
+                        } else {
+                            mActivityWalletLinkBinding.tvSendOtp.setSelected(false);
+                            mActivityWalletLinkBinding.tvSendOtp.setText(String.format("00:" + "%02d", 0));
+                        }
+                        mActivityWalletLinkBinding.tvWeCreateXWallet.setVisibility(View.VISIBLE);
+                    }
 
-                @Override
-                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                    mActivityWalletLinkBinding.tvSendOtp.setEnabled(charSequence.length() > 3);
-                    mActivityWalletLinkBinding.tvSendOtp.setOnClickListener(charSequence.length() > 3 ? WalletLinkActivity.this : null);
-                }
+                }.start();
 
-                @Override
-                public void afterTextChanged(Editable editable) {
+                textWatcher = new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
-                }
-            };
+                    }
 
-            mActivityWalletLinkBinding.etMobileNumber.addTextChangedListener(textWatcher);
-            mActivityWalletLinkBinding.ivMobile.setVisibility(View.GONE);
-            mActivityWalletLinkBinding.tvDefaultCountryCode.setVisibility(View.GONE);
-            mActivityWalletLinkBinding.etMobileNumber.setGravity(Gravity.CENTER);
-            mActivityWalletLinkBinding.etMobileNumber.setText(Utility.EMPTY_STRING);
-            mActivityWalletLinkBinding.etMobileNumber.setTextColor(ContextCompat.getColor(mContext, R.color.grey_varient_8));
-            mActivityWalletLinkBinding.etMobileNumber.setHint(getString(R.string.label_enter_otp));
+                    @Override
+                    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                        mActivityWalletLinkBinding.tvSendOtp.setEnabled(charSequence.length() > 0);
+                        mActivityWalletLinkBinding.tvSendOtp.setOnClickListener(charSequence.length() > 0 ? WalletLinkActivity.this : null);
+                        if (!mActivityWalletLinkBinding.etMobileNumber.getText().toString().isEmpty()) {
+                            mActivityWalletLinkBinding.tvSendOtp.setSelected(true);
+                            mActivityWalletLinkBinding.tvSendOtp.setText(getString(R.string.label_proceed));
+                        } else if (!isTimerOnGoing) {
+                            mActivityWalletLinkBinding.tvSendOtp.setSelected(false);
+                            mActivityWalletLinkBinding.tvSendOtp.setText(String.format("00:" + "%02d", 0));
+                        } else {
+                            mActivityWalletLinkBinding.tvSendOtp.setSelected(false);
+                            mActivityWalletLinkBinding.tvSendOtp.setText(String.format("00:" + "%02d", (int) currentMilliSeconds / 1000));
+
+                        }
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable editable) {
+
+                    }
+                };
+                mActivityWalletLinkBinding.etMobileNumber.removeTextChangedListener(mobileNumberTextWatcher);
+                mActivityWalletLinkBinding.etMobileNumber.addTextChangedListener(textWatcher);
+                mActivityWalletLinkBinding.ivMobile.setVisibility(View.GONE);
+                mActivityWalletLinkBinding.tvDefaultCountryCode.setVisibility(View.GONE);
+                mActivityWalletLinkBinding.etMobileNumber.setGravity(Gravity.CENTER);
+                mActivityWalletLinkBinding.etMobileNumber.setText(Utility.EMPTY_STRING);
+                mActivityWalletLinkBinding.etMobileNumber.setTextColor(ContextCompat.getColor(mContext, R.color.grey_varient_8));
+                mActivityWalletLinkBinding.etMobileNumber.setHint(getString(R.string.label_enter_otp));
           /*  if (BuildConfig.BUILD_TYPE.equalsIgnoreCase(Utility.DEBUG)) {
                 mActivityWalletLinkBinding.etMobileNumber.setText(BootstrapConstant.PAYTM_STAGING_MOBILE_NUMBER);
             }*/
-            SpannableStringBuilder sendOTPSpannableStringBuilder = new SpannableStringBuilder(sendOTPString);
-            int clickIndex = sendOTPString.indexOf(Utility.CLICK);
+                SpannableStringBuilder sendOTPSpannableStringBuilder = new SpannableStringBuilder(sendOTPString);
+                int clickIndex = sendOTPString.indexOf(Utility.CLICK);
 
-            if (clickIndex < 0) {
-                LogUtils.LOGD(TAG, "\"click\" case changed in strings.xml");
-                return;
+                if (clickIndex < 0) {
+                    LogUtils.LOGD(TAG, "\"click\" case changed in strings.xml");
+                    return;
+                }
+
+                LogUtils.LOGD(TAG, "clickIndex: " + clickIndex);
+
+                sendOTPSpannableStringBuilder.setSpan(new ClickableSpan() {
+                    @Override
+                    public void onClick(View view) {
+                        sendOTP(true);
+                    }
+
+                    @Override
+                    public void updateDrawState(TextPaint ds) {
+                        ds.setUnderlineText(false);
+                    }
+                }, clickIndex, sendOTPSpannableStringBuilder.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                sendOTPSpannableStringBuilder.setSpan(new ForegroundColorSpan(ContextCompat.getColor(mContext, R.color.splash_gradient_end)),
+                        clickIndex, sendOTPSpannableStringBuilder.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+                mActivityWalletLinkBinding.tvWeCreateXWallet.setText(sendOTPSpannableStringBuilder);
+                mActivityWalletLinkBinding.tvWeCreateXWallet.setGravity(Gravity.CENTER);
+                mActivityWalletLinkBinding.tvWeCreateXWallet.setMovementMethod(LinkMovementMethod.getInstance());
+
+                break;
+            case BTN_IS_PROCEED:
+                Log.d(TAG, "updateUI: BTN_IS_PROCEED");
+
+                break;
+            case BTN_IS_ADD_AMOUNT: {
+                LinearLayout.LayoutParams tvEnterNoLinkXAccountLayoutParams =
+                        new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                tvEnterNoLinkXAccountLayoutParams.setMargins(0, 0, 0, 0);
+
+                mActivityWalletLinkBinding.tvEnterNoLinkXAccount.setLayoutParams(tvEnterNoLinkXAccountLayoutParams);
+                mActivityWalletLinkBinding.tvEnterNoLinkXAccount.setText(getString(R.string.label_amount_payable));
+                mActivityWalletLinkBinding.tvAmount.setText(getString(R.string.rupee_symbol_x, amount));
+                mActivityWalletLinkBinding.tvAmount.setVisibility(View.VISIBLE);
+                mActivityWalletLinkBinding.tvLowBalance.setVisibility(View.VISIBLE);
+                mActivityWalletLinkBinding.etMobileNumber.setText(Utility.EMPTY_STRING);
+                mActivityWalletLinkBinding.etMobileNumber.setTextColor(ContextCompat.getColor(mContext, R.color.splash_gradient_end));
+                mActivityWalletLinkBinding.etMobileNumber.setHint(getString(R.string.label_enter_amount));
+                mActivityWalletLinkBinding.etMobileNumber.setText(String.valueOf(payableAmount));
+                mActivityWalletLinkBinding.etMobileNumber.setEnabled(true);
+                mActivityWalletLinkBinding.etMobileNumber.setGravity(Gravity.CENTER);
+                mActivityWalletLinkBinding.tvSendOtp.setText(getString(R.string.label_add_amount));
+                mActivityWalletLinkBinding.tvSendOtp.setOnClickListener(this);
+                mActivityWalletLinkBinding.tvSendOtp.setEnabled(true);
+                mActivityWalletLinkBinding.etMobileNumber.removeTextChangedListener(textWatcher);
+                mActivityWalletLinkBinding.tvWeCreateXWallet.setText(getString(R.string.label_current_balance, String.valueOf(paytmWalletBalance)));
+                mActivityWalletLinkBinding.tvWeCreateXWallet.setGravity(Gravity.CENTER);
+
+                break;
             }
+            case BTN_IS_CONFIRM: {
+                LinearLayout.LayoutParams tvEnterNoLinkXAccountLayoutParams =
+                        new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                tvEnterNoLinkXAccountLayoutParams.setMargins((int) (Utility.convertDpToPixel(34f, mContext))
+                        , (int) (Utility.convertDpToPixel(6f, mContext))
+                        , (int) (Utility.convertDpToPixel(34f, mContext))
+                        , (int) (Utility.convertDpToPixel(34f, mContext)));
+                mActivityWalletLinkBinding.tvEnterNoLinkXAccount.setLayoutParams(tvEnterNoLinkXAccountLayoutParams);
+                mActivityWalletLinkBinding.tvEnterNoLinkXAccount.setTextSize(14);
+                if (isPaytm)
+                    mActivityWalletLinkBinding.tvEnterNoLinkXAccount.setText(getString(R.string.label_notify_paying_by_wallet, getString(R.string.label_paytm)));
+                else
+                    mActivityWalletLinkBinding.tvEnterNoLinkXAccount.setText(getString(R.string.label_notify_paying_by_wallet, getString(R.string.label_mobikwik)));
 
-            LogUtils.LOGD(TAG, "clickIndex: " + clickIndex);
+                LinearLayout.LayoutParams tvAmountLayoutParams =
+                        new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                tvAmountLayoutParams.setMargins(0, 0, 0, (int) (Utility.convertDpToPixel(87f, mContext)));
+                mActivityWalletLinkBinding.tvAmount.setLayoutParams(tvAmountLayoutParams);
+                mActivityWalletLinkBinding.tvAmount.setTextSize(32);
+                mActivityWalletLinkBinding.tvAmount.setText(getString(R.string.rupee_symbol_x, amount));
 
-            sendOTPSpannableStringBuilder.setSpan(new ClickableSpan() {
-                @Override
-                public void onClick(View view) {
-                    sendOTP();
-                }
-
-                @Override
-                public void updateDrawState(TextPaint ds) {
-                    ds.setUnderlineText(false);
-                }
-            }, clickIndex, sendOTPSpannableStringBuilder.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            sendOTPSpannableStringBuilder.setSpan(new ForegroundColorSpan(ContextCompat.getColor(mContext, R.color.splash_gradient_end)),
-                    clickIndex, sendOTPSpannableStringBuilder.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-            mActivityWalletLinkBinding.tvWeCreateXWallet.setText(sendOTPSpannableStringBuilder);
-            mActivityWalletLinkBinding.tvWeCreateXWallet.setGravity(Gravity.CENTER);
-            mActivityWalletLinkBinding.tvWeCreateXWallet.setMovementMethod(LinkMovementMethod.getInstance());
-
-        } else if (BTN_WHICH == BTN_IS_PROCEED) {
-            Log.d(TAG, "updateUI: BTN_IS_PROCEED");
-
-        } else if (BTN_WHICH == BTN_IS_ADD_AMOUNT) {
-            LinearLayout.LayoutParams tvEnterNoLinkXAccountLayoutParams =
-                    new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            tvEnterNoLinkXAccountLayoutParams.setMargins(0, 0, 0, 0);
-
-            mActivityWalletLinkBinding.tvEnterNoLinkXAccount.setLayoutParams(tvEnterNoLinkXAccountLayoutParams);
-            mActivityWalletLinkBinding.tvEnterNoLinkXAccount.setText(getString(R.string.label_amount_payable));
-
-            mActivityWalletLinkBinding.tvAmount.setText(getString(R.string.rupee_symbol_x, amount));
-            mActivityWalletLinkBinding.tvAmount.setVisibility(View.VISIBLE);
-            mActivityWalletLinkBinding.tvLowBalance.setVisibility(View.VISIBLE);
-            mActivityWalletLinkBinding.etMobileNumber.setText(Utility.EMPTY_STRING);
-            mActivityWalletLinkBinding.etMobileNumber.setTextColor(ContextCompat.getColor(mContext, R.color.splash_gradient_end));
-            mActivityWalletLinkBinding.etMobileNumber.setHint(getString(R.string.label_enter_amount));
-            mActivityWalletLinkBinding.etMobileNumber.setText(String.valueOf(payableAmount));
-            mActivityWalletLinkBinding.etMobileNumber.setEnabled(false);
-            mActivityWalletLinkBinding.etMobileNumber.setGravity(Gravity.CENTER);
-            mActivityWalletLinkBinding.tvSendOtp.setText(getString(R.string.label_add_amount));
-            mActivityWalletLinkBinding.tvSendOtp.setOnClickListener(this);
-            mActivityWalletLinkBinding.tvSendOtp.setEnabled(true);
-            mActivityWalletLinkBinding.etMobileNumber.removeTextChangedListener(textWatcher);
-            mActivityWalletLinkBinding.tvWeCreateXWallet.setText(getString(R.string.label_current_balance, String.valueOf(paytmWalletBalance)));
-            mActivityWalletLinkBinding.tvWeCreateXWallet.setGravity(Gravity.CENTER);
-
-        } else if (BTN_WHICH == BTN_IS_CONFIRM) {
-            LinearLayout.LayoutParams tvEnterNoLinkXAccountLayoutParams =
-                    new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            tvEnterNoLinkXAccountLayoutParams.setMargins((int) (Utility.convertDpToPixel(34f, mContext))
-                    , (int) (Utility.convertDpToPixel(6f, mContext))
-                    , (int) (Utility.convertDpToPixel(34f, mContext))
-                    , (int) (Utility.convertDpToPixel(34f, mContext)));
-            mActivityWalletLinkBinding.tvEnterNoLinkXAccount.setLayoutParams(tvEnterNoLinkXAccountLayoutParams);
-            mActivityWalletLinkBinding.tvEnterNoLinkXAccount.setTextSize(14);
-            if (isPaytm)
-                mActivityWalletLinkBinding.tvEnterNoLinkXAccount.setText(getString(R.string.label_notify_paying_by_wallet, getString(R.string.label_paytm)));
-            else
-                mActivityWalletLinkBinding.tvEnterNoLinkXAccount.setText(getString(R.string.label_notify_paying_by_wallet, getString(R.string.label_mobikwik)));
-
-            LinearLayout.LayoutParams tvAmountLayoutParams =
-                    new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            tvAmountLayoutParams.setMargins(0, 0, 0, (int) (Utility.convertDpToPixel(87f, mContext)));
-            mActivityWalletLinkBinding.tvAmount.setLayoutParams(tvAmountLayoutParams);
-            mActivityWalletLinkBinding.tvAmount.setTextSize(32);
-            mActivityWalletLinkBinding.tvAmount.setText(getString(R.string.rupee_symbol_x, amount));
-
-            mActivityWalletLinkBinding.tvAmount.setVisibility(View.VISIBLE);
-            mActivityWalletLinkBinding.llEtContainer.setVisibility(View.GONE);
-            mActivityWalletLinkBinding.tvWeCreateXWallet.setVisibility(View.GONE);
-            mActivityWalletLinkBinding.etMobileNumber.removeTextChangedListener(textWatcher);
-            mActivityWalletLinkBinding.tvSendOtp.setText(getString(R.string.label_confirm));
-            mActivityWalletLinkBinding.tvSendOtp.setOnClickListener(this);
-            mActivityWalletLinkBinding.tvSendOtp.setEnabled(true);
+                mActivityWalletLinkBinding.tvAmount.setVisibility(View.VISIBLE);
+                mActivityWalletLinkBinding.llEtContainer.setVisibility(View.GONE);
+                mActivityWalletLinkBinding.tvWeCreateXWallet.setVisibility(View.GONE);
+                mActivityWalletLinkBinding.etMobileNumber.removeTextChangedListener(textWatcher);
+                mActivityWalletLinkBinding.tvSendOtp.setText(getString(R.string.label_confirm));
+                mActivityWalletLinkBinding.tvSendOtp.setOnClickListener(this);
+                mActivityWalletLinkBinding.tvSendOtp.setEnabled(true);
+                break;
+            }
         }
     }
 
@@ -627,13 +741,16 @@ public class WalletLinkActivity extends BaseAppCompatActivity implements View.On
 
     ///////////////////////////////////////////////////////////Paytm Send OTP API call starts///////////////////////////////////////////////////////////
     @Override
-    public void paytmSendOtpSuccessResponse(String state) {
+    public void paytmSendOtpSuccessResponse(String state, boolean isRegenerated) {
         mState = state;
-        updateUI();
+        if (!isRegenerated)
+            updateUI();
+        else
+            timer.start();
         hideProgressDialog();
     }
 
-    private void sendOTP() {
+    private void sendOTP(boolean isRegenerated) {
         if (!Utility.isConnected(mContext)) {
             Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityWalletLinkBinding.getRoot());
             return;
@@ -641,7 +758,7 @@ public class WalletLinkActivity extends BaseAppCompatActivity implements View.On
         //Show Progress
         showProgressDialog();
 
-        PaytmUtility.sendOTP(mContext, mMobileNumber, this);
+        PaytmUtility.sendOTP(mContext, mMobileNumber, this, isRegenerated);
     }
     ///////////////////////////////////////////////////////////Paytm Send OTP API call ends///////////////////////////////////////////////////////////
 
@@ -656,6 +773,7 @@ public class WalletLinkActivity extends BaseAppCompatActivity implements View.On
          * have not called getUserDetails API as whatever this API returns, we already get it in response of this API
          * do not hideProgressDialog as we need to call 3 (would be 4 in case we call getUserDetails API) APIs back to back
          */
+        timer.cancel();
         savePaytmUserDetails();
         checkBalance();
     }
@@ -882,10 +1000,20 @@ public class WalletLinkActivity extends BaseAppCompatActivity implements View.On
     ///////////////////////////////////////////////////////////Volley Get Checksum Hash Web call starts///////////////////////////////////////////////////////////
 
     private void callgetChecksumForAddMoney() {
+
+
+        double edtAmount = Double.parseDouble(mEtText);
+        if (edtAmount < payableAmount) {
+            Utility.showToast(mContext, "Please enter minimum " + payableAmount + " amount to proceed");
+            return;
+        }
+
+
         if (!Utility.isConnected(mContext)) {
             Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityWalletLinkBinding.getRoot());
             return;
         }
+
 
         showProgressDialog();
 
@@ -944,7 +1072,7 @@ public class WalletLinkActivity extends BaseAppCompatActivity implements View.On
             }
 
             //Length of phone number must bhi 10 in length
-            if (!Utility.isValidPhoneNumber(mActivityWalletLinkBinding.etMobileNumber.getText().toString().trim())) {
+            if (!Utility.isValidPhoneNumber(mActivityWalletLinkBinding.etMobileNumber.getText().toString().trim().replace(" ", ""))) {
                 Utility.showSnackBar(getString(R.string.validate_phone_number_length), mActivityWalletLinkBinding.getRoot());
                 return false;
             }

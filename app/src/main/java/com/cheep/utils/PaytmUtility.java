@@ -11,7 +11,6 @@ import com.cheep.network.NetworkUtility;
 import com.cheep.network.PaytmNetworkRequest;
 import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
-import com.mixpanel.android.java_websocket.util.Base64;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -34,7 +33,7 @@ public class PaytmUtility {
     ///////////////////////////////////////////////////////Paytm Send OTP API call starts///////////////////////////////////////////////////////
 
     public interface SendOtpResponseListener {
-        void paytmSendOtpSuccessResponse(String state);
+        void paytmSendOtpSuccessResponse(String state, boolean isRegenerated);
 
         void showGeneralizedErrorMessage();
 
@@ -45,7 +44,7 @@ public class PaytmUtility {
         void volleyError();
     }
 
-    public static void sendOTP(final Context mContext, String mEtText, final SendOtpResponseListener listener) {
+    public static void sendOTP(final Context mContext, String mEtText, final SendOtpResponseListener listener, final boolean isRegenerated) {
 
         // Erro Listener
         Response.ErrorListener mGenerateOTPErrorListener = new Response.ErrorListener() {
@@ -70,7 +69,7 @@ public class PaytmUtility {
                     switch (responseCode) {
                         case NetworkUtility.PAYTM.RESPONSE_CODES.LOGIN:
                         case NetworkUtility.PAYTM.RESPONSE_CODES.REGISTER:
-                            listener.paytmSendOtpSuccessResponse(paytmResponseData.getString(NetworkUtility.PAYTM.PARAMETERS.state));
+                            listener.paytmSendOtpSuccessResponse(paytmResponseData.getString(NetworkUtility.PAYTM.PARAMETERS.state), isRegenerated);
                             break;
                         case NetworkUtility.PAYTM.RESPONSE_CODES.INVALID_AUTHORIZATION:
                         case NetworkUtility.PAYTM.RESPONSE_CODES.BAD_REQUEST:
