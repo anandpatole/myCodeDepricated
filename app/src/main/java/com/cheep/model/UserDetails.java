@@ -85,7 +85,7 @@ public class UserDetails {
     @SerializedName("refer_code")
     public String refer_code;
 
-    @SerializedName("user_details")
+    @SerializedName("paytmData")
     public PaytmUserDetail mPaytmUserDetail;
 
 
