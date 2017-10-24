@@ -415,6 +415,12 @@ public class Utility {
         String PAYU_RESPONSE = "payu_response";
         String AMOUNT = "amount";
         String REFER_CODE = "refer_code";
+        String MOBILE_NUMBER = "mobile_number";
+        String STATE = "state";
+        String PAYABLE_AMOUNT = "payable_amount";
+        String ACCESS_TOKEN = "access_token";
+        String CUST_ID = "cust_id";
+        String PAYTM_WALLET_BALANCE = "paytm_wallet_balance";
     }
 
 

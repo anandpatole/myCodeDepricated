@@ -206,7 +206,6 @@ dependencies {
     // Design Support Library, it also included Multidex library support, So there is no need to provide
     // another library here.
     compile "com.android.support:design:$supportLibVer"
-    compile 'com.android.support:multidex:1.0.1'
 
     // Gson Library
     compile "com.google.code.gson:gson:$gsonLibVer"
@@ -237,42 +236,45 @@ dependencies {
     }
 
     // Glide Library
-    compile 'com.github.bumptech.glide:glide:3.7.0'
+    
 
     // Swipe layout library This is Test Experiment
-    compile 'com.daimajia.swipelayout:library:1.2.0@aar'
-
+    
     //Volley Library
-    compile 'com.android.volley:volley:1.0.0'
-
+    
     //Apache Library
+    
+    //Facebook
+    
+    //For Image Cropping
+    
+    //  View pager indicator for Cover Images & Banner Images
+    
+    // For Broadcasting
+    
+    // For PayUMoney payment integration
+    
+    // HotLine integration(For Chat to Cheep Admin)
+    
+    // for paytm html response reading form input tags
+    compile 'com.android.support:multidex:1.0.1'
+    compile 'com.github.bumptech.glide:glide:3.7.0'
+    compile 'com.daimajia.swipelayout:library:1.2.0@aar'
+    compile 'com.android.volley:volley:1.0.0'
     compile 'org.apache.httpcomponents:httpmime:4.3.6'
     compile 'org.apache.httpcomponents:httpclient-android:4.3.5.1'
-
-    //Facebook
     compile 'com.facebook.android:facebook-android-sdk:4.16.1'
-
-    //For Image Cropping
     compile 'com.theartofdev.edmodo:android-image-cropper:2.3.1'
-
-    //  View pager indicator for Cover Images & Banner Images
     compile 'me.relex:circleindicator:1.2.2@aar'
-
-    // For Broadcasting
     compile 'org.greenrobot:eventbus:3.0.0'
-
-    // For PayUMoney payment integration
     compile 'com.payu.india:payu-sdk:4.3.9'
     compile 'com.payu.custombrowser:payu-custom-browser:5.3.7'
     compile 'com.payu.magicretry:magicretry:1.0.0'
-
-    // HotLine integration(For Chat to Cheep Admin)
     compile 'com.github.freshdesk:hotline-android:1.2.5'
     compile 'com.appsflyer:af-android-sdk:4.7.2@aar'
     compile 'com.amazonaws:aws-android-sdk-s3:2.2.22'
-
-    // for paytm html response reading form input tags
     compile 'org.jsoup:jsoup:1.10.3'
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
 }
 
 // Add to the bottom of the file

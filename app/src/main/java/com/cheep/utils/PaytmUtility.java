@@ -651,7 +651,7 @@ public class PaytmUtility {
     }
 
 
-    public static void savePaytmUserDetails(Context mContext, String mResourceOwnerCustomerId, String mAccessToken, String mobileNumber, final SavePaytmUserResponseListener listener) {
+    public static void savePaytmUserDetails(Context mContext, String mResourceOwnerCustomerId, String mAccessToken, String mobileNumber, final SavePaytmUserResponseListener listener, String methodType) {
 
         final Response.ErrorListener mSavePaytmUserErrorListener = new Response.ErrorListener() {
             @Override
@@ -695,6 +695,7 @@ public class PaytmUtility {
         bodyParams.put(NetworkUtility.TAGS.PAYTM_CUST_ID, mResourceOwnerCustomerId);
         bodyParams.put(NetworkUtility.TAGS.PAYTM_ACCESS_TOKEN, mAccessToken);
         bodyParams.put(NetworkUtility.TAGS.PAYTM_PHONE_NUMBER, mobileNumber);
+        bodyParams.put(NetworkUtility.TAGS.PAYMENT_METHOD_TYPE_TAG, methodType);
 
         @SuppressWarnings("unchecked")
         VolleyNetworkRequest volleyNetworkRequest = new VolleyNetworkRequest(

@@ -116,7 +116,7 @@ public class NetworkUtility {
 
         // Paytm Verify Transaction based on Order
         // Save Paytm user details
-        public static final String SAVE_PAYTM_USER_DETAILS = BASE_URL_API + "customers/payment/storePaytmData";
+        public static final String SAVE_PAYTM_USER_DETAILS = BASE_URL_API + "customers/payment/storePaymentGatewayData";
         public static final String GET_CHECKSUM_HASH = BASE_URL_API + "customers/payment/getPaytmChecksum";
         public static final String VERIFY_CHECKSUM = BASE_URL_API + "customers/Verifychecksum";
         public static final String FETCH_CALLBACK_RESPONSE_FROM_PAYTM = BASE_URL_API + "customers/payment/getCallBackResponse";
@@ -360,6 +360,7 @@ public class NetworkUtility {
         String PROMOCODE_PRICE = "promocode_price";
         String HASH_STRING = "hash_string";
         String PAYMENT_METHOD = "payment_method";
+        String PAYMENT_METHOD_TYPE_TAG = "payment_method_type";
         String REFER_CODE = "refer_code";
         // paytm params
         String ORDER_ID = "ORDER_ID";

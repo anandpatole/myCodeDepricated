@@ -182,7 +182,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
                 break;
             case R.id.rl_paytm:
                 paymentMethod = NetworkUtility.TAGS.PAYMENT_METHOD_TYPE.PAYTM;
-                WalletLinkActivity.newInstance(mContext, true, amount);
+                SendOtpActivity.newInstance(mContext, true, amount);
                 break;
 
             case R.id.rl_cash_payment:
