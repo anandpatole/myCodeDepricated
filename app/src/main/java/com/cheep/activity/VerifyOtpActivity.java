@@ -3,11 +3,13 @@ package com.cheep.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.text.Editable;
+import android.text.InputFilter;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextPaint;
@@ -163,7 +165,7 @@ public class VerifyOtpActivity extends BaseAppCompatActivity {
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 mActivitySendOtpBinding.tvSendOtp.setEnabled(charSequence.length() > 0);
                 mActivitySendOtpBinding.tvSendOtp.setOnClickListener(charSequence.length() > 0 ? mOnClickListener : null);
-                if (!mActivitySendOtpBinding.etMobileNumber.getText().toString().isEmpty()) {
+                if (!mActivitySendOtpBinding.etMobileNumber.getText().toString().trim().isEmpty()) {
                     mActivitySendOtpBinding.tvSendOtp.setSelected(true);
                     mActivitySendOtpBinding.tvSendOtp.setText(getString(R.string.label_proceed));
                 } else if (!isTimerOnGoing) {
@@ -172,15 +174,23 @@ public class VerifyOtpActivity extends BaseAppCompatActivity {
                 } else {
                     mActivitySendOtpBinding.tvSendOtp.setSelected(false);
                     mActivitySendOtpBinding.tvSendOtp.setText(String.format("00:" + "%02d", (int) currentMilliSeconds / 1000));
-
                 }
             }
 
             @Override
             public void afterTextChanged(Editable editable) {
-
+                if (mActivitySendOtpBinding.etMobileNumber.getText().toString().trim().length() > 0) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        mActivitySendOtpBinding.etMobileNumber.setLetterSpacing(0.5f);
+                    }
+                } else {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        mActivitySendOtpBinding.etMobileNumber.setLetterSpacing(0);
+                    }
+                }
             }
         };
+
 
         mActivitySendOtpBinding.etMobileNumber.addTextChangedListener(textWatcher);
         mActivitySendOtpBinding.ivMobile.setVisibility(View.GONE);
@@ -189,6 +199,8 @@ public class VerifyOtpActivity extends BaseAppCompatActivity {
         mActivitySendOtpBinding.etMobileNumber.setText(Utility.EMPTY_STRING);
         mActivitySendOtpBinding.etMobileNumber.setTextColor(ContextCompat.getColor(mContext, R.color.grey_varient_8));
         mActivitySendOtpBinding.etMobileNumber.setHint(getString(R.string.label_enter_otp));
+
+
           /*  if (BuildConfig.BUILD_TYPE.equalsIgnoreCase(Utility.DEBUG)) {
                 mActivitySendOtpBinding.etMobileNumber.setText(BootstrapConstant.PAYTM_STAGING_MOBILE_NUMBER);
             }*/
