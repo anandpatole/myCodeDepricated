@@ -119,7 +119,6 @@ public class VerifyOtpActivity extends BaseAppCompatActivity {
         }
 
 
-
         String sendOTPString = getString(R.string.label_send_otp_again);
         String formattednumber = mMobileNumber.substring(0, 5) + " " + mMobileNumber.substring(5);
         mActivitySendOtpBinding.tvEnterNoLinkXAccount.setText(getString(R.string.label_enter_otp_sent_on_x, formattednumber));
@@ -561,10 +560,8 @@ public class VerifyOtpActivity extends BaseAppCompatActivity {
     public void onMessageEvent(MessageEvent event) {
         Log.d(TAG, "onMessageEvent() called with: event = [" + event.BROADCAST_ACTION + "]");
         if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.PAYTM_RESPONSE) {
-            // Check the response <code></code>
-            if (event.paytmResponse.isSuccess) {
-                finish();
-            }
+            // We need to finish this activity regardless of the response is success or failure
+            finish();
         }
     }
 }

@@ -236,26 +236,25 @@ dependencies {
     }
 
     // Glide Library
-    
 
     // Swipe layout library This is Test Experiment
-    
+
     //Volley Library
-    
+
     //Apache Library
-    
+
     //Facebook
-    
+
     //For Image Cropping
-    
+
     //  View pager indicator for Cover Images & Banner Images
-    
+
     // For Broadcasting
-    
+
     // For PayUMoney payment integration
-    
+
     // HotLine integration(For Chat to Cheep Admin)
-    
+
     // for paytm html response reading form input tags
     compile 'com.android.support:multidex:1.0.1'
     compile 'com.github.bumptech.glide:glide:3.7.0'
