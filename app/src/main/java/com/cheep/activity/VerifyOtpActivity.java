@@ -439,6 +439,7 @@ public class VerifyOtpActivity extends BaseAppCompatActivity {
             } else {
 //            BTN_WHICH = BTN_IS_CONFIRM;
                 //TODO: withdraw money
+                WithdrawMoneyActivity.newInstance(mContext, amount, payableAmount, mAccessToken, mMobileNumber, mResourceOwnerCustomerId, paytmWalletBalance, isPaytm);
             }
             hideProgressDialog();
         }
