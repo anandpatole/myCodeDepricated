@@ -320,8 +320,8 @@ public class VerifyOtpActivity extends BaseAppCompatActivity {
              * do not hideProgressDialog as we need to call 3 (would be 4 in case we call getUserDetails API) APIs back to back
              */
         /*timer.cancel();*/
-        savePaytmUserDetails();
-        checkBalance();
+            savePaytmUserDetails();
+            checkBalance();
         }
 
         @Override
@@ -433,6 +433,7 @@ public class VerifyOtpActivity extends BaseAppCompatActivity {
             } else {
 //            BTN_WHICH = BTN_IS_CONFIRM;
                 //TODO: withdraw money
+                WithdrawMoneyActivity.newInstance(mContext, amount, payableAmount, mAccessToken, mMobileNumber, mResourceOwnerCustomerId, paytmWalletBalance, isPaytm);
             }
             hideProgressDialog();
         }
