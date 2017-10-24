@@ -120,7 +120,7 @@ public class AddMoneyActivity extends BaseAppCompatActivity {
     }
 
     private String formatAmount(String amount) {
-        return new DecimalFormat("##.##").format(amount);
+        return  new DecimalFormat("##.##").format(Double.valueOf(amount));
     }
 
     @Override

@@ -1414,13 +1414,14 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
                     checkBalance(userDetails.mPaytmUserDetail.paytmAccessToken);
                 }
             } catch (NumberFormatException e) {
-
+                mActivityPaymentChoiceBinding.tvPaytmLinkAccount.setText(getString(R.string.label_link_x, getString(R.string.label_account)));
+                mActivityPaymentChoiceBinding.tvPaytmLinkAccount.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_link_blue, 0, 0, 0);
+                PAYTM_STEP = PAYTM_SEND_OTP;
             }
         } else {
             mActivityPaymentChoiceBinding.tvPaytmLinkAccount.setText(getString(R.string.label_link_x, getString(R.string.label_account)));
             mActivityPaymentChoiceBinding.tvPaytmLinkAccount.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_link_blue, 0, 0, 0);
             PAYTM_STEP = PAYTM_SEND_OTP;
-
         }
     }
 
