@@ -210,7 +210,8 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
                 break;
 
             case R.id.rl_cash_payment:
-                paymentMethod = NetworkUtility.TAGS.PAYMENT_METHOD_TYPE.COD;
+                // new changes cod --> pay_later
+                paymentMethod = NetworkUtility.TAGS.PAYMENT_METHOD_TYPE.PAY_LATER;
                 onClickOfCashPaymentMode();
                 break;
         }
@@ -700,7 +701,9 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
                 ? getString(R.string.label_yes).toLowerCase() :
                 getString(R.string.label_no).toLowerCase());
         mParams.put(NetworkUtility.TAGS.PAYMENT_METHOD, paymentMethod);
-        mParams.put(NetworkUtility.TAGS.PAYMENT_STATUS, isSuccess ? Utility.PAYMENT_STATUS.COMPLETED : Utility.PAYMENT_STATUS.FAILED);
+//        mParams.put(NetworkUtility.TAGS.PAYMENT_STATUS, isSuccess ? Utility.PAYMENT_STATUS.COMPLETED : Utility.PAYMENT_STATUS.FAILED);
+//        as per new pay later flow payment_status will be payment_initiated
+        mParams.put(NetworkUtility.TAGS.PAYMENT_STATUS, Utility.PAYMENT_STATUS.PAYMENT_INITIATED);
         mParams.put(NetworkUtility.TAGS.PAYMENT_LOG, response);
         mParams.put(NetworkUtility.TAGS.USED_WALLET_BALANCE, taskDetailModel.usedWalletAmount);
         mParams.put(NetworkUtility.TAGS.PAYABLE_AMOUNT, isAdditional != 0 ? taskDetailModel.additionalQuoteAmount : providerModel.quotePrice);
@@ -732,9 +735,8 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
                         String taskStatus = jsonData.optString(NetworkUtility.TAGS.TASK_STATUS);
 
 //                        callTaskDetailWS();
-
-                        if (Utility.TASK_STATUS.COD.equalsIgnoreCase(taskStatus)
-                                || Utility.TASK_STATUS.PAID.equalsIgnoreCase(taskStatus)) {
+// AS PER new flow pay later task status will be pending
+                        if (Utility.TASK_STATUS.PENDING.equalsIgnoreCase(taskStatus)) {
                             //We are commenting it because from here we are intiating a payment flow and
                             // after that we need to call update payment status on server
                             String taskPaidAmount = jsonData.optString(NetworkUtility.TAGS.TASK_PAID_AMOUNT);
@@ -886,7 +888,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
     // check is task is from insta booking or not
 
     private void onSuccessfullInstaBookingTaskCompletion(JSONObject jsonObject) {
-        Utility.showToast(PaymentChoiceActivity.this,getString(R.string.label_task_created_successfully));
+        Utility.showToast(PaymentChoiceActivity.this, getString(R.string.label_task_created_successfully));
         TaskDetailModel taskDetailModel = (TaskDetailModel) Utility.getObjectFromJsonString(jsonObject.optString(NetworkUtility.TAGS.DATA), TaskDetailModel.class);
 
         if (providerModel != null) {

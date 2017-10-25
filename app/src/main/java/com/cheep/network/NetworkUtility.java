@@ -406,6 +406,7 @@ public class NetworkUtility {
             String PAYU = "payu";
             String COD = "cod";
             String FREE = "free";
+            String PAY_LATER = "pay_later";
         }
 
         String DEVICE_TOKEN = "device_token";
