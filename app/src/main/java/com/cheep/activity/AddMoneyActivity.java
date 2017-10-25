@@ -36,6 +36,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.text.DecimalFormat;
 import java.util.HashMap;
@@ -165,8 +166,9 @@ public class AddMoneyActivity extends BaseAppCompatActivity {
 
 
         double edtAmount = Double.parseDouble(mEtText);
-        double payableAmountTemp = Double.parseDouble(amount) - paytmWalletBalance;
-        if (edtAmount < payableAmountTemp) {
+        BigDecimal payableAmountTemp = BigDecimal.valueOf(Double.parseDouble(amount)).subtract(BigDecimal.valueOf(paytmWalletBalance));
+//        double payableAmountTemp =  Double.valueOf( Double.parseDouble(amount) - paytmWalletBalance);
+        if (edtAmount < payableAmountTemp.doubleValue()) {
             Utility.showToast(mContext, "Please enter minimum " + payableAmountTemp + " amount to proceed");
             return;
         }
