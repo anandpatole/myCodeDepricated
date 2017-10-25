@@ -1101,6 +1101,9 @@ public class Utility {
 
         // When Payment response comes from Paytm
         int PAYTM_RESPONSE = 18;
+
+        // when user has verified Paytm otp and account is linked.
+        int PAYTM_LINKED = 19;
     }
 
     public interface REQUEST_TYPE {

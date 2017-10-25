@@ -165,8 +165,9 @@ public class AddMoneyActivity extends BaseAppCompatActivity {
 
 
         double edtAmount = Double.parseDouble(mEtText);
-        if (edtAmount < payableAmount) {
-            Utility.showToast(mContext, "Please enter minimum " + payableAmount + " amount to proceed");
+        double payableAmountTemp = Double.parseDouble(amount) - paytmWalletBalance;
+        if (edtAmount < payableAmountTemp) {
+            Utility.showToast(mContext, "Please enter minimum " + payableAmountTemp + " amount to proceed");
             return;
         }
 

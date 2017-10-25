@@ -405,7 +405,7 @@ public class HomeActivity extends BaseAppCompatActivity
     }
 
 
-    private void loadFragment(String tag, BaseFragment baseFragment) {
+    public void loadFragment(String tag, BaseFragment baseFragment) {
         getSupportFragmentManager().beginTransaction().replace(R.id.content, baseFragment, tag).commit();
     }
 
