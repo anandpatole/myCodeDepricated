@@ -645,7 +645,7 @@ public class SendOtpActivity extends BaseAppCompatActivity implements View.OnCli
                 mActivitySendOtpBinding.tvSendOtp.setOnClickListener(this);
                 mActivitySendOtpBinding.tvSendOtp.setEnabled(true);
 //                mActivitySendOtpBinding.etMobileNumber.removeTextChangedListener(textWatcher);
-                mActivitySendOtpBinding.tvWeCreateXWallet.setText(getString(R.string.label_current_balance, String.valueOf(paytmWalletBalance)));
+                mActivitySendOtpBinding.tvWeCreateXWallet.setText(getString(R.string.label_current_balance, Utility.getQuotePriceFormatter(String.valueOf(paytmWalletBalance))));
                 mActivitySendOtpBinding.tvWeCreateXWallet.setGravity(Gravity.CENTER);
 
                 break;
