@@ -177,8 +177,6 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
             case R.id.rl_netbanking:
                 paymentMethod = NetworkUtility.TAGS.PAYMENT_METHOD_TYPE.PAYU;
                 LogUtils.LOGD(TAG, "onClick: of HDFC PAYMENT");
-
-                LogUtils.LOGE(TAG, "onClick: of HDFC PAYMENT");
                 if (isStrategicPartner) {
                     // Go for regular payment gateway strategic partner
                     payNowForStrategicPartner();
@@ -1397,6 +1395,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
         // check paytm access token is still valid and show linked account balance
         UserDetails userDetails = PreferenceUtility.getInstance(PaymentChoiceActivity.this).getUserDetails();
         if (userDetails != null && userDetails.mPaytmUserDetail != null) {
+//        if (false) {
             try {
                 long accessTokenExpiresTimeStamp = Long.parseLong(userDetails.mPaytmUserDetail.accessTokenExpiresTimestamp);
                 if (accessTokenExpiresTimeStamp < System.currentTimeMillis()) {
@@ -1500,7 +1499,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
                 //TODO: add amount
                 mActivityPaymentChoiceBinding.tvLowBalancePaytm.setVisibility(View.VISIBLE);
                 mActivityPaymentChoiceBinding.tvLowBalancePaytm.setText("Low balance. You need " +
-                        getString(R.string.rupee_symbol_x, Utility.getQuotePriceFormatter(String.valueOf(payableAmount))) + "...");
+                        getString(R.string.rupee_symbol_x, Utility.getQuotePriceFormatter(String.valueOf(payableAmount))) /*+ "..."*/);
                 PAYTM_STEP = PAYTM_ADD_MONEY;
 
             } else {

@@ -115,12 +115,14 @@ public class AddMoneyActivity extends BaseAppCompatActivity {
         mActivitySendOtpBinding.tvSendOtp.setOnClickListener(mOnClickListener);
         mActivitySendOtpBinding.tvSendOtp.setEnabled(true);
 //                mActivitySendOtpBinding.etMobileNumber.removeTextChangedListener(textWatcher);
-        mActivitySendOtpBinding.tvWeCreateXWallet.setText(getString(R.string.label_current_balance, formatAmount(String.valueOf(paytmWalletBalance))));
+//        mActivitySendOtpBinding.tvWeCreateXWallet.setText(getString(R.string.label_current_balance, formatAmount(String.valueOf(paytmWalletBalance))));
+        mActivitySendOtpBinding.tvWeCreateXWallet.setText(getString(R.string.label_current_balance, Utility.getQuotePriceFormatter(String.valueOf(paytmWalletBalance))));
+
         mActivitySendOtpBinding.tvWeCreateXWallet.setGravity(Gravity.CENTER);
     }
 
     private String formatAmount(String amount) {
-        return  new DecimalFormat("##.##").format(Double.valueOf(amount));
+        return new DecimalFormat("##.##").format(Double.valueOf(amount));
     }
 
     @Override

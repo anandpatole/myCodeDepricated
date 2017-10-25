@@ -259,6 +259,7 @@ public class VerifyOtpActivity extends BaseAppCompatActivity {
     private final PaytmUtility.SendOtpResponseListener mSendOtpResponseListener = new PaytmUtility.SendOtpResponseListener() {
         @Override
         public void paytmSendOtpSuccessResponse(String state, boolean isRegenerated) {
+            mActivityVerifyOtpBinding.tvWeCreateXWallet.setVisibility(View.INVISIBLE);
             mState = state;
             timer.start();
             hideProgressDialog();
@@ -347,6 +348,7 @@ public class VerifyOtpActivity extends BaseAppCompatActivity {
 
         @Override
         public void paytmVerifyOtpInvalidOtp() {
+            mActivityVerifyOtpBinding.etMobileNumber.setText(Utility.EMPTY_STRING);
             Utility.showSnackBar(getString(R.string.label_invalid_otp), mActivityVerifyOtpBinding.getRoot());
             hideProgressDialog();
         }
