@@ -702,8 +702,8 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
                 getString(R.string.label_no).toLowerCase());
         mParams.put(NetworkUtility.TAGS.PAYMENT_METHOD, paymentMethod);
 //        mParams.put(NetworkUtility.TAGS.PAYMENT_STATUS, isSuccess ? Utility.PAYMENT_STATUS.COMPLETED : Utility.PAYMENT_STATUS.FAILED);
-//        as per new pay later flow payment_status will be payment_initiated
-        mParams.put(NetworkUtility.TAGS.PAYMENT_STATUS, Utility.PAYMENT_STATUS.PAYMENT_INITIATED);
+//        as per new pay later flow payment_status will be processing
+        mParams.put(NetworkUtility.TAGS.PAYMENT_STATUS, Utility.PAYMENT_STATUS.PROCESSING);
         mParams.put(NetworkUtility.TAGS.PAYMENT_LOG, response);
         mParams.put(NetworkUtility.TAGS.USED_WALLET_BALANCE, taskDetailModel.usedWalletAmount);
         mParams.put(NetworkUtility.TAGS.PAYABLE_AMOUNT, isAdditional != 0 ? taskDetailModel.additionalQuoteAmount : providerModel.quotePrice);
@@ -736,7 +736,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
 
 //                        callTaskDetailWS();
 // AS PER new flow pay later task status will be pending
-                        if (Utility.TASK_STATUS.PENDING.equalsIgnoreCase(taskStatus)) {
+                        if (Utility.TASK_STATUS.PAY_LATER.equalsIgnoreCase(taskStatus)) {
                             //We are commenting it because from here we are intiating a payment flow and
                             // after that we need to call update payment status on server
                             String taskPaidAmount = jsonData.optString(NetworkUtility.TAGS.TASK_PAID_AMOUNT);

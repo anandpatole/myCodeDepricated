@@ -1117,6 +1117,7 @@ public class Utility {
 
     public interface PAYMENT_STATUS {
         String PAYMENT_INITIATED = "payment_initiated";//not using it
+        String PROCESSING= "processing";//not using it
         String COMPLETED = "completed";
         String FAILED = "failed";
     }
@@ -1183,6 +1184,12 @@ public class Utility {
          * If Additional Payment is Requested by SP
          */
         String ADDITIONAL_PAYMENT_REQUESTED = "additional_payment_requested";
+
+        /**
+         * This is used for new flow - Pay later functionality where user will book pro
+         * and will pay after completion of task
+         */
+        String PAY_LATER = "pay_later";
 
     }
 
