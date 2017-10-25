@@ -101,7 +101,7 @@ public class AddMoneyActivity extends BaseAppCompatActivity {
 
         mActivitySendOtpBinding.tvEnterNoLinkXAccount.setLayoutParams(tvEnterNoLinkXAccountLayoutParams);
         mActivitySendOtpBinding.tvEnterNoLinkXAccount.setText(getString(R.string.label_amount_payable));
-        mActivitySendOtpBinding.tvAmount.setText(getString(R.string.rupee_symbol_x, amount));
+        mActivitySendOtpBinding.tvAmount.setText(getString(R.string.rupee_symbol_x, Utility.getQuotePriceFormatter(String.valueOf(amount))));
         mActivitySendOtpBinding.tvAmount.setVisibility(View.VISIBLE);
         mActivitySendOtpBinding.tvLowBalance.setVisibility(View.VISIBLE);
         mActivitySendOtpBinding.etMobileNumber.setTextColor(ContextCompat.getColor(mContext, R.color.splash_gradient_end));

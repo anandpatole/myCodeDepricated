@@ -1276,7 +1276,7 @@ public class Utility {
             return "0.00";
         if (quotePrice.equalsIgnoreCase("") || quotePrice.equalsIgnoreCase("0") || quotePrice.equalsIgnoreCase("0.0") || quotePrice.equalsIgnoreCase("0.00"))
             return "0.00";
-        DecimalFormat formatter = new DecimalFormat("#,###.00");
+        DecimalFormat formatter = new DecimalFormat("##,##0.00");
         double price = Double.parseDouble(quotePrice);
         return formatter.format(price);
     }
