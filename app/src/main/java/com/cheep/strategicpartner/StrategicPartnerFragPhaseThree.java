@@ -26,6 +26,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.cheep.R;
 import com.cheep.activity.BaseAppCompatActivity;
+import com.cheep.activity.LoginActivity;
 import com.cheep.activity.PaymentChoiceActivity;
 import com.cheep.custom_view.BottomAlertDialog;
 import com.cheep.custom_view.CFEditTextRegular;
@@ -460,6 +461,17 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
     };
 
     private void openPaymentChoiceActivity() {
+
+        if (!Utility.isConnected(mContext)) {
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mFragmentStrategicPartnerPhaseThreeBinding.getRoot());
+            return;
+        }
+
+        if (PreferenceUtility.getInstance(mContext).getUserDetails() == null) {
+            LoginActivity.newInstance(mContext);
+            return;
+        }
+
 
         TaskDetailModel taskDetailModel = new TaskDetailModel();
         taskDetailModel.mQuesList = mStrategicPartnerTaskCreationAct.getQuestionsList();
