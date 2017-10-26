@@ -153,13 +153,15 @@ public class VerifyOtpActivity extends BaseAppCompatActivity {
 
             public void onFinish() {
                 isTimerOnGoing = false;
-                if (!mActivityVerifyOtpBinding.etMobileNumber.getText().toString().isEmpty()) {
-                    mActivityVerifyOtpBinding.tvSendOtp.setSelected(true);
-                    mActivityVerifyOtpBinding.tvSendOtp.setText(getString(R.string.label_proceed));
-                } else {
-                    mActivityVerifyOtpBinding.tvSendOtp.setSelected(false);
-                    mActivityVerifyOtpBinding.tvSendOtp.setText(String.format("00:%02d", 0));
-                }
+//                if (!mActivityVerifyOtpBinding.etMobileNumber.getText().toString().isEmpty()) {
+//                    mActivityVerifyOtpBinding.tvSendOtp.setSelected(true);
+//                    mActivityVerifyOtpBinding.tvSendOtp.setText(getString(R.string.label_proceed));
+//                } else {
+//                    mActivityVerifyOtpBinding.tvSendOtp.setSelected(false);
+//                    mActivityVerifyOtpBinding.tvSendOtp.setText(String.format("00:%02d", 0));
+//                }
+                mActivityVerifyOtpBinding.tvSendOtp.setEnabled(!mActivityVerifyOtpBinding.etMobileNumber.getText().toString().isEmpty());
+                mActivityVerifyOtpBinding.tvSendOtp.setText(getString(R.string.label_proceed));
                 mActivityVerifyOtpBinding.tvWeCreateXWallet.setVisibility(View.VISIBLE);
             }
 
@@ -180,10 +182,13 @@ public class VerifyOtpActivity extends BaseAppCompatActivity {
                     mActivityVerifyOtpBinding.tvSendOtp.setText(getString(R.string.label_proceed));
                 } else if (!isTimerOnGoing) {
                     mActivityVerifyOtpBinding.tvSendOtp.setSelected(false);
-                    mActivityVerifyOtpBinding.tvSendOtp.setText(String.format("00:" + "%02d", 0));
+                    mActivityVerifyOtpBinding.tvSendOtp.setText(getString(R.string.label_proceed));
                 } else {
                     mActivityVerifyOtpBinding.tvSendOtp.setSelected(false);
-                    mActivityVerifyOtpBinding.tvSendOtp.setText(String.format("00:" + "%02d", (int) currentMilliSeconds / 1000));
+                    int minutes = (int) TimeUnit.MILLISECONDS.toMinutes(currentMilliSeconds);
+                    int seconds = (int) (TimeUnit.MILLISECONDS.toSeconds(currentMilliSeconds) -
+                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(currentMilliSeconds)));
+                    mActivityVerifyOtpBinding.tvSendOtp.setText(String.format("%02d:%02d", minutes, seconds));
 
                 }
             }
