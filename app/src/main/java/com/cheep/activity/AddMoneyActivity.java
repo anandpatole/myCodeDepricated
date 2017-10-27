@@ -597,11 +597,16 @@ public class AddMoneyActivity extends BaseAppCompatActivity {
         double edtAmount = Double.parseDouble(mEtText);
         BigDecimal payableAmountTemp = BigDecimal.valueOf(Double.parseDouble(amount)).subtract(BigDecimal.valueOf(paytmWalletBalance));
 //        double payableAmountTemp =  Double.valueOf( Double.parseDouble(amount) - paytmWalletBalance);
+
         if (edtAmount < payableAmountTemp.doubleValue()) {
 //            Utility.showToast(mContext, "Please enter minimum " + payableAmountTemp + " amount to proceed");
             AddMoneyPaytmModelDialog madAddMoneyPaytmModelDialog = new AddMoneyPaytmModelDialog();
             madAddMoneyPaytmModelDialog.show(getSupportFragmentManager(), AddMoneyPaytmModelDialog.TAG);
             return false;
+        }
+        else if(edtAmount<1){
+            Utility.showSnackBar("Please add amount greater than 1", mActivitySendOtpBinding.getRoot());
+
         }
 
 

@@ -886,7 +886,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
     // check is task is from insta booking or not
 
     private void onSuccessfullInstaBookingTaskCompletion(JSONObject jsonObject) {
-        Utility.showToast(PaymentChoiceActivity.this,getString(R.string.label_task_created_successfully));
+        Utility.showToast(PaymentChoiceActivity.this, getString(R.string.label_task_created_successfully));
         TaskDetailModel taskDetailModel = (TaskDetailModel) Utility.getObjectFromJsonString(jsonObject.optString(NetworkUtility.TAGS.DATA), TaskDetailModel.class);
 
         if (providerModel != null) {
@@ -1487,7 +1487,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
                 amount = amount.replace(Utility.COMMA, Utility.EMPTY_STRING);
             }
             boolean isLowBalance = paytmWalletBalance < Double.parseDouble(amount);
-            payableAmount = Math.ceil(Double.parseDouble(amount) - paytmWalletBalance);
+            payableAmount = Double.parseDouble(amount) - paytmWalletBalance;
             mActivityPaymentChoiceBinding.tvPaytmBalance.setVisibility(View.VISIBLE);
 
             mActivityPaymentChoiceBinding.tvPaytmBalance.setText("(" + getString(R.string.rupee_symbol_x, String.valueOf(paytmWalletBalance)) + ")");
