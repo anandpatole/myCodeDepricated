@@ -108,7 +108,11 @@ public class AddMoneyActivity extends BaseAppCompatActivity {
         mActivitySendOtpBinding.tvLowBalance.setVisibility(View.VISIBLE);
         mActivitySendOtpBinding.etMobileNumber.setTextColor(ContextCompat.getColor(mContext, R.color.splash_gradient_end));
         mActivitySendOtpBinding.etMobileNumber.setHint(getString(R.string.label_enter_amount));
-        mActivitySendOtpBinding.etMobileNumber.setText(formatAmount(String.valueOf(payableAmount)));
+        // add minimum amount of 1
+        if (payableAmount < 1)
+            mActivitySendOtpBinding.etMobileNumber.setText(formatAmount(String.valueOf(1)));
+        else
+            mActivitySendOtpBinding.etMobileNumber.setText(formatAmount(String.valueOf(payableAmount)));
         mActivitySendOtpBinding.etMobileNumber.setEnabled(true);
         mActivitySendOtpBinding.etMobileNumber.setGravity(Gravity.CENTER);
         mActivitySendOtpBinding.etMobileNumber.setSelection(mActivitySendOtpBinding.etMobileNumber.getText().toString().length());
@@ -598,15 +602,11 @@ public class AddMoneyActivity extends BaseAppCompatActivity {
         BigDecimal payableAmountTemp = BigDecimal.valueOf(Double.parseDouble(amount)).subtract(BigDecimal.valueOf(paytmWalletBalance));
 //        double payableAmountTemp =  Double.valueOf( Double.parseDouble(amount) - paytmWalletBalance);
 
-        if (edtAmount < payableAmountTemp.doubleValue()) {
+        if (edtAmount < payableAmountTemp.doubleValue() || edtAmount < 1) {
 //            Utility.showToast(mContext, "Please enter minimum " + payableAmountTemp + " amount to proceed");
             AddMoneyPaytmModelDialog madAddMoneyPaytmModelDialog = new AddMoneyPaytmModelDialog();
             madAddMoneyPaytmModelDialog.show(getSupportFragmentManager(), AddMoneyPaytmModelDialog.TAG);
             return false;
-        }
-        else if(edtAmount<1){
-            Utility.showSnackBar("Please add amount greater than 1", mActivitySendOtpBinding.getRoot());
-
         }
 
 
