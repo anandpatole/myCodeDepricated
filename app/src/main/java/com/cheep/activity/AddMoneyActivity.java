@@ -23,6 +23,7 @@ import android.widget.LinearLayout;
 import com.cheep.BuildConfig;
 import com.cheep.R;
 import com.cheep.databinding.ActivityAddMoneyBinding;
+import com.cheep.dialogs.AddMoneyPaytmModelDialog;
 import com.cheep.model.MessageEvent;
 import com.cheep.network.NetworkUtility;
 import com.cheep.utils.PaytmUtility;
@@ -163,15 +164,6 @@ public class AddMoneyActivity extends BaseAppCompatActivity {
     ///////////////////////////////////////////////////////////Volley Get Checksum Hash Web call starts///////////////////////////////////////////////////////////
 
     private void callgetChecksumForAddMoney() {
-
-
-        double edtAmount = Double.parseDouble(mEtText);
-        BigDecimal payableAmountTemp = BigDecimal.valueOf(Double.parseDouble(amount)).subtract(BigDecimal.valueOf(paytmWalletBalance));
-//        double payableAmountTemp =  Double.valueOf( Double.parseDouble(amount) - paytmWalletBalance);
-        if (edtAmount < payableAmountTemp.doubleValue()) {
-            Utility.showToast(mContext, "Please enter minimum " + payableAmountTemp + " amount to proceed");
-            return;
-        }
 
 
         if (!Utility.isConnected(mContext)) {
@@ -602,6 +594,17 @@ public class AddMoneyActivity extends BaseAppCompatActivity {
             Utility.showSnackBar(getString(R.string.validate_empty_amount), mActivitySendOtpBinding.getRoot());
             return false;
         }
+        double edtAmount = Double.parseDouble(mEtText);
+        BigDecimal payableAmountTemp = BigDecimal.valueOf(Double.parseDouble(amount)).subtract(BigDecimal.valueOf(paytmWalletBalance));
+//        double payableAmountTemp =  Double.valueOf( Double.parseDouble(amount) - paytmWalletBalance);
+        if (edtAmount < payableAmountTemp.doubleValue()) {
+//            Utility.showToast(mContext, "Please enter minimum " + payableAmountTemp + " amount to proceed");
+            AddMoneyPaytmModelDialog madAddMoneyPaytmModelDialog = new AddMoneyPaytmModelDialog();
+            madAddMoneyPaytmModelDialog.show(getSupportFragmentManager(), AddMoneyPaytmModelDialog.TAG);
+            return false;
+        }
+
+
         return true;
     }
 
