@@ -259,7 +259,7 @@ public class ChatActivity extends BaseAppCompatActivity implements View.OnClickL
 
         Utility.showCircularImageView(mContext, TAG, mActivityChatBinding.imgProfile, taskChatModel.participantPhotoUrl, Utility.DEFAULT_CHEEP_LOGO);
 
-        // By Default its YES, so message would be EMPTY STRING.
+        // By Default its YES, so message would be EMPTY PHONE.
         enableChatAccess(mCurrentChatStatus, Utility.EMPTY_STRING);
 
         /**

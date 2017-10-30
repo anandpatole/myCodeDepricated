@@ -55,7 +55,6 @@ import java.util.Map;
 /**
  * Created by pankaj on 9/27/16.
  */
-
 public class HomeFragment extends BaseFragment {
     public static final String TAG = "HomeFragment";
 
@@ -146,10 +145,12 @@ public class HomeFragment extends BaseFragment {
             checkOngoingTaskCounter();
 //            mTaskDetailModel.taskStatus = event.taskStatus;
 //            setUpTaskDetails(mTaskDetailModel);
-        } else if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.PAYMENT_COMPLETED_NEED_TO_REDIRECT_TO_MY_TASK_SCREEN) {
+        } else if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.PAYMENT_COMPLETED_NEED_TO_REDIRECT_TO_MY_TASK_SCREEN
+                || event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.TASK_PAID_FOR_INSTA_BOOKING) {
             // Need to rediretct the user to MyTask Screen
             setCurrentTab(TAB_MY_TASK);
         }
+
     }
 
     @Override
@@ -697,7 +698,7 @@ public class HomeFragment extends BaseFragment {
         }
 
         if (!Utility.isConnected(mContext)) {
-            if (mFragmentHomeBinding!= null)
+            if (mFragmentHomeBinding != null)
                 Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mFragmentHomeBinding.getRoot());
             return;
         }

@@ -34,14 +34,23 @@
     <dimen name="scale_12dp">12dp</dimen>
     <dimen name="scale_15dp">15dp</dimen>
     <dimen name="scale_16dp">16dp</dimen>
+    <dimen name="scale_17dp">17dp</dimen>
     <dimen name="scale_18dp">18dp</dimen>
+    <dimen name="scale_19dp">19dp</dimen>
     <dimen name="scale_20dp">20dp</dimen>
+    <dimen name="scale_21dp">21dp</dimen>
     <dimen name="scale_40dp">40dp</dimen>
+    <dimen name="scale_41dp">41dp</dimen>
+    <dimen name="scale_44dp">44dp</dimen>
+    <dimen name="scale_46dp">46dp</dimen>
     <dimen name="scale_22dp">22dp</dimen>
     <dimen name="scale_25dp">25dp</dimen>
+    <dimen name="scale_26dp">26dp</dimen>
+    <dimen name="scale_27dp">27dp</dimen>
     <dimen name="scale_28dp">28dp</dimen>
     <dimen name="scale_30dp">30dp</dimen>
     <dimen name="scale_31dp">31dp</dimen>
+    <dimen name="scale_34dp">34dp</dimen>
     <dimen name="scale_35dp">35dp</dimen>
     <!--<dimen name="scale_37dp">37dp</dimen>-->
     <dimen name="scale_50dp">50dp</dimen>
@@ -82,10 +91,12 @@
     <dimen name="toolbar_title_text_size">18sp</dimen>
     <dimen name="scale_45dp">45dp</dimen>
     <dimen name="scale_60dp">60dp</dimen>
+    <dimen name="scale_62dp">62dp</dimen>
     <dimen name="scale_65dp">65dp</dimen>
     <dimen name="scale_68dp">68dp</dimen>
     <dimen name="scale_70dp">70dp</dimen>
     <dimen name="scale_76dp">76dp</dimen>
+    <dimen name="scale_79dp">79dp</dimen>
     <dimen name="text_size_23sp">23sp</dimen>
     <!--<dimen name="scale_27dp">27dp</dimen>-->
     <!--<dimen name="scale_200dp">200dp</dimen>-->
@@ -134,7 +145,6 @@
     <dimen name="home_screen_extra_category_count_text_size_three_digits">11sp</dimen>
     <!--Home Screen Alignments[End]-->
 
-
     <!-- Strategic partner Banner header -->
     <dimen name="banner_desc_margin_top">25dp</dimen>
     <dimen name="banner_title_text_size">18sp</dimen>
@@ -160,5 +170,6 @@
 
     <!--Verification Screen-->
     <dimen name="verification_screen_margin_logo_description">28.250dp</dimen>
+
 </resources>
 

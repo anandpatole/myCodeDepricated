@@ -1,5 +1,6 @@
 package com.cheep.utils;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.ContentUris;
@@ -17,7 +18,6 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
-import android.media.MediaMetadataRetriever;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -32,8 +32,6 @@ import android.support.v7.widget.AppCompatEditText;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.util.DisplayMetrics;
-import android.util.Log;
-import android.view.Display;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
@@ -56,6 +54,8 @@ import org.cryptonode.jncryptor.CryptorException;
 import org.cryptonode.jncryptor.JNCryptor;
 
 import java.io.UnsupportedEncodingException;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
 import java.net.URLEncoder;
 import java.text.DecimalFormat;
 import java.text.ParseException;
@@ -63,6 +63,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -76,7 +77,8 @@ import static com.cheep.utils.SuperCalendar.SuperFormatter;
  */
 
 public class Utility {
-    public static final class GUEST_STATIC_INFO {
+
+    public interface GUEST_STATIC_INFO {
         public static final String USERNAME = "Guest";
     }
 
@@ -95,6 +97,16 @@ public class Utility {
     public static final String ACTION_REGISTER = "action_register";
     public static final String ACTION_LOGIN = "action_login";
     public static final String ACTION_CHANGE_PHONE_NUMBER = "action_change_phone_number";
+    public static final String CLICK = "Click";
+    public static final String BASIC = "Basic";
+    public static final String COLON = ":";
+    public static final String ADD_MONEY = "ADD_MONEY";
+    public static final String WITHDRAW = "WITHDRAW";
+    public static final String DEFAULT = "DEFAULT";
+    public static final String COMMA = ",";
+    public static final String INR = "INR";
+    public static final String PPI = "PPI";
+    public static final String USRPWD = "USRPWD";
 
     //Date Formats
     public static final String DATE_FORMAT_DD_MM_YY = SuperFormatter.DATE + "/" + SuperFormatter.MONTH_NUMBER + "/" + SuperFormatter.YEAR_4_DIGIT;
@@ -115,7 +127,7 @@ public class Utility {
     public static final String DATE_FORMAT_FULL_DATE = SuperFormatter.FULL_DATE;
 
     public static final int PASSWORD_MIN_LENGTH = 6;
-    public static final int PHONE_MIN_LENGTH = 10;
+    private static final int PHONE_MIN_LENGTH = 10;
 
     public static final int DEFAULT_PROFILE_SRC = R.drawable.icon_profile_img_solid;
     public static final int DEFAULT_CHEEP_LOGO = R.drawable.ic_cheep_circular_icon;
@@ -175,14 +187,16 @@ public class Utility {
 
     public static final int REQUEST_START_PAYMENT = 200;
     public static final int ADDITIONAL_REQUEST_START_PAYMENT = 300;
+    public static final int REQUEST_START_PAYMENT_FOR_STRATEGIC_PARTNER = 400;
+    public static final int REQUEST_CODE_TASK_CREATE_FOR_STRATEGIC_PARTNER = 401;
 
     public static final String REMOVE = "remove";
     public static final String ADD = "add";
 
     //Different Types of Braoadcast Actions
     public static final String BR_ON_TASK_CREATED = "com.cheep.ontaskcreated";
-    public static final String BR_ON_TASK_CREATED_FOR_INSTA_BOOKING = "com.cheep.ontaskcreated.instabooking";
-    public static final String BR_ON_TASK_CREATED_FOR_STRATEGIC_PARTNER = "com.cheep.ontaskcreated.strategicpartner";
+    //    public static final String BR_ON_TASK_CREATED_FOR_INSTA_BOOKING = "com.cheep.ontaskcreated.instabooking";
+//    public static final String BR_ON_TASK_CREATED_FOR_STRATEGIC_PARTNER = "com.cheep.ontaskcreated.strategicpartner";
     public static final String BR_NEW_TASK_ADDED = "com.cheep.newtask.added";
     public static final String BR_ON_LOGIN_SUCCESS = "com.cheep.login.success";
     public static final int CHAT_PAGINATION_RECORD_LIMIT = 20;
@@ -260,9 +274,9 @@ public class Utility {
     /**
      * return price1 if it is not blank else return price2;
      *
-     * @param price1
-     * @param price2
-     * @return
+     * @param price1 String
+     * @param price2 String
+     * @return price1 and if it is empty then return price2
      */
     public static String getActualPrice(String price1, String price2) {
         if (TextUtils.isEmpty(price1))
@@ -323,46 +337,31 @@ public class Utility {
             return EMPTY_STRING;
         }
         String encryptedText = Base64.encodeBytes(encryptedtextInBytes);
-        Log.i("TAG", "applyAESEncryption: Encrypted Text" + encryptedText);
-
-        // Decrypt it
-       /* byte[] decryptedTextInBytes = null;
-        try {
-            decryptedTextInBytes = cryptor.decryptData(encryptedText.getBytes(), password.toCharArray());
-        } catch (CryptorException e) {
-            // Something went wrong
-            e.printStackTrace();
-        }
-
-        if (decryptedTextInBytes != null) {
-            String decryptedText = new String(decryptedTextInBytes);
-            Log.i("TAG", "applyAESEncryption: decrypted Text" + decryptedText);
-        }*/
-
+        LogUtils.LOGI("TAG", "applyAESEncryption: Encrypted Text" + encryptedText);
         return encryptedText;
     }
 
-    public static int getHeightFromWidthForSixteenNineRatio(int width) {
-        Log.d(TAG, "getHeightFromWidthForSixteenNineRatio() called with: width = [" + width + "]");
-        Log.d(TAG, "getHeightFromWidthForSixteenNineRatio() returned: " + ((width * 9) / 16));
+    /*public static int getHeightFromWidthForSixteenNineRatio(int width) {
+        LogUtils.LOGD(TAG, "getHeightFromWidthForSixteenNineRatio() called with: width = [" + width + "]");
+        LogUtils.LOGD(TAG, "getHeightFromWidthForSixteenNineRatio() returned: " + ((width * 9) / 16));
         return ((width * 9) / 16);
-    }
+    }*/
 
     public static int getHeightFromWidthForTwoOneRatio(int width) {
-//        Log.d(TAG, "getHeightFromWidthForTwoOneRatio() called with: width = [" + width + "]");
-//        Log.d(TAG, "getHeightFromWidthForTwoOneRatio() returned: " + (width / 2));
+//        LogUtils.LOGD(TAG, "getHeightFromWidthForTwoOneRatio() called with: width = [" + width + "]");
+//        LogUtils.LOGD(TAG, "getHeightFromWidthForTwoOneRatio() returned: " + (width / 2));
         return (width / 2);
     }
 
     /**
      * Below would provide dynamic height of image based on #Utility.CATEGORY_IMAGE_RATIO
      *
-     * @param width
-     * @return
+     * @param width int
+     * @return round value
      */
     public static int getHeightCategoryImageBasedOnRatio(int width) {
-//        Log.d(TAG, "getHeightCategoryImageBasedOnRatio() called with: width = [" + width + "]");
-//        Log.d(TAG, "getHeightCategoryImageBasedOnRatio() called with: width = [" + Math.round((width / CATEGORY_IMAGE_RATIO)) + "]");
+//        LogUtils.LOGD(TAG, "getHeightCategoryImageBasedOnRatio() called with: width = [" + width + "]");
+//        LogUtils.LOGD(TAG, "getHeightCategoryImageBasedOnRatio() called with: width = [" + Math.round((width / CATEGORY_IMAGE_RATIO)) + "]");
         return Math.round((width / CATEGORY_IMAGE_RATIO));
     }
 
@@ -374,45 +373,54 @@ public class Utility {
     public static final String NO_INTERNET_CONNECTION = "Hey, we see a problem with your internet" + new String(Character.toChars(0x1f914)) + ". We\'ll wait while you check your connection and try again";
 
     //Bundle Extra parameters
-    public static class Extra {
-        public static final String WHICH_FRAG = "which_frag";
-        public static final String USER_DETAILS = "userdetails";
-        public static final String INFO_TYPE = "infoType";
-        public static final String DATA = "DATA";
-        public static final String IS_FIRST_TIME = "isFirstTime";
-        public static final String DATA_2 = "DATA_2";
-        public static final String PASSWORD = "password";
-        public static final String SELECTED_IMAGE_PATH = "selectedImagePath";
-        public static final String CORRECT_OTP = "correctOTP";
-        public static final String CATEGORY = "category";
-        public static final String PHONE_NUMBER = "phone_number";
-        public static final String LATITUDE = "latitude";
-        public static final String LONGITUDE = "longitude";
-        public static final String CITY_NAME = "city_name";
-        public static final String SESSION_EXPIRE = "session_expire";
-        public static final String IMAGE_URL = "image_url";
-        public static final String ACTION = "action";
-        public static final String USER_NAME = "user_name";
-        public static final String ADDRESS_ID = "address_id";
-        public static final String ADDRESS_TEXT = "address_text";
-        public static final String CATEGORY_ID = "category_id";
-        public static final String IS_DATE_SELECTED = "is_date_selected";
-        public static final String DATE_TIME = "date_time";
-        public static final String TASK_DETAIL = "task_detail";
-        public static final String TASK_STATUS = "task_status";
-        public static final String TASK_DETAIL_MODEL = "task_detail_model";
-        public static final String TASK_ID = "task_id";
-        public static final String PAYMENT_VIEW = "payment_view";
-        public static final String PAYMENT_VIEW_IS_ADDITIONAL_CHARGE = "isAdditional";
-
-        public static final String CHAT_NOTIFICATION_DATA = "chat_notification_data";
-        public static final String PROFILE_FROM_FAVOURITE = "from_favorite";
-        public static final String FROM_WHERE = "from_where";
-        public static final String TASK_TYPE_IS_INSTA = "isInsta";
-        public static final String SELECTED_ADDRESS_MODEL = "selectedAddressModel";
-        public static final String LOCATION_INFO = "location_info";
-        public static final String IS_INSTA_BOOKING_TASK = "isInstaBookingTask";
-        public static String REFER_CODE="refer_code";
+    public interface Extra {
+        String WHICH_FRAG = "which_frag";
+        String USER_DETAILS = "userdetails";
+        String INFO_TYPE = "infoType";
+        String DATA = "DATA";
+        String IS_FIRST_TIME = "isFirstTime";
+        String DATA_2 = "DATA_2";
+        String PASSWORD = "password";
+        String SELECTED_IMAGE_PATH = "selectedImagePath";
+        String CORRECT_OTP = "correctOTP";
+        String CATEGORY = "category";
+        String PHONE_NUMBER = "phone_number";
+        String LATITUDE = "latitude";
+        String LONGITUDE = "longitude";
+        String CITY_NAME = "city_name";
+        String SESSION_EXPIRE = "session_expire";
+        String IMAGE_URL = "image_url";
+        String ACTION = "action";
+        String USER_NAME = "user_name";
+        String ADDRESS_ID = "address_id";
+        String ADDRESS_TEXT = "address_text";
+        String CATEGORY_ID = "category_id";
+        String IS_DATE_SELECTED = "is_date_selected";
+        String DATE_TIME = "date_time";
+        String TASK_DETAIL = "task_detail";
+        String TASK_STATUS = "task_status";
+        String TASK_DETAIL_MODEL = "task_detail_model";
+        String TASK_ID = "task_id";
+        String PAYMENT_VIEW = "payment_view";
+        String PAYMENT_VIEW_IS_ADDITIONAL_CHARGE = "isAdditional";
+        String CHAT_NOTIFICATION_DATA = "chat_notification_data";
+        String PROFILE_FROM_FAVOURITE = "from_favorite";
+        String FROM_WHERE = "from_where";
+        String TASK_TYPE_IS_INSTA = "isInsta";
+        String TASK_TYPE_IS_STRATEGIC = "isStrategic";
+        String SELECTED_ADDRESS_MODEL = "selectedAddressModel";
+        String LOCATION_INFO = "location_info";
+        String IS_INSTA_BOOKING_TASK = "isInstaBookingTask";
+        String IS_PAYMENT_SUCCESSFUL = "isPaymentSuccessful";
+        String PAYU_RESPONSE = "payu_response";
+        String AMOUNT = "amount";
+        String REFER_CODE = "refer_code";
+        String MOBILE_NUMBER = "mobile_number";
+        String STATE = "state";
+        String PAYABLE_AMOUNT = "payable_amount";
+        String ACCESS_TOKEN = "access_token";
+        String CUST_ID = "cust_id";
+        String PAYTM_WALLET_BALANCE = "paytm_wallet_balance";
     }
 
 
@@ -420,11 +428,11 @@ public class Utility {
     2 for Gold
     3 for Silver
     4 for bronze*/
-    public static class PRO_LEVEL {
-        public static final String PLATINUM = "1";
-        public static final String GOLD = "2";
-        public static final String SILVER = "3";
-        public static final String BRONZE = "4";
+    public interface PRO_LEVEL {
+        String PLATINUM = "1";
+        String GOLD = "2";
+        String SILVER = "3";
+        String BRONZE = "4";
     }
 
     /**
@@ -490,27 +498,21 @@ public class Utility {
 
         int size[] = new int[2];
 
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-            DisplayMetrics displayMetrics = activity.getResources()
-                    .getDisplayMetrics();
-            size[0] = displayMetrics.widthPixels;
-            size[1] = displayMetrics.heightPixels;
-        } else {
-            Display mDisplay = activity.getWindowManager().getDefaultDisplay();
-            size[0] = mDisplay.getWidth();
-            size[1] = mDisplay.getHeight();
-        }
+        DisplayMetrics displayMetrics = activity.getResources()
+                .getDisplayMetrics();
+        size[0] = displayMetrics.widthPixels;
+        size[1] = displayMetrics.heightPixels;
         return size;
     }
 
     /**
      * Get Application version name
      *
-     * @param context
-     * @return
+     * @param context Context
+     * @return application version name
      */
     public static String getApplicationVersion(Context context) {
-        PackageInfo pInfo = null;
+        PackageInfo pInfo;
         try {
             pInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
             return pInfo.versionName;
@@ -521,6 +523,7 @@ public class Utility {
     }
 
 
+    @SuppressLint("SimpleDateFormat")
     public static String getDate(long milliSeconds, String dateFormat) {
         String finalDate = "";
         try {
@@ -541,17 +544,16 @@ public class Utility {
     /*
      * get formated date from Server Date
      * */
+    @SuppressLint("SimpleDateFormat")
     public static String getFormatedDate(String dateS, String inputDate, String OutputDate) {
         String shoppingdate = dateS;
 
         try {
             //7/18/2016 12:00:00 AM
-            String inputPattern = inputDate;
-            String outputPattern = OutputDate;
 
-            SimpleDateFormat inputFormat = new SimpleDateFormat(inputPattern/*, Locale.US*/);
-            SimpleDateFormat outputFormat = new SimpleDateFormat(outputPattern/*, Locale.US*/);
-            Date date = null;
+            SimpleDateFormat inputFormat = new SimpleDateFormat(inputDate/*, Locale.US*/);
+            SimpleDateFormat outputFormat = new SimpleDateFormat(OutputDate/*, Locale.US*/);
+            Date date;
 
             try {
                 date = inputFormat.parse(dateS);
@@ -572,8 +574,8 @@ public class Utility {
             return "";
 
         Date mFutureDate = com.cheep.firebase.DateUtils.getFormatedDate(date, Utility.DATE_FORMAT_FULL_DATE);
-        String timespan = DateUtils.getRelativeTimeSpanString(mFutureDate.getTime()).toString();
-        Log.d(TAG, "getDateDifference() returned: " + timespan);
+        String timespan = DateUtils.getRelativeTimeSpanString(mFutureDate != null ? mFutureDate.getTime() : 0).toString();
+        LogUtils.LOGE(TAG, "getDateDifference() returned: " + timespan);
         return timespan;
         /*String sCurrentDt = DateUtils.getFormatedDate(Calendar.getInstance().getTime(), Utility.DATE_FORMAT_FULL_DATE);
         Date mCurrentDate=DateUtils.getFormatedDate(sCurrentDt,Utility.DATE_FORMAT_FULL_DATE);
@@ -604,10 +606,10 @@ public class Utility {
         String sCurrentDt = com.cheep.firebase.DateUtils.getFormatedDate(Calendar.getInstance().getTime(), Utility.DATE_FORMAT_FULL_DATE);
         Date mFutureDate = com.cheep.firebase.DateUtils.getFormatedDate(date, Utility.DATE_FORMAT_FULL_DATE);
         Date mCurrentDate = com.cheep.firebase.DateUtils.getFormatedDate(sCurrentDt, Utility.DATE_FORMAT_FULL_DATE);
-        long diff = mFutureDate.getTime() - mCurrentDate.getTime();
+        long diff = (mFutureDate != null ? mFutureDate.getTime() : 0) - (mCurrentDate != null ? mCurrentDate.getTime() : 0);
 
-        String timespan = DateUtils.getRelativeTimeSpanString(mFutureDate.getTime(), System.currentTimeMillis(), DateUtils.SECOND_IN_MILLIS).toString();
-        Log.d(TAG, "getDateDifference() returned: " + timespan);
+        String timespan = DateUtils.getRelativeTimeSpanString(mFutureDate != null ? mFutureDate.getTime() : 0, System.currentTimeMillis(), DateUtils.SECOND_IN_MILLIS).toString();
+        LogUtils.LOGD(TAG, "getDateDifference() returned: " + timespan);
         if (diff > 0) {
             return mContext.getString(R.string.format_task_start_time, timespan);
         } else {
@@ -677,7 +679,7 @@ public class Utility {
     }
 
     public static void showCircularImageView(Context context, String tag, ImageView img, String imageToLoad, int placeholderRes, boolean isRounded) {
-//        Log.d(TAG, "showCircularImageView() called with: context = [" + context + "], tag = [" + tag + "], img = [" + img + "], imageToLoad = [" + imageToLoad + "], placeholderRes = [" + placeholderRes + "], isRounded = [" + isRounded + "]");
+//        LogUtils.LOGD(TAG, "showCircularImageView() called with: context = [" + context + "], tag = [" + tag + "], img = [" + img + "], imageToLoad = [" + imageToLoad + "], placeholderRes = [" + placeholderRes + "], isRounded = [" + isRounded + "]");
         if (!isActivityCorrectForGlide(context)) {
             return;
         }
@@ -727,7 +729,7 @@ public class Utility {
 
 
     public static void showCircularImageViewWithColorBorder(Context context, String tag, ImageView img, String imageToLoad, int placeholderRes, int color, boolean isRounded) {
-//        Log.d(TAG, "showCircularImageView() called with: context = [" + context + "], tag = [" + tag + "], img = [" + img + "], imageToLoad = [" + imageToLoad + "], placeholderRes = [" + placeholderRes + "], isRounded = [" + isRounded + "]");
+//        LogUtils.LOGD(TAG, "showCircularImageView() called with: context = [" + context + "], tag = [" + tag + "], img = [" + img + "], imageToLoad = [" + imageToLoad + "], placeholderRes = [" + placeholderRes + "], isRounded = [" + isRounded + "]");
         if (!isActivityCorrectForGlide(context)) {
             return;
         }
@@ -823,7 +825,7 @@ public class Utility {
      */
     private static Gson gson = new GsonBuilder().create();
 
-    public static <T> Object getObjectFromJsonString(String jsonData, Class modelClass) {
+    public static Object getObjectFromJsonString(String jsonData, Class modelClass) {
         return gson.fromJson(jsonData, modelClass);
     }
 
@@ -1028,7 +1030,7 @@ public class Utility {
      * @param uri The Uri to check.
      * @return Whether the Uri authority is DownloadsProvider.
      */
-    public static boolean isDownloadsDocument(Uri uri) {
+    private static boolean isDownloadsDocument(Uri uri) {
         return "com.android.providers.downloads.documents".equals(uri.getAuthority());
     }
 
@@ -1037,7 +1039,7 @@ public class Utility {
      * @param uri The Uri to check.
      * @return Whether the Uri authority is MediaProvider.
      */
-    public static boolean isMediaDocument(Uri uri) {
+    private static boolean isMediaDocument(Uri uri) {
         return "com.android.providers.media.documents".equals(uri.getAuthority());
     }
 
@@ -1045,148 +1047,158 @@ public class Utility {
      * @param uri The Uri to check.
      * @return Whether the Uri authority is Google Photos.
      */
-    public static boolean isGooglePhotosUri(Uri uri) {
+    private static boolean isGooglePhotosUri(Uri uri) {
         return "com.google.android.apps.photos.content".equals(uri.getAuthority());
     }
 
-    public static final class FILTER_TYPES {
-        public static final String FILTER_TYPE_FEATURED = "Featured";
-        public static final String FILTER_TYPE_POPULAR = "Popular";
-        public static final String FILTER_TYPE_FAVOURITES = "Favourites";
+    public interface FILTER_TYPES {
+        String FILTER_TYPE_FEATURED = "Featured";
+        String FILTER_TYPE_POPULAR = "Popular";
+        String FILTER_TYPE_FAVOURITES = "Favourites";
     }
 
-    public static final class BOOLEAN {
-        public static final String YES = "yes";
-        public static final String NO = "no";
+    public interface BOOLEAN {
+        String YES = "yes";
+        String NO = "no";
     }
 
-    public static final class BROADCAST_TYPE {
-        public static final int UPDATE_FAVOURITE = 1;
-        public static final int UPDATE_COMMENT_COUNT = 2;
-        public static final int TASK_PAID = 3;
-        public static final int TASK_RATED = 4;
-        public static final int TASK_CANCELED = 5;
-        public static final int NEW_NOTIFICATION = 6;
-        public static final int TASK_RESCHEDULED = 7;
-        public static final int TASK_PROCESSING = 8;
+    public interface BROADCAST_TYPE {
+        int UPDATE_FAVOURITE = 1;
+        int UPDATE_COMMENT_COUNT = 2;
+        int TASK_PAID = 3;
+        int TASK_RATED = 4;
+        int TASK_CANCELED = 5;
+        int NEW_NOTIFICATION = 6;
+        int TASK_RESCHEDULED = 7;
+        int TASK_PROCESSING = 8;
 
         // When quote requested by any of the PRO
-        public static final int QUOTE_REQUESTED_BY_PRO = 9;
+        int QUOTE_REQUESTED_BY_PRO = 9;
 
         // When detail request sent by PRO
-        public static final int REQUEST_FOR_DETAIL = 10;
+        int REQUEST_FOR_DETAIL = 10;
 
         // When Task status changes
-        public static final int TASK_STATUS_CHANGE = 11;
+        int TASK_STATUS_CHANGE = 11;
 
         // When additional payment requested
-        public static final int ADDITIONAL_PAYMENT_REQUESTED = 12;
+        int ADDITIONAL_PAYMENT_REQUESTED = 12;
 
         // When detail request getting rejected by User
-        public static final int DETAIL_REQUEST_REJECTED = 13;
+        int DETAIL_REQUEST_REJECTED = 13;
 
         // When AnyTask is Created & We need to check for Alert Disable/Enable in @HomeActivity
-        public static final int TASK_START_ALERT = 14;
+        int TASK_START_ALERT = 14;
 
         // When detail request getting accepted by User
-        public static final int DETAIL_REQUEST_ACCEPTED = 15;
+        int DETAIL_REQUEST_ACCEPTED = 15;
 
         //When Payment has been paid by the user, Need to redirect the user to MyTask Screen
-        public static final int PAYMENT_COMPLETED_NEED_TO_REDIRECT_TO_MY_TASK_SCREEN = 16;
+        int PAYMENT_COMPLETED_NEED_TO_REDIRECT_TO_MY_TASK_SCREEN = 16;
+
+        // when payment is done for insta booked task and complete
+        int TASK_PAID_FOR_INSTA_BOOKING = 17;
+
+        // When Payment response comes from Paytm
+        int PAYTM_RESPONSE = 18;
+
+        // when user has verified Paytm otp and account is linked.
+        int PAYTM_LINKED = 19;
     }
 
-    public static final class REQUEST_TYPE {
-        public static final String QUOTE_REQUESTED = "quote";//sp added quote
-        public static final String DETAIL_REQUIRED = "detail";//sp requested detailed information
+    public interface REQUEST_TYPE {
+        String QUOTE_REQUESTED = "quote";//sp added quote
+        String DETAIL_REQUIRED = "detail";//sp requested detailed information
     }
 
-    public final class SEND_TASK_DETAIL_REQUESTED_STATUS {
-        public static final String INITIAL = "no";
-        public static final String ALREADY_REQUESTED = "pending";
-        public static final String ACCEPTED = "accepted";
-        public static final String REJECTED = "rejected";
+    public interface SEND_TASK_DETAIL_REQUESTED_STATUS {
+        String INITIAL = "no";
+        String ALREADY_REQUESTED = "pending";
+        String ACCEPTED = "accepted";
+        String REJECTED = "rejected";
     }
 
-    public static final class PAYMENT_STATUS {
-        public static final String PAYMENT_INITIATED = "payment_initiated";//not using it
-        public static final String COMPLETED = "completed";
-        public static final String FAILED = "failed";
+    public interface PAYMENT_STATUS {
+        String PAYMENT_INITIATED = "payment_initiated";//not using it
+        String COMPLETED = "completed";
+        String FAILED = "failed";
     }
 
-    public static final class TASK_STATUS {
+    public interface TASK_STATUS {
         /**
          * 1->If task created and only quotes is there.
          * 2->Task created and user paid to sp, but sp not started the task yet.
          */
-        public static final String PENDING = "pending";
+        String PENDING = "pending";
 
         /**
          * If user Payed and task is in progress
          */
-        public static final String PAID = "paid";
+        String PAID = "paid";
+        String COD = "cod";
 
         /**
          * If user starts task on my home
          */
-        public static final String PROCESSING = "processing";
+        String PROCESSING = "processing";
 
         /**
          * If user tries to reschdule the task.
          */
-        public static final String RESCHEDULE_REQUESTED = "reschedule_requested";
+        String RESCHEDULE_REQUESTED = "reschedule_requested";
 
         /**
          * If Task's Reschedule Request has been cancelled by User
          */
-        public static final String RESCHEDULE_REQUEST_REJECTED = "reschedule_request_rejected";
+        String RESCHEDULE_REQUEST_REJECTED = "reschedule_request_rejected";
 
         /**
          * If tasks completed by SP
          */
-        public static final String COMPLETION_REQUEST = "completion_request";
+        String COMPLETION_REQUEST = "completion_request";
 
         /**
          * If tasks completed confirmed by User
          */
-        public static final String COMPLETION_CONFIRM = "completion_confirm";
+        String COMPLETION_CONFIRM = "completion_confirm";
 
         /**
          * If user starts task on my home
          */
-        public static final String CANCELLED_CUSTOMER = "cancel_by_customer";
+        String CANCELLED_CUSTOMER = "cancel_by_customer";
 
         /**
          * If user starts task on my home
          */
-        public static final String CANCELLED_SP = "cancel_by_sp";
+        String CANCELLED_SP = "cancel_by_sp";
 
         /**
          * If Task is Disputed
          */
-        public static final String DISPUTED = "dispute";
+        String DISPUTED = "dispute";
 
         /**
          * If Task is Elapsed
          */
-        public static final String ELAPSED = "elapsed";
+        String ELAPSED = "elapsed";
 
         /**
          * If Additional Payment is Requested by SP
          */
-        public static final String ADDITIONAL_PAYMENT_REQUESTED = "additional_payment_requested";
+        String ADDITIONAL_PAYMENT_REQUESTED = "additional_payment_requested";
 
     }
 
-    public static final class TASK_TYPE {
-        public static final String STRATEGIC = "strategic"; //1->if task created and only quotes is there, 2-> task created and user paid to sp, but sp not started the task yet.
-        public static final String NORMAL = "normal";//if user payed and task is in progress
+    public interface TASK_TYPE {
+        String STRATEGIC = "strategic"; //1->if task created and only quotes is there, 2-> task created and user paid to sp, but sp not started the task yet.
+        String NORMAL = "normal";//if user payed and task is in progress
     }
 
-    public static final class STRATEGIC_PARTNER_BRAND {
-        public static final String VLCC = "VLCC"; //1->if task created and only quotes is there, 2-> task created and user paid to sp, but sp not started the task yet.
+    public interface STRATEGIC_PARTNER_BRAND {
+        String VLCC = "VLCC"; //1->if task created and only quotes is there, 2-> task created and user paid to sp, but sp not started the task yet.
     }
 
-    public static String urlEncodeUTF8(String s) {
+    private static String urlEncodeUTF8(String s) {
         try {
             return URLEncoder.encode(s, "UTF-8");
         } catch (UnsupportedEncodingException e) {
@@ -1208,15 +1220,15 @@ public class Utility {
         return sb.toString();
     }
 
-    public class NOTIFICATION_TYPE {
-        public static final String QUOTE_REQUEST = "QUOTE_REQUEST";
-        public static final String TASK_STATUS_CHANGE = "TASK_STATUS_CHANGE";
-        public static final String ADDITIONAL_PAYMENT_REQUESTED = "additional_payment_requested";
-        public static final String REQUEST_FOR_DETAIL = "REQUEST_FOR_DETAIL";
-        public static final String CHAT_MESSAGE = "FIREBASE";
-        public static final String TASK_CREATE = "TASK_CREATE";
-        public static final String TASK_START_ALERT = "TASK_START_ALERT";
-        public static final String WEB_CUSTOM_NOTIFICATION = "WEB_CUSTOM_NOTIFICATION";
+    public interface NOTIFICATION_TYPE {
+        String QUOTE_REQUEST = "QUOTE_REQUEST";
+        String TASK_STATUS_CHANGE = "TASK_STATUS_CHANGE";
+        String ADDITIONAL_PAYMENT_REQUESTED = "additional_payment_requested";
+        String REQUEST_FOR_DETAIL = "REQUEST_FOR_DETAIL";
+        String CHAT_MESSAGE = "FIREBASE";
+        String TASK_CREATE = "TASK_CREATE";
+        String TASK_START_ALERT = "TASK_START_ALERT";
+        String WEB_CUSTOM_NOTIFICATION = "WEB_CUSTOM_NOTIFICATION";
     }
 
     public static final String SESSION_EXPIRE = "session_expire";
@@ -1224,7 +1236,7 @@ public class Utility {
     /**
      * Call CheepHelpline number
      *
-     * @param mContext
+     * @param mContext Context
      */
     public static void initiateCallToCheepHelpLine(Context mContext) {
         Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse(BuildConfig.CHEEP_HELPLINE_NUMBER));
@@ -1232,7 +1244,7 @@ public class Utility {
     }
 
     /**
-     * Redirect the user to Playstore
+     * Redirect the user to Play store
      */
     public static void redirectUserToPlaystore(Context context) {
         // User cancelled the dialog
@@ -1243,30 +1255,6 @@ public class Utility {
         }
     }
 
-    /**
-     * @param p_videoPath path of video file
-     * @return returns bitmap thumbnail for video
-     * @throws Throwable exception
-     */
-    public static Bitmap getVideoThumbnail(String p_videoPath)
-            throws Throwable {
-        Bitmap m_bitmap = null;
-        MediaMetadataRetriever m_mediaMetadataRetriever = null;
-        try {
-            m_mediaMetadataRetriever = new MediaMetadataRetriever();
-            m_mediaMetadataRetriever.setDataSource(p_videoPath);
-            m_bitmap = m_mediaMetadataRetriever.getFrameAtTime();
-        } catch (Exception m_e) {
-            throw new Throwable(
-                    "Exception in getVideoThumbnail(String p_videoPath)"
-                            + m_e.getMessage());
-        } finally {
-            if (m_mediaMetadataRetriever != null) {
-                m_mediaMetadataRetriever.release();
-            }
-        }
-        return m_bitmap;
-    }
 
     /**
      * Tags for Strategic Partner Questionnary screen
@@ -1291,9 +1279,44 @@ public class Utility {
             return "0.00";
         if (quotePrice.equalsIgnoreCase("") || quotePrice.equalsIgnoreCase("0") || quotePrice.equalsIgnoreCase("0.0") || quotePrice.equalsIgnoreCase("0.00"))
             return "0.00";
-        DecimalFormat formatter = new DecimalFormat("#,###.00");
+        DecimalFormat formatter = new DecimalFormat("##,##0.00");
         double price = Double.parseDouble(quotePrice);
         return formatter.format(price);
+    }
+
+    /**
+     * Get IP address from first non-localhost interface
+     *
+     * @param useIPv4 true=return ipv4, false=return ipv6
+     * @return address or empty string
+     */
+    public static String getIPAddress(boolean useIPv4) {
+        try {
+            List<NetworkInterface> interfaces = Collections.list(NetworkInterface.getNetworkInterfaces());
+            for (NetworkInterface intf : interfaces) {
+                List<InetAddress> addrs = Collections.list(intf.getInetAddresses());
+                for (InetAddress addr : addrs) {
+                    if (!addr.isLoopbackAddress()) {
+                        String sAddr = addr.getHostAddress();
+                        //boolean isIPv4 = InetAddressUtils.isIPv4Address(sAddr);
+                        boolean isIPv4 = sAddr.indexOf(':') < 0;
+
+                        if (useIPv4) {
+                            if (isIPv4)
+                                return sAddr;
+                        } else {
+                            if (!isIPv4) {
+                                int delim = sAddr.indexOf('%'); // drop ip6 zone suffix
+                                return delim < 0 ? sAddr.toUpperCase() : sAddr.substring(0, delim).toUpperCase();
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 
   /*  public static String getExperienceString(String exp) {

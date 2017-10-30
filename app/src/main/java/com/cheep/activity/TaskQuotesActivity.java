@@ -413,7 +413,7 @@ public class TaskQuotesActivity extends BaseAppCompatActivity implements TaskQuo
 
     @Override
     public void onBookClick(ProviderModel provider) {
-        PaymentsStepActivity.newInstance(mContext, mTaskDetailModel, provider, 0);
+        PaymentDetailsActivity.newInstance(mContext, mTaskDetailModel, provider, 0);
     }
 
     @Override

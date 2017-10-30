@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <android.support.design.widget.AppBarLayout
+            android:id="@+id/app_bar_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/AppTheme.AppBarWhite">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.cheep.custom_view.CFTextViewSemiBold
+                    android:id="@+id/text_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="@android:color/transparent"
+                    android:gravity="center"
+                    android:lines="1"
+                    android:maxLines="1"
+                    android:padding="@dimen/scale_10dp"
+                    android:singleLine="true"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/toolbar_title_text_size"
+                    tools:text="Link Paytm" />
+
+            </android.support.v7.widget.Toolbar>
+        </android.support.design.widget.AppBarLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <ScrollView
+                android:id="@+id/sv_main_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fillViewport="true">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <FrameLayout
+                        android:id="@+id/fl_wallet_image_container"
+                        android:layout_width="53dp"
+                        android:layout_height="53dp"
+                        android:layout_gravity="center"
+                        android:layout_marginBottom="@dimen/scale_17dp"
+                        android:layout_marginTop="@dimen/scale_23dp">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_wallet_container" />
+
+                        <ImageView
+                            android:id="@+id/iv_paytm"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginBottom="@dimen/scale_1dp"
+                            android:paddingLeft="@dimen/scale_6dp"
+                            android:paddingRight="@dimen/scale_6dp"
+                            android:src="@drawable/ic_paytm_logo" />
+
+                    </FrameLayout>
+
+                    <com.cheep.custom_view.CFTextViewRegular
+                        android:id="@+id/tv_enter_no_link_x_account"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/scale_79dp"
+                        android:gravity="center"
+                        android:paddingLeft="@dimen/scale_10dp"
+                        android:paddingRight="@dimen/scale_10dp"
+                        android:textColor="@color/grey_varient_8"
+                        android:textSize="@dimen/text_size_16sp"
+                        tools:text="Enter your number and link to your MobiKwik wallet" />
+
+                    <com.cheep.custom_view.CFTextViewSemiBold
+                        android:id="@+id/tv_amount"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/scale_15dp"
+                        android:layout_marginLeft="@dimen/scale_34dp"
+                        android:layout_marginRight="@dimen/scale_34dp"
+                        android:layout_marginTop="@dimen/scale_15dp"
+                        android:gravity="center"
+                        android:text="₹300"
+                        android:textColor="@color/grey_varient_8"
+                        android:textSize="@dimen/text_size_19sp"
+                        android:visibility="gone" />
+
+                    <com.cheep.custom_view.CFTextViewRegular
+                        android:id="@+id/tv_low_balance"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/scale_28dp"
+                        android:layout_marginLeft="@dimen/scale_34dp"
+                        android:layout_marginRight="@dimen/scale_34dp"
+                        android:gravity="center"
+                        android:lineSpacingExtra="@dimen/scale_2dp"
+                        android:text="@string/label_low_balance_add_money"
+                        android:textColor="@color/grey_varient_8"
+                        android:textSize="@dimen/text_size_14sp"
+                        android:visibility="gone" />
+
+                    <LinearLayout
+                        android:id="@+id/ll_et_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/scale_34dp"
+                        android:layout_marginRight="@dimen/scale_34dp"
+                        android:background="@drawable/bottom_stroke_blue"
+                        android:orientation="horizontal"
+                        android:paddingBottom="@dimen/scale_12dp">
+
+                        <ImageView
+                            android:id="@+id/iv_mobile"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="@dimen/scale_21dp"
+                            android:src="@drawable/ic_mobile_black" />
+
+                        <com.cheep.custom_view.CFTextViewBold
+                            android:id="@+id/tv_default_country_code"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="@dimen/scale_12dp"
+                            android:layout_marginTop="@dimen/scale_1dp"
+                            android:text="@string/default_country_code"
+                            android:textColor="@color/grey_varient_8"
+                            android:textSize="@dimen/text_size_17sp" />
+
+                        <com.cheep.custom_view.CFEditTextRegular
+                            android:id="@+id/et_mobile_number"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/scale_1dp"
+                            android:layout_weight="1"
+                            android:background="@color/transparent"
+                            android:hint="@string/label_mobile_number"
+                            android:inputType="phone"
+                            android:maxLength="11"
+                            android:textColor="@color/grey_varient_8"
+                            android:textColorHint="@color/c_60p_opacity_3A3A3A"
+                            android:textCursorDrawable="@null"
+                            android:textSize="@dimen/text_size_17sp" />
+
+                    </LinearLayout>
+
+                    <com.cheep.custom_view.CFTextViewRegular
+                        android:id="@+id/tv_we_create_x_wallet"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/scale_44dp"
+                        android:layout_marginLeft="@dimen/scale_41dp"
+                        android:layout_marginRight="@dimen/scale_41dp"
+                        android:layout_marginTop="@dimen/scale_11dp"
+                        android:textColor="@color/grey_varient_8"
+                        android:textSize="@dimen/text_size_10sp"
+                        tools:text="If you don't have a MobiKwik wallet, we will create one for you" />
+
+                    <com.cheep.custom_view.CFTextViewRegular
+                        android:id="@+id/tv_send_otp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/scale_34dp"
+                        android:layout_marginRight="@dimen/scale_34dp"
+                        android:background="@drawable/verify_otp_btn_selector"
+                        android:enabled="true"
+                        android:gravity="center"
+                        android:padding="@dimen/scale_17dp"
+                        android:text="@string/label_send_otp"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/text_size_14sp"
+                        tools:background="@color/splash_gradient_end" />
+                </LinearLayout>
+            </ScrollView>
+
+            <WebView
+                android:id="@+id/web_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone" />
+
+            <ProgressBar
+                android:id="@+id/progress"
+                style="@style/Widget.AppCompat.ProgressBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:visibility="gone" />
+        </FrameLayout>
+    </LinearLayout>
+</layout>

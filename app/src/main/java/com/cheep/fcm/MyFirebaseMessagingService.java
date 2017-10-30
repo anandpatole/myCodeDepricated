@@ -328,7 +328,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private static NotificationCompat.Builder createMessageNotificationBuilder(Context context, ChatNotification chatNotification) {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
         if (mapMessages.size() > 1) {
-            String formatedText = String.format(Locale.US, "%d" + context.getString(R.string.new_)+ " %s", getActiveMessageCount(), getActiveMessageCount() > 1
+            String formatedText = String.format(Locale.US, "%d" + context.getString(R.string.new_) + " %s", getActiveMessageCount(), getActiveMessageCount() > 1
                     ? context.getString(R.string.messages) : context.getString(R.string.message));
             builder.setContentTitle(formatedText);
         } else {
