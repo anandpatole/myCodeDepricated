@@ -381,6 +381,7 @@
                     android:layout_marginLeft="@dimen/scale_11dp"
                     android:layout_marginRight="@dimen/scale_11dp"
                     android:orientation="vertical"
+                    android:visibility="gone"
                     apps:cardBackgroundColor="@color/white"
                     apps:cardCornerRadius="@dimen/scale_5dp">
 

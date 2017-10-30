@@ -22,5 +22,8 @@ public class BannerImageModel {
     @SerializedName("minimum_selection")
     @Expose
     public String minimum_selection;
+    @SerializedName("banner_type")
+    @Expose
+    public String bannerType;
 
 }

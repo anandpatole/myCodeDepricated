@@ -1489,7 +1489,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
                 amount = amount.replace(Utility.COMMA, Utility.EMPTY_STRING);
             }
             boolean isLowBalance = paytmWalletBalance < Double.parseDouble(amount);
-            payableAmount = Math.ceil(Double.parseDouble(amount) - paytmWalletBalance);
+            payableAmount = Double.parseDouble(amount) - paytmWalletBalance;
             mActivityPaymentChoiceBinding.tvPaytmBalance.setVisibility(View.VISIBLE);
 
             mActivityPaymentChoiceBinding.tvPaytmBalance.setText("(" + getString(R.string.rupee_symbol_x, String.valueOf(paytmWalletBalance)) + ")");

@@ -1115,6 +1115,10 @@ public class SendOtpActivity extends BaseAppCompatActivity implements View.OnCli
             // We need to finish this activity regardless of the response is success or failure
             finish();
         }
+        if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.PAYTM_LINKED) {
+            // when paytm data is linked successfully
+            finish();
+        }
     }
 
 }

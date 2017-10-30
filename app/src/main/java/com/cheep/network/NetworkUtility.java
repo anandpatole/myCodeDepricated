@@ -380,8 +380,8 @@ public class NetworkUtility {
         String AMOUNT = "amount";
         public static final String REFER_COUNT = "refer_count";
         String PAYTM_RESPONSE_DATA = "paytmResponseData";
-        String PAYMENT_GATEWAY_DATA= "paymentGatewayData";
-        String ACCESS_TOKEN_EXPIRES_TIMESTAMP= "access_token_expires_timestamp";
+        String PAYMENT_GATEWAY_DATA = "paymentGatewayData";
+        String ACCESS_TOKEN_EXPIRES_TIMESTAMP = "access_token_expires_timestamp";
 
         interface VERSION_CHANGE_TYPE {
             int NORMAL = 0;
@@ -439,6 +439,12 @@ public class NetworkUtility {
             int SIGNUP_REQUIRED = 445;
             int FORCE_LOGOUT_REQUIRED = 446;
             int USER_DELETED = 447;
+        }
+
+        interface BANNER_TYPE{
+            String STRATEGIC = "strategic";
+            String REFERRAL = "referral";
+            String NORMAL = "normal";
         }
 
         String MESSAGE = "message";

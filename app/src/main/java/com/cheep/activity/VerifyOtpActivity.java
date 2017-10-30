@@ -9,7 +9,6 @@ import android.os.CountDownTimer;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.text.Editable;
-import android.text.InputFilter;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextPaint;
@@ -38,6 +37,8 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.concurrent.TimeUnit;
 
 import static com.cheep.network.NetworkUtility.PAYTM.PARAMETERS.orderId;
 import static com.cheep.network.NetworkUtility.PAYTM.PARAMETERS.response;
@@ -77,6 +78,10 @@ public class VerifyOtpActivity extends BaseAppCompatActivity {
 
     private double payableAmount;
     private ActivityVerifyOtpBinding mActivityVerifyOtpBinding;
+    // set timer for 2 min
+    private static final long RESEND_OTP_TIMER = 2 * 60 * 1000;
+    // set timer interval 1 sec
+    private static final long RESEND_OTP_TIMER_INTERVAL = 1000;
 
     public static void newInstance(Context context, String mobileNumber, String state, boolean isPaytm, String amount) {
         Intent intent = new Intent(context, VerifyOtpActivity.class);
@@ -127,29 +132,36 @@ public class VerifyOtpActivity extends BaseAppCompatActivity {
 //                mActivityVerifyOtpBinding.tvSendOtp.setText(getString(R.string.label_proceed));
         mActivityVerifyOtpBinding.tvSendOtp.setEnabled(false);
         mActivityVerifyOtpBinding.tvWeCreateXWallet.setVisibility(View.INVISIBLE);
-        timer = new CountDownTimer(60000, 1000) {
+        timer = new CountDownTimer(RESEND_OTP_TIMER, RESEND_OTP_TIMER_INTERVAL) {
 
             public void onTick(long millisUntilFinished) {
                 currentMilliSeconds = millisUntilFinished;
                 isTimerOnGoing = true;
+
+                int minutes = (int) TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished);
+                int seconds = (int) (TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) -
+                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished)));
+
                 if (!mActivityVerifyOtpBinding.etMobileNumber.getText().toString().isEmpty()) {
                     mActivityVerifyOtpBinding.tvSendOtp.setSelected(true);
                     mActivityVerifyOtpBinding.tvSendOtp.setText(getString(R.string.label_proceed));
                 } else {
                     mActivityVerifyOtpBinding.tvSendOtp.setSelected(false);
-                    mActivityVerifyOtpBinding.tvSendOtp.setText(String.format("00:" + "%02d", (int) millisUntilFinished / 1000));
+                    mActivityVerifyOtpBinding.tvSendOtp.setText(String.format("%02d:%02d", minutes, seconds));
                 }
             }
 
             public void onFinish() {
                 isTimerOnGoing = false;
-                if (!mActivityVerifyOtpBinding.etMobileNumber.getText().toString().isEmpty()) {
-                    mActivityVerifyOtpBinding.tvSendOtp.setSelected(true);
-                    mActivityVerifyOtpBinding.tvSendOtp.setText(getString(R.string.label_proceed));
-                } else {
-                    mActivityVerifyOtpBinding.tvSendOtp.setSelected(false);
-                    mActivityVerifyOtpBinding.tvSendOtp.setText(String.format("00:" + "%02d", 0));
-                }
+//                if (!mActivityVerifyOtpBinding.etMobileNumber.getText().toString().isEmpty()) {
+//                    mActivityVerifyOtpBinding.tvSendOtp.setSelected(true);
+//                    mActivityVerifyOtpBinding.tvSendOtp.setText(getString(R.string.label_proceed));
+//                } else {
+//                    mActivityVerifyOtpBinding.tvSendOtp.setSelected(false);
+//                    mActivityVerifyOtpBinding.tvSendOtp.setText(String.format("00:%02d", 0));
+//                }
+                mActivityVerifyOtpBinding.tvSendOtp.setEnabled(!mActivityVerifyOtpBinding.etMobileNumber.getText().toString().isEmpty());
+                mActivityVerifyOtpBinding.tvSendOtp.setText(getString(R.string.label_proceed));
                 mActivityVerifyOtpBinding.tvWeCreateXWallet.setVisibility(View.VISIBLE);
             }
 
@@ -170,10 +182,13 @@ public class VerifyOtpActivity extends BaseAppCompatActivity {
                     mActivityVerifyOtpBinding.tvSendOtp.setText(getString(R.string.label_proceed));
                 } else if (!isTimerOnGoing) {
                     mActivityVerifyOtpBinding.tvSendOtp.setSelected(false);
-                    mActivityVerifyOtpBinding.tvSendOtp.setText(String.format("00:" + "%02d", 0));
+                    mActivityVerifyOtpBinding.tvSendOtp.setText(getString(R.string.label_proceed));
                 } else {
                     mActivityVerifyOtpBinding.tvSendOtp.setSelected(false);
-                    mActivityVerifyOtpBinding.tvSendOtp.setText(String.format("00:" + "%02d", (int) currentMilliSeconds / 1000));
+                    int minutes = (int) TimeUnit.MILLISECONDS.toMinutes(currentMilliSeconds);
+                    int seconds = (int) (TimeUnit.MILLISECONDS.toSeconds(currentMilliSeconds) -
+                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(currentMilliSeconds)));
+                    mActivityVerifyOtpBinding.tvSendOtp.setText(String.format("%02d:%02d", minutes, seconds));
 
                 }
             }
@@ -398,6 +413,7 @@ public class VerifyOtpActivity extends BaseAppCompatActivity {
                         UserDetails userDetails = PreferenceUtility.getInstance(VerifyOtpActivity.this).getUserDetails();
                         userDetails.mPaytmUserDetail = (UserDetails.PaytmUserDetail) Utility.getObjectFromJsonString(paytmData, UserDetails.PaytmUserDetail.class);
                         PreferenceUtility.getInstance(VerifyOtpActivity.this).saveUserDetails(userDetails);
+
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
                         Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityVerifyOtpBinding.getRoot());
@@ -475,6 +491,13 @@ public class VerifyOtpActivity extends BaseAppCompatActivity {
                 //TODO: withdraw money
                 WithdrawMoneyActivity.newInstance(mContext, amount, payableAmount, mAccessToken, mMobileNumber, mResourceOwnerCustomerId, paytmWalletBalance, isPaytm);
             }
+            // finish activity as now account is linked.
+            // this event is fired to finish send otp and verify otp activity
+            MessageEvent messageEvent = new MessageEvent();
+            messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.PAYTM_LINKED;
+            EventBus.getDefault().post(messageEvent);
+
+            finish();
             hideProgressDialog();
         }
 

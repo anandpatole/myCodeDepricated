@@ -145,7 +145,6 @@
     <dimen name="home_screen_extra_category_count_text_size_three_digits">11sp</dimen>
     <!--Home Screen Alignments[End]-->
 
-
     <!-- Strategic partner Banner header -->
     <dimen name="banner_desc_margin_top">25dp</dimen>
     <dimen name="banner_title_text_size">18sp</dimen>
@@ -171,5 +170,6 @@
 
     <!--Verification Screen-->
     <dimen name="verification_screen_margin_logo_description">28.250dp</dimen>
+
 </resources>
 

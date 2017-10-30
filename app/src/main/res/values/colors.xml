@@ -31,6 +31,8 @@
     <color name="grey_varient_17">#9a9a9a</color>
     <color name="grey_varient_18">#b0b0b0</color>
     <color name="grey_variant_19">#F6F6F6</color>
+    <color name="grey_variant_20">#3D3D3D</color>
+    <color name="grey_variant_21">#AFAFAF</color>
 
     
     <color name="brown_varient_1">#f0f0f0</color>
@@ -60,6 +62,7 @@
     <color name="grey_dark_color_5">#525252</color>
     <color name="grey_dark_color_6">#787878</color>
     <color name="grey_dark_color_7">#707172</color>
+    <color name="grey_dark_color_8">#AAAAAA</color>
 
     <color name="grey_color">#E8E8E8</color>
     <color name="light_grey_color">#DCDEE3</color>
