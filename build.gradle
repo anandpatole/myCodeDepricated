@@ -25,16 +25,17 @@ buildscript {
         maven {
             url 'https://maven.fabric.io/public'
         }
+        google()
     }
     dependencies {
         // Gradle Plugin for IDE. Note: Use the latest stable version all the time.
-        classpath 'com.android.tools.build:gradle:2.3.3'
+        classpath 'com.android.tools.build:gradle:3.0.0'
 
         // Fabric gradle plugin. Required for Fabric API Integration.
         classpath 'io.fabric.tools:gradle:1.22.1'
 
         // In order to use Google-Play Services for the app.
-        classpath 'com.google.gms:google-services:3.0.0'
+        classpath 'com.google.gms:google-services:3.1.0'
 
         // IMPORTANT NOTE: DO NOT place your application dependencies here; they belong
         // in the individual module build.gradle files. other dependecies should be entered inside
@@ -54,9 +55,7 @@ allprojects {
         }
 
         // Google Repository needed to use libraries hosted in below repository.
-        maven {
-            url "https://maven.google.com"
-        }
+        google()
 
     }
 }

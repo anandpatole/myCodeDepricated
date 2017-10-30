@@ -406,7 +406,7 @@ public class HomeActivity extends BaseAppCompatActivity
 
 
     public void loadFragment(String tag, BaseFragment baseFragment) {
-        getSupportFragmentManager().beginTransaction().replace(R.id.content, baseFragment, tag).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.content, baseFragment, tag).commitAllowingStateLoss();
     }
 
     @Override
