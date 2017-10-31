@@ -78,7 +78,7 @@
                     android:layout_centerVertical="true">
 
                     <ImageView
-                        android:id="@+id/img_default"
+                        android:id="@+id/img_camera"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
@@ -93,6 +93,13 @@
                         tools:ignore="ContentDescription"/>
                 </FrameLayout>
             </RelativeLayout>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycleImg"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/scale_30dp"
+                android:paddingRight="@dimen/scale_30dp"/>
 
             <View
                 android:layout_width="match_parent"

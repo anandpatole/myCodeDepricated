@@ -23,16 +23,16 @@ import java.util.ArrayList;
  * Adapter to show thumbnails of selected image and video in Strategic partner Phase 2(Questionnary screen)
  */
 
-class MediaRecycleAdapter extends RecyclerView.Adapter<MediaRecycleAdapter.MyViewHolder> {
+public  class MediaRecycleAdapter extends RecyclerView.Adapter<MediaRecycleAdapter.MyViewHolder> {
     private static final String TAG = "MediaRecycleAdapter";
     private ArrayList<MediaModel> mList = new ArrayList<>();
     private ItemClick mItemClick;
 
-    MediaRecycleAdapter(ItemClick itemClick) {
+    public MediaRecycleAdapter(ItemClick itemClick) {
         mItemClick = itemClick;
     }
 
-    void addImage(MediaModel mediaModel) {
+    public void addImage(MediaModel mediaModel) {
         if (mList == null) {
             mList = new ArrayList<>();
         }
@@ -62,7 +62,7 @@ class MediaRecycleAdapter extends RecyclerView.Adapter<MediaRecycleAdapter.MyVie
         return mList;
     }
 
-    interface ItemClick {
+    public interface ItemClick {
         void removeMedia();
     }
 

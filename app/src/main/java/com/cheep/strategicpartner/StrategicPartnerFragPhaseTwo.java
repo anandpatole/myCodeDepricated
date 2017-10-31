@@ -12,7 +12,6 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.databinding.DataBindingUtil;
 import android.graphics.drawable.BitmapDrawable;
-import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -2142,9 +2141,9 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
             mCurrentPhotoPath = Utility.getPath(mStrategicPartnerTaskCreationAct, selectedImageUri);
 
             if (mCurrentPhotoPath != null && !mCurrentPhotoPath.equals("")) {
-                if (getDuration(mCurrentPhotoPath) > 10) {
+                if (AmazonUtils.getDuration(mCurrentPhotoPath) > 10) {
                     Utility.showToast(mContext, getString(R.string.message_file_heavy));
-                } else if (getDuration(mCurrentPhotoPath) <= 0) {
+                } else if (AmazonUtils.getDuration(mCurrentPhotoPath) <= 0) {
                     Utility.showToast(mContext, getString(R.string.message_file_something_wrong));
                 } else {
                     try {
@@ -2161,26 +2160,6 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
         }
     }
 
-    private long getDuration(String selectedImagePath) {
-        try {
-            MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-//        use one of overloaded setDataSource() functions to set your data source
-            retriever.setDataSource(selectedImagePath);
-
-            String time = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
-            long timeInSec = 0;
-            try {
-                timeInSec = Long.parseLong(time) / 1000;
-            } catch (NumberFormatException e) {
-                timeInSec = 0;
-            }
-            retriever.release();
-            return timeInSec;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return 0;
-        }
-    }
 
     /**
      * check if 3 image/video is added then hide image add view

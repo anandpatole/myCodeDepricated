@@ -337,7 +337,6 @@
                                                 android:ellipsize="marquee"
                                                 android:gravity="center"
                                                 android:marqueeRepeatLimit="marquee_forever"
-                                                android:maxLines="1"
                                                 android:paddingBottom="@dimen/scale_1dp"
                                                 android:paddingLeft="@dimen/scale_3dp"
                                                 android:paddingRight="@dimen/scale_3dp"
@@ -461,13 +460,13 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:paddingLeft="@dimen/scale_16dp"
-                            android:paddingRight="@dimen/scale_16dp"
-                            android:paddingTop="@dimen/scale_16dp">
+                            android:paddingRight="@dimen/scale_16dp">
 
                             <LinearLayout
                                 android:id="@+id/ln_task_desc"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/scale_16dp"
                                 android:layout_toLeftOf="@+id/frame_select_picture"
                                 android:layout_toStartOf="@+id/frame_select_picture"
                                 android:orientation="vertical">
@@ -514,17 +513,86 @@
 
                             <FrameLayout
                                 android:id="@+id/frame_select_picture"
-                                android:layout_width="@dimen/scale_70dp"
-                                android:layout_height="@dimen/scale_70dp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
                                 android:layout_alignParentRight="true"
-                                android:layout_centerVertical="true">
+                                android:layout_marginTop="@dimen/scale_10dp"
+                                >
+
 
                                 <ImageView
-                                    android:id="@+id/img_task_picture"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
+                                    android:id="@+id/img_task_picture_1"
+                                    android:layout_width="@dimen/scale_70dp"
+                                    android:layout_height="@dimen/scale_70dp"
                                     android:adjustViewBounds="true"
+                                    android:background="@drawable/bg_white_shadow"
+                                    android:padding="@dimen/scale_5dp"
+                                    android:scaleType="centerCrop"
+                                    android:visibility="visible"
                                     tools:ignore="ContentDescription"/>
+
+
+                                <FrameLayout
+                                    android:id="@+id/frame_picture_2"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="@dimen/scale_5dp"
+                                    android:layout_marginTop="@dimen/scale_5dp">
+
+                                    <ImageView
+                                        android:id="@+id/img_task_picture_2"
+                                        android:layout_width="@dimen/scale_70dp"
+                                        android:layout_height="@dimen/scale_70dp"
+                                        android:adjustViewBounds="true"
+                                        android:background="@drawable/bg_white_shadow"
+                                        android:padding="@dimen/scale_5dp"
+                                        android:scaleType="centerCrop"
+                                        android:visibility="visible"
+                                        tools:ignore="ContentDescription"/>
+
+                                    <TextView
+                                        android:id="@+id/tv_counter_2"
+                                        android:layout_width="@dimen/scale_30dp"
+                                        android:layout_height="@dimen/scale_30dp"
+                                        android:layout_gravity="center"
+                                        android:background="@drawable/xml_circular_indicator_selected_with_border"
+                                        android:gravity="center_vertical|center_horizontal"
+                                        android:text="+1"
+                                        android:textColor="@color/white"
+                                        android:textSize="@dimen/text_size_12sp"
+                                        />
+                                </FrameLayout>
+
+                                <FrameLayout
+                                    android:id="@+id/frame_picture_3"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="@dimen/scale_10dp"
+                                    android:layout_marginTop="@dimen/scale_10dp">
+
+                                    <ImageView
+                                        android:id="@+id/img_task_picture_3"
+                                        android:layout_width="@dimen/scale_70dp"
+                                        android:layout_height="@dimen/scale_70dp"
+                                        android:adjustViewBounds="true"
+                                        android:background="@drawable/bg_white_shadow"
+                                        android:padding="@dimen/scale_5dp"
+                                        android:scaleType="centerCrop"
+                                        android:visibility="visible"
+                                        tools:ignore="ContentDescription"/>
+
+                                    <TextView
+                                        android:id="@+id/tv_counter_3"
+                                        android:layout_width="@dimen/scale_30dp"
+                                        android:layout_height="@dimen/scale_30dp"
+                                        android:layout_gravity="center"
+                                        android:background="@drawable/xml_circular_indicator_selected_with_border"
+                                        android:gravity="center_vertical|center_horizontal"
+                                        android:text="+2"
+                                        android:textColor="@color/white"
+                                        android:textSize="@dimen/text_size_12sp"
+                                        />
+                                </FrameLayout>
                             </FrameLayout>
                         </RelativeLayout>
 
@@ -534,6 +602,7 @@
                             android:layout_height="@dimen/scale_0_5dp"
                             android:layout_marginLeft="@dimen/scale_10dp"
                             android:layout_marginRight="@dimen/scale_10dp"
+                            android:layout_marginTop="@dimen/scale_10dp"
                             android:background="@color/grey_varient_11"/>
 
                         <!--Third Section(When)-->

@@ -164,7 +164,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
         mActivityTaskSummaryBinding.frameSelectPicture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                StrategicPartnerMediaViewActiivty.getInstance(TaskSummaryStrategicPartnerActivity.this, mTaskDetailModel.mMediaModelList);
+                StrategicPartnerMediaViewActiivty.getInstance(TaskSummaryStrategicPartnerActivity.this, mTaskDetailModel.mMediaModelList,true);
             }
         });
 

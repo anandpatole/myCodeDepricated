@@ -25,6 +25,12 @@ import com.cheep.R;
 import com.cheep.custom_view.BottomAlertDialog;
 import com.cheep.custom_view.CFEditTextRegular;
 import com.cheep.databinding.ActivityPaymentDetailBinding;
+import com.cheep.dialogs.AcknowledgementDialogWithProfilePic;
+import com.cheep.dialogs.AcknowledgementInteractionListener;
+import com.cheep.firebase.FirebaseHelper;
+import com.cheep.firebase.FirebaseUtils;
+import com.cheep.firebase.model.ChatTaskModel;
+import com.cheep.firebase.model.TaskChatModel;
 import com.cheep.model.AddressModel;
 import com.cheep.model.MessageEvent;
 import com.cheep.model.ProviderModel;
@@ -33,8 +39,13 @@ import com.cheep.model.UserDetails;
 import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
+import com.cheep.utils.LogUtils;
 import com.cheep.utils.PreferenceUtility;
+import com.cheep.utils.SuperCalendar;
 import com.cheep.utils.Utility;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -517,8 +528,14 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
             setTaskState(STEP_THREE_VERIFIED);
             int isAdditionalPayment = getIntent().getIntExtra(Utility.Extra.PAYMENT_VIEW_IS_ADDITIONAL_CHARGE, 0);
             // Open payment method activity on payment as per new flow
+
             taskDetailModel.usedWalletAmount = String.valueOf(usedWalletBalance);
-            PaymentChoiceActivity.newInstance(mContext, taskDetailModel, providerModel, isAdditionalPayment, isInstaBooking, mSelectedAddressModelForInsta);
+            if (isInstaBooking) {
+                PaymentChoiceActivity.newInstance(mContext, taskDetailModel, providerModel, isAdditionalPayment, isInstaBooking, mSelectedAddressModelForInsta);
+            } else {
+                updatePaymentStatus(true, Utility.EMPTY_STRING, isAdditionalPayment != 0);
+            }
+
         }
     };
 
@@ -999,6 +1016,287 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
             }
         }
     };
+
+    /**
+     * According to new flow Pay Later this WS used for book pro only.
+     * Payment will be done after
+     */
+    private void updatePaymentStatus(boolean isSuccess, String response,
+                                     boolean isAdditionalPayment) {
+        if (!Utility.isConnected(mContext)) {
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityPaymentDetailBinding.getRoot());
+            return;
+        }
+        showProgressDialog();
+
+        UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
+        //Add Header parameters
+
+
+        Map<String, String> mHeaderParams = new HashMap<>();
+        mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
+        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, userDetails.UserID);
+
+        //Add Params
+        Map<String, Object> mParams = new HashMap<>();
+        mParams.put(NetworkUtility.TAGS.SP_USER_ID, providerModel.providerId);
+        mParams.put(NetworkUtility.TAGS.TASK_ID, taskDetailModel.taskId);
+        if (!TextUtils.isEmpty(taskDetailModel.cheepCode)) {
+            mParams.put(NetworkUtility.TAGS.CHEEPCODE, taskDetailModel.cheepCode);
+            mParams.put(NetworkUtility.TAGS.PROMOCODE_PRICE, taskDetailModel.taskDiscountAmount);
+
+        } else {
+            mParams.put(NetworkUtility.TAGS.CHEEPCODE, Utility.EMPTY_STRING);
+            mParams.put(NetworkUtility.TAGS.PROMOCODE_PRICE, Utility.ZERO_STRING);
+        }
+        mParams.put(NetworkUtility.TAGS.IS_REFER_CODE, taskDetailModel.isReferCode);
+        mParams.put(NetworkUtility.TAGS.TRANSACTION_ID, Utility.getUniqueTransactionId());
+        mParams.put(NetworkUtility.TAGS.IS_FOR_ADDITIONAL_QUOTE, isAdditionalPayment
+                ? getString(R.string.label_yes).toLowerCase() :
+                getString(R.string.label_no).toLowerCase());
+        mParams.put(NetworkUtility.TAGS.PAYMENT_METHOD, NetworkUtility.PAYMENT_METHOD_TYPE.PAY_LATER);
+//        mParams.put(NetworkUtility.TAGS.PAYMENT_STATUS, isSuccess ? Utility.PAYMENT_STATUS.COMPLETED : Utility.PAYMENT_STATUS.FAILED);
+//        as per new pay later flow payment_status will be processing
+        mParams.put(NetworkUtility.TAGS.PAYMENT_STATUS, Utility.PAYMENT_STATUS.PROCESSING);
+        mParams.put(NetworkUtility.TAGS.PAYMENT_LOG, response);
+        mParams.put(NetworkUtility.TAGS.USED_WALLET_BALANCE, taskDetailModel.usedWalletAmount);
+        mParams.put(NetworkUtility.TAGS.PAYABLE_AMOUNT, isAdditionalPayment ? taskDetailModel.additionalQuoteAmount : providerModel.quotePrice);
+        // Url is based on condition if address id is greater then 0 then it means we need to update the existing address
+        VolleyNetworkRequest mVolleyNetworkRequestForSPList = new VolleyNetworkRequest(NetworkUtility.WS.PAYMENT
+                , mCallUpdatePaymentStatusWSErrorListener
+                , mCallUpdatePaymentStatusWSResponseListener
+                , mHeaderParams
+                , mParams
+                , null);
+        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequestForSPList);
+    }
+
+    Response.Listener mCallUpdatePaymentStatusWSResponseListener = new Response.Listener() {
+        @Override
+        public void onResponse(Object response) {
+
+            String strResponse = (String) response;
+            try {
+                JSONObject jsonObject = new JSONObject(strResponse);
+                LogUtils.LOGE(TAG, "onResponse: " + jsonObject.toString());
+                int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
+                String error_message;
+                hideProgressDialog();
+                switch (statusCode) {
+                    case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
+
+                        JSONObject jsonData = jsonObject.optJSONObject(NetworkUtility.TAGS.DATA);
+                        String taskStatus = jsonData.optString(NetworkUtility.TAGS.TASK_STATUS);
+
+//                        callTaskDetailWS();
+
+// AS PER new flow pay later task status will be pending
+                        if (Utility.TASK_STATUS.PAY_LATER.equalsIgnoreCase(taskStatus)) {
+                            //We are commenting it because from here we are intiating a payment flow and
+                            // after that we need to call update payment status on server
+                            String taskPaidAmount = jsonData.optString(NetworkUtility.TAGS.TASK_PAID_AMOUNT);
+                            if (taskDetailModel != null) {
+                                taskDetailModel.taskStatus = taskStatus;
+                                if (!TextUtils.isEmpty(taskPaidAmount))
+                                    taskDetailModel.taskPaidAmount = taskPaidAmount;
+                                /*
+                                * Update selected sp on firebase
+                                * @Sanjay 20 Feb 2016
+                                * */
+                                if (providerModel != null) {
+                                    updateSelectedSpOnFirebase(taskDetailModel, providerModel);
+                                }
+                            }
+
+                            //  Refresh UI for Paid status
+                            //  FillProviderDetails(providerModel);
+
+                            MessageEvent messageEvent = new MessageEvent();
+                            messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.TASK_PAID;
+                            messageEvent.id = taskDetailModel.taskId;
+                            EventBus.getDefault().post(messageEvent);
+
+                             /*
+                             *  @Changes : 7th July, 2017 :- Bhavesh Patadiya
+                             *  Need to show Model Dialog once Payment has been made successful. Once
+                             *  User clicks on OK. we will finish of the activity.
+                             */
+                            String title = mContext.getString(R.string.label_great_choice_x, PreferenceUtility.getInstance(mContext).getUserDetails().UserName);
+                            final SuperCalendar superStartDateTimeCalendar = SuperCalendar.getInstance();
+                            superStartDateTimeCalendar.setTimeZone(SuperCalendar.SuperTimeZone.GMT.GMT);
+                            superStartDateTimeCalendar.setTimeInMillis(Long.parseLong(taskDetailModel.taskStartdate));
+                            superStartDateTimeCalendar.setLocaleTimeZone();
+
+                            int onlydate = Integer.parseInt(superStartDateTimeCalendar.format("dd"));
+                            String message = fetchMessageFromDateOfMonth(onlydate, superStartDateTimeCalendar);
+
+//                            final UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
+                            AcknowledgementDialogWithProfilePic mAcknowledgementDialogWithProfilePic = AcknowledgementDialogWithProfilePic.newInstance(
+                                    mContext,
+                                    R.drawable.ic_acknowledgement_dialog_header_background,
+                                    title,
+                                    message,
+                                    providerModel != null ? providerModel.profileUrl : null,
+                                    new AcknowledgementInteractionListener() {
+
+                                        @Override
+                                        public void onAcknowledgementAccepted() {
+                                            // Finish the activity
+                                            finish();
+
+                                            // Payment is been done now, so broadcast this specific case to relavent activities
+                                            MessageEvent messageEvent = new MessageEvent();
+                                            messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.PAYMENT_COMPLETED_NEED_TO_REDIRECT_TO_MY_TASK_SCREEN;
+                                            EventBus.getDefault().post(messageEvent);
+                                        }
+                                    });
+                            mAcknowledgementDialogWithProfilePic.setCancelable(false);
+                            mAcknowledgementDialogWithProfilePic.show(getSupportFragmentManager(), AcknowledgementDialogWithProfilePic.TAG);
+
+                        } else if (Utility.TASK_STATUS.PROCESSING.equalsIgnoreCase(taskStatus)) {
+                            //We are commenting it because from here we are intiating a payment flow and after that we need to call update payment status on server
+                            String taskPaidAmount = jsonData.optString(NetworkUtility.TAGS.TASK_PAID_AMOUNT);
+                            if (taskDetailModel != null) {
+                                taskDetailModel.taskStatus = taskStatus;
+                                if (!TextUtils.isEmpty(taskPaidAmount))
+                                    taskDetailModel.taskPaidAmount = taskPaidAmount;
+                            }
+                            //  Refresh UI for Paid status
+                            //  FillProviderDetails(providerModel);
+                            MessageEvent messageEvent = new MessageEvent();
+                            messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.TASK_PROCESSING;
+                            messageEvent.id = taskDetailModel.taskId;
+                            EventBus.getDefault().post(messageEvent);
+
+                            // Finish the activity
+                            finish();
+                        }
+                        break;
+                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
+                        // Show Toast
+                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityPaymentDetailBinding.getRoot());
+                        break;
+                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
+                        error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
+                        // Show message
+                        Utility.showSnackBar(error_message, mActivityPaymentDetailBinding.getRoot());
+                        break;
+                    case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
+                    case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
+                        //Logout and finish the current activity
+                        Utility.logout(mContext, true, statusCode);
+                        finish();
+                        break;
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+                mCallUpdatePaymentStatusWSErrorListener.onErrorResponse(new VolleyError(e.getMessage()));
+            }
+
+        }
+    };
+
+    Response.ErrorListener mCallUpdatePaymentStatusWSErrorListener = new Response.ErrorListener() {
+        @Override
+        public void onErrorResponse(final VolleyError error) {
+            LogUtils.LOGE(TAG, "onErrorResponse() called with: error = [" + error + "]");
+            // Close Progressbar
+            hideProgressDialog();
+            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityPaymentDetailBinding.getRoot());
+        }
+    };
+
+    /*
+         * Update finalized sp id on firebase.
+         * @Sanjay 20 Feb 2016
+         * */
+    private void updateSelectedSpOnFirebase(final TaskDetailModel taskDetailModel, final ProviderModel providerModel) {
+        String formattedTaskId = FirebaseUtils.getPrefixTaskId(taskDetailModel.taskId);
+        String formattedSpId = FirebaseUtils.getPrefixSPId(providerModel.providerId);
+        String formattedUserId = "";
+        final UserDetails userDetails = PreferenceUtility.getInstance(PaymentDetailsActivity.this).getUserDetails();
+        if (userDetails != null) {
+            formattedUserId = FirebaseUtils.getPrefixUserId(userDetails.UserID);
+        }
+        FirebaseHelper.getRecentChatRef(formattedUserId).child(formattedTaskId).removeValue();
+        if (!TextUtils.isEmpty(formattedTaskId) && !TextUtils.isEmpty(formattedSpId)) {
+            FirebaseHelper.getTaskRef(formattedTaskId).child(FirebaseHelper.KEY_SELECTEDSPID).setValue(formattedSpId);
+        }
+
+        final String formattedId = FirebaseUtils.get_T_SP_U_FormattedId(formattedTaskId, formattedSpId, formattedUserId);
+        final String finalFormattedUserId = formattedUserId;
+        FirebaseHelper.getTaskChatRef(formattedTaskId).child(formattedId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists() && dataSnapshot.getValue() != null) {
+                    TaskChatModel taskChatModel = dataSnapshot.getValue(TaskChatModel.class);
+                    if (taskChatModel != null) {
+                        taskChatModel.chatId = formattedId;
+                    }
+                    if (taskChatModel != null) {
+                        FirebaseHelper.getRecentChatRef(finalFormattedUserId).child(taskChatModel.chatId).setValue(taskChatModel);
+                    }
+
+                    if (isInstaBooking) {
+        /* * Add new task detail on firebase
+         * @Giteeka sep 7 2017 for insta booking
+         */
+                        ChatTaskModel chatTaskModel = new ChatTaskModel();
+                        chatTaskModel.taskId = FirebaseUtils.getPrefixTaskId(taskDetailModel.taskId);
+                        chatTaskModel.taskDesc = taskDetailModel.taskDesc;
+                        chatTaskModel.categoryId = taskDetailModel.categoryId;
+                        chatTaskModel.categoryName = taskDetailModel.categoryName;
+                        chatTaskModel.selectedSPId = providerModel.providerId;
+                        UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
+                        chatTaskModel.userId = FirebaseUtils.getPrefixUserId(userDetails.UserID);
+                        FirebaseHelper.getTaskRef(chatTaskModel.taskId).setValue(chatTaskModel);
+                    }
+
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private String fetchMessageFromDateOfMonth(int day, SuperCalendar
+            superStartDateTimeCalendar) {
+        String date;
+        String DATE_FORMAT_TASK_HAS_BEEN_PAID_DATE_TH = SuperCalendar.SuperFormatter.DATE + getString(R.string.label_th_date) + SuperCalendar.SuperFormatter.MONTH_JAN;
+        String DATE_FORMAT_TASK_HAS_BEEN_PAID_DATE_ST = SuperCalendar.SuperFormatter.DATE + getString(R.string.label_st_date) + SuperCalendar.SuperFormatter.MONTH_JAN;
+        String DATE_FORMAT_TASK_HAS_BEEN_PAID_DATE_RD = SuperCalendar.SuperFormatter.DATE + getString(R.string.label_rd_date) + SuperCalendar.SuperFormatter.MONTH_JAN;
+        String DATE_FORMAT_TASK_HAS_BEEN_PAID_DATE_ND = SuperCalendar.SuperFormatter.DATE + getString(R.string.label_nd_date) + SuperCalendar.SuperFormatter.MONTH_JAN;
+
+        if (day >= 11 && day <= 13) {
+            date = superStartDateTimeCalendar.format(DATE_FORMAT_TASK_HAS_BEEN_PAID_DATE_TH);
+        } else {
+            switch (day % 10) {
+                case 1:
+                    date = superStartDateTimeCalendar.format(DATE_FORMAT_TASK_HAS_BEEN_PAID_DATE_ST);
+                    break;
+                case 2:
+                    date = superStartDateTimeCalendar.format(DATE_FORMAT_TASK_HAS_BEEN_PAID_DATE_ND);
+                    break;
+                case 3:
+                    date = superStartDateTimeCalendar.format(DATE_FORMAT_TASK_HAS_BEEN_PAID_DATE_RD);
+                    break;
+                default:
+                    date = superStartDateTimeCalendar.format(DATE_FORMAT_TASK_HAS_BEEN_PAID_DATE_TH);
+                    break;
+            }
+        }
+        // as per  24 hour format 13 spt 2017
+//        String DATE_FORMAT_TASK_HAS_BEEN_PAID_TIME = SuperCalendar.SuperFormatter.HOUR_12_HOUR_2_DIGIT + ":" + SuperCalendar.SuperFormatter.MINUTE + "' '" + SuperCalendar.SuperFormatter.AM_PM;
+        String time = superStartDateTimeCalendar.format(Utility.DATE_FORMAT_HH_MM_AM);
+        String message = mContext.getString(R.string.desc_task_payment_done_acknowledgement
+                , providerModel.userName, date + getString(R.string.label_at) + time);
+        message = message.replace(".", "");
+        message = message.replace(getString(R.string.label_am_caps), getString(R.string.label_am_small)).replace(getString(R.string.label_pm_caps), getString(R.string.label_pm_small));
+        return message + ".";
+    }
 
 
 }

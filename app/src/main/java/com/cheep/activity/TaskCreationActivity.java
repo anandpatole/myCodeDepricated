@@ -11,7 +11,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 
@@ -51,7 +50,6 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -551,6 +549,7 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
         mParams.put(NetworkUtility.TAGS.CAT_ID, mJobCategoryModel.catId);
         mParams.put(NetworkUtility.TAGS.SUBCATEGORY_ID, String.valueOf(mSelectedSubServiceDetailModel.sub_cat_id));
         mParams.put(NetworkUtility.TAGS.START_DATETIME, String.valueOf(mTaskCreationPagerAdapter.mEnterTaskDetailFragment.superCalendar.getTimeInMillis()));
+        mParams.put(NetworkUtility.TAGS.MEDIA_FILE, Utility.getSelectedMediaJsonString(mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mMediaRecycleAdapter.getList()));
 
         // Create Params for AppsFlyer event track
         mTaskCreationParams = new HashMap<>();
@@ -584,18 +583,19 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
         mTaskCreationParams.put(NetworkUtility.TAGS.START_DATETIME, String.valueOf(mTaskCreationPagerAdapter.mEnterTaskDetailFragment.superCalendar.getTimeInMillis()));
 
         // Add Params
-        HashMap<String, File> mFileParams = new HashMap<>();
+        // upload
+       /* HashMap<String, File> mFileParams = new HashMap<>();
         if (!TextUtils.isEmpty(mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mCurrentPhotoPath)
                 && new File(mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mCurrentPhotoPath).exists()) {
             mFileParams.put(NetworkUtility.TAGS.TASK_IMAGE, new File(mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mCurrentPhotoPath));
-        }
+        }*/
 
         VolleyNetworkRequest mVolleyNetworkRequest = new VolleyNetworkRequest(NetworkUtility.WS.CREATE_TASK
                 , mCallCreateTaskWSErrorListener
                 , mCallCreateTaskWSResponseListener
                 , mHeaderParams
                 , mParams
-                , mFileParams);
+                , null);
         Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest);
     }
 
@@ -767,14 +767,14 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
                     model.catImage = mJobCategoryModel.catImage;
                     model.taskStartdate = String.valueOf(mTaskCreationPagerAdapter.mEnterTaskDetailFragment.superCalendar.getCalendar().getTimeInMillis());
                     model.subCategoryID = String.valueOf(mSelectedSubServiceDetailModel.sub_cat_id);
-                    model.taskImage = mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mCurrentPhotoPath;
+//                    model.taskImage = mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mCurrentPhotoPath;
+                    model.mMediaModelList = mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mMediaRecycleAdapter.getList();
                     ProviderModel pModel = new ProviderModel();
                     pModel.userName = taskDetailModel.userName;
                     pModel.profileUrl = taskDetailModel.profileImg;
                     pModel.providerId = taskDetailModel.spId;
                     pModel.quotePrice = taskDetailModel.rateGST;
                     pModel.spWithoutGstQuotePrice = taskDetailModel.rate;
-
                     PaymentDetailsActivity.newInstance(TaskCreationActivity.this, model, pModel, 0, true, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel);
 
                     //Log.i("myLog", "tasks:"+mJobCategoryModel.catName+"::"+mSelectedSubServiceDetailModel.name+"::"+mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mAddress);

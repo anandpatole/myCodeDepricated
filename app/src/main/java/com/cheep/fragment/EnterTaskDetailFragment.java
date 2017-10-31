@@ -1,6 +1,7 @@
 package com.cheep.fragment;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.ClipData;
@@ -37,6 +38,9 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.cheep.BuildConfig;
@@ -55,7 +59,12 @@ import com.cheep.model.UserDetails;
 import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
+import com.cheep.strategicpartner.AmazonUtils;
+import com.cheep.strategicpartner.MediaRecycleAdapter;
+import com.cheep.strategicpartner.model.MediaModel;
+import com.cheep.strategicpartner.recordvideo.RecordVideoNewActivity;
 import com.cheep.utils.FetchLocationInfoUtility;
+import com.cheep.utils.LogUtils;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.SuperCalendar;
 import com.cheep.utils.Utility;
@@ -69,7 +78,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -96,7 +104,7 @@ public class EnterTaskDetailFragment extends BaseFragment {
     public boolean isTaskDescriptionVerified = false;
     public boolean isTaskWhenVerified = false;
     public boolean isTaskWhereVerified = false;
-
+    public MediaRecycleAdapter mMediaRecycleAdapter;
     // For When
     public SuperCalendar startDateTimeSuperCalendar = SuperCalendar.getInstance();
 
@@ -217,14 +225,14 @@ public class EnterTaskDetailFragment extends BaseFragment {
         updateWhereLabelWithIcon(false, Utility.EMPTY_STRING);
 
         //On Click event of attachment
-        mFragmentEnterTaskDetailBinding.imgDefault.setOnClickListener(new View.OnClickListener() {
+        mFragmentEnterTaskDetailBinding.imgCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 //Hide Keyboard if already open
                 Utility.hideKeyboard(mContext, mFragmentEnterTaskDetailBinding.editTaskDesc);
 
-                showPictureChooserDialog();
+                showMediaChooserDialog();
             }
         });
 
@@ -286,6 +294,19 @@ public class EnterTaskDetailFragment extends BaseFragment {
 
         // Update the SP lists
 //        callSPListWS(mTaskCreationActivity.mJobCategoryModel.catId, userDetails.CityID, Utility.EMPTY_STRING);
+
+
+        mMediaRecycleAdapter = new MediaRecycleAdapter(new MediaRecycleAdapter.ItemClick() {
+            @Override
+            public void removeMedia() {
+                // after uploading 3 media file if any one is deleted then add image view again
+                if (mMediaRecycleAdapter.getItemCount() < 3)
+                    mFragmentEnterTaskDetailBinding.imgCamera.setVisibility(View.VISIBLE);
+
+            }
+        });
+        mFragmentEnterTaskDetailBinding.recycleImg.setLayoutManager(new LinearLayoutManager(mTaskCreationActivity, LinearLayoutManager.HORIZONTAL, false));
+        mFragmentEnterTaskDetailBinding.recycleImg.setAdapter(mMediaRecycleAdapter);
     }
 
     public void updateHeightOfLinearLayout() {
@@ -328,12 +349,142 @@ public class EnterTaskDetailFragment extends BaseFragment {
     /////////////////////////////////////Show Picture  related portion of app[START]//////////////////////
     ///////////////////////////////////////////////////////////////////////////////////////////////
 
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////Show Picture  related portion of app[START]//////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+
     public String mCurrentPhotoPath;
 
-    private void showPictureChooserDialog() {
-        Log.d(TAG, "showPictureChooserDialog() called");
+    private void showMediaChooserDialog() {
+        LogUtils.LOGD(TAG, "showPictureChooserDialog() called");
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-        builder.setTitle(R.string.choose_image)
+        builder.setTitle(getString(R.string.choose_media))
+                .setItems(R.array.choose_media_type, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // The 'which' argument contains the index position of the selected item
+                        if (which == 0) {
+                            showVideoChooserDialog();
+                        } else {
+                            showPictureChooserDialog();
+                        }
+                    }
+                });
+        builder.create();
+        builder.show();
+    }
+
+    private void showVideoChooserDialog() {
+        LogUtils.LOGD(TAG, "showPictureChooserDialog() called");
+        AlertDialog.Builder builder = new AlertDialog.Builder(mTaskCreationActivity);
+        builder.setTitle(getString(R.string.choose_video))
+                .setItems(R.array.choose_video_options, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // The 'which' argument contains the index position
+                        // of the selected item
+                        if (which == 0) {
+                            takeVideoIntent(Utility.REQUEST_CODE_WRITE_EXTERNAL_STORAGE_ADD_PROFILE_CAMERA);
+                        } else {
+                            //Select Gallery
+                            // In case Choose File from Gallery
+                            chooseVideoFromGallery(Utility.REQUEST_CODE_GET_VIDEO_GALLERY, Utility.REQUEST_CODE_READ_EXTERNAL_STORAGE_ADD_PROFILE_GALLERY);
+                        }
+                    }
+                });
+        builder.create();
+
+        //Show the dialog
+        builder.show();
+    }
+
+    private void takeVideoIntent(int requestPermissionCode) {
+        //Go ahead with Camera capturing
+        if (ContextCompat.checkSelfPermission(mTaskCreationActivity, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED
+                || ContextCompat.checkSelfPermission(mTaskCreationActivity, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED
+                || ContextCompat.checkSelfPermission(mTaskCreationActivity, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(mTaskCreationActivity, Manifest.permission.CAMERA)
+                    && ActivityCompat.shouldShowRequestPermissionRationale(mTaskCreationActivity, Manifest.permission.RECORD_AUDIO)) {
+                ActivityCompat.requestPermissions(mTaskCreationActivity, new String[]{Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO, Manifest.permission.READ_EXTERNAL_STORAGE}, requestPermissionCode);
+            } else {
+                ActivityCompat.requestPermissions(mTaskCreationActivity, new String[]{Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO, Manifest.permission.READ_EXTERNAL_STORAGE}, requestPermissionCode);
+            }
+        } else {
+            //Go ahead with Camera capturing
+
+
+            Intent takePictureIntent = new Intent(mTaskCreationActivity, RecordVideoNewActivity.class);
+            if (takePictureIntent.resolveActivity(mTaskCreationActivity.getPackageManager()) != null) {
+                // Create the File where the photo should go
+                File photoFile;
+                photoFile = createVideoFile();
+                mCurrentPhotoPath = photoFile.getAbsolutePath();
+                if (photoFile.exists()) {
+                    photoFile.delete();
+                } else {
+                    photoFile.getParentFile().mkdirs();
+                }
+
+                // Continue only if the File was successfully created
+                Uri photoURI = FileProvider.getUriForFile(mTaskCreationActivity,
+                        BuildConfig.FILE_PROVIDER_URL,
+                        photoFile);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+
+                // Grant URI permission START
+                // Enabling the permission at runtime
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    takePictureIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                    ClipData clip =
+                            ClipData.newUri(mTaskCreationActivity.getContentResolver(), "A photo", photoURI);
+                    takePictureIntent.setClipData(clip);
+                    takePictureIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                } else {
+                    List<ResolveInfo> resInfoList =
+                            mTaskCreationActivity.getPackageManager()
+                                    .queryIntentActivities(takePictureIntent, PackageManager.MATCH_DEFAULT_ONLY);
+
+                    for (ResolveInfo resolveInfo : resInfoList) {
+                        String packageName = resolveInfo.activityInfo.packageName;
+                        mTaskCreationActivity.grantUriPermission(packageName, photoURI,
+                                Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                    }
+                }
+                //Grant URI permission END
+//                startActivityForResult(takePictureIntent, requestCode);
+                startActivityForResult(takePictureIntent, Utility.REQUEST_CODE_VIDEO_CAPTURE);
+            }
+
+        }
+    }
+
+    private void chooseVideoFromGallery(int requestFileChooserCode, int requestPermissionCode) {
+        LogUtils.LOGD(TAG, "choosePictureFromGallery() called with: requestFileChooserCode = [" + requestFileChooserCode + "], requestPermissionCode = [" + requestPermissionCode + "]");
+        if (ContextCompat.checkSelfPermission(mTaskCreationActivity, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(mTaskCreationActivity, Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                ActivityCompat.requestPermissions(mTaskCreationActivity, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, requestPermissionCode);
+            } else {
+                ActivityCompat.requestPermissions(mTaskCreationActivity, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, requestPermissionCode);
+            }
+        } else {
+            //Go ahead with file choosing
+            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+            intent.setType("video/*");
+            intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
+            intent.addCategory(Intent.CATEGORY_OPENABLE);
+            if (intent.resolveActivity(mTaskCreationActivity.getPackageManager()) != null) {
+                startActivityForResult(intent, requestFileChooserCode);
+            }
+        }
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////    IMAGE CAPTURE - CHOOSER   /////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////
+
+    private void showPictureChooserDialog() {
+        LogUtils.LOGD(TAG, "showPictureChooserDialog() called");
+        AlertDialog.Builder builder = new AlertDialog.Builder(mTaskCreationActivity);
+        builder.setTitle(getString(R.string.choose_image))
                 .setItems(R.array.choose_image_options, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         // The 'which' argument contains the index position
@@ -355,7 +506,7 @@ public class EnterTaskDetailFragment extends BaseFragment {
 
     private void dispatchTakePictureIntent(int requestCode, int requestPermissionCode) {
         //Go ahead with Camera capturing
-        if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(mTaskCreationActivity, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             if (ActivityCompat.shouldShowRequestPermissionRationale(mTaskCreationActivity, Manifest.permission.CAMERA)) {
                 ActivityCompat.requestPermissions(mTaskCreationActivity, new String[]{Manifest.permission.CAMERA}, requestPermissionCode);
             } else {
@@ -367,58 +518,52 @@ public class EnterTaskDetailFragment extends BaseFragment {
         }
     }
 
-    public void startCameraCaptureChooser(int requestCode) {
+    private void startCameraCaptureChooser(int requestCode) {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // Ensure that there's a camera activity to handle the intent
-        if (takePictureIntent.resolveActivity(mContext.getPackageManager()) != null) {
+        if (takePictureIntent.resolveActivity(mTaskCreationActivity.getPackageManager()) != null) {
             // Create the File where the photo should go
-            File photoFile = null;
-            try {
-                photoFile = createImageFile();
-                mCurrentPhotoPath = photoFile.getAbsolutePath();
-                if (photoFile.exists()) {
-                    photoFile.delete();
-                } else {
-                    photoFile.getParentFile().mkdirs();
-                }
-
-            } catch (IOException ex) {
-                // Error occurred while creating the File
+            File photoFile;
+            photoFile = createImageFile();
+            mCurrentPhotoPath = photoFile.getAbsolutePath();
+            if (photoFile.exists()) {
+                photoFile.delete();
+            } else {
+                photoFile.getParentFile().mkdirs();
             }
+
             // Continue only if the File was successfully created
-            if (photoFile != null) {
-                Uri photoURI = FileProvider.getUriForFile(mContext,
-                        BuildConfig.FILE_PROVIDER_URL,
-                        photoFile);
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+            Uri photoURI = FileProvider.getUriForFile(mTaskCreationActivity,
+                    BuildConfig.FILE_PROVIDER_URL,
+                    photoFile);
+            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
 
-                // Grant URI permission START
-                // Enableing the permission at runtime
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    takePictureIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-                } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                    ClipData clip =
-                            ClipData.newUri(mContext.getContentResolver(), "A photo", photoURI);
-                    takePictureIntent.setClipData(clip);
-                    takePictureIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-                } else {
-                    List<ResolveInfo> resInfoList =
-                            mContext.getPackageManager()
-                                    .queryIntentActivities(takePictureIntent, PackageManager.MATCH_DEFAULT_ONLY);
+            // Grant URI permission START
+            // Enabling the permission at runtime
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                takePictureIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                ClipData clip =
+                        ClipData.newUri(mTaskCreationActivity.getContentResolver(), "A photo", photoURI);
+                takePictureIntent.setClipData(clip);
+                takePictureIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+            } else {
+                List<ResolveInfo> resInfoList =
+                        mTaskCreationActivity.getPackageManager()
+                                .queryIntentActivities(takePictureIntent, PackageManager.MATCH_DEFAULT_ONLY);
 
-                    for (ResolveInfo resolveInfo : resInfoList) {
-                        String packageName = resolveInfo.activityInfo.packageName;
-                        mContext.grantUriPermission(packageName, photoURI,
-                                Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-                    }
+                for (ResolveInfo resolveInfo : resInfoList) {
+                    String packageName = resolveInfo.activityInfo.packageName;
+                    mTaskCreationActivity.grantUriPermission(packageName, photoURI,
+                            Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
                 }
-                //Grant URI permission END
-                startActivityForResult(takePictureIntent, requestCode);
             }
+            //Grant URI permission END
+            startActivityForResult(takePictureIntent, requestCode);
         }
     }
 
-    public File createImageFile() throws IOException {
+    private File createImageFile() {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss"/*, Locale.US*/).format(new Date());
         String imageFileName = "JPEG_" + timeStamp + ".jpg";
@@ -429,7 +574,25 @@ public class EnterTaskDetailFragment extends BaseFragment {
                 storageDir      *//* directory *//*
         );*/
 
-        File photoFile = new File(new File(mContext.getFilesDir(), "CheepImages"), imageFileName);
+        File photoFile = new File(new File(mTaskCreationActivity.getFilesDir(), "CheepImages"), imageFileName);
+        mCurrentPhotoPath = photoFile.getAbsolutePath();
+        // Save a file: path for use with ACTION_VIEW intents
+//        mCurrentPhotoPath = photoFile.getAbsolutePath();
+        return photoFile;
+    }
+
+    private File createVideoFile() {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss"/*, Locale.US*/).format(new Date());
+        String imageFileName = "VID_" + timeStamp + ".mp4";
+        /*File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  *//* prefix *//*
+                ".jpg",         *//* suffix *//*
+                storageDir      *//* directory *//*
+        );*/
+
+        File photoFile = new File(new File(mTaskCreationActivity.getFilesDir(), "CheepImages"), imageFileName);
         mCurrentPhotoPath = photoFile.getAbsolutePath();
         // Save a file: path for use with ACTION_VIEW intents
 //        mCurrentPhotoPath = photoFile.getAbsolutePath();
@@ -438,8 +601,8 @@ public class EnterTaskDetailFragment extends BaseFragment {
 
 
     //// Gallery /////
-    public void choosePictureFromGallery(int requestFileChooserCode, int requestPermissionCode) {
-        Log.d(TAG, "choosePictureFromGallery() called with: requestFileChooserCode = [" + requestFileChooserCode + "], requestPermissionCode = [" + requestPermissionCode + "]");
+    private void choosePictureFromGallery(int requestFileChooserCode, int requestPermissionCode) {
+        LogUtils.LOGD(TAG, "choosePictureFromGallery() called with: requestFileChooserCode = [" + requestFileChooserCode + "], requestPermissionCode = [" + requestPermissionCode + "]");
         if (ContextCompat.checkSelfPermission(mTaskCreationActivity, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             if (ActivityCompat.shouldShowRequestPermissionRationale(mTaskCreationActivity, Manifest.permission.READ_EXTERNAL_STORAGE)) {
                 ActivityCompat.requestPermissions(mTaskCreationActivity, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, requestPermissionCode);
@@ -452,12 +615,12 @@ public class EnterTaskDetailFragment extends BaseFragment {
         }
     }
 
-    public void startIntentFileChooser(int requestCode) {
+    private void startIntentFileChooser(int requestCode) {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType("*/*");
+        intent.setType("image/*");
         intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
         intent.addCategory(Intent.CATEGORY_OPENABLE);
-        if (intent.resolveActivity(mContext.getPackageManager()) != null) {
+        if (intent.resolveActivity(mTaskCreationActivity.getPackageManager()) != null) {
             startActivityForResult(intent, requestCode);
         }
     }
@@ -491,7 +654,7 @@ public class EnterTaskDetailFragment extends BaseFragment {
             }
             checkAddAddressVerified();
             hideProgressDialog();
-        } else if (requestCode == Utility.REQUEST_CODE_IMAGE_CAPTURE_ADD_PROFILE && resultCode == RESULT_OK) {
+        } /*else if (requestCode == Utility.REQUEST_CODE_IMAGE_CAPTURE_ADD_PROFILE && resultCode == RESULT_OK) {
             Log.i(TAG, "onActivityResult: CurrentPath" + mCurrentPhotoPath);
             File f = new File(mCurrentPhotoPath);
             Uri contentUri = Uri.fromFile(f);
@@ -506,8 +669,180 @@ public class EnterTaskDetailFragment extends BaseFragment {
             Utility.loadImageView(mContext, mFragmentEnterTaskDetailBinding.imgPicture, mCurrentPhotoPath, 0);
             mFragmentEnterTaskDetailBinding.imgPicture.setVisibility(View.VISIBLE);
 
+        }*/ else if (requestCode == Utility.REQUEST_CODE_IMAGE_CAPTURE_ADD_PROFILE && resultCode == Activity.RESULT_OK) {
+            Log.i(TAG, "onActivityResult: CurrentPath" + mCurrentPhotoPath);
+            File f = new File(mCurrentPhotoPath);
+            Uri contentUri = Uri.fromFile(f);
+            mCurrentPhotoPath = Utility.getPath(mTaskCreationActivity, contentUri);
+            uploadFile(mCurrentPhotoPath, MediaModel.MediaType.TYPE_IMAGE);
+        }
+
+        // image chosen from gallery result
+        else if (requestCode == Utility.REQUEST_CODE_GET_FILE_ADD_PROFILE_GALLERY && resultCode == Activity.RESULT_OK && data != null) {
+            Log.i(TAG, "onActivityResult: " + data.getData().toString());
+            mCurrentPhotoPath = Utility.getPath(mTaskCreationActivity, data.getData());
+            uploadFile(mCurrentPhotoPath, MediaModel.MediaType.TYPE_IMAGE);
+        }
+
+        // video captured from camera result
+        else if (requestCode == Utility.REQUEST_CODE_VIDEO_CAPTURE && resultCode == RESULT_OK && data != null) {
+            mCurrentPhotoPath = data.getStringExtra("path");
+            LogUtils.LOGE(TAG, "path >> " + mCurrentPhotoPath);
+            uploadFile(mCurrentPhotoPath, MediaModel.MediaType.TYPE_VIDEO);
+        }
+
+        // video chosen from gallery result
+        else if (requestCode == Utility.REQUEST_CODE_GET_VIDEO_GALLERY && resultCode == RESULT_OK && data != null) {
+            Uri selectedImageUri = data.getData();
+            mCurrentPhotoPath = Utility.getPath(mTaskCreationActivity, selectedImageUri);
+
+            if (mCurrentPhotoPath != null && !mCurrentPhotoPath.equals("")) {
+                long duration = AmazonUtils.getDuration(mCurrentPhotoPath);
+                if (duration > 10) {
+                    Utility.showToast(mContext, getString(R.string.message_file_heavy));
+                } else if (duration <= 0) {
+                    Utility.showToast(mContext, getString(R.string.message_file_something_wrong));
+                } else {
+                    try {
+                        LogUtils.LOGE(TAG, "path >> " + mCurrentPhotoPath);
+//                        mMediaRecycleAdapter.addImage(new MediaModel(mCurrentPhotoPath, MediaModel.MediaType.TYPE_VIDEO));
+                        uploadFile(mCurrentPhotoPath, MediaModel.MediaType.TYPE_VIDEO);
+//                        checkMediaArraySize();
+                    } catch (Throwable throwable) {
+                        throwable.printStackTrace();
+                    }
+                }
+            }
+
         }
     }
+    ///////////////////////// ********* Amazon code start here*********** //////////////////////////////////
+
+    private void uploadFile(final String path, final String type) {
+        if (path == null || path.equalsIgnoreCase("")) {
+            return;
+        }
+
+        // async task for uploading file on amazon
+
+//        new AsyncTask<Void, Void, Void>() {
+
+        // thumb folder path for s3 amazon
+        String s3PathThumb;
+        // original file folder path for s3 amazon
+        String s3pathOriginal;
+
+        // to show thumbnail in recycler view in after uploading file on s3
+        String localFilePath;
+
+        showProgressDialog();
+
+        File fileOriginal = new File(path);
+
+        String thumbPath = "";
+        // create thumbnail for uploading
+        if (type.equalsIgnoreCase(MediaModel.MediaType.TYPE_VIDEO))
+            thumbPath = AmazonUtils.getVideoThumbPath(mTaskCreationActivity, path);
+        else
+            thumbPath = AmazonUtils.getImageThumbPath(mTaskCreationActivity, path);
+        final File fileThumb = new File(thumbPath);
+
+//                this name is for creating s3 url for original and file file
+        String name;
+        String thumbName;
+        String timeStamp = System.currentTimeMillis() + "";
+        if (type.equalsIgnoreCase(MediaModel.MediaType.TYPE_IMAGE)) {
+            name = "AND_IMG_" + timeStamp + AmazonUtils.getExtension(path);
+            thumbName = "AND_IMG_" + timeStamp + ".jpg";
+        } else {
+            name = "AND_VID_" + timeStamp + AmazonUtils.getExtension(path);
+            thumbName = "AND_VID_" + timeStamp + ".jpg";
+        }
+
+        localFilePath = thumbPath;
+        s3pathOriginal = BuildConfig.TASK_ORIGINAL_FOLDER + File.separator + name;
+        s3PathThumb = BuildConfig.TASK_THUMB_FOLDER + File.separator + thumbName;
+        UploadListener listener = new UploadListener(s3PathThumb, s3pathOriginal, type, localFilePath);
+        TransferObserver originalFileObserver;
+        TransferObserver thungFileObserver;
+        originalFileObserver = AmazonUtils.uploadMedia(mTaskCreationActivity, fileOriginal, s3pathOriginal, listener);
+        thungFileObserver = AmazonUtils.uploadMedia(mTaskCreationActivity, fileThumb, s3PathThumb, listener);
+        listener.originalFileObserver = originalFileObserver;
+        listener.thungFileObserver = thungFileObserver;
+
+    }
+
+    private class UploadListener implements TransferListener {
+        String s3PathThumb, s3pathOriginal, type, localFilePath;
+
+        UploadListener(String s3PathThumb, String s3pathOriginal, String type, String localFilePath) {
+            this.s3PathThumb = s3PathThumb;
+            this.s3pathOriginal = s3pathOriginal;
+            this.type = type;
+            this.localFilePath = localFilePath;
+        }
+
+        // Keep tracks for media uploading
+        TransferObserver originalFileObserver;
+        TransferObserver thungFileObserver;
+
+
+        @Override
+        public void onError(int id, Exception e) {
+            LogUtils.LOGE(TAG, "Error during upload: " + id, e);
+        }
+
+        @Override
+        public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {
+            LogUtils.LOGD(TAG, "onProgressChanged: " + id + " , total: " + bytesTotal + " current: " + bytesCurrent);
+        }
+
+        @Override
+        public void onStateChanged(int id, TransferState newState) {
+            LogUtils.LOGD(TAG, "onStateChanged: " + id + ", " + newState);
+            LogUtils.LOGD(TAG, "originalFileObserver: " + originalFileObserver.getId() + ", " + originalFileObserver.getState());
+            LogUtils.LOGD(TAG, "thungFileObserver: " + thungFileObserver.getId() + ", " + originalFileObserver.getState());
+            if (originalFileObserver != null && thungFileObserver != null) {
+                if (originalFileObserver.getState() == TransferState.COMPLETED && thungFileObserver.getState() == TransferState.COMPLETED) {
+                    // get s3 urls
+                    String thumbUrl = AmazonUtils.getThumbURL(s3PathThumb);
+                    String originalUrl = AmazonUtils.getOriginalURL(s3pathOriginal);
+
+                    // add image/video model to recycle view
+                    MediaModel mediaModel = new MediaModel();
+                    mediaModel.mediaName = originalUrl;
+                    mediaModel.mediaThumbName = thumbUrl;
+                    LogUtils.LOGE(TAG, "mediaName: " + originalUrl);
+                    LogUtils.LOGE(TAG, "mediaThumbName: " + thumbUrl);
+                    mediaModel.mediaType = type;
+                    mediaModel.localFilePath = localFilePath;
+                    mMediaRecycleAdapter.addImage(mediaModel);
+
+                    // set update media list for strategic partner activity
+                    // for when  user is not creating tasks but he press back buttons
+                    // and goes to home screen that time all uploaded media will be deleted.
+
+
+                    checkMediaArraySize();
+                    // close progress
+                    hideProgressDialog();
+                }
+            }
+        }
+    }
+
+    /**
+     * check if 3 image/video is added then hide image add view
+     * to preventing from adding more media files
+     */
+
+    private void checkMediaArraySize() {
+        if (mMediaRecycleAdapter.getItemCount() == 3) {
+            mFragmentEnterTaskDetailBinding.imgCamera.setVisibility(View.GONE);
+        }
+    }
+
+    ///////////////////////// ********* Amazon code ends here*********** //////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////Show PIcture related portion of app[END]/////////////////
     ///////////////////////////////////////////////////////////////////////////////////////////////

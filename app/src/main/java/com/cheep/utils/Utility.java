@@ -43,9 +43,13 @@ import com.bumptech.glide.request.RequestListener;
 import com.cheep.BuildConfig;
 import com.cheep.R;
 import com.cheep.activity.HomeActivity;
+import com.cheep.strategicpartner.AmazonUtils;
+import com.cheep.strategicpartner.model.MediaModel;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import com.mixpanel.android.java_websocket.util.Base64;
 
@@ -1120,7 +1124,7 @@ public class Utility {
 
     public interface PAYMENT_STATUS {
         String PAYMENT_INITIATED = "payment_initiated";//not using it
-        String PROCESSING= "processing";//not using it
+        String PROCESSING = "processing";//not using it
         String COMPLETED = "completed";
         String FAILED = "failed";
     }
@@ -1326,6 +1330,21 @@ public class Utility {
         return "";
     }
 
+    public static String getSelectedMediaJsonString(ArrayList<MediaModel> list) {
+
+        if (list != null && !list.isEmpty()) {
+            JsonArray selectedMediaArray = new JsonArray();
+            for (int i = 0; i < list.size(); i++) {
+                MediaModel model = list.get(i);
+                JsonObject obj = new JsonObject();
+                obj.addProperty("media_name", AmazonUtils.getFileNameWithExt(model.mediaName, true));
+                obj.addProperty("media_type", model.mediaType);
+                selectedMediaArray.add(obj);
+            }
+            return selectedMediaArray.toString();
+        }
+        return "";
+    }
   /*  public static String getExperienceString(String exp) {
         try {
             float expFloat = Float.parseFloat(exp);

@@ -36,6 +36,7 @@ import com.cheep.model.UserDetails;
 import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
+import com.cheep.strategicpartner.StrategicPartnerMediaViewActiivty;
 import com.cheep.utils.HotlineHelper;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.RoundedBackgroundSpan;
@@ -247,7 +248,30 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
         // Set Second Section
         mActivityTaskSummaryBinding.textSubCategoryName.setText(mTaskDetailModel.subCategoryName);
         mActivityTaskSummaryBinding.textTaskDesc.setText(mTaskDetailModel.taskDesc);
-        Utility.loadImageView(mContext, mActivityTaskSummaryBinding.imgTaskPicture, mTaskDetailModel.taskImage, 0);
+//        Utility.loadImageView(mContext, mActivityTaskSummaryBinding.imgTaskPicture, mTaskDetailModel.taskImage, 0);
+        if (mTaskDetailModel.mMediaModelList != null && !mTaskDetailModel.mMediaModelList.isEmpty()) {
+//            if (mTaskDetailModel.mMediaModelList.size() > 1)
+//                mActivityTaskSummaryBinding.tvCounter.setText("+" + (mTaskDetailModel.mMediaModelList.size() - 1));
+//            else
+//                mActivityTaskSummaryBinding.tvCounter.setVisibility(View.GONE);
+
+            Utility.loadImageView(this, mActivityTaskSummaryBinding.imgTaskPicture1, mTaskDetailModel.mMediaModelList.get(0).mediaThumbName);
+            if (mTaskDetailModel.mMediaModelList.size() == 3) {
+                Utility.loadImageView(this, mActivityTaskSummaryBinding.imgTaskPicture1, mTaskDetailModel.mMediaModelList.get(0).mediaThumbName);
+                Utility.loadImageView(this, mActivityTaskSummaryBinding.imgTaskPicture2, mTaskDetailModel.mMediaModelList.get(1).mediaThumbName);
+                Utility.loadImageView(this, mActivityTaskSummaryBinding.imgTaskPicture3, mTaskDetailModel.mMediaModelList.get(2).mediaThumbName);
+            } else if (mTaskDetailModel.mMediaModelList.size() == 2) {
+                mActivityTaskSummaryBinding.framePicture3.setVisibility(View.GONE);
+                Utility.loadImageView(this, mActivityTaskSummaryBinding.imgTaskPicture1, mTaskDetailModel.mMediaModelList.get(0).mediaThumbName);
+                Utility.loadImageView(this, mActivityTaskSummaryBinding.imgTaskPicture2, mTaskDetailModel.mMediaModelList.get(1).mediaThumbName);
+            } else {
+                mActivityTaskSummaryBinding.framePicture3.setVisibility(View.GONE);
+                mActivityTaskSummaryBinding.framePicture2.setVisibility(View.GONE);
+                Utility.loadImageView(this, mActivityTaskSummaryBinding.imgTaskPicture1, mTaskDetailModel.mMediaModelList.get(0).mediaThumbName);
+            }
+
+        } else
+            mActivityTaskSummaryBinding.frameSelectPicture.setVisibility(View.GONE);
 
 
         // Set Up Third Section WHEN
@@ -465,14 +489,15 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
 
     @Override
     protected void setListeners() {
-        mActivityTaskSummaryBinding.imgTaskPicture.setOnClickListener(new View.OnClickListener() {
+        mActivityTaskSummaryBinding.frameSelectPicture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!TextUtils.isEmpty(mTaskDetailModel.taskImage)) {
+                if (mTaskDetailModel.mMediaModelList != null && !mTaskDetailModel.mMediaModelList.isEmpty()) {
 
                     SharedElementTransitionHelper sharedElementTransitionHelper = new SharedElementTransitionHelper(TaskSummaryActivity.this);
-                    sharedElementTransitionHelper.put(mActivityTaskSummaryBinding.imgTaskPicture, R.string.transition_image_view);
-                    ZoomImageActivity.newInstance(mContext, sharedElementTransitionHelper.getBundle(), mTaskDetailModel.taskImage);
+                    sharedElementTransitionHelper.put(mActivityTaskSummaryBinding.imgTaskPicture1, R.string.transition_image_view);
+//                    ZoomImageActivity.newInstance(mContext, sharedElementTransitionHelper.getBundle(), mTaskDetailModel.taskImage);
+                    StrategicPartnerMediaViewActiivty.getInstance(TaskSummaryActivity.this, mTaskDetailModel.mMediaModelList, false);
                 }
             }
         });
