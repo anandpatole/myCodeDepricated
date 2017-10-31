@@ -393,7 +393,7 @@ public class VerifyOtpActivity extends BaseAppCompatActivity {
         showProgressDialog();
 
         PaytmUtility.savePaytmUserDetails(mContext, mResourceOwnerCustomerId, mAccessToken, mMobileNumber
-                , mSavePaytmUserResponseListener, NetworkUtility.TAGS.PAYMENT_METHOD_TYPE.PAYTM, String.valueOf(mExpires));
+                , mSavePaytmUserResponseListener, NetworkUtility.PAYMENT_METHOD_TYPE.PAYTM, String.valueOf(mExpires));
     }
 
     private final PaytmUtility.SavePaytmUserResponseListener mSavePaytmUserResponseListener = new PaytmUtility.SavePaytmUserResponseListener() {

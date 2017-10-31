@@ -175,7 +175,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
         switch (view.getId()) {
             case R.id.rl_card:
             case R.id.rl_netbanking:
-                paymentMethod = NetworkUtility.TAGS.PAYMENT_METHOD_TYPE.PAYU;
+                paymentMethod = NetworkUtility.PAYMENT_METHOD_TYPE.PAYU;
                 LogUtils.LOGD(TAG, "onClick: of HDFC PAYMENT");
                 if (isStrategicPartner) {
                     // Go for regular payment gateway strategic partner
@@ -189,7 +189,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
                 }
                 break;
             case R.id.rl_paytm:
-                paymentMethod = NetworkUtility.TAGS.PAYMENT_METHOD_TYPE.PAYTM;
+                paymentMethod = NetworkUtility.PAYMENT_METHOD_TYPE.PAYTM;
                 UserDetails userDetails = PreferenceUtility.getInstance(PaymentChoiceActivity.this).getUserDetails();
                 UserDetails.PaytmUserDetail paytmUserDetail = userDetails.mPaytmUserDetail;
 
@@ -211,7 +211,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
 
             case R.id.rl_cash_payment:
                 // new changes cod --> pay_later
-                paymentMethod = NetworkUtility.TAGS.PAYMENT_METHOD_TYPE.PAY_LATER;
+                paymentMethod = NetworkUtility.PAYMENT_METHOD_TYPE.PAY_LATER;
                 onClickOfCashPaymentMode();
                 break;
         }
@@ -700,7 +700,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
         mParams.put(NetworkUtility.TAGS.IS_FOR_ADDITIONAL_QUOTE, isAdditionalPayment
                 ? getString(R.string.label_yes).toLowerCase() :
                 getString(R.string.label_no).toLowerCase());
-        mParams.put(NetworkUtility.TAGS.PAYMENT_METHOD, paymentMethod);
+        mParams.put(NetworkUtility.TAGS.PAYMENT_METHOD, NetworkUtility.PAYMENT_METHOD_TYPE.PAY_LATER);
 //        mParams.put(NetworkUtility.TAGS.PAYMENT_STATUS, isSuccess ? Utility.PAYMENT_STATUS.COMPLETED : Utility.PAYMENT_STATUS.FAILED);
 //        as per new pay later flow payment_status will be processing
         mParams.put(NetworkUtility.TAGS.PAYMENT_STATUS, Utility.PAYMENT_STATUS.PROCESSING);
@@ -735,6 +735,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
                         String taskStatus = jsonData.optString(NetworkUtility.TAGS.TASK_STATUS);
 
 //                        callTaskDetailWS();
+
 // AS PER new flow pay later task status will be pending
                         if (Utility.TASK_STATUS.PAY_LATER.equalsIgnoreCase(taskStatus)) {
                             //We are commenting it because from here we are intiating a payment flow and

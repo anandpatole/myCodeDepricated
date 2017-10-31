@@ -400,14 +400,6 @@ public class NetworkUtility {
             String IOS = "ios";
         }
 
-        interface PAYMENT_METHOD_TYPE {
-            String MOBIKWIK = "mobikwik";
-            String PAYTM = "paytm";
-            String PAYU = "payu";
-            String COD = "cod";
-            String FREE = "free";
-            String PAY_LATER = "pay_later";
-        }
 
         String DEVICE_TOKEN = "device_token";
 
@@ -475,6 +467,16 @@ public class NetworkUtility {
 //            public static final String INSTA_BOOK = "InstaBook";
         }
     }
+
+    public interface PAYMENT_METHOD_TYPE {
+        String MOBIKWIK = "mobikwik";
+        String PAYTM = "paytm";
+        String PAYU = "payu";
+        String COD = "cod";
+        String FREE = "free";
+        String PAY_LATER = "pay_later";
+    }
+
 
 }
 

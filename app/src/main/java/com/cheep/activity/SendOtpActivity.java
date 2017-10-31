@@ -989,7 +989,7 @@ public class SendOtpActivity extends BaseAppCompatActivity implements View.OnCli
 
         showProgressDialog();
 
-        PaytmUtility.savePaytmUserDetails(mContext, mResourceOwnerCustomerId, mAccessToken, mMobileNumber, this, NetworkUtility.TAGS.PAYMENT_METHOD_TYPE.PAYTM, String.valueOf(mExpires));
+        PaytmUtility.savePaytmUserDetails(mContext, mResourceOwnerCustomerId, mAccessToken, mMobileNumber, this, NetworkUtility.PAYMENT_METHOD_TYPE.PAYTM, String.valueOf(mExpires));
     }
     ///////////////////////////////////////////////////////////Volley save paytm user Web call ends///////////////////////////////////////////////////////////
 
