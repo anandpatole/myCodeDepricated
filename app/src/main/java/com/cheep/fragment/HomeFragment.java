@@ -141,14 +141,17 @@ public class HomeFragment extends BaseFragment {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(MessageEvent event) {
         Log.d(TAG, "onMessageEvent() called with: event = [" + event.BROADCAST_ACTION + "]");
-        if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.TASK_START_ALERT) {
-            checkOngoingTaskCounter();
+        switch (event.BROADCAST_ACTION) {
+            case Utility.BROADCAST_TYPE.TASK_START_ALERT:
+                checkOngoingTaskCounter();
 //            mTaskDetailModel.taskStatus = event.taskStatus;
 //            setUpTaskDetails(mTaskDetailModel);
-        } else if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.PAYMENT_COMPLETED_NEED_TO_REDIRECT_TO_MY_TASK_SCREEN
-                || event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.TASK_PAID_FOR_INSTA_BOOKING) {
-            // Need to rediretct the user to MyTask Screen
-            setCurrentTab(TAB_MY_TASK);
+                break;
+            case Utility.BROADCAST_TYPE.PAYMENT_COMPLETED_NEED_TO_REDIRECT_TO_MY_TASK_SCREEN:
+            case Utility.BROADCAST_TYPE.TASK_PAID_FOR_INSTA_BOOKING:
+                // Need to rediretct the user to MyTask Screen
+                setCurrentTab(TAB_MY_TASK);
+                break;
         }
 
     }

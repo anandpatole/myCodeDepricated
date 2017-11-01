@@ -792,6 +792,7 @@ public class TaskQuotesActivity extends BaseAppCompatActivity implements TaskQuo
     public void onMessageEvent(MessageEvent event) {
         switch (event.BROADCAST_ACTION) {
             case Utility.BROADCAST_TYPE.TASK_PAID:
+            case Utility.BROADCAST_TYPE.TASK_PRO_BOOKED:
             case Utility.BROADCAST_TYPE.TASK_PROCESSING:
             case Utility.BROADCAST_TYPE.PAYMENT_COMPLETED_NEED_TO_REDIRECT_TO_MY_TASK_SCREEN:
                 // Finish this activity as its not needed now.

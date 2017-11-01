@@ -179,6 +179,7 @@ public class TaskFragment extends BaseFragment {
                 }
                 break;
             case Utility.BROADCAST_TYPE.TASK_PAID:
+            case Utility.BROADCAST_TYPE.TASK_PRO_BOOKED:
             case Utility.BROADCAST_TYPE.TASK_PROCESSING:
                 if (taskRecyclerViewAdapter != null) {
                     nextPageId = null;

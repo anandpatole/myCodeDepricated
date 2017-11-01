@@ -801,8 +801,9 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
 
 //                        callTaskDetailWS();
 
-// AS PER new flow pay later task status will be pending
-                        if (Utility.TASK_STATUS.PAY_LATER.equalsIgnoreCase(taskStatus)) {
+// AS PER new flow pay later task status will be pay later
+                        if (Utility.TASK_STATUS.COD.equalsIgnoreCase(taskStatus)
+                                || Utility.TASK_STATUS.PAID.equalsIgnoreCase(taskStatus) || Utility.TASK_STATUS.PAY_LATER.equalsIgnoreCase(taskStatus)) {
                             //We are commenting it because from here we are intiating a payment flow and
                             // after that we need to call update payment status on server
                             String taskPaidAmount = jsonData.optString(NetworkUtility.TAGS.TASK_PAID_AMOUNT);
@@ -816,10 +817,9 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
                                 *
                                 * commented by giteeka @31oct2017 - pay later flow
                                 * */
-
-//                                if (providerModel != null) {
-//                                    updateSelectedSpOnFirebase(taskDetailModel, providerModel);
-//                                }
+                                if (providerModel != null) {
+                                    updateSelectedSpOnFirebase(taskDetailModel, providerModel);
+                                }
                             }
 
                             //  Refresh UI for Paid status

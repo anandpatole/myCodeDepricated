@@ -552,5 +552,10 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_recharge_wallet">Recharge Wallet</string>
     <string name="validate_phone_number_wallet">Please Enter a valid Mobile Number</string>
     <string name="label_task_created_successfully">Task Created Successfully</string>
+    <string name="label_yes_pay_now">Yes, Pay Now</string>
+    <string name="label_seek_support">Seek Support</string>
+    <string name="label_book_now">Book Now</string>
+    <string name="label_book_the_pro">Book the PRO</string>
+
 
 </resources>

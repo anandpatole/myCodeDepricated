@@ -472,6 +472,7 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
             mActivityTaskSummaryBinding.textTaskCompletionYes.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+
                     callCompleteTaskWS(Utility.TASK_STATUS.COMPLETION_CONFIRM);
                 }
             });

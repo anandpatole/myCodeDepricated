@@ -1108,6 +1108,10 @@ public class Utility {
 
         // when user has verified Paytm otp and account is linked.
         int PAYTM_LINKED = 19;
+
+        // According to new flow Pay later
+        // when pro is booked
+        int TASK_PRO_BOOKED = 20;
     }
 
     public interface REQUEST_TYPE {

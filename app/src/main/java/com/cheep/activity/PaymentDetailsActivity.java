@@ -253,7 +253,7 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
                     }
                     actualQuotePrice = null;
                     mActivityPaymentDetailBinding.txttotal.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(providerModel.quotePrice)));
-                    mActivityPaymentDetailBinding.textPay.setText(getString(R.string.label_book_now_for_rupees, Utility.getQuotePriceFormatter(providerModel.quotePrice)));
+//                    mActivityPaymentDetailBinding.textPay.setText(getString(R.string.label_book_now_for_rupees, Utility.getQuotePriceFormatter(providerModel.quotePrice)));
                 }
 
             }
@@ -331,7 +331,7 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
                 mActivityPaymentDetailBinding.txttotal.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(providerModel.quotePrice)));
                 mActivityPaymentDetailBinding.txtreferraldiscount.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(referralBalance)));
                 mActivityPaymentDetailBinding.lnPromoCodeDisclaimer.setVisibility(View.GONE);
-                mActivityPaymentDetailBinding.textPay.setText(getString(R.string.label_book_now_for_rupees, Utility.getQuotePriceFormatter(providerModel.quotePrice)));
+//                mActivityPaymentDetailBinding.textPay.setText(getString(R.string.label_book_now_for_rupees, Utility.getQuotePriceFormatter(providerModel.quotePrice)));
             }
         }
     };
@@ -413,7 +413,7 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
             //    mActivityPaymentDetailBinding.txtadditionalcharge.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf(additionalCharges))));
             //    mActivityPaymentDetailBinding.txtsubtotal.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf(subTotal))));
             mActivityPaymentDetailBinding.txttotal.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf(totalPayment))));
-            mActivityPaymentDetailBinding.textPay.setText(getString(R.string.label_book_now_for_rupees, "" + Utility.getQuotePriceFormatter(String.valueOf(totalPayment))));
+//            mActivityPaymentDetailBinding.textPay.setText(getString(R.string.label_book_now_for_rupees, "" + Utility.getQuotePriceFormatter(String.valueOf(totalPayment))));
             mActivityPaymentDetailBinding.txtpromocode.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf(promocodeValue))));
 
         }
@@ -441,7 +441,7 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
         mActivityPaymentDetailBinding.txtadditionalcharge.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf(additionalPaidAmount))));
         mActivityPaymentDetailBinding.txtsubtotal.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf(subTotal))));
         mActivityPaymentDetailBinding.txttotal.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf(taskPaidAmount))));
-        mActivityPaymentDetailBinding.textPay.setText(getString(R.string.label_book_now_for_rupees, "" + Utility.getQuotePriceFormatter(String.valueOf(taskPaidAmount))));
+//        mActivityPaymentDetailBinding.textPay.setText(getString(R.string.label_book_now_for_rupees, "" + Utility.getQuotePriceFormatter(String.valueOf(taskPaidAmount))));
         mActivityPaymentDetailBinding.textreferraldiscountlabel.setText(getString(R.string.label_referral_discount_paymentsumaary));
         mActivityPaymentDetailBinding.textreferraldiscountlabel.setTextColor(ContextCompat.getColor(this, R.color.black));
         mActivityPaymentDetailBinding.llclaimreferral.setEnabled(false);
@@ -496,7 +496,7 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
         double subTotal = additionalCharges;
         mActivityPaymentDetailBinding.txtsubtotal.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf(subTotal))));
         mActivityPaymentDetailBinding.txttotal.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf(subTotal))));
-        mActivityPaymentDetailBinding.textPay.setText(getString(R.string.label_pay_fee_v1, "" + Utility.getQuotePriceFormatter(String.valueOf(subTotal))));
+//        mActivityPaymentDetailBinding.textPay.setText(getString(R.string.label_pay_fee_v1, "" + Utility.getQuotePriceFormatter(String.valueOf(subTotal))));
         mActivityPaymentDetailBinding.rlprofee.setAlpha(0.5f);
         mActivityPaymentDetailBinding.rlreferraldiscount.setAlpha(0.5f);
         mActivityPaymentDetailBinding.rlpromocode.setAlpha(0.5f);
@@ -748,7 +748,7 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
         mActivityPaymentDetailBinding.txtpromocode.setSelected(true);
         mActivityPaymentDetailBinding.txtpromocode.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(discount)));
         mActivityPaymentDetailBinding.txttotal.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(payable)));
-        mActivityPaymentDetailBinding.textPay.setText(getString(R.string.label_book_now_for_rupees, Utility.getQuotePriceFormatter(payable)));
+//        mActivityPaymentDetailBinding.textPay.setText(getString(R.string.label_book_now_for_rupees, Utility.getQuotePriceFormatter(payable)));
         mActivityPaymentDetailBinding.textpromocodelabel.setText(getString(R.string.label_promocode_apply));
         mActivityPaymentDetailBinding.textpromocodelabel.setTextColor(ContextCompat.getColor(this, R.color.black));
 
@@ -878,13 +878,18 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(MessageEvent event) {
-        if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.TASK_PAID
-                || event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.PAYMENT_COMPLETED_NEED_TO_REDIRECT_TO_MY_TASK_SCREEN) {
-            finish();
-        } else if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.TASK_PAID_FOR_INSTA_BOOKING) {
-            finish();
-        } else if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.TASK_PROCESSING) {
-            finish();
+//        if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.TASK_PAID
+//                || event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.PAYMENT_COMPLETED_NEED_TO_REDIRECT_TO_MY_TASK_SCREEN) {
+        switch (event.BROADCAST_ACTION) {
+            case Utility.BROADCAST_TYPE.PAYMENT_COMPLETED_NEED_TO_REDIRECT_TO_MY_TASK_SCREEN:
+                finish();
+                break;
+            case Utility.BROADCAST_TYPE.TASK_PAID_FOR_INSTA_BOOKING:
+                finish();
+                break;
+            case Utility.BROADCAST_TYPE.TASK_PROCESSING:
+                finish();
+                break;
         }
     }
 
@@ -990,7 +995,7 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
                         providerModel.quotePrice = payable;
                         mActivityPaymentDetailBinding.txttotal.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(payable)));
 
-                        mActivityPaymentDetailBinding.textPay.setText(getString(R.string.label_book_now_for_rupees, Utility.getQuotePriceFormatter(payable)));
+//                        mActivityPaymentDetailBinding.textPay.setText(getString(R.string.label_book_now_for_rupees, Utility.getQuotePriceFormatter(payable)));
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
                         // Show Toast
@@ -1091,7 +1096,8 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
 //                        callTaskDetailWS();
 
 // AS PER new flow pay later task status will be pending
-                        if (Utility.TASK_STATUS.PAY_LATER.equalsIgnoreCase(taskStatus)) {
+                        if (Utility.TASK_STATUS.COD.equalsIgnoreCase(taskStatus)
+                                || Utility.TASK_STATUS.PAID.equalsIgnoreCase(taskStatus) || Utility.TASK_STATUS.PAY_LATER.equalsIgnoreCase(taskStatus)) {
                             //We are commenting it because from here we are intiating a payment flow and
                             // after that we need to call update payment status on server
                             String taskPaidAmount = jsonData.optString(NetworkUtility.TAGS.TASK_PAID_AMOUNT);
@@ -1112,7 +1118,7 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
                             //  FillProviderDetails(providerModel);
 
                             MessageEvent messageEvent = new MessageEvent();
-                            messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.TASK_PAID;
+                            messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.TASK_PRO_BOOKED;
                             messageEvent.id = taskDetailModel.taskId;
                             EventBus.getDefault().post(messageEvent);
 
