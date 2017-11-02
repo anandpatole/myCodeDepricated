@@ -96,7 +96,19 @@ public class TaskDetailModel {
     @SerializedName("task_discount_amount")
     public String taskDiscountAmount;
 
-    public String quoteAmountWithGST;
+    @SerializedName("is_refer_code")
+    public String isReferCode;
+
+    @SerializedName("is_promo_code")
+    public String isPromoCode;
+
+    @SerializedName("is_wallet_used")
+    public String isWalletUsed;
+
+
+    @SerializedName("used_wallet_amount")
+    public String usedWalletAmount;
+
 
     @SerializedName("cat_image_extra")
     public AttachmentModel catImageExtras;
@@ -131,6 +143,14 @@ public class TaskDetailModel {
     @SerializedName("is_prefed_quote")
     public String isPrefedQuote;
 
+    // this is for payment choice activity for strategic partner
+    public String totalStrategicPartner;
+    public String payableAmountStrategicPartner;
+    public String quoteAmountStrategicPartner;
+
+
+    // This is for payment choice screen
+    public String cheepCode;
 
     public TaskDetailModel() {
 

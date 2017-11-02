@@ -58,8 +58,6 @@ public class ProviderModel {
     @SerializedName("sp_quote_price")
     public String quotePrice;
 
-    public String quotePriceWithOutGST;
-
     @SerializedName("request_detail_status")
     public String request_detail_status;
 
@@ -86,6 +84,9 @@ public class ProviderModel {
 
     @SerializedName("pro_level")
     public String pro_level;
+
+    @SerializedName("sp_without_gst_quote_price")
+    public String spWithoutGstQuotePrice;
 
     @SerializedName("live_lable_arr")
     public List<String> offerList;

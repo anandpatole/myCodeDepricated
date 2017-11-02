@@ -82,4 +82,27 @@ public class UserDetails {
     @SerializedName("locality")
     public String mLocality;
 
+    @SerializedName("refer_code")
+    public String refer_code;
+
+    @SerializedName("paytmData")
+    public PaytmUserDetail mPaytmUserDetail;
+
+
+    @Keep
+    public static class PaytmUserDetail {
+
+        @SerializedName("paytm_access_token")
+        public String paytmAccessToken;
+
+        @SerializedName("paytm_phone_number")
+        public String paytmphoneNumber;
+
+        @SerializedName("paytm_cust_id")
+        public String paytmCustId;
+
+        @SerializedName("access_token_expires_timestamp")
+        public String accessTokenExpiresTimestamp;
+
+    }
 }

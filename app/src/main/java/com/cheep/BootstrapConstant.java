@@ -13,4 +13,10 @@ public class BootstrapConstant {
 
     // card detail for bank
     public static final String CC_DETAILS = "4012001037141112";
+
+    /**
+     * Paytm staging details
+     */
+    public static final String PAYTM_STAGING_MOBILE_NUMBER = "7777777777";
+    public static final String PAYTM_STAGING_OTP = "489871";
 }

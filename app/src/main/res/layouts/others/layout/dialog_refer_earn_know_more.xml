@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:paddingLeft="@dimen/scale_10dp"
+        android:paddingRight="@dimen/scale_10dp"
+        tools:background="@color/black">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="@dimen/scale_10dp"
+            android:layout_marginRight="@dimen/scale_10dp"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/img_header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:src="@drawable/ic_dialog_know_more_upperpart"
+                tools:ignore="ContentDescription"/>
+
+            <LinearLayout
+                android:id="@+id/ln_bottom_section"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/img_header"
+                android:background="@drawable/rounded_bottom_part_only_fill_white_5x5"
+                android:orientation="vertical"
+                android:paddingTop="@dimen/scale_18dp">
+
+                <com.cheep.custom_view.CFTextViewSemiBold
+                    android:id="@+id/title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:gravity="center_horizontal"
+                    android:text="@string/label_about_refer_and_earn"
+                    android:textColor="@color/grey_varient_8"
+                    android:textSize="@dimen/text_size_18sp"/>
+
+                <com.cheep.custom_view.CFTextViewRegular
+                    android:id="@+id/tvBody"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/scale_8dp"
+                    android:gravity="left"
+                    android:lineSpacingExtra="@dimen/scale_2dp"
+                    android:padding="@dimen/scale_8dp"
+                    android:text="@string/label_dialog_refer_and_earn_body"
+                    android:textColor="@color/grey_dark_color_2"
+                    android:textSize="@dimen/text_size_11sp"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/scale_1dp"
+                    android:layout_marginLeft="@dimen/scale_8dp"
+                    android:layout_marginRight="@dimen/scale_8dp"
+                    android:layout_marginTop="@dimen/scale_15dp"
+                    android:background="@color/grey_varient_18"/>
+
+                <com.cheep.custom_view.CFTextViewSemiBold
+                    android:id="@+id/tvOk"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:gravity="center"
+                    android:text="@string/label_gotcha"
+                    android:textColor="@color/splash_gradient_end"
+                    android:textSize="@dimen/text_size_16sp"/>
+            </LinearLayout>
+        </RelativeLayout>
+    </LinearLayout>
+
+</layout>

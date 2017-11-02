@@ -15,9 +15,12 @@ import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.cheep.R;
-import com.cheep.strategicpartner.StrategicPartnerTaskCreationAct;
+import com.cheep.activity.HomeActivity;
 import com.cheep.model.BannerImageModel;
-import com.cheep.utils.Utility;
+import com.cheep.model.UserDetails;
+import com.cheep.network.NetworkUtility;
+import com.cheep.strategicpartner.StrategicPartnerTaskCreationAct;
+import com.cheep.utils.PreferenceUtility;
 
 public class BannerImageFragment extends BaseFragment {
     private static final String TAG = "BannerImageFragment";
@@ -63,6 +66,7 @@ public class BannerImageFragment extends BaseFragment {
         progress = (ProgressBar) view.findViewById(R.id.progress);
         return view;
     }
+
     boolean processingClick = false;
 
     @Override
@@ -91,8 +95,17 @@ public class BannerImageFragment extends BaseFragment {
 
                     if (!processingClick) {
                         processingClick = true;
-                        if (bannerImageModel != null && !bannerImageModel.cat_id.equalsIgnoreCase(Utility.ZERO_STRING)) {
+
+                        if (bannerImageModel != null && bannerImageModel.bannerType.equalsIgnoreCase(NetworkUtility.TAGS.BANNER_TYPE.STRATEGIC)) {
                             StrategicPartnerTaskCreationAct.getInstance(mContext, bannerImageModel);
+                        } else if (bannerImageModel != null && bannerImageModel.bannerType.equalsIgnoreCase(NetworkUtility.TAGS.BANNER_TYPE.REFERRAL)) {
+
+                            UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
+                            if (userDetails != null)
+                                ((HomeActivity) mContext).loadFragment(ReferAndEarnFragment.TAG, ReferAndEarnFragment.newInstance());
+                        } else {
+                            // this is normal banner
+                            // do nothing
                         }
                     }
                 }

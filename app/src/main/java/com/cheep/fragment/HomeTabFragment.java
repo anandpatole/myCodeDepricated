@@ -309,13 +309,8 @@ public class HomeTabFragment extends BaseFragment {
         mFragmentTabHomeBinding.swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if (PreferenceUtility.getInstance(mContext).getGuestUserDetails() != null
-                        || PreferenceUtility.getInstance(mContext).getUserDetails() != null) {
-                    mFragmentTabHomeBinding.swipeRefreshLayout.setRefreshing(false);
-                    return;
-                }
                 // Fetch Only Category List from server
-                getCategoryListFromServer();
+                getBannerImageListFromServer();
             }
         });
         Utility.setSwipeRefreshLayoutColors(mFragmentTabHomeBinding.swipeRefreshLayout);
@@ -616,7 +611,9 @@ public class HomeTabFragment extends BaseFragment {
         /*if (PreferenceUtility.getInstance(mContext).getUserDetails() == null) {
             return;
         }*/
-        ((HomeActivity) getActivity()).isReadyToLoad = true;
+        if (mContext == null)
+            return;
+        ((HomeActivity) mContext).isReadyToLoad = true;
 
         if (!Utility.isConnected(mContext)) {
             errorLoadingHelper.failed(Utility.NO_INTERNET_CONNECTION, 0, onRetryBtnClickListener);
@@ -1187,7 +1184,7 @@ public class HomeTabFragment extends BaseFragment {
         }
 
         if (!Utility.isConnected(mContext)) {
-            Utility.showToast(mContext,Utility.NO_INTERNET_CONNECTION);
+            Utility.showToast(mContext, Utility.NO_INTERNET_CONNECTION);
             return;
         }
 

@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +22,7 @@ import com.cheep.network.VolleyNetworkRequest;
 import com.cheep.strategicpartner.model.AllSubSubCat;
 import com.cheep.strategicpartner.model.StrategicPartnerServiceModel;
 import com.cheep.utils.ErrorLoadingHelper;
+import com.cheep.utils.LogUtils;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.Utility;
 
@@ -74,7 +74,7 @@ public class StrategicPartnerFragPhaseOne extends BaseFragment {
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        Log.d(TAG, "setUserVisibleHint() called with: isVisibleToUser = [" + isVisibleToUser + "]");
+        LogUtils.LOGD(TAG, "setUserVisibleHint() called with: isVisibleToUser = [" + isVisibleToUser + "]");
         if (!isVisibleToUser || mStrategicPartnerTaskCreationAct == null) {
             return;
         }
@@ -89,7 +89,7 @@ public class StrategicPartnerFragPhaseOne extends BaseFragment {
 
     @Override
     public void initiateUI() {
-        Log.d(TAG, "initiateUI() called");
+        LogUtils.LOGD(TAG, "initiateUI() called");
 
         //Setting recycler view
         errorLoadingHelper = new ErrorLoadingHelper(mFragmentStrategicPartnerPhaseOneBinding.recyclerView);
@@ -128,7 +128,7 @@ public class StrategicPartnerFragPhaseOne extends BaseFragment {
                     if (!selectedServiceList.isEmpty()) {
                         mStrategicPartnerTaskCreationAct.setSelectedSubService(selectedServiceList);
 
-                        Log.d(TAG, "onSubCategoryRowItemClicked() called with: subServiceDetailModel = [" + "]");
+                        LogUtils.LOGD(TAG, "onSubCategoryRowItemClicked() called with: subServiceDetailModel = [" + "]");
                         // Make the status Verified
                         isVerified = true;
 
@@ -142,7 +142,7 @@ public class StrategicPartnerFragPhaseOne extends BaseFragment {
                             }
                         }, 500);
                     } else {
-                        Utility.showSnackBar(getString(R.string.step_1_desc_for_strategic_partner), mFragmentStrategicPartnerPhaseOneBinding.getRoot());
+                        Utility.showSnackBar(getString(R.string.validation_step_1_desc_for_strategic_partner), mFragmentStrategicPartnerPhaseOneBinding.getRoot());
                     }
                 }
 
@@ -153,7 +153,7 @@ public class StrategicPartnerFragPhaseOne extends BaseFragment {
 
     @Override
     public void setListener() {
-        Log.d(TAG, "setListener() called");
+        LogUtils.LOGD(TAG, "setListener() called");
     }
 
 
@@ -162,7 +162,7 @@ public class StrategicPartnerFragPhaseOne extends BaseFragment {
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
     private void fetchListOfSubCategory(String catId) {
-        Log.d(TAG, "fetchListOfSubCategory() called with: catId = [" + catId + "]");
+        LogUtils.LOGD(TAG, "fetchListOfSubCategory() called with: catId = [" + catId + "]");
         if (!Utility.isConnected(mContext)) {
             Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mFragmentStrategicPartnerPhaseOneBinding.getRoot());
             return;
@@ -192,11 +192,11 @@ public class StrategicPartnerFragPhaseOne extends BaseFragment {
     private Response.Listener mCallFetchAllSubCateSPListingWSResponseListener = new Response.Listener() {
         @Override
         public void onResponse(Object response) {
-            Log.d(TAG, "onResponse() called with: response = [" + response + "]");
+            LogUtils.LOGD(TAG, "onResponse() called with: response = [" + response + "]");
             String strResponse = (String) response;
             try {
                 JSONObject jsonObject = new JSONObject(strResponse);
-                Log.i(TAG, "onResponse: " + jsonObject.toString());
+                LogUtils.LOGI(TAG, "onResponse: " + jsonObject.toString());
                 int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
                 String error_message;
                 switch (statusCode) {
@@ -236,7 +236,7 @@ public class StrategicPartnerFragPhaseOne extends BaseFragment {
     private Response.ErrorListener mCallFetchAllSubCateSPListingWSErrorListener = new Response.ErrorListener() {
         @Override
         public void onErrorResponse(VolleyError error) {
-            Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
+            LogUtils.LOGD(TAG, "onErrorResponse() called with: error = [" + error + "]");
             Utility.showSnackBar(getString(R.string.label_something_went_wrong), mFragmentStrategicPartnerPhaseOneBinding.getRoot());
         }
     };

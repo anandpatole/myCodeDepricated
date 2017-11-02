@@ -3,18 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.cheep">
 
-    <!-- versionName and versionCode are specified in build.gradle -->
-    <!-- min and target sdk are defined in build.gradle -->
-
-    <!-- Legacy permissions, required due to minSdk level.
-         Newer devices will use runtime permisisons. -->
+    <!-- camera permission -->
     <uses-feature
         android:name="android.hardware.camera"
         android:required="true" />
 
-    <!-- <uses-permission
-         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
-         android:maxSdkVersion="18" />-->
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -46,6 +39,7 @@
             android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -99,7 +93,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/NoAnimTheme" />
         <activity
-            android:name=".activity.PaymentsActivity"
+            android:name=".activity.HDFCPaymentGatewayActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.ChatActivity"
@@ -133,7 +127,7 @@
             android:name=".activity.IntroScreenActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.PaymentsStepActivity"
+            android:name=".activity.PaymentDetailsActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
@@ -155,6 +149,15 @@
             android:name="com.freshdesk.hotline.activity.ConversationDetailActivity"
             android:theme="@style/HotlineTheme"
             tools:replace="android:theme" />
+        <activity
+            android:name=".activity.PaymentChoiceActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+        <activity
+            android:name=".activity.SendOtpActivity"
+            android:configChanges="locale|orientation"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
 
         <!-- Location Tracked Service -->
         <service
@@ -195,7 +198,7 @@
             android:name=".fcm.RegistrationIntentService"
             android:exported="false" />
 
-        <!--For Fabric API-->
+        <!-- For Fabric API -->
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="50533e46aadf44b1a02395ec21663bdaf1111763" />
@@ -260,9 +263,14 @@
                 <action android:name="com.android.vending.INSTALL_REFERRER" />
             </intent-filter>
         </receiver>
+
         <service
             android:name="com.amazonaws.mobileconnectors.s3.transferutility.TransferService"
             android:enabled="true" />
+
+        <activity android:name=".activity.VerifyOtpActivity" />
+        <activity android:name=".activity.WithdrawMoneyActivity" />
+        <activity android:name=".activity.AddMoneyActivity"></activity>
     </application>
 
 </manifest>

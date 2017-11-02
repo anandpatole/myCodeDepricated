@@ -83,6 +83,9 @@ public class VerificationActivity extends BaseAppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mActivityVerificationBinding = DataBindingUtil.setContentView(this, R.layout.activity_verification);
+      /*  getWindow().setSoftInputMode(
+                WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+*/
         initiateUI();
         setListeners();
     }
@@ -134,7 +137,8 @@ public class VerificationActivity extends BaseAppCompatActivity {
             mActivityVerificationBinding.btnNearlyThere.setAllCaps(false);
             mActivityVerificationBinding.btnNearlyThere.setText(getString(R.string.label_brilliant_its_time_to_cheep));
         }
-
+        // to open keyboard automatically when activity opens
+        mActivityVerificationBinding.editOtp1.requestFocus();
     }
 
     private ArrayList<EditText> sequenceList;
@@ -532,6 +536,9 @@ public class VerificationActivity extends BaseAppCompatActivity {
         if (!TextUtils.isEmpty(mUserDetails.gp_app_id)) {
             mParams.put(NetworkUtility.TAGS.GOOGLE_PLUS_APP_ID, mUserDetails.gp_app_id);
         }
+//        if(!TextUtils.isEmpty(mUserDetails.refer_code)){
+//            mParams.put(NetworkUtility.TAGS.VALID_REFER_CODE,PreferenceUtility.getInstance(mContext).getUserDetails().refer_code);
+//        }
 
 //        mParams.put(NetworkUtility.TAGS.PASSWORD, password);
 

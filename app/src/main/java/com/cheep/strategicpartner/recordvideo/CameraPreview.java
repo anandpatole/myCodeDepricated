@@ -2,9 +2,10 @@ package com.cheep.strategicpartner.recordvideo;
 
 import android.content.Context;
 import android.hardware.Camera;
-import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+
+import com.cheep.utils.LogUtils;
 
 import java.io.IOException;
 
@@ -33,7 +34,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
                 mCamera.startPreview();
             }
         } catch (IOException e) {
-            Log.d(VIEW_LOG_TAG, "Error setting camera preview: " + e.getMessage());
+            LogUtils.LOGD(VIEW_LOG_TAG, "Error setting camera preview: " + e.getMessage());
         }
     }
 
@@ -56,7 +57,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
             mCamera.setPreviewDisplay(mHolder);
             mCamera.startPreview();
         } catch (Exception e) {
-            Log.d(VIEW_LOG_TAG, "Error starting camera preview: " + e.getMessage());
+            LogUtils.LOGD(VIEW_LOG_TAG, "Error starting camera preview: " + e.getMessage());
         }
     }
 

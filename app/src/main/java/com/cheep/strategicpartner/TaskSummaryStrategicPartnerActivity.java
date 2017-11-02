@@ -17,7 +17,6 @@ import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,6 +48,7 @@ import com.cheep.network.VolleyNetworkRequest;
 import com.cheep.strategicpartner.model.AllSubSubCat;
 import com.cheep.strategicpartner.model.StrategicPartnerServiceModel;
 import com.cheep.utils.HotlineHelper;
+import com.cheep.utils.LogUtils;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.RoundedBackgroundSpan;
 import com.cheep.utils.SuperCalendar;
@@ -216,7 +216,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
             mActivityTaskSummaryBinding.lnCall.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.i(TAG, "onClick: Call");
+                    LogUtils.LOGI(TAG, "onClick: Call");
                     Utility.showToast(TaskSummaryStrategicPartnerActivity.this, getString(R.string.label_wrok_in_progress));
 //                    Utility.openCustomerCareCallDialer(mContext, mTaskDetailModel.selectedProvider.sp_phone_number);
                 }
@@ -224,7 +224,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
             mActivityTaskSummaryBinding.lnChat.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.i(TAG, "onClick: Chat");
+                    LogUtils.LOGI(TAG, "onClick: Chat");
                     Utility.showToast(TaskSummaryStrategicPartnerActivity.this, getString(R.string.label_wrok_in_progress));
 //                    TaskChatModel taskChatModel = new TaskChatModel();
 //                    taskChatModel.categoryName = mTaskDetailModel.categoryName;
@@ -428,7 +428,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
                 });
                 updateHeightOfLinearLayout(true);
             }
-        } else if (Utility.TASK_STATUS.PAID.equalsIgnoreCase(mTaskDetailModel.taskStatus)) {
+        } else if (Utility.TASK_STATUS.COD.equalsIgnoreCase(mTaskDetailModel.taskStatus) || Utility.TASK_STATUS.PAID.equalsIgnoreCase(mTaskDetailModel.taskStatus)) {
             mActivityTaskSummaryBinding.textTaskStatusTop.setText(getString(R.string.task_confirmed));
         } else if (Utility.TASK_STATUS.CANCELLED_CUSTOMER.equalsIgnoreCase(mTaskDetailModel.taskStatus)) {
             mActivityTaskSummaryBinding.textTaskStatusTop.setText(getString(R.string.msg_task_cancelled_title));
@@ -470,9 +470,9 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
                 e.printStackTrace();
             }
             superCalendar.setLocaleTimeZone();
-            String task_reschedule_date= superCalendar.format(Utility.DATE_FORMAT_DD_MMM );
+            String task_reschedule_date = superCalendar.format(Utility.DATE_FORMAT_DD_MMM);
             String task_reschedule_time = superCalendar.format(Utility.DATE_FORMAT_HH_MM_AM);
-            String message = getString(R.string.label_reschedule_desc, task_reschedule_date + getString(R.string.label_at)+task_reschedule_time);
+            String message = getString(R.string.label_reschedule_desc, task_reschedule_date + getString(R.string.label_at) + task_reschedule_time);
 
 
             mActivityTaskSummaryBinding.textTaskRescheduleRequestDesc.setText(message);
@@ -514,7 +514,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
             mActivityTaskSummaryBinding.textAdditionalPaymentAccept.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.i(TAG, "onClick: Accept Additional Payment");
+                    LogUtils.LOGI(TAG, "onClick: Accept Additional Payment");
 
                     // First Call Asynctask that would going to check whether current status of Progressing or not.
                     callCheckingTaskStatus();
@@ -526,7 +526,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
             mActivityTaskSummaryBinding.textAdditionalPaymentDecline.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.i(TAG, "onClick: Decline Additional Payment");
+                    LogUtils.LOGI(TAG, "onClick: Decline Additional Payment");
                     showAdditionalPaymentRejectionDialog();
                 }
             });
@@ -621,7 +621,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
      * @param list of Providers available for task
      */
     private void updateSPImageStacks(ArrayList<ProviderModel> list) {
-        Log.d(TAG, "updateSPImageStacks() called with: list = [" + list.size() + "]");
+        LogUtils.LOGD(TAG, "updateSPImageStacks() called with: list = [" + list.size() + "]");
         for (int i = 0; i < 5; i++) {
             switch (i) {
                 case 0:
@@ -744,7 +744,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
             String strResponse = (String) response;
             try {
                 JSONObject jsonObject = new JSONObject(strResponse);
-                Log.i(TAG, "onResponse: " + jsonObject.toString());
+                LogUtils.LOGI(TAG, "onResponse: " + jsonObject.toString());
                 int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
                 String error_message;
                 showProgressBar(false);
@@ -785,7 +785,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
     Response.ErrorListener mCallTaskDetailWSErrorListener = new Response.ErrorListener() {
         @Override
         public void onErrorResponse(final VolleyError error) {
-            Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
+            LogUtils.LOGD(TAG, "onErrorResponse() called with: error = [" + error + "]");
 
             // Close Progressbar
             showProgressBar(false);
@@ -864,7 +864,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
             String strResponse = (String) response;
             try {
                 JSONObject jsonObject = new JSONObject(strResponse);
-                Log.i(TAG, "onResponse: " + jsonObject.toString());
+                LogUtils.LOGI(TAG, "onResponse: " + jsonObject.toString());
                 int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
                 switch (statusCode) {
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
@@ -930,7 +930,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
     Response.ErrorListener mCallCompleteTaskWSErrorListener = new Response.ErrorListener() {
         @Override
         public void onErrorResponse(VolleyError error) {
-            Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
+            LogUtils.LOGD(TAG, "onErrorResponse() called with: error = [" + error + "]");
 
             // Close Progressbar
             hideProgressDialog();
@@ -1048,7 +1048,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
             String strResponse = (String) response;
             try {
                 JSONObject jsonObject = new JSONObject(strResponse);
-                Log.i(TAG, "onResponse: " + jsonObject.toString());
+                LogUtils.LOGI(TAG, "onResponse: " + jsonObject.toString());
                 int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
                 switch (statusCode) {
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
@@ -1089,7 +1089,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
     Response.ErrorListener mCallAddReviewWSErrorListener = new Response.ErrorListener() {
         @Override
         public void onErrorResponse(VolleyError error) {
-            Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
+            LogUtils.LOGD(TAG, "onErrorResponse() called with: error = [" + error + "]");
 
             // Close Progressbar
             hideProgressDialog();
@@ -1178,7 +1178,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
             String strResponse = (String) response;
             try {
                 JSONObject jsonObject = new JSONObject(strResponse);
-                Log.i(TAG, "onResponse: " + jsonObject.toString());
+                LogUtils.LOGI(TAG, "onResponse: " + jsonObject.toString());
                 int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
                 switch (statusCode) {
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
@@ -1219,7 +1219,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
     Response.ErrorListener mCallDeclineAdditionalPaymentRequestWSErrorListener = new Response.ErrorListener() {
         @Override
         public void onErrorResponse(VolleyError error) {
-            Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
+            LogUtils.LOGD(TAG, "onErrorResponse() called with: error = [" + error + "]");
 
             // Close Progressbar
             hideProgressDialog();
@@ -1235,7 +1235,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(MessageEvent event) {
-        Log.d(TAG, "onMessageEvent() called with: event = [" + event.BROADCAST_ACTION + "]");
+        LogUtils.LOGD(TAG, "onMessageEvent() called with: event = [" + event.BROADCAST_ACTION + "]");
         if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.TASK_STATUS_CHANGE) {
             mTaskDetailModel.taskStatus = event.taskStatus;
             setUpTaskDetails(mTaskDetailModel);
@@ -1305,7 +1305,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
                 , new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
+                LogUtils.LOGD(TAG, "onErrorResponse() called with: error = [" + error + "]");
 
                 // Close Progressbar
                 hideProgressDialog();
@@ -1320,7 +1320,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
                 String strResponse = (String) response;
                 try {
                     JSONObject jsonObject = new JSONObject(strResponse);
-                    Log.i(TAG, "onResponse: " + jsonObject.toString());
+                    LogUtils.LOGI(TAG, "onResponse: " + jsonObject.toString());
                     int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
                     String error_message;
 
@@ -1412,7 +1412,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
             String strResponse = (String) response;
             try {
                 JSONObject jsonObject = new JSONObject(strResponse);
-                Log.i(TAG, "onResponse: " + jsonObject.toString());
+                LogUtils.LOGI(TAG, "onResponse: " + jsonObject.toString());
                 int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
                 switch (statusCode) {
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
@@ -1465,7 +1465,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
     Response.ErrorListener mGetTaskStatusWSErrorListener = new Response.ErrorListener() {
         @Override
         public void onErrorResponse(VolleyError error) {
-            Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
+            LogUtils.LOGD(TAG, "onErrorResponse() called with: error = [" + error + "]");
 
             // Close Progressbar
             hideProgressDialog();
@@ -1476,16 +1476,16 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
     };
 
     private void manageUnreadBadgeCounterForChat() {
-        Log.d(TAG, "manageUnreadBadgeCounterForChat() called");
+        LogUtils.LOGD(TAG, "manageUnreadBadgeCounterForChat() called");
         // Read task chat unread count from firebase
         String t_sp_u_formattedId = FirebaseUtils.get_T_SP_U_FormattedId(mTaskDetailModel.taskId, mTaskDetailModel.selectedProvider.providerId, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
         FirebaseHelper.getRecentChatRef(FirebaseUtils.getPrefixUserId(PreferenceUtility.getInstance(mContext).getUserDetails().UserID)).child(t_sp_u_formattedId).child(FirebaseHelper.KEY_UNREADCOUNT).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.d(TAG, "onDataChange() called with: dataSnapshot = [" + dataSnapshot + "]");
+                LogUtils.LOGD(TAG, "onDataChange() called with: dataSnapshot = [" + dataSnapshot + "]");
                 if (dataSnapshot.exists()) {
                     Integer count = dataSnapshot.getValue(Integer.class);
-                    Log.d(TAG, "onDataChange() called with: dataSnapshot = Unread Counter [" + count + "]");
+                    LogUtils.LOGD(TAG, "onDataChange() called with: dataSnapshot = Unread Counter [" + count + "]");
                     if (count <= 0) {
                         mActivityTaskSummaryBinding.tvChatUnreadCount.setVisibility(View.GONE);
                     } else {
@@ -1499,7 +1499,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Log.d(TAG, "onCancelled() called with: databaseError = [" + databaseError + "]");
+                LogUtils.LOGD(TAG, "onCancelled() called with: databaseError = [" + databaseError + "]");
             }
         });
     }

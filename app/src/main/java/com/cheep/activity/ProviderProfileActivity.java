@@ -231,7 +231,7 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
         mActivityProviderProfileBinding.layoutPay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                PaymentsStepActivity.newInstance(mContext, taskDetailModel, providerModel, 0);
+                PaymentDetailsActivity.newInstance(mContext, taskDetailModel, providerModel, 0);
             }
         });
 
@@ -358,7 +358,7 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
 
     public void updateChatUIBasedOnCurrentRequestStatus() {
         Log.d(TAG, "updateChatUIBasedOnCurrentRequestStatus() called");
-        if (providerModel == null) {
+        if (providerModel == null || mContext == null) {
             return;
         }
         // TODO : done according to @cheep team suggestion : 06 sept 2017
@@ -683,6 +683,7 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
+                hideProgressDialog();
                 mCallReportSPWSErrorListener.onErrorResponse(new VolleyError(e.getMessage()));
             }
 
@@ -695,9 +696,7 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
             Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
 
             // Close Progressbar
-//            hideProgressDialog();
-
-
+            hideProgressDialog();
 //            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityProviderProfileBinding.getRoot());
             Utility.showToast(mContext, getString(R.string.label_something_went_wrong));
 
