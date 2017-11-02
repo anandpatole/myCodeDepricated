@@ -26,10 +26,10 @@ import com.cheep.utils.SuperCalendar;
 import com.cheep.utils.Utility;
 
 
-public class PaymentsStepStrategicPartnerActivity extends BaseAppCompatActivity {
+public class PaymentsSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
 
     public static void newInstance(Context context, TaskDetailModel taskDetailModel) {
-        Intent intent = new Intent(context, PaymentsStepStrategicPartnerActivity.class);
+        Intent intent = new Intent(context, PaymentsSummaryStrategicPartnerActivity.class);
         intent.putExtra(Utility.Extra.DATA, Utility.getJsonStringFromObject(taskDetailModel));
         context.startActivity(intent);
     }

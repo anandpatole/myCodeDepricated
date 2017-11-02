@@ -746,6 +746,18 @@ public class Utility {
                 .crossFade()
                 .into(img);
     }
+    public static void showCircularImageViewWithColorBorder(Context context, String tag, ImageView img, int imageToLoad, int color, boolean isRounded) {
+//        LogUtils.LOGD(TAG, "showCircularImageView() called with: context = [" + context + "], tag = [" + tag + "], img = [" + img + "], imageToLoad = [" + imageToLoad + "], placeholderRes = [" + placeholderRes + "], isRounded = [" + isRounded + "]");
+        if (!isActivityCorrectForGlide(context)) {
+            return;
+        }
+        Glide
+                .with(context)
+                .load(imageToLoad)
+                .transform(new CircleTransform(context, isRounded, ContextCompat.getColor(context, color), 5, imageToLoad, tag))
+                .crossFade()
+                .into(img);
+    }
 
     /*public static void showCircularImageView(Context context, String tag, ImageView img, String imageToLoad, int placeholderRes, boolean isRounded, int cbo) {
         if (!isActivityCorrectForGlide(context)) {

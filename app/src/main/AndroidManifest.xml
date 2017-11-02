@@ -249,7 +249,7 @@
             android:name=".strategicpartner.StrategicPartnerMediaViewActiivty"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".strategicpartner.PaymentsStepStrategicPartnerActivity"
+            android:name=".strategicpartner.PaymentsSummaryStrategicPartnerActivity"
             android:screenOrientation="portrait" />
 
         <!--

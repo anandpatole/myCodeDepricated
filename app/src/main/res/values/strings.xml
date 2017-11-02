@@ -556,6 +556,8 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_seek_support">Seek Support</string>
     <string name="label_book_now">Book Now</string>
     <string name="label_book_the_pro">Book the PRO</string>
+    <string name="label_done">Done</string>
+    <string name="desc_pay_by_cash">Thank you for your business. Please pay ₹%1s to our PRO, %2s after </string>
 
 
 </resources>

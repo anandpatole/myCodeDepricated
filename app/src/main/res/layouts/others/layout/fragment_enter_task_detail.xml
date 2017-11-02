@@ -82,7 +82,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:src="@drawable/ic_icon_task_camera"
+                        android:src="@drawable/ic_task_camera_video"
                         tools:ignore="ContentDescription"/>
 
                     <ImageView

@@ -53,7 +53,10 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -234,7 +237,7 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     // Redirect the user to Payment Summary screen.
-                    PaymentDetailsActivity.newInstance(TaskSummaryActivity.this, mTaskDetailModel, mTaskDetailModel.selectedProvider, true);
+                    PaymentSummaryActivity.newInstance(TaskSummaryActivity.this, mTaskDetailModel, mTaskDetailModel.selectedProvider, true);
                 }
             });
 
@@ -286,7 +289,22 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
             e.printStackTrace();
         }
         superCalendar.setLocaleTimeZone();
-        String task_original_date_time = superCalendar.format(Utility.DATE_FORMAT_DD_MMM + " " + Utility.DATE_FORMAT_HH_MM_AM);
+//        String task_original_date_time = superCalendar.format(Utility.DATE_FORMAT_DD_MMM + " " + Utility.DATE_FORMAT_HH_MM_AM);
+
+        Date d = superCalendar.getCalendar().getTime();
+
+        SimpleDateFormat timeFormatter = new SimpleDateFormat(Utility.TIME_FORMAT_24HH_MM);
+        String fromHour = timeFormatter.format(d);
+        SuperCalendar superCalendarToDate = SuperCalendar.getInstance();
+        superCalendarToDate.setTimeInMillis(superCalendar.getCalendar().getTimeInMillis());
+        superCalendarToDate.getCalendar().add(Calendar.HOUR_OF_DAY, 2);
+
+        Date toDate = superCalendarToDate.getCalendar().getTime();
+        String toHour = timeFormatter.format(toDate);
+
+        String task_original_date_time = superCalendar.format(Utility.DATE_FORMAT_DD_MMM) + getString(R.string.label_between) + fromHour + " hrs - " + toHour + " hrs";
+
+
         mActivityTaskSummaryBinding.textTaskWhen.setText(task_original_date_time);
 
         // Setup WHERE section

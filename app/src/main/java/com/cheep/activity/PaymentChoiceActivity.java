@@ -20,6 +20,7 @@ import com.cheep.R;
 import com.cheep.databinding.ActivityPaymentChoiceBinding;
 import com.cheep.dialogs.AcknowledgementDialogWithProfilePic;
 import com.cheep.dialogs.AcknowledgementInteractionListener;
+import com.cheep.dialogs.PayByCashDialog;
 import com.cheep.firebase.FirebaseHelper;
 import com.cheep.firebase.FirebaseUtils;
 import com.cheep.firebase.model.ChatTaskModel;
@@ -92,6 +93,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
         intent.putExtra(Utility.Extra.SELECTED_ADDRESS_MODEL, Utility.getJsonStringFromObject(mSelectedAddressModel));
         context.startActivity(intent);
     }
+
 
     public static void newInstance(BaseFragment baseFragment, TaskDetailModel taskDetailModel, boolean isStrategicPartner, AddressModel mSelectedAddressModel) {
         Intent intent = new Intent(baseFragment.getActivity(), PaymentChoiceActivity.class);
@@ -209,7 +211,10 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
             case R.id.rl_cash_payment:
                 // new changes cod --> pay_later
                 paymentMethod = NetworkUtility.PAYMENT_METHOD_TYPE.COD;
-                onClickOfCashPaymentMode();
+                PayByCashDialog payByCashDialog = PayByCashDialog.newInstance(providerModel.userName, Utility.getQuotePriceFormatter(String.valueOf(payableAmount)));
+                payByCashDialog.show(getSupportFragmentManager(), payByCashDialog.TAG);
+//                onClickOfCashPaymentMode();
+
                 break;
         }
     }
@@ -863,7 +868,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
                                             messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.PAYMENT_COMPLETED_NEED_TO_REDIRECT_TO_MY_TASK_SCREEN;
                                             EventBus.getDefault().post(messageEvent);
                                         }
-                                    },-1);
+                                    }, -1);
                             mAcknowledgementDialogWithProfilePic.setCancelable(false);
                             mAcknowledgementDialogWithProfilePic.show(getSupportFragmentManager(), AcknowledgementDialogWithProfilePic.TAG);
 
@@ -1230,7 +1235,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
                                         messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.PAYMENT_COMPLETED_NEED_TO_REDIRECT_TO_MY_TASK_SCREEN;
                                         EventBus.getDefault().post(messageEvent);
                                     }
-                                },-1);
+                                }, -1);
                         mAcknowledgementDialogWithProfilePic.setCancelable(false);
                         mAcknowledgementDialogWithProfilePic.show(getSupportFragmentManager(), AcknowledgementDialogWithProfilePic.TAG);
 
