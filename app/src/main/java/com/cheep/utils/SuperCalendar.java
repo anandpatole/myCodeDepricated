@@ -151,30 +151,30 @@ public class SuperCalendar {
     }
 
 
-    public static interface SuperFormatter {
+    public interface SuperFormatter {
         //COMMON FORMATS, DONT CHANGE THE COMMON FORMATS
-        public static final String HOUR_24_HOUR = "HH";
+        String HOUR_24_HOUR = "HH";
 //        public static final String HOUR_12_HOUR_2_DIGIT = "hh";
 //        public static final String HOUR_12_HOUR_1_DIGIT = "h";
-        public static final String MINUTE = "mm";
-        public static final String SECONDS = "ss";
-        public static final String MILLISECONDS = "SSS";
+        String MINUTE = "mm";
+        String SECONDS = "ss";
+        String MILLISECONDS = "SSS";
 
 //        public static final String AM_PM = "a";
 
-        public static final String DATE = "dd";
+        String DATE = "dd";
 
-        public static final String MONTH_JAN = "MMM";
-        public static final String MONTH_JANUARY = "MMMM";
-        public static final String MONTH_NUMBER = "MM";
+        String MONTH_JAN = "MMM";
+        String MONTH_JANUARY = "MMMM";
+        String MONTH_NUMBER = "MM";
 
-        public static final String YEAR_4_DIGIT = "yyyy";
-        public static final String YEAR_2_DIGIT = "yy";
+        String YEAR_4_DIGIT = "yyyy";
+        String YEAR_2_DIGIT = "yy";
 
-        public static final String WEEK_SUNDAY = "EEEE";
-        public static final String WEEK_SUN = "EEE";
+        String WEEK_SUNDAY = "EEEE";
+        String WEEK_SUN = "EEE";
 
-        public static final String PAYMENT_DATE = "yyyy-MM-dd hh:mm:ss";
-        public static final String FULL_DATE = "yyyy-MM-dd hh:mm:ss aa";
+        String PAYMENT_DATE = "yyyy-MM-dd hh:mm:ss";
+        String FULL_DATE = "yyyy-MM-dd hh:mm:ss aa";
     }
 }

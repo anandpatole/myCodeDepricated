@@ -305,7 +305,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
 //                            PLEASE NOTE: THIS IS JUST TO BYPPASS THE PAYMENT GATEWAY. THIS IS NOT
 //                            GOING TO RUN IN LIVE ENVIRONMENT BUILDS
                             // Direct bypass the things
-                            if (!isInstaBooking && jsonObject.getString(NetworkUtility.TAGS.IS_FOR_ADDITIONAL_QUOTE).equalsIgnoreCase(getString(R.string.label_yes))) {
+                            if (!isInstaBooking && jsonObject.optString(NetworkUtility.TAGS.IS_FOR_ADDITIONAL_QUOTE).equalsIgnoreCase(getString(R.string.label_yes))) {
                                 //Call update payment service from here with all the response come from service
                                 updatePaymentStatus(true, getString(R.string.message_payment_bypassed), true);
                             } else {
@@ -863,7 +863,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
                                             messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.PAYMENT_COMPLETED_NEED_TO_REDIRECT_TO_MY_TASK_SCREEN;
                                             EventBus.getDefault().post(messageEvent);
                                         }
-                                    });
+                                    },-1);
                             mAcknowledgementDialogWithProfilePic.setCancelable(false);
                             mAcknowledgementDialogWithProfilePic.show(getSupportFragmentManager(), AcknowledgementDialogWithProfilePic.TAG);
 
@@ -1230,7 +1230,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
                                         messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.PAYMENT_COMPLETED_NEED_TO_REDIRECT_TO_MY_TASK_SCREEN;
                                         EventBus.getDefault().post(messageEvent);
                                     }
-                                });
+                                },-1);
                         mAcknowledgementDialogWithProfilePic.setCancelable(false);
                         mAcknowledgementDialogWithProfilePic.show(getSupportFragmentManager(), AcknowledgementDialogWithProfilePic.TAG);
 

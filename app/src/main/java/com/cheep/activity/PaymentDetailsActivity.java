@@ -53,6 +53,9 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -1127,7 +1130,8 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
                              *  Need to show Model Dialog once Payment has been made successful. Once
                              *  User clicks on OK. we will finish of the activity.
                              */
-                            String title = mContext.getString(R.string.label_great_choice_x, PreferenceUtility.getInstance(mContext).getUserDetails().UserName);
+//                            String title = mContext.getString(R.string.label_great_choice_x, PreferenceUtility.getInstance(mContext).getUserDetails().UserName);
+                            String title = mContext.getString(R.string.label_brilliant) + "!";
                             final SuperCalendar superStartDateTimeCalendar = SuperCalendar.getInstance();
                             superStartDateTimeCalendar.setTimeZone(SuperCalendar.SuperTimeZone.GMT.GMT);
                             superStartDateTimeCalendar.setTimeInMillis(Long.parseLong(taskDetailModel.taskStartdate));
@@ -1137,6 +1141,23 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
                             String message = fetchMessageFromDateOfMonth(onlydate, superStartDateTimeCalendar);
 
 //                            final UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
+                            int badgeResId = -1;
+                            if (providerModel.pro_level != null) {
+                                switch (providerModel.pro_level) {
+                                    case Utility.PRO_LEVEL.PLATINUM:
+                                        badgeResId = R.drawable.ic_badge_platinum;
+                                        break;
+                                    case Utility.PRO_LEVEL.GOLD:
+                                        badgeResId = R.drawable.ic_badge_gold;
+                                        break;
+                                    case Utility.PRO_LEVEL.SILVER:
+                                        badgeResId = R.drawable.ic_badge_silver;
+                                        break;
+                                    case Utility.PRO_LEVEL.BRONZE:
+                                        badgeResId = R.drawable.ic_badge_bronze;
+                                        break;
+                                }
+                            }
                             AcknowledgementDialogWithProfilePic mAcknowledgementDialogWithProfilePic = AcknowledgementDialogWithProfilePic.newInstance(
                                     mContext,
                                     R.drawable.ic_acknowledgement_dialog_header_background,
@@ -1155,7 +1176,7 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
                                             messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.PAYMENT_COMPLETED_NEED_TO_REDIRECT_TO_MY_TASK_SCREEN;
                                             EventBus.getDefault().post(messageEvent);
                                         }
-                                    });
+                                    }, badgeResId);
                             mAcknowledgementDialogWithProfilePic.setCancelable(false);
                             mAcknowledgementDialogWithProfilePic.show(getSupportFragmentManager(), AcknowledgementDialogWithProfilePic.TAG);
 
@@ -1296,11 +1317,26 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
         }
         // as per  24 hour format 13 spt 2017
 //        String DATE_FORMAT_TASK_HAS_BEEN_PAID_TIME = SuperCalendar.SuperFormatter.HOUR_12_HOUR_2_DIGIT + ":" + SuperCalendar.SuperFormatter.MINUTE + "' '" + SuperCalendar.SuperFormatter.AM_PM;
-        String time = superStartDateTimeCalendar.format(Utility.DATE_FORMAT_HH_MM_AM);
+//        String time = superStartDateTimeCalendar.format(Utility.DATE_FORMAT_HH_MM_AM);
+
+        Date d = superStartDateTimeCalendar.getCalendar().getTime();
+
+
+        // set time format 24 hours
+
+        SimpleDateFormat timeFormatter = new SimpleDateFormat(Utility.TIME_FORMAT_24HH_MM);
+        String fromHour = timeFormatter.format(d);
+        SuperCalendar superCalendar = SuperCalendar.getInstance();
+        superCalendar.setTimeInMillis(superStartDateTimeCalendar.getCalendar().getTimeInMillis());
+        superCalendar.getCalendar().add(Calendar.HOUR_OF_DAY, 2);
+
+        Date toDate = superCalendar.getCalendar().getTime();
+        String toHour = timeFormatter.format(toDate);
+
         String message = mContext.getString(R.string.desc_task_payment_done_acknowledgement
-                , providerModel.userName, date + getString(R.string.label_at) + time);
+                , providerModel.userName, date + getString(R.string.label_between) + fromHour + " hrs - " + toHour + " hrs");
         message = message.replace(".", "");
-        message = message.replace(getString(R.string.label_am_caps), getString(R.string.label_am_small)).replace(getString(R.string.label_pm_caps), getString(R.string.label_pm_small));
+//        message = message.replace(getString(R.string.label_am_caps), getString(R.string.label_am_small)).replace(getString(R.string.label_pm_caps), getString(R.string.label_pm_small));
         return message + ".";
     }
 

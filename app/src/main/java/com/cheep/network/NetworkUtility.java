@@ -444,6 +444,7 @@ public class NetworkUtility {
         String RESOURCE_ID = "resourceid";
         String PROFILE_PIC_NEEDS_TOBE_SHOWN = "is_profile_pic_needs_be_shown";
         String VERSION_DESC = "version_desc";
+        String SHOW_BADGE = "showBadge";
 
         String OTP_CODE = "otp_code";
 

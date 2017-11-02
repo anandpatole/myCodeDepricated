@@ -16,11 +16,8 @@ import android.view.ViewGroup;
 import android.view.Window;
 
 import com.cheep.R;
-
 import com.cheep.databinding.DialogFragmentAcknowledgementWithProfilePicBinding;
-import com.cheep.model.UserDetails;
 import com.cheep.network.NetworkUtility;
-import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.Utility;
 
 public class AcknowledgementDialogWithProfilePic extends DialogFragment {
@@ -32,12 +29,13 @@ public class AcknowledgementDialogWithProfilePic extends DialogFragment {
     private AcknowledgementInteractionListener mListener;
     private Context mContext;
     private String pictureURL;
+    private int badgeResID;
 
     /**
      * Create a new instance of MyDialogFragment, providing "num"
      * as an argument.
      */
-    public static AcknowledgementDialogWithProfilePic newInstance(Context mContext, int imgResourceIdOfHeader, String title, String message, String pictureurl, AcknowledgementInteractionListener listener) {
+    public static AcknowledgementDialogWithProfilePic newInstance(Context mContext, int imgResourceIdOfHeader, String title, String message, String pictureurl, AcknowledgementInteractionListener listener, int badgeResID) {
         AcknowledgementDialogWithProfilePic f = new AcknowledgementDialogWithProfilePic();
         Log.d(TAG, "newInstance() called with: mContext = [" + mContext + "], imgResourceIdOfHeader = [" + imgResourceIdOfHeader + "], title = [" + title + "], message = [" + message + "], pictureurl = [" + pictureurl + "], listener = [" + listener + "]");
         f.setListener(listener);
@@ -48,6 +46,8 @@ public class AcknowledgementDialogWithProfilePic extends DialogFragment {
         args.putString(NetworkUtility.TAGS.MESSAGE, message);
         args.putString(NetworkUtility.TAGS.PICTURE_URL, pictureurl);
         args.putInt(NetworkUtility.TAGS.RESOURCE_ID, imgResourceIdOfHeader);
+        args.putInt(NetworkUtility.TAGS.RESOURCE_ID, imgResourceIdOfHeader);
+        args.putInt(NetworkUtility.TAGS.SHOW_BADGE, badgeResID);
 
         f.setArguments(args);
         return f;
@@ -74,6 +74,7 @@ public class AcknowledgementDialogWithProfilePic extends DialogFragment {
         mMessage = getArguments().getString(NetworkUtility.TAGS.MESSAGE);
         mTitle = getArguments().getString(NetworkUtility.TAGS.TITLE);
         pictureURL = getArguments().getString(NetworkUtility.TAGS.PICTURE_URL);
+        badgeResID = getArguments().getInt(NetworkUtility.TAGS.SHOW_BADGE, -1);
     }
 
     @Nullable
@@ -102,6 +103,12 @@ public class AcknowledgementDialogWithProfilePic extends DialogFragment {
 
         //Set Message
         mDialogFragmentAcknowledgementBinding.textTaskCreationAcknowledgment.setText(mMessage);
+
+
+        // set badge for prp profile
+        if (badgeResID != -1) {
+            mDialogFragmentAcknowledgementBinding.ivBadge.setImageResource(badgeResID);
+        }
 
         // Click event of Okay button
         mDialogFragmentAcknowledgementBinding.textOkay.setOnClickListener(new View.OnClickListener() {

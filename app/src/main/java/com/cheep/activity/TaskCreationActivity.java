@@ -729,15 +729,13 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
 
             Date d = superCalendar.getCalendar().getTime();
 
-            // set time format 24 hours
-            final String timeFormat = SuperCalendar.SuperFormatter.HOUR_24_HOUR + ":" + SuperCalendar.SuperFormatter.MINUTE + "";
 
             // set date format
             final String dateFormat = SuperCalendar.SuperFormatter.DATE + " " + SuperCalendar.SuperFormatter.MONTH_JAN;
 
             // formatter for date and time
             SimpleDateFormat dateFormatter = new SimpleDateFormat(dateFormat);
-            SimpleDateFormat timeFormatter = new SimpleDateFormat(timeFormat);
+            SimpleDateFormat timeFormatter = new SimpleDateFormat(Utility.TIME_FORMAT_24HH_MM);
 
             String date = dateFormatter.format(d);
 
