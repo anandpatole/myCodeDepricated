@@ -4,7 +4,6 @@ import android.content.Context;
 import android.text.TextUtils;
 
 import com.android.volley.Cache;
-import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Network;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -66,7 +65,7 @@ public class Volley {
         getRequestQueue().add(req);
     }*/
 
-    private static final String TAG = "Volley";
+    private static final String TAG = Volley.class.getSimpleName();
     private static Volley mInstance;
     private RequestQueue mRequestQueue;
     public static final int NETWORK_RESPONSE_TIME_OUT = 20000;

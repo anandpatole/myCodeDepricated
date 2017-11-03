@@ -14,4 +14,9 @@
         <item quantity="one">a day</item>
         <item quantity="other">%d days</item>
     </plurals>
+
+    <plurals name="earnings_from_referrals">
+        <item quantity="one">Your Earnings Till Date : ₹%1$s from %2$s referral</item>
+        <item quantity="other">Your Earnings Till Date : ₹%1$s from %2$s referrals</item>
+    </plurals>
 </resources>

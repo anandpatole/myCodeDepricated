@@ -25,7 +25,7 @@ import com.cheep.R;
  * Custom Edittext for regular font
  */
 public class CFTextViewRegular extends AppCompatTextView {
-    private static final String TAG = "CFTextViewRegular";
+    private static final String TAG = CFTextViewRegular.class.getSimpleName();
     private Context mContext;
 
     private static final String ELLIPSIZE = "... ";

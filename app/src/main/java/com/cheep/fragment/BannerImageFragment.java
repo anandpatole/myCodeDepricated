@@ -23,7 +23,7 @@ import com.cheep.strategicpartner.StrategicPartnerTaskCreationAct;
 import com.cheep.utils.PreferenceUtility;
 
 public class BannerImageFragment extends BaseFragment {
-    private static final String TAG = "BannerImageFragment";
+    private static final String TAG = BannerImageFragment.class.getSimpleName();
     private ImageView img_cover;
     private BannerImageModel bannerImageModel;
     private ProgressBar progress;

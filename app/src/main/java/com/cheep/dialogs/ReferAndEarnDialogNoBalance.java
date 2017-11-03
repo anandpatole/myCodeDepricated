@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.cheep.R;
-import com.cheep.databinding.DialogReferAndEarnInfoBinding;
 import com.cheep.databinding.DialogReferAndEarnNoBalanceBinding;
 
 /**
@@ -19,7 +18,7 @@ import com.cheep.databinding.DialogReferAndEarnNoBalanceBinding;
  */
 
 public class ReferAndEarnDialogNoBalance extends DialogFragment {
-    public static final String TAG = "ReferAndEarnDialogNoBalance";
+    public static final String TAG = ReferAndEarnDialogNoBalance.class.getSimpleName();
     private DialogReferAndEarnNoBalanceBinding mDialogReferAndEarnNoBalanceBinding;
 
 

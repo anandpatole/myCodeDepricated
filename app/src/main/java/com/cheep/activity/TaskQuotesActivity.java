@@ -55,7 +55,7 @@ import java.util.List;
 import java.util.Map;
 
 public class TaskQuotesActivity extends BaseAppCompatActivity implements TaskQuotesRecyclerViewAdapter.OnInteractionListener {
-    private static final String TAG = "TaskQuotesActivity";
+    private static final String TAG = TaskQuotesActivity.class.getSimpleName();
 
     public static void newInstance(Context context, TaskDetailModel model, boolean isFirstTimeCreate) {
         Intent intent = new Intent(context, TaskQuotesActivity.class);

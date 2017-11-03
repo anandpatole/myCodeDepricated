@@ -27,7 +27,7 @@ import java.util.Map;
 
 public class PaytmNetworkRequest extends StringRequest {
 
-    private static final String TAG = "PaytmNetworkRequest";
+    private static final String TAG = PaytmNetworkRequest.class.getSimpleName();
     private static final int DEFAULT_TIMEOUT_MS = 20000;
     private static final int DEFAULT_MAX_RETRIES = 0;
     private final Response.Listener<String> mListener;

@@ -62,7 +62,7 @@ import static com.cheep.network.NetworkUtility.WS.REVIEW_LIST;
 
 public class ProviderProfileActivity extends BaseAppCompatActivity implements ReviewsRecyclerViewAdapter.ReviewRowInteractionListener {
 
-    private static final String TAG = "ProviderProfileActivity";
+    private static final String TAG = ProviderProfileActivity.class.getSimpleName();
 
     private ActivityProfileBinding mActivityProviderProfileBinding;
     private ProviderModel providerModel;

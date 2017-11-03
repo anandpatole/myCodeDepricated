@@ -42,7 +42,7 @@ import java.util.Map;
  */
 public class FavouriteFragment extends BaseFragment {
 
-    public static final String TAG = "FavouriteFragment";
+    public static final String TAG = FavouriteFragment.class.getSimpleName();
 
     private DrawerLayoutInteractionListener mListener;
     private FragmentFavouriteBinding mFragmentFavouriteFragment;

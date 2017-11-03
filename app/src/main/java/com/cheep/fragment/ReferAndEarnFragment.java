@@ -52,7 +52,7 @@ import java.util.Map;
 
 public class ReferAndEarnFragment extends BaseFragment {
 
-    public static final String TAG = "ReferAndEarnFragment";
+    public static final String TAG = ReferAndEarnFragment.class.getSimpleName();
     private DrawerLayoutInteractionListener mListener;
     private FragmentReferAndEarnBinding mfragmentReferAndEarnBinding;
 
@@ -220,11 +220,15 @@ public class ReferAndEarnFragment extends BaseFragment {
                             double totalEarning = 0;
                             try {
                                 totalEarning = Double.parseDouble(referralCount) * Double.parseDouble(maxDiscountAmount);
-                                if (Integer.parseInt(referralCount) == 1 || Integer.parseInt(referralCount) == 0) {
-                                    mfragmentReferAndEarnBinding.tvRefereBalanceAndCount.setText(getString(R.string.label_you_have_earned, (int) totalEarning + "", referralCount, "referral"));
+                               /* if (Integer.parseInt(referralCount) == 1 || Integer.parseInt(referralCount) == 0) {
+                                    mfragmentReferAndEarnBinding.tvRefereBalanceAndCount.setText(getString(R.string.label_you_have_earned, String.valueOf((int) totalEarning), referralCount, "referral"));
                                 } else {
-                                    mfragmentReferAndEarnBinding.tvRefereBalanceAndCount.setText(getString(R.string.label_you_have_earned, (int) totalEarning + "", referralCount, "referrals"));
-                                }
+                                    mfragmentReferAndEarnBinding.tvRefereBalanceAndCount.setText(getString(R.string.label_you_have_earned, String.valueOf((int) totalEarning), referralCount, "referrals"));
+                                }*/
+                                mfragmentReferAndEarnBinding.tvRefereBalanceAndCount.setText(getResources().getQuantityString(R.plurals.earnings_from_referrals
+                                        , Integer.parseInt(referralCount)
+                                        , String.valueOf((int) totalEarning)
+                                        , referralCount));
                                 if (!TextUtils.isEmpty(referralBalance))
                                     mfragmentReferAndEarnBinding.tvUserBalance.setText(getString(R.string.label_your_current_balance, (int) Double.parseDouble(referralBalance) + ""));
                                 mfragmentReferAndEarnBinding.tvRefereBalanceAndCount.setVisibility(View.VISIBLE);

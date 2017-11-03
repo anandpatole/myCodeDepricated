@@ -14,7 +14,6 @@ import android.view.animation.AnimationUtils;
 
 import com.cheep.R;
 import com.cheep.databinding.ActivitySplashBinding;
-import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.Utility;
 
 import java.security.MessageDigest;
@@ -26,7 +25,7 @@ import java.security.NoSuchAlgorithmException;
 
 public class SplashActivity extends BaseAppCompatActivity {
 
-    private static final String TAG = "SplashActivity";
+    private static final String TAG = SplashActivity.class.getSimpleName();
 
     //Handler for track splash activity timeout
     private Handler mHandler;
@@ -48,7 +47,7 @@ public class SplashActivity extends BaseAppCompatActivity {
         startAnimations();
 
         try {
-            PackageInfo info = getPackageManager().getPackageInfo("com.cheep", PackageManager.GET_SIGNATURES);
+            PackageInfo info = getPackageManager().getPackageInfo(mContext.getPackageName(), PackageManager.GET_SIGNATURES);
             for (Signature signature : info.signatures) {
                 MessageDigest md = MessageDigest.getInstance("SHA");
                 md.update(signature.toByteArray());

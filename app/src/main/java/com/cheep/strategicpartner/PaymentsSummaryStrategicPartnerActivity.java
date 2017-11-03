@@ -35,7 +35,7 @@ public class PaymentsSummaryStrategicPartnerActivity extends BaseAppCompatActivi
     }
 
 
-    private static final String TAG = "PaymentsStepActivity";
+    private static final String TAG = PaymentsSummaryStrategicPartnerActivity.class.getSimpleName();
     private TaskDetailModel taskDetailModel;
     private ActivityPaymentDetailStartegicPartnerNewBinding mActivityPaymentDetailBinding;
 

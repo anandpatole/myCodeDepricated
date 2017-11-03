@@ -73,7 +73,7 @@ android {
         buildConfigField("String", "INDUSTRY_TYPE_ID", getProperty("INDUSTRY_TYPE_ID_STAGING"))
         buildConfigField("String", "CLIENT_SECRET", getProperty("CLIENT_SECRET_STAGING"))
         buildConfigField("String", "WEBSITE", getProperty("WEBSITE_STAGING"))
-
+        buildConfigField("String", "COUNTRY_CODE", getProperty("COUNTRY_CODE_INDIA"))
     }
 
     // Source Sets

@@ -82,6 +82,15 @@ import static com.cheep.utils.SuperCalendar.SuperFormatter;
 
 public class Utility {
 
+    public static final String MERCHANT = "merchant";
+    public static final String EMAIL = "email";
+    public static final String PUBLIC_PROFILE = "public_profile";
+    public static final String BIRTH_DATE = "user_birthday";
+    public static final String UTC = "UTC";
+    public static final String FACEBOOK_EMAIL_KEY = "email";
+    public static final String FACEBOOK_NAME_KEY = "name";
+    public static final String FACEBOOK_FIELDS_KEY = "fields";
+
     public interface GUEST_STATIC_INFO {
         public static final String USERNAME = "Guest";
     }
@@ -426,6 +435,11 @@ public class Utility {
         String ACCESS_TOKEN = "access_token";
         String CUST_ID = "cust_id";
         String PAYTM_WALLET_BALANCE = "paytm_wallet_balance";
+        String URL = "url";
+        String POST_DATA = "postData";
+        String RESULT = "result";
+        String DATE = "date";
+        String MODEL = "model";
     }
 
 

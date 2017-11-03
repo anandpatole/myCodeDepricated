@@ -12,7 +12,7 @@ import java.util.Map;
  * Class Used for managing TypeFace instances, to avoid memory leaks.
  */
 public class TypeFaceProvider {
-    private static final String TAG = "Typefaces";
+    private static final String TAG = TypeFaceProvider.class.getSimpleName();
 
     private static final Map<String, Typeface> cache = new Hashtable<>();
 

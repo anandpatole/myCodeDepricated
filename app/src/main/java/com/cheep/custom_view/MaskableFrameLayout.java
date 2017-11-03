@@ -25,7 +25,7 @@ import com.cheep.R;
 public class MaskableFrameLayout extends FrameLayout {
 
     //Constants
-    private static final String TAG = "MaskableFrameLayout";
+    private static final String TAG = MaskableFrameLayout.class.getSimpleName();
 
     private Handler mHandler;
 

@@ -16,7 +16,7 @@ import com.cheep.network.NetworkUtility;
 import com.cheep.utils.Utility;
 
 public class AcknowledgementDialogWithoutProfilePic extends DialogFragment {
-    public static final String TAG = "AcknowledgementDialogWithoutProfilePic";
+    public static final String TAG = AcknowledgementDialogWithoutProfilePic.class.getSimpleName();
     private String mTitle = Utility.EMPTY_STRING;
     private String mMessage = Utility.EMPTY_STRING;
     private int imgResourceIdOfHeader = -1;

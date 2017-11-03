@@ -61,7 +61,7 @@ import java.util.Map;
  * Created by bhavesh on 26/4/17.
  */
 public class TaskCreationActivity extends BaseAppCompatActivity {
-    private static final String TAG = "TaskCreationActivity";
+    private static final String TAG = TaskCreationActivity.class.getSimpleName();
     private ActivityTaskCreateBinding mActivityTaskCreateBinding;
     public JobCategoryModel mJobCategoryModel;
     TaskCreationPagerAdapter mTaskCreationPagerAdapter;

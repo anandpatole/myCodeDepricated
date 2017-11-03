@@ -12,7 +12,6 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
 import android.location.Location;
-import android.net.http.LoggingEventHandler;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
@@ -76,7 +75,7 @@ import java.util.Map;
  * Created by Bhavesh Patadiya on 9/26/16.
  */
 public class LoginActivity extends BaseAppCompatActivity implements FacebookHelper.FacebookCallbacks {
-    private static final String TAG = "LoginActivity";
+    private static final String TAG = LoginActivity.class.getSimpleName();
     private ActivityLoginBinding mActivityLoginBinding;
 
     //Temporary variables for storing Email and Username in case of social media signup
@@ -431,15 +430,15 @@ public class LoginActivity extends BaseAppCompatActivity implements FacebookHelp
                             hideProgressDialog();
 
                             //Check if we found a valid email address from Facebook, if not NOT let user to go ahaed by showing snackbar
-                            if (!me.has("email")) {
+                            if (!me.has(Utility.FACEBOOK_EMAIL_KEY)) {
 //                                Utility.showSnackBar(getString(R.string.social_email_not_found), mActivityLoginBinding.getRoot());
                                 Toast.makeText(mContext, getString(R.string.social_email_not_found), Toast.LENGTH_LONG).show();
                                 return;
                             }
 
                             //Set temporary address
-                            TEMP_EMAIL = me.optString("email");
-                            TEMP_NAME = me.optString("name");
+                            TEMP_EMAIL = me.optString(Utility.FACEBOOK_EMAIL_KEY);
+                            TEMP_NAME = me.optString(Utility.FACEBOOK_NAME_KEY);
                             TEMP_PHONE_NUMBER = Utility.EMPTY_STRING;
                             TEMP_LOGIN_WITH = NetworkUtility.TAGS.LOGINWITHTYPE.FACEBOOK;
                             TEMP_FB_APP_ID = me.optString("id");
@@ -452,7 +451,7 @@ public class LoginActivity extends BaseAppCompatActivity implements FacebookHelp
                         }
                     });
             Bundle bundle = new Bundle();
-            bundle.putString("fields", "email,name");
+            bundle.putString(Utility.FACEBOOK_FIELDS_KEY, (Utility.FACEBOOK_EMAIL_KEY + Utility.COMMA + Utility.FACEBOOK_NAME_KEY));
             request.setParameters(bundle);
             GraphRequest.executeBatchAsync(request);
         }
@@ -848,7 +847,7 @@ public class LoginActivity extends BaseAppCompatActivity implements FacebookHelp
 //                                finish();
                             }
                         }
-                       // PreferenceUtility.REFER_CODE = jsonObject.getJSONObject(NetworkUtility.TAGS.DATA).getString(NetworkUtility.TAGS.REFER_CODE);
+                        // PreferenceUtility.REFER_CODE = jsonObject.getJSONObject(NetworkUtility.TAGS.DATA).getString(NetworkUtility.TAGS.REFER_CODE);
                         //PreferenceUtility.getInstance(mContext).setReferenceCode(jsonObject.getJSONObject(NetworkUtility.TAGS.DATA).getString(NetworkUtility.TAGS.REFER_CODE));
                         //Log.e(TAG, jsonObject.getJSONObject(NetworkUtility.TAGS.DATA).getString(NetworkUtility.TAGS.REFER_CODE) );
                         break;

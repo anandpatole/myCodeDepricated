@@ -108,7 +108,7 @@ public class HomeActivity extends BaseAppCompatActivity
         HistoryRecyclerViewAdapter.HistoryItemInteractionListener,
         ChatTabRecyclerViewAdapter.ChatItemInteractionListener {
 
-    private static final String TAG = "HomeActivity";
+    private static final String TAG = HomeActivity.class.getSimpleName();
     private ActivityHomeBinding mActivityHomeBinding;
     private NavHeaderHomeBinding navHeaderHomeBinding;
 

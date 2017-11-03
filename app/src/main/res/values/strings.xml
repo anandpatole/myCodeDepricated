@@ -441,7 +441,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="total_experience">%s years of experience</string>
     <string name="merchant_detail_body">Your task is assigned to our PRO, %1$s. He will be at your selected address on %2$s. You can also contact your PRO via chat or call within the App. We are always available 24x7 for any help!</string>
     <string name="alert_no_pro_found">Thank you for your order. All our PROs in your city are busy due to heavy demand. We have noted your requirements and we will revert back to you very shortly.</string>
-    <string name="label_address_delete_title">CHEEP</string>
+    <string name="cheep_all_caps">CHEEP</string>
     <string name="label_address_delete_message">Are you sure you want to delete this address?</string>
     <string name="disclaimer_promo_code">The Promo Code discount has been levied on pre tax amount.</string>
     <string name="disclaimer_referral">The Referral discount has been levied on pre tax amount.</string>
@@ -455,7 +455,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_when_they_use_cheep_get_50">When they book and pay for their first service, they will get ₹50 off and you will earn ₹50 yourself. Know more</string>
     <string name="label_invite_friends">Invite Friends</string>
     <string name="label_refer_and_earn">Refer &amp; Earn</string>
-    <string name="label_you_have_earned">Your Earnings Till Date : ₹%1$s from %2$s %3$s</string>
+    <!--<string name="label_you_have_earned">Your Earnings Till Date : ₹%1$s from %2$s %3$s</string>-->
     <string name="label_your_current_balance">(Your Current Balance: ₹%1$s)</string>
     <string name="label_about_refer_and_earn">About Refer &amp; Earn</string>
     <string name="label_dialog_refer_and_earn_body">Share your unique referral code with friends, and you both will earn ₹50 when they book and pay for their first task. The more friends you send the code to, the more you earn. It\'s so simple. So go on, spread the love and make tons of money at your friend\'s cost.</string>
@@ -566,4 +566,10 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="desc_pay_by_cash">Thank you for your business. Please pay ₹%1s to our PRO, %2s after </string>
 
 
+    <string name="label_gotcha">Gotcha</string>
+    <string name="label_confirm_payment">Confirm Payment</string>
+    <string name="label_add_money_description">Please add sufficient funds to your wallet to complete the booking. Thank you   </string>
+    <string name="label_add_funds">Add Funds</string>
+    <string name="enter_min_amount">"Please enter minimum %1s amount to proceed"</string>
+    <string name="need_to_add_fund">You\'re a wee bit short!</string>
 </resources>

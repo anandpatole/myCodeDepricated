@@ -24,7 +24,7 @@ import java.util.ArrayList;
  */
 
 public  class MediaRecycleAdapter extends RecyclerView.Adapter<MediaRecycleAdapter.MyViewHolder> {
-    private static final String TAG = "MediaRecycleAdapter";
+    private static final String TAG = MediaRecycleAdapter.class.getSimpleName();
     private ArrayList<MediaModel> mList = new ArrayList<>();
     private ItemClick mItemClick;
 

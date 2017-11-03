@@ -1126,7 +1126,7 @@ public class ProfileTabFragment extends BaseFragment {
     private void showAddressDeletionConfirmationDialog(final AddressModel model) {
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext, R.style.MyAlertDialogStyle);
         builder.setCancelable(false);
-        builder.setTitle(getString(R.string.label_address_delete_title));
+        builder.setTitle(getString(R.string.cheep_all_caps));
         builder.setMessage(getString(R.string.label_address_delete_message));
         builder.setPositiveButton(getString(R.string.label_Ok), new DialogInterface.OnClickListener() {
             @Override

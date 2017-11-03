@@ -39,7 +39,7 @@ import java.util.Map;
 
 public class NotificationActivity extends BaseAppCompatActivity implements NotificationRecyclerViewAdapter.NotificationItemInteractionListener {
 
-    private static final String TAG = "NotificationActivity";
+    private static final String TAG = NotificationActivity.class.getSimpleName();
 
     private ActivityNotificationBinding mActivityNotificationBinding;
     private ErrorLoadingHelper errorLoadingHelper;
@@ -141,7 +141,7 @@ public class NotificationActivity extends BaseAppCompatActivity implements Notif
                 , mParams
                 , null);
 
-        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequestForNotificationList,NetworkUtility.WS.NOTIFICATION_LIST);
+        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequestForNotificationList, NetworkUtility.WS.NOTIFICATION_LIST);
     }
 
     Response.Listener mCallNotificationWSResponseListener = new Response.Listener() {

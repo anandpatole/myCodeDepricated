@@ -20,7 +20,7 @@ import java.util.ArrayList;
  */
 
 public class CommentsRecyclerViewAdapter extends RecyclerView.Adapter<CommentsRecyclerViewAdapter.ViewHolder> {
-    private static final String TAG = "CommentsRecyclerViewAda";
+    private static final String TAG = CommentsRecyclerViewAdapter.class.getSimpleName();
     private ArrayList<CommentsModel> mList;
     private SuperCalendar superCalendar;
 

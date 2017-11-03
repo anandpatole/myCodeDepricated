@@ -21,7 +21,7 @@ import java.util.Map;
 
 public class HDFCPaymentUtility {
 
-    private static final String TAG = "HDFCPaymentUtility";
+    private static final String TAG = HDFCPaymentUtility.class.getSimpleName();
 
     // Constants
     public static final String TXN_ID = "txnid";

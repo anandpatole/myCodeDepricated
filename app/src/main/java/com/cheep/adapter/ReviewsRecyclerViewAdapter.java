@@ -22,7 +22,7 @@ import java.util.ArrayList;
 
 public class ReviewsRecyclerViewAdapter extends RecyclerView.Adapter<ReviewsRecyclerViewAdapter.ViewHolder> {
 
-    private static final String TAG = "ReviewsRecyclerViewAdap";
+    private static final String TAG = ReviewsRecyclerViewAdapter.class.getSimpleName();
     private ReviewRowInteractionListener listener;
     private Context context;
     private ArrayList<ReviewModel> mList;

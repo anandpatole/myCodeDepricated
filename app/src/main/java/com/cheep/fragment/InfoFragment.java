@@ -36,7 +36,7 @@ import java.util.Map;
 
 public class InfoFragment extends BaseFragment {
 
-    public static final String TAG = "InfoFragment";
+    public static final String TAG = InfoFragment.class.getSimpleName();
 
     private DrawerLayoutInteractionListener mListener;
     private FragmentInfoBinding mFragmentInfoBinding;

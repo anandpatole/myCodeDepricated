@@ -32,7 +32,7 @@ public class AmazonUtils {
     private static AmazonS3Client sS3Client;
     private static CognitoCachingCredentialsProvider sCredProvider;
     private static TransferUtility sTransferUtility;
-    private static final String TAG = "AmazonUtils";
+    private static final String TAG = AmazonUtils.class.getSimpleName();
 
 
     //    private static final String COGNITO_POOL_ID = "ap-south-1:219f4bf8-6f0c-4fbe-aacf-1079267e128d";

@@ -62,7 +62,7 @@ import java.util.Map;
  */
 
 public class TaskSummaryActivity extends BaseAppCompatActivity {
-    private static final String TAG = "TaskSummaryActivity";
+    private static final String TAG = TaskSummaryActivity.class.getSimpleName();
     private ActivityTaskSummaryBinding mActivityTaskSummaryBinding;
     private TaskDetailModel mTaskDetailModel;
 

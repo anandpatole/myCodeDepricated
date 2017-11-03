@@ -854,7 +854,7 @@ public class SendOtpActivity extends BaseAppCompatActivity implements View.OnCli
         bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.CUST_ID, mResourceOwnerCustomerId);
         bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.MOBILE_NO, mMobileNumber);
         bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.EMAIL, PreferenceUtility.getInstance(mContext).getUserDetails().Email);
-        bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.THEME, "merchant");
+        bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.THEME, Utility.MERCHANT);
 
         String postData = generatePostDataString(bodyParams); //"username=" + URLEncoder.encode(my_username, "UTF-8") + "&password=" + URLEncoder.encode(my_password, "UTF-8");
 
@@ -913,7 +913,7 @@ public class SendOtpActivity extends BaseAppCompatActivity implements View.OnCli
 
         double edtAmount = Double.parseDouble(mEtText);
         if (edtAmount < payableAmount) {
-            Utility.showToast(mContext, "Please enter minimum " + payableAmount + " amount to proceed");
+            Utility.showToast(mContext, getString(R.string.enter_min_amount, payableAmount));
             return;
         }
 

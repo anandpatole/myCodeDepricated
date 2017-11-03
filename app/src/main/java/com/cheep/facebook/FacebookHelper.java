@@ -3,6 +3,7 @@ package com.cheep.facebook;
 import android.app.Activity;
 import android.content.Context;
 
+import com.cheep.utils.Utility;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -18,18 +19,18 @@ import java.util.Collection;
  * Created by bhavesh on 9/4/15.
  */
 public class FacebookHelper {
-    private static final String TAG = "FacebookHelper";
+    private static final String TAG = FacebookHelper.class.getSimpleName();
     private Activity mActivity;
     private LoginManager mLoginManager;
     private LoginResult mLoginResult;
     private Profile mFacebookProfile;
 
-    private static final String EMAIL = "email";
-    private static final String PUBLIC_PROFILE = "public_profile";
-    public static final String BIRTH_DATE = "user_birthday";
+//    public static final String EMAIL = "email";
+//    public static final String PUBLIC_PROFILE = "public_profile";
+//    public static final String BIRTH_DATE = "user_birthday";
 //    public static final String AGE_RANGE = "age_range";
 
-    private Collection<String> READ_PERMISSIONS = Arrays.asList(EMAIL, PUBLIC_PROFILE);
+    private Collection<String> READ_PERMISSIONS = Arrays.asList(Utility.EMAIL, Utility.PUBLIC_PROFILE);
 
     public interface FacebookCallbacks {
         void onFBLoginSuccessCalled(LoginResult loginResult);

@@ -21,7 +21,7 @@ import java.util.ArrayList;
  */
 
 public class SubServiceRecyclerViewAdapter extends RecyclerView.Adapter<SubServiceRecyclerViewAdapter.ViewHolder> {
-    private static final String TAG = "SubServiceRecyclerViewA";
+    private static final String TAG = SubServiceRecyclerViewAdapter.class.getSimpleName();
     ArrayList<SubServiceDetailModel> mList = new ArrayList<>();
     private SelectSubCategoryFragment.SubServiceListInteractionListener mSubServiceListInteractionListener;
 
