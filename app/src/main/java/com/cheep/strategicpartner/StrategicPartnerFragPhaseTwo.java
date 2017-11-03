@@ -106,7 +106,7 @@ import static com.cheep.network.NetworkUtility.TAGS.SP_USER_ID;
  */
 
 public class StrategicPartnerFragPhaseTwo extends BaseFragment {
-    public static final String TAG = StrategicPartnerFragPhaseTwo.class.getSimpleName();
+    public static final String TAG = "StrategicPartnerFragPha";
     private FragmentStrategicPartnerPhaseTwoBinding mFragmentStrategicPartnerPhaseTwoBinding;
     private StrategicPartnerTaskCreationAct mStrategicPartnerTaskCreationAct;
     private SuperCalendar startDateTimeSuperCalendar = SuperCalendar.getInstance();

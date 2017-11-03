@@ -237,7 +237,7 @@
                             android:ellipsize="end"
                             android:gravity="left|top"
                             android:lineSpacingExtra="@dimen/scale_2dp"
-                            android:lines="2"
+                            android:lines="3"
                             android:paddingLeft="@dimen/scale_3dp"
                             android:textColor="@color/colorSaffron"
                             android:textSize="@dimen/text_size_11sp"

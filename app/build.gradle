@@ -219,6 +219,11 @@ android {
         exclude 'META-INF/NOTICE'
         exclude 'META-INF/LICENSE'
     }
+
+    lintOptions {
+        disable 'LongLogTag'
+    }
+
 }
 
 //Added to resolve this error

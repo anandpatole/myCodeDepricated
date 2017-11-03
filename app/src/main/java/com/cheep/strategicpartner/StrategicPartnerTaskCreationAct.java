@@ -455,7 +455,7 @@ public class StrategicPartnerTaskCreationAct extends BaseAppCompatActivity {
         switch (event.BROADCAST_ACTION) {
             case Utility.BROADCAST_TYPE.PAYMENT_COMPLETED_NEED_TO_REDIRECT_TO_MY_TASK_SCREEN:
                 // Finish this activity
-                finish();
+//                finish();
                 break;
         }
     }

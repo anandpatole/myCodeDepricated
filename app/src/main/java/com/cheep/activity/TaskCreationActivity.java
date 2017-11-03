@@ -773,7 +773,9 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
                     pModel.profileUrl = taskDetailModel.profileImg;
                     pModel.providerId = taskDetailModel.spId;
                     pModel.quotePrice = taskDetailModel.rateGST;
+                    pModel.isVerified = taskDetailModel.verified;
                     pModel.spWithoutGstQuotePrice = taskDetailModel.rate;
+                    pModel.rating = taskDetailModel.rating;
                     PaymentDetailsActivity.newInstance(TaskCreationActivity.this, model, pModel, 0, true, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel);
 
                     //Log.i("myLog", "tasks:"+mJobCategoryModel.catName+"::"+mSelectedSubServiceDetailModel.name+"::"+mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mAddress);

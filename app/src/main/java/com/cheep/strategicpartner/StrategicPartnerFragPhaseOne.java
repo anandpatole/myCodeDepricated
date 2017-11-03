@@ -43,7 +43,7 @@ import static com.cheep.network.NetworkUtility.TAGS.CAT_ID;
  */
 
 public class StrategicPartnerFragPhaseOne extends BaseFragment {
-    public static final String TAG = StrategicPartnerFragPhaseOne.class.getSimpleName();
+    public static final String TAG = "StrategicPartnerFragPha";
     private FragmentStrategicPartnerPhaseOneBinding mFragmentStrategicPartnerPhaseOneBinding;
     private ErrorLoadingHelper errorLoadingHelper;
     private StrategicPartnerTaskCreationAct mStrategicPartnerTaskCreationAct;

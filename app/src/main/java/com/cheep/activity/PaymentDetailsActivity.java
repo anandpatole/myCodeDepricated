@@ -21,6 +21,7 @@ import android.widget.TextView;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.appsflyer.AppsFlyerLib;
 import com.cheep.R;
 import com.cheep.custom_view.BottomAlertDialog;
 import com.cheep.custom_view.CFEditTextRegular;
@@ -197,7 +198,6 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
 
         if (taskDetailModel != null) {
 
-
             // set category name
             mActivityPaymentDetailBinding.textCategory.setVisibility(View.VISIBLE);
             mActivityPaymentDetailBinding.textCategory.setText(taskDetailModel.categoryName);
@@ -288,7 +288,8 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
 
             taskDetailModel.usedWalletAmount = String.valueOf(usedWalletBalance);
             if (isInstaBooking) {
-                PaymentChoiceActivity.newInstance(mContext, taskDetailModel, providerModel, isAdditionalPayment, isInstaBooking, mSelectedAddressModelForInsta);
+                callCreateInstaBookingTaskWS();
+//                PaymentChoiceActivity.newInstance(mContext, taskDetailModel, providerModel, isAdditionalPayment, isInstaBooking, mSelectedAddressModelForInsta);
             } else {
                 updatePaymentStatus(true, Utility.EMPTY_STRING, isAdditionalPayment != 0);
             }
@@ -1200,5 +1201,175 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
 
     }
 
+    //        TASK_CREATE_INSTA_BOOKING
 
+    private Map<String, Object> mTaskCreationParams;
+
+    private void callCreateInstaBookingTaskWS() {
+
+        if (!Utility.isConnected(mContext)) {
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityPaymentDetailBinding.getRoot());
+            return;
+        }
+        showProgressDialog();
+
+        UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
+        //Add Header parameters
+        Map<String, String> mHeaderParams = new HashMap<>();
+        mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
+        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, userDetails.UserID);
+
+        //Add Params
+        Map<String, Object> mParams = new HashMap<>();
+        mParams.put(NetworkUtility.TAGS.TASK_DESC, taskDetailModel.taskDesc);
+        String txnId = Utility.getUniqueTransactionId();
+        if (Integer.parseInt(mSelectedAddressModelForInsta.address_id) > 0) {
+            mParams.put(NetworkUtility.TAGS.ADDRESS_ID, mSelectedAddressModelForInsta.address_id);
+        } else {
+            // In case its negative then provide other address information
+            mParams.put(NetworkUtility.TAGS.ADDRESS_INITIALS, mSelectedAddressModelForInsta.address_initials);
+            mParams.put(NetworkUtility.TAGS.ADDRESS, mSelectedAddressModelForInsta.address);
+            mParams.put(NetworkUtility.TAGS.CATEGORY, mSelectedAddressModelForInsta.category);
+            mParams.put(NetworkUtility.TAGS.LAT, mSelectedAddressModelForInsta.lat);
+            mParams.put(NetworkUtility.TAGS.LNG, mSelectedAddressModelForInsta.lng);
+            mParams.put(NetworkUtility.TAGS.CITY_NAME, mSelectedAddressModelForInsta.cityName);
+            mParams.put(NetworkUtility.TAGS.COUNTRY, mSelectedAddressModelForInsta.countryName);
+            mParams.put(NetworkUtility.TAGS.STATE, mSelectedAddressModelForInsta.stateName);
+        }
+        mParams.put(NetworkUtility.TAGS.CITY_ID, userDetails.CityID);
+        mParams.put(NetworkUtility.TAGS.CAT_ID, taskDetailModel.categoryId);
+        mParams.put(NetworkUtility.TAGS.START_DATETIME, taskDetailModel.taskStartdate);
+        mParams.put(NetworkUtility.TAGS.SUBCATEGORY_ID, taskDetailModel.subCategoryID);
+        mParams.put(NetworkUtility.TAGS.SP_USER_ID, providerModel.providerId);
+        mParams.put(NetworkUtility.TAGS.TRANSACTION_ID, txnId);
+        mParams.put(NetworkUtility.TAGS.PAYMENT_STATUS, Utility.PAYMENT_STATUS.COMPLETED);
+        LogUtils.LOGE(TAG, "payNow: cheepCode " + taskDetailModel.cheepCode);
+        LogUtils.LOGE(TAG, "payNow: dicount " + taskDetailModel.taskDiscountAmount);
+
+        if (!TextUtils.isEmpty(taskDetailModel.cheepCode)) {
+            mParams.put(NetworkUtility.TAGS.CHEEPCODE, taskDetailModel.cheepCode);
+            mParams.put(NetworkUtility.TAGS.PROMOCODE_PRICE, taskDetailModel.taskDiscountAmount);
+        } else {
+            mParams.put(NetworkUtility.TAGS.CHEEPCODE, Utility.EMPTY_STRING);
+            mParams.put(NetworkUtility.TAGS.PROMOCODE_PRICE, Utility.ZERO_STRING);
+        }
+        mParams.put(NetworkUtility.TAGS.IS_REFER_CODE, taskDetailModel.isReferCode);
+        mParams.put(NetworkUtility.TAGS.QUOTE_AMOUNT, providerModel.spWithoutGstQuotePrice);
+        mParams.put(NetworkUtility.TAGS.PAYABLE_AMOUNT, providerModel.quotePrice);
+        mParams.put(NetworkUtility.TAGS.PAYMENT_LOG, Utility.EMPTY_STRING);
+        mParams.put(NetworkUtility.TAGS.PAYMENT_METHOD, NetworkUtility.PAYMENT_METHOD_TYPE.PAY_LATER);
+        mParams.put(NetworkUtility.TAGS.USED_WALLET_BALANCE, taskDetailModel.usedWalletAmount);
+        String media_file = Utility.getSelectedMediaJsonString(taskDetailModel.mMediaModelList);
+        mParams.put(NetworkUtility.TAGS.MEDIA_FILE, media_file);
+        mParams.put(NetworkUtility.TAGS.TASK_TYPE, Utility.TASK_TYPE.INSTA_BOOK);
+
+        // For AppsFlyer
+        mTaskCreationParams = new HashMap<>();
+        mTaskCreationParams.put(NetworkUtility.TAGS.TASK_DESC, taskDetailModel.taskDesc);
+//        mParams.put(NetworkUtility.TAGS.ADDRESS_ID, taskDetailModel.taskAddressId);
+        if (Integer.parseInt(mSelectedAddressModelForInsta.address_id) > 0) {
+            mTaskCreationParams.put(NetworkUtility.TAGS.ADDRESS_ID, mSelectedAddressModelForInsta.address_id);
+        } else {
+            // In case its nagative then provide other address information
+            mTaskCreationParams.put(NetworkUtility.TAGS.ADDRESS_INITIALS, mSelectedAddressModelForInsta.address_initials);
+            mTaskCreationParams.put(NetworkUtility.TAGS.ADDRESS, mSelectedAddressModelForInsta.address);
+            mTaskCreationParams.put(NetworkUtility.TAGS.CATEGORY, mSelectedAddressModelForInsta.category);
+            mTaskCreationParams.put(NetworkUtility.TAGS.LAT, mSelectedAddressModelForInsta.lat);
+            mTaskCreationParams.put(NetworkUtility.TAGS.LNG, mSelectedAddressModelForInsta.lng);
+            mTaskCreationParams.put(NetworkUtility.TAGS.CITY_NAME, mSelectedAddressModelForInsta.cityName);
+            mTaskCreationParams.put(NetworkUtility.TAGS.COUNTRY, mSelectedAddressModelForInsta.countryName);
+            mTaskCreationParams.put(NetworkUtility.TAGS.STATE, mSelectedAddressModelForInsta.stateName);
+        }
+        mTaskCreationParams.put(NetworkUtility.TAGS.CITY_ID, userDetails.CityID);
+        mTaskCreationParams.put(NetworkUtility.TAGS.CAT_ID, taskDetailModel.categoryId);
+        mTaskCreationParams.put(NetworkUtility.TAGS.START_DATETIME, taskDetailModel.taskStartdate);
+        mTaskCreationParams.put(NetworkUtility.TAGS.PAYMENT_STATUS, Utility.PAYMENT_STATUS.COMPLETED);
+        mTaskCreationParams.put(NetworkUtility.TAGS.SUBCATEGORY_ID, taskDetailModel.subCategoryID);
+        mTaskCreationParams.put(NetworkUtility.TAGS.SP_USER_ID, providerModel.providerId);
+        mTaskCreationParams.put(NetworkUtility.TAGS.USED_WALLET_BALANCE, taskDetailModel.usedWalletAmount);
+        mTaskCreationParams.put(NetworkUtility.TAGS.MEDIA_FILE, media_file);
+        mTaskCreationParams.put(NetworkUtility.TAGS.TRANSACTION_ID, txnId);
+        mTaskCreationParams.put(NetworkUtility.TAGS.TASK_TYPE, Utility.TASK_TYPE.INSTA_BOOK);
+
+        if (!TextUtils.isEmpty(taskDetailModel.cheepCode)) {
+            mTaskCreationParams.put(NetworkUtility.TAGS.CHEEPCODE, taskDetailModel.cheepCode);
+            mTaskCreationParams.put(NetworkUtility.TAGS.PROMOCODE_PRICE, taskDetailModel.taskDiscountAmount);
+
+        } else {
+            mTaskCreationParams.put(NetworkUtility.TAGS.CHEEPCODE, Utility.EMPTY_STRING);
+            mTaskCreationParams.put(NetworkUtility.TAGS.PROMOCODE_PRICE, Utility.ZERO_STRING);
+        }
+
+        mTaskCreationParams.put(NetworkUtility.TAGS.QUOTE_AMOUNT, providerModel.spWithoutGstQuotePrice);
+        mTaskCreationParams.put(NetworkUtility.TAGS.PAYABLE_AMOUNT, providerModel.quotePrice);
+        mTaskCreationParams.put(NetworkUtility.TAGS.PAYMENT_LOG, Utility.EMPTY_STRING);
+        mTaskCreationParams.put(NetworkUtility.TAGS.PAYMENT_METHOD, NetworkUtility.PAYMENT_METHOD_TYPE.PAY_LATER);
+
+        // Url is based on condition if address id is greater then 0 then it means we need to update the existing address
+        VolleyNetworkRequest mVolleyNetworkRequestForSPList = new VolleyNetworkRequest(NetworkUtility.WS.CREATE_TASK
+                , mCallUpdatePaymentStatusWSErrorListener
+                , mCallCreateInstaTaskWSResponseListener
+                , mHeaderParams
+                , mParams, null);
+        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequestForSPList);
+
+    }
+
+    Response.Listener mCallCreateInstaTaskWSResponseListener = new Response.Listener() {
+        @Override
+        public void onResponse(Object response) {
+
+            String strResponse = (String) response;
+            try {
+                JSONObject jsonObject = new JSONObject(strResponse);
+                LogUtils.LOGE(TAG, "onResponse: " + jsonObject.toString());
+                int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
+                String error_message;
+                hideProgressDialog();
+                switch (statusCode) {
+                    case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
+                        // Send Event tracking for AppsFlyer
+                        AppsFlyerLib.getInstance().trackEvent(mContext, NetworkUtility.TAGS.APPSFLYER_CUSTOM_TRACK_EVENTS.TASK_CREATE, mTaskCreationParams);
+                        onSuccessfulInstaBookingTaskCompletion(jsonObject);
+                        break;
+                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
+                        // Show Toast
+                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityPaymentDetailBinding.getRoot());
+                        break;
+                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
+                        error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
+                        // Show message
+                        Utility.showSnackBar(error_message, mActivityPaymentDetailBinding.getRoot());
+                        break;
+                    case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
+                    case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
+                        //Logout and finish the current activity
+                        Utility.logout(mContext, true, statusCode);
+                        finish();
+                        break;
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+                mCallUpdatePaymentStatusWSErrorListener.onErrorResponse(new VolleyError(e.getMessage()));
+            }
+
+        }
+    };
+    // check is task is from insta booking or not
+
+    private void onSuccessfulInstaBookingTaskCompletion(JSONObject jsonObject) {
+        Utility.showToast(PaymentDetailsActivity.this, getString(R.string.label_task_created_successfully));
+        TaskDetailModel taskDetailModel = (TaskDetailModel) Utility.getObjectFromJsonString(jsonObject.optString(NetworkUtility.TAGS.DATA), TaskDetailModel.class);
+
+        if (providerModel != null) {
+            // add task and pro entry for firebase
+            updateSelectedSpOnFirebase(taskDetailModel, providerModel);
+        }
+
+        MessageEvent messageEvent = new MessageEvent();
+        messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.TASK_PAID_FOR_INSTA_BOOKING;
+        EventBus.getDefault().post(messageEvent);
+
+        finish();
+    }
 }

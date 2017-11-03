@@ -316,7 +316,7 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
                 holder.mUpcomingTaskBinding.tvDesc.setText(model.taskDesc);
 
                 String mBookingDate = holder.mView.getContext().getString(R.string.format_task_book_date
-                        , superStartDateTimeCalendar.format(Utility.DATE_FORMAT_DD_MMM_HH_MM_AM));
+                        , superStartDateTimeCalendar.format(Utility.DATE_FORMAT_DD_MMM) + " " + Utility.get2HourTimeSlots(model.taskStartdate));
                 holder.mUpcomingTaskBinding.tvTaskBookedDateTime.setText(mBookingDate);
 
                 holder.mUpcomingTaskBinding.tvTaskStartedTime.setText(Utility.getDateDifference(holder.mView.getContext(), superStartDateTimeCalendar.format(Utility.DATE_FORMAT_FULL_DATE)));
