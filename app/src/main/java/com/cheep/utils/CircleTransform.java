@@ -6,14 +6,12 @@ import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.provider.Settings;
-import android.util.Log;
 
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
 import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
 
 public class CircleTransform extends BitmapTransformation {
-    private static final String TAG = "CircleTransform";
+    private static final String TAG = CircleTransform.class.getSimpleName();
     private boolean roundedCorner = false;
     private int borderColor = Color.WHITE;
     private int borderWidth = 0;

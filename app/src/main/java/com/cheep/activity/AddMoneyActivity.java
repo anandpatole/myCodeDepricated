@@ -298,7 +298,7 @@ public class AddMoneyActivity extends BaseAppCompatActivity {
         bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.CUST_ID, mResourceOwnerCustomerId);
         bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.MOBILE_NO, mMobileNumber);
         bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.EMAIL, PreferenceUtility.getInstance(mContext).getUserDetails().Email);
-        bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.THEME, "merchant");
+        bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.THEME, Utility.MERCHANT);
 
         String postData = generatePostDataString(bodyParams); //"username=" + URLEncoder.encode(my_username, "UTF-8") + "&password=" + URLEncoder.encode(my_password, "UTF-8");
 

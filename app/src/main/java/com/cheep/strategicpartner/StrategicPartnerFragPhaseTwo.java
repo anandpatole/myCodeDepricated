@@ -107,7 +107,7 @@ import static com.cheep.network.NetworkUtility.TAGS.SP_USER_ID;
  */
 
 public class StrategicPartnerFragPhaseTwo extends BaseFragment {
-    public static final String TAG = "StracPartnerFragThree";
+    public static final String TAG = StrategicPartnerFragPhaseTwo.class.getSimpleName();
     private FragmentStrategicPartnerPhaseTwoBinding mFragmentStrategicPartnerPhaseTwoBinding;
     private StrategicPartnerTaskCreationAct mStrategicPartnerTaskCreationAct;
     private SuperCalendar startDateTimeSuperCalendar = SuperCalendar.getInstance();
@@ -1353,7 +1353,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
     private void showAddressDeletionConfirmationDialog(final AddressModel model) {
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext, R.style.MyAlertDialogStyle);
         builder.setCancelable(false);
-        builder.setTitle(getString(R.string.label_address_delete_title));
+        builder.setTitle(getString(R.string.cheep_all_caps));
         builder.setMessage(getString(R.string.label_address_delete_message));
         builder.setPositiveButton(getString(R.string.label_Ok), new DialogInterface.OnClickListener() {
             @Override

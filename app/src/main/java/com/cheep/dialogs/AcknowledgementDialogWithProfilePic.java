@@ -16,15 +16,12 @@ import android.view.ViewGroup;
 import android.view.Window;
 
 import com.cheep.R;
-
 import com.cheep.databinding.DialogFragmentAcknowledgementWithProfilePicBinding;
-import com.cheep.model.UserDetails;
 import com.cheep.network.NetworkUtility;
-import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.Utility;
 
 public class AcknowledgementDialogWithProfilePic extends DialogFragment {
-    public static final String TAG = "AcknowledgementDialogWi";
+    public static final String TAG = AcknowledgementDialogWithProfilePic.class.getSimpleName();
     private String mTitle = Utility.EMPTY_STRING;
     private String mMessage = Utility.EMPTY_STRING;
     private int imgResourceIdOfHeader = -1;

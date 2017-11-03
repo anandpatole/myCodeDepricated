@@ -39,7 +39,7 @@ import java.util.Map;
 
 public class FAQFragment extends BaseFragment {
 
-    public static final String TAG = "FAQFragment";
+    public static final String TAG = FAQFragment.class.getSimpleName();
 
     private DrawerLayoutInteractionListener mListener;
     private FragmentFaqBinding mFragmentFaqBinding;

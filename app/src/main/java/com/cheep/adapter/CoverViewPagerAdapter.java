@@ -14,7 +14,7 @@ import java.util.ArrayList;
 //Banner Image View Pager Adapter
 public class CoverViewPagerAdapter extends FragmentStatePagerAdapter {
 
-    private static final String TAG = "BannerViewPagerAdapter";
+    private static final String TAG = CoverViewPagerAdapter.class.getSimpleName();
     private ArrayList<CoverImageModel> imageModelArrayList;
 
     public CoverViewPagerAdapter(FragmentManager fragmentManager, ArrayList<CoverImageModel> modelArrayList) {

@@ -22,7 +22,7 @@ import java.util.ArrayList;
 
 public class NotificationRecyclerViewAdapter extends LoadMoreRecyclerAdapter<NotificationRecyclerViewAdapter.ViewHolder> {
 
-    private static final String TAG = "NotificationRecyclerVie";
+    private static final String TAG = NotificationRecyclerViewAdapter.class.getSimpleName();
     private ArrayList<NotificationModel> mList;
     private NotificationItemInteractionListener mListener;
     private SuperCalendar superCalendar;

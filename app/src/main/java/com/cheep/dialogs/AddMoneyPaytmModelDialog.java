@@ -23,7 +23,7 @@ import com.cheep.databinding.DialogAddMoneyPaytmBinding;
  */
 
 public class AddMoneyPaytmModelDialog extends DialogFragment {
-    public static final String TAG = "AddMoneyPaytmModelDialog";
+    public static final String TAG = AddMoneyPaytmModelDialog.class.getSimpleName();
     private DialogAddMoneyPaytmBinding mDialogAddMoneyPaytmBinding;
 
 

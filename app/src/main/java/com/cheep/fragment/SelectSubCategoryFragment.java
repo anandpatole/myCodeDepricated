@@ -40,7 +40,7 @@ import static com.cheep.network.NetworkUtility.TAGS.CAT_ID;
  */
 
 public class SelectSubCategoryFragment extends BaseFragment {
-    public static final String TAG = "SelectSubCategoryFragme";
+    public static final String TAG = SelectSubCategoryFragment.class.getSimpleName();
     private FragmentSelectSubserviceBinding mFragmentSelectSubserviceBinding;
     private SubServiceRecyclerViewAdapter mSubServiceRecyclerViewAdapter;
     ErrorLoadingHelper errorLoadingHelper;

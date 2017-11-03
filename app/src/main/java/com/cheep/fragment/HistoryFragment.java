@@ -40,7 +40,7 @@ import java.util.Map;
  */
 public class HistoryFragment extends BaseFragment {
 
-    public static final String TAG = "HistoryFragment";
+    public static final String TAG = HistoryFragment.class.getSimpleName();
 
     private DrawerLayoutInteractionListener mListener;
     private FragmentHistoryBinding mFragmentHistoryBinding;

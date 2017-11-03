@@ -39,7 +39,7 @@ import com.google.android.gms.common.api.Status;
  */
 public class SelectLocationActivity extends BaseAppCompatActivity {
 
-    private static final String TAG = "SelectLocationActivity";
+    private static final String TAG = SelectLocationActivity.class.getSimpleName();
     private ActivitySelectLocationBinding mActivitySelectLocationBinding;
     private PlacesAutoCompleteAdapter placesAutoCompleteAdapter;
 

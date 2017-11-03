@@ -88,7 +88,7 @@ import static com.cheep.utils.Utility.getObjectFromJsonString;
  */
 
 public class EnterTaskDetailFragment extends BaseFragment {
-    public static final String TAG = "EnterTaskDetailFragment";
+    public static final String TAG = EnterTaskDetailFragment.class.getSimpleName();
     private FragmentEnterTaskDetailBinding mFragmentEnterTaskDetailBinding;
     private TaskCreationActivity mTaskCreationActivity;
     public boolean isTotalVerified = false;
@@ -716,7 +716,7 @@ public class EnterTaskDetailFragment extends BaseFragment {
     private void showAddressDeletionConfirmationDialog(final AddressModel model) {
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext, R.style.MyAlertDialogStyle);
         builder.setCancelable(false);
-        builder.setTitle(getString(R.string.label_address_delete_title));
+        builder.setTitle(getString(R.string.cheep_all_caps));
         builder.setMessage(getString(R.string.label_address_delete_message));
         builder.setPositiveButton(getString(R.string.label_Ok), new DialogInterface.OnClickListener() {
             @Override
@@ -1627,8 +1627,8 @@ public class EnterTaskDetailFragment extends BaseFragment {
     private void showNoProForAddressDialog() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(mTaskCreationActivity, R.style.MyAlertDialogStyle);
         builder.setCancelable(false);
-        builder.setTitle("CHEEP");
-        builder.setMessage("No Pro is available for this address");
+        builder.setTitle(getString(R.string.cheep_all_caps));
+        builder.setMessage(getString(R.string.no_pro_available_description));
         builder.setPositiveButton(getString(R.string.label_Ok), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {

@@ -12,14 +12,13 @@ import android.view.ViewGroup;
 
 import com.cheep.R;
 import com.cheep.databinding.DialogReferAndEarnInfoBinding;
-import com.cheep.databinding.DialogReferEarnKnowMoreBinding;
 
 /**
  * Created by meet on 20/9/17.
  */
 
 public class ReferAndEarnInfoDialog extends DialogFragment {
-    public static final String TAG = "ReferAndEarnInfoDialog";
+    public static final String TAG = ReferAndEarnInfoDialog.class.getSimpleName();
     private DialogReferAndEarnInfoBinding mDialogReferAndEarnInfoBinding;
 
 

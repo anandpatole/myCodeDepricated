@@ -61,7 +61,7 @@ import java.util.Map;
  * and payment flow
  */
 public class StrategicPartnerFragPhaseThree extends BaseFragment {
-    public static final String TAG = "StrategicPartnerFragPha";
+    public static final String TAG = StrategicPartnerFragPhaseThree.class.getSimpleName();
     private FragmentStrategicPartnerPhaseThreeBinding mFragmentStrategicPartnerPhaseThreeBinding;
     private StrategicPartnerTaskCreationAct mStrategicPartnerTaskCreationAct;
     private String payableAmount = "";

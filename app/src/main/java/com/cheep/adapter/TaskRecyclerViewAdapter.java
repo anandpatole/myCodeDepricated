@@ -49,7 +49,7 @@ import java.util.Map;
  */
 public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRecyclerViewAdapter.ViewHolder> {
 
-    private static final String TAG = "TaskRecyclerViewAdapter";
+    private static final String TAG = TaskRecyclerViewAdapter.class.getSimpleName();
     public static final int VIEW_TYPE_UPCOMING = 1;
     public static final int VIEW_TYPE_INDIVIDUAL = 2;
     public static final int VIEW_TYPE_GROUP = 3;

@@ -56,7 +56,7 @@ import java.util.Map;
  * Created by pankaj on 9/27/16.
  */
 public class HomeFragment extends BaseFragment {
-    public static final String TAG = "HomeFragment";
+    public static final String TAG = HomeFragment.class.getSimpleName();
 
     public static final String TAB_HOME = HomeTabFragment.TAG;
     public static final String TAB_MY_TASK = MyTaskTabFragment.TAG;

@@ -51,7 +51,7 @@ import static com.cheep.network.NetworkUtility.WS.PAST_TASK;
 
 public class TaskFragment extends BaseFragment {
 
-    private static final String TAG = "TaskFragment";
+    private static final String TAG = TaskFragment.class.getSimpleName();
     public static final int TAB_PENDING_TASK = 0;
     public static final int TAB_PAST_TASK = 1;
 

@@ -586,25 +586,25 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
                 if (resultCode == RESULT_OK) {
                     //success
                     if (data != null) {
-                        LogUtils.LOGE(TAG, "onActivityResult() called with success: result= [" + data.getStringExtra("payu_response") + "]");
+                        LogUtils.LOGE(TAG, "onActivityResult() called with success: result= [" + data.getStringExtra(Utility.Extra.PAYU_RESPONSE) + "]");
                         //Call update payment service from here with all the response come from service
                         // check is task is from insta booking or not
                         if (isInstaBooking)
-                            callCreateInstaBookingTaskWS(data.getStringExtra("payu_response"));
+                            callCreateInstaBookingTaskWS(data.getStringExtra(Utility.Extra.PAYU_RESPONSE));
                         else
-                            updatePaymentStatus(true, data.getStringExtra("payu_response"), false);
+                            updatePaymentStatus(true, data.getStringExtra(Utility.Extra.PAYU_RESPONSE), false);
                     }
                 }
                 if (resultCode == RESULT_CANCELED) {
                     //failed
                     if (data != null) {
-                        LogUtils.LOGE(TAG, "onActivityResult() called with failed: result= [" + data.getStringExtra("payu_response") + "]");
+                        LogUtils.LOGE(TAG, "onActivityResult() called with failed: result= [" + data.getStringExtra(Utility.Extra.PAYU_RESPONSE) + "]");
                         //Call update payment service from here with all the response come from service
                         // check is task is from insta booking or not
                         if (isInstaBooking)
                             Utility.showSnackBar(getString(R.string.msg_payment_failed), mActivityPaymentChoiceBinding.getRoot());
                         else
-                            updatePaymentStatus(false, data.getStringExtra("payu_response"), false);
+                            updatePaymentStatus(false, data.getStringExtra(Utility.Extra.PAYU_RESPONSE), false);
                         Utility.showSnackBar(getString(R.string.msg_payment_failed), mActivityPaymentChoiceBinding.getRoot());
                     }
                 }
@@ -614,17 +614,17 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
                 if (resultCode == RESULT_OK) {
                     //success
                     if (data != null) {
-                        LogUtils.LOGE(TAG, "onActivityResult() called with success: result= [" + data.getStringExtra("payu_response") + "]");
+                        LogUtils.LOGE(TAG, "onActivityResult() called with success: result= [" + data.getStringExtra(Utility.Extra.PAYU_RESPONSE) + "]");
                         //Call update payment service from here with all the response come from service
-                        updatePaymentStatus(true, data.getStringExtra("payu_response"), true);
+                        updatePaymentStatus(true, data.getStringExtra(Utility.Extra.PAYU_RESPONSE), true);
                     }
                 }
                 if (resultCode == RESULT_CANCELED) {
                     //failed
                     if (data != null) {
-                        LogUtils.LOGE(TAG, "onActivityResult() called with failed: result= [" + data.getStringExtra("payu_response") + "]");
+                        LogUtils.LOGE(TAG, "onActivityResult() called with failed: result= [" + data.getStringExtra(Utility.Extra.PAYU_RESPONSE) + "]");
                         //Call update payment service from here with all the response come from service
-                        updatePaymentStatus(false, data.getStringExtra("payu_response"), true);
+                        updatePaymentStatus(false, data.getStringExtra(Utility.Extra.PAYU_RESPONSE), true);
                         Utility.showSnackBar(getString(R.string.msg_payment_failed), mActivityPaymentChoiceBinding.getRoot());
                     }
                 }
@@ -633,14 +633,14 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
                 if (resultCode == Activity.RESULT_OK) {
                     // success
                     if (data != null) {
-                        LogUtils.LOGE(TAG, "onActivityResult() called with success: result= [" + data.getStringExtra("payu_response") + "]");
+                        LogUtils.LOGE(TAG, "onActivityResult() called with success: result= [" + data.getStringExtra(Utility.Extra.PAYU_RESPONSE) + "]");
                         // Call update payment service from here with all the response come from service
-                        callCreateStrategicPartnerTaskWS(data.getStringExtra("payu_response"));
+                        callCreateStrategicPartnerTaskWS(data.getStringExtra(Utility.Extra.PAYU_RESPONSE));
                     }
                 }
                 if (resultCode == Activity.RESULT_CANCELED) {
                     if (data != null) {
-                        LogUtils.LOGE(TAG, "onActivityResult() called with failed: result= [" + data.getStringExtra("payu_response") + "]");
+                        LogUtils.LOGE(TAG, "onActivityResult() called with failed: result= [" + data.getStringExtra(Utility.Extra.PAYU_RESPONSE) + "]");
                         //Call update payment service from here with all the response come from service
 //                    callTaskCreationWebServiceForStratgicPartner(false, data.getStringExtra("result"));
                         Utility.showSnackBar(getString(R.string.msg_payment_failed), mActivityPaymentChoiceBinding.getRoot());

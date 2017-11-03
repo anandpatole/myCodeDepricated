@@ -19,6 +19,7 @@ import com.cheep.databinding.FragmentMediaViewBinding;
 import com.cheep.fragment.BaseFragment;
 import com.cheep.strategicpartner.model.MediaModel;
 import com.cheep.utils.LogUtils;
+import com.cheep.utils.Utility;
 
 /**
  * Created by Giteeka on 18/8/17.
@@ -29,14 +30,14 @@ import com.cheep.utils.LogUtils;
 
 public class MediaViewFragment extends BaseFragment {
     FragmentMediaViewBinding mFragmentMediaViewBinding;
-    private static final String TAG = "MediaViewFragment";
+    private static final String TAG = MediaViewFragment.class.getSimpleName();
     private MediaModel mMediaModel;
 
 
     @SuppressWarnings("unused")
     public static MediaViewFragment newInstance(MediaModel mediaModel) {
         Bundle bundle = new Bundle();
-        bundle.putSerializable("model", mediaModel);
+        bundle.putSerializable(Utility.Extra.MODEL, mediaModel);
         MediaViewFragment mediaViewFragment = new MediaViewFragment();
         mediaViewFragment.setArguments(bundle);
         return mediaViewFragment;
@@ -67,8 +68,8 @@ public class MediaViewFragment extends BaseFragment {
     @Override
     public void initiateUI() {
         LogUtils.LOGD(TAG, "initiateUI() called");
-        if (getArguments() != null && getArguments().getSerializable("model") != null) {
-            mMediaModel = (MediaModel) getArguments().getSerializable("model");
+        if (getArguments() != null && getArguments().getSerializable(Utility.Extra.MODEL) != null) {
+            mMediaModel = (MediaModel) getArguments().getSerializable(Utility.Extra.MODEL);
 
             String url = mMediaModel.mediaType.equalsIgnoreCase(MediaModel.MediaType.TYPE_VIDEO) ? mMediaModel.mediaThumbName : mMediaModel.mediaName;
             Glide.with(mContext)

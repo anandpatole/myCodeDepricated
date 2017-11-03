@@ -23,7 +23,7 @@ import java.util.ArrayList;
  */
 
 public class ProviderRecyclerViewAdapter extends LoadMoreRecyclerAdapter<ProviderRecyclerViewAdapter.ViewHolder> {
-    private static final String TAG = "ProviderRecyclerViewAda";
+    private static final String TAG = ProviderRecyclerViewAdapter.class.getSimpleName();
     private ProviderRowInteractionListener listener;
     Context context;
 

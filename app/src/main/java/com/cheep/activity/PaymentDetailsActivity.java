@@ -77,7 +77,7 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
         context.startActivity(intent);
     }
 
-    private static final String TAG = "PaymentDetailsActivity";
+    private static final String TAG = PaymentDetailsActivity.class.getSimpleName();
     private ActivityPaymentDetailBinding mActivityPaymentDetailBinding;
     Bundle bundle;
     private ProviderModel providerModel;

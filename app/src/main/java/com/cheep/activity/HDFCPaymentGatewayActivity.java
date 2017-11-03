@@ -26,6 +26,7 @@ import android.webkit.WebViewClient;
 
 import com.cheep.BuildConfig;
 import com.cheep.R;
+import com.cheep.utils.Utility;
 import com.payu.custombrowser.Bank;
 import com.payu.custombrowser.PayUWebChromeClient;
 import com.payu.custombrowser.PayUWebViewClient;
@@ -61,8 +62,8 @@ public class HDFCPaymentGatewayActivity extends AppCompatActivity implements Mag
     public static void newInstance(Context context, String postData, int requestCode) {
 
         Intent intent = new Intent(context, HDFCPaymentGatewayActivity.class);
-        intent.putExtra("url", BuildConfig.PAYUBIZ_HDFC_URL);
-        intent.putExtra("postData", postData);
+        intent.putExtra(Utility.Extra.URL, BuildConfig.PAYUBIZ_HDFC_URL);
+        intent.putExtra(Utility.Extra.POST_DATA, postData);
         // if task is generated from insta booking feature then addition payment field will not come in response
         ((AppCompatActivity) context).startActivityForResult(intent, requestCode);
     }
@@ -70,8 +71,8 @@ public class HDFCPaymentGatewayActivity extends AppCompatActivity implements Mag
     public static void newInstance(Fragment fragment, String postData, int requestCode) {
 
         Intent intent = new Intent(fragment.getActivity(), HDFCPaymentGatewayActivity.class);
-        intent.putExtra("url", BuildConfig.PAYUBIZ_HDFC_URL);
-        intent.putExtra("postData", postData);
+        intent.putExtra(Utility.Extra.URL, BuildConfig.PAYUBIZ_HDFC_URL);
+        intent.putExtra(Utility.Extra.POST_DATA, postData);
         // if task is generated from insta booking feature then addition payment field will not come in response
         fragment.startActivityForResult(intent, requestCode);
     }
@@ -220,8 +221,8 @@ public class HDFCPaymentGatewayActivity extends AppCompatActivity implements Mag
             WebView.setWebContentsDebuggingEnabled(true);
         }*/
 
-        url = getIntent().getExtras().getString("url");
-        postData = getIntent().getExtras().getString("postData");
+        url = getIntent().getExtras().getString(Utility.Extra.URL);
+        postData = getIntent().getExtras().getString(Utility.Extra.POST_DATA);
 
         String[] list = postData.split("&");
 
@@ -352,7 +353,7 @@ public class HDFCPaymentGatewayActivity extends AppCompatActivity implements Mag
                         public void run() {
 
                             Intent intent = new Intent();
-                            intent.putExtra("result", result);
+                            intent.putExtra(Utility.Extra.RESULT, result);
                             setResult(Activity.RESULT_OK, intent);
                             finish();
 
@@ -372,7 +373,7 @@ public class HDFCPaymentGatewayActivity extends AppCompatActivity implements Mag
                         @Override
                         public void run() {
                             Intent intent = new Intent();
-                            intent.putExtra("result", result);
+                            intent.putExtra(Utility.Extra.RESULT, result);
                             setResult(RESULT_CANCELED, intent);
                             finish();
                         }
@@ -418,7 +419,7 @@ public class HDFCPaymentGatewayActivity extends AppCompatActivity implements Mag
         if (cancelTransaction) {
             cancelTransaction = false;
             Intent intent = new Intent();
-            intent.putExtra("result", "Transaction canceled due to back pressed!");
+            intent.putExtra(Utility.Extra.RESULT, "Transaction canceled due to back pressed!");
             setResult(RESULT_CANCELED, intent);
             super.onBackPressed();
             return;

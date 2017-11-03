@@ -72,7 +72,7 @@ import java.util.Map;
  */
 
 public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
-    private static final String TAG = "TaskSummaryStrategicPar";
+    private static final String TAG = TaskSummaryStrategicPartnerActivity.class.getSimpleName();
     private ActivityTaskSummaryStrategicPartnerBinding mActivityTaskSummaryBinding;
     private TaskDetailModel mTaskDetailModel;
 

@@ -19,7 +19,7 @@ import org.json.JSONObject;
  * Created by bhavesh on 25/8/17.
  */
 public class FetchLocationInfoUtility {
-    private static final String TAG = "FetchLocationInfoUtilit";
+    private static final String TAG = FetchLocationInfoUtility.class.getSimpleName();
     /**
      * https://maps.googleapis.com/maps/api/geocode/json?latlng='.$location_row['user_lat'].','.$location_row['user_lng'].'&sensor=false&key=AIzaSyDtxYbkO21G_uHSXNXuZayLskeEjFQ6HvY
      */

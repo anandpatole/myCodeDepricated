@@ -15,10 +15,11 @@ import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.cheep.R;
+import com.cheep.adapter.CommentsRecyclerViewAdapter;
 import com.cheep.model.CoverImageModel;
 
 public class CoverImageFragment extends BaseFragment {
-    private static final String TAG = "CoverImageFragment";
+    private static final String TAG = CommentsRecyclerViewAdapter.class.getSimpleName();
     private ImageView img_cover;
     private CoverImageModel coverImageModel;
     private ProgressBar progress;

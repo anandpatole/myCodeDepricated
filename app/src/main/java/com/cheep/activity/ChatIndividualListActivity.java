@@ -8,12 +8,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.TextView;
 
 import com.cheep.R;
 import com.cheep.adapter.ChatTabRecyclerViewAdapter;
-import com.cheep.adapter.NotificationRecyclerViewAdapter;
-import com.cheep.custom_view.BottomAlertDialog;
 import com.cheep.custom_view.DividerItemDecoration;
 import com.cheep.databinding.ActivityChatIndividualListBinding;
 import com.cheep.firebase.EndlessRecyclerOnScrollListener;
@@ -21,7 +18,6 @@ import com.cheep.firebase.FirebaseHelper;
 import com.cheep.firebase.FirebaseUtils;
 import com.cheep.firebase.model.ChatServiceProviderModel;
 import com.cheep.firebase.model.ChatTaskModel;
-import com.cheep.model.NotificationModel;
 import com.cheep.firebase.model.TaskChatModel;
 import com.cheep.model.UserDetails;
 import com.cheep.utils.PreferenceUtility;
@@ -42,7 +38,7 @@ import java.util.List;
  */
 public class ChatIndividualListActivity extends BaseAppCompatActivity implements ChatTabRecyclerViewAdapter.ChatItemInteractionListener {
     // Constants
-    private static final String TAG = "ChatIndividualListActivity";
+    private static final String TAG = ChatIndividualListActivity.class.getSimpleName();
 
     private ChatTabRecyclerViewAdapter chatTabRecyclerViewAdapter;
     private LinearLayoutManager mLinearLayoutManager;
