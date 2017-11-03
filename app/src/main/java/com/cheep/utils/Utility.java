@@ -115,6 +115,7 @@ public class Utility {
     //Date Formats
     public static final String DATE_FORMAT_DD_MM_YY = SuperFormatter.DATE + "/" + SuperFormatter.MONTH_NUMBER + "/" + SuperFormatter.YEAR_4_DIGIT;
     public static final String DATE_FORMAT_DD_MMM = SuperFormatter.DATE + " " + SuperFormatter.MONTH_JAN;
+    public static final String DATE_FORMAT_DD_MMMM = SuperFormatter.DATE + " " + SuperFormatter.MONTH_JANUARY;
     public static final String DATE_FORMAT_DD_MMM_YYYY = SuperFormatter.DATE + " " + SuperFormatter.MONTH_JAN + " " + SuperFormatter.YEAR_4_DIGIT;
     //TODO :: commented on 13 sept 2017 as per 24 hours formation
 //    public static final String DATE_FORMAT_HH_MM_AM = SuperFormatter.HOUR_12_HOUR_2_DIGIT + ":" + SuperFormatter.MINUTE + " " + SuperFormatter.AM_PM;
@@ -746,6 +747,7 @@ public class Utility {
                 .crossFade()
                 .into(img);
     }
+
     public static void showCircularImageViewWithColorBorder(Context context, String tag, ImageView img, int imageToLoad, int color, boolean isRounded) {
 //        LogUtils.LOGD(TAG, "showCircularImageView() called with: context = [" + context + "], tag = [" + tag + "], img = [" + img + "], imageToLoad = [" + imageToLoad + "], placeholderRes = [" + placeholderRes + "], isRounded = [" + isRounded + "]");
         if (!isActivityCorrectForGlide(context)) {
@@ -1219,6 +1221,7 @@ public class Utility {
     public interface TASK_TYPE {
         String STRATEGIC = "strategic"; //1->if task created and only quotes is there, 2-> task created and user paid to sp, but sp not started the task yet.
         String NORMAL = "normal";//if user payed and task is in progress
+        String INSTA_BOOK = "instabook";//if user payed and task is in progress
     }
 
     public interface STRATEGIC_PARTNER_BRAND {
@@ -1373,4 +1376,50 @@ public class Utility {
             return exp + " Year \nExperience";
         }
     }*/
+
+    public static int getProLevelBadge(String pro_level) {
+        if (TextUtils.isEmpty(pro_level))
+            return 0;
+        switch (pro_level) {
+            case Utility.PRO_LEVEL.PLATINUM:
+                return R.drawable.ic_badge_platinum;
+            case Utility.PRO_LEVEL.GOLD:
+                return R.drawable.ic_badge_gold;
+            case Utility.PRO_LEVEL.SILVER:
+                return R.drawable.ic_badge_silver;
+            case Utility.PRO_LEVEL.BRONZE:
+                return R.drawable.ic_badge_bronze;
+        }
+        return 0;
+    }
+
+    public static String checkNonNullAndSet(String text) {
+        return text != null ? text.trim() : "";
+    }
+
+    public static String get2HourTimeSlots(String timeStamp) {
+        SuperCalendar superCalendar = SuperCalendar.getInstance();
+        superCalendar.setTimeZone(SuperCalendar.SuperTimeZone.GMT.GMT);
+        try {
+            superCalendar.setTimeInMillis(Long.parseLong(timeStamp));
+
+            superCalendar.setLocaleTimeZone();
+//        String task_original_date_time = superCalendar.format(Utility.DATE_FORMAT_DD_MMM + " " + Utility.DATE_FORMAT_HH_MM_AM);
+
+            Date d = superCalendar.getCalendar().getTime();
+
+            SimpleDateFormat timeFormatter = new SimpleDateFormat(Utility.TIME_FORMAT_24HH_MM);
+            String fromHour = timeFormatter.format(d);
+            SuperCalendar superCalendarToDate = SuperCalendar.getInstance();
+            superCalendarToDate.setTimeInMillis(superCalendar.getCalendar().getTimeInMillis());
+            superCalendarToDate.getCalendar().add(Calendar.HOUR_OF_DAY, 2);
+            Date toDate = superCalendarToDate.getCalendar().getTime();
+            String toHour = timeFormatter.format(toDate);
+
+            return fromHour + " hrs - " + toHour + " hrs";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "";
+        }
+    }
 }

@@ -234,9 +234,9 @@ public class TaskQuotesActivity extends BaseAppCompatActivity implements TaskQuo
 
     private void populateData() {
         if (mTaskDetailModel != null) {
-            tvTitle.setText(checkNonNullAndSet(mTaskDetailModel.categoryName));
-            tvTaskTitle.setText(checkNonNullAndSet(mTaskDetailModel.subCategoryName));
-            tvTaskDescription.setText(checkNonNullAndSet(mTaskDetailModel.taskDesc));
+            tvTitle.setText(Utility.checkNonNullAndSet(mTaskDetailModel.categoryName));
+            tvTaskTitle.setText(Utility.checkNonNullAndSet(mTaskDetailModel.subCategoryName));
+            tvTaskDescription.setText(Utility.checkNonNullAndSet(mTaskDetailModel.taskDesc));
 
             SuperCalendar superCalendar = SuperCalendar.getInstance();
             superCalendar.setTimeZone(SuperCalendar.SuperTimeZone.GMT.GMT);
@@ -359,9 +359,7 @@ public class TaskQuotesActivity extends BaseAppCompatActivity implements TaskQuo
         return 15;
     }
 
-    private String checkNonNullAndSet(String text) {
-        return text != null ? text.trim() : "";
-    }
+
 
     private Response.Listener mSPListResponseListener = new Response.Listener() {
         @Override

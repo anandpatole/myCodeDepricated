@@ -74,8 +74,13 @@ public class PaymentSummaryActivity extends BaseAppCompatActivity {
             });
         }
 
+
+
         mActivityPaymentDetailBinding.ivTermsTick.setSelected(true);
         mActivityPaymentDetailBinding.textPay.setSelected(true);
+        mActivityPaymentDetailBinding.textName.setVisibility(View.GONE);
+        mActivityPaymentDetailBinding.providerRating.setVisibility(View.GONE);
+        mActivityPaymentDetailBinding.textExperience.setVisibility(View.GONE);
 
         if (getIntent().hasExtra(Utility.Extra.DATA)) {
             providerModel = (ProviderModel) Utility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA), ProviderModel.class);
@@ -83,6 +88,9 @@ public class PaymentSummaryActivity extends BaseAppCompatActivity {
             taskDetailModel = (TaskDetailModel) Utility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA_2), TaskDetailModel.class);
         }
 
+
+        mActivityPaymentDetailBinding.textVerified.setVisibility(View.GONE);
+        mActivityPaymentDetailBinding.textCategory.setVisibility(View.GONE);
         mActivityPaymentDetailBinding.lnDesclaimer.setVisibility(View.VISIBLE);
         if (getIntent().hasExtra(Utility.Extra.PAYMENT_VIEW)) {
             boolean viewonly = getIntent().getBooleanExtra(Utility.Extra.PAYMENT_VIEW, false);

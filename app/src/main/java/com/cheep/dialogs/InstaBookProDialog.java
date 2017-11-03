@@ -103,23 +103,8 @@ public class InstaBookProDialog extends DialogFragment {
             mDialog.tvVerified.setVisibility(View.GONE);
         }
 
+        mDialog.ivBadge.setImageResource(Utility.getProLevelBadge(merchantDetail.proLevel));
 
-        if (merchantDetail.proLevel != null) {
-            switch (merchantDetail.proLevel) {
-                case Utility.PRO_LEVEL.PLATINUM:
-                    mDialog.ivBadge.setImageResource(R.drawable.ic_badge_platinum);
-                    break;
-                case Utility.PRO_LEVEL.GOLD:
-                    mDialog.ivBadge.setImageResource(R.drawable.ic_badge_gold);
-                    break;
-                case Utility.PRO_LEVEL.SILVER:
-                    mDialog.ivBadge.setImageResource(R.drawable.ic_badge_silver);
-                    break;
-                case Utility.PRO_LEVEL.BRONZE:
-                    mDialog.ivBadge.setImageResource(R.drawable.ic_badge_bronze);
-                    break;
-            }
-        }
         mDialog.tvBody.setText(getString(R.string.merchant_detail_body, merchantDetail.userName, date));
         mDialog.tvBook.setText(getString(R.string.label_pay_X, Utility.getQuotePriceFormatter(merchantDetail.rateGST)));
 

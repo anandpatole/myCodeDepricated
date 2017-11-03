@@ -256,14 +256,11 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
                         } else {
                             holder.mUpcomingTaskBinding.tvVerified.setVisibility(View.GONE);
                         }
-                        if (model.selectedProvider.pro_level.equals(Utility.PRO_LEVEL.PLATINUM))
-                            holder.mUpcomingTaskBinding.imgBadge.setImageResource(R.drawable.ic_badge_platinum);
-                        else if (model.selectedProvider.equals(Utility.PRO_LEVEL.GOLD))
-                            holder.mUpcomingTaskBinding.imgBadge.setImageResource(R.drawable.ic_badge_gold);
-                        else if (model.selectedProvider.pro_level.equals(Utility.PRO_LEVEL.SILVER))
-                            holder.mUpcomingTaskBinding.imgBadge.setImageResource(R.drawable.ic_badge_silver);
-                        else if (model.selectedProvider.pro_level.equals(Utility.PRO_LEVEL.BRONZE))
-                            holder.mUpcomingTaskBinding.imgBadge.setImageResource(R.drawable.ic_badge_bronze);
+
+                        int bagResId = Utility.getProLevelBadge(model.selectedProvider.pro_level);
+                        if (bagResId != -1)
+                            holder.mUpcomingTaskBinding.imgBadge.setImageResource(bagResId);
+
                     }
                     holder.mUpcomingTaskBinding.tvViewTask.setVisibility(View.VISIBLE);
                     holder.mUpcomingTaskBinding.tvViewQuotes.setVisibility(View.GONE);

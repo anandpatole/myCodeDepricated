@@ -53,10 +53,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -281,38 +278,30 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
         /*
           Setting dynamic fields based on current status of task(Job)
          */
+
         SuperCalendar superCalendar = SuperCalendar.getInstance();
         superCalendar.setTimeZone(SuperCalendar.SuperTimeZone.GMT.GMT);
+        String task_original_date = "";
         try {
             superCalendar.setTimeInMillis(Long.parseLong(mTaskDetailModel.taskStartdate));
-        } catch (Exception e) {
+            superCalendar.setLocaleTimeZone();
+            task_original_date = superCalendar.format(Utility.DATE_FORMAT_DD_MMM) + getString(R.string.label_between);
+        } catch (NumberFormatException e) {
             e.printStackTrace();
         }
-        superCalendar.setLocaleTimeZone();
-//        String task_original_date_time = superCalendar.format(Utility.DATE_FORMAT_DD_MMM + " " + Utility.DATE_FORMAT_HH_MM_AM);
 
-        Date d = superCalendar.getCalendar().getTime();
+        String time = Utility.get2HourTimeSlots(mTaskDetailModel.taskStartdate);
+        mActivityTaskSummaryBinding.textTaskWhen.setText(task_original_date + time);
 
-        SimpleDateFormat timeFormatter = new SimpleDateFormat(Utility.TIME_FORMAT_24HH_MM);
-        String fromHour = timeFormatter.format(d);
-        SuperCalendar superCalendarToDate = SuperCalendar.getInstance();
-        superCalendarToDate.setTimeInMillis(superCalendar.getCalendar().getTimeInMillis());
-        superCalendarToDate.getCalendar().add(Calendar.HOUR_OF_DAY, 2);
-
-        Date toDate = superCalendarToDate.getCalendar().getTime();
-        String toHour = timeFormatter.format(toDate);
-
-        String task_original_date_time = superCalendar.format(Utility.DATE_FORMAT_DD_MMM) + getString(R.string.label_between) + fromHour + " hrs - " + toHour + " hrs";
-
-
-        mActivityTaskSummaryBinding.textTaskWhen.setText(task_original_date_time);
 
         // Setup WHERE section
         mActivityTaskSummaryBinding.textTaskWhere.setText(mTaskDetailModel.taskAddress);
 
 
         // Onclick of when and Where section
-        mActivityTaskSummaryBinding.lnTaskDesc.setOnClickListener(new View.OnClickListener() {
+        mActivityTaskSummaryBinding.lnTaskDesc.setOnClickListener(new View.OnClickListener()
+
+        {
             @Override
             public void onClick(View view) {
                 showFullDesc(getString(R.string.label_desc), mActivityTaskSummaryBinding.textTaskDesc.getText().toString());
@@ -1534,8 +1523,6 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
 
             // Close Progressbar
 //            hideProgressDialog();
-
-
             Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityTaskSummaryBinding.getRoot());
 
         }

@@ -196,22 +196,57 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
 
 
         if (taskDetailModel != null) {
+
+
+            // set category name
+            mActivityPaymentDetailBinding.textCategory.setVisibility(View.VISIBLE);
+            mActivityPaymentDetailBinding.textCategory.setText(taskDetailModel.categoryName);
+
+            // top header image
             Utility.loadImageView(mContext, mActivityPaymentDetailBinding.imgService, taskDetailModel.catImage, R.drawable.gradient_black);
+
+
         }
         if (providerModel != null) {
             Utility.showCircularImageViewWithColorBorder(mContext, TAG, mActivityPaymentDetailBinding.imgProfile, providerModel.profileUrl, Utility.DEFAULT_CHEEP_LOGO, R.color.dark_blue_variant_1, true);
-            String dateTime = "";
+            String datetime = "";
+
+            // pro name
+            mActivityPaymentDetailBinding.textName.setText(providerModel.userName);
+            // set date & time
             if (!TextUtils.isEmpty(taskDetailModel.taskStartdate)) {
-                dateTime = Utility.getDate(Long.parseLong(taskDetailModel.taskStartdate), Utility.DATE_TIME_DD_MMMM_HH_MM);
-                dateTime = dateTime.replace(getString(R.string.label_am_caps), getString(R.string.label_am_small)).replace(getString(R.string.label_pm_caps), getString(R.string.label_pm_small));
+                datetime = Utility.getDate(Long.parseLong(taskDetailModel.taskStartdate), Utility.DATE_FORMAT_DD_MMMM) + ", " + Utility.get2HourTimeSlots(taskDetailModel.taskStartdate);
+//                dateTime = dateTime.replace(getString(R.string.label_am_caps), getString(R.string.label_am_small)).replace(getString(R.string.label_pm_caps), getString(R.string.label_pm_small));
+
             }
 
+            // pro experience
+            if (!TextUtils.isEmpty(providerModel.experience))
+                if (Utility.ZERO_STRING.equals(providerModel.experience)) {
+                    mActivityPaymentDetailBinding.textExperience.setText(Utility.checkNonNullAndSet(mContext.getString(R.string.label_experience_zero)));
+                } else {
+                    mActivityPaymentDetailBinding.textExperience.setText(this.getResources().getQuantityString(R.plurals.getExperienceStringOneLine, Integer.parseInt(providerModel.experience), providerModel.experience));
+                }
+
+
+            // set pro rating
+            Utility.showRating(providerModel.rating, mActivityPaymentDetailBinding.providerRating);
+
+
+            //badge
+            int badgeResID = Utility.getProLevelBadge(providerModel.pro_level);
+            Utility.showCircularImageViewWithColorBorder(mContext, TAG, mActivityPaymentDetailBinding.ivBadge, badgeResID, R.color.splash_gradient_end, true);
+
+            // pro verified text
+            mActivityPaymentDetailBinding.textVerified.setVisibility(providerModel.isVerified.equalsIgnoreCase(Utility.BOOLEAN.YES) ? View.VISIBLE : View.GONE);
+
+            // set task description date time and place
             SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder();
             spannableStringBuilder.append(getSpannableString(taskDetailModel.subCategoryName, ContextCompat.getColor(this, R.color.splash_gradient_end), true));
-            spannableStringBuilder.append(getSpannableString(getString(R.string.label_by), ContextCompat.getColor(this, R.color.grey_varient_8), false));
-            spannableStringBuilder.append(getSpannableString(providerModel.userName, ContextCompat.getColor(this, R.color.splash_gradient_end), true));
+//            spannableStringBuilder.append(getSpannableString(getString(R.string.label_by), ContextCompat.getColor(this, R.color.grey_varient_8), false));
+//            spannableStringBuilder.append(getSpannableString(providerModel.userName, ContextCompat.getColor(this, R.color.splash_gradient_end), true));
             spannableStringBuilder.append(getSpannableString(getString(R.string.label_on), ContextCompat.getColor(this, R.color.grey_varient_8), false));
-            spannableStringBuilder.append(getSpannableString(dateTime, ContextCompat.getColor(this, R.color.splash_gradient_end), true));
+            spannableStringBuilder.append(getSpannableString(datetime, ContextCompat.getColor(this, R.color.splash_gradient_end), true));
             spannableStringBuilder.append(getSpannableString(getString(R.string.label_at), ContextCompat.getColor(this, R.color.grey_varient_8), false));
             spannableStringBuilder.append(getSpannableString(taskDetailModel.taskAddress, ContextCompat.getColor(this, R.color.splash_gradient_end), true));
             mActivityPaymentDetailBinding.txtdesc.setText(spannableStringBuilder);
@@ -303,9 +338,6 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
             onClickOfClosePromoCode();
             if (mActivityPaymentDetailBinding.ivreferraldiscount.isSelected()) {
                 taskDetailModel.isReferCode = Utility.BOOLEAN.NO;
-                Log.e(TAG, "  providerModel.spWithoutGstQuotePrice  :: " + providerModel.spWithoutGstQuotePrice);
-                Log.e(TAG, "  maxReferDiscount  :: " + maxReferDiscount);
-                Log.e(TAG, " referralBalance  :: " + referralBalance);
 
                 try {
                     actualQuotePrice = providerModel.quotePrice;
@@ -399,13 +431,8 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
                 }
             }
 
-            double subTotal = (taskPaidAmount + additionalCharges);
             double totalPayment = (taskPaidAmount + additionalCharges) - promocodeValue;
-            //     mActivityPaymentDetailBinding.txtprofee.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf(taskPaidAmount))));
-            //    mActivityPaymentDetailBinding.txtadditionalcharge.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf(additionalCharges))));
-            //    mActivityPaymentDetailBinding.txtsubtotal.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf(subTotal))));
             mActivityPaymentDetailBinding.txttotal.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf(totalPayment))));
-//            mActivityPaymentDetailBinding.textPay.setText(getString(R.string.label_book_now_for_rupees, "" + Utility.getQuotePriceFormatter(String.valueOf(totalPayment))));
             mActivityPaymentDetailBinding.txtpromocode.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf(promocodeValue))));
 
         }
@@ -980,23 +1007,7 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
                             String message = fetchMessageFromDateOfMonth(onlydate, superStartDateTimeCalendar);
 
 //                            final UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
-                            int badgeResId = -1;
-                            if (providerModel.pro_level != null) {
-                                switch (providerModel.pro_level) {
-                                    case Utility.PRO_LEVEL.PLATINUM:
-                                        badgeResId = R.drawable.ic_badge_platinum;
-                                        break;
-                                    case Utility.PRO_LEVEL.GOLD:
-                                        badgeResId = R.drawable.ic_badge_gold;
-                                        break;
-                                    case Utility.PRO_LEVEL.SILVER:
-                                        badgeResId = R.drawable.ic_badge_silver;
-                                        break;
-                                    case Utility.PRO_LEVEL.BRONZE:
-                                        badgeResId = R.drawable.ic_badge_bronze;
-                                        break;
-                                }
-                            }
+                            int badgeResId = Utility.getProLevelBadge(providerModel.pro_level);
                             AcknowledgementDialogWithProfilePic mAcknowledgementDialogWithProfilePic = AcknowledgementDialogWithProfilePic.newInstance(
                                     mContext,
                                     R.drawable.ic_acknowledgement_dialog_header_background,
