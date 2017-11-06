@@ -644,7 +644,7 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
 //                }
 //            }
 
-        VolleyNetworkRequest mVolleyNetworkRequest = new VolleyNetworkRequest(NetworkUtility.WS.TASK_CREATE_STRATEGIC_PARTNER
+        VolleyNetworkRequest mVolleyNetworkRequest = new VolleyNetworkRequest(NetworkUtility.WS.CREATE_TASK
                 , mCallCreateTaskWSErrorListener
                 , mCallCreateTaskWSResponseListener
                 , mHeaderParams
@@ -680,11 +680,11 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
                     && !queAnsModel.answerType.equalsIgnoreCase(Utility.TEMPLATE_LOCATION)
                     && !queAnsModel.answerType.equalsIgnoreCase(Utility.TEMPLATE_UPLOAD)) {
                 JsonObject jsonObject = new JsonObject();
-                jsonObject.addProperty("question_id", queAnsModel.questionId);
+                jsonObject.addProperty(NetworkUtility.TAGS.QUESTION_ID, queAnsModel.questionId);
                 if (queAnsModel.answer != null)
-                    jsonObject.addProperty("answer", queAnsModel.answer);
+                    jsonObject.addProperty(NetworkUtility.TAGS.ANSWER, queAnsModel.answer);
                 else
-                    jsonObject.addProperty("answer", Utility.EMPTY_STRING);
+                    jsonObject.addProperty(NetworkUtility.TAGS.ANSWER, Utility.EMPTY_STRING);
                 quesArray.add(jsonObject);
             }
         }
@@ -702,9 +702,9 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
             for (int j = 0; j < model.allSubSubCats.size(); j++) {
                 AllSubSubCat allSubSubCat = model.allSubSubCats.get(j);
                 JsonObject obj = new JsonObject();
-                obj.addProperty("subcategory_id", model.sub_cat_id);
-                obj.addProperty("sub_sub_cat_id", allSubSubCat.subSubCatId);
-                obj.addProperty("price", allSubSubCat.price);
+                obj.addProperty(NetworkUtility.TAGS.SUBCATEGORY_ID, model.sub_cat_id);
+                obj.addProperty(NetworkUtility.TAGS.SUB_SUB_CAT_ID, allSubSubCat.subSubCatId);
+                obj.addProperty(NetworkUtility.TAGS.PRICE, allSubSubCat.price);
                 selectedServiceArray.add(obj);
             }
         }

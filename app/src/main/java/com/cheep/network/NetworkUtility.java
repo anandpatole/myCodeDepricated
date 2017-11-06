@@ -382,6 +382,9 @@ public class NetworkUtility {
         String PAYTM_RESPONSE_DATA = "paytmResponseData";
         String PAYMENT_GATEWAY_DATA = "paymentGatewayData";
         String ACCESS_TOKEN_EXPIRES_TIMESTAMP = "access_token_expires_timestamp";
+        String SUB_SUB_CAT_ID= "sub_sub_cat_id";
+        String QUESTION_ID= "question_id";
+        String ANSWER= "answer";
 
         interface VERSION_CHANGE_TYPE {
             int NORMAL = 0;
