@@ -147,8 +147,8 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
         // price - Checking if amount present then show call and paid lables else hide
         if (provider.getQuotePriceInInteger() > 0) {
             holder.tvPrice.setVisibility(View.VISIBLE);
-//            holder.tvPrice.setText(mContext.getString(R.string.label_book_rs, provider.quotePrice));
-            holder.tvPrice.setText(mContext.getString(R.string.label_book_now));
+            holder.tvPrice.setText(mContext.getString(R.string.label_book_rs, Utility.getQuotePriceFormatter(provider.quotePrice)));
+//            holder.tvPrice.setText(mContext.getString(R.string.label_book_now));
             holder.tvPrice.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

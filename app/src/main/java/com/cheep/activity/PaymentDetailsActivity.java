@@ -175,7 +175,7 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
             int isAdditional = getIntent().getIntExtra(Utility.Extra.PAYMENT_VIEW_IS_ADDITIONAL_CHARGE, 0);
             if (isAdditional == 0) {
                 if (taskDetailModel != null) {
-                    resetPromocodeValue();
+                    resetPromoCodeValue();
                     callGetReferBalance();
                     double taskPaidAmount = getQuotePriceInInteger(providerModel.quotePrice);
                     double additionalCharges = 0;
@@ -289,10 +289,8 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
             taskDetailModel.usedWalletAmount = String.valueOf(usedWalletBalance);
             if (isInstaBooking) {
                 callCreateInstaBookingTaskWS();
-//                PaymentChoiceActivity.newInstance(mContext, taskDetailModel, providerModel, isAdditionalPayment, isInstaBooking, mSelectedAddressModelForInsta);
             } else {
                 callBookProForNormalTaskWS();
-//                updatePaymentStatus(true, Utility.EMPTY_STRING, isAdditionalPayment != 0);
             }
 
         }
@@ -305,7 +303,7 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
             mActivityPaymentDetailBinding.txtpromocode.setSelected(false);
             mActivityPaymentDetailBinding.imgCheepCodeClose.setVisibility(View.GONE);
             mActivityPaymentDetailBinding.llpromocode.setEnabled(true);
-            resetPromocodeValue();
+            resetPromoCodeValue();
 
             mActivityPaymentDetailBinding.ivpromocode.setSelected(!mActivityPaymentDetailBinding.ivpromocode.isSelected());
             mActivityPaymentDetailBinding.txtpromocode.setSelected(mActivityPaymentDetailBinding.ivpromocode.isSelected());
@@ -395,13 +393,13 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
         actualQuotePrice = null;
         mActivityPaymentDetailBinding.imgCheepCodeClose.setVisibility(View.GONE);
         mActivityPaymentDetailBinding.llpromocode.setEnabled(true);
-        resetPromocodeValue();
+        resetPromoCodeValue();
     }
 
     /**
      * Used for Reset Payment Values after applying promocode OR Removing promociod
      */
-    public void resetPromocodeValue() {
+    public void resetPromoCodeValue() {
         mActivityPaymentDetailBinding.textpromocodelabel.setTextColor(ContextCompat.getColor(this, R.color.splash_gradient_end));
         mActivityPaymentDetailBinding.textpromocodelabel.setText(getResources().getString(R.string.label_enter_promocode));
         mActivityPaymentDetailBinding.lnPromoCodeDisclaimer.setVisibility(View.GONE);

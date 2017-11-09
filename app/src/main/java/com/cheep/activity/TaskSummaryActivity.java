@@ -482,7 +482,7 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
                 public void onClick(View view) {
 
 //                    callCompleteTaskWS(Utility.TASK_STATUS.COMPLETION_CONFIRM);
-                    NewPaymentChoiceActivity.newInstance(mContext, mTaskDetailModel);
+                    PaymentChoiceActivity.newInstance(mContext, mTaskDetailModel);
 
                 }
             });
@@ -492,6 +492,13 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
                     callCompleteTaskWS(Utility.TASK_STATUS.PROCESSING);
                 }
             });
+            mActivityTaskSummaryBinding.textTaskSeekSupport.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Utility.initiateCallToCheepHelpLine(mContext);
+                }
+            });
+
         } else {
             mActivityTaskSummaryBinding.lnTaskCompletionRequested.setVisibility(View.GONE);
         }

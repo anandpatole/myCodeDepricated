@@ -1,27 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
              android:layout_width="wrap_content"
              android:layout_height="wrap_content"
              android:orientation="vertical">
 
 
-    <ImageView
-        android:layout_marginTop="@dimen/scale_10dp"
-        android:layout_marginRight="@dimen/scale_10dp"
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/scale_10dp"
-        android:id="@+id/imgThumb"
-        android:layout_width="@dimen/h_camera_que_fragment"
-        android:layout_height="@dimen/h_camera_que_fragment"
-        android:scaleType="fitXY"
-        />
+        android:layout_marginRight="@dimen/scale_10dp"
+        android:layout_marginTop="@dimen/scale_10dp">
+
+        <ImageView
+            android:id="@+id/imgThumb"
+            android:layout_width="@dimen/h_camera_que_fragment"
+            android:layout_height="@dimen/h_camera_que_fragment"
+            android:scaleType="fitXY"
+            tools:background="#eeeeee"
+            />
+
+        <ImageView
+            android:id="@+id/imgPlay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_play_button_blue"
+            tools:background="#eeeeee"
+            />
+    </RelativeLayout>
 
     <ImageView
         android:id="@+id/imgRemove"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="right|top"
+        android:padding="@dimen/scale_5dp"
         android:scaleType="fitXY"
-        android:layout_marginRight="@dimen/scale_5dp"
         android:src="@drawable/ic_remove"
         />
 </FrameLayout>

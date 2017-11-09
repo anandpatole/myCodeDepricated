@@ -238,8 +238,8 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
         // Checking if amount present then show call and paid lables else hide
         if (providerModel.getQuotePriceInInteger() > 0) {
             mActivityProviderProfileBinding.layoutPay.setVisibility(View.VISIBLE);
-//            mActivityProviderProfileBinding.textPrice.setText(getString(R.string.label_pay_X, providerModel.quotePrice));
-            mActivityProviderProfileBinding.textPrice.setText(getString(R.string.label_book_the_pro));
+            mActivityProviderProfileBinding.textPrice.setText(getString(R.string.label_pay_X, Utility.getQuotePriceFormatter(providerModel.quotePrice)));
+//            mActivityProviderProfileBinding.textPrice.setText(getString(R.string.label_book_the_pro));
             mActivityProviderProfileBinding.textPrice.setSelected(true);
         } else {
             mActivityProviderProfileBinding.layoutPay.setVisibility(View.GONE);

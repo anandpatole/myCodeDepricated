@@ -173,7 +173,7 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
         // set total and sub total details
         mFragmentStrategicPartnerPhaseThreeBinding.txttotal.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(mStrategicPartnerTaskCreationAct.totalOfGSTPrice)));
         mFragmentStrategicPartnerPhaseThreeBinding.txtsubtotal.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(mStrategicPartnerTaskCreationAct.totalOfGSTPrice)));
-        mFragmentStrategicPartnerPhaseThreeBinding.textPay.setText(getString(R.string.label_pay) + getString(R.string.rupee_symbol_x, String.valueOf(Utility.getQuotePriceFormatter(mStrategicPartnerTaskCreationAct.totalOfGSTPrice))));
+        mFragmentStrategicPartnerPhaseThreeBinding.textPay.setText(getString(R.string.label_book_now_for_rupees, String.valueOf(Utility.getQuotePriceFormatter(mStrategicPartnerTaskCreationAct.totalOfGSTPrice))));
 
         // handle clicks for create task web api and payment flow
         mFragmentStrategicPartnerPhaseThreeBinding.textPay.setOnClickListener(new View.OnClickListener() {
@@ -582,6 +582,8 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
         mParams.put(NetworkUtility.TAGS.PAYMENT_METHOD, NetworkUtility.PAYMENT_METHOD_TYPE.PAY_LATER);
         mParams.put(NetworkUtility.TAGS.PAYMENT_LOG, Utility.EMPTY_STRING);
         mParams.put(NetworkUtility.TAGS.TASK_TYPE, Utility.TASK_TYPE.STRATEGIC);
+        mParams.put(NetworkUtility.TAGS.IS_REFER_CODE, Utility.BOOLEAN.NO);
+        mParams.put(NetworkUtility.TAGS.USED_WALLET_BALANCE, Utility.ZERO_STRING);
 
         LogUtils.LOGE(TAG, "subCategoryDetail = [ " + subCategoryDetail + " ] ");
         LogUtils.LOGE(TAG, "question_detail = [ " + question_detail + " ] ");
@@ -631,18 +633,6 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
         mTaskCreationParams.put(NetworkUtility.TAGS.PAYMENT_METHOD, NetworkUtility.PAYMENT_METHOD_TYPE.PAY_LATER);
         mTaskCreationParams.put(NetworkUtility.TAGS.PAYMENT_STATUS, Utility.PAYMENT_STATUS.COMPLETED);
 
-        // Add Params
-//        HashMap<String, File> mFileParams = new HashMap<>();
-
-
-//        if (mFileList != null && !mFileList.isEmpty())
-//            for (int i = 0; i < mFileList.size(); i++) {
-//                MediaModel mediaModel = mFileList.get(i);
-//                if (!TextUtils.isEmpty(mediaModel.mediaName) && new File(mediaModel.mediaName).exists()) {
-//                    LogUtils.LOGE(TAG, "callTaskCreationWebServiceForStratgicPartner: path " + mediaModel.mediaName + "");
-//                    mFileParams.put("media_file[" + i + "]", new File(mediaModel.mediaName));
-//                }
-//            }
 
         VolleyNetworkRequest mVolleyNetworkRequest = new VolleyNetworkRequest(NetworkUtility.WS.CREATE_TASK
                 , mCallCreateTaskWSErrorListener

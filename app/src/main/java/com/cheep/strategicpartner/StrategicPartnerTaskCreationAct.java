@@ -47,7 +47,7 @@ import java.util.ArrayList;
  * location services for address
  */
 public class StrategicPartnerTaskCreationAct extends BaseAppCompatActivity {
-    private static final String TAG = StrategicPartnerTaskCreationAct.class.getSimpleName();
+    private static final String TAG = "StrategicPartnerTaskCre";
 
     private ActivityTaskCreationForStrategicPartnerBinding mActivityTaskCreationForStrategicPartnerBinding;
     public BannerImageModel mBannerImageModel;

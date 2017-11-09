@@ -155,8 +155,12 @@ public class PaymentsSummaryStrategicPartnerActivity extends BaseAppCompatActivi
             mActivityPaymentDetailBinding.txttotal.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf(taskPaidAmount))));
             mActivityPaymentDetailBinding.txtpromocode.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf((promocodeValue)))));
             mActivityPaymentDetailBinding.lnPromoCodeDisclaimer.setVisibility(promocodeValue == 0 ? View.GONE : View.VISIBLE);
+            if (taskDetailModel.taskStatus.equalsIgnoreCase(Utility.TASK_STATUS.COMPLETION_CONFIRM))
+                mActivityPaymentDetailBinding.textLabelTotalPaid.setText(getString(R.string.label_total_paid));
+            else
+                mActivityPaymentDetailBinding.textLabelTotalPaid.setText(getString(R.string.label_total_pay));
         }
-        mActivityPaymentDetailBinding.textLabelTotalPaid.setText(getString(R.string.label_total_paid));
+
         mActivityPaymentDetailBinding.textpromocodelabel.setEnabled(false);
         mActivityPaymentDetailBinding.textpromocodelabel.setText(getString(R.string.label_promocode_apply));
         mActivityPaymentDetailBinding.textpromocodelabel.setTextColor(ContextCompat.getColor(this, R.color.black));

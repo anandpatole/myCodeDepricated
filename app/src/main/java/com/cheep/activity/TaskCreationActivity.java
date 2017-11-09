@@ -543,9 +543,7 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
             mParams.put(NetworkUtility.TAGS.COUNTRY, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.countryName);
             mParams.put(NetworkUtility.TAGS.STATE, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.stateName);
         }
-        if (userDetails != null) {
-            mParams.put(NetworkUtility.TAGS.CITY_ID, userDetails.CityID);
-        }
+        mParams.put(NetworkUtility.TAGS.CITY_ID, userDetails.CityID);
         mParams.put(NetworkUtility.TAGS.CAT_ID, mJobCategoryModel.catId);
         mParams.put(NetworkUtility.TAGS.TASK_TYPE, Utility.TASK_TYPE.NORMAL);
         mParams.put(NetworkUtility.TAGS.SUBCATEGORY_ID, String.valueOf(mSelectedSubServiceDetailModel.sub_cat_id));
@@ -992,10 +990,8 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
     private BroadcastReceiver mBR_OnLoginSuccess = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.d(TAG, "onReceive() called with: context = [" + context + "], intent = [" + intent + "]");
             Utility.hideKeyboard(mContext);
-            // TODO : check here for user guest has selected insta booked or get quots
-            Log.e(TAG, "isInstaBooking :: " + isInstaBooking);
+            // check here for user guest has selected insta booked or get quots
             if (isInstaBooking)
                 onInstaBookClicked();
             else

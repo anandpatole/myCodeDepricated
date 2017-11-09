@@ -72,12 +72,15 @@ public class MediaRecycleAdapter extends RecyclerView.Adapter<MediaRecycleAdapte
         public final View mView;
         ImageView mImgThumb = null;
         ImageView mImgRemove = null;
+        ImageView mImgPlay = null;
 
         MyViewHolder(final View binding) {
             super(binding);
             mView = binding;
             mImgThumb = mView.findViewById(R.id.imgThumb);
             mImgRemove = mView.findViewById(R.id.imgRemove);
+            mImgPlay = mView.findViewById(R.id.imgPlay);
+            mImgRemove.setImageResource(mIsStrategicPartner ? R.drawable.ic_remove : R.drawable.ic_remove_blue);
             mImgRemove.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -93,34 +96,10 @@ public class MediaRecycleAdapter extends RecyclerView.Adapter<MediaRecycleAdapte
         void bind(final MediaModel mediaModel) {
             LogUtils.LOGI(TAG, "bind:>>  " + mediaModel.mediaName);
 
-//            Utility.loadImageView(mView.getContext(), mImgThumb, mediaModel.mediaThumbName);
-//             set image thumbnails with rounder grey border around image view
-//            if (mediaModel.mediaType.equalsIgnoreCase(MediaModel.MediaType.TYPE_IMAGE)) {
-//                Glide.with(mView.getContext()).load(mediaModel.mediaName).asBitmap().thumbnail(0.2f).diskCacheStrategy(DiskCacheStrategy.ALL).listener(new RequestListener<String, Bitmap>() {
-//
-//                    @Override
-//                    public boolean onException(Exception e, String model, Target<Bitmap> target, boolean isFirstResource) {
-//                        return false;
-//                    }
-//
-//                    @Override
-//                    public boolean onResourceReady(Bitmap resource, String model, Target<Bitmap> target, boolean isFromMemoryCache, boolean isFirstResource) {
-//                        Log.e("SARMAD_GLIDE", "onResourceReadyCalled");
-//                        Log.e("SARMAD_GLIDE", "Is Loaded from Cache = " + isFromMemoryCache);
-//                        Log.e("SARMAD_GLIDE", "Is First Time loaded = " + isFirstResource);
-//                        mImgThumb.setImageBitmap(Utility.getRoundedCornerBitmap(resource, mImgThumb.getContext()));
-//                        // how to tell if the Bitmap resource is Thumbnail or actually the large size image
-//                        return true;
-//                    }
-//                }).into(mImgThumb);
-//            } else {
-//                try {
-//                    mImgThumb.setImageBitmap(Utility.getRoundedCornerBitmap(Utility.getVideoThumbnail(mediaModel.mediaName), mImgThumb.getContext()));
-//                } catch (Throwable throwable) {
-//                    throwable.printStackTrace();
-//                }
-//            }
-
+            mImgPlay.setVisibility(
+                    !mIsStrategicPartner && mediaModel.mediaType.equalsIgnoreCase(MediaModel.MediaType.TYPE_VIDEO) ?
+                            View.VISIBLE:
+                            View.GONE);
 
             Glide.with(mView.getContext()).load(mediaModel.localFilePath).asBitmap().thumbnail(0.2f).diskCacheStrategy(DiskCacheStrategy.ALL).listener(new RequestListener<String, Bitmap>() {
 
@@ -131,10 +110,11 @@ public class MediaRecycleAdapter extends RecyclerView.Adapter<MediaRecycleAdapte
 
                 @Override
                 public boolean onResourceReady(Bitmap resource, String model, Target<Bitmap> target, boolean isFromMemoryCache, boolean isFirstResource) {
-                    if (mIsStrategicPartner)
+                    if (mIsStrategicPartner) {
                         mImgThumb.setImageBitmap(Utility.getRoundedCornerBitmap(resource, mImgThumb.getContext()));
-                    else
+                    } else {
                         mImgThumb.setImageBitmap(resource);
+                    }
                     return true;
                 }
             }).into(mImgThumb);

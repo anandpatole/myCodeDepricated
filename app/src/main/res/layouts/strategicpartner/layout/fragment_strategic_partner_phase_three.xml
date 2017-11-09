@@ -56,7 +56,7 @@
                         android:layout_marginLeft="@dimen/scale_8dp"
                         android:gravity="left"
                         android:lineSpacingExtra="@dimen/scale_2dp"
-                        android:text="@string/disclaimer_task_completion_strategic_partner"
+                        android:text="@string/disclaimer_task_creation"
                         android:textColor="@color/task_desclaimer"
                         android:textSize="@dimen/text_size_12sp"/>
                 </LinearLayout>

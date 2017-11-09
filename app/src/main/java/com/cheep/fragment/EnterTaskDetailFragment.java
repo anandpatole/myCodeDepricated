@@ -304,7 +304,7 @@ public class EnterTaskDetailFragment extends BaseFragment {
                     mFragmentEnterTaskDetailBinding.imgAdd.setVisibility(View.VISIBLE);
 
             }
-        },false);
+        }, false);
         mFragmentEnterTaskDetailBinding.recycleImg.setLayoutManager(new LinearLayoutManager(mTaskCreationActivity, LinearLayoutManager.HORIZONTAL, false));
         mFragmentEnterTaskDetailBinding.recycleImg.setAdapter(mMediaRecycleAdapter);
     }
@@ -654,22 +654,7 @@ public class EnterTaskDetailFragment extends BaseFragment {
             }
             checkAddAddressVerified();
             hideProgressDialog();
-        } /*else if (requestCode == Utility.REQUEST_CODE_IMAGE_CAPTURE_ADD_PROFILE && resultCode == RESULT_OK) {
-            Log.i(TAG, "onActivityResult: CurrentPath" + mCurrentPhotoPath);
-            File f = new File(mCurrentPhotoPath);
-            Uri contentUri = Uri.fromFile(f);
-            mCurrentPhotoPath = Utility.getPath(mContext, contentUri);
-            Utility.loadImageView(mContext, mFragmentEnterTaskDetailBinding.imgPicture, mCurrentPhotoPath, 0);
-            mFragmentEnterTaskDetailBinding.imgPicture.setVisibility(View.VISIBLE);
-
-        } else if (requestCode == Utility.REQUEST_CODE_GET_FILE_ADD_PROFILE_GALLERY && resultCode == RESULT_OK) {
-            Log.i(TAG, "onActivityResult: " + data.getData().toString());
-
-            mCurrentPhotoPath = Utility.getPath(mContext, data.getData());
-            Utility.loadImageView(mContext, mFragmentEnterTaskDetailBinding.imgPicture, mCurrentPhotoPath, 0);
-            mFragmentEnterTaskDetailBinding.imgPicture.setVisibility(View.VISIBLE);
-
-        }*/ else if (requestCode == Utility.REQUEST_CODE_IMAGE_CAPTURE_ADD_PROFILE && resultCode == Activity.RESULT_OK) {
+        } else if (requestCode == Utility.REQUEST_CODE_IMAGE_CAPTURE_ADD_PROFILE && resultCode == Activity.RESULT_OK) {
             Log.i(TAG, "onActivityResult: CurrentPath" + mCurrentPhotoPath);
             File f = new File(mCurrentPhotoPath);
             Uri contentUri = Uri.fromFile(f);

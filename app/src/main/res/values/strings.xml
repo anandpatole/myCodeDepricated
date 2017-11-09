@@ -183,7 +183,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="social_email_not_found">Hey we can\'t seem to identify this social account! Are you sure you are using the correct email address for your social media account? Why dont you try again?</string>
     <string name="confirmation_logout">Are you sure you want to Logout?</string>
     <string name="label_pay_now">Pay Now</string>
-    <string name="label_pay_X">Book &amp; Pay ₹ %1$s</string>
+    <string name="label_pay_X">Book the PRO for ₹%1$s</string>
     <string name="label_pay_X_X_X">Pay ₹ %1$s - ₹ %2$s = ₹ %3$s</string>
     <string name="label_thanks_for_choosing_x_summary">Thanks for choosing %1$s\nPlease confirm the summary below</string>
     <string name="label_thanks_feedback_no">Thank you %1$s for your feedback. We would like to know more. Please call with our Cheep team so that we can help to complete the task to your satisfaction.</string><!--or chat-->
@@ -335,7 +335,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_total_pay">Total Pay</string>
 
     <string name="label_pay_fee_v1">Pay ₹%1$s</string>
-    <string name="label_book_now_for_rupees">Book now for Rs. %1$s</string>
+    <string name="label_book_now_for_rupees">Book now for ₹%1$s</string>
     <string name="label_payment_summary">Payment Summary</string>
     <string name="label_enter_reason">Enter Reason</string>
     <string name="label_reason">Reason</string>
@@ -348,7 +348,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_on">&#160;on&#160;</string>
     <string name="label_at">&#160;at&#160;</string>
 
-    <string name="label_book_rs">Book ₹%1$s</string>
+    <string name="label_book_rs">Book For ₹%1$s</string>
 
     <string name="label_formatted_quote_amount">₹ %1$s</string>
     <string name="label_pros_around_you_reviewing_desc">PROs around you are viewing your task currently and shall respond shortly</string>
@@ -551,7 +551,6 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_enter_amount">Enter Amount</string>
     <string name="label_amount_payable">Amount Payable</string>
     <string name="label_notify_paying_by_wallet">You are about to pay using your %1s wallet</string>
-
     <string name="no_pro_available_title"/>
     <string name="no_pro_available_description">No PROs is available for this address</string>
     <string name="validate_comment">Please provide valid comment.</string>
@@ -564,7 +563,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_book_now">Book Now</string>
     <string name="label_book_the_pro">Book the PRO</string>
     <string name="label_done">Done</string>
-    <string name="desc_pay_by_cash">Thank you for your business. Please pay ₹%1s to our PRO, %2s after successful completion of your task.</string>
+    <string name="desc_pay_by_cash">Thank you for your business. Please pay ₹%1s to our PRO, %2s after they successfully complete the task.</string>
 
 
     <string name="label_gotcha">Gotcha</string>

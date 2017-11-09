@@ -744,7 +744,7 @@
                             android:layout_height="wrap_content"
                             android:orientation="vertical"
                             android:padding="@dimen/scale_16dp"
-                            android:visibility="gone">
+                            android:visibility="visible">
 
                             <com.cheep.custom_view.CFTextViewRegular
                                 android:id="@+id/text_confirm_text"
