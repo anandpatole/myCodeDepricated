@@ -443,7 +443,8 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
                     Log.i(TAG, "onClick: Accept Additional Payment");
 
                     // First Call Asynctask that would going to check whether current status of Progressing or not.
-                    callCheckingTaskStatus();
+//                    callCheckingTaskStatus();
+                    callAcceptAdditionalPaymentRequest();
 
 
                 }
@@ -480,7 +481,9 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
                 @Override
                 public void onClick(View view) {
 
-                    callCompleteTaskWS(Utility.TASK_STATUS.COMPLETION_CONFIRM);
+//                    callCompleteTaskWS(Utility.TASK_STATUS.COMPLETION_CONFIRM);
+                    NewPaymentChoiceActivity.newInstance(mContext, mTaskDetailModel);
+
                 }
             });
             mActivityTaskSummaryBinding.textTaskCompletionNo.setOnClickListener(new View.OnClickListener() {
@@ -1127,7 +1130,7 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
                         showRateDialog();*/
 
                         mTaskDetailModel.taskStatus = Utility.TASK_STATUS.PROCESSING;
-                        setUpTaskDetails(mTaskDetailModel);
+                        callTaskDetailWS(mTaskDetailModel.taskId);
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
                         // Show Toast
@@ -1193,6 +1196,12 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
                 // Finish this activity
                 finish();
                 break;
+            case Utility.BROADCAST_TYPE.TASK_PAID_SUCCESSFULLY:
+
+                //Refresh UI for complete status
+                mTaskDetailModel.taskStatus = Utility.TASK_STATUS.COMPLETION_CONFIRM;
+                setUpTaskDetails(mTaskDetailModel);
+                break;
         }
     }
 
@@ -1205,6 +1214,8 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
         Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.WS.ADD_REVIEW);
         Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.WS.SP_ADD_TO_FAV);
         Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.WS.PAYMENT);
+        Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.WS.TASK_DETAIL);
+        Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.WS.ACCEPT_ADDITIONAL_PAYMENT_REQUEST);
 
         EventBus.getDefault().unregister(this);
 
@@ -1309,6 +1320,83 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
                 , null);
         Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest);
     }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////Accept Detail Service[START] //////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+    private void callAcceptAdditionalPaymentRequest() {
+        //Validation
+        if (!Utility.isConnected(mContext)) {
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityTaskSummaryBinding.getRoot());
+            return;
+        }
+
+        //Show Progress
+        showProgressDialog();
+
+        UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
+
+        //Add Header parameters
+        Map<String, String> mHeaderParams = new HashMap<>();
+        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, userDetails.UserID);
+        mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
+
+        //Add Params
+        Map<String, String> mParams = new HashMap<>();
+        mParams.put(NetworkUtility.TAGS.TASK_ID, mTaskDetailModel.taskId);
+
+        VolleyNetworkRequest mVolleyNetworkRequest = new VolleyNetworkRequest(NetworkUtility.WS.ACCEPT_ADDITIONAL_PAYMENT_REQUEST
+                , mGetTaskStatusWSErrorListener
+                , mAcceptAdditionalPaymentRequestWSResponseListener
+                , mHeaderParams
+                , mParams
+                , null);
+        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest, NetworkUtility.WS.ACCEPT_ADDITIONAL_PAYMENT_REQUEST);
+
+    }
+
+    Response.Listener mAcceptAdditionalPaymentRequestWSResponseListener = new Response.Listener() {
+        @Override
+        public void onResponse(Object response) {
+            hideProgressDialog();
+            String strResponse = (String) response;
+            try {
+                JSONObject jsonObject = new JSONObject(strResponse);
+                Log.i(TAG, "onResponse: " + jsonObject.toString());
+                int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
+                switch (statusCode) {
+                    case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
+                        callTaskDetailWS(mTaskDetailModel.taskId);
+                        break;
+                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
+                        // Show Toast
+                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityTaskSummaryBinding.getRoot());
+                        hideProgressDialog();
+                        break;
+                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
+                        String error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
+                        // Show message
+                        Utility.showSnackBar(error_message, mActivityTaskSummaryBinding.getRoot());
+                        hideProgressDialog();
+                        break;
+                    case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
+                    case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
+                        //Logout and finish the current activity
+                        Utility.logout(mContext, true, statusCode);
+                        finish();
+                        hideProgressDialog();
+                        break;
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+                mCallCompleteTaskWSErrorListener.onErrorResponse(new VolleyError(e.getMessage()));
+            }
+
+        }
+    };
+
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////Accept-Reject Detail Service[End] //////////////////

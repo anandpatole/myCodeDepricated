@@ -75,7 +75,6 @@ public class PaymentSummaryActivity extends BaseAppCompatActivity {
         }
 
 
-
         mActivityPaymentDetailBinding.ivTermsTick.setSelected(true);
         mActivityPaymentDetailBinding.textPay.setSelected(true);
         mActivityPaymentDetailBinding.textName.setVisibility(View.GONE);
@@ -100,17 +99,23 @@ public class PaymentSummaryActivity extends BaseAppCompatActivity {
                     mActivityPaymentDetailBinding.lnDesclaimer.setVisibility(View.GONE);
 //                    mActivityPaymentDetailBinding.textMaterialDisclaimer.setVisibility(View.GONE);
                     Utility.loadImageView(mContext, mActivityPaymentDetailBinding.imgService, taskDetailModel.catImage, R.drawable.gradient_black);
+
+                    if (taskDetailModel.taskStatus.equalsIgnoreCase(Utility.TASK_STATUS.COMPLETION_CONFIRM))
+                        mActivityPaymentDetailBinding.textLabelTotalPaid.setText(getString(R.string.label_total_paid));
+                    else
+                        mActivityPaymentDetailBinding.textLabelTotalPaid.setText(getString(R.string.label_total_pay));
+
+                    mActivityPaymentDetailBinding.textPay.setVisibility(View.GONE);
+                    mActivityPaymentDetailBinding.textpromocodelabel.setText(getString(R.string.label_promocode_apply));
+                    mActivityPaymentDetailBinding.textpromocodelabel.setTextColor(ContextCompat.getColor(this, R.color.black));
+                    mActivityPaymentDetailBinding.textreferraldiscountlabel.setTextColor(ContextCompat.getColor(this, R.color.black));
+                    mActivityPaymentDetailBinding.lnstep.setVisibility(View.GONE);
+                    mActivityPaymentDetailBinding.textStepDesc.setVisibility(View.GONE);
+                    mActivityPaymentDetailBinding.lltermsandcondition.setVisibility(View.GONE);
+                    mActivityPaymentDetailBinding.ivreferraldiscount.setVisibility(View.INVISIBLE);
+                    mActivityPaymentDetailBinding.ivpromocode.setVisibility(View.INVISIBLE);
                 }
-                mActivityPaymentDetailBinding.textLabelTotalPaid.setText(getString(R.string.label_total_paid));
-                mActivityPaymentDetailBinding.textPay.setVisibility(View.GONE);
-                mActivityPaymentDetailBinding.textpromocodelabel.setText(getString(R.string.label_promocode_apply));
-                mActivityPaymentDetailBinding.textpromocodelabel.setTextColor(ContextCompat.getColor(this, R.color.black));
-                mActivityPaymentDetailBinding.textreferraldiscountlabel.setTextColor(ContextCompat.getColor(this, R.color.black));
-                mActivityPaymentDetailBinding.lnstep.setVisibility(View.GONE);
-                mActivityPaymentDetailBinding.textStepDesc.setVisibility(View.GONE);
-                mActivityPaymentDetailBinding.lltermsandcondition.setVisibility(View.GONE);
-                mActivityPaymentDetailBinding.ivreferraldiscount.setVisibility(View.INVISIBLE);
-                mActivityPaymentDetailBinding.ivpromocode.setVisibility(View.INVISIBLE);
+
 
             }
         }

@@ -225,7 +225,7 @@ public class EnterTaskDetailFragment extends BaseFragment {
         updateWhereLabelWithIcon(false, Utility.EMPTY_STRING);
 
         //On Click event of attachment
-        mFragmentEnterTaskDetailBinding.imgCamera.setOnClickListener(new View.OnClickListener() {
+        mFragmentEnterTaskDetailBinding.imgAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -301,10 +301,10 @@ public class EnterTaskDetailFragment extends BaseFragment {
             public void removeMedia() {
                 // after uploading 3 media file if any one is deleted then add image view again
                 if (mMediaRecycleAdapter.getItemCount() < 3)
-                    mFragmentEnterTaskDetailBinding.imgCamera.setVisibility(View.VISIBLE);
+                    mFragmentEnterTaskDetailBinding.imgAdd.setVisibility(View.VISIBLE);
 
             }
-        });
+        },false);
         mFragmentEnterTaskDetailBinding.recycleImg.setLayoutManager(new LinearLayoutManager(mTaskCreationActivity, LinearLayoutManager.HORIZONTAL, false));
         mFragmentEnterTaskDetailBinding.recycleImg.setAdapter(mMediaRecycleAdapter);
     }
@@ -838,7 +838,7 @@ public class EnterTaskDetailFragment extends BaseFragment {
 
     private void checkMediaArraySize() {
         if (mMediaRecycleAdapter.getItemCount() == 3) {
-            mFragmentEnterTaskDetailBinding.imgCamera.setVisibility(View.GONE);
+            mFragmentEnterTaskDetailBinding.imgAdd.setVisibility(View.GONE);
         }
     }
 

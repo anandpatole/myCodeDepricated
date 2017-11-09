@@ -23,13 +23,15 @@ import java.util.ArrayList;
  * Adapter to show thumbnails of selected image and video in Strategic partner Phase 2(Questionnary screen)
  */
 
-public  class MediaRecycleAdapter extends RecyclerView.Adapter<MediaRecycleAdapter.MyViewHolder> {
+public class MediaRecycleAdapter extends RecyclerView.Adapter<MediaRecycleAdapter.MyViewHolder> {
     private static final String TAG = MediaRecycleAdapter.class.getSimpleName();
     private ArrayList<MediaModel> mList = new ArrayList<>();
     private ItemClick mItemClick;
+    private boolean mIsStrategicPartner;
 
-    public MediaRecycleAdapter(ItemClick itemClick) {
+    public MediaRecycleAdapter(ItemClick itemClick, boolean isStrategicPartner) {
         mItemClick = itemClick;
+        mIsStrategicPartner = isStrategicPartner;
     }
 
     public void addImage(MediaModel mediaModel) {
@@ -129,7 +131,10 @@ public  class MediaRecycleAdapter extends RecyclerView.Adapter<MediaRecycleAdapt
 
                 @Override
                 public boolean onResourceReady(Bitmap resource, String model, Target<Bitmap> target, boolean isFromMemoryCache, boolean isFirstResource) {
-                    mImgThumb.setImageBitmap(Utility.getRoundedCornerBitmap(resource, mImgThumb.getContext()));
+                    if (mIsStrategicPartner)
+                        mImgThumb.setImageBitmap(Utility.getRoundedCornerBitmap(resource, mImgThumb.getContext()));
+                    else
+                        mImgThumb.setImageBitmap(resource);
                     return true;
                 }
             }).into(mImgThumb);

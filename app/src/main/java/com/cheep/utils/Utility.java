@@ -1140,6 +1140,7 @@ public class Utility {
         // According to new flow Pay later
         // when pro is booked
         int TASK_PRO_BOOKED = 20;
+        int TASK_PAID_SUCCESSFULLY = 21;
     }
 
     public interface REQUEST_TYPE {

@@ -332,6 +332,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
 
     <string name="label_promocode_apply">Promo Code Applied</string>
     <string name="label_total_paid">Total Paid</string>
+    <string name="label_total_pay">Total Pay</string>
 
     <string name="label_pay_fee_v1">Pay ₹%1$s</string>
     <string name="label_book_now_for_rupees">Book now for Rs. %1$s</string>
@@ -563,7 +564,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_book_now">Book Now</string>
     <string name="label_book_the_pro">Book the PRO</string>
     <string name="label_done">Done</string>
-    <string name="desc_pay_by_cash">Thank you for your business. Please pay ₹%1s to our PRO, %2s after </string>
+    <string name="desc_pay_by_cash">Thank you for your business. Please pay ₹%1s to our PRO, %2s after successful completion of your task.</string>
 
 
     <string name="label_gotcha">Gotcha</string>

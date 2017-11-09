@@ -154,7 +154,7 @@
             android:theme="@style/HotlineTheme"
             tools:replace="android:theme" />
         <activity
-            android:name=".activity.PaymentChoiceActivity"
+            android:name=".activity.NewPaymentChoiceActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity

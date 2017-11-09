@@ -780,7 +780,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
                     mFragmentStrategicPartnerPhaseTwoBinding.linMain.findViewWithTag(Utility.TEMPLATE_UPLOAD).setSelected(false);
 
             }
-        });
+        }, true);
 
         recycleImg.setAdapter(mMediaRecycleAdapter);
 

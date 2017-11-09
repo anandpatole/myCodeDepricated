@@ -291,7 +291,8 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
                 callCreateInstaBookingTaskWS();
 //                PaymentChoiceActivity.newInstance(mContext, taskDetailModel, providerModel, isAdditionalPayment, isInstaBooking, mSelectedAddressModelForInsta);
             } else {
-                updatePaymentStatus(true, Utility.EMPTY_STRING, isAdditionalPayment != 0);
+                callBookProForNormalTaskWS();
+//                updatePaymentStatus(true, Utility.EMPTY_STRING, isAdditionalPayment != 0);
             }
 
         }
@@ -816,7 +817,7 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
 //                || event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.PAYMENT_COMPLETED_NEED_TO_REDIRECT_TO_MY_TASK_SCREEN) {
         switch (event.BROADCAST_ACTION) {
             case Utility.BROADCAST_TYPE.PAYMENT_COMPLETED_NEED_TO_REDIRECT_TO_MY_TASK_SCREEN:
-                finish();
+//                finish();
                 break;
             case Utility.BROADCAST_TYPE.TASK_PAID_FOR_INSTA_BOOKING:
                 finish();
@@ -892,12 +893,8 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
         }
     };
 
-    /**
-     * According to new flow Pay Later this WS used for book pro only.
-     * Payment will be done after
-     */
-    private void updatePaymentStatus(boolean isSuccess, String response,
-                                     boolean isAdditionalPayment) {
+
+    private void callBookProForNormalTaskWS() {
         if (!Utility.isConnected(mContext)) {
             Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityPaymentDetailBinding.getRoot());
             return;
@@ -907,7 +904,6 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
         UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
         //Add Header parameters
 
-
         Map<String, String> mHeaderParams = new HashMap<>();
         mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
         mHeaderParams.put(NetworkUtility.TAGS.USER_ID, userDetails.UserID);
@@ -916,37 +912,30 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
         Map<String, Object> mParams = new HashMap<>();
         mParams.put(NetworkUtility.TAGS.SP_USER_ID, providerModel.providerId);
         mParams.put(NetworkUtility.TAGS.TASK_ID, taskDetailModel.taskId);
+        mParams.put(NetworkUtility.TAGS.IS_REFER_CODE, taskDetailModel.isReferCode);
+        mParams.put(NetworkUtility.TAGS.PAYABLE_AMOUNT, providerModel.quotePrice);
+        mParams.put(NetworkUtility.TAGS.USED_WALLET_BALANCE, taskDetailModel.usedWalletAmount);
+
         if (!TextUtils.isEmpty(taskDetailModel.cheepCode)) {
             mParams.put(NetworkUtility.TAGS.CHEEPCODE, taskDetailModel.cheepCode);
             mParams.put(NetworkUtility.TAGS.PROMOCODE_PRICE, taskDetailModel.taskDiscountAmount);
-
         } else {
             mParams.put(NetworkUtility.TAGS.CHEEPCODE, Utility.EMPTY_STRING);
             mParams.put(NetworkUtility.TAGS.PROMOCODE_PRICE, Utility.ZERO_STRING);
         }
-        mParams.put(NetworkUtility.TAGS.IS_REFER_CODE, taskDetailModel.isReferCode);
-        mParams.put(NetworkUtility.TAGS.TRANSACTION_ID, Utility.getUniqueTransactionId());
-        mParams.put(NetworkUtility.TAGS.IS_FOR_ADDITIONAL_QUOTE, isAdditionalPayment
-                ? getString(R.string.label_yes).toLowerCase() :
-                getString(R.string.label_no).toLowerCase());
-        mParams.put(NetworkUtility.TAGS.PAYMENT_METHOD, NetworkUtility.PAYMENT_METHOD_TYPE.PAY_LATER);
-//        mParams.put(NetworkUtility.TAGS.PAYMENT_STATUS, isSuccess ? Utility.PAYMENT_STATUS.COMPLETED : Utility.PAYMENT_STATUS.FAILED);
-//        as per new pay later flow payment_status will be processing
-        mParams.put(NetworkUtility.TAGS.PAYMENT_STATUS, Utility.PAYMENT_STATUS.PROCESSING);
-        mParams.put(NetworkUtility.TAGS.PAYMENT_LOG, response);
-        mParams.put(NetworkUtility.TAGS.USED_WALLET_BALANCE, taskDetailModel.usedWalletAmount);
-        mParams.put(NetworkUtility.TAGS.PAYABLE_AMOUNT, isAdditionalPayment ? taskDetailModel.additionalQuoteAmount : providerModel.quotePrice);
+
         // Url is based on condition if address id is greater then 0 then it means we need to update the existing address
-        VolleyNetworkRequest mVolleyNetworkRequestForSPList = new VolleyNetworkRequest(NetworkUtility.WS.PAYMENT
-                , mCallUpdatePaymentStatusWSErrorListener
-                , mCallUpdatePaymentStatusWSResponseListener
+        VolleyNetworkRequest mVolleyNetworkRequestForSPList = new VolleyNetworkRequest(NetworkUtility.WS.BOOK_PRO_FOR_NORMAL_TASK
+                , mCallBookProForNormalTaskWSErrorListener
+                , mCallBookProForNormalTaskWSResponseListener
                 , mHeaderParams
                 , mParams
                 , null);
         Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequestForSPList);
     }
 
-    Response.Listener mCallUpdatePaymentStatusWSResponseListener = new Response.Listener() {
+
+    Response.Listener mCallBookProForNormalTaskWSResponseListener = new Response.Listener() {
         @Override
         public void onResponse(Object response) {
 
@@ -966,8 +955,7 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
 //                        callTaskDetailWS();
 
 // AS PER new flow pay later task status will be pending
-                        if (Utility.TASK_STATUS.COD.equalsIgnoreCase(taskStatus)
-                                || Utility.TASK_STATUS.PAID.equalsIgnoreCase(taskStatus) || Utility.TASK_STATUS.PAY_LATER.equalsIgnoreCase(taskStatus)) {
+                        if (Utility.TASK_STATUS.PENDING.equalsIgnoreCase(taskStatus)) {
                             //We are commenting it because from here we are intiating a payment flow and
                             // after that we need to call update payment status on server
                             String taskPaidAmount = jsonData.optString(NetworkUtility.TAGS.TASK_PAID_AMOUNT);
@@ -1068,13 +1056,13 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
-                mCallUpdatePaymentStatusWSErrorListener.onErrorResponse(new VolleyError(e.getMessage()));
+                mCallBookProForNormalTaskWSErrorListener.onErrorResponse(new VolleyError(e.getMessage()));
             }
 
         }
     };
 
-    Response.ErrorListener mCallUpdatePaymentStatusWSErrorListener = new Response.ErrorListener() {
+    Response.ErrorListener mCallBookProForNormalTaskWSErrorListener = new Response.ErrorListener() {
         @Override
         public void onErrorResponse(final VolleyError error) {
             LogUtils.LOGE(TAG, "onErrorResponse() called with: error = [" + error + "]");
@@ -1307,7 +1295,7 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
 
         // Url is based on condition if address id is greater then 0 then it means we need to update the existing address
         VolleyNetworkRequest mVolleyNetworkRequestForSPList = new VolleyNetworkRequest(NetworkUtility.WS.CREATE_TASK
-                , mCallUpdatePaymentStatusWSErrorListener
+                , mCallBookProForNormalTaskWSErrorListener
                 , mCallCreateInstaTaskWSResponseListener
                 , mHeaderParams
                 , mParams, null);
@@ -1350,7 +1338,7 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
-                mCallUpdatePaymentStatusWSErrorListener.onErrorResponse(new VolleyError(e.getMessage()));
+                mCallBookProForNormalTaskWSErrorListener.onErrorResponse(new VolleyError(e.getMessage()));
             }
 
         }

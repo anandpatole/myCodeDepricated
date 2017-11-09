@@ -77,6 +77,7 @@ public class NetworkUtility {
         public static final String PAYMENT_HISTORY = BASE_URL + "customers/payment/payment_history";
         public static final String EMERGENCY_ALERT = BASE_URL + "customers//sp_profile/emergency_alert";
         public static final String CHECK_PROCESSING_TASK = BASE_URL + "customers/tasks/check_processing_task";
+        public static final String BOOK_PRO_FOR_NORMAL_TASK = BASE_URL + "customers/tasks/bookProForNormalTask";
 
         // Chat Image upload
         public static final String IMAGE_UPLOAD_FOR_CHAT = BASE_URL + "customers/profile/imageUploadForChat";
@@ -113,6 +114,8 @@ public class NetworkUtility {
         //Refer and Earn
         public static final String REFER_BALANCE = BASE_URL + "customers/profile/getReferBalance";
         public static final String GET_AMOUNT_WITH_GST = BASE_URL + "customers/payment/getAmountWithGST";
+        public static final String PAY_TASK_PAYMENT = BASE_URL + "customers/payment/payTaskPayment";
+        public static final String ACCEPT_ADDITIONAL_PAYMENT_REQUEST = BASE_URL + "customers/tasks/acceptAdditionalPaymentRequest";
 
         // Paytm Verify Transaction based on Order
         // Save Paytm user details
@@ -382,9 +385,9 @@ public class NetworkUtility {
         String PAYTM_RESPONSE_DATA = "paytmResponseData";
         String PAYMENT_GATEWAY_DATA = "paymentGatewayData";
         String ACCESS_TOKEN_EXPIRES_TIMESTAMP = "access_token_expires_timestamp";
-        String SUB_SUB_CAT_ID= "sub_sub_cat_id";
-        String QUESTION_ID= "question_id";
-        String ANSWER= "answer";
+        String SUB_SUB_CAT_ID = "sub_sub_cat_id";
+        String QUESTION_ID = "question_id";
+        String ANSWER = "answer";
 
         interface VERSION_CHANGE_TYPE {
             int NORMAL = 0;
@@ -436,7 +439,7 @@ public class NetworkUtility {
             int USER_DELETED = 447;
         }
 
-        interface BANNER_TYPE{
+        interface BANNER_TYPE {
             String STRATEGIC = "strategic";
             String REFERRAL = "referral";
             String NORMAL = "normal";

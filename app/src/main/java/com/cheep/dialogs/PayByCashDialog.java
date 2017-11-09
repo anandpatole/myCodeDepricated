@@ -34,15 +34,23 @@ public class PayByCashDialog extends DialogFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
+
+
+    public interface PayByCashDoneListener {
+        void onDoneClick();
+    }
+
+    PayByCashDoneListener mPayByCashDoneListener;
+
 
     /**
      * Create a new instance of MyDialogFragment, providing "num"
      * as an argument.
      */
-    public static PayByCashDialog newInstance(String proName, String quoteAmount) {
+    public static PayByCashDialog newInstance(String proName, String quoteAmount, PayByCashDoneListener payByCashDoneListener) {
         PayByCashDialog f = new PayByCashDialog();
+        f.mPayByCashDoneListener = payByCashDoneListener;
         // Supply num input as an argument.
         Bundle args = new Bundle();
         args.putString(NetworkUtility.TAGS.SP_USER_NAME, proName);
@@ -78,11 +86,11 @@ public class PayByCashDialog extends DialogFragment {
 
         mDialogPayByCashBinding.textDescription.setText(span);
 
-        mDialogPayByCashBinding.textDescription.setOnClickListener(new View.OnClickListener() {
+        mDialogPayByCashBinding.textOkay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Dissmiss the dialog.
-                dismiss();
+            mPayByCashDoneListener.onDoneClick();
+            dismiss();
             }
         });
         return mDialogPayByCashBinding.getRoot();
