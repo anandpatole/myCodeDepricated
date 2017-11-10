@@ -255,10 +255,10 @@
                         <RatingBar
                             android:id="@+id/provider_rating"
                             android:layout_width="wrap_content"
-                            android:layout_height="@dimen/scale_9dp"
+                            android:layout_height="@dimen/scale_8dp"
                             android:layout_marginTop="@dimen/scale_3dp"
                             android:isIndicator="true"
-                            android:progressDrawable="@drawable/rating_bar_selector_s1"
+                            android:progressDrawable="@drawable/rating_bar_selector_payment_detail"
                             android:rating="4"
                             android:stepSize="1"/>
 

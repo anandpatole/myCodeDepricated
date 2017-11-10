@@ -99,7 +99,7 @@
                                   android:layout_height="match_parent"
                                   android:layout_marginLeft="@dimen/scale_30dp"
                                   android:layout_marginRight="@dimen/scale_30dp"
-                                  android:layout_marginBottom="@dimen/scale_30dp"
+                                  android:layout_marginBottom="@dimen/scale_15dp"
                                   android:orientation="horizontal">
 
                 <LinearLayout

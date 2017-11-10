@@ -119,7 +119,6 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
             case R.id.rl_card:
             case R.id.rl_netbanking:
                 paymentMethod = NetworkUtility.PAYMENT_METHOD_TYPE.PAYU;
-                LogUtils.LOGD(TAG, "onClick: of HDFC PAYMENT");
                 if (taskDetailModel.taskType.equalsIgnoreCase(Utility.TASK_TYPE.STRATEGIC)) {
                     // Go for HDFC/payu payment gateway strategic partner
                     generateHashForStrategicPartner();

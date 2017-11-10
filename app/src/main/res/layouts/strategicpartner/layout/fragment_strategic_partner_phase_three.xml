@@ -292,7 +292,7 @@
             android:background="@color/dark_blue_variant_1"
             android:gravity="center"
             android:padding="@dimen/scale_12dp"
-            android:text="@string/continue_"
+            android:text="@string/label_book_now"
             android:textColor="@color/white"
             android:textSize="@dimen/text_size_17sp"
             android:visibility="visible"/>

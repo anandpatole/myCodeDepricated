@@ -279,12 +279,12 @@
                             <android.support.v7.widget.AppCompatRatingBar
                                 android:id="@+id/rating_bar"
                                 android:layout_width="wrap_content"
-                                android:layout_height="@dimen/scale_23dp"
+                                android:layout_height="@dimen/scale_20dp"
                                 android:layout_centerHorizontal="true"
                                 android:layout_marginLeft="@dimen/scale_22dp"
                                 android:layout_marginRight="@dimen/scale_22dp"
                                 android:isIndicator="true"
-                                android:progressDrawable="@drawable/rating_bar_blue_selector_s5"
+                                android:progressDrawable="@drawable/rating_bar_task_summary_big"
                                 android:rating="0"
                                 android:stepSize="1"/>
 

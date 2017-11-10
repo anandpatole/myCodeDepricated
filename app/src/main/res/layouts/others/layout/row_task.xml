@@ -101,12 +101,12 @@
                     <RatingBar
                         android:id="@+id/rating_bar"
                         android:layout_width="wrap_content"
-                        android:layout_height="@dimen/scale_9dp"
+                        android:layout_height="@dimen/scale_8dp"
                         android:layout_alignParentRight="true"
                         android:layout_gravity="center"
                         android:layout_marginTop="@dimen/scale_8dp"
                         android:isIndicator="true"
-                        android:progressDrawable="@drawable/rating_bar_selector_s1"
+                        android:progressDrawable="@drawable/rating_bar_selector_payment_detail"
                         android:rating="4"
                         android:stepSize="1" />
                     <!--<com.cheep.custom_view.CFTextViewRegular

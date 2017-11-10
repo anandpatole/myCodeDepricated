@@ -18,7 +18,7 @@
 
                 <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/scale_170dp"
+                    android:layout_height="@dimen/scale_160dp"
                     android:background="@color/white">
 
                     <ImageView
@@ -271,15 +271,30 @@
                                         -->
                                     </LinearLayout>
 
-                                    <RatingBar
-                                        android:id="@+id/provider_rating"
+                                    <LinearLayout
                                         android:layout_width="wrap_content"
-                                        android:layout_height="@dimen/scale_9dp"
-                                        android:layout_marginTop="@dimen/scale_3dp"
-                                        android:isIndicator="true"
-                                        android:progressDrawable="@drawable/rating_bar_selector_s1"
-                                        android:rating="4"
-                                        android:stepSize="1"/>
+                                        android:layout_height="wrap_content"
+                                        android:orientation="horizontal">
+
+                                        <RatingBar
+                                            android:id="@+id/provider_rating"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="@dimen/scale_8dp"
+                                            android:layout_marginTop="@dimen/scale_3dp"
+                                            android:isIndicator="true"
+                                            android:progressDrawable="@drawable/rating_bar_selector_payment_detail"
+                                            android:rating="4"
+                                            android:stepSize="1"/>
+
+                                        <com.cheep.custom_view.CFTextViewRegular
+                                            android:id="@+id/text_experience"
+                                            android:layout_marginLeft="@dimen/scale_5dp"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:textColor="@color/grey_varient_8"
+                                            android:textSize="@dimen/text_size_12sp"
+                                            tools:text="sadsa"/>
+                                    </LinearLayout>
 
                                     <com.cheep.custom_view.CFTextViewRegular
                                         android:id="@+id/text_address_km_away"
@@ -298,6 +313,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_alignParentRight="true"
                                     android:layout_gravity="center_vertical"
+                                    android:layout_marginRight="@dimen/scale_20dp"
                                     android:gravity="center"
                                     android:orientation="horizontal">
 
@@ -391,7 +407,6 @@
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:layout_centerVertical="true"
-                                        android:layout_marginLeft="@dimen/scale_10dp"
                                         android:layout_toLeftOf="@+id/rl_profile_icon"
                                         android:gravity="center_horizontal"
                                         android:orientation="vertical">
@@ -526,7 +541,7 @@
                                     android:layout_height="@dimen/scale_70dp"
                                     android:adjustViewBounds="true"
                                     android:background="@drawable/bg_white_shadow"
-                                    android:padding="@dimen/scale_5dp"
+                                    android:padding="@dimen/scale_3dp"
                                     android:scaleType="centerCrop"
                                     android:visibility="visible"
                                     tools:ignore="ContentDescription"/>
@@ -536,8 +551,8 @@
                                     android:id="@+id/frame_picture_2"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginLeft="@dimen/scale_5dp"
-                                    android:layout_marginTop="@dimen/scale_5dp">
+                                    android:layout_marginLeft="@dimen/scale_3dp"
+                                    android:layout_marginTop="@dimen/scale_3dp">
 
                                     <ImageView
                                         android:id="@+id/img_task_picture_2"
@@ -545,21 +560,21 @@
                                         android:layout_height="@dimen/scale_70dp"
                                         android:adjustViewBounds="true"
                                         android:background="@drawable/bg_white_shadow"
-                                        android:padding="@dimen/scale_5dp"
+                                        android:padding="@dimen/scale_3dp"
                                         android:scaleType="centerCrop"
                                         android:visibility="visible"
                                         tools:ignore="ContentDescription"/>
 
                                     <TextView
                                         android:id="@+id/tv_counter_2"
-                                        android:layout_width="@dimen/scale_30dp"
-                                        android:layout_height="@dimen/scale_30dp"
+                                        android:layout_width="@dimen/scale_20dp"
+                                        android:layout_height="@dimen/scale_20dp"
                                         android:layout_gravity="center"
                                         android:background="@drawable/xml_circular_indicator_selected_with_border"
                                         android:gravity="center_vertical|center_horizontal"
-                                        android:text="+1"
+                                        android:text="+2"
                                         android:textColor="@color/white"
-                                        android:textSize="@dimen/text_size_12sp"
+                                        android:textSize="@dimen/text_size_11sp"
                                         />
                                 </FrameLayout>
 
@@ -567,8 +582,8 @@
                                     android:id="@+id/frame_picture_3"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginLeft="@dimen/scale_10dp"
-                                    android:layout_marginTop="@dimen/scale_10dp">
+                                    android:layout_marginLeft="@dimen/scale_6dp"
+                                    android:layout_marginTop="@dimen/scale_6dp">
 
                                     <ImageView
                                         android:id="@+id/img_task_picture_3"
@@ -576,21 +591,21 @@
                                         android:layout_height="@dimen/scale_70dp"
                                         android:adjustViewBounds="true"
                                         android:background="@drawable/bg_white_shadow"
-                                        android:padding="@dimen/scale_5dp"
+                                        android:padding="@dimen/scale_3dp"
                                         android:scaleType="centerCrop"
                                         android:visibility="visible"
                                         tools:ignore="ContentDescription"/>
 
                                     <TextView
                                         android:id="@+id/tv_counter_3"
-                                        android:layout_width="@dimen/scale_30dp"
-                                        android:layout_height="@dimen/scale_30dp"
+                                        android:layout_width="@dimen/scale_20dp"
+                                        android:layout_height="@dimen/scale_20dp"
                                         android:layout_gravity="center"
                                         android:background="@drawable/xml_circular_indicator_selected_with_border"
                                         android:gravity="center_vertical|center_horizontal"
                                         android:text="+2"
                                         android:textColor="@color/white"
-                                        android:textSize="@dimen/text_size_12sp"
+                                        android:textSize="@dimen/text_size_11sp"
                                         />
                                 </FrameLayout>
                             </FrameLayout>

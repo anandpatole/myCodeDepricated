@@ -77,7 +77,7 @@ public class PayByCashDialog extends DialogFragment {
         String text = getString(R.string.desc_pay_by_cash, mQuoteAmount, mPROName);
         StringBuilder description = new StringBuilder(text);
         // appending two space for two smiley at the end of description
-        description.append(" ");
+        description.append("  ");
         Spannable span = new SpannableString(description);
         Drawable img2 = ContextCompat.getDrawable(getActivity(), R.drawable.ic_smiley_folded_hands);
         img2.setBounds(0, 0, img2.getIntrinsicWidth(), img2.getIntrinsicHeight());

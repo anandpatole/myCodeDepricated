@@ -362,7 +362,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_your_task_is_posted">Your task is posted!</string>
     <string name="label_great_choice_x">Great choice %1$s!</string>
     <string name="desc_task_creation_acknowledgement">Hi %1$s, thank you for posting the task. Soon you will receive multiple quotes from verified and insured PROs around you.</string>
-    <string name="desc_task_payment_done_acknowledgement">Your task is confirmed and our CHEEP PRO %1$s, will be there at your location on %2$s.</string>
+    <string name="desc_task_payment_done_acknowledgement">Your task is confirmed and our CHEEP PRO %1s will be there at your location on %2s.</string>
     <string name="desc_request_for_detail_accepted_acknowledgment">Thanks! %1$s will now get back to you either by chat or call to discuss your task.</string>
     <string name="label_happy_homes">%s Homes Made Happy So Far</string>
     <string name="label_quote_discount" tools:ignore="StringFormatInvalid">% Cheeper</string>
