@@ -1379,18 +1379,19 @@ public class Utility {
         }
         return "";
     }
-  /*  public static String getExperienceString(String exp) {
+
+    public static String getExperienceString(String exp, String separator) {
         try {
             float expFloat = Float.parseFloat(exp);
             if (expFloat > 1) {
-                return exp + " Years \nExperience";
+                return exp + " Years " + separator + "Experience";
             } else {
-                return exp + " Year \nExperience";
+                return exp + " Year " + separator + "Experience";
             }
         } catch (NumberFormatException e) {
-            return exp + " Year \nExperience";
+            return exp + " Year " + separator + "Experience";
         }
-    }*/
+    }
 
     public static int getProLevelBadge(String pro_level) {
         if (TextUtils.isEmpty(pro_level))

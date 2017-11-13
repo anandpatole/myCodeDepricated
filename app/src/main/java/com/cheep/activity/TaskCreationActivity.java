@@ -53,6 +53,7 @@ import org.json.JSONObject;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -548,6 +549,7 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
         mParams.put(NetworkUtility.TAGS.TASK_TYPE, Utility.TASK_TYPE.NORMAL);
         mParams.put(NetworkUtility.TAGS.SUBCATEGORY_ID, String.valueOf(mSelectedSubServiceDetailModel.sub_cat_id));
         mParams.put(NetworkUtility.TAGS.START_DATETIME, String.valueOf(mTaskCreationPagerAdapter.mEnterTaskDetailFragment.superCalendar.getTimeInMillis()));
+        Collections.reverse(mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mMediaRecycleAdapter.getList());
         mParams.put(NetworkUtility.TAGS.MEDIA_FILE, Utility.getSelectedMediaJsonString(mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mMediaRecycleAdapter.getList()));
 
         // Create Params for AppsFlyer event track
@@ -765,6 +767,7 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
                     taskDetailModel.taskStartdate = String.valueOf(mTaskCreationPagerAdapter.mEnterTaskDetailFragment.superCalendar.getCalendar().getTimeInMillis());
                     taskDetailModel.subCategoryID = String.valueOf(mSelectedSubServiceDetailModel.sub_cat_id);
 //                    model.taskImage = mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mCurrentPhotoPath;
+                    Collections.reverse(mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mMediaRecycleAdapter.getList());
                     taskDetailModel.mMediaModelList = mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mMediaRecycleAdapter.getList();
                     ProviderModel providerModel = new ProviderModel();
                     providerModel.userName = instaBookingProDetail.userName;

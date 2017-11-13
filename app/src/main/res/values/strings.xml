@@ -271,11 +271,11 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     </plurals>
 
     <string name="label_experience_zero">3 Years\nExperience</string>
-    <plurals name="getExperienceString">
-        <!--<item quantity="zero">Awaited\nResponse</item>-->
+  <!--  <plurals name="getExperienceString">
+        &lt;!&ndash;<item quantity="zero">Awaited\nResponse</item>&ndash;&gt;
         <item quantity="one">%s Year\nExperience</item>
         <item quantity="other">%s Years\nExperience</item>
-    </plurals>
+    </plurals>-->
     <plurals name="getExperienceStringOneLine">
         <!--<item quantity="zero">Awaited\nResponse</item>-->
         <item quantity="one">%s Year Experience</item>

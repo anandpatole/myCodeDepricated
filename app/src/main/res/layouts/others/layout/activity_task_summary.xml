@@ -518,7 +518,6 @@
                                     android:background="@color/transparent"
                                     android:gravity="start"
                                     android:lines="3"
-                                    android:paddingBottom="@dimen/scale_8dp"
                                     android:paddingRight="@dimen/scale_8dp"
                                     android:paddingTop="@dimen/scale_8dp"
                                     android:textColor="@color/black"
@@ -617,7 +616,7 @@
                             android:layout_height="@dimen/scale_0_5dp"
                             android:layout_marginLeft="@dimen/scale_10dp"
                             android:layout_marginRight="@dimen/scale_10dp"
-                            android:layout_marginTop="@dimen/scale_10dp"
+                            android:layout_marginTop="@dimen/scale_8dp"
                             android:background="@color/grey_varient_11"/>
 
                         <!--Third Section(When)-->
@@ -735,7 +734,6 @@
                         <View
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/scale_0_5dp"
-                            android:layout_marginBottom="@dimen/scale_16dp"
                             android:layout_marginLeft="@dimen/scale_10dp"
                             android:layout_marginRight="@dimen/scale_10dp"
                             android:background="@color/grey_varient_11"/>
@@ -745,6 +743,7 @@
                             android:id="@+id/text_view_payment_summary"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/scale_16dp"
                             android:layout_gravity="center_horizontal"
                             android:layout_marginBottom="@dimen/scale_16dp"
                             android:text="@string/label_view_payment_summary"
@@ -985,7 +984,10 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="vertical"
-                            android:padding="@dimen/scale_16dp"
+                            android:paddingTop="@dimen/scale_16dp"
+                            android:paddingLeft="@dimen/scale_16dp"
+                            android:paddingRight="@dimen/scale_16dp"
+                            android:paddingBottom="@dimen/scale_16dp"
                             android:visibility="visible">
 
                             <com.cheep.custom_view.CFTextViewRegular
@@ -1001,7 +1003,9 @@
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="@dimen/scale_16dp"
+                                android:layout_marginTop="@dimen/scale_10dp"
+                                android:layout_marginLeft="@dimen/scale_18dp"
+                                android:layout_marginRight="@dimen/scale_18dp"
                                 android:gravity="center"
                                 android:orientation="horizontal">
 
@@ -1010,7 +1014,7 @@
                                     android:layout_width="0dp"
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="bottom"
-                                    android:layout_marginRight="@dimen/scale_10dp"
+                                    android:layout_marginRight="@dimen/scale_20dp"
                                     android:layout_weight="1"
                                     android:background="@drawable/img_blue_rounded"
                                     android:gravity="center"

@@ -225,7 +225,9 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
                 if (Utility.ZERO_STRING.equals(providerModel.experience)) {
                     mActivityPaymentDetailBinding.textExperience.setText(Utility.checkNonNullAndSet(mContext.getString(R.string.label_experience_zero)));
                 } else {
-                    mActivityPaymentDetailBinding.textExperience.setText(this.getResources().getQuantityString(R.plurals.getExperienceStringOneLine, Integer.parseInt(providerModel.experience), providerModel.experience));
+//                    mActivityPaymentDetailBinding.textExperience.setText(this.getResources().getQuantityString(R.plurals.getExperienceStringOneLine, Integer.parseInt(providerModel.experience), providerModel.experience));
+                    mActivityPaymentDetailBinding.textExperience.setText(Utility.getExperienceString(providerModel.experience,Utility.EMPTY_STRING));
+
                 }
 
 
