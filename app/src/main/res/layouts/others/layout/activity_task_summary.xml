@@ -785,6 +785,7 @@
                                     android:layout_gravity="bottom"
                                     android:layout_marginRight="@dimen/scale_10dp"
                                     android:layout_weight="1"
+                                    android:textSize="@dimen/text_size_seek_support"
                                     android:background="@drawable/img_blue_rounded"
                                     android:gravity="center"
                                     android:minWidth="150dp"
@@ -800,6 +801,7 @@
                                     android:id="@+id/text_task_completion_no"
                                     android:layout_width="0dp"
                                     android:layout_height="match_parent"
+                                    android:textSize="@dimen/text_size_seek_support"
                                     android:layout_gravity="bottom"
                                     android:layout_marginRight="@dimen/scale_10dp"
                                     android:layout_weight="1"
@@ -817,6 +819,7 @@
                                 <com.cheep.custom_view.CFTextViewSemiBold
                                     android:id="@+id/text_task_seek_support"
                                     android:layout_width="0dp"
+                                    android:textSize="@dimen/text_size_seek_support"
                                     android:layout_height="match_parent"
                                     android:layout_gravity="bottom"
                                     android:layout_weight="1"

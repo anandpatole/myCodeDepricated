@@ -773,6 +773,7 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
                     providerModel.userName = instaBookingProDetail.userName;
                     providerModel.profileUrl = instaBookingProDetail.profileImg;
                     providerModel.providerId = instaBookingProDetail.spId;
+                    providerModel.pro_level = instaBookingProDetail.proLevel;
                     providerModel.quotePrice = instaBookingProDetail.rateGST;
                     providerModel.isVerified = instaBookingProDetail.verified;
                     providerModel.experience = instaBookingProDetail.experience;
