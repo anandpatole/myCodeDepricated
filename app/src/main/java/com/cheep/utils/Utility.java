@@ -91,6 +91,14 @@ public class Utility {
     public static final String FACEBOOK_NAME_KEY = "name";
     public static final String FACEBOOK_FIELDS_KEY = "fields";
 
+    public static boolean allPermissionGranted(String[] permissions, int[] grantResults) {
+        boolean allGranted = true;
+        for (int i = 0; i < permissions.length; i++) {
+            allGranted = grantResults[i] == PackageManager.PERMISSION_GRANTED;
+        }
+        return allGranted;
+    }
+
     public interface GUEST_STATIC_INFO {
         public static final String USERNAME = "Guest";
     }
@@ -161,17 +169,12 @@ public class Utility {
     public static final String CHAT_TYPE_MONEY = "money";
 
     public static final int REQUEST_CODE_PERMISSION_LOCATION = 101;
-    public static final int REQUEST_CODE_READ_EXTERNAL_STORAGE = 102;
-    public static final int REQUEST_CODE_GET_FILE = 103;
+
     public static final int REQUEST_CODE_GET_FILE_ADD_COVER = 104;
-    public static final int REQUEST_CODE_GET_FILE_ADD_PROFILE = 105;
     public static final int REQUEST_CODE_READ_EXTERNAL_STORAGE_ADD_COVER = 106;
 
-
-    public static final int REQUEST_CODE_READ_EXTERNAL_STORAGE_ADD_PROFILE = 107;
     public static final int REQUEST_CODE_CROP_GET_FILE_ADD_PROFILE = 110;
     public static final int REQUEST_CODE_CHANGE_LOCATION = 108;
-    public static final int REQUEST_CODE_GET_FILE_ADD_PHOTO = 111;
     public static final int REQUEST_CODE_CHECK_LOCATION_SETTINGS = 112;
 
     public static final int REQUEST_CODE_IMAGE_CAPTURE_ADD_PROFILE = 113;
@@ -180,8 +183,14 @@ public class Utility {
     public static final int REQUEST_CODE_READ_EXTERNAL_STORAGE_ADD_PROFILE_GALLERY = 116;
     public static final int PLACE_PICKER_REQUEST = 117;
     public static final int REQUEST_CODE_ADD_PROFILE_CAMERA = 118;
-    public static final int REQUEST_CODE_VIDEO_CAPTURE = 119;
-    public static final int REQUEST_CODE_GET_VIDEO_GALLERY = 120;
+
+    /**
+     * Image/Video intent request code for task images
+     */
+    public static final int REQUEST_CODE_VIDEO_CAPTURE = 1111;
+    public static final int REQUEST_CODE_IMAGE_CAPTURE = 1112;
+    public static final int REQUEST_CODE_VIDEO_SELECT = 1113;
+    public static final int REQUEST_CODE_IMAGE_SELECT = 1114;
 
     /*
     * @Sanjay

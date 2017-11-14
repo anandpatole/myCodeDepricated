@@ -1,6 +1,5 @@
 package com.cheep.strategicpartner;
 
-import android.Manifest;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
@@ -17,8 +16,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
@@ -72,6 +71,7 @@ import com.cheep.strategicpartner.recordvideo.RecordVideoNewActivity;
 import com.cheep.utils.FetchLocationInfoUtility;
 import com.cheep.utils.LogUtils;
 import com.cheep.utils.PreferenceUtility;
+import com.cheep.utils.RequestPermission;
 import com.cheep.utils.SuperCalendar;
 import com.cheep.utils.Utility;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
@@ -105,7 +105,7 @@ import static com.cheep.network.NetworkUtility.TAGS.SP_USER_ID;
  * partner specific question will be inflated run time
  */
 
-public class StrategicPartnerFragPhaseTwo extends BaseFragment {
+public class StrategicPartnerFragPhaseTwo extends BaseFragment implements RequestPermission.OnRequestPermissionResult {
     public static final String TAG = "StrategicPartnerFragPha";
     private FragmentStrategicPartnerPhaseTwoBinding mFragmentStrategicPartnerPhaseTwoBinding;
     private StrategicPartnerTaskCreationAct mStrategicPartnerTaskCreationAct;
@@ -115,6 +115,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
     private int count = 1;
     private ArrayList<QueAnsModel> mList;
     private boolean isVerified = false;
+    private RequestPermission mRequestPermission;
 
     @SuppressWarnings("unused")
     public static StrategicPartnerFragPhaseTwo newInstance() {
@@ -177,6 +178,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
         LogUtils.LOGD(TAG, "initiateUI() called");
 
         // handle click of bottom button (book and pay)
+        mRequestPermission = new RequestPermission(StrategicPartnerFragPhaseTwo.this, this);
         mFragmentStrategicPartnerPhaseTwoBinding.textContinue.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -820,11 +822,19 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
                         // The 'which' argument contains the index position
                         // of the selected item
                         if (which == 0) {
-                            takeVideoIntent(Utility.REQUEST_CODE_WRITE_EXTERNAL_STORAGE_ADD_PROFILE_CAMERA);
+                            if (mRequestPermission.shouldCheckVideoCapturePermission()) {
+                                requestPermissions(mRequestPermission.permissionsRequiredForVideoCapture, RequestPermission.REQUEST_PERMISSION_FOR_VIDEO_CAPTURE);
+                            } else {
+                                takeVideoIntent();
+                            }
                         } else {
                             //Select Gallery
                             // In case Choose File from Gallery
-                            chooseVideoFromGallery(Utility.REQUEST_CODE_GET_VIDEO_GALLERY, Utility.REQUEST_CODE_READ_EXTERNAL_STORAGE_ADD_PROFILE_GALLERY);
+                            if (mRequestPermission.shouldCheckOpenGalleryPermission()) {
+                                requestPermissions(mRequestPermission.permissionsRequiredForOpenGallery, RequestPermission.REQUEST_PERMISSION_FOR_OPEN_GALLERY_VIDEO);
+                            } else {
+                                chooseVideoFromGallery();
+                            }
                         }
                     }
                 });
@@ -835,86 +845,64 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
     }
 
 
-    private void takeVideoIntent(int requestPermissionCode) {
+    private void takeVideoIntent() {
         //Go ahead with Camera capturing
-        if (ContextCompat.checkSelfPermission(mStrategicPartnerTaskCreationAct, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED
-                || ContextCompat.checkSelfPermission(mStrategicPartnerTaskCreationAct, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED
-                || ContextCompat.checkSelfPermission(mStrategicPartnerTaskCreationAct, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(mStrategicPartnerTaskCreationAct, Manifest.permission.CAMERA)
-                    && ActivityCompat.shouldShowRequestPermissionRationale(mStrategicPartnerTaskCreationAct, Manifest.permission.RECORD_AUDIO)) {
-                ActivityCompat.requestPermissions(mStrategicPartnerTaskCreationAct, new String[]{Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO, Manifest.permission.READ_EXTERNAL_STORAGE}, requestPermissionCode);
+        //Go ahead with Camera capturing
+        Intent takePictureIntent = new Intent(mStrategicPartnerTaskCreationAct, RecordVideoNewActivity.class);
+        if (takePictureIntent.resolveActivity(mStrategicPartnerTaskCreationAct.getPackageManager()) != null) {
+            // Create the File where the photo should go
+            File photoFile;
+            photoFile = createVideoFile();
+            mCurrentPhotoPath = photoFile.getAbsolutePath();
+            if (photoFile.exists()) {
+                photoFile.delete();
             } else {
-                ActivityCompat.requestPermissions(mStrategicPartnerTaskCreationAct, new String[]{Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO, Manifest.permission.READ_EXTERNAL_STORAGE}, requestPermissionCode);
+                photoFile.getParentFile().mkdirs();
             }
-        } else {
-            //Go ahead with Camera capturing
 
+            // Continue only if the File was successfully created
+            Uri photoURI = FileProvider.getUriForFile(mStrategicPartnerTaskCreationAct,
+                    BuildConfig.FILE_PROVIDER_URL,
+                    photoFile);
+            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
 
-            Intent takePictureIntent = new Intent(mStrategicPartnerTaskCreationAct, RecordVideoNewActivity.class);
-            if (takePictureIntent.resolveActivity(mStrategicPartnerTaskCreationAct.getPackageManager()) != null) {
-                // Create the File where the photo should go
-                File photoFile;
-                photoFile = createVideoFile();
-                mCurrentPhotoPath = photoFile.getAbsolutePath();
-                if (photoFile.exists()) {
-                    photoFile.delete();
-                } else {
-                    photoFile.getParentFile().mkdirs();
+            // Grant URI permission START
+            // Enabling the permission at runtime
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                takePictureIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                ClipData clip =
+                        ClipData.newUri(mStrategicPartnerTaskCreationAct.getContentResolver(), "A photo", photoURI);
+                takePictureIntent.setClipData(clip);
+                takePictureIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+            } else {
+                List<ResolveInfo> resInfoList =
+                        mStrategicPartnerTaskCreationAct.getPackageManager()
+                                .queryIntentActivities(takePictureIntent, PackageManager.MATCH_DEFAULT_ONLY);
+
+                for (ResolveInfo resolveInfo : resInfoList) {
+                    String packageName = resolveInfo.activityInfo.packageName;
+                    mStrategicPartnerTaskCreationAct.grantUriPermission(packageName, photoURI,
+                            Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
                 }
-
-                // Continue only if the File was successfully created
-                Uri photoURI = FileProvider.getUriForFile(mStrategicPartnerTaskCreationAct,
-                        BuildConfig.FILE_PROVIDER_URL,
-                        photoFile);
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-
-                // Grant URI permission START
-                // Enabling the permission at runtime
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    takePictureIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-                } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                    ClipData clip =
-                            ClipData.newUri(mStrategicPartnerTaskCreationAct.getContentResolver(), "A photo", photoURI);
-                    takePictureIntent.setClipData(clip);
-                    takePictureIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-                } else {
-                    List<ResolveInfo> resInfoList =
-                            mStrategicPartnerTaskCreationAct.getPackageManager()
-                                    .queryIntentActivities(takePictureIntent, PackageManager.MATCH_DEFAULT_ONLY);
-
-                    for (ResolveInfo resolveInfo : resInfoList) {
-                        String packageName = resolveInfo.activityInfo.packageName;
-                        mStrategicPartnerTaskCreationAct.grantUriPermission(packageName, photoURI,
-                                Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-                    }
-                }
-                //Grant URI permission END
+            }
+            //Grant URI permission END
 //                startActivityForResult(takePictureIntent, requestCode);
-                startActivityForResult(takePictureIntent, Utility.REQUEST_CODE_VIDEO_CAPTURE);
-            }
-
+            startActivityForResult(takePictureIntent, Utility.REQUEST_CODE_VIDEO_CAPTURE);
         }
     }
 
-    private void chooseVideoFromGallery(int requestFileChooserCode, int requestPermissionCode) {
-        LogUtils.LOGD(TAG, "choosePictureFromGallery() called with: requestFileChooserCode = [" + requestFileChooserCode + "], requestPermissionCode = [" + requestPermissionCode + "]");
-        if (ContextCompat.checkSelfPermission(mStrategicPartnerTaskCreationAct, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(mStrategicPartnerTaskCreationAct, Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                ActivityCompat.requestPermissions(mStrategicPartnerTaskCreationAct, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, requestPermissionCode);
-            } else {
-                ActivityCompat.requestPermissions(mStrategicPartnerTaskCreationAct, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, requestPermissionCode);
-            }
-        } else {
-            //Go ahead with file choosing
-            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-            intent.setType("video/*");
-            intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
-            intent.addCategory(Intent.CATEGORY_OPENABLE);
-            if (intent.resolveActivity(mStrategicPartnerTaskCreationAct.getPackageManager()) != null) {
-                startActivityForResult(intent, requestFileChooserCode);
-            }
+    private void chooseVideoFromGallery() {
+        //Go ahead with file choosing
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("video/*");
+        intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        if (intent.resolveActivity(mStrategicPartnerTaskCreationAct.getPackageManager()) != null) {
+            startActivityForResult(intent, Utility.REQUEST_CODE_VIDEO_SELECT);
         }
     }
+
 
     /////////////////////////////////////////////////////////////////////////////////////////////
     //////////////////////////////////////////    IMAGE CAPTURE - CHOOSER   /////////////////////
@@ -929,11 +917,17 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
                         // The 'which' argument contains the index position
                         // of the selected item
                         if (which == 0) {
-                            dispatchTakePictureIntent(Utility.REQUEST_CODE_IMAGE_CAPTURE_ADD_PROFILE, Utility.REQUEST_CODE_WRITE_EXTERNAL_STORAGE_ADD_PROFILE_CAMERA);
+                            if (mRequestPermission.shouldCheckImageCapturePermission())
+                                requestPermissions(mRequestPermission.permissionsRequiredForImageCapture, RequestPermission.REQUEST_PERMISSION_FOR_IMAGE_CAPTURE);
+                            else
+                                startCameraCaptureChooser();
                         } else {
                             //Select Gallery
                             // In case Choose File from Gallery
-                            choosePictureFromGallery(Utility.REQUEST_CODE_GET_FILE_ADD_PROFILE_GALLERY, Utility.REQUEST_CODE_READ_EXTERNAL_STORAGE_ADD_PROFILE_GALLERY);
+                            if (mRequestPermission.shouldCheckOpenGalleryPermission())
+                                requestPermissions(mRequestPermission.permissionsRequiredForOpenGallery, RequestPermission.REQUEST_PERMISSION_FOR_OPEN_GALLERY_IMAGE);
+                            else
+                                startIntentImageChooser();
                         }
                     }
                 });
@@ -943,21 +937,8 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
         builder.show();
     }
 
-    private void dispatchTakePictureIntent(int requestCode, int requestPermissionCode) {
-        //Go ahead with Camera capturing
-        if (ContextCompat.checkSelfPermission(mStrategicPartnerTaskCreationAct, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(mStrategicPartnerTaskCreationAct, Manifest.permission.CAMERA)) {
-                ActivityCompat.requestPermissions(mStrategicPartnerTaskCreationAct, new String[]{Manifest.permission.CAMERA}, requestPermissionCode);
-            } else {
-                ActivityCompat.requestPermissions(mStrategicPartnerTaskCreationAct, new String[]{Manifest.permission.CAMERA}, requestPermissionCode);
-            }
-        } else {
-            //Go ahead with Camera capturing
-            startCameraCaptureChooser(requestCode);
-        }
-    }
 
-    private void startCameraCaptureChooser(int requestCode) {
+    private void startCameraCaptureChooser() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // Ensure that there's a camera activity to handle the intent
         if (takePictureIntent.resolveActivity(mStrategicPartnerTaskCreationAct.getPackageManager()) != null) {
@@ -998,9 +979,10 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
                 }
             }
             //Grant URI permission END
-            startActivityForResult(takePictureIntent, requestCode);
+            startActivityForResult(takePictureIntent, Utility.REQUEST_CODE_IMAGE_CAPTURE);
         }
     }
+
 
     private File createImageFile() {
         // Create an image file name
@@ -1040,27 +1022,14 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
 
 
     //// Gallery /////
-    private void choosePictureFromGallery(int requestFileChooserCode, int requestPermissionCode) {
-        LogUtils.LOGD(TAG, "choosePictureFromGallery() called with: requestFileChooserCode = [" + requestFileChooserCode + "], requestPermissionCode = [" + requestPermissionCode + "]");
-        if (ContextCompat.checkSelfPermission(mStrategicPartnerTaskCreationAct, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(mStrategicPartnerTaskCreationAct, Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                ActivityCompat.requestPermissions(mStrategicPartnerTaskCreationAct, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, requestPermissionCode);
-            } else {
-                ActivityCompat.requestPermissions(mStrategicPartnerTaskCreationAct, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, requestPermissionCode);
-            }
-        } else {
-            //Go ahead with file choosing
-            startIntentFileChooser(requestFileChooserCode);
-        }
-    }
 
-    private void startIntentFileChooser(int requestCode) {
+    private void startIntentImageChooser() {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("image/*");
         intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         if (intent.resolveActivity(mStrategicPartnerTaskCreationAct.getPackageManager()) != null) {
-            startActivityForResult(intent, requestCode);
+            startActivityForResult(intent, Utility.REQUEST_CODE_IMAGE_SELECT);
         }
     }
 
@@ -2107,7 +2076,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
 
 
         // image capture from camera result
-        else if (requestCode == Utility.REQUEST_CODE_IMAGE_CAPTURE_ADD_PROFILE && resultCode == Activity.RESULT_OK) {
+        else if (requestCode == Utility.REQUEST_CODE_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
             Log.i(TAG, "onActivityResult: CurrentPath" + mCurrentPhotoPath);
             File f = new File(mCurrentPhotoPath);
             Uri contentUri = Uri.fromFile(f);
@@ -2118,7 +2087,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
         }
 
         // image chosen from gallery result
-        else if (requestCode == Utility.REQUEST_CODE_GET_FILE_ADD_PROFILE_GALLERY && resultCode == Activity.RESULT_OK && data != null) {
+        else if (requestCode == Utility.REQUEST_CODE_IMAGE_SELECT && resultCode == Activity.RESULT_OK && data != null) {
             Log.i(TAG, "onActivityResult: " + data.getData().toString());
             mCurrentPhotoPath = Utility.getPath(mStrategicPartnerTaskCreationAct, data.getData());
             uploadFile(mCurrentPhotoPath, MediaModel.MediaType.TYPE_IMAGE);
@@ -2136,7 +2105,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
         }
 
         // video chosen from gallery result
-        else if (requestCode == Utility.REQUEST_CODE_GET_VIDEO_GALLERY && resultCode == RESULT_OK && data != null) {
+        else if (requestCode == Utility.REQUEST_CODE_VIDEO_SELECT && resultCode == RESULT_OK && data != null) {
             Uri selectedImageUri = data.getData();
             mCurrentPhotoPath = Utility.getPath(mStrategicPartnerTaskCreationAct, selectedImageUri);
 
@@ -2295,6 +2264,35 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment {
         observer1 = AmazonUtils.uploadMedia(mStrategicPartnerTaskCreationAct, fileThumb, s3PathThumb, listener);
         listener.observer = observer;
         listener.observer1 = observer1;
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        mRequestPermission.onRequestPermissionsResult(requestCode,permissions,grantResults);
+    }
+
+    @Override
+    public void onPermissionGranted(int code) {
+        switch (code) {
+            case RequestPermission.REQUEST_PERMISSION_FOR_VIDEO_CAPTURE:
+                takeVideoIntent();
+                break;
+            case RequestPermission.REQUEST_PERMISSION_FOR_OPEN_GALLERY_VIDEO:
+                chooseVideoFromGallery();
+                break;
+            case RequestPermission.REQUEST_PERMISSION_FOR_IMAGE_CAPTURE:
+                startCameraCaptureChooser();
+                break;
+            case RequestPermission.REQUEST_PERMISSION_FOR_OPEN_GALLERY_IMAGE:
+                startIntentImageChooser();
+                break;
+        }
+    }
+
+    @Override
+    public void onPermissionDenied(int code) {
 
     }
 

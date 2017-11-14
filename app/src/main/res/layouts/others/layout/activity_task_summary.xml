@@ -507,7 +507,7 @@
                                         android:paddingLeft="@dimen/scale_15dp"
                                         android:textColor="@color/splash_gradient_end"
                                         android:textSize="@dimen/text_size_18sp"
-                                        tools:text="Restaurant"/>
+                                        tools:text="RestaurantRestaurantRestaurantRestaurant"/>
                                 </LinearLayout>
 
                                 <com.cheep.custom_view.CFTextViewRegular
@@ -517,9 +517,9 @@
                                     android:layout_below="@+id/ln_sub_category"
                                     android:background="@color/transparent"
                                     android:gravity="start"
-                                    android:lines="3"
+                                    tools:text="asdasdasddasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdsdasdasdasdasdasdasdasdasdasdasdas"
+                                    android:maxLines="2"
                                     android:paddingRight="@dimen/scale_8dp"
-                                    android:paddingTop="@dimen/scale_8dp"
                                     android:textColor="@color/black"
                                     android:textColorHint="@color/grey_dark_color_2"
                                     android:textSize="@dimen/text_size_12sp"/>
@@ -571,7 +571,7 @@
                                         android:layout_gravity="center"
                                         android:background="@drawable/xml_circular_indicator_selected_with_border"
                                         android:gravity="center_vertical|center_horizontal"
-                                        android:text="+2"
+                                        android:text="+1"
                                         android:textColor="@color/white"
                                         android:textSize="@dimen/text_size_11sp"
                                         />
@@ -616,7 +616,7 @@
                             android:layout_height="@dimen/scale_0_5dp"
                             android:layout_marginLeft="@dimen/scale_10dp"
                             android:layout_marginRight="@dimen/scale_10dp"
-                            android:layout_marginTop="@dimen/scale_8dp"
+                            android:layout_marginTop="@dimen/scale_5dp"
                             android:background="@color/grey_varient_11"/>
 
                         <!--Third Section(When)-->
@@ -757,14 +757,13 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="vertical"
-                            android:padding="@dimen/scale_16dp"
+                            android:padding="@dimen/scale_10dp"
                             android:visibility="visible">
 
                             <com.cheep.custom_view.CFTextViewRegular
                                 android:id="@+id/text_confirm_text"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="@dimen/scale_10dp"
                                 android:gravity="center"
                                 android:padding="@dimen/scale_5dp"
                                 android:text="@string/label_complete_job_confirm"
@@ -774,7 +773,7 @@
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="@dimen/scale_16dp"
+                                android:layout_marginTop="@dimen/scale_10dp"
                                 android:gravity="center"
                                 android:orientation="horizontal">
 

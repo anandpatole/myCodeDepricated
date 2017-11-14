@@ -54,6 +54,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -256,6 +257,7 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
 //            else
 //                mActivityTaskSummaryBinding.tvCounter.setVisibility(View.GONE);
 
+            Collections.reverse(mTaskDetailModel.mMediaModelList);
             Utility.loadImageView(this, mActivityTaskSummaryBinding.imgTaskPicture1, mTaskDetailModel.mMediaModelList.get(0).mediaThumbName);
             if (mTaskDetailModel.mMediaModelList.size() == 3) {
                 Utility.loadImageView(this, mActivityTaskSummaryBinding.imgTaskPicture1, mTaskDetailModel.mMediaModelList.get(0).mediaThumbName);
@@ -263,8 +265,8 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
                 Utility.loadImageView(this, mActivityTaskSummaryBinding.imgTaskPicture3, mTaskDetailModel.mMediaModelList.get(2).mediaThumbName);
             } else if (mTaskDetailModel.mMediaModelList.size() == 2) {
                 mActivityTaskSummaryBinding.framePicture3.setVisibility(View.GONE);
-                Utility.loadImageView(this, mActivityTaskSummaryBinding.imgTaskPicture1, mTaskDetailModel.mMediaModelList.get(0).mediaThumbName);
-                Utility.loadImageView(this, mActivityTaskSummaryBinding.imgTaskPicture2, mTaskDetailModel.mMediaModelList.get(1).mediaThumbName);
+                Utility.loadImageView(this, mActivityTaskSummaryBinding.imgTaskPicture2, mTaskDetailModel.mMediaModelList.get(0).mediaThumbName);
+                Utility.loadImageView(this, mActivityTaskSummaryBinding.imgTaskPicture1, mTaskDetailModel.mMediaModelList.get(1).mediaThumbName);
             } else {
                 mActivityTaskSummaryBinding.framePicture3.setVisibility(View.GONE);
                 mActivityTaskSummaryBinding.framePicture2.setVisibility(View.GONE);
@@ -489,7 +491,7 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
     private void showTaskCompletionDialog(boolean flag) {
         if (flag) {
             mActivityTaskSummaryBinding.lnTaskCompletionRequested.setVisibility(View.VISIBLE);
-            mActivityTaskSummaryBinding.textConfirmText.setText(getString(R.string.label_complete_job_confirm, mTaskDetailModel.selectedProvider.userName));
+            mActivityTaskSummaryBinding.textConfirmText.setText(getString(R.string.label_complete_job_confirm, "PRO"));
             mActivityTaskSummaryBinding.textTaskCompletionYes.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
