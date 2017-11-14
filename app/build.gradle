@@ -205,7 +205,7 @@ android {
     }
 
     //DataBinding needs to be enabled
-        dataBinding {
+    dataBinding {
         enabled true
     }
 
