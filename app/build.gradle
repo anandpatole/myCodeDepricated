@@ -7,7 +7,7 @@ repositories {
 }
 
 android {
-    compileSdkVersion 26
+    compileSdkVersion 27
     buildToolsVersion "26.0.2"
     defaultConfig {
         applicationId "com.cheep"
@@ -236,10 +236,10 @@ configurations {
 
 // Description
 ext {
-    supportLibVer = '26.1.0'
+    supportLibVer = '27.0.1'
 //    supportLibVer = '25.4.0'
     gsonLibVer = '2.7'
-    playServiceVer = '11.2.2'
+    playServiceVer = '11.6.0'
 //    playServiceVer = '10.2.0'
 }
 
@@ -275,6 +275,11 @@ dependencies {
 
     // firebase database sdk
     compile "com.google.firebase:firebase-database:$playServiceVer"
+
+    //For dynamic links
+    compile ("com.google.firebase:firebase-invites:$playServiceVer"){
+        exclude group: "com.google.firebase", module: "firebase-dynamic-links"
+    }
 
     //Twitter
     compile('com.twitter.sdk.android:twitter:2.3.2@aar') {

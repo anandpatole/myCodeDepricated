@@ -37,6 +37,8 @@ public class SplashActivity extends BaseAppCompatActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        Log.d(TAG, "onCreate: intent [ " + getIntent() + " ] + intent action [ " + getIntent().getAction() + " ]"
+                + " ]  + intent data [ " + getIntent().getData());
         super.onCreate(savedInstanceState);
         getWindow().setBackgroundDrawableResource(R.drawable.splash_gradient);
         if (getIntent() != null && getIntent().getExtras() != null)
