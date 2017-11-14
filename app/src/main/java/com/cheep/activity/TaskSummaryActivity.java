@@ -265,8 +265,9 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
                 Utility.loadImageView(this, mActivityTaskSummaryBinding.imgTaskPicture3, mTaskDetailModel.mMediaModelList.get(2).mediaThumbName);
             } else if (mTaskDetailModel.mMediaModelList.size() == 2) {
                 mActivityTaskSummaryBinding.framePicture3.setVisibility(View.GONE);
-                Utility.loadImageView(this, mActivityTaskSummaryBinding.imgTaskPicture2, mTaskDetailModel.mMediaModelList.get(0).mediaThumbName);
-                Utility.loadImageView(this, mActivityTaskSummaryBinding.imgTaskPicture1, mTaskDetailModel.mMediaModelList.get(1).mediaThumbName);
+                Utility.loadImageView(this, mActivityTaskSummaryBinding.imgTaskPicture2, mTaskDetailModel.mMediaModelList.get(1).mediaThumbName);
+                Utility.loadImageView(this, mActivityTaskSummaryBinding.imgTaskPicture1, mTaskDetailModel.mMediaModelList.get(0).mediaThumbName);
+
             } else {
                 mActivityTaskSummaryBinding.framePicture3.setVisibility(View.GONE);
                 mActivityTaskSummaryBinding.framePicture2.setVisibility(View.GONE);

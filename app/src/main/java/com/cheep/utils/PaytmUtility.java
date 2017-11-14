@@ -365,6 +365,7 @@ public class PaytmUtility {
                             listener.paytmCheckBalanceSuccessResponse(paytmResponseData);
                             break;
                         case NetworkUtility.PAYTM.RESPONSE_CODES.INVALID_AUTHORIZATION:
+                        case NetworkUtility.PAYTM.RESPONSE_CODES.UNAUTHORIZED_ACCESS:
                             listener.paytmInvalidAuthorization();
                             break;
                         case NetworkUtility.PAYTM.RESPONSE_CODES.BAD_REQUEST:

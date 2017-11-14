@@ -576,11 +576,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
                 // show dialog
 //                Utility.showToast(mContext, "Paytm Puru have giteeka na hawale vatan sathio!!!!! :) ");
 //                TODO: Need to start the task from here
-
-                if (taskDetailModel.taskType.equalsIgnoreCase(Utility.TASK_TYPE.NORMAL)) {
-                    callPaymentForNormalTaskWS(event.paytmResponse.ResponsePayLoad);
-                }
-
+                callPaymentForNormalTaskWS(event.paytmResponse.ResponsePayLoad);
             } else {
                 Utility.showToast(mContext, getString(R.string.msg_payment_failed));
             }
@@ -652,6 +648,11 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
         @Override
         public void paytmInvalidAuthorization() {
             //TODO: implement that if accessToken is valid i.e. 1 month is not due directly call checkBalance API.
+            mActivityPaymentChoiceBinding.progress.setVisibility(View.GONE);
+            mActivityPaymentChoiceBinding.tvPaytmLinkAccount.setVisibility(View.VISIBLE);
+            mActivityPaymentChoiceBinding.tvPaytmLinkAccount.setText(getString(R.string.label_link_x, getString(R.string.label_account)));
+            mActivityPaymentChoiceBinding.tvPaytmLinkAccount.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_link_blue, 0, 0, 0);
+            PAYTM_STEP = PAYTM_SEND_OTP;
         }
 
         @Override
