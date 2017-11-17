@@ -143,6 +143,9 @@ public class TaskDetailModel {
     @SerializedName("is_prefed_quote")
     public String isPrefedQuote;
 
+    @SerializedName("payment_status")
+    public String paymentStatus;
+
     // this is for payment choice activity for strategic partner
     public String totalStrategicPartner;
     public String payableAmountStrategicPartner;

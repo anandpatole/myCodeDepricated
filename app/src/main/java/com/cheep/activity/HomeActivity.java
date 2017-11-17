@@ -487,6 +487,11 @@ public class HomeActivity extends BaseAppCompatActivity
     }
 
     @Override
+    public void onBookSimilarTaskClicked(TaskDetailModel providerModel) {
+
+    }
+
+    @Override
     public void onCreateNewTask() {
         //Checking if there is already a fragment then
         Fragment mFragment = getSupportFragmentManager().findFragmentByTag(HomeFragment.TAG);

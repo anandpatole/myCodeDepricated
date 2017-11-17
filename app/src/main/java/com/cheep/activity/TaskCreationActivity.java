@@ -766,6 +766,7 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
                     taskDetailModel.subCategoryID = String.valueOf(mSelectedSubServiceDetailModel.sub_cat_id);
 //                    model.taskImage = mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mCurrentPhotoPath;
                     taskDetailModel.mMediaModelList = mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mMediaRecycleAdapter.getList();
+                    taskDetailModel.taskType = Utility.TASK_TYPE.INSTA_BOOK;
                     ProviderModel providerModel = new ProviderModel();
                     providerModel.userName = instaBookingProDetail.userName;
                     providerModel.profileUrl = instaBookingProDetail.profileImg;
@@ -776,7 +777,7 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
                     providerModel.experience = instaBookingProDetail.experience;
                     providerModel.spWithoutGstQuotePrice = instaBookingProDetail.rate;
                     providerModel.rating = instaBookingProDetail.rating;
-                    PaymentDetailsActivity.newInstance(TaskCreationActivity.this, taskDetailModel, providerModel, 0, true, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel);
+                    PaymentDetailsActivity.newInstance(TaskCreationActivity.this, taskDetailModel, providerModel, 0, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel);
 
                     //Log.i("myLog", "tasks:"+mJobCategoryModel.catName+"::"+mSelectedSubServiceDetailModel.name+"::"+mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mAddress);
 

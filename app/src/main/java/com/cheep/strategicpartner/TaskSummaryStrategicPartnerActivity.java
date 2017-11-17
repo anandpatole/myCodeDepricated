@@ -31,6 +31,7 @@ import com.android.volley.VolleyError;
 import com.cheep.R;
 import com.cheep.activity.BaseAppCompatActivity;
 import com.cheep.activity.ChatActivity;
+import com.cheep.activity.PaymentChoiceActivity;
 import com.cheep.activity.TaskQuotesActivity;
 import com.cheep.custom_view.BottomAlertDialog;
 import com.cheep.databinding.ActivityTaskSummaryStrategicPartnerBinding;
@@ -164,7 +165,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
         mActivityTaskSummaryBinding.frameSelectPicture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                StrategicPartnerMediaViewActiivty.getInstance(TaskSummaryStrategicPartnerActivity.this, mTaskDetailModel.mMediaModelList,true);
+                StrategicPartnerMediaViewActiivty.getInstance(TaskSummaryStrategicPartnerActivity.this, mTaskDetailModel.mMediaModelList, true);
             }
         });
 
@@ -390,15 +391,21 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
     private void updateUIBasedOnTaskStatus() {
         if (Utility.TASK_STATUS.PENDING.equalsIgnoreCase(mTaskDetailModel.taskStatus)) {
             mActivityTaskSummaryBinding.textTaskStatusTop.setText(getString(R.string.task_confirmed));
+            mActivityTaskSummaryBinding.textViewPaymentSummary.setVisibility(View.VISIBLE);
+
         } else if (Utility.TASK_STATUS.PROCESSING.equalsIgnoreCase(mTaskDetailModel.taskStatus)) {
             mActivityTaskSummaryBinding.textTaskStatusTop.setText(getString(R.string.task_status_processing));
+            mActivityTaskSummaryBinding.textViewPaymentSummary.setVisibility(View.VISIBLE);
+
         } else if (Utility.TASK_STATUS.COMPLETION_REQUEST.equalsIgnoreCase(mTaskDetailModel.taskStatus)) {
             mActivityTaskSummaryBinding.textTaskStatusTop.setText(getString(R.string.task_status_processing));
+            mActivityTaskSummaryBinding.textViewPaymentSummary.setVisibility(View.GONE);
 
             // Setup Task Completion Request Dialog
             showTaskCompletionDialog(true);
         } else if (Utility.TASK_STATUS.COMPLETION_CONFIRM.equalsIgnoreCase(mTaskDetailModel.taskStatus)) {
             mActivityTaskSummaryBinding.textTaskStatusTop.setText(getString(R.string.label_task_complete));
+            mActivityTaskSummaryBinding.textViewPaymentSummary.setVisibility(View.VISIBLE);
 
             // No need to hide ChatCall Button Now.
             showChatCallButton(false);
@@ -430,8 +437,10 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
             }
         } else if (Utility.TASK_STATUS.COD.equalsIgnoreCase(mTaskDetailModel.taskStatus) || Utility.TASK_STATUS.PAID.equalsIgnoreCase(mTaskDetailModel.taskStatus)) {
             mActivityTaskSummaryBinding.textTaskStatusTop.setText(getString(R.string.task_confirmed));
+            mActivityTaskSummaryBinding.textViewPaymentSummary.setVisibility(View.VISIBLE);
         } else if (Utility.TASK_STATUS.CANCELLED_CUSTOMER.equalsIgnoreCase(mTaskDetailModel.taskStatus)) {
             mActivityTaskSummaryBinding.textTaskStatusTop.setText(getString(R.string.msg_task_cancelled_title));
+            mActivityTaskSummaryBinding.textViewPaymentSummary.setVisibility(View.VISIBLE);
 
             // Cancellation Reason
             mActivityTaskSummaryBinding.lnTaskCancellation.setVisibility(View.VISIBLE);
@@ -444,6 +453,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
         } else if (Utility.TASK_STATUS.CANCELLED_SP.equalsIgnoreCase(mTaskDetailModel.taskStatus)) {
 //            mActivityTaskSummaryBinding.textTaskStatusTop.setText(getString(R.string.task_was_cancelled_by_x, mTaskDetailModel.selectedProvider.userName));
             mActivityTaskSummaryBinding.textTaskStatusTop.setText(getString(R.string.msg_task_cancelled_title));
+            mActivityTaskSummaryBinding.textViewPaymentSummary.setVisibility(View.VISIBLE);
 
             // Cancellation Reason
             mActivityTaskSummaryBinding.lnTaskCancellation.setVisibility(View.VISIBLE);
@@ -457,6 +467,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
         // reschedule task status
         else if (Utility.TASK_STATUS.RESCHEDULE_REQUESTED.equalsIgnoreCase(mTaskDetailModel.taskStatus)) {
             mActivityTaskSummaryBinding.textTaskStatusTop.setText(getString(R.string.label_reschedule_requested));
+            mActivityTaskSummaryBinding.textViewPaymentSummary.setVisibility(View.GONE);
 
             // Reschedule request desc
             mActivityTaskSummaryBinding.lnTaskRescheduleRequested.setVisibility(View.VISIBLE);
@@ -482,6 +493,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
         else if (Utility.TASK_STATUS.RESCHEDULE_REQUEST_REJECTED.equalsIgnoreCase(mTaskDetailModel.taskStatus)) {
             mActivityTaskSummaryBinding.textTaskStatusTop.setText(getString(R.string.label_reschedule_rejected));
             mActivityTaskSummaryBinding.lnTaskRescheduleRejected.setVisibility(View.VISIBLE);
+            mActivityTaskSummaryBinding.textViewPaymentSummary.setVisibility(View.VISIBLE);
 
             // Chat & Call with @Cheep team click event of buttons
             mActivityTaskSummaryBinding.textContactCheepViaCall.setOnClickListener(new View.OnClickListener() {
@@ -507,6 +519,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
             mActivityTaskSummaryBinding.textTaskStatusTop.setText(getString(R.string.task_status_processing));
 
             mActivityTaskSummaryBinding.lnTaskAdditionalQuoteRequested.setVisibility(View.VISIBLE);
+            mActivityTaskSummaryBinding.textViewPaymentSummary.setVisibility(View.GONE);
 
             String additionalQuoteAmount = getString(R.string.rupee_symbol_x, mTaskDetailModel.additionalQuoteAmount);
             mActivityTaskSummaryBinding.textAdditionalPaymentDesc.setText(getString(R.string.label_additional_payment_desc, additionalQuoteAmount));
@@ -536,7 +549,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
     /**
      * This would make the Chat Call Visible/Invisible
      *
-     * @param flag
+     * @param flag not used
      */
     private void showChatCallButton(boolean flag) {
         // TODO :: changed on sept 12
@@ -552,16 +565,35 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
         if (flag) {
             mActivityTaskSummaryBinding.lnTaskCompletionRequested.setVisibility(View.VISIBLE);
             mActivityTaskSummaryBinding.textConfirmText.setText(getString(R.string.label_complete_job_confirm, mTaskDetailModel.selectedProvider.userName));
+
+            if (mTaskDetailModel.paymentStatus.equalsIgnoreCase(Utility.TASK_STATUS.PAID)) {
+                mActivityTaskSummaryBinding.textTaskCompletionYes.setText(R.string.label_yes);
+            } else {
+                mActivityTaskSummaryBinding.textTaskCompletionYes.setText(R.string.label_yes_pay_now);
+            }
+
             mActivityTaskSummaryBinding.textTaskCompletionYes.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    callCompleteTaskWS(Utility.TASK_STATUS.COMPLETION_CONFIRM);
+
+                    if (mTaskDetailModel.paymentStatus.equalsIgnoreCase(Utility.TASK_STATUS.PAID)) {
+                        callCompleteTaskWS(Utility.TASK_STATUS.COMPLETION_CONFIRM);
+                    } else {
+                        PaymentChoiceActivity.newInstance(mContext, mTaskDetailModel);
+                    }
                 }
             });
             mActivityTaskSummaryBinding.textTaskCompletionNo.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     callCompleteTaskWS(Utility.TASK_STATUS.PROCESSING);
+                }
+            });
+
+            mActivityTaskSummaryBinding.textTaskSeekSupport.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Utility.initiateCallToCheepHelpLine(mContext);
                 }
             });
         } else {

@@ -28,10 +28,6 @@ import com.cheep.custom_view.CFEditTextRegular;
 import com.cheep.databinding.ActivityPaymentDetailBinding;
 import com.cheep.dialogs.AcknowledgementDialogWithProfilePic;
 import com.cheep.dialogs.AcknowledgementInteractionListener;
-import com.cheep.firebase.FirebaseHelper;
-import com.cheep.firebase.FirebaseUtils;
-import com.cheep.firebase.model.ChatTaskModel;
-import com.cheep.firebase.model.TaskChatModel;
 import com.cheep.model.AddressModel;
 import com.cheep.model.MessageEvent;
 import com.cheep.model.ProviderModel;
@@ -44,9 +40,6 @@ import com.cheep.utils.LogUtils;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.SuperCalendar;
 import com.cheep.utils.Utility;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.ValueEventListener;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -54,9 +47,6 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -83,6 +73,7 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
     private CFEditTextRegular edtCheepcode;
     private BottomAlertDialog cheepCodeDialog;
     private String cheepCode;
+    private boolean isPayNow = false;
 
     /**
      * payment for normal task
@@ -108,12 +99,11 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
      * @param providerModel
      * @param additional
      */
-    public static void newInstance(Context context, TaskDetailModel taskDetailModel, ProviderModel providerModel, int additional, boolean isInstaBooking, AddressModel mSelectedAddressModel) {
+    public static void newInstance(Context context, TaskDetailModel taskDetailModel, ProviderModel providerModel, int additional, AddressModel mSelectedAddressModel) {
         Intent intent = new Intent(context, PaymentDetailsActivity.class);
         intent.putExtra(Utility.Extra.DATA, Utility.getJsonStringFromObject(providerModel));
         intent.putExtra(Utility.Extra.DATA_2, Utility.getJsonStringFromObject(taskDetailModel));
         intent.putExtra(Utility.Extra.SELECTED_ADDRESS_MODEL, Utility.getJsonStringFromObject(mSelectedAddressModel));
-        intent.putExtra(Utility.Extra.TASK_TYPE_IS_INSTA, isInstaBooking);
         intent.putExtra(PAYMENT_VIEW_IS_ADDITIONAL_CHARGE, additional);
         context.startActivity(intent);
     }
@@ -154,17 +144,21 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
         setTaskState(STEP_THREE_UNVERIFIED);
 
         mActivityPaymentDetailBinding.ivTermsTick.setSelected(true);
-        mActivityPaymentDetailBinding.textPay.setSelected(true);
+
+        // Changes are per new flow pay now/later: 15/11/17
+        mActivityPaymentDetailBinding.textBookAndPay.setSelected(true);
+        mActivityPaymentDetailBinding.textBookOnly.setSelected(true);
+
         mActivityPaymentDetailBinding.lnDesclaimer.setVisibility(View.VISIBLE);
 
         if (getIntent().hasExtra(Utility.Extra.DATA)) {
             providerModel = (ProviderModel) Utility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA), ProviderModel.class);
             //This is only when provider profile view for specific task (provider gives quote to specific task)
             taskDetailModel = (TaskDetailModel) Utility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA_2), TaskDetailModel.class);
+            isInstaBooking = taskDetailModel.taskType.equalsIgnoreCase(Utility.TASK_TYPE.INSTA_BOOK);
         }
 
-        if (getIntent().hasExtra(Utility.Extra.TASK_TYPE_IS_INSTA)) {
-            isInstaBooking = getIntent().getBooleanExtra(Utility.Extra.TASK_TYPE_IS_INSTA, false);
+        if (getIntent().hasExtra(Utility.Extra.SELECTED_ADDRESS_MODEL)) {
             mSelectedAddressModelForInsta = (AddressModel) Utility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.SELECTED_ADDRESS_MODEL), AddressModel.class);
         }
 
@@ -226,7 +220,7 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
                     mActivityPaymentDetailBinding.textExperience.setText(Utility.checkNonNullAndSet(mContext.getString(R.string.label_experience_zero)));
                 } else {
 //                    mActivityPaymentDetailBinding.textExperience.setText(this.getResources().getQuantityString(R.plurals.getExperienceStringOneLine, Integer.parseInt(providerModel.experience), providerModel.experience));
-                    mActivityPaymentDetailBinding.textExperience.setText(Utility.getExperienceString(providerModel.experience,Utility.EMPTY_STRING));
+                    mActivityPaymentDetailBinding.textExperience.setText(Utility.getExperienceString(providerModel.experience, Utility.EMPTY_STRING));
 
                 }
 
@@ -260,7 +254,8 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
 
     @Override
     protected void setListeners() {
-        mActivityPaymentDetailBinding.textPay.setOnClickListener(onPayClickListener);
+        mActivityPaymentDetailBinding.textBookAndPay.setOnClickListener(onPayClickListener);
+        mActivityPaymentDetailBinding.textBookOnly.setOnClickListener(onBookOnlyClickListener);
         mActivityPaymentDetailBinding.llclaimreferral.setOnClickListener(OnClaimOfReferCodeClickListener);
         mActivityPaymentDetailBinding.llpromocode.setOnClickListener(onPromoCodeClickListener);
         // Add Declaimer
@@ -275,16 +270,42 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
             @Override
             public void onClick(View view) {
                 mActivityPaymentDetailBinding.ivTermsTick.setSelected(!mActivityPaymentDetailBinding.ivTermsTick.isSelected());
-                mActivityPaymentDetailBinding.textPay.setSelected(mActivityPaymentDetailBinding.ivTermsTick.isSelected());
-                mActivityPaymentDetailBinding.textPay.setEnabled(mActivityPaymentDetailBinding.ivTermsTick.isSelected());
+
+// Changes are per new flow pay now/later: 15/11/17
+                mActivityPaymentDetailBinding.textBookOnly.setSelected(mActivityPaymentDetailBinding.ivTermsTick.isSelected());
+                mActivityPaymentDetailBinding.textBookAndPay.setSelected(mActivityPaymentDetailBinding.ivTermsTick.isSelected());
+                mActivityPaymentDetailBinding.textBookOnly.setEnabled(mActivityPaymentDetailBinding.ivTermsTick.isSelected());
+                mActivityPaymentDetailBinding.textBookAndPay.setEnabled(mActivityPaymentDetailBinding.ivTermsTick.isSelected());
             }
         });
 
     }
 
+    // Changes are per new flow pay now/later: 15/11/17
     View.OnClickListener onPayClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
+            isPayNow = true;
+            setTaskState(STEP_THREE_VERIFIED);
+            int isAdditionalPayment = getIntent().getIntExtra(Utility.Extra.PAYMENT_VIEW_IS_ADDITIONAL_CHARGE, 0);
+            taskDetailModel.usedWalletAmount = String.valueOf(usedWalletBalance);
+
+//            taskDetailModel.usedWalletAmount = String.valueOf(usedWalletBalance);
+//            if (isInstaBooking) {
+//                callCreateInstaBookingTaskWS();
+//            } else {
+//                callBookProForNormalTaskWS();
+//            }
+            PaymentChoiceActivity.newInstance(mContext, taskDetailModel, providerModel, isAdditionalPayment, mSelectedAddressModelForInsta);
+
+
+        }
+    };
+    // Changes are per new flow pay now/later: 15/11/17
+    View.OnClickListener onBookOnlyClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            isPayNow = false;
             setTaskState(STEP_THREE_VERIFIED);
             int isAdditionalPayment = getIntent().getIntExtra(Utility.Extra.PAYMENT_VIEW_IS_ADDITIONAL_CHARGE, 0);
 
@@ -465,7 +486,8 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
         mActivityPaymentDetailBinding.textpromocodelabel.setText(R.string.label_enter_promocode);
         mActivityPaymentDetailBinding.txtpromocode.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(Utility.ZERO_STRING)));
         mActivityPaymentDetailBinding.txtreferraldiscount.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(Utility.ZERO_STRING)));
-        mActivityPaymentDetailBinding.textPay.setSelected(mActivityPaymentDetailBinding.ivTermsTick.isSelected());
+        mActivityPaymentDetailBinding.textBookAndPay.setSelected(mActivityPaymentDetailBinding.ivTermsTick.isSelected());
+        mActivityPaymentDetailBinding.textBookOnly.setSelected(mActivityPaymentDetailBinding.ivTermsTick.isSelected());
     }
 
     public SpannableStringBuilder getSpannableString(String fullstring, int color, boolean isBold) {
@@ -818,6 +840,8 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
         switch (event.BROADCAST_ACTION) {
             case Utility.BROADCAST_TYPE.PAYMENT_COMPLETED_NEED_TO_REDIRECT_TO_MY_TASK_SCREEN:
 //                finish();
+                if (isPayNow)
+                    finish();
                 break;
             case Utility.BROADCAST_TYPE.TASK_PAID_FOR_INSTA_BOOKING:
                 finish();
@@ -968,7 +992,7 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
                                 * @Sanjay 20 Feb 2016
                                 * */
                                 if (providerModel != null) {
-                                    updateSelectedSpOnFirebase(taskDetailModel, providerModel);
+                                    Utility.updateSelectedSpOnFirebase(mContext, taskDetailModel, providerModel, isInstaBooking);
                                 }
                             }
 
@@ -993,7 +1017,7 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
                             superStartDateTimeCalendar.setLocaleTimeZone();
 
                             int onlydate = Integer.parseInt(superStartDateTimeCalendar.format("dd"));
-                            String message = fetchMessageFromDateOfMonth(onlydate, superStartDateTimeCalendar);
+                            String message = Utility.fetchMessageFromDateOfMonth(mContext, onlydate, superStartDateTimeCalendar, providerModel);
 
 //                            final UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
                             int badgeResId = Utility.getProLevelBadge(providerModel.pro_level);
@@ -1072,110 +1096,6 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
         }
     };
 
-    /*
-         * Update finalized sp id on firebase.
-         * @Sanjay 20 Feb 2016
-         * */
-    private void updateSelectedSpOnFirebase(final TaskDetailModel taskDetailModel, final ProviderModel providerModel) {
-        String formattedTaskId = FirebaseUtils.getPrefixTaskId(taskDetailModel.taskId);
-        String formattedSpId = FirebaseUtils.getPrefixSPId(providerModel.providerId);
-        String formattedUserId = "";
-        final UserDetails userDetails = PreferenceUtility.getInstance(PaymentDetailsActivity.this).getUserDetails();
-        if (userDetails != null) {
-            formattedUserId = FirebaseUtils.getPrefixUserId(userDetails.UserID);
-        }
-        FirebaseHelper.getRecentChatRef(formattedUserId).child(formattedTaskId).removeValue();
-        if (!TextUtils.isEmpty(formattedTaskId) && !TextUtils.isEmpty(formattedSpId)) {
-            FirebaseHelper.getTaskRef(formattedTaskId).child(FirebaseHelper.KEY_SELECTEDSPID).setValue(formattedSpId);
-        }
-
-        final String formattedId = FirebaseUtils.get_T_SP_U_FormattedId(formattedTaskId, formattedSpId, formattedUserId);
-        final String finalFormattedUserId = formattedUserId;
-        FirebaseHelper.getTaskChatRef(formattedTaskId).child(formattedId).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists() && dataSnapshot.getValue() != null) {
-                    TaskChatModel taskChatModel = dataSnapshot.getValue(TaskChatModel.class);
-                    if (taskChatModel != null) {
-                        taskChatModel.chatId = formattedId;
-                    }
-                    if (taskChatModel != null) {
-                        FirebaseHelper.getRecentChatRef(finalFormattedUserId).child(taskChatModel.chatId).setValue(taskChatModel);
-                    }
-
-                    if (isInstaBooking) {
-        /* * Add new task detail on firebase
-         * @Giteeka sep 7 2017 for insta booking
-         */
-                        ChatTaskModel chatTaskModel = new ChatTaskModel();
-                        chatTaskModel.taskId = FirebaseUtils.getPrefixTaskId(taskDetailModel.taskId);
-                        chatTaskModel.taskDesc = taskDetailModel.taskDesc;
-                        chatTaskModel.categoryId = taskDetailModel.categoryId;
-                        chatTaskModel.categoryName = taskDetailModel.categoryName;
-                        chatTaskModel.selectedSPId = providerModel.providerId;
-                        UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
-                        chatTaskModel.userId = FirebaseUtils.getPrefixUserId(userDetails.UserID);
-                        FirebaseHelper.getTaskRef(chatTaskModel.taskId).setValue(chatTaskModel);
-                    }
-
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-    }
-
-    private String fetchMessageFromDateOfMonth(int day, SuperCalendar
-            superStartDateTimeCalendar) {
-        String date;
-        String DATE_FORMAT_TASK_HAS_BEEN_PAID_DATE_TH = SuperCalendar.SuperFormatter.DATE + getString(R.string.label_th_date) + SuperCalendar.SuperFormatter.MONTH_JAN;
-        String DATE_FORMAT_TASK_HAS_BEEN_PAID_DATE_ST = SuperCalendar.SuperFormatter.DATE + getString(R.string.label_st_date) + SuperCalendar.SuperFormatter.MONTH_JAN;
-        String DATE_FORMAT_TASK_HAS_BEEN_PAID_DATE_RD = SuperCalendar.SuperFormatter.DATE + getString(R.string.label_rd_date) + SuperCalendar.SuperFormatter.MONTH_JAN;
-        String DATE_FORMAT_TASK_HAS_BEEN_PAID_DATE_ND = SuperCalendar.SuperFormatter.DATE + getString(R.string.label_nd_date) + SuperCalendar.SuperFormatter.MONTH_JAN;
-
-        if (day >= 11 && day <= 13) {
-            date = superStartDateTimeCalendar.format(DATE_FORMAT_TASK_HAS_BEEN_PAID_DATE_TH);
-        } else {
-            switch (day % 10) {
-                case 1:
-                    date = superStartDateTimeCalendar.format(DATE_FORMAT_TASK_HAS_BEEN_PAID_DATE_ST);
-                    break;
-                case 2:
-                    date = superStartDateTimeCalendar.format(DATE_FORMAT_TASK_HAS_BEEN_PAID_DATE_ND);
-                    break;
-                case 3:
-                    date = superStartDateTimeCalendar.format(DATE_FORMAT_TASK_HAS_BEEN_PAID_DATE_RD);
-                    break;
-                default:
-                    date = superStartDateTimeCalendar.format(DATE_FORMAT_TASK_HAS_BEEN_PAID_DATE_TH);
-                    break;
-            }
-        }
-        // as per  24 hour format 13 spt 2017
-//        String DATE_FORMAT_TASK_HAS_BEEN_PAID_TIME = SuperCalendar.SuperFormatter.HOUR_12_HOUR_2_DIGIT + ":" + SuperCalendar.SuperFormatter.MINUTE + "' '" + SuperCalendar.SuperFormatter.AM_PM;
-//        String time = superStartDateTimeCalendar.format(Utility.DATE_FORMAT_HH_MM_AM);
-
-        // set time format 24 hours
-        Date d = superStartDateTimeCalendar.getCalendar().getTime();
-
-        SimpleDateFormat timeFormatter = new SimpleDateFormat(Utility.TIME_FORMAT_24HH_MM);
-        String fromHour = timeFormatter.format(d);
-        SuperCalendar superCalendar = SuperCalendar.getInstance();
-        superCalendar.setTimeInMillis(superStartDateTimeCalendar.getCalendar().getTimeInMillis());
-        superCalendar.getCalendar().add(Calendar.HOUR_OF_DAY, 2);
-
-        Date toDate = superCalendar.getCalendar().getTime();
-        String toHour = timeFormatter.format(toDate);
-
-        String message = mContext.getString(R.string.desc_task_payment_done_acknowledgement
-                , providerModel.userName, date + getString(R.string.label_between) + fromHour + " hrs - " + toHour + " hrs");
-        message = message.replace(".", "");
-//        message = message.replace(getString(R.string.label_am_caps), getString(R.string.label_am_small)).replace(getString(R.string.label_pm_caps), getString(R.string.label_pm_small));
-        return message + ".";
-    }
 
     @Override
     public void onBackPressed() {
@@ -1210,7 +1130,6 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
         //Add Params
         Map<String, Object> mParams = new HashMap<>();
         mParams.put(NetworkUtility.TAGS.TASK_DESC, taskDetailModel.taskDesc);
-        String txnId = Utility.getUniqueTransactionId();
         if (Integer.parseInt(mSelectedAddressModelForInsta.address_id) > 0) {
             mParams.put(NetworkUtility.TAGS.ADDRESS_ID, mSelectedAddressModelForInsta.address_id);
         } else {
@@ -1229,7 +1148,6 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
         mParams.put(NetworkUtility.TAGS.START_DATETIME, taskDetailModel.taskStartdate);
         mParams.put(NetworkUtility.TAGS.SUBCATEGORY_ID, taskDetailModel.subCategoryID);
         mParams.put(NetworkUtility.TAGS.SP_USER_ID, providerModel.providerId);
-        mParams.put(NetworkUtility.TAGS.TRANSACTION_ID, txnId);
         mParams.put(NetworkUtility.TAGS.PAYMENT_STATUS, Utility.PAYMENT_STATUS.COMPLETED);
         LogUtils.LOGE(TAG, "payNow: cheepCode " + taskDetailModel.cheepCode);
         LogUtils.LOGE(TAG, "payNow: dicount " + taskDetailModel.taskDiscountAmount);
@@ -1244,12 +1162,14 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
         mParams.put(NetworkUtility.TAGS.IS_REFER_CODE, taskDetailModel.isReferCode);
         mParams.put(NetworkUtility.TAGS.QUOTE_AMOUNT, providerModel.spWithoutGstQuotePrice);
         mParams.put(NetworkUtility.TAGS.PAYABLE_AMOUNT, providerModel.quotePrice);
-        mParams.put(NetworkUtility.TAGS.PAYMENT_LOG, Utility.EMPTY_STRING);
-        mParams.put(NetworkUtility.TAGS.PAYMENT_METHOD, NetworkUtility.PAYMENT_METHOD_TYPE.PAY_LATER);
         mParams.put(NetworkUtility.TAGS.USED_WALLET_BALANCE, taskDetailModel.usedWalletAmount);
         String media_file = Utility.getSelectedMediaJsonString(taskDetailModel.mMediaModelList);
         mParams.put(NetworkUtility.TAGS.MEDIA_FILE, media_file);
         mParams.put(NetworkUtility.TAGS.TASK_TYPE, Utility.TASK_TYPE.INSTA_BOOK);
+
+        mParams.put(NetworkUtility.TAGS.PAYMENT_LOG, Utility.EMPTY_STRING);
+        mParams.put(NetworkUtility.TAGS.PAYMENT_METHOD, NetworkUtility.PAYMENT_METHOD_TYPE.PAY_LATER);
+        mParams.put(NetworkUtility.TAGS.PAYMENT_STATUS, Utility.PAYMENT_STATUS.COMPLETED);
 
         // For AppsFlyer
         mTaskCreationParams = new HashMap<>();
@@ -1276,8 +1196,8 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
         mTaskCreationParams.put(NetworkUtility.TAGS.SP_USER_ID, providerModel.providerId);
         mTaskCreationParams.put(NetworkUtility.TAGS.USED_WALLET_BALANCE, taskDetailModel.usedWalletAmount);
         mTaskCreationParams.put(NetworkUtility.TAGS.MEDIA_FILE, media_file);
-        mTaskCreationParams.put(NetworkUtility.TAGS.TRANSACTION_ID, txnId);
         mTaskCreationParams.put(NetworkUtility.TAGS.TASK_TYPE, Utility.TASK_TYPE.INSTA_BOOK);
+        mTaskCreationParams.put(NetworkUtility.TAGS.PAYMENT_STATUS, Utility.PAYMENT_STATUS.COMPLETED);
 
         if (!TextUtils.isEmpty(taskDetailModel.cheepCode)) {
             mTaskCreationParams.put(NetworkUtility.TAGS.CHEEPCODE, taskDetailModel.cheepCode);
@@ -1318,7 +1238,7 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
                         // Send Event tracking for AppsFlyer
                         AppsFlyerLib.getInstance().trackEvent(mContext, NetworkUtility.TAGS.APPSFLYER_CUSTOM_TRACK_EVENTS.TASK_CREATE, mTaskCreationParams);
-                        onSuccessfulInstaBookingTaskCompletion(jsonObject);
+                        Utility.onSuccessfulInstaBookingTaskCompletion(PaymentDetailsActivity.this, jsonObject, providerModel);
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
                         // Show Toast
@@ -1345,19 +1265,5 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
     };
     // check is task is from insta booking or not
 
-    private void onSuccessfulInstaBookingTaskCompletion(JSONObject jsonObject) {
-        Utility.showToast(PaymentDetailsActivity.this, getString(R.string.label_task_created_successfully));
-        TaskDetailModel taskDetailModel = (TaskDetailModel) Utility.getObjectFromJsonString(jsonObject.optString(NetworkUtility.TAGS.DATA), TaskDetailModel.class);
 
-        if (providerModel != null) {
-            // add task and pro entry for firebase
-            updateSelectedSpOnFirebase(taskDetailModel, providerModel);
-        }
-
-        MessageEvent messageEvent = new MessageEvent();
-        messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.TASK_PAID_FOR_INSTA_BOOKING;
-        EventBus.getDefault().post(messageEvent);
-
-        finish();
-    }
 }

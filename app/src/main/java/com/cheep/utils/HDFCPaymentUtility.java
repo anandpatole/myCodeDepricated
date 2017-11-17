@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 import android.text.TextUtils;
 
 import com.cheep.BuildConfig;
+import com.cheep.model.ProviderModel;
 import com.cheep.model.TaskDetailModel;
 import com.cheep.model.UserDetails;
 import com.cheep.network.NetworkUtility;
@@ -45,7 +46,10 @@ public class HDFCPaymentUtility {
     private static final String UDF5 = "udf5";
     private static final String HASH = "hash";
 
-    public static Map<String, String> getPaymentTransactionFieldsForNormalTask(String fcmToken, UserDetails userDetails, TaskDetailModel taskDetailModel) {
+    public static Map<String, String> getPaymentTransactionFieldsForNormalTask(String fcmToken,
+                                                                               UserDetails userDetails,
+                                                                               TaskDetailModel taskDetailModel,
+                                                                               ProviderModel providerModel) {
 
         Map<String, String> mParams = new HashMap<>();
 
@@ -56,10 +60,20 @@ public class HDFCPaymentUtility {
         mParams.put(KEY, BuildConfig.PAYUBIZ_HDFC_KEY);
         mParams.put(EMAIL, userDetails.Email);
         mParams.put(FIRSTNAME, userDetails.UserName);
-        mParams.put(AMOUNT, taskDetailModel.taskPaidAmount);
+
+        if (taskDetailModel.taskPaidAmount != null && !taskDetailModel.taskPaidAmount.isEmpty())
+            mParams.put(AMOUNT, taskDetailModel.taskPaidAmount);
+        else
+            mParams.put(AMOUNT, providerModel.quotePrice);
+
         mParams.put(PRODUCTINFO, taskDetailModel.taskId);
-        mParams.put(TASK_ID, taskDetailModel.taskId);
-        mParams.put(UDF2, taskDetailModel.selectedProvider.providerId);
+
+        if (taskDetailModel.taskId != null && !taskDetailModel.taskId.isEmpty())
+            mParams.put(TASK_ID, taskDetailModel.taskId);
+        else
+            mParams.put(TASK_ID, Utility.EMPTY_STRING);
+
+        mParams.put(UDF2, providerModel.providerId);
         mParams.put(UDF1, "Task Start Date : " + taskDetailModel.taskStartdate);
         mParams.put(UDF3, NetworkUtility.TAGS.PLATFORMTYPE.ANDROID);
         mParams.put(UDF4, Utility.EMPTY_STRING);
@@ -73,6 +87,7 @@ public class HDFCPaymentUtility {
         mParams.put(INSTRUMENT_ID, BuildConfig.PAYUBIZ_INSTRUMENT_ID);
         mParams.put(PHONE, userDetails.PhoneNumber);
         mParams.put(HASH, Utility.EMPTY_STRING);
+        LogUtils.LOGE(TAG, "getPaymentTransactionFieldsForNormalTask: mparams " + mParams);
         return mParams;
     }
 

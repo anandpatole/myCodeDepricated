@@ -20,6 +20,8 @@ public interface TaskRowDataInteractionListener {
 
     void onCallClicked(TaskDetailModel providerModel);
 
+    void onBookSimilarTaskClicked(TaskDetailModel providerModel);
+
     //    void onTaskRowFragListItemClicked(int which, TaskChatModel exploreDataModel); //, RowTabChatBinding mRawTabChatBinding
     void onCreateNewTask();
 

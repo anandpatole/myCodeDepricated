@@ -11,7 +11,7 @@
             android:id="@+id/scrollView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@+id/text_pay"
+            android:layout_above="@+id/ln_bottom_pay"
             android:paddingTop="@dimen/margin_top_payment_step"
             >
 
@@ -282,20 +282,42 @@
             </LinearLayout>
         </android.support.v4.widget.NestedScrollView>
 
-
-        <com.cheep.custom_view.CFTextViewSemiBold
-            android:id="@+id/text_pay"
+        <LinearLayout
+            android:id="@+id/ln_bottom_pay"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/h_book_and_pay"
+            android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_gravity="bottom"
-            android:background="@color/dark_blue_variant_1"
-            android:gravity="center"
-            android:padding="@dimen/scale_12dp"
-            android:text="@string/label_book_now"
-            android:textColor="@color/white"
-            android:textSize="@dimen/text_size_17sp"
-            android:visibility="visible"/>
+            android:orientation="horizontal">
 
+            <com.cheep.custom_view.CFTextViewSemiBold
+                android:id="@+id/text_book_only"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/h_book_and_pay"
+                android:layout_gravity="bottom"
+                android:layout_weight="1"
+                android:background="@color/dark_blue_variant_1"
+                android:gravity="center"
+                android:padding="@dimen/scale_12dp"
+                android:text="@string/label_book_now"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_17sp"
+                android:visibility="visible"/>
+
+
+            <com.cheep.custom_view.CFTextViewSemiBold
+                android:id="@+id/text_book_and_pay"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/h_book_and_pay"
+                android:layout_gravity="bottom"
+                android:layout_marginLeft="@dimen/scale_5dp"
+                android:layout_weight="1"
+                android:background="@color/dark_blue_variant_1"
+                android:gravity="center"
+                android:padding="@dimen/scale_12dp"
+                android:text="@string/label_book_and_pay"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_17sp"
+                android:visibility="visible"/>
+        </LinearLayout>
     </RelativeLayout>
 </layout>

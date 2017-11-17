@@ -1212,9 +1212,9 @@ public class EnterTaskDetailFragment extends BaseFragment implements RequestPerm
                 } else*/
                 if (TextUtils.isEmpty(edtAddress.getText().toString().trim())) {
                     Utility.showToast(mContext, getString(R.string.validate_address));
-                } /*else if (TextUtils.isEmpty(edtAddressInitials.getText().toString().trim())) {
+                } else if (TextUtils.isEmpty(edtAddressInitials.getText().toString().trim())) {
                     Utility.showToast(mContext, getString(R.string.validate_address_initials));
-                } */ else {
+                }  else {
                     if (addressModel != null) {
                         callUpdateAddressWS(addressModel.address_id,
                                 (radioHome.isChecked()

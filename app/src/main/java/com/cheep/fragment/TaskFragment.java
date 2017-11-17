@@ -326,7 +326,7 @@ public class TaskFragment extends BaseFragment {
                         nextPageId = jsonObject.optString(loadMoreKey);
                         errorLoadingHelper.success();
                         taskRecyclerViewAdapter.onLoadMoreComplete();
-                        if (list.size() == 0) {
+                        if (list.isEmpty()) {
                             taskRecyclerViewAdapter.disableLoadMore();
                         }
 

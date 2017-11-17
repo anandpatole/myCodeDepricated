@@ -341,7 +341,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_reason">Reason</string>
 
     <string name="label_you_nearly_there">You\'re nearly there</string>
-    <string name="label_please_chk_detail">Please check details below and pay</string>
+    <string name="label_please_chk_detail">Please check details below and book</string>
     <string name="label_enter_promocode">Apply Promo Code</string>
     <!--<string name="label_enter_promocode">Enter Promo Code</string>-->
     <string name="label_by">&#160;by&#160;</string>
@@ -396,7 +396,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="step_1_desc_for_strategic_partner">Please select as many services you need from the list below</string>
     <string name="validation_step_1_desc_for_strategic_partner">Oops! Please select a service from the above list to continue</string>
     <string name="step_2_desc_for_strategic_partner">Please share some more information</string>
-    <string name="step_3_desc_for_strategic_partner">Please check details below and pay</string>
+    <string name="step_3_desc_for_strategic_partner">Please check details below and book</string>
     <string name="continue_">Continue</string>
 
     <string name="label_select_an_address">Select an Address</string>
@@ -447,7 +447,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="disclaimer_promo_code">The Promo Code discount has been levied on pre tax amount.</string>
     <string name="disclaimer_referral">The Referral discount has been levied on pre tax amount.</string>
     <string name="disclaimer_promo_code_strategic_partner">5% Promo Code discount has been applied on the pre-tax amount.</string>
-    <string name="book_and_pay_x">Book and Pay ₹%1$s</string>
+    <string name="book_and_pay_x">Book now for ₹%1$s</string>
 
     <string name="label_service_required_for">Service Required For</string>
     <string name="special_instructions">Special Instructions</string>
@@ -572,4 +572,6 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_add_funds">Add Funds</string>
     <string name="enter_min_amount">"Please enter minimum %1s amount to proceed"</string>
     <string name="need_to_add_fund">You\'re a wee bit short!</string>
+    <string name="validate_address_initials">Please enter valid HouseNo/FlatNo</string>
+
 </resources>

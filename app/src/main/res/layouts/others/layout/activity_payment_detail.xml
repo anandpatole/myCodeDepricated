@@ -10,7 +10,7 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@+id/text_pay">
+            android:layout_above="@+id/ln_book_and_pay">
 
             <android.support.v4.widget.NestedScrollView
                 android:layout_width="match_parent"
@@ -381,6 +381,7 @@
                                 android:singleLine="true"
                                 android:textColor="@color/black"
                                 android:textSize="@dimen/text_size_14sp"
+                                tools:ignore="EllipsizeMaxLines"
                                 tools:text="₹ 300"/>
 
                         </RelativeLayout>
@@ -435,6 +436,7 @@
                                 android:singleLine="true"
                                 android:textColor="@color/black"
                                 android:textSize="@dimen/text_size_14sp"
+                                tools:ignore="EllipsizeMaxLines"
                                 tools:text="₹ 0"/>
 
                         </RelativeLayout>
@@ -487,6 +489,7 @@
                                 android:singleLine="true"
                                 android:textColor="@color/black"
                                 android:textSize="@dimen/text_size_14sp"
+                                tools:ignore="EllipsizeMaxLines"
                                 tools:text="₹ 300"/>
 
                         </RelativeLayout>
@@ -554,6 +557,7 @@
                                 android:singleLine="true"
                                 android:textColor="@drawable/textcolor_paymentsummary_selector"
                                 android:textSize="@dimen/text_size_14sp"
+                                tools:ignore="EllipsizeMaxLines"
                                 tools:text="₹ 300"/>
 
                         </RelativeLayout>
@@ -634,7 +638,8 @@
                                 android:singleLine="true"
                                 android:text="₹ 0"
                                 android:textColor="@drawable/textcolor_paymentsummary_selector"
-                                android:textSize="@dimen/text_size_14sp"/>
+                                android:textSize="@dimen/text_size_14sp"
+                                tools:ignore="EllipsizeMaxLines"/>
 
 
                         </RelativeLayout>
@@ -714,6 +719,7 @@
                                 android:singleLine="true"
                                 android:textColor="@color/black"
                                 android:textSize="@dimen/text_size_18sp"
+                                tools:ignore="EllipsizeMaxLines"
                                 tools:text="₹ 300"/>
 
                         </RelativeLayout>
@@ -761,19 +767,40 @@
                 old text for this pay button
         -->
         <!--android:text="@string/label_pay_fee_v1"-->
-
-        <com.cheep.custom_view.CFTextViewSemiBold
-            android:id="@+id/text_pay"
+        <LinearLayout
+            android:id="@+id/ln_book_and_pay"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_gravity="bottom"
-            android:background="@drawable/payment_detail_btn_blue_selector"
-            android:gravity="center"
-            android:padding="@dimen/scale_10dp"
-            android:text="@string/label_book_now"
-            android:textColor="@color/white"
-            android:textSize="@dimen/text_size_17sp"
-            android:visibility="visible"/>
+            android:orientation="horizontal">
+
+            w<com.cheep.custom_view.CFTextViewSemiBold
+                android:id="@+id/text_book_only"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/payment_detail_btn_blue_selector"
+                android:gravity="center"
+                android:padding="@dimen/scale_10dp"
+                android:text="@string/label_book_now"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_17sp"
+                android:visibility="visible"/>
+
+            <com.cheep.custom_view.CFTextViewSemiBold
+                android:id="@+id/text_book_and_pay"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/payment_detail_btn_blue_selector"
+                android:gravity="center"
+                android:padding="@dimen/scale_10dp"
+                android:layout_marginLeft="@dimen/scale_10dp"
+                android:text="@string/label_book_and_pay"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_17sp"
+                android:visibility="visible"/>
+        </LinearLayout>
     </RelativeLayout>
 </layout>

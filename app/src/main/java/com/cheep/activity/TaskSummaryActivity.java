@@ -192,7 +192,7 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
                 sVerified = new SpannableString(" " + mContext.getString(R.string.label_verified_pro) + " ");
                 sVerified.setSpan(new RelativeSizeSpan(0.9f), 0, sVerified.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 sVerified.setSpan(new RoundedBackgroundSpan(ContextCompat.getColor(this, R.color.splash_gradient_end), ContextCompat.getColor(this, R.color.white)), 0, sVerified.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-                mActivityTaskSummaryBinding.textProviderName.setText(sVerified != null ? TextUtils.concat(sName, " ", sVerified) : sName);
+                mActivityTaskSummaryBinding.textProviderName.setText(TextUtils.concat(sName, " ", sVerified));
             }
             // Distanceof Provider
             mActivityTaskSummaryBinding.textAddressKmAway.setText(mTaskDetailModel.selectedProvider.distance + getString(R.string.label_away));
@@ -493,13 +493,22 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
         if (flag) {
             mActivityTaskSummaryBinding.lnTaskCompletionRequested.setVisibility(View.VISIBLE);
             mActivityTaskSummaryBinding.textConfirmText.setText(getString(R.string.label_complete_job_confirm, "PRO"));
+
+            if (mTaskDetailModel.paymentStatus.equalsIgnoreCase(Utility.TASK_STATUS.PAID)) {
+                mActivityTaskSummaryBinding.textTaskCompletionYes.setText(R.string.label_yes);
+            } else {
+                mActivityTaskSummaryBinding.textTaskCompletionYes.setText(R.string.label_yes_pay_now);
+            }
+
             mActivityTaskSummaryBinding.textTaskCompletionYes.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
 
-//                    callCompleteTaskWS(Utility.TASK_STATUS.COMPLETION_CONFIRM);
-                    PaymentChoiceActivity.newInstance(mContext, mTaskDetailModel);
-
+                    if (mTaskDetailModel.paymentStatus.equalsIgnoreCase(Utility.TASK_STATUS.PAID)) {
+                        callCompleteTaskWS(Utility.TASK_STATUS.COMPLETION_CONFIRM);
+                    } else {
+                        PaymentChoiceActivity.newInstance(mContext, mTaskDetailModel);
+                    }
                 }
             });
             mActivityTaskSummaryBinding.textTaskCompletionNo.setOnClickListener(new View.OnClickListener() {

@@ -106,6 +106,9 @@
 
     <color name="c_4B4B4B">#4B4B4B</color>
     <color name="c_60p_opacity_3A3A3A">#663A3A3A</color>
+    <color name="task_completed_green">#21A17B</color>
+    <color name="task_canceled_red">#EB3727</color>
+    <color name="task_elapses_red">#F06608</color>
     <!--test-->
     <!--<color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>

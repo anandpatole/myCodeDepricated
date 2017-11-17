@@ -28,6 +28,7 @@ import com.appsflyer.AppsFlyerLib;
 import com.cheep.R;
 import com.cheep.activity.BaseAppCompatActivity;
 import com.cheep.activity.LoginActivity;
+import com.cheep.activity.PaymentChoiceActivity;
 import com.cheep.custom_view.BottomAlertDialog;
 import com.cheep.custom_view.CFEditTextRegular;
 import com.cheep.databinding.FragmentStrategicPartnerPhaseThreeBinding;
@@ -35,20 +36,18 @@ import com.cheep.dialogs.AcknowledgementDialogWithProfilePic;
 import com.cheep.dialogs.AcknowledgementInteractionListener;
 import com.cheep.fragment.BaseFragment;
 import com.cheep.model.MessageEvent;
+import com.cheep.model.ProviderModel;
+import com.cheep.model.TaskDetailModel;
 import com.cheep.model.UserDetails;
 import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
-import com.cheep.strategicpartner.model.AllSubSubCat;
 import com.cheep.strategicpartner.model.MediaModel;
 import com.cheep.strategicpartner.model.QueAnsModel;
-import com.cheep.strategicpartner.model.StrategicPartnerServiceModel;
 import com.cheep.utils.LogUtils;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.SuperCalendar;
 import com.cheep.utils.Utility;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 
 import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
@@ -176,13 +175,9 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
 //        mFragmentStrategicPartnerPhaseThreeBinding.textPay.setText(getString(R.string.label_book_now_for_rupees, String.valueOf(Utility.getQuotePriceFormatter(mStrategicPartnerTaskCreationAct.totalOfGSTPrice))));
 
         // handle clicks for create task web api and payment flow
-        mFragmentStrategicPartnerPhaseThreeBinding.textPay.setOnClickListener(new View.OnClickListener() {
+        mFragmentStrategicPartnerPhaseThreeBinding.textBookOnly.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                // Initiating the payment now
-//                payNow();
-//            Open Payment choice activity
 
 
                 if (!Utility.isConnected(mContext)) {
@@ -196,6 +191,40 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
                 }
 
                 callCreateStrategicPartnerTaskWS();
+            }
+        });
+
+        mFragmentStrategicPartnerPhaseThreeBinding.textBookAndPay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                TaskDetailModel taskDetailModel = new TaskDetailModel();
+                taskDetailModel.mQuesList = mStrategicPartnerTaskCreationAct.getQuestionsList();
+                taskDetailModel.taskDesc = getTaskDescription(mStrategicPartnerTaskCreationAct.getQuestionsList());
+                taskDetailModel.taskSelectedSubCategoryList = mStrategicPartnerTaskCreationAct.getSelectedSubService();
+                for (QueAnsModel model : mStrategicPartnerTaskCreationAct.getQuestionsList())
+                    if (model.answerType.equalsIgnoreCase(Utility.TEMPLATE_UPLOAD)) {
+                        taskDetailModel.mMediaModelList = model.medialList;
+                        break;
+                    }
+                taskDetailModel.taskStartdate = start_datetime;
+                taskDetailModel.categoryId = mStrategicPartnerTaskCreationAct.mBannerImageModel.cat_id;
+                taskDetailModel.taskType = Utility.TASK_TYPE.STRATEGIC;
+                taskDetailModel.quoteAmountStrategicPartner = mStrategicPartnerTaskCreationAct.totalOfBasePrice;
+                taskDetailModel.totalStrategicPartner = mStrategicPartnerTaskCreationAct.totalOfGSTPrice;
+                taskDetailModel.payableAmountStrategicPartner = payableAmount;
+                taskDetailModel.payableAmountStrategicPartner = payableAmount;
+                taskDetailModel.cheepCode = cheepCode;
+                taskDetailModel.taskDiscountAmount = promocode_price;
+                ProviderModel provider = new ProviderModel();
+                provider.providerId = mStrategicPartnerTaskCreationAct.spUserId;
+                taskDetailModel.selectedProvider = provider;
+                taskDetailModel.categoryName = mStrategicPartnerTaskCreationAct.mBannerImageModel.name;
+                taskDetailModel.catImage = mStrategicPartnerTaskCreationAct.mBannerImageModel.imgCatImageUrl;
+
+                PaymentChoiceActivity.newInstance(StrategicPartnerFragPhaseThree.this, taskDetailModel,  mStrategicPartnerTaskCreationAct.mSelectedAddressModel);
+
+
             }
         });
 
@@ -484,31 +513,6 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
     // TODO : commented on 4 nove as per pay later flow
     private void callCreateStrategicPartnerTaskWS() {
 
-//        taskDetailModel = new TaskDetailModel();
-//        taskDetailModel.mQuesList = mStrategicPartnerTaskCreationAct.getQuestionsList();
-//        taskDetailModel.taskDesc = getTaskDescription(mStrategicPartnerTaskCreationAct.getQuestionsList());
-//        taskDetailModel.taskSelectedSubCategoryList = mStrategicPartnerTaskCreationAct.getSelectedSubService();
-//        for (QueAnsModel model : mStrategicPartnerTaskCreationAct.getQuestionsList())
-//            if (model.answerType.equalsIgnoreCase(Utility.TEMPLATE_UPLOAD)) {
-//                taskDetailModel.mMediaModelList = model.medialList;
-//                break;
-//            }
-//        taskDetailModel.taskStartdate = start_datetime;
-//        taskDetailModel.categoryId = mStrategicPartnerTaskCreationAct.mBannerImageModel.cat_id;
-//        taskDetailModel.taskType = Utility.TASK_TYPE.STRATEGIC;
-//        taskDetailModel.quoteAmountStrategicPartner = mStrategicPartnerTaskCreationAct.totalOfBasePrice;
-//        taskDetailModel.totalStrategicPartner = mStrategicPartnerTaskCreationAct.totalOfGSTPrice;
-//        taskDetailModel.payableAmountStrategicPartner = payableAmount;
-//        taskDetailModel.payableAmountStrategicPartner = payableAmount;
-//        taskDetailModel.cheepCode = cheepCode;
-//        taskDetailModel.taskDiscountAmount = promocode_price;
-//        ProviderModel provider = new ProviderModel();
-//        provider.providerId = mStrategicPartnerTaskCreationAct.spUserId;
-//        taskDetailModel.selectedProvider = provider;
-//        taskDetailModel.categoryName = mStrategicPartnerTaskCreationAct.mBannerImageModel.name;
-//        taskDetailModel.catImage = mStrategicPartnerTaskCreationAct.mBannerImageModel.imgCatImageUrl;
-
-
         // Check Internet connection
         if (!Utility.isConnected(mContext)) {
             Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mFragmentStrategicPartnerPhaseThreeBinding.getRoot());
@@ -534,13 +538,12 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
 
         // Add Params
         ArrayList<QueAnsModel> mList = mStrategicPartnerTaskCreationAct.getQuestionsList();
-        String subCategoryDetail = getSelectedServicesJsonString().toString();
+        String subCategoryDetail = Utility.getSelectedServicesJsonString(mStrategicPartnerTaskCreationAct.getSelectedSubService());
         String task_desc = getTaskDescription(mStrategicPartnerTaskCreationAct.getQuestionsList());
-        String question_detail = getQuestionAnswerDetailsJsonString(mList).toString();
+        String question_detail = Utility.getQuestionAnswerDetailsJsonString(mList);
         String media_file = Utility.getSelectedMediaJsonString(mMediaModelList);
         LogUtils.LOGE(TAG, "start dat time " + start_datetime);
         SuperCalendar superCalendar = SuperCalendar.getInstance();
-        String txnid = Utility.getUniqueTransactionId();
         superCalendar.setTimeInMillis(Long.parseLong(start_datetime));
         superCalendar.setTimeZone(SuperCalendar.SuperTimeZone.GMT.GMT);
 
@@ -572,7 +575,6 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
         mParams.put(NetworkUtility.TAGS.CHEEPCODE, TextUtils.isEmpty(cheepCode) ? Utility.EMPTY_STRING : cheepCode);
         mParams.put(NetworkUtility.TAGS.PAYABLE_AMOUNT, TextUtils.isEmpty(cheepCode) ? mStrategicPartnerTaskCreationAct.totalOfGSTPrice
                 : payableAmount);
-        mParams.put(NetworkUtility.TAGS.TRANSACTION_ID, txnid);
         mParams.put(NetworkUtility.TAGS.TASK_DESC, task_desc);
         mParams.put(NetworkUtility.TAGS.SP_USER_ID, mStrategicPartnerTaskCreationAct.spUserId);
         mParams.put(NetworkUtility.TAGS.PROMOCODE_PRICE, TextUtils.isEmpty(cheepCode) ? Utility.ZERO_STRING : promocode_price);
@@ -624,7 +626,6 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
         mTaskCreationParams.put(NetworkUtility.TAGS.QUOTE_AMOUNT, mStrategicPartnerTaskCreationAct.totalOfBasePrice + "");
         mTaskCreationParams.put(NetworkUtility.TAGS.PAYABLE_AMOUNT, TextUtils.isEmpty(cheepCode) ? mStrategicPartnerTaskCreationAct.totalOfGSTPrice
                 : payableAmount);
-        mTaskCreationParams.put(NetworkUtility.TAGS.TRANSACTION_ID, txnid);
         mTaskCreationParams.put(NetworkUtility.TAGS.MEDIA_FILE, media_file);
         mTaskCreationParams.put(NetworkUtility.TAGS.SP_USER_ID, mStrategicPartnerTaskCreationAct.spUserId);
         mTaskCreationParams.put(NetworkUtility.TAGS.CHEEPCODE, cheepCode);
@@ -660,46 +661,6 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
         }
     };
 
-    private JsonArray getQuestionAnswerDetailsJsonString(ArrayList<QueAnsModel> mList) {
-        JsonArray quesArray = new JsonArray();
-        for (int i = 0; i < mList.size(); i++) {
-            QueAnsModel queAnsModel = mList.get(i);
-            if (!queAnsModel.answerType.equalsIgnoreCase(Utility.TEMPLATE_DATE_PICKER)
-                    && !queAnsModel.answerType.equalsIgnoreCase(Utility.TEMPLATE_TIME_PICKER)
-                    && !queAnsModel.answerType.equalsIgnoreCase(Utility.TEMPLATE_TEXT_FIELD)
-                    && !queAnsModel.answerType.equalsIgnoreCase(Utility.TEMPLATE_LOCATION)
-                    && !queAnsModel.answerType.equalsIgnoreCase(Utility.TEMPLATE_UPLOAD)) {
-                JsonObject jsonObject = new JsonObject();
-                jsonObject.addProperty(NetworkUtility.TAGS.QUESTION_ID, queAnsModel.questionId);
-                if (queAnsModel.answer != null)
-                    jsonObject.addProperty(NetworkUtility.TAGS.ANSWER, queAnsModel.answer);
-                else
-                    jsonObject.addProperty(NetworkUtility.TAGS.ANSWER, Utility.EMPTY_STRING);
-                quesArray.add(jsonObject);
-            }
-        }
-        return quesArray;
-    }
-
-    //    media name will be with extension
-//    [{"media_name" : "5","media_type" : "288"},{"media_name" : "5","media_type" : "288"}]
-
-    private JsonArray getSelectedServicesJsonString() {
-        JsonArray selectedServiceArray = new JsonArray();
-        ArrayList<StrategicPartnerServiceModel> list = mStrategicPartnerTaskCreationAct.getSelectedSubService();
-        for (int i = 0; i < list.size(); i++) {
-            StrategicPartnerServiceModel model = list.get(i);
-            for (int j = 0; j < model.allSubSubCats.size(); j++) {
-                AllSubSubCat allSubSubCat = model.allSubSubCats.get(j);
-                JsonObject obj = new JsonObject();
-                obj.addProperty(NetworkUtility.TAGS.SUBCATEGORY_ID, model.sub_cat_id);
-                obj.addProperty(NetworkUtility.TAGS.SUB_SUB_CAT_ID, allSubSubCat.subSubCatId);
-                obj.addProperty(NetworkUtility.TAGS.PRICE, allSubSubCat.price);
-                selectedServiceArray.add(obj);
-            }
-        }
-        return selectedServiceArray;
-    }
 
     Response.Listener mCallCreateTaskWSResponseListener = new Response.Listener() {
         @Override

@@ -76,7 +76,8 @@ public class PaymentSummaryActivity extends BaseAppCompatActivity {
 
 
         mActivityPaymentDetailBinding.ivTermsTick.setSelected(true);
-        mActivityPaymentDetailBinding.textPay.setSelected(true);
+        mActivityPaymentDetailBinding.textBookAndPay.setSelected(true);
+        mActivityPaymentDetailBinding.textBookOnly.setSelected(true);
         mActivityPaymentDetailBinding.textName.setVisibility(View.GONE);
         mActivityPaymentDetailBinding.providerRating.setVisibility(View.GONE);
         mActivityPaymentDetailBinding.textExperience.setVisibility(View.GONE);
@@ -105,7 +106,8 @@ public class PaymentSummaryActivity extends BaseAppCompatActivity {
                     else
                         mActivityPaymentDetailBinding.textLabelTotalPaid.setText(getString(R.string.label_total_pay));
 
-                    mActivityPaymentDetailBinding.textPay.setVisibility(View.GONE);
+                    mActivityPaymentDetailBinding.textBookAndPay.setVisibility(View.GONE);
+                    mActivityPaymentDetailBinding.textBookOnly.setVisibility(View.GONE);
                     mActivityPaymentDetailBinding.textpromocodelabel.setText(getString(R.string.label_promocode_apply));
                     mActivityPaymentDetailBinding.textpromocodelabel.setTextColor(ContextCompat.getColor(this, R.color.black));
                     mActivityPaymentDetailBinding.textreferraldiscountlabel.setTextColor(ContextCompat.getColor(this, R.color.black));
