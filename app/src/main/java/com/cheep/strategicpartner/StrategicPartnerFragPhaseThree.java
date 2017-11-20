@@ -118,7 +118,7 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
         mFragmentStrategicPartnerPhaseThreeBinding.recycleSelectedService.setLayoutManager(new LinearLayoutManager(mStrategicPartnerTaskCreationAct));
         mFragmentStrategicPartnerPhaseThreeBinding.recycleSelectedService.setNestedScrollingEnabled(false);
         if (mStrategicPartnerTaskCreationAct.getSelectedSubService() != null)
-            mFragmentStrategicPartnerPhaseThreeBinding.recycleSelectedService.setAdapter(new PaymentSummaryAdapter(mStrategicPartnerTaskCreationAct.getSelectedSubService()));
+            mFragmentStrategicPartnerPhaseThreeBinding.recycleSelectedService.setAdapter(new PaymentDetailAdapter(mStrategicPartnerTaskCreationAct.getSelectedSubService()));
     }
 
 
@@ -167,7 +167,7 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
 
         // get list of selected services from phase 1
         if (mStrategicPartnerTaskCreationAct.getSelectedSubService() != null)
-            mFragmentStrategicPartnerPhaseThreeBinding.recycleSelectedService.setAdapter(new PaymentSummaryAdapter(mStrategicPartnerTaskCreationAct.getSelectedSubService()));
+            mFragmentStrategicPartnerPhaseThreeBinding.recycleSelectedService.setAdapter(new PaymentDetailAdapter(mStrategicPartnerTaskCreationAct.getSelectedSubService()));
 
         // set total and sub total details
         mFragmentStrategicPartnerPhaseThreeBinding.txttotal.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(mStrategicPartnerTaskCreationAct.totalOfGSTPrice)));

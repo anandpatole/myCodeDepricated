@@ -236,7 +236,7 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     // Redirect the user to Payment Summary screen.
-                    PaymentSummaryActivity.newInstance(TaskSummaryActivity.this, mTaskDetailModel, mTaskDetailModel.selectedProvider, true);
+                    PaymentSummaryActivity.newInstance(TaskSummaryActivity.this, mTaskDetailModel);
                 }
             });
 

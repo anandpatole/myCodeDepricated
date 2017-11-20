@@ -116,6 +116,7 @@ public class NetworkUtility {
         public static final String GET_AMOUNT_WITH_GST = BASE_URL + "customers/payment/getAmountWithGST";
         public static final String PAY_TASK_PAYMENT = BASE_URL + "customers/payment/payTaskPayment";
         public static final String ACCEPT_ADDITIONAL_PAYMENT_REQUEST = BASE_URL + "customers/tasks/acceptAdditionalPaymentRequest";
+        public static final String GET_PAYMENT_SUMMARY = BASE_URL + "customers/tasks/getPaymentSummary";
 
         // Paytm Verify Transaction based on Order
         // Save Paytm user details
