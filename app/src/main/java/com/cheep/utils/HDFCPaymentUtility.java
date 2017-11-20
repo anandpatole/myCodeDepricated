@@ -1,7 +1,6 @@
 package com.cheep.utils;
 
 import android.os.AsyncTask;
-import android.text.TextUtils;
 
 import com.cheep.BuildConfig;
 import com.cheep.model.ProviderModel;
@@ -66,13 +65,16 @@ public class HDFCPaymentUtility {
         else
             mParams.put(AMOUNT, providerModel.quotePrice);
 
+
         mParams.put(PRODUCTINFO, taskDetailModel.taskId);
 
-        if (taskDetailModel.taskId != null && !taskDetailModel.taskId.isEmpty())
+        if (taskDetailModel.taskId != null && !taskDetailModel.taskId.isEmpty()) {
             mParams.put(TASK_ID, taskDetailModel.taskId);
-        else
+            mParams.put(PRODUCTINFO, taskDetailModel.taskId);
+        } else {
             mParams.put(TASK_ID, Utility.EMPTY_STRING);
-
+            mParams.put(PRODUCTINFO, userDetails.UserID);
+        }
         mParams.put(UDF2, providerModel.providerId);
         mParams.put(UDF1, "Task Start Date : " + taskDetailModel.taskStartdate);
         mParams.put(UDF3, NetworkUtility.TAGS.PLATFORMTYPE.ANDROID);
@@ -94,9 +96,7 @@ public class HDFCPaymentUtility {
 
     public static Map<String, String> getPaymentTransactionFieldsForStrategicPartner(String fcmToken,
                                                                                      UserDetails userDetails,
-                                                                                     String cheepCode,
-                                                                                     String total,
-                                                                                     String payableAmount,
+                                                                                     String payAmount,
                                                                                      String start_datetime) {
 
         Map<String, String> mTransactionFieldsParams;
@@ -120,7 +120,8 @@ public class HDFCPaymentUtility {
         mTransactionFieldsParams.put(EMAIL, userDetails.Email);
         mTransactionFieldsParams.put(PHONE, userDetails.PhoneNumber);
         // Total Amount
-        mTransactionFieldsParams.put(AMOUNT, TextUtils.isEmpty(cheepCode) ? total : payableAmount);
+        mTransactionFieldsParams.put(AMOUNT, payAmount);
+
         // Start DateTime(In Milliseconds- Timestamp)
         mTransactionFieldsParams.put(UDF1, "Task Start Date : " + start_datetime);
         // We don't have Provider ID so pass it empty.
@@ -132,6 +133,8 @@ public class HDFCPaymentUtility {
         mTransactionFieldsParams.put(UDF4, Utility.EMPTY_STRING);
         mTransactionFieldsParams.put(UDF5, Utility.EMPTY_STRING);
         mTransactionFieldsParams.put(HASH, Utility.EMPTY_STRING);
+
+
         return mTransactionFieldsParams;
     }
 

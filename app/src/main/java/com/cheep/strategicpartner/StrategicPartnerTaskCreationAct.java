@@ -55,6 +55,7 @@ public class StrategicPartnerTaskCreationAct extends BaseAppCompatActivity {
     private ArrayList<StrategicPartnerServiceModel> mSelectedServicesList;
     public boolean isSingleSelection = false;
     public String spUserId = "";
+    public boolean isPayNow = false;
 
     @Nullable
     public AddressModel mSelectedAddressModel;
@@ -455,7 +456,8 @@ public class StrategicPartnerTaskCreationAct extends BaseAppCompatActivity {
         switch (event.BROADCAST_ACTION) {
             case Utility.BROADCAST_TYPE.PAYMENT_COMPLETED_NEED_TO_REDIRECT_TO_MY_TASK_SCREEN:
                 // Finish this activity
-//                finish();
+                if (isPayNow)
+                    finish();
                 break;
         }
     }

@@ -137,7 +137,7 @@ public class TaskFragment extends BaseFragment {
 
         errorLoadingHelper.showLoading();
         callTasksWS();
-        if (EventBus.getDefault().isRegistered(this) == false)
+        if (!EventBus.getDefault().isRegistered(this))
             EventBus.getDefault().register(this);
         initSwipeToRefreshLayout();
     }
@@ -160,7 +160,7 @@ public class TaskFragment extends BaseFragment {
         taskRecyclerViewAdapter.setIsLoadMoreEnabled(true, R.layout.load_more_progress, commonRecyclerViewBinding.recyclerView, new LoadMoreSwipeRecyclerAdapter.OnLoadMoreListener() {
             @Override
             public void onLoadMore() {
-                if (taskRecyclerViewAdapter.getmList().size() > 0) {
+                if (!taskRecyclerViewAdapter.getmList().isEmpty()) {
                     callTasksWS();
                 }
             }
@@ -235,7 +235,7 @@ public class TaskFragment extends BaseFragment {
     @Override
     public void onDetach() {
         Log.d(TAG, "onDetach() called");
-        if (EventBus.getDefault().isRegistered(this) == true)
+        if (EventBus.getDefault().isRegistered(this))
             EventBus.getDefault().unregister(this);
 
         mListener = null;
@@ -285,10 +285,7 @@ public class TaskFragment extends BaseFragment {
         Map<String, String> mParams = new HashMap<>();
         if (!TextUtils.isEmpty(nextPageId) && loadMoreKey != null) {
             mParams.put(loadMoreKey, nextPageId);
-        } else {
-
         }
-
         VolleyNetworkRequest mVolleyNetworkRequestForCategoryList = new VolleyNetworkRequest(whichFrg == TAB_PENDING_TASK ? NetworkUtility.WS.PENDING_TASK : PAST_TASK
                 , mCallPendingTaskWSErrorListener
                 , mCallPendingTaskWSResponseListener

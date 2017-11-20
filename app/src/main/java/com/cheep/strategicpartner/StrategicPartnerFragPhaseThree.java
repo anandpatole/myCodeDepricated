@@ -178,7 +178,7 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
         mFragmentStrategicPartnerPhaseThreeBinding.textBookOnly.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                mStrategicPartnerTaskCreationAct.isPayNow = false;
 
                 if (!Utility.isConnected(mContext)) {
                     Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mFragmentStrategicPartnerPhaseThreeBinding.getRoot());
@@ -197,6 +197,7 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
         mFragmentStrategicPartnerPhaseThreeBinding.textBookAndPay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                mStrategicPartnerTaskCreationAct.isPayNow = true;
 
                 TaskDetailModel taskDetailModel = new TaskDetailModel();
                 taskDetailModel.mQuesList = mStrategicPartnerTaskCreationAct.getQuestionsList();
@@ -210,19 +211,20 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
                 taskDetailModel.taskStartdate = start_datetime;
                 taskDetailModel.categoryId = mStrategicPartnerTaskCreationAct.mBannerImageModel.cat_id;
                 taskDetailModel.taskType = Utility.TASK_TYPE.STRATEGIC;
+
                 taskDetailModel.quoteAmountStrategicPartner = mStrategicPartnerTaskCreationAct.totalOfBasePrice;
-                taskDetailModel.totalStrategicPartner = mStrategicPartnerTaskCreationAct.totalOfGSTPrice;
-                taskDetailModel.payableAmountStrategicPartner = payableAmount;
-                taskDetailModel.payableAmountStrategicPartner = payableAmount;
                 taskDetailModel.cheepCode = cheepCode;
                 taskDetailModel.taskDiscountAmount = promocode_price;
+                taskDetailModel.taskPaidAmount = TextUtils.isEmpty(taskDetailModel.cheepCode) ? mStrategicPartnerTaskCreationAct.totalOfGSTPrice
+                        : payableAmount;
+
                 ProviderModel provider = new ProviderModel();
                 provider.providerId = mStrategicPartnerTaskCreationAct.spUserId;
                 taskDetailModel.selectedProvider = provider;
                 taskDetailModel.categoryName = mStrategicPartnerTaskCreationAct.mBannerImageModel.name;
                 taskDetailModel.catImage = mStrategicPartnerTaskCreationAct.mBannerImageModel.imgCatImageUrl;
 
-                PaymentChoiceActivity.newInstance(StrategicPartnerFragPhaseThree.this, taskDetailModel,  mStrategicPartnerTaskCreationAct.mSelectedAddressModel);
+                PaymentChoiceActivity.newInstance(StrategicPartnerFragPhaseThree.this, taskDetailModel, mStrategicPartnerTaskCreationAct.mSelectedAddressModel);
 
 
             }

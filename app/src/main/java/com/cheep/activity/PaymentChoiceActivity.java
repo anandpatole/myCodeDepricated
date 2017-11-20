@@ -1,6 +1,5 @@
 package com.cheep.activity;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
@@ -30,7 +29,6 @@ import com.cheep.model.UserDetails;
 import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
-import com.cheep.strategicpartner.model.MediaModel;
 import com.cheep.strategicpartner.model.QueAnsModel;
 import com.cheep.utils.HDFCPaymentUtility;
 import com.cheep.utils.LogUtils;
@@ -135,10 +133,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
 
         if (isPayNow) {
             if (taskDetailModel.taskType.equalsIgnoreCase(Utility.TASK_TYPE.STRATEGIC)) {
-                if (taskDetailModel.cheepCode != null && !taskDetailModel.cheepCode.isEmpty())
-                    amount = Utility.getQuotePriceFormatter(taskDetailModel.payableAmountStrategicPartner);
-                else
-                    amount = Utility.getQuotePriceFormatter(taskDetailModel.totalStrategicPartner);
+                amount = Utility.getQuotePriceFormatter(taskDetailModel.taskPaidAmount);
             } /*else if (isAdditional != 0) {
                 amount = Utility.getQuotePriceFormatter(taskDetailModel.additionalQuoteAmount);
             } */ else {
@@ -205,13 +200,26 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
                 PayByCashDialog payByCashDialog = PayByCashDialog.newInstance(providerModel.userName, Utility.getQuotePriceFormatter(taskDetailModel.taskPaidAmount), new PayByCashDialog.PayByCashDoneListener() {
                     @Override
                     public void onDoneClick() {
-                        callPaymentForNormalOrInstaTaskWS(Utility.EMPTY_STRING);
+                        onSuccessOfAnyPaymentMode(Utility.EMPTY_STRING);
                     }
                 });
                 payByCashDialog.show(getSupportFragmentManager(), PayByCashDialog.TAG);
 
                 break;
         }
+    }
+
+    private void onSuccessOfAnyPaymentMode(String paymentLog) {
+        if (isPayNow) {
+            if (taskDetailModel.taskType.equalsIgnoreCase(Utility.TASK_TYPE.NORMAL))
+                callBookProAndPayForNormalTaskWS(paymentLog);
+            else if (taskDetailModel.taskType.equalsIgnoreCase(Utility.TASK_TYPE.INSTA_BOOK)) {
+                callCreateInstaBookingTaskWS(paymentLog);
+            } else {
+                callCreateStrategicPartnerTaskWS(paymentLog);
+            }
+        } else
+            callPaymentForNormalOrInstaTaskWS(paymentLog);
     }
 
 
@@ -277,7 +285,6 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
             String strResponse = (String) response;
             try {
                 JSONObject jsonObject = new JSONObject(strResponse);
-                LogUtils.LOGE(TAG, "onResponse: " + jsonObject.toString());
                 int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
                 String error_message;
                 hideProgressDialog();
@@ -293,18 +300,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
 //                            GOING TO RUN IN LIVE ENVIRONMENT BUILDS
                             // Direct bypass the things
 //                            updatePaymentStatus(true, getString(R.string.message_payment_bypassed), false);
-                            if (isPayNow) {
-                                if (taskDetailModel.taskType.equalsIgnoreCase(Utility.TASK_TYPE.NORMAL))
-                                    callBookProAndPayForNormalTaskWS(getString(R.string.message_payment_bypassed));
-                                else if (taskDetailModel.taskType.equalsIgnoreCase(Utility.TASK_TYPE.INSTA_BOOK)) {
-                                    callCreateInstaBookingTaskWS(getString(R.string.message_payment_bypassed));
-                                } else {
-                                    LogUtils.LOGE(TAG, "onResponse: call staretegic partner task");
-                                    callCreateStrategicPartnerTaskWS(getString(R.string.message_payment_bypassed));
-                                }
-                            } else {
-                                callPaymentForNormalOrInstaTaskWS(getString(R.string.message_payment_bypassed));
-                            }
+                            onSuccessOfAnyPaymentMode(getString(R.string.message_payment_bypassed));
                         } else {
                             //TODO: Remove this when release and it is saving cc detail in clipboard only
                             if ("debug".equalsIgnoreCase(BuildConfig.BUILD_TYPE)) {
@@ -368,45 +364,13 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
                     //success
                     if (data != null) {
                         LogUtils.LOGE(TAG, "onActivityResult() called with success: result= [" + data.getStringExtra(Utility.Extra.PAYU_RESPONSE) + "]");
-
-                        if (isPayNow)
-                            if (taskDetailModel.taskType.equalsIgnoreCase(Utility.TASK_TYPE.NORMAL))
-                                callBookProAndPayForNormalTaskWS(data.getStringExtra(Utility.Extra.PAYU_RESPONSE));
-                            else if (taskDetailModel.taskType.equalsIgnoreCase(Utility.TASK_TYPE.INSTA_BOOK)) {
-                                callCreateInstaBookingTaskWS(data.getStringExtra(Utility.Extra.PAYU_RESPONSE));
-                            } else {
-                                LogUtils.LOGE(TAG, "onActivityResult: call startegic partner task");
-                                callCreateStrategicPartnerTaskWS(data.getStringExtra(Utility.Extra.PAYU_RESPONSE));
-                            }
-                        else
-                            callPaymentForNormalOrInstaTaskWS(data.getStringExtra(Utility.Extra.PAYU_RESPONSE));
-
-
+                        onSuccessOfAnyPaymentMode(data.getStringExtra(Utility.Extra.PAYU_RESPONSE));
                     }
                 }
                 if (resultCode == RESULT_CANCELED) {
                     //failed
                     if (data != null) {
                         LogUtils.LOGE(TAG, "onActivityResult() called with failed: result= [" + data.getStringExtra(Utility.Extra.PAYU_RESPONSE) + "]");
-                        Utility.showSnackBar(getString(R.string.msg_payment_failed), mActivityPaymentChoiceBinding.getRoot());
-                    }
-                }
-                break;
-            case Utility.REQUEST_START_PAYMENT_FOR_STRATEGIC_PARTNER:
-                if (resultCode == Activity.RESULT_OK) {
-                    // success
-                    if (data != null) {
-                        LogUtils.LOGE(TAG, "onActivityResult() called with success: result= [" + data.getStringExtra(Utility.Extra.PAYU_RESPONSE) + "]");
-                        // Call update payment service from here with all the response come from service
-                        LogUtils.LOGD(TAG, "onActivityResult: payment of strategic partner");
-//                        callCreateStrategicPartnerTaskWS(data.getStringExtra(Utility.Extra.PAYU_RESPONSE));
-                    }
-                }
-                if (resultCode == Activity.RESULT_CANCELED) {
-                    if (data != null) {
-                        LogUtils.LOGE(TAG, "onActivityResult() called with failed: result= [" + data.getStringExtra(Utility.Extra.PAYU_RESPONSE) + "]");
-                        //Call update payment service from here with all the response come from service
-//                    callTaskCreationWebServiceForStratgicPartner(false, data.getStringExtra("result"));
                         Utility.showSnackBar(getString(R.string.msg_payment_failed), mActivityPaymentChoiceBinding.getRoot());
                     }
                 }
@@ -535,9 +499,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
         //Add Params
         mTransactionParams = HDFCPaymentUtility.getPaymentTransactionFieldsForStrategicPartner(PreferenceUtility.getInstance(this).getFCMRegID(),
                 userDetails,
-                taskDetailModel.cheepCode,
-                taskDetailModel.totalStrategicPartner,
-                taskDetailModel.payableAmountStrategicPartner,
+                taskDetailModel.taskPaidAmount,
                 taskDetailModel.taskStartdate);
 
         // We do not need to pass PROID and TaskID in Strategic partner as it still not finalized
@@ -652,22 +614,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
                 if (event.paytmResponse.isSuccess) {
                     // show dialog
 //                TODO: Need to start the task from here
-                    if (taskDetailModel.taskType.equalsIgnoreCase(Utility.TASK_TYPE.STRATEGIC)) {
-                        callPaymentForStrategicTaskWS(event.paytmResponse.ResponsePayLoad);
-                    } else {
-                        if (isPayNow)
-                            if (taskDetailModel.taskType.equalsIgnoreCase(Utility.TASK_TYPE.NORMAL))
-                                callBookProAndPayForNormalTaskWS(event.paytmResponse.ResponsePayLoad);
-                            else if (taskDetailModel.taskType.equalsIgnoreCase(Utility.TASK_TYPE.INSTA_BOOK)) {
-                                callCreateInstaBookingTaskWS(event.paytmResponse.ResponsePayLoad);
-                            } else {
-                                callCreateStrategicPartnerTaskWS(event.paytmResponse.ResponsePayLoad);
-                                LogUtils.LOGE(TAG, "onResponse: call staretegic partner task");
-                            }
-                        else {
-                            callPaymentForNormalOrInstaTaskWS(event.paytmResponse.ResponsePayLoad);
-                        }
-                    }
+                    onSuccessOfAnyPaymentMode(event.paytmResponse.ResponsePayLoad);
                 } else {
                     Utility.showToast(mContext, getString(R.string.msg_payment_failed));
                 }
@@ -861,7 +808,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
 
 
                         // AS PER new flow pay later task status will be pending
-                        if (Utility.TASK_STATUS.PENDING.equalsIgnoreCase(taskStatus) ) {
+                        if (Utility.TASK_STATUS.PENDING.equalsIgnoreCase(taskStatus)) {
                             //We are commenting it because from here we are intiating a payment flow and
                             // after that we need to call update payment status on server
                             String taskPaidAmount = jsonData.optString(NetworkUtility.TAGS.TASK_PAID_AMOUNT);
@@ -1168,13 +1115,6 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
             return;
         }
 
-        ArrayList<MediaModel> mMediaModelList = new ArrayList<>();
-        for (QueAnsModel model : taskDetailModel.mQuesList)
-            if (model.answerType.equalsIgnoreCase(Utility.TEMPLATE_UPLOAD)) {
-                mMediaModelList = model.medialList;
-                break;
-            }
-
         //Show Progress
         showProgressDialog();
 
@@ -1224,8 +1164,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
         mParams.put(NetworkUtility.TAGS.QUOTE_AMOUNT, taskDetailModel.quoteAmountStrategicPartner + "");
 
         mParams.put(NetworkUtility.TAGS.CHEEPCODE, TextUtils.isEmpty(taskDetailModel.cheepCode) ? Utility.EMPTY_STRING : taskDetailModel.cheepCode);
-        mParams.put(NetworkUtility.TAGS.PAYABLE_AMOUNT, TextUtils.isEmpty(taskDetailModel.cheepCode) ? taskDetailModel.totalStrategicPartner
-                : taskDetailModel.payableAmountStrategicPartner);
+        mParams.put(NetworkUtility.TAGS.PAYABLE_AMOUNT, taskDetailModel.taskPaidAmount);
         mParams.put(NetworkUtility.TAGS.TRANSACTION_ID, txnid);
         mParams.put(NetworkUtility.TAGS.TASK_DESC, task_desc);
         mParams.put(NetworkUtility.TAGS.SP_USER_ID, taskDetailModel.selectedProvider.providerId);
@@ -1281,8 +1220,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
         mTaskCreationParams.put(NetworkUtility.TAGS.SUB_CATEGORY_DETAIL, subCategoryDetail);
         mTaskCreationParams.put(NetworkUtility.TAGS.QUESTION_DETAIL, question_detail);
         mTaskCreationParams.put(NetworkUtility.TAGS.QUOTE_AMOUNT, taskDetailModel.quoteAmountStrategicPartner + "");
-        mTaskCreationParams.put(NetworkUtility.TAGS.PAYABLE_AMOUNT, TextUtils.isEmpty(taskDetailModel.cheepCode) ? taskDetailModel.totalStrategicPartner
-                : taskDetailModel.payableAmountStrategicPartner);
+        mTaskCreationParams.put(NetworkUtility.TAGS.PAYABLE_AMOUNT, taskDetailModel.taskPaidAmount);
         if (mTransactionParams == null)
             mParams.put(NetworkUtility.TAGS.TRANSACTION_ID, Utility.getUniqueTransactionId());
         else
