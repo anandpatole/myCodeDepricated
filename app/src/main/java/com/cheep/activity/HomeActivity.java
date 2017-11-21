@@ -66,6 +66,7 @@ import com.cheep.fragment.ReferAndEarnFragment;
 import com.cheep.interfaces.DrawerLayoutInteractionListener;
 import com.cheep.interfaces.NotificationClickInteractionListener;
 import com.cheep.interfaces.TaskRowDataInteractionListener;
+import com.cheep.model.BannerImageModel;
 import com.cheep.model.FAQModel;
 import com.cheep.model.HistoryModel;
 import com.cheep.model.JobCategoryModel;
@@ -77,6 +78,7 @@ import com.cheep.model.UserDetails;
 import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
+import com.cheep.strategicpartner.StrategicPartnerTaskCreationAct;
 import com.cheep.strategicpartner.TaskSummaryStrategicPartnerActivity;
 import com.cheep.utils.HotlineHelper;
 import com.cheep.utils.PreferenceUtility;
@@ -487,9 +489,18 @@ public class HomeActivity extends BaseAppCompatActivity
     }
 
     @Override
-    public void onBookSimilarTaskClicked(TaskDetailModel providerModel) {
-
+    public void onBookSimilarTaskClicked(JobCategoryModel jobCategoryModel, BannerImageModel bannerImageModel) {
+        HomeFragment mHomeFragment = (HomeFragment) getSupportFragmentManager().findFragmentByTag(HomeFragment.TAG);
+        if (mHomeFragment != null) {
+            mHomeFragment.setCurrentTab(HomeFragment.TAB_HOME);
+            if (jobCategoryModel != null) {
+                TaskCreationActivity.getInstance(mContext, jobCategoryModel);
+            } else if (bannerImageModel != null) {
+                StrategicPartnerTaskCreationAct.getInstance(mContext, bannerImageModel);
+            }
+        }
     }
+
 
     @Override
     public void onCreateNewTask() {

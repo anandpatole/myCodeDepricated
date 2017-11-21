@@ -48,7 +48,7 @@ public class HDFCPaymentUtility {
     public static Map<String, String> getPaymentTransactionFieldsForNormalTask(String fcmToken,
                                                                                UserDetails userDetails,
                                                                                TaskDetailModel taskDetailModel,
-                                                                               ProviderModel providerModel) {
+                                                                               ProviderModel providerModel, boolean isPayNow) {
 
         Map<String, String> mParams = new HashMap<>();
 
@@ -61,7 +61,7 @@ public class HDFCPaymentUtility {
         mParams.put(FIRSTNAME, userDetails.UserName);
 
         if (taskDetailModel.taskPaidAmount != null && !taskDetailModel.taskPaidAmount.isEmpty())
-            mParams.put(AMOUNT, taskDetailModel.taskPaidAmount);
+            mParams.put(AMOUNT, isPayNow ? taskDetailModel.taskPaidAmount : taskDetailModel.taskTotalPendingAmount);
         else
             mParams.put(AMOUNT, providerModel.quotePrice);
 

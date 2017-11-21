@@ -140,7 +140,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
                 amount = Utility.getQuotePriceFormatter(providerModel.quotePrice);
             }
         } else {
-            amount = Utility.getQuotePriceFormatter(taskDetailModel.taskPaidAmount);
+            amount = Utility.getQuotePriceFormatter(taskDetailModel.taskTotalPendingAmount);
         }
         mActivityPaymentChoiceBinding.textTitle.setText(getString(R.string.label_please_pay_x, amount));
 
@@ -242,7 +242,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
         // = new HashMap<String, Object>();
 
         mTransactionParams = HDFCPaymentUtility.getPaymentTransactionFieldsForNormalTask(
-                PreferenceUtility.getInstance(this).getFCMRegID(), userDetails, taskDetailModel, providerModel);
+                PreferenceUtility.getInstance(this).getFCMRegID(), userDetails, taskDetailModel, providerModel, isPayNow);
 
         new HDFCPaymentUtility.AsyncFetchEncryptedString(new HDFCPaymentUtility.EncryptTransactionParamsListener() {
             @Override
@@ -499,7 +499,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
         //Add Params
         mTransactionParams = HDFCPaymentUtility.getPaymentTransactionFieldsForStrategicPartner(PreferenceUtility.getInstance(this).getFCMRegID(),
                 userDetails,
-                taskDetailModel.taskPaidAmount,
+                isPayNow ? taskDetailModel.taskPaidAmount : taskDetailModel.taskTotalPendingAmount,
                 taskDetailModel.taskStartdate);
 
         // We do not need to pass PROID and TaskID in Strategic partner as it still not finalized
@@ -753,6 +753,8 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
         mParams.put(NetworkUtility.TAGS.IS_REFER_CODE, taskDetailModel.isReferCode);
         mParams.put(NetworkUtility.TAGS.PAYABLE_AMOUNT, providerModel.quotePrice);
         mParams.put(NetworkUtility.TAGS.USED_WALLET_BALANCE, taskDetailModel.usedWalletAmount);
+        LogUtils.LOGE(TAG, "callBookProForNormalTaskWS: quote amount" + providerModel.spWithoutGstQuotePrice);
+        mParams.put(NetworkUtility.TAGS.QUOTE_AMOUNT, providerModel.spWithoutGstQuotePrice);
 
         if (!TextUtils.isEmpty(taskDetailModel.cheepCode)) {
             mParams.put(NetworkUtility.TAGS.CHEEPCODE, taskDetailModel.cheepCode);

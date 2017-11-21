@@ -939,6 +939,8 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
         mParams.put(NetworkUtility.TAGS.IS_REFER_CODE, taskDetailModel.isReferCode);
         mParams.put(NetworkUtility.TAGS.PAYABLE_AMOUNT, providerModel.quotePrice);
         mParams.put(NetworkUtility.TAGS.USED_WALLET_BALANCE, taskDetailModel.usedWalletAmount);
+        LogUtils.LOGE(TAG, "callBookProForNormalTaskWS: quote amount" + providerModel.spWithoutGstQuotePrice);
+        mParams.put(NetworkUtility.TAGS.QUOTE_AMOUNT, providerModel.spWithoutGstQuotePrice);
 
         if (!TextUtils.isEmpty(taskDetailModel.cheepCode)) {
             mParams.put(NetworkUtility.TAGS.CHEEPCODE, taskDetailModel.cheepCode);

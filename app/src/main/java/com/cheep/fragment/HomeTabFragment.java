@@ -362,6 +362,7 @@ public class HomeTabFragment extends BaseFragment {
     };
 
 
+
     public interface CategoryRowInteractionListener {
         void onCategoryRowClicked(JobCategoryModel model, int position);
 

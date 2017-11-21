@@ -38,6 +38,7 @@ import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
 import com.cheep.strategicpartner.StrategicPartnerMediaViewActiivty;
 import com.cheep.utils.HotlineHelper;
+import com.cheep.utils.LogUtils;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.RoundedBackgroundSpan;
 import com.cheep.utils.SharedElementTransitionHelper;
@@ -131,6 +132,7 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
 
         // By Default makethe task completion dialog as gone
         showTaskCompletionDialog(false);
+        LogUtils.LOGE(TAG, "showTaskCompletionDialog: taskTotalPendingAmount :: " + mTaskDetailModel.taskTotalPendingAmount);
         mActivityTaskSummaryBinding.lnTaskCancellation.setVisibility(View.GONE);
         mActivityTaskSummaryBinding.lnRatingSection.setVisibility(View.GONE);
         mActivityTaskSummaryBinding.lnTaskRescheduleRequested.setVisibility(View.GONE);
@@ -494,20 +496,44 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
             mActivityTaskSummaryBinding.lnTaskCompletionRequested.setVisibility(View.VISIBLE);
             mActivityTaskSummaryBinding.textConfirmText.setText(getString(R.string.label_complete_job_confirm, "PRO"));
 
-            if (mTaskDetailModel.paymentStatus.equalsIgnoreCase(Utility.TASK_STATUS.PAID)) {
-                mActivityTaskSummaryBinding.textTaskCompletionYes.setText(R.string.label_yes);
-            } else {
+//            if (mTaskDetailModel.paymentStatus.equalsIgnoreCase(Utility.TASK_STATUS.PAID)) {
+            double pendingAmount;
+            try {
+                LogUtils.LOGE(TAG, "showTaskCompletionDialog: taskTotalPendingAmount :: " + mTaskDetailModel.taskTotalPendingAmount);
+                pendingAmount = Double.parseDouble(mTaskDetailModel.taskTotalPendingAmount);
+            } catch (NumberFormatException e) {
+                pendingAmount = 0;
+            }
+            LogUtils.LOGE(TAG, "showTaskCompletionDialog: pendingAmount :: " + pendingAmount);
+            if (pendingAmount > 0) {
                 mActivityTaskSummaryBinding.textTaskCompletionYes.setText(R.string.label_yes_pay_now);
+            } else {
+                mActivityTaskSummaryBinding.textTaskCompletionYes.setText(R.string.label_yes);
             }
 
             mActivityTaskSummaryBinding.textTaskCompletionYes.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
 
-                    if (mTaskDetailModel.paymentStatus.equalsIgnoreCase(Utility.TASK_STATUS.PAID)) {
-                        callCompleteTaskWS(Utility.TASK_STATUS.COMPLETION_CONFIRM);
-                    } else {
+//                    if (mTaskDetailModel.paymentStatus.equalsIgnoreCase(Utility.TASK_STATUS.PAID)) {
+//                        callCompleteTaskWS(Utility.TASK_STATUS.COMPLETION_CONFIRM);
+//                    } else {
+//                        PaymentChoiceActivity.newInstance(mContext, mTaskDetailModel);
+//                    }
+                    double pendingAmount;
+                    try {
+                        LogUtils.LOGE(TAG, "showTaskCompletionDialog: taskTotalPendingAmount :: " + mTaskDetailModel.taskTotalPendingAmount);
+                        pendingAmount = Double.parseDouble(mTaskDetailModel.taskTotalPendingAmount);
+                    } catch (NumberFormatException e) {
+                        pendingAmount = 0;
+                    }
+                    LogUtils.LOGE(TAG, "showTaskCompletionDialog: pendingAmount :: " + pendingAmount);
+
+                    if (pendingAmount > 0) {
                         PaymentChoiceActivity.newInstance(mContext, mTaskDetailModel);
+                    } else {
+                        callCompleteTaskWS(Utility.TASK_STATUS.COMPLETION_CONFIRM);
+//                        mActivityTaskSummaryBinding.textTaskCompletionYes.setText(R.string.label_yes);
                     }
                 }
             });

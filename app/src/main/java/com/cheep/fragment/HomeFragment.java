@@ -349,7 +349,7 @@ public class HomeFragment extends BaseFragment {
 
 
     //Loads the fragment in inner_content container
-    private void loadFragment(String tab, BaseFragment fragmentToCommit) {
+    private void  loadFragment(String tab, BaseFragment fragmentToCommit) {
         if (textLastSelectedTab != null) {
             //Checking if last selected tab is same which current pressed then no need to load again
             setSelected(textLastSelectedTab, false);

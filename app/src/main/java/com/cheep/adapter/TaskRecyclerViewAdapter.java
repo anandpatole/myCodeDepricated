@@ -11,6 +11,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.AnimationDrawable;
 import android.net.Uri;
+import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.Layout;
@@ -31,6 +32,8 @@ import com.cheep.databinding.RowTaskGroupBinding;
 import com.cheep.databinding.RowUpcomingTaskBinding;
 import com.cheep.fragment.TaskFragment;
 import com.cheep.interfaces.TaskRowDataInteractionListener;
+import com.cheep.model.BannerImageModel;
+import com.cheep.model.JobCategoryModel;
 import com.cheep.model.MessageEvent;
 import com.cheep.model.TaskDetailModel;
 import com.cheep.strategicpartner.model.ServiceTaskDetailModel;
@@ -315,7 +318,7 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
 
                 holder.mUpcomingTaskBinding.tvDesc.setText(model.taskDesc);
 
-                String mBookingDate = holder.mView.getContext().getString(R.string.format_task_book_date
+                final String mBookingDate = holder.mView.getContext().getString(R.string.format_task_book_date
                         , superStartDateTimeCalendar.format(Utility.DATE_FORMAT_DD_MMM) + " " + Utility.get2HourTimeSlots(model.taskStartdate));
                 holder.mUpcomingTaskBinding.tvTaskBookedDateTime.setText(mBookingDate);
 
@@ -551,8 +554,29 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
                 holder.mRowTaskBinding.textBookSimilarTask.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        @Nullable BannerImageModel bannerImageModel;
+                        @Nullable JobCategoryModel jobCategoryModel;
+                        if (model.taskType.equalsIgnoreCase(Utility.TASK_TYPE.STRATEGIC)) {
+                            jobCategoryModel = null;
 
-                        listener.onBookSimilarTaskClicked(model);
+                            bannerImageModel = new BannerImageModel();
+                            bannerImageModel.imgCatImageUrl = model.catImageExtras.medium;
+                            bannerImageModel.bannerImage = model.bannerImage;
+                            bannerImageModel.cat_id = model.categoryId;
+                            bannerImageModel.name = model.categoryName;
+                            bannerImageModel.minimum_selection = "1";
+
+                        } else {
+
+                            jobCategoryModel = new JobCategoryModel();
+                            jobCategoryModel.catId = model.categoryId;
+                            jobCategoryModel.catName = model.categoryName;
+                            jobCategoryModel.catImage = model.catImage;
+                            jobCategoryModel.catImageExtras = model.catImageExtras;
+
+                            bannerImageModel = null;
+                        }
+                        listener.onBookSimilarTaskClicked(jobCategoryModel, bannerImageModel);
 
                     }
                 });

@@ -146,6 +146,9 @@ public class TaskDetailModel {
     @SerializedName("payment_status")
     public String paymentStatus;
 
+    @SerializedName("task_total_pending_amount")
+    public String taskTotalPendingAmount;
+
     // this is for payment choice activity for strategic partner
 //    public String totalStrategicPartner;
 //    public String payableAmountStrategicPartner;
