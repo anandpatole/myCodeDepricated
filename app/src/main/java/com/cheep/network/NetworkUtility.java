@@ -33,6 +33,7 @@ public class NetworkUtility {
         public static final String UPDATE_PROFILE = BASE_URL + "customers/profile/edit";
         public static final String CATEGORY_LIST = BASE_URL + "customers/category/all_cats";
         public static final String ALL_BANNER = BASE_URL + "customers/category/all_banner";
+        public static final String GET_CATEGORY_ID_BASED_ON_SLUG = BASE_URL + "customers/category/getCategoryIdBasedOnSlug";
         public static final String FAVOURITE_CATEGORY = BASE_URL + "customers/category/category_favourite";
 
         public static final String UPDATE_LOCATION = BASE_URL + "customers/profile/update_location";
@@ -388,6 +389,8 @@ public class NetworkUtility {
         String SUB_SUB_CAT_ID = "sub_sub_cat_id";
         String QUESTION_ID = "question_id";
         String ANSWER = "answer";
+        String CAT_SLUG = "cat_slug";
+        String CAT_TYPE = "cat_type";
 
         interface VERSION_CHANGE_TYPE {
             int NORMAL = 0;

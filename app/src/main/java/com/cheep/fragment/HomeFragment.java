@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.databinding.DataBindingUtil;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -76,9 +77,10 @@ public class HomeFragment extends BaseFragment {
     private String formattedSenderId = "";
     private List<String> unreadCountIds = new ArrayList<>();
 
-    public static HomeFragment newInstance() {
+    public static HomeFragment newInstance(Uri link) {
         HomeFragment fragment = new HomeFragment();
         Bundle args = new Bundle();
+        args.putParcelable(Utility.Extra.DYNAMIC_LINK_URI, link);
         fragment.setArguments(args);
         return fragment;
     }
@@ -421,7 +423,13 @@ public class HomeFragment extends BaseFragment {
                     mFragmentsStackTags.remove(HomeTabFragment.TAG);
                     mFragmentsStackTags.add(HomeTabFragment.TAG);
                 } else {
-                    fragmentToCommit = HomeTabFragment.newInstance(mListener);
+                    //For Dynamic Link
+                    if (getArguments().getParcelable(Utility.Extra.DYNAMIC_LINK_URI) != null) {
+                        fragmentToCommit = HomeTabFragment.newInstance(mListener
+                                , (Uri) getArguments().getParcelable(Utility.Extra.DYNAMIC_LINK_URI));
+                    } else {
+                        fragmentToCommit = HomeTabFragment.newInstance(mListener, null);
+                    }
                     if (!mFragmentsStackTags.contains(HomeTabFragment.TAG)) {
                         mFragmentsStackTags.add(HomeTabFragment.TAG);
                     }
