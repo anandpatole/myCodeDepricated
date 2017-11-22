@@ -175,7 +175,7 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
 //        mFragmentStrategicPartnerPhaseThreeBinding.textPay.setText(getString(R.string.label_book_now_for_rupees, String.valueOf(Utility.getQuotePriceFormatter(mStrategicPartnerTaskCreationAct.totalOfGSTPrice))));
 
         // handle clicks for create task web api and payment flow
-        mFragmentStrategicPartnerPhaseThreeBinding.textBookOnly.setOnClickListener(new View.OnClickListener() {
+        mFragmentStrategicPartnerPhaseThreeBinding.rlPayLater.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mStrategicPartnerTaskCreationAct.isPayNow = false;
@@ -194,7 +194,7 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
             }
         });
 
-        mFragmentStrategicPartnerPhaseThreeBinding.textBookAndPay.setOnClickListener(new View.OnClickListener() {
+        mFragmentStrategicPartnerPhaseThreeBinding.rlPayNow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mStrategicPartnerTaskCreationAct.isPayNow = true;

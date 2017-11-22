@@ -573,5 +573,6 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="enter_min_amount">"Please enter minimum %1s amount to proceed"</string>
     <string name="need_to_add_fund">You\'re a wee bit short!</string>
     <string name="validate_address_initials">Please enter valid HouseNo/FlatNo</string>
+    <string name="label_pay_later">Pay Later</string>
 
 </resources>

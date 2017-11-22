@@ -157,6 +157,8 @@ public class TaskDetailModel {
 
     // This is for payment choice screen
     public String cheepCode;
+    @SerializedName("minimum_selection")
+    public String minimumSelection;
 
     public TaskDetailModel() {
 

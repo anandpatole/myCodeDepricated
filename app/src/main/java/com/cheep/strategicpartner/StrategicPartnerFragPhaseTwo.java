@@ -32,6 +32,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -160,9 +161,16 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment implements Reques
                 }
             }
         }
+        mFragmentStrategicPartnerPhaseTwoBinding.scrollView.getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
+            @Override
+            public void onScrollChanged() {
+            Utility.hideKeyboard(mContext);
+            }
+        });
         mFragmentStrategicPartnerPhaseTwoBinding.textContinue.setText(getString(R.string.book_and_pay_x, "" + Utility.getQuotePriceFormatter(String.valueOf(total))));
         mStrategicPartnerTaskCreationAct.totalOfGSTPrice = String.valueOf(total);
         mStrategicPartnerTaskCreationAct.totalOfBasePrice = String.valueOf(totalOfBasePrice);
+
         // Task Description
 
         mStrategicPartnerTaskCreationAct.setTaskState(
@@ -389,6 +397,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment implements Reques
             txtAnswer.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    Utility.hideKeyboard(mContext);
                     showDropDownMenu(txtAnswer, model);
                 }
             });
@@ -492,6 +501,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment implements Reques
         txtAnswer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Utility.hideKeyboard(mContext);
                 final Calendar c = Calendar.getInstance();
                 txtAnswer.setSelected(true);
                 DatePickerDialog datePickerDialog = new DatePickerDialog(mStrategicPartnerTaskCreationAct, new DatePickerDialog.OnDateSetListener() {
@@ -577,6 +587,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment implements Reques
             @Override
             public void onClick(View view) {
 
+                Utility.hideKeyboard(mContext);
                 for (QueAnsModel queAnsModel : mList) {
                     // check if date is selected
                     if (queAnsModel.answerType.equalsIgnoreCase(Utility.TEMPLATE_DATE_PICKER)) {
@@ -763,6 +774,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment implements Reques
         imgAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Utility.hideKeyboard(mContext);
                 showMediaChooserDialog();
             }
         });
@@ -1073,6 +1085,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment implements Reques
         txtAnswer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Utility.hideKeyboard(mContext);
                 if (txtAnswer.isSelected())
                     showAddressDialog(txtAnswer, txtQueNo, model);
 //                else {

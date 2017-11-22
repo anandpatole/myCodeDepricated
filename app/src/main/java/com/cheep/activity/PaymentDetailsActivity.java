@@ -146,8 +146,8 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
         mActivityPaymentDetailBinding.ivTermsTick.setSelected(true);
 
         // Changes are per new flow pay now/later: 15/11/17
-        mActivityPaymentDetailBinding.textBookAndPay.setSelected(true);
-        mActivityPaymentDetailBinding.textBookOnly.setSelected(true);
+        mActivityPaymentDetailBinding.rlPayNow.setSelected(true);
+        mActivityPaymentDetailBinding.rlPayLater.setSelected(true);
 
         mActivityPaymentDetailBinding.lnDesclaimer.setVisibility(View.VISIBLE);
 
@@ -254,8 +254,8 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
 
     @Override
     protected void setListeners() {
-        mActivityPaymentDetailBinding.textBookAndPay.setOnClickListener(onPayClickListener);
-        mActivityPaymentDetailBinding.textBookOnly.setOnClickListener(onBookOnlyClickListener);
+        mActivityPaymentDetailBinding.rlPayNow.setOnClickListener(onPayClickListener);
+        mActivityPaymentDetailBinding.rlPayLater.setOnClickListener(onBookOnlyClickListener);
         mActivityPaymentDetailBinding.llclaimreferral.setOnClickListener(OnClaimOfReferCodeClickListener);
         mActivityPaymentDetailBinding.llpromocode.setOnClickListener(onPromoCodeClickListener);
         // Add Declaimer
@@ -272,10 +272,10 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
                 mActivityPaymentDetailBinding.ivTermsTick.setSelected(!mActivityPaymentDetailBinding.ivTermsTick.isSelected());
 
 // Changes are per new flow pay now/later: 15/11/17
-                mActivityPaymentDetailBinding.textBookOnly.setSelected(mActivityPaymentDetailBinding.ivTermsTick.isSelected());
-                mActivityPaymentDetailBinding.textBookAndPay.setSelected(mActivityPaymentDetailBinding.ivTermsTick.isSelected());
-                mActivityPaymentDetailBinding.textBookOnly.setEnabled(mActivityPaymentDetailBinding.ivTermsTick.isSelected());
-                mActivityPaymentDetailBinding.textBookAndPay.setEnabled(mActivityPaymentDetailBinding.ivTermsTick.isSelected());
+                mActivityPaymentDetailBinding.rlPayLater.setSelected(mActivityPaymentDetailBinding.ivTermsTick.isSelected());
+                mActivityPaymentDetailBinding.rlPayNow.setSelected(mActivityPaymentDetailBinding.ivTermsTick.isSelected());
+                mActivityPaymentDetailBinding.rlPayLater.setEnabled(mActivityPaymentDetailBinding.ivTermsTick.isSelected());
+                mActivityPaymentDetailBinding.rlPayNow.setEnabled(mActivityPaymentDetailBinding.ivTermsTick.isSelected());
             }
         });
 
@@ -486,8 +486,8 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
         mActivityPaymentDetailBinding.textpromocodelabel.setText(R.string.label_enter_promocode);
         mActivityPaymentDetailBinding.txtpromocode.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(Utility.ZERO_STRING)));
         mActivityPaymentDetailBinding.txtreferraldiscount.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(Utility.ZERO_STRING)));
-        mActivityPaymentDetailBinding.textBookAndPay.setSelected(mActivityPaymentDetailBinding.ivTermsTick.isSelected());
-        mActivityPaymentDetailBinding.textBookOnly.setSelected(mActivityPaymentDetailBinding.ivTermsTick.isSelected());
+        mActivityPaymentDetailBinding.rlPayNow.setSelected(mActivityPaymentDetailBinding.ivTermsTick.isSelected());
+        mActivityPaymentDetailBinding.rlPayLater.setSelected(mActivityPaymentDetailBinding.ivTermsTick.isSelected());
     }
 
     public SpannableStringBuilder getSpannableString(String fullstring, int color, boolean isBold) {

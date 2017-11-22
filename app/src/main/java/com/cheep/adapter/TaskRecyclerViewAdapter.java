@@ -405,25 +405,75 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
                 }
                 if (Utility.TASK_STATUS.CANCELLED_CUSTOMER.equalsIgnoreCase(model.taskStatus)) {
                     holder.mRowTaskGroupBinding.lnTaskStatusWithQuote.setVisibility(View.VISIBLE);
-                    holder.mRowTaskGroupBinding.textTaskApprovedQuote.setVisibility(View.GONE);
-                    holder.mRowTaskGroupBinding.textTaskStatus.setText(context.getString(R.string.label_cancelled));
+//                    holder.mRowTaskGroupBinding.textTaskApprovedQuote.setVisibility(View.GONE);
+//                    holder.mRowTaskGroupBinding.textTaskStatus.setText(context.getString(R.string.label_cancelled));
+                    holder.mRowTaskGroupBinding.textTaskStatus.setText("");
 
+                    holder.mRowTaskGroupBinding.textTaskStatusCancelled.setVisibility(View.VISIBLE);
+                    holder.mRowTaskGroupBinding.textTaskStatusElapsed.setVisibility(View.GONE);
+                    holder.mRowTaskGroupBinding.textTaskStatusCompleted.setVisibility(View.GONE);
 
                 } else if (Utility.TASK_STATUS.CANCELLED_SP.equalsIgnoreCase(model.taskStatus)) {
                     holder.mRowTaskGroupBinding.lnTaskStatusWithQuote.setVisibility(View.VISIBLE);
-                    holder.mRowTaskGroupBinding.textTaskStatus.setText(context.getString(R.string.label_cancelled));
-                    holder.mRowTaskGroupBinding.textTaskApprovedQuote.setVisibility(View.GONE);
+//                    holder.mRowTaskGroupBinding.textTaskStatus.setText(context.getString(R.string.label_cancelled));
+//                    holder.mRowTaskGroupBinding.textTaskApprovedQuote.setVisibility(View.GONE);
+
+                    holder.mRowTaskGroupBinding.textTaskStatus.setText("");
+                    holder.mRowTaskGroupBinding.textTaskStatusCancelled.setVisibility(View.VISIBLE);
+                    holder.mRowTaskGroupBinding.textTaskStatusElapsed.setVisibility(View.GONE);
+                    holder.mRowTaskGroupBinding.textTaskStatusCompleted.setVisibility(View.GONE);
+
                 } else if (Utility.TASK_STATUS.ELAPSED.equalsIgnoreCase(model.taskStatus)) {
                     holder.mRowTaskGroupBinding.lnTaskStatusWithQuote.setVisibility(View.VISIBLE);
-                    holder.mRowTaskGroupBinding.textTaskStatus.setText(context.getString(R.string.label_lapsed));
-                    holder.mRowTaskGroupBinding.textTaskApprovedQuote.setVisibility(View.GONE);
+//                    holder.mRowTaskGroupBinding.textTaskStatus.setText(context.getString(R.string.label_lapsed));
+//                    holder.mRowTaskGroupBinding.textTaskApprovedQuote.setVisibility(View.GONE);
+                    holder.mRowTaskGroupBinding.textTaskStatus.setText("");
+                    holder.mRowTaskGroupBinding.textTaskStatusCancelled.setVisibility(View.GONE);
+                    holder.mRowTaskGroupBinding.textTaskStatusElapsed.setVisibility(View.VISIBLE);
+                    holder.mRowTaskGroupBinding.textTaskStatusCompleted.setVisibility(View.GONE);
+
                 } else if (Utility.TASK_STATUS.DISPUTED.equalsIgnoreCase(model.taskStatus)) {
                     holder.mRowTaskGroupBinding.lnTaskStatusWithQuote.setVisibility(View.VISIBLE);
                     holder.mRowTaskGroupBinding.textTaskStatus.setText(context.getString(R.string.label_disputed));
                     holder.mRowTaskGroupBinding.textTaskApprovedQuote.setVisibility(View.GONE);
+
+                    holder.mRowTaskGroupBinding.textTaskStatusCancelled.setVisibility(View.GONE);
+                    holder.mRowTaskGroupBinding.textTaskStatusElapsed.setVisibility(View.GONE);
+                    holder.mRowTaskGroupBinding.textTaskStatusCompleted.setVisibility(View.GONE);
                 } else {
                     holder.mRowTaskGroupBinding.lnTaskStatusWithQuote.setVisibility(View.GONE);
                 }
+
+                holder.mRowTaskGroupBinding.textBookSimilarTask.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        @Nullable BannerImageModel bannerImageModel;
+                        @Nullable JobCategoryModel jobCategoryModel;
+                        if (model.taskType.equalsIgnoreCase(Utility.TASK_TYPE.STRATEGIC)) {
+                            jobCategoryModel = null;
+
+                            bannerImageModel = new BannerImageModel();
+                            bannerImageModel.imgCatImageUrl = model.catImageExtras.medium;
+                            bannerImageModel.bannerImage = model.bannerImage;
+                            bannerImageModel.cat_id = model.categoryId;
+                            bannerImageModel.name = model.categoryName;
+                            bannerImageModel.minimum_selection = model.minimumSelection;
+
+                        } else {
+
+                            jobCategoryModel = new JobCategoryModel();
+                            jobCategoryModel.catId = model.categoryId;
+                            jobCategoryModel.catName = model.categoryName;
+                            jobCategoryModel.catImage = model.catImage;
+                            jobCategoryModel.catImageExtras = model.catImageExtras;
+
+                            bannerImageModel = null;
+                        }
+                        listener.onBookSimilarTaskClicked(jobCategoryModel, bannerImageModel);
+
+                    }
+                });
+
                 holder.mRowTaskGroupBinding.swipeLayout.setSwipeEnabled(false);
                 mItemManger.bindView(holder.itemView, position);
                 break;
@@ -564,7 +614,7 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
                             bannerImageModel.bannerImage = model.bannerImage;
                             bannerImageModel.cat_id = model.categoryId;
                             bannerImageModel.name = model.categoryName;
-                            bannerImageModel.minimum_selection = "1";
+                            bannerImageModel.minimum_selection = model.minimumSelection;
 
                         } else {
 
