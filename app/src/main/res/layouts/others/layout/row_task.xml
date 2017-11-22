@@ -121,16 +121,6 @@
                         android:text="@string/label_responses_received"
                         android:textColor="@color/black"
                         android:textSize="@dimen/text_size_11sp" />-->
-                    <ImageView
-                        android:id="@+id/img_badge"
-                        android:layout_width="@dimen/chat_width"
-                        android:layout_height="@dimen/chat_width"
-                        android:layout_gravity="center"
-                        android:layout_marginBottom="@dimen/scale_3dp"
-                        android:layout_marginTop="@dimen/scale_10dp"
-                        android:gravity="center"
-                        android:src="@drawable/ic_silver_badge_partner"
-                        tools:ignore="ContentDescription"/>
 
 
                 </LinearLayout>
@@ -302,15 +292,29 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/ln_description"
                     android:layout_marginBottom="@dimen/scale_8dp"
-                    android:layout_marginLeft="@dimen/scale_16dp"
-                    android:layout_marginTop="@dimen/scale_5dp"
-                    android:layout_toRightOf="@+id/layout_participant_counter"
+                    android:layout_marginTop="@dimen/scale_12dp"
                     android:orientation="horizontal">
+
+                    <FrameLayout
+                        android:layout_width="@dimen/chat_profile_layout_width"
+                        android:layout_height="wrap_content">
+
+                        <ImageView
+                            android:id="@+id/img_badge"
+                            android:layout_width="@dimen/chat_width"
+                            android:layout_height="@dimen/chat_width"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:src="@drawable/ic_silver_badge_partner"
+                            tools:ignore="ContentDescription"/>
+                    </FrameLayout>
 
                     <com.cheep.custom_view.CFTextViewBold
                         android:id="@+id/text_book_similar_task"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="@dimen/scale_16dp"
                         android:layout_marginRight="@dimen/scale_10dp"
                         android:layout_weight="1.5"
                         android:background="@drawable/rounded_rect_blue"
@@ -319,7 +323,7 @@
                         android:paddingLeft="@dimen/scale_4dp"
                         android:paddingRight="@dimen/scale_4dp"
                         android:paddingTop="@dimen/scale_5dp"
-                        android:text="Book a similar task"
+                        android:text="@string/book_a_similar_task"
                         android:textColor="@color/white"
                         android:textSize="@dimen/text_size_seek_support"/>
 
