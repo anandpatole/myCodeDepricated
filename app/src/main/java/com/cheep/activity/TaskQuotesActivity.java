@@ -360,7 +360,6 @@ public class TaskQuotesActivity extends BaseAppCompatActivity implements TaskQuo
     }
 
 
-
     private Response.Listener mSPListResponseListener = new Response.Listener() {
         @Override
         public void onResponse(Object rawResponse) {
@@ -411,7 +410,7 @@ public class TaskQuotesActivity extends BaseAppCompatActivity implements TaskQuo
 
     @Override
     public void onBookClick(ProviderModel provider) {
-        PaymentDetailsActivity.newInstance(mContext, mTaskDetailModel, provider, 0);
+        PaymentDetailsActivity.newInstance(mContext, mTaskDetailModel, provider, null);
     }
 
     @Override

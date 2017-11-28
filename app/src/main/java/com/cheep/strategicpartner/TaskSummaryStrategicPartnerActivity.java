@@ -186,7 +186,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
 
             // Hide Payment Summary textview
             mActivityTaskSummaryBinding.textViewPaymentSummary.setVisibility(View.GONE);
-
+            mActivityTaskSummaryBinding.textPaid.setVisibility(View.GONE);
             updateSPImageStacks(mTaskDetailModel.mQuotedSPList);
         } else {
             // Provider is final.
@@ -195,6 +195,14 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
 
             // Show Payment Summary text view
             mActivityTaskSummaryBinding.textViewPaymentSummary.setVisibility(View.VISIBLE);
+
+            mActivityTaskSummaryBinding.textViewPaymentSummary.setVisibility(View.VISIBLE);
+            String s = "";
+            if (!TextUtils.isEmpty(mTaskDetailModel.isAnyAmountPending))
+                s = mTaskDetailModel.isAnyAmountPending.equalsIgnoreCase(Utility.BOOLEAN.YES) ? getString(R.string.label_not_paid) : getString(R.string.label_paid);
+
+            mActivityTaskSummaryBinding.textPaid.setVisibility(View.VISIBLE);
+            mActivityTaskSummaryBinding.textPaid.setText("(" + s + ")");
 
             // Set rating
             Utility.showRating(mTaskDetailModel.selectedProvider.rating, mActivityTaskSummaryBinding.providerRating);
@@ -392,20 +400,24 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
         if (Utility.TASK_STATUS.PENDING.equalsIgnoreCase(mTaskDetailModel.taskStatus)) {
             mActivityTaskSummaryBinding.textTaskStatusTop.setText(getString(R.string.task_confirmed));
             mActivityTaskSummaryBinding.textViewPaymentSummary.setVisibility(View.VISIBLE);
+            mActivityTaskSummaryBinding.textPaid.setVisibility(View.VISIBLE);
 
         } else if (Utility.TASK_STATUS.PROCESSING.equalsIgnoreCase(mTaskDetailModel.taskStatus)) {
             mActivityTaskSummaryBinding.textTaskStatusTop.setText(getString(R.string.task_status_processing));
             mActivityTaskSummaryBinding.textViewPaymentSummary.setVisibility(View.VISIBLE);
+            mActivityTaskSummaryBinding.textPaid.setVisibility(View.VISIBLE);
 
         } else if (Utility.TASK_STATUS.COMPLETION_REQUEST.equalsIgnoreCase(mTaskDetailModel.taskStatus)) {
             mActivityTaskSummaryBinding.textTaskStatusTop.setText(getString(R.string.task_status_processing));
             mActivityTaskSummaryBinding.textViewPaymentSummary.setVisibility(View.GONE);
+            mActivityTaskSummaryBinding.textPaid.setVisibility(View.GONE);
 
             // Setup Task Completion Request Dialog
             showTaskCompletionDialog(true);
         } else if (Utility.TASK_STATUS.COMPLETION_CONFIRM.equalsIgnoreCase(mTaskDetailModel.taskStatus)) {
             mActivityTaskSummaryBinding.textTaskStatusTop.setText(getString(R.string.label_task_complete));
             mActivityTaskSummaryBinding.textViewPaymentSummary.setVisibility(View.VISIBLE);
+            mActivityTaskSummaryBinding.textPaid.setVisibility(View.VISIBLE);
 
             // No need to hide ChatCall Button Now.
             showChatCallButton(false);
@@ -438,9 +450,11 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
         } else if (Utility.TASK_STATUS.COD.equalsIgnoreCase(mTaskDetailModel.taskStatus) || Utility.TASK_STATUS.PAID.equalsIgnoreCase(mTaskDetailModel.taskStatus)) {
             mActivityTaskSummaryBinding.textTaskStatusTop.setText(getString(R.string.task_confirmed));
             mActivityTaskSummaryBinding.textViewPaymentSummary.setVisibility(View.VISIBLE);
+            mActivityTaskSummaryBinding.textPaid.setVisibility(View.VISIBLE);
         } else if (Utility.TASK_STATUS.CANCELLED_CUSTOMER.equalsIgnoreCase(mTaskDetailModel.taskStatus)) {
             mActivityTaskSummaryBinding.textTaskStatusTop.setText(getString(R.string.msg_task_cancelled_title));
             mActivityTaskSummaryBinding.textViewPaymentSummary.setVisibility(View.VISIBLE);
+            mActivityTaskSummaryBinding.textPaid.setVisibility(View.VISIBLE);
 
             // Cancellation Reason
             mActivityTaskSummaryBinding.lnTaskCancellation.setVisibility(View.VISIBLE);
@@ -454,6 +468,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
 //            mActivityTaskSummaryBinding.textTaskStatusTop.setText(getString(R.string.task_was_cancelled_by_x, mTaskDetailModel.selectedProvider.userName));
             mActivityTaskSummaryBinding.textTaskStatusTop.setText(getString(R.string.msg_task_cancelled_title));
             mActivityTaskSummaryBinding.textViewPaymentSummary.setVisibility(View.VISIBLE);
+            mActivityTaskSummaryBinding.textPaid.setVisibility(View.VISIBLE);
 
             // Cancellation Reason
             mActivityTaskSummaryBinding.lnTaskCancellation.setVisibility(View.VISIBLE);
@@ -468,6 +483,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
         else if (Utility.TASK_STATUS.RESCHEDULE_REQUESTED.equalsIgnoreCase(mTaskDetailModel.taskStatus)) {
             mActivityTaskSummaryBinding.textTaskStatusTop.setText(getString(R.string.label_reschedule_requested));
             mActivityTaskSummaryBinding.textViewPaymentSummary.setVisibility(View.GONE);
+            mActivityTaskSummaryBinding.textPaid.setVisibility(View.VISIBLE);
 
             // Reschedule request desc
             mActivityTaskSummaryBinding.lnTaskRescheduleRequested.setVisibility(View.VISIBLE);
@@ -494,6 +510,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
             mActivityTaskSummaryBinding.textTaskStatusTop.setText(getString(R.string.label_reschedule_rejected));
             mActivityTaskSummaryBinding.lnTaskRescheduleRejected.setVisibility(View.VISIBLE);
             mActivityTaskSummaryBinding.textViewPaymentSummary.setVisibility(View.VISIBLE);
+            mActivityTaskSummaryBinding.textPaid.setVisibility(View.VISIBLE);
 
             // Chat & Call with @Cheep team click event of buttons
             mActivityTaskSummaryBinding.textContactCheepViaCall.setOnClickListener(new View.OnClickListener() {
@@ -520,6 +537,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
 
             mActivityTaskSummaryBinding.lnTaskAdditionalQuoteRequested.setVisibility(View.VISIBLE);
             mActivityTaskSummaryBinding.textViewPaymentSummary.setVisibility(View.GONE);
+            mActivityTaskSummaryBinding.textPaid.setVisibility(View.GONE);
 
             String additionalQuoteAmount = getString(R.string.rupee_symbol_x, mTaskDetailModel.additionalQuoteAmount);
             mActivityTaskSummaryBinding.textAdditionalPaymentDesc.setText(getString(R.string.label_additional_payment_desc, additionalQuoteAmount));

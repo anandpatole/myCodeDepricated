@@ -199,6 +199,7 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
                 //holder.mUpcomingTaskBinding.gridImageView.createWithUrls(arrayListUri); // just for testing
                 holder.mUpcomingTaskBinding.gridImageView.createWithUrls(getURIListFromStringList(model.profile_img_arr));
 
+
                 if (model.selectedProvider == null) {
                     holder.mUpcomingTaskBinding.layoutIndividualProfile.setVisibility(View.GONE);
                     holder.mUpcomingTaskBinding.layoutGroupProfile.setVisibility(View.VISIBLE);
@@ -211,6 +212,8 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
                     holder.mUpcomingTaskBinding.tvTaskResponseStatus.setVisibility(View.VISIBLE);
                     // Need to hide reschedule button as PRO is not Finalized now.
                     holder.mUpcomingTaskBinding.frameRescheduleTask.setVisibility(View.GONE);
+                    holder.mUpcomingTaskBinding.textPaid.setText(Utility.EMPTY_STRING);
+
                 } else {
                     holder.mUpcomingTaskBinding.layoutIndividualProfile.setVisibility(View.VISIBLE);
                     holder.mUpcomingTaskBinding.layoutGroupProfile.setVisibility(View.GONE);
@@ -268,8 +271,13 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
                     holder.mUpcomingTaskBinding.tvViewTask.setVisibility(View.VISIBLE);
                     holder.mUpcomingTaskBinding.tvViewQuotes.setVisibility(View.GONE);
 
-                    holder.mUpcomingTaskBinding.tvTaskResponseStatus.setVisibility(View.GONE);
 
+                    if (!TextUtils.isEmpty(model.isAnyAmountPending))
+                        holder.mUpcomingTaskBinding.textPaid.setText(model.isAnyAmountPending.equalsIgnoreCase(Utility.BOOLEAN.YES) ? context.getString(R.string.label_not_paid) : context.getString(R.string.label_paid));
+                    else
+                        holder.mUpcomingTaskBinding.textPaid.setText(Utility.EMPTY_STRING);
+
+                    holder.mUpcomingTaskBinding.tvTaskResponseStatus.setVisibility(View.GONE);
                     // Need to Show reschedule button as PRO is not Finalized now.
                     holder.mUpcomingTaskBinding.frameRescheduleTask.setVisibility(View.VISIBLE);
                 }

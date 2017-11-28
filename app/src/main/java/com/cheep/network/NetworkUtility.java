@@ -56,7 +56,8 @@ public class NetworkUtility {
 
         public static final String REPORT_SP = BASE_URL + "customers/sp_profile/report_abuse";
         public static final String TASK_DETAIL = BASE_URL + "customers/tasks/task_details";
-
+//        public static final String TASK_DETAIL = BASE_URL + "customers/tasks/new_task_details";
+//        http://35.154.147.32/admin/v10/customers/tasks/new_task_details
         public static final String PENDING_TASK = BASE_URL + "customers/tasks/my_pending_tasks";
         public static final String PAST_TASK = BASE_URL + "customers/tasks/my_past_tasks_list";
         public static final String REVIEW_LIST = BASE_URL + "customers/sp_profile/customer_reviews";

@@ -8,9 +8,12 @@ import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.text.InputFilter;
+import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -148,6 +151,7 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
 
 
         // Setup First section whether SP is final or not
+
         if (mTaskDetailModel.selectedProvider == null) {
             // Provider is not final yet, so need to show the nearby available.
             mActivityTaskSummaryBinding.lnResponseReceived.setVisibility(View.VISIBLE);
@@ -157,6 +161,7 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
 
             // Hide Payment Summary textview
             mActivityTaskSummaryBinding.textViewPaymentSummary.setVisibility(View.GONE);
+            mActivityTaskSummaryBinding.textPaid.setVisibility(View.GONE);
 
             updateSPImageStacks(mTaskDetailModel.mQuotedSPList);
         } else {
@@ -166,6 +171,13 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
 
             // Show Payment Summary textview
             mActivityTaskSummaryBinding.textViewPaymentSummary.setVisibility(View.VISIBLE);
+            String s = "";
+            if (!TextUtils.isEmpty(mTaskDetailModel.isAnyAmountPending))
+                s = mTaskDetailModel.isAnyAmountPending.equalsIgnoreCase(Utility.BOOLEAN.YES) ? getString(R.string.label_not_paid) : getString(R.string.label_paid);
+
+            mActivityTaskSummaryBinding.textPaid.setVisibility(View.VISIBLE);
+            mActivityTaskSummaryBinding.textPaid.setText("(" + s + ")");
+
 
             // Set rating
             Utility.showRating(mTaskDetailModel.selectedProvider.rating, mActivityTaskSummaryBinding.providerRating);
@@ -325,19 +337,24 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
         if (Utility.TASK_STATUS.PENDING.equalsIgnoreCase(mTaskDetailModel.taskStatus)) {
             mActivityTaskSummaryBinding.textTaskStatusTop.setText(getString(R.string.task_confirmed));
             mActivityTaskSummaryBinding.textViewPaymentSummary.setVisibility(View.VISIBLE);
+            mActivityTaskSummaryBinding.textPaid.setVisibility(View.VISIBLE);
+
         } else if (Utility.TASK_STATUS.PROCESSING.equalsIgnoreCase(mTaskDetailModel.taskStatus)) {
             mActivityTaskSummaryBinding.textTaskStatusTop.setText(getString(R.string.task_status_processing));
             mActivityTaskSummaryBinding.textViewPaymentSummary.setVisibility(View.VISIBLE);
+            mActivityTaskSummaryBinding.textPaid.setVisibility(View.VISIBLE);
 
         } else if (Utility.TASK_STATUS.COMPLETION_REQUEST.equalsIgnoreCase(mTaskDetailModel.taskStatus)) {
             mActivityTaskSummaryBinding.textTaskStatusTop.setText(getString(R.string.task_status_processing));
             mActivityTaskSummaryBinding.textViewPaymentSummary.setVisibility(View.GONE);
+            mActivityTaskSummaryBinding.textPaid.setVisibility(View.GONE);
 
             // Setup Task Completion Request Dialog
             showTaskCompletionDialog(true);
         } else if (Utility.TASK_STATUS.COMPLETION_CONFIRM.equalsIgnoreCase(mTaskDetailModel.taskStatus)) {
             mActivityTaskSummaryBinding.textTaskStatusTop.setText(getString(R.string.label_task_complete));
             mActivityTaskSummaryBinding.textViewPaymentSummary.setVisibility(View.VISIBLE);
+            mActivityTaskSummaryBinding.textPaid.setVisibility(View.VISIBLE);
 
             // No need to hide ChatCall Button Now.
             showChatCallButton(false);
@@ -370,10 +387,12 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
         } else if (Utility.TASK_STATUS.COD.equalsIgnoreCase(mTaskDetailModel.taskStatus) || Utility.TASK_STATUS.PAID.equalsIgnoreCase(mTaskDetailModel.taskStatus)) {
             mActivityTaskSummaryBinding.textTaskStatusTop.setText(getString(R.string.task_confirmed));
             mActivityTaskSummaryBinding.textViewPaymentSummary.setVisibility(View.VISIBLE);
+            mActivityTaskSummaryBinding.textPaid.setVisibility(View.VISIBLE);
 
         } else if (Utility.TASK_STATUS.CANCELLED_CUSTOMER.equalsIgnoreCase(mTaskDetailModel.taskStatus)) {
             mActivityTaskSummaryBinding.textTaskStatusTop.setText(getString(R.string.msg_task_cancelled_title));
             mActivityTaskSummaryBinding.textViewPaymentSummary.setVisibility(View.VISIBLE);
+            mActivityTaskSummaryBinding.textPaid.setVisibility(View.VISIBLE);
 
             // Cancellation Reason
             mActivityTaskSummaryBinding.lnTaskCancellation.setVisibility(View.VISIBLE);
@@ -387,6 +406,7 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
 //            mActivityTaskSummaryBinding.textTaskStatusTop.setText(getString(R.string.task_was_cancelled_by_x, mTaskDetailModel.selectedProvider.userName));
             mActivityTaskSummaryBinding.textTaskStatusTop.setText(getString(R.string.msg_task_cancelled_title));
             mActivityTaskSummaryBinding.textViewPaymentSummary.setVisibility(View.VISIBLE);
+            mActivityTaskSummaryBinding.textPaid.setVisibility(View.VISIBLE);
 
             // Cancellation Reason
             mActivityTaskSummaryBinding.lnTaskCancellation.setVisibility(View.VISIBLE);
@@ -401,6 +421,7 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
         else if (Utility.TASK_STATUS.RESCHEDULE_REQUESTED.equalsIgnoreCase(mTaskDetailModel.taskStatus)) {
             mActivityTaskSummaryBinding.textTaskStatusTop.setText(getString(R.string.label_reschedule_requested));
             mActivityTaskSummaryBinding.textViewPaymentSummary.setVisibility(View.VISIBLE);
+            mActivityTaskSummaryBinding.textPaid.setVisibility(View.VISIBLE);
 
             // Reschedule request desc
             mActivityTaskSummaryBinding.lnTaskRescheduleRequested.setVisibility(View.VISIBLE);
@@ -424,6 +445,7 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
         else if (Utility.TASK_STATUS.RESCHEDULE_REQUEST_REJECTED.equalsIgnoreCase(mTaskDetailModel.taskStatus)) {
             mActivityTaskSummaryBinding.textTaskStatusTop.setText(getString(R.string.label_reschedule_rejected));
             mActivityTaskSummaryBinding.textViewPaymentSummary.setVisibility(View.VISIBLE);
+            mActivityTaskSummaryBinding.textPaid.setVisibility(View.VISIBLE);
 
             mActivityTaskSummaryBinding.lnTaskRescheduleRejected.setVisibility(View.VISIBLE);
 
@@ -450,6 +472,7 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
         else if (Utility.TASK_STATUS.ADDITIONAL_PAYMENT_REQUESTED.equalsIgnoreCase(mTaskDetailModel.taskStatus)) {
             mActivityTaskSummaryBinding.textTaskStatusTop.setText(getString(R.string.task_status_processing));
             mActivityTaskSummaryBinding.textViewPaymentSummary.setVisibility(View.GONE);
+            mActivityTaskSummaryBinding.textPaid.setVisibility(View.GONE);
             mActivityTaskSummaryBinding.lnTaskAdditionalQuoteRequested.setVisibility(View.VISIBLE);
 
             String additionalQuoteAmount = getString(R.string.rupee_symbol_x, mTaskDetailModel.additionalQuoteAmount);
@@ -494,7 +517,21 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
     private void showTaskCompletionDialog(boolean flag) {
         if (flag) {
             mActivityTaskSummaryBinding.lnTaskCompletionRequested.setVisibility(View.VISIBLE);
-            mActivityTaskSummaryBinding.textConfirmText.setText(getString(R.string.label_complete_job_confirm, "PRO"));
+            String mainText = getString(R.string.label_complete_job_confirm, "PRO");
+            String s = "";
+            if (!TextUtils.isEmpty(mTaskDetailModel.isAnyAmountPending)) {
+                s = mTaskDetailModel.isAnyAmountPending.equalsIgnoreCase(Utility.BOOLEAN.YES) ? getString(R.string.label_not_paid) : getString(R.string.label_paid);
+                s = "(" + s + ")";
+            }
+            if (!s.isEmpty()) {
+                String fullstring = mainText + s;
+                SpannableStringBuilder text = new SpannableStringBuilder(fullstring);
+                text.setSpan(new ForegroundColorSpan(ContextCompat.getColor(this, R.color.grey_varient_23)), fullstring.indexOf(s.charAt(0)), fullstring.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                mActivityTaskSummaryBinding.textConfirmText.setText(text);
+            } else {
+                mActivityTaskSummaryBinding.textConfirmText.setText(mainText);
+
+            }
 
 //            if (mTaskDetailModel.paymentStatus.equalsIgnoreCase(Utility.TASK_STATUS.PAID)) {
             double pendingAmount;
@@ -1460,94 +1497,6 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
     ////////////////////////////////////////Accept-Reject Detail Service[End] //////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
-
-    private void callCheckingTaskStatus() {
-        //Validation
-        if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityTaskSummaryBinding.getRoot());
-            return;
-        }
-
-        //Show Progress
-        showProgressDialog();
-
-        UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
-
-        //Add Header parameters
-        Map<String, String> mHeaderParams = new HashMap<>();
-        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, userDetails.UserID);
-        mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
-
-        //Add Params
-        Map<String, String> mParams = new HashMap<>();
-        mParams.put(NetworkUtility.TAGS.TASK_ID, mTaskDetailModel.taskId);
-
-        VolleyNetworkRequest mVolleyNetworkRequest = new VolleyNetworkRequest(NetworkUtility.WS.GET_TASK_STATUS
-                , mGetTaskStatusWSErrorListener
-                , mGetTaskStatusWSResponseListener
-                , mHeaderParams
-                , mParams
-                , null);
-        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest, NetworkUtility.WS.GET_TASK_STATUS);
-
-    }
-
-    Response.Listener mGetTaskStatusWSResponseListener = new Response.Listener() {
-        @Override
-        public void onResponse(Object response) {
-            hideProgressDialog();
-            String strResponse = (String) response;
-            try {
-                JSONObject jsonObject = new JSONObject(strResponse);
-                Log.i(TAG, "onResponse: " + jsonObject.toString());
-                int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
-                switch (statusCode) {
-                    case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
-                        JSONObject jData = jsonObject.getJSONObject(NetworkUtility.TAGS.DATA);
-                        String taskStatus = jData.getString(NetworkUtility.TAGS.TASK_STATUS);
-
-                        if (taskStatus.equalsIgnoreCase(Utility.TASK_STATUS.ADDITIONAL_PAYMENT_REQUESTED)) {
-                            // payNow(true);
-                            PaymentDetailsActivity.newInstance(mContext, mTaskDetailModel, mTaskDetailModel.selectedProvider, 1);
-                        } else if (taskStatus.equalsIgnoreCase(Utility.TASK_STATUS.COMPLETION_REQUEST)) {
-                            Utility.showSnackBar(getString(R.string.message_no_more_payment_task_completed), mActivityTaskSummaryBinding.getRoot());
-                            mTaskDetailModel.taskStatus = Utility.TASK_STATUS.COMPLETION_REQUEST;
-                            setUpTaskDetails(mTaskDetailModel);
-
-                        }
-//                        Utility.showSnackBar(jsonObject.getString(NetworkUtility.TAGS.MESSAGE), mActivityJobSummaryBinding.getRoot());
-                       /* Utility.showSnackBar(getString(R.string.msg_thanks_for_confirmation), mActivityJobSummaryBinding.getRoot());
-                        mActivityJobSummaryBinding.layoutStatusConfirmationRequired.setVisibility(View.GONE);
-                        showRateDialog();*/
-
-//                        hideProgressDialog();
-                        break;
-                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
-                        // Show Toast
-                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityTaskSummaryBinding.getRoot());
-                        hideProgressDialog();
-                        break;
-                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
-                        String error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
-                        // Show message
-                        Utility.showSnackBar(error_message, mActivityTaskSummaryBinding.getRoot());
-                        hideProgressDialog();
-                        break;
-                    case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
-                    case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
-                        //Logout and finish the current activity
-                        Utility.logout(mContext, true, statusCode);
-                        finish();
-                        hideProgressDialog();
-                        break;
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-                mCallCompleteTaskWSErrorListener.onErrorResponse(new VolleyError(e.getMessage()));
-            }
-
-        }
-    };
 
     Response.ErrorListener mGetTaskStatusWSErrorListener = new Response.ErrorListener() {
         @Override

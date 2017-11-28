@@ -758,7 +758,7 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
                     taskDetailModel.subCategoryName = mSelectedSubServiceDetailModel.name;
                     taskDetailModel.taskAddress = mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.address;
                     taskDetailModel.taskAddressId = mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.address_id;
-                    taskDetailModel.task_total_amount = instaBookingProDetail.rate;
+                    taskDetailModel.taskPaidAmount = instaBookingProDetail.rate;
                     taskDetailModel.categoryId = mJobCategoryModel.catId;
                     taskDetailModel.taskDesc = mTaskCreationPagerAdapter.mEnterTaskDetailFragment.getTaskDescription();
                     taskDetailModel.catImage = mJobCategoryModel.catImage;
@@ -777,7 +777,7 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
                     providerModel.experience = instaBookingProDetail.experience;
                     providerModel.spWithoutGstQuotePrice = instaBookingProDetail.rate;
                     providerModel.rating = instaBookingProDetail.rating;
-                    PaymentDetailsActivity.newInstance(TaskCreationActivity.this, taskDetailModel, providerModel, 0, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel);
+                    PaymentDetailsActivity.newInstance(TaskCreationActivity.this, taskDetailModel, providerModel, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel);
 
                     //Log.i("myLog", "tasks:"+mJobCategoryModel.catName+"::"+mSelectedSubServiceDetailModel.name+"::"+mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mAddress);
 

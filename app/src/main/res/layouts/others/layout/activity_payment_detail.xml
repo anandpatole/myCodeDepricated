@@ -297,6 +297,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
+                        android:visibility="gone"
                         android:layout_marginBottom="@dimen/scale_5dp"
                         android:layout_marginTop="@dimen/scale_10dp"
                         android:orientation="horizontal"
@@ -749,7 +750,7 @@
                                 android:gravity="center_vertical"
                                 android:padding="@dimen/scale_5dp"
                                 android:text="@string/label_terms"
-                                android:textColor="@color/grey_varient_17"
+                                android:textColor="@color/grey_variant_20"
                                 android:textSize="@dimen/text_size_12sp"/>
 
                         </LinearLayout>
@@ -780,7 +781,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_centerVertical="true"
-                                android:src="@drawable/ic_insta_book"/>
+                                android:src="@drawable/ic_pay_now"/>
 
 
                             <com.cheep.custom_view.CFTextViewBold
@@ -811,11 +812,12 @@
                                 android:src="@drawable/ic_info_blue"/>
 
                             <com.cheep.custom_view.CFTextViewLight
+                                android:id="@+id/text_desc_pay_now"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="@dimen/scale_8dp"
-                                android:text="@string/info_insta_book"
-                                android:textColor="@color/grey_varient_16"
+                                android:text="@string/description_pay_now"
+                                android:textColor="@color/grey_varient_22"
                                 android:textSize="@dimen/text_size_10sp"/>
                         </LinearLayout>
 
@@ -865,7 +867,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_centerVertical="true"
-                                android:src="@drawable/ic_insta_book"/>
+                                android:src="@drawable/ic_pay_later"/>
 
 
                             <com.cheep.custom_view.CFTextViewBold
@@ -895,8 +897,8 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="@dimen/scale_8dp"
-                                android:text="@string/info_insta_book"
-                                android:textColor="@color/grey_varient_16"
+                                android:text="@string/description_pay_later"
+                                android:textColor="@color/grey_varient_22"
                                 android:textSize="@dimen/text_size_10sp"/>
                         </LinearLayout>
 

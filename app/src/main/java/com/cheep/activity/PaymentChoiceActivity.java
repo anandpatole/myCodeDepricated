@@ -77,11 +77,10 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
         context.startActivity(intent);
     }
 
-    public static void newInstance(Context context, TaskDetailModel taskDetailModel, ProviderModel providerModel, int isAdditionalPayment, AddressModel mSelectedAddressModel) {
+    public static void newInstance(Context context, TaskDetailModel taskDetailModel, ProviderModel providerModel, AddressModel mSelectedAddressModel) {
         Intent intent = new Intent(context, PaymentChoiceActivity.class);
         intent.putExtra(Utility.Extra.DATA, Utility.getJsonStringFromObject(taskDetailModel));
         intent.putExtra(Utility.Extra.DATA_2, Utility.getJsonStringFromObject(providerModel));
-        intent.putExtra(Utility.Extra.PAYMENT_VIEW_IS_ADDITIONAL_CHARGE, isAdditionalPayment);
         intent.putExtra(Utility.Extra.SELECTED_ADDRESS_MODEL, Utility.getJsonStringFromObject(mSelectedAddressModel));
         intent.putExtra(Utility.Extra.IS_PAY_NOW, true);
         context.startActivity(intent);

@@ -53,8 +53,6 @@ public class TaskDetailModel {
     @SerializedName("task_status")
     public String taskStatus;
 
-    @SerializedName("task_payment_status")
-    public String taskPaymentStatus;
 
     @SerializedName("task_reviewed")
     public String ratingDone;
@@ -74,12 +72,6 @@ public class TaskDetailModel {
     @SerializedName("additional_quote_amount")
     public String additionalQuoteAmount;
 
-    @SerializedName("task_total_amount")
-    public String task_total_amount;
-
-    @SerializedName("additional_paid_amount")
-    public String additional_paid_amount;
-
     // Added for New UI
     @SerializedName("task_address_id")
     public String taskAddressId;
@@ -87,23 +79,9 @@ public class TaskDetailModel {
     @SerializedName("task_type")
     public String taskType;
 
-    @SerializedName("payable_amount_with_gst")
-    public String payableAmountWithGST;
 
     @SerializedName("cat_image")
     public String catImage;
-
-    @SerializedName("task_discount_amount")
-    public String taskDiscountAmount;
-
-    @SerializedName("is_refer_code")
-    public String isReferCode;
-
-    @SerializedName("is_promo_code")
-    public String isPromoCode;
-
-    @SerializedName("is_wallet_used")
-    public String isWalletUsed;
 
 
     @SerializedName("used_wallet_amount")
@@ -149,10 +127,13 @@ public class TaskDetailModel {
     @SerializedName("task_total_pending_amount")
     public String taskTotalPendingAmount;
 
-    // this is for payment choice activity for strategic partner
-//    public String totalStrategicPartner;
-//    public String payableAmountStrategicPartner;
+    @SerializedName("is_any_amount_pending")
+    public String isAnyAmountPending;
+
+
     public String quoteAmountStrategicPartner;
+    public String taskDiscountAmount;
+    public String isReferCode;
 
 
     // This is for payment choice screen

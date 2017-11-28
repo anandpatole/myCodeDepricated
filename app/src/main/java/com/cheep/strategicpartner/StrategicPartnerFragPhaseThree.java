@@ -114,6 +114,7 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
     @Override
     public void initiateUI() {
         LogUtils.LOGD(TAG, "initiateUI() called");
+        mFragmentStrategicPartnerPhaseThreeBinding.textDescPayNow.setText(getString(R.string.description_pay_now)+ " " +new String(Character.toChars(0x1F499)) );
 
         mFragmentStrategicPartnerPhaseThreeBinding.recycleSelectedService.setLayoutManager(new LinearLayoutManager(mStrategicPartnerTaskCreationAct));
         mFragmentStrategicPartnerPhaseThreeBinding.recycleSelectedService.setNestedScrollingEnabled(false);

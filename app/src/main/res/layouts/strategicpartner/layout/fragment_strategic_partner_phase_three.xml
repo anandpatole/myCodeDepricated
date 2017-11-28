@@ -283,10 +283,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:paddingBottom="@dimen/scale_20dp"
                     android:paddingLeft="@dimen/scale_20dp"
-                    android:paddingRight="@dimen/scale_20dp"
-                    android:paddingTop="@dimen/scale_10dp">
+                    android:paddingTop="@dimen/scale_10dp"
+                    android:paddingBottom="@dimen/scale_20dp"
+                    android:paddingRight="@dimen/scale_20dp">
 
 
                     <RelativeLayout
@@ -303,7 +303,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
-                            android:src="@drawable/ic_insta_book"/>
+                            android:src="@drawable/ic_pay_now"/>
 
 
                         <com.cheep.custom_view.CFTextViewBold
@@ -334,19 +334,20 @@
                             android:src="@drawable/ic_info_blue"/>
 
                         <com.cheep.custom_view.CFTextViewLight
+                            android:id="@+id/text_desc_pay_now"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="@dimen/scale_8dp"
-                            android:text="@string/info_insta_book"
-                            android:textColor="@color/grey_varient_16"
+                            android:text="@string/description_pay_now"
+                            android:textColor="@color/grey_varient_22"
                             android:textSize="@dimen/text_size_10sp"/>
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/scale_15dp"
-                        android:layout_marginTop="@dimen/scale_15dp">
+                        android:layout_marginTop="@dimen/scale_15dp"
+                        android:layout_marginBottom="@dimen/scale_15dp">
 
                         <View
                             android:layout_width="0dp"
@@ -388,7 +389,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
-                            android:src="@drawable/ic_insta_book"/>
+                            android:src="@drawable/ic_pay_later"/>
 
 
                         <com.cheep.custom_view.CFTextViewBold
@@ -418,12 +419,13 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="@dimen/scale_8dp"
-                            android:text="@string/info_insta_book"
-                            android:textColor="@color/grey_varient_16"
+                            android:text="@string/description_pay_later"
+                            android:textColor="@color/grey_varient_22"
                             android:textSize="@dimen/text_size_10sp"/>
                     </LinearLayout>
 
                 </LinearLayout>
+
 
             </LinearLayout>
         </android.support.v4.widget.NestedScrollView>
