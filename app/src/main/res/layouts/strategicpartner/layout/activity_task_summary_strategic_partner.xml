@@ -656,7 +656,6 @@
                         <View
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/scale_0_5dp"
-                            android:layout_marginBottom="@dimen/scale_16dp"
                             android:layout_marginLeft="@dimen/scale_10dp"
                             android:layout_marginRight="@dimen/scale_10dp"
                             android:background="@color/grey_varient_11"/>

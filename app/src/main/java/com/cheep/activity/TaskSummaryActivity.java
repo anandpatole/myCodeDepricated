@@ -1295,6 +1295,7 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
 
                 //Refresh UI for complete status
                 mTaskDetailModel.taskStatus = Utility.TASK_STATUS.COMPLETION_CONFIRM;
+                mTaskDetailModel.isAnyAmountPending= Utility.BOOLEAN.NO;
                 setUpTaskDetails(mTaskDetailModel);
                 break;
         }
