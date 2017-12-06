@@ -567,7 +567,8 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
                     LogUtils.LOGE(TAG, "showTaskCompletionDialog: pendingAmount :: " + pendingAmount);
 
                     if (pendingAmount > 0) {
-                        PaymentChoiceActivity.newInstance(mContext, mTaskDetailModel);
+//                        PaymentChoiceActivity.newInstance(mContext, mTaskDetailModel);
+                        PaymentDetailsActivity.newInstance(mContext,mTaskDetailModel);
                     } else {
                         callCompleteTaskWS(Utility.TASK_STATUS.COMPLETION_CONFIRM);
 //                        mActivityTaskSummaryBinding.textTaskCompletionYes.setText(R.string.label_yes);

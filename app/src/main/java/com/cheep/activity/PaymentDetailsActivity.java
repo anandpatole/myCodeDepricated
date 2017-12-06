@@ -85,9 +85,25 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
         intent.putExtra(Utility.Extra.DATA, Utility.getJsonStringFromObject(providerModel));
         intent.putExtra(Utility.Extra.DATA_2, Utility.getJsonStringFromObject(taskDetailModel));
         intent.putExtra(Utility.Extra.SELECTED_ADDRESS_MODEL, Utility.getJsonStringFromObject(mSelectedAddressModel));
+        intent.putExtra(Utility.Extra.DATA_3, false);
         context.startActivity(intent);
     }
 
+    /**
+     * payment summary on completion of task
+     * if user has choose pay later option or additional payments are pending then this instance will be called
+     *
+     * @param mContext
+     * @param taskDetailModel
+     */
+    public static void newInstance(Context mContext, TaskDetailModel taskDetailModel) {
+        Intent intent = new Intent(mContext, PaymentDetailsActivity.class);
+        intent.putExtra(Utility.Extra.DATA, Utility.getJsonStringFromObject(taskDetailModel.selectedProvider));
+        intent.putExtra(Utility.Extra.DATA_2, Utility.getJsonStringFromObject(taskDetailModel));
+        intent.putExtra(Utility.Extra.DATA_3, true);
+        mContext.startActivity(intent);
+
+    }
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
     @Override
@@ -124,19 +140,151 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
         setTaskState(STEP_THREE_UNVERIFIED);
 
         mActivityPaymentDetailBinding.ivTermsTick.setSelected(true);
+        if (getIntent().hasExtra(Utility.Extra.DATA_3)) {
+            if (getIntent().getBooleanExtra(Utility.Extra.DATA_3, false))
+                setUpDetailsForPayLater();
+            else
+                setUpDetailsForBooking();
+        } else {
+            setUpDetailsForBooking();
+        }
 
+
+    }
+
+    private void setUpDetailsForPayLater() {
+        // Changes are per new flow pay now/later: 4/12/17
+
+        mActivityPaymentDetailBinding.rlPayNow.setVisibility(View.GONE);
+        mActivityPaymentDetailBinding.rlPayLater.setVisibility(View.GONE);
+
+        mActivityPaymentDetailBinding.rlPayNow.setSelected(true);
+        mActivityPaymentDetailBinding.rlPayLater.setSelected(true);
+        mActivityPaymentDetailBinding.rlreferraldiscount.setEnabled(false);
+        mActivityPaymentDetailBinding.rlpromocode.setEnabled(false);
+
+        mActivityPaymentDetailBinding.lnPayNow.setVisibility(View.VISIBLE);
+
+        mActivityPaymentDetailBinding.lnDesclaimer.setVisibility(View.GONE);
+
+        if (getIntent().hasExtra(Utility.Extra.DATA_2)) {
+            //This is only when provider profile view for specific task (provider gives quote to specific task)
+            taskDetailModel = (TaskDetailModel) Utility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA_2), TaskDetailModel.class);
+            providerModel = (ProviderModel) Utility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA), ProviderModel.class);
+        }
+
+
+        if (taskDetailModel != null && providerModel != null) {
+
+            mActivityPaymentDetailBinding.textTitle.setText(getString(R.string.title_booking_confimation));
+
+            mActivityPaymentDetailBinding.txtprofee.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf(providerModel.quotePrice))));
+            mActivityPaymentDetailBinding.txtadditionalcharge.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf(0))));
+            mActivityPaymentDetailBinding.txtsubtotal.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf(providerModel.quotePrice))));
+            mActivityPaymentDetailBinding.textCategory.setVisibility(View.VISIBLE);
+            mActivityPaymentDetailBinding.textCategory.setText(taskDetailModel.categoryName);
+
+            // top header image
+            Utility.loadImageView(mContext, mActivityPaymentDetailBinding.imgService, taskDetailModel.catImage, R.drawable.gradient_black);
+            Utility.showCircularImageViewWithColorBorder(mContext, TAG, mActivityPaymentDetailBinding.imgProfile, providerModel.profileUrl, Utility.DEFAULT_CHEEP_LOGO, R.color.dark_blue_variant_1, true);
+            String datetime = "";
+
+            // pro name
+            mActivityPaymentDetailBinding.textName.setText(providerModel.userName);
+            // set date & time
+            if (!TextUtils.isEmpty(taskDetailModel.taskStartdate)) {
+                datetime = Utility.getDate(Long.parseLong(taskDetailModel.taskStartdate), Utility.DATE_FORMAT_DD_MMMM) + ", " + Utility.get2HourTimeSlots(taskDetailModel.taskStartdate);
+//                dateTime = dateTime.replace(getString(R.string.label_am_caps), getString(R.string.label_am_small)).replace(getString(R.string.label_pm_caps), getString(R.string.label_pm_small));
+
+            }
+
+            // pro experience
+            if (!TextUtils.isEmpty(providerModel.experience))
+                if (Utility.ZERO_STRING.equals(providerModel.experience)) {
+                    mActivityPaymentDetailBinding.textExperience.setText(Utility.checkNonNullAndSet(mContext.getString(R.string.label_experience_zero)));
+                } else {
+//                    mActivityPaymentDetailBinding.textExperience.setText(this.getResources().getQuantityString(R.plurals.getExperienceStringOneLine, Integer.parseInt(providerModel.experience), providerModel.experience));
+                    mActivityPaymentDetailBinding.textExperience.setText(Utility.getExperienceString(providerModel.experience, Utility.EMPTY_STRING));
+                }
+
+
+            // set pro rating
+            Utility.showRating(providerModel.rating, mActivityPaymentDetailBinding.providerRating);
+
+            //badge
+            int badgeResID = Utility.getProLevelBadge(providerModel.pro_level);
+            Utility.showCircularImageViewWithColorBorder(mContext, TAG, mActivityPaymentDetailBinding.ivBadge, badgeResID, R.color.splash_gradient_end, true);
+
+            // pro verified text
+            mActivityPaymentDetailBinding.textVerified.setVisibility(providerModel.isVerified.equalsIgnoreCase(Utility.BOOLEAN.YES) ? View.VISIBLE : View.GONE);
+
+            // set task description date time and place
+            SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder();
+            spannableStringBuilder.append(getSpannableString(taskDetailModel.subCategoryName, ContextCompat.getColor(this, R.color.splash_gradient_end), true));
+            spannableStringBuilder.append(getSpannableString(getString(R.string.label_on), ContextCompat.getColor(this, R.color.grey_varient_8), false));
+            spannableStringBuilder.append(getSpannableString(datetime, ContextCompat.getColor(this, R.color.splash_gradient_end), true));
+            spannableStringBuilder.append(getSpannableString(getString(R.string.label_at), ContextCompat.getColor(this, R.color.grey_varient_8), false));
+            spannableStringBuilder.append(getSpannableString(taskDetailModel.taskAddress, ContextCompat.getColor(this, R.color.splash_gradient_end), true));
+            mActivityPaymentDetailBinding.txtdesc.setText(spannableStringBuilder);
+
+            mActivityPaymentDetailBinding.txtprofee.setText(getRuppeAmount(providerModel.quotePrice));
+            mActivityPaymentDetailBinding.txtadditionalcharge.setText(getRuppeAmount(taskDetailModel.additionalQuoteAmount));
+//            mActivityPaymentDetailBinding.txtsubtotal.setText(getRuppeAmount(taskDetailModel.));
+            mActivityPaymentDetailBinding.txttotal.setText(getRuppeAmount(taskDetailModel.taskPaidAmount));
+            mActivityPaymentDetailBinding.txtreferraldiscount.setText(getRuppeAmount(taskDetailModel.usedWalletAmount));
+            mActivityPaymentDetailBinding.txtpromocode.setText(getRuppeAmount(taskDetailModel.taskDiscountAmount));
+
+            double walletBalanceUsed = 0;
+            double promocodePrice = 0;
+            try {
+                walletBalanceUsed = Double.parseDouble(taskDetailModel.usedWalletAmount);
+                promocodePrice = Double.parseDouble(taskDetailModel.taskDiscountAmount);
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+            }
+            if (walletBalanceUsed > 0) {
+                mActivityPaymentDetailBinding.lnPromoCodeDisclaimer.setVisibility(View.VISIBLE);
+                mActivityPaymentDetailBinding.txtPromoCodeDisclaimer.setText(R.string.disclaimer_referral);
+            } else if (promocodePrice > 0) {
+                mActivityPaymentDetailBinding.lnPromoCodeDisclaimer.setVisibility(View.VISIBLE);
+                mActivityPaymentDetailBinding.txtPromoCodeDisclaimer.setText(R.string.disclaimer_promo_code);
+            } else {
+                mActivityPaymentDetailBinding.lnPromoCodeDisclaimer.setVisibility(View.GONE);
+            }
+
+            mActivityPaymentDetailBinding.textPayNow.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    PaymentDetailsActivity.newInstance(mContext, taskDetailModel);
+                }
+            });
+        }
+    }
+
+    private String getRuppeAmount(String proPaymentAmount) {
+        return getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(proPaymentAmount));
+    }
+
+    private void setUpDetailsForBooking() {
         // Changes are per new flow pay now/later: 15/11/17
+
         mActivityPaymentDetailBinding.rlPayNow.setSelected(true);
         mActivityPaymentDetailBinding.rlPayLater.setSelected(true);
 
-        mActivityPaymentDetailBinding.lnDesclaimer.setVisibility(View.VISIBLE);
-        mActivityPaymentDetailBinding.lnPromoCodeDisclaimer.setVisibility(View.GONE);
-        mActivityPaymentDetailBinding.textDescPayNow.setText(getString(R.string.description_pay_now)+ " " +new String(Character.toChars(0x1F499)) );
+        mActivityPaymentDetailBinding.rlPayNow.setVisibility(View.VISIBLE);
+        mActivityPaymentDetailBinding.rlPayLater.setVisibility(View.VISIBLE);
 
-        if (getIntent().hasExtra(Utility.Extra.DATA)) {
+        mActivityPaymentDetailBinding.lnPayNow.setVisibility(View.GONE);
+
+        mActivityPaymentDetailBinding.lnDesclaimer.setVisibility(View.GONE);
+        mActivityPaymentDetailBinding.lnPromoCodeDisclaimer.setVisibility(View.GONE);
+
+        mActivityPaymentDetailBinding.textDescPayNow.setText(getString(R.string.description_pay_now) + " " + new String(Character.toChars(0x1F499)));
+
+        if (getIntent().hasExtra(Utility.Extra.DATA_2)) {
             //This is only when provider profile view for specific task (provider gives quote to specific task)
-            providerModel = (ProviderModel) Utility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA), ProviderModel.class);
             taskDetailModel = (TaskDetailModel) Utility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA_2), TaskDetailModel.class);
+            providerModel = (ProviderModel) Utility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA), ProviderModel.class);
             isInstaBooking = taskDetailModel.taskType.equalsIgnoreCase(Utility.TASK_TYPE.INSTA_BOOK);
         }
 
@@ -1149,6 +1297,8 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
 
         }
     };
+
+
     // check is task is from insta booking or not
 
 //    Blue Heart Emoji (U+1F499) - iEmoji.com

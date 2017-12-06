@@ -10,7 +10,7 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@+id/ln_book_and_pay">
+            android:layout_above="@+id/ln_pay_now">
 
             <android.support.v4.widget.NestedScrollView
                 android:layout_width="match_parent"
@@ -297,12 +297,12 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:visibility="gone"
                         android:layout_marginBottom="@dimen/scale_5dp"
                         android:layout_marginTop="@dimen/scale_10dp"
                         android:orientation="horizontal"
                         android:paddingLeft="@dimen/scale_20dp"
-                        android:paddingRight="@dimen/scale_20dp">
+                        android:paddingRight="@dimen/scale_20dp"
+                        android:visibility="gone">
 
                         <ImageView
                             android:layout_width="wrap_content"
@@ -761,10 +761,10 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:paddingLeft="@dimen/scale_20dp"
-                        android:paddingTop="@dimen/scale_10dp"
                         android:paddingBottom="@dimen/scale_20dp"
-                        android:paddingRight="@dimen/scale_20dp">
+                        android:paddingLeft="@dimen/scale_20dp"
+                        android:paddingRight="@dimen/scale_20dp"
+                        android:paddingTop="@dimen/scale_10dp">
 
 
                         <RelativeLayout
@@ -824,8 +824,8 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/scale_15dp"
-                            android:layout_marginBottom="@dimen/scale_15dp">
+                            android:layout_marginBottom="@dimen/scale_15dp"
+                            android:layout_marginTop="@dimen/scale_15dp">
 
                             <View
                                 android:layout_width="0dp"
@@ -916,42 +916,29 @@
                 old text for this pay button
         -->
         <!--android:text="@string/label_pay_fee_v1"-->
-        <!--
-                <LinearLayout
-                    android:id="@+id/ln_book_and_pay"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_gravity="bottom"
-                    android:orientation="horizontal">
 
-                    w<com.cheep.custom_view.CFTextViewSemiBold
-                        android:id="@+id/text_book_only"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:background="@drawable/payment_detail_btn_blue_selector"
-                        android:gravity="center"
-                        android:padding="@dimen/scale_10dp"
-                        android:text="@string/label_book_now"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/text_size_17sp"
-                        android:visibility="visible"/>
+        <LinearLayout
+            android:id="@+id/ln_pay_now"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_gravity="bottom"
+            android:orientation="horizontal">
 
-                    <com.cheep.custom_view.CFTextViewSemiBold
-                        android:id="@+id/text_book_and_pay"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:background="@drawable/payment_detail_btn_blue_selector"
-                        android:gravity="center"
-                        android:padding="@dimen/scale_10dp"
-                        android:layout_marginLeft="@dimen/scale_10dp"
-                        android:text="@string/label_book_and_pay"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/text_size_17sp"
-                        android:visibility="visible"/>
-                </LinearLayout>
-        -->
+            <com.cheep.custom_view.CFTextViewSemiBold
+                android:id="@+id/text_pay_now"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/payment_detail_btn_blue_selector"
+                android:gravity="center"
+                android:padding="@dimen/scale_10dp"
+                android:text="@string/label_pay_now"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_17sp"
+                android:visibility="visible"/>
+
+        </LinearLayout>
+
     </RelativeLayout>
 </layout>

@@ -420,6 +420,7 @@ public class Utility {
         String DATA = "DATA";
         String IS_FIRST_TIME = "isFirstTime";
         String DATA_2 = "DATA_2";
+        String DATA_3 = "DATA_3";
         String PASSWORD = "password";
         String SELECTED_IMAGE_PATH = "selectedImagePath";
         String CORRECT_OTP = "correctOTP";
