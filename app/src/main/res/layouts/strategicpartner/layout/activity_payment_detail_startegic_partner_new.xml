@@ -67,7 +67,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="@dimen/scale_32dp"
                         android:layout_gravity="center"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        android:visibility="invisible">
 
                         <com.cheep.custom_view.CFTextViewRegular
                             android:id="@+id/text_step_1"
@@ -121,9 +122,9 @@
                         android:gravity="center"
                         android:paddingLeft="@dimen/scale_20dp"
                         android:paddingRight="@dimen/scale_20dp"
+                        android:text="@string/step_3_desc_for_strategic_partner"
                         android:textColor="@color/white"
-                        android:textSize="@dimen/banner_title_text_size"
-                        tools:text="asdadasdasdasdadasdas"/>
+                        android:textSize="@dimen/banner_title_text_size"/>
                 </LinearLayout>
             </FrameLayout>
 
@@ -132,6 +133,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_above="@id/ln_pay_now"
             android:layout_below="@+id/flmainTop">
 
             <android.support.v4.widget.NestedScrollView
@@ -205,6 +207,7 @@
 
                         <LinearLayout
                             android:id="@+id/lnTop"
+                            android:paddingBottom="@dimen/scale_10dp"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="vertical">
@@ -413,6 +416,29 @@
         </RelativeLayout>
 
         <!--app:letterSpacing="0.3"-->
+        <LinearLayout
+            android:id="@+id/ln_pay_now"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_gravity="bottom"
+            android:orientation="horizontal">
+
+            <com.cheep.custom_view.CFTextViewSemiBold
+                android:id="@+id/text_pay_now"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/payment_detail_btn_blue_selector"
+                android:gravity="center"
+                android:padding="@dimen/scale_10dp"
+                android:text="@string/label_pay_now"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_17sp"
+                android:visibility="visible"/>
+
+        </LinearLayout>
 
         <ImageView
             android:id="@+id/imgLogo"

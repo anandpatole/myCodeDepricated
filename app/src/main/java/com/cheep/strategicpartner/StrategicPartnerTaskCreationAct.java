@@ -454,7 +454,7 @@ public class StrategicPartnerTaskCreationAct extends BaseAppCompatActivity {
     public void onMessageEvent(MessageEvent event) {
         Log.d(TAG, "onMessageEvent() called with: event = [" + event.BROADCAST_ACTION + "]");
         switch (event.BROADCAST_ACTION) {
-            case Utility.BROADCAST_TYPE.PAYMENT_COMPLETED_NEED_TO_REDIRECT_TO_MY_TASK_SCREEN:
+            case Utility.BROADCAST_TYPE.TASK_PAID_SUCCESSFULLY:
                 // Finish this activity
                 if (isPayNow)
                     finish();

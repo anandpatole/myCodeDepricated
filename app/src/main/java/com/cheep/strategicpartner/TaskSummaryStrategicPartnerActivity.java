@@ -31,7 +31,6 @@ import com.android.volley.VolleyError;
 import com.cheep.R;
 import com.cheep.activity.BaseAppCompatActivity;
 import com.cheep.activity.ChatActivity;
-import com.cheep.activity.PaymentChoiceActivity;
 import com.cheep.activity.TaskQuotesActivity;
 import com.cheep.custom_view.BottomAlertDialog;
 import com.cheep.databinding.ActivityTaskSummaryStrategicPartnerBinding;
@@ -632,7 +631,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
                     LogUtils.LOGE(TAG, "showTaskCompletionDialog: pendingAmount :: " + pendingAmount);
 
                     if (pendingAmount > 0) {
-                        PaymentChoiceActivity.newInstance(mContext, mTaskDetailModel);
+                        PaymentsSummaryStrategicPartnerActivity.newInstance(mContext, mTaskDetailModel);
                     } else {
                         callCompleteTaskWS(Utility.TASK_STATUS.COMPLETION_CONFIRM);
 //                        mActivityTaskSummaryBinding.textTaskCompletionYes.setText(R.string.label_yes);
@@ -1347,9 +1346,15 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
             case Utility.BROADCAST_TYPE.TASK_PAID_SUCCESSFULLY:
 
                 //Refresh UI for complete status
-                mTaskDetailModel.taskStatus = Utility.TASK_STATUS.COMPLETION_CONFIRM;
-                mTaskDetailModel.isAnyAmountPending = Utility.BOOLEAN.NO;
-                setUpTaskDetails(mTaskDetailModel);
+                LogUtils.LOGE(TAG, "onMessageEvent:taskStatus " + event.taskStatus);
+                if (mTaskDetailModel.taskStatus.equalsIgnoreCase(Utility.TASK_STATUS.COMPLETION_REQUEST)) {
+                    callCompleteTaskWS(Utility.TASK_STATUS.COMPLETION_CONFIRM);
+                } else {
+                    mTaskDetailModel.taskStatus = event.taskStatus;
+                    mTaskDetailModel.isAnyAmountPending = Utility.BOOLEAN.NO;
+                    mTaskDetailModel.taskTotalPendingAmount = "0";
+                    setUpTaskDetails(mTaskDetailModel);
+                }
                 break;
         }
 
@@ -1362,6 +1367,9 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
          */
         Volley.getInstance(mContext).getRequestQueue().cancelAll(Utility.getUniqueTagForNetwork(this, NetworkUtility.WS.TASK_DETAIL));
         Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.WS.ADD_REVIEW);
+        Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.WS.ACCEPT_ADDITIONAL_PAYMENT_REQUEST);
+        Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.WS.DECLINE_ADDITIONAL_PAYMENT_REQUEST);
+        Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.WS.CHANGE_TASK_STATUS);
         Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.WS.SP_ADD_TO_FAV);
         Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.WS.PAYMENT);
 

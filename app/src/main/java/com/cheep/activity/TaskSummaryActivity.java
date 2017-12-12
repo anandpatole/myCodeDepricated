@@ -250,7 +250,21 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     // Redirect the user to Payment Summary screen.
-                    PaymentSummaryActivity.newInstance(TaskSummaryActivity.this, mTaskDetailModel);
+                    double pendingAmount;
+                    try {
+                        pendingAmount = Double.parseDouble(mTaskDetailModel.taskTotalPendingAmount);
+                    } catch (NumberFormatException e) {
+                        pendingAmount = 0;
+                    }
+                    LogUtils.LOGE(TAG, "showTaskCompletionDialog: pendingAmount :: " + pendingAmount);
+
+                    if (pendingAmount > 0) {
+//                        PaymentChoiceActivity.newInstance(mContext, mTaskDetailModel);
+                        PaymentDetailsActivity.newInstance(mContext, mTaskDetailModel);
+                    } else {
+//                        mActivityTaskSummaryBinding.textTaskCompletionYes.setText(R.string.label_yes);
+                        PaymentSummaryActivity.newInstance(TaskSummaryActivity.this, mTaskDetailModel);
+                    }
                 }
             });
 
@@ -568,7 +582,7 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
 
                     if (pendingAmount > 0) {
 //                        PaymentChoiceActivity.newInstance(mContext, mTaskDetailModel);
-                        PaymentDetailsActivity.newInstance(mContext,mTaskDetailModel);
+                        PaymentDetailsActivity.newInstance(mContext, mTaskDetailModel);
                     } else {
                         callCompleteTaskWS(Utility.TASK_STATUS.COMPLETION_CONFIRM);
 //                        mActivityTaskSummaryBinding.textTaskCompletionYes.setText(R.string.label_yes);
@@ -1295,9 +1309,20 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
             case Utility.BROADCAST_TYPE.TASK_PAID_SUCCESSFULLY:
 
                 //Refresh UI for complete status
-                mTaskDetailModel.taskStatus = Utility.TASK_STATUS.COMPLETION_CONFIRM;
-                mTaskDetailModel.isAnyAmountPending= Utility.BOOLEAN.NO;
-                setUpTaskDetails(mTaskDetailModel);
+//                mTaskDetailModel.taskStatus = event.taskStatus;
+//                mTaskDetailModel.isAnyAmountPending = Utility.BOOLEAN.NO;
+//                setUpTaskDetails(mTaskDetailModel);
+
+                LogUtils.LOGE(TAG, "onMessageEvent:taskStatus " + event.taskStatus);
+//                if (mTaskDetailModel.taskStatus.equalsIgnoreCase(Utility.TASK_STATUS.COMPLETION_REQUEST)) {
+//                    callCompleteTaskWS(Utility.TASK_STATUS.COMPLETION_CONFIRM);
+//                } else {
+                    LogUtils.LOGE(TAG, "onMessageEvent:taskStatus " + event.taskStatus);
+                    mTaskDetailModel.taskStatus = event.taskStatus;
+                    mTaskDetailModel.isAnyAmountPending = Utility.BOOLEAN.NO;
+                    mTaskDetailModel.taskTotalPendingAmount = "0";
+                    setUpTaskDetails(mTaskDetailModel);
+//                }
                 break;
         }
     }

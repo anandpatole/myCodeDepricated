@@ -16,13 +16,10 @@ public class PaymentSummaryModel {
     @SerializedName("pro_payment_amount")
     @Expose
     public String proPaymentAmount;
-    @SerializedName("pro_payment_status")
-    @Expose
-    public String proPaymentStatus;
 
     @SerializedName("promocode_price")
     @Expose
-    public String promocodePrice;
+    public String promoCodePrice;
     @SerializedName("sub_total_amount")
     @Expose
     public String subTotalAmount;
@@ -38,6 +35,19 @@ public class PaymentSummaryModel {
     @SerializedName("task_user_category")
     @Expose
     public List<TaskUserCategory> taskUserCategory = null;
+
+    @SerializedName("additional_paid_amount")
+    @Expose
+    public String additionalPaidAmount;
+
+    @SerializedName("pro_payment_status")
+    @Expose
+    public String proPaymentStatus;
+
+
+    @SerializedName("total_amount_status")
+    @Expose
+    public String totalAmountStatus;
 
 
     public class TaskUserCategory {

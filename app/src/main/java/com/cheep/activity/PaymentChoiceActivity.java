@@ -121,7 +121,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
             }
         }
         isPayNow = getIntent().getBooleanExtra(Utility.Extra.IS_PAY_NOW, false);
-        mActivityPaymentChoiceBinding.llCashPayment.setVisibility(isPayNow? View.GONE:View.VISIBLE);
+        mActivityPaymentChoiceBinding.llCashPayment.setVisibility(isPayNow ? View.GONE : View.VISIBLE);
         mActivityPaymentChoiceBinding.tvPaytmLinkAccount.setText(getString(R.string.label_link_x, getString(R.string.label_account)));
         setupActionbar();
 
@@ -197,7 +197,8 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
             case R.id.rl_cash_payment:
                 paymentMethod = NetworkUtility.PAYMENT_METHOD_TYPE.COD;
 
-                PayByCashDialog payByCashDialog = PayByCashDialog.newInstance(providerModel.userName, Utility.getQuotePriceFormatter(taskDetailModel.taskPaidAmount), new PayByCashDialog.PayByCashDoneListener() {
+                String proName = taskDetailModel.taskType.equalsIgnoreCase(Utility.TASK_TYPE.STRATEGIC) ? taskDetailModel.categoryName : providerModel.userName;
+                PayByCashDialog payByCashDialog = PayByCashDialog.newInstance(proName, amount, new PayByCashDialog.PayByCashDoneListener() {
                     @Override
                     public void onDoneClick() {
                         onSuccessOfAnyPaymentMode(Utility.EMPTY_STRING);
@@ -406,7 +407,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
         // Url is based on condition if address id is greater then 0 then it means we need to update the existing address
         VolleyNetworkRequest mVolleyNetworkRequestForSPList = new VolleyNetworkRequest(NetworkUtility.WS.PAY_TASK_PAYMENT
                 , mCallCompleteTaskWSErrorListener
-                , mCallCompleteTaskWSResponseListener
+                , mCallPayTaskPaymentWSResponseListener
                 , mHeaderParams
                 , mParams
                 , null);
@@ -414,10 +415,10 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
     }
 
 
-    Response.Listener mCallCompleteTaskWSResponseListener = new Response.Listener() {
+    Response.Listener mCallPayTaskPaymentWSResponseListener = new Response.Listener() {
         @Override
         public void onResponse(Object response) {
-
+            hideProgressDialog();
             String strResponse = (String) response;
             try {
                 JSONObject jsonObject = new JSONObject(strResponse);
@@ -425,7 +426,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
                 int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
                 switch (statusCode) {
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
-                        Utility.showSnackBar(getString(R.string.msg_thanks_for_confirmation), mActivityPaymentChoiceBinding.getRoot());
+//                        Utility.showSnackBar(getString(R.string.msg_thanks_for_confirmation), mActivityPaymentChoiceBinding.getRoot());
 
                                 /*
                                   Update the UI Accordingly.
@@ -434,11 +435,15 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
                         //Refresh UI for Paid status
 
                         // Notify the Home Screen to check for ongoing task counter.
-                        MessageEvent messageEvent = new MessageEvent();
-                        messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.TASK_PAID_SUCCESSFULLY;
-                        EventBus.getDefault().post(messageEvent);
-                        finish();
-
+                        if (taskDetailModel.taskStatus.equalsIgnoreCase(Utility.TASK_STATUS.COMPLETION_REQUEST)) {
+                            callCompleteTaskWS(Utility.TASK_STATUS.COMPLETION_CONFIRM);
+                        } else {
+                            MessageEvent messageEvent = new MessageEvent();
+                            messageEvent.taskStatus = (jsonObject.optJSONObject(NetworkUtility.TAGS.DATA)).optString(NetworkUtility.TAGS.TASK_STATUS);
+                            messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.TASK_PAID_SUCCESSFULLY;
+                            EventBus.getDefault().post(messageEvent);
+                            finish();
+                        }
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
                         // Show Toast
@@ -460,7 +465,6 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
                 e.printStackTrace();
                 mCallCompleteTaskWSErrorListener.onErrorResponse(new VolleyError(e.getMessage()));
             }
-            hideProgressDialog();
         }
     };
 
@@ -625,11 +629,6 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
         }
 
     }
-
-    private void callPaymentForStrategicTaskWS(String responsePayLoad) {
-
-    }
-
     ///////////////////////////////////////////////////////////Paytm Check Balance API call starts///////////////////////////////////////////////////////////
 
     private void checkBalance(String mAccessToken) {
@@ -985,7 +984,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
             mParams.put(NetworkUtility.TAGS.PROMOCODE_PRICE, Utility.ZERO_STRING);
         }
         mParams.put(NetworkUtility.TAGS.IS_REFER_CODE, taskDetailModel.isReferCode);
-        mParams.put(NetworkUtility.TAGS.QUOTE_AMOUNT, providerModel.spWithoutGstQuotePrice);
+        mParams.put(NetworkUtility.TAGS.QUOTE_AMOUNT, TextUtils.isEmpty(taskDetailModel.cheepCode) ? providerModel.quotePrice : providerModel.actualQuotePrice);
         mParams.put(NetworkUtility.TAGS.PAYABLE_AMOUNT, providerModel.quotePrice);
         mParams.put(NetworkUtility.TAGS.PAYMENT_LOG, Utility.EMPTY_STRING);
         mParams.put(NetworkUtility.TAGS.PAYMENT_METHOD, NetworkUtility.PAYMENT_METHOD_TYPE.PAY_LATER);
@@ -1325,6 +1324,97 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
             hideProgressDialog();
         }
     };
+
+    /**
+     * Call Complete task
+     */
+    private void callCompleteTaskWS(String status) {
+
+        //Validation
+        if (!Utility.isConnected(mContext)) {
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityPaymentChoiceBinding.getRoot());
+            return;
+        }
+
+        //Show Progress
+        showProgressDialog();
+
+        UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
+
+        //Add Header parameters
+        Map<String, String> mHeaderParams = new HashMap<>();
+        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, userDetails.UserID);
+        mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
+
+        SuperCalendar superCalendar = SuperCalendar.getInstance();
+        superCalendar.setTimeZone(SuperCalendar.SuperTimeZone.GMT.GMT);
+
+        //Add Params
+        Map<String, String> mParams = new HashMap<>();
+        mParams.put(NetworkUtility.TAGS.TASK_ID, taskDetailModel.taskId);
+        mParams.put(NetworkUtility.TAGS.STATUS, status);
+
+        //Sending end datetime millis in GMT timezone
+        mParams.put(NetworkUtility.TAGS.TASK_ENDDATE, String.valueOf(superCalendar.getTimeInMillis()));
+
+        VolleyNetworkRequest mVolleyNetworkRequest = new VolleyNetworkRequest(NetworkUtility.WS.CHANGE_TASK_STATUS
+                , mCallCompleteTaskWSErrorListener
+                , mCallCompleteTaskWSResponseListener
+                , mHeaderParams
+                , mParams
+                , null);
+        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest);
+
+    }
+
+    Response.Listener mCallCompleteTaskWSResponseListener = new Response.Listener() {
+        @Override
+        public void onResponse(Object response) {
+
+            String strResponse = (String) response;
+            try {
+                JSONObject jsonObject = new JSONObject(strResponse);
+                Log.i(TAG, "onResponse: " + jsonObject.toString());
+                int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
+                switch (statusCode) {
+                    case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
+                        String taskStatus = jsonObject.getString(NetworkUtility.TAGS.TASK_STATUS);
+                        if (!TextUtils.isEmpty(taskStatus)) {
+                            if (taskStatus.equalsIgnoreCase(Utility.TASK_STATUS.COMPLETION_CONFIRM)) {
+                                Utility.showSnackBar(getString(R.string.msg_thanks_for_confirmation), mActivityPaymentChoiceBinding.getRoot());
+                                MessageEvent messageEvent = new MessageEvent();
+                                messageEvent.taskStatus = taskStatus;
+                                messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.TASK_PAID_SUCCESSFULLY;
+                                EventBus.getDefault().post(messageEvent);
+                                finish();
+                            }
+                        }
+
+                        break;
+                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
+                        // Show Toast
+                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityPaymentChoiceBinding.getRoot());
+                        break;
+                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
+                        String error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
+                        // Show message
+                        Utility.showSnackBar(error_message, mActivityPaymentChoiceBinding.getRoot());
+                        break;
+                    case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
+                    case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
+                        //Logout and finish the current activity
+                        Utility.logout(mContext, true, statusCode);
+                        finish();
+                        break;
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+                mCallCompleteTaskWSErrorListener.onErrorResponse(new VolleyError(e.getMessage()));
+            }
+            hideProgressDialog();
+        }
+    };
+
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////           Create Strategic task + payment  [end]                        /////////////////
     //////////////////////////////////////////////////////////////////////////////////////////////////////////

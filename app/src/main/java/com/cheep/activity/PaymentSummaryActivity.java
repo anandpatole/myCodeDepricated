@@ -122,22 +122,22 @@ public class PaymentSummaryActivity extends BaseAppCompatActivity {
 
     public void viewPaymentDetails() {
         if (paymentSummaryModel != null) {
-            if (taskDetailModel.taskStatus.equalsIgnoreCase(Utility.TASK_STATUS.COMPLETION_CONFIRM))
-                mActivityPaymentDetailBinding.textLabelTotalPaid.setText(getString(R.string.label_total_paid));
-            else
+            if (paymentSummaryModel.totalAmountStatus.equalsIgnoreCase(Utility.TASK_STATUS.PENDING))
                 mActivityPaymentDetailBinding.textLabelTotalPaid.setText(getString(R.string.label_total_pay));
+            else
+                mActivityPaymentDetailBinding.textLabelTotalPaid.setText(getString(R.string.label_total_paid));
 
             mActivityPaymentDetailBinding.txtprofee.setText(getRuppeAmount(paymentSummaryModel.proPaymentAmount));
-            mActivityPaymentDetailBinding.txtadditionalcharge.setText(getRuppeAmount(paymentSummaryModel.additionalPendingAmount));
+            mActivityPaymentDetailBinding.txtadditionalcharge.setText(getRuppeAmount(paymentSummaryModel.additionalPaidAmount));
             mActivityPaymentDetailBinding.txtsubtotal.setText(getRuppeAmount(paymentSummaryModel.subTotalAmount));
             mActivityPaymentDetailBinding.txttotal.setText(getRuppeAmount(paymentSummaryModel.totalAmount));
             mActivityPaymentDetailBinding.txtreferraldiscount.setText(getRuppeAmount(paymentSummaryModel.walletBalanceUsed));
-            mActivityPaymentDetailBinding.txtpromocode.setText(getRuppeAmount(paymentSummaryModel.promocodePrice));
+            mActivityPaymentDetailBinding.txtpromocode.setText(getRuppeAmount(paymentSummaryModel.promoCodePrice));
 
             if (getQuotePriceInInteger(paymentSummaryModel.walletBalanceUsed) > 0) {
                 mActivityPaymentDetailBinding.lnPromoCodeDisclaimer.setVisibility(View.VISIBLE);
                 mActivityPaymentDetailBinding.txtPromoCodeDisclaimer.setText(R.string.disclaimer_referral);
-            } else if (getQuotePriceInInteger(paymentSummaryModel.promocodePrice) > 0) {
+            } else if (getQuotePriceInInteger(paymentSummaryModel.promoCodePrice) > 0) {
                 mActivityPaymentDetailBinding.lnPromoCodeDisclaimer.setVisibility(View.VISIBLE);
                 mActivityPaymentDetailBinding.txtPromoCodeDisclaimer.setText(R.string.disclaimer_promo_code);
             } else {

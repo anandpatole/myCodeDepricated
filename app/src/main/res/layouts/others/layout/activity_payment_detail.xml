@@ -246,6 +246,7 @@
                         tools:text="Bosche"/>
 
                     <LinearLayout
+                        android:id="@+id/lnRateExp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center_horizontal"
@@ -353,7 +354,7 @@
                             android:paddingTop="@dimen/scale_5dp">
 
                             <com.cheep.custom_view.CFTextViewRegular
-                                android:id="@+id/CFTextViewRegular"
+                                android:id="@+id/textProChargesLabel"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="left|center_vertical"
@@ -362,7 +363,7 @@
                                 android:paddingBottom="@dimen/scale_5dp"
                                 android:paddingTop="@dimen/scale_5dp"
                                 android:text="@string/label_pro_fee"
-                                android:textColor="@color/black"
+                                android:textColor="@drawable/textcolor_paymentsummary_selector"
                                 android:textSize="@dimen/text_size_14sp"/>
 
                             <com.cheep.custom_view.CFTextViewSemiBold
@@ -380,7 +381,7 @@
                                 android:paddingBottom="@dimen/scale_5dp"
                                 android:paddingTop="@dimen/scale_5dp"
                                 android:singleLine="true"
-                                android:textColor="@color/black"
+                                android:textColor="@drawable/textcolor_paymentsummary_selector"
                                 android:textSize="@dimen/text_size_14sp"
                                 tools:ignore="EllipsizeMaxLines"
                                 tools:text="₹ 300"/>
@@ -539,6 +540,20 @@
                                     android:text="@string/label_referral_discount"
                                     android:textColor="@color/splash_gradient_end"
                                     android:textSize="@dimen/text_size_12sp"/>
+
+                                <com.cheep.custom_view.CFTextViewRegular
+                                    android:id="@+id/textreferraldiscountApplied"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="left|center_vertical"
+                                    android:layout_marginLeft="@dimen/scale_5dp"
+                                    android:gravity="center_vertical"
+                                    android:paddingBottom="@dimen/scale_5dp"
+                                    android:paddingTop="@dimen/scale_5dp"
+                                    android:text="@string/label_referral_discount_applied"
+                                    android:textColor="@color/grey_varient_17"
+                                    android:textSize="@dimen/text_size_12sp"/>
+
                             </LinearLayout>
 
                             <com.cheep.custom_view.CFTextViewSemiBold
@@ -607,6 +622,21 @@
                                     android:text="@string/label_promocode_apply"
                                     android:textColor="@color/splash_gradient_end"
                                     android:textSize="@dimen/text_size_12sp"/>
+
+                                <com.cheep.custom_view.CFTextViewRegular
+                                    android:id="@+id/textpromocodeApplied"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_centerVertical="true"
+                                    android:layout_gravity="left|center_vertical"
+                                    android:layout_marginLeft="@dimen/scale_5dp"
+                                    android:gravity="center_vertical"
+                                    android:paddingBottom="@dimen/scale_5dp"
+                                    android:paddingTop="@dimen/scale_5dp"
+                                    android:text="@string/label_promocode_apply"
+                                    android:textColor="@color/grey_varient_17"
+                                    android:textSize="@dimen/text_size_12sp"/>
+
                             </LinearLayout>
 
                             <ImageView
@@ -758,6 +788,7 @@
                     </LinearLayout>
 
                     <LinearLayout
+                        android:id="@+id/lnPayLaterPayNowButtons"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"

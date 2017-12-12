@@ -25,17 +25,23 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.cheep.R;
 import com.cheep.activity.BaseAppCompatActivity;
+import com.cheep.activity.PaymentChoiceActivity;
 import com.cheep.databinding.ActivityPaymentDetailStartegicPartnerNewBinding;
 import com.cheep.databinding.RowPaymentSummaryBinding;
+import com.cheep.model.MessageEvent;
 import com.cheep.model.PaymentSummaryModel;
 import com.cheep.model.TaskDetailModel;
 import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
+import com.cheep.utils.LogUtils;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.SuperCalendar;
 import com.cheep.utils.Utility;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -53,10 +59,13 @@ public class PaymentsSummaryStrategicPartnerActivity extends BaseAppCompatActivi
     }
 
     PaymentSummaryModel paymentSummaryModel;
-    private static final String TAG = PaymentsSummaryStrategicPartnerActivity.class.getSimpleName();
+    private static final String TAG = "PaymentsSummaryStrategi";
     private TaskDetailModel taskDetailModel;
     private ActivityPaymentDetailStartegicPartnerNewBinding mActivityPaymentDetailBinding;
-
+    /**
+     * used while user taps on View Payment summary and tries to do payment in on going task
+     */
+    private boolean isPayNow = true;
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
     @Override
@@ -66,6 +75,7 @@ public class PaymentsSummaryStrategicPartnerActivity extends BaseAppCompatActivi
           when the device runing out of memory we dont want the user to restart the payment. rather we close it and redirect them to previous activity.
          */
         mActivityPaymentDetailBinding = DataBindingUtil.setContentView(this, R.layout.activity_payment_detail_startegic_partner_new);
+        EventBus.getDefault().register(this);
 
         initiateUI();
         setListeners();
@@ -111,6 +121,15 @@ public class PaymentsSummaryStrategicPartnerActivity extends BaseAppCompatActivi
                 }
             });
 
+            if (taskDetailModel.isAnyAmountPending.equalsIgnoreCase(Utility.BOOLEAN.YES))
+            {
+                mActivityPaymentDetailBinding.textTitle.setText(R.string.title_booking_confimation);
+            }
+            else{
+                mActivityPaymentDetailBinding.textTitle.setText(R.string.label_payment_summary);
+
+            }
+
             callPaymentSummaryWS();
 
             Utility.showCircularImageViewWithColorBorder(mContext, TAG, mActivityPaymentDetailBinding.imgLogo, taskDetailModel.catImage, Utility.DEFAULT_CHEEP_LOGO, R.color.dark_blue_variant_1, true);
@@ -148,17 +167,28 @@ public class PaymentsSummaryStrategicPartnerActivity extends BaseAppCompatActivi
     private void setPaymentData() {
         if (paymentSummaryModel != null) {
 
+            if (paymentSummaryModel.totalAmountStatus.equalsIgnoreCase(Utility.TASK_STATUS.PENDING)) {
+                mActivityPaymentDetailBinding.lnPayNow.setVisibility(View.VISIBLE);
+                mActivityPaymentDetailBinding.textPayNow.setSelected(true);
+                mActivityPaymentDetailBinding.textStepDesc.setVisibility(View.VISIBLE);
+                mActivityPaymentDetailBinding.textTitle.setText(R.string.title_booking_confimation);
+            } else {
+                mActivityPaymentDetailBinding.lnPayNow.setVisibility(View.GONE);
+                mActivityPaymentDetailBinding.textStepDesc.setVisibility(View.GONE);
+                mActivityPaymentDetailBinding.textTitle.setText(R.string.label_payment_summary);
+            }
+
             mActivityPaymentDetailBinding.txtsubtotal.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf(paymentSummaryModel.subTotalAmount))));
             mActivityPaymentDetailBinding.txttotal.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf(paymentSummaryModel.totalAmount))));
-            mActivityPaymentDetailBinding.txtpromocode.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf((paymentSummaryModel.promocodePrice)))));
+            mActivityPaymentDetailBinding.txtpromocode.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf((paymentSummaryModel.promoCodePrice)))));
 
-            double promocodeValue = getQuotePriceInInteger(paymentSummaryModel.promocodePrice);
+            double promocodeValue = getQuotePriceInInteger(paymentSummaryModel.promoCodePrice);
 
             mActivityPaymentDetailBinding.lnPromoCodeDisclaimer.setVisibility(promocodeValue == 0 ? View.GONE : View.VISIBLE);
-            if (taskDetailModel.taskStatus.equalsIgnoreCase(Utility.TASK_STATUS.COMPLETION_CONFIRM))
-                mActivityPaymentDetailBinding.textLabelTotalPaid.setText(getString(R.string.label_total_paid));
-            else
+            if (paymentSummaryModel.totalAmountStatus.equalsIgnoreCase(Utility.TASK_STATUS.PENDING))
                 mActivityPaymentDetailBinding.textLabelTotalPaid.setText(getString(R.string.label_total_pay));
+            else
+                mActivityPaymentDetailBinding.textLabelTotalPaid.setText(getString(R.string.label_total_paid));
 
             mActivityPaymentDetailBinding.recycleSelectedService.setAdapter(new PaymentSummaryAdapter(paymentSummaryModel.taskUserCategory));
 
@@ -223,7 +253,7 @@ public class PaymentsSummaryStrategicPartnerActivity extends BaseAppCompatActivi
         @Override
         public void onResponse(Object response) {
 //            hideProgressDialog();
-                            showProgressBar(false);/**/
+            showProgressBar(false);/**/
             String strResponse = (String) response;
             try {
                 JSONObject jsonObject = new JSONObject(strResponse);
@@ -280,6 +310,13 @@ public class PaymentsSummaryStrategicPartnerActivity extends BaseAppCompatActivi
 
     @Override
     protected void setListeners() {
+        mActivityPaymentDetailBinding.textPayNow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                isPayNow = true;
+                PaymentChoiceActivity.newInstance(mContext, taskDetailModel);
+            }
+        });
     }
 
     @Override
@@ -289,8 +326,26 @@ public class PaymentsSummaryStrategicPartnerActivity extends BaseAppCompatActivi
 
     @Override
     public void onDestroy() {
+        Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.WS.GET_PAYMENT_SUMMARY);
+        EventBus.getDefault().unregister(this);
         super.onDestroy();
     }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(MessageEvent event) {
+        LogUtils.LOGD(TAG, "onMessageEvent() called with: event = [" + event.BROADCAST_ACTION + "]");
+        switch (event.BROADCAST_ACTION) {
+            case Utility.BROADCAST_TYPE.TASK_PAID_SUCCESSFULLY:
+
+                //Refresh UI for complete status
+                if (isPayNow) {
+                    paymentSummaryModel.totalAmountStatus = Utility.TASK_STATUS.PAID;
+                    setPaymentData();
+                }
+                break;
+        }
+    }
+
 
     class PaymentSummaryAdapter extends RecyclerView.Adapter<PaymentSummaryAdapter.MyViewHolder> {
         private List<PaymentSummaryModel.TaskUserCategory> mList;
@@ -318,6 +373,7 @@ public class PaymentsSummaryStrategicPartnerActivity extends BaseAppCompatActivi
             holder.rowPastTaskBinding.textServiceRate.setText(
                     holder.rowPastTaskBinding.textServiceRate.getContext().getString(R.string.rupee_symbol_x, String.valueOf(Utility.getQuotePriceFormatter(taskUserCategory.userCategoryPrice))));
         }
+
 
         @Override
         public int getItemCount() {
