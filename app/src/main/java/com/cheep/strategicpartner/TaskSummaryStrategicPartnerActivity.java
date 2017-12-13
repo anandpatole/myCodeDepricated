@@ -598,19 +598,19 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
             }
 
 //            if (mTaskDetailModel.paymentStatus.equalsIgnoreCase(Utility.TASK_STATUS.PAID)) {
-            double pendingAmount;
-            try {
-                LogUtils.LOGE(TAG, "showTaskCompletionDialog: taskTotalPendingAmount :: " + mTaskDetailModel.taskTotalPendingAmount);
-                pendingAmount = Double.parseDouble(mTaskDetailModel.taskTotalPendingAmount);
-            } catch (NumberFormatException e) {
-                pendingAmount = 0;
-            }
-            LogUtils.LOGE(TAG, "showTaskCompletionDialog: pendingAmount :: " + pendingAmount);
-            if (pendingAmount > 0) {
-                mActivityTaskSummaryBinding.textTaskCompletionYes.setText(R.string.label_yes_pay_now);
-            } else {
-                mActivityTaskSummaryBinding.textTaskCompletionYes.setText(R.string.label_yes);
-            }
+//            double pendingAmount;
+//            try {
+//                LogUtils.LOGE(TAG, "showTaskCompletionDialog: taskTotalPendingAmount :: " + mTaskDetailModel.taskTotalPendingAmount);
+//                pendingAmount = Double.parseDouble(mTaskDetailModel.taskTotalPendingAmount);
+//            } catch (NumberFormatException e) {
+//                pendingAmount = 0;
+//            }
+//            LogUtils.LOGE(TAG, "showTaskCompletionDialog: pendingAmount :: " + pendingAmount);
+//            if (pendingAmount > 0) {
+//                mActivityTaskSummaryBinding.textTaskCompletionYes.setText(R.string.label_yes_pay_now);
+//            } else {
+//                mActivityTaskSummaryBinding.textTaskCompletionYes.setText(R.string.label_yes);
+//            }
 
             mActivityTaskSummaryBinding.textTaskCompletionYes.setOnClickListener(new View.OnClickListener() {
                 @Override

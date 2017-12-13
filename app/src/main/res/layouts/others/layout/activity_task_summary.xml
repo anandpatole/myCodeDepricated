@@ -801,7 +801,7 @@
                                     android:paddingLeft="@dimen/scale_5dp"
                                     android:paddingRight="@dimen/scale_5dp"
                                     android:paddingTop="@dimen/scale_10dp"
-                                    android:text="@string/label_yes_pay_now"
+                                    android:text="@string/label_yes"
                                     android:textAllCaps="false"
                                     android:textColor="@color/white"
                                     android:textSize="@dimen/text_size_seek_support"/>

@@ -548,19 +548,19 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
             }
 
 //            if (mTaskDetailModel.paymentStatus.equalsIgnoreCase(Utility.TASK_STATUS.PAID)) {
-            double pendingAmount;
-            try {
-                LogUtils.LOGE(TAG, "showTaskCompletionDialog: taskTotalPendingAmount :: " + mTaskDetailModel.taskTotalPendingAmount);
-                pendingAmount = Double.parseDouble(mTaskDetailModel.taskTotalPendingAmount);
-            } catch (NumberFormatException e) {
-                pendingAmount = 0;
-            }
-            LogUtils.LOGE(TAG, "showTaskCompletionDialog: pendingAmount :: " + pendingAmount);
-            if (pendingAmount > 0) {
-                mActivityTaskSummaryBinding.textTaskCompletionYes.setText(R.string.label_yes_pay_now);
-            } else {
-                mActivityTaskSummaryBinding.textTaskCompletionYes.setText(R.string.label_yes);
-            }
+//            double pendingAmount;
+//            try {
+//                LogUtils.LOGE(TAG, "showTaskCompletionDialog: taskTotalPendingAmount :: " + mTaskDetailModel.taskTotalPendingAmount);
+//                pendingAmount = Double.parseDouble(mTaskDetailModel.taskTotalPendingAmount);
+//            } catch (NumberFormatException e) {
+//                pendingAmount = 0;
+//            }
+//            LogUtils.LOGE(TAG, "showTaskCompletionDialog: pendingAmount :: " + pendingAmount);
+//            if (pendingAmount > 0) {
+//                mActivityTaskSummaryBinding.textTaskCompletionYes.setText(R.string.label_yes_pay_now);
+//            } else {
+//                mActivityTaskSummaryBinding.textTaskCompletionYes.setText(R.string.label_yes);
+//            }
 
             mActivityTaskSummaryBinding.textTaskCompletionYes.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -1317,11 +1317,11 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
 //                if (mTaskDetailModel.taskStatus.equalsIgnoreCase(Utility.TASK_STATUS.COMPLETION_REQUEST)) {
 //                    callCompleteTaskWS(Utility.TASK_STATUS.COMPLETION_CONFIRM);
 //                } else {
-                    LogUtils.LOGE(TAG, "onMessageEvent:taskStatus " + event.taskStatus);
-                    mTaskDetailModel.taskStatus = event.taskStatus;
-                    mTaskDetailModel.isAnyAmountPending = Utility.BOOLEAN.NO;
-                    mTaskDetailModel.taskTotalPendingAmount = "0";
-                    setUpTaskDetails(mTaskDetailModel);
+                LogUtils.LOGE(TAG, "onMessageEvent:taskStatus " + event.taskStatus);
+                mTaskDetailModel.taskStatus = event.taskStatus;
+                mTaskDetailModel.isAnyAmountPending = Utility.BOOLEAN.NO;
+                mTaskDetailModel.taskTotalPendingAmount = "0";
+                setUpTaskDetails(mTaskDetailModel);
 //                }
                 break;
         }
