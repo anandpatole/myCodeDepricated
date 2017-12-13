@@ -405,7 +405,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
             mParams.put(NetworkUtility.TAGS.TRANSACTION_ID, Utility.getUniqueTransactionId());
         else
             mParams.put(NetworkUtility.TAGS.TRANSACTION_ID, mTransactionParams.get(HDFCPaymentUtility.TXN_ID));
-        mParams.put(NetworkUtility.TAGS.PAYABLE_AMOUNT, taskDetailModel.taskPaidAmount);
+        mParams.put(NetworkUtility.TAGS.PAYABLE_AMOUNT, taskDetailModel.taskTotalPendingAmount);
         mParams.put(NetworkUtility.TAGS.PAYMENT_LOG, paymentLog);
         mParams.put(NetworkUtility.TAGS.PAYMENT_STATUS, Utility.PAYMENT_STATUS.COMPLETED);
         mParams.put(NetworkUtility.TAGS.PAYMENT_METHOD, paymentMethod);

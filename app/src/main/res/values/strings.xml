@@ -575,7 +575,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="validate_address_initials">Please enter valid HouseNo/FlatNo</string>
     <string name="label_pay_later">Pay Later</string>
     <string name="book_a_similar_task">Book a similar task</string>
-    <string name="description_pay_now">Recommended if you are busy or travelling and may now have the time to pay later, or if you want to gift this service to your family or friends and don\'t want them to pay</string>
+    <string name="description_pay_now">Recommended if you are busy or travelling and may not have the time to pay later, or if you want to gift this service to your family or friends and don\'t want them to pay</string>
     <string name="description_pay_later">Recommended only if you wish to pay after you avail the service. Payment will have to be made immediately to our PRO on completion of the task.</string>
 
     <string name="label_paid">Paid</string>
