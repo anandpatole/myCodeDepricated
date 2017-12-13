@@ -123,11 +123,10 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
         isPayNow = getIntent().getBooleanExtra(Utility.Extra.IS_PAY_NOW, false);
 
 
-        if (taskDetailModel != null && (taskDetailModel.taskStatus.equalsIgnoreCase(Utility.TASK_STATUS.PROCESSING) ||
-                taskDetailModel.taskStatus.equalsIgnoreCase(Utility.TASK_STATUS.COMPLETION_REQUEST)))
-        mActivityPaymentChoiceBinding.llCashPayment.setVisibility(View.VISIBLE);
+        if (taskDetailModel != null && taskDetailModel.taskStatus.equalsIgnoreCase(Utility.TASK_STATUS.PENDING))
+            mActivityPaymentChoiceBinding.llCashPayment.setVisibility(View.GONE);
         else
-        mActivityPaymentChoiceBinding.llCashPayment.setVisibility(View.GONE);
+            mActivityPaymentChoiceBinding.llCashPayment.setVisibility(View.VISIBLE);
 
         mActivityPaymentChoiceBinding.tvPaytmLinkAccount.setText(getString(R.string.label_link_x, getString(R.string.label_account)));
         setupActionbar();
