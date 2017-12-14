@@ -777,6 +777,7 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
                     providerModel.experience = instaBookingProDetail.experience;
                     providerModel.spWithoutGstQuotePrice = instaBookingProDetail.rate;
                     providerModel.rating = instaBookingProDetail.rating;
+                    taskDetailModel.taskStatus= Utility.TASK_STATUS.PENDING;
                     PaymentDetailsActivity.newInstance(TaskCreationActivity.this, taskDetailModel, providerModel, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel);
 
                     //Log.i("myLog", "tasks:"+mJobCategoryModel.catName+"::"+mSelectedSubServiceDetailModel.name+"::"+mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mAddress);

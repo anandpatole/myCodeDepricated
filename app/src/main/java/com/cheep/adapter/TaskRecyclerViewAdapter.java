@@ -36,6 +36,7 @@ import com.cheep.model.BannerImageModel;
 import com.cheep.model.JobCategoryModel;
 import com.cheep.model.MessageEvent;
 import com.cheep.model.TaskDetailModel;
+import com.cheep.network.NetworkUtility;
 import com.cheep.strategicpartner.model.ServiceTaskDetailModel;
 import com.cheep.utils.LoadMoreSwipeRecyclerAdapter;
 import com.cheep.utils.SuperCalendar;
@@ -501,6 +502,14 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
 
                 if (model.selectedProvider != null) {
                     Utility.showCircularImageViewWithColorBorder(holder.mRowTaskBinding.imgProfile.getContext(), TAG, holder.mRowTaskBinding.imgProfile, model.selectedProvider.profileUrl, Utility.DEFAULT_CHEEP_LOGO, R.color.grey_dark_color, true);
+                    //experience
+                    if (TextUtils.isEmpty(model.selectedProvider.experience)
+                            || Utility.ZERO_STRING.equals(model.selectedProvider.experience)) {
+                        holder.mRowTaskBinding.tvExperience.setText(Utility.checkNonNullAndSet(holder.mRowTaskBinding.tvExperience.getContext().getString(R.string.label_experience_zero)));
+                    } else {
+//            holder.tvExperience.setText(holder.mView.getContext().getResources().getQuantityString(R.plurals.getExperienceString, Integer.parseInt(provider.experience), provider.experience));
+                        holder.mRowTaskBinding.tvExperience.setText(Utility.getExperienceString(model.selectedProvider.experience, "\n"));
+                    }
 
                     holder.mRowTaskBinding.textTaskApprovedQuote.setText(holder.mRowTaskBinding.imgProfile.getContext().getString(R.string.rupee_symbol_x_space, Utility.getActualPrice(model.taskPaidAmount, model.selectedProvider.quotePrice)));
                     if (model.taskType.equalsIgnoreCase(Utility.TASK_TYPE.STRATEGIC)) {
@@ -601,6 +610,18 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
                     holder.mRowTaskBinding.textTaskStatusCompleted.setVisibility(View.VISIBLE);
                     holder.mRowTaskBinding.textTaskStatus.setText("");
                 }
+
+
+                if (!TextUtils.isEmpty(model.paymentMethod)) {
+                    if (model.paymentMethod.equalsIgnoreCase(NetworkUtility.PAYMENT_METHOD_TYPE.PAYTM))
+                        holder.mRowTaskBinding.textPaymentMode.setText(holder.mRowTaskBinding.getRoot().getContext().getString(R.string.lable_via, "Paytm"));
+                    else if (model.paymentMethod.equalsIgnoreCase(NetworkUtility.PAYMENT_METHOD_TYPE.COD))
+                        holder.mRowTaskBinding.textPaymentMode.setText(holder.mRowTaskBinding.getRoot().getContext().getString(R.string.lable_via, "Cash"));
+                    else
+                        holder.mRowTaskBinding.textPaymentMode.setText(holder.mRowTaskBinding.getRoot().getContext().getString(R.string.lable_via, "HDFC"));
+                } else
+                    holder.mRowTaskBinding.textPaymentMode.setText(Utility.EMPTY_STRING);
+
                 holder.mRowTaskBinding.swipeLayout.getSurfaceView().setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -642,6 +663,7 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
                 mItemManger.bindView(holder.itemView, position);
                 break;
             }
+
         }
     }
 
@@ -893,6 +915,7 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
             }
 
         }
+
     }
 
     private String getAllUniqueCategories(List<ServiceTaskDetailModel> list) {

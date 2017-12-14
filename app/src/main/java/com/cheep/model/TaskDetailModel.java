@@ -127,6 +127,8 @@ public class TaskDetailModel {
 
     @SerializedName("is_any_amount_pending")
     public String isAnyAmountPending;
+    @SerializedName("payment_method")
+    public String paymentMethod;
 
 
     public String quoteAmountStrategicPartner;

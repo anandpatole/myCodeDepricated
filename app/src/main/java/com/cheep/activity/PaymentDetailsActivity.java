@@ -1006,7 +1006,8 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
 
             case Utility.BROADCAST_TYPE.TASK_PAID_SUCCESSFULLY:
                 if (payPendingAmount) {
-                    showPaymentSummary();
+//                    showPaymentSummary();
+                    finish();
                 }
                 break;
             case Utility.BROADCAST_TYPE.TASK_PAID_FOR_INSTA_BOOKING:

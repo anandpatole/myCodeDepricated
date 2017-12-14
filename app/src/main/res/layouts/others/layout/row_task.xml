@@ -105,6 +105,17 @@
                     android:progressDrawable="@drawable/rating_bar_selector_payment_detail"
                     android:rating="4"
                     android:stepSize="1"/>
+
+                <com.cheep.custom_view.CFTextViewRegular
+                    android:id="@+id/tvExperience"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/scale_4dp"
+                    android:gravity="center"
+                    android:textColor="@color/grey_varient_8"
+                    android:textSize="@dimen/text_size_11sp"
+                    tools:text="6 Years Experience"/>
+
                 <!--<com.cheep.custom_view.CFTextViewRegular
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -286,9 +297,9 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/ln_description"
+                android:layout_below="@+id/layout_participant_counter"
                 android:layout_marginBottom="@dimen/scale_8dp"
-                android:layout_marginTop="@dimen/scale_12dp"
+                android:layout_marginTop="@dimen/scale_10dp"
                 android:orientation="horizontal">
 
                 <FrameLayout
@@ -343,6 +354,15 @@
                         android:textColor="@color/black"
                         android:textSize="@dimen/text_size_14sp"
                         tools:text="123"/>
+
+                    <com.cheep.custom_view.CFTextViewSemiBold
+                        android:id="@+id/text_payment_mode"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAllCaps="false"
+                        android:textColor="@color/grey_varient_13"
+                        android:textSize="@dimen/text_size_11sp"
+                        tools:text="@string/label_cancelled"/>
 
                     <com.cheep.custom_view.CFTextViewSemiBold
                         android:id="@+id/text_task_status"

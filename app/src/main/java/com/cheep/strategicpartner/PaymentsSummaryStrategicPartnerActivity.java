@@ -121,11 +121,9 @@ public class PaymentsSummaryStrategicPartnerActivity extends BaseAppCompatActivi
                 }
             });
 
-            if (taskDetailModel.isAnyAmountPending.equalsIgnoreCase(Utility.BOOLEAN.YES))
-            {
+            if (taskDetailModel.isAnyAmountPending.equalsIgnoreCase(Utility.BOOLEAN.YES)) {
                 mActivityPaymentDetailBinding.textTitle.setText(R.string.title_booking_confimation);
-            }
-            else{
+            } else {
                 mActivityPaymentDetailBinding.textTitle.setText(R.string.label_payment_summary);
 
             }
@@ -339,8 +337,9 @@ public class PaymentsSummaryStrategicPartnerActivity extends BaseAppCompatActivi
 
                 //Refresh UI for complete status
                 if (isPayNow) {
-                    paymentSummaryModel.totalAmountStatus = Utility.TASK_STATUS.PAID;
-                    setPaymentData();
+//                    paymentSummaryModel.totalAmountStatus = Utility.TASK_STATUS.PAID;
+//                    setPaymentData();
+                    finish();
                 }
                 break;
         }
