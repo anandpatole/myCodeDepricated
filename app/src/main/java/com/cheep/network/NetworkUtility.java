@@ -56,7 +56,7 @@ public class NetworkUtility {
 
         public static final String REPORT_SP = BASE_URL + "customers/sp_profile/report_abuse";
         public static final String TASK_DETAIL = BASE_URL + "customers/tasks/task_details";
-//        public static final String TASK_DETAIL = BASE_URL + "customers/tasks/new_task_details";
+        //        public static final String TASK_DETAIL = BASE_URL + "customers/tasks/new_task_details";
 //        http://35.154.147.32/admin/v10/customers/tasks/new_task_details
         public static final String PENDING_TASK = BASE_URL + "customers/tasks/my_pending_tasks";
         public static final String PAST_TASK = BASE_URL + "customers/tasks/my_past_tasks_list";
@@ -390,6 +390,8 @@ public class NetworkUtility {
         String SUB_SUB_CAT_ID = "sub_sub_cat_id";
         String QUESTION_ID = "question_id";
         String ANSWER = "answer";
+        String PRO_PAYMENT_STATUS = "pro_payment_status";
+        String ADDITIONAL_PENDING_AMOUNT = "additional_pending_amount";
 
         interface VERSION_CHANGE_TYPE {
             int NORMAL = 0;

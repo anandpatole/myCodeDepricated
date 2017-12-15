@@ -141,6 +141,9 @@ public class TaskDetailModel {
     @SerializedName("minimum_selection")
     public String minimumSelection;
 
+    public PaymentSummaryModel paymentSummaryModel;
+
+
     public TaskDetailModel() {
 
     }

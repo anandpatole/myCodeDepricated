@@ -503,12 +503,19 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
                 if (model.selectedProvider != null) {
                     Utility.showCircularImageViewWithColorBorder(holder.mRowTaskBinding.imgProfile.getContext(), TAG, holder.mRowTaskBinding.imgProfile, model.selectedProvider.profileUrl, Utility.DEFAULT_CHEEP_LOGO, R.color.grey_dark_color, true);
                     //experience
-                    if (TextUtils.isEmpty(model.selectedProvider.experience)
-                            || Utility.ZERO_STRING.equals(model.selectedProvider.experience)) {
-                        holder.mRowTaskBinding.tvExperience.setText(Utility.checkNonNullAndSet(holder.mRowTaskBinding.tvExperience.getContext().getString(R.string.label_experience_zero)));
+
+                    if (model.taskType.equalsIgnoreCase(Utility.TASK_TYPE.STRATEGIC)) {
+                        holder.mRowTaskBinding.tvExperience.setVisibility(View.GONE);
                     } else {
+                        holder.mRowTaskBinding.tvExperience.setVisibility(View.VISIBLE);
+
+                        if (TextUtils.isEmpty(model.selectedProvider.experience)
+                                || Utility.ZERO_STRING.equals(model.selectedProvider.experience)) {
+                            holder.mRowTaskBinding.tvExperience.setText(Utility.checkNonNullAndSet(holder.mRowTaskBinding.tvExperience.getContext().getString(R.string.label_experience_zero)));
+                        } else {
 //            holder.tvExperience.setText(holder.mView.getContext().getResources().getQuantityString(R.plurals.getExperienceString, Integer.parseInt(provider.experience), provider.experience));
-                        holder.mRowTaskBinding.tvExperience.setText(Utility.getExperienceString(model.selectedProvider.experience, "\n"));
+                            holder.mRowTaskBinding.tvExperience.setText(Utility.getExperienceString(model.selectedProvider.experience, "\n"));
+                        }
                     }
 
                     holder.mRowTaskBinding.textTaskApprovedQuote.setText(holder.mRowTaskBinding.imgProfile.getContext().getString(R.string.rupee_symbol_x_space, Utility.getActualPrice(model.taskPaidAmount, model.selectedProvider.quotePrice)));

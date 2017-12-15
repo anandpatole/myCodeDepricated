@@ -226,7 +226,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
                 callCreateStrategicPartnerTaskWS(paymentLog);
             }
         } else
-            callPaymentForNormalOrInstaTaskWS(paymentLog);
+            callPayTaskPaymentWS(paymentLog);
     }
 
 
@@ -385,7 +385,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
         }
     }
 
-    private void callPaymentForNormalOrInstaTaskWS(String paymentLog) {
+    private void callPayTaskPaymentWS(String paymentLog) {
         if (!Utility.isConnected(mContext)) {
             Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityPaymentChoiceBinding.getRoot());
             return;
@@ -410,6 +410,13 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
         mParams.put(NetworkUtility.TAGS.PAYMENT_STATUS, Utility.PAYMENT_STATUS.COMPLETED);
         mParams.put(NetworkUtility.TAGS.PAYMENT_METHOD, paymentMethod);
         mParams.put(NetworkUtility.TAGS.TASK_ID, taskDetailModel.taskId);
+
+        mParams.put(NetworkUtility.TAGS.PRO_PAYMENT_STATUS, taskDetailModel.paymentSummaryModel.proPaymentStatus);
+        mParams.put(NetworkUtility.TAGS.ADDITIONAL_PENDING_AMOUNT,
+                TextUtils.isEmpty(taskDetailModel.paymentSummaryModel.additionalPendingAmount)
+                        ? Utility.ZERO_STRING :
+                        taskDetailModel.paymentSummaryModel.additionalPendingAmount);
+
         // Url is based on condition if address id is greater then 0 then it means we need to update the existing address
         VolleyNetworkRequest mVolleyNetworkRequestForSPList = new VolleyNetworkRequest(NetworkUtility.WS.PAY_TASK_PAYMENT
                 , mCallCompleteTaskWSErrorListener

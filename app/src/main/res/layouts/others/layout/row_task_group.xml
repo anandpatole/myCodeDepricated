@@ -114,7 +114,8 @@
 
                     <com.cheep.custom_view.CFTextViewSemiBold
                         android:id="@+id/text_category_name"
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
+                        android:layout_marginRight="@dimen/scale_23dp"
                         android:layout_height="wrap_content"
                         android:layout_toRightOf="@+id/img_profile"
                         android:layout_weight="1"
@@ -203,7 +204,7 @@
                         android:id="@+id/text_desc"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="@dimen/scale_10dp"
+                        android:layout_marginRight="@dimen/scale_23dp"
                         android:layout_weight="1.5"
                         android:ellipsize="end"
                         android:lines="2"
@@ -227,7 +228,20 @@
                             android:text="@string/label_completed"
                             android:textColor="@color/task_completed_green"
                             android:textSize="@dimen/text_size_11sp"
-                            android:visibility="visible"/>
+                            android:visibility="gone"/>
+
+                        <com.cheep.custom_view.CFTextViewRegular
+                            android:id="@+id/text_task_status_elapsed"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:drawableLeft="@drawable/ic_task_elapsed"
+                            android:drawablePadding="@dimen/scale_5dp"
+                            android:ellipsize="end"
+                            android:lines="1"
+                            android:text="@string/label_lapsed"
+                            android:textColor="@color/task_elapses_red"
+                            android:textSize="@dimen/text_size_11sp"
+                            android:visibility="gone"/>
 
                         <com.cheep.custom_view.CFTextViewRegular
                             android:id="@+id/text_task_status_cancelled"
@@ -243,19 +257,7 @@
                             android:textSize="@dimen/text_size_11sp"
                             android:visibility="gone"/>
 
-                        <com.cheep.custom_view.CFTextViewRegular
-                            android:id="@+id/text_task_status_elapsed"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:drawableLeft="@drawable/ic_task_elapsed"
-                            android:drawablePadding="@dimen/scale_5dp"
-                            android:ellipsize="end"
-                            android:gravity="left"
-                            android:lines="1"
-                            android:text="@string/label_lapsed"
-                            android:textColor="@color/task_elapses_red"
-                            android:textSize="@dimen/text_size_11sp"
-                            android:visibility="gone"/>
+
                     </RelativeLayout>
                 </LinearLayout>
 
@@ -273,7 +275,7 @@
                         android:id="@+id/text_book_similar_task"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="@dimen/scale_10dp"
+                        android:layout_marginRight="@dimen/scale_23dp"
                         android:layout_weight="1.5"
                         android:background="@drawable/rounded_rect_blue"
                         android:gravity="center"

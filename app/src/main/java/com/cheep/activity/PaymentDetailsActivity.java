@@ -167,7 +167,7 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     /**
-     * Call Task Detail web service
+     * Call Payment Detail web service
      */
     private void callPaymentSummaryWS() {
 
@@ -302,7 +302,7 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
             // pro experience
             if (!TextUtils.isEmpty(providerModel.experience))
                 if (Utility.ZERO_STRING.equals(providerModel.experience)) {
-                    mActivityPaymentDetailBinding.textExperience.setText(Utility.checkNonNullAndSet(mContext.getString(R.string.label_experience_zero)));
+                    mActivityPaymentDetailBinding.textExperience.setText(Utility.checkNonNullAndSet(mContext.getString(R.string.label_experience_zero_one_line)));
                 } else {
 //                    mActivityPaymentDetailBinding.textExperience.setText(this.getResources().getQuantityString(R.plurals.getExperienceStringOneLine, Integer.parseInt(providerModel.experience), providerModel.experience));
                     mActivityPaymentDetailBinding.textExperience.setText(Utility.getExperienceString(providerModel.experience, Utility.EMPTY_STRING));
@@ -371,6 +371,7 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     payPendingAmount = true;
+                    taskDetailModel.paymentSummaryModel = paymentSummaryModel;
                     PaymentChoiceActivity.newInstance(mContext, taskDetailModel);
                 }
             });
@@ -381,6 +382,9 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
         return getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(proPaymentAmount));
     }
 
+    /**
+     * When user selects book button
+     */
     private void setUpDetailsForBooking() {
         // Changes are per new flow pay now/later: 15/11/17
 
@@ -437,7 +441,7 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
             // pro experience
             if (!TextUtils.isEmpty(providerModel.experience))
                 if (Utility.ZERO_STRING.equals(providerModel.experience)) {
-                    mActivityPaymentDetailBinding.textExperience.setText(Utility.checkNonNullAndSet(mContext.getString(R.string.label_experience_zero)));
+                    mActivityPaymentDetailBinding.textExperience.setText(Utility.checkNonNullAndSet(mContext.getString(R.string.label_experience_zero_one_line)));
                 } else {
 //                    mActivityPaymentDetailBinding.textExperience.setText(this.getResources().getQuantityString(R.plurals.getExperienceStringOneLine, Integer.parseInt(providerModel.experience), providerModel.experience));
                     mActivityPaymentDetailBinding.textExperience.setText(Utility.getExperienceString(providerModel.experience, Utility.EMPTY_STRING));
