@@ -5,13 +5,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
+import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
+import android.text.style.ImageSpan;
 import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -398,7 +401,18 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
         mActivityPaymentDetailBinding.lnDesclaimer.setVisibility(View.GONE);
         mActivityPaymentDetailBinding.lnPromoCodeDisclaimer.setVisibility(View.GONE);
 
-        mActivityPaymentDetailBinding.textDescPayNow.setText(getString(R.string.description_pay_now) + " " + new String(Character.toChars(0x1F499)));
+        String text = getString(R.string.description_pay_now);
+        StringBuilder description = new StringBuilder(text);
+        // appending two space for two smiley at the end of description
+        description.append("  ");
+        Spannable span = new SpannableString(description);
+        Drawable img = ContextCompat.getDrawable(this, R.drawable.ic_blue_heart);
+        img.setBounds(0, 0, img.getIntrinsicWidth(), img.getIntrinsicHeight());
+        ImageSpan image= new ImageSpan(img, ImageSpan.ALIGN_BOTTOM);
+        span.setSpan(image, span.length() - 1, span.length(), Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
+        mActivityPaymentDetailBinding.textDescPayNow.setText(span);
+
+//        mActivityPaymentDetailBinding.textDescPayNow.setText(getString(R.string.description_pay_now) + " " + new String(Character.toChars(0x1F499)));
 
         if (getIntent().hasExtra(Utility.Extra.DATA_2)) {
             //This is only when provider profile view for specific task (provider gives quote to specific task)
