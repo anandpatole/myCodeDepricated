@@ -36,7 +36,6 @@ import com.cheep.model.BannerImageModel;
 import com.cheep.model.JobCategoryModel;
 import com.cheep.model.MessageEvent;
 import com.cheep.model.TaskDetailModel;
-import com.cheep.network.NetworkUtility;
 import com.cheep.strategicpartner.model.ServiceTaskDetailModel;
 import com.cheep.utils.LoadMoreSwipeRecyclerAdapter;
 import com.cheep.utils.SuperCalendar;
@@ -412,43 +411,35 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
                     }
                     holder.mRowTaskGroupBinding.textTaskResponseStatus.setText(holder.mView.getContext().getString(R.string.label_responses));
                 }
+
                 if (Utility.TASK_STATUS.CANCELLED_CUSTOMER.equalsIgnoreCase(model.taskStatus)) {
                     holder.mRowTaskGroupBinding.lnTaskStatusWithQuote.setVisibility(View.VISIBLE);
-//                    holder.mRowTaskGroupBinding.textTaskApprovedQuote.setVisibility(View.GONE);
-//                    holder.mRowTaskGroupBinding.textTaskStatus.setText(context.getString(R.string.label_cancelled));
-                    holder.mRowTaskGroupBinding.textTaskStatus.setText("");
+                    holder.mRowTaskGroupBinding.textTaskApprovedQuote.setVisibility(View.GONE);
 
-                    holder.mRowTaskGroupBinding.textTaskStatusCancelled.setVisibility(View.VISIBLE);
-                    holder.mRowTaskGroupBinding.textTaskStatusElapsed.setVisibility(View.GONE);
-                    holder.mRowTaskGroupBinding.textTaskStatusCompleted.setVisibility(View.GONE);
+                    holder.mRowTaskGroupBinding.imgIcon.setImageResource(R.drawable.ic_task_cancelled);
+                    holder.mRowTaskGroupBinding.textTaskStatus.setText(R.string.label_cancelled);
+                    holder.mRowTaskGroupBinding.textTaskStatus.setTextColor(ContextCompat.getColor(context, R.color.task_canceled_red));
 
                 } else if (Utility.TASK_STATUS.CANCELLED_SP.equalsIgnoreCase(model.taskStatus)) {
                     holder.mRowTaskGroupBinding.lnTaskStatusWithQuote.setVisibility(View.VISIBLE);
-//                    holder.mRowTaskGroupBinding.textTaskStatus.setText(context.getString(R.string.label_cancelled));
-//                    holder.mRowTaskGroupBinding.textTaskApprovedQuote.setVisibility(View.GONE);
-
-                    holder.mRowTaskGroupBinding.textTaskStatus.setText("");
-                    holder.mRowTaskGroupBinding.textTaskStatusCancelled.setVisibility(View.VISIBLE);
-                    holder.mRowTaskGroupBinding.textTaskStatusElapsed.setVisibility(View.GONE);
-                    holder.mRowTaskGroupBinding.textTaskStatusCompleted.setVisibility(View.GONE);
-
+                    holder.mRowTaskGroupBinding.textTaskApprovedQuote.setVisibility(View.GONE);
+                    holder.mRowTaskGroupBinding.imgIcon.setImageResource(R.drawable.ic_task_cancelled);
+                    holder.mRowTaskGroupBinding.textTaskStatus.setText(R.string.label_cancelled);
+                    holder.mRowTaskGroupBinding.textTaskStatus.setTextColor(ContextCompat.getColor(context, R.color.task_canceled_red));
                 } else if (Utility.TASK_STATUS.ELAPSED.equalsIgnoreCase(model.taskStatus)) {
                     holder.mRowTaskGroupBinding.lnTaskStatusWithQuote.setVisibility(View.VISIBLE);
-//                    holder.mRowTaskGroupBinding.textTaskStatus.setText(context.getString(R.string.label_lapsed));
-//                    holder.mRowTaskGroupBinding.textTaskApprovedQuote.setVisibility(View.GONE);
-                    holder.mRowTaskGroupBinding.textTaskStatus.setText("");
-                    holder.mRowTaskGroupBinding.textTaskStatusCancelled.setVisibility(View.GONE);
-                    holder.mRowTaskGroupBinding.textTaskStatusElapsed.setVisibility(View.VISIBLE);
-                    holder.mRowTaskGroupBinding.textTaskStatusCompleted.setVisibility(View.GONE);
+                    holder.mRowTaskGroupBinding.textTaskApprovedQuote.setVisibility(View.GONE);
+                    holder.mRowTaskGroupBinding.imgIcon.setImageResource(R.drawable.ic_task_elapsed);
+                    holder.mRowTaskGroupBinding.textTaskStatus.setText(R.string.label_lapsed);
+                    holder.mRowTaskGroupBinding.textTaskStatus.setTextColor(ContextCompat.getColor(context, R.color.task_elapses_red));
 
                 } else if (Utility.TASK_STATUS.DISPUTED.equalsIgnoreCase(model.taskStatus)) {
                     holder.mRowTaskGroupBinding.lnTaskStatusWithQuote.setVisibility(View.VISIBLE);
                     holder.mRowTaskGroupBinding.textTaskStatus.setText(context.getString(R.string.label_disputed));
                     holder.mRowTaskGroupBinding.textTaskApprovedQuote.setVisibility(View.GONE);
-
-                    holder.mRowTaskGroupBinding.textTaskStatusCancelled.setVisibility(View.GONE);
-                    holder.mRowTaskGroupBinding.textTaskStatusElapsed.setVisibility(View.GONE);
-                    holder.mRowTaskGroupBinding.textTaskStatusCompleted.setVisibility(View.GONE);
+                    holder.mRowTaskGroupBinding.imgIcon.setImageResource(R.drawable.ic_support_in_progress);
+                    holder.mRowTaskGroupBinding.textTaskStatus.setText(R.string.label_support_in_progress);
+                    holder.mRowTaskGroupBinding.textTaskStatus.setTextColor(ContextCompat.getColor(context, R.color.task_elapses_red));
                 } else {
                     holder.mRowTaskGroupBinding.lnTaskStatusWithQuote.setVisibility(View.GONE);
                 }
@@ -574,60 +565,57 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
 
                 holder.mRowTaskBinding.lnTaskStatusWithQuote.setVisibility(View.VISIBLE);
 
+
+                // cancelled
                 if (Utility.TASK_STATUS.CANCELLED_CUSTOMER.equalsIgnoreCase(model.taskStatus)) {
-//                    holder.mRowTaskBinding.textTaskStatus.setText(context.getString(R.string.label_cancelled));
-                    holder.mRowTaskBinding.textTaskStatusCancelled.setVisibility(View.VISIBLE);
-                    holder.mRowTaskBinding.textTaskStatusElapsed.setVisibility(View.GONE);
-                    holder.mRowTaskBinding.textTaskStatusCompleted.setVisibility(View.GONE);
-
-                } else if (Utility.TASK_STATUS.RESCHEDULE_REQUEST_REJECTED.equalsIgnoreCase(model.taskStatus)) {
-                    holder.mRowTaskBinding.textTaskStatus.setText(context.getString(R.string.label_reschedule_rejected));
-
-//                    holder.mRowTaskBinding.textTaskStatusCancelled.setVisibility(View.VISIBLE);
-//                    holder.mRowTaskBinding.textTaskStatusElapsed.setVisibility(View.VISIBLE);
-//                    holder.mRowTaskBinding.textTaskStatusCompleted.setVisibility(View.VISIBLE);
-
-                } else if (Utility.TASK_STATUS.CANCELLED_SP.equalsIgnoreCase(model.taskStatus)) {
-//                    holder.mRowTaskBinding.textTaskStatus.setText(context.getString(R.string.label_cancelled));
-
-                    holder.mRowTaskBinding.textTaskStatusCancelled.setVisibility(View.VISIBLE);
-                    holder.mRowTaskBinding.textTaskStatusElapsed.setVisibility(View.GONE);
-                    holder.mRowTaskBinding.textTaskStatusCompleted.setVisibility(View.GONE);
-
-                } else if (Utility.TASK_STATUS.DISPUTED.equalsIgnoreCase(model.taskStatus)) {
-                    holder.mRowTaskBinding.textTaskStatus.setText(context.getString(R.string.label_disputed));
-                } else if (Utility.TASK_STATUS.COMPLETION_CONFIRM.equalsIgnoreCase(model.taskStatus)) {
-//                    holder.mRowTaskBinding.textTaskStatus.setText(context.getString(R.string.label_completed));
-
-                    holder.mRowTaskBinding.textTaskStatusCancelled.setVisibility(View.GONE);
-                    holder.mRowTaskBinding.textTaskStatusElapsed.setVisibility(View.GONE);
-                    holder.mRowTaskBinding.textTaskStatusCompleted.setVisibility(View.VISIBLE);
-                } else if (Utility.TASK_STATUS.ELAPSED.equalsIgnoreCase(model.taskStatus)) {
-//                    holder.mRowTaskBinding.textTaskStatus.setText(context.getString(R.string.label_completed));
-
-                    holder.mRowTaskBinding.textTaskStatusCancelled.setVisibility(View.GONE);
-                    holder.mRowTaskBinding.textTaskStatusElapsed.setVisibility(View.VISIBLE);
-                    holder.mRowTaskBinding.textTaskStatusCompleted.setVisibility(View.GONE);
-
+                    holder.mRowTaskBinding.imgIcon.setImageResource(R.drawable.ic_task_cancelled);
+                    holder.mRowTaskBinding.textTaskStatus.setText(R.string.label_cancelled);
+                    holder.mRowTaskBinding.textTaskStatus.setTextColor(ContextCompat.getColor(context, R.color.task_canceled_red));
+                }
+                // reschedule
+                else if (Utility.TASK_STATUS.RESCHEDULE_REQUEST_REJECTED.equalsIgnoreCase(model.taskStatus)) {
+                    holder.mRowTaskBinding.imgIcon.setImageResource(R.drawable.ic_task_reschedule_rejected);
+                    holder.mRowTaskBinding.textTaskStatus.setText(R.string.label_reschedule_rejected);
+                    holder.mRowTaskBinding.textTaskStatus.setTextColor(ContextCompat.getColor(context, R.color.task_canceled_red));
+                }
+                // cancelled
+                else if (Utility.TASK_STATUS.CANCELLED_SP.equalsIgnoreCase(model.taskStatus)) {
+                    holder.mRowTaskBinding.imgIcon.setImageResource(R.drawable.ic_task_cancelled);
+                    holder.mRowTaskBinding.textTaskStatus.setText(R.string.label_cancelled);
+                    holder.mRowTaskBinding.textTaskStatus.setTextColor(ContextCompat.getColor(context, R.color.task_canceled_red));
+                }
+                // disputed
+                else if (Utility.TASK_STATUS.DISPUTED.equalsIgnoreCase(model.taskStatus)) {
+                    holder.mRowTaskBinding.imgIcon.setImageResource(R.drawable.ic_support_in_progress);
+                    holder.mRowTaskBinding.textTaskStatus.setText(R.string.label_support_in_progress);
+                    holder.mRowTaskBinding.textTaskStatus.setTextColor(ContextCompat.getColor(context, R.color.task_elapses_red));
+                }
+                // completion confirm
+                else if (Utility.TASK_STATUS.COMPLETION_CONFIRM.equalsIgnoreCase(model.taskStatus)) {
+                    holder.mRowTaskBinding.imgIcon.setImageResource(R.drawable.ic_task_completed);
+                    holder.mRowTaskBinding.textTaskStatus.setText(R.string.label_completed);
+                    holder.mRowTaskBinding.textTaskStatus.setTextColor(ContextCompat.getColor(context, R.color.task_completed_green));
+                }
+                // lapsed
+                else if (Utility.TASK_STATUS.ELAPSED.equalsIgnoreCase(model.taskStatus)) {
+                    holder.mRowTaskBinding.imgIcon.setImageResource(R.drawable.ic_task_elapsed);
+                    holder.mRowTaskBinding.textTaskStatus.setText(R.string.label_lapsed);
+                    holder.mRowTaskBinding.textTaskStatus.setTextColor(ContextCompat.getColor(context, R.color.task_elapses_red));
                 } else {
-//                    holder.mRowTaskBinding.textTaskStatus.setText(context.getString(R.string.label_completed));
-
-                    holder.mRowTaskBinding.textTaskStatusCancelled.setVisibility(View.GONE);
-                    holder.mRowTaskBinding.textTaskStatusElapsed.setVisibility(View.GONE);
-                    holder.mRowTaskBinding.textTaskStatusCompleted.setVisibility(View.VISIBLE);
-                    holder.mRowTaskBinding.textTaskStatus.setText("");
+                    holder.mRowTaskBinding.imgIcon.setVisibility(View.GONE);
+                    holder.mRowTaskBinding.textTaskStatus.setVisibility(View.GONE);
                 }
 
-
-                if (!TextUtils.isEmpty(model.paymentMethod)) {
-                    if (model.paymentMethod.equalsIgnoreCase(NetworkUtility.PAYMENT_METHOD_TYPE.PAYTM))
-                        holder.mRowTaskBinding.textPaymentMode.setText(holder.mRowTaskBinding.getRoot().getContext().getString(R.string.lable_via, "Paytm"));
-                    else if (model.paymentMethod.equalsIgnoreCase(NetworkUtility.PAYMENT_METHOD_TYPE.COD))
-                        holder.mRowTaskBinding.textPaymentMode.setText(holder.mRowTaskBinding.getRoot().getContext().getString(R.string.lable_via, "Cash"));
-                    else
-                        holder.mRowTaskBinding.textPaymentMode.setText(holder.mRowTaskBinding.getRoot().getContext().getString(R.string.lable_via, "HDFC"));
-                } else
-                    holder.mRowTaskBinding.textPaymentMode.setText(Utility.EMPTY_STRING);
+//
+//                if (!TextUtils.isEmpty(model.paymentMethod)) {
+//                    if (model.paymentMethod.equalsIgnoreCase(NetworkUtility.PAYMENT_METHOD_TYPE.PAYTM))
+//                        holder.mRowTaskBinding.textPaymentMode.setText(holder.mRowTaskBinding.getRoot().getContext().getString(R.string.lable_via, "Paytm"));
+//                    else if (model.paymentMethod.equalsIgnoreCase(NetworkUtility.PAYMENT_METHOD_TYPE.COD))
+//                        holder.mRowTaskBinding.textPaymentMode.setText(holder.mRowTaskBinding.getRoot().getContext().getString(R.string.lable_via, "Cash"));
+//                    else
+//                        holder.mRowTaskBinding.textPaymentMode.setText(holder.mRowTaskBinding.getRoot().getContext().getString(R.string.lable_via, "HDFC"));
+//                } else
+                holder.mRowTaskBinding.textPaymentMode.setText(model.paymentMethod);
 
                 holder.mRowTaskBinding.swipeLayout.getSurfaceView().setOnClickListener(new View.OnClickListener() {
                     @Override

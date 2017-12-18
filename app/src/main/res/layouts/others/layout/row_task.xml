@@ -251,45 +251,69 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1">
 
-                    <com.cheep.custom_view.CFTextViewRegular
-                        android:id="@+id/text_task_status_completed"
+                    <ImageView
+                        android:id="@+id/imgIcon"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:drawableLeft="@drawable/ic_task_completed"
-                        android:drawablePadding="@dimen/scale_5dp"
-                        android:ellipsize="end"
-                        android:lines="1"
-                        android:text="@string/label_completed"
+                        android:layout_marginRight="@dimen/scale_2dp"
+                        android:layout_marginTop="@dimen/scale_1dp"
+                        tools:src="@drawable/ic_task_completed"/>
+
+                    <com.cheep.custom_view.CFTextViewRegular
+                        android:id="@+id/text_task_status"
+                        android:layout_width="wrap_content"
+                        android:gravity="left"
+                        android:layout_height="wrap_content"
+                        android:layout_toRightOf="@+id/imgIcon"
                         android:textColor="@color/task_completed_green"
                         android:textSize="@dimen/text_size_11sp"
-                        android:visibility="gone"/>
+                        android:visibility="visible"
+                        tools:text="@string/label_reschedule_rejected"/>
+                    <!--
+                                      <com.cheep.custom_view.CFTextViewRegular
+                                          android:id="@+id/text_task_status_elapsed"
+                                          android:layout_width="wrap_content"
+                                          android:layout_height="wrap_content"
+                                          android:drawableLeft="@drawable/ic_task_elapsed"
+                                          android:drawablePadding="@dimen/scale_5dp"
+                                          android:text="@string/label_lapsed"
+                                          android:textColor="@color/task_elapses_red"
+                                          android:textSize="@dimen/text_size_11sp"
+                                          android:visibility="gone"/>
 
-                    <com.cheep.custom_view.CFTextViewRegular
-                        android:id="@+id/text_task_status_elapsed"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:drawableLeft="@drawable/ic_task_elapsed"
-                        android:drawablePadding="@dimen/scale_5dp"
-                        android:ellipsize="end"
-                        android:lines="1"
-                        android:text="@string/label_lapsed"
-                        android:textColor="@color/task_elapses_red"
-                        android:textSize="@dimen/text_size_11sp"
-                        android:visibility="gone"/>
+                                      <com.cheep.custom_view.CFTextViewRegular
+                                          android:id="@+id/text_task_status_cancelled"
+                                          android:layout_width="wrap_content"
+                                          android:layout_height="wrap_content"
+                                          android:drawableLeft="@drawable/ic_task_cancelled"
+                                          android:drawablePadding="@dimen/scale_5dp"
+                                          android:text="@string/label_cancelled"
+                                          android:textColor="@color/task_canceled_red"
+                                          android:textSize="@dimen/text_size_11sp"
+                                          android:visibility="gone"/>
 
-                    <com.cheep.custom_view.CFTextViewRegular
-                        android:id="@+id/text_task_status_cancelled"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:drawableLeft="@drawable/ic_task_cancelled"
-                        android:drawablePadding="@dimen/scale_5dp"
-                        android:ellipsize="end"
-                        android:gravity="left"
-                        android:lines="1"
-                        android:text="@string/label_cancelled"
-                        android:textColor="@color/task_canceled_red"
-                        android:textSize="@dimen/text_size_11sp"
-                        android:visibility="gone"/>
+                                      <com.cheep.custom_view.CFTextViewRegular
+                                          android:id="@+id/text_task_status_Reschedule_rejected"
+                                          android:layout_width="wrap_content"
+                                          android:layout_height="wrap_content"
+                                          android:drawableStart="@drawable/ic_task_reschedule_rejected"
+                                          android:drawableLeft="@drawable/ic_task_reschedule_rejected"
+                                          android:drawablePadding="@dimen/scale_5dp"
+                                          android:text="@string/label_reschedule_rejected"
+                                          android:textColor="@color/task_canceled_red"
+                                          android:textSize="@dimen/text_size_11sp"
+                                          android:visibility="visible"/>
+
+                                      <com.cheep.custom_view.CFTextViewRegular
+                                          android:id="@+id/text_task_status_disputed"
+                                          android:layout_width="wrap_content"
+                                          android:layout_height="wrap_content"
+                                          android:drawableLeft="@drawable/ic_support_in_progress"
+                                          android:drawablePadding="@dimen/scale_5dp"
+                                          android:text="@string/label_support_in_progress"
+                                          android:textColor="@color/task_elapses_red"
+                                          android:textSize="@dimen/text_size_11sp"
+                                          android:visibility="gone"/>-->
 
 
                 </RelativeLayout>
@@ -363,16 +387,16 @@
                         android:textAllCaps="false"
                         android:textColor="@color/grey_varient_13"
                         android:textSize="@dimen/text_size_11sp"
-                        tools:text="@string/label_cancelled"/>
+                        tools:text="@string/label_paytm"/>
 
-                    <com.cheep.custom_view.CFTextViewSemiBold
-                        android:id="@+id/text_task_status"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textAllCaps="false"
-                        android:textColor="@color/grey_varient_13"
-                        android:textSize="@dimen/text_size_11sp"
-                        tools:text="@string/label_cancelled"/>
+                    <!--   <com.cheep.custom_view.CFTextViewSemiBold
+                           android:id="@+id/text_task_status"
+                           android:layout_width="wrap_content"
+                           android:layout_height="wrap_content"
+                           android:textAllCaps="false"
+                           android:textColor="@color/grey_varient_13"
+                           android:textSize="@dimen/text_size_11sp"
+                           tools:text="@string/label_cancelled"/>-->
                 </LinearLayout>
             </LinearLayout>
         </RelativeLayout>

@@ -312,6 +312,7 @@ public class PaymentsSummaryStrategicPartnerActivity extends BaseAppCompatActivi
             @Override
             public void onClick(View v) {
                 isPayNow = true;
+                taskDetailModel.paymentSummaryModel = paymentSummaryModel;
                 PaymentChoiceActivity.newInstance(mContext, taskDetailModel);
             }
         });

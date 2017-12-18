@@ -408,7 +408,7 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
         Spannable span = new SpannableString(description);
         Drawable img = ContextCompat.getDrawable(this, R.drawable.ic_blue_heart);
         img.setBounds(0, 0, img.getIntrinsicWidth(), img.getIntrinsicHeight());
-        ImageSpan image= new ImageSpan(img, ImageSpan.ALIGN_BOTTOM);
+        ImageSpan image = new ImageSpan(img, ImageSpan.ALIGN_BOTTOM);
         span.setSpan(image, span.length() - 1, span.length(), Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
         mActivityPaymentDetailBinding.textDescPayNow.setText(span);
 
@@ -1023,6 +1023,7 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
                 break;
 
             case Utility.BROADCAST_TYPE.TASK_PAID_SUCCESSFULLY:
+                LogUtils.LOGE(TAG, "onMessageEvent: payPendingAmount " + payPendingAmount);
                 if (payPendingAmount) {
 //                    showPaymentSummary();
                     finish();

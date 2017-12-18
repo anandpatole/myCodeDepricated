@@ -115,8 +115,8 @@
                     <com.cheep.custom_view.CFTextViewSemiBold
                         android:id="@+id/text_category_name"
                         android:layout_width="wrap_content"
-                        android:layout_marginRight="@dimen/scale_23dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginRight="@dimen/scale_23dp"
                         android:layout_toRightOf="@+id/img_profile"
                         android:layout_weight="1"
                         android:ellipsize="end"
@@ -212,50 +212,30 @@
                         android:textColor="@color/black"
                         android:textSize="@dimen/text_size_11sp"/>
 
+
                     <RelativeLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1">
 
-                        <com.cheep.custom_view.CFTextViewRegular
-                            android:id="@+id/text_task_status_completed"
+                        <ImageView
+                            android:id="@+id/imgIcon"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:drawableLeft="@drawable/ic_task_completed"
-                            android:drawablePadding="@dimen/scale_5dp"
-                            android:ellipsize="end"
-                            android:lines="1"
-                            android:text="@string/label_completed"
+                            android:layout_marginRight="@dimen/scale_2dp"
+                            android:layout_marginTop="@dimen/scale_1dp"
+                            tools:src="@drawable/ic_task_completed"/>
+
+                        <com.cheep.custom_view.CFTextViewRegular
+                            android:id="@+id/text_task_status"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_toRightOf="@+id/imgIcon"
+                            android:gravity="left"
                             android:textColor="@color/task_completed_green"
                             android:textSize="@dimen/text_size_11sp"
-                            android:visibility="gone"/>
-
-                        <com.cheep.custom_view.CFTextViewRegular
-                            android:id="@+id/text_task_status_elapsed"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:drawableLeft="@drawable/ic_task_elapsed"
-                            android:drawablePadding="@dimen/scale_5dp"
-                            android:ellipsize="end"
-                            android:lines="1"
-                            android:text="@string/label_lapsed"
-                            android:textColor="@color/task_elapses_red"
-                            android:textSize="@dimen/text_size_11sp"
-                            android:visibility="gone"/>
-
-                        <com.cheep.custom_view.CFTextViewRegular
-                            android:id="@+id/text_task_status_cancelled"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:drawableLeft="@drawable/ic_task_cancelled"
-                            android:drawablePadding="@dimen/scale_5dp"
-                            android:ellipsize="end"
-                            android:gravity="left"
-                            android:lines="1"
-                            android:text="@string/label_cancelled"
-                            android:textColor="@color/task_canceled_red"
-                            android:textSize="@dimen/text_size_11sp"
-                            android:visibility="gone"/>
+                            android:visibility="visible"
+                            tools:text="@string/label_reschedule_rejected"/>
 
 
                     </RelativeLayout>
@@ -308,63 +288,63 @@
                                 android:textColor="@color/black"
                                 android:textSize="@dimen/text_size_14sp"
                                 tools:text="123"/>
-
-                            <com.cheep.custom_view.CFTextViewSemiBold
-                                android:id="@+id/text_task_status"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textAllCaps="false"
-                                android:textColor="@color/grey_varient_13"
-                                android:textSize="@dimen/text_size_11sp"
-                                tools:text="@string/label_cancelled"/>
+                            <!--
+                                                        <com.cheep.custom_view.CFTextViewSemiBold
+                                                            android:id="@+id/text_task_status"
+                                                            android:layout_width="wrap_content"
+                                                            android:layout_height="wrap_content"
+                                                            android:textAllCaps="false"
+                                                            android:textColor="@color/grey_varient_13"
+                                                            android:textSize="@dimen/text_size_11sp"
+                                                            tools:text="@string/label_cancelled"/>-->
                         </LinearLayout>
                     </FrameLayout>
                 </LinearLayout>
 
 
-<!--
-                <FrameLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_below="@+id/text_desc">
+                <!--
+                                <FrameLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignParentEnd="true"
+                                    android:layout_alignParentRight="true"
+                                    android:layout_below="@+id/text_desc">
 
-                    <LinearLayout
-                        android:id="@+id/ln_task_status_with_quote"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:visibility="gone">
+                                    <LinearLayout
+                                        android:id="@+id/ln_task_status_with_quote"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:orientation="vertical"
+                                        android:visibility="gone">
 
-                        <com.cheep.custom_view.CFTextViewSemiBold
-                            android:id="@+id/text_task_approved_quote"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_horizontal"
-                            android:paddingLeft="@dimen/scale_8dp"
-                            android:paddingRight="@dimen/scale_8dp"
-                            android:paddingTop="@dimen/scale_5dp"
-                            android:textAllCaps="false"
-                            android:textColor="@color/black"
-                            android:textSize="@dimen/text_size_14sp"
-                            tools:text="123"/>
+                                        <com.cheep.custom_view.CFTextViewSemiBold
+                                            android:id="@+id/text_task_approved_quote"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_gravity="center_horizontal"
+                                            android:paddingLeft="@dimen/scale_8dp"
+                                            android:paddingRight="@dimen/scale_8dp"
+                                            android:paddingTop="@dimen/scale_5dp"
+                                            android:textAllCaps="false"
+                                            android:textColor="@color/black"
+                                            android:textSize="@dimen/text_size_14sp"
+                                            tools:text="123"/>
 
-                        <com.cheep.custom_view.CFTextViewSemiBold
-                            android:id="@+id/text_task_status"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:paddingBottom="@dimen/scale_5dp"
-                            android:paddingLeft="@dimen/scale_8dp"
-                            android:paddingRight="@dimen/scale_8dp"
-                            android:paddingTop="@dimen/scale_3dp"
-                            android:text="@string/label_cancelled"
-                            android:textAllCaps="false"
-                            android:textColor="@color/grey_varient_13"
-                            android:textSize="@dimen/text_size_11sp"/>
-                    </LinearLayout>
-                </FrameLayout>
--->
+                                        <com.cheep.custom_view.CFTextViewSemiBold
+                                            android:id="@+id/text_task_status"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:paddingBottom="@dimen/scale_5dp"
+                                            android:paddingLeft="@dimen/scale_8dp"
+                                            android:paddingRight="@dimen/scale_8dp"
+                                            android:paddingTop="@dimen/scale_3dp"
+                                            android:text="@string/label_cancelled"
+                                            android:textAllCaps="false"
+                                            android:textColor="@color/grey_varient_13"
+                                            android:textSize="@dimen/text_size_11sp"/>
+                                    </LinearLayout>
+                                </FrameLayout>
+                -->
             </RelativeLayout>
 
             <!--<RelativeLayout
