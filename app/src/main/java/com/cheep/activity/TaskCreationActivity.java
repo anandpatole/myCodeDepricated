@@ -811,7 +811,6 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
             FirebaseHelper.getTaskRef(chatTaskModel.taskId).setValue(chatTaskModel);
         }
 
-
         String message = mContext.getString(R.string.desc_task_creation_acknowledgement
                 , PreferenceUtility.getInstance(mContext).getUserDetails().UserName);
         String title = mContext.getString(R.string.label_your_task_is_posted);

@@ -290,6 +290,10 @@ public class NetworkUtility {
         String DISTANCE = "distance";
         String IS_FAVOURITE = "is_favourite";
         String DATA = "data";
+        //        for closest area
+        String CLOSEST_AREA = "closest_address";
+        String CLOSEST_CATEGORY = "category";
+        String CLOSEST_ADDRESS = "address";
         String WS_ACCESS_KEY = "ws_access_key";
         String USER_ID = "user_id";
         String PAGE_ID = "page_id";
