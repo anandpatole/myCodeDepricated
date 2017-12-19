@@ -24,29 +24,55 @@
 
                 <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="wrap_content">
 
-                    <com.cheep.custom_view.CFTextViewSemiBold
-                        android:id="@+id/text_location"
+                    <RelativeLayout
+                        android:id="@+id/rel_location_action"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:background="@android:color/transparent"
-                        android:drawablePadding="@dimen/scale_5dp"
-                        android:drawableRight="@drawable/icon_drop_down_blue"
-                        android:gravity="center"
-                        android:lines="1"
-                        android:maxLines="1"
-                        android:paddingBottom="@dimen/scale_10dp"
-                        android:paddingRight="@dimen/scale_10dp"
-                        android:paddingTop="@dimen/scale_10dp"
-                        android:singleLine="true"
-                        android:textAllCaps="false"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/toolbar_title_text_size"
-                        android:transitionName="@string/transition_location"
-                        tools:ignore="UnusedAttribute"
-                        tools:text="@string/dummy_name" />
+                        android:layout_height="@dimen/scale_60dp"
+                        android:layout_gravity="center|center_vertical"
+                        android:paddingBottom="@dimen/scale_5dp"
+                        android:paddingLeft="@dimen/scale_25dp"
+                        android:paddingRight="@dimen/scale_40dp"
+                        android:paddingTop="@dimen/scale_12dp"
+                        android:visibility="visible">
+
+                        <ImageView
+                            android:id="@+id/img_location"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_margin="@dimen/scale_10dp"
+                            android:layout_marginEnd="@dimen/scale_6dp"
+                            android:layout_marginRight="@dimen/scale_25dp"
+                            android:drawablePadding="@dimen/scale_15dp"
+                            android:src="@drawable/ab_pick_location"
+                            tools:ignore="ContentDescription" />
+
+                        <com.cheep.custom_view.CFTextViewSemiBold
+                            android:id="@+id/text_location"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_toEndOf="@+id/img_location"
+                            android:layout_toRightOf="@+id/img_location"
+                            android:background="@android:color/transparent"
+                            android:drawablePadding="@dimen/scale_15dp"
+                            android:drawableRight="@drawable/icon_drop_down_blue"
+                            android:gravity="center"
+                            android:lines="1"
+                            android:maxLines="1"
+                            android:paddingBottom="@dimen/scale_10dp"
+                            android:paddingRight="@dimen/scale_8dp"
+                            android:paddingTop="@dimen/scale_6dp"
+                            android:singleLine="true"
+                            android:textAllCaps="false"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/toolbar_title_text_size"
+                            android:transitionName="@string/transition_location"
+                            tools:ignore="UnusedAttribute"
+                            tools:text="@string/dummy_name" />
+                    </RelativeLayout>
 
                     <RelativeLayout
                         android:id="@+id/rel_notification_action"
@@ -61,7 +87,6 @@
                             android:id="@+id/img_notification"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/scale_5dp"
                             android:src="@drawable/icon_notification"
                             tools:ignore="ContentDescription" />
 

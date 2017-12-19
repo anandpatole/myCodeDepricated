@@ -285,6 +285,10 @@ public class NetworkUtility {
         String DISTANCE = "distance";
         String IS_FAVOURITE = "is_favourite";
         String DATA = "data";
+        //        for closest area
+        String CLOSEST_AREA = "closest_address";
+        String CLOSEST_CATEGORY = "category";
+        String CLOSEST_ADDRESS = "address";
         String WS_ACCESS_KEY = "ws_access_key";
         String USER_ID = "user_id";
         String PAGE_ID = "page_id";
@@ -380,8 +384,8 @@ public class NetworkUtility {
         String AMOUNT = "amount";
         public static final String REFER_COUNT = "refer_count";
         String PAYTM_RESPONSE_DATA = "paytmResponseData";
-        String PAYMENT_GATEWAY_DATA= "paymentGatewayData";
-        String ACCESS_TOKEN_EXPIRES_TIMESTAMP= "access_token_expires_timestamp";
+        String PAYMENT_GATEWAY_DATA = "paymentGatewayData";
+        String ACCESS_TOKEN_EXPIRES_TIMESTAMP = "access_token_expires_timestamp";
 
         interface VERSION_CHANGE_TYPE {
             int NORMAL = 0;

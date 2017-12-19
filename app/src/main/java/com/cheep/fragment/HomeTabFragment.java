@@ -309,8 +309,13 @@ public class HomeTabFragment extends BaseFragment {
         mFragmentTabHomeBinding.swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                if (PreferenceUtility.getInstance(mContext).getGuestUserDetails() != null
+                        || PreferenceUtility.getInstance(mContext).getUserDetails() != null) {
+                    mFragmentTabHomeBinding.swipeRefreshLayout.setRefreshing(false);
+                    return;
+                }
                 // Fetch Only Category List from server
-                getBannerImageListFromServer();
+                getCategoryListFromServer();
             }
         });
         Utility.setSwipeRefreshLayoutColors(mFragmentTabHomeBinding.swipeRefreshLayout);
@@ -337,7 +342,6 @@ public class HomeTabFragment extends BaseFragment {
             switch (view.getId()) {
 
                 case text_search:
-
                     if (homeTabRecyclerViewAdapter != null) {
                         sharedElementTransitionHelper = new SharedElementTransitionHelper(getActivity());
                         sharedElementTransitionHelper.put(mFragmentTabHomeBinding.textSearch, R.string.transition_text_search);
@@ -346,11 +350,9 @@ public class HomeTabFragment extends BaseFragment {
 
                     break;
                 case R.id.text_location:
-
                     Intent intent = new Intent(mContext, SelectLocationActivity.class);
                     startActivityForResult(intent, Utility.REQUEST_CODE_CHANGE_LOCATION);
                     ((AppCompatActivity) mContext).overridePendingTransition(0, 0);
-
                     break;
                 case R.id.rel_notification_action:
                     if (mNotificationClickInteractionListener != null) {
@@ -490,6 +492,7 @@ public class HomeTabFragment extends BaseFragment {
                                 ? mLocationIno.City
                                 : mLocationIno.Locality);
                         if (PreferenceUtility.getInstance(mContext).getUserDetails() != null) {
+                            Log.v("in if condition", "update location");
                             updateLocationForLoggedInUser(mLocationIno);
                         }
                     }
@@ -561,6 +564,10 @@ public class HomeTabFragment extends BaseFragment {
                         userDetails.mCountry = jsonData.optString(NetworkUtility.TAGS.COUNTRY);
                         userDetails.mLocality = jsonData.optString(NetworkUtility.TAGS.LOCALITY);
                         PreferenceUtility.getInstance(mContext).saveUserDetails(userDetails);
+
+//                       Beenal - For Category listing update after the location update.
+                        // Call Category listing webservice.
+                        getCategoryListFromServer();
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
 //                        mFragmentTabHomeBinding.textLocation.setText(tempCityName);
@@ -593,7 +600,6 @@ public class HomeTabFragment extends BaseFragment {
         @Override
         public void onErrorResponse(VolleyError error) {
             Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
-
             // Show Toast
 //            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mFragmentTabHomeBinding.getRoot());
         }
@@ -611,9 +617,7 @@ public class HomeTabFragment extends BaseFragment {
         /*if (PreferenceUtility.getInstance(mContext).getUserDetails() == null) {
             return;
         }*/
-        if (mContext == null)
-            return;
-        ((HomeActivity) mContext).isReadyToLoad = true;
+        ((HomeActivity) getActivity()).isReadyToLoad = true;
 
         if (!Utility.isConnected(mContext)) {
             errorLoadingHelper.failed(Utility.NO_INTERNET_CONNECTION, 0, onRetryBtnClickListener);
@@ -824,6 +828,18 @@ public class HomeTabFragment extends BaseFragment {
                             PreferenceUtility.getInstance(mContext).saveGuestUserDetails(mGuestUserDetails);
                         }
 
+//                       Condition for changing the location icon
+                        Log.v("Closest Area", jsonObject.optString(NetworkUtility.TAGS.CLOSEST_AREA).toString());
+                        if (jsonObject.optString(NetworkUtility.TAGS.CLOSEST_AREA).toString().equals("[]") || jsonObject.optString(NetworkUtility.TAGS.CLOSEST_AREA).toString().equals("null") || TextUtils.isEmpty(jsonObject.optString(NetworkUtility.TAGS.CLOSEST_AREA).toString())) {
+                            String Category = "";
+                            Log.v("Closest Area", Category);
+                            updateLogoSuccess(Category);
+                        } else {
+                            String Category = "";
+                            Category = jsonObject.getJSONObject(NetworkUtility.TAGS.CLOSEST_AREA).getString(NetworkUtility.TAGS.CLOSEST_CATEGORY);
+                            Log.v("Closest Area", Category);
+                            updateLogoSuccess(Category);
+                        }
                         ArrayList<JobCategoryModel> list;
                         list = Utility.getObjectListFromJsonString(jsonObject.optString(NetworkUtility.TAGS.DATA), JobCategoryModel[].class);
 
@@ -872,6 +888,20 @@ public class HomeTabFragment extends BaseFragment {
             }
         }
     };
+
+    private void updateLogoSuccess(String category) {
+        Log.d(TAG, "updateLogoSuccess() called with: LogoCategory = [" + category + "]");
+
+        if (category.equalsIgnoreCase("home")) {
+            mFragmentTabHomeBinding.imgLocation.setImageDrawable(getResources().getDrawable(R.drawable.ab_home));
+        } else if (category.equalsIgnoreCase("office")) {
+            mFragmentTabHomeBinding.imgLocation.setImageDrawable(getResources().getDrawable(R.drawable.ab_office));
+        } else if (category.equalsIgnoreCase("other")) {
+            mFragmentTabHomeBinding.imgLocation.setImageDrawable(getResources().getDrawable(R.drawable.ab_other));
+        } else {
+            mFragmentTabHomeBinding.imgLocation.setImageDrawable(getResources().getDrawable(R.drawable.ab_pick_location));
+        }
+    }
 
     Response.ErrorListener mCallCategoryListWSErrorListener = new Response.ErrorListener() {
         @Override
