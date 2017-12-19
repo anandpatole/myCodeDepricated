@@ -263,7 +263,7 @@
                         android:paddingLeft="@dimen/scale_4dp"
                         android:paddingRight="@dimen/scale_4dp"
                         android:paddingTop="@dimen/scale_5dp"
-                        android:text="Book a similar task"
+                        android:text="@string/label_book_a_similar_task"
                         android:textColor="@color/white"
                         android:textSize="@dimen/text_size_seek_support"/>
 

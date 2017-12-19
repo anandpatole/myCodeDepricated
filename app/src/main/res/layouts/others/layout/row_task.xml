@@ -151,7 +151,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:ellipsize="end"
-                        android:lines="1"
+                        android:maxLines="2"
                         android:textAllCaps="false"
                         android:textColor="@color/splash_gradient_end"
                         android:textSize="@dimen/text_size_14sp"
@@ -212,6 +212,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/top_row"
+                android:layout_marginTop="@dimen/scale_2dp"
                 android:layout_marginLeft="@dimen/scale_16dp"
                 android:layout_toRightOf="@+id/layout_participant_counter"
                 android:layout_weight="1"
@@ -355,7 +356,7 @@
                     android:paddingLeft="@dimen/scale_4dp"
                     android:paddingRight="@dimen/scale_4dp"
                     android:paddingTop="@dimen/scale_5dp"
-                    android:text="@string/book_a_similar_task"
+                    android:text="@string/label_book_a_similar_task"
                     android:textColor="@color/white"
                     android:textSize="@dimen/text_size_seek_support"/>
 

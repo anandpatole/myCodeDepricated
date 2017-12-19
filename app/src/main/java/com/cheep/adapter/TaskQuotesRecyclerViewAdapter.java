@@ -116,7 +116,7 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
         SpannableString sVerified = null;
         if (provider.isVerified.equalsIgnoreCase(Utility.BOOLEAN.YES)) {
             sVerified = new SpannableString(" " + mContext.getString(R.string.label_verified_pro) + " ");
-            sVerified.setSpan(new RoundedBackgroundSpan(mTagBackgroundColor, mTagTextColor), 0, sVerified.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+            sVerified.setSpan(new RoundedBackgroundSpan(mTagBackgroundColor, mTagTextColor,0), 0, sVerified.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
         }
         holder.tvName.setText(sVerified != null ? TextUtils.concat(sName, " ", sVerified) : sName);
 

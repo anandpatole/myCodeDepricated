@@ -38,6 +38,7 @@ import com.cheep.model.MessageEvent;
 import com.cheep.model.TaskDetailModel;
 import com.cheep.strategicpartner.model.ServiceTaskDetailModel;
 import com.cheep.utils.LoadMoreSwipeRecyclerAdapter;
+import com.cheep.utils.RoundedBackgroundSpan;
 import com.cheep.utils.SuperCalendar;
 import com.cheep.utils.Utility;
 
@@ -229,13 +230,27 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
                     });
 
                     if (model.taskType.equalsIgnoreCase(Utility.TASK_TYPE.STRATEGIC)) {
-                        holder.mUpcomingTaskBinding.tvProviderName.setText(model.categoryName);
+                        SpannableString sName = new SpannableString(Utility.checkNonNullAndSet(model.categoryName));
+                        SpannableString sPartner = null;
+                        sPartner = new SpannableString(" " + context.getString(R.string.label_partner_pro) + " ");
+                        sPartner.setSpan(new RoundedBackgroundSpan(ContextCompat.getColor(context, R.color.splash_gradient_end), ContextCompat.getColor(context, R.color.white), context.getResources().getDimension(R.dimen.text_size_12sp)), 0, sPartner.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+                        holder.mUpcomingTaskBinding.tvProviderName.setText(TextUtils.concat(sName, " ", sPartner));
+                        holder.mUpcomingTaskBinding.imgBadge.setImageResource(R.drawable.ic_silver_badge_partner);
+                        holder.mUpcomingTaskBinding.tvVerified.setVisibility(View.GONE);
                         holder.mUpcomingTaskBinding.imgFav.setVisibility(View.GONE);
 
 
                     } else {
-                        holder.mUpcomingTaskBinding.tvProviderName.setText(model.selectedProvider.userName);
+                        SpannableString sName = new SpannableString(Utility.checkNonNullAndSet(model.selectedProvider.userName));
+                        SpannableString sVerified = null;
+                        if (model.selectedProvider.isVerified.equalsIgnoreCase(Utility.BOOLEAN.YES)) {
+                            sVerified = new SpannableString(" " + context.getString(R.string.label_verified_pro) + " ");
+                            sVerified.setSpan(new RoundedBackgroundSpan(ContextCompat.getColor(context, R.color.splash_gradient_end), ContextCompat.getColor(context, R.color.white), context.getResources().getDimension(R.dimen.text_size_12sp)), 0, sVerified.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+                        }
+                        holder.mUpcomingTaskBinding.tvProviderName.setText(sVerified != null ? TextUtils.concat(sName, " ", sVerified) : sName);
+                        holder.mUpcomingTaskBinding.tvVerified.setVisibility(View.GONE);
                         holder.mUpcomingTaskBinding.imgFav.setVisibility(View.VISIBLE);
+
                         if (Utility.BOOLEAN.YES.equals(model.selectedProvider.isFavourite))
                             holder.mUpcomingTaskBinding.imgFav.setSelected(true);
                         else
@@ -252,7 +267,7 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
 
                     if (model.taskType.equalsIgnoreCase(Utility.TASK_TYPE.STRATEGIC)) {
                         holder.mUpcomingTaskBinding.imgBadge.setImageResource(R.drawable.ic_silver_badge_partner);
-                        holder.mUpcomingTaskBinding.tvVerified.setVisibility(View.VISIBLE);
+                        holder.mUpcomingTaskBinding.tvVerified.setVisibility(View.GONE);
                         holder.mUpcomingTaskBinding.tvVerified.setText(context.getString(R.string.label_partner));
                     } else {
 
@@ -511,19 +526,30 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
 
                     holder.mRowTaskBinding.textTaskApprovedQuote.setText(holder.mRowTaskBinding.imgProfile.getContext().getString(R.string.rupee_symbol_x_space, Utility.getActualPrice(model.taskPaidAmount, model.selectedProvider.quotePrice)));
                     if (model.taskType.equalsIgnoreCase(Utility.TASK_TYPE.STRATEGIC)) {
-                        holder.mRowTaskBinding.textProviderName.setText(model.categoryName);
-                        holder.mRowTaskBinding.imgBadge.setVisibility(View.INVISIBLE);
-                        holder.mRowTaskBinding.textVerified.setVisibility(View.VISIBLE);
+                        SpannableString sName = new SpannableString(Utility.checkNonNullAndSet(model.categoryName));
+                        SpannableString sPartner = null;
+                        sPartner = new SpannableString(" " + context.getString(R.string.label_partner_pro) + " ");
+                        sPartner.setSpan(new RoundedBackgroundSpan(ContextCompat.getColor(context, R.color.splash_gradient_end), ContextCompat.getColor(context, R.color.white), context.getResources().getDimension(R.dimen.text_size_12sp)), 0, sPartner.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+                        holder.mRowTaskBinding.textProviderName.setText(TextUtils.concat(sName, " ", sPartner));
+                        holder.mRowTaskBinding.imgBadge.setVisibility(View.VISIBLE);
+                        holder.mRowTaskBinding.imgBadge.setImageResource(R.drawable.ic_silver_badge_partner);
+                        holder.mRowTaskBinding.textVerified.setVisibility(View.GONE);
                         holder.mRowTaskBinding.textVerified.setText(context.getString(R.string.label_partner));
                     } else {
                         holder.mRowTaskBinding.imgBadge.setVisibility(View.VISIBLE);
-                        holder.mRowTaskBinding.textProviderName.setText(model.selectedProvider.userName);
-                        holder.mRowTaskBinding.textVerified.setVisibility(View.VISIBLE);
-                        holder.mRowTaskBinding.textVerified.setText(context.getString(R.string.label_verified).toLowerCase());
+                        SpannableString sName = new SpannableString(Utility.checkNonNullAndSet(model.selectedProvider.userName));
+                        SpannableString sVerified = null;
+                        if (model.selectedProvider.isVerified.equalsIgnoreCase(Utility.BOOLEAN.YES)) {
+                            sVerified = new SpannableString(" " + context.getString(R.string.label_verified_pro) + " ");
+                            sVerified.setSpan(new RoundedBackgroundSpan(ContextCompat.getColor(context, R.color.splash_gradient_end), ContextCompat.getColor(context, R.color.white), context.getResources().getDimension(R.dimen.text_size_12sp)), 0, sVerified.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+                        }
+                        holder.mRowTaskBinding.textProviderName.setText(sVerified != null ? TextUtils.concat(sName, " ", sVerified) : sName);
+                        holder.mRowTaskBinding.textVerified.setVisibility(View.GONE);
                         int bagResId = Utility.getProLevelBadge(model.selectedProvider.pro_level);
                         if (bagResId != -1)
                             holder.mRowTaskBinding.imgBadge.setImageResource(bagResId);
                     }
+
                     if (!TextUtils.isEmpty(model.subCategoryName))
                         holder.mRowTaskBinding.textSubCategoryName.setText(model.subCategoryName);
                     else
@@ -531,12 +557,6 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
 
                     holder.mRowTaskBinding.imgProfile.setVisibility(View.VISIBLE);
 
-//                   if (Utility.BOOLEAN.YES.equalsIgnoreCase(model.selectedProvider.isVerified)) {
-//                       holder.mRowTaskBinding.textVerified.setVisibility(View.VISIBLE);
-//                       holder.mRowTaskBinding.textVerified.setText(context.getString(R.string.label_verified).toLowerCase());
-//                   } else {
-//                       holder.mRowTaskBinding.textVerified.setVisibility(View.GONE);
-//                   }
 
                     // Show Rating
                     Utility.showRating(model.selectedProvider.rating, holder.mRowTaskBinding.ratingBar);
@@ -550,12 +570,6 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
                     holder.mRowTaskBinding.textVerified.setVisibility(View.GONE);
                     holder.mRowTaskBinding.textSubCategoryName.setText("");
 
-//                   if (Utility.BOOLEAN.YES.equalsIgnoreCase(model.selectedProvider.isVerified)) {
-//                       holder.mRowTaskBinding.textVerified.setVisibility(View.VISIBLE);
-//                       holder.mRowTaskBinding.textVerified.setText(context.getString(R.string.label_verified).toLowerCase());
-//                   } else {
-//                       holder.mRowTaskBinding.textVerified.setVisibility(View.GONE);
-//                   }
 
                     // Show Rating
                     Utility.showRating("0", holder.mRowTaskBinding.ratingBar);
