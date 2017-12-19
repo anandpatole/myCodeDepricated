@@ -205,7 +205,6 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
                     holder.mUpcomingTaskBinding.layoutIndividualProfile.setVisibility(View.GONE);
                     holder.mUpcomingTaskBinding.layoutGroupProfile.setVisibility(View.VISIBLE);
                     holder.mUpcomingTaskBinding.tvProviderName.setText(model.categoryName);
-                    holder.mUpcomingTaskBinding.tvVerified.setVisibility(View.GONE);
                     holder.mUpcomingTaskBinding.ratingBar.setVisibility(View.GONE);
                     holder.mUpcomingTaskBinding.imgBadge.setVisibility(View.GONE);
                     holder.mUpcomingTaskBinding.tvViewTask.setVisibility(View.GONE);
@@ -236,7 +235,6 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
                         sPartner.setSpan(new RoundedBackgroundSpan(ContextCompat.getColor(context, R.color.splash_gradient_end), ContextCompat.getColor(context, R.color.white), context.getResources().getDimension(R.dimen.text_size_12sp)), 0, sPartner.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
                         holder.mUpcomingTaskBinding.tvProviderName.setText(TextUtils.concat(sName, " ", sPartner));
                         holder.mUpcomingTaskBinding.imgBadge.setImageResource(R.drawable.ic_silver_badge_partner);
-                        holder.mUpcomingTaskBinding.tvVerified.setVisibility(View.GONE);
                         holder.mUpcomingTaskBinding.imgFav.setVisibility(View.GONE);
 
 
@@ -248,7 +246,6 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
                             sVerified.setSpan(new RoundedBackgroundSpan(ContextCompat.getColor(context, R.color.splash_gradient_end), ContextCompat.getColor(context, R.color.white), context.getResources().getDimension(R.dimen.text_size_12sp)), 0, sVerified.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
                         }
                         holder.mUpcomingTaskBinding.tvProviderName.setText(sVerified != null ? TextUtils.concat(sName, " ", sVerified) : sName);
-                        holder.mUpcomingTaskBinding.tvVerified.setVisibility(View.GONE);
                         holder.mUpcomingTaskBinding.imgFav.setVisibility(View.VISIBLE);
 
                         if (Utility.BOOLEAN.YES.equals(model.selectedProvider.isFavourite))
@@ -267,17 +264,7 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
 
                     if (model.taskType.equalsIgnoreCase(Utility.TASK_TYPE.STRATEGIC)) {
                         holder.mUpcomingTaskBinding.imgBadge.setImageResource(R.drawable.ic_silver_badge_partner);
-                        holder.mUpcomingTaskBinding.tvVerified.setVisibility(View.GONE);
-                        holder.mUpcomingTaskBinding.tvVerified.setText(context.getString(R.string.label_partner));
                     } else {
-
-                        if (Utility.BOOLEAN.YES.equalsIgnoreCase(model.selectedProvider.isVerified)) {
-                            holder.mUpcomingTaskBinding.tvVerified.setVisibility(View.VISIBLE);
-                            holder.mUpcomingTaskBinding.tvVerified.setText(context.getString(R.string.label_verified).toLowerCase());
-                        } else {
-                            holder.mUpcomingTaskBinding.tvVerified.setVisibility(View.GONE);
-                        }
-
                         int bagResId = Utility.getProLevelBadge(model.selectedProvider.pro_level);
                         if (bagResId != -1)
                             holder.mUpcomingTaskBinding.imgBadge.setImageResource(bagResId);
@@ -400,15 +387,20 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
 
                 break;
             case VIEW_TYPE_GROUP: {
+
                 superStartDateTimeCalendar.setTimeZone(SuperCalendar.SuperTimeZone.GMT.GMT);
                 superStartDateTimeCalendar.setTimeInMillis(Long.parseLong(model.taskStartdate));
                 superStartDateTimeCalendar.setLocaleTimeZone();
 
-                String date_time = holder.mView.getContext().getString(R.string.format_date_time
-                        , superStartDateTimeCalendar.format(Utility.DATE_FORMAT_DD_MMM)
-                        , superStartDateTimeCalendar.format(Utility.DATE_FORMAT_HH_MM_AM));
+                final String dateTime = superStartDateTimeCalendar.format(Utility.DATE_FORMAT_DD_MMM) + " " + Utility.get2HourTimeSlotsForPastTaskScreen(model.taskStartdate);
 
-                holder.mRowTaskGroupBinding.textDateTime.setText(date_time);
+// old time format for past task
+//                String date_time = holder.mView.getContext().getString(R.string.format_date_time
+//                        , superStartDateTimeCalendar.format(Utility.DATE_FORMAT_DD_MMM)
+//                        , superStartDateTimeCalendar.format(Utility.DATE_FORMAT_HH_MM_AM));
+
+                holder.mRowTaskGroupBinding.textDateTime.setText(dateTime);
+
 
                 holder.mRowTaskGroupBinding.textDesc.setText(model.taskDesc);
                 holder.mRowTaskGroupBinding.textCategoryName.setText(model.categoryName);
@@ -499,10 +491,13 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
                 superStartDateTimeCalendar.setTimeInMillis(Long.parseLong(model.taskStartdate));
                 superStartDateTimeCalendar.setLocaleTimeZone();
 
-                String date_time = holder.mView.getContext().getString(R.string.format_date_time
-                        , superStartDateTimeCalendar.format(Utility.DATE_FORMAT_DD_MMM)
-                        , superStartDateTimeCalendar.format(Utility.DATE_FORMAT_HH_MM_AM));
-                holder.mRowTaskBinding.textDateTime.setText(date_time);
+                final String dateTime = superStartDateTimeCalendar.format(Utility.DATE_FORMAT_DD_MMM) + " " + Utility.get2HourTimeSlotsForPastTaskScreen(model.taskStartdate);
+
+// old time format for past task
+//                String date_time = holder.mView.getContext().getString(R.string.format_date_time
+//                        , superStartDateTimeCalendar.format(Utility.DATE_FORMAT_DD_MMM)
+//                        , superStartDateTimeCalendar.format(Utility.DATE_FORMAT_HH_MM_AM));
+                holder.mRowTaskBinding.textDateTime.setText(dateTime);
 
                 holder.mRowTaskBinding.textDesc.setText(model.taskDesc);
 
@@ -533,8 +528,8 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
                         holder.mRowTaskBinding.textProviderName.setText(TextUtils.concat(sName, " ", sPartner));
                         holder.mRowTaskBinding.imgBadge.setVisibility(View.VISIBLE);
                         holder.mRowTaskBinding.imgBadge.setImageResource(R.drawable.ic_silver_badge_partner);
-                        holder.mRowTaskBinding.textVerified.setVisibility(View.GONE);
-                        holder.mRowTaskBinding.textVerified.setText(context.getString(R.string.label_partner));
+//                        holder.mRowTaskBinding.textVerified.setVisibility(View.GONE);
+//                        holder.mRowTaskBinding.textVerified.setText(context.getString(R.string.label_partner));
                     } else {
                         holder.mRowTaskBinding.imgBadge.setVisibility(View.VISIBLE);
                         SpannableString sName = new SpannableString(Utility.checkNonNullAndSet(model.selectedProvider.userName));
@@ -544,7 +539,7 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
                             sVerified.setSpan(new RoundedBackgroundSpan(ContextCompat.getColor(context, R.color.splash_gradient_end), ContextCompat.getColor(context, R.color.white), context.getResources().getDimension(R.dimen.text_size_12sp)), 0, sVerified.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
                         }
                         holder.mRowTaskBinding.textProviderName.setText(sVerified != null ? TextUtils.concat(sName, " ", sVerified) : sName);
-                        holder.mRowTaskBinding.textVerified.setVisibility(View.GONE);
+//                        holder.mRowTaskBinding.textVerified.setVisibility(View.GONE);
                         int bagResId = Utility.getProLevelBadge(model.selectedProvider.pro_level);
                         if (bagResId != -1)
                             holder.mRowTaskBinding.imgBadge.setImageResource(bagResId);
@@ -567,7 +562,7 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
 
                     holder.mRowTaskBinding.textProviderName.setText("");
                     holder.mRowTaskBinding.imgBadge.setVisibility(View.GONE);
-                    holder.mRowTaskBinding.textVerified.setVisibility(View.GONE);
+//                    holder.mRowTaskBinding.textVerified.setVisibility(View.GONE);
                     holder.mRowTaskBinding.textSubCategoryName.setText("");
 
 

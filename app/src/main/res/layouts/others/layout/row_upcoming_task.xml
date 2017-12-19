@@ -77,7 +77,6 @@
                     android:layout_width="@dimen/chat_profile_layout_width"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="4dp"
-                    android:layout_toRightOf="@+id/img_unread"
                     android:orientation="vertical"
                     android:paddingTop="@dimen/scale_3dp"
                     android:visibility="gone">
@@ -106,7 +105,6 @@
                     android:layout_width="@dimen/chat_profile_layout_width"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="4dp"
-                    android:layout_toRightOf="@+id/img_unread"
                     android:orientation="vertical"
                     android:paddingTop="@dimen/scale_3dp"
                     android:visibility="visible">
@@ -126,51 +124,23 @@
                     android:orientation="vertical"
                     android:paddingRight="@dimen/scale_10dp">
 
-                    <LinearLayout
-                        android:id="@+id/top_row"
+
+                    <com.cheep.custom_view.CFTextViewSemiBold
+                        android:id="@+id/tvProviderName"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_toRightOf="@+id/layout_participant_counter"
-                        android:orientation="horizontal">
+                        android:ellipsize="end"
+                        android:maxLines="2"
+                        android:textAllCaps="false"
+                        android:textColor="@color/splash_gradient_end"
+                        android:textSize="@dimen/text_size_14sp"
+                        tools:text="vlcc dfcvfghfghfghfg ghjghjghj"/>
 
-                        <com.cheep.custom_view.CFTextViewSemiBold
-                            android:id="@+id/tvProviderName"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:ellipsize="end"
-                            android:maxLines="2"
-                            android:textAllCaps="false"
-                            android:textColor="@color/splash_gradient_end"
-                            android:textSize="@dimen/text_size_14sp"
-                            tools:text="vlcc dfcvfghfghfghfg ghjghjghj"/>
-
-                        <com.cheep.custom_view.CFTextViewSemiBold
-                            android:id="@+id/tvVerified"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:layout_marginLeft="@dimen/scale_5dp"
-                            android:background="@drawable/img_blue_rounded"
-                            android:ellipsize="marquee"
-                            android:maxLines="1"
-                            android:paddingBottom="@dimen/scale_3dp"
-                            android:paddingLeft="@dimen/scale_5dp"
-                            android:paddingRight="@dimen/scale_5dp"
-                            android:paddingTop="@dimen/scale_3dp"
-                            android:singleLine="true"
-                            android:textAllCaps="false"
-                            android:textColor="@color/white"
-                            android:textSize="@dimen/text_size_10sp"
-                            android:visibility="visible"
-                            tools:text="@string/label_partner"/>
-                    </LinearLayout>
 
                     <com.cheep.custom_view.CFTextViewRegular
                         android:id="@+id/tvSubCategoryNameStrPart"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
-                        android:layout_below="@+id/top_row"
-                        android:layout_toRightOf="@+id/layout_participant_counter"
                         android:layout_marginTop="@dimen/scale_2dp"
                         android:layout_weight="1"
                         android:ellipsize="end"
@@ -185,8 +155,6 @@
                         android:id="@+id/tvSubCategoryName"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
-                        android:layout_below="@+id/top_row"
-                        android:layout_toRightOf="@+id/layout_participant_counter"
                         android:layout_weight="1"
                         android:ellipsize="end"
                         android:lines="1"
@@ -200,10 +168,8 @@
                         android:id="@+id/tvDesc"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_below="@+id/text_sub_category_name"
                         android:layout_marginBottom="@dimen/scale_8dp"
                         android:layout_marginTop="@dimen/scale_5dp"
-                        android:layout_toRightOf="@+id/layout_participant_counter"
                         android:ellipsize="end"
                         android:gravity="left|top"
                         android:lines="2"
@@ -302,7 +268,6 @@
                         android:id="@+id/ratingBar"
                         android:layout_width="wrap_content"
                         android:layout_height="@dimen/scale_8dp"
-                        android:layout_alignParentRight="true"
                         android:layout_gravity="center"
                         android:isIndicator="true"
                         android:progressDrawable="@drawable/rating_bar_selector_payment_detail"
@@ -382,9 +347,9 @@
                     <com.cheep.custom_view.CFTextViewSemiBold
                         android:id="@+id/tvViewTask"
                         android:layout_width="match_parent"
-                        android:layout_marginTop="@dimen/scale_5dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="bottom"
+                        android:layout_marginTop="@dimen/scale_5dp"
                         android:background="@drawable/img_blue_rounded"
                         android:gravity="center"
                         android:paddingBottom="@dimen/scale_5dp"
