@@ -824,14 +824,17 @@ public class HomeTabFragment extends BaseFragment {
 
 //                       Condition for changing the location icon
                         Log.v("Closest Area", jsonObject.optString(NetworkUtility.TAGS.CLOSEST_AREA).toString());
-                        if (jsonObject.optString(NetworkUtility.TAGS.CLOSEST_AREA).toString().equals("[]") || jsonObject.optString(NetworkUtility.TAGS.CLOSEST_AREA).toString().equals("null") || TextUtils.isEmpty(jsonObject.optString(NetworkUtility.TAGS.CLOSEST_AREA).toString())) {
+                        String cat = jsonObject.optString(NetworkUtility.TAGS.CLOSEST_AREA).toString();
+//                       Condition for changing the location icon
+                        Log.v("Closest Area", jsonObject.optString(NetworkUtility.TAGS.CLOSEST_AREA).toString());
+                        if (cat.equals("{}") || cat.equals("[]") || cat.equals("null") || TextUtils.isEmpty( cat )) {
                             String Category = "";
-                            Log.v("Closest Area", Category);
+                            Log.v("Closest Area if", Category);
                             updateLogoSuccess(Category);
                         } else {
                             String Category = "";
                             Category = jsonObject.getJSONObject(NetworkUtility.TAGS.CLOSEST_AREA).getString(NetworkUtility.TAGS.CLOSEST_CATEGORY);
-                            Log.v("Closest Area", Category);
+                            Log.v("Closest Area else", Category);
                             updateLogoSuccess(Category);
                         }
                         ArrayList<JobCategoryModel> list;
