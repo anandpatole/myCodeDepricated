@@ -107,6 +107,7 @@ public class Utility {
     public static final String FACEBOOK_EMAIL_KEY = "email";
     public static final String FACEBOOK_NAME_KEY = "name";
     public static final String FACEBOOK_FIELDS_KEY = "fields";
+    public static final String NORMAL = "normal";
 
     public static boolean allPermissionGranted(String[] permissions, int[] grantResults) {
         boolean allGranted = true;
@@ -468,6 +469,7 @@ public class Utility {
         String DATE = "date";
         String MODEL = "model";
         String IS_PAY_NOW = "isPayNow";
+        String DYNAMIC_LINK_URI = "DYNAMIC_LINK_URI";
     }
 
 
@@ -537,7 +539,7 @@ public class Utility {
 
         //Redirect user to Home Screen
 //        LoginActivity.newInstance(mContext, isSessionExpire, action);
-        HomeActivity.newInstance(mContext);
+        HomeActivity.newInstance(mContext, null);
     }
 
     //Method to get Device width and height in array, [0] = width, [1] = height

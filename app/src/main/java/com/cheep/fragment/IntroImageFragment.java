@@ -41,7 +41,7 @@ public class IntroImageFragment extends BaseFragment {
                 PreferenceUtility.getInstance(mContext).updateIntroScreenStatus(true);
                 //Start the Login activity
 //                LoginActivity.newInstance(mContext);
-                HomeActivity.newInstance(mContext);
+                HomeActivity.newInstance(mContext, null);
                 getActivity().finish();
             }
         });
