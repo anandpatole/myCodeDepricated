@@ -833,7 +833,7 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
                     intent.putExtra(Utility.Extra.IS_INSTA_BOOKING_TASK, Utility.BOOLEAN.NO.equalsIgnoreCase(taskDetailModel.isPrefedQuote));
                     sendBroadcast(intent);
                 } else {
-                    HomeActivity.newInstance(mContext);
+                    HomeActivity.newInstance(mContext, null);
                 }
             }
         });

@@ -89,6 +89,7 @@ public class BannerImageFragment extends BaseFragment {
                     })
                     .into(img_cover);
 
+            //Click event of banner
             img_cover.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

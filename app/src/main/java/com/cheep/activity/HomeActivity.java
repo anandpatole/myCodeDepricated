@@ -13,6 +13,7 @@ import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.databinding.DataBindingUtil;
 import android.location.Location;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -122,9 +123,12 @@ public class HomeActivity extends BaseAppCompatActivity
      */
     public boolean isReadyToLoad = false;
 
-    public static void newInstance(Context context) {
+    public static void newInstance(Context context, Uri link) {
         Intent intent = new Intent(context, HomeActivity.class);
-//        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        if (link != null) {
+            intent.putExtra(Utility.Extra.DYNAMIC_LINK_URI, link);
+        }
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
     }
 
@@ -137,6 +141,7 @@ public class HomeActivity extends BaseAppCompatActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d(TAG, "onCreate() called with: savedInstanceState = [" + savedInstanceState + "]");
         super.onCreate(savedInstanceState);
 
         /*
@@ -157,7 +162,8 @@ public class HomeActivity extends BaseAppCompatActivity
         mActivityHomeBinding = DataBindingUtil.setContentView(this, R.layout.activity_home);
 
         //For managing notification redirect to job summary
-        onNewIntent(getIntent());
+        if (!getIntent().hasExtra(Utility.Extra.DYNAMIC_LINK_URI))
+            onNewIntent(getIntent());
         initiateUI();
 
         //Register BroadCast
@@ -249,8 +255,11 @@ public class HomeActivity extends BaseAppCompatActivity
         // Setup Initial Fragment Change
 
 //        FirebaseCrash.report(new Exception("My first Android non-fatal error"));
-
-        Fragment mFragment = HomeFragment.newInstance();
+        Fragment mFragment;
+        if (getIntent().hasExtra(Utility.Extra.DYNAMIC_LINK_URI))
+            mFragment = HomeFragment.newInstance((Uri) getIntent().getExtras().getParcelable(Utility.Extra.DYNAMIC_LINK_URI));
+        else
+            mFragment = HomeFragment.newInstance(null);
         getSupportFragmentManager().beginTransaction().replace(R.id.content, mFragment, HomeFragment.TAG).commit();
 
         //Inflate header view
@@ -307,7 +316,7 @@ public class HomeActivity extends BaseAppCompatActivity
         if (slideMenuListModel.title.equals(getString(R.string.label_home))) {
             Fragment mFragment = getSupportFragmentManager().findFragmentByTag(HomeFragment.TAG);
             if (mFragment == null) {
-                loadFragment(HomeFragment.TAG, HomeFragment.newInstance());
+                loadFragment(HomeFragment.TAG, HomeFragment.newInstance(null));
             } else {
                 Log.i(TAG, "onSlideMenuListItemClicked: " + slideMenuListModel.title + " is there");
                 //We need to enable enquiry fragment, in case its not there
@@ -379,7 +388,7 @@ public class HomeActivity extends BaseAppCompatActivity
                     //reset the current screen to Home screen
                     Fragment mFragment = getSupportFragmentManager().findFragmentByTag(HomeFragment.TAG);
                     if (mFragment == null) {
-                        loadFragment(HomeFragment.TAG, HomeFragment.newInstance());
+                        loadFragment(HomeFragment.TAG, HomeFragment.newInstance(null));
                     }
                 }
             }, 1000);
@@ -507,7 +516,7 @@ public class HomeActivity extends BaseAppCompatActivity
         //Checking if there is already a fragment then
         Fragment mFragment = getSupportFragmentManager().findFragmentByTag(HomeFragment.TAG);
         if (mFragment == null) {
-            loadFragment(HomeFragment.TAG, HomeFragment.newInstance());
+            loadFragment(HomeFragment.TAG, HomeFragment.newInstance(null));
         } else {
             ((HomeFragment) mFragment).openCreateNewTask();
         }
@@ -919,7 +928,7 @@ public class HomeActivity extends BaseAppCompatActivity
             } else {
                 Fragment mFragment = getSupportFragmentManager().findFragmentByTag(HomeFragment.TAG);
                 if (mFragment == null) {
-                    loadFragment(HomeFragment.TAG, HomeFragment.newInstance());
+                    loadFragment(HomeFragment.TAG, HomeFragment.newInstance(null));
                 } else {
                     super.onBackPressed();
                 }
@@ -1203,7 +1212,7 @@ public class HomeActivity extends BaseAppCompatActivity
 
             // Redirect user to Home Screen
 //          LoginActivity.newInstance(mContext);
-            HomeActivity.newInstance(mContext);
+            HomeActivity.newInstance(mContext, null);
             return;
         }
 
@@ -1253,7 +1262,7 @@ public class HomeActivity extends BaseAppCompatActivity
 
             //Redirect user to Home Screen
 //            LoginActivity.newInstance(mContext);
-            HomeActivity.newInstance(mContext);
+            HomeActivity.newInstance(mContext, null);
 
             /*String strResponse = (String) response;
             try {
@@ -1304,7 +1313,7 @@ public class HomeActivity extends BaseAppCompatActivity
 
             //Redirect user to Home Screen
 //            LoginActivity.newInstance(mContext);
-            HomeActivity.newInstance(mContext);
+            HomeActivity.newInstance(mContext, null);
 
             // Show Toast
 //            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityHomeBinding.getRoot());
@@ -1563,7 +1572,7 @@ public class HomeActivity extends BaseAppCompatActivity
                         finish();
 
                         // restart this activity
-                        HomeActivity.newInstance(mContext);
+                        HomeActivity.newInstance(mContext, null);
 
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:

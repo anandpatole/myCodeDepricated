@@ -5,8 +5,10 @@ import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.databinding.DataBindingUtil;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.util.Base64;
 import android.util.Log;
 import android.view.animation.Animation;
@@ -15,6 +17,10 @@ import android.view.animation.AnimationUtils;
 import com.cheep.R;
 import com.cheep.databinding.ActivitySplashBinding;
 import com.cheep.utils.Utility;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.dynamiclinks.FirebaseDynamicLinks;
+import com.google.firebase.dynamiclinks.PendingDynamicLinkData;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -37,6 +43,8 @@ public class SplashActivity extends BaseAppCompatActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        Log.d(TAG, "onCreate: intent [ " + getIntent() + " ] + intent action [ " + getIntent().getAction() + " ]"
+                + " ]  + intent data [ " + getIntent().getData());
         super.onCreate(savedInstanceState);
         getWindow().setBackgroundDrawableResource(R.drawable.splash_gradient);
         if (getIntent() != null && getIntent().getExtras() != null)
@@ -87,7 +95,43 @@ public class SplashActivity extends BaseAppCompatActivity {
             /*
              * For Guest Login We would directly redirect the user to HomeScreen
              */
-            HomeActivity.newInstance(mContext);
+            FirebaseDynamicLinks.getInstance()
+                    .getDynamicLink(getIntent())
+                    .addOnSuccessListener(SplashActivity.this, new OnSuccessListener<PendingDynamicLinkData>() {
+                        @Override
+                        public void onSuccess(PendingDynamicLinkData pendingDynamicLinkData) {
+                            // Get deep link from result (may be null if no link is found)
+                            Uri deepLink = null;
+                            if (pendingDynamicLinkData != null) {
+                                deepLink = pendingDynamicLinkData.getLink();
+                            } else {
+                                HomeActivity.newInstance(mContext, null);
+                                return;
+                            }
+
+                            HomeActivity.newInstance(mContext, deepLink);
+                            // Handle the deep link. For example, open the linked
+                            // content, or apply promotional credit to the user's
+                            // account.
+                            // ...
+
+                            // ...
+                        }
+                    })
+                    .addOnFailureListener(SplashActivity.this, new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.w(TAG, "getDynamicLink:onFailure", e);
+                        }
+                    });
+
+
+
+
+            /*if (!TextUtils.isEmpty(getIntent().getDataString()))
+                HomeActivity.newInstance(mContext, getIntent().getData());
+            else
+                HomeActivity.newInstance(mContext, null);*/
             finish();
 
             /*if (PreferenceUtility.getInstance(mContext).getUserDetails() == null) {

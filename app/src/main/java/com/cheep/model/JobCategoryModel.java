@@ -5,7 +5,6 @@ import android.support.annotation.Keep;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -20,6 +19,10 @@ public class JobCategoryModel {
     public String catName;
     @SerializedName("cat_desc")
     public String catDesc;
+    @SerializedName("cat_slug")
+    public String catSlug;
+    @SerializedName("cat_type")
+    public String catType;
     @SerializedName("cat_icon")
     public String catIcon;
     @SerializedName("cat_image")

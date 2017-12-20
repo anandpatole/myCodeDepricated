@@ -42,6 +42,13 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:host="f7zdy.app.goo.gl" android:scheme="http"/>
+                <data android:host="f7zdy.app.goo.gl" android:scheme="https"/>
+            </intent-filter>
         </activity>
         <activity
             android:name=".activity.TaskCreationActivity"
