@@ -80,6 +80,7 @@ android {
     sourceSets {
         main {
             res.srcDirs = [
+                    'src/main/res/layouts/cheepcare',
                     'src/main/res/layouts/strategicpartner',
                     'src/main/res/layouts/others',
                     'src/main/res/layouts',
