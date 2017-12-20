@@ -459,6 +459,11 @@ public class StrategicPartnerTaskCreationAct extends BaseAppCompatActivity {
                 if (isPayNow)
                     finish();
                 break;
+            case Utility.BROADCAST_TYPE.PAYMENT_COMPLETED_NEED_TO_REDIRECT_TO_MY_TASK_SCREEN:
+                // Finish this activity
+                if (isPayNow)
+                    finish();
+                break;
         }
     }
 

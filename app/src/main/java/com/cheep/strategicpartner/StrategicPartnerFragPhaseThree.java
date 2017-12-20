@@ -216,6 +216,7 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
                 taskDetailModel.quoteAmountStrategicPartner = mStrategicPartnerTaskCreationAct.totalOfBasePrice;
                 taskDetailModel.cheepCode = cheepCode;
                 taskDetailModel.taskDiscountAmount = promocode_price;
+                taskDetailModel.taskStatus= Utility.TASK_STATUS.PENDING;
                 taskDetailModel.taskPaidAmount = TextUtils.isEmpty(taskDetailModel.cheepCode) ? mStrategicPartnerTaskCreationAct.totalOfGSTPrice
                         : payableAmount;
 
