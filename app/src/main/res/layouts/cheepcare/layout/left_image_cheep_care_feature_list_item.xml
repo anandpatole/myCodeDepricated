@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/scale_41dp"
+        android:orientation="horizontal"
+        android:paddingEnd="@dimen/scale_20dp"
+        android:paddingLeft="@dimen/scale_20dp"
+        android:paddingRight="@dimen/scale_20dp"
+        android:paddingStart="@dimen/scale_20dp">
+
+        <ImageView
+            android:id="@+id/iv_no_hidden_charges"
+            android:layout_width="@dimen/scale_57dp"
+            android:layout_height="@dimen/scale_57dp"
+            android:layout_gravity="top"
+            android:layout_marginEnd="@dimen/scale_17dp"
+            android:layout_marginRight="@dimen/scale_17dp"
+            tools:src="@drawable/ic_rupee_stroked_in_glass"/>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <com.cheep.custom_view.CFTextViewSemiBold
+                android:id="@+id/tv_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/grey_varient_8"
+                android:textSize="@dimen/text_size_13sp"
+                tools:text="@string/dummy_email"/>
+
+            <com.cheep.custom_view.CFTextViewSemiBold
+                android:id="@+id/tv_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/grey_dark_color_2"
+                android:textSize="@dimen/text_size_11sp"
+                tools:text="@string/enter_min_amount"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+</layout>
