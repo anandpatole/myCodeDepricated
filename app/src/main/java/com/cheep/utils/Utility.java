@@ -146,6 +146,7 @@ public class Utility {
     public static final String INR = "INR";
     public static final String PPI = "PPI";
     public static final String USRPWD = "USRPWD";
+    public static final String DYNAMIC_LINK_CATEGORY_HOME = "home";
 
     //Date Formats
     public static final String DATE_FORMAT_DD_MM_YY = SuperFormatter.DATE + "/" + SuperFormatter.MONTH_NUMBER + "/" + SuperFormatter.YEAR_4_DIGIT;
