@@ -14,7 +14,7 @@ android {
         minSdkVersion 16
         targetSdkVersion 25
         versionCode 27
-        versionName "1.1.15" // PLEASE FIRST MAKE SURE MIN-VERSION IS 16.
+        versionName "1.1.16" // PLEASE FIRST MAKE SURE MIN-VERSION IS 16.
         renderscriptTargetApi 18
         renderscriptSupportModeEnabled true
 
@@ -157,24 +157,24 @@ android {
 
         live {
             versionNameSuffix "-LIVE"
-            buildConfigField("String", "BASE_URL", getProperty("DEVELOPMENT_BASE_URL"))
-            buildConfigField("String", "BASE_URL_API", getProperty("DEVELOPMENT_BASE_URL_API"))
+            buildConfigField("String", "BASE_URL", getProperty("STAGING_BASE_URL"))
+            buildConfigField("String", "BASE_URL_API", getProperty("STAGING_BASE_URL_API"))
             buildConfigField("String", "CHAT_NODE", getProperty("CHAT_NODE_DEBUG"))
-            buildConfigField("String", "PAYUBIZ_HDFC_KEY", getProperty("PAYUBIZ_HDFC_SANDBOX_KEY"))
-            buildConfigField("String", "PAYUBIZ_HDFC_URL", getProperty("PAYUBIZ_HDFC_SANDBOX_URL"))
+            buildConfigField("String", "PAYUBIZ_HDFC_KEY", getProperty("PAYUBIZ_HDFC_LIVE_KEY"))
+            buildConfigField("String", "PAYUBIZ_HDFC_URL", getProperty("PAYUBIZ_HDFC_LIVE_URL"))
             buildConfigField("boolean", "NEED_TO_BYPASS_PAYMENT", "false")
 
-            //Paytm
-            buildConfigField("String", "PAYTM_OAUTH_BASE_URL", getProperty("PAYTM_OAUTH_STAGING_BASE_URL"))
-            buildConfigField("String", "PAYTM_WALLET_BASE_URL", getProperty("PAYTM_WALLET_STAGING_BASE_URL"))
-            buildConfigField("String", "PAYTM_CHECK_BALANCE_URL", getProperty("PAYTM_CHECK_BALANCE_STAGING_URL"))
-            buildConfigField("String", "SANDBOX_MERCHANT_ID", getProperty("MERCHANT_ID_STAGING"))
-            buildConfigField("String", "MERCHANT_KEY", getProperty("MERCHANT_KEY_STAGING"))
-            buildConfigField("String", "CLIENT_ID", getProperty("CLIENT_ID_STAGING"))
+            // Paytm
+            buildConfigField("String", "PAYTM_OAUTH_BASE_URL", getProperty("PAYTM_OAUTH_PRODUCTION_BASE_URL"))
+            buildConfigField("String", "PAYTM_WALLET_BASE_URL", getProperty("PAYTM_WALLET_PRODUCTION_BASE_URL"))
+            buildConfigField("String", "PAYTM_CHECK_BALANCE_URL", getProperty("PAYTM_CHECK_BALANCE_PRODUCTION_URL"))
+            buildConfigField("String", "SANDBOX_MERCHANT_ID", getProperty("MERCHANT_ID_PRODUCTION"))
+            buildConfigField("String", "MERCHANT_KEY", getProperty("MERCHANT_KEY_PRODUCTION"))
+            buildConfigField("String", "CLIENT_ID", getProperty("CLIENT_ID_PRODUCTION"))
             buildConfigField("String", "CHANNEL_ID", getProperty("CHANNEL_ID"))
-            buildConfigField("String", "INDUSTRY_TYPE_ID", getProperty("INDUSTRY_TYPE_ID_STAGING"))
-            buildConfigField("String", "CLIENT_SECRET", getProperty("CLIENT_SECRET_STAGING"))
-            buildConfigField("String", "WEBSITE", getProperty("WEBSITE_STAGING"))
+            buildConfigField("String", "INDUSTRY_TYPE_ID", getProperty("INDUSTRY_TYPE_ID_PRODUCTION"))
+            buildConfigField("String", "CLIENT_SECRET", getProperty("CLIENT_SECRET_PRODUCTION"))
+            buildConfigField("String", "WEBSITE", getProperty("WEBSITE_PRODUCTION"))
 
             signingConfig signingConfigs.debug
         }
