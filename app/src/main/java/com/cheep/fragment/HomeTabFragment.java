@@ -837,7 +837,7 @@ public class HomeTabFragment extends BaseFragment {
                         String cat = jsonObject.optString(NetworkUtility.TAGS.CLOSEST_AREA).toString();
 //                       Condition for changing the location icon
                         Log.v("Closest Area", jsonObject.optString(NetworkUtility.TAGS.CLOSEST_AREA).toString());
-                        if (cat.equals("{}") || cat.equals("[]") || cat.equals("null") || TextUtils.isEmpty( cat )) {
+                        if (cat.equals("{}") || cat.equals("[]") || cat.equals("null") || TextUtils.isEmpty(cat)) {
                             String Category = "";
                             Log.v("Closest Area if", Category);
                             updateLogoSuccess(Category);
@@ -950,7 +950,22 @@ public class HomeTabFragment extends BaseFragment {
         }*/
         if (mContext == null)
             return;
+        String categorySlug = "";
+
         ((HomeActivity) mContext).isReadyToLoad = true;
+
+        // if dynamic link is for home then do not call web service
+        if (getArguments().getParcelable(Utility.Extra.DYNAMIC_LINK_URI) != null) {
+            Log.d(TAG, "getCategoryIdBasedOnSlug: category slug" +
+                    ((Uri) getArguments().getParcelable(Utility.Extra.DYNAMIC_LINK_URI)).getLastPathSegment());
+            categorySlug = ((Uri) getArguments().getParcelable(Utility.Extra.DYNAMIC_LINK_URI)).getLastPathSegment();
+            if (categorySlug.equalsIgnoreCase(Utility.DYNAMIC_LINK_CATEGORY_HOME) || categorySlug.isEmpty()) {
+                return;
+            }
+        } else {
+            return;
+        }
+
 
         if (!Utility.isConnected(mContext)) {
             errorLoadingHelper.failed(Utility.NO_INTERNET_CONNECTION, 0, onRetryBtnClickListener);
@@ -967,14 +982,7 @@ public class HomeTabFragment extends BaseFragment {
 
         //Add Params
         Map<String, String> mParams = new HashMap<>();
-        if (getArguments().getParcelable(Utility.Extra.DYNAMIC_LINK_URI) != null) {
-            Log.d(TAG, "getCategoryIdBasedOnSlug: category slug" +
-                    ((Uri) getArguments().getParcelable(Utility.Extra.DYNAMIC_LINK_URI)).getLastPathSegment());
-            String categorySlug = ((Uri) getArguments().getParcelable(Utility.Extra.DYNAMIC_LINK_URI)).getLastPathSegment();
-            mParams.put(NetworkUtility.TAGS.CAT_SLUG, categorySlug);
-        } else {
-            Log.d(TAG, "getCategoryIdBasedOnSlug: no uri got. some error");
-        }
+        mParams.put(NetworkUtility.TAGS.CAT_SLUG, categorySlug);
 
         VolleyNetworkRequest mVolleyNetworkRequest = new VolleyNetworkRequest(NetworkUtility.WS.GET_CATEGORY_ID_BASED_ON_SLUG
                 , mCallGetCategoryIdWSErrorListener
@@ -982,7 +990,9 @@ public class HomeTabFragment extends BaseFragment {
                 , mHeaderParams
                 , mParams
                 , null);
-        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest, NetworkUtility.WS.GET_CATEGORY_ID_BASED_ON_SLUG);
+        Volley.getInstance(mContext).
+
+                addToRequestQueue(mVolleyNetworkRequest, NetworkUtility.WS.GET_CATEGORY_ID_BASED_ON_SLUG);
     }
 
     Response.Listener mCallGetCategoryIdWSResponseListener = new Response.Listener() {
