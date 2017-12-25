@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.cheep.R;
+import com.cheep.cheepcare.activity.LandingScreenPickPackageActivity;
 import com.cheep.databinding.FragmentSubscriptionBannerImageBinding;
 import com.cheep.fragment.BaseFragment;
 import com.cheep.utils.LogUtils;
@@ -143,6 +144,8 @@ public class SubscriptionBannerFragment extends BaseFragment {
 
                     if (!processingClick) {
                         processingClick = true;
+
+                        LandingScreenPickPackageActivity.newInstance(mContext, bannerImageModel.cityName);
                     }
                 }
             });

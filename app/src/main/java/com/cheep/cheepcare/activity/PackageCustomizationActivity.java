@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -13,6 +14,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.cheep.R;
 import com.cheep.activity.BaseAppCompatActivity;
+import com.cheep.cheepcare.adapter.PackageCustomizationPagerAdapter;
+import com.cheep.cheepcare.fragment.SelectPackageSpecificationsFragment;
 import com.cheep.cheepcare.model.CheepCarePackageModel;
 import com.cheep.databinding.ActivityPackageCustomizationBinding;
 import com.cheep.utils.Utility;
@@ -24,11 +27,13 @@ import com.cheep.utils.Utility;
 public class PackageCustomizationActivity extends BaseAppCompatActivity {
 
     private ActivityPackageCustomizationBinding mBinding;
+    private PackageCustomizationPagerAdapter mPackageCustomizationPagerAdapter;
+    private CheepCarePackageModel mPackageModel;
 
     public static void newInstance(Context context, int position, CheepCarePackageModel model) {
         Intent intent = new Intent(context, PackageCustomizationActivity.class);
-        intent.putExtra("Position", position);
-        intent.putExtra("Model", model);
+        intent.putExtra(Utility.Extra.POSITION, position);
+        intent.putExtra(Utility.Extra.MODEL, model);
         context.startActivity(intent);
     }
 
@@ -41,6 +46,11 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
 
     @Override
     protected void initiateUI() {
+
+        if (getIntent().hasExtra(Utility.Extra.MODEL)){
+             mPackageModel = (CheepCarePackageModel) getIntent().getExtras().getSerializable(Utility.Extra.MODEL);
+             /*position = getIntent().getExtras().getInt(Utility.Extra.POSITION);*/
+        }
 
         // Calculate Pager Height and Width
         ViewTreeObserver mViewTreeObserver = mBinding.ivCityImage.getViewTreeObserver();
@@ -69,6 +79,15 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
 
         // Set the default step
         setTaskState(STEP_ONE_UNVERIFIED);
+
+        //Initiate description
+        mBinding.textStepDesc.setText(getString(R.string.step_1_desc_cheep_care));
+
+        //Initiate Button text
+        mBinding.textContinue.setText(getString(R.string.select_x_package, mPackageModel.packageTitle));
+
+        // Setting viewpager
+        setupViewPager(mBinding.viewpager);
 
         // Manage Click events of TaskCreation steps
         mBinding.textStep1.setOnClickListener(new View.OnClickListener() {
@@ -121,6 +140,17 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
                 }
             });
         }
+    }
+
+    /**
+     * This will setup the viewpager and tabs as well
+     *
+     * @param pager
+     */
+    private void setupViewPager(ViewPager pager) {
+        mPackageCustomizationPagerAdapter = new PackageCustomizationPagerAdapter(getSupportFragmentManager());
+        mPackageCustomizationPagerAdapter.addFragment(SelectPackageSpecificationsFragment.TAG);
+        pager.setAdapter(mPackageCustomizationPagerAdapter);
     }
 
     /**
@@ -268,8 +298,7 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
         if (mBinding.viewpager.getCurrentItem() == 2) {
             gotoStep(STAGE_2);
             return;
-        }
-        else if (mBinding.viewpager.getCurrentItem() == 1) {
+        } else if (mBinding.viewpager.getCurrentItem() == 1) {
             gotoStep(STAGE_1);
             return;
         }

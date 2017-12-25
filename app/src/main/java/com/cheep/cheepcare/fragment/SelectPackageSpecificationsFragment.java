@@ -21,7 +21,7 @@ import com.cheep.fragment.BaseFragment;
 
 public class SelectPackageSpecificationsFragment extends BaseFragment {
 
-    private static final String TAG = SelectPackageSpecificationsFragment.class.getSimpleName();
+    public static final String TAG = SelectPackageSpecificationsFragment.class.getSimpleName();
     private PackageCustomizationActivity mPackageCustomizationActivity;
     private FragmentSelectPackageSpecificationBinding mBinding;
     private boolean isVerified = false;
@@ -79,7 +79,7 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
 
     @Override
     public void initiateUI() {
-
+        mBinding.ivIsAddressSelected.setSelected(true);
     }
 
     @Override

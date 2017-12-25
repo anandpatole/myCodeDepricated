@@ -1,5 +1,7 @@
 package com.cheep.cheepcare.activity;
 
+import android.content.Context;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -31,6 +33,13 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
     private ActivityLandingScreenPickPackageBinding mBinding;
     private CheepCareFeatureAdapter mFeatureAdapter;
     private CheepCarePackageAdapter mPackageAdapter;
+    private String mCityName;
+
+    public static void newInstance(Context context, String cityName) {
+        Intent intent = new Intent(context, LandingScreenPickPackageActivity.class);
+        intent.putExtra(Utility.Extra.CITY_NAME, cityName);
+        context.startActivity(intent);
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -43,6 +52,10 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
 
     @Override
     protected void initiateUI() {
+
+        if (getIntent().hasExtra(Utility.Extra.CITY_NAME)){
+            mCityName = getIntent().getExtras().getString(Utility.Extra.CITY_NAME);
+        }
 
         // Calculate Pager Height and Width
         ViewTreeObserver mViewTreeObserver = mBinding.ivCityImage.getViewTreeObserver();
@@ -69,7 +82,7 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
                 .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                 .into(mBinding.ivCheepCareGif);
 
-        mBinding.tvCityName.setText("Mumbai");
+        mBinding.tvCityName.setText(mCityName);
 
         SpannableStringBuilder spannableStringBuilder
                 = new SpannableStringBuilder(getString(R.string.dummy_good_morning_mumbai));
