@@ -186,6 +186,11 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".cheepcare.activity.PackageCustomizationActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize"/>
+
         <!-- Location Tracked Service -->
         <service
             android:name=".services.LocationTrackService"

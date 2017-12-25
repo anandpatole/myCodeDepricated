@@ -36,6 +36,13 @@
 
     </style>
 
+    <style name="AppTheme.AppBarWhite.ColorControlNormalBlue">
+        <item name="colorControlNormal">@color/splash_gradient_end</item>
+    </style>
+
+    <style name="AppTheme.AppBarBlack.ColorControlNormalBlue">
+        <item name="colorControlNormal">@color/splash_gradient_end</item>
+    </style>
 
     <!--Theme.AppCompat.NoActionBar For Blue or Black background-->
     <style name="AppTheme.AppBarBlack" parent="ThemeOverlay.AppCompat.Dark.ActionBar">

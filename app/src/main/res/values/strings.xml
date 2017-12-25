@@ -585,4 +585,11 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="landing_page_info_text">We bring you our top services in affordable packages so you can get
     the best care for your homes, offices, and societies.</string>
     <string name="packages_for_needs">Packages for all your needs</string>
+    <string name="step_1_desc_cheep_care">Customize the plan to your needs</string>
+    <string name="step_2_desc_cheep_care">WooHoo! Add more packages and save money</string>
+    <string name="step_3_desc_cheep_care">Awesome! Just one step away from happiness!</string>
+
+    <!--For Content description-->
+    <string name="city_image">City Image</string>
+    <string name="cheep_care_gif">Cheep Care Gif</string>
 </resources>
