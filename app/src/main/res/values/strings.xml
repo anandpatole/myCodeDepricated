@@ -580,4 +580,9 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_not_paid">Not Paid</string>
     <string name="lable_via">Via %1s</string>
 
+    <string name="label_mumbai">Mumbai</string>
+    <string name="dummy_good_morning_mumbai">GOOOOOOD MOOOOORNING MUUUUUUMBAI!</string>
+    <string name="landing_page_info_text">We bring you our top services in affordable packages so you can get
+    the best care for your homes, offices, and societies.</string>
+    <string name="packages_for_needs">Packages for all your needs</string>
 </resources>
