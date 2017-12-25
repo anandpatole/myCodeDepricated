@@ -119,7 +119,7 @@ public class SubscriptionBannerFragment extends BaseFragment {
 
         if (bannerImageModel != null) {
             Glide.with(mContext)
-                    .load(R.drawable.gif_cheep_care_home_new)
+                    .load(R.drawable.gif_cheep_care_unit)
                     .asGif()
                     .dontAnimate()
                     .dontTransform()
