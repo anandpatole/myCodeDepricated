@@ -477,6 +477,7 @@ public class Utility {
         String MODEL = "model";
         String IS_PAY_NOW = "isPayNow";
         String DYNAMIC_LINK_URI = "DYNAMIC_LINK_URI";
+        String POSITION = "position";
     }
 
 
