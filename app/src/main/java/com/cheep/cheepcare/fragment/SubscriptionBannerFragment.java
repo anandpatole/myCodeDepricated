@@ -1,4 +1,4 @@
-package com.cheep.cheepcare;
+package com.cheep.cheepcare.fragment;
 
 import android.annotation.SuppressLint;
 import android.databinding.DataBindingUtil;
@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.cheep.R;
+import com.cheep.cheepcare.model.SubscriptionBannerModel;
 import com.cheep.databinding.FragmentSubscriptionBannerImageBinding;
 import com.cheep.fragment.BaseFragment;
 import com.cheep.utils.LogUtils;

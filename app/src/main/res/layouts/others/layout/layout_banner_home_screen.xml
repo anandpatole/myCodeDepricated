@@ -50,7 +50,7 @@
             android:orientation="horizontal"
             >
 
-            <com.cheep.cheepcare.VerticalViewPager
+            <com.cheep.cheepcare.customview.VerticalViewPager
                 android:id="@+id/view_pager_subscription_banner_images"
                 android:layout_width="match_parent"
                 android:layout_height="100dp"/>

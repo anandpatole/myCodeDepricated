@@ -1,4 +1,4 @@
-package com.cheep.cheepcare;
+package com.cheep.cheepcare.model;
 
 import android.support.annotation.Keep;
 
