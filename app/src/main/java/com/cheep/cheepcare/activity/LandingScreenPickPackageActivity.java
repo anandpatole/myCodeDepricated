@@ -7,6 +7,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.ImageSpan;
+import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 
@@ -27,14 +28,14 @@ import com.cheep.utils.Utility;
 
 public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
 
-    private ActivityLandingScreenPickPackageBinding mActivityLandingScreenPickPackageBinding;
+    private ActivityLandingScreenPickPackageBinding mBinding;
     private CheepCareFeatureAdapter mFeatureAdapter;
     private CheepCarePackageAdapter mPackageAdapter;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mActivityLandingScreenPickPackageBinding
+        mBinding
                 = DataBindingUtil.setContentView(this, R.layout.activity_landing_screen_pick_package);
         initiateUI();
         setListeners();
@@ -44,61 +45,87 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
     protected void initiateUI() {
 
         // Calculate Pager Height and Width
-        ViewTreeObserver mViewTreeObserver = mActivityLandingScreenPickPackageBinding.ivCityImage.getViewTreeObserver();
+        ViewTreeObserver mViewTreeObserver = mBinding.ivCityImage.getViewTreeObserver();
         mViewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
-                mActivityLandingScreenPickPackageBinding.ivCityImage.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                int width = mActivityLandingScreenPickPackageBinding.ivCityImage.getMeasuredWidth();
-                ViewGroup.LayoutParams params = mActivityLandingScreenPickPackageBinding.ivCityImage.getLayoutParams();
-                params.height = Utility.getHeightFromWidthForTwoOneRatio(width);
-                mActivityLandingScreenPickPackageBinding.ivCityImage.setLayoutParams(params);
+                mBinding.ivCityImage.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                int width = mBinding.ivCityImage.getMeasuredWidth();
+                ViewGroup.LayoutParams params = mBinding.ivCityImage.getLayoutParams();
+                params.height = Utility.getHeightFromWidthForOneHalfIsToOneRatio(width);
+                mBinding.ivCityImage.setLayoutParams(params);
 
                 // Load the image now.
-                Utility.loadImageView(mContext, mActivityLandingScreenPickPackageBinding.ivCityImage
-                        , R.drawable.ic_landing_screen_mumbai
+                Utility.loadImageView(mContext, mBinding.ivCityImage
+                        , R.drawable.img_landing_screen_mumbai
                         , R.drawable.hotline_ic_image_loading_placeholder);
             }
         });
-        
-        SpannableStringBuilder spannableStringBuilder
-                = new SpannableStringBuilder(getString(R.string.dummy_good_morning_mumbai));
-        spannableStringBuilder.append(Utility.ONE_CHARACTER_SPACE).append(Utility.ONE_CHARACTER_SPACE);
-        ImageSpan span = new ImageSpan(getBaseContext(), R.drawable.ic_mic, ImageSpan.ALIGN_BASELINE);
-        spannableStringBuilder.setSpan(span, spannableStringBuilder.length() - 1
-                , spannableStringBuilder.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
-        mActivityLandingScreenPickPackageBinding.tvGoodMorningText.setText(spannableStringBuilder);
 
         Glide.with(mContext)
                 .load(R.drawable.ic_home_with_heart_text)
                 .asGif()
                 .dontAnimate()
                 .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                .into(mActivityLandingScreenPickPackageBinding.ivCheepCareGif);
+                .into(mBinding.ivCheepCareGif);
 
-        mActivityLandingScreenPickPackageBinding.recyclerViewCheepCareFeature.setNestedScrollingEnabled(false);
+        mBinding.tvCityName.setText("Mumbai");
+
+        SpannableStringBuilder spannableStringBuilder
+                = new SpannableStringBuilder(getString(R.string.dummy_good_morning_mumbai));
+        spannableStringBuilder.append(Utility.ONE_CHARACTER_SPACE).append(Utility.ONE_CHARACTER_SPACE);
+        ImageSpan span = new ImageSpan(getBaseContext(), R.drawable.ic_mic, ImageSpan.ALIGN_BASELINE);
+        spannableStringBuilder.setSpan(span, spannableStringBuilder.length() - 1
+                , spannableStringBuilder.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+        mBinding.tvGoodMorningText.setText(spannableStringBuilder);
+
+        mBinding.tvInfoText.setText(getString(R.string.landing_page_info_text));
+
+        mBinding.recyclerViewCheepCareFeature.setNestedScrollingEnabled(false);
         mFeatureAdapter = new CheepCareFeatureAdapter();
         mFeatureAdapter.addFeatureList(CheepCareFeatureModel.getCheepCareFeatures());
-        mActivityLandingScreenPickPackageBinding.recyclerViewCheepCareFeature.setLayoutManager(new LinearLayoutManager(
+        mBinding.recyclerViewCheepCareFeature.setLayoutManager(new LinearLayoutManager(
                 mContext
                 , LinearLayoutManager.VERTICAL
                 , false
         ));
-        mActivityLandingScreenPickPackageBinding.recyclerViewCheepCareFeature.setAdapter(mFeatureAdapter);
+        mBinding.recyclerViewCheepCareFeature.setAdapter(mFeatureAdapter);
 
-        mActivityLandingScreenPickPackageBinding.recyclerViewCheepCarePackages.setNestedScrollingEnabled(false);
-        mPackageAdapter = new CheepCarePackageAdapter();
+        mBinding.recyclerViewCheepCarePackages.setNestedScrollingEnabled(false);
+        mPackageAdapter = new CheepCarePackageAdapter(mPackageItemClickListener);
         mPackageAdapter.addPakcageList(CheepCarePackageModel.getCheepCarePackages());
-        mActivityLandingScreenPickPackageBinding.recyclerViewCheepCarePackages.setLayoutManager(new LinearLayoutManager(
+        mBinding.recyclerViewCheepCarePackages.setLayoutManager(new LinearLayoutManager(
                 mContext
                 , LinearLayoutManager.VERTICAL
                 , false
         ));
-        mActivityLandingScreenPickPackageBinding.recyclerViewCheepCarePackages.setAdapter(mPackageAdapter);
+        mBinding.recyclerViewCheepCarePackages.setAdapter(mPackageAdapter);
+
+        // Setting up Toolbar
+        setSupportActionBar(mBinding.toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setTitle(Utility.EMPTY_STRING);
+            mBinding.toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Utility.hideKeyboard(mContext);
+                    onBackPressed();
+                }
+            });
+        }
     }
 
     @Override
     protected void setListeners() {
 
     }
+
+    private final CheepCarePackageAdapter.PackageItemClickListener mPackageItemClickListener
+            = new CheepCarePackageAdapter.PackageItemClickListener() {
+        @Override
+        public void onPackageItemClick(int position, CheepCarePackageModel packageModel) {
+            PackageCustomizationActivity.newInstance(mContext, position, packageModel);
+        }
+    };
 }

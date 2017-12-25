@@ -395,6 +395,12 @@ public class Utility {
         return (width / 2);
     }
 
+    public static int getHeightFromWidthForOneHalfIsToOneRatio(int width) {
+//        LogUtils.LOGD(TAG, "getHeightFromWidthForTwoOneRatio() called with: width = [" + width + "]");
+//        LogUtils.LOGD(TAG, "getHeightFromWidthForTwoOneRatio() returned: " + (width / 2));
+        return (int) (((float) width) / 1.52542373);
+    }
+
     /**
      * Below would provide dynamic height of image based on #Utility.CATEGORY_IMAGE_RATIO
      *

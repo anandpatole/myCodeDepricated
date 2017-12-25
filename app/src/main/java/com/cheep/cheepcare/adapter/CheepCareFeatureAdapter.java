@@ -59,6 +59,7 @@ public class CheepCareFeatureAdapter extends LoadMoreRecyclerAdapter<CheepCareFe
                     , R.drawable.hotline_ic_image_loading_placeholder);
             leftBinding.tvTitle.setText(model.featureTitle);
             leftBinding.tvDescription.setText(model.featureDescription);
+            leftBinding.getRoot().setOnClickListener(null);
         } else if (holder instanceof RightSideImageViewHolder) {
             RightImageCheepCareFeatureListItemBinding rightBinding = holder.getBinding();
             Utility.loadImageView(rightBinding.getRoot().getContext()
@@ -67,6 +68,7 @@ public class CheepCareFeatureAdapter extends LoadMoreRecyclerAdapter<CheepCareFe
                     , R.drawable.hotline_ic_image_loading_placeholder);
             rightBinding.tvTitle.setText(model.featureTitle);
             rightBinding.tvDescription.setText(model.featureDescription);
+            rightBinding.getRoot().setOnClickListener(null);
         }
     }
 

@@ -4,30 +4,24 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <android.support.design.widget.CoordinatorLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:descendantFocusability="blocksDescendants"
         android:orientation="vertical">
 
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@android:color/transparent"
-                android:theme="@style/AppTheme.AppBarWhite">
-            </android.support.v7.widget.Toolbar>
-
             <ImageView
                 android:id="@+id/iv_city_image"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/scale_174dp"
-                android:adjustViewBounds="true"
-                android:scaleType="centerCrop"
-                android:src="@drawable/ic_landing_screen_mumbai"/>
+                android:contentDescription="@string/city_image"
+                tools:adjustViewBounds="true"
+                tools:scaleType="centerCrop"
+                tools:src="@drawable/img_landing_screen_mumbai"/>
 
 
             <ImageView
@@ -49,82 +43,103 @@
                 android:layout_marginBottom="@dimen/scale_8dp"
                 android:layout_marginLeft="@dimen/scale_18dp"
                 android:layout_marginStart="@dimen/scale_18dp"
-                android:text="@string/label_mumbai"
                 android:textColor="@color/white"
-                android:textSize="@dimen/text_size_25sp"/>
+                android:textSize="@dimen/text_size_25sp"
+                tools:text="@string/label_mumbai"/>
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:theme="@style/AppTheme.AppBarWhite.ColorControlNormalBlue">
+            </android.support.v7.widget.Toolbar>
 
         </FrameLayout>
 
         <android.support.v4.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="@dimen/scale_174dp"
-            android:layout_weight="1">
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:fillViewport="true"
+            android:focusableInTouchMode="true">
 
-            <LinearLayout
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_height="match_parent">
 
-                <com.cheep.custom_view.CFTextViewBold
-                    android:id="@+id/tv_good_morning_text"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/scale_29dp"
-                    android:layout_marginLeft="@dimen/scale_29dp"
-                    android:layout_marginRight="@dimen/scale_29dp"
-                    android:layout_marginStart="@dimen/scale_28dp"
-                    android:focusableInTouchMode="true"
-                    android:layout_marginTop="@dimen/scale_12dp"
-                    android:gravity="center"
-                    android:text="@string/dummy_good_morning_mumbai"
-                    android:textColor="@color/black_varient_1"
-                    android:textSize="@dimen/text_size_15sp"/>
+                    android:orientation="vertical">
+
+                    <com.cheep.custom_view.CFTextViewBold
+                        android:id="@+id/tv_good_morning_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/scale_29dp"
+                        android:layout_marginLeft="@dimen/scale_29dp"
+                        android:layout_marginRight="@dimen/scale_29dp"
+                        android:layout_marginStart="@dimen/scale_28dp"
+                        android:layout_marginTop="@dimen/scale_12dp"
+                        android:gravity="center"
+                        android:textColor="@color/black_varient_1"
+                        android:textSize="@dimen/text_size_15sp"
+                        tools:text="@string/dummy_good_morning_mumbai"/>
+
+                    <com.cheep.custom_view.CFTextViewRegular
+                        android:id="@+id/tv_info_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/scale_12dp"
+                        android:gravity="center"
+                        android:paddingEnd="@dimen/scale_20dp"
+                        android:paddingLeft="@dimen/scale_20dp"
+                        android:paddingRight="@dimen/scale_20dp"
+                        android:paddingStart="@dimen/scale_20dp"
+                        android:textColor="@color/grey_dark_color_2"
+                        android:textSize="@dimen/text_size_13sp"
+                        tools:text="@string/landing_page_info_text"/>
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/recycler_view_cheep_care_feature"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        tools:listitem="@layout/right_image_cheep_care_feature_list_item"/>
+
+                    <com.cheep.custom_view.CFTextViewSemiBold
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/scale_24dp"
+                        android:layout_marginTop="@dimen/scale_35dp"
+                        android:paddingEnd="@dimen/scale_20dp"
+                        android:paddingLeft="@dimen/scale_20dp"
+                        android:paddingRight="@dimen/scale_20dp"
+                        android:paddingStart="@dimen/scale_20dp"
+                        android:text="@string/packages_for_needs"
+                        android:textColor="@color/black_varient_1"
+                        android:textSize="@dimen/text_size_16sp"/>
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/recycler_view_cheep_care_packages"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        tools:listitem="@layout/cheep_care_package_list_item"/>
+
+
+                </LinearLayout>
 
                 <com.cheep.custom_view.CFTextViewRegular
-                    android:id="@+id/tv_info_text"
-                    android:layout_width="match_parent"
+                    android:id="@+id/text_error"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/scale_12dp"
-                    android:gravity="center"
-                    android:paddingEnd="@dimen/scale_20dp"
-                    android:paddingLeft="@dimen/scale_20dp"
-                    android:paddingRight="@dimen/scale_20dp"
-                    android:paddingStart="@dimen/scale_20dp"
-                    android:text="@string/landing_page_info_text"
-                    android:textColor="@color/grey_dark_color_2"
-                    android:textSize="@dimen/text_size_13sp"/>
+                    android:layout_gravity="center"
+                    android:padding="@dimen/scale_16dp"
+                    android:visibility="gone"
+                    tools:text="Work In Progress"/>
 
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/recycler_view_cheep_care_feature"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    tools:list_item="@layout/right_image_cheep_care_feature_list_item"/>
-
-                <com.cheep.custom_view.CFTextViewSemiBold
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/scale_24dp"
-                    android:layout_marginTop="@dimen/scale_35dp"
-                    android:paddingEnd="@dimen/scale_20dp"
-                    android:paddingLeft="@dimen/scale_20dp"
-                    android:paddingRight="@dimen/scale_20dp"
-                    android:paddingStart="@dimen/scale_20dp"
-                    android:text="@string/packages_for_needs"
-                    android:textColor="@color/black_varient_1"
-                    android:textSize="@dimen/text_size_16sp"/>
-
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/recycler_view_cheep_care_packages"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    tools:list_item="@layout/right_image_cheep_care_feature_list_item"/>
-
-
-
-            </LinearLayout>
+            </FrameLayout>
 
         </android.support.v4.widget.NestedScrollView>
-
-    </android.support.design.widget.CoordinatorLayout>
+    </LinearLayout>
 </layout>

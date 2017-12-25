@@ -18,7 +18,7 @@ public class CheepCarePackageModel implements Serializable {
     public static List<CheepCarePackageModel> getCheepCarePackages(){
         List<CheepCarePackageModel> packageModels = new ArrayList<>();
         packageModels.add(new CheepCarePackageModel(){{
-            packageImage = String.valueOf(R.drawable.ic_home_with_heart_text);
+            packageImage = String.valueOf(R.drawable.banner_appliance_care);
             packageTitle = "Home Care";
             packageDescription = "Yearly plumbing, electricity & carpentry support for your home";
         }});

@@ -22,7 +22,16 @@ import java.util.List;
 
 public class CheepCarePackageAdapter extends LoadMoreRecyclerAdapter<CheepCarePackageAdapter.CheepCarePackageViewHolder> {
 
+    private final PackageItemClickListener mListener;
     private List<CheepCarePackageModel> mList = new ArrayList<>();
+
+    public interface PackageItemClickListener {
+        void onPackageItemClick(int position, CheepCarePackageModel packageModel);
+    }
+
+    public CheepCarePackageAdapter(PackageItemClickListener listener){
+        mListener = listener;
+    }
 
     @Override
     public CheepCarePackageViewHolder onActualCreateViewHolder(ViewGroup parent, int viewType) {
@@ -33,17 +42,32 @@ public class CheepCarePackageAdapter extends LoadMoreRecyclerAdapter<CheepCarePa
     }
 
     @Override
-    public void onActualBindViewHolder(CheepCarePackageViewHolder holder, int position) {
-        CheepCarePackageModel model = mList.get(position);
-        holder.mBinding.tvTitle.setText(model.packageTitle);
-        holder.mBinding.tvDescription.setText(model.packageDescription);
+    public void onActualBindViewHolder(final CheepCarePackageViewHolder holder, int position) {
+        final CheepCarePackageModel model = mList.get(position);
 
         Glide.with(holder.mBinding.getRoot().getContext())
-                .load(R.drawable.ic_home_with_heart_text)
+                .load(R.drawable.banner_appliance_care_gif)
                 .asGif()
                 .dontAnimate()
                 .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                .into(holder.mBinding.ivCharge);
+                .into(holder.mBinding.ivItemBackground);
+
+        holder.mBinding.tvTitle.setText(model.packageTitle);
+        holder.mBinding.tvDescription.setText(model.packageDescription);
+
+        /*Glide.with(holder.mBinding.getRoot().getContext())
+                .load(R.drawable.home_care_price_mumbai)
+                .asGif()
+                .dontAnimate()
+                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                .into(holder.mBinding.ivCharge);*/
+
+        holder.mBinding.getRoot().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mListener.onPackageItemClick(holder.getAdapterPosition(), model);
+            }
+        });
     }
 
     @Override
