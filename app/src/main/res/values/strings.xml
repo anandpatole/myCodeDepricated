@@ -588,7 +588,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="step_1_desc_cheep_care">Customize the plan to your needs</string>
     <string name="step_2_desc_cheep_care">WooHoo! Add more packages and save money</string>
     <string name="step_3_desc_cheep_care">Awesome! Just one step away from happiness!</string>
-    <string name="select_x_package">Select %s package</string>
+    <string name="select_x_package">Select %1s package</string>
     <string name="home_care">Home Care</string>
     <string name="biz_care">Biz Care</string>
     <string name="appliance_care">Appliance Care</string>
@@ -599,4 +599,6 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <!--For Content description-->
     <string name="city_image">City Image</string>
     <string name="cheep_care_gif">Cheep Care Gif</string>
+    <string name="rupee_symbol_x_package_price">₹%1s/MTH</string>
+
 </resources>

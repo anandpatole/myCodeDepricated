@@ -15,6 +15,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.cheep.R;
 import com.cheep.activity.BaseAppCompatActivity;
 import com.cheep.cheepcare.adapter.PackageCustomizationPagerAdapter;
+import com.cheep.cheepcare.fragment.PackageBundlingFragment;
 import com.cheep.cheepcare.fragment.SelectPackageSpecificationsFragment;
 import com.cheep.cheepcare.model.CheepCarePackageModel;
 import com.cheep.databinding.ActivityPackageCustomizationBinding;
@@ -101,12 +102,14 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
             public void onClick(View v) {
                 /*
                   Need to check whether first step is verified or not.
+                  TODO:: remove comments
+
                  */
-                if (mCurrentStep > 1) {
+//                if (mCurrentStep > 1) {
                     gotoStep(STAGE_2);
-                } else {
-                    Utility.showSnackBar(getString(R.string.step_1_desc_cheep_care), mBinding.getRoot());
-                }
+//                } else {
+//                    Utility.showSnackBar(getString(R.string.step_1_desc_cheep_care), mBinding.getRoot());
+//                }
 
             }
         });
@@ -150,6 +153,7 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
     private void setupViewPager(ViewPager pager) {
         mPackageCustomizationPagerAdapter = new PackageCustomizationPagerAdapter(getSupportFragmentManager());
         mPackageCustomizationPagerAdapter.addFragment(SelectPackageSpecificationsFragment.TAG);
+        mPackageCustomizationPagerAdapter.addFragment(PackageBundlingFragment.TAG);
         pager.setAdapter(mPackageCustomizationPagerAdapter);
     }
 

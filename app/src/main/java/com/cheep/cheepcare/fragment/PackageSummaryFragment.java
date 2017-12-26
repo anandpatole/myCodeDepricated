@@ -23,7 +23,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-public class PackageBundlingFragment extends BaseFragment {
+public class PackageSummaryFragment extends BaseFragment {
 
     public static final String TAG = "PackageBundlingFragment";
     private PackageCustomizationActivity mPackageCustomizationActivity;
@@ -31,8 +31,8 @@ public class PackageBundlingFragment extends BaseFragment {
     private boolean isVerified = false;
     private PackageBundlingAdapter mPackageAdapter;
 
-    public static PackageBundlingFragment newInstance() {
-        return new PackageBundlingFragment();
+    public static PackageSummaryFragment newInstance() {
+        return new PackageSummaryFragment();
     }
 
     @Override

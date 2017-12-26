@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <LinearLayout
@@ -137,8 +136,8 @@
                 android:layout_alignBottom="@id/iv_city_image"
                 android:layout_centerHorizontal="true"
                 android:layout_marginBottom="@dimen/scale_13dp"
-                android:layout_marginLeft="@dimen/scale_40dp"
-                android:layout_marginRight="@dimen/scale_40dp"
+                android:layout_marginLeft="@dimen/scale_20dp"
+                android:layout_marginRight="@dimen/scale_20dp"
                 android:background="@color/white"
                 android:paddingEnd="@dimen/scale_8dp"
                 android:paddingLeft="@dimen/scale_8dp"
@@ -158,7 +157,7 @@
 
         </RelativeLayout>
 
-        <FrameLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1">
@@ -166,12 +165,14 @@
             <com.cheep.custom_view.NonSwipeableViewPager
                 android:id="@+id/viewpager"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent"
+                android:layout_above="@+id/text_continue"/>
 
             <com.cheep.custom_view.CFTextViewSemiBold
                 android:id="@+id/text_continue"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
                 android:layout_gravity="bottom"
                 android:background="@color/splash_gradient_end"
                 android:gravity="center"
@@ -179,7 +180,7 @@
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_size_17sp"
                 tools:text="@string/label_post_it"/>
-        </FrameLayout>
+        </RelativeLayout>
 
     </LinearLayout>
 </layout>
