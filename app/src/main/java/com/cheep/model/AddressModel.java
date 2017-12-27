@@ -4,11 +4,13 @@ import android.support.annotation.Keep;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import java.io.Serializable;
+
 /**
  * Created by Bhavesh V Patadiya on 10/13/16.
  */
 @Keep
-public class AddressModel {
+public class AddressModel implements Serializable{
 
     public String address_id;
     public String address_initials;

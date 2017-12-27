@@ -62,6 +62,10 @@
         <item name="android:textColorHint">@color/grey_dark_color</item>
     </style>
 
+    <style name="Widget.AppCompat.ListPopupWindow.FixedWidth">
+        <item name="android:dropDownWidth">40dp</item>
+    </style>
+
     <!--Activity Themes-->
     <style name="AppTheme" parent="BaseTheme">
         <!-- Customize your theme here. -->

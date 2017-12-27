@@ -595,6 +595,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="tech_care">Tech Care</string>
     <string name="soci_care">Soci Care</string>
     <string name="label_select_address">Select Address</string>
+    <string name="label_add_another_address">Add another address</string>
 
     <!--For Content description-->
     <string name="city_image">City Image</string>

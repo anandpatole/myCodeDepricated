@@ -9,8 +9,8 @@ import android.view.ViewGroup;
 
 import com.cheep.R;
 import com.cheep.cheepcare.model.CheepCareFeatureModel;
-import com.cheep.databinding.LeftImageCheepCareFeatureListItemBinding;
-import com.cheep.databinding.RightImageCheepCareFeatureListItemBinding;
+import com.cheep.databinding.RowLeftImageCheepCareFeatureBinding;
+import com.cheep.databinding.RowRightImageCheepCareFeatureBinding;
 import com.cheep.utils.LoadMoreRecyclerAdapter;
 import com.cheep.utils.Utility;
 
@@ -40,10 +40,10 @@ public class CheepCareFeatureAdapter extends LoadMoreRecyclerAdapter<CheepCareFe
     public CheepCareFeatureBaseViewHolder onActualCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
         if (viewType == EVEN_POSITION) {
-            View view = layoutInflater.inflate(R.layout.left_image_cheep_care_feature_list_item, parent, false);
+            View view = layoutInflater.inflate(R.layout.row_left_image_cheep_care_feature, parent, false);
             return new LeftSideImageViewHolder(view);
         } else {
-            View view = layoutInflater.inflate(R.layout.right_image_cheep_care_feature_list_item, parent, false);
+            View view = layoutInflater.inflate(R.layout.row_right_image_cheep_care_feature, parent, false);
             return new RightSideImageViewHolder(view);
         }
     }
@@ -52,7 +52,7 @@ public class CheepCareFeatureAdapter extends LoadMoreRecyclerAdapter<CheepCareFe
     public void onActualBindViewHolder(CheepCareFeatureBaseViewHolder holder, int position) {
         CheepCareFeatureModel model = mList.get(position);
         if (holder instanceof LeftSideImageViewHolder) {
-            LeftImageCheepCareFeatureListItemBinding leftBinding = holder.getBinding();
+            RowLeftImageCheepCareFeatureBinding leftBinding = holder.getBinding();
             Utility.loadImageView(leftBinding.getRoot().getContext()
                     , leftBinding.ivNoHiddenCharges
                     , Integer.parseInt(model.featureImage)
@@ -61,7 +61,7 @@ public class CheepCareFeatureAdapter extends LoadMoreRecyclerAdapter<CheepCareFe
             leftBinding.tvDescription.setText(model.featureDescription);
             leftBinding.getRoot().setOnClickListener(null);
         } else if (holder instanceof RightSideImageViewHolder) {
-            RightImageCheepCareFeatureListItemBinding rightBinding = holder.getBinding();
+            RowRightImageCheepCareFeatureBinding rightBinding = holder.getBinding();
             Utility.loadImageView(rightBinding.getRoot().getContext()
                     , rightBinding.ivNoHiddenCharges
                     , Integer.parseInt(model.featureImage)

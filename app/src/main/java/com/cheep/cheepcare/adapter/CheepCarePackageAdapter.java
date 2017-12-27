@@ -10,7 +10,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.cheep.R;
 import com.cheep.cheepcare.model.CheepCarePackageModel;
-import com.cheep.databinding.CheepCarePackageListItemBinding;
+import com.cheep.databinding.RowCheepCarePackageBinding;
 import com.cheep.utils.LoadMoreRecyclerAdapter;
 
 import java.util.ArrayList;
@@ -36,8 +36,8 @@ public class CheepCarePackageAdapter extends LoadMoreRecyclerAdapter<CheepCarePa
     @Override
     public CheepCarePackageViewHolder onActualCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
-        CheepCarePackageListItemBinding binding
-                = DataBindingUtil.inflate(layoutInflater, R.layout.cheep_care_package_list_item, parent, false);
+        RowCheepCarePackageBinding binding
+                = DataBindingUtil.inflate(layoutInflater, R.layout.row_cheep_care_package, parent, false);
         return new CheepCarePackageViewHolder(binding);
     }
 
@@ -76,9 +76,9 @@ public class CheepCarePackageAdapter extends LoadMoreRecyclerAdapter<CheepCarePa
     }
 
     public class CheepCarePackageViewHolder extends RecyclerView.ViewHolder {
-        public CheepCarePackageListItemBinding mBinding;
+        public RowCheepCarePackageBinding mBinding;
 
-        public CheepCarePackageViewHolder(CheepCarePackageListItemBinding binding) {
+        public CheepCarePackageViewHolder(RowCheepCarePackageBinding binding) {
             super(binding.getRoot());
             mBinding = binding;
         }

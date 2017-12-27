@@ -1,4 +1,4 @@
-package com.cheep.cheepcare;
+package com.cheep.cheepcare.fragment;
 
 import android.annotation.SuppressLint;
 import android.databinding.DataBindingUtil;
@@ -11,10 +11,10 @@ import android.view.ViewGroup;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.cheep.R;
+import com.cheep.cheepcare.model.SubscriptionBannerModel;
 import com.cheep.cheepcare.activity.LandingScreenPickPackageActivity;
 import com.cheep.databinding.FragmentSubscriptionBannerImageBinding;
 import com.cheep.fragment.BaseFragment;
-import com.cheep.utils.LogUtils;
 
 import java.util.ArrayList;
 
@@ -128,7 +128,7 @@ public class SubscriptionBannerFragment extends BaseFragment {
                     .into(binding.imgCheepCareGif);
 
 
-            LogUtils.LOGE(TAG, "init: " + bannerImageModel.cityName);
+            /*LogUtils.LOGE(TAG, "init: " + bannerImageModel.cityName);*/
             binding.tvTitle.setText(bannerImageModel.title);
             binding.tvSubTitle.setText(bannerImageModel.subTitle);
             binding.tvCityName.setText(bannerImageModel.cityName);
