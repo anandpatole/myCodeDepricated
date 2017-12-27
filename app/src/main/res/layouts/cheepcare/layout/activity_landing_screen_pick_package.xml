@@ -105,7 +105,7 @@
                         android:id="@+id/recycler_view_cheep_care_feature"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        tools:listitem="@layout/right_image_cheep_care_feature_list_item"/>
+                        tools:listitem="@layout/row_right_image_cheep_care_feature"/>
 
                     <com.cheep.custom_view.CFTextViewSemiBold
                         android:layout_width="match_parent"
@@ -124,7 +124,7 @@
                         android:id="@+id/recycler_view_cheep_care_packages"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        tools:listitem="@layout/cheep_care_package_list_item"/>
+                        tools:listitem="@layout/row_cheep_care_package"/>
 
 
                 </LinearLayout>
