@@ -28,7 +28,7 @@ public class CheepCarePackageModel implements Serializable {
             packageTitle = "Home Care";
             packageDescription = "Yearly plumbing, electricity & carpentry support for your home";
             isSelected = true;
-            price = "200";
+            price = "20000";
         }});
 
         packageModels.add(new CheepCarePackageModel() {{

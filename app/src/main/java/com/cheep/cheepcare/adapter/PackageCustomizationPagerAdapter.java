@@ -5,6 +5,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import com.cheep.cheepcare.fragment.PackageBundlingFragment;
+import com.cheep.cheepcare.fragment.PackageSummaryFragment;
 import com.cheep.cheepcare.fragment.SelectPackageSpecificationsFragment;
 
 import java.util.ArrayList;
@@ -18,11 +19,13 @@ public class PackageCustomizationPagerAdapter extends FragmentPagerAdapter {
     private final List<String> mTitleList = new ArrayList<>();
     public SelectPackageSpecificationsFragment mSelectPackageSpecificationsFragment;
     public PackageBundlingFragment mPackageBundlingFragment;
+    public PackageSummaryFragment mPackageSummaryFragment;
 
     public PackageCustomizationPagerAdapter(FragmentManager fm) {
         super(fm);
         mSelectPackageSpecificationsFragment = SelectPackageSpecificationsFragment.newInstance();
         mPackageBundlingFragment = PackageBundlingFragment.newInstance();
+        mPackageSummaryFragment = PackageSummaryFragment.newInstance();
     }
 
     @Override
@@ -32,6 +35,8 @@ public class PackageCustomizationPagerAdapter extends FragmentPagerAdapter {
                 return mSelectPackageSpecificationsFragment;
             case 1:
                 return mPackageBundlingFragment;
+            case 2:
+                return mPackageSummaryFragment;
             default:
                 return null;
         }

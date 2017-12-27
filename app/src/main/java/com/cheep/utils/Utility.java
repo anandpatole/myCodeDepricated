@@ -29,8 +29,11 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.AppCompatEditText;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
+import android.text.style.RelativeSizeSpan;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -1670,5 +1673,16 @@ public class Utility {
         }
         return selectedServiceArray.toString();
     }
+
+    public static SpannableString getCheepCarePackageMonthlyPrice(SpannableString spannableString, int start, int end) {
+        RelativeSizeSpan relativeSizeSpan = new RelativeSizeSpan(0.5f);
+
+        spannableString.setSpan(relativeSizeSpan, start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannableString.setSpan(new CustomCharacterSpan(), start, end,
+                SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        return spannableString;
+    }
+
 
 }

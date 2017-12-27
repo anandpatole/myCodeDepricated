@@ -16,6 +16,7 @@ import com.cheep.R;
 import com.cheep.activity.BaseAppCompatActivity;
 import com.cheep.cheepcare.adapter.PackageCustomizationPagerAdapter;
 import com.cheep.cheepcare.fragment.PackageBundlingFragment;
+import com.cheep.cheepcare.fragment.PackageSummaryFragment;
 import com.cheep.cheepcare.fragment.SelectPackageSpecificationsFragment;
 import com.cheep.cheepcare.model.CheepCarePackageModel;
 import com.cheep.databinding.ActivityPackageCustomizationBinding;
@@ -119,11 +120,12 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
                 /*
                   Need to check whether first step is verified or not.
                  */
-                if (mCurrentStep > 1) {
+//                TODO:: remove comments
+//                if (mCurrentStep > 1) {
                     gotoStep(STAGE_3);
-                } else {
-                    Utility.showSnackBar(getString(R.string.step_1_desc_cheep_care), mBinding.getRoot());
-                }
+//                } else {
+//                    Utility.showSnackBar(getString(R.string.step_1_desc_cheep_care), mBinding.getRoot());
+//                }
 
             }
         });
@@ -154,6 +156,7 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
         mPackageCustomizationPagerAdapter = new PackageCustomizationPagerAdapter(getSupportFragmentManager());
         mPackageCustomizationPagerAdapter.addFragment(SelectPackageSpecificationsFragment.TAG);
         mPackageCustomizationPagerAdapter.addFragment(PackageBundlingFragment.TAG);
+        mPackageCustomizationPagerAdapter.addFragment(PackageSummaryFragment.TAG);
         pager.setAdapter(mPackageCustomizationPagerAdapter);
     }
 

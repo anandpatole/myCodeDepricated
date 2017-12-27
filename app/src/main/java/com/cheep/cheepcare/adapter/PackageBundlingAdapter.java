@@ -4,9 +4,7 @@ import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
 import android.support.v7.widget.RecyclerView;
-import android.text.Spannable;
 import android.text.SpannableString;
-import android.text.style.RelativeSizeSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +14,6 @@ import com.cheep.cheepcare.model.CheepCarePackageModel;
 import com.cheep.databinding.RowBundledPackageHeaderBinding;
 import com.cheep.databinding.RowBundledPackageSelectedBinding;
 import com.cheep.databinding.RowBundledPackagetNoSelectedBinding;
-import com.cheep.utils.CustomCharacterSpan;
 import com.cheep.utils.LoadMoreRecyclerAdapter;
 import com.cheep.utils.Utility;
 
@@ -79,7 +76,7 @@ public class PackageBundlingAdapter extends LoadMoreRecyclerAdapter<PackageBundl
                 context = holder.mRowNotSelectedBinding.getRoot().getContext();
                 Utility.loadImageView(context, holder.mRowNotSelectedBinding.ivItemBackground, "https://s3.ap-south-1.amazonaws.com/cheepapp/category/banner_image/medium/Untitled.jpg");
                 SpannableString spannableString = new SpannableString(context.getString(R.string.rupee_symbol_x_package_price, model.price));
-                spannableString = spannableString(spannableString, spannableString.length() - 2, spannableString.length());
+                spannableString = Utility.getCheepCarePackageMonthlyPrice(spannableString, spannableString.length() - 2, spannableString.length());
                 holder.mRowNotSelectedBinding.tvPrice.setText(spannableString);
                 holder.mRowNotSelectedBinding.ivIsAddressSelected.setSelected(model.isSelected);
                 holder.mRowNotSelectedBinding.tvDescription.setText(model.packageDescription);
@@ -89,7 +86,7 @@ public class PackageBundlingAdapter extends LoadMoreRecyclerAdapter<PackageBundl
                 holder.mRowNotSelectedBinding.getRoot().setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                            mListener.onPackageItemClick(holder.getAdapterPosition(), model);
+                        mListener.onPackageItemClick(holder.getAdapterPosition(), model);
                     }
                 });
                 break;
@@ -97,7 +94,7 @@ public class PackageBundlingAdapter extends LoadMoreRecyclerAdapter<PackageBundl
                 context = holder.mRowSelectedBinding.getRoot().getContext();
                 Utility.loadImageView(context, holder.mRowSelectedBinding.ivItemBackground, "https://s3.ap-south-1.amazonaws.com/cheepapp/category/banner_image/medium/Untitled.jpg");
                 SpannableString spannableString1 = new SpannableString(context.getString(R.string.rupee_symbol_x_package_price, model.price));
-                spannableString1 = spannableString(spannableString1, spannableString1.length() - 2, spannableString1.length());
+                spannableString1 = Utility.getCheepCarePackageMonthlyPrice(spannableString1, spannableString1.length() - 2, spannableString1.length());
                 holder.mRowSelectedBinding.tvPrice.setText(spannableString1);
                 holder.mRowSelectedBinding.ivIsAddressSelected.setSelected(model.isSelected);
                 holder.mRowSelectedBinding.tvDescription.setText(model.packageDescription);
@@ -107,7 +104,7 @@ public class PackageBundlingAdapter extends LoadMoreRecyclerAdapter<PackageBundl
                 holder.mRowSelectedBinding.getRoot().setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                            mListener.onPackageItemClick(holder.getAdapterPosition(), model);
+                        mListener.onPackageItemClick(holder.getAdapterPosition(), model);
                     }
                 });
                 break;
@@ -148,16 +145,6 @@ public class PackageBundlingAdapter extends LoadMoreRecyclerAdapter<PackageBundl
     public void addPakcageList(List<CheepCarePackageModel> list) {
         mList.addAll(list);
         notifyDataSetChanged();
-    }
-
-    private SpannableString spannableString(SpannableString spannableString, int start, int end) {
-        RelativeSizeSpan relativeSizeSpan = new RelativeSizeSpan(0.5f);
-
-        spannableString.setSpan(relativeSizeSpan, start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        spannableString.setSpan(new CustomCharacterSpan(), start, end,
-                SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-        return spannableString;
     }
 
 

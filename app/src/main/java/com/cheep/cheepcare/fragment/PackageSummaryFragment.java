@@ -13,23 +13,21 @@ import android.view.ViewGroup;
 import com.cheep.R;
 import com.cheep.activity.BaseAppCompatActivity;
 import com.cheep.cheepcare.activity.PackageCustomizationActivity;
-import com.cheep.cheepcare.adapter.PackageBundlingAdapter;
+import com.cheep.cheepcare.adapter.SelectedPackageSummaryAdapter;
 import com.cheep.cheepcare.model.CheepCarePackageModel;
-import com.cheep.databinding.FragmentPackageBundlingBinding;
+import com.cheep.databinding.FragmentPackageSummaryBinding;
 import com.cheep.fragment.BaseFragment;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 public class PackageSummaryFragment extends BaseFragment {
 
-    public static final String TAG = "PackageBundlingFragment";
+    public static final String TAG = "PackageSummaryFragment";
     private PackageCustomizationActivity mPackageCustomizationActivity;
-    private FragmentPackageBundlingBinding mBinding;
+    private FragmentPackageSummaryBinding mBinding;
     private boolean isVerified = false;
-    private PackageBundlingAdapter mPackageAdapter;
+    private SelectedPackageSummaryAdapter mPackageAdapter;
 
     public static PackageSummaryFragment newInstance() {
         return new PackageSummaryFragment();
@@ -44,7 +42,7 @@ public class PackageSummaryFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        mBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_package_bundling, container, false);
+        mBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_package_summary, container, false);
         return mBinding.getRoot();
     }
 
@@ -71,6 +69,7 @@ public class PackageSummaryFragment extends BaseFragment {
 
         // Hide the post task button
 //        mPackageCustomizationActivity.showPostTaskButton(false, false);
+
     }
 
     @Override
@@ -86,7 +85,7 @@ public class PackageSummaryFragment extends BaseFragment {
     public void initiateUI() {
 
         mBinding.rvBundlePackages.setNestedScrollingEnabled(false);
-        mPackageAdapter = new PackageBundlingAdapter(new PackageBundlingAdapter.PackageItemClickListener() {
+        mPackageAdapter = new SelectedPackageSummaryAdapter(new SelectedPackageSummaryAdapter.PackageItemClickListener() {
             @Override
             public void onPackageItemClick(int position, CheepCarePackageModel packageModel) {
 
@@ -101,40 +100,18 @@ public class PackageSummaryFragment extends BaseFragment {
         mBinding.rvBundlePackages.setAdapter(mPackageAdapter);
     }
 
-    private List<CheepCarePackageModel> getList(List<CheepCarePackageModel> cheepCarePackages) {
-
-        Collections.sort(cheepCarePackages, new Comparator<CheepCarePackageModel>() {
-            @Override
-            public int compare(CheepCarePackageModel o1, CheepCarePackageModel o2) {
-                boolean b1 = o1.isSelected;
-                boolean b2 = o2.isSelected;
-
-                return (b1 != b2) ? (b1) ? -1 : 1 : 0;
-            }
-        });
-        ArrayList<CheepCarePackageModel> newList = new ArrayList<>();
-        boolean isHeaderAdded = false;
-        for (CheepCarePackageModel model : cheepCarePackages) {
-            if (model.isSelected) {
-                model.rowType = PackageBundlingAdapter.ROW_PACKAGE_SELECTED;
-            } else {
-                if (!isHeaderAdded) {
-                    CheepCarePackageModel model1 = new CheepCarePackageModel();
-                    model1.rowType = PackageBundlingAdapter.ROW_PACKAGE_HEADER;
-                    newList.add(model1);
-                    isHeaderAdded = true;
-                }
-                model.rowType = PackageBundlingAdapter.ROW_PACKAGE_NOT_SELECTED;
-            }
-            newList.add(model);
-        }
-        return newList;
-    }
-
     @Override
     public void setListener() {
 
     }
 
-
+    private List<CheepCarePackageModel> getList(List<CheepCarePackageModel> cheepCarePackages) {
+        ArrayList<CheepCarePackageModel> newList = new ArrayList<>();
+        for (CheepCarePackageModel model : cheepCarePackages) {
+            if (model.isSelected) {
+                newList.add(model);
+            }
+        }
+        return newList;
+    }
 }
