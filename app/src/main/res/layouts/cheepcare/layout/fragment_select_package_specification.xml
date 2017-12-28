@@ -69,6 +69,7 @@
                 android:visibility="invisible"/>
 
             <LinearLayout
+                android:id="@+id/lnAddAddress"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/scale_20dp"

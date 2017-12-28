@@ -150,6 +150,8 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_add">Add</string>
     <string name="label_other">Other</string>
     <string name="label_office">Office</string>
+    <string name="label_biz">Biz</string>
+    <string name="label_soci">Soci</string>
     <string name="label_add_address">Add Address</string>
     <string name="label_username">Username</string>
     <string name="label_spread_the_gift_of_happiness">Spread the gift of happiness</string>
@@ -609,4 +611,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_inclusive_of_taxes">Inclusive\nof taxes</string>
     <string name="label_support_in_progress">Support in progress</string>
     <string name="label_book_a_similar_task">Book a Similar Task</string>
+    <string name="hint_landmark">Landmark</string>
+    <string name="hint_pincode">Pincode</string>
+    <string name="hint_nickname">Nickname</string>
 </resources>
