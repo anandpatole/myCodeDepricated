@@ -273,14 +273,17 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
     private void setUpDetailsForPayLater() {
         // Changes are per new flow pay now/later: 4/12/17
         mActivityPaymentDetailBinding.lnPayLaterPayNowButtons.setVisibility(View.GONE);
+
         mActivityPaymentDetailBinding.rlreferraldiscount.setEnabled(false);
         mActivityPaymentDetailBinding.rlpromocode.setEnabled(false);
+
+        mActivityPaymentDetailBinding.llpromocode.setEnabled(false);
+        mActivityPaymentDetailBinding.llclaimreferral.setEnabled(false);
 
         mActivityPaymentDetailBinding.lnPayNow.setVisibility(View.VISIBLE);
         mActivityPaymentDetailBinding.textPayNow.setSelected(true);
 
         mActivityPaymentDetailBinding.lnDesclaimer.setVisibility(View.GONE);
-
 
         if (taskDetailModel != null && providerModel != null) {
 
