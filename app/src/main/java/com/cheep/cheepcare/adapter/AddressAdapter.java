@@ -4,6 +4,7 @@ import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import android.widget.ArrayAdapter;
 import com.cheep.R;
 import com.cheep.databinding.RowAddressPackageCustomizationBinding;
 import com.cheep.model.AddressModel;
+import com.cheep.utils.Utility;
 
 import java.util.List;
 
@@ -61,7 +63,12 @@ public class AddressAdapter<T> extends ArrayAdapter<T> {
         if (position == 0) {
             mHolder.mBinding.llAddressContainer.setVisibility(View.GONE);
         } else {
-            mHolder.mBinding.tvAddressNickname.setText(mList.get(position).address_initials);
+            if (!TextUtils.isEmpty(mList.get(position).nickname))
+                mHolder.mBinding.tvAddressNickname.setText(mList.get(position).nickname);
+            else if (!TextUtils.isEmpty(mList.get(position).category))
+                mHolder.mBinding.tvAddressNickname.setText(Utility.getAddressCategoryString(mList.get(position).category));
+            else
+                mHolder.mBinding.tvAddressNickname.setText(Utility.EMPTY_STRING);
             mHolder.mBinding.llAddressContainer.setVisibility(View.VISIBLE);
         }
         mHolder.mBinding.tvAddress.setText(mList.get(position).address);

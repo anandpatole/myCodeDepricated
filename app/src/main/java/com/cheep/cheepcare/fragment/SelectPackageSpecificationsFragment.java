@@ -22,6 +22,7 @@ import com.cheep.cheepcare.model.CheepCarePackageSubServicesModel;
 import com.cheep.databinding.FragmentSelectPackageSpecificationBinding;
 import com.cheep.fragment.BaseFragment;
 import com.cheep.model.AddressModel;
+import com.cheep.network.NetworkUtility;
 import com.cheep.utils.Utility;
 
 import java.util.ArrayList;
@@ -41,7 +42,6 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
     private List<AddressModel> mList;
     private boolean isClicked = false;
     BottomAddAddressDialog dialog;
-    private AddressModel mSelectedAddressModel;
 
     public static SelectPackageSpecificationsFragment newInstance() {
         return new SelectPackageSpecificationsFragment();
@@ -103,21 +103,34 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
     @Override
     public void setListener() {
 
+        // init ui for add address
         mBinding.lnAddAddress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (dialog != null && dialog.isShowing())
                     dialog.dismiss();
 
-                dialog = new BottomAddAddressDialog(mContext, new BottomAddAddressDialog.AddAddressListener() {
+                ArrayList<String> strings = new ArrayList<>();
+                strings.add(NetworkUtility.TAGS.ADDRESS_TYPE.HOME);
+                strings.add(NetworkUtility.TAGS.ADDRESS_TYPE.OFFICE);
+//                dialog.getAddressCategory().add(NetworkUtility.TAGS.ADDRESS_TYPE.HOME);
+//                dialog.getAddressCategory().add(NetworkUtility.TAGS.ADDRESS_TYPE.HOME);
+                dialog = new BottomAddAddressDialog(SelectPackageSpecificationsFragment.this, new BottomAddAddressDialog.AddAddressListener() {
                     @Override
                     public void onAddAddress(AddressModel addressModel) {
-                        mSelectedAddressModel = addressModel;
+                        mList.add(addressModel);
+                        dialog.dismiss();
+//                        mBinding.tvSpinnerAddress.setText(mList.get(mList.size() - 1).address);
+//                        mBinding.ivIsAddressSelected.setSelected(true);
                     }
-                });
+                },strings);
+
                 dialog.showDialog();
             }
         });
+
+
+        // Spinner initialisation for select address view
         mList = getDummyAddressList();
         mList.add(0, new AddressModel() {{
             address = getString(R.string.label_select_address);

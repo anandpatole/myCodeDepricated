@@ -474,6 +474,8 @@ public class NetworkUtility {
             public static final String HOME = "home";
             public static final String OFFICE = "office";
             public static final String OTHERS = "other";
+            public static final String BIZ= "biz";
+            public static final String SOCI= "soci";
         }
 
         class APPSFLYER_CUSTOM_TRACK_EVENTS {

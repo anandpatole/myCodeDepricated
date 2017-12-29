@@ -251,9 +251,11 @@
                             android:lines="1"
                             android:maxLines="1"
                             android:padding="@dimen/scale_10dp"
+                            android:inputType="number"
                             android:singleLine="true"
                             android:textColor="@color/black"
                             android:textSize="@dimen/text_size_15sp"
+                            android:maxLength="6"
                             android:theme="@style/EditTextWhiteBG"/>
 
                         <View

@@ -10,7 +10,7 @@ import java.io.Serializable;
  * Created by Bhavesh V Patadiya on 10/13/16.
  */
 @Keep
-public class AddressModel implements Serializable{
+public class AddressModel implements Serializable {
 
     public String address_id;
     public String address_initials;
@@ -18,6 +18,9 @@ public class AddressModel implements Serializable{
     public String category; //comes from NetworkUtility.TAGS.ADDRESS_TYPE.
     public String lat;
     public String lng;
+    public String landmark;
+    public String pincode;
+    public String nickname;
     /**
      * This would only be usefull in case of Guest
      */

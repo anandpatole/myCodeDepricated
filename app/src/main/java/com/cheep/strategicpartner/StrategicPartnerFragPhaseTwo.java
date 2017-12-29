@@ -164,7 +164,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment implements Reques
         mFragmentStrategicPartnerPhaseTwoBinding.scrollView.getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
             @Override
             public void onScrollChanged() {
-            Utility.hideKeyboard(mContext);
+                Utility.hideKeyboard(mContext);
             }
         });
         mFragmentStrategicPartnerPhaseTwoBinding.textContinue.setText(getString(R.string.book_and_pay_x, "" + Utility.getQuotePriceFormatter(String.valueOf(total))));
@@ -1242,12 +1242,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment implements Reques
                         mSelectedAddressModel = model;*/
                                 LogUtils.LOGE(TAG, "category detail >> " + model.category + "");
                                 textAns.setBackground(ContextCompat.getDrawable(mStrategicPartnerTaskCreationAct, R.drawable.background_ans_normal));
-                                if (model.category.equalsIgnoreCase(NetworkUtility.TAGS.ADDRESS_TYPE.HOME))
-                                    textAns.setText(getString(R.string.label_home));
-                                else if (model.category.equalsIgnoreCase(NetworkUtility.TAGS.ADDRESS_TYPE.OFFICE))
-                                    textAns.setText(getString(R.string.label_office));
-                                else
-                                    textAns.setText(getString(R.string.label_other));
+                                textAns.setText(getString(Utility.getAddressCategoryString(model.category)));
                                 textAns.setSelected(true);
                                 queAnsModel.answer = model.address_id;
                                 textQueNo.setSelected(true);
@@ -2283,7 +2278,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment implements Reques
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        mRequestPermission.onRequestPermissionsResult(requestCode,permissions,grantResults);
+        mRequestPermission.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     @Override

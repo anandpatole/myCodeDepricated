@@ -1,15 +1,17 @@
 package com.cheep.cheepcare.dialogs;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
+import android.databinding.DataBindingUtil;
 import android.support.design.widget.BottomSheetDialog;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -36,6 +38,7 @@ import com.google.android.gms.maps.model.LatLng;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -57,6 +60,7 @@ public class BottomAddAddressDialog {
     private Context mContext;
     private Fragment fragment;
     private AddAddressListener addAddressListener;
+    private ArrayList<String> addressCategory = new ArrayList<>();
 
     public interface AddAddressListener {
         void onAddAddress(AddressModel addressModel);
@@ -67,37 +71,54 @@ public class BottomAddAddressDialog {
      *
      * @param context instance of activity
      */
-    public BottomAddAddressDialog(Context context, AddAddressListener addAddressListener) {
+    public BottomAddAddressDialog(Context context, AddAddressListener addAddressListener, ArrayList<String> strings) {
         mContext = context;
-        view = View.inflate(mContext, R.layout.dialog_add_address_cheep_care, null);
+        binding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.dialog_add_address_cheep_care, null, false);
+        view = binding.getRoot();
         dialog = new BottomSheetDialog(mContext);
         this.addAddressListener = addAddressListener;
+        addressCategory =strings;
         init();
-
     }
+
 
     /**
      * Open dialog from fragment
      *
      * @param fragment instance of fragment
+     * @param strings
      */
-    public BottomAddAddressDialog(Fragment fragment, AddAddressListener addAddressListener) {
+    public BottomAddAddressDialog(Fragment fragment, AddAddressListener addAddressListener, ArrayList<String> strings) {
         this.addAddressListener = addAddressListener;
+        this.fragment = fragment;
         mContext = fragment.getActivity();
-        view = View.inflate(mContext, R.layout.dialog_add_address_cheep_care, null);
+        binding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.dialog_add_address_cheep_care, null, false);
+        view = binding.getRoot();
         dialog = new BottomSheetDialog(mContext);
+        addressCategory =strings;
         init();
 
     }
 
     public boolean isShowing() {
-        if (dialog != null)
-            return dialog.isShowing();
-        else
-            return false;
+        return dialog != null && dialog.isShowing();
     }
 
     private void init() {
+
+
+        if (!addressCategory.isEmpty()) {
+            binding.radioHome.setVisibility(addressCategory.contains(NetworkUtility.TAGS.ADDRESS_TYPE.HOME) ?
+                    View.VISIBLE : View.GONE);
+            binding.radioOffice.setVisibility(addressCategory.contains(NetworkUtility.TAGS.ADDRESS_TYPE.OFFICE) ?
+                    View.VISIBLE : View.GONE);
+            binding.radioBiz.setVisibility(addressCategory.contains(NetworkUtility.TAGS.ADDRESS_TYPE.BIZ) ?
+                    View.VISIBLE : View.GONE);
+            binding.radioSoci.setVisibility(addressCategory.contains(NetworkUtility.TAGS.ADDRESS_TYPE.SOCI) ?
+                    View.VISIBLE : View.GONE);
+            binding.radioOther.setVisibility(addressCategory.contains(NetworkUtility.TAGS.ADDRESS_TYPE.OTHERS) ?
+                    View.VISIBLE : View.GONE);
+        }
 
         // click handler for address selection
         binding.editAddress.setOnClickListener(new View.OnClickListener() {
@@ -106,7 +127,6 @@ public class BottomAddAddressDialog {
                 showPlacePickerDialog();
             }
         });
-
 
         // address initials are mandatory
         // handle button enable/disable states

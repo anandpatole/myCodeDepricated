@@ -120,6 +120,19 @@ public class Utility {
         return allGranted;
     }
 
+    public static int getAddressCategoryString(String category) {
+        if (category.equalsIgnoreCase(NetworkUtility.TAGS.ADDRESS_TYPE.HOME))
+            return R.string.label_home;
+        else if (category.equalsIgnoreCase(NetworkUtility.TAGS.ADDRESS_TYPE.OFFICE))
+            return R.string.label_office;
+        else if (category.equalsIgnoreCase(NetworkUtility.TAGS.ADDRESS_TYPE.BIZ))
+            return R.string.label_biz;
+        else if (category.equalsIgnoreCase(NetworkUtility.TAGS.ADDRESS_TYPE.SOCI))
+            return R.string.label_soci;
+        else
+            return R.string.label_other;
+    }
+
     public interface GUEST_STATIC_INFO {
         public static final String USERNAME = "Guest";
     }
