@@ -14,7 +14,7 @@ android {
         minSdkVersion 16
         targetSdkVersion 25
         versionCode 28
-        versionName "1.1.19" // PLEASE FIRST MAKE SURE MIN-VERSION IS 16.
+        versionName "1.1.18" // PLEASE FIRST MAKE SURE MIN-VERSION IS 16.
         renderscriptTargetApi 18
         renderscriptSupportModeEnabled true
 
@@ -159,7 +159,7 @@ android {
             versionNameSuffix "-LIVE"
             buildConfigField("String", "BASE_URL", getProperty("STAGING_BASE_URL"))
             buildConfigField("String", "BASE_URL_API", getProperty("STAGING_BASE_URL_API"))
-            buildConfigField("String", "CHAT_NODE", getProperty("CHAT_NODE_DEBUG"))
+            buildConfigField("String", "CHAT_NODE", getProperty("CHAT_NODE_LIVE"))
             buildConfigField("String", "PAYUBIZ_HDFC_KEY", getProperty("PAYUBIZ_HDFC_LIVE_KEY"))
             buildConfigField("String", "PAYUBIZ_HDFC_URL", getProperty("PAYUBIZ_HDFC_LIVE_URL"))
             buildConfigField("boolean", "NEED_TO_BYPASS_PAYMENT", "false")
