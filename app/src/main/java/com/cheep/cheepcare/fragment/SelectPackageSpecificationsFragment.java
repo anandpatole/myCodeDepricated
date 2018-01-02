@@ -1,6 +1,7 @@
 package com.cheep.cheepcare.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -20,6 +21,7 @@ import com.cheep.activity.BaseAppCompatActivity;
 import com.cheep.cheepcare.activity.PackageCustomizationActivity;
 import com.cheep.cheepcare.adapter.AddressAdapter;
 import com.cheep.cheepcare.adapter.ExpandablePackageServicesRecyclerAdapter;
+import com.cheep.cheepcare.dialogs.BottomAddAddressDialog;
 import com.cheep.cheepcare.model.CheepCarePackageServicesModel;
 import com.cheep.cheepcare.model.CheepCarePackageSubServicesModel;
 import com.cheep.databinding.FragmentSelectPackageSpecificationBinding;
@@ -43,6 +45,8 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
     private AddressAdapter<AddressModel> mAdapter;
     private List<AddressModel> mList;
     private boolean isClicked = false;
+    BottomAddAddressDialog dialog;
+    private AddressModel mSelectedAddressModel;
 
     public static SelectPackageSpecificationsFragment newInstance() {
         return new SelectPackageSpecificationsFragment();
@@ -95,6 +99,7 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
         }
     }
 
+
     @Override
     public void initiateUI() {
         mBinding.ivIsAddressSelected.setSelected(true);
@@ -102,6 +107,22 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
 
     @Override
     public void setListener() {
+
+        mBinding.lnAddAddress.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (dialog != null && dialog.isShowing())
+                    dialog.dismiss();
+
+                dialog = new BottomAddAddressDialog(mContext, new BottomAddAddressDialog.AddAddressListener() {
+                    @Override
+                    public void onAddAddress(AddressModel addressModel) {
+                        mSelectedAddressModel = addressModel;
+                    }
+                });
+                dialog.showDialog();
+            }
+        });
         mList = getDummyAddressList();
         mList.add(0, new AddressModel() {{
             address = getString(R.string.label_select_address);
@@ -231,5 +252,13 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
             isSelected = false;
         }});
         return list;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == Utility.PLACE_PICKER_REQUEST && dialog != null)
+            dialog.onActivityResult(resultCode, data);
+
     }
 }
