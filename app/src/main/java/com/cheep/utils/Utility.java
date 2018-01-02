@@ -29,8 +29,11 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.AppCompatEditText;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
+import android.text.style.RelativeSizeSpan;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -118,6 +121,19 @@ public class Utility {
         return allGranted;
     }
 
+    public static int getAddressCategoryString(String category) {
+        if (category.equalsIgnoreCase(NetworkUtility.TAGS.ADDRESS_TYPE.HOME))
+            return R.string.label_home;
+        else if (category.equalsIgnoreCase(NetworkUtility.TAGS.ADDRESS_TYPE.OFFICE))
+            return R.string.label_office;
+        else if (category.equalsIgnoreCase(NetworkUtility.TAGS.ADDRESS_TYPE.BIZ))
+            return R.string.label_biz;
+        else if (category.equalsIgnoreCase(NetworkUtility.TAGS.ADDRESS_TYPE.SOCI))
+            return R.string.label_soci;
+        else
+            return R.string.label_other;
+    }
+
     public interface GUEST_STATIC_INFO {
         public static final String USERNAME = "Guest";
     }
@@ -147,6 +163,7 @@ public class Utility {
     public static final String INR = "INR";
     public static final String PPI = "PPI";
     public static final String USRPWD = "USRPWD";
+    public static final String DYNAMIC_LINK_CATEGORY_HOME = "home";
 
     //Date Formats
     public static final String DATE_FORMAT_DD_MM_YY = SuperFormatter.DATE + "/" + SuperFormatter.MONTH_NUMBER + "/" + SuperFormatter.YEAR_4_DIGIT;
@@ -395,6 +412,12 @@ public class Utility {
         return (width / 2);
     }
 
+    public static int getHeightFromWidthForOneHalfIsToOneRatio(int width) {
+//        LogUtils.LOGD(TAG, "getHeightFromWidthForTwoOneRatio() called with: width = [" + width + "]");
+//        LogUtils.LOGD(TAG, "getHeightFromWidthForTwoOneRatio() returned: " + (width / 2));
+        return (int) (((float) width) / 1.52542373);
+    }
+
     /**
      * Below would provide dynamic height of image based on #Utility.CATEGORY_IMAGE_RATIO
      *
@@ -471,6 +494,7 @@ public class Utility {
         String MODEL = "model";
         String IS_PAY_NOW = "isPayNow";
         String DYNAMIC_LINK_URI = "DYNAMIC_LINK_URI";
+        String POSITION = "position";
     }
 
 
@@ -1663,5 +1687,16 @@ public class Utility {
         }
         return selectedServiceArray.toString();
     }
+
+    public static SpannableString getCheepCarePackageMonthlyPrice(SpannableString spannableString, int start, int end) {
+        RelativeSizeSpan relativeSizeSpan = new RelativeSizeSpan(0.5f);
+
+        spannableString.setSpan(relativeSizeSpan, start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannableString.setSpan(new CustomCharacterSpan(), start, end,
+                SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        return spannableString;
+    }
+
 
 }

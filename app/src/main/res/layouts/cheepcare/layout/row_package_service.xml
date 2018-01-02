@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/ln_root"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/scale_9dp"
+        android:layout_marginBottom="@dimen/scale_15dp"
+        android:paddingEnd="@dimen/scale_30dp"
+        android:paddingLeft="@dimen/scale_24dp"
+        android:paddingRight="@dimen/scale_30dp"
+        android:paddingStart="@dimen/scale_24dp">
+
+        <ImageView
+            android:id="@+id/img_icon_correct"
+            android:layout_width="@dimen/scale_15dp"
+            android:layout_height="@dimen/scale_15dp"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/ic_tick_selector"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_service_name"
+            app:layout_constraintTop_toTopOf="@+id/tv_service_name"
+            tools:ignore="ContentDescription"/>
+
+        <com.cheep.custom_view.CFTextViewSemiBold
+            android:id="@+id/tv_service_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:drawableEnd="@drawable/ic_drop_down_arrow"
+            android:drawablePadding="@dimen/scale_8dp"
+            android:drawableRight="@drawable/ic_drop_down_arrow"
+            android:ellipsize="marquee"
+            android:gravity="center_vertical"
+            android:paddingLeft="@dimen/scale_15dp"
+            android:paddingStart="@dimen/scale_15dp"
+            android:singleLine="true"
+            android:textColor="@color/grey_varient_8"
+            android:textSize="@dimen/text_size_17sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toEndOf="@id/img_icon_correct"
+            tools:text="Restaurant"/>
+
+        <com.cheep.custom_view.CFTextViewSemiBold
+            android:id="@+id/tv_service_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="TextView"
+            android:textColor="@color/grey_varient_8"
+            android:textSize="@dimen/text_size_16sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:paddingLeft="@dimen/scale_30dp"
+            android:paddingStart="@dimen/scale_30dp"
+            app:layout_constraintStart_toEndOf="@id/tv_service_name"
+            app:layout_constraintTop_toBottomOf="@id/tv_service_name"/>
+
+    </android.support.constraint.ConstraintLayout>
+</layout>

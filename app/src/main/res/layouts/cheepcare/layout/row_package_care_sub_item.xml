@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/front_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_marginLeft="@dimen/home_screen_general_margin"
+            android:layout_marginRight="@dimen/home_screen_general_margin"
+            android:layout_marginTop="@dimen/home_screen_general_margin"
+            android:layout_marginBottom="@dimen/home_screen_pro_available_section_left_right_margin"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/img_category_background"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/scale_170dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/img_landing_screen_mumbai"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="ContentDescription"/>
+
+            <ImageView
+                android:id="@+id/iv_subscribed"
+                android:layout_width="@dimen/scale_100dp"
+                android:layout_height="@dimen/scale_26dp"
+                android:layout_marginEnd="@dimen/scale_8dp"
+                android:layout_marginRight="@dimen/scale_8dp"
+                android:layout_marginTop="@dimen/scale_12dp"
+                android:src="@drawable/ic_subscribed_text"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+            <LinearLayout
+                android:id="@+id/llBookCategoryContainer"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/scale_170dp"
+                android:layout_alignParentBottom="true"
+                android:background="@drawable/home_tab_black_gradient"
+                android:orientation="horizontal"
+                android:padding="@dimen/home_screen_category_image_inner_margin"
+                app:layout_constraintBottom_toBottomOf="@id/img_category_background"
+                app:layout_constraintEnd_toEndOf="@id/img_category_background"
+                app:layout_constraintStart_toStartOf="@id/img_category_background"
+                app:layout_constraintTop_toTopOf="@id/img_category_background">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:id="@+id/img_category_icon"
+                        android:layout_width="@dimen/scale_50dp"
+                        android:layout_height="@dimen/scale_50dp"
+                        android:adjustViewBounds="false"
+                        android:visibility="gone"
+                        tools:ignore="ContentDescription"/>
+
+                    <com.cheep.custom_view.CFTextViewSemiBold
+                        android:id="@+id/text_category_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:maxLines="2"
+                        android:text="@string/label_plumber"
+                        android:textAllCaps="false"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/text_size_18sp"/>
+                </LinearLayout>
+
+                <com.cheep.custom_view.CFTextViewSemiBold
+                    android:id="@+id/tvBook"
+                    android:layout_width="@dimen/home_screen_book_button_width"
+                    android:layout_height="@dimen/home_screen_book_button_height"
+                    android:layout_gravity="bottom"
+                    android:background="@drawable/rounded_rect_blue"
+                    android:gravity="center"
+                    android:padding="@dimen/scale_6dp"
+                    android:text="@string/label_book"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_size_11sp"/>
+
+                <!-- <com.cheep.custom_view.CFTextViewSemiBold
+                     android:id="@+id/text_jobs_count"
+                     android:layout_width="wrap_content"
+                     android:layout_height="wrap_content"
+                     android:layout_gravity="bottom"
+                     android:layout_marginBottom="@dimen/scale_5dp"
+                     android:layout_marginRight="@dimen/scale_16dp"
+                     android:background="@drawable/rounded_corder_white"
+                     android:gravity="center"
+                     android:minWidth="@dimen/scale_45dp"
+                     android:padding="@dimen/scale_5dp"
+                     android:textColor="@color/white"
+                     android:textSize="@dimen/text_size_14sp"/>-->
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/home_screen_pro_available_section_left_right_margin"
+                android:paddingRight="@dimen/home_screen_pro_available_section_left_right_margin"
+                android:paddingTop="@dimen/home_screen_general_margin"
+                app:layout_constraintTop_toBottomOf="@id/img_category_background">
+
+                <!--Below is the UI for Actions which are reported for particular task. -->
+                <LinearLayout
+                    android:id="@+id/ln_pros_available"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="start|center_vertical"
+                    android:orientation="horizontal"
+                    android:visibility="visible">
+
+                    <ImageView
+                        android:id="@+id/img_1"
+                        android:layout_width="@dimen/home_screen_near_by_pro_image_height_width"
+                        android:layout_height="@dimen/home_screen_near_by_pro_image_height_width"
+                        android:src="@drawable/dummy_person1"
+                        tools:ignore="ContentDescription"/>
+
+                    <ImageView
+                        android:id="@+id/img_2"
+                        android:layout_width="@dimen/home_screen_near_by_pro_image_height_width"
+                        android:layout_height="@dimen/home_screen_near_by_pro_image_height_width"
+                        android:layout_marginLeft="-20dp"
+                        android:src="@drawable/dummy_person1"
+                        tools:ignore="ContentDescription"/>
+
+                    <ImageView
+                        android:id="@+id/img_3"
+                        android:layout_width="@dimen/home_screen_near_by_pro_image_height_width"
+                        android:layout_height="@dimen/home_screen_near_by_pro_image_height_width"
+                        android:layout_marginLeft="-20dp"
+                        android:src="@drawable/dummy_person1"
+                        tools:ignore="ContentDescription"/>
+
+                    <com.cheep.custom_view.CFTextViewSemiBold
+                        android:id="@+id/extra_pro_count"
+                        android:layout_width="@dimen/home_screen_near_by_pro_image_height_width"
+                        android:layout_height="@dimen/home_screen_near_by_pro_image_height_width"
+                        android:layout_marginLeft="-20dp"
+                        android:background="@drawable/background_blue_white_circle_strock_width_one"
+                        android:gravity="center"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/home_screen_extra_category_count_text_size_one_digits"
+                        tools:text="+0"/>
+
+                    <com.cheep.custom_view.CFTextViewSemiBold
+                        android:id="@+id/text_task_response_status"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/home_screen_near_by_pro_image_height_width"
+                        android:layout_gravity="center"
+                        android:focusable="true"
+                        android:focusableInTouchMode="true"
+                        android:gravity="left|center_vertical"
+                        android:scrollHorizontally="true"
+                        android:textColor="@color/splash_gradient_end"
+                        android:textSize="@dimen/home_screen_pro_available_text_size"
+                        tools:text="@string/label_pros_available"/>
+                </LinearLayout>
+
+                <RelativeLayout
+                    android:id="@+id/flOffer"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="@dimen/scale_15dp"
+                    android:layout_weight="1">
+
+                    <com.cheep.custom_view.CFTextViewSemiBold
+                        android:id="@+id/tv_live_feed"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/home_screen_near_by_pro_image_height_width"
+                        android:layout_gravity="right"
+                        android:lineSpacingMultiplier="1.3"
+                        android:lines="2"
+                        android:textColor="@color/task_quote_offer_color"
+                        android:textSize="@dimen/text_size_11sp"
+                        tools:text="17 people trolled by Anurag Kulkarni todayasdad sdassdasd asd dasdasdad"/>
+
+                    <ImageView
+                        android:id="@+id/ivLiveAnimated"
+                        android:layout_width="@dimen/icon_live_home_screen_width"
+                        android:layout_height="@dimen/icon_live_home_screen_height"
+                        android:layout_alignLeft="@+id/tv_live_feed"
+                        tools:ignore="ContentDescription"
+                        tools:src="@drawable/ic_live_0001"/>
+                </RelativeLayout>
+            </LinearLayout>
+        </android.support.constraint.ConstraintLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/home_screen_divider_height"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_gravity="bottom"
+            android:background="@color/grey_dark_color_4"/>
+
+    </android.support.v7.widget.CardView>
+
+</layout>

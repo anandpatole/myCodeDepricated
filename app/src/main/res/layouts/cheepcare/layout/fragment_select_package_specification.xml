@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bottom_stroke_gray"
+                android:orientation="horizontal"
+                android:paddingBottom="@dimen/scale_9dp"
+                android:paddingEnd="@dimen/scale_30dp"
+                android:paddingLeft="@dimen/scale_24dp"
+                android:paddingRight="@dimen/scale_30dp"
+                android:paddingStart="@dimen/scale_24dp"
+                android:paddingTop="@dimen/scale_10dp">
+
+                <ImageView
+                    android:id="@+id/iv_is_address_selected"
+                    android:layout_width="@dimen/scale_15dp"
+                    android:layout_height="@dimen/scale_15dp"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/ic_tick_selector"/>
+
+                <com.cheep.custom_view.CFTextViewSemiBold
+                    android:id="@+id/tv_spinner_address"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:checked="true"
+                    android:drawableEnd="@drawable/ic_drop_down_arrow"
+                    android:drawablePadding="@dimen/scale_8dp"
+                    android:drawableRight="@drawable/ic_drop_down_arrow"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="@dimen/scale_15dp"
+                    android:paddingStart="@dimen/scale_15dp"
+                    android:singleLine="true"
+                    android:text="@string/label_select_address"
+                    android:textColor="@color/grey_varient_8"
+                    android:textSize="@dimen/text_size_14sp"/>
+
+            </LinearLayout>
+
+            <Spinner
+                android:id="@+id/spinner_address_selection"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginEnd="@dimen/scale_46dp"
+                android:layout_marginLeft="@dimen/scale_55dp"
+                android:layout_marginRight="@dimen/scale_46dp"
+                android:layout_marginStart="@dimen/scale_55dp"
+                android:background="@drawable/bg_spinner"
+                android:dropDownWidth="@dimen/scale_256dp"
+                android:focusable="true"
+                android:paddingTop="6dp"
+                android:textSize="@dimen/text_size_14sp"
+                android:theme="@style/AppTheme.AppBarWhite.ColorControlNormalBlue"
+                android:visibility="invisible"/>
+
+            <LinearLayout
+                android:id="@+id/lnAddAddress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/scale_20dp"
+                android:layout_marginTop="@dimen/scale_7dp"
+                android:background="@drawable/bottom_stroke_gray"
+                android:orientation="horizontal"
+                android:paddingBottom="@dimen/scale_9dp"
+                android:paddingEnd="@dimen/scale_30dp"
+                android:paddingLeft="@dimen/scale_24dp"
+                android:paddingRight="@dimen/scale_30dp"
+                android:paddingStart="@dimen/scale_24dp">
+
+                <ImageView
+                    android:layout_width="@dimen/scale_15dp"
+                    android:layout_height="@dimen/scale_15dp"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/ic_white_plus_background_blue"/>
+
+                <com.cheep.custom_view.CFTextViewSemiBold
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:checked="true"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="@dimen/scale_15dp"
+                    android:paddingStart="@dimen/scale_15dp"
+                    android:text="@string/label_add_address"
+                    android:textColor="@color/grey_varient_8"
+                    android:textSize="@dimen/text_size_14sp"/>
+
+            </LinearLayout>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clipToPadding="false"
+                android:paddingBottom="@dimen/scale_25dp"
+                app:layoutManager="LinearLayoutManager"/>
+
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
+</layout>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+        xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <LinearLayout
         android:id="@+id/root_banner_view"
@@ -21,7 +21,7 @@
             <android.support.v4.view.ViewPager
                 android:id="@+id/view_pager_banner_images"
                 android:layout_width="match_parent"
-                android:layout_height="200dp" />
+                android:layout_height="200dp"/>
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -34,14 +34,47 @@
                     android:layout_centerHorizontal="true"
                     android:layout_centerVertical="true"
                     app:ci_drawable="@drawable/xml_circular_indicator_selected"
-                    app:ci_drawable_unselected="@drawable/xml_circular_indicator_unselected" />
+                    app:ci_drawable_unselected="@drawable/xml_circular_indicator_unselected"/>
             </RelativeLayout>
         </LinearLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="@dimen/home_screen_divider_height"
-            android:background="@color/grey_dark_color_4" />
+            android:background="@color/grey_dark_color_4"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:focusableInTouchMode="true"
+            android:orientation="horizontal"
+            >
+
+            <com.cheep.cheepcare.customview.VerticalViewPager
+                android:id="@+id/view_pager_subscription_banner_images"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"/>
+
+            <RelativeLayout
+                android:layout_width="@dimen/scale_12dp"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:visibility="visible">
+
+                <me.relex.circleindicator.CircleIndicator
+                    android:id="@+id/indicator_subscription_banner"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    app:ci_drawable="@drawable/xml_circular_indicator_selected_white"
+                    app:ci_drawable_unselected="@drawable/xml_circular_indicator_unselected_white"
+                    app:ci_height="@dimen/scale_3dp"
+                    app:ci_orientation="vertical"
+                    app:ci_width="@dimen/scale_3dp"/>
+            </RelativeLayout>
+        </RelativeLayout>
+
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -57,7 +90,7 @@
                 android:layout_centerVertical="true"
                 android:text="@string/label_our_services"
                 android:textColor="@color/grey_dark_color_5"
-                android:textSize="@dimen/text_size_18sp" />
+                android:textSize="@dimen/text_size_18sp"/>
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -71,7 +104,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/label_filter"
                     android:textAllCaps="true"
-                    android:textColor="@color/grey_dark_color_6" />
+                    android:textColor="@color/grey_dark_color_6"/>
 
                 <com.cheep.custom_view.CFTextViewRegular
                     android:id="@+id/text_filter"
@@ -86,7 +119,7 @@
                     android:paddingTop="@dimen/scale_5dp"
                     android:text="@string/label_featured"
                     android:textColor="@color/selector_text_color_home_filter"
-                    android:textSize="@dimen/text_size_14sp" />
+                    android:textSize="@dimen/text_size_14sp"/>
             </LinearLayout>
         </RelativeLayout>
     </LinearLayout>

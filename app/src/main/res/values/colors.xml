@@ -35,8 +35,11 @@
     <color name="grey_variant_21">#AFAFAF</color>
     <color name="grey_varient_22">#545454</color>
     <color name="grey_varient_23">#959595</color>
+    <color name="grey_varient_24">#C3C3C3</color>
+    <color name="grey_varient_25">#DAD8D7</color>
+    <color name="grey_varient_26">#6E6D6E</color>
 
-    
+
     <color name="brown_varient_1">#f0f0f0</color>
 
     <!--<color name="cheepest_bg_color">#E3F1FE</color>-->
@@ -111,6 +114,7 @@
     <color name="task_completed_green">#21A17B</color>
     <color name="task_canceled_red">#EB3727</color>
     <color name="task_elapses_red">#F06608</color>
+    <color name="black_varient_1">#010101</color>
     <!--test-->
     <!--<color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>

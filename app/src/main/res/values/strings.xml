@@ -150,6 +150,8 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_add">Add</string>
     <string name="label_other">Other</string>
     <string name="label_office">Office</string>
+    <string name="label_biz">Biz</string>
+    <string name="label_soci">Soci</string>
     <string name="label_add_address">Add Address</string>
     <string name="label_username">Username</string>
     <string name="label_spread_the_gift_of_happiness">Spread the gift of happiness</string>
@@ -580,4 +582,39 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_not_paid">Not Paid</string>
     <string name="lable_via">Via %1s</string>
 
+    <string name="label_mumbai">Mumbai</string>
+    <string name="dummy_good_morning_mumbai">GOOOOOOD MOOOOORNING MUUUUUUMBAI!</string>
+    <string name="landing_page_info_text">We bring you our top services in affordable packages so you can get
+    the best care for your homes, offices, and societies.</string>
+    <string name="packages_for_needs">Packages for all your needs</string>
+    <string name="step_1_desc_cheep_care">Customize the plan to your needs</string>
+    <string name="step_2_desc_cheep_care">WooHoo! Add more packages and save money</string>
+    <string name="step_3_desc_cheep_care">Awesome! Just one step away from happiness!</string>
+    <string name="select_x_package">Select %1s package</string>
+    <string name="home_care">Home Care</string>
+    <string name="biz_care">Biz Care</string>
+    <string name="appliance_care">Appliance Care</string>
+    <string name="tech_care">Tech Care</string>
+    <string name="soci_care">Soci Care</string>
+    <string name="label_select_address">Select Address</string>
+    <string name="label_add_another_address">Add another address</string>
+    <string name="rupee_symbol_x_package_price">₹%1s/MTH</string>
+    <string name="label_half_yearly">Half-Yearly</string>
+    <string name="description_half_yearly_package">Hassel-free goodness with CHEEP CARE for 6 whole months.</string>
+    <string name="label_yearly">Yearly</string>
+    <string name="description_yearly_package">Go epic with yearlong CHEEP CARE just how you like it.</string>
+    <string name="label_save_600_year">(Save ₹600/year)</string>
+    <string name="label_inclusive_of_taxes">Inclusive\nof taxes</string>
+    <string name="label_support_in_progress">Support in progress</string>
+    <string name="label_book_a_similar_task">Book a Similar Task</string>
+    <string name="msg_welcome_x">Welcome %1s!</string>
+    <string name="msg_welcoming_on_subscription">Congratulations on your CHEEP CARE Subscription. You can tap any of
+        the services below to enjoy them for free!*</string>
+
+    <!--For Content description-->
+    <string name="city_image">City Image</string>
+    <string name="cheep_care_gif">Cheep Care Gif</string>
+    <string name="hint_landmark">Landmark</string>
+    <string name="hint_pincode">Pincode</string>
+    <string name="hint_nickname">Nickname</string>
 </resources>

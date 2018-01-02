@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/scale_10dp">
+
+        <ImageView
+            android:id="@+id/iv_item_background"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            tools:src="@drawable/banner_appliance_care"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingEnd="@dimen/scale_16dp"
+            android:paddingLeft="@dimen/scale_16dp"
+            android:paddingRight="@dimen/scale_16dp"
+            android:paddingStart="@dimen/scale_16dp">
+
+            <ImageView
+                android:id="@+id/iv_is_address_selected"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:src="@drawable/selector_filled_tick"/>
+
+
+            <LinearLayout
+                android:id="@+id/lnTop"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/scale_16dp"
+                android:layout_marginLeft="@dimen/scale_16dp"
+                android:layout_marginRight="@dimen/scale_16dp"
+                android:layout_marginTop="@dimen/scale_16dp"
+                android:layout_toLeftOf="@+id/tv_price"
+                android:layout_toRightOf="@id/iv_is_address_selected"
+                android:orientation="vertical">
+
+
+                <com.cheep.custom_view.CFTextViewSemiBold
+                    android:id="@+id/tv_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_size_17sp"
+                    tools:text="Appliance Care"/>
+
+
+                <com.cheep.custom_view.CFTextViewRegular
+                    android:id="@+id/tv_description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_size_12sp"
+                    tools:text="Please enter minimum %1s amount to proceed Please "/>
+
+
+                <LinearLayout
+                    android:id="@+id/tv_address"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:orientation="horizontal"
+                    android:paddingBottom="@dimen/scale_5dp"
+                    android:paddingRight="@dimen/scale_8dp"
+                    android:paddingTop="@dimen/scale_5dp"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_size_12sp">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/icon_home_white"/>
+
+
+                    <com.cheep.custom_view.CFTextViewRegular
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="@dimen/scale_5dp"
+                        android:layout_weight="1"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:text="121, ddfdf dsfsdf sdfsdf  sdf "
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/text_size_12sp"/>
+
+                </LinearLayout>
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/iv_cancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="@dimen/scale_10dp"
+                android:src="@drawable/selector_filled_tick"/>
+
+            <com.cheep.custom_view.CFTextViewSemiBold
+                android:id="@+id/tv_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/iv_cancel"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_17sp"
+                tools:text="$2v0/MTH"/>
+
+        </RelativeLayout>
+    </FrameLayout>
+</layout>

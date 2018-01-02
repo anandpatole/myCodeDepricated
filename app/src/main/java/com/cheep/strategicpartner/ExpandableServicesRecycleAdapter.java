@@ -24,7 +24,10 @@ import java.util.List;
  * <p>
  * Expandable RecyclerView for service selection in Strategic partner Phase 1
  */
-class ExpandableServicesRecycleAdapter extends ExpandableRecyclerAdapter<StrategicPartnerServiceModel, AllSubSubCat, ExpandableServicesRecycleAdapter.ParentSubCategoryViewHolder, ExpandableServicesRecycleAdapter.ChildSubCategoryViewHolder> {
+class ExpandableServicesRecycleAdapter extends ExpandableRecyclerAdapter<StrategicPartnerServiceModel
+        , AllSubSubCat
+        , ExpandableServicesRecycleAdapter.ParentSubCategoryViewHolder
+        , ExpandableServicesRecycleAdapter.ChildSubCategoryViewHolder> {
 
     private List<StrategicPartnerServiceModel> mSubCategoriesList;
     private boolean isSingleSelection = false;

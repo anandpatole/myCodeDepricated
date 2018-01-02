@@ -37,6 +37,8 @@ import com.cheep.activity.SearchActivity;
 import com.cheep.activity.SelectLocationActivity;
 import com.cheep.activity.TaskCreationActivity;
 import com.cheep.adapter.HomeTabRecyclerViewAdapter;
+import com.cheep.cheepcare.fragment.SubscriptionBannerFragment;
+import com.cheep.cheepcare.model.SubscriptionBannerModel;
 import com.cheep.databinding.FragmentTabHomeBinding;
 import com.cheep.databinding.LayoutFilterHomePopupBinding;
 import com.cheep.interfaces.DrawerLayoutInteractionListener;
@@ -254,6 +256,7 @@ public class HomeTabFragment extends BaseFragment {
 
         // Setup Cover Image Adapter as Empty
         setupCoverViewPager(null);
+        setupCheepCareBannerViewPager(SubscriptionBannerFragment.getSubscriptionBannerModels());
         // Initiate Recyclerview
         initiateRecyclerView(null);
 
@@ -953,6 +956,17 @@ public class HomeTabFragment extends BaseFragment {
         String categorySlug = "";
 
         ((HomeActivity) mContext).isReadyToLoad = true;
+        if (getArguments().getParcelable(Utility.Extra.DYNAMIC_LINK_URI) != null) {
+            Log.d(TAG, "getCategoryIdBasedOnSlug: category slug" +
+                    ((Uri) getArguments().getParcelable(Utility.Extra.DYNAMIC_LINK_URI)).getLastPathSegment());
+            categorySlug = ((Uri) getArguments().getParcelable(Utility.Extra.DYNAMIC_LINK_URI)).getLastPathSegment();
+            if (categorySlug.equalsIgnoreCase(Utility.DYNAMIC_LINK_CATEGORY_HOME) || categorySlug.isEmpty()) {
+                return;
+            }
+        } else {
+            return;
+        }
+
 
         // if dynamic link is for home then do not call web service
         if (getArguments().getParcelable(Utility.Extra.DYNAMIC_LINK_URI) != null) {
@@ -1078,7 +1092,54 @@ public class HomeTabFragment extends BaseFragment {
     }
 
     private BannerViewPagerAdapter bannerViewPagerAdapter;
+    private CheepCareBannerViewPagerAdapter cheepCareBannerViewPagerAdapter;
     private Handler mHandler;
+    private Handler mHandlerSubscriptionBanner;
+
+    private void setupCheepCareBannerViewPager(ArrayList<SubscriptionBannerModel> mBannerListModels) {
+
+        cheepCareBannerViewPagerAdapter = new CheepCareBannerViewPagerAdapter(getChildFragmentManager(), mBannerListModels);
+        mFragmentTabHomeBinding.layoutBannerHeader.viewPagerSubscriptionBannerImages.setAdapter(cheepCareBannerViewPagerAdapter);
+
+        //See if we are having only one image, do not show the indicator in that case
+        showORHidePagerIndicator();
+
+        // For Setting up view pager Indicator
+        mFragmentTabHomeBinding.layoutBannerHeader.indicatorSubscriptionBanner.setViewPager(mFragmentTabHomeBinding.layoutBannerHeader.viewPagerSubscriptionBannerImages);
+        cheepCareBannerViewPagerAdapter.registerDataSetObserver(mFragmentTabHomeBinding.layoutBannerHeader.indicatorSubscriptionBanner.getDataSetObserver());
+        if (mHandlerSubscriptionBanner != null) {
+            mHandlerSubscriptionBanner.removeCallbacks(mAutoSlideRunnableSubscriptionBanner);
+            mHandlerSubscriptionBanner = null;
+            mHandlerSubscriptionBanner = new Handler();
+        } else {
+            mHandlerSubscriptionBanner = new Handler();
+        }
+        // Sliding of Viewpager image
+        mHandlerSubscriptionBanner.postDelayed(mAutoSlideRunnableSubscriptionBanner, 4000);
+
+        mFragmentTabHomeBinding.layoutBannerHeader.viewPagerSubscriptionBannerImages.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int i, float v, int i1) {
+                mFragmentTabHomeBinding.layoutBannerHeader.viewPagerSubscriptionBannerImages.getParent().requestDisallowInterceptTouchEvent(true);
+            }
+
+            @Override
+            public void onPageSelected(int i) {
+                if (mHandlerSubscriptionBanner == null) {
+                    return;
+                }
+                //Reset the sliding
+                mHandlerSubscriptionBanner.removeCallbacks(mAutoSlideRunnableSubscriptionBanner);
+                // reset the sliding
+                mHandlerSubscriptionBanner.postDelayed(mAutoSlideRunnableSubscriptionBanner, 4000);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int i) {
+
+            }
+        });
+    }
 
     private void setupCoverViewPager(ArrayList<BannerImageModel> mBannerListModels) {
 
@@ -1137,6 +1198,18 @@ public class HomeTabFragment extends BaseFragment {
             mFragmentTabHomeBinding.layoutBannerHeader.viewPagerBannerImages.setCurrentItem(currentPosition);
         }
     };
+    private Runnable mAutoSlideRunnableSubscriptionBanner = new Runnable() {
+        @Override
+        public void run() {
+            int currentPosition = mFragmentTabHomeBinding.layoutBannerHeader.viewPagerSubscriptionBannerImages.getCurrentItem();
+            if (currentPosition == (cheepCareBannerViewPagerAdapter.getCount() - 1)) {
+                currentPosition = 0;
+            } else {
+                currentPosition = currentPosition + 1;
+            }
+            mFragmentTabHomeBinding.layoutBannerHeader.viewPagerSubscriptionBannerImages.setCurrentItem(currentPosition);
+        }
+    };
 
     private void addCoverImageListing(ArrayList<BannerImageModel> mBannerListModels) {
         bannerViewPagerAdapter.replaceData(mBannerListModels);
@@ -1154,18 +1227,18 @@ public class HomeTabFragment extends BaseFragment {
     }
 
     private static class BannerViewPagerAdapter extends FragmentStatePagerAdapter {
-        private ArrayList<BannerImageModel> imageModelArrayList;
+        private ArrayList<BannerImageModel> strategicPartnerBannerArrayList;
 
         BannerViewPagerAdapter(FragmentManager fragmentManager, ArrayList<BannerImageModel> modelArrayList) {
             super(fragmentManager);
 //            Log.d(TAG, "BannerViewPagerAdapter() called with: fragmentManager = [" + fragmentManager + "], modelArrayList = [" + modelArrayList + "]");
-            this.imageModelArrayList = modelArrayList != null ? modelArrayList : new ArrayList<BannerImageModel>();
+            this.strategicPartnerBannerArrayList = modelArrayList != null ? modelArrayList : new ArrayList<BannerImageModel>();
         }
 
         @Override
         public Fragment getItem(int position) {
-//            Log.d(TAG, "getItem() called with: position = [" + position + "]" + " Size: " + imageModelArrayList.size());
-            return BannerImageFragment.getInstance(imageModelArrayList.get(position));
+//            Log.d(TAG, "getItem() called with: position = [" + position + "]" + " Size: " + cheepCareSubscriptionBannerArrayList.size());
+            return BannerImageFragment.getInstance(strategicPartnerBannerArrayList.get(position));
         }
 
         @Override
@@ -1175,28 +1248,68 @@ public class HomeTabFragment extends BaseFragment {
 
         @Override
         public int getCount() {
-            if (imageModelArrayList == null) {
+            if (strategicPartnerBannerArrayList == null) {
                 return 0;
             }
-            return imageModelArrayList.size();
+            return strategicPartnerBannerArrayList.size();
         }
 
         private ArrayList<BannerImageModel> getLists() {
-            return imageModelArrayList;
+            return strategicPartnerBannerArrayList;
         }
 
         private void replaceData(ArrayList<BannerImageModel> modelArrayList) {
-//            Log.d(TAG, "replaceData() called with: modelArrayList = [" + modelArrayList.size() + "]");
-            imageModelArrayList = modelArrayList;
+            strategicPartnerBannerArrayList = modelArrayList;
             notifyDataSetChanged();
         }
 
         @Override
         public void restoreState(Parcelable state, ClassLoader loader) {
-//            super.restoreState(state, loader);
         }
 
     }
+
+    private static class CheepCareBannerViewPagerAdapter extends FragmentStatePagerAdapter {
+        private ArrayList<SubscriptionBannerModel> cheepCareSubscriptionBannerArrayList;
+
+        CheepCareBannerViewPagerAdapter(FragmentManager fragmentManager, ArrayList<SubscriptionBannerModel> modelArrayList) {
+            super(fragmentManager);
+//            Log.d(TAG, "BannerViewPagerAdapter() called with: fragmentManager = [" + fragmentManager + "], modelArrayList = [" + modelArrayList + "]");
+            this.cheepCareSubscriptionBannerArrayList = modelArrayList != null ? modelArrayList : new ArrayList<SubscriptionBannerModel>();
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+//            Log.d(TAG, "getItem() called with: position = [" + position + "]" + " Size: " + cheepCareSubscriptionBannerArrayList.size());
+            return SubscriptionBannerFragment.getInstance(cheepCareSubscriptionBannerArrayList.get(position));
+        }
+
+        @Override
+        public int getItemPosition(Object object) {
+            return POSITION_NONE;
+        }
+
+        @Override
+        public int getCount() {
+            return cheepCareSubscriptionBannerArrayList == null ? 0 : cheepCareSubscriptionBannerArrayList.size();
+        }
+
+        private ArrayList<SubscriptionBannerModel> getLists() {
+            return cheepCareSubscriptionBannerArrayList;
+        }
+
+        private void replaceData(ArrayList<SubscriptionBannerModel> modelArrayList) {
+//            Log.d(TAG, "replaceData() called with: modelArrayList = [" + modelArrayList.size() + "]");
+            cheepCareSubscriptionBannerArrayList = modelArrayList;
+            notifyDataSetChanged();
+        }
+
+        @Override
+        public void restoreState(Parcelable state, ClassLoader loader) {
+        }
+
+    }
+
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////

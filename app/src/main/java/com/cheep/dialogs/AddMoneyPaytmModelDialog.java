@@ -50,7 +50,7 @@ public class AddMoneyPaytmModelDialog extends DialogFragment {
         description.append("    ");
         Spannable span = new SpannableString(description);
         Drawable img1 = ContextCompat.getDrawable(getActivity(), R.drawable.ic_smiley_bird);
-        Drawable img2 = ContextCompat.getDrawable(getActivity(), R.drawable.ic_smiley_folded_hands);
+        Drawable img2 = ContextCompat.getDrawable(getActivity(), R.drawable.ic_smiley_folded_hands_small);
         img1.setBounds(0, 0, img1.getIntrinsicWidth(), img1.getIntrinsicHeight());
         img2.setBounds(0, 0, img2.getIntrinsicWidth(), img2.getIntrinsicHeight());
         ImageSpan image1 = new ImageSpan(img1, ImageSpan.ALIGN_BASELINE);
