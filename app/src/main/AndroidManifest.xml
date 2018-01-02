@@ -179,17 +179,18 @@
             android:name=".cheepcare.activity.LandingScreenPickPackageActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden">
-            <!--<intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>-->
         </activity>
 
         <activity
             android:name=".cheepcare.activity.PackageCustomizationActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize"/>
+
+        <activity
+            android:name=".cheepcare.activity.WelcomeToCheepCareActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize|stateAlwaysHidden">
+        </activity>
 
         <!-- Location Tracked Service -->
         <service

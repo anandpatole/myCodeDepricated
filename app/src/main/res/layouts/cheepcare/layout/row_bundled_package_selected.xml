@@ -83,8 +83,6 @@
                         android:layout_marginRight="@dimen/scale_50dp"
                         android:layout_marginTop="@dimen/scale_5dp"
                         android:background="@drawable/background_steps_unverified"
-                        android:ellipsize="end"
-                        android:maxLines="1"
                         android:orientation="horizontal"
                         android:paddingBottom="@dimen/scale_5dp"
                         android:paddingLeft="@dimen/scale_10dp"
@@ -93,36 +91,37 @@
                         android:textColor="@color/white"
                         android:textSize="@dimen/text_size_12sp">
 
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/icon_address_home_active"/>
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:src="@drawable/icon_address_home_active"
+                                tools:ignore="ContentDescription"/>
 
-                        <com.cheep.custom_view.CFTextViewRegular
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="@dimen/scale_2dp"
-                            android:text="Home"
-                            android:textColor="@color/splash_gradient_end"
-                            android:textSize="@dimen/text_size_12sp"/>
+                            <com.cheep.custom_view.CFTextViewRegular
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="@dimen/scale_2dp"
+                                android:layout_marginStart="@dimen/scale_2dp"
+                                android:layout_weight="1"
+                                android:singleLine="true"
+                                android:textColor="@color/splash_gradient_end"
+                                android:textSize="@dimen/text_size_12sp"
+                                tools:text="Home Home Home Home Home Home Home Home"/>
 
-                        <com.cheep.custom_view.CFTextViewRegular
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="@dimen/scale_2dp"
-                            android:layout_weight="1"
-                            android:ellipsize="end"
-                            android:maxLines="1"
-                            android:text="121, ddfdf dsfsdf sdfsdf  sdf "
-                            android:textColor="@color/grey_varient_10"
-                            android:textSize="@dimen/text_size_12sp"/>
+                            <com.cheep.custom_view.CFTextViewRegular
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="@dimen/scale_2dp"
+                                android:layout_marginStart="@dimen/scale_2dp"
+                                android:layout_weight="2"
+                                android:drawableEnd="@drawable/ic_drop_down_arrow"
+                                android:drawableRight="@drawable/ic_drop_down_arrow"
+                                android:singleLine="true"
+                                android:textColor="@color/grey_varient_10"
+                                android:textSize="@dimen/text_size_12sp"
+                                tools:text="121, ddfdf dsfsdf sdfsdf  sdf "/>
 
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:src="@drawable/ic_drop_down_arrow"/>
-                    </LinearLayout>
+                        </LinearLayout>
 
 
                     <com.cheep.custom_view.CFTextViewRegular

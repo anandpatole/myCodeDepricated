@@ -1,7 +1,9 @@
 package com.cheep.cheepcare.adapter;
 
+import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.support.annotation.NonNull;
+import android.text.SpannableString;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +16,7 @@ import com.cheep.custom_view.expandablerecycleview.ExpandableRecyclerAdapter;
 import com.cheep.custom_view.expandablerecycleview.ParentViewHolder;
 import com.cheep.databinding.RowPackageServiceBinding;
 import com.cheep.databinding.RowPackageSubServicesBinding;
+import com.cheep.utils.Utility;
 
 import java.util.List;
 
@@ -82,7 +85,7 @@ public class ExpandablePackageServicesRecyclerAdapter extends ExpandableRecycler
     @Override
     public void onBindChildViewHolder(@NonNull ChildCategoryViewHolder childViewHolder
             , int parentPosition, int childPosition, @NonNull CheepCarePackageSubServicesModel child) {
-        childViewHolder.bind(child);
+        childViewHolder.bind(child, childViewHolder.mBinding.getRoot().getContext());
     }
 
     /**
@@ -117,6 +120,7 @@ public class ExpandablePackageServicesRecyclerAdapter extends ExpandableRecycler
         // bind data with view parent row
         public void bind(@NonNull CheepCarePackageServicesModel servicesModel) {
             mBinding.imgIconCorrect.setSelected(servicesModel.isSelected);
+            mBinding.tvServiceDescription.setText(servicesModel.description);
             mBinding.tvServiceName.setText(servicesModel.name);
         }
 
@@ -188,7 +192,7 @@ public class ExpandablePackageServicesRecyclerAdapter extends ExpandableRecycler
         }
 
         // bind data with view for child row
-        public void bind(@NonNull CheepCarePackageSubServicesModel subServicesModel) {
+        public void bind(@NonNull CheepCarePackageSubServicesModel subServicesModel, Context context) {
 
             mBinding.tvSubServiceName.setText(subServicesModel.subSubCatName);
             //commented as, as of now there is no description
@@ -198,8 +202,12 @@ public class ExpandablePackageServicesRecyclerAdapter extends ExpandableRecycler
             } else {
                 textPackageDescription.setVisibility(View.GONE);
             }*/
-            mBinding.tvSubServicePrice.setText(itemView.getContext().getString(R.string.rupee_symbol_x
-                    , /*Utility.getQuotePriceFormatter(String.valueOf(*/subServicesModel.price)/*))*/);
+            SpannableString spannableString = new SpannableString(context.getString(R.string.rupee_symbol_x_package_price
+                    , subServicesModel.price));
+            spannableString = Utility.getCheepCarePackageMonthlyPrice(spannableString, spannableString.length() - 2, spannableString.length());
+            mBinding.tvSubServicePrice.setText(spannableString);
+            /*mBinding.tvSubServicePrice.setText(itemView.getContext().getString(R.string.rupee_symbol_x
+                    , *//*Utility.getQuotePriceFormatter(String.valueOf(*//*subServicesModel.price)*//*))*//*);*/
             mBinding.imgIconCorrect.setSelected(subServicesModel.isSelected);
             mBinding.tvSubServicePrice.setSelected(subServicesModel.isSelected);
         }

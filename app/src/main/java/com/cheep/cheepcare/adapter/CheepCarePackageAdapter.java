@@ -29,7 +29,7 @@ public class CheepCarePackageAdapter extends LoadMoreRecyclerAdapter<CheepCarePa
         void onPackageItemClick(int position, CheepCarePackageModel packageModel);
     }
 
-    public CheepCarePackageAdapter(PackageItemClickListener listener){
+    public CheepCarePackageAdapter(PackageItemClickListener listener) {
         mListener = listener;
     }
 
@@ -84,7 +84,7 @@ public class CheepCarePackageAdapter extends LoadMoreRecyclerAdapter<CheepCarePa
         }
     }
 
-    public void addPakcageList(List<CheepCarePackageModel> list) {
+    public void addPackageList(List<CheepCarePackageModel> list) {
         mList.addAll(list);
         notifyDataSetChanged();
     }

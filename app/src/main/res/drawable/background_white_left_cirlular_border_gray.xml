@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:bottom="@dimen/scale_3dp"
+        android:left="@dimen/scale_3dp"
+        android:right="-2dp"
+        android:top="@dimen/scale_3dp">
+        <shape android:shape="rectangle">
+            <corners
+                android:bottomLeftRadius="@dimen/scale_16dp"
+                android:topLeftRadius="@dimen/scale_16dp"/>
+            <solid android:color="@color/transparent"/>
+            <stroke
+                android:width="@dimen/scale_1dp"
+                android:color="@color/grey_varient_26"/>
+        </shape>
+    </item>
+    <item android:right="-4dp">
+        <shape android:shape="rectangle">
+            <corners
+                android:bottomLeftRadius="@dimen/scale_16dp"
+                android:topLeftRadius="@dimen/scale_16dp"/>
+            <solid android:color="@color/transparent"/>
+            <stroke
+                android:width="@dimen/scale_3dp"
+                android:color="@color/grey_varient_25"/>
+        </shape>
+    </item>
+    <item
+        android:bottom="@dimen/scale_5dp"
+        android:left="@dimen/scale_5dp"
+        android:top="@dimen/scale_5dp">
+        <shape android:shape="rectangle">
+            <corners
+                android:bottomLeftRadius="@dimen/scale_16dp"
+                android:topLeftRadius="@dimen/scale_16dp"/>
+            <solid android:color="@color/transparent"/>
+            <stroke
+                android:width="@dimen/scale_1dp"
+                android:color="@color/grey_varient_26"/>
+        </shape>
+    </item>
+    <item
+        android:bottom="@dimen/scale_4dp"
+        android:left="@dimen/scale_4dp"
+        android:right="@dimen/scale_1dp"
+        android:top="@dimen/scale_4dp">
+        <shape
+            android:shape="rectangle">
+            <corners
+                android:bottomLeftRadius="@dimen/scale_16dp"
+                android:topLeftRadius="@dimen/scale_16dp"/>
+            <solid android:color="@color/white"/>
+        </shape>
+    </item>
+</layer-list>

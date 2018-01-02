@@ -596,10 +596,6 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="soci_care">Soci Care</string>
     <string name="label_select_address">Select Address</string>
     <string name="label_add_another_address">Add another address</string>
-
-    <!--For Content description-->
-    <string name="city_image">City Image</string>
-    <string name="cheep_care_gif">Cheep Care Gif</string>
     <string name="rupee_symbol_x_package_price">₹%1s/MTH</string>
     <string name="label_half_yearly">Half-Yearly</string>
     <string name="description_half_yearly_package">Hassel-free goodness with CHEEP CARE for 6 whole months.</string>
@@ -609,4 +605,11 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_inclusive_of_taxes">Inclusive\nof taxes</string>
     <string name="label_support_in_progress">Support in progress</string>
     <string name="label_book_a_similar_task">Book a Similar Task</string>
+    <string name="msg_welcome_x">Welcome %1s!</string>
+    <string name="msg_welcoming_on_subscription">Congratulations on your CHEEP CARE Subscription. You can tap any of
+        the services below to enjoy them for free!*</string>
+
+    <!--For Content description-->
+    <string name="city_image">City Image</string>
+    <string name="cheep_care_gif">Cheep Care Gif</string>
 </resources>

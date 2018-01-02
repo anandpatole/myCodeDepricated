@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/scale_144dp"
+        android:layout_margin="@dimen/scale_4dp"
+        app:cardElevation="@dimen/scale_4dp">
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/scale_144dp"
+            android:layout_marginTop="@dimen/scale_16dp"
+            android:padding="@dimen/scale_4dp">
+
+            <ImageView
+                android:id="@+id/iv_care_image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:src="@drawable/banner_appliance_care"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+            <ImageView
+                android:id="@+id/iv_subscribed"
+                android:layout_width="@dimen/scale_90dp"
+                android:layout_height="@dimen/scale_22dp"
+                android:layout_marginLeft="@dimen/scale_32dp"
+                android:layout_marginStart="@dimen/scale_32dp"
+                android:layout_marginTop="@dimen/scale_12dp"
+                android:src="@drawable/ic_subscribed_text"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+            <com.cheep.custom_view.CFTextViewSemiBold
+                android:id="@+id/tv_care_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/scale_32dp"
+                android:layout_marginStart="@dimen/scale_32dp"
+                android:layout_marginTop="@dimen/scale_4dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_18sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/iv_subscribed"
+                tools:text="Home Care"/>
+
+            <com.cheep.custom_view.CFTextViewSemiBold
+                android:id="@+id/tv_days_left1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/scale_4dp"
+                android:background="@drawable/background_white_left_cirlular_border_gray"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:maxLines="1"
+                android:paddingBottom="@dimen/scale_6dp"
+                android:paddingEnd="@dimen/scale_6dp"
+                android:paddingLeft="@dimen/scale_10dp"
+                android:paddingRight="@dimen/scale_6dp"
+                android:paddingStart="@dimen/scale_10dp"
+                android:paddingTop="@dimen/scale_6dp"
+                android:textColor="@color/grey_dark_color_2"
+                android:textSize="@dimen/text_size_10sp"
+                app:layout_constraintEnd_toStartOf="@+id/tv_days_left2"
+                app:layout_constraintTop_toBottomOf="@id/iv_subscribed"
+                tools:text="1"/>
+
+            <com.cheep.custom_view.CFTextViewSemiBold
+                android:id="@+id/tv_days_left2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/scale_4dp"
+                android:background="@drawable/background_top_bottom_gray_dark_gray_stroke"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:maxLines="1"
+                android:paddingBottom="@dimen/scale_6dp"
+                android:paddingEnd="@dimen/scale_6dp"
+                android:paddingLeft="@dimen/scale_6dp"
+                android:paddingRight="@dimen/scale_6dp"
+                android:paddingStart="@dimen/scale_6dp"
+                android:paddingTop="@dimen/scale_6dp"
+                android:textColor="@color/grey_dark_color_2"
+                android:textSize="@dimen/text_size_10sp"
+                app:layout_constraintEnd_toStartOf="@+id/tv_days_left3"
+                app:layout_constraintTop_toBottomOf="@id/iv_subscribed"
+                tools:text="1"/>
+
+            <com.cheep.custom_view.CFTextViewSemiBold
+                android:id="@+id/tv_days_left3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/scale_32dp"
+                android:layout_marginRight="@dimen/scale_32dp"
+                android:layout_marginTop="@dimen/scale_4dp"
+                android:background="@drawable/background_white_right_cirlular_border_gray"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:maxLines="1"
+                android:paddingBottom="@dimen/scale_6dp"
+                android:paddingEnd="@dimen/scale_10dp"
+                android:paddingLeft="@dimen/scale_6dp"
+                android:paddingRight="@dimen/scale_10dp"
+                android:paddingStart="@dimen/scale_6dp"
+                android:paddingTop="@dimen/scale_6dp"
+                android:textColor="@color/grey_dark_color_2"
+                android:textSize="@dimen/text_size_10sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/iv_subscribed"
+                tools:text="1"/>
+
+            <com.cheep.custom_view.CFTextViewSemiBold
+                android:id="@+id/tv_left_days"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Days Left"
+                android:textColor="@color/white"
+                app:layout_constraintEnd_toEndOf="@id/tv_days_left3"
+                app:layout_constraintStart_toEndOf="@id/tv_address"
+                app:layout_constraintStart_toStartOf="@id/tv_days_left1"
+                app:layout_constraintTop_toBottomOf="@id/tv_days_left1"/>
+
+            <LinearLayout
+                android:id="@+id/tv_address"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/scale_12dp"
+                android:layout_marginLeft="@dimen/scale_32dp"
+                android:layout_marginRight="@dimen/scale_12dp"
+                android:layout_marginStart="@dimen/scale_32dp"
+                android:layout_marginTop="@dimen/scale_4dp"
+                android:background="@drawable/background_steps_unverified"
+                android:orientation="horizontal"
+                android:paddingBottom="@dimen/scale_5dp"
+                android:paddingEnd="@dimen/scale_8dp"
+                android:paddingLeft="@dimen/scale_10dp"
+                android:paddingRight="@dimen/scale_8dp"
+                android:paddingStart="@dimen/scale_10dp"
+                android:paddingTop="@dimen/scale_5dp"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_12sp"
+                app:layout_constraintEnd_toStartOf="@id/tv_left_days"
+                app:layout_constraintHorizontal_weight="0.7"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_care_name">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/icon_address_home_active"
+                    tools:ignore="ContentDescription"/>
+
+                <com.cheep.custom_view.CFTextViewRegular
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/scale_2dp"
+                    android:layout_marginStart="@dimen/scale_2dp"
+                    android:layout_weight="1"
+                    android:singleLine="true"
+                    android:text="Home 1"
+                    android:textColor="@color/splash_gradient_end"
+                    android:textSize="@dimen/text_size_12sp"/>
+
+                <com.cheep.custom_view.CFTextViewRegular
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="4"
+                    android:drawableEnd="@drawable/ic_drop_down_arrow"
+                    android:drawableRight="@drawable/ic_drop_down_arrow"
+                    android:singleLine="true"
+                    android:text="121, Ghanshyam Enclave, New Mumbai"
+                    android:textColor="@color/grey_varient_10"
+                    android:textSize="@dimen/text_size_12sp"/>
+
+            </LinearLayout>
+
+            <com.cheep.custom_view.CFTextViewRegular
+                android:id="@+id/tv_description"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/scale_32dp"
+                android:layout_marginLeft="@dimen/scale_32dp"
+                android:layout_marginStart="@dimen/scale_32dp"
+                android:layout_marginTop="@dimen/scale_4dp"
+                android:drawableEnd="@drawable/ic_white_arrow_filled_blue"
+                android:drawablePadding="@dimen/scale_8dp"
+                android:drawableRight="@drawable/ic_white_arrow_filled_blue"
+                android:singleLine="true"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_11sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_weight="0.8"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_address"
+                tools:text="Please enter enter enter enter enter enter enter minimum %1s amount to proceed"/>
+
+
+        </android.support.constraint.ConstraintLayout>
+    </android.support.v7.widget.CardView>
+</layout>

@@ -86,6 +86,7 @@
     <dimen name="scale_120dp">120dp</dimen>
     <!--<dimen name="scale_130dp">130dp</dimen>-->
     <dimen name="scale_140dp">140dp</dimen>
+    <dimen name="scale_144dp">144dp</dimen>
     <!--<dimen name="scale_150dp">150dp</dimen>-->
     <dimen name="scale_160dp">160dp</dimen>
     <dimen name="scale_170dp">170dp</dimen>

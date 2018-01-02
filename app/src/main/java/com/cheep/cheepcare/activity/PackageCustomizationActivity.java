@@ -31,11 +31,13 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
     private ActivityPackageCustomizationBinding mBinding;
     private PackageCustomizationPagerAdapter mPackageCustomizationPagerAdapter;
     private CheepCarePackageModel mPackageModel;
+    private String mCityName;
 
-    public static void newInstance(Context context, int position, CheepCarePackageModel model) {
+    public static void newInstance(Context context, int position, CheepCarePackageModel model, String cityName) {
         Intent intent = new Intent(context, PackageCustomizationActivity.class);
         intent.putExtra(Utility.Extra.POSITION, position);
         intent.putExtra(Utility.Extra.MODEL, model);
+        intent.putExtra(Utility.Extra.CITY_NAME, cityName);
         context.startActivity(intent);
     }
 
@@ -44,13 +46,15 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
         super.onCreate(savedInstanceState);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_package_customization);
         initiateUI();
+        setListeners();
     }
 
     @Override
     protected void initiateUI() {
 
-        if (getIntent().hasExtra(Utility.Extra.MODEL)){
-             mPackageModel = (CheepCarePackageModel) getIntent().getExtras().getSerializable(Utility.Extra.MODEL);
+        if (getIntent().hasExtra(Utility.Extra.MODEL)) {
+            mPackageModel = (CheepCarePackageModel) getIntent().getExtras().getSerializable(Utility.Extra.MODEL);
+            mCityName = getIntent().getExtras().getString(Utility.Extra.CITY_NAME);
              /*position = getIntent().getExtras().getInt(Utility.Extra.POSITION);*/
         }
 
@@ -107,7 +111,7 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
 
                  */
 //                if (mCurrentStep > 1) {
-                    gotoStep(STAGE_2);
+                gotoStep(STAGE_2);
 //                } else {
 //                    Utility.showSnackBar(getString(R.string.step_1_desc_cheep_care), mBinding.getRoot());
 //                }
@@ -122,7 +126,7 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
                  */
 //                TODO:: remove comments
 //                if (mCurrentStep > 1) {
-                    gotoStep(STAGE_3);
+                gotoStep(STAGE_3);
 //                } else {
 //                    Utility.showSnackBar(getString(R.string.step_1_desc_cheep_care), mBinding.getRoot());
 //                }
@@ -314,6 +318,17 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
 
     @Override
     protected void setListeners() {
-
+        mBinding.textContinue.setOnClickListener(mOnClickListener);
     }
+
+    private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()) {
+                case R.id.text_continue:
+                    WelcomeToCheepCareActivity.newInstance(mContext, mCityName);
+                    break;
+            }
+        }
+    };
 }

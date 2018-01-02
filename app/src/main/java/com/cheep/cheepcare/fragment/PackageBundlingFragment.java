@@ -64,9 +64,9 @@ public class PackageBundlingFragment extends BaseFragment {
         }
 
         if (isVerified) {
-            mPackageCustomizationActivity.setTaskState(PackageCustomizationActivity.STEP_ONE_VERIFIED);
+            mPackageCustomizationActivity.setTaskState(PackageCustomizationActivity.STEP_TWO_VERIFIED);
         } else {
-            mPackageCustomizationActivity.setTaskState(PackageCustomizationActivity.STEP_ONE_UNVERIFIED);
+            mPackageCustomizationActivity.setTaskState(PackageCustomizationActivity.STEP_TWO_UNVERIFIED);
         }
 
         // Hide the post task button
