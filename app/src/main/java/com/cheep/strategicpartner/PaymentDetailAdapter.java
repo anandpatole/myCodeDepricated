@@ -21,10 +21,10 @@ import java.util.List;
  * amount
  */
 
-class PaymentSummaryAdapter extends RecyclerView.Adapter<PaymentSummaryAdapter.MyViewHolder> {
+class PaymentDetailAdapter extends RecyclerView.Adapter<PaymentDetailAdapter.MyViewHolder> {
     private ArrayList<StrategicPartnerServiceModel> mList;
 
-    PaymentSummaryAdapter(ArrayList<StrategicPartnerServiceModel> mList) {
+    PaymentDetailAdapter(ArrayList<StrategicPartnerServiceModel> mList) {
         this.mList = mList;
     }
 
@@ -32,12 +32,12 @@ class PaymentSummaryAdapter extends RecyclerView.Adapter<PaymentSummaryAdapter.M
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         RowPaymentSummaryBinding rowPaymentSummaryBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), R.layout.row_payment_summary, parent, false);
-        return new PaymentSummaryAdapter.MyViewHolder(rowPaymentSummaryBinding);
+        return new PaymentDetailAdapter.MyViewHolder(rowPaymentSummaryBinding);
 
     }
 
     @Override
-    public void onBindViewHolder(PaymentSummaryAdapter.MyViewHolder holder, int position) {
+    public void onBindViewHolder(PaymentDetailAdapter.MyViewHolder holder, int position) {
         holder.rowPastTaskBinding.textServiceName.setText(mList.get(position).name);
         double total = 0;
         StringBuilder subscription = new StringBuilder("");

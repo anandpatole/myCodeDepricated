@@ -45,7 +45,7 @@ import java.util.Map;
  */
 
 public class VerificationActivity extends BaseAppCompatActivity {
-    private static final String TAG = "VerificationActivity";
+    private static final String TAG = VerificationActivity.class.getSimpleName();
     private ActivityVerificationBinding mActivityVerificationBinding;
     private UserDetails mUserDetails;
     private String selectedImagePath;

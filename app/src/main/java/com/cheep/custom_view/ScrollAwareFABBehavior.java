@@ -8,7 +8,7 @@ import android.util.AttributeSet;
 import android.view.View;
 
 public class ScrollAwareFABBehavior extends FloatingActionButton.Behavior {
-    private static final String TAG = "ScrollAwareFABBehavior";
+    private static final String TAG = ScrollAwareFABBehavior.class.getSimpleName();
 
     public ScrollAwareFABBehavior(Context context, AttributeSet attrs) {
         super();

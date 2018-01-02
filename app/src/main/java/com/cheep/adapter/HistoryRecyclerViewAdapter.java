@@ -20,7 +20,7 @@ import java.util.ArrayList;
 
 public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecyclerViewAdapter.ViewHolder> {
 
-    private static final String TAG = "HistoryRecyclerViewAdap";
+    private static final String TAG = HistoryRecyclerViewAdapter.class.getSimpleName();
     ArrayList<HistoryModel> mList;
     private HistoryItemInteractionListener listener;
     private Context mContext;

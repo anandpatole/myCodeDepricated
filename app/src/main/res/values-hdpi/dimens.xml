@@ -20,5 +20,6 @@
     <!--For HDPI devices, Strategic partner description for creation pages
     we would be have differetn margin top-->
     <dimen name="banner_desc_margin_top">10dp</dimen>
+    <dimen name="text_size_seek_support">12sp</dimen>
 
 </resources>

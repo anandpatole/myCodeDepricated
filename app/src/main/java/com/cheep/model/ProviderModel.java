@@ -88,6 +88,11 @@ public class ProviderModel {
     @SerializedName("sp_without_gst_quote_price")
     public String spWithoutGstQuotePrice;
 
+    /**
+     * for pay now
+     */
+    public String actualQuotePrice ="";
+
     @SerializedName("live_lable_arr")
     public List<String> offerList;
 

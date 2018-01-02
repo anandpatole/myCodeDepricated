@@ -17,7 +17,7 @@ import com.cheep.databinding.DialogReferEarnKnowMoreBinding;
  */
 
 public class ReferAndEarnDialogKnowMore extends DialogFragment {
-    public static final String TAG = "ReferAndEarnDialogKnowMore";
+    public static final String TAG = ReferAndEarnDialogKnowMore.class.getSimpleName();
     private DialogReferEarnKnowMoreBinding mDialogReferEarnKnowMoreBinding;
 
 

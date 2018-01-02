@@ -36,6 +36,9 @@ public class InstaBookingProDetail implements Parcelable {
     @Expose
     public String verified;
 
+    @SerializedName("sp_ratings_count")
+    public String rating;
+
     @SerializedName("pro_level")
     @Expose
     public String proLevel;

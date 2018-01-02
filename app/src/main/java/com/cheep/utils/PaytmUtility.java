@@ -365,6 +365,7 @@ public class PaytmUtility {
                             listener.paytmCheckBalanceSuccessResponse(paytmResponseData);
                             break;
                         case NetworkUtility.PAYTM.RESPONSE_CODES.INVALID_AUTHORIZATION:
+                        case NetworkUtility.PAYTM.RESPONSE_CODES.UNAUTHORIZED_ACCESS:
                             listener.paytmInvalidAuthorization();
                             break;
                         case NetworkUtility.PAYTM.RESPONSE_CODES.BAD_REQUEST:
@@ -633,7 +634,7 @@ public class PaytmUtility {
         bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.MID, BuildConfig.SANDBOX_MERCHANT_ID);
         bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.MOBILE_NO, mMobileNumber);
         bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.EMAIL, PreferenceUtility.getInstance(mContext).getUserDetails().Email);
-        bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.THEME, "merchant");
+        bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.THEME, Utility.MERCHANT);
 
         @SuppressWarnings("unchecked")
         VolleyNetworkRequest volleyNetworkRequest = new VolleyNetworkRequest(

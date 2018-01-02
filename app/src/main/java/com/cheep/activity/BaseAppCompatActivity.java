@@ -32,7 +32,7 @@ import com.google.android.gms.common.api.Status;
 public abstract class BaseAppCompatActivity extends AppCompatActivity {
 
     //Contants
-    private static final String TAG = "BaseAppCompatActivity";
+    private static final String TAG = BaseAppCompatActivity.class.getSimpleName();
     public static final int RESULT_CODE_GOOGLE_PLAY_SERVICE_RESOLVE = 101;
 
     // All child class can use the context initialize by @BaseAppCompatActivity class

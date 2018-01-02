@@ -37,7 +37,7 @@ import java.util.ArrayList;
  * Class which will keep track of location and notify the relavent activities when needed
  */
 public class LocationTrackService extends Service implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
-    private static final String TAG = "LocationTrackService";
+    private static final String TAG = LocationTrackService.class.getSimpleName();
 
     //Location Request Parameters
     /**

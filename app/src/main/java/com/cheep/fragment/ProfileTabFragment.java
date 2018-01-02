@@ -927,9 +927,9 @@ public class ProfileTabFragment extends BaseFragment {
                 } else*/
                 if (TextUtils.isEmpty(edtAddress.getText().toString().trim())) {
                     Utility.showToast(mContext, getString(R.string.validate_address));
-                }/* else if (TextUtils.isEmpty(edtAddressInitials.getText().toString().trim())) {
+                } else if (TextUtils.isEmpty(edtAddressInitials.getText().toString().trim())) {
                     Utility.showToast(mContext, getString(R.string.validate_address_initials));
-                }*/ else {
+                } else {
                     if (addressModel != null) {
                         callUpdateAddressWS(addressModel.address_id,
                                 (radioHome.isChecked()
@@ -1126,7 +1126,7 @@ public class ProfileTabFragment extends BaseFragment {
     private void showAddressDeletionConfirmationDialog(final AddressModel model) {
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext, R.style.MyAlertDialogStyle);
         builder.setCancelable(false);
-        builder.setTitle(getString(R.string.label_address_delete_title));
+        builder.setTitle(getString(R.string.cheep_all_caps));
         builder.setMessage(getString(R.string.label_address_delete_message));
         builder.setPositiveButton(getString(R.string.label_Ok), new DialogInterface.OnClickListener() {
             @Override

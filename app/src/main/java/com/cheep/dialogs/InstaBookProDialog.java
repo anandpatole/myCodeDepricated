@@ -20,7 +20,7 @@ import com.cheep.model.InstaBookingProDetail;
 import com.cheep.utils.Utility;
 
 public class InstaBookProDialog extends DialogFragment {
-    public static final String TAG = "AcknowledgementDialogWi";
+    public static final String TAG = InstaBookProDialog.class.getSimpleName();
 
     private DialogInstabookProInfoBinding mDialog;
     private AcknowledgementInteractionListener mListener;
@@ -40,8 +40,8 @@ public class InstaBookProDialog extends DialogFragment {
         f.setContext(mContext);
         // Supply num input as an argument.
         Bundle args = new Bundle();
-        args.putParcelable("merchant", detail);
-        args.putString("date", date);
+        args.putParcelable(Utility.MERCHANT, detail);
+        args.putString(Utility.Extra.DATE, date);
         f.setArguments(args);
         return f;
     }
@@ -63,8 +63,8 @@ public class InstaBookProDialog extends DialogFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        merchantDetail = getArguments().getParcelable("merchant");
-        date = getArguments().getString("date");
+        merchantDetail = getArguments().getParcelable(Utility.MERCHANT);
+        date = getArguments().getString(Utility.Extra.DATE);
     }
 
     @Nullable
@@ -103,23 +103,8 @@ public class InstaBookProDialog extends DialogFragment {
             mDialog.tvVerified.setVisibility(View.GONE);
         }
 
+        mDialog.ivBadge.setImageResource(Utility.getProLevelBadge(merchantDetail.proLevel));
 
-        if (merchantDetail.proLevel != null) {
-            switch (merchantDetail.proLevel) {
-                case Utility.PRO_LEVEL.PLATINUM:
-                    mDialog.ivBadge.setImageResource(R.drawable.ic_badge_platinum);
-                    break;
-                case Utility.PRO_LEVEL.GOLD:
-                    mDialog.ivBadge.setImageResource(R.drawable.ic_badge_gold);
-                    break;
-                case Utility.PRO_LEVEL.SILVER:
-                    mDialog.ivBadge.setImageResource(R.drawable.ic_badge_silver);
-                    break;
-                case Utility.PRO_LEVEL.BRONZE:
-                    mDialog.ivBadge.setImageResource(R.drawable.ic_badge_bronze);
-                    break;
-            }
-        }
         mDialog.tvBody.setText(getString(R.string.merchant_detail_body, merchantDetail.userName, date));
         mDialog.tvBook.setText(getString(R.string.label_pay_X, Utility.getQuotePriceFormatter(merchantDetail.rateGST)));
 

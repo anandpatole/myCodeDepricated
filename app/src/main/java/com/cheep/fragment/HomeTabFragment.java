@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -34,6 +35,7 @@ import com.cheep.R;
 import com.cheep.activity.HomeActivity;
 import com.cheep.activity.SearchActivity;
 import com.cheep.activity.SelectLocationActivity;
+import com.cheep.activity.TaskCreationActivity;
 import com.cheep.adapter.HomeTabRecyclerViewAdapter;
 import com.cheep.databinding.FragmentTabHomeBinding;
 import com.cheep.databinding.LayoutFilterHomePopupBinding;
@@ -48,6 +50,7 @@ import com.cheep.model.UserDetails;
 import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
+import com.cheep.strategicpartner.StrategicPartnerTaskCreationAct;
 import com.cheep.utils.ErrorLoadingHelper;
 import com.cheep.utils.FetchLocationInfoUtility;
 import com.cheep.utils.PreferenceUtility;
@@ -89,9 +92,10 @@ public class HomeTabFragment extends BaseFragment {
     private String mSelectedFilterType = Utility.FILTER_TYPES.FILTER_TYPE_FEATURED;
 
 
-    public static HomeTabFragment newInstance(DrawerLayoutInteractionListener mListener) {
+    public static HomeTabFragment newInstance(DrawerLayoutInteractionListener mListener, Uri link) {
         Bundle args = new Bundle();
         HomeTabFragment fragment = new HomeTabFragment();
+        args.putParcelable(Utility.Extra.DYNAMIC_LINK_URI, link);
         fragment.setArguments(args);
         fragment.setmListener(mListener);
         return fragment;
@@ -309,7 +313,6 @@ public class HomeTabFragment extends BaseFragment {
         mFragmentTabHomeBinding.swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                // Fetch Only Category List from server
                 getBannerImageListFromServer();
             }
         });
@@ -337,7 +340,6 @@ public class HomeTabFragment extends BaseFragment {
             switch (view.getId()) {
 
                 case text_search:
-
                     if (homeTabRecyclerViewAdapter != null) {
                         sharedElementTransitionHelper = new SharedElementTransitionHelper(getActivity());
                         sharedElementTransitionHelper.put(mFragmentTabHomeBinding.textSearch, R.string.transition_text_search);
@@ -346,11 +348,9 @@ public class HomeTabFragment extends BaseFragment {
 
                     break;
                 case R.id.text_location:
-
                     Intent intent = new Intent(mContext, SelectLocationActivity.class);
                     startActivityForResult(intent, Utility.REQUEST_CODE_CHANGE_LOCATION);
                     ((AppCompatActivity) mContext).overridePendingTransition(0, 0);
-
                     break;
                 case R.id.rel_notification_action:
                     if (mNotificationClickInteractionListener != null) {
@@ -398,6 +398,9 @@ public class HomeTabFragment extends BaseFragment {
             mFragmentTabHomeBinding.textLocation.setText(userDetails.getDisplayLocationName());
             errorLoadingHelper.showLoading();
             getBannerImageListFromServer();
+            if (getArguments().getParcelable(Utility.Extra.DYNAMIC_LINK_URI) != null) {
+                getCategoryIdBasedOnSlug();
+            }
         } else {
            /* toggleErrorScreen(true);
             mFragmentTabHomeBinding.textLocation.setText(getString(R.string.hint_select_location));
@@ -490,6 +493,7 @@ public class HomeTabFragment extends BaseFragment {
                                 ? mLocationIno.City
                                 : mLocationIno.Locality);
                         if (PreferenceUtility.getInstance(mContext).getUserDetails() != null) {
+                            Log.v("in if condition", "update location");
                             updateLocationForLoggedInUser(mLocationIno);
                         }
                     }
@@ -561,6 +565,10 @@ public class HomeTabFragment extends BaseFragment {
                         userDetails.mCountry = jsonData.optString(NetworkUtility.TAGS.COUNTRY);
                         userDetails.mLocality = jsonData.optString(NetworkUtility.TAGS.LOCALITY);
                         PreferenceUtility.getInstance(mContext).saveUserDetails(userDetails);
+
+//                       Beenal - For Category listing update after the location update.
+                        // Call Category listing webservice.
+                        getCategoryListFromServer();
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
 //                        mFragmentTabHomeBinding.textLocation.setText(tempCityName);
@@ -587,13 +595,15 @@ public class HomeTabFragment extends BaseFragment {
         Log.d(TAG, "updateLatLongSuccess() called with: cityName = [" + cityName + "]");
         mFragmentTabHomeBinding.textLocation.setText(cityName);
         getBannerImageListFromServer();
+        if (getArguments().getParcelable(Utility.Extra.DYNAMIC_LINK_URI) != null) {
+            getCategoryIdBasedOnSlug();
+        }
     }
 
     Response.ErrorListener mCallUpdateLatLngWSErrorListener = new Response.ErrorListener() {
         @Override
         public void onErrorResponse(VolleyError error) {
             Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
-
             // Show Toast
 //            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mFragmentTabHomeBinding.getRoot());
         }
@@ -611,9 +621,7 @@ public class HomeTabFragment extends BaseFragment {
         /*if (PreferenceUtility.getInstance(mContext).getUserDetails() == null) {
             return;
         }*/
-        if (mContext == null)
-            return;
-        ((HomeActivity) mContext).isReadyToLoad = true;
+        ((HomeActivity) getActivity()).isReadyToLoad = true;
 
         if (!Utility.isConnected(mContext)) {
             errorLoadingHelper.failed(Utility.NO_INTERNET_CONNECTION, 0, onRetryBtnClickListener);
@@ -824,6 +832,21 @@ public class HomeTabFragment extends BaseFragment {
                             PreferenceUtility.getInstance(mContext).saveGuestUserDetails(mGuestUserDetails);
                         }
 
+//                       Condition for changing the location icon
+                        Log.v("Closest Area", jsonObject.optString(NetworkUtility.TAGS.CLOSEST_AREA).toString());
+                        String cat = jsonObject.optString(NetworkUtility.TAGS.CLOSEST_AREA).toString();
+//                       Condition for changing the location icon
+                        Log.v("Closest Area", jsonObject.optString(NetworkUtility.TAGS.CLOSEST_AREA).toString());
+                        if (cat.equals("{}") || cat.equals("[]") || cat.equals("null") || TextUtils.isEmpty(cat)) {
+                            String Category = "";
+                            Log.v("Closest Area if", Category);
+                            updateLogoSuccess(Category);
+                        } else {
+                            String Category = "";
+                            Category = jsonObject.getJSONObject(NetworkUtility.TAGS.CLOSEST_AREA).getString(NetworkUtility.TAGS.CLOSEST_CATEGORY);
+                            Log.v("Closest Area else", Category);
+                            updateLogoSuccess(Category);
+                        }
                         ArrayList<JobCategoryModel> list;
                         list = Utility.getObjectListFromJsonString(jsonObject.optString(NetworkUtility.TAGS.DATA), JobCategoryModel[].class);
 
@@ -873,6 +896,20 @@ public class HomeTabFragment extends BaseFragment {
         }
     };
 
+    private void updateLogoSuccess(String category) {
+        Log.d(TAG, "updateLogoSuccess() called with: LogoCategory = [" + category + "]");
+
+        if (category.equalsIgnoreCase("home")) {
+            mFragmentTabHomeBinding.imgLocation.setImageDrawable(getResources().getDrawable(R.drawable.ab_home));
+        } else if (category.equalsIgnoreCase("office")) {
+            mFragmentTabHomeBinding.imgLocation.setImageDrawable(getResources().getDrawable(R.drawable.ab_office));
+        } else if (category.equalsIgnoreCase("other")) {
+            mFragmentTabHomeBinding.imgLocation.setImageDrawable(getResources().getDrawable(R.drawable.ab_other));
+        } else {
+            mFragmentTabHomeBinding.imgLocation.setImageDrawable(getResources().getDrawable(R.drawable.ab_pick_location));
+        }
+    }
+
     Response.ErrorListener mCallCategoryListWSErrorListener = new Response.ErrorListener() {
         @Override
         public void onErrorResponse(VolleyError error) {
@@ -898,6 +935,137 @@ public class HomeTabFragment extends BaseFragment {
     /////////////////////////////////////// Category Listing [END]/////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////// Dynamic Linking getCategoryIdBasedOnSlug [Start]/////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private void getCategoryIdBasedOnSlug() {
+        //If user is logged out already,return from here only.
+        /*if (PreferenceUtility.getInstance(mContext).getUserDetails() == null) {
+            return;
+        }*/
+        if (mContext == null)
+            return;
+        String categorySlug = "";
+
+        ((HomeActivity) mContext).isReadyToLoad = true;
+
+        // if dynamic link is for home then do not call web service
+        if (getArguments().getParcelable(Utility.Extra.DYNAMIC_LINK_URI) != null) {
+            Log.d(TAG, "getCategoryIdBasedOnSlug: category slug" +
+                    ((Uri) getArguments().getParcelable(Utility.Extra.DYNAMIC_LINK_URI)).getLastPathSegment());
+            categorySlug = ((Uri) getArguments().getParcelable(Utility.Extra.DYNAMIC_LINK_URI)).getLastPathSegment();
+            if (categorySlug.equalsIgnoreCase(Utility.DYNAMIC_LINK_CATEGORY_HOME) || categorySlug.isEmpty()) {
+                return;
+            }
+        } else {
+            return;
+        }
+
+
+        if (!Utility.isConnected(mContext)) {
+            errorLoadingHelper.failed(Utility.NO_INTERNET_CONNECTION, 0, onRetryBtnClickListener);
+            return;
+        }
+
+        errorLoadingHelper.showLoading();
+
+        //Add Header parameters
+        Map<String, String> mHeaderParams = new HashMap<>();
+        mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
+        if (PreferenceUtility.getInstance(mContext).getUserDetails() != null)
+            mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
+
+        //Add Params
+        Map<String, String> mParams = new HashMap<>();
+        mParams.put(NetworkUtility.TAGS.CAT_SLUG, categorySlug);
+
+        VolleyNetworkRequest mVolleyNetworkRequest = new VolleyNetworkRequest(NetworkUtility.WS.GET_CATEGORY_ID_BASED_ON_SLUG
+                , mCallGetCategoryIdWSErrorListener
+                , mCallGetCategoryIdWSResponseListener
+                , mHeaderParams
+                , mParams
+                , null);
+        Volley.getInstance(mContext).
+
+                addToRequestQueue(mVolleyNetworkRequest, NetworkUtility.WS.GET_CATEGORY_ID_BASED_ON_SLUG);
+    }
+
+    Response.Listener mCallGetCategoryIdWSResponseListener = new Response.Listener() {
+        @Override
+        public void onResponse(Object response) {
+            Log.d(TAG, "onResponse() called with: response = [" + response + "]");
+
+            String strResponse = (String) response;
+            try {
+                JSONObject jsonObject = new JSONObject(strResponse);
+                Log.i(TAG, "onResponse: " + jsonObject.toString());
+                int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
+                String error_message;
+                switch (statusCode) {
+                    case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
+                        String categoryType =
+                                jsonObject.getJSONObject(NetworkUtility.TAGS.DATA).getString(NetworkUtility.TAGS.CAT_TYPE);
+                        if (categoryType.equalsIgnoreCase(Utility.NORMAL)) {
+                            JobCategoryModel model = (JobCategoryModel) Utility.getObjectFromJsonString(
+                                    jsonObject.getString(NetworkUtility.TAGS.DATA), JobCategoryModel.class);
+                            TaskCreationActivity.getInstance(mContext, model);
+                        } else {
+                            BannerImageModel model = (BannerImageModel) Utility.getObjectFromJsonString(
+                                    jsonObject.getString(NetworkUtility.TAGS.DATA), BannerImageModel.class);
+                            StrategicPartnerTaskCreationAct.getInstance(mContext, model);
+                        }
+
+                        break;
+                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
+                        // Show Toast
+//                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mFragmentTabHomeBinding.getRoot());
+                        errorLoadingHelper.failed(getString(R.string.label_something_went_wrong), 0, onRetryBtnClickListener);
+                        break;
+                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
+                        error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
+                        toggleErrorScreen(true);
+                        // Show message
+//                        Utility.showSnackBar(error_message, mFragmentTabHomeBinding.getRoot());
+                        errorLoadingHelper.failed(error_message, 0, onRetryBtnClickListener);
+                        break;
+                    case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
+                    case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
+                        //Logout and finish the current activity
+                        Utility.logout(mContext, true, statusCode);
+                        if (getActivity() != null)
+                            getActivity().finish();
+                        break;
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+                mCallGetCategoryIdWSErrorListener.onErrorResponse(new VolleyError(e.getMessage()));
+            }
+        }
+    };
+
+    Response.ErrorListener mCallGetCategoryIdWSErrorListener = new Response.ErrorListener() {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
+            if (mContext == null) {
+                return;
+            }
+            mFragmentTabHomeBinding.swipeRefreshLayout.setRefreshing(false);
+            errorLoadingHelper.failed(getString(R.string.label_something_went_wrong), 0, onRetryBtnClickListener);
+        }
+    };
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////// Dynamic Linking getCategoryIdBasedOnSlug [End]/////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////

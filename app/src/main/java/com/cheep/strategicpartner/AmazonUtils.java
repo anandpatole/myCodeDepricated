@@ -3,6 +3,7 @@ package com.cheep.strategicpartner;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.MediaMetadataRetriever;
 import android.media.ThumbnailUtils;
 import android.os.AsyncTask;
 import android.provider.MediaStore;
@@ -31,10 +32,10 @@ public class AmazonUtils {
     private static AmazonS3Client sS3Client;
     private static CognitoCachingCredentialsProvider sCredProvider;
     private static TransferUtility sTransferUtility;
-    private static final String TAG = "AmazonUtils";
+    private static final String TAG = AmazonUtils.class.getSimpleName();
 
 
-//    private static final String COGNITO_POOL_ID = "ap-south-1:219f4bf8-6f0c-4fbe-aacf-1079267e128d";
+    //    private static final String COGNITO_POOL_ID = "ap-south-1:219f4bf8-6f0c-4fbe-aacf-1079267e128d";
 //    private static final String BUCKET_NAME = "cheepapp";
     private static final String AMAZON_REGION = Regions.AP_SOUTH_1.getName();
 //    private static final String BUCKET_REGION = Regions.AP_SOUTH_1.getName();
@@ -70,8 +71,8 @@ public class AmazonUtils {
         return sTransferUtility;
     }
 
-    static TransferObserver uploadMedia(final Context context, File file, String s3Path, TransferListener l) {
-        TransferObserver observer = getTransferUtility(context).upload( BuildConfig.BUCKET_NAME, s3Path, file);
+    public static TransferObserver uploadMedia(final Context context, File file, String s3Path, TransferListener l) {
+        TransferObserver observer = getTransferUtility(context).upload(BuildConfig.BUCKET_NAME, s3Path, file);
         observer.setTransferListener(l);
         return observer;
     }
@@ -89,7 +90,7 @@ public class AmazonUtils {
         return "";
     }
 
-    static String getExtension(String mFilePath) {
+    public static String getExtension(String mFilePath) {
         if (!TextUtils.isEmpty(mFilePath)) {
             String ext = mFilePath.substring(mFilePath.lastIndexOf("."), mFilePath.length());
             LogUtils.LOGD(TAG, "getExtension() called with: ext = [" + ext + "]");
@@ -101,7 +102,7 @@ public class AmazonUtils {
 
     private static final int THUMBNAIL_SIZE = 400;
 
-    static String getImageThumbPath(Context context, String path) {
+    public static String getImageThumbPath(Context context, String path) {
         String filepath = "";
         BitmapFactory.Options bounds = new BitmapFactory.Options();
         bounds.inJustDecodeBounds = true;
@@ -136,7 +137,7 @@ public class AmazonUtils {
         return filepath;
     }
 
-    static String getVideoThumbPath(Context mContext, String mVideoPath) {
+    public static String getVideoThumbPath(Context mContext, String mVideoPath) {
         try {
             File outputDir = mContext.getCacheDir(); // context being the Activity pointer
             File file = File.createTempFile(getFileNameWithExt(mVideoPath, false), ".jpg", outputDir);
@@ -147,7 +148,7 @@ public class AmazonUtils {
                 return file.getAbsolutePath();
             }
         } catch (Exception e) {
-           LogUtils.LOGI("TAG", "Exception while creating temp file" + e.toString());
+            LogUtils.LOGI("TAG", "Exception while creating temp file" + e.toString());
             return "";
         }
         return "";
@@ -158,11 +159,11 @@ public class AmazonUtils {
      * @param name folder path of
      * @return
      */
-    static String getOriginalURL(String name) {
+    public static String getOriginalURL(String name) {
         return BuildConfig.AMAZON_S3_URL + BuildConfig.BUCKET_NAME + File.separator + name;
     }
 
-    static String getThumbURL(String name) {
+    public static String getThumbURL(String name) {
         return BuildConfig.AMAZON_S3_URL + BuildConfig.BUCKET_NAME + File.separator + name;
     }
 
@@ -180,11 +181,31 @@ public class AmazonUtils {
 
             @Override
             protected Void doInBackground(Void... voids) {
-                getS3Client(context).deleteObject(new DeleteObjectRequest( BuildConfig.BUCKET_NAME + File.separator + BuildConfig.TASK_ORIGINAL_FOLDER, AmazonUtils.getFileNameWithExt(original, true)));
-                getS3Client(context).deleteObject(new DeleteObjectRequest(BuildConfig.BUCKET_NAME + File.separator+ BuildConfig.TASK_THUMB_FOLDER, AmazonUtils.getFileNameWithExt(thumb, true)));
+                getS3Client(context).deleteObject(new DeleteObjectRequest(BuildConfig.BUCKET_NAME + File.separator + BuildConfig.TASK_ORIGINAL_FOLDER, AmazonUtils.getFileNameWithExt(original, true)));
+                getS3Client(context).deleteObject(new DeleteObjectRequest(BuildConfig.BUCKET_NAME + File.separator + BuildConfig.TASK_THUMB_FOLDER, AmazonUtils.getFileNameWithExt(thumb, true)));
                 return null;
             }
         }.execute();
     }
 
+    public static long getDuration(String selectedImagePath) {
+        try {
+            MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+//        use one of overloaded setDataSource() functions to set your data source
+            retriever.setDataSource(selectedImagePath);
+
+            String time = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+            long timeInSec = 0;
+            try {
+                timeInSec = Long.parseLong(time) / 1000;
+            } catch (NumberFormatException e) {
+                timeInSec = 0;
+            }
+            retriever.release();
+            return timeInSec;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
 }

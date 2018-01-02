@@ -53,7 +53,7 @@ import static com.cheep.utils.Utility.REQUEST_CODE_IMAGE_CAPTURE_ADD_PROFILE;
  */
 
 public class SignupActivity extends BaseAppCompatActivity {
-    private static final String TAG = "SignupActivity";
+    private static final String TAG = SignupActivity.class.getSimpleName();
     private ActivitySignupBinding mActivitySignupBinding;
 
     private String mCurrentPhotoPath;

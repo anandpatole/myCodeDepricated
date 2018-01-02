@@ -426,7 +426,7 @@
                         android:id="@+id/text_label_paid"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/label_paid"
+                        android:text="@string/label_booked"
                         android:textAllCaps="false"
                         android:textColor="@color/black"
                         android:textSize="@dimen/text_size_10sp" />

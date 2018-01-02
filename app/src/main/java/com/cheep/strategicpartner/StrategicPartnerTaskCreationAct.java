@@ -47,7 +47,7 @@ import java.util.ArrayList;
  * location services for address
  */
 public class StrategicPartnerTaskCreationAct extends BaseAppCompatActivity {
-    private static final String TAG = "TaskCreationForSPScreen";
+    private static final String TAG = "StrategicPartnerTaskCre";
 
     private ActivityTaskCreationForStrategicPartnerBinding mActivityTaskCreationForStrategicPartnerBinding;
     public BannerImageModel mBannerImageModel;
@@ -55,6 +55,7 @@ public class StrategicPartnerTaskCreationAct extends BaseAppCompatActivity {
     private ArrayList<StrategicPartnerServiceModel> mSelectedServicesList;
     public boolean isSingleSelection = false;
     public String spUserId = "";
+    public boolean isPayNow = false;
 
     @Nullable
     public AddressModel mSelectedAddressModel;
@@ -453,9 +454,15 @@ public class StrategicPartnerTaskCreationAct extends BaseAppCompatActivity {
     public void onMessageEvent(MessageEvent event) {
         Log.d(TAG, "onMessageEvent() called with: event = [" + event.BROADCAST_ACTION + "]");
         switch (event.BROADCAST_ACTION) {
+            case Utility.BROADCAST_TYPE.TASK_PAID_SUCCESSFULLY:
+                // Finish this activity
+                if (isPayNow)
+                    finish();
+                break;
             case Utility.BROADCAST_TYPE.PAYMENT_COMPLETED_NEED_TO_REDIRECT_TO_MY_TASK_SCREEN:
                 // Finish this activity
-                finish();
+                if (isPayNow)
+                    finish();
                 break;
         }
     }

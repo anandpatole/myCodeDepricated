@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.databinding.DataBindingUtil;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -56,7 +57,7 @@ import java.util.Map;
  * Created by pankaj on 9/27/16.
  */
 public class HomeFragment extends BaseFragment {
-    public static final String TAG = "HomeFragment";
+    public static final String TAG = HomeFragment.class.getSimpleName();
 
     public static final String TAB_HOME = HomeTabFragment.TAG;
     public static final String TAB_MY_TASK = MyTaskTabFragment.TAG;
@@ -76,9 +77,10 @@ public class HomeFragment extends BaseFragment {
     private String formattedSenderId = "";
     private List<String> unreadCountIds = new ArrayList<>();
 
-    public static HomeFragment newInstance() {
+    public static HomeFragment newInstance(Uri link) {
         HomeFragment fragment = new HomeFragment();
         Bundle args = new Bundle();
+        args.putParcelable(Utility.Extra.DYNAMIC_LINK_URI, link);
         fragment.setArguments(args);
         return fragment;
     }
@@ -141,14 +143,17 @@ public class HomeFragment extends BaseFragment {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(MessageEvent event) {
         Log.d(TAG, "onMessageEvent() called with: event = [" + event.BROADCAST_ACTION + "]");
-        if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.TASK_START_ALERT) {
-            checkOngoingTaskCounter();
+        switch (event.BROADCAST_ACTION) {
+            case Utility.BROADCAST_TYPE.TASK_START_ALERT:
+                checkOngoingTaskCounter();
 //            mTaskDetailModel.taskStatus = event.taskStatus;
 //            setUpTaskDetails(mTaskDetailModel);
-        } else if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.PAYMENT_COMPLETED_NEED_TO_REDIRECT_TO_MY_TASK_SCREEN
-                || event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.TASK_PAID_FOR_INSTA_BOOKING) {
-            // Need to rediretct the user to MyTask Screen
-            setCurrentTab(TAB_MY_TASK);
+                break;
+            case Utility.BROADCAST_TYPE.PAYMENT_COMPLETED_NEED_TO_REDIRECT_TO_MY_TASK_SCREEN:
+            case Utility.BROADCAST_TYPE.TASK_PAID_FOR_INSTA_BOOKING:
+                // Need to rediretct the user to MyTask Screen
+                setCurrentTab(TAB_MY_TASK);
+                break;
         }
 
     }
@@ -346,7 +351,7 @@ public class HomeFragment extends BaseFragment {
 
 
     //Loads the fragment in inner_content container
-    private void loadFragment(String tab, BaseFragment fragmentToCommit) {
+    private void  loadFragment(String tab, BaseFragment fragmentToCommit) {
         if (textLastSelectedTab != null) {
             //Checking if last selected tab is same which current pressed then no need to load again
             setSelected(textLastSelectedTab, false);
@@ -418,7 +423,13 @@ public class HomeFragment extends BaseFragment {
                     mFragmentsStackTags.remove(HomeTabFragment.TAG);
                     mFragmentsStackTags.add(HomeTabFragment.TAG);
                 } else {
-                    fragmentToCommit = HomeTabFragment.newInstance(mListener);
+                    //For Dynamic Link
+                    if (getArguments().getParcelable(Utility.Extra.DYNAMIC_LINK_URI) != null) {
+                        fragmentToCommit = HomeTabFragment.newInstance(mListener
+                                , (Uri) getArguments().getParcelable(Utility.Extra.DYNAMIC_LINK_URI));
+                    } else {
+                        fragmentToCommit = HomeTabFragment.newInstance(mListener, null);
+                    }
                     if (!mFragmentsStackTags.contains(HomeTabFragment.TAG)) {
                         mFragmentsStackTags.add(HomeTabFragment.TAG);
                     }

@@ -25,7 +25,7 @@ import com.cheep.databinding.DialogCustomProgressBinding;
  */
 
 public class CustomLoadingDialog extends DialogFragment {
-    public static final String TAG = "AcknowledgementDialogWi";
+    public static final String TAG = CustomLoadingDialog.class.getSimpleName();
     private DialogCustomProgressBinding customProgressBinding;
     private AcknowledgementInteractionListener mListener;
 

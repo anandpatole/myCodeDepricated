@@ -23,7 +23,7 @@ import com.cheep.strategicpartner.StrategicPartnerTaskCreationAct;
 import com.cheep.utils.PreferenceUtility;
 
 public class BannerImageFragment extends BaseFragment {
-    private static final String TAG = "BannerImageFragment";
+    private static final String TAG = BannerImageFragment.class.getSimpleName();
     private ImageView img_cover;
     private BannerImageModel bannerImageModel;
     private ProgressBar progress;
@@ -89,6 +89,7 @@ public class BannerImageFragment extends BaseFragment {
                     })
                     .into(img_cover);
 
+            //Click event of banner
             img_cover.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

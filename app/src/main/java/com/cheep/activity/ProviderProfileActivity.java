@@ -62,7 +62,7 @@ import static com.cheep.network.NetworkUtility.WS.REVIEW_LIST;
 
 public class ProviderProfileActivity extends BaseAppCompatActivity implements ReviewsRecyclerViewAdapter.ReviewRowInteractionListener {
 
-    private static final String TAG = "ProviderProfileActivity";
+    private static final String TAG = ProviderProfileActivity.class.getSimpleName();
 
     private ActivityProfileBinding mActivityProviderProfileBinding;
     private ProviderModel providerModel;
@@ -231,14 +231,15 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
         mActivityProviderProfileBinding.layoutPay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                PaymentDetailsActivity.newInstance(mContext, taskDetailModel, providerModel, 0);
+                PaymentDetailsActivity.newInstance(mContext, taskDetailModel, providerModel, null);
             }
         });
 
         // Checking if amount present then show call and paid lables else hide
         if (providerModel.getQuotePriceInInteger() > 0) {
             mActivityProviderProfileBinding.layoutPay.setVisibility(View.VISIBLE);
-            mActivityProviderProfileBinding.textPrice.setText(getString(R.string.label_pay_X, providerModel.quotePrice));
+            mActivityProviderProfileBinding.textPrice.setText(getString(R.string.label_pay_X, Utility.getQuotePriceFormatter(providerModel.quotePrice)));
+//            mActivityProviderProfileBinding.textPrice.setText(getString(R.string.label_book_the_pro));
             mActivityProviderProfileBinding.textPrice.setSelected(true);
         } else {
             mActivityProviderProfileBinding.layoutPay.setVisibility(View.GONE);
@@ -439,6 +440,7 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
                     reviewsRecyclerViewAdapter.updateCommentCounter(event.id, event.commentCount);
                 break;
             case Utility.BROADCAST_TYPE.TASK_PAID:
+            case Utility.BROADCAST_TYPE.TASK_PRO_BOOKED:
             case Utility.BROADCAST_TYPE.TASK_PROCESSING:
                 finish();
 //            initiateUI();

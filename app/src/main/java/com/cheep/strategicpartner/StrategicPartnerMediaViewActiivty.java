@@ -17,9 +17,11 @@ import com.cheep.R;
 import com.cheep.activity.BaseAppCompatActivity;
 import com.cheep.databinding.ActivityMediaViewStrategicPartnerBinding;
 import com.cheep.strategicpartner.model.MediaModel;
+import com.cheep.utils.SharedElementTransitionHelper;
 import com.cheep.utils.Utility;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -37,16 +39,19 @@ public class StrategicPartnerMediaViewActiivty extends BaseAppCompatActivity {
 
     private MediaViewPagerAdapter mMediaViewPagerAdapter;
     private ActivityMediaViewStrategicPartnerBinding mActivityMediaViewStrategicPartnerBinding;
+    private boolean isStrategic = true;
 
-    public static void getInstance(Context mContext, ArrayList<MediaModel> modelArrayList) {
+    public static void getInstance(Context mContext, ArrayList<MediaModel> modelArrayList, boolean isStrategic) {
         Intent intent = new Intent(mContext, StrategicPartnerMediaViewActiivty.class);
         intent.putExtra("list", modelArrayList);
+        intent.putExtra("isStrategic", isStrategic);
         mContext.startActivity(intent);
     }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        SharedElementTransitionHelper.enableTransition(this);
         mActivityMediaViewStrategicPartnerBinding = DataBindingUtil.setContentView(this, R.layout.activity_media_view_strategic_partner);
         initiateUI();
     }
@@ -84,10 +89,14 @@ public class StrategicPartnerMediaViewActiivty extends BaseAppCompatActivity {
      * @param pager view pager for 3 steps
      */
     private void setupViewPager(ViewPager pager) {
-        if (getIntent() != null && getIntent().hasExtra("list"))
+        if (getIntent() != null && getIntent().hasExtra("list")) {
             mediaModels = (ArrayList<MediaModel>) getIntent().getSerializableExtra("list");
+            isStrategic = getIntent().getBooleanExtra("isStrategic", true);
+        }
         mMediaViewPagerAdapter = new MediaViewPagerAdapter(getSupportFragmentManager());
         if (mediaModels != null && !mediaModels.isEmpty()) {
+            if (!isStrategic)
+                Collections.reverse(mediaModels);
             mMediaViewPagerAdapter.setMediaModelList(mediaModels);
             pager.setAdapter(mMediaViewPagerAdapter);
         }

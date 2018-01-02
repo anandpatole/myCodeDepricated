@@ -62,7 +62,7 @@
     <!--<dimen name="scale_130dp">130dp</dimen>-->
     <dimen name="scale_140dp">140dp</dimen>
     <!--<dimen name="scale_150dp">150dp</dimen>-->
-    <!--<dimen name="scale_160dp">160dp</dimen>-->
+    <dimen name="scale_160dp">160dp</dimen>
     <dimen name="scale_170dp">170dp</dimen>
     <dimen name="scale_180dp">180dp</dimen>
     <!--<dimen name="scale_190dp">190dp</dimen>-->
@@ -170,6 +170,7 @@
 
     <!--Verification Screen-->
     <dimen name="verification_screen_margin_logo_description">28.250dp</dimen>
+    <dimen name="text_size_seek_support">14sp</dimen>
 
 </resources>
 

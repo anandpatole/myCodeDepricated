@@ -1,7 +1,6 @@
 package com.cheep.utils;
 
 import android.os.AsyncTask;
-import android.text.TextUtils;
 
 import com.cheep.BuildConfig;
 import com.cheep.model.ProviderModel;
@@ -21,14 +20,15 @@ import java.util.Map;
 
 public class HDFCPaymentUtility {
 
-    private static final String TAG = "HDFCPaymentUtility";
+    private static final String TAG = HDFCPaymentUtility.class.getSimpleName();
 
     // Constants
     public static final String TXN_ID = "txnid";
     private static final String DEVICE_TYPE = "device_type";
     private static final String ISMOBILEVIEW = "ismobileview";
-    private static final String PRODUCTINFO = "productinfo";
     private static final String USER_CREDENTIALS = "user_credentials";
+    private static final String PRODUCTINFO = "productinfo";
+    private static final String TASK_ID = "task_id";
     private static final String KEY = "key";
     private static final String INSTRUMENT_TYPE = "instrument_type";
     private static final String SURL = "surl";
@@ -45,60 +45,55 @@ public class HDFCPaymentUtility {
     private static final String UDF5 = "udf5";
     private static final String HASH = "hash";
 
-    public static Map<String, String> getPaymentTransactionFieldsForNormalTask(String fcmToken, UserDetails userDetails, boolean isForAdditionalQuote, boolean isInstaBooking, TaskDetailModel taskDetailModel, ProviderModel providerModel) {
+    public static Map<String, String> getPaymentTransactionFieldsForNormalTask(String fcmToken,
+                                                                               UserDetails userDetails,
+                                                                               TaskDetailModel taskDetailModel,
+                                                                               ProviderModel providerModel, boolean isPayNow) {
 
         Map<String, String> mParams = new HashMap<>();
 
         String transaction_Id = Utility.getUniqueTransactionId();
         mParams.put(TXN_ID, transaction_Id);
+
+
+        mParams.put(KEY, BuildConfig.PAYUBIZ_HDFC_KEY);
+        mParams.put(EMAIL, userDetails.Email);
+        mParams.put(FIRSTNAME, userDetails.UserName);
+
+        mParams.put(AMOUNT, isPayNow ? providerModel.quotePrice : taskDetailModel.taskTotalPendingAmount);
+
+
+        mParams.put(PRODUCTINFO, taskDetailModel.taskId);
+
+        if (taskDetailModel.taskId != null && !taskDetailModel.taskId.isEmpty()) {
+            mParams.put(TASK_ID, taskDetailModel.taskId);
+            mParams.put(PRODUCTINFO, taskDetailModel.taskId);
+        } else {
+            mParams.put(TASK_ID, Utility.EMPTY_STRING);
+            mParams.put(PRODUCTINFO, userDetails.UserID);
+        }
+        mParams.put(UDF2, providerModel.providerId);
+        mParams.put(UDF1, "Task Start Date : " + taskDetailModel.taskStartdate);
+        mParams.put(UDF3, NetworkUtility.TAGS.PLATFORMTYPE.ANDROID);
+        mParams.put(UDF4, Utility.EMPTY_STRING);
+        mParams.put(UDF5, Utility.EMPTY_STRING);
+        mParams.put(USER_CREDENTIALS, BuildConfig.PAYUBIZ_HDFC_KEY + ":" + userDetails.Email);
         mParams.put(DEVICE_TYPE, "1");
         mParams.put(ISMOBILEVIEW, "1");
-        mParams.put(KEY, BuildConfig.PAYUBIZ_HDFC_KEY);
-        mParams.put(USER_CREDENTIALS, BuildConfig.PAYUBIZ_HDFC_KEY + ":" + userDetails.Email);
         mParams.put(INSTRUMENT_TYPE, fcmToken);
         mParams.put(SURL, BuildConfig.PAYUBIZ_SUCCESS_URL);
         mParams.put(FURL, BuildConfig.PAYUBIZ_FAIL_URL);
         mParams.put(INSTRUMENT_ID, BuildConfig.PAYUBIZ_INSTRUMENT_ID);
-
-        mParams.put(FIRSTNAME, userDetails.UserName);
-        mParams.put(EMAIL, userDetails.Email);
         mParams.put(PHONE, userDetails.PhoneNumber);
-        // Total Amount
-
-        mParams.put(AMOUNT, isForAdditionalQuote ? taskDetailModel.additionalQuoteAmount : providerModel.quotePrice);
-        mParams.put(PRODUCTINFO, isInstaBooking ? userDetails.UserID : taskDetailModel.taskId);
-        mParams.put(UDF1, "Task Start Date : " + taskDetailModel.taskStartdate);
-        mParams.put(UDF2, isInstaBooking ? Utility.EMPTY_STRING : "Provider Id : " + providerModel.providerId);
-        mParams.put(UDF3, NetworkUtility.TAGS.PLATFORMTYPE.ANDROID);
-        mParams.put(UDF4, isForAdditionalQuote ? Utility.TASK_STATUS.ADDITIONAL_PAYMENT_REQUESTED : "");
-        mParams.put(UDF5, "");
         mParams.put(HASH, Utility.EMPTY_STRING);
-
-
-        if (!isInstaBooking) {
-            mParams.put(NetworkUtility.TAGS.SP_USER_ID, providerModel.providerId);
-            mParams.put(NetworkUtility.TAGS.TASK_ID, taskDetailModel.taskId);
-        }
-
-        if (!TextUtils.isEmpty(taskDetailModel.cheepCode)) {
-            mParams.put(NetworkUtility.TAGS.CHEEPCODE, taskDetailModel.cheepCode);
-            mParams.put(NetworkUtility.TAGS.PROMOCODE_PRICE, taskDetailModel.taskDiscountAmount);
-        } else {
-            mParams.put(NetworkUtility.TAGS.CHEEPCODE, Utility.EMPTY_STRING);
-            mParams.put(NetworkUtility.TAGS.PROMOCODE_PRICE, Utility.ZERO_STRING);
-        }
-        mParams.put(NetworkUtility.TAGS.IS_REFER_CODE, taskDetailModel.isReferCode);
-
-
+        LogUtils.LOGE(TAG, "getPaymentTransactionFieldsForNormalTask: mparams " + mParams);
         return mParams;
     }
 
 
     public static Map<String, String> getPaymentTransactionFieldsForStrategicPartner(String fcmToken,
                                                                                      UserDetails userDetails,
-                                                                                     String cheepCode,
-                                                                                     String total,
-                                                                                     String payableAmount,
+                                                                                     String payAmount,
                                                                                      String start_datetime) {
 
         Map<String, String> mTransactionFieldsParams;
@@ -122,7 +117,8 @@ public class HDFCPaymentUtility {
         mTransactionFieldsParams.put(EMAIL, userDetails.Email);
         mTransactionFieldsParams.put(PHONE, userDetails.PhoneNumber);
         // Total Amount
-        mTransactionFieldsParams.put(AMOUNT, TextUtils.isEmpty(cheepCode) ? total : payableAmount);
+        mTransactionFieldsParams.put(AMOUNT, payAmount);
+
         // Start DateTime(In Milliseconds- Timestamp)
         mTransactionFieldsParams.put(UDF1, "Task Start Date : " + start_datetime);
         // We don't have Provider ID so pass it empty.
@@ -134,6 +130,8 @@ public class HDFCPaymentUtility {
         mTransactionFieldsParams.put(UDF4, Utility.EMPTY_STRING);
         mTransactionFieldsParams.put(UDF5, Utility.EMPTY_STRING);
         mTransactionFieldsParams.put(HASH, Utility.EMPTY_STRING);
+
+
         return mTransactionFieldsParams;
     }
 

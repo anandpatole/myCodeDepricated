@@ -43,15 +43,36 @@ import com.bumptech.glide.request.RequestListener;
 import com.cheep.BuildConfig;
 import com.cheep.R;
 import com.cheep.activity.HomeActivity;
+import com.cheep.firebase.FirebaseHelper;
+import com.cheep.firebase.FirebaseUtils;
+import com.cheep.firebase.model.ChatTaskModel;
+import com.cheep.firebase.model.TaskChatModel;
+import com.cheep.model.MessageEvent;
+import com.cheep.model.ProviderModel;
+import com.cheep.model.TaskDetailModel;
+import com.cheep.model.UserDetails;
+import com.cheep.network.NetworkUtility;
+import com.cheep.strategicpartner.AmazonUtils;
+import com.cheep.strategicpartner.model.AllSubSubCat;
+import com.cheep.strategicpartner.model.MediaModel;
+import com.cheep.strategicpartner.model.QueAnsModel;
+import com.cheep.strategicpartner.model.StrategicPartnerServiceModel;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import com.mixpanel.android.java_websocket.util.Base64;
 
 import org.cryptonode.jncryptor.AES256JNCryptor;
 import org.cryptonode.jncryptor.CryptorException;
 import org.cryptonode.jncryptor.JNCryptor;
+import org.greenrobot.eventbus.EventBus;
+import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
@@ -77,6 +98,25 @@ import static com.cheep.utils.SuperCalendar.SuperFormatter;
  */
 
 public class Utility {
+
+    public static final String MERCHANT = "merchant";
+    public static final String EMAIL = "email";
+    public static final String PUBLIC_PROFILE = "public_profile";
+    public static final String BIRTH_DATE = "user_birthday";
+    public static final String UTC = "UTC";
+    public static final String FACEBOOK_EMAIL_KEY = "email";
+    public static final String FACEBOOK_NAME_KEY = "name";
+    public static final String FACEBOOK_FIELDS_KEY = "fields";
+    public static final String NORMAL = "normal";
+    public static final String DYNAMIC_LINK_CATEGORY_HOME = "home";
+
+    public static boolean allPermissionGranted(String[] permissions, int[] grantResults) {
+        boolean allGranted = true;
+        for (int i = 0; i < permissions.length; i++) {
+            allGranted = grantResults[i] == PackageManager.PERMISSION_GRANTED;
+        }
+        return allGranted;
+    }
 
     public interface GUEST_STATIC_INFO {
         public static final String USERNAME = "Guest";
@@ -111,6 +151,7 @@ public class Utility {
     //Date Formats
     public static final String DATE_FORMAT_DD_MM_YY = SuperFormatter.DATE + "/" + SuperFormatter.MONTH_NUMBER + "/" + SuperFormatter.YEAR_4_DIGIT;
     public static final String DATE_FORMAT_DD_MMM = SuperFormatter.DATE + " " + SuperFormatter.MONTH_JAN;
+    public static final String DATE_FORMAT_DD_MMMM = SuperFormatter.DATE + " " + SuperFormatter.MONTH_JANUARY;
     public static final String DATE_FORMAT_DD_MMM_YYYY = SuperFormatter.DATE + " " + SuperFormatter.MONTH_JAN + " " + SuperFormatter.YEAR_4_DIGIT;
     //TODO :: commented on 13 sept 2017 as per 24 hours formation
 //    public static final String DATE_FORMAT_HH_MM_AM = SuperFormatter.HOUR_12_HOUR_2_DIGIT + ":" + SuperFormatter.MINUTE + " " + SuperFormatter.AM_PM;
@@ -120,7 +161,7 @@ public class Utility {
     public static final String DATE_FORMAT_HH_MM_AM = SuperFormatter.HOUR_24_HOUR + ":" + SuperFormatter.MINUTE + " ";
     public static final String DATE_FORMAT_DD_MMM_HH_MM_AM = SuperFormatter.DATE + " " + SuperFormatter.MONTH_JAN + " " + SuperFormatter.HOUR_24_HOUR + ":" + SuperFormatter.MINUTE + "";
     public static final String DATE_FORMAT_TASK_HAS_BEEN_PAID_DATE = SuperFormatter.DATE + " " + SuperFormatter.MONTH_JAN;
-    public static final String DATE_FORMAT_TASK_HAS_BEEN_PAID_TIME = SuperFormatter.HOUR_24_HOUR + ":" + SuperFormatter.MINUTE + "";
+    public static final String TIME_FORMAT_24HH_MM = SuperFormatter.HOUR_24_HOUR + ":" + SuperFormatter.MINUTE + "";
     public static final String DATE_TIME_FORMAT_SERVICE_YEAR = SuperFormatter.YEAR_4_DIGIT + "-" + SuperFormatter.MONTH_NUMBER + "-" + SuperFormatter.DATE + " " + SuperFormatter.HOUR_24_HOUR + ":" + SuperFormatter.MINUTE + ":" + SuperFormatter.SECONDS;
     //    dd MMMM, HH:mm a
     public static final String DATE_TIME_DD_MMMM_HH_MM = SuperFormatter.DATE + " " + SuperFormatter.MONTH_JANUARY + " " + SuperFormatter.HOUR_24_HOUR + ":" + SuperFormatter.MINUTE + "";
@@ -147,17 +188,12 @@ public class Utility {
     public static final String CHAT_TYPE_MONEY = "money";
 
     public static final int REQUEST_CODE_PERMISSION_LOCATION = 101;
-    public static final int REQUEST_CODE_READ_EXTERNAL_STORAGE = 102;
-    public static final int REQUEST_CODE_GET_FILE = 103;
+
     public static final int REQUEST_CODE_GET_FILE_ADD_COVER = 104;
-    public static final int REQUEST_CODE_GET_FILE_ADD_PROFILE = 105;
     public static final int REQUEST_CODE_READ_EXTERNAL_STORAGE_ADD_COVER = 106;
 
-
-    public static final int REQUEST_CODE_READ_EXTERNAL_STORAGE_ADD_PROFILE = 107;
     public static final int REQUEST_CODE_CROP_GET_FILE_ADD_PROFILE = 110;
     public static final int REQUEST_CODE_CHANGE_LOCATION = 108;
-    public static final int REQUEST_CODE_GET_FILE_ADD_PHOTO = 111;
     public static final int REQUEST_CODE_CHECK_LOCATION_SETTINGS = 112;
 
     public static final int REQUEST_CODE_IMAGE_CAPTURE_ADD_PROFILE = 113;
@@ -166,8 +202,14 @@ public class Utility {
     public static final int REQUEST_CODE_READ_EXTERNAL_STORAGE_ADD_PROFILE_GALLERY = 116;
     public static final int PLACE_PICKER_REQUEST = 117;
     public static final int REQUEST_CODE_ADD_PROFILE_CAMERA = 118;
-    public static final int REQUEST_CODE_VIDEO_CAPTURE = 119;
-    public static final int REQUEST_CODE_GET_VIDEO_GALLERY = 120;
+
+    /**
+     * Image/Video intent request code for task images
+     */
+    public static final int REQUEST_CODE_VIDEO_CAPTURE = 1111;
+    public static final int REQUEST_CODE_IMAGE_CAPTURE = 1112;
+    public static final int REQUEST_CODE_VIDEO_SELECT = 1113;
+    public static final int REQUEST_CODE_IMAGE_SELECT = 1114;
 
     /*
     * @Sanjay
@@ -380,6 +422,7 @@ public class Utility {
         String DATA = "DATA";
         String IS_FIRST_TIME = "isFirstTime";
         String DATA_2 = "DATA_2";
+        String DATA_3 = "DATA_3";
         String PASSWORD = "password";
         String SELECTED_IMAGE_PATH = "selectedImagePath";
         String CORRECT_OTP = "correctOTP";
@@ -421,6 +464,13 @@ public class Utility {
         String ACCESS_TOKEN = "access_token";
         String CUST_ID = "cust_id";
         String PAYTM_WALLET_BALANCE = "paytm_wallet_balance";
+        String URL = "url";
+        String POST_DATA = "postData";
+        String RESULT = "result";
+        String DATE = "date";
+        String MODEL = "model";
+        String IS_PAY_NOW = "isPayNow";
+        String DYNAMIC_LINK_URI = "DYNAMIC_LINK_URI";
     }
 
 
@@ -490,7 +540,7 @@ public class Utility {
 
         //Redirect user to Home Screen
 //        LoginActivity.newInstance(mContext, isSessionExpire, action);
-        HomeActivity.newInstance(mContext);
+        HomeActivity.newInstance(mContext, null);
     }
 
     //Method to get Device width and height in array, [0] = width, [1] = height
@@ -739,6 +789,19 @@ public class Utility {
                 .transform(new CircleTransform(context, isRounded, ContextCompat.getColor(context, color), 5, imageToLoad, tag))
                 .placeholder(placeholderRes)
                 .error(placeholderRes)
+                .crossFade()
+                .into(img);
+    }
+
+    public static void showCircularImageViewWithColorBorder(Context context, String tag, ImageView img, int imageToLoad, int color, boolean isRounded) {
+//        LogUtils.LOGD(TAG, "showCircularImageView() called with: context = [" + context + "], tag = [" + tag + "], img = [" + img + "], imageToLoad = [" + imageToLoad + "], placeholderRes = [" + placeholderRes + "], isRounded = [" + isRounded + "]");
+        if (!isActivityCorrectForGlide(context)) {
+            return;
+        }
+        Glide
+                .with(context)
+                .load(imageToLoad)
+                .transform(new CircleTransform(context, isRounded, ContextCompat.getColor(context, color), 5, imageToLoad, tag))
                 .crossFade()
                 .into(img);
     }
@@ -1104,6 +1167,11 @@ public class Utility {
 
         // when user has verified Paytm otp and account is linked.
         int PAYTM_LINKED = 19;
+
+        // According to new flow Pay later
+        // when pro is booked
+        int TASK_PRO_BOOKED = 20;
+        int TASK_PAID_SUCCESSFULLY = 21;
     }
 
     public interface REQUEST_TYPE {
@@ -1120,6 +1188,7 @@ public class Utility {
 
     public interface PAYMENT_STATUS {
         String PAYMENT_INITIATED = "payment_initiated";//not using it
+        String PROCESSING = "processing";//not using it
         String COMPLETED = "completed";
         String FAILED = "failed";
     }
@@ -1187,11 +1256,18 @@ public class Utility {
          */
         String ADDITIONAL_PAYMENT_REQUESTED = "additional_payment_requested";
 
+        /**
+         * This is used for new flow - Pay later functionality where user will book pro
+         * and will pay after completion of task
+         */
+        String PAY_LATER = "pay_later";
+
     }
 
     public interface TASK_TYPE {
         String STRATEGIC = "strategic"; //1->if task created and only quotes is there, 2-> task created and user paid to sp, but sp not started the task yet.
         String NORMAL = "normal";//if user payed and task is in progress
+        String INSTA_BOOK = "instabook";//if user payed and task is in progress
     }
 
     public interface STRATEGIC_PARTNER_BRAND {
@@ -1319,16 +1395,273 @@ public class Utility {
         return "";
     }
 
-  /*  public static String getExperienceString(String exp) {
+    public static String getSelectedMediaJsonString(ArrayList<MediaModel> list) {
+
+        if (list != null && !list.isEmpty()) {
+            JsonArray selectedMediaArray = new JsonArray();
+            for (int i = 0; i < list.size(); i++) {
+                MediaModel model = list.get(i);
+                JsonObject obj = new JsonObject();
+                obj.addProperty("media_name", AmazonUtils.getFileNameWithExt(model.mediaName, true));
+                obj.addProperty("media_type", model.mediaType);
+                selectedMediaArray.add(obj);
+            }
+            return selectedMediaArray.toString();
+        }
+        return "";
+    }
+
+    public static String getExperienceString(String exp, String separator) {
         try {
             float expFloat = Float.parseFloat(exp);
             if (expFloat > 1) {
-                return exp + " Years \nExperience";
+                return exp + " Years " + separator + "Experience";
             } else {
-                return exp + " Year \nExperience";
+                return exp + " Year " + separator + "Experience";
             }
         } catch (NumberFormatException e) {
-            return exp + " Year \nExperience";
+            return exp + " Year " + separator + "Experience";
         }
-    }*/
+    }
+
+    public static int getProLevelBadge(String pro_level) {
+        if (TextUtils.isEmpty(pro_level))
+            return 0;
+        switch (pro_level) {
+            case Utility.PRO_LEVEL.PLATINUM:
+                return R.drawable.ic_badge_platinum;
+            case Utility.PRO_LEVEL.GOLD:
+                return R.drawable.ic_badge_gold;
+            case Utility.PRO_LEVEL.SILVER:
+                return R.drawable.ic_badge_silver;
+            case Utility.PRO_LEVEL.BRONZE:
+                return R.drawable.ic_badge_bronze;
+        }
+        return 0;
+    }
+
+    public static String checkNonNullAndSet(String text) {
+        return text != null ? text.trim() : "";
+    }
+
+    public static String get2HourTimeSlots(String timeStamp) {
+        SuperCalendar superCalendar = SuperCalendar.getInstance();
+        superCalendar.setTimeZone(SuperCalendar.SuperTimeZone.GMT.GMT);
+        try {
+            superCalendar.setTimeInMillis(Long.parseLong(timeStamp));
+
+            superCalendar.setLocaleTimeZone();
+//        String task_original_date_time = superCalendar.format(Utility.DATE_FORMAT_DD_MMM + " " + Utility.DATE_FORMAT_HH_MM_AM);
+
+            Date d = superCalendar.getCalendar().getTime();
+
+            SimpleDateFormat timeFormatter = new SimpleDateFormat(Utility.TIME_FORMAT_24HH_MM);
+            String fromHour = timeFormatter.format(d);
+            SuperCalendar superCalendarToDate = SuperCalendar.getInstance();
+            superCalendarToDate.setTimeInMillis(superCalendar.getCalendar().getTimeInMillis());
+            superCalendarToDate.getCalendar().add(Calendar.HOUR_OF_DAY, 2);
+            Date toDate = superCalendarToDate.getCalendar().getTime();
+            String toHour = timeFormatter.format(toDate);
+
+            return fromHour + " hrs - " + toHour + " hrs";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "";
+        }
+    }
+
+
+    public static String get2HourTimeSlotsForPastTaskScreen(String timeStamp) {
+        SuperCalendar superCalendar = SuperCalendar.getInstance();
+        superCalendar.setTimeZone(SuperCalendar.SuperTimeZone.GMT.GMT);
+        try {
+            superCalendar.setTimeInMillis(Long.parseLong(timeStamp));
+
+            superCalendar.setLocaleTimeZone();
+//        String task_original_date_time = superCalendar.format(Utility.DATE_FORMAT_DD_MMM + " " + Utility.DATE_FORMAT_HH_MM_AM);
+
+            Date d = superCalendar.getCalendar().getTime();
+
+            SimpleDateFormat timeFormatter = new SimpleDateFormat(Utility.TIME_FORMAT_24HH_MM);
+            String fromHour = timeFormatter.format(d);
+            SuperCalendar superCalendarToDate = SuperCalendar.getInstance();
+            superCalendarToDate.setTimeInMillis(superCalendar.getCalendar().getTimeInMillis());
+            superCalendarToDate.getCalendar().add(Calendar.HOUR_OF_DAY, 2);
+            Date toDate = superCalendarToDate.getCalendar().getTime();
+            String toHour = timeFormatter.format(toDate);
+
+            return "between " + fromHour + " hrs to " + toHour + " hrs";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "";
+        }
+    }
+
+    public static String fetchMessageFromDateOfMonth(Context context, int day, SuperCalendar
+            superStartDateTimeCalendar, ProviderModel providerModel) {
+        String date;
+        String DATE_FORMAT_TASK_HAS_BEEN_PAID_DATE_TH = SuperCalendar.SuperFormatter.DATE + context.getString(R.string.label_th_date) + SuperCalendar.SuperFormatter.MONTH_JAN;
+        String DATE_FORMAT_TASK_HAS_BEEN_PAID_DATE_ST = SuperCalendar.SuperFormatter.DATE + context.getString(R.string.label_st_date) + SuperCalendar.SuperFormatter.MONTH_JAN;
+        String DATE_FORMAT_TASK_HAS_BEEN_PAID_DATE_RD = SuperCalendar.SuperFormatter.DATE + context.getString(R.string.label_rd_date) + SuperCalendar.SuperFormatter.MONTH_JAN;
+        String DATE_FORMAT_TASK_HAS_BEEN_PAID_DATE_ND = SuperCalendar.SuperFormatter.DATE + context.getString(R.string.label_nd_date) + SuperCalendar.SuperFormatter.MONTH_JAN;
+
+        if (day >= 11 && day <= 13) {
+            date = superStartDateTimeCalendar.format(DATE_FORMAT_TASK_HAS_BEEN_PAID_DATE_TH);
+        } else {
+            switch (day % 10) {
+                case 1:
+                    date = superStartDateTimeCalendar.format(DATE_FORMAT_TASK_HAS_BEEN_PAID_DATE_ST);
+                    break;
+                case 2:
+                    date = superStartDateTimeCalendar.format(DATE_FORMAT_TASK_HAS_BEEN_PAID_DATE_ND);
+                    break;
+                case 3:
+                    date = superStartDateTimeCalendar.format(DATE_FORMAT_TASK_HAS_BEEN_PAID_DATE_RD);
+                    break;
+                default:
+                    date = superStartDateTimeCalendar.format(DATE_FORMAT_TASK_HAS_BEEN_PAID_DATE_TH);
+                    break;
+            }
+        }
+        // as per  24 hour format 13 spt 2017
+//        String DATE_FORMAT_TASK_HAS_BEEN_PAID_TIME = SuperCalendar.SuperFormatter.HOUR_12_HOUR_2_DIGIT + ":" + SuperCalendar.SuperFormatter.MINUTE + "' '" + SuperCalendar.SuperFormatter.AM_PM;
+//        String time = superStartDateTimeCalendar.format(Utility.DATE_FORMAT_HH_MM_AM);
+
+        // set time format 24 hours
+        Date d = superStartDateTimeCalendar.getCalendar().getTime();
+
+        SimpleDateFormat timeFormatter = new SimpleDateFormat(Utility.TIME_FORMAT_24HH_MM);
+        String fromHour = timeFormatter.format(d);
+        SuperCalendar superCalendar = SuperCalendar.getInstance();
+        superCalendar.setTimeInMillis(superStartDateTimeCalendar.getCalendar().getTimeInMillis());
+        superCalendar.getCalendar().add(Calendar.HOUR_OF_DAY, 2);
+
+        Date toDate = superCalendar.getCalendar().getTime();
+        String toHour = timeFormatter.format(toDate);
+
+        String message = context.getString(R.string.desc_task_payment_done_acknowledgement
+                , providerModel.userName, date + context.getString(R.string.label_between) + fromHour + " hrs - " + toHour + " hrs");
+        message = message.replace(".", "");
+//        message = message.replace(getString(R.string.label_am_caps), getString(R.string.label_am_small)).replace(getString(R.string.label_pm_caps), getString(R.string.label_pm_small));
+        return message + ".";
+    }
+
+    /*
+        * Update finalized sp id on firebase.
+        * @Sanjay 20 Feb 2016
+        * */
+    public static void updateSelectedSpOnFirebase(final Context context,
+                                                  final TaskDetailModel taskDetailModel,
+                                                  final ProviderModel providerModel,
+                                                  final boolean isInstaBooking) {
+
+        String formattedTaskId = FirebaseUtils.getPrefixTaskId(taskDetailModel.taskId);
+        String formattedSpId = FirebaseUtils.getPrefixSPId(providerModel.providerId);
+        String formattedUserId = "";
+        final UserDetails userDetails = PreferenceUtility.getInstance(context).getUserDetails();
+        if (userDetails != null) {
+            formattedUserId = FirebaseUtils.getPrefixUserId(userDetails.UserID);
+        }
+        FirebaseHelper.getRecentChatRef(formattedUserId).child(formattedTaskId).removeValue();
+        if (!TextUtils.isEmpty(formattedTaskId) && !TextUtils.isEmpty(formattedSpId)) {
+            FirebaseHelper.getTaskRef(formattedTaskId).child(FirebaseHelper.KEY_SELECTEDSPID).setValue(formattedSpId);
+        }
+
+        final String formattedId = FirebaseUtils.get_T_SP_U_FormattedId(formattedTaskId, formattedSpId, formattedUserId);
+        final String finalFormattedUserId = formattedUserId;
+        FirebaseHelper.getTaskChatRef(formattedTaskId).child(formattedId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists() && dataSnapshot.getValue() != null) {
+                    TaskChatModel taskChatModel = dataSnapshot.getValue(TaskChatModel.class);
+                    if (taskChatModel != null) {
+                        taskChatModel.chatId = formattedId;
+                    }
+                    if (taskChatModel != null) {
+                        FirebaseHelper.getRecentChatRef(finalFormattedUserId).child(taskChatModel.chatId).setValue(taskChatModel);
+                    }
+
+                    if (isInstaBooking) {
+        /* * Add new task detail on firebase
+         * @Giteeka sep 7 2017 for insta booking
+         */
+                        ChatTaskModel chatTaskModel = new ChatTaskModel();
+                        chatTaskModel.taskId = FirebaseUtils.getPrefixTaskId(taskDetailModel.taskId);
+                        chatTaskModel.taskDesc = taskDetailModel.taskDesc;
+                        chatTaskModel.categoryId = taskDetailModel.categoryId;
+                        chatTaskModel.categoryName = taskDetailModel.categoryName;
+                        chatTaskModel.selectedSPId = providerModel.providerId;
+                        UserDetails userDetails = PreferenceUtility.getInstance(context).getUserDetails();
+                        chatTaskModel.userId = FirebaseUtils.getPrefixUserId(userDetails.UserID);
+                        FirebaseHelper.getTaskRef(chatTaskModel.taskId).setValue(chatTaskModel);
+                    }
+
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    public static void onSuccessfulInstaBookingTaskCompletion(Context context, JSONObject jsonObject, ProviderModel providerModel) {
+        Utility.showToast(context, context.getString(R.string.label_task_created_successfully));
+        TaskDetailModel taskDetailModel = (TaskDetailModel) Utility.getObjectFromJsonString(jsonObject.optString(NetworkUtility.TAGS.DATA), TaskDetailModel.class);
+
+        if (providerModel != null) {
+            // add task and pro entry for firebase
+            Utility.updateSelectedSpOnFirebase(context, taskDetailModel, providerModel, taskDetailModel.taskType.equalsIgnoreCase(TASK_TYPE.INSTA_BOOK));
+        }
+
+        MessageEvent messageEvent = new MessageEvent();
+        messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.TASK_PAID_FOR_INSTA_BOOKING;
+        EventBus.getDefault().post(messageEvent);
+
+        ((Activity) context).finish();
+    }
+
+
+    public static String getQuestionAnswerDetailsJsonString(ArrayList<QueAnsModel> mList) {
+        JsonArray quesArray = new JsonArray();
+        for (int i = 0; i < mList.size(); i++) {
+            QueAnsModel queAnsModel = mList.get(i);
+            if (!queAnsModel.answerType.equalsIgnoreCase(Utility.TEMPLATE_DATE_PICKER)
+                    && !queAnsModel.answerType.equalsIgnoreCase(Utility.TEMPLATE_TIME_PICKER)
+                    && !queAnsModel.answerType.equalsIgnoreCase(Utility.TEMPLATE_TEXT_FIELD)
+                    && !queAnsModel.answerType.equalsIgnoreCase(Utility.TEMPLATE_LOCATION)
+                    && !queAnsModel.answerType.equalsIgnoreCase(Utility.TEMPLATE_UPLOAD)) {
+                JsonObject jsonObject = new JsonObject();
+                jsonObject.addProperty(NetworkUtility.TAGS.QUESTION_ID, queAnsModel.questionId);
+                if (queAnsModel.answer != null)
+                    jsonObject.addProperty(NetworkUtility.TAGS.ANSWER, queAnsModel.answer);
+                else
+                    jsonObject.addProperty(NetworkUtility.TAGS.ANSWER, Utility.EMPTY_STRING);
+                quesArray.add(jsonObject);
+            }
+        }
+        return quesArray.toString();
+    }
+
+    //    media name will be with extension
+//    [{"media_name" : "5","media_type" : "288"},{"media_name" : "5","media_type" : "288"}]
+
+    public static String getSelectedServicesJsonString(ArrayList<StrategicPartnerServiceModel> mSelectedServicesList) {
+        JsonArray selectedServiceArray = new JsonArray();
+        ArrayList<StrategicPartnerServiceModel> list = mSelectedServicesList;
+        for (int i = 0; i < list.size(); i++) {
+            StrategicPartnerServiceModel model = list.get(i);
+            for (int j = 0; j < model.allSubSubCats.size(); j++) {
+                AllSubSubCat allSubSubCat = model.allSubSubCats.get(j);
+                JsonObject obj = new JsonObject();
+                obj.addProperty(NetworkUtility.TAGS.SUBCATEGORY_ID, model.sub_cat_id);
+                obj.addProperty(NetworkUtility.TAGS.SUB_SUB_CAT_ID, allSubSubCat.subSubCatId);
+                obj.addProperty(NetworkUtility.TAGS.PRICE, allSubSubCat.price);
+                selectedServiceArray.add(obj);
+            }
+        }
+        return selectedServiceArray.toString();
+    }
+
 }

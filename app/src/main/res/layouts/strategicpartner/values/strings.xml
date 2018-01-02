@@ -1,10 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="label_gotcha">Gotcha</string>
-    <string name="label_confirm_payment">Confirm Payment</string>
-    <string name="label_add_money_description">Please add sufficient funds to your wallet to complete the booking. Thank you   </string>
-    <string name="label_add_funds">Add Funds</string>
-
+    <string name="label_support_in_progress">Support in progress</string>
+    <string name="label_book_a_similar_task">Book a Similar Task</string>
 </resources>

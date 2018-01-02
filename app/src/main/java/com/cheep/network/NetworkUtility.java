@@ -33,6 +33,7 @@ public class NetworkUtility {
         public static final String UPDATE_PROFILE = BASE_URL + "customers/profile/edit";
         public static final String CATEGORY_LIST = BASE_URL + "customers/category/all_cats";
         public static final String ALL_BANNER = BASE_URL + "customers/category/all_banner";
+        public static final String GET_CATEGORY_ID_BASED_ON_SLUG = BASE_URL + "customers/category/getCategoryIdBasedOnSlug";
         public static final String FAVOURITE_CATEGORY = BASE_URL + "customers/category/category_favourite";
 
         public static final String UPDATE_LOCATION = BASE_URL + "customers/profile/update_location";
@@ -56,7 +57,8 @@ public class NetworkUtility {
 
         public static final String REPORT_SP = BASE_URL + "customers/sp_profile/report_abuse";
         public static final String TASK_DETAIL = BASE_URL + "customers/tasks/task_details";
-
+        //        public static final String TASK_DETAIL = BASE_URL + "customers/tasks/new_task_details";
+//        http://35.154.147.32/admin/v10/customers/tasks/new_task_details
         public static final String PENDING_TASK = BASE_URL + "customers/tasks/my_pending_tasks";
         public static final String PAST_TASK = BASE_URL + "customers/tasks/my_past_tasks_list";
         public static final String REVIEW_LIST = BASE_URL + "customers/sp_profile/customer_reviews";
@@ -77,6 +79,7 @@ public class NetworkUtility {
         public static final String PAYMENT_HISTORY = BASE_URL + "customers/payment/payment_history";
         public static final String EMERGENCY_ALERT = BASE_URL + "customers//sp_profile/emergency_alert";
         public static final String CHECK_PROCESSING_TASK = BASE_URL + "customers/tasks/check_processing_task";
+        public static final String BOOK_PRO_FOR_NORMAL_TASK = BASE_URL + "customers/tasks/bookProForNormalTask";
 
         // Chat Image upload
         public static final String IMAGE_UPLOAD_FOR_CHAT = BASE_URL + "customers/profile/imageUploadForChat";
@@ -113,6 +116,9 @@ public class NetworkUtility {
         //Refer and Earn
         public static final String REFER_BALANCE = BASE_URL + "customers/profile/getReferBalance";
         public static final String GET_AMOUNT_WITH_GST = BASE_URL + "customers/payment/getAmountWithGST";
+        public static final String PAY_TASK_PAYMENT = BASE_URL + "customers/payment/payTaskPayment";
+        public static final String ACCEPT_ADDITIONAL_PAYMENT_REQUEST = BASE_URL + "customers/tasks/acceptAdditionalPaymentRequest";
+        public static final String GET_PAYMENT_SUMMARY = BASE_URL + "customers/tasks/getPaymentSummary";
 
         // Paytm Verify Transaction based on Order
         // Save Paytm user details
@@ -285,6 +291,10 @@ public class NetworkUtility {
         String DISTANCE = "distance";
         String IS_FAVOURITE = "is_favourite";
         String DATA = "data";
+        //        for closest area
+        String CLOSEST_AREA = "closest_address";
+        String CLOSEST_CATEGORY = "category";
+        String CLOSEST_ADDRESS = "address";
         String WS_ACCESS_KEY = "ws_access_key";
         String USER_ID = "user_id";
         String PAGE_ID = "page_id";
@@ -382,6 +392,13 @@ public class NetworkUtility {
         String PAYTM_RESPONSE_DATA = "paytmResponseData";
         String PAYMENT_GATEWAY_DATA = "paymentGatewayData";
         String ACCESS_TOKEN_EXPIRES_TIMESTAMP = "access_token_expires_timestamp";
+        String SUB_SUB_CAT_ID = "sub_sub_cat_id";
+        String QUESTION_ID = "question_id";
+        String ANSWER = "answer";
+        String PRO_PAYMENT_STATUS = "pro_payment_status";
+        String ADDITIONAL_PENDING_AMOUNT = "additional_pending_amount";
+        String CAT_SLUG = "cat_slug";
+        String CAT_TYPE = "cat_type";
 
         interface VERSION_CHANGE_TYPE {
             int NORMAL = 0;
@@ -400,13 +417,6 @@ public class NetworkUtility {
             String IOS = "ios";
         }
 
-        interface PAYMENT_METHOD_TYPE {
-            String MOBIKWIK = "mobikwik";
-            String PAYTM = "paytm";
-            String PAYU = "payu";
-            String COD = "cod";
-            String FREE = "free";
-        }
 
         String DEVICE_TOKEN = "device_token";
 
@@ -440,7 +450,7 @@ public class NetworkUtility {
             int USER_DELETED = 447;
         }
 
-        interface BANNER_TYPE{
+        interface BANNER_TYPE {
             String STRATEGIC = "strategic";
             String REFERRAL = "referral";
             String NORMAL = "normal";
@@ -451,6 +461,7 @@ public class NetworkUtility {
         String RESOURCE_ID = "resourceid";
         String PROFILE_PIC_NEEDS_TOBE_SHOWN = "is_profile_pic_needs_be_shown";
         String VERSION_DESC = "version_desc";
+        String SHOW_BADGE = "showBadge";
 
         String OTP_CODE = "otp_code";
 
@@ -474,6 +485,16 @@ public class NetworkUtility {
 //            public static final String INSTA_BOOK = "InstaBook";
         }
     }
+
+    public interface PAYMENT_METHOD_TYPE {
+        String MOBIKWIK = "mobikwik";
+        String PAYTM = "paytm";
+        String PAYU = "payu";
+        String COD = "cod";
+        String FREE = "free";
+        String PAY_LATER = "pay_later";
+    }
+
 
 }
 

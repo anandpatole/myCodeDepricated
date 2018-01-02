@@ -112,11 +112,11 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
         Utility.showCircularImageView(mContext, TAG, holder.ivAvatar, provider.profileUrl, Utility.DEFAULT_CHEEP_LOGO);
 
         //basic info
-        SpannableString sName = new SpannableString(checkNonNullAndSet(provider.userName));
+        SpannableString sName = new SpannableString(Utility.checkNonNullAndSet(provider.userName));
         SpannableString sVerified = null;
         if (provider.isVerified.equalsIgnoreCase(Utility.BOOLEAN.YES)) {
             sVerified = new SpannableString(" " + mContext.getString(R.string.label_verified_pro) + " ");
-            sVerified.setSpan(new RoundedBackgroundSpan(mTagBackgroundColor, mTagTextColor), 0, sVerified.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+            sVerified.setSpan(new RoundedBackgroundSpan(mTagBackgroundColor, mTagTextColor,0), 0, sVerified.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
         }
         holder.tvName.setText(sVerified != null ? TextUtils.concat(sName, " ", sVerified) : sName);
 
@@ -133,21 +133,23 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
 //        holder.tvDescription.makeExpandable(provider.information, 3);
 //        manageReadMore(holder.tvDescription, provider.information);
 
-        holder.tvLocation.setText(checkNonNullAndSet(provider.sp_locality));
+        holder.tvLocation.setText(Utility.checkNonNullAndSet(provider.sp_locality));
         Utility.showRating(provider.rating, holder.ratingBar);
 
         //experience
-        if (!TextUtils.isEmpty(provider.experience)
+        if (TextUtils.isEmpty(provider.experience)
                 || Utility.ZERO_STRING.equals(provider.experience)) {
-            holder.tvExperience.setText(checkNonNullAndSet(mContext.getString(R.string.label_experience_zero)));
+            holder.tvExperience.setText(Utility.checkNonNullAndSet(mContext.getString(R.string.label_experience_zero)));
         } else {
-            holder.tvExperience.setText(holder.mView.getContext().getResources().getQuantityString(R.plurals.getExperienceString, Integer.parseInt(provider.experience), provider.experience));
+//            holder.tvExperience.setText(holder.mView.getContext().getResources().getQuantityString(R.plurals.getExperienceString, Integer.parseInt(provider.experience), provider.experience));
+            holder.tvExperience.setText(Utility.getExperienceString(provider.experience,"\n"));
         }
 
         // price - Checking if amount present then show call and paid lables else hide
         if (provider.getQuotePriceInInteger() > 0) {
             holder.tvPrice.setVisibility(View.VISIBLE);
-            holder.tvPrice.setText(mContext.getString(R.string.label_book_rs, provider.quotePrice));
+            holder.tvPrice.setText(mContext.getString(R.string.label_book_rs, Utility.getQuotePriceFormatter(provider.quotePrice)));
+//            holder.tvPrice.setText(mContext.getString(R.string.label_book_now));
             holder.tvPrice.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -354,10 +356,7 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
             holder.tvDistance.setVisibility(View.GONE);
         }
 
-        //badge
-        holder.ivBadge.setImageResource(
-
-                getBadgeResource(provider.pro_level));
+        holder.ivBadge.setImageResource(Utility.getProLevelBadge(provider.pro_level));
 
         //favorite
         holder.ivFavoriteQuote.setSelected(provider.isFavourite.equals(Utility.BOOLEAN.YES));
@@ -433,27 +432,6 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
         ////////////////////////////////////////////////////////////////////////////////////////////
     }
 
-    private String checkNonNullAndSet(String text) {
-        return text != null ? text.trim() : "";
-    }
-
-    private int getBadgeResource(String badgeIndex) {
-        if (badgeIndex != null) {
-            switch (badgeIndex) {
-                case "1"://platinum
-                    return R.drawable.ic_badge_platinum;
-                case "2"://gold
-                    return R.drawable.ic_badge_gold;
-                case "3"://silver
-                    return R.drawable.ic_badge_silver;
-                case "4"://bronze
-                    return R.drawable.ic_badge_bronze;
-                default:
-                    return 0;
-            }
-        }
-        return 0;
-    }
 
     private AnimatorSet loadBannerScrollAnimation(View view, int offset, int distance, AnimatorListenerAdapter midEndListener) {
         ObjectAnimator moveOut = ObjectAnimator.ofFloat(view, View.TRANSLATION_Y, 0, (-1 * distance));

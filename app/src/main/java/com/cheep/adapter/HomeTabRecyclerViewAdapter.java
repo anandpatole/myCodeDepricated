@@ -19,11 +19,9 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 
 import com.cheep.R;
-import com.cheep.activity.TaskQuotesActivity;
 import com.cheep.databinding.RowTabHomeBinding;
 import com.cheep.fragment.HomeTabFragment;
 import com.cheep.model.JobCategoryModel;
-import com.cheep.model.ProviderModel;
 import com.cheep.utils.Utility;
 
 import java.util.ArrayList;
@@ -36,7 +34,7 @@ import java.util.Map;
  */
 
 public class HomeTabRecyclerViewAdapter extends RecyclerView.Adapter<HomeTabRecyclerViewAdapter.ViewHolder> {
-    private static final String TAG = "HomeTabRecyclerViewAdap";
+    private static final String TAG = HomeTabRecyclerViewAdapter.class.getSimpleName();
     ArrayList<JobCategoryModel> mList;
     HomeTabFragment.CategoryRowInteractionListener mListener;
     Context mContext;

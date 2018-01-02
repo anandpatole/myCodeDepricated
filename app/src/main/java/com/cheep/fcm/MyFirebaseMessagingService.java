@@ -376,7 +376,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             builder.setContentIntent(msgPendingIntent);
         }
 
-        android.support.v7.app.NotificationCompat.InboxStyle inboxStyle = new android.support.v7.app.NotificationCompat.InboxStyle();
+        NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
         if ((mapMessages != null) && (mapMessages.size() > 0)) {
             for (int i = privateMessages.size() - 1; i >= 0; i--) {
                 if (!TextUtils.isEmpty(privateMessages.get(i))) {

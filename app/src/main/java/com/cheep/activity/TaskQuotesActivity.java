@@ -55,7 +55,7 @@ import java.util.List;
 import java.util.Map;
 
 public class TaskQuotesActivity extends BaseAppCompatActivity implements TaskQuotesRecyclerViewAdapter.OnInteractionListener {
-    private static final String TAG = "TaskQuotesActivity";
+    private static final String TAG = TaskQuotesActivity.class.getSimpleName();
 
     public static void newInstance(Context context, TaskDetailModel model, boolean isFirstTimeCreate) {
         Intent intent = new Intent(context, TaskQuotesActivity.class);
@@ -234,9 +234,9 @@ public class TaskQuotesActivity extends BaseAppCompatActivity implements TaskQuo
 
     private void populateData() {
         if (mTaskDetailModel != null) {
-            tvTitle.setText(checkNonNullAndSet(mTaskDetailModel.categoryName));
-            tvTaskTitle.setText(checkNonNullAndSet(mTaskDetailModel.subCategoryName));
-            tvTaskDescription.setText(checkNonNullAndSet(mTaskDetailModel.taskDesc));
+            tvTitle.setText(Utility.checkNonNullAndSet(mTaskDetailModel.categoryName));
+            tvTaskTitle.setText(Utility.checkNonNullAndSet(mTaskDetailModel.subCategoryName));
+            tvTaskDescription.setText(Utility.checkNonNullAndSet(mTaskDetailModel.taskDesc));
 
             SuperCalendar superCalendar = SuperCalendar.getInstance();
             superCalendar.setTimeZone(SuperCalendar.SuperTimeZone.GMT.GMT);
@@ -359,9 +359,6 @@ public class TaskQuotesActivity extends BaseAppCompatActivity implements TaskQuo
         return 15;
     }
 
-    private String checkNonNullAndSet(String text) {
-        return text != null ? text.trim() : "";
-    }
 
     private Response.Listener mSPListResponseListener = new Response.Listener() {
         @Override
@@ -413,7 +410,7 @@ public class TaskQuotesActivity extends BaseAppCompatActivity implements TaskQuo
 
     @Override
     public void onBookClick(ProviderModel provider) {
-        PaymentDetailsActivity.newInstance(mContext, mTaskDetailModel, provider, 0);
+        PaymentDetailsActivity.newInstance(mContext, mTaskDetailModel, provider, null);
     }
 
     @Override
@@ -792,6 +789,7 @@ public class TaskQuotesActivity extends BaseAppCompatActivity implements TaskQuo
     public void onMessageEvent(MessageEvent event) {
         switch (event.BROADCAST_ACTION) {
             case Utility.BROADCAST_TYPE.TASK_PAID:
+            case Utility.BROADCAST_TYPE.TASK_PRO_BOOKED:
             case Utility.BROADCAST_TYPE.TASK_PROCESSING:
             case Utility.BROADCAST_TYPE.PAYMENT_COMPLETED_NEED_TO_REDIRECT_TO_MY_TASK_SCREEN:
                 // Finish this activity as its not needed now.

@@ -9,7 +9,6 @@ import com.google.gson.annotations.SerializedName;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
 import java.util.TimeZone;
 
 /**
@@ -17,7 +16,7 @@ import java.util.TimeZone;
  */
 @Keep
 public class HistoryModel {
-    private static final String TAG = "HistoryModel";
+    private static final String TAG = HistoryModel.class.getSimpleName();
     @SerializedName("sp_user_id")
     public String sp_user_id;
 
@@ -42,7 +41,7 @@ public class HistoryModel {
     public String getPaymentDate() {
         Log.i(TAG, "getPaymentDate: Initial Date: " + payment_date);
         SimpleDateFormat serverSDF = new SimpleDateFormat(Utility.DATE_TIME_FORMAT_SERVICE_YEAR/*, Locale.US*/);
-        serverSDF.setTimeZone(TimeZone.getTimeZone("UTC"));
+        serverSDF.setTimeZone(TimeZone.getTimeZone(Utility.UTC));
         SimpleDateFormat outputSDF = new SimpleDateFormat(Utility.DATE_TIME_FORMAT_SERVICE_YEAR/*, Locale.US*/);
         Date date = null;
         try {

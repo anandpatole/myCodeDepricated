@@ -8,9 +8,12 @@ import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.text.InputFilter;
+import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -36,7 +39,9 @@ import com.cheep.model.UserDetails;
 import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
+import com.cheep.strategicpartner.StrategicPartnerMediaViewActiivty;
 import com.cheep.utils.HotlineHelper;
+import com.cheep.utils.LogUtils;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.RoundedBackgroundSpan;
 import com.cheep.utils.SharedElementTransitionHelper;
@@ -53,6 +58,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -61,7 +67,7 @@ import java.util.Map;
  */
 
 public class TaskSummaryActivity extends BaseAppCompatActivity {
-    private static final String TAG = "TaskSummaryActivity";
+    private static final String TAG = TaskSummaryActivity.class.getSimpleName();
     private ActivityTaskSummaryBinding mActivityTaskSummaryBinding;
     private TaskDetailModel mTaskDetailModel;
 
@@ -129,6 +135,7 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
 
         // By Default makethe task completion dialog as gone
         showTaskCompletionDialog(false);
+        LogUtils.LOGE(TAG, "showTaskCompletionDialog: taskTotalPendingAmount :: " + mTaskDetailModel.taskTotalPendingAmount);
         mActivityTaskSummaryBinding.lnTaskCancellation.setVisibility(View.GONE);
         mActivityTaskSummaryBinding.lnRatingSection.setVisibility(View.GONE);
         mActivityTaskSummaryBinding.lnTaskRescheduleRequested.setVisibility(View.GONE);
@@ -144,6 +151,7 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
 
 
         // Setup First section whether SP is final or not
+
         if (mTaskDetailModel.selectedProvider == null) {
             // Provider is not final yet, so need to show the nearby available.
             mActivityTaskSummaryBinding.lnResponseReceived.setVisibility(View.VISIBLE);
@@ -153,6 +161,7 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
 
             // Hide Payment Summary textview
             mActivityTaskSummaryBinding.textViewPaymentSummary.setVisibility(View.GONE);
+            mActivityTaskSummaryBinding.textPaid.setVisibility(View.GONE);
 
             updateSPImageStacks(mTaskDetailModel.mQuotedSPList);
         } else {
@@ -162,9 +171,17 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
 
             // Show Payment Summary textview
             mActivityTaskSummaryBinding.textViewPaymentSummary.setVisibility(View.VISIBLE);
+            String s = "";
+            if (!TextUtils.isEmpty(mTaskDetailModel.isAnyAmountPending))
+                s = mTaskDetailModel.isAnyAmountPending.equalsIgnoreCase(Utility.BOOLEAN.YES) ? getString(R.string.label_not_paid) : getString(R.string.label_paid);
+
+            mActivityTaskSummaryBinding.textPaid.setVisibility(View.VISIBLE);
+            mActivityTaskSummaryBinding.textPaid.setText("(" + s + ")");
+
 
             // Set rating
             Utility.showRating(mTaskDetailModel.selectedProvider.rating, mActivityTaskSummaryBinding.providerRating);
+            mActivityTaskSummaryBinding.textExperience.setText(mTaskDetailModel.selectedProvider.rating);
 
             if (Utility.BOOLEAN.YES.equals(mTaskDetailModel.selectedProvider.isFavourite))
                 mActivityTaskSummaryBinding.imgFav.setSelected(true);
@@ -188,8 +205,8 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
             if (Utility.BOOLEAN.YES.equalsIgnoreCase(mTaskDetailModel.selectedProvider.isVerified)) {
                 sVerified = new SpannableString(" " + mContext.getString(R.string.label_verified_pro) + " ");
                 sVerified.setSpan(new RelativeSizeSpan(0.9f), 0, sVerified.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                sVerified.setSpan(new RoundedBackgroundSpan(ContextCompat.getColor(this, R.color.splash_gradient_end), ContextCompat.getColor(this, R.color.white)), 0, sVerified.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-                mActivityTaskSummaryBinding.textProviderName.setText(sVerified != null ? TextUtils.concat(sName, " ", sVerified) : sName);
+                sVerified.setSpan(new RoundedBackgroundSpan(ContextCompat.getColor(this, R.color.splash_gradient_end), ContextCompat.getColor(this, R.color.white),0), 0, sVerified.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+                mActivityTaskSummaryBinding.textProviderName.setText(TextUtils.concat(sName, " ", sVerified));
             }
             // Distanceof Provider
             mActivityTaskSummaryBinding.textAddressKmAway.setText(mTaskDetailModel.selectedProvider.distance + getString(R.string.label_away));
@@ -233,7 +250,21 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     // Redirect the user to Payment Summary screen.
-                    PaymentDetailsActivity.newInstance(TaskSummaryActivity.this, mTaskDetailModel, mTaskDetailModel.selectedProvider, true);
+                    double pendingAmount;
+                    try {
+                        pendingAmount = Double.parseDouble(mTaskDetailModel.taskTotalPendingAmount);
+                    } catch (NumberFormatException e) {
+                        pendingAmount = 0;
+                    }
+                    LogUtils.LOGE(TAG, "showTaskCompletionDialog: pendingAmount :: " + pendingAmount);
+
+                    if (pendingAmount > 0) {
+//                        PaymentChoiceActivity.newInstance(mContext, mTaskDetailModel);
+                        PaymentDetailsActivity.newInstance(mContext, mTaskDetailModel);
+                    } else {
+//                        mActivityTaskSummaryBinding.textTaskCompletionYes.setText(R.string.label_yes);
+                        PaymentSummaryActivity.newInstance(TaskSummaryActivity.this, mTaskDetailModel);
+                    }
                 }
             });
 
@@ -247,30 +278,62 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
         // Set Second Section
         mActivityTaskSummaryBinding.textSubCategoryName.setText(mTaskDetailModel.subCategoryName);
         mActivityTaskSummaryBinding.textTaskDesc.setText(mTaskDetailModel.taskDesc);
-        Utility.loadImageView(mContext, mActivityTaskSummaryBinding.imgTaskPicture, mTaskDetailModel.taskImage, 0);
+//        Utility.loadImageView(mContext, mActivityTaskSummaryBinding.imgTaskPicture, mTaskDetailModel.taskImage, 0);
+        if (mTaskDetailModel.mMediaModelList != null && !mTaskDetailModel.mMediaModelList.isEmpty()) {
+//            if (mTaskDetailModel.mMediaModelList.size() > 1)
+//                mActivityTaskSummaryBinding.tvCounter.setText("+" + (mTaskDetailModel.mMediaModelList.size() - 1));
+//            else
+//                mActivityTaskSummaryBinding.tvCounter.setVisibility(View.GONE);
+
+            Collections.reverse(mTaskDetailModel.mMediaModelList);
+            Utility.loadImageView(this, mActivityTaskSummaryBinding.imgTaskPicture1, mTaskDetailModel.mMediaModelList.get(0).mediaThumbName);
+            if (mTaskDetailModel.mMediaModelList.size() == 3) {
+                Utility.loadImageView(this, mActivityTaskSummaryBinding.imgTaskPicture1, mTaskDetailModel.mMediaModelList.get(0).mediaThumbName);
+                Utility.loadImageView(this, mActivityTaskSummaryBinding.imgTaskPicture2, mTaskDetailModel.mMediaModelList.get(1).mediaThumbName);
+                Utility.loadImageView(this, mActivityTaskSummaryBinding.imgTaskPicture3, mTaskDetailModel.mMediaModelList.get(2).mediaThumbName);
+            } else if (mTaskDetailModel.mMediaModelList.size() == 2) {
+                mActivityTaskSummaryBinding.framePicture3.setVisibility(View.GONE);
+                Utility.loadImageView(this, mActivityTaskSummaryBinding.imgTaskPicture2, mTaskDetailModel.mMediaModelList.get(1).mediaThumbName);
+                Utility.loadImageView(this, mActivityTaskSummaryBinding.imgTaskPicture1, mTaskDetailModel.mMediaModelList.get(0).mediaThumbName);
+
+            } else {
+                mActivityTaskSummaryBinding.framePicture3.setVisibility(View.GONE);
+                mActivityTaskSummaryBinding.framePicture2.setVisibility(View.GONE);
+                Utility.loadImageView(this, mActivityTaskSummaryBinding.imgTaskPicture1, mTaskDetailModel.mMediaModelList.get(0).mediaThumbName);
+            }
+
+        } else
+            mActivityTaskSummaryBinding.frameSelectPicture.setVisibility(View.GONE);
 
 
         // Set Up Third Section WHEN
         /*
           Setting dynamic fields based on current status of task(Job)
          */
+
         SuperCalendar superCalendar = SuperCalendar.getInstance();
         superCalendar.setTimeZone(SuperCalendar.SuperTimeZone.GMT.GMT);
+        String task_original_date = "";
         try {
             superCalendar.setTimeInMillis(Long.parseLong(mTaskDetailModel.taskStartdate));
-        } catch (Exception e) {
+            superCalendar.setLocaleTimeZone();
+            task_original_date = superCalendar.format(Utility.DATE_FORMAT_DD_MMM) + getString(R.string.label_between);
+        } catch (NumberFormatException e) {
             e.printStackTrace();
         }
-        superCalendar.setLocaleTimeZone();
-        String task_original_date_time = superCalendar.format(Utility.DATE_FORMAT_DD_MMM + " " + Utility.DATE_FORMAT_HH_MM_AM);
-        mActivityTaskSummaryBinding.textTaskWhen.setText(task_original_date_time);
+
+        String time = Utility.get2HourTimeSlots(mTaskDetailModel.taskStartdate);
+        mActivityTaskSummaryBinding.textTaskWhen.setText(task_original_date + time);
+
 
         // Setup WHERE section
         mActivityTaskSummaryBinding.textTaskWhere.setText(mTaskDetailModel.taskAddress);
 
 
         // Onclick of when and Where section
-        mActivityTaskSummaryBinding.lnTaskDesc.setOnClickListener(new View.OnClickListener() {
+        mActivityTaskSummaryBinding.lnTaskDesc.setOnClickListener(new View.OnClickListener()
+
+        {
             @Override
             public void onClick(View view) {
                 showFullDesc(getString(R.string.label_desc), mActivityTaskSummaryBinding.textTaskDesc.getText().toString());
@@ -287,15 +350,25 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
     private void updateUIBasedOnTaskStatus() {
         if (Utility.TASK_STATUS.PENDING.equalsIgnoreCase(mTaskDetailModel.taskStatus)) {
             mActivityTaskSummaryBinding.textTaskStatusTop.setText(getString(R.string.task_confirmed));
+            mActivityTaskSummaryBinding.textViewPaymentSummary.setVisibility(View.VISIBLE);
+            mActivityTaskSummaryBinding.textPaid.setVisibility(View.VISIBLE);
+
         } else if (Utility.TASK_STATUS.PROCESSING.equalsIgnoreCase(mTaskDetailModel.taskStatus)) {
             mActivityTaskSummaryBinding.textTaskStatusTop.setText(getString(R.string.task_status_processing));
+            mActivityTaskSummaryBinding.textViewPaymentSummary.setVisibility(View.VISIBLE);
+            mActivityTaskSummaryBinding.textPaid.setVisibility(View.VISIBLE);
+
         } else if (Utility.TASK_STATUS.COMPLETION_REQUEST.equalsIgnoreCase(mTaskDetailModel.taskStatus)) {
             mActivityTaskSummaryBinding.textTaskStatusTop.setText(getString(R.string.task_status_processing));
+            mActivityTaskSummaryBinding.textViewPaymentSummary.setVisibility(View.GONE);
+            mActivityTaskSummaryBinding.textPaid.setVisibility(View.GONE);
 
             // Setup Task Completion Request Dialog
             showTaskCompletionDialog(true);
         } else if (Utility.TASK_STATUS.COMPLETION_CONFIRM.equalsIgnoreCase(mTaskDetailModel.taskStatus)) {
             mActivityTaskSummaryBinding.textTaskStatusTop.setText(getString(R.string.label_task_complete));
+            mActivityTaskSummaryBinding.textViewPaymentSummary.setVisibility(View.VISIBLE);
+            mActivityTaskSummaryBinding.textPaid.setVisibility(View.VISIBLE);
 
             // No need to hide ChatCall Button Now.
             showChatCallButton(false);
@@ -327,8 +400,13 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
             }
         } else if (Utility.TASK_STATUS.COD.equalsIgnoreCase(mTaskDetailModel.taskStatus) || Utility.TASK_STATUS.PAID.equalsIgnoreCase(mTaskDetailModel.taskStatus)) {
             mActivityTaskSummaryBinding.textTaskStatusTop.setText(getString(R.string.task_confirmed));
+            mActivityTaskSummaryBinding.textViewPaymentSummary.setVisibility(View.VISIBLE);
+            mActivityTaskSummaryBinding.textPaid.setVisibility(View.VISIBLE);
+
         } else if (Utility.TASK_STATUS.CANCELLED_CUSTOMER.equalsIgnoreCase(mTaskDetailModel.taskStatus)) {
             mActivityTaskSummaryBinding.textTaskStatusTop.setText(getString(R.string.msg_task_cancelled_title));
+            mActivityTaskSummaryBinding.textViewPaymentSummary.setVisibility(View.VISIBLE);
+            mActivityTaskSummaryBinding.textPaid.setVisibility(View.VISIBLE);
 
             // Cancellation Reason
             mActivityTaskSummaryBinding.lnTaskCancellation.setVisibility(View.VISIBLE);
@@ -341,6 +419,8 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
         } else if (Utility.TASK_STATUS.CANCELLED_SP.equalsIgnoreCase(mTaskDetailModel.taskStatus)) {
 //            mActivityTaskSummaryBinding.textTaskStatusTop.setText(getString(R.string.task_was_cancelled_by_x, mTaskDetailModel.selectedProvider.userName));
             mActivityTaskSummaryBinding.textTaskStatusTop.setText(getString(R.string.msg_task_cancelled_title));
+            mActivityTaskSummaryBinding.textViewPaymentSummary.setVisibility(View.VISIBLE);
+            mActivityTaskSummaryBinding.textPaid.setVisibility(View.VISIBLE);
 
             // Cancellation Reason
             mActivityTaskSummaryBinding.lnTaskCancellation.setVisibility(View.VISIBLE);
@@ -354,6 +434,8 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
         // reschedule task status
         else if (Utility.TASK_STATUS.RESCHEDULE_REQUESTED.equalsIgnoreCase(mTaskDetailModel.taskStatus)) {
             mActivityTaskSummaryBinding.textTaskStatusTop.setText(getString(R.string.label_reschedule_requested));
+            mActivityTaskSummaryBinding.textViewPaymentSummary.setVisibility(View.VISIBLE);
+            mActivityTaskSummaryBinding.textPaid.setVisibility(View.VISIBLE);
 
             // Reschedule request desc
             mActivityTaskSummaryBinding.lnTaskRescheduleRequested.setVisibility(View.VISIBLE);
@@ -376,6 +458,9 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
         //Task's Reschedule request got cancelled
         else if (Utility.TASK_STATUS.RESCHEDULE_REQUEST_REJECTED.equalsIgnoreCase(mTaskDetailModel.taskStatus)) {
             mActivityTaskSummaryBinding.textTaskStatusTop.setText(getString(R.string.label_reschedule_rejected));
+            mActivityTaskSummaryBinding.textViewPaymentSummary.setVisibility(View.VISIBLE);
+            mActivityTaskSummaryBinding.textPaid.setVisibility(View.VISIBLE);
+
             mActivityTaskSummaryBinding.lnTaskRescheduleRejected.setVisibility(View.VISIBLE);
 
             // Chat & Call with @Cheep team click event of buttons
@@ -400,7 +485,8 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
         //Task's Additional Payment Request comes
         else if (Utility.TASK_STATUS.ADDITIONAL_PAYMENT_REQUESTED.equalsIgnoreCase(mTaskDetailModel.taskStatus)) {
             mActivityTaskSummaryBinding.textTaskStatusTop.setText(getString(R.string.task_status_processing));
-
+            mActivityTaskSummaryBinding.textViewPaymentSummary.setVisibility(View.GONE);
+            mActivityTaskSummaryBinding.textPaid.setVisibility(View.GONE);
             mActivityTaskSummaryBinding.lnTaskAdditionalQuoteRequested.setVisibility(View.VISIBLE);
 
             String additionalQuoteAmount = getString(R.string.rupee_symbol_x, mTaskDetailModel.additionalQuoteAmount);
@@ -412,7 +498,8 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
                     Log.i(TAG, "onClick: Accept Additional Payment");
 
                     // First Call Asynctask that would going to check whether current status of Progressing or not.
-                    callCheckingTaskStatus();
+//                    callCheckingTaskStatus();
+                    callAcceptAdditionalPaymentRequest();
 
 
                 }
@@ -444,11 +531,62 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
     private void showTaskCompletionDialog(boolean flag) {
         if (flag) {
             mActivityTaskSummaryBinding.lnTaskCompletionRequested.setVisibility(View.VISIBLE);
-            mActivityTaskSummaryBinding.textConfirmText.setText(getString(R.string.label_complete_job_confirm, mTaskDetailModel.selectedProvider.userName));
+            String mainText = getString(R.string.label_complete_job_confirm, "PRO");
+            String s = "";
+            if (!TextUtils.isEmpty(mTaskDetailModel.isAnyAmountPending)) {
+                s = mTaskDetailModel.isAnyAmountPending.equalsIgnoreCase(Utility.BOOLEAN.YES) ? getString(R.string.label_not_paid) : getString(R.string.label_paid);
+                s = "(" + s + ")";
+            }
+            if (!s.isEmpty()) {
+                String fullstring = mainText + s;
+                SpannableStringBuilder text = new SpannableStringBuilder(fullstring);
+                text.setSpan(new ForegroundColorSpan(ContextCompat.getColor(this, R.color.grey_varient_23)), fullstring.indexOf(s.charAt(0)), fullstring.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                mActivityTaskSummaryBinding.textConfirmText.setText(text);
+            } else {
+                mActivityTaskSummaryBinding.textConfirmText.setText(mainText);
+
+            }
+
+//            if (mTaskDetailModel.paymentStatus.equalsIgnoreCase(Utility.TASK_STATUS.PAID)) {
+//            double pendingAmount;
+//            try {
+//                LogUtils.LOGE(TAG, "showTaskCompletionDialog: taskTotalPendingAmount :: " + mTaskDetailModel.taskTotalPendingAmount);
+//                pendingAmount = Double.parseDouble(mTaskDetailModel.taskTotalPendingAmount);
+//            } catch (NumberFormatException e) {
+//                pendingAmount = 0;
+//            }
+//            LogUtils.LOGE(TAG, "showTaskCompletionDialog: pendingAmount :: " + pendingAmount);
+//            if (pendingAmount > 0) {
+//                mActivityTaskSummaryBinding.textTaskCompletionYes.setText(R.string.label_yes_pay_now);
+//            } else {
+//                mActivityTaskSummaryBinding.textTaskCompletionYes.setText(R.string.label_yes);
+//            }
+
             mActivityTaskSummaryBinding.textTaskCompletionYes.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    callCompleteTaskWS(Utility.TASK_STATUS.COMPLETION_CONFIRM);
+
+//                    if (mTaskDetailModel.paymentStatus.equalsIgnoreCase(Utility.TASK_STATUS.PAID)) {
+//                        callCompleteTaskWS(Utility.TASK_STATUS.COMPLETION_CONFIRM);
+//                    } else {
+//                        PaymentChoiceActivity.newInstance(mContext, mTaskDetailModel);
+//                    }
+                    double pendingAmount;
+                    try {
+                        LogUtils.LOGE(TAG, "showTaskCompletionDialog: taskTotalPendingAmount :: " + mTaskDetailModel.taskTotalPendingAmount);
+                        pendingAmount = Double.parseDouble(mTaskDetailModel.taskTotalPendingAmount);
+                    } catch (NumberFormatException e) {
+                        pendingAmount = 0;
+                    }
+                    LogUtils.LOGE(TAG, "showTaskCompletionDialog: pendingAmount :: " + pendingAmount);
+
+                    if (pendingAmount > 0) {
+//                        PaymentChoiceActivity.newInstance(mContext, mTaskDetailModel);
+                        PaymentDetailsActivity.newInstance(mContext, mTaskDetailModel);
+                    } else {
+                        callCompleteTaskWS(Utility.TASK_STATUS.COMPLETION_CONFIRM);
+//                        mActivityTaskSummaryBinding.textTaskCompletionYes.setText(R.string.label_yes);
+                    }
                 }
             });
             mActivityTaskSummaryBinding.textTaskCompletionNo.setOnClickListener(new View.OnClickListener() {
@@ -457,6 +595,13 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
                     callCompleteTaskWS(Utility.TASK_STATUS.PROCESSING);
                 }
             });
+            mActivityTaskSummaryBinding.textTaskSeekSupport.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Utility.initiateCallToCheepHelpLine(mContext);
+                }
+            });
+
         } else {
             mActivityTaskSummaryBinding.lnTaskCompletionRequested.setVisibility(View.GONE);
         }
@@ -465,14 +610,15 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
 
     @Override
     protected void setListeners() {
-        mActivityTaskSummaryBinding.imgTaskPicture.setOnClickListener(new View.OnClickListener() {
+        mActivityTaskSummaryBinding.frameSelectPicture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!TextUtils.isEmpty(mTaskDetailModel.taskImage)) {
+                if (mTaskDetailModel.mMediaModelList != null && !mTaskDetailModel.mMediaModelList.isEmpty()) {
 
                     SharedElementTransitionHelper sharedElementTransitionHelper = new SharedElementTransitionHelper(TaskSummaryActivity.this);
-                    sharedElementTransitionHelper.put(mActivityTaskSummaryBinding.imgTaskPicture, R.string.transition_image_view);
-                    ZoomImageActivity.newInstance(mContext, sharedElementTransitionHelper.getBundle(), mTaskDetailModel.taskImage);
+                    sharedElementTransitionHelper.put(mActivityTaskSummaryBinding.imgTaskPicture1, R.string.transition_image_view);
+//                    ZoomImageActivity.newInstance(mContext, sharedElementTransitionHelper.getBundle(), mTaskDetailModel.taskImage);
+                    StrategicPartnerMediaViewActiivty.getInstance(TaskSummaryActivity.this, mTaskDetailModel.mMediaModelList, false);
                 }
             }
         });
@@ -678,7 +824,7 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
                         finish();
                         break;
                 }
-            } catch (JSONException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
                 mCallTaskDetailWSErrorListener.onErrorResponse(new VolleyError(e.getMessage()));
             }
@@ -1094,7 +1240,7 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
                         showRateDialog();*/
 
                         mTaskDetailModel.taskStatus = Utility.TASK_STATUS.PROCESSING;
-                        setUpTaskDetails(mTaskDetailModel);
+                        callTaskDetailWS(mTaskDetailModel.taskId);
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
                         // Show Toast
@@ -1160,6 +1306,24 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
                 // Finish this activity
                 finish();
                 break;
+            case Utility.BROADCAST_TYPE.TASK_PAID_SUCCESSFULLY:
+
+                //Refresh UI for complete status
+//                mTaskDetailModel.taskStatus = event.taskStatus;
+//                mTaskDetailModel.isAnyAmountPending = Utility.BOOLEAN.NO;
+//                setUpTaskDetails(mTaskDetailModel);
+
+                LogUtils.LOGE(TAG, "onMessageEvent:taskStatus " + event.taskStatus);
+//                if (mTaskDetailModel.taskStatus.equalsIgnoreCase(Utility.TASK_STATUS.COMPLETION_REQUEST)) {
+//                    callCompleteTaskWS(Utility.TASK_STATUS.COMPLETION_CONFIRM);
+//                } else {
+                LogUtils.LOGE(TAG, "onMessageEvent:taskStatus " + event.taskStatus);
+                mTaskDetailModel.taskStatus = event.taskStatus;
+                mTaskDetailModel.isAnyAmountPending = Utility.BOOLEAN.NO;
+                mTaskDetailModel.taskTotalPendingAmount = "0";
+                setUpTaskDetails(mTaskDetailModel);
+//                }
+                break;
         }
     }
 
@@ -1172,6 +1336,8 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
         Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.WS.ADD_REVIEW);
         Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.WS.SP_ADD_TO_FAV);
         Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.WS.PAYMENT);
+        Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.WS.TASK_DETAIL);
+        Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.WS.ACCEPT_ADDITIONAL_PAYMENT_REQUEST);
 
         EventBus.getDefault().unregister(this);
 
@@ -1278,11 +1444,11 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    ////////////////////////////////////////Accept-Reject Detail Service[End] //////////////////
+    ////////////////////////////////////////Accept Detail Service[START] //////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-    private void callCheckingTaskStatus() {
+    private void callAcceptAdditionalPaymentRequest() {
         //Validation
         if (!Utility.isConnected(mContext)) {
             Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityTaskSummaryBinding.getRoot());
@@ -1303,17 +1469,17 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
         Map<String, String> mParams = new HashMap<>();
         mParams.put(NetworkUtility.TAGS.TASK_ID, mTaskDetailModel.taskId);
 
-        VolleyNetworkRequest mVolleyNetworkRequest = new VolleyNetworkRequest(NetworkUtility.WS.GET_TASK_STATUS
+        VolleyNetworkRequest mVolleyNetworkRequest = new VolleyNetworkRequest(NetworkUtility.WS.ACCEPT_ADDITIONAL_PAYMENT_REQUEST
                 , mGetTaskStatusWSErrorListener
-                , mGetTaskStatusWSResponseListener
+                , mAcceptAdditionalPaymentRequestWSResponseListener
                 , mHeaderParams
                 , mParams
                 , null);
-        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest, NetworkUtility.WS.GET_TASK_STATUS);
+        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest, NetworkUtility.WS.ACCEPT_ADDITIONAL_PAYMENT_REQUEST);
 
     }
 
-    Response.Listener mGetTaskStatusWSResponseListener = new Response.Listener() {
+    Response.Listener mAcceptAdditionalPaymentRequestWSResponseListener = new Response.Listener() {
         @Override
         public void onResponse(Object response) {
             hideProgressDialog();
@@ -1324,24 +1490,7 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
                 int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
                 switch (statusCode) {
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
-                        JSONObject jData = jsonObject.getJSONObject(NetworkUtility.TAGS.DATA);
-                        String taskStatus = jData.getString(NetworkUtility.TAGS.TASK_STATUS);
-
-                        if (taskStatus.equalsIgnoreCase(Utility.TASK_STATUS.ADDITIONAL_PAYMENT_REQUESTED)) {
-                            // payNow(true);
-                            PaymentDetailsActivity.newInstance(mContext, mTaskDetailModel, mTaskDetailModel.selectedProvider, 1);
-                        } else if (taskStatus.equalsIgnoreCase(Utility.TASK_STATUS.COMPLETION_REQUEST)) {
-                            Utility.showSnackBar(getString(R.string.message_no_more_payment_task_completed), mActivityTaskSummaryBinding.getRoot());
-                            mTaskDetailModel.taskStatus = Utility.TASK_STATUS.COMPLETION_REQUEST;
-                            setUpTaskDetails(mTaskDetailModel);
-
-                        }
-//                        Utility.showSnackBar(jsonObject.getString(NetworkUtility.TAGS.MESSAGE), mActivityJobSummaryBinding.getRoot());
-                       /* Utility.showSnackBar(getString(R.string.msg_thanks_for_confirmation), mActivityJobSummaryBinding.getRoot());
-                        mActivityJobSummaryBinding.layoutStatusConfirmationRequired.setVisibility(View.GONE);
-                        showRateDialog();*/
-
-//                        hideProgressDialog();
+                        callTaskDetailWS(mTaskDetailModel.taskId);
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
                         // Show Toast
@@ -1369,6 +1518,12 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
 
         }
     };
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////Accept-Reject Detail Service[End] //////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
 
     Response.ErrorListener mGetTaskStatusWSErrorListener = new Response.ErrorListener() {
         @Override
@@ -1490,8 +1645,6 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
 
             // Close Progressbar
 //            hideProgressDialog();
-
-
             Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityTaskSummaryBinding.getRoot());
 
         }

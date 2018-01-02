@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.TextView;
 
+import com.cheep.BuildConfig;
 import com.cheep.R;
 import com.cheep.model.GooglePlaceModel;
 import com.cheep.utils.GoogleMapUtils;
@@ -85,7 +86,7 @@ public class PlacesAutoCompleteAdapter extends RecyclerView.Adapter<PlacesAutoCo
 
 
     // INTERNET REQUEST FOR PLACES
-    private static final String LOG_TAG = "PlacesAutoCompleteAdapter";
+    private static final String LOG_TAG = PlacesAutoCompleteAdapter.class.getSimpleName();
 
     private ArrayList<GooglePlaceModel> autocomplete(String input) {
         ArrayList<GooglePlaceModel> resultList = null;
@@ -97,10 +98,10 @@ public class PlacesAutoCompleteAdapter extends RecyclerView.Adapter<PlacesAutoCo
 
             //Setting this default value, we can remove this
 //            String countryCode = "in";
-            String countryCode = "in"; //in
+            /*String countryCode = "in"; //in*/
 
-            if (!TextUtils.isEmpty(countryCode))
-                sb.append("&components=country:").append(countryCode);
+            if (!TextUtils.isEmpty(BuildConfig.COUNTRY_CODE))
+                sb.append("&components=country:").append(BuildConfig.COUNTRY_CODE);
 //            sb.append("&types=(cities)");
             sb.append("&input=").append(URLEncoder.encode(input, "utf8"));
 
@@ -115,10 +116,10 @@ public class PlacesAutoCompleteAdapter extends RecyclerView.Adapter<PlacesAutoCo
                 jsonResults.append(buff, 0, read);
             }
         } catch (MalformedURLException e) {
-            Log.e("PlaceAutoComplete", "Error processing Places API URL" + e.toString());
+            Log.e(LOG_TAG, "Error processing Places API URL" + e.toString());
             return resultList;
         } catch (IOException e) {
-            Log.e("PlaceAutoComplete", "Error connecting to Places API" + e.toString());
+            Log.e(LOG_TAG, "Error connecting to Places API" + e.toString());
             return resultList;
         } finally {
             if (conn != null) {
@@ -147,7 +148,7 @@ public class PlacesAutoCompleteAdapter extends RecyclerView.Adapter<PlacesAutoCo
                 resultList.add(place);
             }
         } catch (JSONException e) {
-            Log.e("PlaceAutoComplete", "Cannot process JSON results", e);
+            Log.e(LOG_TAG, "Cannot process JSON results", e);
         }
 
         return resultList;

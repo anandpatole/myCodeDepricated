@@ -1,6 +1,8 @@
 package com.cheep.interfaces;
 
 import com.cheep.databinding.RowUpcomingTaskBinding;
+import com.cheep.model.BannerImageModel;
+import com.cheep.model.JobCategoryModel;
 import com.cheep.model.TaskDetailModel;
 
 public interface TaskRowDataInteractionListener {
@@ -19,6 +21,8 @@ public interface TaskRowDataInteractionListener {
     void onMigrateTaskFromPendingToPast(TaskDetailModel model);
 
     void onCallClicked(TaskDetailModel providerModel);
+
+    void onBookSimilarTaskClicked(JobCategoryModel jobCategoryModel, BannerImageModel bannerImageModel);
 
     //    void onTaskRowFragListItemClicked(int which, TaskChatModel exploreDataModel); //, RowTabChatBinding mRawTabChatBinding
     void onCreateNewTask();

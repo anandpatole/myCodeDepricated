@@ -12,11 +12,10 @@ import android.widget.ImageView;
 
 import com.cheep.R;
 import com.cheep.activity.HomeActivity;
-import com.cheep.activity.LoginActivity;
 import com.cheep.utils.PreferenceUtility;
 
 public class IntroImageFragment extends BaseFragment {
-    private static final String TAG = "CoverImageFragment";
+    private static final String TAG = IntroImageFragment.class.getSimpleName();
     private ImageView img_intro;
     private ImageView img_get_started;
     private int introImage;
@@ -42,7 +41,7 @@ public class IntroImageFragment extends BaseFragment {
                 PreferenceUtility.getInstance(mContext).updateIntroScreenStatus(true);
                 //Start the Login activity
 //                LoginActivity.newInstance(mContext);
-                HomeActivity.newInstance(mContext);
+                HomeActivity.newInstance(mContext, null);
                 getActivity().finish();
             }
         });

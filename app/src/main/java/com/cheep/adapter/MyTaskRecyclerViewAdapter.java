@@ -11,7 +11,7 @@ import android.widget.LinearLayout;
 
 import com.cheep.R;
 import com.cheep.activity.ProviderProfileActivity;
-import com.cheep.databinding.RowPastTaskBinding;
+import com.cheep.databinding.RowPastTaskProProfileBinding;
 import com.cheep.model.CoverImageModel;
 import com.cheep.model.JobCategoryModel;
 import com.cheep.utils.Utility;
@@ -50,7 +50,7 @@ public class MyTaskRecyclerViewAdapter extends RecyclerView.Adapter<MyTaskRecycl
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         mContext = parent.getContext();
-        RowPastTaskBinding rowPastTaskBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), R.layout.row_past_task, parent, false);
+        RowPastTaskProProfileBinding rowPastTaskBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), R.layout.row_past_task_pro_profile, parent, false);
         return new ViewHolder(rowPastTaskBinding);
     }
 
@@ -83,9 +83,9 @@ public class MyTaskRecyclerViewAdapter extends RecyclerView.Adapter<MyTaskRecycl
 
     class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
-        public final RowPastTaskBinding rowPastTaskBinding;
+        public final RowPastTaskProProfileBinding rowPastTaskBinding;
 
-        public ViewHolder(RowPastTaskBinding binding) {
+        public ViewHolder(RowPastTaskProProfileBinding binding) {
             super(binding.getRoot());
             mView = binding.getRoot();
             rowPastTaskBinding = binding;
