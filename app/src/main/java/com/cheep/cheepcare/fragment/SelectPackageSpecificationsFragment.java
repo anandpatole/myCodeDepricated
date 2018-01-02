@@ -5,6 +5,11 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.ImageSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -152,7 +157,24 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
                     mBinding.ivIsAddressSelected.setSelected(false);
                     return;
                 }
-                mBinding.tvSpinnerAddress.setText(mList.get(position).address);
+                ImageSpan imageSpan = new ImageSpan(mContext, R.drawable.icon_address_home_active, ImageSpan.ALIGN_BASELINE);
+                ForegroundColorSpan colorSpan = new ForegroundColorSpan(ContextCompat.getColor(mContext
+                        , R.color.splash_gradient_end));
+
+                SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder();
+                spannableStringBuilder.append(Utility.ONE_CHARACTER_SPACE);
+                spannableStringBuilder.append(Utility.ONE_CHARACTER_SPACE);
+                spannableStringBuilder.setSpan(imageSpan, 0
+                        , 1, Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+                spannableStringBuilder.append(Utility.ONE_CHARACTER_SPACE);
+                spannableStringBuilder.append(mList.get(position).address_initials);
+                int startIndex = spannableStringBuilder.toString().indexOf(mList.get(position).address_initials);
+                int endIndex = startIndex + mList.get(position).address_initials.length();
+                spannableStringBuilder.setSpan(colorSpan, startIndex, endIndex,
+                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                spannableStringBuilder.append(Utility.ONE_CHARACTER_SPACE);
+                spannableStringBuilder.append(mList.get(position).address);
+                mBinding.tvSpinnerAddress.setText(spannableStringBuilder);
                 mBinding.ivIsAddressSelected.setSelected(true);
             }
 
@@ -170,6 +192,7 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
             }
         });
 
+        mBinding.recyclerView.setNestedScrollingEnabled(false);
         mBinding.recyclerView.setAdapter(new ExpandablePackageServicesRecyclerAdapter(getServiceList(), true));
     }
 
@@ -194,7 +217,7 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
         final List<CheepCarePackageSubServicesModel> subList = new ArrayList<>();
         subList.add(new CheepCarePackageSubServicesModel() {{
             subSubCatName = "1 & 2 BHK";
-            price = "200/MTH";
+            price = "200";
             subSubCatId = "1";
             subCategoryName = "Essential Home Care Services";
             isSelected = false;
@@ -202,7 +225,7 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
 
         subList.add(new CheepCarePackageSubServicesModel() {{
             subSubCatName = "3 BHK";
-            price = "206/MTH";
+            price = "206";
             subSubCatId = "2";
             subCategoryName = "Essential Home Care Services";
             isSelected = false;
@@ -210,7 +233,7 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
 
         subList.add(new CheepCarePackageSubServicesModel() {{
             subSubCatName = "4 BHK";
-            price = "225/MTH";
+            price = "225";
             subSubCatId = "3";
             subCategoryName = "Essential Home Care Services";
             isSelected = false;
@@ -218,7 +241,7 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
 
         subList.add(new CheepCarePackageSubServicesModel() {{
             subSubCatName = "5 BHK";
-            price = "263/MTH";
+            price = "263";
             subSubCatId = "4";
             subCategoryName = "Essential Home Care Services";
             isSelected = false;
@@ -226,7 +249,7 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
 
         subList.add(new CheepCarePackageSubServicesModel() {{
             subSubCatName = "6 BHK";
-            price = "375/MTH";
+            price = "375";
             subSubCatId = "5";
             subCategoryName = "Essential Home Care Services";
             isSelected = false;

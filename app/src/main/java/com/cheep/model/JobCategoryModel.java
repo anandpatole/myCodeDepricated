@@ -5,13 +5,14 @@ import android.support.annotation.Keep;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by pankaj on 9/27/16.
  */
 @Keep
-public class JobCategoryModel {
+public class JobCategoryModel implements Serializable {
 
     @SerializedName("cat_id")
     public String catId;

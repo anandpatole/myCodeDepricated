@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.LinearLayoutManager;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.ImageSpan;
@@ -17,42 +16,36 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.cheep.R;
 import com.cheep.activity.BaseAppCompatActivity;
-import com.cheep.cheepcare.adapter.CheepCareFeatureAdapter;
-import com.cheep.cheepcare.adapter.CheepCarePackageAdapter;
-import com.cheep.cheepcare.model.CheepCareFeatureModel;
+import com.cheep.cheepcare.adapter.ExpandableCareRecyclerAdapter;
 import com.cheep.cheepcare.model.CheepCarePackageModel;
-import com.cheep.databinding.ActivityLandingScreenPickPackageBinding;
+import com.cheep.databinding.ActivityWelcomeToCheepCareBinding;
 import com.cheep.utils.Utility;
 
 /**
- * Created by pankaj on 12/21/17.
+ * Created by pankaj on 12/28/17.
  */
 
-public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
+public class WelcomeToCheepCareActivity extends BaseAppCompatActivity {
 
-    private ActivityLandingScreenPickPackageBinding mBinding;
-    private CheepCareFeatureAdapter mFeatureAdapter;
-    private CheepCarePackageAdapter mPackageAdapter;
+    private ActivityWelcomeToCheepCareBinding mBinding;
     private String mCityName;
 
     public static void newInstance(Context context, String cityName) {
-        Intent intent = new Intent(context, LandingScreenPickPackageActivity.class);
+        Intent intent = new Intent(context, WelcomeToCheepCareActivity.class);
         intent.putExtra(Utility.Extra.CITY_NAME, cityName);
         context.startActivity(intent);
     }
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mBinding
-                = DataBindingUtil.setContentView(this, R.layout.activity_landing_screen_pick_package);
+        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_welcome_to_cheep_care);
         initiateUI();
         setListeners();
     }
 
     @Override
     protected void initiateUI() {
-
         if (getIntent().hasExtra(Utility.Extra.CITY_NAME)) {
             mCityName = getIntent().getExtras().getString(Utility.Extra.CITY_NAME);
         }
@@ -85,34 +78,17 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
         mBinding.tvCityName.setText(mCityName);
 
         SpannableStringBuilder spannableStringBuilder
-                = new SpannableStringBuilder(getString(R.string.dummy_good_morning_mumbai));
+                = new SpannableStringBuilder(getString(R.string.msg_welcome_x, "Nikita"));
         spannableStringBuilder.append(Utility.ONE_CHARACTER_SPACE).append(Utility.ONE_CHARACTER_SPACE);
-        ImageSpan span = new ImageSpan(mContext, R.drawable.ic_mic, ImageSpan.ALIGN_BASELINE);
+        ImageSpan span = new ImageSpan(getBaseContext(), R.drawable.ic_smiley_folded_hands_big, ImageSpan.ALIGN_BASELINE);
         spannableStringBuilder.setSpan(span, spannableStringBuilder.length() - 1
                 , spannableStringBuilder.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
-        mBinding.tvGoodMorningText.setText(spannableStringBuilder);
+        mBinding.tvWelcomeText.setText(spannableStringBuilder);
 
-        mBinding.tvInfoText.setText(getString(R.string.landing_page_info_text));
+        mBinding.tvInfoText.setText(getString(R.string.msg_welcoming_on_subscription));
 
-        mBinding.recyclerViewCheepCareFeature.setNestedScrollingEnabled(false);
-        mFeatureAdapter = new CheepCareFeatureAdapter();
-        mFeatureAdapter.addFeatureList(CheepCareFeatureModel.getCheepCareFeatures());
-        mBinding.recyclerViewCheepCareFeature.setLayoutManager(new LinearLayoutManager(
-                mContext
-                , LinearLayoutManager.VERTICAL
-                , false
-        ));
-        mBinding.recyclerViewCheepCareFeature.setAdapter(mFeatureAdapter);
-
-        mBinding.recyclerViewCheepCarePackages.setNestedScrollingEnabled(false);
-        mPackageAdapter = new CheepCarePackageAdapter(mPackageItemClickListener);
-        mPackageAdapter.addPackageList(CheepCarePackageModel.getCheepCarePackages());
-        mBinding.recyclerViewCheepCarePackages.setLayoutManager(new LinearLayoutManager(
-                mContext
-                , LinearLayoutManager.VERTICAL
-                , false
-        ));
-        mBinding.recyclerViewCheepCarePackages.setAdapter(mPackageAdapter);
+        mBinding.recyclerView.setNestedScrollingEnabled(false);
+        mBinding.recyclerView.setAdapter(new ExpandableCareRecyclerAdapter(CheepCarePackageModel.getCheepCarePackages(), true));
 
         // Setting up Toolbar
         setSupportActionBar(mBinding.toolbar);
@@ -133,12 +109,4 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
     protected void setListeners() {
 
     }
-
-    private final CheepCarePackageAdapter.PackageItemClickListener mPackageItemClickListener
-            = new CheepCarePackageAdapter.PackageItemClickListener() {
-        @Override
-        public void onPackageItemClick(int position, CheepCarePackageModel packageModel) {
-            PackageCustomizationActivity.newInstance(mContext, position, packageModel, mCityName);
-        }
-    };
 }
