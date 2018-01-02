@@ -17,7 +17,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:src="@drawable/ic_cheep_why_work"
+            android:src="@drawable/ic_cheep_india"
             tools:ignore="ContentDescription" />
 
         <ImageView

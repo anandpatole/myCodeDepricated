@@ -824,7 +824,7 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
                         finish();
                         break;
                 }
-            } catch (JSONException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
                 mCallTaskDetailWSErrorListener.onErrorResponse(new VolleyError(e.getMessage()));
             }

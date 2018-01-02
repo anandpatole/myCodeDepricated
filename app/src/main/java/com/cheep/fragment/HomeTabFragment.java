@@ -968,6 +968,19 @@ public class HomeTabFragment extends BaseFragment {
         }
 
 
+        // if dynamic link is for home then do not call web service
+        if (getArguments().getParcelable(Utility.Extra.DYNAMIC_LINK_URI) != null) {
+            Log.d(TAG, "getCategoryIdBasedOnSlug: category slug" +
+                    ((Uri) getArguments().getParcelable(Utility.Extra.DYNAMIC_LINK_URI)).getLastPathSegment());
+            categorySlug = ((Uri) getArguments().getParcelable(Utility.Extra.DYNAMIC_LINK_URI)).getLastPathSegment();
+            if (categorySlug.equalsIgnoreCase(Utility.DYNAMIC_LINK_CATEGORY_HOME) || categorySlug.isEmpty()) {
+                return;
+            }
+        } else {
+            return;
+        }
+
+
         if (!Utility.isConnected(mContext)) {
             errorLoadingHelper.failed(Utility.NO_INTERNET_CONNECTION, 0, onRetryBtnClickListener);
             return;

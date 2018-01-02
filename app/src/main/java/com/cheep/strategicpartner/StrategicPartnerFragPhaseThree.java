@@ -194,7 +194,8 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
                 callCreateStrategicPartnerTaskWS();
             }
         });
-
+        mFragmentStrategicPartnerPhaseThreeBinding.rlPayNow.setSelected(true);
+        mFragmentStrategicPartnerPhaseThreeBinding.rlPayLater.setSelected(true);
         mFragmentStrategicPartnerPhaseThreeBinding.rlPayNow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

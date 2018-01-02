@@ -285,7 +285,6 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
 
         mActivityPaymentDetailBinding.lnDesclaimer.setVisibility(View.GONE);
 
-
         if (taskDetailModel != null && providerModel != null) {
 
             mActivityPaymentDetailBinding.textTitle.setText(getString(R.string.title_booking_confimation));
