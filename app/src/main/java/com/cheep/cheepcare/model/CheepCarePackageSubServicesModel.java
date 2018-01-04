@@ -21,4 +21,11 @@ public class CheepCarePackageSubServicesModel implements Serializable {
     public String subCategoryName;
 
     public boolean isSelected = false;
+
+    public String type;
+
+    public interface SERVICE_TYPE {
+        String SIMPLE = "simple";
+        String UNIT = "unit";
+    }
 }

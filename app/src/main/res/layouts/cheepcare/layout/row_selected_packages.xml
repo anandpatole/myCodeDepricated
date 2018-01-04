@@ -107,8 +107,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:layout_marginTop="@dimen/scale_10dp"
-                android:src="@drawable/selector_filled_tick"/>
+                android:layout_marginTop="@dimen/scale_16dp"
+                android:src="@drawable/ic_cross_with_shadow"/>
 
             <com.cheep.custom_view.CFTextViewSemiBold
                 android:id="@+id/tv_price"

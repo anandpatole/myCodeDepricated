@@ -128,7 +128,7 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
 //                        mBinding.tvSpinnerAddress.setText(mList.get(mList.size() - 1).address);
 //                        mBinding.ivIsAddressSelected.setSelected(true);
                     }
-                },strings);
+                }, strings);
 
                 dialog.showDialog();
             }
@@ -215,6 +215,32 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
 
     public List<CheepCarePackageServicesModel> getServiceList() {
         final List<CheepCarePackageSubServicesModel> subList = new ArrayList<>();
+        getHomeList(subList);
+
+        List<CheepCarePackageServicesModel> list = new ArrayList<>();
+        list.add(new CheepCarePackageServicesModel() {{
+            catId = 1;
+            sub_cat_id = 1;
+            name = "Essential Home Care Services";
+            description = "(Plumbing+Carpentry+Electrician)";
+            subServices = subList;
+            isSelected = false;
+            type = CheepCarePackageSubServicesModel.SERVICE_TYPE.SIMPLE;
+        }});
+
+        list.add(new CheepCarePackageServicesModel() {{
+            catId = 1;
+            sub_cat_id = 1;
+            name = "Essential Home Care Services";
+            description = "(Plumbing+Carpentry+Electrician)";
+            subServices = subList;
+            isSelected = false;
+            type = CheepCarePackageSubServicesModel.SERVICE_TYPE.UNIT;
+        }});
+        return list;
+    }
+
+    private void getHomeList(List<CheepCarePackageSubServicesModel> subList) {
         subList.add(new CheepCarePackageSubServicesModel() {{
             subSubCatName = "1 & 2 BHK";
             price = "200";
@@ -254,17 +280,6 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
             subCategoryName = "Essential Home Care Services";
             isSelected = false;
         }});
-
-        List<CheepCarePackageServicesModel> list = new ArrayList<>();
-        list.add(new CheepCarePackageServicesModel() {{
-            catId = 1;
-            sub_cat_id = 1;
-            name = "Essential Home Care Services";
-            description = "(Plumbing+Carpentry+Electrician)";
-            subServices = subList;
-            isSelected = false;
-        }});
-        return list;
     }
 
     @Override

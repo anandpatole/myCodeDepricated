@@ -17,6 +17,7 @@ public class CheepCarePackageServicesModel implements Parent<CheepCarePackageSub
     public String description;
     public List<CheepCarePackageSubServicesModel> subServices = null;
     public boolean isSelected = false;
+    public String type;
 
     @Override
     public List<CheepCarePackageSubServicesModel> getChildList() {
