@@ -14,10 +14,18 @@ public class CheepCarePackageServicesModel implements Parent<CheepCarePackageSub
     public int catId;
     public int sub_cat_id;
     public String name;
+/*
     public String description;
+*/
     public List<CheepCarePackageSubServicesModel> subServices = null;
     public boolean isSelected = false;
     public String type;
+
+
+    public interface SERVICE_TYPE {
+        String SIMPLE = "simple";
+        String UNIT = "unit";
+    }
 
     @Override
     public List<CheepCarePackageSubServicesModel> getChildList() {

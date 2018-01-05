@@ -38,12 +38,15 @@
             app:layout_constraintRight_toLeftOf="@+id/tv_sub_service_price"
             app:layout_constraintTop_toTopOf="parent">
 
-            <com.cheep.custom_view.CFTextViewRegular
+            <com.cheep.custom_view.CFTextViewSemiBold
                 android:id="@+id/tv_minus"
-                android:layout_width="30dp"
+                android:layout_width="@dimen/scale_20dp"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:padding="@dimen/scale_5dp"
+                android:paddingBottom="@dimen/scale_2dp"
+                android:paddingLeft="@dimen/scale_5dp"
+                android:paddingRight="@dimen/scale_5dp"
+                android:paddingTop="@dimen/scale_2dp"
                 android:text="-"
                 android:textColor="@color/splash_gradient_end"
                 android:textSize="@dimen/text_size_20sp"
@@ -52,26 +55,32 @@
                 app:layout_constraintRight_toLeftOf="@+id/tv_digit"
                 app:layout_constraintTop_toTopOf="parent"/>
 
-            <com.cheep.custom_view.CFTextViewRegular
+            <com.cheep.custom_view.CFTextViewSemiBold
                 android:id="@+id/tv_digit"
                 android:layout_width="30dp"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:minWidth="@dimen/scale_25dp"
-                android:padding="@dimen/scale_5dp"
-                android:text="10"
+                android:minWidth="@dimen/scale_20dp"
+                android:paddingBottom="@dimen/scale_2dp"
+                android:paddingLeft="@dimen/scale_5dp"
+                android:paddingRight="@dimen/scale_5dp"
+                android:paddingTop="@dimen/scale_2dp"
+                tools:text="10"
                 android:textColor="@color/splash_gradient_end"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toRightOf="@id/tv_minus"
                 app:layout_constraintRight_toLeftOf="@+id/tv_plus"
                 app:layout_constraintTop_toTopOf="parent"/>
 
-            <com.cheep.custom_view.CFTextViewRegular
+            <com.cheep.custom_view.CFTextViewSemiBold
                 android:id="@+id/tv_plus"
-                android:layout_width="30dp"
+                android:layout_width="@dimen/scale_20dp"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:padding="@dimen/scale_5dp"
+                android:paddingBottom="@dimen/scale_2dp"
+                android:paddingLeft="@dimen/scale_5dp"
+                android:paddingRight="@dimen/scale_5dp"
+                android:paddingTop="@dimen/scale_2dp"
                 android:text="+"
                 android:textColor="@color/splash_gradient_end"
                 android:textSize="@dimen/text_size_20sp"

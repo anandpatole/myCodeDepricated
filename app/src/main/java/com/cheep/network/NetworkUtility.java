@@ -131,6 +131,10 @@ public class NetworkUtility {
         public static final String PAYTM_CHECK_BALANCE = BASE_URL_API + "customers/payment/checkPaytmBalance";
         public static final String PAYTM_WITHDRAW_MONEY = BASE_URL_API + "customers/payment/withdrawMoney";
 
+
+        // CHEEP CARE web services
+        public static final String GET_CITY_CARE_DETAIL = BASE_URL+ "customers/care/getCityCareDetail";
+
     }
 
     public static class PAYTM {
@@ -399,6 +403,9 @@ public class NetworkUtility {
         String ADDITIONAL_PENDING_AMOUNT = "additional_pending_amount";
         String CAT_SLUG = "cat_slug";
         String CAT_TYPE = "cat_type";
+        String NORMAL_BANNER = "normalBanner";
+        String CARE_BANNER = "careBanner";
+        String CARE_CITY_ID= "care_city_id";
 
         interface VERSION_CHANGE_TYPE {
             int NORMAL = 0;
@@ -474,8 +481,8 @@ public class NetworkUtility {
             public static final String HOME = "home";
             public static final String OFFICE = "office";
             public static final String OTHERS = "other";
-            public static final String BIZ= "biz";
-            public static final String SOCI= "soci";
+            public static final String BIZ = "biz";
+            public static final String SOCI = "soci";
         }
 
         class APPSFLYER_CUSTOM_TRACK_EVENTS {
@@ -488,6 +495,7 @@ public class NetworkUtility {
         }
     }
 
+
     public interface PAYMENT_METHOD_TYPE {
         String MOBIKWIK = "mobikwik";
         String PAYTM = "paytm";
@@ -495,6 +503,14 @@ public class NetworkUtility {
         String COD = "cod";
         String FREE = "free";
         String PAY_LATER = "pay_later";
+    }
+
+    public interface CARE_CITY_SLUG {
+        String MUMBAI = "mumbai";
+        String HYDRABAD = "hydrabad";
+        String DELHI= "delhi";
+        String CHENNAI= "chennai";
+        String BENGALURU= "bengaluru";
     }
 
 

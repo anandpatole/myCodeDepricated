@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.cheep.R;
-import com.cheep.cheepcare.model.CheepCarePackageModel;
+import com.cheep.cheepcare.model.CheepCareCityLandingPageModel;
 import com.cheep.databinding.RowCheepCarePackageBinding;
 import com.cheep.utils.LoadMoreRecyclerAdapter;
 
@@ -23,10 +23,10 @@ import java.util.List;
 public class CheepCarePackageAdapter extends LoadMoreRecyclerAdapter<CheepCarePackageAdapter.CheepCarePackageViewHolder> {
 
     private final PackageItemClickListener mListener;
-    private List<CheepCarePackageModel> mList = new ArrayList<>();
+    private List<CheepCareCityLandingPageModel.PackageDetail> mList = new ArrayList<>();
 
     public interface PackageItemClickListener {
-        void onPackageItemClick(int position, CheepCarePackageModel packageModel);
+        void onPackageItemClick(int position, CheepCareCityLandingPageModel.PackageDetail packageModel);
     }
 
     public CheepCarePackageAdapter(PackageItemClickListener listener) {
@@ -43,7 +43,8 @@ public class CheepCarePackageAdapter extends LoadMoreRecyclerAdapter<CheepCarePa
 
     @Override
     public void onActualBindViewHolder(final CheepCarePackageViewHolder holder, int position) {
-        final CheepCarePackageModel model = mList.get(position);
+        final CheepCareCityLandingPageModel.PackageDetail model = mList.get(position);
+
 
         Glide.with(holder.mBinding.getRoot().getContext())
                 .load(R.drawable.banner_appliance_care_gif)
@@ -52,8 +53,8 @@ public class CheepCarePackageAdapter extends LoadMoreRecyclerAdapter<CheepCarePa
                 .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                 .into(holder.mBinding.ivItemBackground);
 
-        holder.mBinding.tvTitle.setText(model.packageTitle);
-        holder.mBinding.tvDescription.setText(model.packageDescription);
+        holder.mBinding.tvTitle.setText(model.title);
+        holder.mBinding.tvDescription.setText(model.subtitle);
 
         /*Glide.with(holder.mBinding.getRoot().getContext())
                 .load(R.drawable.home_care_price_mumbai)
@@ -84,7 +85,7 @@ public class CheepCarePackageAdapter extends LoadMoreRecyclerAdapter<CheepCarePa
         }
     }
 
-    public void addPackageList(List<CheepCarePackageModel> list) {
+    public void addPackageList(List<CheepCareCityLandingPageModel.PackageDetail> list) {
         mList.addAll(list);
         notifyDataSetChanged();
     }

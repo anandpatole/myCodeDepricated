@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.cheep.R;
-import com.cheep.cheepcare.model.CheepCareFeatureModel;
+import com.cheep.cheepcare.model.CheepCareCityLandingPageModel;
 import com.cheep.databinding.RowLeftImageCheepCareFeatureBinding;
 import com.cheep.databinding.RowRightImageCheepCareFeatureBinding;
 import com.cheep.utils.LoadMoreRecyclerAdapter;
@@ -25,7 +25,7 @@ public class CheepCareFeatureAdapter extends LoadMoreRecyclerAdapter<CheepCareFe
 
     public static final int ODD_POSITION = 1;
     public static final int EVEN_POSITION = 2;
-    private List<CheepCareFeatureModel> mList = new ArrayList<>();
+    private List<CheepCareCityLandingPageModel.CityTutorials> mList = new ArrayList<>();
 
     @Override
     public int getItemViewType(int position) {
@@ -50,24 +50,24 @@ public class CheepCareFeatureAdapter extends LoadMoreRecyclerAdapter<CheepCareFe
 
     @Override
     public void onActualBindViewHolder(CheepCareFeatureBaseViewHolder holder, int position) {
-        CheepCareFeatureModel model = mList.get(position);
+        CheepCareCityLandingPageModel.CityTutorials model = mList.get(position);
         if (holder instanceof LeftSideImageViewHolder) {
             RowLeftImageCheepCareFeatureBinding leftBinding = holder.getBinding();
             Utility.loadImageView(leftBinding.getRoot().getContext()
                     , leftBinding.ivNoHiddenCharges
-                    , Integer.parseInt(model.featureImage)
+                    , model.image
                     , R.drawable.hotline_ic_image_loading_placeholder);
-            leftBinding.tvTitle.setText(model.featureTitle);
-            leftBinding.tvDescription.setText(model.featureDescription);
+            leftBinding.tvTitle.setText(model.title);
+            leftBinding.tvDescription.setText(model.description);
             leftBinding.getRoot().setOnClickListener(null);
         } else if (holder instanceof RightSideImageViewHolder) {
             RowRightImageCheepCareFeatureBinding rightBinding = holder.getBinding();
             Utility.loadImageView(rightBinding.getRoot().getContext()
                     , rightBinding.ivNoHiddenCharges
-                    , Integer.parseInt(model.featureImage)
+                    , model.image
                     , R.drawable.hotline_ic_image_loading_placeholder);
-            rightBinding.tvTitle.setText(model.featureTitle);
-            rightBinding.tvDescription.setText(model.featureDescription);
+            rightBinding.tvTitle.setText(model.title);
+            rightBinding.tvDescription.setText(model.description);
             rightBinding.getRoot().setOnClickListener(null);
         }
     }
@@ -106,7 +106,7 @@ public class CheepCareFeatureAdapter extends LoadMoreRecyclerAdapter<CheepCareFe
         }
     }
 
-    public void addFeatureList(List<CheepCareFeatureModel> list) {
+    public void addFeatureList(List<CheepCareCityLandingPageModel.CityTutorials> list) {
         mList.addAll(list);
         notifyDataSetChanged();
     }

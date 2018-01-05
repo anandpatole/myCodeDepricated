@@ -15,7 +15,9 @@ import com.cheep.custom_view.expandablerecycleview.ChildViewHolder;
 import com.cheep.custom_view.expandablerecycleview.ExpandableRecyclerAdapter;
 import com.cheep.custom_view.expandablerecycleview.ParentViewHolder;
 import com.cheep.databinding.RowPackageServiceBinding;
+import com.cheep.databinding.RowPackageSubServiceUnitBinding;
 import com.cheep.databinding.RowPackageSubServicesBinding;
+import com.cheep.utils.LogUtils;
 import com.cheep.utils.Utility;
 
 import java.util.List;
@@ -29,8 +31,13 @@ public class ExpandablePackageServicesRecyclerAdapter extends ExpandableRecycler
         , ExpandablePackageServicesRecyclerAdapter.ParentCategoryViewHolder
         , ExpandablePackageServicesRecyclerAdapter.ChildCategoryViewHolder> {
 
+    private static final String TAG = "ExpandablePackageServic";
     private final boolean isSingleSelection;
     private final List<CheepCarePackageServicesModel> mList;
+
+    public static final int VIEW_TYPE_SINGLE_SELECTION = 1;
+    public static final int VIEW_TYPE_UNIT_SELECTION = 2;
+
 
     /**
      * Primary constructor. Sets up {@link #mParentList} and {@link #mFlatItemList}.
@@ -55,6 +62,14 @@ public class ExpandablePackageServicesRecyclerAdapter extends ExpandableRecycler
         this.isSingleSelection = isSingleSelection;
     }
 
+    @Override
+    public int getChildViewType(int parentPosition, int childPosition) {
+        if (mList.get(parentPosition).type.equalsIgnoreCase(CheepCarePackageServicesModel.SERVICE_TYPE.SIMPLE))
+            return VIEW_TYPE_SINGLE_SELECTION;
+        else
+            return VIEW_TYPE_UNIT_SELECTION;
+    }
+
     @NonNull
     @Override
     public ParentCategoryViewHolder onCreateParentViewHolder(@NonNull ViewGroup parentViewGroup, int viewType) {
@@ -69,11 +84,21 @@ public class ExpandablePackageServicesRecyclerAdapter extends ExpandableRecycler
     @NonNull
     @Override
     public ChildCategoryViewHolder onCreateChildViewHolder(@NonNull ViewGroup childViewGroup, int viewType) {
-        RowPackageSubServicesBinding binding = DataBindingUtil.inflate(LayoutInflater.from(childViewGroup.getContext())
-                , R.layout.row_package_sub_services
-                , childViewGroup
-                , false);
-        return new ExpandablePackageServicesRecyclerAdapter.ChildCategoryViewHolder(binding);
+        switch (viewType) {
+            case VIEW_TYPE_UNIT_SELECTION:
+                RowPackageSubServiceUnitBinding binding = DataBindingUtil.inflate(LayoutInflater.from(childViewGroup.getContext())
+                        , R.layout.row_package_sub_service_unit
+                        , childViewGroup
+                        , false);
+                return new ExpandablePackageServicesRecyclerAdapter.ChildCategoryViewHolder(binding);
+
+            default:
+                RowPackageSubServicesBinding binding1 = DataBindingUtil.inflate(LayoutInflater.from(childViewGroup.getContext())
+                        , R.layout.row_package_sub_services
+                        , childViewGroup
+                        , false);
+                return new ExpandablePackageServicesRecyclerAdapter.ChildCategoryViewHolder(binding1);
+        }
     }
 
     @Override
@@ -85,7 +110,8 @@ public class ExpandablePackageServicesRecyclerAdapter extends ExpandableRecycler
     @Override
     public void onBindChildViewHolder(@NonNull ChildCategoryViewHolder childViewHolder
             , int parentPosition, int childPosition, @NonNull CheepCarePackageSubServicesModel child) {
-        childViewHolder.bind(child, childViewHolder.mBinding.getRoot().getContext());
+        int viewType = getChildViewType(parentPosition, childPosition);
+        childViewHolder.bind(child, childViewHolder, viewType);
     }
 
     /**
@@ -120,7 +146,11 @@ public class ExpandablePackageServicesRecyclerAdapter extends ExpandableRecycler
         // bind data with view parent row
         public void bind(@NonNull CheepCarePackageServicesModel servicesModel) {
             mBinding.imgIconCorrect.setSelected(servicesModel.isSelected);
-            mBinding.tvServiceDescription.setText(servicesModel.description);
+            if (mList.get(getParentAdapterPosition()).type.equalsIgnoreCase(CheepCarePackageServicesModel.SERVICE_TYPE.SIMPLE))
+                mBinding.imgDownArrow.setVisibility(View.VISIBLE);
+            else
+                mBinding.imgDownArrow.setVisibility(View.GONE);
+
             mBinding.tvServiceName.setText(servicesModel.name);
         }
 
@@ -141,14 +171,16 @@ public class ExpandablePackageServicesRecyclerAdapter extends ExpandableRecycler
      */
     class ChildCategoryViewHolder extends ChildViewHolder {
 
-        RowPackageSubServicesBinding mBinding;
+        RowPackageSubServicesBinding mSelectionBinding;
+        RowPackageSubServiceUnitBinding mUnitBinding;
 
-        ChildCategoryViewHolder(@NonNull RowPackageSubServicesBinding binding) {
-            super(binding.getRoot());
+
+        ChildCategoryViewHolder(@NonNull RowPackageSubServicesBinding selectionBinding) {
+            super(selectionBinding.getRoot());
             // init views
-            mBinding = binding;
+            mSelectionBinding = selectionBinding;
             // on click of check box
-            mBinding.lnRoot.setOnClickListener(new View.OnClickListener() {
+            mSelectionBinding.lnRoot.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
 
@@ -191,26 +223,67 @@ public class ExpandablePackageServicesRecyclerAdapter extends ExpandableRecycler
             });
         }
 
-        // bind data with view for child row
-        public void bind(@NonNull CheepCarePackageSubServicesModel subServicesModel, Context context) {
+        ChildCategoryViewHolder(@NonNull RowPackageSubServiceUnitBinding unitBinding) {
+            super(unitBinding.getRoot());
+            mUnitBinding = unitBinding;
+            mUnitBinding.tvMinus.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    CheepCarePackageSubServicesModel model = mList.get(getParentAdapterPosition()).getChildList().get(getChildAdapterPosition());
+                    LogUtils.LOGE(TAG, "onClick() called with: minus = " + model.qty);
+                    if (model.qty > 0) {
+                        model.qty--;
+                    }
+                    LogUtils.LOGE(TAG, "onClick() called with: minus = " + model.qty);
+                    notifyChildChanged(getParentAdapterPosition(), getChildAdapterPosition());
+                }
+            });
 
-            mBinding.tvSubServiceName.setText(subServicesModel.subSubCatName);
-            //commented as, as of now there is no description
+            mUnitBinding.tvPlus.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    CheepCarePackageSubServicesModel model = mList.get(getParentAdapterPosition()).getChildList().get(getChildAdapterPosition());
+                    LogUtils.LOGE(TAG, "onClick() called with: plus = " + model.qty);
+                    if (model.qty < model.maxQty) {
+                        model.qty++;
+                    }
+                    LogUtils.LOGE(TAG, "onClick() called with: plus = " + model.qty);
+                    notifyChildChanged(getParentAdapterPosition(), getChildAdapterPosition());
+                }
+            });
+        }
+
+        // bind data with view for child row
+        public void bind(@NonNull CheepCarePackageSubServicesModel subServicesModel, ChildCategoryViewHolder holder, int viewType) {
+            if (viewType == VIEW_TYPE_SINGLE_SELECTION) {
+                mSelectionBinding.tvSubServiceName.setText(subServicesModel.subSubCatName);
+                Context context = holder.mSelectionBinding.getRoot().getContext();
+                //commented as, as of now there is no description
             /*if (subServicesModel.package_description != null && !subServicesModel.package_description.isEmpty()) {
                 textPackageDescription.setText(subServicesModel.package_description);
                 textPackageDescription.setVisibility(View.VISIBLE);
             } else {
                 textPackageDescription.setVisibility(View.GONE);
             }*/
-            SpannableString spannableString = new SpannableString(context.getString(R.string.rupee_symbol_x_package_price
-                    , subServicesModel.price));
-            spannableString = Utility.getCheepCarePackageMonthlyPrice(spannableString, spannableString.length() - 2, spannableString.length());
-            mBinding.tvSubServicePrice.setText(spannableString);
+                SpannableString spannableString = new SpannableString(context.getString(R.string.rupee_symbol_x_package_price, subServicesModel.price));
+                spannableString = Utility.getCheepCarePackageMonthlyPrice(spannableString, spannableString.length() - 2, spannableString.length());
+                mSelectionBinding.tvSubServicePrice.setText(spannableString);
             /*mBinding.tvSubServicePrice.setText(itemView.getContext().getString(R.string.rupee_symbol_x
                     , *//*Utility.getQuotePriceFormatter(String.valueOf(*//*subServicesModel.price)*//*))*//*);*/
-            mBinding.imgIconCorrect.setSelected(subServicesModel.isSelected);
-            mBinding.tvSubServicePrice.setSelected(subServicesModel.isSelected);
-        }
+                mSelectionBinding.imgIconCorrect.setSelected(subServicesModel.isSelected);
+                mSelectionBinding.tvSubServicePrice.setSelected(subServicesModel.isSelected);
 
+            } else {
+                Context context = holder.mUnitBinding.getRoot().getContext();
+                mUnitBinding.tvSubServiceName.setText(subServicesModel.subSubCatName);
+                mUnitBinding.tvDigit.setText(String.valueOf(subServicesModel.qty));
+                SpannableString spannableString = new SpannableString(context.getString(R.string.rupee_symbol_x_package_price, subServicesModel.price));
+                spannableString = Utility.getCheepCarePackageMonthlyPrice(spannableString, spannableString.length() - 2, spannableString.length());
+                mUnitBinding.tvSubServicePrice.setText(spannableString);
+                mUnitBinding.tvSubServicePrice.setSelected(true);
+            }
+
+
+        }
     }
 }

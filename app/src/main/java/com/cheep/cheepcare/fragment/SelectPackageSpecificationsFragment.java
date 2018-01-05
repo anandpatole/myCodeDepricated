@@ -221,21 +221,19 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
         list.add(new CheepCarePackageServicesModel() {{
             catId = 1;
             sub_cat_id = 1;
-            name = "Essential Home Care Services";
-            description = "(Plumbing+Carpentry+Electrician)";
+            name = "Essential Home Care Services (Plumbing+Carpentry+Electrician)";
             subServices = subList;
-            isSelected = false;
-            type = CheepCarePackageSubServicesModel.SERVICE_TYPE.SIMPLE;
+            isSelected = true;
+            type = CheepCarePackageServicesModel.SERVICE_TYPE.SIMPLE;
         }});
 
         list.add(new CheepCarePackageServicesModel() {{
             catId = 1;
             sub_cat_id = 1;
-            name = "Essential Home Care Services";
-            description = "(Plumbing+Carpentry+Electrician)";
+            name = "Essential Home Care Services (Plumbing+Carpentry+Electrician)";
             subServices = subList;
-            isSelected = false;
-            type = CheepCarePackageSubServicesModel.SERVICE_TYPE.UNIT;
+            isSelected = true;
+            type = CheepCarePackageServicesModel.SERVICE_TYPE.UNIT;
         }});
         return list;
     }
@@ -245,7 +243,6 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
             subSubCatName = "1 & 2 BHK";
             price = "200";
             subSubCatId = "1";
-            subCategoryName = "Essential Home Care Services";
             isSelected = false;
         }});
 
@@ -253,7 +250,6 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
             subSubCatName = "3 BHK";
             price = "206";
             subSubCatId = "2";
-            subCategoryName = "Essential Home Care Services";
             isSelected = false;
         }});
 
@@ -261,7 +257,6 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
             subSubCatName = "4 BHK";
             price = "225";
             subSubCatId = "3";
-            subCategoryName = "Essential Home Care Services";
             isSelected = false;
         }});
 
@@ -269,7 +264,6 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
             subSubCatName = "5 BHK";
             price = "263";
             subSubCatId = "4";
-            subCategoryName = "Essential Home Care Services";
             isSelected = false;
         }});
 
@@ -277,7 +271,6 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
             subSubCatName = "6 BHK";
             price = "375";
             subSubCatId = "5";
-            subCategoryName = "Essential Home Care Services";
             isSelected = false;
         }});
     }

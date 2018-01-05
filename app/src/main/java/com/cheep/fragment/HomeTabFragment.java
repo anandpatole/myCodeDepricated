@@ -38,7 +38,7 @@ import com.cheep.activity.SelectLocationActivity;
 import com.cheep.activity.TaskCreationActivity;
 import com.cheep.adapter.HomeTabRecyclerViewAdapter;
 import com.cheep.cheepcare.fragment.SubscriptionBannerFragment;
-import com.cheep.cheepcare.model.SubscriptionBannerModel;
+import com.cheep.cheepcare.model.CheepCareBannerModel;
 import com.cheep.databinding.FragmentTabHomeBinding;
 import com.cheep.databinding.LayoutFilterHomePopupBinding;
 import com.cheep.interfaces.DrawerLayoutInteractionListener;
@@ -91,6 +91,7 @@ public class HomeTabFragment extends BaseFragment {
 
     // For storing category Cover image list
     private ArrayList<BannerImageModel> bannerImageModelArrayList;
+    private ArrayList<CheepCareBannerModel> careBannerModelArrayList;
     private String mSelectedFilterType = Utility.FILTER_TYPES.FILTER_TYPE_FEATURED;
 
 
@@ -256,7 +257,7 @@ public class HomeTabFragment extends BaseFragment {
 
         // Setup Cover Image Adapter as Empty
         setupCoverViewPager(null);
-        setupCheepCareBannerViewPager(SubscriptionBannerFragment.getSubscriptionBannerModels());
+        setupCheepCareBannerViewPager(null);
         // Initiate Recyclerview
         initiateRecyclerView(null);
 
@@ -665,8 +666,9 @@ public class HomeTabFragment extends BaseFragment {
                 String error_message;
                 switch (statusCode) {
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
-                        bannerImageModelArrayList = Utility.getObjectListFromJsonString(jsonObject.optString(NetworkUtility.TAGS.DATA), BannerImageModel[].class);
-
+                        JSONObject dataObject = jsonObject.optJSONObject(NetworkUtility.TAGS.DATA);
+                        bannerImageModelArrayList = Utility.getObjectListFromJsonString(dataObject.getString(NetworkUtility.TAGS.NORMAL_BANNER), BannerImageModel[].class);
+                        careBannerModelArrayList = Utility.getObjectListFromJsonString(dataObject.getString(NetworkUtility.TAGS.CARE_BANNER), CheepCareBannerModel[].class);
                         // Call Category listing webservice.
                         getCategoryListFromServer();
 
@@ -857,7 +859,7 @@ public class HomeTabFragment extends BaseFragment {
                         showBannerView(true);
 
                         // Setup Cover ViewPager homeTabRecyclerViewAdapter
-                        addCoverImageListing(bannerImageModelArrayList);
+                        addCoverImageListing(bannerImageModelArrayList, careBannerModelArrayList);
 
                         // Setting RecyclerView Adapter
                         homeTabRecyclerViewAdapter.addItems(list);
@@ -1095,7 +1097,7 @@ public class HomeTabFragment extends BaseFragment {
     private Handler mHandler;
     private Handler mHandlerSubscriptionBanner;
 
-    private void setupCheepCareBannerViewPager(ArrayList<SubscriptionBannerModel> mBannerListModels) {
+    private void setupCheepCareBannerViewPager(ArrayList<CheepCareBannerModel> mBannerListModels) {
 
         cheepCareBannerViewPagerAdapter = new CheepCareBannerViewPagerAdapter(getChildFragmentManager(), mBannerListModels);
         mFragmentTabHomeBinding.layoutBannerHeader.viewPagerSubscriptionBannerImages.setAdapter(cheepCareBannerViewPagerAdapter);
@@ -1210,8 +1212,9 @@ public class HomeTabFragment extends BaseFragment {
         }
     };
 
-    private void addCoverImageListing(ArrayList<BannerImageModel> mBannerListModels) {
+    private void addCoverImageListing(ArrayList<BannerImageModel> mBannerListModels, ArrayList<CheepCareBannerModel> careBannerModelArrayList) {
         bannerViewPagerAdapter.replaceData(mBannerListModels);
+        cheepCareBannerViewPagerAdapter.replaceData(careBannerModelArrayList);
 
         //See if we are having only one image, do not show the indicator in that case
         showORHidePagerIndicator();
@@ -1222,6 +1225,12 @@ public class HomeTabFragment extends BaseFragment {
             mFragmentTabHomeBinding.layoutBannerHeader.indicatorHomeBanner.setVisibility(View.VISIBLE);
         } else {
             mFragmentTabHomeBinding.layoutBannerHeader.indicatorHomeBanner.setVisibility(View.INVISIBLE);
+        }
+
+        if (cheepCareBannerViewPagerAdapter != null && cheepCareBannerViewPagerAdapter.getCount() >= 1) {
+            mFragmentTabHomeBinding.layoutBannerHeader.indicatorSubscriptionBanner.setVisibility(View.VISIBLE);
+        } else {
+            mFragmentTabHomeBinding.layoutBannerHeader.indicatorSubscriptionBanner.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -1269,12 +1278,12 @@ public class HomeTabFragment extends BaseFragment {
     }
 
     private static class CheepCareBannerViewPagerAdapter extends FragmentStatePagerAdapter {
-        private ArrayList<SubscriptionBannerModel> cheepCareSubscriptionBannerArrayList;
+        private ArrayList<CheepCareBannerModel> cheepCareSubscriptionBannerArrayList;
 
-        CheepCareBannerViewPagerAdapter(FragmentManager fragmentManager, ArrayList<SubscriptionBannerModel> modelArrayList) {
+        CheepCareBannerViewPagerAdapter(FragmentManager fragmentManager, ArrayList<CheepCareBannerModel> modelArrayList) {
             super(fragmentManager);
 //            Log.d(TAG, "BannerViewPagerAdapter() called with: fragmentManager = [" + fragmentManager + "], modelArrayList = [" + modelArrayList + "]");
-            this.cheepCareSubscriptionBannerArrayList = modelArrayList != null ? modelArrayList : new ArrayList<SubscriptionBannerModel>();
+            this.cheepCareSubscriptionBannerArrayList = modelArrayList != null ? modelArrayList : new ArrayList<CheepCareBannerModel>();
         }
 
         @Override
@@ -1293,11 +1302,11 @@ public class HomeTabFragment extends BaseFragment {
             return cheepCareSubscriptionBannerArrayList == null ? 0 : cheepCareSubscriptionBannerArrayList.size();
         }
 
-        private ArrayList<SubscriptionBannerModel> getLists() {
+        private ArrayList<CheepCareBannerModel> getLists() {
             return cheepCareSubscriptionBannerArrayList;
         }
 
-        private void replaceData(ArrayList<SubscriptionBannerModel> modelArrayList) {
+        private void replaceData(ArrayList<CheepCareBannerModel> modelArrayList) {
 //            Log.d(TAG, "replaceData() called with: modelArrayList = [" + modelArrayList.size() + "]");
             cheepCareSubscriptionBannerArrayList = modelArrayList;
             notifyDataSetChanged();

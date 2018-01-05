@@ -14,18 +14,15 @@ public class CheepCarePackageSubServicesModel implements Serializable {
 
     public String basePrice;
 
+    public int qty = 1;
+    public int maxQty = 15;
+
     public String subSubCatId;
 
     public String package_description;
 
-    public String subCategoryName;
 
     public boolean isSelected = false;
 
-    public String type;
 
-    public interface SERVICE_TYPE {
-        String SIMPLE = "simple";
-        String UNIT = "unit";
-    }
 }

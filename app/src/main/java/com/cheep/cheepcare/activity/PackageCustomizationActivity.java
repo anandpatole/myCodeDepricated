@@ -18,7 +18,7 @@ import com.cheep.cheepcare.adapter.PackageCustomizationPagerAdapter;
 import com.cheep.cheepcare.fragment.PackageBundlingFragment;
 import com.cheep.cheepcare.fragment.PackageSummaryFragment;
 import com.cheep.cheepcare.fragment.SelectPackageSpecificationsFragment;
-import com.cheep.cheepcare.model.CheepCarePackageModel;
+import com.cheep.cheepcare.model.CheepCareCityLandingPageModel;
 import com.cheep.databinding.ActivityPackageCustomizationBinding;
 import com.cheep.utils.Utility;
 
@@ -30,10 +30,10 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
 
     private ActivityPackageCustomizationBinding mBinding;
     private PackageCustomizationPagerAdapter mPackageCustomizationPagerAdapter;
-    private CheepCarePackageModel mPackageModel;
+    private CheepCareCityLandingPageModel.PackageDetail mPackageModel;
     private String mCityName;
 
-    public static void newInstance(Context context, int position, CheepCarePackageModel model, String cityName) {
+    public static void newInstance(Context context, int position, CheepCareCityLandingPageModel.PackageDetail model, String cityName) {
         Intent intent = new Intent(context, PackageCustomizationActivity.class);
         intent.putExtra(Utility.Extra.POSITION, position);
         intent.putExtra(Utility.Extra.MODEL, model);
@@ -53,7 +53,7 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
     protected void initiateUI() {
 
         if (getIntent().hasExtra(Utility.Extra.MODEL)) {
-            mPackageModel = (CheepCarePackageModel) getIntent().getExtras().getSerializable(Utility.Extra.MODEL);
+            mPackageModel = (CheepCareCityLandingPageModel.PackageDetail) getIntent().getExtras().getSerializable(Utility.Extra.MODEL);
             mCityName = getIntent().getExtras().getString(Utility.Extra.CITY_NAME);
              /*position = getIntent().getExtras().getInt(Utility.Extra.POSITION);*/
         }
@@ -90,7 +90,7 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
         mBinding.textStepDesc.setText(getString(R.string.step_1_desc_cheep_care));
 
         //Initiate Button text
-        mBinding.textContinue.setText(getString(R.string.select_x_package, mPackageModel.packageTitle));
+        mBinding.textContinue.setText(getString(R.string.select_x_package, mPackageModel.title));
 
         // Setting viewpager
         setupViewPager(mBinding.viewpager);

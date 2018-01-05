@@ -13,16 +13,31 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.cheep.R;
 import com.cheep.activity.BaseAppCompatActivity;
 import com.cheep.cheepcare.adapter.CheepCareFeatureAdapter;
 import com.cheep.cheepcare.adapter.CheepCarePackageAdapter;
-import com.cheep.cheepcare.model.CheepCareFeatureModel;
-import com.cheep.cheepcare.model.CheepCarePackageModel;
+import com.cheep.cheepcare.model.CheepCareCityLandingPageModel;
 import com.cheep.databinding.ActivityLandingScreenPickPackageBinding;
+import com.cheep.network.NetworkUtility;
+import com.cheep.network.Volley;
+import com.cheep.network.VolleyNetworkRequest;
+import com.cheep.utils.LogUtils;
+import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.Utility;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import static com.cheep.network.NetworkUtility.TAGS.CARE_CITY_ID;
+import static com.cheep.network.NetworkUtility.TAGS.DATA;
 
 /**
  * Created by pankaj on 12/21/17.
@@ -33,11 +48,12 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
     private ActivityLandingScreenPickPackageBinding mBinding;
     private CheepCareFeatureAdapter mFeatureAdapter;
     private CheepCarePackageAdapter mPackageAdapter;
-    private String mCityName;
+    private CheepCareCityLandingPageModel model;
+    private String mCityId;
 
-    public static void newInstance(Context context, String cityName) {
+    public static void newInstance(Context context, String cityId) {
         Intent intent = new Intent(context, LandingScreenPickPackageActivity.class);
-        intent.putExtra(Utility.Extra.CITY_NAME, cityName);
+        intent.putExtra(Utility.Extra.CITY_ID, cityId);
         context.startActivity(intent);
     }
 
@@ -53,12 +69,17 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
     @Override
     protected void initiateUI() {
 
-        if (getIntent().hasExtra(Utility.Extra.CITY_NAME)) {
-            mCityName = getIntent().getExtras().getString(Utility.Extra.CITY_NAME);
+        if (getIntent().hasExtra(Utility.Extra.CITY_ID)) {
+            mCityId = getIntent().getExtras().getString(Utility.Extra.CITY_ID);
         }
 
-        // Calculate Pager Height and Width
+
+        callGetCityLandingCareDetailWS();
+    }
+
+    private void setData() {
         ViewTreeObserver mViewTreeObserver = mBinding.ivCityImage.getViewTreeObserver();
+
         mViewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
@@ -68,9 +89,28 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
                 params.height = Utility.getHeightFromWidthForOneHalfIsToOneRatio(width);
                 mBinding.ivCityImage.setLayoutParams(params);
 
+                int resId = R.drawable.img_landing_screen_mumbai;
+                switch (model.cityDetail.citySlug) {
+                    case NetworkUtility.CARE_CITY_SLUG.MUMBAI:
+                        resId = R.drawable.banner_mumbai;
+                        break;
+                    case NetworkUtility.CARE_CITY_SLUG.HYDRABAD:
+                        resId = R.drawable.banner_hyderabad;
+                        break;
+                    case NetworkUtility.CARE_CITY_SLUG.BENGALURU:
+                        resId = R.drawable.banner_bengaluru;
+                        break;
+                    case NetworkUtility.CARE_CITY_SLUG.DELHI:
+                        resId = R.drawable.banner_delhi;
+                        break;
+                    case NetworkUtility.CARE_CITY_SLUG.CHENNAI:
+                        resId = R.drawable.banner_chennai;
+                        break;
+                }
+
                 // Load the image now.
                 Utility.loadImageView(mContext, mBinding.ivCityImage
-                        , R.drawable.img_landing_screen_mumbai
+                        , resId
                         , R.drawable.hotline_ic_image_loading_placeholder);
             }
         });
@@ -82,10 +122,11 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
                 .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                 .into(mBinding.ivCheepCareGif);
 
-        mBinding.tvCityName.setText(mCityName);
+        mBinding.tvCityName.setText(model.cityDetail.cityName);
 
         SpannableStringBuilder spannableStringBuilder
-                = new SpannableStringBuilder(getString(R.string.dummy_good_morning_mumbai));
+                = new SpannableStringBuilder(model.cityDetail.greetingMessage);
+
         spannableStringBuilder.append(Utility.ONE_CHARACTER_SPACE).append(Utility.ONE_CHARACTER_SPACE);
         ImageSpan span = new ImageSpan(mContext, R.drawable.ic_mic, ImageSpan.ALIGN_BASELINE);
         spannableStringBuilder.setSpan(span, spannableStringBuilder.length() - 1
@@ -96,7 +137,10 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
 
         mBinding.recyclerViewCheepCareFeature.setNestedScrollingEnabled(false);
         mFeatureAdapter = new CheepCareFeatureAdapter();
-        mFeatureAdapter.addFeatureList(CheepCareFeatureModel.getCheepCareFeatures());
+
+        // cheep care feature list
+        mFeatureAdapter.addFeatureList(model.cityDetail.cityTutorials);
+
         mBinding.recyclerViewCheepCareFeature.setLayoutManager(new LinearLayoutManager(
                 mContext
                 , LinearLayoutManager.VERTICAL
@@ -105,8 +149,10 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
         mBinding.recyclerViewCheepCareFeature.setAdapter(mFeatureAdapter);
 
         mBinding.recyclerViewCheepCarePackages.setNestedScrollingEnabled(false);
+
         mPackageAdapter = new CheepCarePackageAdapter(mPackageItemClickListener);
-        mPackageAdapter.addPackageList(CheepCarePackageModel.getCheepCarePackages());
+        mPackageAdapter.addPackageList(model.packageDetailList);
+
         mBinding.recyclerViewCheepCarePackages.setLayoutManager(new LinearLayoutManager(
                 mContext
                 , LinearLayoutManager.VERTICAL
@@ -137,8 +183,94 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
     private final CheepCarePackageAdapter.PackageItemClickListener mPackageItemClickListener
             = new CheepCarePackageAdapter.PackageItemClickListener() {
         @Override
-        public void onPackageItemClick(int position, CheepCarePackageModel packageModel) {
-            PackageCustomizationActivity.newInstance(mContext, position, packageModel, mCityName);
+        public void onPackageItemClick(int position, CheepCareCityLandingPageModel.PackageDetail packageModel) {
+            PackageCustomizationActivity.newInstance(mContext, position, packageModel, model.cityDetail.cityName);
         }
     };
+
+
+    private static final String TAG = "LandingScreenPickPackag";
+
+    private void callGetCityLandingCareDetailWS() {
+        LogUtils.LOGD(TAG, "callGetCityLandingCareDetailWS() called with: catId = [" + mCityId + "]");
+        if (!Utility.isConnected(mContext)) {
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mBinding.getRoot());
+            return;
+        }
+        showProgressDialog();
+
+        //Add Header parameters
+        Map<String, String> mHeaderParams = new HashMap<>();
+        mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
+
+        //Add Params
+        Map<String, String> mParams = new HashMap<>();
+        mParams.put(CARE_CITY_ID, mCityId);
+
+        //noinspection unchecked
+        VolleyNetworkRequest mVolleyNetworkRequestForCategoryList = new VolleyNetworkRequest(NetworkUtility.WS.GET_CITY_CARE_DETAIL
+                , mCallFetchAllSubCateSPListingWSErrorListener
+                , mCallFetchAllSubCateSPListingWSResponseListener
+                , mHeaderParams
+                , mParams
+                , null);
+
+        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequestForCategoryList, NetworkUtility.WS.GET_CITY_CARE_DETAIL);
+    }
+
+
+    private Response.Listener mCallFetchAllSubCateSPListingWSResponseListener = new Response.Listener() {
+        @Override
+        public void onResponse(Object response) {
+            LogUtils.LOGD(TAG, "onResponse() called with: response = [" + response + "]");
+            String strResponse = (String) response;
+            try {
+                JSONObject jsonObject = new JSONObject(strResponse);
+                LogUtils.LOGI(TAG, "onResponse: " + jsonObject.toString());
+                int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
+                String error_message;
+                switch (statusCode) {
+                    case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
+                        model = (CheepCareCityLandingPageModel) Utility.getObjectFromJsonString(jsonObject.optString(DATA), CheepCareCityLandingPageModel.class);
+                        setData();
+                        break;
+                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
+                        // Show Toast
+                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
+                        hideProgressDialog();
+                        break;
+                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
+                        error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
+                        // Show message
+                        Utility.showSnackBar(error_message, mBinding.getRoot());
+                        hideProgressDialog();
+                        break;
+                    case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
+                    case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
+                        //Logout and finish the current activity
+                        Utility.logout(mContext, true, statusCode);
+                        finish();
+                        break;
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+                mCallFetchAllSubCateSPListingWSErrorListener.onErrorResponse(new VolleyError(e.getMessage()));
+            }
+
+        }
+    };
+    private Response.ErrorListener mCallFetchAllSubCateSPListingWSErrorListener = new Response.ErrorListener() {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            hideProgressDialog();
+            LogUtils.LOGD(TAG, "onErrorResponse() called with: error = [" + error + "]");
+            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
+        }
+    };
+
+    @Override
+    protected void onDestroy() {
+        Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.WS.GET_CITY_CARE_DETAIL);
+        super.onDestroy();
+    }
 }
