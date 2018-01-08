@@ -111,7 +111,6 @@ public class Utility {
     public static final String FACEBOOK_NAME_KEY = "name";
     public static final String FACEBOOK_FIELDS_KEY = "fields";
     public static final String NORMAL = "normal";
-    public static final String DYNAMIC_LINK_CATEGORY_HOME = "home";
 
     public static boolean allPermissionGranted(String[] permissions, int[] grantResults) {
         boolean allGranted = true;

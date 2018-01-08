@@ -81,6 +81,9 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
                 .dontAnimate()
                 .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                 .into(mBinding.ivCheepCareGif);
+        /*// Start cheep care animations
+        mBinding.ivCheepCareGif.setBackgroundResource(R.drawable.cheep_care_animation);
+        ((AnimationDrawable) mBinding.ivCheepCareGif.getBackground()).start();*/
 
         mBinding.tvCityName.setText(mCityName);
 

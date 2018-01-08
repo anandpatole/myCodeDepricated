@@ -8,7 +8,8 @@
         android:layout_width="match_parent"
         android:layout_height="130dp"
         android:layout_marginBottom="@dimen/scale_10dp"
-        app:cardCornerRadius="@dimen/scale_3dp">
+        app:cardCornerRadius="@dimen/scale_3dp"
+        app:cardElevation="@dimen/scale_4dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -42,8 +43,8 @@
                     android:id="@+id/lnTop"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/scale_16dp"
                     android:layout_marginLeft="@dimen/scale_16dp"
+                    android:layout_marginTop="@dimen/scale_16dp"
                     android:layout_toRightOf="@id/iv_is_address_selected"
                     android:orientation="vertical">
 
@@ -80,48 +81,51 @@
                         android:id="@+id/tv_address"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/scale_50dp"
                         android:layout_marginRight="@dimen/scale_50dp"
                         android:layout_marginTop="@dimen/scale_5dp"
                         android:background="@drawable/background_steps_unverified"
                         android:orientation="horizontal"
                         android:paddingBottom="@dimen/scale_5dp"
+                        android:paddingEnd="@dimen/scale_8dp"
                         android:paddingLeft="@dimen/scale_10dp"
                         android:paddingRight="@dimen/scale_8dp"
+                        android:paddingStart="@dimen/scale_10dp"
                         android:paddingTop="@dimen/scale_5dp"
                         android:textColor="@color/white"
                         android:textSize="@dimen/text_size_12sp">
 
-                            <ImageView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:src="@drawable/icon_address_home_active"
-                                tools:ignore="ContentDescription"/>
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/icon_address_home_active"
+                            tools:ignore="ContentDescription"/>
 
-                            <com.cheep.custom_view.CFTextViewRegular
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="@dimen/scale_2dp"
-                                android:layout_marginStart="@dimen/scale_2dp"
-                                android:layout_weight="1"
-                                android:singleLine="true"
-                                android:textColor="@color/splash_gradient_end"
-                                android:textSize="@dimen/text_size_12sp"
-                                tools:text="Home Home Home Home Home Home Home Home"/>
+                        <com.cheep.custom_view.CFTextViewRegular
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/scale_2dp"
+                            android:layout_marginStart="@dimen/scale_2dp"
+                            android:layout_weight="1"
+                            android:singleLine="true"
+                            android:text="Home Ho"
+                            android:textColor="@color/splash_gradient_end"
+                            android:textSize="@dimen/text_size_12sp"/>
 
-                            <com.cheep.custom_view.CFTextViewRegular
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="@dimen/scale_2dp"
-                                android:layout_marginStart="@dimen/scale_2dp"
-                                android:layout_weight="2"
-                                android:drawableEnd="@drawable/ic_drop_down_arrow"
-                                android:drawableRight="@drawable/ic_drop_down_arrow"
-                                android:singleLine="true"
-                                android:textColor="@color/grey_varient_10"
-                                android:textSize="@dimen/text_size_12sp"
-                                tools:text="121, ddfdf dsfsdf sdfsdf  sdf "/>
+                        <com.cheep.custom_view.CFTextViewRegular
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/scale_1dp"
+                            android:layout_marginStart="@dimen/scale_1dp"
+                            android:layout_weight="4"
+                            android:drawableEnd="@drawable/ic_drop_down_arrow"
+                            android:drawableRight="@drawable/ic_drop_down_arrow"
+                            android:singleLine="true"
+                            android:textColor="@color/grey_varient_10"
+                            android:textSize="@dimen/text_size_12sp"
+                            tools:text="121, ddfdf dsfsdf sdfsdf  sdf "/>
 
-                        </LinearLayout>
+                    </LinearLayout>
 
 
                     <com.cheep.custom_view.CFTextViewRegular
@@ -130,8 +134,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/scale_5dp"
                         android:ellipsize="end"
-                        android:maxLines="2"
                         android:lines="2"
+                        android:maxLines="2"
                         android:text="Please enter minimum %1s amount to proceed Please enter minimum %1s amount to proceed"
                         android:textColor="@color/white"
                         android:textSize="@dimen/text_size_12sp"/>

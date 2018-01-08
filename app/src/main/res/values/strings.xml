@@ -610,11 +610,15 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="msg_welcome_x">Welcome %1s!</string>
     <string name="msg_welcoming_on_subscription">Congratulations on your CHEEP CARE Subscription. You can tap any of
         the services below to enjoy them for free!*</string>
-
-    <!--For Content description-->
+    <string name="cheep_care_work_flow_desc">Hi %1s, simply tell us what needs to be done and then leave the hard
+    work to our PROS! CHEEP will sort it out for you within 24 hours.  </string>
     <string name="city_image">City Image</string>
     <string name="cheep_care_gif">Cheep Care Gif</string>
     <string name="hint_landmark">Landmark</string>
     <string name="hint_pincode">Pincode</string>
     <string name="hint_nickname">Nickname</string>
+    <string name="msg_bundle_other_packages">Click here to bundle other packages, save loads of
+        money and make your homes more happier</string>
+    <string name="label_renew">Renew</string>
+    <string name="msg_renew_subscription_ends">Your subscription will expire in %1s days</string>
 </resources>

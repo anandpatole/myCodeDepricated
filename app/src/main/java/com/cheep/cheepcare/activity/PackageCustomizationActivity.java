@@ -82,6 +82,9 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
                 .dontAnimate()
                 .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                 .into(mBinding.ivCheepCareGif);
+        /*// Start cheep care animations
+        mBinding.ivCheepCareGif.setBackgroundResource(R.drawable.cheep_care_animation);
+        ((AnimationDrawable) mBinding.ivCheepCareGif.getBackground()).start();*/
 
         // Set the default step
         setTaskState(STEP_ONE_UNVERIFIED);

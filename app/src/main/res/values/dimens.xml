@@ -81,10 +81,12 @@
     <dimen name="scale_79dp">79dp</dimen>
     <dimen name="scale_80dp">80dp</dimen>
     <dimen name="scale_90dp">90dp</dimen>
+    <dimen name="scale_96dp">96dp</dimen>
     <dimen name="scale_100dp">100dp</dimen>
     <dimen name="scale_108dp">108dp</dimen>
+    <dimen name="scale_113dp">113dp</dimen>
     <dimen name="scale_120dp">120dp</dimen>
-    <!--<dimen name="scale_130dp">130dp</dimen>-->
+    <dimen name="scale_129dp">129dp</dimen>
     <dimen name="scale_140dp">140dp</dimen>
     <dimen name="scale_144dp">144dp</dimen>
     <!--<dimen name="scale_150dp">150dp</dimen>-->

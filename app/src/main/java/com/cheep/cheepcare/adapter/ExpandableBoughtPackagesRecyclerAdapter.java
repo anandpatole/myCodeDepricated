@@ -36,14 +36,14 @@ import java.util.Map;
  * Created by pankaj on 1/1/18.
  */
 
-public class ExpandableCareRecyclerAdapter extends ExpandableRecyclerAdapter<CheepCarePackageModel
+public class ExpandableBoughtPackagesRecyclerAdapter extends ExpandableRecyclerAdapter<CheepCarePackageModel
         , JobCategoryModel
-        , ExpandableCareRecyclerAdapter.ParentCategoryViewHolder
-        , ExpandableCareRecyclerAdapter.ChildCategoryViewHolder> {
+        , ExpandableBoughtPackagesRecyclerAdapter.ParentCategoryViewHolder
+        , ExpandableBoughtPackagesRecyclerAdapter.ChildCategoryViewHolder> {
 
     private final boolean isSingleSelection;
     private final List<CheepCarePackageModel> mList;
-    private static final String TAG = ExpandableCareRecyclerAdapter.class.getSimpleName();
+    private static final String TAG = ExpandableBoughtPackagesRecyclerAdapter.class.getSimpleName();
 
     /**
      * Primary constructor. Sets up {@link #mParentList} and {@link #mFlatItemList}.
@@ -61,7 +61,7 @@ public class ExpandableCareRecyclerAdapter extends ExpandableRecyclerAdapter<Che
      * @param parentList List of all parents to be displayed in the RecyclerView that this
      *                   adapter is linked to
      */
-    public ExpandableCareRecyclerAdapter(@NonNull List<CheepCarePackageModel> parentList
+    public ExpandableBoughtPackagesRecyclerAdapter(@NonNull List<CheepCarePackageModel> parentList
             , boolean isSingleSelection) {
         super(parentList);
 
@@ -71,7 +71,7 @@ public class ExpandableCareRecyclerAdapter extends ExpandableRecyclerAdapter<Che
 
     @NonNull
     @Override
-    public ExpandableCareRecyclerAdapter.ParentCategoryViewHolder onCreateParentViewHolder(@NonNull ViewGroup parentViewGroup
+    public ExpandableBoughtPackagesRecyclerAdapter.ParentCategoryViewHolder onCreateParentViewHolder(@NonNull ViewGroup parentViewGroup
             , int viewType) {
         RowPackageCareItemBinding binding =
                 DataBindingUtil.inflate(LayoutInflater.from(parentViewGroup.getContext())
@@ -83,7 +83,7 @@ public class ExpandableCareRecyclerAdapter extends ExpandableRecyclerAdapter<Che
 
     @NonNull
     @Override
-    public ExpandableCareRecyclerAdapter.ChildCategoryViewHolder onCreateChildViewHolder(@NonNull ViewGroup childViewGroup, int viewType) {
+    public ExpandableBoughtPackagesRecyclerAdapter.ChildCategoryViewHolder onCreateChildViewHolder(@NonNull ViewGroup childViewGroup, int viewType) {
         final RowPackageCareSubItemBinding binding = DataBindingUtil.inflate(LayoutInflater.from(childViewGroup.getContext())
                 , R.layout.row_package_care_sub_item
                 , childViewGroup
@@ -93,7 +93,7 @@ public class ExpandableCareRecyclerAdapter extends ExpandableRecyclerAdapter<Che
     }
 
     @Override
-    public void onBindParentViewHolder(@NonNull final ExpandableCareRecyclerAdapter.ParentCategoryViewHolder parentViewHolder
+    public void onBindParentViewHolder(@NonNull final ExpandableBoughtPackagesRecyclerAdapter.ParentCategoryViewHolder parentViewHolder
             , final int parentPosition
             , @NonNull CheepCarePackageModel parent) {
 
@@ -151,7 +151,7 @@ public class ExpandableCareRecyclerAdapter extends ExpandableRecyclerAdapter<Che
     }
 
     @Override
-    public void onBindChildViewHolder(@NonNull ExpandableCareRecyclerAdapter.ChildCategoryViewHolder childViewHolder
+    public void onBindChildViewHolder(@NonNull ExpandableBoughtPackagesRecyclerAdapter.ChildCategoryViewHolder childViewHolder
             , int parentPosition, int childPosition, @NonNull JobCategoryModel child) {
 
         if (childPosition < (mList.get(childPosition).subItems.size() - 1)) {
@@ -187,7 +187,9 @@ public class ExpandableCareRecyclerAdapter extends ExpandableRecyclerAdapter<Che
         // bind data with view parent row
         public void bind(@NonNull CheepCarePackageModel model) {
 
-            Utility.loadImageView(mBinding.getRoot().getContext(), mBinding.ivCareImage
+            Context context = mBinding.getRoot().getContext();
+
+            Utility.loadImageView(context, mBinding.ivCareImage
                     , "https://s3.ap-south-1.amazonaws.com/cheepapp/category/banner_image/medium/Untitled.jpg");
 
             mBinding.tvCareName.setText(model.packageTitle);
@@ -246,6 +248,11 @@ public class ExpandableCareRecyclerAdapter extends ExpandableRecyclerAdapter<Che
                 mBinding.tvDaysLeft3.setVisibility(View.GONE);
                 mBinding.tvLeftDays.setVisibility(View.GONE);
             }
+
+            if (Short.parseShort(model.daysLeft) <= 10) {
+                mBinding.llRenewContainer.setVisibility(View.VISIBLE);
+                mBinding.tvRenewText.setText(context.getString(R.string.msg_renew_subscription_ends, model.daysLeft));
+            }
         }
     }
 
@@ -262,49 +269,6 @@ public class ExpandableCareRecyclerAdapter extends ExpandableRecyclerAdapter<Che
             // init views
             mBinding = binding;
             animators = new ArrayList<>();
-
-            // on click of check box
-            /*mBinding.lnRoot.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
-                    // get click child row and its parent
-                    int parentPos = getParentAdapterPosition();
-                    int childPos = getChildAdapterPosition();
-
-                    // if single child is selected then parent also should be selected
-                    // if all children are deselected then parent should be deselected
-
-                    if (!isSingleSelection) {
-                        JobCategoryModel subService = mList.get(parentPos).subItems.get(childPos);
-                        subService.isSelected = !subService.isSelected;
-                        if (subService.isSelected)
-                            mList.get(parentPos).isSelected = true;
-                        else {
-                            int flag = 0;
-                            for (CheepCarePackageModel subServiceEach : mList.get(parentPos).subItems) {
-                                if (!subServiceEach.isSelected)
-                                    flag++;
-                            }
-                            if (flag == mList.get(parentPos).subItems.size())
-                                mList.get(parentPos).isSelected = false;
-                        }
-                        notifyDataSetChanged();
-                    } else {
-                        for (int i = 0; i < mList.size(); i++) {
-
-                            for (int j = 0; j < mList.get(i).subItems.size(); j++) {
-
-                                mList.get(i).subItems.get(j).isSelected = (i == parentPos && j == childPos);
-                                mList.get(i).isSelected = i == parentPos;
-                            }
-                        }
-                        notifyDataSetChanged();
-
-                    }
-
-                }
-            });*/
         }
 
         // bind data with view for child row
