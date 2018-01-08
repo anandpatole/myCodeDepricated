@@ -20,16 +20,21 @@
             android:src="@drawable/ic_tick_selector"
             app:layout_constraintBottom_toBottomOf="@+id/tv_sub_service_name"
             app:layout_constraintHorizontal_weight="0.1"
+            android:layout_marginTop="@dimen/scale_3dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/tv_sub_service_name"
+            app:layout_constraintVertical_bias="0"
             tools:ignore="ContentDescription"/>
 
         <com.cheep.custom_view.CFTextViewSemiBold
             android:id="@+id/tv_sub_service_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:ellipsize="end"
             android:gravity="center_vertical"
+            android:maxLines="2"
             android:paddingLeft="@dimen/scale_17dp"
+            android:paddingRight="@dimen/scale_3dp"
             android:paddingStart="@dimen/scale_17dp"
             android:textColor="@color/grey_varient_8"
             android:textSize="@dimen/text_size_16sp"
@@ -38,21 +43,23 @@
             app:layout_constraintHorizontal_weight="0.5"
             app:layout_constraintStart_toEndOf="@id/img_icon_correct"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="Restaurant"/>
+            app:layout_constraintVertical_bias="0"
+            tools:text="Restaurant Restaurant Restaurant Restaurant"/>
 
         <com.cheep.custom_view.CFTextViewRegular
             android:id="@+id/tv_sub_service_price"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginRight="@dimen/scale_14dp"
             android:layout_marginEnd="@dimen/scale_14dp"
+            android:layout_marginRight="@dimen/scale_14dp"
+            android:textColor="@drawable/sub_category_text_color_selector"
             android:textSize="@dimen/text_size_16sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:textColor="@drawable/sub_category_text_color_selector"
             app:layout_constraintHorizontal_weight="0.4"
             app:layout_constraintLeft_toRightOf="@+id/tv_sub_service_name"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0"
             tools:text="TextView"/>
 
     </android.support.constraint.ConstraintLayout>

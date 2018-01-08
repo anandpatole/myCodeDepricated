@@ -122,7 +122,9 @@ public class Utility {
     }
 
     public static int getAddressCategoryString(String category) {
-        if (category.equalsIgnoreCase(NetworkUtility.TAGS.ADDRESS_TYPE.HOME))
+        if (TextUtils.isEmpty(category))
+            return R.string.label_empty_string;
+        else if (category.equalsIgnoreCase(NetworkUtility.TAGS.ADDRESS_TYPE.HOME))
             return R.string.label_home;
         else if (category.equalsIgnoreCase(NetworkUtility.TAGS.ADDRESS_TYPE.OFFICE))
             return R.string.label_office;
@@ -453,7 +455,7 @@ public class Utility {
         String LATITUDE = "latitude";
         String LONGITUDE = "longitude";
         String CITY_NAME = "city_name";
-        String CITY_ID= "city_id";
+        String CITY_ID = "city_id";
         String SESSION_EXPIRE = "session_expire";
         String IMAGE_URL = "image_url";
         String ACTION = "action";
@@ -495,6 +497,8 @@ public class Utility {
         String IS_PAY_NOW = "isPayNow";
         String DYNAMIC_LINK_URI = "DYNAMIC_LINK_URI";
         String POSITION = "position";
+        String SELECTED_PACKAGE_ID = "selectedPackageID";
+        String PACKAGE_LIST = "packageList";
     }
 
 

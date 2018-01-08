@@ -65,10 +65,8 @@ public class AddressAdapter<T> extends ArrayAdapter<T> {
         } else {
             if (!TextUtils.isEmpty(mList.get(position).nickname))
                 mHolder.mBinding.tvAddressNickname.setText(mList.get(position).nickname);
-            else if (!TextUtils.isEmpty(mList.get(position).category))
-                mHolder.mBinding.tvAddressNickname.setText(Utility.getAddressCategoryString(mList.get(position).category));
             else
-                mHolder.mBinding.tvAddressNickname.setText(Utility.EMPTY_STRING);
+                mHolder.mBinding.tvAddressNickname.setText(Utility.getAddressCategoryString(mList.get(position).category));
             mHolder.mBinding.llAddressContainer.setVisibility(View.VISIBLE);
         }
         mHolder.mBinding.tvAddress.setText(mList.get(position).address);

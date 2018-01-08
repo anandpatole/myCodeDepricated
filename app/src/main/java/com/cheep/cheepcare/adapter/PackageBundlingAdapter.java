@@ -5,12 +5,13 @@ import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.cheep.R;
-import com.cheep.cheepcare.model.CheepCarePackageModel;
+import com.cheep.cheepcare.model.PackageDetail;
 import com.cheep.databinding.RowBundledPackageHeaderBinding;
 import com.cheep.databinding.RowBundledPackageSelectedBinding;
 import com.cheep.databinding.RowBundledPackagetNoSelectedBinding;
@@ -27,14 +28,14 @@ import java.util.List;
 public class PackageBundlingAdapter extends LoadMoreRecyclerAdapter<PackageBundlingAdapter.PackageViewHolder> {
 
     private final PackageItemClickListener mListener;
-    private List<CheepCarePackageModel> mList = new ArrayList<>();
+    private List<PackageDetail> mList = new ArrayList<>();
 
     public static final int ROW_PACKAGE_SELECTED = 0;
     public static final int ROW_PACKAGE_HEADER = 1;
     public static final int ROW_PACKAGE_NOT_SELECTED = 2;
 
     public interface PackageItemClickListener {
-        void onPackageItemClick(int position, CheepCarePackageModel packageModel);
+        void onPackageItemClick(int position, PackageDetail packageModel);
     }
 
     public PackageBundlingAdapter(PackageItemClickListener listener) {
@@ -70,17 +71,17 @@ public class PackageBundlingAdapter extends LoadMoreRecyclerAdapter<PackageBundl
     public void onActualBindViewHolder(final PackageViewHolder holder, int position) {
         int viewType = getItemViewType(holder.getAdapterPosition());
         Context context;
-        final CheepCarePackageModel model = mList.get(position);
+        final PackageDetail model = mList.get(position);
         switch (viewType) {
             case ROW_PACKAGE_NOT_SELECTED:
                 context = holder.mRowNotSelectedBinding.getRoot().getContext();
                 Utility.loadImageView(context, holder.mRowNotSelectedBinding.ivItemBackground, "https://s3.ap-south-1.amazonaws.com/cheepapp/category/banner_image/medium/Untitled.jpg");
-                SpannableString spannableString = new SpannableString(context.getString(R.string.rupee_symbol_x_package_price, model.price));
+                SpannableString spannableString = new SpannableString(context.getString(R.string.rupee_symbol_x_package_price, "0"));
                 spannableString = Utility.getCheepCarePackageMonthlyPrice(spannableString, spannableString.length() - 2, spannableString.length());
                 holder.mRowNotSelectedBinding.tvPrice.setText(spannableString);
                 holder.mRowNotSelectedBinding.ivIsAddressSelected.setSelected(model.isSelected);
-                holder.mRowNotSelectedBinding.tvDescription.setText(model.packageDescription);
-                holder.mRowNotSelectedBinding.tvTitle.setText(model.packageTitle);
+                holder.mRowNotSelectedBinding.tvDescription.setText(model.subtitle);
+                holder.mRowNotSelectedBinding.tvTitle.setText(model.title);
 
 
                 holder.mRowNotSelectedBinding.getRoot().setOnClickListener(new View.OnClickListener() {
@@ -93,18 +94,23 @@ public class PackageBundlingAdapter extends LoadMoreRecyclerAdapter<PackageBundl
             case ROW_PACKAGE_SELECTED:
                 context = holder.mRowSelectedBinding.getRoot().getContext();
                 Utility.loadImageView(context, holder.mRowSelectedBinding.ivItemBackground, "https://s3.ap-south-1.amazonaws.com/cheepapp/category/banner_image/medium/Untitled.jpg");
-                SpannableString spannableString1 = new SpannableString(context.getString(R.string.rupee_symbol_x_package_price, model.price));
+                SpannableString spannableString1 = new SpannableString(context.getString(R.string.rupee_symbol_x_package_price, "0"));
                 spannableString1 = Utility.getCheepCarePackageMonthlyPrice(spannableString1, spannableString1.length() - 2, spannableString1.length());
                 holder.mRowSelectedBinding.tvPrice.setText(spannableString1);
                 holder.mRowSelectedBinding.ivIsAddressSelected.setSelected(model.isSelected);
-                holder.mRowSelectedBinding.tvDescription.setText(model.packageDescription);
-                holder.mRowSelectedBinding.tvTitle.setText(model.packageTitle);
+                holder.mRowSelectedBinding.tvDescription.setText(model.subtitle);
+                holder.mRowSelectedBinding.tvTitle.setText(model.title);
+
+                if (!TextUtils.isEmpty(model.mSelectedAddress.nickname))
+                    holder.mRowSelectedBinding.tvAddressNickname.setText(model.mSelectedAddress.nickname);
+                else
+                    holder.mRowSelectedBinding.tvAddressNickname.setText(Utility.getAddressCategoryString(model.mSelectedAddress.category));
+                holder.mRowSelectedBinding.tvAddress.setText(model.mSelectedAddress.address);
 
 
                 holder.mRowSelectedBinding.getRoot().setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mListener.onPackageItemClick(holder.getAdapterPosition(), model);
                     }
                 });
                 break;
@@ -142,7 +148,7 @@ public class PackageBundlingAdapter extends LoadMoreRecyclerAdapter<PackageBundl
         }
     }
 
-    public void addPakcageList(List<CheepCarePackageModel> list) {
+    public void addPakcageList(List<PackageDetail> list) {
         mList.addAll(list);
         notifyDataSetChanged();
     }

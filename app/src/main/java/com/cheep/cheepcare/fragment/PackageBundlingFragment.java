@@ -14,7 +14,7 @@ import com.cheep.R;
 import com.cheep.activity.BaseAppCompatActivity;
 import com.cheep.cheepcare.activity.PackageCustomizationActivity;
 import com.cheep.cheepcare.adapter.PackageBundlingAdapter;
-import com.cheep.cheepcare.model.CheepCarePackageModel;
+import com.cheep.cheepcare.model.PackageDetail;
 import com.cheep.databinding.FragmentPackageBundlingBinding;
 import com.cheep.fragment.BaseFragment;
 
@@ -68,6 +68,22 @@ public class PackageBundlingFragment extends BaseFragment {
         } else {
             mPackageCustomizationActivity.setTaskState(PackageCustomizationActivity.STEP_TWO_UNVERIFIED);
         }
+        mPackageAdapter = new PackageBundlingAdapter(new PackageBundlingAdapter.PackageItemClickListener() {
+            @Override
+            public void onPackageItemClick(int position, PackageDetail packageModel) {
+                mPackageCustomizationActivity.mPackageId = packageModel.id;
+                mPackageCustomizationActivity.gotoStep(PackageCustomizationActivity.STAGE_1);
+                mPackageCustomizationActivity.loadAnotherPackage();
+            }
+        });
+        mPackageAdapter.addPakcageList(getList());
+        mBinding.rvBundlePackages.setLayoutManager(new LinearLayoutManager(
+                mContext
+                , LinearLayoutManager.VERTICAL
+                , false
+        ));
+        mBinding.rvBundlePackages.setAdapter(mPackageAdapter);
+
 
         // Hide the post task button
 //        mPackageCustomizationActivity.showPostTaskButton(false, false);
@@ -86,40 +102,29 @@ public class PackageBundlingFragment extends BaseFragment {
     public void initiateUI() {
 
         mBinding.rvBundlePackages.setNestedScrollingEnabled(false);
-        mPackageAdapter = new PackageBundlingAdapter(new PackageBundlingAdapter.PackageItemClickListener() {
-            @Override
-            public void onPackageItemClick(int position, CheepCarePackageModel packageModel) {
 
-            }
-        });
-        mPackageAdapter.addPakcageList(getList(CheepCarePackageModel.getCheepCarePackages()));
-        mBinding.rvBundlePackages.setLayoutManager(new LinearLayoutManager(
-                mContext
-                , LinearLayoutManager.VERTICAL
-                , false
-        ));
-        mBinding.rvBundlePackages.setAdapter(mPackageAdapter);
+
     }
 
-    private List<CheepCarePackageModel> getList(List<CheepCarePackageModel> cheepCarePackages) {
+    private List<PackageDetail> getList() {
 
-        Collections.sort(cheepCarePackages, new Comparator<CheepCarePackageModel>() {
+        Collections.sort(mPackageCustomizationActivity.getPackageList(), new Comparator<PackageDetail>() {
             @Override
-            public int compare(CheepCarePackageModel o1, CheepCarePackageModel o2) {
+            public int compare(PackageDetail o1, PackageDetail o2) {
                 boolean b1 = o1.isSelected;
                 boolean b2 = o2.isSelected;
 
                 return (b1 != b2) ? (b1) ? -1 : 1 : 0;
             }
         });
-        ArrayList<CheepCarePackageModel> newList = new ArrayList<>();
+        ArrayList<PackageDetail> newList = new ArrayList<>();
         boolean isHeaderAdded = false;
-        for (CheepCarePackageModel model : cheepCarePackages) {
+        for (PackageDetail model : mPackageCustomizationActivity.getPackageList()) {
             if (model.isSelected) {
                 model.rowType = PackageBundlingAdapter.ROW_PACKAGE_SELECTED;
             } else {
                 if (!isHeaderAdded) {
-                    CheepCarePackageModel model1 = new CheepCarePackageModel();
+                    PackageDetail model1 = new PackageDetail();
                     model1.rowType = PackageBundlingAdapter.ROW_PACKAGE_HEADER;
                     newList.add(model1);
                     isHeaderAdded = true;

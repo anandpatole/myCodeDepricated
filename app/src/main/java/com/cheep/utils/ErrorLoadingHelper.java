@@ -41,7 +41,8 @@ public class ErrorLoadingHelper {
         textError.setVisibility(View.GONE);
         if (imgPostATask != null)
             imgPostATask.setVisibility(View.GONE);
-        textErrorAction.setVisibility(View.GONE);
+        if (textErrorAction != null)
+            textErrorAction.setVisibility(View.GONE);
 
         // Hide Favourite section view
         if (mEmptyFavouriteLayout != null)

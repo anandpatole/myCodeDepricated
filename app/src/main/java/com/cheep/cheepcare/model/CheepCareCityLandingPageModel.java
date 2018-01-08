@@ -61,20 +61,4 @@ public class CheepCareCityLandingPageModel {
         public String title;
     }
 
-    public class PackageDetail implements Serializable {
-
-        @SerializedName("id")
-        @Expose
-        public String id;
-        @SerializedName("title")
-        @Expose
-        public String title;
-        @SerializedName("subtitle")
-        @Expose
-        public String subtitle;
-        @SerializedName("package_slug")
-        @Expose
-        public String packageSlug;
-        private final static long serialVersionUID = -4061560571461215516L;
-    }
 }

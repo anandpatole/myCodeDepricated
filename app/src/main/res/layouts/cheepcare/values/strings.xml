@@ -2,4 +2,5 @@
 <resources>
     <string name="hint_apply_cheep_promo_code">Apply CHEEP Promo code?</string>
     <string name="hint_apply_cheep_mate_code">Have a CHEEP Mate Code?</string>
+    <string name="label_empty_string"></string>
 </resources>

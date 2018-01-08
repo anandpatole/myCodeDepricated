@@ -1,6 +1,8 @@
 package com.cheep.cheepcare.model;
 
 import com.cheep.custom_view.expandablerecycleview.Parent;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 import java.util.List;
@@ -9,27 +11,34 @@ import java.util.List;
  * Created by pankaj on 12/26/17.
  */
 
-public class CheepCarePackageServicesModel implements Parent<CheepCarePackageSubServicesModel>, Serializable {
+public class CheepCarePackageServicesModel implements Parent<PackageOption>, Serializable {
 
-    public int catId;
-    public int sub_cat_id;
-    public String name;
-/*
-    public String description;
-*/
-    public List<CheepCarePackageSubServicesModel> subServices = null;
+    @SerializedName("package_id")
+    @Expose
+    public String packageId;
+
+    @SerializedName("package_option_title")
+    @Expose
+    public String packageOptionTitle;
+
+    @SerializedName("selection_type")
+    @Expose
+    public String selectionType;
+
+    @SerializedName("package_option")
+    @Expose
+    public List<PackageOption> packageOptionList = null;
     public boolean isSelected = false;
-    public String type;
-
 
     public interface SERVICE_TYPE {
-        String SIMPLE = "simple";
-        String UNIT = "unit";
+        String RADIO = "radio";
+        String CHECK_BOX = "checkbox";
     }
 
+
     @Override
-    public List<CheepCarePackageSubServicesModel> getChildList() {
-        return subServices;
+    public List<PackageOption> getChildList() {
+        return packageOptionList;
     }
 
     @Override

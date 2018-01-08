@@ -18,9 +18,11 @@ import com.cheep.cheepcare.adapter.PackageCustomizationPagerAdapter;
 import com.cheep.cheepcare.fragment.PackageBundlingFragment;
 import com.cheep.cheepcare.fragment.PackageSummaryFragment;
 import com.cheep.cheepcare.fragment.SelectPackageSpecificationsFragment;
-import com.cheep.cheepcare.model.CheepCareCityLandingPageModel;
+import com.cheep.cheepcare.model.PackageDetail;
 import com.cheep.databinding.ActivityPackageCustomizationBinding;
 import com.cheep.utils.Utility;
+
+import java.util.ArrayList;
 
 /**
  * Created by pankaj on 12/22/17.
@@ -30,14 +32,26 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
 
     private ActivityPackageCustomizationBinding mBinding;
     private PackageCustomizationPagerAdapter mPackageCustomizationPagerAdapter;
-    private CheepCareCityLandingPageModel.PackageDetail mPackageModel;
+    private PackageDetail mPackageModel;
     private String mCityName;
+    public String mPackageId = "";
+    private ArrayList<PackageDetail> mPackageList = new ArrayList<>();
 
-    public static void newInstance(Context context, int position, CheepCareCityLandingPageModel.PackageDetail model, String cityName) {
+    public void setPackageList(ArrayList<PackageDetail> mPackageList) {
+        this.mPackageList = mPackageList;
+    }
+
+    public ArrayList<PackageDetail> getPackageList() {
+        return mPackageList;
+    }
+
+    public static void newInstance(Context context, int position, PackageDetail model, String cityName, String selectedPackageID, String packageList) {
         Intent intent = new Intent(context, PackageCustomizationActivity.class);
         intent.putExtra(Utility.Extra.POSITION, position);
         intent.putExtra(Utility.Extra.MODEL, model);
         intent.putExtra(Utility.Extra.CITY_NAME, cityName);
+        intent.putExtra(Utility.Extra.SELECTED_PACKAGE_ID, selectedPackageID);
+        intent.putExtra(Utility.Extra.PACKAGE_LIST, packageList);
         context.startActivity(intent);
     }
 
@@ -53,8 +67,10 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
     protected void initiateUI() {
 
         if (getIntent().hasExtra(Utility.Extra.MODEL)) {
-            mPackageModel = (CheepCareCityLandingPageModel.PackageDetail) getIntent().getExtras().getSerializable(Utility.Extra.MODEL);
+            mPackageModel = (PackageDetail) getIntent().getExtras().getSerializable(Utility.Extra.MODEL);
             mCityName = getIntent().getExtras().getString(Utility.Extra.CITY_NAME);
+            mPackageId = getIntent().getExtras().getString(Utility.Extra.SELECTED_PACKAGE_ID);
+            mPackageList = Utility.getObjectListFromJsonString(getIntent().getExtras().getString(Utility.Extra.PACKAGE_LIST), PackageDetail[].class);
              /*position = getIntent().getExtras().getInt(Utility.Extra.POSITION);*/
         }
 
@@ -154,7 +170,7 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
     /**
      * This will setup the viewpager and tabs as well
      *
-     * @param pager
+     * @param pager pager
      */
     private void setupViewPager(ViewPager pager) {
         mPackageCustomizationPagerAdapter = new PackageCustomizationPagerAdapter(getSupportFragmentManager());
@@ -326,9 +342,30 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.text_continue:
-                    WelcomeToCheepCareActivity.newInstance(mContext, mCityName);
+//                    WelcomeToCheepCareActivity.newInstance(mContext, mCityName);
+                    if (mBinding.viewpager.getCurrentItem() == STAGE_1) {
+                        SelectPackageSpecificationsFragment fragment = (SelectPackageSpecificationsFragment) mPackageCustomizationPagerAdapter.getItem(mBinding.viewpager.getCurrentItem());
+                        if (fragment != null) {
+                            if (fragment.validateData()) {
+                                for (PackageDetail detail : mPackageList) {
+                                    if (detail.id.equalsIgnoreCase(mPackageId)) {
+                                        detail.isSelected = true;
+                                        detail.mSelectedAddress = fragment.mSelectedAddress;
+                                    }
+                                }
+                                gotoStep(STAGE_2);
+                            }
+                        }
+                    }
                     break;
             }
         }
     };
+
+    public void loadAnotherPackage() {
+        SelectPackageSpecificationsFragment fragment = (SelectPackageSpecificationsFragment) mPackageCustomizationPagerAdapter.getItem(mBinding.viewpager.getCurrentItem());
+        if (fragment != null) {
+            fragment.initiateUI();
+        }
+    }
 }

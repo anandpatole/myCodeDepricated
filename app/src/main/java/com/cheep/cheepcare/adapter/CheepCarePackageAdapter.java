@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.cheep.R;
-import com.cheep.cheepcare.model.CheepCareCityLandingPageModel;
+import com.cheep.cheepcare.model.PackageDetail;
 import com.cheep.databinding.RowCheepCarePackageBinding;
 import com.cheep.utils.LoadMoreRecyclerAdapter;
 
@@ -23,10 +23,10 @@ import java.util.List;
 public class CheepCarePackageAdapter extends LoadMoreRecyclerAdapter<CheepCarePackageAdapter.CheepCarePackageViewHolder> {
 
     private final PackageItemClickListener mListener;
-    private List<CheepCareCityLandingPageModel.PackageDetail> mList = new ArrayList<>();
+    private List<PackageDetail> mList = new ArrayList<>();
 
     public interface PackageItemClickListener {
-        void onPackageItemClick(int position, CheepCareCityLandingPageModel.PackageDetail packageModel);
+        void onPackageItemClick(int position, PackageDetail packageModel);
     }
 
     public CheepCarePackageAdapter(PackageItemClickListener listener) {
@@ -43,7 +43,7 @@ public class CheepCarePackageAdapter extends LoadMoreRecyclerAdapter<CheepCarePa
 
     @Override
     public void onActualBindViewHolder(final CheepCarePackageViewHolder holder, int position) {
-        final CheepCareCityLandingPageModel.PackageDetail model = mList.get(position);
+        final PackageDetail model = mList.get(position);
 
 
         Glide.with(holder.mBinding.getRoot().getContext())
@@ -85,7 +85,7 @@ public class CheepCarePackageAdapter extends LoadMoreRecyclerAdapter<CheepCarePa
         }
     }
 
-    public void addPackageList(List<CheepCareCityLandingPageModel.PackageDetail> list) {
+    public void addPackageList(List<PackageDetail> list) {
         mList.addAll(list);
         notifyDataSetChanged();
     }

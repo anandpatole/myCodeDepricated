@@ -134,6 +134,7 @@ public class NetworkUtility {
 
         // CHEEP CARE web services
         public static final String GET_CITY_CARE_DETAIL = BASE_URL+ "customers/care/getCityCareDetail";
+        public static final String GET_CARE_PACKAGE_DETAILS= BASE_URL+ "customers/care/getCarePackageDetails";
 
     }
 
@@ -405,7 +406,8 @@ public class NetworkUtility {
         String CAT_TYPE = "cat_type";
         String NORMAL_BANNER = "normalBanner";
         String CARE_BANNER = "careBanner";
-        String CARE_CITY_ID= "care_city_id";
+        String CARE_CITY_SLUG= "care_city_slug";
+        String CARE_PACKAGE_ID= "care_package_id";
 
         interface VERSION_CHANGE_TYPE {
             int NORMAL = 0;

@@ -18,10 +18,11 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:singleLine="true"
+            android:maxLines="2"
             android:textColor="@color/grey_varient_8"
             android:textSize="@dimen/text_size_16sp"
             app:layout_constraintBottom_toBottomOf="parent"
+            android:paddingRight="@dimen/scale_3dp"
             app:layout_constraintHorizontal_weight="1"
             app:layout_constraintRight_toLeftOf="@+id/cl_center"
             app:layout_constraintStart_toStartOf="parent"
@@ -30,6 +31,7 @@
 
         <android.support.constraint.ConstraintLayout
             android:id="@+id/cl_center"
+            app:layout_constraintVertical_bias="0"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/background_grey_border_rounded_rect"
@@ -65,12 +67,12 @@
                 android:paddingLeft="@dimen/scale_5dp"
                 android:paddingRight="@dimen/scale_5dp"
                 android:paddingTop="@dimen/scale_2dp"
-                tools:text="10"
                 android:textColor="@color/splash_gradient_end"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toRightOf="@id/tv_minus"
                 app:layout_constraintRight_toLeftOf="@+id/tv_plus"
-                app:layout_constraintTop_toTopOf="parent"/>
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="10"/>
 
             <com.cheep.custom_view.CFTextViewSemiBold
                 android:id="@+id/tv_plus"
@@ -97,6 +99,7 @@
             android:layout_marginEnd="@dimen/scale_14dp"
             android:layout_marginLeft="@dimen/scale_10dp"
             android:layout_marginRight="@dimen/scale_14dp"
+            app:layout_constraintVertical_bias="0"
             android:layout_marginStart="@dimen/scale_10dp"
             android:ellipsize="end"
             android:singleLine="true"
