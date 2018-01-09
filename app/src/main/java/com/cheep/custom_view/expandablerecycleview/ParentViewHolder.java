@@ -20,6 +20,7 @@ public class ParentViewHolder<P extends Parent<C>, C> extends RecyclerView.ViewH
     @Nullable
     private ParentViewHolderExpandCollapseListener mParentViewHolderExpandCollapseListener;
     private boolean mExpanded;
+    private boolean mIsExpandable = true;
     P mParent;
     ExpandableRecyclerAdapter mExpandableAdapter;
 
@@ -27,7 +28,7 @@ public class ParentViewHolder<P extends Parent<C>, C> extends RecyclerView.ViewH
      * Empowers {@link com.bignerdranch.expandablerecyclerview.ExpandableRecyclerAdapter}
      * implementations to be notified of expand/collapse state change events.
      */
-    interface ParentViewHolderExpandCollapseListener {
+    public interface ParentViewHolderExpandCollapseListener {
 
         /**
          * Called when a parent is expanded.
@@ -130,13 +131,13 @@ public class ParentViewHolder<P extends Parent<C>, C> extends RecyclerView.ViewH
     }
 
     /**
-     * Setter for the {@link ParentViewHolderExpandCollapseListener} implemented in
-     * {@link com.bignerdranch.expandablerecyclerview.ExpandableRecyclerAdapter}.
+     * Setter for the {@link ParentViewHolderExpandCollapseListener} implementedycle in
+     * {@link com.bignerdranch.expandablerecyclerview.ExpandableRecrAdapter}.
      *
      * @param parentViewHolderExpandCollapseListener The {@link ParentViewHolderExpandCollapseListener} to set on the {@link ParentViewHolder}
      */
     @UiThread
-    void setParentViewHolderExpandCollapseListener(ParentViewHolderExpandCollapseListener parentViewHolderExpandCollapseListener) {
+    public void setParentViewHolderExpandCollapseListener(ParentViewHolderExpandCollapseListener parentViewHolderExpandCollapseListener) {
         mParentViewHolderExpandCollapseListener = parentViewHolderExpandCollapseListener;
     }
 
@@ -159,6 +160,13 @@ public class ParentViewHolder<P extends Parent<C>, C> extends RecyclerView.ViewH
     }
 
     /**
+     * @param isExpandable pass true if child views need to be collapsible false otherwise
+     */
+    public void setIsExpandable(boolean isExpandable) {
+        mIsExpandable = isExpandable;
+    }
+
+    /**
      * Used to determine whether a click in the entire parent {@link View}
      * should trigger row expansion.
      * <p>
@@ -170,7 +178,7 @@ public class ParentViewHolder<P extends Parent<C>, C> extends RecyclerView.ViewH
      */
     @UiThread
     public boolean shouldItemViewClickToggleExpansion() {
-        return true;
+        return mIsExpandable;
     }
 
     /**

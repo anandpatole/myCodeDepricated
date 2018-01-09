@@ -5,34 +5,37 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <android.support.v7.widget.CardView
+        android:id="@+id/card_view"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/scale_144dp"
-        android:layout_margin="@dimen/scale_4dp"
-        app:cardElevation="@dimen/scale_4dp">
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/scale_8dp"
+        android:layout_marginRight="@dimen/scale_8dp"
+        android:layout_marginTop="@dimen/scale_8dp"
+        app:cardElevation="@dimen/scale_4dp"
+        app:contentPadding="0dp">
 
         <android.support.constraint.ConstraintLayout
+            android:id="@+id/constraint_layout"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/scale_144dp"
-            android:layout_marginTop="@dimen/scale_16dp"
-            android:padding="@dimen/scale_4dp">
+            android:layout_height="wrap_content">
 
             <ImageView
                 android:id="@+id/iv_care_image"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="@dimen/scale_113dp"
                 android:scaleType="centerCrop"
-                android:src="@drawable/banner_appliance_care"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
+                app:layout_constraintTop_toTopOf="parent"
+                tools:src="@drawable/banner_appliance_care"/>
 
             <ImageView
                 android:id="@+id/iv_subscribed"
-                android:layout_width="@dimen/scale_90dp"
-                android:layout_height="@dimen/scale_22dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/scale_32dp"
                 android:layout_marginStart="@dimen/scale_32dp"
-                android:layout_marginTop="@dimen/scale_12dp"
+                android:layout_marginTop="@dimen/scale_8dp"
                 android:src="@drawable/ic_subscribed_text"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"/>
@@ -57,7 +60,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/scale_4dp"
-                android:background="@drawable/background_white_left_cirlular_border_gray"
+                android:background="@drawable/background_white_left_circular_border_gray"
                 android:ellipsize="end"
                 android:gravity="center"
                 android:maxLines="1"
@@ -98,10 +101,10 @@
                 android:id="@+id/tv_days_left3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/scale_32dp"
-                android:layout_marginRight="@dimen/scale_32dp"
+                android:layout_marginEnd="@dimen/scale_24dp"
+                android:layout_marginRight="@dimen/scale_24dp"
                 android:layout_marginTop="@dimen/scale_4dp"
-                android:background="@drawable/background_white_right_cirlular_border_gray"
+                android:background="@drawable/background_white_right_circular_border_gray"
                 android:ellipsize="end"
                 android:gravity="center"
                 android:maxLines="1"
@@ -165,13 +168,15 @@
                     android:layout_marginStart="@dimen/scale_2dp"
                     android:layout_weight="1"
                     android:singleLine="true"
-                    android:text="Home 1"
+                    android:text="Home 12"
                     android:textColor="@color/splash_gradient_end"
                     android:textSize="@dimen/text_size_12sp"/>
 
                 <com.cheep.custom_view.CFTextViewRegular
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/scale_1dp"
+                    android:layout_marginStart="@dimen/scale_1dp"
                     android:layout_weight="4"
                     android:drawableEnd="@drawable/ic_drop_down_arrow"
                     android:drawableRight="@drawable/ic_drop_down_arrow"
@@ -202,6 +207,47 @@
                 app:layout_constraintTop_toBottomOf="@id/tv_address"
                 tools:text="Please enter enter enter enter enter enter enter minimum %1s amount to proceed"/>
 
+            <LinearLayout
+                android:id="@+id/ll_renew_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/scale_16dp"
+                android:layout_marginEnd="@dimen/scale_11dp"
+                android:layout_marginLeft="@dimen/scale_22dp"
+                android:layout_marginRight="@dimen/scale_11dp"
+                android:layout_marginStart="@dimen/scale_22dp"
+                android:layout_marginTop="@dimen/scale_129dp"
+                android:orientation="horizontal"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <com.cheep.custom_view.CFTextViewSemiBold
+                    android:id="@+id/tv_renew_text"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/scale_8dp"
+                    android:layout_marginRight="@dimen/scale_8dp"
+                    android:layout_weight="1"
+                    android:ellipsize="end"
+                    android:maxLines="2"
+                    android:textAllCaps="false"
+                    android:textColor="@color/grey_varient_16"
+                    android:textSize="@dimen/text_size_14sp"
+                    tools:text="Your subscription will end in 6 days."/>
+
+                <com.cheep.custom_view.CFTextViewSemiBold
+                    android:id="@+id/tvRenew"
+                    android:layout_width="@dimen/home_screen_book_button_width"
+                    android:layout_height="@dimen/home_screen_book_button_height"
+                    android:layout_gravity="center"
+                    android:background="@drawable/rounded_rect_blue"
+                    android:gravity="center"
+                    android:text="@string/label_renew"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_size_11sp"/>
+
+            </LinearLayout>
 
         </android.support.constraint.ConstraintLayout>
     </android.support.v7.widget.CardView>

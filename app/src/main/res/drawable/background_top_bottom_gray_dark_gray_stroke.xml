@@ -10,7 +10,7 @@
             <solid android:color="@color/transparent"/>
             <stroke
                 android:width="@dimen/scale_1dp"
-                android:color="@color/grey_varient_26"/>
+                android:color="@color/grey_varient_28"/>
         </shape>
     </item>
     <item
@@ -31,7 +31,7 @@
             <solid android:color="@color/transparent"/>
             <stroke
                 android:width="@dimen/scale_1dp"
-                android:color="@color/grey_varient_26"/>
+                android:color="@color/grey_varient_28"/>
         </shape>
     </item>
     <item
