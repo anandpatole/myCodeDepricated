@@ -100,10 +100,7 @@ public class PackageBundlingFragment extends BaseFragment {
 
     @Override
     public void initiateUI() {
-
         mBinding.rvBundlePackages.setNestedScrollingEnabled(false);
-
-
     }
 
     private List<PackageDetail> getList() {
@@ -140,6 +137,5 @@ public class PackageBundlingFragment extends BaseFragment {
     public void setListener() {
 
     }
-
 
 }

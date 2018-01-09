@@ -121,6 +121,8 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
 
     @Override
     public void initiateUI() {
+        isClicked = false;
+
         mBinding.ivIsAddressSelected.setSelected(true);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mContext);
@@ -260,7 +262,7 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
         mList.clear();
 
         if (userDetails != null && !userDetails.addressList.isEmpty())
-            mList = userDetails.addressList;
+            mList = /*new ArrayList<>(*/userDetails.addressList;
 
         mList.add(0, new AddressModel() {{
             address = getString(R.string.label_select_address);

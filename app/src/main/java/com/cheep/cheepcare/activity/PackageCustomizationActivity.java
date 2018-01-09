@@ -363,7 +363,8 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
     };
 
     public void loadAnotherPackage() {
-        SelectPackageSpecificationsFragment fragment = (SelectPackageSpecificationsFragment) mPackageCustomizationPagerAdapter.getItem(mBinding.viewpager.getCurrentItem());
+        SelectPackageSpecificationsFragment fragment =
+                (SelectPackageSpecificationsFragment) mPackageCustomizationPagerAdapter.getItem(mBinding.viewpager.getCurrentItem());
         if (fragment != null) {
             fragment.initiateUI();
         }
