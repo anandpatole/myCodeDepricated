@@ -262,7 +262,7 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
         mList.clear();
 
         if (userDetails != null && !userDetails.addressList.isEmpty())
-            mList = /*new ArrayList<>(*/userDetails.addressList;
+            mList = new ArrayList<>(userDetails.addressList);
 
         mList.add(0, new AddressModel() {{
             address = getString(R.string.label_select_address);
