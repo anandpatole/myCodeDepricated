@@ -5,8 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.animation.SpringAnimation;
-import android.support.animation.SpringForce;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
@@ -85,21 +83,6 @@ public class ManageSubscriptionActivity extends BaseAppCompatActivity {
         mBinding.tvCityName.setText(mCityName);
 
         mBinding.tvInfoText.setText(getString(R.string.cheep_care_work_flow_desc, "Nikita"));
-
-        // create an animation for your view and set the property you want to animate
-        SpringAnimation animation = new SpringAnimation(mBinding.ivCityImage, SpringAnimation.ROTATION_X);
-        // create a spring with desired parameters
-        SpringForce spring = new SpringForce();
-        // can also be passed directly in the constructor
-        spring.setFinalPosition(100f);
-        // optional, default is STIFFNESS_MEDIUM
-        spring.setStiffness(SpringForce.STIFFNESS_LOW);
-        // optional, default is DAMPING_RATIO_MEDIUM_BOUNCY
-        spring.setDampingRatio(SpringForce.DAMPING_RATIO_MEDIUM_BOUNCY);
-        // set your animation's spring
-        animation.setSpring(spring);
-        // animate!
-        animation.start();
 
         mBinding.recyclerView.setNestedScrollingEnabled(false);
         ExpandableBoughtPackagesRecyclerAdapter adapter =

@@ -333,8 +333,6 @@ dependencies {
     compile 'com.amazonaws:aws-android-sdk-s3:2.2.22'
 //    compile 'org.jsoup:jsoup:1.10.3'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
-
-    compile "com.android.support:support-dynamic-animation:27.0.2"
 }
 
 // Add to the bottom of the file
