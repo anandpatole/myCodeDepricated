@@ -3,6 +3,7 @@ package com.cheep.cheepcare.fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -49,6 +50,7 @@ import java.util.Map;
 
 import static com.cheep.network.NetworkUtility.TAGS.CARE_PACKAGE_ID;
 import static com.cheep.network.NetworkUtility.TAGS.DATA;
+import static com.cheep.network.NetworkUtility.TAGS.PACKAGE_OPTION_DETAILS;
 
 /**
  * Created by pankaj on 12/25/17.
@@ -64,7 +66,6 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
     private List<AddressModel> mList;
     private boolean isClicked = false;
     BottomAddAddressDialog dialog;
-    private CheepCarePackageServicesModel model;
     public AddressModel mSelectedAddress;
 
     public static SelectPackageSpecificationsFragment newInstance() {
@@ -121,9 +122,10 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
 
     @Override
     public void initiateUI() {
-        isClicked = false;
 
-        mBinding.ivIsAddressSelected.setSelected(true);
+        isClicked = false;
+        mSelectedAddress = null;
+        mBinding.ivIsAddressSelected.setSelected(false);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mContext);
         mBinding.recyclerView.setLayoutManager(linearLayoutManager);
@@ -147,7 +149,7 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
             return;
         }
 
-        showHindProgress(true);
+        showHideProgress(true);
         //Add Header parameters
         Map<String, String> mHeaderParams = new HashMap<>();
         mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
@@ -168,14 +170,14 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
 
     }
 
-    private void showHindProgress(boolean b) {
-        mBinding.progressLoad.setVisibility(b ? View.VISIBLE : View.GONE);
+    private void showHideProgress(boolean showProgress) {
+        mBinding.progressLoad.setVisibility(showProgress ? View.VISIBLE : View.GONE);
     }
 
     private Response.Listener mCallGetCarePackageDetailsWSResponseListener = new Response.Listener() {
         @Override
         public void onResponse(Object response) {
-            showHindProgress(false);
+            showHideProgress(false);
             LogUtils.LOGD(TAG, "onResponse() called with: response = [" + response + "]");
             String strResponse = (String) response;
             try {
@@ -185,9 +187,9 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
                 String error_message;
                 switch (statusCode) {
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
-                        ArrayList<CheepCarePackageServicesModel> list = new ArrayList<>();
-                        model = (CheepCarePackageServicesModel) Utility.getObjectFromJsonString(jsonObject.optString(DATA), CheepCarePackageServicesModel.class);
-                        list.add(model);
+                        String jsonData = jsonObject.optJSONObject(DATA).optString(PACKAGE_OPTION_DETAILS);
+                        ArrayList<CheepCarePackageServicesModel> list;
+                        list = Utility.getObjectListFromJsonString(jsonData, CheepCarePackageServicesModel[].class);
                         addPackagesOptionListToPackages(mPackageCustomizationActivity.mPackageId, list);
                         mBinding.recyclerView.setAdapter(new ExpandablePackageServicesRecyclerAdapter(list, true));
                         break;
@@ -226,7 +228,7 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
     private Response.ErrorListener mCallGetCarePackageDetailsSingWSErrorListener = new Response.ErrorListener() {
         @Override
         public void onErrorResponse(VolleyError error) {
-            showHindProgress(false);
+            showHideProgress(false);
             LogUtils.LOGD(TAG, "onErrorResponse() called with: error = [" + error + "]");
             Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
         }
@@ -249,7 +251,12 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
 //                        mBinding.tvSpinnerAddress.setText(mList.get(mList.size() - 1).address);
 //                        mBinding.ivIsAddressSelected.setSelected(true);
                     }
-                }, strings);
+
+                    @Override
+                    public void onUpdateAddress(AddressModel addressModel) {
+
+                    }
+                }, strings, null);
 
                 dialog.showDialog();
             }
@@ -262,7 +269,7 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
         mList.clear();
 
         if (userDetails != null && !userDetails.addressList.isEmpty())
-            mList = new ArrayList<>(userDetails.addressList);
+            mList.addAll(userDetails.addressList);
 
         mList.add(0, new AddressModel() {{
             address = getString(R.string.label_select_address);
@@ -283,9 +290,13 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
                 if (!isClicked && position == 0) {
                     mBinding.tvSpinnerAddress.setText(getString(R.string.label_select_address));
                     mBinding.ivIsAddressSelected.setSelected(false);
+
                     return;
                 }
-                ImageSpan imageSpan = new ImageSpan(mContext, R.drawable.icon_address_home_active, ImageSpan.ALIGN_BASELINE);
+                AddressModel model = mList.get(position);
+                Drawable img = ContextCompat.getDrawable(mPackageCustomizationActivity, Utility.getAddressCategoryBlueIcon(model.category));
+                img.setBounds(0, 0, img.getIntrinsicWidth(), img.getIntrinsicHeight());
+                ImageSpan imageSpan = new ImageSpan(img, ImageSpan.ALIGN_BOTTOM);
                 ForegroundColorSpan colorSpan = new ForegroundColorSpan(ContextCompat.getColor(mContext
                         , R.color.splash_gradient_end));
 
@@ -296,25 +307,26 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
                         , 1, Spanned.SPAN_INCLUSIVE_INCLUSIVE);
                 spannableStringBuilder.append(Utility.ONE_CHARACTER_SPACE);
 
+
+                // show address's nick name or nick name is null then show category
                 String category;
-                if (!TextUtils.isEmpty(mList.get(position).nickname))
-                    category = mList.get(position).nickname;
+                if (!TextUtils.isEmpty(model.nickname))
+                    category = model.nickname;
                 else
-                    category = mList.get(position).category;
+                    category = model.category;
 
                 if (!TextUtils.isEmpty(category)) {
                     spannableStringBuilder.append(category);
                     int startIndex = spannableStringBuilder.toString().indexOf(category);
                     int endIndex = startIndex + category.length();
-                    spannableStringBuilder.setSpan(colorSpan, startIndex, endIndex,
-                            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    spannableStringBuilder.setSpan(colorSpan, startIndex, endIndex, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                     spannableStringBuilder.append(Utility.ONE_CHARACTER_SPACE);
                 }
 
-                spannableStringBuilder.append(mList.get(position).address);
+                spannableStringBuilder.append(model.address_initials + ", " + model.address);
                 mBinding.tvSpinnerAddress.setText(spannableStringBuilder);
                 mBinding.ivIsAddressSelected.setSelected(true);
-                mSelectedAddress = mList.get(position);
+                mSelectedAddress = model;
             }
 
             @Override
@@ -348,6 +360,9 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
         for (PackageDetail detail : mPackageCustomizationActivity.getPackageList()) {
             if (detail.id.equalsIgnoreCase(mPackageCustomizationActivity.mPackageId)) {
                 CheepCarePackageServicesModel model = detail.packageOptionList.get(0);
+                if (model == null)
+                    return false;
+
                 if (model.selectionType.equalsIgnoreCase(CheepCarePackageServicesModel.SERVICE_TYPE.RADIO))
                     for (PackageOption option : model.getChildList()) {
                         if (option.isSelected) {

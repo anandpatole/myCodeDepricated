@@ -95,6 +95,7 @@
                         android:textSize="@dimen/text_size_12sp">
 
                         <ImageView
+                            android:id="@+id/iv_address_icon"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:src="@drawable/icon_address_home_active"

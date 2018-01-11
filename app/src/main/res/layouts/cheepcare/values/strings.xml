@@ -3,4 +3,5 @@
     <string name="hint_apply_cheep_promo_code">Apply CHEEP Promo code?</string>
     <string name="hint_apply_cheep_mate_code">Have a CHEEP Mate Code?</string>
     <string name="label_empty_string"></string>
+    <string name="label_proceed_to_checkout">Proceed to Checkout</string>
 </resources>

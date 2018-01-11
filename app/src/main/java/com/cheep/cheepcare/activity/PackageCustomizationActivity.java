@@ -109,7 +109,7 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
         mBinding.textStepDesc.setText(getString(R.string.step_1_desc_cheep_care));
 
         //Initiate Button text
-        mBinding.textContinue.setText(getString(R.string.select_x_package, mPackageModel.title));
+        setContinueButtonText();
 
         // Setting viewpager
         setupViewPager(mBinding.viewpager);
@@ -167,6 +167,13 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
                     onBackPressed();
                 }
             });
+        }
+    }
+
+    public void setContinueButtonText() {
+        for (PackageDetail detail : mPackageList) {
+            if (detail.id.equalsIgnoreCase(mPackageId))
+                mBinding.textContinue.setText(getString(R.string.select_x_package, detail.title));
         }
     }
 
@@ -308,16 +315,20 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
                 mBinding.viewpager.setCurrentItem(0);
                 // Change description
                 mBinding.textStepDesc.setText(getString(R.string.step_1_desc_cheep_care));
+                setContinueButtonText();
                 break;
             case STAGE_2:
                 mBinding.viewpager.setCurrentItem(1);
                 // Change description
                 mBinding.textStepDesc.setText(getString(R.string.step_2_desc_cheep_care));
+                mBinding.textContinue.setText(getString(R.string.label_proceed_to_checkout));
+
                 break;
             case STAGE_3:
                 mBinding.viewpager.setCurrentItem(2);
                 // Change description
                 mBinding.textStepDesc.setText(getString(R.string.step_3_desc_cheep_care));
+                mBinding.textContinue.setText(getString(R.string.label_pay_now));
                 break;
         }
     }
@@ -359,6 +370,10 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
                                 gotoStep(STAGE_2);
                             }
                         }
+                    } else if (mBinding.viewpager.getCurrentItem() == STAGE_2) {
+                        gotoStep(STAGE_3);
+                    } else {
+//                        PaymentChoiceActivity.newInstance();
                     }
                     break;
             }

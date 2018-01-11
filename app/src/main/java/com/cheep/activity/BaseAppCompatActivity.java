@@ -199,14 +199,14 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity {
     /**
      * Show Progress Dialog
      */
-    protected void showProgressDialog() {
+    public void showProgressDialog() {
         showProgressDialog(getString(R.string.label_please_wait));
     }
 
     /**
      * Close Progress Dialog
      */
-    protected void hideProgressDialog() {
+    public void hideProgressDialog() {
         if (mProgressDialog != null && mProgressDialog.isShowing()) {
             mProgressDialog.dismiss();
         }

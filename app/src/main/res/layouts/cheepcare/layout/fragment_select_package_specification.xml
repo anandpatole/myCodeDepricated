@@ -8,6 +8,7 @@
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/white"
         android:fillViewport="true">
 
         <LinearLayout
@@ -40,6 +41,7 @@
                     android:layout_height="wrap_content"
                     android:background="@android:color/transparent"
                     android:checked="true"
+                    android:layout_gravity="center_vertical"
                     android:drawableEnd="@drawable/ic_drop_down_arrow"
                     android:drawablePadding="@dimen/scale_8dp"
                     android:drawableRight="@drawable/ic_drop_down_arrow"
@@ -117,14 +119,19 @@
                     android:paddingBottom="@dimen/scale_25dp"
                     app:layoutManager="LinearLayoutManager"/>
 
-                <ProgressBar
+                <RelativeLayout
                     android:id="@+id/progress_load"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:visibility="gone"/>
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/white">
 
+                    <ProgressBar
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:visibility="visible"/>
 
+                </RelativeLayout>
             </RelativeLayout>
 
             <com.cheep.custom_view.CFTextViewRegular

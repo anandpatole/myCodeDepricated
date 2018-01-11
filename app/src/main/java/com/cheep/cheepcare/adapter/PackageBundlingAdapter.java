@@ -76,7 +76,7 @@ public class PackageBundlingAdapter extends LoadMoreRecyclerAdapter<PackageBundl
             case ROW_PACKAGE_NOT_SELECTED:
                 context = holder.mRowNotSelectedBinding.getRoot().getContext();
                 Utility.loadImageView(context, holder.mRowNotSelectedBinding.ivItemBackground, "https://s3.ap-south-1.amazonaws.com/cheepapp/category/banner_image/medium/Untitled.jpg");
-                SpannableString spannableString = new SpannableString(context.getString(R.string.rupee_symbol_x_package_price, "0"));
+                SpannableString spannableString = new SpannableString(context.getString(R.string.rupee_symbol_x_package_price, model.price));
                 spannableString = Utility.getCheepCarePackageMonthlyPrice(spannableString, spannableString.length() - 2, spannableString.length());
                 holder.mRowNotSelectedBinding.tvPrice.setText(spannableString);
                 holder.mRowNotSelectedBinding.ivIsAddressSelected.setSelected(model.isSelected);
@@ -94,18 +94,21 @@ public class PackageBundlingAdapter extends LoadMoreRecyclerAdapter<PackageBundl
             case ROW_PACKAGE_SELECTED:
                 context = holder.mRowSelectedBinding.getRoot().getContext();
                 Utility.loadImageView(context, holder.mRowSelectedBinding.ivItemBackground, "https://s3.ap-south-1.amazonaws.com/cheepapp/category/banner_image/medium/Untitled.jpg");
-                SpannableString spannableString1 = new SpannableString(context.getString(R.string.rupee_symbol_x_package_price, "0"));
+                SpannableString spannableString1 = new SpannableString(context.getString(R.string.rupee_symbol_x_package_price, model.price));
                 spannableString1 = Utility.getCheepCarePackageMonthlyPrice(spannableString1, spannableString1.length() - 2, spannableString1.length());
                 holder.mRowSelectedBinding.tvPrice.setText(spannableString1);
                 holder.mRowSelectedBinding.ivIsAddressSelected.setSelected(model.isSelected);
                 holder.mRowSelectedBinding.tvDescription.setText(model.subtitle);
                 holder.mRowSelectedBinding.tvTitle.setText(model.title);
 
-                if (!TextUtils.isEmpty(model.mSelectedAddress.nickname))
-                    holder.mRowSelectedBinding.tvAddressNickname.setText(model.mSelectedAddress.nickname);
-                else
-                    holder.mRowSelectedBinding.tvAddressNickname.setText(Utility.getAddressCategoryString(model.mSelectedAddress.category));
-                holder.mRowSelectedBinding.tvAddress.setText(model.mSelectedAddress.address);
+                if (model.mSelectedAddress != null) {
+                    if (!TextUtils.isEmpty(model.mSelectedAddress.nickname))
+                        holder.mRowSelectedBinding.tvAddressNickname.setText(model.mSelectedAddress.nickname);
+                    else
+                        holder.mRowSelectedBinding.tvAddressNickname.setText(Utility.getAddressCategoryString(model.mSelectedAddress.category));
+                    holder.mRowSelectedBinding.ivAddressIcon.setImageResource(Utility.getAddressCategoryBlueIcon(model.mSelectedAddress.category));
+                }
+                holder.mRowSelectedBinding.tvAddress.setText(model.mSelectedAddress.address_initials + ", " + model.mSelectedAddress.address);
 
 
                 holder.mRowSelectedBinding.getRoot().setOnClickListener(new View.OnClickListener() {

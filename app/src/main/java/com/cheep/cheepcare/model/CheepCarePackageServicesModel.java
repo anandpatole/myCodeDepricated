@@ -25,7 +25,7 @@ public class CheepCarePackageServicesModel implements Parent<PackageOption>, Ser
     @Expose
     public String selectionType;
 
-    @SerializedName("package_option")
+    @SerializedName("package_suboption")
     @Expose
     public List<PackageOption> packageOptionList = null;
     public boolean isSelected = false;

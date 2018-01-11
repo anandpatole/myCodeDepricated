@@ -14,7 +14,7 @@ import com.cheep.R;
 import com.cheep.activity.BaseAppCompatActivity;
 import com.cheep.cheepcare.activity.PackageCustomizationActivity;
 import com.cheep.cheepcare.adapter.SelectedPackageSummaryAdapter;
-import com.cheep.cheepcare.model.CheepCarePackageModel;
+import com.cheep.cheepcare.model.PackageDetail;
 import com.cheep.databinding.FragmentPackageSummaryBinding;
 import com.cheep.fragment.BaseFragment;
 
@@ -87,11 +87,24 @@ public class PackageSummaryFragment extends BaseFragment {
         mBinding.rvBundlePackages.setNestedScrollingEnabled(false);
         mPackageAdapter = new SelectedPackageSummaryAdapter(new SelectedPackageSummaryAdapter.PackageItemClickListener() {
             @Override
-            public void onPackageItemClick(int position, CheepCarePackageModel packageModel) {
+            public void onPackageItemClick(int position, PackageDetail packageModel) {
 
             }
+
+            @Override
+            public void onRemovePackage(int position, PackageDetail packageModel) {
+
+                for (PackageDetail detail : mPackageCustomizationActivity.getPackageList())
+                    if (detail.id.equalsIgnoreCase(packageModel.id)) {
+                        detail.isSelected = false;
+                        detail.mSelectedAddress = null;
+                        detail.packageOptionList = null;
+                        mPackageAdapter.getList().remove(position);
+                    }
+                mPackageAdapter.notifyDataSetChanged();
+            }
         });
-        mPackageAdapter.addPakcageList(getList(CheepCarePackageModel.getCheepCarePackages()));
+        mPackageAdapter.addPakcageList(getList());
         mBinding.rvBundlePackages.setLayoutManager(new LinearLayoutManager(
                 mContext
                 , LinearLayoutManager.VERTICAL
@@ -105,9 +118,9 @@ public class PackageSummaryFragment extends BaseFragment {
 
     }
 
-    private List<CheepCarePackageModel> getList(List<CheepCarePackageModel> cheepCarePackages) {
-        ArrayList<CheepCarePackageModel> newList = new ArrayList<>();
-        for (CheepCarePackageModel model : cheepCarePackages) {
+    private List<PackageDetail> getList() {
+        ArrayList<PackageDetail> newList = new ArrayList<>();
+        for (PackageDetail model : mPackageCustomizationActivity.getPackageList()) {
             if (model.isSelected) {
                 newList.add(model);
             }
