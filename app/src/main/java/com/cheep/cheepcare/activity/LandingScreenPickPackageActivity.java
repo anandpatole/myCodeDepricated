@@ -54,7 +54,7 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
 
     public static void newInstance(Context context, CheepCareBannerModel city) {
         Intent intent = new Intent(context, LandingScreenPickPackageActivity.class);
-        intent.putExtra(Utility.Extra.CITY_ID, Utility.getJsonStringFromObject(city));
+        intent.putExtra(Utility.Extra.CITY_DETAIL, Utility.getJsonStringFromObject(city));
         context.startActivity(intent);
     }
 
@@ -70,8 +70,8 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
     @Override
     protected void initiateUI() {
 
-        if (getIntent().hasExtra(Utility.Extra.CITY_ID)) {
-            mCity = (CheepCareBannerModel) Utility.getObjectFromJsonString(getIntent().getExtras().getString(Utility.Extra.CITY_ID), CheepCareBannerModel.class);
+        if (getIntent().hasExtra(Utility.Extra.CITY_DETAIL)) {
+            mCity = (CheepCareBannerModel) Utility.getObjectFromJsonString(getIntent().getExtras().getString(Utility.Extra.CITY_DETAIL), CheepCareBannerModel.class);
         }
 
         ViewTreeObserver mViewTreeObserver = mBinding.ivCityImage.getViewTreeObserver();

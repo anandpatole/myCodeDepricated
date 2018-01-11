@@ -32,7 +32,6 @@ public class CheepCareCityLandingPageModel {
         @SerializedName("city_tutorials")
         @Expose
         public List<CityTutorials> cityTutorials = null;
-        private final static long serialVersionUID = -559093759760941890L;
 
     }
 

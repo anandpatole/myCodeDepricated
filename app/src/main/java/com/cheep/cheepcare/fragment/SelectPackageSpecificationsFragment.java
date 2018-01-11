@@ -129,7 +129,6 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
         mBinding.recyclerView.setLayoutManager(linearLayoutManager);
         mBinding.recyclerView.setNestedScrollingEnabled(false);
 
-
         callPackageOptionListWS();
         initAddressUI();
     }

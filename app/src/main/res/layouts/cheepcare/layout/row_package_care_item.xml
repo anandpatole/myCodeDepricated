@@ -220,6 +220,8 @@
                 android:orientation="horizontal"
                 android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
                 <com.cheep.custom_view.CFTextViewSemiBold
@@ -231,7 +233,6 @@
                     android:layout_weight="1"
                     android:ellipsize="end"
                     android:maxLines="2"
-                    android:textAllCaps="false"
                     android:textColor="@color/grey_varient_16"
                     android:textSize="@dimen/text_size_14sp"
                     tools:text="Your subscription will end in 6 days."/>

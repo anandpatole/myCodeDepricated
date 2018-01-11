@@ -621,4 +621,10 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
         money and make your homes more happier</string>
     <string name="label_renew">Renew</string>
     <string name="msg_renew_subscription_ends">Your subscription will expire in %1s days</string>
+    <string name="hint_apply_cheep_promo_code">Apply CHEEP Promo code?</string>
+    <string name="hint_apply_cheep_mate_code">Have a CHEEP Mate Code?</string>
+    <string name="label_empty_string"></string>
+    <string name="msg_mng_subs_add_packages">You can also add more CHEEP Care Packages at striking, affordable deals.</string>
+    <string name="msg_cheep_assurance_select_time">As per our guarantee, CHEEP will instantly provide a verified PRO to get your job done within 24 hours of
+        booking. If you wish to choose a specific time, please click here!</string>
 </resources>

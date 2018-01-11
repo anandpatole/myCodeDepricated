@@ -168,7 +168,9 @@ public class SubscriptionBannerFragment extends BaseFragment {
 
                     if (!processingClick) {
                         processingClick = true;
+//                        ManageSubscriptionActivity.newInstance(mContext, bannerImageModel);
                         LandingScreenPickPackageActivity.newInstance(mContext, bannerImageModel);
+//                        WelcomeToCheepCareActivity.newInstance(mContext, bannerImageModel.cityName);
                     }
                 }
             });

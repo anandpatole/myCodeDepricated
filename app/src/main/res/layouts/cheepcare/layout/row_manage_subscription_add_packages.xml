@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/scale_10dp"
+        android:layout_marginLeft="@dimen/scale_4dp"
+        android:layout_marginRight="@dimen/scale_4dp"
+        app:cardCornerRadius="@dimen/scale_4dp"
+        app:cardElevation="@dimen/scale_4dp">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/iv_item_background"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                tools:src="@drawable/banner_appliance_care"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/scale_12dp"
+                android:layout_marginTop="@dimen/scale_12dp"
+                android:orientation="horizontal"
+                android:paddingEnd="@dimen/scale_20dp"
+                android:paddingLeft="@dimen/scale_29dp"
+                android:paddingRight="@dimen/scale_20dp"
+                android:paddingStart="@dimen/scale_29dp">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <com.cheep.custom_view.CFTextViewSemiBold
+                        android:id="@+id/tv_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawableEnd="@drawable/ic_right_arrow_in_white_circle"
+                        android:drawablePadding="@dimen/scale_24dp"
+                        android:drawableRight="@drawable/ic_right_arrow_in_white_circle"
+                        android:singleLine="true"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/text_size_17sp"
+                        tools:text="@string/appliance_care"/>
+
+                    <com.cheep.custom_view.CFTextViewRegular
+                        android:id="@+id/tv_description"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="marquee"
+                        android:maxLines="2"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/text_size_11sp"
+                        tools:text="@string/enter_min_amount"/>
+
+                    <RelativeLayout
+                        android:id="@+id/flOffer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginTop="@dimen/scale_4dp">
+
+                        <com.cheep.custom_view.CFTextViewRegular
+                            android:id="@+id/tv_live_feed"
+                            android:layout_width="wrap_content"
+                            android:layout_height="@dimen/home_screen_near_by_pro_image_height_width"
+                            android:layout_gravity="end"
+                            android:maxLines="2"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/text_size_11sp"
+                            tools:text="17 people trolled by Anurag Kulkarni todayasdad sdassdasd asd dasdasdad"/>
+
+                        <ImageView
+                            android:id="@+id/ivLiveAnimated"
+                            android:layout_width="@dimen/icon_live_home_screen_width"
+                            android:layout_height="@dimen/icon_live_home_screen_height"
+                            android:layout_alignLeft="@id/tv_live_feed"
+                            android:layout_alignStart="@id/tv_live_feed"
+                            android:src="@drawable/ic_live_0001"/>
+                    </RelativeLayout>
+
+                </LinearLayout>
+
+                <com.cheep.custom_view.CFTextViewBold
+                    android:id="@+id/tv_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top"
+                    android:layout_marginBottom="@dimen/scale_4dp"
+                    android:layout_marginLeft="@dimen/scale_14dp"
+                    android:layout_marginStart="@dimen/scale_14dp"
+                    android:layout_marginTop="@dimen/scale_4dp"
+                    android:text="@string/rupee_symbol_x_package_price"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_size_16sp"/>
+
+            </LinearLayout>
+        </FrameLayout>
+    </android.support.v7.widget.CardView>
+</layout>

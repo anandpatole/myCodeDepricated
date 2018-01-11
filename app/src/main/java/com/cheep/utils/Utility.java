@@ -455,7 +455,7 @@ public class Utility {
         String LATITUDE = "latitude";
         String LONGITUDE = "longitude";
         String CITY_NAME = "city_name";
-        String CITY_ID = "city_id";
+        String CITY_DETAIL = "city_detail";
         String SESSION_EXPIRE = "session_expire";
         String IMAGE_URL = "image_url";
         String ACTION = "action";

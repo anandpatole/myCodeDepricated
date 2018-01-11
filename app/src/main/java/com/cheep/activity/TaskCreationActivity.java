@@ -576,7 +576,7 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
             mTaskCreationParams.put(NetworkUtility.TAGS.COUNTRY, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.countryName);
             mTaskCreationParams.put(NetworkUtility.TAGS.STATE, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.stateName);
         }
-//        mTaskCreationParams.put(NetworkUtility.TAGS.CITY_ID, userDetails.CityID);
+//        mTaskCreationParams.put(NetworkUtility.TAGS.CITY_DETAIL, userDetails.CityID);
         mTaskCreationParams.put(NetworkUtility.TAGS.CAT_ID, mJobCategoryModel.catId);
         mTaskCreationParams.put(NetworkUtility.TAGS.SUBCATEGORY_ID, String.valueOf(mSelectedSubServiceDetailModel.sub_cat_id));
         mTaskCreationParams.put(NetworkUtility.TAGS.START_DATETIME, String.valueOf(mTaskCreationPagerAdapter.mEnterTaskDetailFragment.superCalendar.getTimeInMillis()));

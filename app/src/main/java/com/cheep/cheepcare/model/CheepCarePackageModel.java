@@ -22,6 +22,7 @@ public class CheepCarePackageModel implements Parent<JobCategoryModel>, Serializ
     public String price;
     public String subscribedDescription;
     public String daysLeft;
+    public String catId;
     public boolean isSelected = false;
 
     public List<String> live_lable_arr;
@@ -214,42 +215,71 @@ public class CheepCarePackageModel implements Parent<JobCategoryModel>, Serializ
         return packageModels;
     }
 
-    public static List<CheepCarePackageModel> getManageSubscriptionPackageListing() {
-        final List<JobCategoryModel> itemsHome = new ArrayList<>();
+    public static List<CheepCarePackageModel> getManageSubscriptionAddPackageList() {
 
         List<CheepCarePackageModel> packageModels = new ArrayList<>();
         packageModels.add(new CheepCarePackageModel() {{
             packageImage = String.valueOf(R.drawable.banner_appliance_care);
             packageTitle = "Home Care";
             packageDescription = "Yearly plumbing, electricity & carpentry support for your home";
+            live_lable_arr = new ArrayList<>();
+            live_lable_arr
+                    .add("77 users are viewing Carpenters right now");
+            live_lable_arr
+                    .add("Over 44 Carpenters booked through CHEEP this month");
             price = "200";
+            catId = "1";
         }});
 
         packageModels.add(new CheepCarePackageModel() {{
             packageImage = String.valueOf(R.drawable.ic_home_with_heart_text);
             packageTitle = "Appliance Care";
             price = "250";
+            live_lable_arr = new ArrayList<>();
+            live_lable_arr
+                    .add("77 users are viewing Carpenters right now");
+            live_lable_arr
+                    .add("Over 44 Carpenters booked through CHEEP this month");
             packageDescription = "Keep all your appliances in tip-top shape";
+            catId = "2";
         }});
 
         packageModels.add(new CheepCarePackageModel() {{
             packageImage = String.valueOf(R.drawable.ic_home_with_heart_text);
             packageTitle = "Tech Care";
             packageDescription = "Maintain all your funky gadgets like never before";
+            live_lable_arr = new ArrayList<>();
+            live_lable_arr
+                    .add("77 users are viewing Carpenters right now");
+            live_lable_arr
+                    .add("Over 44 Carpenters booked through CHEEP this month");
             price = "250";
+            catId = "3";
         }});
 
         packageModels.add(new CheepCarePackageModel() {{
             packageImage = String.valueOf(R.drawable.ic_home_with_heart_text);
             packageTitle = "Biz Care";
             packageDescription = "Plumbing, electricity, & carpentry for your business for a year";
+            live_lable_arr = new ArrayList<>();
+            live_lable_arr
+                    .add("77 users are viewing Carpenters right now");
+            live_lable_arr
+                    .add("Over 44 Carpenters booked through CHEEP this month");
             price = "1667";
+            catId = "4";
         }});
         packageModels.add(new CheepCarePackageModel() {{
             packageImage = String.valueOf(R.drawable.ic_home_with_heart_text);
             packageTitle = "Soci Care";
             packageDescription = "Year long plumbing, electricity, & carpentry services for your society";
+            live_lable_arr = new ArrayList<>();
+            live_lable_arr
+                    .add("77 users are viewing Carpenters right now");
+            live_lable_arr
+                    .add("Over 44 Carpenters booked through CHEEP this month");
             price = "417";
+            catId = "5";
         }});
 
         return packageModels;

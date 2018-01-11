@@ -15,6 +15,8 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.cheep.R;
 import com.cheep.activity.BaseAppCompatActivity;
 import com.cheep.cheepcare.adapter.ExpandableBoughtPackagesRecyclerAdapter;
+import com.cheep.cheepcare.adapter.ManageSubscriptionAddPackageAdapter;
+import com.cheep.cheepcare.model.CheepCareBannerModel;
 import com.cheep.cheepcare.model.CheepCarePackageModel;
 import com.cheep.databinding.ActivityManageSubscriptionBinding;
 import com.cheep.utils.Utility;
@@ -29,13 +31,13 @@ public class ManageSubscriptionActivity extends BaseAppCompatActivity {
 
     private static final String TAG = ManageSubscriptionActivity.class.getSimpleName();
     private ActivityManageSubscriptionBinding mBinding;
-    private String mCityName;
+    private CheepCareBannerModel mCity;
     private List<AnimatorSet> animators;
 
-    public static void newInstance(Context mContext, String cityName) {
-        Intent intent = new Intent(mContext, ManageSubscriptionActivity.class);
-        intent.putExtra(Utility.Extra.CITY_NAME, cityName);
-        mContext.startActivity(intent);
+    public static void newInstance(Context context, CheepCareBannerModel city) {
+        Intent intent = new Intent(context, ManageSubscriptionActivity.class);
+        intent.putExtra(Utility.Extra.CITY_DETAIL, Utility.getJsonStringFromObject(city));
+        context.startActivity(intent);
     }
 
     @Override
@@ -48,8 +50,8 @@ public class ManageSubscriptionActivity extends BaseAppCompatActivity {
 
     @Override
     protected void initiateUI() {
-        if (getIntent().hasExtra(Utility.Extra.CITY_NAME)) {
-            mCityName = getIntent().getExtras().getString(Utility.Extra.CITY_NAME);
+        if (getIntent().hasExtra(Utility.Extra.CITY_DETAIL)) {
+            mCity = (CheepCareBannerModel) Utility.getObjectFromJsonString(getIntent().getExtras().getString(Utility.Extra.CITY_DETAIL), CheepCareBannerModel.class);
         }
 
         // Calculate Pager Height and Width
@@ -80,14 +82,20 @@ public class ManageSubscriptionActivity extends BaseAppCompatActivity {
         mBinding.ivCheepCareGif.setBackgroundResource(R.drawable.cheep_care_animation);
         ((AnimationDrawable) mBinding.ivCheepCareGif.getBackground()).start();*/
 
-        mBinding.tvCityName.setText(mCityName);
+        mBinding.tvCityName.setText(mCity.cityName);
 
         mBinding.tvInfoText.setText(getString(R.string.cheep_care_work_flow_desc, "Nikita"));
 
-        mBinding.recyclerView.setNestedScrollingEnabled(false);
-        ExpandableBoughtPackagesRecyclerAdapter adapter =
+        mBinding.rvBoughtPackages.setNestedScrollingEnabled(false);
+        ExpandableBoughtPackagesRecyclerAdapter boughtAdapter =
                 new ExpandableBoughtPackagesRecyclerAdapter(CheepCarePackageModel.getCheepCareBoughtPackages(), true);
-        mBinding.recyclerView.setAdapter(adapter);
+        mBinding.rvBoughtPackages.setAdapter(boughtAdapter);
+
+        mBinding.rvAddPackage.setNestedScrollingEnabled(false);
+        ManageSubscriptionAddPackageAdapter addPackageAdapter =
+                new ManageSubscriptionAddPackageAdapter(addPackageInteractionListener
+                        , CheepCarePackageModel.getManageSubscriptionAddPackageList());
+        mBinding.rvAddPackage.setAdapter(addPackageAdapter);
 
         // Setting up Toolbar
         setSupportActionBar(mBinding.toolbar);
@@ -108,4 +116,12 @@ public class ManageSubscriptionActivity extends BaseAppCompatActivity {
     protected void setListeners() {
 
     }
+
+    private final ManageSubscriptionAddPackageAdapter.AddPackageInteractionListener addPackageInteractionListener =
+            new ManageSubscriptionAddPackageAdapter.AddPackageInteractionListener() {
+                @Override
+                public void onPackageItemClick(CheepCarePackageModel model) {
+
+                }
+            };
 }

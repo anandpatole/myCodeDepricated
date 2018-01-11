@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingBottom="@dimen/scale_21dp"
+        android:paddingLeft="@dimen/scale_23dp"
+        android:paddingRight="@dimen/scale_23dp"
+        android:paddingTop="@dimen/scale_9dp">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toStartOf="@id/imgAdd"
+            app:layout_constraintHorizontal_bias="0.8"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:itemCount="3"/>
+
+        <ImageView
+            android:id="@+id/imgAdd"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/h_camera_que_fragment"
+            android:layout_marginBottom="@dimen/scale_10dp"
+            android:layout_marginRight="@dimen/scale_10dp"
+            android:layout_marginTop="@dimen/scale_10dp"
+            android:src="@drawable/ic_camera"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/recycler_view"/>
+
+        <com.cheep.custom_view.CFTextViewRegular
+            android:id="@+id/tv_service_description"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/scale_16dp"
+            android:text="I need a Plumber to repair the problem I’m facing."
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_size_11sp"
+            app:layout_constraintEnd_toEndOf="@id/recycler_view"
+            app:layout_constraintStart_toStartOf="@id/recycler_view"
+            app:layout_constraintTop_toBottomOf="@id/imgAdd"/>
+
+        <View
+            android:id="@+id/separator1"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/scale_1dp"
+            android:layout_marginTop="@dimen/scale_23dp"
+            android:background="@drawable/bottom_stroke_gray"
+            app:layout_constraintTop_toBottomOf="@id/tv_service_description"/>
+
+
+        <ImageView
+            android:id="@+id/icon_task_when"
+            android:layout_width="@dimen/scale_17dp"
+            android:layout_height="@dimen/scale_17dp"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/selector_clock_gray_blue"
+            app:layout_constraintBottom_toBottomOf="@id/text_when"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/text_when"
+            tools:ignore="ContentDescription"/>
+
+        <com.cheep.custom_view.CFTextViewSemiBold
+            android:id="@+id/text_when"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/scale_10dp"
+            android:layout_marginTop="@dimen/scale_27dp"
+            android:paddingLeft="@dimen/scale_15dp"
+            android:text="@string/label_when"
+            android:textColor="@color/selector_text_535353_blue"
+            android:textSize="@dimen/text_size_18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/icon_task_when"
+            app:layout_constraintTop_toBottomOf="@id/separator1"/>
+
+        <ImageView
+            android:id="@+id/icon_when_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginTop="@dimen/scale_4dp"
+            android:src="@drawable/ic_info_blue"
+            app:layout_constraintEnd_toEndOf="@id/icon_task_when"
+            app:layout_constraintEnd_toStartOf="@+id/text_task_when"
+            app:layout_constraintStart_toStartOf="@id/icon_task_when"
+            app:layout_constraintTop_toTopOf="@+id/text_task_when"
+            tools:ignore="ContentDescription"/>
+
+        <com.cheep.custom_view.CFTextViewRegular
+            android:id="@+id/text_task_when"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/scale_10dp"
+            android:layout_marginTop="@dimen/scale_8dp"
+            android:background="@color/transparent"
+            android:gravity="start"
+            android:includeFontPadding="false"
+            android:paddingBottom="@dimen/scale_8dp"
+            android:paddingLeft="@dimen/scale_16dp"
+            android:text="@string/msg_cheep_assurance_select_time"
+            android:textColor="@color/grey_varient_16"
+            android:textColorHint="@color/grey_dark_color_2"
+            android:textSize="@dimen/text_size_11sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/icon_when_info"
+            app:layout_constraintTop_toBottomOf="@id/text_when"/>
+
+
+        <View
+            android:id="@+id/separator2"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/scale_1dp"
+            android:layout_marginTop="@dimen/scale_23dp"
+            android:background="@drawable/bottom_stroke_gray"
+            app:layout_constraintTop_toBottomOf="@id/text_task_when"/>
+
+
+        <ImageView
+            android:id="@+id/icon_task_where"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/ic_icon_task_where_active"
+            app:layout_constraintBottom_toBottomOf="@id/text_where"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/text_where"
+            tools:ignore="ContentDescription"/>
+
+        <com.cheep.custom_view.CFTextViewSemiBold
+            android:id="@+id/text_where"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/scale_10dp"
+            android:layout_marginTop="@dimen/scale_27dp"
+            android:paddingLeft="@dimen/scale_19dp"
+            android:text="@string/label_where"
+            android:textColor="@color/splash_gradient_end"
+            android:textSize="@dimen/text_size_18sp"
+            app:layout_constraintEnd_toEndOf="@+id/iv_top_arrow"
+            app:layout_constraintStart_toEndOf="@id/icon_task_where"
+            app:layout_constraintTop_toBottomOf="@id/separator2"/>
+
+        <ImageView
+            android:id="@+id/iv_top_arrow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_drop_down_arrow"
+            app:layout_constraintBottom_toBottomOf="@id/text_where"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/text_where"/>
+
+        <com.cheep.custom_view.CFTextViewRegular
+            android:id="@+id/text_task_where"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/scale_10dp"
+            android:background="@color/transparent"
+            android:gravity="start"
+            android:paddingBottom="@dimen/scale_8dp"
+            android:paddingLeft="@dimen/scale_32dp"
+            android:paddingTop="@dimen/scale_8dp"
+            android:text="@string/msg_cheep_assurance_select_time"
+            android:textColor="@color/grey_varient_16"
+            android:textColorHint="@color/grey_dark_color_2"
+            android:textSize="@dimen/text_size_11sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/text_where"/>
+
+
+    </android.support.constraint.ConstraintLayout>
+</layout>

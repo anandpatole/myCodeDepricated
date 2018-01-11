@@ -42,6 +42,7 @@
             android:layout_marginLeft="@dimen/scale_18dp"
             android:layout_marginStart="@dimen/scale_18dp"
             android:textColor="@color/white"
+            android:background="@drawable/background_ans_address_normal"
             android:textSize="@dimen/text_size_25sp"
             app:layout_constraintBottom_toBottomOf="@id/iv_city_image"
             app:layout_constraintStart_toStartOf="parent"
@@ -69,8 +70,8 @@
             <android.support.constraint.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:paddingBottom="@dimen/scale_32dp"
-                android:descendantFocusability="blocksDescendants">
+                android:descendantFocusability="blocksDescendants"
+                android:paddingBottom="@dimen/scale_32dp">
 
                 <com.cheep.custom_view.CFTextViewRegular
                     android:id="@+id/tv_info_text"
@@ -97,14 +98,66 @@
                     app:layout_constraintStart_toEndOf="@id/tv_info_text"/>
 
                 <android.support.v7.widget.RecyclerView
-                    android:id="@+id/recycler_view"
+                    android:id="@+id/rv_bought_packages"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/scale_18dp"
                     app:layoutManager="LinearLayoutManager"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_info_text"
                     tools:itemCount="2"
                     tools:listitem="@layout/row_package_care_item"/>
+
+                <LinearLayout
+                    android:id="@+id/ll_add_packages"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/scale_12dp"
+                    android:layout_marginLeft="@dimen/scale_16dp"
+                    android:layout_marginRight="@dimen/scale_12dp"
+                    android:layout_marginStart="@dimen/scale_16dp"
+                    android:layout_marginTop="@dimen/scale_8dp"
+                    android:orientation="horizontal"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/rv_bought_packages">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/ic_celebrate"/>
+
+                    <com.cheep.custom_view.CFTextViewRegular
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:paddingBottom="@dimen/scale_8dp"
+                        android:paddingTop="@dimen/scale_8dp"
+                        android:text="@string/transition_text_search"
+                        android:textColor="@color/grey_varient_16"
+                        android:textSize="@dimen/text_size_11sp"/>
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/ic_celebrate_2"/>
+
+                </LinearLayout>
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/rv_add_package"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/scale_8dp"
+                    app:layoutManager="LinearLayoutManager"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/ll_add_packages"
+                    tools:itemCount="2"
+                    tools:listitem="@layout/row_manage_subscription_add_packages"/>
 
                 <com.cheep.custom_view.CFTextViewRegular
                     android:id="@+id/text_error"
