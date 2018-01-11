@@ -14,9 +14,13 @@ import com.cheep.R;
 import com.cheep.activity.BaseAppCompatActivity;
 import com.cheep.cheepcare.activity.PackageCustomizationActivity;
 import com.cheep.cheepcare.adapter.SelectedPackageSummaryAdapter;
+import com.cheep.cheepcare.model.CheepCarePackageServicesModel;
 import com.cheep.cheepcare.model.PackageDetail;
+import com.cheep.cheepcare.model.PackageOption;
 import com.cheep.databinding.FragmentPackageSummaryBinding;
 import com.cheep.fragment.BaseFragment;
+import com.cheep.utils.LogUtils;
+import com.cheep.utils.Utility;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +32,7 @@ public class PackageSummaryFragment extends BaseFragment {
     private FragmentPackageSummaryBinding mBinding;
     private boolean isVerified = false;
     private SelectedPackageSummaryAdapter mPackageAdapter;
+    boolean isYearly = true;
 
     public static PackageSummaryFragment newInstance() {
         return new PackageSummaryFragment();
@@ -67,6 +72,13 @@ public class PackageSummaryFragment extends BaseFragment {
             mPackageCustomizationActivity.setTaskState(PackageCustomizationActivity.STEP_THREE_UNVERIFIED);
         }
 
+        if (mPackageAdapter != null && mPackageAdapter.getList() != null) {
+            mPackageAdapter.getList().clear();
+            mPackageAdapter.addPakcageList(getList());
+            calculateTotalPrice();
+        }
+
+
         // Hide the post task button
 //        mPackageCustomizationActivity.showPostTaskButton(false, false);
 
@@ -85,7 +97,10 @@ public class PackageSummaryFragment extends BaseFragment {
     public void initiateUI() {
 
         mBinding.rvBundlePackages.setNestedScrollingEnabled(false);
+
+        // package recycler view item click listener
         mPackageAdapter = new SelectedPackageSummaryAdapter(new SelectedPackageSummaryAdapter.PackageItemClickListener() {
+
             @Override
             public void onPackageItemClick(int position, PackageDetail packageModel) {
 
@@ -100,22 +115,75 @@ public class PackageSummaryFragment extends BaseFragment {
                         detail.mSelectedAddress = null;
                         detail.packageOptionList = null;
                         mPackageAdapter.getList().remove(position);
+                        calculateTotalPrice();
                     }
                 mPackageAdapter.notifyDataSetChanged();
             }
         });
+
         mPackageAdapter.addPakcageList(getList());
+
         mBinding.rvBundlePackages.setLayoutManager(new LinearLayoutManager(
                 mContext
                 , LinearLayoutManager.VERTICAL
                 , false
         ));
+
         mBinding.rvBundlePackages.setAdapter(mPackageAdapter);
+
+
+        mBinding.ivHalfYearlyPackage.setSelected(!isYearly);
+        mBinding.ivYearlyPackage.setSelected(isYearly);
+        calculateTotalPrice();
+
     }
 
     @Override
     public void setListener() {
 
+        mBinding.rlHalfYearlyPackage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                isYearly = false;
+                calculateTotalPrice();
+            }
+        });
+
+
+        mBinding.rlYearlyPackage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                isYearly = true;
+                calculateTotalPrice();
+
+            }
+        });
+    }
+
+    private void calculateTotalPrice() {
+        double totalPrice = 0;
+        mBinding.ivHalfYearlyPackage.setSelected(!isYearly);
+        mBinding.ivYearlyPackage.setSelected(isYearly);
+        for (PackageDetail detail : mPackageAdapter.getList()) {
+            if (detail.packageOptionList != null) {
+                for (CheepCarePackageServicesModel service : detail.packageOptionList) {
+                    if (service.selectionType.equalsIgnoreCase(CheepCarePackageServicesModel.SELECTION_TYPE.RADIO)) {
+                        for (PackageOption option : service.getChildList()) {
+                            if (option.isSelected) {
+                                totalPrice += isYearly ? Double.valueOf(option.annualPrice) : Double.valueOf(option.sixmonthPrice);
+                            }
+                        }
+                    } else {
+                        PackageOption option = service.getChildList().get(0);
+                        totalPrice += isYearly ? Double.valueOf(option.annualPrice) : Double.valueOf(option.sixmonthPrice);
+                    }
+                }
+            }
+
+
+        }
+        LogUtils.LOGE(TAG, "calculateTotalPrice: totalPrice :: " + totalPrice);
+        mBinding.textTotal.setText(getString(R.string.rupee_symbol_x, Utility.getQuotePriceFormatter(String.valueOf(totalPrice))));
     }
 
     private List<PackageDetail> getList() {

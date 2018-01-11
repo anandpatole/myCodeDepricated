@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     >
 
     <android.support.v4.widget.NestedScrollView
@@ -31,6 +32,7 @@
                 android:paddingRight="@dimen/scale_16dp">
 
                 <RelativeLayout
+                    android:id="@+id/rlHalfYearlyPackage"
                     android:layout_width="@dimen/scale_0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -72,6 +74,7 @@
                     android:background="@color/colorSemiGray"/>
 
                 <RelativeLayout
+                    android:id="@+id/rlYearlyPackage"
                     android:layout_width="@dimen/scale_0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -126,12 +129,12 @@
 
                 <com.cheep.custom_view.CFTextViewSemiBold
                     android:id="@+id/text_total"
+                    tools:text="₹3,600"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true"
                     android:layout_alignParentTop="true"
-                    android:text="₹3,600"
                     android:textColor="@color/splash_gradient_end"
                     android:textSize="@dimen/text_size_30sp"/>
 
@@ -198,6 +201,7 @@
                         android:layout_below="@+id/txtApplyPromoCode"
                         android:layout_marginTop="@dimen/scale_3dp"
                         android:background="@color/splash_gradient_end"/>
+
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

@@ -363,7 +363,7 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
                 if (model == null)
                     return false;
 
-                if (model.selectionType.equalsIgnoreCase(CheepCarePackageServicesModel.SERVICE_TYPE.RADIO))
+                if (model.selectionType.equalsIgnoreCase(CheepCarePackageServicesModel.SELECTION_TYPE.RADIO))
                     for (PackageOption option : model.getChildList()) {
                         if (option.isSelected) {
                             isAnyServiceSelected = true;

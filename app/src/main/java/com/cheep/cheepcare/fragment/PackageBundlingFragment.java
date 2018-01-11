@@ -116,11 +116,13 @@ public class PackageBundlingFragment extends BaseFragment {
         });
         ArrayList<PackageDetail> newList = new ArrayList<>();
         boolean isHeaderAdded = false;
+        int count = 0;
         for (PackageDetail model : mPackageCustomizationActivity.getPackageList()) {
             if (model.isSelected) {
                 model.rowType = PackageBundlingAdapter.ROW_PACKAGE_SELECTED;
+                count++;
             } else {
-                if (!isHeaderAdded) {
+                if (count > 0 && !isHeaderAdded) {
                     PackageDetail model1 = new PackageDetail();
                     model1.rowType = PackageBundlingAdapter.ROW_PACKAGE_HEADER;
                     newList.add(model1);

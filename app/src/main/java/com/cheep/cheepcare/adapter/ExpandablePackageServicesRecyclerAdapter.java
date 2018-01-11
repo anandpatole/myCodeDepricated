@@ -61,7 +61,7 @@ public class ExpandablePackageServicesRecyclerAdapter extends ExpandableRecycler
 
     @Override
     public int getChildViewType(int parentPosition, int childPosition) {
-        if (mList.get(parentPosition).selectionType.equalsIgnoreCase(CheepCarePackageServicesModel.SERVICE_TYPE.RADIO))
+        if (mList.get(parentPosition).selectionType.equalsIgnoreCase(CheepCarePackageServicesModel.SELECTION_TYPE.RADIO))
             return VIEW_TYPE_SINGLE_SELECTION;
         else
             return VIEW_TYPE_UNIT_SELECTION;
@@ -131,7 +131,7 @@ public class ExpandablePackageServicesRecyclerAdapter extends ExpandableRecycler
         // bind data with view parent row
         public void bind(@NonNull CheepCarePackageServicesModel servicesModel) {
             mBinding.imgIconCorrect.setSelected(true);
-            if (mList.get(getParentAdapterPosition()).selectionType.equalsIgnoreCase(CheepCarePackageServicesModel.SERVICE_TYPE.RADIO))
+            if (mList.get(getParentAdapterPosition()).selectionType.equalsIgnoreCase(CheepCarePackageServicesModel.SELECTION_TYPE.RADIO))
                 mBinding.imgDownArrow.setVisibility(View.VISIBLE);
             else
                 mBinding.imgDownArrow.setVisibility(View.GONE);

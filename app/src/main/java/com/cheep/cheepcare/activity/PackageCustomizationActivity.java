@@ -183,6 +183,7 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
      * @param pager pager
      */
     private void setupViewPager(ViewPager pager) {
+        pager.setOffscreenPageLimit(2);
         mPackageCustomizationPagerAdapter = new PackageCustomizationPagerAdapter(getSupportFragmentManager());
         mPackageCustomizationPagerAdapter.addFragment(SelectPackageSpecificationsFragment.TAG);
         mPackageCustomizationPagerAdapter.addFragment(PackageBundlingFragment.TAG);

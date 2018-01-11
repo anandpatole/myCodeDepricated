@@ -30,7 +30,7 @@ public class CheepCarePackageServicesModel implements Parent<PackageOption>, Ser
     public List<PackageOption> packageOptionList = null;
     public boolean isSelected = false;
 
-    public interface SERVICE_TYPE {
+    public interface SELECTION_TYPE {
         String RADIO = "radio";
         String CHECK_BOX = "checkbox";
     }
