@@ -136,6 +136,37 @@ public class Utility {
             return R.string.label_other;
     }
 
+    public static int getAddressCategoryBlueIcon(String category) {
+        if (TextUtils.isEmpty(category))
+            return R.drawable.icon_address_home_active;
+        else if (category.equalsIgnoreCase(NetworkUtility.TAGS.ADDRESS_TYPE.HOME))
+            return R.drawable.icon_address_home_active;
+        else if (category.equalsIgnoreCase(NetworkUtility.TAGS.ADDRESS_TYPE.OFFICE))
+            return R.drawable.icon_address_office_active;
+        else if (category.equalsIgnoreCase(NetworkUtility.TAGS.ADDRESS_TYPE.BIZ))
+            return R.drawable.icon_address_office_active;
+        else if (category.equalsIgnoreCase(NetworkUtility.TAGS.ADDRESS_TYPE.SOCI))
+            return R.drawable.icon_address_home_active;
+        else
+            return R.drawable.icon_address_other_active;
+    }
+
+    public static int getAddressCategoryWhiteIcon(String category) {
+        if (TextUtils.isEmpty(category))
+            return R.drawable.icon_home_white;
+        else if (category.equalsIgnoreCase(NetworkUtility.TAGS.ADDRESS_TYPE.HOME))
+            return R.drawable.icon_home_white;
+        else if (category.equalsIgnoreCase(NetworkUtility.TAGS.ADDRESS_TYPE.OFFICE))
+            return R.drawable.icon_office_white;
+        else if (category.equalsIgnoreCase(NetworkUtility.TAGS.ADDRESS_TYPE.BIZ))
+            return R.drawable.icon_office_white;
+        else if (category.equalsIgnoreCase(NetworkUtility.TAGS.ADDRESS_TYPE.SOCI))
+            return R.drawable.icon_home_white;
+        else
+            return R.drawable.icon_home_white;
+    }
+
+
     public interface GUEST_STATIC_INFO {
         public static final String USERNAME = "Guest";
     }

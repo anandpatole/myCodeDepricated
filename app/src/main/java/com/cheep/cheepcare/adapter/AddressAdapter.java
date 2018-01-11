@@ -59,17 +59,18 @@ public class AddressAdapter<T> extends ArrayAdapter<T> {
         } else {
             mHolder = (ViewHolder) convertView.getTag();
         }
-
+        AddressModel model = mList.get(position);
         if (position == 0) {
             mHolder.mBinding.llAddressContainer.setVisibility(View.GONE);
         } else {
-            if (!TextUtils.isEmpty(mList.get(position).nickname))
-                mHolder.mBinding.tvAddressNickname.setText(mList.get(position).nickname);
+            if (!TextUtils.isEmpty(model.nickname) && !model.nickname.equalsIgnoreCase("null"))
+                mHolder.mBinding.tvAddressNickname.setText(model.nickname);
             else
-                mHolder.mBinding.tvAddressNickname.setText(Utility.getAddressCategoryString(mList.get(position).category));
+                mHolder.mBinding.tvAddressNickname.setText(Utility.getAddressCategoryString(model.category));
+            mHolder.mBinding.ivAddressIcon.setImageResource(Utility.getAddressCategoryBlueIcon(model.category));
             mHolder.mBinding.llAddressContainer.setVisibility(View.VISIBLE);
         }
-        mHolder.mBinding.tvAddress.setText(mList.get(position).address);
+        mHolder.mBinding.tvAddress.setText(model.address_initials + ", " + model.address);
 
         return convertView;
     }

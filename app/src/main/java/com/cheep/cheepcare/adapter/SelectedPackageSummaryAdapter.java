@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.cheep.R;
-import com.cheep.cheepcare.model.CheepCarePackageModel;
+import com.cheep.cheepcare.model.PackageDetail;
 import com.cheep.databinding.RowSelectedPackagesBinding;
 import com.cheep.utils.LoadMoreRecyclerAdapter;
 import com.cheep.utils.Utility;
@@ -26,10 +26,12 @@ import java.util.List;
 public class SelectedPackageSummaryAdapter extends LoadMoreRecyclerAdapter<SelectedPackageSummaryAdapter.CheepCarePackageViewHolder> {
 
     private final PackageItemClickListener mListener;
-    private List<CheepCarePackageModel> mList = new ArrayList<>();
+    private List<PackageDetail> mList = new ArrayList<>();
 
     public interface PackageItemClickListener {
-        void onPackageItemClick(int position, CheepCarePackageModel packageModel);
+        void onPackageItemClick(int position, PackageDetail packageModel);
+
+        void onRemovePackage(int position, PackageDetail packageModel);
     }
 
     public SelectedPackageSummaryAdapter(PackageItemClickListener listener) {
@@ -46,7 +48,7 @@ public class SelectedPackageSummaryAdapter extends LoadMoreRecyclerAdapter<Selec
 
     @Override
     public void onActualBindViewHolder(final CheepCarePackageViewHolder holder, int position) {
-        final CheepCarePackageModel model = mList.get(position);
+        final PackageDetail model = mList.get(position);
         Context context = holder.mBinding.getRoot().getContext();
 
         Glide.with(context)
@@ -56,11 +58,23 @@ public class SelectedPackageSummaryAdapter extends LoadMoreRecyclerAdapter<Selec
                 .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                 .into(holder.mBinding.ivItemBackground);
 
-        holder.mBinding.tvTitle.setText(model.packageTitle);
-        holder.mBinding.ivIsAddressSelected.setSelected(model.isSelected);
-        holder.mBinding.tvDescription.setText(model.packageDescription);
-        SpannableString spannableString1 = new SpannableString(context.getString(R.string.rupee_symbol_x_package_price, model.price));
+        // set title of package
+        holder.mBinding.tvTitle.setText(model.title);
+
+        // set description of package
+        holder.mBinding.tvDescription.setText(model.subtitle);
+
+        // set montly price of package
+        SpannableString spannableString1 = new SpannableString(context.getString(R.string.rupee_symbol_x_package_price, model.packageOptionList.get(0).getChildList().get(0).monthlyPrice));
         spannableString1 = Utility.getCheepCarePackageMonthlyPrice(spannableString1, spannableString1.length() - 2, spannableString1.length());
+
+        // set address category icon
+        holder.mBinding.ivAddressIcon.setImageResource(Utility.getAddressCategoryWhiteIcon(model.mSelectedAddress.category));
+        holder.mBinding.tvAddress.setText(model.mSelectedAddress.address_initials + ", " + model.mSelectedAddress.address);
+
+        holder.mBinding.ivIsAddressSelected.setSelected(model.isSelected);
+
+
         holder.mBinding.tvPrice.setText(spannableString1);
 
         /*Glide.with(holder.mBinding.getRoot().getContext())
@@ -89,10 +103,20 @@ public class SelectedPackageSummaryAdapter extends LoadMoreRecyclerAdapter<Selec
         public CheepCarePackageViewHolder(RowSelectedPackagesBinding binding) {
             super(binding.getRoot());
             mBinding = binding;
+            mBinding.ivCancel.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mListener.onRemovePackage(getAdapterPosition(), mList.get(getAdapterPosition()));
+                }
+            });
         }
     }
 
-    public void addPakcageList(List<CheepCarePackageModel> list) {
+    public List<PackageDetail> getList() {
+        return mList;
+    }
+
+    public void addPakcageList(List<PackageDetail> list) {
         mList.addAll(list);
         notifyDataSetChanged();
     }

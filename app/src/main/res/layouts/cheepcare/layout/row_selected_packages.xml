@@ -69,7 +69,6 @@
 
 
                 <LinearLayout
-                    android:id="@+id/tv_address"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
@@ -82,15 +81,18 @@
                     android:textSize="@dimen/text_size_12sp">
 
                     <ImageView
+                        android:id="@+id/iv_address_icon"
+                        android:layout_gravity="center_vertical"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:src="@drawable/icon_home_white"/>
 
 
                     <com.cheep.custom_view.CFTextViewRegular
+                        android:id="@+id/tv_address"
+                        android:layout_gravity="center_vertical"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
                         android:layout_marginLeft="@dimen/scale_5dp"
                         android:layout_weight="1"
                         android:ellipsize="end"

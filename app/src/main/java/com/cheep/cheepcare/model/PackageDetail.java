@@ -1,5 +1,7 @@
 package com.cheep.cheepcare.model;
 
+import android.support.annotation.Nullable;
+
 import com.cheep.model.AddressModel;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -18,12 +20,20 @@ public class PackageDetail implements Serializable {
     @SerializedName("subtitle")
     @Expose
     public String subtitle;
+
+    @SerializedName("price")
+    @Expose
+    public String price;
+
+
     @SerializedName("package_slug")
     @Expose
     public String packageSlug;
     private final static long serialVersionUID = -4061560571461215516L;
+    @Nullable
     public ArrayList<CheepCarePackageServicesModel> packageOptionList;
     public boolean isSelected = false;
+    @Nullable
     public AddressModel mSelectedAddress;
     public int rowType = 0;
 }

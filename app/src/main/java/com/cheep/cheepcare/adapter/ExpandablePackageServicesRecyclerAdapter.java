@@ -220,7 +220,7 @@ public class ExpandablePackageServicesRecyclerAdapter extends ExpandableRecycler
         // bind data with view for child row
         public void bind(@NonNull PackageOption subServicesModel, ChildCategoryViewHolder holder, int viewType) {
             if (viewType == VIEW_TYPE_SINGLE_SELECTION) {
-                mSelectionBinding.tvSubServiceName.setText(subServicesModel.options);
+                mSelectionBinding.tvSubServiceName.setText(subServicesModel.packageSuboptionTitle);
                 Context context = holder.mSelectionBinding.getRoot().getContext();
                 //commented as, as of now there is no description
             /*if (subServicesModel.package_description != null && !subServicesModel.package_description.isEmpty()) {
@@ -239,7 +239,7 @@ public class ExpandablePackageServicesRecyclerAdapter extends ExpandableRecycler
 
             } else {
                 Context context = holder.mUnitBinding.getRoot().getContext();
-                mUnitBinding.tvSubServiceName.setText(subServicesModel.options);
+                mUnitBinding.tvSubServiceName.setText(subServicesModel.packageSuboptionTitle);
                 if (subServicesModel.qty == -1) {
                     subServicesModel.qty = Integer.valueOf(subServicesModel.minUnit);
                     mUnitBinding.tvDigit.setText(String.valueOf(subServicesModel.minUnit));

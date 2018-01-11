@@ -33,7 +33,6 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
@@ -47,12 +46,12 @@ import com.cheep.R;
 import com.cheep.activity.BaseAppCompatActivity;
 import com.cheep.activity.TaskCreationActivity;
 import com.cheep.adapter.AddressRecyclerViewAdapter;
+import com.cheep.cheepcare.dialogs.BottomAddAddressDialog;
 import com.cheep.custom_view.BottomAlertDialog;
 import com.cheep.custom_view.DividerItemDecoration;
 import com.cheep.databinding.FragmentEnterTaskDetailBinding;
 import com.cheep.model.AddressModel;
 import com.cheep.model.GuestUserDetails;
-import com.cheep.model.LocationInfo;
 import com.cheep.model.ProviderModel;
 import com.cheep.model.UserDetails;
 import com.cheep.network.NetworkUtility;
@@ -62,7 +61,6 @@ import com.cheep.strategicpartner.AmazonUtils;
 import com.cheep.strategicpartner.MediaRecycleAdapter;
 import com.cheep.strategicpartner.model.MediaModel;
 import com.cheep.strategicpartner.recordvideo.RecordVideoNewActivity;
-import com.cheep.utils.FetchLocationInfoUtility;
 import com.cheep.utils.LogUtils;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.RequestPermission;
@@ -70,7 +68,6 @@ import com.cheep.utils.SuperCalendar;
 import com.cheep.utils.Utility;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
-import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.model.LatLng;
 
@@ -87,9 +84,6 @@ import java.util.List;
 import java.util.Map;
 
 import static android.app.Activity.RESULT_OK;
-import static com.cheep.R.id.edit_address;
-import static com.cheep.R.id.edit_address_initials;
-import static com.cheep.utils.Utility.getObjectFromJsonString;
 
 /**
  * Created by bhavesh on 28/4/17.
@@ -108,6 +102,7 @@ public class EnterTaskDetailFragment extends BaseFragment implements RequestPerm
     // For When
     public SuperCalendar startDateTimeSuperCalendar = SuperCalendar.getInstance();
     private RequestPermission mRequestPermission;
+    private BottomAddAddressDialog dialog;
 
     @SuppressWarnings("unused")
     public static EnterTaskDetailFragment newInstance() {
@@ -601,30 +596,7 @@ public class EnterTaskDetailFragment extends BaseFragment implements RequestPerm
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == Utility.PLACE_PICKER_REQUEST) {
-            isPlacePickerClicked = false;
-            if (resultCode == RESULT_OK) {
-                isAddressPickYouLocationVerified = true;
-                isAddressNameVerified = true;
-                final Place place = PlacePicker.getPlace(mContext, data);
-                final CharSequence name = place.getName();
-                final CharSequence address = place.getAddress();
-                ln_pick_your_location.setVisibility(View.GONE);
-                ln_address_row.setVisibility(View.VISIBLE);
-                if (edtAddress != null) {
-                    edtAddress.setText(address);
-                   /* edtAddress.setFocusable(true);
-                    edtAddress.setFocusableInTouchMode(true);*/
-                    edtAddress.setTag(place.getLatLng());
-                }
-            } else {
-                if (TextUtils.isEmpty(edtAddress.getText().toString().trim())) {
-                    isAddressPickYouLocationVerified = false;
-                } else {
-                    isAddressPickYouLocationVerified = true;
-                    isAddressNameVerified = true;
-                }
-            }
-            checkAddAddressVerified();
+                dialog.onActivityResult(resultCode, data);
             hideProgressDialog();
         } else if (requestCode == Utility.REQUEST_CODE_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
             Log.i(TAG, "onActivityResult: CurrentPath" + mCurrentPhotoPath);
@@ -929,7 +901,7 @@ public class EnterTaskDetailFragment extends BaseFragment implements RequestPerm
         view.findViewById(R.id.btn_add_address).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showAddAddressDialog(null);
+                showBottomAddressDialog(null);
 //                addAddressDialog.dismiss();
             }
         });
@@ -981,7 +953,7 @@ public class EnterTaskDetailFragment extends BaseFragment implements RequestPerm
 
         if (shouldOpenAddAddress) {
             addressDialog.view.findViewById(R.id.btn_submit).setVisibility(View.GONE);
-            showAddAddressDialog(null);
+            showBottomAddressDialog(null);
         }
     }
 
@@ -1004,7 +976,7 @@ public class EnterTaskDetailFragment extends BaseFragment implements RequestPerm
             @Override
             public void onEditClicked(AddressModel model, int position) {
                 TEMP_ADDRESS_ID = model.address_id;
-                showAddAddressDialog(model);
+                showBottomAddressDialog(model);
             }
 
             @Override
@@ -1061,6 +1033,7 @@ public class EnterTaskDetailFragment extends BaseFragment implements RequestPerm
     private boolean isAddressPickYouLocationVerified = false;
     private boolean isAddressFlatNoVerified = false;
 
+/*
     private void showAddAddressDialog(final AddressModel addressModel) {
         if (addressModel == null) {
             isAddressPickYouLocationVerified = false;
@@ -1080,7 +1053,8 @@ public class EnterTaskDetailFragment extends BaseFragment implements RequestPerm
         ln_pick_your_location = (LinearLayout) view.findViewById(R.id.ln_pick_your_location);
         ln_address_row = (LinearLayout) view.findViewById(R.id.ln_address_row);
 
-        /*edtName.addTextChangedListener(new TextWatcher() {
+        */
+/*edtName.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -1101,7 +1075,8 @@ public class EnterTaskDetailFragment extends BaseFragment implements RequestPerm
                     checkAddAddressVerified();
                 }
             }
-        });*/
+        });*//*
+
 
         edtAddressInitials.addTextChangedListener(new TextWatcher() {
             @Override
@@ -1147,7 +1122,8 @@ public class EnterTaskDetailFragment extends BaseFragment implements RequestPerm
             ln_address_row.setVisibility(View.GONE);
             ln_pick_your_location.setVisibility(View.VISIBLE);
         }
-       /* edtAddress.setOnTouchListener(new View.OnTouchListener() {
+       */
+/* edtAddress.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent event) {
 
@@ -1170,7 +1146,8 @@ public class EnterTaskDetailFragment extends BaseFragment implements RequestPerm
                 }
                 return false;
             }
-        });*/
+        });*//*
+
         btnAdd = (Button) view.findViewById(R.id.btn_add);
 
         if (addressModel != null) {
@@ -1191,15 +1168,19 @@ public class EnterTaskDetailFragment extends BaseFragment implements RequestPerm
 
             // Initiaze the varfication tags accordingly.
             isAddressFlatNoVerified = true;
-           /* isAddressNameVerified = true;
-            isAddressPickYouLocationVerified = addressModel.address_initials.trim().length() > 0;*/
+           */
+/* isAddressNameVerified = true;
+            isAddressPickYouLocationVerified = addressModel.address_initials.trim().length() > 0;*//*
+
             checkAddAddressVerified();
 
         } else {
             btnAdd.setText(getString(R.string.label_add));
             radioHome.setChecked(true);
-           /* edtAddress.setFocusable(false);
-            edtAddress.setFocusableInTouchMode(false);*/
+           */
+/* edtAddress.setFocusable(false);
+            edtAddress.setFocusableInTouchMode(false);*//*
+
         }
 
         addAddressDialog = new BottomAlertDialog(mContext);
@@ -1207,33 +1188,37 @@ public class EnterTaskDetailFragment extends BaseFragment implements RequestPerm
             @Override
             public void onClick(View view) {
 
-               /* if (TextUtils.isEmpty(edtName.getText().toString().trim())) {
+               */
+/* if (TextUtils.isEmpty(edtName.getText().toString().trim())) {
                     Utility.showToast(mContext, getString(R.string.validate_address_nickname));
-                } else*/
+                } else*//*
+
                 if (TextUtils.isEmpty(edtAddress.getText().toString().trim())) {
                     Utility.showToast(mContext, getString(R.string.validate_address));
                 } else if (TextUtils.isEmpty(edtAddressInitials.getText().toString().trim())) {
                     Utility.showToast(mContext, getString(R.string.validate_address_initials));
-                }  else {
+                } else {
                     if (addressModel != null) {
                         callUpdateAddressWS(addressModel.address_id,
                                 (radioHome.isChecked()
                                         ? NetworkUtility.TAGS.ADDRESS_TYPE.HOME
                                         : radio_office.isChecked() ? NetworkUtility.TAGS.ADDRESS_TYPE.OFFICE : NetworkUtility.TAGS.ADDRESS_TYPE.OTHERS)
-                                /*, edtName.getText().toString().trim()*/
+                                */
+/*, edtName.getText().toString().trim()*//*
+
                                 , edtAddress.getText().toString().trim()
                                 , edtAddressInitials.getText().toString().trim()
                                 , (LatLng) edtAddress.getTag());
                     } else {
 
-                        callAddAddressWS(
-                                (radioHome.isChecked()
-                                        ? NetworkUtility.TAGS.ADDRESS_TYPE.HOME
-                                        : radio_office.isChecked() ? NetworkUtility.TAGS.ADDRESS_TYPE.OFFICE : NetworkUtility.TAGS.ADDRESS_TYPE.OTHERS)
-                                /*, edtName.getText().toString().trim()*/
-                                , edtAddress.getText().toString().trim()
-                                , edtAddressInitials.getText().toString().trim()
-                                , (LatLng) edtAddress.getTag());
+                        AddressModel model = new AddressModel();
+                        model.category = radioHome.isChecked()
+                                ? NetworkUtility.TAGS.ADDRESS_TYPE.HOME
+                                : radio_office.isChecked() ? NetworkUtility.TAGS.ADDRESS_TYPE.OFFICE : NetworkUtility.TAGS.ADDRESS_TYPE.OTHERS;
+                        model.address = edtAddress.getText().toString().trim();
+                        model.address_initials = edtAddressInitials.getText().toString().trim();
+
+                        callAddAddressWS(model, (LatLng) edtAddress.getTag());
                     }
                 }
             }
@@ -1248,6 +1233,7 @@ public class EnterTaskDetailFragment extends BaseFragment implements RequestPerm
 
         checkAddAddressVerified();
     }
+*/
 
     private void checkAddAddressVerified() {
         /*if (isAddressFlatNoVerified
@@ -1265,7 +1251,6 @@ public class EnterTaskDetailFragment extends BaseFragment implements RequestPerm
         }
     }
 
-    boolean isPlacePickerClicked = false;
 
     public void showPlacePickerDialog(boolean isForceShow) {
 
@@ -1446,371 +1431,7 @@ public class EnterTaskDetailFragment extends BaseFragment implements RequestPerm
         }
     };
 
-    /**
-     * Calling Update Address WS
-     *
-     * @param addressType
-     * @param address
-     */
-    private void callUpdateAddressWS(final String addressId, final String addressType,/* String addressName,*/ final String address, final String addressInitials, LatLng latLng) {
-        if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mFragmentEnterTaskDetailBinding.getRoot());
-            return;
-        }
 
-        if (PreferenceUtility.getInstance(mContext).getUserDetails() == null) {
-            /**
-             * Guest User so just save it locally & Return.
-             */
-            showProgressDialog();
-            FetchLocationInfoUtility mFetchLocationInfoUtility = new FetchLocationInfoUtility(
-                    mContext,
-                    new FetchLocationInfoUtility.FetchLocationInfoCallBack() {
-                        @Override
-                        public void onLocationInfoAvailable(LocationInfo mLocationIno) {
-                            hideProgressDialog();
-                            GuestUserDetails guestUserDetails = PreferenceUtility.getInstance(mContext).getGuestUserDetails();
-                            if (addressRecyclerViewAdapter != null) {
-                                AddressModel mAddressModel = addressRecyclerViewAdapter.getSelectedAddress();
-                                mAddressModel.address_id = addressId;
-                                mAddressModel.category = addressType;
-                                mAddressModel.address = address;
-                                mAddressModel.address_initials = addressInitials;
-                                mAddressModel.lat = mLocationIno.lat;
-                                mAddressModel.lng = mLocationIno.lng;
-                                mAddressModel.countryName = mLocationIno.Country;
-                                mAddressModel.stateName = mLocationIno.State;
-                                mAddressModel.cityName = mLocationIno.City;
-                                addressRecyclerViewAdapter.updateItem(mAddressModel);
-                                // Saving information in sharedpreference
-                                guestUserDetails.addressList = addressRecyclerViewAdapter.getmList();
-                            }
-                            PreferenceUtility.getInstance(mContext).saveGuestUserDetails(guestUserDetails);
-                            if (addAddressDialog != null) {
-                                addAddressDialog.dismiss();
-                            }
-                        }
-
-                        @Override
-                        public void internetConnectionNotFound() {
-                            hideProgressDialog();
-                            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mFragmentEnterTaskDetailBinding.getRoot());
-                        }
-                    },
-                    false
-            );
-            mFetchLocationInfoUtility.getLocationInfo(String.valueOf(latLng.latitude), String.valueOf(latLng.longitude));
-            return;
-        } else {
-            /*
-             * For Logged In user,
-             */
-            showProgressDialog();
-            FetchLocationInfoUtility mFetchLocationInfoUtility = new FetchLocationInfoUtility(
-                    mContext,
-                    new FetchLocationInfoUtility.FetchLocationInfoCallBack() {
-                        @Override
-                        public void onLocationInfoAvailable(LocationInfo mLocationIno) {
-                            // Show Progress
-                            showProgressDialog();
-
-                            // Add Header parameters
-                            Map<String, String> mHeaderParams = new HashMap<>();
-                            mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
-                            mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
-
-                            // Add Params
-                            Map<String, Object> mParams = new HashMap<>();
-                            mParams.put(NetworkUtility.TAGS.ADDRESS_ID, addressId);
-                            mParams.put(NetworkUtility.TAGS.CATEGORY, addressType);
-                            mParams.put(NetworkUtility.TAGS.ADDRESS, address);
-                            mParams.put(NetworkUtility.TAGS.ADDRESS_INITIALS, addressInitials);
-                            mParams.put(NetworkUtility.TAGS.LAT, mLocationIno.lat);
-                            mParams.put(NetworkUtility.TAGS.LNG, mLocationIno.lng);
-                            mParams.put(NetworkUtility.TAGS.COUNTRY, mLocationIno.Country);
-                            mParams.put(NetworkUtility.TAGS.STATE, mLocationIno.State);
-                            mParams.put(NetworkUtility.TAGS.CITY_NAME, mLocationIno.City);
-
-                            // Url is based on condition if address id is greater then 0 then it means we need to update the existing address
-                            VolleyNetworkRequest mVolleyNetworkRequest = new VolleyNetworkRequest(NetworkUtility.WS.EDIT_ADDRESS
-                                    , mCallUpdateAddressWSErrorListener
-                                    , mCallUpdateAddressResponseListener
-                                    , mHeaderParams
-                                    , mParams
-                                    , null);
-                            Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest, NetworkUtility.WS.EDIT_ADDRESS);
-                        }
-
-                        @Override
-                        public void internetConnectionNotFound() {
-                            hideProgressDialog();
-                            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mFragmentEnterTaskDetailBinding.getRoot());
-                        }
-                    },
-                    false
-            );
-            mFetchLocationInfoUtility.getLocationInfo(String.valueOf(latLng.latitude), String.valueOf(latLng.longitude));
-        }
-    }
-
-
-    Response.Listener mCallUpdateAddressResponseListener = new Response.Listener() {
-        @Override
-        public void onResponse(Object response) {
-
-            String strResponse = (String) response;
-            try {
-                JSONObject jsonObject = new JSONObject(strResponse);
-                Log.i(TAG, "onResponse: " + jsonObject.toString());
-                int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
-                String error_message;
-                if (addAddressDialog != null) {
-                    addAddressDialog.dismiss();
-                }
-                switch (statusCode) {
-                    case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
-
-                        AddressModel addressModel = (AddressModel) getObjectFromJsonString(jsonObject.getJSONObject(NetworkUtility.TAGS.DATA).toString(), AddressModel.class);
-
-                        if (!TextUtils.isEmpty(TEMP_ADDRESS_ID)) {
-                            if (addressRecyclerViewAdapter != null) {
-                                addressRecyclerViewAdapter.updateItem(addressModel);
-                            }
-                        }
-
-                        //Saving information in sharedpreference
-                        UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
-                        userDetails.addressList = addressRecyclerViewAdapter.getmList();
-                        PreferenceUtility.getInstance(mContext).saveUserDetails(userDetails);
-
-
-//                        String message = jsonObject.getJSONObject(NetworkUtility.TAGS.DATA).getString(NetworkUtility.TAGS.OTP_CODE);
-//                        VerificationActivity.newInstance(mContext, PreferenceUtility.getInstance(mContext).getUserDetails(), TEMP_PHONE_NUMBER, message);
-
-                        break;
-                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
-                        // Show Toast
-                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mFragmentEnterTaskDetailBinding.getRoot());
-                        break;
-                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
-                        error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
-                        // Show message
-                        Utility.showSnackBar(error_message, mFragmentEnterTaskDetailBinding.getRoot());
-                        break;
-                    case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
-                    case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
-                        //Logout and finish the current activity
-                        Utility.logout(mContext, true, statusCode);
-                        mTaskCreationActivity.finish();
-                        break;
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-                mCallUpdateAddressWSErrorListener.onErrorResponse(new VolleyError(e.getMessage()));
-            }
-            hideProgressDialog();
-        }
-    };
-
-    Response.ErrorListener mCallUpdateAddressWSErrorListener = new Response.ErrorListener() {
-        @Override
-        public void onErrorResponse(VolleyError error) {
-            Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
-
-            // Close Progressbar
-            hideProgressDialog();
-
-            // Show Toast
-            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mFragmentEnterTaskDetailBinding.getRoot());
-        }
-    };
-
-
-    /**
-     * Calling Add Address WS
-     *
-     * @param addressType
-     * @param address
-     */
-    private void callAddAddressWS(final String addressType, /*String addressName,*/ final String address, final String addressInitials, final LatLng latLng) {
-        if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mFragmentEnterTaskDetailBinding.getRoot());
-            return;
-        }
-
-        if (PreferenceUtility.getInstance(mContext).getUserDetails() == null) {
-            showProgressDialog();
-            FetchLocationInfoUtility mFetchLocationInfoUtility = new FetchLocationInfoUtility(
-                    mContext,
-                    new FetchLocationInfoUtility.FetchLocationInfoCallBack() {
-                        @Override
-                        public void onLocationInfoAvailable(LocationInfo mLocationIno) {
-                            hideProgressDialog();
-
-                            GuestUserDetails guestUserDetails = PreferenceUtility.getInstance(mContext).getGuestUserDetails();
-
-                            /**
-                             * In case og Guest User we want to save it locally.
-                             */
-                            AddressModel addressModel = new AddressModel();
-                            // Creating Dynamic AddressID but it would be nagative values always to differentiat with logged in users address.
-                            addressModel.address_id = "-" + (guestUserDetails.addressList == null ? "1" : String.valueOf(guestUserDetails.addressList.size() + 1));
-                            addressModel.address = address;
-                            addressModel.cityName = mLocationIno.City;
-                            addressModel.countryName = mLocationIno.Country;
-                            addressModel.stateName = mLocationIno.State;
-                            addressModel.address_initials = addressInitials;
-                            addressModel.category = addressType;
-                            addressModel.lat = String.valueOf(latLng.latitude);
-                            addressModel.lng = String.valueOf(latLng.longitude);
-
-                            if (addressRecyclerViewAdapter != null) {
-                                addressRecyclerViewAdapter.add(addressModel);
-                                addressDialog.view.findViewById(R.id.btn_submit).setVisibility(View.VISIBLE);
-                            }
-
-                            //Saving information in sharedpreference
-                            guestUserDetails.addressList = addressRecyclerViewAdapter.getmList();
-                            PreferenceUtility.getInstance(mContext).saveGuestUserDetails(guestUserDetails);
-
-                            if (addAddressDialog != null) {
-                                addAddressDialog.dismiss();
-                            }
-                        }
-
-                        @Override
-                        public void internetConnectionNotFound() {
-                            hideProgressDialog();
-                            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mFragmentEnterTaskDetailBinding.getRoot());
-                        }
-                    },
-                    false
-            );
-            mFetchLocationInfoUtility.getLocationInfo(String.valueOf(latLng.latitude), String.valueOf(latLng.longitude));
-            return;
-        } else {
-            /**
-             * Logged In User so first need to fetch other location info and then call add address
-             * Webservice.
-             */
-            showProgressDialog();
-            FetchLocationInfoUtility mFetchLocationInfoUtility = new FetchLocationInfoUtility(
-                    mContext,
-                    new FetchLocationInfoUtility.FetchLocationInfoCallBack() {
-                        @Override
-                        public void onLocationInfoAvailable(LocationInfo mLocationIno) {
-
-                            //Add Header parameters
-                            Map<String, String> mHeaderParams = new HashMap<>();
-                            mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
-                            mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
-
-                            //Add Params
-                            Map<String, Object> mParams = new HashMap<>();
-                            mParams.put(NetworkUtility.TAGS.CATEGORY, addressType);
-                            mParams.put(NetworkUtility.TAGS.ADDRESS, address);
-                            mParams.put(NetworkUtility.TAGS.ADDRESS_INITIALS, addressInitials);
-                            mParams.put(NetworkUtility.TAGS.LAT, mLocationIno.lat);
-                            mParams.put(NetworkUtility.TAGS.LNG, mLocationIno.lng);
-                            mParams.put(NetworkUtility.TAGS.COUNTRY, mLocationIno.Country);
-                            mParams.put(NetworkUtility.TAGS.STATE, mLocationIno.State);
-                            mParams.put(NetworkUtility.TAGS.CITY_NAME, mLocationIno.City);
-
-                            Utility.hideKeyboard(mContext);
-                            //Url is based on condition if address id is greater then 0 then it means we need to update the existing address
-                            VolleyNetworkRequest mVolleyNetworkRequest = new VolleyNetworkRequest(NetworkUtility.WS.ADD_ADDRESS
-                                    , mCallAddAddressWSErrorListener
-                                    , mCallAddAddressResponseListener
-                                    , mHeaderParams
-                                    , mParams
-                                    , null);
-                            Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest, NetworkUtility.WS.ADD_ADDRESS);
-                        }
-
-                        @Override
-                        public void internetConnectionNotFound() {
-                            hideProgressDialog();
-                            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mFragmentEnterTaskDetailBinding.getRoot());
-                        }
-                    },
-                    false
-            );
-            mFetchLocationInfoUtility.getLocationInfo(String.valueOf(latLng.latitude), String.valueOf(latLng.longitude));
-            return;
-        }
-    }
-
-
-    Response.Listener mCallAddAddressResponseListener = new Response.Listener() {
-        @Override
-        public void onResponse(Object response) {
-
-            String strResponse = (String) response;
-            try {
-                JSONObject jsonObject = new JSONObject(strResponse);
-                Log.i(TAG, "onResponse: " + jsonObject.toString());
-                int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
-                String error_message;
-
-                switch (statusCode) {
-                    case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
-
-                        AddressModel addressModel = (AddressModel) getObjectFromJsonString(jsonObject.getJSONObject(NetworkUtility.TAGS.DATA).toString(), AddressModel.class);
-
-                        if (addressRecyclerViewAdapter != null) {
-                            addressRecyclerViewAdapter.add(addressModel);
-                            addressDialog.view.findViewById(R.id.btn_submit).setVisibility(View.VISIBLE);
-                        }
-
-                        //Saving information in sharedpreference
-                        UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
-                        userDetails.addressList = addressRecyclerViewAdapter.getmList();
-                        PreferenceUtility.getInstance(mContext).saveUserDetails(userDetails);
-
-                        if (addAddressDialog != null) {
-                            addAddressDialog.dismiss();
-                        }
-
-                        break;
-                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
-                        // Show Toast
-//                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityHireNewJobBinding.getRoot());
-                        Utility.showToast(mContext, getString(R.string.label_something_went_wrong));
-                        break;
-                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
-                        error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
-                        // Show message
-//                        Utility.showSnackBar(error_message, mActivityHireNewJobBinding.getRoot());
-                        Utility.showToast(mContext, error_message);
-                        break;
-                    case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
-                    case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
-                        //Logout and finish the current activity
-                        Utility.logout(mContext, true, statusCode);
-                        mTaskCreationActivity.finish();
-                        break;
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-                mCallAddAddressWSErrorListener.onErrorResponse(new VolleyError(e.getMessage()));
-            }
-            hideProgressDialog();
-        }
-    };
-
-    Response.ErrorListener mCallAddAddressWSErrorListener = new Response.ErrorListener() {
-        @Override
-        public void onErrorResponse(VolleyError error) {
-            Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
-
-            // Close Progressbar
-            hideProgressDialog();
-
-            // Show Toast
-//            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityHireNewJobBinding.getRoot());
-            Utility.showToast(mContext, getString(R.string.label_something_went_wrong));
-        }
-    };
     ///////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////WHERE Feature [START]/////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -2034,6 +1655,56 @@ public class EnterTaskDetailFragment extends BaseFragment implements RequestPerm
             mFragmentEnterTaskDetailBinding.extraProCount.setVisibility(View.GONE);
         }
     }
+
+    private void showBottomAddressDialog(AddressModel model) {
+        dialog = new BottomAddAddressDialog(EnterTaskDetailFragment.this, new BottomAddAddressDialog.AddAddressListener() {
+            @Override
+            public void onAddAddress(AddressModel addressModel) {
+//                    mList.add(addressModel);
+                if (addressRecyclerViewAdapter != null) {
+                    addressRecyclerViewAdapter.add(addressModel);
+                    addressDialog.view.findViewById(R.id.btn_submit).setVisibility(View.VISIBLE);
+                }
+
+                //Saving information in sharedpreference
+                UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
+                userDetails.addressList = addressRecyclerViewAdapter.getmList();
+                PreferenceUtility.getInstance(mContext).saveUserDetails(userDetails);
+
+                if (addAddressDialog != null) {
+                    addAddressDialog.dismiss();
+                }
+
+                if (dialog != null) {
+                    dialog.dismiss();
+                }
+            }
+
+            @Override
+            public void onUpdateAddress(AddressModel addressModel) {
+
+                if (!TextUtils.isEmpty(TEMP_ADDRESS_ID)) {
+                    if (addressRecyclerViewAdapter != null) {
+                        addressRecyclerViewAdapter.updateItem(addressModel);
+                    }
+                }
+
+                //Saving information in sharedpreference
+                UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
+                userDetails.addressList = addressRecyclerViewAdapter.getmList();
+                PreferenceUtility.getInstance(mContext).saveUserDetails(userDetails);
+
+
+                if (dialog != null) {
+                    dialog.dismiss();
+                }
+
+            }
+        }, new ArrayList<String>(), model);
+
+        dialog.showDialog();
+    }
+
 
     @Override
     public void onDetach() {

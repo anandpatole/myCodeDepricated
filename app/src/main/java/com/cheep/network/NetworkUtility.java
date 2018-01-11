@@ -2,6 +2,9 @@ package com.cheep.network;
 
 
 import com.cheep.BuildConfig;
+import com.cheep.model.AddressModel;
+
+import java.util.Map;
 
 /**
  * Created by bhavesh on 13/8/16.
@@ -133,8 +136,8 @@ public class NetworkUtility {
 
 
         // CHEEP CARE web services
-        public static final String GET_CITY_CARE_DETAIL = BASE_URL+ "customers/care/getCityCareDetail";
-        public static final String GET_CARE_PACKAGE_DETAILS= BASE_URL+ "customers/care/getCarePackageDetails";
+        public static final String GET_CITY_CARE_DETAIL = BASE_URL + "customers/care/getCityCareDetail";
+        public static final String GET_CARE_PACKAGE_DETAILS = BASE_URL + "customers/care/getCarePackageDetails";
 
     }
 
@@ -406,8 +409,12 @@ public class NetworkUtility {
         String CAT_TYPE = "cat_type";
         String NORMAL_BANNER = "normalBanner";
         String CARE_BANNER = "careBanner";
-        String CARE_CITY_SLUG= "care_city_slug";
-        String CARE_PACKAGE_ID= "care_package_id";
+        String CARE_CITY_SLUG = "care_city_slug";
+        String CARE_PACKAGE_ID = "care_package_id";
+        String LANDMARK = "landmark";
+        String PINCODE = "pincode";
+        String NICKNAME = "nickname";
+        String PACKAGE_OPTION_DETAILS = "package_option_details";
 
         interface VERSION_CHANGE_TYPE {
             int NORMAL = 0;
@@ -510,9 +517,26 @@ public class NetworkUtility {
     public interface CARE_CITY_SLUG {
         String MUMBAI = "mumbai";
         String HYDRABAD = "hydrabad";
-        String DELHI= "delhi";
-        String CHENNAI= "chennai";
-        String BENGALURU= "bengaluru";
+        String DELHI = "delhi";
+        String CHENNAI = "chennai";
+        String BENGALURU = "bengaluru";
+    }
+
+    public static Map<String, Object> getAddressParamHashmap(Map<String, Object> mParams, AddressModel model) {
+
+        mParams.put(NetworkUtility.TAGS.CATEGORY, model.category);
+        mParams.put(NetworkUtility.TAGS.ADDRESS, model.address);
+        mParams.put(NetworkUtility.TAGS.ADDRESS_INITIALS, model.address_initials);
+        mParams.put(NetworkUtility.TAGS.LAT, model.lat);
+        mParams.put(NetworkUtility.TAGS.LNG, model.lng);
+        mParams.put(NetworkUtility.TAGS.COUNTRY, model.countryName);
+        mParams.put(NetworkUtility.TAGS.STATE, model.stateName);
+        mParams.put(NetworkUtility.TAGS.CITY_NAME, model.cityName);
+        mParams.put(NetworkUtility.TAGS.LANDMARK, model.landmark);
+        mParams.put(NetworkUtility.TAGS.NICKNAME, model.nickname);
+        mParams.put(NetworkUtility.TAGS.PINCODE, model.pincode);
+
+        return mParams;
     }
 
 

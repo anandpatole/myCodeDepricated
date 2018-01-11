@@ -11,7 +11,7 @@ import android.widget.RadioButton;
 import com.cheep.R;
 import com.cheep.databinding.RowAddressBinding;
 import com.cheep.model.AddressModel;
-import com.cheep.network.NetworkUtility;
+import com.cheep.utils.Utility;
 
 import java.util.ArrayList;
 
@@ -65,16 +65,8 @@ public class AddressRecyclerViewAdapter extends RecyclerView.Adapter<AddressRecy
             holder.mRowAddressBinding.radioButton.setChecked(false);
         }
 
-        if (NetworkUtility.TAGS.ADDRESS_TYPE.HOME.equalsIgnoreCase(model.category)) {
-            holder.mRowAddressBinding.textAddressNickname.setCompoundDrawablesWithIntrinsicBounds(R.drawable.icon_address_home_active, 0, 0, 0);
-            holder.mRowAddressBinding.textAddressNickname.setText(holder.mRowAddressBinding.getRoot().getContext().getString(R.string.label_home));
-        } else if (NetworkUtility.TAGS.ADDRESS_TYPE.OFFICE.equalsIgnoreCase(model.category)) {
-            holder.mRowAddressBinding.textAddressNickname.setCompoundDrawablesWithIntrinsicBounds(R.drawable.icon_address_office_active, 0, 0, 0);
-            holder.mRowAddressBinding.textAddressNickname.setText(holder.mRowAddressBinding.getRoot().getContext().getString(R.string.label_office));
-        } else {
-            holder.mRowAddressBinding.textAddressNickname.setCompoundDrawablesWithIntrinsicBounds(R.drawable.icon_address_other_active, 0, 0, 0);
-            holder.mRowAddressBinding.textAddressNickname.setText(holder.mRowAddressBinding.getRoot().getContext().getString(R.string.label_other));
-        }
+        holder.mRowAddressBinding.textAddressCategory.setText(Utility.getAddressCategoryString(model.category));
+        holder.mRowAddressBinding.textAddressCategory.setCompoundDrawablesWithIntrinsicBounds(Utility.getAddressCategoryBlueIcon(model.category), 0, 0, 0);
 
         holder.mRowAddressBinding.radioButton.setOnClickListener(new View.OnClickListener() {
             @Override

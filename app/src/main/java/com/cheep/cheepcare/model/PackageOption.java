@@ -10,12 +10,12 @@ import java.io.Serializable;
 @Keep
 public class PackageOption implements Serializable {
 
-    @SerializedName("package_option_id")
+    @SerializedName("package_suboption_id")
     @Expose
     public String packageOptionId;
-    @SerializedName("options")
+    @SerializedName("package_suboption_title")
     @Expose
-    public String options;
+    public String packageSuboptionTitle;
     @SerializedName("unit_price")
     @Expose
     public String unitPrice;
