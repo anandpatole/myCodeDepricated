@@ -191,7 +191,18 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
                         ArrayList<CheepCarePackageServicesModel> list;
                         list = Utility.getObjectListFromJsonString(jsonData, CheepCarePackageServicesModel[].class);
                         addPackagesOptionListToPackages(mPackageCustomizationActivity.mPackageId, list);
-                        mBinding.recyclerView.setAdapter(new ExpandablePackageServicesRecyclerAdapter(list, true));
+                        mPackageCustomizationActivity.setContinueButtonText();
+                        mBinding.recyclerView.setAdapter(new ExpandablePackageServicesRecyclerAdapter(list, new ExpandablePackageServicesRecyclerAdapter.OnClickOfPackSubServiceListener() {
+                            @Override
+                            public void updateBottomButtonForSingleService(String selectedService, String price) {
+                                mPackageCustomizationActivity.setContinueButtonText(selectedService, price);
+                            }
+
+                            @Override
+                            public void updateBottomButtonForUnitService(int totalAppliance, String price) {
+                                mPackageCustomizationActivity.setContinueButtonText(totalAppliance, price);
+                            }
+                        }));
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
                         // Show Toast

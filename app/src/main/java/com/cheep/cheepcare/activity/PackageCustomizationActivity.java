@@ -18,7 +18,9 @@ import com.cheep.cheepcare.adapter.PackageCustomizationPagerAdapter;
 import com.cheep.cheepcare.fragment.PackageBundlingFragment;
 import com.cheep.cheepcare.fragment.PackageSummaryFragment;
 import com.cheep.cheepcare.fragment.SelectPackageSpecificationsFragment;
+import com.cheep.cheepcare.model.CheepCarePackageServicesModel;
 import com.cheep.cheepcare.model.PackageDetail;
+import com.cheep.cheepcare.model.PackageOption;
 import com.cheep.databinding.ActivityPackageCustomizationBinding;
 import com.cheep.utils.Utility;
 
@@ -170,12 +172,6 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
         }
     }
 
-    public void setContinueButtonText() {
-        for (PackageDetail detail : mPackageList) {
-            if (detail.id.equalsIgnoreCase(mPackageId))
-                mBinding.textContinue.setText(getString(R.string.select_x_package, detail.title));
-        }
-    }
 
     /**
      * This will setup the viewpager and tabs as well
@@ -323,13 +319,16 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
                 // Change description
                 mBinding.textStepDesc.setText(getString(R.string.step_2_desc_cheep_care));
                 mBinding.textContinue.setText(getString(R.string.label_proceed_to_checkout));
-
+                mBinding.textService.setText(Utility.EMPTY_STRING);
+                mBinding.textPrice.setText(Utility.EMPTY_STRING);
                 break;
             case STAGE_3:
                 mBinding.viewpager.setCurrentItem(2);
                 // Change description
                 mBinding.textStepDesc.setText(getString(R.string.step_3_desc_cheep_care));
                 mBinding.textContinue.setText(getString(R.string.label_pay_now));
+                mBinding.textService.setText(Utility.EMPTY_STRING);
+                mBinding.textPrice.setText(Utility.EMPTY_STRING);
                 break;
         }
     }
@@ -387,5 +386,46 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
         if (fragment != null) {
             fragment.initiateUI();
         }
+    }
+
+    public void setContinueButtonText() {
+        mBinding.textContinue.setText(R.string.add_package_to_cart);
+        for (PackageDetail detail : mPackageList) {
+            if (detail.id.equalsIgnoreCase(mPackageId)) {
+                if (detail.packageOptionList != null && detail.id.equalsIgnoreCase(mPackageId)) {
+                    for (CheepCarePackageServicesModel services : detail.packageOptionList) {
+                        if (services.selectionType.equalsIgnoreCase(CheepCarePackageServicesModel.SELECTION_TYPE.RADIO))
+                            for (PackageOption option : services.getChildList()) {
+                                if (option.isSelected) {
+                                    setContinueButtonText(option.packageSuboptionTitle, option.monthlyPrice);
+                                }
+                            }
+                        else {
+                            int totalCount = 0;
+                            String monthlyPrice = services.getChildList().get(0).monthlyPrice;
+                            for (PackageOption option : services.getChildList()) {
+                                if (option.qty == -1)
+                                    totalCount += Integer.parseInt(option.minUnit);
+                                else
+                                    totalCount += option.qty;
+                            }
+                            setContinueButtonText(totalCount, monthlyPrice);
+                        }
+                    }
+                }
+                mBinding.textContinue.setText(getString(R.string.add_package_to_cart));
+                break;
+            }
+        }
+    }
+
+    public void setContinueButtonText(String selectedService, String price) {
+        mBinding.textService.setText(selectedService);
+        mBinding.textPrice.setText(Utility.getMonthlyPrice(price, this));
+    }
+
+    public void setContinueButtonText(int totalAppliance, String price) {
+        mBinding.textService.setText(getString(R.string.label_appliance, totalAppliance));
+        mBinding.textPrice.setText(Utility.getMonthlyPrice(price, this));
     }
 }

@@ -1734,4 +1734,16 @@ public class Utility {
     }
 
 
+    public static SpannableString getMonthlyPrice(String amount, Context context) {
+        DecimalFormat format = new DecimalFormat();
+        format.setDecimalSeparatorAlwaysShown(false);
+
+        SpannableString spannableString = new SpannableString(context.getString(R.string.rupee_symbol_x_package_price, format.format(Double.valueOf(amount))));
+        RelativeSizeSpan relativeSizeSpan = new RelativeSizeSpan(0.5f);
+        spannableString.setSpan(relativeSizeSpan, spannableString.length() - 2, spannableString.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannableString.setSpan(new CustomCharacterSpan(), spannableString.length() - 2, spannableString.length(), SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE);
+        return spannableString;
+    }
+
+
 }

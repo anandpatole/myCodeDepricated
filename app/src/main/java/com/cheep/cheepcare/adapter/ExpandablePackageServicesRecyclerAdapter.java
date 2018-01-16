@@ -3,7 +3,6 @@ package com.cheep.cheepcare.adapter;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.support.annotation.NonNull;
-import android.text.SpannableString;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,6 +35,14 @@ public class ExpandablePackageServicesRecyclerAdapter extends ExpandableRecycler
     public static final int VIEW_TYPE_SINGLE_SELECTION = 1;
     public static final int VIEW_TYPE_UNIT_SELECTION = 2;
 
+    private OnClickOfPackSubServiceListener listener;
+
+    public interface OnClickOfPackSubServiceListener {
+
+        void updateBottomButtonForSingleService(String selectedService, String price);
+
+        void updateBottomButtonForUnitService(int totalAppliance, String price);
+    }
 
     /**
      * Primary constructor. Sets up {@link #mParentList} and {@link #mFlatItemList}.
@@ -53,10 +60,12 @@ public class ExpandablePackageServicesRecyclerAdapter extends ExpandableRecycler
      * @param parentList List of all parents to be displayed in the RecyclerView that this
      *                   adapter is linked to
      */
-    public ExpandablePackageServicesRecyclerAdapter(@NonNull List<CheepCarePackageServicesModel> parentList
-            , boolean isSingleSelection) {
+
+
+    public ExpandablePackageServicesRecyclerAdapter(@NonNull List<CheepCarePackageServicesModel> parentList, OnClickOfPackSubServiceListener listener) {
         super(parentList);
         mList = parentList;
+        this.listener = listener;
     }
 
     @Override
@@ -185,6 +194,8 @@ public class ExpandablePackageServicesRecyclerAdapter extends ExpandableRecycler
                         }
                     }
                     notifyDataSetChanged();
+                    listener.updateBottomButtonForSingleService(mList.get(parentPos).getChildList().get(childPos).packageSuboptionTitle,
+                            mList.get(parentPos).getChildList().get(childPos).monthlyPrice);
                 }
             });
         }
@@ -195,24 +206,40 @@ public class ExpandablePackageServicesRecyclerAdapter extends ExpandableRecycler
             mUnitBinding.tvMinus.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    PackageOption model = mList.get(getParentAdapterPosition()).getChildList().get(getChildAdapterPosition());
+
+                    int parentPos = getParentAdapterPosition();
+                    int childPos = getChildAdapterPosition();
+                    PackageOption model = mList.get(parentPos).getChildList().get(childPos);
                     int minQty = Integer.valueOf(model.minUnit);
                     if (model.qty > minQty) {
                         model.qty--;
                     }
-                    notifyChildChanged(getParentAdapterPosition(), getChildAdapterPosition());
+                    notifyChildChanged(parentPos, childPos);
+
+                    int totalCount = 0;
+                    for (PackageOption option : mList.get(parentPos).getChildList()) {
+                        totalCount += option.qty;
+                    }
+                    listener.updateBottomButtonForUnitService(totalCount, mList.get(parentPos).getChildList().get(childPos).monthlyPrice);
                 }
             });
 
             mUnitBinding.tvPlus.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    PackageOption model = mList.get(getParentAdapterPosition()).getChildList().get(getChildAdapterPosition());
+                    int parentPos = getParentAdapterPosition();
+                    int childPos = getChildAdapterPosition();
+                    PackageOption model = mList.get(parentPos).getChildList().get(childPos);
                     int maxQty = Integer.valueOf(model.maxUnit);
                     if (model.qty < maxQty) {
                         model.qty++;
                     }
-                    notifyChildChanged(getParentAdapterPosition(), getChildAdapterPosition());
+                    notifyChildChanged(parentPos, childPos);
+                    int totalCount = 0;
+                    for (PackageOption option : mList.get(parentPos).getChildList()) {
+                        totalCount += option.qty;
+                    }
+                    listener.updateBottomButtonForUnitService(totalCount, mList.get(parentPos).getChildList().get(childPos).monthlyPrice);
                 }
             });
         }
@@ -229,9 +256,11 @@ public class ExpandablePackageServicesRecyclerAdapter extends ExpandableRecycler
             } else {
                 textPackageDescription.setVisibility(View.GONE);
             }*/
-                SpannableString spannableString = new SpannableString(context.getString(R.string.rupee_symbol_x_package_price, subServicesModel.monthlyPrice));
-                spannableString = Utility.getCheepCarePackageMonthlyPrice(spannableString, spannableString.length() - 2, spannableString.length());
-                mSelectionBinding.tvSubServicePrice.setText(spannableString);
+//                SpannableString spannableString = new SpannableString(context.getString(R.string.rupee_symbol_x_package_price, subServicesModel.monthlyPrice));
+//                spannableString = Utility.getCheepCarePackageMonthlyPrice(spannableString, spannableString.length() - 2, spannableString.length());
+//                mSelectionBinding.tvSubServicePrice.setText(spannableString);
+                mSelectionBinding.tvSubServicePrice.setText(Utility.getMonthlyPrice(subServicesModel.monthlyPrice, context));
+
             /*mBinding.tvSubServicePrice.setText(itemView.getContext().getString(R.string.rupee_symbol_x
                     , *//*Utility.getQuotePriceFormatter(String.valueOf(*//*subServicesModel.price)*//*))*//*);*/
                 mSelectionBinding.imgIconCorrect.setSelected(subServicesModel.isSelected);
@@ -246,9 +275,9 @@ public class ExpandablePackageServicesRecyclerAdapter extends ExpandableRecycler
                 } else
                     mUnitBinding.tvDigit.setText(String.valueOf(subServicesModel.qty));
 
-                SpannableString spannableString = new SpannableString(context.getString(R.string.rupee_symbol_x_package_price, subServicesModel.unitPrice));
-                spannableString = Utility.getCheepCarePackageMonthlyPrice(spannableString, spannableString.length() - 2, spannableString.length());
-                mUnitBinding.tvSubServicePrice.setText(spannableString);
+//                SpannableString spannableString = new SpannableString(context.getString(R.string.rupee_symbol_x_package_price, subServicesModel.unitPrice));
+//                spannableString = Utility.getCheepCarePackageMonthlyPrice(spannableString, spannableString.length() - 2, spannableString.length());
+                mUnitBinding.tvSubServicePrice.setText(Utility.getMonthlyPrice(subServicesModel.unitPrice, context));
                 mUnitBinding.tvSubServicePrice.setSelected(true);
             }
 
