@@ -41,6 +41,7 @@ import com.cheep.utils.LogUtils;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.Utility;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -65,7 +66,7 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
     private AddressAdapter<AddressModel> mAdapter;
     private List<AddressModel> mList;
     private boolean isClicked = false;
-    BottomAddAddressDialog dialog;
+    BottomAddAddressDialog addressDialog;
     public AddressModel mSelectedAddress;
 
     public static SelectPackageSpecificationsFragment newInstance() {
@@ -250,17 +251,23 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
         mBinding.lnAddAddress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (dialog != null && dialog.isShowing())
-                    dialog.dismiss();
+                if (addressDialog != null && addressDialog.isShowing())
+                    addressDialog.dismiss();
 
                 ArrayList<String> strings = new ArrayList<>();
-                dialog = new BottomAddAddressDialog(SelectPackageSpecificationsFragment.this, new BottomAddAddressDialog.AddAddressListener() {
+                addressDialog = new BottomAddAddressDialog(SelectPackageSpecificationsFragment.this, new BottomAddAddressDialog.AddAddressListener() {
                     @Override
                     public void onAddAddress(AddressModel addressModel) {
+
+
+                        //Saving information in shared preference
+                        UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
+                        userDetails.addressList.add(addressModel);
+                        PreferenceUtility.getInstance(mContext).saveUserDetails(userDetails);
+
                         mList.add(addressModel);
-                        dialog.dismiss();
-//                        mBinding.tvSpinnerAddress.setText(mList.get(mList.size() - 1).address);
-//                        mBinding.ivIsAddressSelected.setSelected(true);
+                        verifyAddressForCity(addressModel);
+                        addressDialog.dismiss();
                     }
 
                     @Override
@@ -269,7 +276,7 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
                     }
                 }, strings, null);
 
-                dialog.showDialog();
+                addressDialog.showDialog();
             }
         });
 
@@ -301,43 +308,10 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
                 if (!isClicked && position == 0) {
                     mBinding.tvSpinnerAddress.setText(getString(R.string.label_select_address));
                     mBinding.ivIsAddressSelected.setSelected(false);
-
                     return;
                 }
                 AddressModel model = mList.get(position);
-                Drawable img = ContextCompat.getDrawable(mPackageCustomizationActivity, Utility.getAddressCategoryBlueIcon(model.category));
-                img.setBounds(0, 0, img.getIntrinsicWidth(), img.getIntrinsicHeight());
-                ImageSpan imageSpan = new ImageSpan(img, ImageSpan.ALIGN_BOTTOM);
-                ForegroundColorSpan colorSpan = new ForegroundColorSpan(ContextCompat.getColor(mContext
-                        , R.color.splash_gradient_end));
-
-                SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder();
-                spannableStringBuilder.append(Utility.ONE_CHARACTER_SPACE);
-                spannableStringBuilder.append(Utility.ONE_CHARACTER_SPACE);
-                spannableStringBuilder.setSpan(imageSpan, 0
-                        , 1, Spanned.SPAN_INCLUSIVE_INCLUSIVE);
-                spannableStringBuilder.append(Utility.ONE_CHARACTER_SPACE);
-
-
-                // show address's nick name or nick name is null then show category
-                String category;
-                if (!TextUtils.isEmpty(model.nickname))
-                    category = model.nickname;
-                else
-                    category = model.category;
-
-                if (!TextUtils.isEmpty(category)) {
-                    spannableStringBuilder.append(category);
-                    int startIndex = spannableStringBuilder.toString().indexOf(category);
-                    int endIndex = startIndex + category.length();
-                    spannableStringBuilder.setSpan(colorSpan, startIndex, endIndex, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    spannableStringBuilder.append(Utility.ONE_CHARACTER_SPACE);
-                }
-
-                spannableStringBuilder.append(model.address_initials + ", " + model.address);
-                mBinding.tvSpinnerAddress.setText(spannableStringBuilder);
-                mBinding.ivIsAddressSelected.setSelected(true);
-                mSelectedAddress = model;
+                verifyAddressForCity(model);
             }
 
             @Override
@@ -355,18 +329,52 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
         });
     }
 
+    private void fillAddressView(AddressModel model) {
+        Drawable img = ContextCompat.getDrawable(mPackageCustomizationActivity, Utility.getAddressCategoryBlueIcon(model.category));
+        img.setBounds(0, 0, img.getIntrinsicWidth(), img.getIntrinsicHeight());
+        ImageSpan imageSpan = new ImageSpan(img, ImageSpan.ALIGN_BOTTOM);
+        ForegroundColorSpan colorSpan = new ForegroundColorSpan(ContextCompat.getColor(mContext
+                , R.color.splash_gradient_end));
+
+        SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder();
+        spannableStringBuilder.append(Utility.ONE_CHARACTER_SPACE);
+        spannableStringBuilder.append(Utility.ONE_CHARACTER_SPACE);
+        spannableStringBuilder.setSpan(imageSpan, 0
+                , 1, Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+        spannableStringBuilder.append(Utility.ONE_CHARACTER_SPACE);
+
+
+        // show address's nick name or nick name is null then show category
+        String category;
+        if (!TextUtils.isEmpty(model.nickname))
+            category = model.nickname;
+        else
+            category = model.category;
+
+        if (!TextUtils.isEmpty(category)) {
+            spannableStringBuilder.append(category);
+            int startIndex = spannableStringBuilder.toString().indexOf(category);
+            int endIndex = startIndex + category.length();
+            spannableStringBuilder.setSpan(colorSpan, startIndex, endIndex, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            spannableStringBuilder.append(Utility.ONE_CHARACTER_SPACE);
+        }
+
+        spannableStringBuilder.append(model.address_initials + ", " + model.address);
+        mBinding.tvSpinnerAddress.setText(spannableStringBuilder);
+        mBinding.ivIsAddressSelected.setSelected(true);
+        mSelectedAddress = model;
+    }
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == Utility.PLACE_PICKER_REQUEST && dialog != null)
-            dialog.onActivityResult(resultCode, data);
+        if (requestCode == Utility.PLACE_PICKER_REQUEST && addressDialog != null)
+            addressDialog.onActivityResult(resultCode, data);
 
     }
 
     public boolean validateData() {
-
-
         boolean isAnyServiceSelected = false;
         for (PackageDetail detail : mPackageCustomizationActivity.getPackageList()) {
             if (detail.id.equalsIgnoreCase(mPackageCustomizationActivity.mPackageId)) {
@@ -397,4 +405,101 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
 
         return true;
     }
+
+    private void verifyAddressForCity(final AddressModel model) {
+
+        showProgressDialog();
+
+        //Add Header parameters
+        Map<String, String> mHeaderParams = new HashMap<>();
+        mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
+        if (PreferenceUtility.getInstance(mContext).getUserDetails() != null)
+            mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
+
+        //Add Params
+        Map<String, Object> mParams = new HashMap<>();
+        int addressId;
+        try {
+            addressId = Integer.parseInt(model.address_id);
+        } catch (Exception e) {
+            addressId = 0;
+        }
+        if (addressId <= 0) {
+            // In case its nagative then provide other address information
+            mParams.put(NetworkUtility.TAGS.ADDRESS_ID, Utility.ZERO_STRING);
+            mParams.put(NetworkUtility.TAGS.CITY_NAME, model.cityName);
+        } else {
+            mParams.put(NetworkUtility.TAGS.ADDRESS_ID, model.address_id);
+            mParams.put(NetworkUtility.TAGS.CITY_NAME, Utility.EMPTY_STRING);
+        }
+
+        Utility.hideKeyboard(mContext);
+        @SuppressWarnings("unchecked")
+        VolleyNetworkRequest mVolleyNetworkRequest = new VolleyNetworkRequest(NetworkUtility.WS.VERIFY_ADDRESS_CHEEP_CARE
+                , new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                LogUtils.LOGD(TAG, "onErrorResponse() called with: error = [" + error + "]");
+                // Close Progressbar
+                hideProgressDialog();
+                // Show Toast
+                Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
+            }
+        }
+                , new Response.Listener() {
+            @Override
+            public void onResponse(Object response) {
+                hideProgressDialog();
+                Log.i(TAG, "onResponse: " + response);
+
+                String strResponse = (String) response;
+                try {
+                    JSONObject jsonObject = new JSONObject(strResponse);
+                    Log.i(TAG, "onResponse: " + jsonObject.toString());
+                    int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
+                    String error_message;
+
+                    switch (statusCode) {
+                        case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
+                            JSONObject jsonData = jsonObject.getJSONObject(NetworkUtility.TAGS.DATA);
+                            // strategic partner pro id for given location
+                            String city_id = jsonData.optString(NetworkUtility.TAGS.CITY_ID);
+                            if (mPackageCustomizationActivity.mCityDetail.id.equalsIgnoreCase(city_id)) {
+                                fillAddressView(model);
+                            } else {
+                                Utility.showToast(mPackageCustomizationActivity, getString(R.string.validation_message_cheep_care_address, mPackageCustomizationActivity.mCityDetail.cityName));
+                            }
+
+                            break;
+                        case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
+                            // Show Toast
+                            Utility.showToast(mPackageCustomizationActivity, getString(R.string.label_something_went_wrong));
+                            break;
+                        case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
+                            error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
+                            // Show message
+                            Utility.showToast(mPackageCustomizationActivity, error_message);
+                            break;
+                        case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
+                        case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
+                            //Logout and finish the current activity
+                            Utility.logout(mContext, true, statusCode);
+                            mPackageCustomizationActivity.finish();
+                            break;
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    mCallGetCarePackageDetailsSingWSErrorListener.onErrorResponse(new VolleyError(e.getMessage()));
+                }
+                hideProgressDialog();
+            }
+        }
+                , mHeaderParams
+                , mParams
+                , null);
+        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest, NetworkUtility.WS.CHECK_PRO_AVAILABILITY_FOR_STRATEGIC_TASK);
+
+
+    }
+
 }

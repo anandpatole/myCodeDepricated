@@ -129,14 +129,14 @@
 
                 <com.cheep.custom_view.CFTextViewSemiBold
                     android:id="@+id/text_total"
-                    tools:text="₹3,600"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true"
                     android:layout_alignParentTop="true"
                     android:textColor="@color/splash_gradient_end"
-                    android:textSize="@dimen/text_size_30sp"/>
+                    android:textSize="@dimen/text_size_30sp"
+                    tools:text="₹3,600"/>
 
                 <com.cheep.custom_view.CFTextViewRegular
                     android:layout_width="wrap_content"
@@ -290,10 +290,27 @@
                             android:text="Invalid Code"
                             android:textColor="@color/grey_varient_27"
                             android:textSize="@dimen/text_size_12sp"/>
+
                     </LinearLayout>
                 </LinearLayout>
 
             </LinearLayout>
+
+            <com.cheep.custom_view.CFTextViewRegular
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="left"
+
+                android:paddingBottom="@dimen/scale_16dp"
+                android:paddingTop="@dimen/scale_16dp"
+                android:drawablePadding="@dimen/scale_3dp"
+                android:drawableLeft="@drawable/ic_info_blue"
+                android:paddingLeft="@dimen/scale_16dp"
+                android:paddingRight="@dimen/scale_16dp"
+                android:text="@string/info_package_payment_summary"
+                android:textColor="@color/grey_varient_27"
+                android:textSize="@dimen/text_size_12sp"/>
+
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 </layout>

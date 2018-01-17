@@ -151,20 +151,6 @@ public class Utility {
             return R.drawable.icon_address_other_active;
     }
 
-    public static int getAddressCategoryWhiteIcon(String category) {
-        if (TextUtils.isEmpty(category))
-            return R.drawable.icon_home_white;
-        else if (category.equalsIgnoreCase(NetworkUtility.TAGS.ADDRESS_TYPE.HOME))
-            return R.drawable.icon_home_white;
-        else if (category.equalsIgnoreCase(NetworkUtility.TAGS.ADDRESS_TYPE.OFFICE))
-            return R.drawable.icon_office_white;
-        else if (category.equalsIgnoreCase(NetworkUtility.TAGS.ADDRESS_TYPE.BIZ))
-            return R.drawable.icon_office_white;
-        else if (category.equalsIgnoreCase(NetworkUtility.TAGS.ADDRESS_TYPE.SOCI))
-            return R.drawable.icon_home_white;
-        else
-            return R.drawable.icon_home_white;
-    }
 
 
     public interface GUEST_STATIC_INFO {
@@ -1740,8 +1726,8 @@ public class Utility {
 
         SpannableString spannableString = new SpannableString(context.getString(R.string.rupee_symbol_x_package_price, format.format(Double.valueOf(amount))));
         RelativeSizeSpan relativeSizeSpan = new RelativeSizeSpan(0.5f);
-        spannableString.setSpan(relativeSizeSpan, spannableString.length() - 2, spannableString.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        spannableString.setSpan(new CustomCharacterSpan(), spannableString.length() - 2, spannableString.length(), SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannableString.setSpan(relativeSizeSpan, spannableString.length() - 3, spannableString.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannableString.setSpan(new CustomCharacterSpan(), spannableString.length() - 3, spannableString.length(), SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE);
         return spannableString;
     }
 

@@ -216,11 +216,15 @@ public class ExpandablePackageServicesRecyclerAdapter extends ExpandableRecycler
                     }
                     notifyChildChanged(parentPos, childPos);
 
+
                     int totalCount = 0;
+
+                    double monthlyPrice = Double.parseDouble(mList.get(parentPos).getChildList().get(0).monthlyPrice);
                     for (PackageOption option : mList.get(parentPos).getChildList()) {
                         totalCount += option.qty;
+                        monthlyPrice += Double.parseDouble(option.unitPrice) * (option.qty - 1);
                     }
-                    listener.updateBottomButtonForUnitService(totalCount, mList.get(parentPos).getChildList().get(childPos).monthlyPrice);
+                    listener.updateBottomButtonForUnitService(totalCount, String.valueOf(monthlyPrice));
                 }
             });
 
@@ -236,10 +240,12 @@ public class ExpandablePackageServicesRecyclerAdapter extends ExpandableRecycler
                     }
                     notifyChildChanged(parentPos, childPos);
                     int totalCount = 0;
+                    double monthlyPrice = Double.parseDouble(mList.get(parentPos).getChildList().get(0).monthlyPrice);
                     for (PackageOption option : mList.get(parentPos).getChildList()) {
                         totalCount += option.qty;
+                        monthlyPrice += Double.parseDouble(option.unitPrice) * (option.qty - 1);
                     }
-                    listener.updateBottomButtonForUnitService(totalCount, mList.get(parentPos).getChildList().get(childPos).monthlyPrice);
+                    listener.updateBottomButtonForUnitService(totalCount, String.valueOf(monthlyPrice));
                 }
             });
         }
@@ -277,8 +283,12 @@ public class ExpandablePackageServicesRecyclerAdapter extends ExpandableRecycler
 
 //                SpannableString spannableString = new SpannableString(context.getString(R.string.rupee_symbol_x_package_price, subServicesModel.unitPrice));
 //                spannableString = Utility.getCheepCarePackageMonthlyPrice(spannableString, spannableString.length() - 2, spannableString.length());
-                mUnitBinding.tvSubServicePrice.setText(Utility.getMonthlyPrice(subServicesModel.unitPrice, context));
+                double price = Double.parseDouble(subServicesModel.unitPrice) * (subServicesModel.qty - 1);
+                mUnitBinding.tvSubServicePrice.setText(Utility.getMonthlyPrice(String.valueOf(price), context));
                 mUnitBinding.tvSubServicePrice.setSelected(true);
+
+                mUnitBinding.tvSubServiceName.setText(subServicesModel.packageSuboptionTitle);
+                mUnitBinding.tvSubServicePrice.setVisibility(subServicesModel.qty == 1 ? View.INVISIBLE : View.VISIBLE);
             }
 
 

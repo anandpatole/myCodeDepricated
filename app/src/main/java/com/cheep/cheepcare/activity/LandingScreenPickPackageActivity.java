@@ -190,7 +190,7 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
         @Override
         public void onPackageItemClick(int position, PackageDetail packageModel) {
             String packageList = Utility.getJsonStringFromObject(model.packageDetailList);
-            PackageCustomizationActivity.newInstance(mContext, position, packageModel, model.cityDetail.cityName, packageModel.id, packageList);
+            PackageCustomizationActivity.newInstance(mContext, position, packageModel, model.cityDetail, packageModel.id, packageList);
         }
     };
 

@@ -8,8 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.cheep.R;
 import com.cheep.cheepcare.model.PackageDetail;
 import com.cheep.databinding.RowSelectedPackagesBinding;
@@ -51,13 +49,6 @@ public class SelectedPackageSummaryAdapter extends LoadMoreRecyclerAdapter<Selec
         final PackageDetail model = mList.get(position);
         Context context = holder.mBinding.getRoot().getContext();
 
-        Glide.with(context)
-                .load(R.drawable.banner_appliance_care_gif)
-                .asGif()
-                .dontAnimate()
-                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                .into(holder.mBinding.ivItemBackground);
-
         // set title of package
         holder.mBinding.tvTitle.setText(model.title);
 
@@ -66,10 +57,10 @@ public class SelectedPackageSummaryAdapter extends LoadMoreRecyclerAdapter<Selec
 
         // set montly price of package
         SpannableString spannableString1 = new SpannableString(context.getString(R.string.rupee_symbol_x_package_price, model.packageOptionList.get(0).getChildList().get(0).monthlyPrice));
-        spannableString1 = Utility.getCheepCarePackageMonthlyPrice(spannableString1, spannableString1.length() - 2, spannableString1.length());
+        spannableString1 = Utility.getCheepCarePackageMonthlyPrice(spannableString1, spannableString1.length() - 3, spannableString1.length());
 
         // set address category icon
-        holder.mBinding.ivAddressIcon.setImageResource(Utility.getAddressCategoryWhiteIcon(model.mSelectedAddress.category));
+        holder.mBinding.ivAddressIcon.setImageResource(Utility.getAddressCategoryBlueIcon(model.mSelectedAddress.category));
         holder.mBinding.tvAddress.setText(model.mSelectedAddress.address_initials + ", " + model.mSelectedAddress.address);
 
         holder.mBinding.ivIsAddressSelected.setSelected(model.isSelected);

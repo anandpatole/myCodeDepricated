@@ -18,10 +18,12 @@ import com.cheep.cheepcare.adapter.PackageCustomizationPagerAdapter;
 import com.cheep.cheepcare.fragment.PackageBundlingFragment;
 import com.cheep.cheepcare.fragment.PackageSummaryFragment;
 import com.cheep.cheepcare.fragment.SelectPackageSpecificationsFragment;
+import com.cheep.cheepcare.model.CheepCareCityLandingPageModel;
 import com.cheep.cheepcare.model.CheepCarePackageServicesModel;
 import com.cheep.cheepcare.model.PackageDetail;
 import com.cheep.cheepcare.model.PackageOption;
 import com.cheep.databinding.ActivityPackageCustomizationBinding;
+import com.cheep.network.NetworkUtility;
 import com.cheep.utils.Utility;
 
 import java.util.ArrayList;
@@ -35,7 +37,7 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
     private ActivityPackageCustomizationBinding mBinding;
     private PackageCustomizationPagerAdapter mPackageCustomizationPagerAdapter;
     private PackageDetail mPackageModel;
-    private String mCityName;
+    public CheepCareCityLandingPageModel.CityDetail mCityDetail;
     public String mPackageId = "";
     private ArrayList<PackageDetail> mPackageList = new ArrayList<>();
 
@@ -47,11 +49,11 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
         return mPackageList;
     }
 
-    public static void newInstance(Context context, int position, PackageDetail model, String cityName, String selectedPackageID, String packageList) {
+    public static void newInstance(Context context, int position, PackageDetail model, CheepCareCityLandingPageModel.CityDetail cityDetail, String selectedPackageID, String packageList) {
         Intent intent = new Intent(context, PackageCustomizationActivity.class);
         intent.putExtra(Utility.Extra.POSITION, position);
         intent.putExtra(Utility.Extra.MODEL, model);
-        intent.putExtra(Utility.Extra.CITY_NAME, cityName);
+        intent.putExtra(Utility.Extra.CITY_NAME, Utility.getJsonStringFromObject(cityDetail));
         intent.putExtra(Utility.Extra.SELECTED_PACKAGE_ID, selectedPackageID);
         intent.putExtra(Utility.Extra.PACKAGE_LIST, packageList);
         context.startActivity(intent);
@@ -70,7 +72,7 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
 
         if (getIntent().hasExtra(Utility.Extra.MODEL)) {
             mPackageModel = (PackageDetail) getIntent().getExtras().getSerializable(Utility.Extra.MODEL);
-            mCityName = getIntent().getExtras().getString(Utility.Extra.CITY_NAME);
+            mCityDetail = (CheepCareCityLandingPageModel.CityDetail) Utility.getObjectFromJsonString(getIntent().getExtras().getString(Utility.Extra.CITY_NAME), CheepCareCityLandingPageModel.CityDetail.class);
             mPackageId = getIntent().getExtras().getString(Utility.Extra.SELECTED_PACKAGE_ID);
             mPackageList = Utility.getObjectListFromJsonString(getIntent().getExtras().getString(Utility.Extra.PACKAGE_LIST), PackageDetail[].class);
              /*position = getIntent().getExtras().getInt(Utility.Extra.POSITION);*/
@@ -88,8 +90,30 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
                 mBinding.ivCityImage.setLayoutParams(params);
 
                 // Load the image now.
+
+
+                int resId = R.drawable.img_landing_screen_mumbai;
+                switch (mCityDetail.citySlug) {
+                    case NetworkUtility.CARE_CITY_SLUG.MUMBAI:
+                        resId = R.drawable.img_landing_screen_mumbai;
+                        break;
+                    case NetworkUtility.CARE_CITY_SLUG.HYDRABAD:
+                        resId = R.drawable.img_landing_screen_hydrabad;
+                        break;
+                    case NetworkUtility.CARE_CITY_SLUG.BENGALURU:
+                        resId = R.drawable.img_landing_screen_bengaluru;
+                        break;
+                    case NetworkUtility.CARE_CITY_SLUG.DELHI:
+                        resId = R.drawable.img_landing_screen_delhi;
+                        break;
+                    case NetworkUtility.CARE_CITY_SLUG.CHENNAI:
+                        resId = R.drawable.img_landing_screen_chennai;
+                        break;
+                }
+
+
                 Utility.loadImageView(mContext, mBinding.ivCityImage
-                        , R.drawable.img_landing_screen_mumbai
+                        , resId
                         , R.drawable.hotline_ic_image_loading_placeholder);
             }
         });
@@ -356,7 +380,7 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.text_continue:
-//                    WelcomeToCheepCareActivity.newInstance(mContext, mCityName);
+//                    WelcomeToCheepCareActivity.newInstance(mContext, mCityDetail);
                     if (mBinding.viewpager.getCurrentItem() == STAGE_1) {
                         SelectPackageSpecificationsFragment fragment = (SelectPackageSpecificationsFragment) mPackageCustomizationPagerAdapter.getItem(mBinding.viewpager.getCurrentItem());
                         if (fragment != null) {
