@@ -14,9 +14,9 @@ import com.cheep.R;
 import com.cheep.activity.BaseAppCompatActivity;
 import com.cheep.cheepcare.activity.PackageCustomizationActivity;
 import com.cheep.cheepcare.adapter.SelectedPackageSummaryAdapter;
-import com.cheep.cheepcare.model.CheepCarePackageServicesModel;
-import com.cheep.cheepcare.model.PackageDetail;
 import com.cheep.cheepcare.model.PackageOption;
+import com.cheep.cheepcare.model.PackageDetail;
+import com.cheep.cheepcare.model.PackageSubOption;
 import com.cheep.databinding.FragmentPackageSummaryBinding;
 import com.cheep.fragment.BaseFragment;
 import com.cheep.utils.LogUtils;
@@ -32,7 +32,6 @@ public class PackageSummaryFragment extends BaseFragment {
     private FragmentPackageSummaryBinding mBinding;
     private boolean isVerified = false;
     private SelectedPackageSummaryAdapter mPackageAdapter;
-    boolean isYearly = true;
 
     public static PackageSummaryFragment newInstance() {
         return new PackageSummaryFragment();
@@ -132,8 +131,8 @@ public class PackageSummaryFragment extends BaseFragment {
         mBinding.rvBundlePackages.setAdapter(mPackageAdapter);
 
 
-        mBinding.ivHalfYearlyPackage.setSelected(!isYearly);
-        mBinding.ivYearlyPackage.setSelected(isYearly);
+        mBinding.ivHalfYearlyPackage.setSelected(!mPackageCustomizationActivity.isYearly);
+        mBinding.ivYearlyPackage.setSelected(mPackageCustomizationActivity.isYearly);
         calculateTotalPrice();
 
     }
@@ -144,7 +143,7 @@ public class PackageSummaryFragment extends BaseFragment {
         mBinding.rlHalfYearlyPackage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                isYearly = false;
+                mPackageCustomizationActivity.isYearly = false;
                 calculateTotalPrice();
             }
         });
@@ -153,7 +152,7 @@ public class PackageSummaryFragment extends BaseFragment {
         mBinding.rlYearlyPackage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                isYearly = true;
+                mPackageCustomizationActivity.isYearly = true;
                 calculateTotalPrice();
 
             }
@@ -161,29 +160,34 @@ public class PackageSummaryFragment extends BaseFragment {
     }
 
     private void calculateTotalPrice() {
-        double totalPrice = 0;
-        mBinding.ivHalfYearlyPackage.setSelected(!isYearly);
-        mBinding.ivYearlyPackage.setSelected(isYearly);
+        mPackageCustomizationActivity.totalPrice = 0;
+        mBinding.ivHalfYearlyPackage.setSelected(!mPackageCustomizationActivity.isYearly);
+        mBinding.ivYearlyPackage.setSelected(mPackageCustomizationActivity.isYearly);
         for (PackageDetail detail : mPackageAdapter.getList()) {
-            if (detail.packageOptionList != null) {
-                for (CheepCarePackageServicesModel service : detail.packageOptionList) {
-                    if (service.selectionType.equalsIgnoreCase(CheepCarePackageServicesModel.SELECTION_TYPE.RADIO)) {
-                        for (PackageOption option : service.getChildList()) {
+            if (detail.packageOptionList != null && detail.isSelected) {
+                for (PackageOption service : detail.packageOptionList) {
+                    if (service.selectionType.equalsIgnoreCase(PackageOption.SELECTION_TYPE.RADIO)) {
+                        for (PackageSubOption option : service.getChildList()) {
                             if (option.isSelected) {
-                                totalPrice += isYearly ? Double.valueOf(option.annualPrice) : Double.valueOf(option.sixmonthPrice);
+                                mPackageCustomizationActivity.totalPrice += mPackageCustomizationActivity.isYearly ? Double.valueOf(option.annualPrice) : Double.valueOf(option.sixmonthPrice);
                             }
                         }
                     } else {
-                        PackageOption option = service.getChildList().get(0);
-                        totalPrice += isYearly ? Double.valueOf(option.annualPrice) : Double.valueOf(option.sixmonthPrice);
+                        PackageSubOption option = service.getChildList().get(0);
+
+                        mPackageCustomizationActivity.totalPrice += mPackageCustomizationActivity.isYearly ? Double.valueOf(option.annualPrice) : Double.valueOf(option.sixmonthPrice);
+                        for (PackageSubOption option1 : service.getChildList()) {
+                            if (option1.qty > 1) {
+                                mPackageCustomizationActivity.totalPrice += Double.valueOf(option1.unitPrice) * (option1.qty - 1);
+                            }
+                        }
                     }
                 }
             }
-
-
         }
-        LogUtils.LOGE(TAG, "calculateTotalPrice: totalPrice :: " + totalPrice);
-        mBinding.textTotal.setText(getString(R.string.rupee_symbol_x, Utility.getQuotePriceFormatter(String.valueOf(totalPrice))));
+
+        LogUtils.LOGE(TAG, "calculateTotalPrice: totalPrice :: " + mPackageCustomizationActivity.totalPrice);
+        mBinding.textTotal.setText(getString(R.string.rupee_symbol_x, Utility.getQuotePriceFormatter(String.valueOf(mPackageCustomizationActivity.totalPrice))));
     }
 
     private List<PackageDetail> getList() {

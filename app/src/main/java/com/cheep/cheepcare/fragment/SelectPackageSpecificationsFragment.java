@@ -27,9 +27,9 @@ import com.cheep.cheepcare.activity.PackageCustomizationActivity;
 import com.cheep.cheepcare.adapter.AddressAdapter;
 import com.cheep.cheepcare.adapter.ExpandablePackageServicesRecyclerAdapter;
 import com.cheep.cheepcare.dialogs.BottomAddAddressDialog;
-import com.cheep.cheepcare.model.CheepCarePackageServicesModel;
-import com.cheep.cheepcare.model.PackageDetail;
 import com.cheep.cheepcare.model.PackageOption;
+import com.cheep.cheepcare.model.PackageDetail;
+import com.cheep.cheepcare.model.PackageSubOption;
 import com.cheep.databinding.FragmentSelectPackageSpecificationBinding;
 import com.cheep.fragment.BaseFragment;
 import com.cheep.model.AddressModel;
@@ -189,8 +189,8 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
                 switch (statusCode) {
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
                         String jsonData = jsonObject.optJSONObject(DATA).optString(PACKAGE_OPTION_DETAILS);
-                        ArrayList<CheepCarePackageServicesModel> list;
-                        list = Utility.getObjectListFromJsonString(jsonData, CheepCarePackageServicesModel[].class);
+                        ArrayList<PackageOption> list;
+                        list = Utility.getObjectListFromJsonString(jsonData, PackageOption[].class);
                         addPackagesOptionListToPackages(mPackageCustomizationActivity.mPackageId, list);
                         mPackageCustomizationActivity.setContinueButtonText();
                         mBinding.recyclerView.setAdapter(new ExpandablePackageServicesRecyclerAdapter(list, new ExpandablePackageServicesRecyclerAdapter.OnClickOfPackSubServiceListener() {
@@ -229,7 +229,7 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
         }
     };
 
-    private void addPackagesOptionListToPackages(String id, ArrayList<CheepCarePackageServicesModel> list) {
+    private void addPackagesOptionListToPackages(String id, ArrayList<PackageOption> list) {
         for (PackageDetail detail : mPackageCustomizationActivity.getPackageList()) {
             if (detail.id.equalsIgnoreCase(id)) {
                 detail.packageOptionList = list;
@@ -378,12 +378,12 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
         boolean isAnyServiceSelected = false;
         for (PackageDetail detail : mPackageCustomizationActivity.getPackageList()) {
             if (detail.id.equalsIgnoreCase(mPackageCustomizationActivity.mPackageId)) {
-                CheepCarePackageServicesModel model = detail.packageOptionList.get(0);
+                PackageOption model = detail.packageOptionList.get(0);
                 if (model == null)
                     return false;
 
-                if (model.selectionType.equalsIgnoreCase(CheepCarePackageServicesModel.SELECTION_TYPE.RADIO))
-                    for (PackageOption option : model.getChildList()) {
+                if (model.selectionType.equalsIgnoreCase(PackageOption.SELECTION_TYPE.RADIO))
+                    for (PackageSubOption option : model.getChildList()) {
                         if (option.isSelected) {
                             isAnyServiceSelected = true;
                         }

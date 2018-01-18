@@ -11,8 +11,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:paddingBottom="@dimen/scale_20dp">
+            android:orientation="vertical">
 
 
             <android.support.v7.widget.RecyclerView
@@ -208,6 +207,7 @@
                         android:layout_gravity="center_horizontal">
 
                         <ImageView
+                            android:id="@+id/iv_info_grey_promo_code"
                             android:layout_width="10dp"
                             android:layout_height="10dp"
                             android:layout_gravity="center_vertical"
@@ -216,10 +216,11 @@
                             />
 
                         <com.cheep.custom_view.CFTextViewRegular
+                            android:id="@+id/txt_promo_code_message"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center"
-                            android:text="Yay! You saved 10%"
+                            android:text="@string/label_applied_promo_code_message"
                             android:textColor="@color/grey_varient_27"
                             android:textSize="@dimen/text_size_12sp"/>
                     </LinearLayout>
@@ -246,7 +247,7 @@
                             android:layout_height="wrap_content"
                             android:layout_toLeftOf="@+id/imgTick2"
                             android:gravity="center"
-                            android:hint="@string/hint_apply_cheep_promo_code"
+                            android:hint="@string/hint_apply_cheep_mate_code"
                             android:textColor="@color/grey_varient_10"
                             android:textSize="@dimen/text_size_13sp"
                             />
@@ -276,6 +277,7 @@
                         android:layout_gravity="center_horizontal">
 
                         <ImageView
+                            android:id="@+id/iv_info_grey_mate_code"
                             android:layout_width="10dp"
                             android:layout_height="10dp"
                             android:layout_gravity="center_vertical"
@@ -284,10 +286,11 @@
                             />
 
                         <com.cheep.custom_view.CFTextViewRegular
+                            android:id="@+id/txt_mate_code_message"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center"
-                            android:text="Invalid Code"
+                            android:text="@string/label_invalid_code"
                             android:textColor="@color/grey_varient_27"
                             android:textSize="@dimen/text_size_12sp"/>
 
@@ -296,20 +299,30 @@
 
             </LinearLayout>
 
-            <com.cheep.custom_view.CFTextViewRegular
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="left"
-
-                android:paddingBottom="@dimen/scale_16dp"
-                android:paddingTop="@dimen/scale_16dp"
-                android:drawablePadding="@dimen/scale_3dp"
-                android:drawableLeft="@drawable/ic_info_blue"
+                android:paddingBottom="@dimen/scale_20dp"
                 android:paddingLeft="@dimen/scale_16dp"
                 android:paddingRight="@dimen/scale_16dp"
-                android:text="@string/info_package_payment_summary"
-                android:textColor="@color/grey_varient_27"
-                android:textSize="@dimen/text_size_12sp"/>
+                android:paddingTop="@dimen/scale_20dp">
+
+                <ImageView
+                    android:id="@+id/iv_info_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/scale_10dp"
+                    android:src="@drawable/ic_info_blue"/>
+
+                <com.cheep.custom_view.CFTextViewRegular
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@id/iv_info_icon"
+                    android:gravity="left"
+                    android:text="@string/info_package_payment_summary"
+                    android:textColor="@color/grey_varient_16"
+                    android:textSize="@dimen/text_size_12sp"/>
+            </RelativeLayout>
 
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>

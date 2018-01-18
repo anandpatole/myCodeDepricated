@@ -1,44 +1,48 @@
 package com.cheep.cheepcare.model;
 
-import android.support.annotation.Keep;
-
+import com.cheep.custom_view.expandablerecycleview.Parent;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.util.List;
 
-@Keep
-public class PackageOption implements Serializable {
+/**
+ * Created by pankaj on 12/26/17.
+ */
 
-    @SerializedName("package_suboption_id")
-    @Expose
-    public String packageOptionId;
-    @SerializedName("package_suboption_title")
-    @Expose
-    public String packageSuboptionTitle;
-    @SerializedName("unit_price")
-    @Expose
-    public String unitPrice;
-    @SerializedName("monthly_price")
-    @Expose
-    public String monthlyPrice;
-    @SerializedName("sixmonth_price")
-    @Expose
-    public String sixmonthPrice;
-    @SerializedName("annual_price")
-    @Expose
-    public String annualPrice;
-    //  "min_unit": "1",
-//          "max_unit": "5"
-    @SerializedName("min_unit")
-    @Expose
-    public String minUnit;
+public class PackageOption implements Parent<PackageSubOption>, Serializable {
 
-    @SerializedName("max_unit")
+    @SerializedName("package_option_id")
     @Expose
-    public String maxUnit;
+    public String packageId;
 
+    @SerializedName("package_option_title")
+    @Expose
+    public String packageOptionTitle;
+
+    @SerializedName("selection_type")
+    @Expose
+    public String selectionType;
+
+    @SerializedName("package_suboption")
+    @Expose
+    public List<PackageSubOption> packageOptionList = null;
     public boolean isSelected = false;
 
-    public int qty = -1;
+    public interface SELECTION_TYPE {
+        String RADIO = "radio";
+        String CHECK_BOX = "checkbox";
+    }
+
+
+    @Override
+    public List<PackageSubOption> getChildList() {
+        return packageOptionList;
+    }
+
+    @Override
+    public boolean isInitiallyExpanded() {
+        return false;
+    }
 }

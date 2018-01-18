@@ -8,4 +8,6 @@
     <string name="label_appliance">%1d Appliances</string>
     <string name="validation_message_cheep_care_address">Please select address of %1s</string>
     <string name="info_package_payment_summary"><![CDATA[Under CHEEP Care, basic repairs & maintenance will be provided by our PRO\'s. All material will be charged extra as per actuals. For complex jobs, additional payments may be charged by the PRO.]]></string>
+    <string name="label_invalid_code">Invalid Code</string>
+    <string name="label_applied_promo_code_message">Yay! You saved %1s</string>
 </resources>
