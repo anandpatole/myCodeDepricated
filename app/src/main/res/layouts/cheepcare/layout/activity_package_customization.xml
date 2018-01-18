@@ -166,20 +166,57 @@
                 android:id="@+id/viewpager"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_above="@+id/text_continue"/>
+                android:layout_above="@+id/ln_bottom"/>
 
-            <com.cheep.custom_view.CFTextViewSemiBold
-                android:id="@+id/text_continue"
+            <LinearLayout
+                android:id="@+id/ln_bottom"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_gravity="bottom"
-                android:background="@color/splash_gradient_end"
-                android:gravity="center"
-                android:padding="@dimen/scale_10dp"
-                android:textColor="@color/white"
-                android:textSize="@dimen/text_size_17sp"
-                tools:text="@string/label_post_it"/>
+                android:layout_alignParentBottom="true">
+
+                <com.cheep.custom_view.CFTextViewSemiBold
+                    android:id="@+id/text_service"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="bottom"
+                    android:layout_weight="0.5"
+                    android:background="@color/splash_gradient_end"
+                    android:ellipsize="end"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_size_15sp"
+                    tools:text="@string/add_package_to_cart"/>
+
+                <com.cheep.custom_view.CFTextViewSemiBold
+                    android:id="@+id/text_continue"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:layout_weight="1"
+                    android:background="@color/splash_gradient_end"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:padding="@dimen/scale_10dp"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_size_17sp"
+                    tools:text="@string/add_package_to_cart"/>
+
+                <com.cheep.custom_view.CFTextViewSemiBold
+                    android:id="@+id/text_price"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="bottom"
+                    android:layout_weight="0.5"
+                    android:background="@color/splash_gradient_end"
+                    android:ellipsize="end"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_size_15sp"
+                    tools:text="@string/add_package_to_cart"/>
+
+            </LinearLayout>
         </RelativeLayout>
 
     </LinearLayout>

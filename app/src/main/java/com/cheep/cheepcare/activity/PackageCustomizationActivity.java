@@ -18,9 +18,18 @@ import com.cheep.cheepcare.adapter.PackageCustomizationPagerAdapter;
 import com.cheep.cheepcare.fragment.PackageBundlingFragment;
 import com.cheep.cheepcare.fragment.PackageSummaryFragment;
 import com.cheep.cheepcare.fragment.SelectPackageSpecificationsFragment;
+import com.cheep.cheepcare.model.CheepCareCityLandingPageModel;
 import com.cheep.cheepcare.model.PackageDetail;
+import com.cheep.cheepcare.model.PackageOption;
+import com.cheep.cheepcare.model.PackageSubOption;
 import com.cheep.databinding.ActivityPackageCustomizationBinding;
+import com.cheep.network.NetworkUtility;
+import com.cheep.utils.LogUtils;
 import com.cheep.utils.Utility;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -33,9 +42,12 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
     private ActivityPackageCustomizationBinding mBinding;
     private PackageCustomizationPagerAdapter mPackageCustomizationPagerAdapter;
     private PackageDetail mPackageModel;
-    private String mCityName;
+    public CheepCareCityLandingPageModel.CityDetail mCityDetail;
     public String mPackageId = "";
     private ArrayList<PackageDetail> mPackageList = new ArrayList<>();
+    public double totalPrice;
+    public boolean isYearly = true;
+    private static final String TAG = "PackageCustomizationAct";
 
     public void setPackageList(ArrayList<PackageDetail> mPackageList) {
         this.mPackageList = mPackageList;
@@ -45,11 +57,11 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
         return mPackageList;
     }
 
-    public static void newInstance(Context context, int position, PackageDetail model, String cityName, String selectedPackageID, String packageList) {
+    public static void newInstance(Context context, int position, PackageDetail model, CheepCareCityLandingPageModel.CityDetail cityDetail, String selectedPackageID, String packageList) {
         Intent intent = new Intent(context, PackageCustomizationActivity.class);
         intent.putExtra(Utility.Extra.POSITION, position);
         intent.putExtra(Utility.Extra.MODEL, model);
-        intent.putExtra(Utility.Extra.CITY_NAME, cityName);
+        intent.putExtra(Utility.Extra.CITY_NAME, Utility.getJsonStringFromObject(cityDetail));
         intent.putExtra(Utility.Extra.SELECTED_PACKAGE_ID, selectedPackageID);
         intent.putExtra(Utility.Extra.PACKAGE_LIST, packageList);
         context.startActivity(intent);
@@ -68,7 +80,7 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
 
         if (getIntent().hasExtra(Utility.Extra.MODEL)) {
             mPackageModel = (PackageDetail) getIntent().getExtras().getSerializable(Utility.Extra.MODEL);
-            mCityName = getIntent().getExtras().getString(Utility.Extra.CITY_NAME);
+            mCityDetail = (CheepCareCityLandingPageModel.CityDetail) Utility.getObjectFromJsonString(getIntent().getExtras().getString(Utility.Extra.CITY_NAME), CheepCareCityLandingPageModel.CityDetail.class);
             mPackageId = getIntent().getExtras().getString(Utility.Extra.SELECTED_PACKAGE_ID);
             mPackageList = Utility.getObjectListFromJsonString(getIntent().getExtras().getString(Utility.Extra.PACKAGE_LIST), PackageDetail[].class);
              /*position = getIntent().getExtras().getInt(Utility.Extra.POSITION);*/
@@ -86,8 +98,30 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
                 mBinding.ivCityImage.setLayoutParams(params);
 
                 // Load the image now.
+
+
+                int resId = R.drawable.img_landing_screen_mumbai;
+                switch (mCityDetail.citySlug) {
+                    case NetworkUtility.CARE_CITY_SLUG.MUMBAI:
+                        resId = R.drawable.img_landing_screen_mumbai;
+                        break;
+                    case NetworkUtility.CARE_CITY_SLUG.HYDRABAD:
+                        resId = R.drawable.img_landing_screen_hydrabad;
+                        break;
+                    case NetworkUtility.CARE_CITY_SLUG.BENGALURU:
+                        resId = R.drawable.img_landing_screen_bengaluru;
+                        break;
+                    case NetworkUtility.CARE_CITY_SLUG.DELHI:
+                        resId = R.drawable.img_landing_screen_delhi;
+                        break;
+                    case NetworkUtility.CARE_CITY_SLUG.CHENNAI:
+                        resId = R.drawable.img_landing_screen_chennai;
+                        break;
+                }
+
+
                 Utility.loadImageView(mContext, mBinding.ivCityImage
-                        , R.drawable.img_landing_screen_mumbai
+                        , resId
                         , R.drawable.hotline_ic_image_loading_placeholder);
             }
         });
@@ -118,7 +152,7 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
         mBinding.textStep1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                gotoStep(STAGE_1);
+//                gotoStep(STAGE_1);
             }
         });
         mBinding.textStep2.setOnClickListener(new View.OnClickListener() {
@@ -130,7 +164,7 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
 
                  */
 //                if (mCurrentStep > 1) {
-                gotoStep(STAGE_2);
+//                gotoStep(STAGE_2);
 //                } else {
 //                    Utility.showSnackBar(getString(R.string.step_1_desc_cheep_care), mBinding.getRoot());
 //                }
@@ -145,7 +179,7 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
                  */
 //                TODO:: remove comments
 //                if (mCurrentStep > 1) {
-                gotoStep(STAGE_3);
+//                gotoStep(STAGE_3);
 //                } else {
 //                    Utility.showSnackBar(getString(R.string.step_1_desc_cheep_care), mBinding.getRoot());
 //                }
@@ -170,12 +204,6 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
         }
     }
 
-    public void setContinueButtonText() {
-        for (PackageDetail detail : mPackageList) {
-            if (detail.id.equalsIgnoreCase(mPackageId))
-                mBinding.textContinue.setText(getString(R.string.select_x_package, detail.title));
-        }
-    }
 
     /**
      * This will setup the viewpager and tabs as well
@@ -183,6 +211,7 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
      * @param pager pager
      */
     private void setupViewPager(ViewPager pager) {
+        pager.setOffscreenPageLimit(2);
         mPackageCustomizationPagerAdapter = new PackageCustomizationPagerAdapter(getSupportFragmentManager());
         mPackageCustomizationPagerAdapter.addFragment(SelectPackageSpecificationsFragment.TAG);
         mPackageCustomizationPagerAdapter.addFragment(PackageBundlingFragment.TAG);
@@ -322,13 +351,16 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
                 // Change description
                 mBinding.textStepDesc.setText(getString(R.string.step_2_desc_cheep_care));
                 mBinding.textContinue.setText(getString(R.string.label_proceed_to_checkout));
-
+                mBinding.textService.setText(Utility.EMPTY_STRING);
+                mBinding.textPrice.setText(Utility.EMPTY_STRING);
                 break;
             case STAGE_3:
                 mBinding.viewpager.setCurrentItem(2);
                 // Change description
                 mBinding.textStepDesc.setText(getString(R.string.step_3_desc_cheep_care));
                 mBinding.textContinue.setText(getString(R.string.label_pay_now));
+                mBinding.textService.setText(Utility.EMPTY_STRING);
+                mBinding.textPrice.setText(Utility.EMPTY_STRING);
                 break;
         }
     }
@@ -356,7 +388,6 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.text_continue:
-//                    WelcomeToCCActivity.newInstance(mContext, mCityName);
                     if (mBinding.viewpager.getCurrentItem() == STAGE_1) {
                         SelectPackageSpecificationsFragment fragment = (SelectPackageSpecificationsFragment) mPackageCustomizationPagerAdapter.getItem(mBinding.viewpager.getCurrentItem());
                         if (fragment != null) {
@@ -374,11 +405,87 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
                         gotoStep(STAGE_3);
                     } else {
 //                        PaymentChoiceActivity.newInstance();
+
+                        createSubscriptionPackageRequest();
                     }
                     break;
             }
         }
     };
+
+    private void createSubscriptionPackageRequest() {
+
+        JSONArray cartArray = new JSONArray();
+        double totalPrice = 0;
+
+        for (PackageDetail detail : mPackageList) {
+            {
+                JSONObject packageObject = new JSONObject();
+                if (detail.isSelected) {
+                    try {
+                        packageObject.put("package_id", detail.id);
+                        JSONArray multiPackageArray = new JSONArray();
+                        JSONObject singleObj = new JSONObject();
+                        JSONObject addressObject = new JSONObject();
+                        int addressId;
+                        try {
+                            addressId = Integer.parseInt(detail.mSelectedAddress.address_id);
+                        } catch (Exception e) {
+                            addressId = 0;
+                        }
+                        if (addressId <= 0) {
+                            addressObject.put(NetworkUtility.TAGS.ADDRESS, detail.mSelectedAddress.address);
+                            addressObject.put(NetworkUtility.TAGS.ADDRESS_INITIALS, detail.mSelectedAddress.address_initials);
+                            addressObject.put(NetworkUtility.TAGS.CATEGORY, detail.mSelectedAddress.category);
+                            addressObject.put(NetworkUtility.TAGS.LAT, detail.mSelectedAddress.lat);
+                            addressObject.put(NetworkUtility.TAGS.LNG, detail.mSelectedAddress.lng);
+                            addressObject.put(NetworkUtility.TAGS.COUNTRY, detail.mSelectedAddress.countryName);
+                            addressObject.put(NetworkUtility.TAGS.STATE, detail.mSelectedAddress.stateName);
+                            addressObject.put(NetworkUtility.TAGS.CITY_NAME, detail.mSelectedAddress.cityName);
+                        } else {
+                            addressObject.put(NetworkUtility.TAGS.ADDRESS_ID, addressId);
+                        }
+
+                        double price = 0;
+                        singleObj.put("address", addressObject);
+                        JSONArray optionArray = new JSONArray();
+                        for (PackageOption servicesModel : detail.packageOptionList) {
+                            JSONObject optionObj = new JSONObject();
+                            optionObj.put("package_option_id", servicesModel.packageId);
+
+                            JSONArray subOptionArray = new JSONArray();
+                            if (servicesModel.selectionType.equalsIgnoreCase(PackageOption.SELECTION_TYPE.RADIO))
+                                for (PackageSubOption option : servicesModel.getChildList()) {
+                                    if (option.isSelected) {
+                                        JSONObject object = new JSONObject();
+                                        object.put("package_suboption_id", option.packageOptionId);
+                                        object.put("unit", "1");
+                                        subOptionArray.put(object);
+                                    }
+                                }
+                            else
+                                for (PackageSubOption option : servicesModel.getChildList()) {
+                                    JSONObject object = new JSONObject();
+                                    object.put("package_suboption_id", option.packageOptionId);
+                                    object.put("unit", option.qty);
+                                    subOptionArray.put(object);
+                                }
+
+                            optionObj.put("package_suboptions", subOptionArray);
+                            optionArray.put(optionObj);
+                        }
+                        singleObj.put("package_options", optionArray);
+                        multiPackageArray.put(singleObj);
+                        packageObject.put("package", multiPackageArray);
+                        cartArray.put(packageObject);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+        LogUtils.LOGE(TAG, "createSubscriptionPackageRequest: " + cartArray.toString());
+    }
 
     public void loadAnotherPackage() {
         SelectPackageSpecificationsFragment fragment =
@@ -386,5 +493,43 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
         if (fragment != null) {
             fragment.initiateUI();
         }
+    }
+
+    public void setContinueButtonText() {
+        mBinding.textContinue.setText(R.string.add_package_to_cart);
+        for (PackageDetail detail : mPackageList) {
+            if (detail.id.equalsIgnoreCase(mPackageId)) {
+                if (detail.packageOptionList != null && detail.id.equalsIgnoreCase(mPackageId)) {
+                    for (PackageOption packageOption : detail.packageOptionList) {
+                        if (packageOption.selectionType.equalsIgnoreCase(PackageOption.SELECTION_TYPE.RADIO))
+                            for (PackageSubOption option : packageOption.getChildList()) {
+                                if (option.isSelected) {
+                                    setContinueButtonText(option.packageSuboptionTitle, option.monthlyPrice);
+                                }
+                            }
+                        else {
+                            int totalCount = 0;
+                            String monthlyPrice = packageOption.getChildList().get(0).monthlyPrice;
+                            for (PackageSubOption option : packageOption.getChildList()) {
+                                totalCount += option.qty;
+                            }
+                            setContinueButtonText(totalCount, monthlyPrice);
+                        }
+                    }
+                }
+                mBinding.textContinue.setText(getString(R.string.add_package_to_cart));
+                break;
+            }
+        }
+    }
+
+    public void setContinueButtonText(String selectedService, String price) {
+        mBinding.textService.setText(selectedService);
+        mBinding.textPrice.setText(Utility.getMonthlyPrice(price, this));
+    }
+
+    public void setContinueButtonText(int totalAppliance, String price) {
+        mBinding.textService.setText(getString(R.string.label_appliance, totalAppliance));
+        mBinding.textPrice.setText(Utility.getMonthlyPrice(price, this));
     }
 }

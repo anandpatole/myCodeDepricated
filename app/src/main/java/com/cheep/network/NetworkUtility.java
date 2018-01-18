@@ -138,6 +138,7 @@ public class NetworkUtility {
         // CHEEP CARE web services
         public static final String GET_CITY_CARE_DETAIL = BASE_URL + "customers/care/getCityCareDetail";
         public static final String GET_CARE_PACKAGE_DETAILS = BASE_URL + "customers/care/getCarePackageDetails";
+        public static final String VERIFY_ADDRESS_CHEEP_CARE = BASE_URL + "customers/profile/verify_address";
 
     }
 

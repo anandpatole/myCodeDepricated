@@ -10,6 +10,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.cheep.R;
 import com.cheep.activity.BaseAppCompatActivity;
 import com.cheep.cheepcare.activity.PackageCustomizationActivity;
@@ -17,11 +19,23 @@ import com.cheep.cheepcare.adapter.PackageBundlingAdapter;
 import com.cheep.cheepcare.model.PackageDetail;
 import com.cheep.databinding.FragmentPackageBundlingBinding;
 import com.cheep.fragment.BaseFragment;
+import com.cheep.model.AddressModel;
+import com.cheep.network.NetworkUtility;
+import com.cheep.network.Volley;
+import com.cheep.network.VolleyNetworkRequest;
+import com.cheep.utils.LogUtils;
+import com.cheep.utils.PreferenceUtility;
+import com.cheep.utils.Utility;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class PackageBundlingFragment extends BaseFragment {
 
@@ -75,6 +89,11 @@ public class PackageBundlingFragment extends BaseFragment {
                 mPackageCustomizationActivity.gotoStep(PackageCustomizationActivity.STAGE_1);
                 mPackageCustomizationActivity.loadAnotherPackage();
             }
+
+            @Override
+            public void onUpdateOfAddress(int position, AddressModel addressModel) {
+                verifyAddressForCity(position, addressModel);
+            }
         });
         mPackageAdapter.addPakcageList(getList());
         mBinding.rvBundlePackages.setLayoutManager(new LinearLayoutManager(
@@ -116,11 +135,13 @@ public class PackageBundlingFragment extends BaseFragment {
         });
         ArrayList<PackageDetail> newList = new ArrayList<>();
         boolean isHeaderAdded = false;
+        int count = 0;
         for (PackageDetail model : mPackageCustomizationActivity.getPackageList()) {
             if (model.isSelected) {
                 model.rowType = PackageBundlingAdapter.ROW_PACKAGE_SELECTED;
+                count++;
             } else {
-                if (!isHeaderAdded) {
+                if (count > 0 && !isHeaderAdded) {
                     PackageDetail model1 = new PackageDetail();
                     model1.rowType = PackageBundlingAdapter.ROW_PACKAGE_HEADER;
                     newList.add(model1);
@@ -138,4 +159,102 @@ public class PackageBundlingFragment extends BaseFragment {
 
     }
 
+    private void verifyAddressForCity(final int adapterPosition, final AddressModel model) {
+
+        showProgressDialog();
+
+        //Add Header parameters
+        Map<String, String> mHeaderParams = new HashMap<>();
+        mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
+        if (PreferenceUtility.getInstance(mContext).getUserDetails() != null)
+            mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
+
+        //Add Params
+        Map<String, Object> mParams = new HashMap<>();
+        int addressId;
+        try {
+            addressId = Integer.parseInt(model.address_id);
+        } catch (Exception e) {
+            addressId = 0;
+        }
+        if (addressId <= 0) {
+            // In case its nagative then provide other address information
+            mParams.put(NetworkUtility.TAGS.ADDRESS_ID, Utility.ZERO_STRING);
+            mParams.put(NetworkUtility.TAGS.CITY_NAME, model.cityName);
+        } else {
+            mParams.put(NetworkUtility.TAGS.ADDRESS_ID, model.address_id);
+            mParams.put(NetworkUtility.TAGS.CITY_NAME, Utility.EMPTY_STRING);
+        }
+
+        Utility.hideKeyboard(mContext);
+        @SuppressWarnings("unchecked")
+        VolleyNetworkRequest mVolleyNetworkRequest = new VolleyNetworkRequest(NetworkUtility.WS.VERIFY_ADDRESS_CHEEP_CARE
+                , errorListener
+                , new Response.Listener() {
+            @Override
+            public void onResponse(Object response) {
+                hideProgressDialog();
+                Log.i(TAG, "onResponse: " + response);
+
+                String strResponse = (String) response;
+                try {
+                    JSONObject jsonObject = new JSONObject(strResponse);
+                    Log.i(TAG, "onResponse: " + jsonObject.toString());
+                    int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
+                    String error_message;
+
+                    switch (statusCode) {
+                        case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
+                            JSONObject jsonData = jsonObject.getJSONObject(NetworkUtility.TAGS.DATA);
+                            // strategic partner pro id for given location
+                            String city_id = jsonData.optString(NetworkUtility.TAGS.CITY_ID);
+                            if (mPackageCustomizationActivity.mCityDetail.id.equalsIgnoreCase(city_id)) {
+                                mPackageAdapter.getList().get(adapterPosition).mSelectedAddress = model;
+                                mPackageAdapter.notifyItemChanged(adapterPosition);
+                            } else {
+                                Utility.showToast(mPackageCustomizationActivity, getString(R.string.validation_message_cheep_care_address,mPackageCustomizationActivity.mCityDetail.cityName));
+                            }
+
+                            break;
+                        case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
+                            // Show Toast
+                            Utility.showToast(mPackageCustomizationActivity, getString(R.string.label_something_went_wrong));
+                            break;
+                        case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
+                            error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
+                            // Show message
+                            Utility.showToast(mPackageCustomizationActivity, error_message);
+                            break;
+                        case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
+                        case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
+                            //Logout and finish the current activity
+                            Utility.logout(mContext, true, statusCode);
+                            mPackageCustomizationActivity.finish();
+                            break;
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    errorListener.onErrorResponse(new VolleyError(e.getMessage()));
+                }
+                hideProgressDialog();
+            }
+        }
+                , mHeaderParams
+                , mParams
+                , null);
+        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest, NetworkUtility.WS.CHECK_PRO_AVAILABILITY_FOR_STRATEGIC_TASK);
+
+    }
+
+    Response.ErrorListener errorListener = new Response.ErrorListener() {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            LogUtils.LOGD(TAG, "onErrorResponse() called with: error = [" + error + "]");
+            // Close Progressbar
+            hideProgressDialog();
+            // Show Toast
+            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
+        }
+
+    };
 }

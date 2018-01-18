@@ -63,7 +63,7 @@ public class AddressPackageCustomizationAdapter<T> extends ArrayAdapter<T> {
         if (position == 0) {
             mHolder.mBinding.llAddressContainer.setVisibility(View.GONE);
         } else {
-            if (!TextUtils.isEmpty(model.nickname) && !model.nickname.equalsIgnoreCase("null"))
+            if (!TextUtils.isEmpty(model.nickname))
                 mHolder.mBinding.tvAddressNickname.setText(model.nickname);
             else
                 mHolder.mBinding.tvAddressNickname.setText(Utility.getAddressCategoryString(model.category));

@@ -14,9 +14,13 @@ import com.cheep.R;
 import com.cheep.activity.BaseAppCompatActivity;
 import com.cheep.cheepcare.activity.PackageCustomizationActivity;
 import com.cheep.cheepcare.adapter.SelectedPackageSummaryAdapter;
+import com.cheep.cheepcare.model.PackageOption;
 import com.cheep.cheepcare.model.PackageDetail;
+import com.cheep.cheepcare.model.PackageSubOption;
 import com.cheep.databinding.FragmentPackageSummaryBinding;
 import com.cheep.fragment.BaseFragment;
+import com.cheep.utils.LogUtils;
+import com.cheep.utils.Utility;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,6 +71,13 @@ public class PackageSummaryFragment extends BaseFragment {
             mPackageCustomizationActivity.setTaskState(PackageCustomizationActivity.STEP_THREE_UNVERIFIED);
         }
 
+        if (mPackageAdapter != null && mPackageAdapter.getList() != null) {
+            mPackageAdapter.getList().clear();
+            mPackageAdapter.addPakcageList(getList());
+            calculateTotalPrice();
+        }
+
+
         // Hide the post task button
 //        mPackageCustomizationActivity.showPostTaskButton(false, false);
 
@@ -85,7 +96,10 @@ public class PackageSummaryFragment extends BaseFragment {
     public void initiateUI() {
 
         mBinding.rvBundlePackages.setNestedScrollingEnabled(false);
+
+        // package recycler view item click listener
         mPackageAdapter = new SelectedPackageSummaryAdapter(new SelectedPackageSummaryAdapter.PackageItemClickListener() {
+
             @Override
             public void onPackageItemClick(int position, PackageDetail packageModel) {
 
@@ -100,22 +114,80 @@ public class PackageSummaryFragment extends BaseFragment {
                         detail.mSelectedAddress = null;
                         detail.packageOptionList = null;
                         mPackageAdapter.getList().remove(position);
+                        calculateTotalPrice();
                     }
                 mPackageAdapter.notifyDataSetChanged();
             }
         });
+
         mPackageAdapter.addPakcageList(getList());
+
         mBinding.rvBundlePackages.setLayoutManager(new LinearLayoutManager(
                 mContext
                 , LinearLayoutManager.VERTICAL
                 , false
         ));
+
         mBinding.rvBundlePackages.setAdapter(mPackageAdapter);
+
+
+        mBinding.ivHalfYearlyPackage.setSelected(!mPackageCustomizationActivity.isYearly);
+        mBinding.ivYearlyPackage.setSelected(mPackageCustomizationActivity.isYearly);
+        calculateTotalPrice();
+
     }
 
     @Override
     public void setListener() {
 
+        mBinding.rlHalfYearlyPackage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mPackageCustomizationActivity.isYearly = false;
+                calculateTotalPrice();
+            }
+        });
+
+
+        mBinding.rlYearlyPackage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mPackageCustomizationActivity.isYearly = true;
+                calculateTotalPrice();
+
+            }
+        });
+    }
+
+    private void calculateTotalPrice() {
+        mPackageCustomizationActivity.totalPrice = 0;
+        mBinding.ivHalfYearlyPackage.setSelected(!mPackageCustomizationActivity.isYearly);
+        mBinding.ivYearlyPackage.setSelected(mPackageCustomizationActivity.isYearly);
+        for (PackageDetail detail : mPackageAdapter.getList()) {
+            if (detail.packageOptionList != null && detail.isSelected) {
+                for (PackageOption service : detail.packageOptionList) {
+                    if (service.selectionType.equalsIgnoreCase(PackageOption.SELECTION_TYPE.RADIO)) {
+                        for (PackageSubOption option : service.getChildList()) {
+                            if (option.isSelected) {
+                                mPackageCustomizationActivity.totalPrice += mPackageCustomizationActivity.isYearly ? Double.valueOf(option.annualPrice) : Double.valueOf(option.sixmonthPrice);
+                            }
+                        }
+                    } else {
+                        PackageSubOption option = service.getChildList().get(0);
+
+                        mPackageCustomizationActivity.totalPrice += mPackageCustomizationActivity.isYearly ? Double.valueOf(option.annualPrice) : Double.valueOf(option.sixmonthPrice);
+                        for (PackageSubOption option1 : service.getChildList()) {
+                            if (option1.qty > 1) {
+                                mPackageCustomizationActivity.totalPrice += Double.valueOf(option1.unitPrice) * (option1.qty - 1);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        LogUtils.LOGE(TAG, "calculateTotalPrice: totalPrice :: " + mPackageCustomizationActivity.totalPrice);
+        mBinding.textTotal.setText(getString(R.string.rupee_symbol_x, Utility.getQuotePriceFormatter(String.valueOf(mPackageCustomizationActivity.totalPrice))));
     }
 
     private List<PackageDetail> getList() {

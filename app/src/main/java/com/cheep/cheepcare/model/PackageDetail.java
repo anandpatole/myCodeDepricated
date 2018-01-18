@@ -31,9 +31,11 @@ public class PackageDetail implements Serializable {
     public String packageSlug;
     private final static long serialVersionUID = -4061560571461215516L;
     @Nullable
-    public ArrayList<CheepCarePackageServicesModel> packageOptionList;
+    public ArrayList<PackageOption> packageOptionList;
     public boolean isSelected = false;
     @Nullable
     public AddressModel mSelectedAddress;
     public int rowType = 0;
+
+    public double calculatedPackagePrice = 0;
 }

@@ -443,7 +443,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="progress_dialog_body">We are searching for a suitable PRO in your neighbourhood.</string>
     <string name="all_done">All Done</string>
     <string name="total_experience">%s years of experience</string>
-    <string name="merchant_detail_body">Your task is assigned to our PRO, %1$s. He will be at your selected address on %2$s. You can also contact your PRO via chat or call within the App. We are always available 24x7 for any help!</string>
+    <string name="insta_book_pro_dialog_body">Your task is assigned to, %1$s. Your PRO will be at your selected address on %2$s. You can also contact your PRO via chat or call within the App. We are always available 24x7 for any help!</string>
     <string name="alert_no_pro_found">Thank you for your order. All our PROs in your city are busy due to heavy demand. We have noted your requirements and we will revert back to you very shortly.</string>
     <string name="cheep_all_caps">CHEEP</string>
     <string name="label_address_delete_message">Are you sure you want to delete this address?</string>
@@ -598,7 +598,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="soci_care">Soci Care</string>
     <string name="label_select_address">Select Address</string>
     <string name="label_add_another_address">Add another address</string>
-    <string name="rupee_symbol_x_package_price">₹%1s/MTH</string>
+    <string name="rupee_symbol_x_package_price">₹%1s/MTH*</string>
     <string name="label_half_yearly">Half-Yearly</string>
     <string name="description_half_yearly_package">Hassel-free goodness with CHEEP CARE for 6 whole months.</string>
     <string name="label_yearly">Yearly</string>
@@ -620,13 +620,20 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="msg_bundle_other_packages">Click here to bundle other packages and save money</string>
     <string name="label_renew">Renew</string>
     <string name="msg_renew_subscription_ends">Your subscription will expire in %1s days</string>
-    <string name="hint_apply_cheep_promo_code">Apply CHEEP Promo code?</string>
-    <string name="hint_apply_cheep_mate_code">Have a CHEEP Mate Code?</string>
-    <string name="label_empty_string"></string>
-    <string name="label_proceed_to_checkout">Proceed to Checkout</string>
     <string name="msg_mng_subs_add_packages">You can also add more CHEEP Care Packages at striking, affordable deals.</string>
     <string name="msg_cheep_assurance_select_time">As per our guarantee, CHEEP will instantly provide a verified PRO to get your job done within 24 hours of
         booking. If you wish to choose a specific time, please click here!</string>
     <string name="label_subscribed">Subscribed</string>
     <string name="label_sort">Sort</string>
+
+    <string name="hint_apply_cheep_promo_code">Apply CHEEP Promo code?</string>
+    <string name="hint_apply_cheep_mate_code">Have a CHEEP Mate Code?</string>
+    <string name="label_empty_string"></string>
+    <string name="label_proceed_to_checkout">Proceed to Checkout</string>
+    <string name="add_package_to_cart">Add Package to Cart</string>
+    <string name="label_appliance">%1d Appliances</string>
+    <string name="validation_message_cheep_care_address">Please select address of %1s</string>
+    <string name="info_package_payment_summary">Under CHEEP Care, basic repairs &amp; maintenance will be provided by our PRO\'s. All material will be charged extra as per actuals. For complex jobs, additional payments may be charged by the PRO.></string>
+    <string name="label_invalid_code">Invalid Code</string>
+    <string name="label_applied_promo_code_message">Yay! You saved %1s</string>
 </resources>
