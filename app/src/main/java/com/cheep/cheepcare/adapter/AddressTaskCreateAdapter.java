@@ -12,6 +12,7 @@ import android.widget.ArrayAdapter;
 
 import com.cheep.R;
 import com.cheep.databinding.RowAddressPackageCustomizationBinding;
+import com.cheep.databinding.RowAddressTaskCreateBinding;
 import com.cheep.model.AddressModel;
 import com.cheep.utils.Utility;
 
@@ -21,11 +22,11 @@ import java.util.List;
  * Created by pankaj on 12/25/17.
  */
 
-public class AddressAdapter<T> extends ArrayAdapter<T> {
+public class AddressTaskCreateAdapter<T> extends ArrayAdapter<T> {
 
     private final List<AddressModel> mList;
 
-    public AddressAdapter(@NonNull Context context, int resource, List<AddressModel> list) {
+    public AddressTaskCreateAdapter(@NonNull Context context, int resource, List<AddressModel> list) {
         super(context, resource);
         mList = list;
     }
@@ -48,10 +49,10 @@ public class AddressAdapter<T> extends ArrayAdapter<T> {
 
     @Override
     public View getDropDownView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        final AddressAdapter.ViewHolder mHolder;
+        final AddressTaskCreateAdapter.ViewHolder mHolder;
         if (convertView == null) {
-            RowAddressPackageCustomizationBinding binding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext())
-                    , R.layout.row_address_package_customization
+            RowAddressTaskCreateBinding binding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext())
+                    , R.layout.row_address_task_create
                     , parent, false);
             convertView = binding.getRoot();
             mHolder = new ViewHolder(binding);
@@ -59,7 +60,7 @@ public class AddressAdapter<T> extends ArrayAdapter<T> {
         } else {
             mHolder = (ViewHolder) convertView.getTag();
         }
-        AddressModel model = mList.get(position);
+       /* AddressModel model = mList.get(position);
         if (position == 0) {
             mHolder.mBinding.llAddressContainer.setVisibility(View.GONE);
         } else {
@@ -70,15 +71,15 @@ public class AddressAdapter<T> extends ArrayAdapter<T> {
             mHolder.mBinding.ivAddressIcon.setImageResource(Utility.getAddressCategoryBlueIcon(model.category));
             mHolder.mBinding.llAddressContainer.setVisibility(View.VISIBLE);
         }
-        mHolder.mBinding.tvAddress.setText(model.address_initials + ", " + model.address);
+        mHolder.mBinding.tvAddress.setText(model.address_initials + ", " + model.address);*/
 
         return convertView;
     }
 
     private static class ViewHolder {
-        private RowAddressPackageCustomizationBinding mBinding;
+        private RowAddressTaskCreateBinding mBinding;
 
-        ViewHolder(RowAddressPackageCustomizationBinding binding) {
+        ViewHolder(RowAddressTaskCreateBinding binding) {
             mBinding = binding;
         }
     }

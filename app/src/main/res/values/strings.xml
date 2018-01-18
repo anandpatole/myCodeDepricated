@@ -554,7 +554,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_enter_amount">Enter Amount</string>
     <string name="label_amount_payable">Amount Payable</string>
     <string name="label_notify_paying_by_wallet">You are about to pay using your %1s wallet</string>
-    <string name="no_pro_available_title"/>
+    <string name="no_pro_available_title" />
     <string name="no_pro_available_description">No PROs is available for this address</string>
     <string name="validate_comment">Please provide valid comment.</string>
     <string name="title_booking_confimation">Booking Confirmation</string>
@@ -617,8 +617,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="hint_landmark">Landmark</string>
     <string name="hint_pincode">Pincode</string>
     <string name="hint_nickname">Nickname</string>
-    <string name="msg_bundle_other_packages">Click here to bundle other packages, save loads of
-        money and make your homes more happier</string>
+    <string name="msg_bundle_other_packages">Click here to bundle other packages and save money</string>
     <string name="label_renew">Renew</string>
     <string name="msg_renew_subscription_ends">Your subscription will expire in %1s days</string>
     <string name="hint_apply_cheep_promo_code">Apply CHEEP Promo code?</string>
@@ -628,4 +627,6 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="msg_mng_subs_add_packages">You can also add more CHEEP Care Packages at striking, affordable deals.</string>
     <string name="msg_cheep_assurance_select_time">As per our guarantee, CHEEP will instantly provide a verified PRO to get your job done within 24 hours of
         booking. If you wish to choose a specific time, please click here!</string>
+    <string name="label_subscribed">Subscribed</string>
+    <string name="label_sort">Sort</string>
 </resources>

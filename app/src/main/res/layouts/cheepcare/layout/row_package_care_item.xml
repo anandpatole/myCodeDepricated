@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
@@ -11,7 +10,7 @@
         android:layout_marginLeft="@dimen/scale_8dp"
         android:layout_marginRight="@dimen/scale_8dp"
         android:layout_marginTop="@dimen/scale_8dp"
-        app:cardElevation="@dimen/scale_4dp"
+        app:cardElevation="@dimen/scale_14dp"
         app:contentPadding="0dp">
 
         <android.support.constraint.ConstraintLayout
@@ -27,7 +26,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:src="@drawable/banner_appliance_care"/>
+                tools:src="@drawable/banner_appliance_care" />
 
             <ImageView
                 android:id="@+id/iv_subscribed"
@@ -38,7 +37,7 @@
                 android:layout_marginTop="@dimen/scale_8dp"
                 android:src="@drawable/ic_subscribed_text"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
+                app:layout_constraintTop_toTopOf="parent" />
 
             <com.cheep.custom_view.CFTextViewSemiBold
                 android:id="@+id/tv_care_name"
@@ -53,7 +52,7 @@
                 android:textSize="@dimen/text_size_18sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/iv_subscribed"
-                tools:text="Home Care"/>
+                tools:text="Home Care" />
 
             <com.cheep.custom_view.CFTextViewSemiBold
                 android:id="@+id/tv_days_left1"
@@ -74,7 +73,7 @@
                 android:textSize="@dimen/text_size_10sp"
                 app:layout_constraintEnd_toStartOf="@+id/tv_days_left2"
                 app:layout_constraintTop_toBottomOf="@id/iv_subscribed"
-                tools:text="1"/>
+                tools:text="1" />
 
             <com.cheep.custom_view.CFTextViewSemiBold
                 android:id="@+id/tv_days_left2"
@@ -95,7 +94,7 @@
                 android:textSize="@dimen/text_size_10sp"
                 app:layout_constraintEnd_toStartOf="@+id/tv_days_left3"
                 app:layout_constraintTop_toBottomOf="@id/iv_subscribed"
-                tools:text="1"/>
+                tools:text="1" />
 
             <com.cheep.custom_view.CFTextViewSemiBold
                 android:id="@+id/tv_days_left3"
@@ -118,7 +117,7 @@
                 android:textSize="@dimen/text_size_10sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/iv_subscribed"
-                tools:text="1"/>
+                tools:text="1" />
 
             <com.cheep.custom_view.CFTextViewSemiBold
                 android:id="@+id/tv_left_days"
@@ -129,7 +128,7 @@
                 app:layout_constraintEnd_toEndOf="@id/tv_days_left3"
                 app:layout_constraintStart_toEndOf="@id/tv_address"
                 app:layout_constraintStart_toStartOf="@id/tv_days_left1"
-                app:layout_constraintTop_toBottomOf="@id/tv_days_left1"/>
+                app:layout_constraintTop_toBottomOf="@id/tv_days_left1" />
 
             <LinearLayout
                 android:id="@+id/tv_address"
@@ -159,7 +158,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/icon_address_home_active"
-                    tools:ignore="ContentDescription"/>
+                    tools:ignore="ContentDescription" />
 
                 <com.cheep.custom_view.CFTextViewRegular
                     android:layout_width="0dp"
@@ -170,7 +169,7 @@
                     android:singleLine="true"
                     android:text="Home 12"
                     android:textColor="@color/splash_gradient_end"
-                    android:textSize="@dimen/text_size_12sp"/>
+                    android:textSize="@dimen/text_size_12sp" />
 
                 <com.cheep.custom_view.CFTextViewRegular
                     android:layout_width="0dp"
@@ -183,7 +182,7 @@
                     android:singleLine="true"
                     android:text="121, Ghanshyam Enclave, New Mumbai"
                     android:textColor="@color/grey_varient_10"
-                    android:textSize="@dimen/text_size_12sp"/>
+                    android:textSize="@dimen/text_size_12sp" />
 
             </LinearLayout>
 
@@ -205,7 +204,7 @@
                 app:layout_constraintHorizontal_weight="0.8"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_address"
-                tools:text="Please enter enter enter enter enter enter enter minimum %1s amount to proceed"/>
+                tools:text="Please enter enter enter enter enter enter enter minimum %1s amount to proceed" />
 
             <LinearLayout
                 android:id="@+id/ll_renew_container"
@@ -235,7 +234,7 @@
                     android:maxLines="2"
                     android:textColor="@color/grey_varient_16"
                     android:textSize="@dimen/text_size_14sp"
-                    tools:text="Your subscription will end in 6 days."/>
+                    tools:text="Your subscription will end in 6 days." />
 
                 <com.cheep.custom_view.CFTextViewSemiBold
                     android:id="@+id/tvRenew"
@@ -246,7 +245,7 @@
                     android:gravity="center"
                     android:text="@string/label_renew"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/text_size_11sp"/>
+                    android:textSize="@dimen/text_size_11sp" />
 
             </LinearLayout>
 

@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    >
+    xmlns:tools="http://schemas.android.com/tools">
 
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -33,25 +31,82 @@
                     android:layout_width="@dimen/scale_15dp"
                     android:layout_height="@dimen/scale_15dp"
                     android:layout_gravity="center_vertical"
-                    android:src="@drawable/ic_tick_selector"/>
+                    android:src="@drawable/ic_tick_selector" />
 
-                <com.cheep.custom_view.CFTextViewSemiBold
-                    android:id="@+id/tv_spinner_address"
+                <FrameLayout
+                    android:id="@+id/fl_address_container"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@android:color/transparent"
-                    android:checked="true"
+                    android:layout_height="match_parent"
                     android:layout_gravity="center_vertical"
-                    android:drawableEnd="@drawable/ic_drop_down_arrow"
-                    android:drawablePadding="@dimen/scale_8dp"
-                    android:drawableRight="@drawable/ic_drop_down_arrow"
-                    android:gravity="center_vertical"
-                    android:paddingLeft="@dimen/scale_15dp"
-                    android:paddingStart="@dimen/scale_15dp"
-                    android:singleLine="true"
-                    android:text="@string/label_select_address"
-                    android:textColor="@color/grey_varient_8"
-                    android:textSize="@dimen/text_size_14sp"/>
+                    android:layout_marginLeft="@dimen/scale_15dp"
+                    android:layout_marginStart="@dimen/scale_15dp">
+
+                    <LinearLayout
+                        android:id="@+id/ll_address_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center_vertical"
+                        android:visibility="gone">
+
+                        <ImageView
+                            android:id="@+id/icon_task_where"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            tools:src="@drawable/icon_address_home_active" />
+
+                        <com.cheep.custom_view.CFTextViewSemiBold
+                            android:id="@+id/tv_address_nickname"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:background="@android:color/transparent"
+                            android:gravity="center"
+                            android:includeFontPadding="false"
+                            android:paddingLeft="@dimen/scale_8dp"
+                            android:text="home"
+                            android:textColor="@color/splash_gradient_end"
+                            app:layout_constraintBottom_toBottomOf="@+id/view_dot"
+                            app:layout_constraintStart_toEndOf="@id/iv_home"
+                            app:layout_constraintTop_toTopOf="@+id/view_dot" />
+
+                        <com.cheep.custom_view.CFTextViewSemiBold
+                            android:id="@+id/tv_address"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginLeft="@dimen/scale_4dp"
+                            android:layout_weight="1"
+                            android:background="@android:color/transparent"
+                            android:drawableEnd="@drawable/ic_drop_down_arrow"
+                            android:drawablePadding="@dimen/scale_8dp"
+                            android:drawableRight="@drawable/ic_drop_down_arrow"
+                            android:gravity="center_vertical"
+                            android:includeFontPadding="false"
+                            android:singleLine="true"
+                            android:text="Subscribed under CHEEP care"
+                            android:textColor="@color/grey_varient_8"
+                            android:textSize="@dimen/text_size_14sp" />
+                    </LinearLayout>
+
+                    <com.cheep.custom_view.CFTextViewSemiBold
+                        android:id="@+id/tv_select_address"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:background="@android:color/transparent"
+                        android:checked="true"
+                        android:drawableEnd="@drawable/ic_drop_down_arrow"
+                        android:drawablePadding="@dimen/scale_8dp"
+                        android:drawableRight="@drawable/ic_drop_down_arrow"
+                        android:gravity="center_vertical"
+                        android:singleLine="true"
+                        android:text="@string/label_select_address"
+                        android:textColor="@color/grey_varient_8"
+                        android:textSize="@dimen/text_size_14sp" />
+
+                </FrameLayout>
 
             </LinearLayout>
 
@@ -69,7 +124,7 @@
                 android:paddingTop="6dp"
                 android:textSize="@dimen/text_size_14sp"
                 android:theme="@style/AppTheme.AppBarWhite.ColorControlNormalBlue"
-                android:visibility="invisible"/>
+                android:visibility="invisible" />
 
             <LinearLayout
                 android:id="@+id/lnAddAddress"
@@ -90,7 +145,7 @@
                     android:layout_height="@dimen/scale_15dp"
                     android:layout_gravity="center_vertical"
                     android:src="@drawable/ic_white_plus_background_blue"
-                    tools:ignore="ContentDescription"/>
+                    tools:ignore="ContentDescription" />
 
                 <com.cheep.custom_view.CFTextViewSemiBold
                     android:layout_width="match_parent"
@@ -102,13 +157,14 @@
                     android:paddingStart="@dimen/scale_15dp"
                     android:text="@string/label_add_address"
                     android:textColor="@color/grey_varient_8"
-                    android:textSize="@dimen/text_size_14sp"/>
+                    android:textSize="@dimen/text_size_14sp" />
 
             </LinearLayout>
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="0dp"
+                android:layout_weight="1">
 
 
                 <android.support.v7.widget.RecyclerView
@@ -117,7 +173,7 @@
                     android:layout_height="match_parent"
                     android:clipToPadding="false"
                     android:paddingBottom="@dimen/scale_25dp"
-                    app:layoutManager="LinearLayoutManager"/>
+                    app:layoutManager="LinearLayoutManager" />
 
                 <RelativeLayout
                     android:id="@+id/progress_load"
@@ -129,24 +185,26 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
-                        android:visibility="visible"/>
+                        android:visibility="visible" />
 
                 </RelativeLayout>
             </RelativeLayout>
 
             <com.cheep.custom_view.CFTextViewRegular
                 android:id="@+id/tv_other_bundle_packages"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:layout_marginBottom="@dimen/scale_12dp"
+                android:layout_marginEnd="@dimen/scale_67dp"
+                android:layout_marginLeft="@dimen/scale_65dp"
+                android:layout_marginRight="@dimen/scale_67dp"
+                android:background="@color/grey_varient_25"
+                android:layout_marginStart="@dimen/scale_65dp"
                 android:gravity="center"
-                android:paddingEnd="@dimen/scale_67dp"
-                android:paddingLeft="@dimen/scale_65dp"
-                android:paddingRight="@dimen/scale_67dp"
-                android:paddingStart="@dimen/scale_65dp"
                 android:text="@string/msg_bundle_other_packages"
                 android:textColor="@color/splash_gradient_end"
-                android:textSize="@dimen/text_size_10sp"/>
+                android:textSize="@dimen/text_size_10sp" />
 
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>

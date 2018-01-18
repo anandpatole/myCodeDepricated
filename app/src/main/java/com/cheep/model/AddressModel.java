@@ -22,7 +22,7 @@ public class AddressModel implements Serializable {
     public String pincode;
     public String nickname;
     /**
-     * This would only be usefull in case of Guest
+     * This would only be useful in case of Guest
      */
     public String cityName;
     public String countryName;

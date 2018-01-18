@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:paddingTop="@dimen/scale_16dp">
+
+        <ImageView
+            android:id="@+id/iv_home"
+            android:layout_width="@dimen/scale_14dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="@dimen/scale_32dp"
+            android:src="@drawable/icon_address_home_active"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_address_nickname"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tv_address_nickname" />
+
+        <com.cheep.custom_view.CFTextViewSemiBold
+            android:id="@+id/tv_address_nickname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:includeFontPadding="false"
+            android:text="@string/label_home"
+            android:paddingLeft="@dimen/scale_7dp"
+            android:textColor="@color/splash_gradient_end"
+            app:layout_constraintBottom_toBottomOf="@+id/view_dot"
+            app:layout_constraintStart_toEndOf="@id/iv_home"
+            app:layout_constraintTop_toTopOf="@+id/view_dot" />
+
+        <View
+            android:id="@+id/view_dot"
+            android:layout_width="@dimen/scale_4dp"
+            android:layout_height="@dimen/scale_4dp"
+            android:layout_gravity="center"
+            android:layout_marginLeft="@dimen/scale_4dp"
+            android:background="@drawable/gray_dot"
+            android:includeFontPadding="false"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_label_address_subscribed"
+            app:layout_constraintStart_toEndOf="@id/tv_address_nickname"
+            app:layout_constraintTop_toTopOf="@+id/tv_label_address_subscribed" />
+
+        <com.cheep.custom_view.CFTextViewRegular
+            android:id="@+id/tv_label_address_subscribed"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/scale_4dp"
+            android:includeFontPadding="false"
+            android:paddingRight="@dimen/scale_12dp"
+            android:text="Subscribed under CHEEP care"
+            android:textColor="@color/grey_varient_17"
+            android:textSize="@dimen/text_size_12sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/view_dot" />
+
+        <com.cheep.custom_view.CFTextViewRegular
+            android:id="@+id/tv_address"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/scale_8dp"
+            android:includeFontPadding="false"
+            android:paddingLeft="@dimen/scale_32dp"
+            android:paddingRight="@dimen/scale_12dp"
+            android:text="1202/1204 UniWorld Towers, Next to Palladium Mall, Opp Jijabai Kantabai Library, Mahatma Gandhi Phule Road, Elphinstone Road (West) Mumbai"
+            android:textColor="@color/black_varient_1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_label_address_subscribed" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/scale_1dp"
+            android:layout_marginLeft="@dimen/scale_16dp"
+            android:layout_marginRight="@dimen/scale_12dp"
+            android:layout_marginTop="@dimen/scale_12dp"
+            android:background="@drawable/bottom_stroke_gray"
+            app:layout_constraintTop_toBottomOf="@id/tv_address" />
+
+    </android.support.constraint.ConstraintLayout>
+</layout>

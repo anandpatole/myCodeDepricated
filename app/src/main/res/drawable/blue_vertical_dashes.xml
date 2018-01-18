@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:bottom="-2dp"
+        android:right="-2dp"
+        android:top="-2dp">
+        <shape xmlns:android="http://schemas.android.com/apk/res/android"
+            android:shape="rectangle">
+            <stroke
+                android:width="@dimen/scale_1dp"
+                android:color="@color/splash_gradient_end"
+                android:dashGap="@dimen/scale_1dp"
+                android:dashWidth="@dimen/scale_3dp" />
+        </shape>
+    </item>
+</layer-list>

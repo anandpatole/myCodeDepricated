@@ -24,7 +24,7 @@ import com.android.volley.VolleyError;
 import com.cheep.R;
 import com.cheep.activity.BaseAppCompatActivity;
 import com.cheep.cheepcare.activity.PackageCustomizationActivity;
-import com.cheep.cheepcare.adapter.AddressAdapter;
+import com.cheep.cheepcare.adapter.AddressPackageCustomizationAdapter;
 import com.cheep.cheepcare.adapter.ExpandablePackageServicesRecyclerAdapter;
 import com.cheep.cheepcare.dialogs.BottomAddAddressDialog;
 import com.cheep.cheepcare.model.CheepCarePackageServicesModel;
@@ -37,9 +37,11 @@ import com.cheep.model.UserDetails;
 import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
+import com.cheep.utils.DottedUnderlineSpan;
 import com.cheep.utils.LogUtils;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.Utility;
+import com.google.gson.ExclusionStrategy;
 
 import org.json.JSONObject;
 
@@ -62,7 +64,7 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
     private PackageCustomizationActivity mPackageCustomizationActivity;
     private FragmentSelectPackageSpecificationBinding mBinding;
     private boolean isVerified = false;
-    private AddressAdapter<AddressModel> mAdapter;
+    private AddressPackageCustomizationAdapter<AddressModel> mAdapter;
     private List<AddressModel> mList;
     private boolean isClicked = false;
     BottomAddAddressDialog dialog;
@@ -130,6 +132,21 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mContext);
         mBinding.recyclerView.setLayoutManager(linearLayoutManager);
         mBinding.recyclerView.setNestedScrollingEnabled(false);
+
+        SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(getString(R.string.msg_cheep_assurance_select_time));
+
+        /*DottedUnderlineSpan dottedUnderlineSpan = new DottedUnderlineSpan(
+                ContextCompat.getColor(mContext, R.color.splash_gradient_end)
+                , getString(R.string.msg_cheep_assurance_select_time)
+                , Utility.convertDpToPixel(2f, mContext)
+                , Utility.convertDpToPixel(1f, mContext)
+                , Utility.convertDpToPixel(1f, mContext)
+        );
+        spannableStringBuilder.setSpan(dottedUnderlineSpan
+                , 0
+                , getString(R.string.msg_cheep_assurance_select_time).length()
+                , Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);*/
+        mBinding.tvOtherBundlePackages.setText(spannableStringBuilder);
 
         callPackageOptionListWS();
         initAddressUI();
@@ -274,7 +291,7 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
             address = getString(R.string.label_select_address);
         }});
 
-        mAdapter = new AddressAdapter<>(mContext
+        mAdapter = new AddressPackageCustomizationAdapter<>(mContext
                 , android.R.layout.simple_spinner_item
                 , mList);
         mBinding.spinnerAddressSelection.setAdapter(mAdapter);
@@ -287,25 +304,20 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (!isClicked && position == 0) {
-                    mBinding.tvSpinnerAddress.setText(getString(R.string.label_select_address));
+                    mBinding.tvSelectAddress.setText(getString(R.string.label_select_address));
                     mBinding.ivIsAddressSelected.setSelected(false);
-
+                    mBinding.llAddressContainer.setVisibility(View.GONE);
+                    mBinding.tvSelectAddress.setVisibility(View.VISIBLE);
                     return;
                 }
+
+                mBinding.llAddressContainer.setVisibility(View.VISIBLE);
+                mBinding.tvSelectAddress.setVisibility(View.GONE);
+
                 AddressModel model = mList.get(position);
-                Drawable img = ContextCompat.getDrawable(mPackageCustomizationActivity, Utility.getAddressCategoryBlueIcon(model.category));
-                img.setBounds(0, 0, img.getIntrinsicWidth(), img.getIntrinsicHeight());
-                ImageSpan imageSpan = new ImageSpan(img, ImageSpan.ALIGN_BOTTOM);
-                ForegroundColorSpan colorSpan = new ForegroundColorSpan(ContextCompat.getColor(mContext
-                        , R.color.splash_gradient_end));
 
-                SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder();
-                spannableStringBuilder.append(Utility.ONE_CHARACTER_SPACE);
-                spannableStringBuilder.append(Utility.ONE_CHARACTER_SPACE);
-                spannableStringBuilder.setSpan(imageSpan, 0
-                        , 1, Spanned.SPAN_INCLUSIVE_INCLUSIVE);
-                spannableStringBuilder.append(Utility.ONE_CHARACTER_SPACE);
-
+                mBinding.iconTaskWhere.setImageDrawable(ContextCompat.getDrawable(mContext
+                        , Utility.getAddressCategoryBlueIcon(model.category)));
 
                 // show address's nick name or nick name is null then show category
                 String category;
@@ -314,27 +326,20 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
                 else
                     category = model.category;
 
-                if (!TextUtils.isEmpty(category)) {
-                    spannableStringBuilder.append(category);
-                    int startIndex = spannableStringBuilder.toString().indexOf(category);
-                    int endIndex = startIndex + category.length();
-                    spannableStringBuilder.setSpan(colorSpan, startIndex, endIndex, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    spannableStringBuilder.append(Utility.ONE_CHARACTER_SPACE);
-                }
+                mBinding.tvAddressNickname.setText(category);
 
-                spannableStringBuilder.append(model.address_initials + ", " + model.address);
-                mBinding.tvSpinnerAddress.setText(spannableStringBuilder);
+                mBinding.tvAddress.setText(model.address);
                 mBinding.ivIsAddressSelected.setSelected(true);
                 mSelectedAddress = model;
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                mBinding.tvSpinnerAddress.setText(getString(R.string.label_select_address));
+                mBinding.tvSelectAddress.setText(getString(R.string.label_select_address));
             }
         });
 
-        mBinding.tvSpinnerAddress.setOnClickListener(new View.OnClickListener() {
+        mBinding.flAddressContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 isClicked = true;
@@ -381,8 +386,6 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
             Utility.showSnackBar("Please select any service", mBinding.getRoot());
             return false;
         }
-
-
         return true;
     }
 }

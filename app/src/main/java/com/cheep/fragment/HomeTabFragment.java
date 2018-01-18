@@ -35,8 +35,8 @@ import com.cheep.R;
 import com.cheep.activity.HomeActivity;
 import com.cheep.activity.SearchActivity;
 import com.cheep.activity.SelectLocationActivity;
-import com.cheep.activity.TaskCreationActivity;
 import com.cheep.adapter.HomeTabRecyclerViewAdapter;
+import com.cheep.cheepcare.activity.TaskCreationCCActivity;
 import com.cheep.cheepcare.fragment.SubscriptionBannerFragment;
 import com.cheep.cheepcare.model.CheepCareBannerModel;
 import com.cheep.databinding.FragmentTabHomeBinding;
@@ -1028,7 +1028,7 @@ public class HomeTabFragment extends BaseFragment {
                         if (categoryType.equalsIgnoreCase(Utility.NORMAL)) {
                             JobCategoryModel model = (JobCategoryModel) Utility.getObjectFromJsonString(
                                     jsonObject.getString(NetworkUtility.TAGS.DATA), JobCategoryModel.class);
-                            TaskCreationActivity.getInstance(mContext, model);
+                            TaskCreationCCActivity.getInstance(mContext, model);
                         } else {
                             BannerImageModel model = (BannerImageModel) Utility.getObjectFromJsonString(
                                     jsonObject.getString(NetworkUtility.TAGS.DATA), BannerImageModel.class);
@@ -1343,6 +1343,9 @@ public class HomeTabFragment extends BaseFragment {
         } else if (mSelectedFilterType.equalsIgnoreCase(Utility.FILTER_TYPES.FILTER_TYPE_FAVOURITES)) {
             mFragmentTabHomeBinding.layoutBannerHeader.textFilter.setText(getResources().getString(R.string.label_favourites));
             mFragmentTabHomeBinding.layoutBannerHeader.textFilter.setCompoundDrawablesWithIntrinsicBounds(R.drawable.selector_drawable_left_filter_home_favourites, 0, 0, 0);
+        } else if (mSelectedFilterType.equalsIgnoreCase(Utility.FILTER_TYPES.FILTER_TYPE_SUBSCRIBED)) {
+            mFragmentTabHomeBinding.layoutBannerHeader.textFilter.setText(getResources().getString(R.string.label_subscribed));
+            mFragmentTabHomeBinding.layoutBannerHeader.textFilter.setCompoundDrawablesWithIntrinsicBounds(R.drawable.selector_drawable_left_filter_home_featured, 0, 0, 0);
         }
     }
 
@@ -1352,7 +1355,13 @@ public class HomeTabFragment extends BaseFragment {
     private void showFilterWindow() {
 //        Log.i(TAG, "showFilterWindow: ");
 
-        final LayoutFilterHomePopupBinding mLayoutFilterHomePopupBinding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.layout_filter_home_popup, mFragmentTabHomeBinding.layoutBannerHeader.rootBannerView, false);
+        final LayoutFilterHomePopupBinding mLayoutFilterHomePopupBinding =
+                DataBindingUtil.inflate(
+                        LayoutInflater.from(mContext)
+                        , R.layout.layout_filter_home_popup
+                        , mFragmentTabHomeBinding.layoutBannerHeader.rootBannerView
+                        , false
+                );
 //        View mFilterPopupWindow = View.inflate(mContext, R.layout.layout_filter_home_popup, null);
 
         final PopupWindow mPopupWindow = new PopupWindow(mContext);
@@ -1421,6 +1430,21 @@ public class HomeTabFragment extends BaseFragment {
             }
         });
 
+        mLayoutFilterHomePopupBinding.textSubscribed.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mSelectedFilterType.equalsIgnoreCase(Utility.FILTER_TYPES.FILTER_TYPE_SUBSCRIBED)) {
+                    mPopupWindow.dismiss();
+                    return;
+                }
+                mSelectedFilterType = Utility.FILTER_TYPES.FILTER_TYPE_SUBSCRIBED;
+                updateFilterSelectionInPopup(mLayoutFilterHomePopupBinding);
+                updateFilterText();
+//                getCategoryListFromServer(true);
+                Utility.showToast(mContext, "Subscribed Clicked!!");
+                mPopupWindow.dismiss();
+            }
+        });
     }
 
     private void updateFilterSelectionInPopup(LayoutFilterHomePopupBinding mLayoutFilterHomePopupBinding) {
@@ -1429,19 +1453,28 @@ public class HomeTabFragment extends BaseFragment {
             mLayoutFilterHomePopupBinding.textFeatured.setSelected(true);
             mLayoutFilterHomePopupBinding.textPopular.setSelected(false);
             mLayoutFilterHomePopupBinding.textFavourites.setSelected(false);
+            mLayoutFilterHomePopupBinding.textSubscribed.setSelected(false);
         } else if (mSelectedFilterType.equalsIgnoreCase(Utility.FILTER_TYPES.FILTER_TYPE_POPULAR)) {
             mLayoutFilterHomePopupBinding.textFeatured.setSelected(false);
             mLayoutFilterHomePopupBinding.textPopular.setSelected(true);
             mLayoutFilterHomePopupBinding.textFavourites.setSelected(false);
+            mLayoutFilterHomePopupBinding.textSubscribed.setSelected(false);
         } else if (mSelectedFilterType.equalsIgnoreCase(Utility.FILTER_TYPES.FILTER_TYPE_FAVOURITES)) {
             mLayoutFilterHomePopupBinding.textFeatured.setSelected(false);
             mLayoutFilterHomePopupBinding.textPopular.setSelected(false);
             mLayoutFilterHomePopupBinding.textFavourites.setSelected(true);
+            mLayoutFilterHomePopupBinding.textSubscribed.setSelected(false);
+        } else if (mSelectedFilterType.equalsIgnoreCase(Utility.FILTER_TYPES.FILTER_TYPE_SUBSCRIBED)) {
+            mLayoutFilterHomePopupBinding.textFeatured.setSelected(false);
+            mLayoutFilterHomePopupBinding.textPopular.setSelected(false);
+            mLayoutFilterHomePopupBinding.textFavourites.setSelected(false);
+            mLayoutFilterHomePopupBinding.textSubscribed.setSelected(true);
         } else {
             // By Deafult make featured as selected
             mLayoutFilterHomePopupBinding.textFeatured.setSelected(true);
             mLayoutFilterHomePopupBinding.textPopular.setSelected(false);
             mLayoutFilterHomePopupBinding.textFavourites.setSelected(false);
+            mLayoutFilterHomePopupBinding.textSubscribed.setSelected(false);
         }
     }
 

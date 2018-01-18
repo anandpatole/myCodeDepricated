@@ -28,15 +28,15 @@ import java.util.List;
  * Created by pankaj on 12/28/17.
  */
 
-public class WelcomeToCheepCareActivity extends BaseAppCompatActivity {
+public class WelcomeToCCActivity extends BaseAppCompatActivity {
 
-    private static final String TAG = WelcomeToCheepCareActivity.class.getSimpleName();
+    private static final String TAG = WelcomeToCCActivity.class.getSimpleName();
     private ActivityWelcomeToCheepCareBinding mBinding;
     private String mCityName;
     private List<AnimatorSet> animators;
 
     public static void newInstance(Context mContext, String cityName) {
-        Intent intent = new Intent(mContext, WelcomeToCheepCareActivity.class);
+        Intent intent = new Intent(mContext, WelcomeToCCActivity.class);
         intent.putExtra(Utility.Extra.CITY_NAME, cityName);
         mContext.startActivity(intent);
     }

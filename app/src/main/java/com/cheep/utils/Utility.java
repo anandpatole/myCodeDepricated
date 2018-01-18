@@ -1177,6 +1177,7 @@ public class Utility {
         String FILTER_TYPE_FEATURED = "Featured";
         String FILTER_TYPE_POPULAR = "Popular";
         String FILTER_TYPE_FAVOURITES = "Favourites";
+        String FILTER_TYPE_SUBSCRIBED = "Subscribed";
     }
 
     public interface BOOLEAN {

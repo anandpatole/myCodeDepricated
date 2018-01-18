@@ -356,7 +356,7 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.text_continue:
-//                    WelcomeToCheepCareActivity.newInstance(mContext, mCityName);
+//                    WelcomeToCCActivity.newInstance(mContext, mCityName);
                     if (mBinding.viewpager.getCurrentItem() == STAGE_1) {
                         SelectPackageSpecificationsFragment fragment = (SelectPackageSpecificationsFragment) mPackageCustomizationPagerAdapter.getItem(mBinding.viewpager.getCurrentItem());
                         if (fragment != null) {
