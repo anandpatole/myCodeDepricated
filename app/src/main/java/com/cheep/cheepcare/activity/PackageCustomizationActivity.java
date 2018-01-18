@@ -18,7 +18,7 @@ import com.cheep.cheepcare.adapter.PackageCustomizationPagerAdapter;
 import com.cheep.cheepcare.fragment.PackageBundlingFragment;
 import com.cheep.cheepcare.fragment.PackageSummaryFragment;
 import com.cheep.cheepcare.fragment.SelectPackageSpecificationsFragment;
-import com.cheep.cheepcare.model.CheepCareCityLandingPageModel;
+import com.cheep.cheepcare.model.CityLandingPageModel;
 import com.cheep.cheepcare.model.PackageDetail;
 import com.cheep.cheepcare.model.PackageOption;
 import com.cheep.cheepcare.model.PackageSubOption;
@@ -42,7 +42,7 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
     private ActivityPackageCustomizationBinding mBinding;
     private PackageCustomizationPagerAdapter mPackageCustomizationPagerAdapter;
     private PackageDetail mPackageModel;
-    public CheepCareCityLandingPageModel.CityDetail mCityDetail;
+    public CityLandingPageModel.CityDetail mCityDetail;
     public String mPackageId = "";
     private ArrayList<PackageDetail> mPackageList = new ArrayList<>();
     public double totalPrice;
@@ -57,7 +57,7 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
         return mPackageList;
     }
 
-    public static void newInstance(Context context, int position, PackageDetail model, CheepCareCityLandingPageModel.CityDetail cityDetail, String selectedPackageID, String packageList) {
+    public static void newInstance(Context context, int position, PackageDetail model, CityLandingPageModel.CityDetail cityDetail, String selectedPackageID, String packageList) {
         Intent intent = new Intent(context, PackageCustomizationActivity.class);
         intent.putExtra(Utility.Extra.POSITION, position);
         intent.putExtra(Utility.Extra.MODEL, model);
@@ -80,7 +80,7 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
 
         if (getIntent().hasExtra(Utility.Extra.MODEL)) {
             mPackageModel = (PackageDetail) getIntent().getExtras().getSerializable(Utility.Extra.MODEL);
-            mCityDetail = (CheepCareCityLandingPageModel.CityDetail) Utility.getObjectFromJsonString(getIntent().getExtras().getString(Utility.Extra.CITY_NAME), CheepCareCityLandingPageModel.CityDetail.class);
+            mCityDetail = (CityLandingPageModel.CityDetail) Utility.getObjectFromJsonString(getIntent().getExtras().getString(Utility.Extra.CITY_NAME), CityLandingPageModel.CityDetail.class);
             mPackageId = getIntent().getExtras().getString(Utility.Extra.SELECTED_PACKAGE_ID);
             mPackageList = Utility.getObjectListFromJsonString(getIntent().getExtras().getString(Utility.Extra.PACKAGE_LIST), PackageDetail[].class);
              /*position = getIntent().getExtras().getInt(Utility.Extra.POSITION);*/
@@ -222,13 +222,10 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
     /**
      * Below would manage the state of Step while creating task creation
      */
-    /*public static final int STEP_ONE_NORMAL = 1;*/
     public static final int STEP_ONE_UNVERIFIED = 1;
     public static final int STEP_ONE_VERIFIED = 2;
-    /*public static final int STEP_TWO_NORMAL = 4;*/
     public static final int STEP_TWO_UNVERIFIED = 3;
     public static final int STEP_TWO_VERIFIED = 4;
-    /*public static final int STEP_THREE_NORMAL = 7;*/
     public static final int STEP_THREE_UNVERIFIED = 5;
     public static final int STEP_THREE_VERIFIED = 6;
     public int mCurrentStep = -1;
@@ -236,101 +233,29 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
     public void setTaskState(int step_state) {
         mCurrentStep = step_state;
         switch (step_state) {
-            /*case STEP_ONE_NORMAL:
-                mBinding.textStep1.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_steps_normal));
-                mBinding.textStep1.setTextColor(ContextCompat.getColor(mContext, R.color.white));
-
-                mBinding.textStep2.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_steps_normal));
-                mBinding.textStep2.setTextColor(ContextCompat.getColor(mContext, R.color.white));
-
-                mBinding.textStep3.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_steps_normal));
-                mBinding.textStep3.setTextColor(ContextCompat.getColor(mContext, R.color.white));
-
-                break;*/
             case STEP_ONE_UNVERIFIED:
                 mBinding.textStep1.setSelected(true);
                 mBinding.textStep2.setSelected(false);
                 mBinding.textStep3.setSelected(false);
                 break;
-                /*mBinding.textStep1.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_steps_unverified));
-                mBinding.textStep1.setTextColor(ContextCompat.getColor(mContext, R.color.splash_gradient_end));
 
-                mBinding.textStep2.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_steps_normal));
-                mBinding.textStep2.setTextColor(ContextCompat.getColor(mContext, R.color.white));
-
-                mBinding.textStep3.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_steps_normal));
-                mBinding.textStep3.setTextColor(ContextCompat.getColor(mContext, R.color.white));
-
-                break;*/
             case STEP_ONE_VERIFIED:
-            /*case STEP_TWO_NORMAL:
-                mBinding.textStep1.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_steps_verified));
-                mBinding.textStep1.setTextColor(ContextCompat.getColor(mContext, R.color.white));
-
-                mBinding.textStep2.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_steps_normal));
-                mBinding.textStep2.setTextColor(ContextCompat.getColor(mContext, R.color.white));
-
-                mBinding.textStep3.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_steps_normal));
-                mBinding.textStep3.setTextColor(ContextCompat.getColor(mContext, R.color.white));
-
-                break;*/
             case STEP_TWO_UNVERIFIED:
                 mBinding.textStep1.setSelected(false);
                 mBinding.textStep2.setSelected(true);
                 mBinding.textStep3.setSelected(false);
                 break;
-                /*mBinding.textStep1.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_steps_verified));
-                mBinding.textStep1.setTextColor(ContextCompat.getColor(mContext, R.color.white));
-
-                mBinding.textStep2.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_steps_unverified));
-                mBinding.textStep2.setTextColor(ContextCompat.getColor(mContext, R.color.splash_gradient_end));
-
-                mBinding.textStep3.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_steps_normal));
-                mBinding.textStep3.setTextColor(ContextCompat.getColor(mContext, R.color.white));
-
-                break;*/
             case STEP_TWO_VERIFIED:
-            /*case STEP_THREE_NORMAL:
-                mBinding.textStep1.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_steps_verified));
-                mBinding.textStep1.setTextColor(ContextCompat.getColor(mContext, R.color.white));
-
-                mBinding.textStep2.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_steps_verified));
-                mBinding.textStep2.setTextColor(ContextCompat.getColor(mContext, R.color.white));
-
-                mBinding.textStep3.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_steps_normal));
-                mBinding.textStep3.setTextColor(ContextCompat.getColor(mContext, R.color.white));
-
-                break;*/
             case STEP_THREE_UNVERIFIED:
                 mBinding.textStep1.setSelected(false);
                 mBinding.textStep2.setSelected(false);
                 mBinding.textStep3.setSelected(true);
                 break;
-                /*mBinding.textStep1.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_steps_verified));
-                mBinding.textStep1.setTextColor(ContextCompat.getColor(mContext, R.color.white));
-
-                mBinding.textStep2.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_steps_verified));
-                mBinding.textStep2.setTextColor(ContextCompat.getColor(mContext, R.color.white));
-
-                mBinding.textStep3.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_steps_unverified));
-                mBinding.textStep3.setTextColor(ContextCompat.getColor(mContext, R.color.splash_gradient_end));
-
-                break;*/
             case STEP_THREE_VERIFIED:
                 mBinding.textStep1.setSelected(false);
                 mBinding.textStep2.setSelected(false);
                 mBinding.textStep3.setSelected(true);
                 break;
-                /*mBinding.textStep1.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_steps_verified));
-                mBinding.textStep1.setTextColor(ContextCompat.getColor(mContext, R.color.white));
-
-                mBinding.textStep2.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_steps_verified));
-                mBinding.textStep2.setTextColor(ContextCompat.getColor(mContext, R.color.white));
-
-                mBinding.textStep3.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_steps_verified));
-                mBinding.textStep3.setTextColor(ContextCompat.getColor(mContext, R.color.white));
-
-                break;*/
         }
     }
 

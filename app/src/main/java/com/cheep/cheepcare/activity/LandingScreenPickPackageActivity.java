@@ -22,7 +22,7 @@ import com.cheep.activity.BaseAppCompatActivity;
 import com.cheep.cheepcare.adapter.CheepCareFeatureAdapter;
 import com.cheep.cheepcare.adapter.CheepCarePackageAdapter;
 import com.cheep.cheepcare.model.CheepCareBannerModel;
-import com.cheep.cheepcare.model.CheepCareCityLandingPageModel;
+import com.cheep.cheepcare.model.CityLandingPageModel;
 import com.cheep.cheepcare.model.PackageDetail;
 import com.cheep.databinding.ActivityLandingScreenPickPackageBinding;
 import com.cheep.network.NetworkUtility;
@@ -49,7 +49,7 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
     private ActivityLandingScreenPickPackageBinding mBinding;
     private CheepCareFeatureAdapter mFeatureAdapter;
     private CheepCarePackageAdapter mPackageAdapter;
-    private CheepCareCityLandingPageModel model;
+    private CityLandingPageModel model;
     private CheepCareBannerModel mCity;
 
     public static void newInstance(Context context, CheepCareBannerModel city) {
@@ -238,7 +238,7 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
                 String error_message;
                 switch (statusCode) {
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
-                        model = (CheepCareCityLandingPageModel) Utility.getObjectFromJsonString(jsonObject.optString(DATA), CheepCareCityLandingPageModel.class);
+                        model = (CityLandingPageModel) Utility.getObjectFromJsonString(jsonObject.optString(DATA), CityLandingPageModel.class);
                         setData();
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
