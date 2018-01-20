@@ -625,6 +625,12 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
         booking. If you wish to choose a specific time, please click here!</string>
     <string name="label_subscribed">Subscribed</string>
     <string name="label_sort">Sort</string>
+    <string name="label_add_new">Add new</string>
+    <string name="label_busy_no_worries">BUSY? No worries!</string>
+    <string name="msg_choose_specific_time">To choose a specific time slot for the PRO during the day or in any Emergency
+        after working hours, simply pay an additional charge of ₹%1s and get the PRO to come when you want!</string>
+    <string name="label_select_time">Select Time</string>
+    <string name="label_no_thanks">No, Thanks</string>
 
     <string name="hint_apply_cheep_promo_code">Apply CHEEP Promo code?</string>
     <string name="hint_apply_cheep_mate_code">Have a CHEEP Mate Code?</string>

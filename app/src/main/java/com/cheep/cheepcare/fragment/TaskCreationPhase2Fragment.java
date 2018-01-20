@@ -21,6 +21,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableStringBuilder;
@@ -52,9 +53,9 @@ import com.cheep.activity.TaskCreationActivity;
 import com.cheep.adapter.AddressRecyclerViewAdapter;
 import com.cheep.adapter.SelectedSubServiceAdapter;
 import com.cheep.cheepcare.activity.TaskCreationCCActivity;
-import com.cheep.cheepcare.adapter.AddressPackageCustomizationAdapter;
 import com.cheep.cheepcare.adapter.AddressTaskCreateAdapter;
 import com.cheep.cheepcare.dialogs.BottomAddAddressDialog;
+import com.cheep.cheepcare.dialogs.SelectSpecificTimeDialog;
 import com.cheep.custom_view.BottomAlertDialog;
 import com.cheep.custom_view.DividerItemDecoration;
 import com.cheep.databinding.FragmentTaskCreationPhase2Binding;
@@ -62,7 +63,6 @@ import com.cheep.fragment.BaseFragment;
 import com.cheep.model.AddressModel;
 import com.cheep.model.GuestUserDetails;
 import com.cheep.model.ProviderModel;
-import com.cheep.model.SubServiceDetailModel;
 import com.cheep.model.UserDetails;
 import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
@@ -99,7 +99,10 @@ import static android.app.Activity.RESULT_OK;
  * Created by bhavesh on 28/4/17.
  */
 
-public class TaskCreationPhase2Fragment extends BaseFragment implements RequestPermission.OnRequestPermissionResult {
+public class TaskCreationPhase2Fragment extends BaseFragment
+        implements
+        RequestPermission.OnRequestPermissionResult
+        , SelectSpecificTimeDialog.DialogInteractionListener {
     public static final String TAG = TaskCreationPhase2Fragment.class.getSimpleName();
     private FragmentTaskCreationPhase2Binding mBinding;
     private TaskCreationCCActivity mTaskCreationCCActivity;
@@ -107,6 +110,7 @@ public class TaskCreationPhase2Fragment extends BaseFragment implements RequestP
 
     public boolean isTaskDescriptionVerified = false;
     public boolean isTaskWhereVerified = false;
+
     public MediaRecycleAdapter mMediaRecycleAdapter;
     // For When
     public SuperCalendar startDateTimeSuperCalendar = SuperCalendar.getInstance();
@@ -163,13 +167,13 @@ public class TaskCreationPhase2Fragment extends BaseFragment implements RequestP
             return;
         }
 
-        if (mTaskCreationCCActivity.getSelectedSubServices() == null || mTaskCreationCCActivity.getSelectedSubServices().size() == 0) {
-            return;
-        }
+//        if (mTaskCreationCCActivity.getSelectedSubService() == null) {
+//            return;
+//        }
 
         // Task Description
-        /*isTaskDescriptionVerified = mTaskCreationCCActivity.getSelectedSubService().sub_cat_id != -1 ||
-                !TextUtils.isEmpty(mBinding.editTaskDesc.getText().toString().trim());*/
+//        isTaskDescriptionVerified = mTaskCreationCCActivity.getSelectedSubService().sub_cat_id != -1 ||
+//                !TextUtils.isEmpty(mBinding.editTaskDesc.getText().toString().trim());
 
         // When Verification
 //        isTaskWhenVerified = !TextUtils.isEmpty(mBinding.textTaskWhen.getText().toString().trim());
@@ -216,11 +220,7 @@ public class TaskCreationPhase2Fragment extends BaseFragment implements RequestP
         // Update Task related details
         updateTaskDetails();
 
-        ForegroundColorSpan colorSpan = new ForegroundColorSpan(ContextCompat.getColor(mContext, R.color.splash_gradient_end));
-        String cheepGuarantee = getString(R.string.msg_cheep_assurance_select_time);
-        SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(cheepGuarantee);
-        spannableStringBuilder.setSpan(colorSpan, cheepGuarantee.indexOf("click"), cheepGuarantee.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        mBinding.textTaskWhen.setText(spannableStringBuilder);
+        resetWhenUI();
 
         /*mBinding.editTaskDesc.addTextChangedListener(new TextWatcher() {
             @Override
@@ -326,15 +326,15 @@ public class TaskCreationPhase2Fragment extends BaseFragment implements RequestP
 //        mBinding.recycleImg.setLayoutManager(new LinearLayoutManager(mTaskCreationCCActivity, LinearLayoutManager.HORIZONTAL, false));
 //        mBinding.recycleImg.setAdapter(mMediaRecycleAdapter);
 
-        final List<AddressModel> mList = new ArrayList<>();
+        final List<AddressModel> mAddressList = new ArrayList<>();
         AddressModel addressModel = new AddressModel();
-        mList.add(addressModel);
-        mList.add(addressModel);
-        mList.add(addressModel);
+        mAddressList.add(addressModel);
+        mAddressList.add(addressModel);
+        mAddressList.add(addressModel);
 
         mAddressAdapter = new AddressTaskCreateAdapter<>(mContext
                 , android.R.layout.simple_spinner_item
-                , mList);
+                , mAddressList);
         mBinding.spinnerAddressSelection.setAdapter(mAddressAdapter);
         mBinding.spinnerAddressSelection.setFocusable(false);
         mBinding.spinnerAddressSelection.setPrompt("Prompt");
@@ -345,7 +345,13 @@ public class TaskCreationPhase2Fragment extends BaseFragment implements RequestP
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
-               /* AddressModel model = mList.get(position);
+                if (position == mAddressList.size() - 1) {
+                    showBottomAddressDialog(null);
+                } else {
+                    Log.d(TAG, "onItemSelected: ");
+                }
+
+               /* AddressModel model = mAddressList.get(position);
 
                 mBinding.iconTaskWhere.setImageDrawable(ContextCompat.getDrawable(mContext
                         , Utility.getAddressCategoryBlueIcon(model.category)));
@@ -720,6 +726,7 @@ public class TaskCreationPhase2Fragment extends BaseFragment implements RequestP
         }
     }
 
+    private boolean isDialogOnceShown = false;
     private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -729,7 +736,13 @@ public class TaskCreationPhase2Fragment extends BaseFragment implements RequestP
                 case R.id.text_when:
                     // On Click event of When
 //                    Utility.hideKeyboard(mContext, mBinding.editTaskDesc);
-                    showDateTimePickerDialog();
+                    if (!isDialogOnceShown) {
+                        SelectSpecificTimeDialog selectSpecificTimeDialog = new SelectSpecificTimeDialog();
+                        selectSpecificTimeDialog.show(((AppCompatActivity) mContext).getSupportFragmentManager(), SelectSpecificTimeDialog.TAG);
+                        selectSpecificTimeDialog.setTargetFragment(TaskCreationPhase2Fragment.this, 0);
+                    } else {
+                        showDateTimePickerDialog();
+                    }
                     break;
                 case R.id.cvInstaBook:
                     Log.i("myLog", "" + isTotalVerified);
@@ -751,9 +764,9 @@ public class TaskCreationPhase2Fragment extends BaseFragment implements RequestP
 //                    Utility.hideKeyboard(mContext, mBinding.editTaskDesc);
 //                    showAddressDialog();
                     break;
-//                case R.id.cvGetQuote:
-//                    mTaskCreationCCActivity.onGetQuoteClicked();
-//                    break;
+                case R.id.cvGetQuote:
+                    mTaskCreationCCActivity.onGetQuoteClicked();
+                    break;
             }
         }
     };
@@ -835,6 +848,18 @@ public class TaskCreationPhase2Fragment extends BaseFragment implements RequestP
     @Override
     public void onPermissionDenied(int code) {
 
+    }
+
+    @Override
+    public void onSelectTimeClicked() {
+        Log.d(TAG, "onSelectTimeClicked() called");
+        showDateTimePickerDialog();
+    }
+
+    @Override
+    public void onNoThanksClicked() {
+        Log.d(TAG, "onNoThanksClicked() called");
+        resetWhenUI();
     }
 
     private class UploadListener implements TransferListener {
@@ -950,6 +975,8 @@ public class TaskCreationPhase2Fragment extends BaseFragment implements RequestP
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                         if (view.isShown()) {
 
+                            //this is to manage the dialog showing
+                            isDialogOnceShown = true;
 
                             Log.d(TAG, "onTimeSet() called with: view = [" + view + "], hourOfDay = [" + hourOfDay + "], minute = [" + minute + "]");
 
@@ -970,6 +997,8 @@ public class TaskCreationPhase2Fragment extends BaseFragment implements RequestP
 //                                mBinding.textTaskWhen.setText(Utility.EMPTY_STRING);
 //                                mBinding.textTaskWhen.setVisibility(View.GONE);
                                 updateTaskVerificationFlags();
+                                superCalendar = null;
+                                resetWhenUI();
                                 return;
                             }
 //                            }
@@ -980,6 +1009,7 @@ public class TaskCreationPhase2Fragment extends BaseFragment implements RequestP
                                         + startDateTimeSuperCalendar.format(Utility.DATE_FORMAT_HH_MM_AM);
                                 mBinding.textTaskWhen.setText(selectedDateTime);
                                 mBinding.textTaskWhen.setVisibility(View.VISIBLE);
+                                mBinding.iconWhenInfo.setVisibility(View.INVISIBLE);
                                 updateTaskVerificationFlags();
                             } else {
                                 mBinding.textTaskWhen.setText(Utility.EMPTY_STRING);
@@ -992,6 +1022,16 @@ public class TaskCreationPhase2Fragment extends BaseFragment implements RequestP
                 }, c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE), false);
         timePickerDialog.show();
 
+    }
+
+    private void resetWhenUI() {
+        mBinding.iconWhenInfo.setVisibility(View.VISIBLE);
+
+        ForegroundColorSpan colorSpan = new ForegroundColorSpan(ContextCompat.getColor(mContext, R.color.splash_gradient_end));
+        String cheepGuarantee = getString(R.string.msg_cheep_assurance_select_time);
+        SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(cheepGuarantee);
+        spannableStringBuilder.setSpan(colorSpan, cheepGuarantee.indexOf("click"), cheepGuarantee.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        mBinding.textTaskWhen.setText(spannableStringBuilder);
     }
     ///////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////WHEN Feature [END]//////////////////////

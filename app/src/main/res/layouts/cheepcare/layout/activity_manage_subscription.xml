@@ -70,11 +70,29 @@
                 android:descendantFocusability="blocksDescendants"
                 android:paddingBottom="@dimen/scale_32dp">
 
+                <com.cheep.custom_view.CFTextViewBold
+                    android:id="@+id/tv_welcome_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/scale_29dp"
+                    android:layout_marginLeft="@dimen/scale_29dp"
+                    android:layout_marginRight="@dimen/scale_29dp"
+                    android:layout_marginStart="@dimen/scale_28dp"
+                    android:layout_marginTop="@dimen/scale_16dp"
+                    android:gravity="center"
+                    android:textColor="@color/black_varient_1"
+                    android:textSize="@dimen/text_size_15sp"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="@string/msg_welcome_x" />
+
                 <com.cheep.custom_view.CFTextViewRegular
                     android:id="@+id/tv_info_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/scale_15dp"
+                    android:layout_marginTop="@dimen/scale_16dp"
                     android:gravity="center"
                     android:paddingEnd="@dimen/scale_32dp"
                     android:paddingLeft="@dimen/scale_32dp"
@@ -84,7 +102,7 @@
                     android:textSize="@dimen/text_size_13sp"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_welcome_text"
                     tools:text="@string/cheep_care_work_flow_desc" />
 
                 <ImageView
