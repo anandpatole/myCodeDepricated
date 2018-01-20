@@ -10,7 +10,7 @@ import java.util.List;
  * Created by giteeka on 5/1/18.
  */
 
-public class CheepCareCityLandingPageModel {
+public class CityLandingPageModel {
 
     public class CityDetail implements Serializable {
 

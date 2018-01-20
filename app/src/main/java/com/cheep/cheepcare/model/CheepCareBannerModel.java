@@ -10,7 +10,6 @@ import com.google.gson.annotations.SerializedName;
 public class CheepCareBannerModel {
 
     @SerializedName("id")
-    @Expose
     public String id;
 
     @SerializedName("city_name")

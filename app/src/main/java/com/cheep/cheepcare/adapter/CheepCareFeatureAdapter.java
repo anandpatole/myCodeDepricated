@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.cheep.R;
-import com.cheep.cheepcare.model.CheepCareCityLandingPageModel;
+import com.cheep.cheepcare.model.CityLandingPageModel;
 import com.cheep.databinding.RowLeftImageCheepCareFeatureBinding;
 import com.cheep.databinding.RowRightImageCheepCareFeatureBinding;
 import com.cheep.utils.LoadMoreRecyclerAdapter;
@@ -25,7 +25,7 @@ public class CheepCareFeatureAdapter extends LoadMoreRecyclerAdapter<CheepCareFe
 
     public static final int ODD_POSITION = 1;
     public static final int EVEN_POSITION = 2;
-    private List<CheepCareCityLandingPageModel.CityTutorials> mList = new ArrayList<>();
+    private List<CityLandingPageModel.CityTutorials> mList = new ArrayList<>();
 
     @Override
     public int getItemViewType(int position) {
@@ -50,7 +50,7 @@ public class CheepCareFeatureAdapter extends LoadMoreRecyclerAdapter<CheepCareFe
 
     @Override
     public void onActualBindViewHolder(CheepCareFeatureBaseViewHolder holder, int position) {
-        CheepCareCityLandingPageModel.CityTutorials model = mList.get(position);
+        CityLandingPageModel.CityTutorials model = mList.get(position);
         if (holder instanceof LeftSideImageViewHolder) {
             RowLeftImageCheepCareFeatureBinding leftBinding = holder.getBinding();
             Utility.loadImageView(leftBinding.getRoot().getContext()
@@ -107,7 +107,7 @@ public class CheepCareFeatureAdapter extends LoadMoreRecyclerAdapter<CheepCareFe
         }
     }
 
-    public void addFeatureList(List<CheepCareCityLandingPageModel.CityTutorials> list) {
+    public void addFeatureList(List<CityLandingPageModel.CityTutorials> list) {
         mList.addAll(list);
         notifyDataSetChanged();
     }

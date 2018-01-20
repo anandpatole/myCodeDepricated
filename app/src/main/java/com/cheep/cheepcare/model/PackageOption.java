@@ -14,19 +14,15 @@ import java.util.List;
 public class PackageOption implements Parent<PackageSubOption>, Serializable {
 
     @SerializedName("package_option_id")
-    @Expose
     public String packageId;
 
     @SerializedName("package_option_title")
-    @Expose
     public String packageOptionTitle;
 
     @SerializedName("selection_type")
-    @Expose
     public String selectionType;
 
     @SerializedName("package_suboption")
-    @Expose
     public List<PackageSubOption> packageOptionList = null;
     public boolean isSelected = false;
 
