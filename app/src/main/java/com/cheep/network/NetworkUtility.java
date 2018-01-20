@@ -523,6 +523,14 @@ public class NetworkUtility {
         String BENGALURU = "bengaluru";
     }
 
+    public interface CARE_PACKAGE_SLUG {
+        String BIZ_CARE = "bizcare";
+        String HOME_CARE = "homecare";
+        String SOCI_CARE = "socicare";
+        String TECH_CARE = "techcare";
+        String APPLIANCE_CARE = "appliancecare";
+    }
+
     public static Map<String, Object> getAddressParamHashmap(Map<String, Object> mParams, AddressModel model) {
 
         mParams.put(NetworkUtility.TAGS.CATEGORY, model.category);

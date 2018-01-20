@@ -1,6 +1,8 @@
 package com.cheep.cheepcare.activity;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
@@ -45,9 +47,14 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
     public CheepCareCityLandingPageModel.CityDetail mCityDetail;
     public String mPackageId = "";
     private ArrayList<PackageDetail> mPackageList = new ArrayList<>();
-    public double totalPrice;
-    public boolean isYearly = true;
     private static final String TAG = "PackageCustomizationAct";
+    private int mPreviousState = 0;
+    int cartCount = 0;
+
+    public static final int STAGE_1 = 0;
+    public static final int STAGE_2 = 1;
+    public static final int STAGE_3 = 2;
+
 
     public void setPackageList(ArrayList<PackageDetail> mPackageList) {
         this.mPackageList = mPackageList;
@@ -236,109 +243,38 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
     public void setTaskState(int step_state) {
         mCurrentStep = step_state;
         switch (step_state) {
-            /*case STEP_ONE_NORMAL:
-                mBinding.textStep1.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_steps_normal));
-                mBinding.textStep1.setTextColor(ContextCompat.getColor(mContext, R.color.white));
 
-                mBinding.textStep2.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_steps_normal));
-                mBinding.textStep2.setTextColor(ContextCompat.getColor(mContext, R.color.white));
-
-                mBinding.textStep3.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_steps_normal));
-                mBinding.textStep3.setTextColor(ContextCompat.getColor(mContext, R.color.white));
-
-                break;*/
             case STEP_ONE_UNVERIFIED:
                 mBinding.textStep1.setSelected(true);
                 mBinding.textStep2.setSelected(false);
                 mBinding.textStep3.setSelected(false);
                 break;
-                /*mBinding.textStep1.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_steps_unverified));
-                mBinding.textStep1.setTextColor(ContextCompat.getColor(mContext, R.color.splash_gradient_end));
 
-                mBinding.textStep2.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_steps_normal));
-                mBinding.textStep2.setTextColor(ContextCompat.getColor(mContext, R.color.white));
-
-                mBinding.textStep3.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_steps_normal));
-                mBinding.textStep3.setTextColor(ContextCompat.getColor(mContext, R.color.white));
-
-                break;*/
             case STEP_ONE_VERIFIED:
-            /*case STEP_TWO_NORMAL:
-                mBinding.textStep1.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_steps_verified));
-                mBinding.textStep1.setTextColor(ContextCompat.getColor(mContext, R.color.white));
-
-                mBinding.textStep2.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_steps_normal));
-                mBinding.textStep2.setTextColor(ContextCompat.getColor(mContext, R.color.white));
-
-                mBinding.textStep3.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_steps_normal));
-                mBinding.textStep3.setTextColor(ContextCompat.getColor(mContext, R.color.white));
-
-                break;*/
             case STEP_TWO_UNVERIFIED:
                 mBinding.textStep1.setSelected(false);
                 mBinding.textStep2.setSelected(true);
                 mBinding.textStep3.setSelected(false);
                 break;
-                /*mBinding.textStep1.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_steps_verified));
-                mBinding.textStep1.setTextColor(ContextCompat.getColor(mContext, R.color.white));
 
-                mBinding.textStep2.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_steps_unverified));
-                mBinding.textStep2.setTextColor(ContextCompat.getColor(mContext, R.color.splash_gradient_end));
-
-                mBinding.textStep3.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_steps_normal));
-                mBinding.textStep3.setTextColor(ContextCompat.getColor(mContext, R.color.white));
-
-                break;*/
             case STEP_TWO_VERIFIED:
-            /*case STEP_THREE_NORMAL:
-                mBinding.textStep1.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_steps_verified));
-                mBinding.textStep1.setTextColor(ContextCompat.getColor(mContext, R.color.white));
-
-                mBinding.textStep2.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_steps_verified));
-                mBinding.textStep2.setTextColor(ContextCompat.getColor(mContext, R.color.white));
-
-                mBinding.textStep3.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_steps_normal));
-                mBinding.textStep3.setTextColor(ContextCompat.getColor(mContext, R.color.white));
-
-                break;*/
             case STEP_THREE_UNVERIFIED:
                 mBinding.textStep1.setSelected(false);
                 mBinding.textStep2.setSelected(false);
                 mBinding.textStep3.setSelected(true);
                 break;
-                /*mBinding.textStep1.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_steps_verified));
-                mBinding.textStep1.setTextColor(ContextCompat.getColor(mContext, R.color.white));
 
-                mBinding.textStep2.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_steps_verified));
-                mBinding.textStep2.setTextColor(ContextCompat.getColor(mContext, R.color.white));
-
-                mBinding.textStep3.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_steps_unverified));
-                mBinding.textStep3.setTextColor(ContextCompat.getColor(mContext, R.color.splash_gradient_end));
-
-                break;*/
             case STEP_THREE_VERIFIED:
                 mBinding.textStep1.setSelected(false);
                 mBinding.textStep2.setSelected(false);
                 mBinding.textStep3.setSelected(true);
                 break;
-                /*mBinding.textStep1.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_steps_verified));
-                mBinding.textStep1.setTextColor(ContextCompat.getColor(mContext, R.color.white));
 
-                mBinding.textStep2.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_steps_verified));
-                mBinding.textStep2.setTextColor(ContextCompat.getColor(mContext, R.color.white));
-
-                mBinding.textStep3.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_steps_verified));
-                mBinding.textStep3.setTextColor(ContextCompat.getColor(mContext, R.color.white));
-
-                break;*/
         }
     }
 
-    public static final int STAGE_1 = 0;
-    public static final int STAGE_2 = 1;
-    public static final int STAGE_3 = 2;
-
     public void gotoStep(int step) {
+        mPreviousState = mBinding.viewpager.getCurrentItem();
         switch (step) {
             case STAGE_1:
                 mBinding.viewpager.setCurrentItem(0);
@@ -368,14 +304,46 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (mBinding.viewpager.getCurrentItem() == 2) {
-            gotoStep(STAGE_2);
-            return;
-        } else if (mBinding.viewpager.getCurrentItem() == 1) {
-            gotoStep(STAGE_1);
-            return;
-        }
+
+
+        if (mBinding.viewpager.getCurrentItem() == 0) {
+            if (cartCount > 0)
+                showAlertDialog();
+            else
+                super.onBackPressed();
+        } else gotoStep(mPreviousState);
+
+
+/*
+            if (mBinding.viewpager.getCurrentItem() == 2) {
+                gotoStep(STAGE_2);
+                return;
+            } else if (mBinding.viewpager.getCurrentItem() == 1) {
+                gotoStep(STAGE_1);
+                return;
+            }
         super.onBackPressed();
+*/
+    }
+
+    private void showAlertDialog() {
+        AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+        alertDialog.setTitle(getString(R.string.app_name));
+        alertDialog.setMessage(getString(R.string.cheep_care_alert_message));
+        alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, getString(R.string.label_Ok), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                PackageCustomizationActivity.super.onBackPressed();
+            }
+        });
+        alertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.label_cancel), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+        alertDialog.show();
     }
 
     @Override
@@ -389,29 +357,65 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
             switch (v.getId()) {
                 case R.id.text_continue:
                     if (mBinding.viewpager.getCurrentItem() == STAGE_1) {
-                        SelectPackageSpecificationsFragment fragment = (SelectPackageSpecificationsFragment) mPackageCustomizationPagerAdapter.getItem(mBinding.viewpager.getCurrentItem());
-                        if (fragment != null) {
-                            if (fragment.validateData()) {
-                                for (PackageDetail detail : mPackageList) {
-                                    if (detail.id.equalsIgnoreCase(mPackageId)) {
-                                        detail.isSelected = true;
-                                        detail.mSelectedAddress = fragment.mSelectedAddress;
-                                    }
-                                }
-                                gotoStep(STAGE_2);
-                            }
-                        }
+                        goToPackageBundling(STAGE_3);
                     } else if (mBinding.viewpager.getCurrentItem() == STAGE_2) {
                         gotoStep(STAGE_3);
                     } else {
-//                        PaymentChoiceActivity.newInstance();
-
                         createSubscriptionPackageRequest();
                     }
                     break;
             }
         }
     };
+
+    public void goToPackageBundling(int step) {
+        SelectPackageSpecificationsFragment fragment = (SelectPackageSpecificationsFragment) mPackageCustomizationPagerAdapter.getItem(mBinding.viewpager.getCurrentItem());
+        cartCount = 0;
+        if (fragment != null) {
+            if (fragment.validateData()) {
+                for (PackageDetail detail : mPackageList) {
+                    if (detail.id.equalsIgnoreCase(mPackageId)) {
+                        detail.isSelected = true;
+                        detail.mSelectedAddress = fragment.mSelectedAddress;
+                    }
+                    if (detail.packageOptionList != null && detail.isSelected) {
+                        cartCount++;
+                        for (PackageOption service : detail.packageOptionList) {
+                            if (service.selectionType.equalsIgnoreCase(PackageOption.SELECTION_TYPE.RADIO)) {
+                                for (PackageSubOption option : service.getChildList()) {
+                                    if (option.isSelected) {
+                                        detail.monthlyPrice = Double.parseDouble(option.monthlyPrice);
+                                        detail.yearlyPrice = Double.parseDouble(option.annualPrice);
+                                        detail.halfYearlyPrice = Double.parseDouble(option.sixmonthPrice);
+                                    }
+                                }
+                            } else {
+                                PackageSubOption option = service.getChildList().get(0);
+
+                                detail.monthlyPrice = Double.parseDouble(option.monthlyPrice);
+                                detail.yearlyPrice = Double.parseDouble(option.annualPrice);
+                                detail.halfYearlyPrice = Double.parseDouble(option.sixmonthPrice);
+
+                                for (PackageSubOption option1 : service.getChildList()) {
+                                    if (option1.qty > 1) {
+                                        detail.monthlyPrice = detail.monthlyPrice * (option1.qty - 1);
+                                        detail.yearlyPrice = detail.yearlyPrice * (option1.qty - 1) * 12;
+                                        detail.halfYearlyPrice = detail.halfYearlyPrice * (option1.qty - 1) * 6;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                gotoStep(step);
+            }
+            updateCartCount();
+        }
+    }
+
+    private void updateCartCount() {
+        mBinding.tvBadgeCartCount.setText(String.valueOf(cartCount));
+    }
 
     private void createSubscriptionPackageRequest() {
 
@@ -521,6 +525,7 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
                 break;
             }
         }
+        calculateTotalPrice();
     }
 
     public void setContinueButtonText(String selectedService, String price) {
@@ -532,4 +537,37 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
         mBinding.textService.setText(getString(R.string.label_appliance, totalAppliance));
         mBinding.textPrice.setText(Utility.getMonthlyPrice(price, this));
     }
+
+    private void calculateTotalPrice() {
+        for (PackageDetail detail : mPackageList) {
+            if (detail.packageOptionList != null && detail.isSelected) {
+                for (PackageOption service : detail.packageOptionList) {
+                    if (service.selectionType.equalsIgnoreCase(PackageOption.SELECTION_TYPE.RADIO)) {
+                        for (PackageSubOption option : service.getChildList()) {
+                            if (option.isSelected) {
+                                detail.monthlyPrice = Double.parseDouble(option.monthlyPrice);
+                                detail.yearlyPrice = Double.parseDouble(option.annualPrice);
+                                detail.halfYearlyPrice = Double.parseDouble(option.sixmonthPrice);
+                            }
+                        }
+                    } else {
+                        PackageSubOption option = service.getChildList().get(0);
+
+                        detail.monthlyPrice = Double.parseDouble(option.monthlyPrice);
+                        detail.yearlyPrice = Double.parseDouble(option.annualPrice);
+                        detail.halfYearlyPrice = Double.parseDouble(option.sixmonthPrice);
+
+                        for (PackageSubOption option1 : service.getChildList()) {
+                            if (option1.qty > 1) {
+                                detail.monthlyPrice = detail.monthlyPrice * (option1.qty - 1);
+                                detail.yearlyPrice = detail.yearlyPrice * (option1.qty - 1) * 12;
+                                detail.halfYearlyPrice = detail.halfYearlyPrice * (option1.qty - 1) * 6;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
 }

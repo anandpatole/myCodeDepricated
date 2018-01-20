@@ -23,6 +23,7 @@ import com.cheep.databinding.RowBundledPackageHeaderBinding;
 import com.cheep.databinding.RowBundledPackageSelectedBinding;
 import com.cheep.databinding.RowBundledPackagetNoSelectedBinding;
 import com.cheep.model.AddressModel;
+import com.cheep.model.GuestUserDetails;
 import com.cheep.model.UserDetails;
 import com.cheep.utils.LoadMoreRecyclerAdapter;
 import com.cheep.utils.PreferenceUtility;
@@ -210,7 +211,13 @@ public class PackageBundlingAdapter extends LoadMoreRecyclerAdapter<PackageBundl
             }
         });*/
         final UserDetails userDetails = PreferenceUtility.getInstance(view.getContext()).getUserDetails();
-        final DropDownAddressAdapter dropDownAdapter = new DropDownAddressAdapter(userDetails.addressList);
+        final GuestUserDetails guestUserDetails = PreferenceUtility.getInstance(view.getContext()).getGuestUserDetails();
+        final DropDownAddressAdapter dropDownAdapter;
+        if (userDetails != null)
+            dropDownAdapter = new DropDownAddressAdapter(userDetails.addressList);
+        else {
+            dropDownAdapter = new DropDownAddressAdapter(guestUserDetails.addressList);
+        }
         recyclerview.setAdapter(dropDownAdapter);
         DropDownAddressAdapter.ClickItem clickListener = new DropDownAddressAdapter.ClickItem() {
             @Override
@@ -224,7 +231,11 @@ public class PackageBundlingAdapter extends LoadMoreRecyclerAdapter<PackageBundl
 //                model.answer = model.dropDownList.get(i).dropdown_answer;
 //                mFragmentStrategicPartnerPhaseTwoBinding.linMain.findViewWithTag(model.questionId).setSelected(true);
 
-                mListener.onUpdateOfAddress(adapterPosition,userDetails.addressList.get(i));
+                if (userDetails != null)
+                    mListener.onUpdateOfAddress(adapterPosition, userDetails.addressList.get(i));
+                else
+                    mListener.onUpdateOfAddress(adapterPosition, guestUserDetails.addressList.get(i));
+
 
                 mPopupWindow.dismiss();
 

@@ -12,10 +12,12 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.cheep.R;
 import com.cheep.cheepcare.activity.LandingScreenPickPackageActivity;
+import com.cheep.cheepcare.activity.ManageSubscriptionActivity;
 import com.cheep.cheepcare.model.CheepCareBannerModel;
 import com.cheep.databinding.FragmentSubscriptionBannerImageBinding;
 import com.cheep.fragment.BaseFragment;
 import com.cheep.network.NetworkUtility;
+import com.cheep.utils.Utility;
 
 import java.util.ArrayList;
 
@@ -26,53 +28,7 @@ public class SubscriptionBannerFragment extends BaseFragment {
     private FragmentSubscriptionBannerImageBinding binding;
 
 
-    public static ArrayList<CheepCareBannerModel> cheepCareBannerModels;
-
-/*
-    public static ArrayList<CheepCareBannerModel> getCheepCareBannerModels() {
-
-        cheepCareBannerModels = new ArrayList<>();
-        CheepCareBannerModel model = new CheepCareBannerModel();
-        model.title = "Discover a new level of carefree!";
-        model.subTitle = "Tap here for zippy, doorstep services ";
-        model.cityName = "Mumbai";
-        model.tempImgRes = R.drawable.banner_mumbai;
-        cheepCareBannerModels.add(model);
-
-        model = new CheepCareBannerModel();
-        model.title = "Discover a new level of carefree!";
-        model.subTitle = "Tap here for zippy, doorstep services ";
-        model.cityName = "Bengaluru";
-        model.tempImgRes = R.drawable.banner_bengaluru;
-        cheepCareBannerModels.add(model);
-
-        model = new CheepCareBannerModel();
-        model.title = "Discover a new level of carefree!";
-        model.subTitle = "Tap here for zippy, doorstep services ";
-        model.cityName = "Hyderabad";
-        model.tempImgRes = R.drawable.banner_hyderabad;
-        cheepCareBannerModels.add(model);
-
-
-        model = new CheepCareBannerModel();
-        model.title = "Discover a new level of carefree!";
-        model.subTitle = "Tap here for zippy, doorstep services ";
-        model.cityName = "Delhi";
-        model.tempImgRes = R.drawable.banner_delhi;
-        cheepCareBannerModels.add(model);
-
-
-        model = new CheepCareBannerModel();
-        model.title = "Discover a new level of carefree!";
-        model.subTitle = "Tap here for zippy, doorstep services ";
-        model.cityName = "Chennai";
-        model.tempImgRes = R.drawable.banner_chennai;
-        cheepCareBannerModels.add(model);
-
-
-        return cheepCareBannerModels;
-    }
-*/
+    public ArrayList<CheepCareBannerModel> cheepCareBannerModels;
 
     public SubscriptionBannerFragment() {
         // Required empty public constructor
@@ -168,9 +124,11 @@ public class SubscriptionBannerFragment extends BaseFragment {
 
                     if (!processingClick) {
                         processingClick = true;
-//                        ManageSubscriptionActivity.newInstance(mContext, bannerImageModel);
-                        LandingScreenPickPackageActivity.newInstance(mContext, bannerImageModel);
-//                        WelcomeToCCActivity.newInstance(mContext, bannerImageModel.cityName);
+                        if (bannerImageModel.isSubscribed.equalsIgnoreCase(Utility.BOOLEAN.YES)) {
+                            ManageSubscriptionActivity.newInstance(mContext, bannerImageModel);
+                        } else {
+                            LandingScreenPickPackageActivity.newInstance(mContext, bannerImageModel);
+                        }
                     }
                 }
             });

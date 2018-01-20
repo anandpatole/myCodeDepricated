@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="cheep_tips">Chips Tips: %1s</string>
+    <string name="cheep_care_alert_message">Your package details will be lost, Are you sure want to go back?</string>
+</resources>
