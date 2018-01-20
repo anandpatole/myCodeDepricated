@@ -56,7 +56,9 @@ public class SelectedPackageSummaryAdapter extends LoadMoreRecyclerAdapter<Selec
         holder.mBinding.tvDescription.setText(model.subtitle);
 
         // set montly price of package
-        SpannableString spannableString1 = new SpannableString(context.getString(R.string.rupee_symbol_x_package_price, model.packageOptionList.get(0).getChildList().get(0).monthlyPrice));
+
+
+        SpannableString spannableString1 = new SpannableString(context.getString(R.string.rupee_symbol_x_package_price, String.valueOf(model.monthlyPrice)));
         spannableString1 = Utility.getCheepCarePackageMonthlyPrice(spannableString1, spannableString1.length() - 3, spannableString1.length());
 
         // set address category icon

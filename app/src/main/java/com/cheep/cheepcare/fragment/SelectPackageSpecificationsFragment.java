@@ -23,12 +23,13 @@ import com.cheep.cheepcare.activity.PackageCustomizationActivity;
 import com.cheep.cheepcare.adapter.AddressPackageCustomizationAdapter;
 import com.cheep.cheepcare.adapter.ExpandablePackageServicesRecyclerAdapter;
 import com.cheep.cheepcare.dialogs.BottomAddAddressDialog;
-import com.cheep.cheepcare.model.PackageOption;
 import com.cheep.cheepcare.model.PackageDetail;
+import com.cheep.cheepcare.model.PackageOption;
 import com.cheep.cheepcare.model.PackageSubOption;
 import com.cheep.databinding.FragmentSelectPackageSpecificationBinding;
 import com.cheep.fragment.BaseFragment;
 import com.cheep.model.AddressModel;
+import com.cheep.model.GuestUserDetails;
 import com.cheep.model.UserDetails;
 import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
@@ -128,7 +129,7 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
         mBinding.recyclerView.setLayoutManager(linearLayoutManager);
         mBinding.recyclerView.setNestedScrollingEnabled(false);
 
-        SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(getString(R.string.msg_cheep_assurance_select_time));
+        SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(getString(R.string.msg_bundle_other_packages));
 
         /*DottedUnderlineSpan dottedUnderlineSpan = new DottedUnderlineSpan(
                 ContextCompat.getColor(mContext, R.color.splash_gradient_end)
@@ -145,11 +146,17 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
 
         callPackageOptionListWS();
         initAddressUI();
+        initChipTipsUI();
     }
 
     @Override
     public void setListener() {
-
+        mBinding.tvOtherBundlePackages.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mPackageCustomizationActivity.goToPackageBundling(PackageCustomizationActivity.STAGE_2);
+            }
+        });
 
     }
 
@@ -271,13 +278,19 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
 
 
                         //Saving information in shared preference
-                        UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
-                        userDetails.addressList.add(addressModel);
-                        PreferenceUtility.getInstance(mContext).saveUserDetails(userDetails);
 
+                        UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
+                        if (userDetails != null) {
+                            userDetails.addressList.add(addressModel);
+                            PreferenceUtility.getInstance(mContext).saveUserDetails(userDetails);
+                        }
                         mList.add(addressModel);
                         verifyAddressForCity(addressModel);
                         addressDialog.dismiss();
+                        if (!mList.isEmpty()) {
+                            mBinding.llAddressView.setVisibility(View.VISIBLE);
+                        }
+
                     }
 
                     @Override
@@ -298,6 +311,14 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
 
         if (userDetails != null && !userDetails.addressList.isEmpty())
             mList.addAll(userDetails.addressList);
+        else {
+            GuestUserDetails guestUserDetails = PreferenceUtility.getInstance(mPackageCustomizationActivity).getGuestUserDetails();
+            mList.addAll(guestUserDetails.addressList);
+        }
+
+        if (mList.isEmpty()) {
+            mBinding.llAddressView.setVisibility(View.GONE);
+        }
 
         mList.add(0, new AddressModel() {{
             address = getString(R.string.label_select_address);
@@ -378,7 +399,10 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
         boolean isAnyServiceSelected = false;
         for (PackageDetail detail : mPackageCustomizationActivity.getPackageList()) {
             if (detail.id.equalsIgnoreCase(mPackageCustomizationActivity.mPackageId)) {
-                PackageOption model = detail.packageOptionList.get(0);
+                PackageOption model = null;
+                if (detail.packageOptionList != null) {
+                    model = detail.packageOptionList.get(0);
+                }
                 if (model == null)
                     return false;
 
@@ -497,7 +521,41 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
                 , null);
         Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest, NetworkUtility.WS.CHECK_PRO_AVAILABILITY_FOR_STRATEGIC_TASK);
 
+    }
 
+    private void initChipTipsUI() {
+        ViewGroup.LayoutParams params = mBinding.rlChipTips.getLayoutParams();
+        params.height = (int) getResources().getDimension(R.dimen.scale_30dp);
+        mBinding.rlChipTips.setLayoutParams(params);
+        mBinding.rlChipTips.setSelected(false);
+        mBinding.ivBird.setImageResource(R.drawable.ic_cheep_bird_tip);
+        mBinding.ivCross.setImageResource(R.drawable.ic_drop_down_arrow);
+        mBinding.ivCross.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mBinding.rlChipTips.isSelected()) {
+
+                    mBinding.ivCross.setImageResource(R.drawable.ic_drop_down_arrow);
+                    mBinding.ivBird.setImageResource(R.drawable.ic_cheep_bird_tip);
+                    mBinding.rlChipTips.setSelected(false);
+
+                    ViewGroup.LayoutParams params = mBinding.rlChipTips.getLayoutParams();
+                    params.height = (int) getResources().getDimension(R.dimen.scale_30dp);
+                    mBinding.rlChipTips.setLayoutParams(params);
+
+                } else {
+
+                    mBinding.ivCross.setImageResource(R.drawable.icon_cross_blue);
+                    mBinding.rlChipTips.setSelected(true);
+                    mBinding.ivBird.setImageResource(R.drawable.ic_cheep_bird_tip_big);
+
+                    ViewGroup.LayoutParams params = mBinding.rlChipTips.getLayoutParams();
+                    params.height = (int) getResources().getDimension(R.dimen.scale_50dp);
+                    mBinding.rlChipTips.setLayoutParams(params);
+
+                }
+            }
+        });
     }
 
 }

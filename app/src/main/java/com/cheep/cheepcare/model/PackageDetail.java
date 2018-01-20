@@ -32,5 +32,7 @@ public class PackageDetail implements Serializable {
     public AddressModel mSelectedAddress;
     public int rowType = 0;
 
-    public double calculatedPackagePrice = 0;
+    public double monthlyPrice = 0;
+    public double yearlyPrice = 0;
+    public double halfYearlyPrice = 0;
 }

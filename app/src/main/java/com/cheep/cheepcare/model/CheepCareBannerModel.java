@@ -2,6 +2,7 @@ package com.cheep.cheepcare.model;
 
 import android.support.annotation.Keep;
 
+import com.cheep.utils.Utility;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -26,5 +27,9 @@ public class CheepCareBannerModel {
     @SerializedName("subtitle")
     @Expose
     public String subtitle;
+
+    @SerializedName("is_subscribed")
+    @Expose
+    public String isSubscribed = Utility.BOOLEAN.NO;
 
 }

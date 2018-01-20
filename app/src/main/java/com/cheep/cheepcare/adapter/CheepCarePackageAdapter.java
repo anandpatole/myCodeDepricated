@@ -11,6 +11,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.cheep.R;
 import com.cheep.cheepcare.model.PackageDetail;
 import com.cheep.databinding.RowCheepCarePackageBinding;
+import com.cheep.network.NetworkUtility;
 import com.cheep.utils.LoadMoreRecyclerAdapter;
 
 import java.util.ArrayList;
@@ -47,11 +48,34 @@ public class CheepCarePackageAdapter extends LoadMoreRecyclerAdapter<CheepCarePa
 
 
         Glide.with(holder.mBinding.getRoot().getContext())
-                .load(R.drawable.banner_appliance_care_gif)
+                .load(R.drawable.banner_appliance_care)
+                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                .into(holder.mBinding.ivItemBackground);
+
+        int resId = R.drawable.gif_ballon_home_price;
+        switch (model.packageSlug) {
+            case NetworkUtility.CARE_PACKAGE_SLUG.HOME_CARE:
+                resId = R.drawable.gif_ballon_home_price;
+                break;
+            case NetworkUtility.CARE_PACKAGE_SLUG.APPLIANCE_CARE:
+                resId = R.drawable.gif_ballon_app_tec_price;
+                break;
+            case NetworkUtility.CARE_PACKAGE_SLUG.TECH_CARE:
+                resId = R.drawable.gif_ballon_app_tec_price;
+                break;
+            case NetworkUtility.CARE_PACKAGE_SLUG.BIZ_CARE:
+                resId = R.drawable.gif_ballon_biz_price;
+                break;
+            case NetworkUtility.CARE_PACKAGE_SLUG.SOCI_CARE:
+                resId = R.drawable.gif_ballon_soci_price;
+                break;
+        }
+        Glide.with(holder.mBinding.getRoot().getContext())
+                .load(resId)
                 .asGif()
                 .dontAnimate()
                 .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                .into(holder.mBinding.ivItemBackground);
+                .into(holder.mBinding.ivCharge);
 
         holder.mBinding.tvTitle.setText(model.title);
         holder.mBinding.tvDescription.setText(model.subtitle);
