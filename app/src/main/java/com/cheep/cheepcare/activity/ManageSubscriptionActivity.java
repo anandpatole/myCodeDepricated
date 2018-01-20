@@ -6,6 +6,9 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.style.ImageSpan;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -33,6 +36,7 @@ public class ManageSubscriptionActivity extends BaseAppCompatActivity {
     private ActivityManageSubscriptionBinding mBinding;
     private CheepCareBannerModel mCity;
     private List<AnimatorSet> animators;
+    private int activityType;
 
     public static void newInstance(Context context, CheepCareBannerModel city) {
         Intent intent = new Intent(context, ManageSubscriptionActivity.class);
@@ -84,7 +88,18 @@ public class ManageSubscriptionActivity extends BaseAppCompatActivity {
 
         mBinding.tvCityName.setText(mCity.cityName);
 
-        mBinding.tvInfoText.setText(getString(R.string.cheep_care_work_flow_desc, "Nikita"));
+        if (activityType == 0) {
+            SpannableStringBuilder spannableStringBuilder
+                    = new SpannableStringBuilder(getString(R.string.msg_welcome_x, "Nikita"));
+            spannableStringBuilder.append(Utility.ONE_CHARACTER_SPACE).append(Utility.ONE_CHARACTER_SPACE);
+            ImageSpan span = new ImageSpan(getBaseContext(), R.drawable.ic_smiley_folded_hands_big, ImageSpan.ALIGN_BASELINE);
+            spannableStringBuilder.setSpan(span, spannableStringBuilder.length() - 1
+                    , spannableStringBuilder.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+            mBinding.tvWelcomeText.setText(spannableStringBuilder);
+            mBinding.tvInfoText.setText(getString(R.string.msg_welcoming_on_subscription));
+        } else {
+            mBinding.tvInfoText.setText(getString(R.string.cheep_care_work_flow_desc, "Nikita"));
+        }
 
         mBinding.rvBoughtPackages.setNestedScrollingEnabled(false);
         ExpandableBoughtPackagesRecyclerAdapter boughtAdapter =

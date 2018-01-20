@@ -406,10 +406,11 @@ public class TaskCreationCCActivity extends BaseAppCompatActivity {
             return;
         }
 
-//        if (mTaskCreationPagerAdapter.mEnterTaskDetailFragment.superCalendar == null) {
-//            Utility.showSnackBar(getString(R.string.can_only_start_task_after_3_hours), mActivityTaskCreateBinding.getRoot());
-//            return;
-//        }
+        /*if (mTaskCreationPagerAdapter.mEnterTaskDetailFragment.superCalendar == null) {
+            Utility.showSnackBar(getString(R.string.can_only_start_task_after_3_hours), mActivityTaskCreateBinding.getRoot());
+            return;
+        }*/
+
         if (PreferenceUtility.getInstance(mContext).getUserDetails() == null) {
             isInstaBooking = true;
             LoginActivity.newInstance(mContext);
@@ -431,51 +432,68 @@ public class TaskCreationCCActivity extends BaseAppCompatActivity {
         Map<String, String> mParams = new HashMap<>();
         mParams.put(NetworkUtility.TAGS.CITY_ID, userDetails.CityID);
         mParams.put(NetworkUtility.TAGS.CAT_ID, mJobCategoryModel.catId);
-//        if (Integer.parseInt(mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.address_id) > 0) {
-//            mParams.put(NetworkUtility.TAGS.ADDRESS_ID, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.address_id);
-//        } else {
-//            // In case its nagative then provide other address information
-//            /*
-//             public String address_initials;
-//             public String address;
-//             public String category; //comes from NetworkUtility.TAGS.ADDRESS_TYPE.
-//             public String lat;
-//             public String lng;
-//             */
-//            mParams.put(NetworkUtility.TAGS.ADDRESS_INITIALS, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.address_initials);
-//            mParams.put(NetworkUtility.TAGS.ADDRESS, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.address);
-//            mParams.put(NetworkUtility.TAGS.CATEGORY, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.category);
-//            mParams.put(NetworkUtility.TAGS.LAT, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.lat);
-//            mParams.put(NetworkUtility.TAGS.LNG, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.lng);
-//            mParams.put(NetworkUtility.TAGS.CITY_NAME, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.cityName);
-//            mParams.put(NetworkUtility.TAGS.COUNTRY, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.countryName);
-//            mParams.put(NetworkUtility.TAGS.STATE, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.stateName);
-//        }
+
+        if (Integer.parseInt(mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.mSelectedAddressModel.address_id) > 0) {
+            mParams.put(NetworkUtility.TAGS.ADDRESS_ID, mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.mSelectedAddressModel.address_id);
+        } else {
+            // In case its nagative then provide other address information
+            /*
+             public String address_initials;
+             public String address;
+             public String category; //comes from NetworkUtility.TAGS.ADDRESS_TYPE.
+             public String lat;
+             public String lng;
+             */
+            mParams.put(
+                    NetworkUtility.TAGS.ADDRESS_INITIALS
+                    , mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.mSelectedAddressModel.address_initials);
+            mParams.put(
+                    NetworkUtility.TAGS.ADDRESS
+                    , mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.mSelectedAddressModel.address);
+            mParams.put(
+                    NetworkUtility.TAGS.CATEGORY
+                    , mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.mSelectedAddressModel.category);
+            mParams.put(
+                    NetworkUtility.TAGS.LAT
+                    , mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.mSelectedAddressModel.lat);
+            mParams.put(
+                    NetworkUtility.TAGS.LNG
+                    , mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.mSelectedAddressModel.lng);
+            mParams.put(
+                    NetworkUtility.TAGS.CITY_NAME
+                    , mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.mSelectedAddressModel.cityName);
+            mParams.put(
+                    NetworkUtility.TAGS.COUNTRY
+                    , mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.mSelectedAddressModel.countryName);
+            mParams.put(
+                    NetworkUtility.TAGS.STATE
+                    , mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.mSelectedAddressModel.stateName);
+        }
 //        mParams.put(NetworkUtility.TAGS.SUBCATEGORY_ID, String.valueOf(mSelectedSubServiceDetailModel.sub_cat_id));
 
         mTaskCreationParams = new HashMap<>();
         mTaskCreationParams.put(NetworkUtility.TAGS.CITY_ID, userDetails.CityID);
         mTaskCreationParams.put(NetworkUtility.TAGS.CAT_ID, mJobCategoryModel.catId);
-//        if (Integer.parseInt(mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.address_id) > 0) {
-//            mParams.put(NetworkUtility.TAGS.ADDRESS_ID, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.address_id);
-//        } else {
-//            // In case its nagative then provide other address information
-//            /*
-//             public String address_initials;
-//             public String address;
-//             public String category; //comes from NetworkUtility.TAGS.ADDRESS_TYPE.
-//             public String lat;
-//             public String lng;
-//             */
-//            mTaskCreationParams.put(NetworkUtility.TAGS.ADDRESS_INITIALS, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.address_initials);
-//            mTaskCreationParams.put(NetworkUtility.TAGS.ADDRESS, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.address);
-//            mTaskCreationParams.put(NetworkUtility.TAGS.CATEGORY, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.category);
-//            mTaskCreationParams.put(NetworkUtility.TAGS.LAT, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.lat);
-//            mTaskCreationParams.put(NetworkUtility.TAGS.LNG, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.lng);
-//            mTaskCreationParams.put(NetworkUtility.TAGS.CITY_NAME, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.cityName);
-//            mTaskCreationParams.put(NetworkUtility.TAGS.COUNTRY, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.countryName);
-//            mTaskCreationParams.put(NetworkUtility.TAGS.STATE, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.stateName);
-//        }
+        if (Integer.parseInt(mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.mSelectedAddressModel.address_id) > 0) {
+            mParams.put(NetworkUtility.TAGS.ADDRESS_ID, mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.mSelectedAddressModel.address_id);
+        } else {
+            // In case its nagative then provide other address information
+            /*
+             public String address_initials;
+             public String address;
+             public String category; //comes from NetworkUtility.TAGS.ADDRESS_TYPE.
+             public String lat;
+             public String lng;
+             */
+            mTaskCreationParams.put(NetworkUtility.TAGS.ADDRESS_INITIALS, mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.mSelectedAddressModel.address_initials);
+            mTaskCreationParams.put(NetworkUtility.TAGS.ADDRESS, mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.mSelectedAddressModel.address);
+            mTaskCreationParams.put(NetworkUtility.TAGS.CATEGORY, mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.mSelectedAddressModel.category);
+            mTaskCreationParams.put(NetworkUtility.TAGS.LAT, mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.mSelectedAddressModel.lat);
+            mTaskCreationParams.put(NetworkUtility.TAGS.LNG, mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.mSelectedAddressModel.lng);
+            mTaskCreationParams.put(NetworkUtility.TAGS.CITY_NAME, mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.mSelectedAddressModel.cityName);
+            mTaskCreationParams.put(NetworkUtility.TAGS.COUNTRY, mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.mSelectedAddressModel.countryName);
+            mTaskCreationParams.put(NetworkUtility.TAGS.STATE, mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.mSelectedAddressModel.stateName);
+        }
 //        mTaskCreationParams.put(NetworkUtility.TAGS.SUBCATEGORY_ID, String.valueOf(mSelectedSubServiceDetailModel.sub_cat_id));
 
         VolleyNetworkRequest mVolleyNetworkRequest = new VolleyNetworkRequest(NetworkUtility.WS.GET_PRO_FOR_INSTA_BOOKING
@@ -491,7 +509,7 @@ public class TaskCreationCCActivity extends BaseAppCompatActivity {
     /////////////////////////////////////Post Task [Start] /////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////
     public void onGetQuoteClicked() {
-        Log.d(TAG, "onPostTaskClicked() called");
+        Log.d(TAG, "onGetQuoteClicked() called");
         if (!isValidationCompleted()) {
             return;
         }
@@ -502,10 +520,10 @@ public class TaskCreationCCActivity extends BaseAppCompatActivity {
             return;
         }
 
-//        if (mTaskCreationPagerAdapter.mEnterTaskDetailFragment.superCalendar == null) {
-//            Utility.showSnackBar(getString(R.string.can_only_start_task_after_3_hours), mActivityTaskCreateBinding.getRoot());
-//            return;
-//        }
+        if (mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.superCalendar == null) {
+            Utility.showSnackBar(getString(R.string.can_only_start_task_after_3_hours), mActivityTaskCreateBinding.getRoot());
+            return;
+        }
 
         if (PreferenceUtility.getInstance(mContext).getUserDetails() == null) {
             isInstaBooking = false;
@@ -537,64 +555,89 @@ public class TaskCreationCCActivity extends BaseAppCompatActivity {
 
         // Add Params
         Map<String, String> mParams = new HashMap<>();
-//        mParams.put(NetworkUtility.TAGS.TASK_DESC, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.getTaskDescription());
-//        if (Integer.parseInt(mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.address_id) > 0) {
-//            mParams.put(NetworkUtility.TAGS.ADDRESS_ID, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.address_id);
-//        } else {
-//            // In case its nagative then provide other address information
-//            /*
-//             public String address_initials;
-//             public String address;
-//             public String category; //comes from NetworkUtility.TAGS.ADDRESS_TYPE.
-//             public String lat;
-//             public String lng;
-//             */
-//            mParams.put(NetworkUtility.TAGS.ADDRESS_INITIALS, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.address_initials);
-//            mParams.put(NetworkUtility.TAGS.ADDRESS, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.address);
-//            mParams.put(NetworkUtility.TAGS.CATEGORY, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.category);
-//            mParams.put(NetworkUtility.TAGS.LAT, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.lat);
-//            mParams.put(NetworkUtility.TAGS.LNG, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.lng);
-//            mParams.put(NetworkUtility.TAGS.CITY_NAME, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.cityName);
-//            mParams.put(NetworkUtility.TAGS.COUNTRY, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.countryName);
-//            mParams.put(NetworkUtility.TAGS.STATE, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.stateName);
-//        }
-//        mParams.put(NetworkUtility.TAGS.CITY_ID, userDetails.CityID);
-//        mParams.put(NetworkUtility.TAGS.CAT_ID, mJobCategoryModel.catId);
-//        mParams.put(NetworkUtility.TAGS.TASK_TYPE, Utility.TASK_TYPE.NORMAL);
-////        mParams.put(NetworkUtility.TAGS.SUBCATEGORY_ID, String.valueOf(mSelectedSubServiceDetailModel.sub_cat_id));
-//        mParams.put(NetworkUtility.TAGS.START_DATETIME, String.valueOf(mTaskCreationPagerAdapter.mEnterTaskDetailFragment.superCalendar.getTimeInMillis()));
-//        mParams.put(NetworkUtility.TAGS.MEDIA_FILE, Utility.getSelectedMediaJsonString(mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mMediaRecycleAdapter.getList()));
-//
-//        // Create Params for AppsFlyer event track
-//        mTaskCreationParams = new HashMap<>();
-////        mTaskCreationParams.put(NetworkUtility.TAGS.TASK_DESC, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.getTaskDescription());
-//        if (Integer.parseInt(mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.address_id) > 0) {
-//            mTaskCreationParams.put(NetworkUtility.TAGS.ADDRESS_ID, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.address_id);
-//        } else {
-//            // In case its nagative then provide other address information
-//            /**
-//             * public String address_initials;
-//             public String address;
-//             public String category; //comes from NetworkUtility.TAGS.ADDRESS_TYPE.
-//             public String lat;
-//             public String lng;
-//             public String cityName;
-//             public String countryName;
-//             public String stateName;
-//             */
-//            mTaskCreationParams.put(NetworkUtility.TAGS.ADDRESS_INITIALS, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.address_initials);
-//            mTaskCreationParams.put(NetworkUtility.TAGS.ADDRESS, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.address);
-//            mTaskCreationParams.put(NetworkUtility.TAGS.CATEGORY, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.category);
-//            mTaskCreationParams.put(NetworkUtility.TAGS.LAT, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.lat);
-//            mTaskCreationParams.put(NetworkUtility.TAGS.LNG, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.lng);
-//            mTaskCreationParams.put(NetworkUtility.TAGS.CITY_NAME, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.cityName);
-//            mTaskCreationParams.put(NetworkUtility.TAGS.COUNTRY, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.countryName);
-//            mTaskCreationParams.put(NetworkUtility.TAGS.STATE, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.stateName);
-//        }
+//        mParams.put(NetworkUtility.TAGS.TASK_DESC, mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.getTaskDescription());
+        if (Integer.parseInt(mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.mSelectedAddressModel.address_id) > 0) {
+            mParams.put(NetworkUtility.TAGS.ADDRESS_ID, mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.mSelectedAddressModel.address_id);
+        } else {
+            // In case its nagative then provide other address information
+            /*
+             public String address_initials;
+             public String address;
+             public String category; //comes from NetworkUtility.TAGS.ADDRESS_TYPE.
+             public String lat;
+             public String lng;
+             */
+            mParams.put(
+                    NetworkUtility.TAGS.ADDRESS_INITIALS
+                    , mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.mSelectedAddressModel.address_initials);
+            mParams.put(
+                    NetworkUtility.TAGS.ADDRESS
+                    , mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.mSelectedAddressModel.address);
+            mParams.put(
+                    NetworkUtility.TAGS.CATEGORY
+                    , mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.mSelectedAddressModel.category);
+            mParams.put(
+                    NetworkUtility.TAGS.LAT
+                    , mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.mSelectedAddressModel.lat);
+            mParams.put(
+                    NetworkUtility.TAGS.LNG
+                    , mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.mSelectedAddressModel.lng);
+            mParams.put(
+                    NetworkUtility.TAGS.CITY_NAME
+                    , mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.mSelectedAddressModel.cityName);
+            mParams.put(
+                    NetworkUtility.TAGS.COUNTRY
+                    , mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.mSelectedAddressModel.countryName);
+            mParams.put(
+                    NetworkUtility.TAGS.STATE
+                    , mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.mSelectedAddressModel.stateName);
+        }
+
+        mParams.put(NetworkUtility.TAGS.CITY_ID, userDetails.CityID);
+        mParams.put(NetworkUtility.TAGS.CAT_ID, mJobCategoryModel.catId);
+        mParams.put(NetworkUtility.TAGS.TASK_TYPE, Utility.TASK_TYPE.NORMAL);
+//        mParams.put(NetworkUtility.TAGS.SUBCATEGORY_ID, String.valueOf(mSelectedSubServiceDetailModel.sub_cat_id));
+
+        //because when is not compulsory
+        if (mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.superCalendar == null) {
+            mParams.put(NetworkUtility.TAGS.START_DATETIME, String.valueOf(mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.superCalendar.getTimeInMillis()));
+        }
+        mParams.put(NetworkUtility.TAGS.MEDIA_FILE, Utility.getSelectedMediaJsonString(mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.mMediaRecycleAdapter.getList()));
+
+        // Create Params for AppsFlyer event track
+        mTaskCreationParams = new HashMap<>();
+//        mTaskCreationParams.put(NetworkUtility.TAGS.TASK_DESC, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.getTaskDescription());
+        if (Integer.parseInt(mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.mSelectedAddressModel.address_id) > 0) {
+            mTaskCreationParams.put(NetworkUtility.TAGS.ADDRESS_ID, mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.mSelectedAddressModel.address_id);
+        } else {
+            // In case its nagative then provide other address information
+            /**
+             * public String address_initials;
+             public String address;
+             public String category; //comes from NetworkUtility.TAGS.ADDRESS_TYPE.
+             public String lat;
+             public String lng;
+             public String cityName;
+             public String countryName;
+             public String stateName;
+             */
+            mTaskCreationParams.put(NetworkUtility.TAGS.ADDRESS_INITIALS, mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.mSelectedAddressModel.address_initials);
+            mTaskCreationParams.put(NetworkUtility.TAGS.ADDRESS, mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.mSelectedAddressModel.address);
+            mTaskCreationParams.put(NetworkUtility.TAGS.CATEGORY, mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.mSelectedAddressModel.category);
+            mTaskCreationParams.put(NetworkUtility.TAGS.LAT, mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.mSelectedAddressModel.lat);
+            mTaskCreationParams.put(NetworkUtility.TAGS.LNG, mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.mSelectedAddressModel.lng);
+            mTaskCreationParams.put(NetworkUtility.TAGS.CITY_NAME, mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.mSelectedAddressModel.cityName);
+            mTaskCreationParams.put(NetworkUtility.TAGS.COUNTRY, mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.mSelectedAddressModel.countryName);
+            mTaskCreationParams.put(NetworkUtility.TAGS.STATE, mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.mSelectedAddressModel.stateName);
+        }
 //        mTaskCreationParams.put(NetworkUtility.TAGS.CITY_DETAIL, userDetails.CityID);
         mTaskCreationParams.put(NetworkUtility.TAGS.CAT_ID, mJobCategoryModel.catId);
 //        mTaskCreationParams.put(NetworkUtility.TAGS.SUBCATEGORY_ID, String.valueOf(mSelectedSubServiceDetailModel.sub_cat_id));
-//        mTaskCreationParams.put(NetworkUtility.TAGS.START_DATETIME, String.valueOf(mTaskCreationPagerAdapter.mEnterTaskDetailFragment.superCalendar.getTimeInMillis()));
+
+        //because when is not compulsory
+        if (mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.superCalendar == null) {
+            mTaskCreationParams.put(NetworkUtility.TAGS.START_DATETIME, String.valueOf(mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.superCalendar.getTimeInMillis()));
+        }
 
         // Add Params
         // upload
@@ -941,22 +984,22 @@ public class TaskCreationCCActivity extends BaseAppCompatActivity {
 
     public boolean isValidationCompleted() {
         // Task Description
-//        if (!mTaskCreationPagerAdapter.mEnterTaskDetailFragment.isTaskDescriptionVerified) {
-//            Utility.showSnackBar(getString(R.string.validate_task_desc), mActivityTaskCreateBinding.getRoot());
-//            return false;
-//        }
+        if (!mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.isTaskDescriptionVerified) {
+            Utility.showSnackBar(getString(R.string.validate_task_desc), mActivityTaskCreateBinding.getRoot());
+            return false;
+        }
 
         // Date-Time of Task
-//        if (!mTaskCreationPagerAdapter.mEnterTaskDetailFragment.isTaskWhenVerified) {
-//            Utility.showSnackBar(getString(R.string.validate_date), mActivityTaskCreateBinding.getRoot());
-//            return false;
-//        }
-//
-//         place of Task
-//        if (!mTaskCreationPagerAdapter.mEnterTaskDetailFragment.isTaskWhereVerified) {
-//            Utility.showSnackBar(getString(R.string.validate_address_new_task), mActivityTaskCreateBinding.getRoot());
-//            return false;
-//        }
+        if (mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.superCalendar == null) {
+            Utility.showSnackBar(getString(R.string.validate_date), mActivityTaskCreateBinding.getRoot());
+            return false;
+        }
+
+        // place of Task
+        if (!mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.isTaskWhereVerified) {
+            Utility.showSnackBar(getString(R.string.validate_address_new_task), mActivityTaskCreateBinding.getRoot());
+            return false;
+        }
 
         return true;
     }

@@ -4,14 +4,15 @@ import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.text.TextUtils;
+import android.support.v4.content.ContextCompat;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 
 import com.cheep.R;
-import com.cheep.databinding.RowAddressPackageCustomizationBinding;
 import com.cheep.databinding.RowAddressTaskCreateBinding;
 import com.cheep.model.AddressModel;
 import com.cheep.utils.Utility;
@@ -49,17 +50,55 @@ public class AddressTaskCreateAdapter<T> extends ArrayAdapter<T> {
 
     @Override
     public View getDropDownView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        final AddressTaskCreateAdapter.ViewHolder mHolder;
+
+        Context context = parent.getContext();
+        LayoutInflater layoutInflater = LayoutInflater.from(context);
+        final AddressViewHolder mHolder;
+
+
         if (convertView == null) {
-            RowAddressTaskCreateBinding binding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext())
+            RowAddressTaskCreateBinding binding = DataBindingUtil.inflate(layoutInflater
                     , R.layout.row_address_task_create
                     , parent, false);
             convertView = binding.getRoot();
-            mHolder = new ViewHolder(binding);
+            mHolder = new AddressViewHolder(binding);
             convertView.setTag(mHolder);
         } else {
-            mHolder = (ViewHolder) convertView.getTag();
+            mHolder = (AddressViewHolder) convertView.getTag();
         }
+
+        if (position == mList.size() - 1) {
+            LinearLayout.LayoutParams layoutParams =
+                    (LinearLayout.LayoutParams) mHolder.mBinding.llAddressMetaData.getLayoutParams();
+            layoutParams.gravity = Gravity.CENTER_HORIZONTAL;
+            mHolder.mBinding.llAddressContainer.setPadding(
+                    (int) Utility.convertDpToPixel(12, context)
+                    , (int) Utility.convertDpToPixel(12, context)
+                    , (int) Utility.convertDpToPixel(12, context)
+                    , 0
+            );
+            mHolder.mBinding.ivHome.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_white_plus_background_blue));
+            mHolder.mBinding.tvAddressNickname.setText(context.getString(R.string.label_add_new));
+            mHolder.mBinding.viewDot.setVisibility(View.GONE);
+            mHolder.mBinding.tvLabelAddressSubscribed.setVisibility(View.GONE);
+            mHolder.mBinding.tvAddress.setVisibility(View.GONE);
+        } else {
+            LinearLayout.LayoutParams layoutParams =
+                    (LinearLayout.LayoutParams) mHolder.mBinding.llAddressMetaData.getLayoutParams();
+            layoutParams.gravity = Gravity.START;
+            mHolder.mBinding.llAddressContainer.setPadding(
+                    (int) Utility.convertDpToPixel(32, context)
+                    , (int) Utility.convertDpToPixel(12, context)
+                    , (int) Utility.convertDpToPixel(12, context)
+                    , 0
+            );
+            mHolder.mBinding.ivHome.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.icon_address_home_active));
+            mHolder.mBinding.tvAddressNickname.setText(context.getString(R.string.label_home));
+            mHolder.mBinding.viewDot.setVisibility(View.VISIBLE);
+            mHolder.mBinding.tvLabelAddressSubscribed.setVisibility(View.VISIBLE);
+            mHolder.mBinding.tvAddress.setVisibility(View.VISIBLE);
+        }
+
        /* AddressModel model = mList.get(position);
         if (position == 0) {
             mHolder.mBinding.llAddressContainer.setVisibility(View.GONE);
@@ -76,10 +115,10 @@ public class AddressTaskCreateAdapter<T> extends ArrayAdapter<T> {
         return convertView;
     }
 
-    private static class ViewHolder {
+    private static class AddressViewHolder {
         private RowAddressTaskCreateBinding mBinding;
 
-        ViewHolder(RowAddressTaskCreateBinding binding) {
+        AddressViewHolder(RowAddressTaskCreateBinding binding) {
             mBinding = binding;
         }
     }

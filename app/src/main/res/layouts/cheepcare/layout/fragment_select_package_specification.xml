@@ -254,7 +254,7 @@
                 </RelativeLayout>
             </RelativeLayout>
 
-            <com.cheep.custom_view.CFTextViewRegular
+            <com.cheep.custom_view.DashedBlueUnderlineCFTextViewRegular
                 android:id="@+id/tv_other_bundle_packages"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -264,6 +264,7 @@
                 android:layout_marginLeft="@dimen/scale_65dp"
                 android:layout_marginRight="@dimen/scale_67dp"
                 android:layout_marginStart="@dimen/scale_65dp"
+                android:background="@color/grey_varient_25"
                 android:gravity="center"
                 android:text="@string/msg_bundle_other_packages"
                 android:textColor="@color/splash_gradient_end"
