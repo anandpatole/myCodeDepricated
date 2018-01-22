@@ -168,6 +168,7 @@
                     android:orientation="vertical">
 
                     <RelativeLayout
+                        android:id="@+id/rl_promo_code"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
 
@@ -177,19 +178,20 @@
                             android:layout_height="wrap_content"
                             android:layout_toLeftOf="@+id/iv_tick_promo_code"
                             android:gravity="center"
-                            android:hint="@string/hint_apply_cheep_promo_code"
+                            android:text="@string/hint_apply_cheep_promo_code"
                             android:textColor="@color/grey_varient_10"
+
                             android:textSize="@dimen/text_size_13sp"
                             />
 
                         <ImageView
                             android:id="@+id/iv_tick_promo_code"
-                            android:layout_width="15dp"
-                            android:layout_height="15dp"
+                            android:layout_width="@dimen/scale_10dp"
+                            android:layout_height="@dimen/scale_10dp"
                             android:layout_alignParentRight="true"
                             android:layout_centerVertical="true"
                             android:src="@drawable/selector_apply_code"
-                            android:visibility="gone"/>
+                            android:visibility="visible"/>
 
                     </RelativeLayout>
 
@@ -220,7 +222,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center"
-                            android:text="@string/label_applied_promo_code_message"
+                            android:text="@string/label_applied_promo_code_message_cheep_care"
                             android:textColor="@color/grey_varient_27"
                             android:textSize="@dimen/text_size_12sp"/>
                     </LinearLayout>
@@ -231,13 +233,14 @@
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="bottom"
+                    android:layout_gravity="top"
                     android:layout_marginLeft="@dimen/scale_10dp"
                     android:layout_marginRight="@dimen/scale_5dp"
                     android:layout_weight="1"
                     android:orientation="vertical">
 
                     <RelativeLayout
+                        android:id="@+id/rl_mate_code"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
 
@@ -247,19 +250,19 @@
                             android:layout_height="wrap_content"
                             android:layout_toLeftOf="@+id/iv_tick_mate_code"
                             android:gravity="center"
-                            android:hint="@string/hint_apply_cheep_mate_code"
+                            android:text="@string/hint_apply_cheep_mate_code"
                             android:textColor="@color/grey_varient_10"
                             android:textSize="@dimen/text_size_13sp"
                             />
 
                         <ImageView
                             android:id="@+id/iv_tick_mate_code"
-                            android:layout_width="15dp"
-                            android:layout_height="15dp"
+                            android:layout_width="@dimen/scale_10dp"
+                            android:layout_height="@dimen/scale_10dp"
                             android:layout_alignParentRight="true"
                             android:layout_centerVertical="true"
                             android:src="@drawable/selector_apply_code"
-                            android:visibility="gone"/>
+                            android:visibility="visible"/>
 
                     </RelativeLayout>
 

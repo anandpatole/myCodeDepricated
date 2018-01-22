@@ -53,7 +53,6 @@
                     android:paddingLeft="@dimen/scale_3dp"
                     android:paddingRight="@dimen/scale_3dp"
                     android:paddingTop="@dimen/scale_1dp"
-                    android:text="9"
                     android:textColor="@color/black"
                     android:textSize="@dimen/text_size_10sp"
                     android:visibility="visible"/>

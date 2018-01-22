@@ -53,13 +53,16 @@ public class PackageSummaryFragment extends BaseFragment {
     private BottomAlertDialog cheepCodeDialog;
     private String cheepCode;
 
-    public double totalPrice;
-    public double payableAmount;
+    public double totalPrice = 0;
+    public double payableAmount = 0;
     public boolean isYearly = true;
-    private double rate;
-    private double gstRate;
-    private double discountPrice;
-    private double gstPrice;
+    private double gstRate = 0;
+    private double discountPrice = 0;
+    private double gstPrice = 0;
+    private String cheepMateCode = "";
+    private double bundledDiscountRate = 0;
+    private double bundledDiscountPrice = 0;
+    private double discountRate;
 
     public static PackageSummaryFragment newInstance() {
         return new PackageSummaryFragment();
@@ -98,7 +101,6 @@ public class PackageSummaryFragment extends BaseFragment {
         } else {
             mPackageCustomizationActivity.setTaskState(PackageCustomizationActivity.STEP_THREE_UNVERIFIED);
         }
-        resetMateCodeValue();
         resetPromoCodeValue();
 
         if (mPackageAdapter != null && mPackageAdapter.getList() != null) {
@@ -138,6 +140,11 @@ public class PackageSummaryFragment extends BaseFragment {
             @Override
             public void onRemovePackage(int position, PackageDetail packageModel) {
 
+                if (mPackageAdapter.getList().size() == 1) {
+                    mPackageCustomizationActivity.showAlertDialog();
+                    return;
+                }
+
                 for (PackageDetail detail : mPackageCustomizationActivity.getPackageList())
                     if (detail.id.equalsIgnoreCase(packageModel.id)) {
                         detail.isSelected = false;
@@ -146,6 +153,7 @@ public class PackageSummaryFragment extends BaseFragment {
                         mPackageAdapter.getList().remove(position);
                         calculateTotalPrice();
                     }
+                mPackageCustomizationActivity.updateCartCount();
                 mPackageAdapter.notifyDataSetChanged();
             }
         });
@@ -161,6 +169,7 @@ public class PackageSummaryFragment extends BaseFragment {
         mBinding.rvBundlePackages.setAdapter(mPackageAdapter);
         mBinding.ivHalfYearlyPackage.setSelected(!isYearly);
         mBinding.ivYearlyPackage.setSelected(isYearly);
+        resetMateCodeValue();
         calculateTotalPrice();
     }
 
@@ -183,21 +192,75 @@ public class PackageSummaryFragment extends BaseFragment {
 
             }
         });
+        mBinding.txtApplyPromoCode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mPackageAdapter.getList().size() > 1) {
+                    Utility.showToast(mPackageCustomizationActivity, getString(R.string.label_error_promo_code_with_bundled_discount));
+                } else {
+                    showCheepCodeDialog();
+                }
+            }
+        });
+        mBinding.txtApplyMateCode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showCheepMateCodeDialog();
+            }
+        });
+
+        mBinding.ivTickPromoCode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!v.isSelected()) {
+                    resetPromoCodeValue();
+                }
+            }
+        });
     }
 
+    /**
+     * apply bundled discount
+     * apply GST
+     * show final price
+     */
     private void calculateTotalPrice() {
         totalPrice = 0;
         mBinding.ivHalfYearlyPackage.setSelected(!isYearly);
         mBinding.ivYearlyPackage.setSelected(isYearly);
         for (PackageDetail detail : mPackageAdapter.getList()) {
-            if (isYearly) {
-                totalPrice += detail.yearlyPrice;
-            } else {
-                totalPrice += detail.halfYearlyPrice;
-            }
+            LogUtils.LOGE(TAG, "calculateTotalPrice: -----------------");
+            LogUtils.LOGE(TAG, "calculateTotalPrice: detail.yearlyPrice  " + detail.yearlyPrice);
+            LogUtils.LOGE(TAG, "calculateTotalPrice: detail.halfYearlyPrice  " + detail.halfYearlyPrice);
+            totalPrice += isYearly ? detail.yearlyPrice : detail.halfYearlyPrice;
+        }
+        LogUtils.LOGE(TAG, "calculateTotalPrice: totalPrice :: " + totalPrice);
+
+        if (mPackageAdapter.getList().size() > 1) {
+            // bundled discount
+            int bundledPkgCnt = mPackageAdapter.getList().size() - 1;
+            bundledDiscountRate = 5 * bundledPkgCnt;
+            bundledDiscountPrice = totalPrice * bundledDiscountRate / 100;
+            totalPrice = totalPrice - bundledDiscountPrice;
+            LogUtils.LOGE(TAG, "calculateTotalPrice: discountPrice :: " + bundledDiscountPrice);
+        } else {
+            discountPrice = totalPrice * discountRate / 100;
+            totalPrice = totalPrice - discountPrice;
+            LogUtils.LOGE(TAG, "calculateTotalPrice: discountPrice :: " + discountPrice);
         }
 
+        // apply GST RATE
         LogUtils.LOGE(TAG, "calculateTotalPrice: totalPrice :: " + totalPrice);
+
+        gstRate = 18;
+        gstPrice = totalPrice * gstRate / 100;
+        totalPrice = totalPrice + gstPrice;
+
+
+        LogUtils.LOGE(TAG, "calculateTotalPrice: gstPrice :: " + gstPrice);
+        LogUtils.LOGE(TAG, "calculateTotalPrice: totalPrice :: " + totalPrice);
+
+
         mBinding.textTotal.setText(getString(R.string.rupee_symbol_x, Utility.getQuotePriceFormatter(String.valueOf(totalPrice))));
     }
 
@@ -215,6 +278,26 @@ public class PackageSummaryFragment extends BaseFragment {
         View view = View.inflate(mContext, R.layout.dialog_add_promocode, null);
         edtCheepPromoCode = view.findViewById(R.id.edit_cheepcode);
         cheepCodeDialog = new BottomAlertDialog(mContext);
+        edtCheepPromoCode.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
+                switch (actionId) {
+                    case EditorInfo.IME_ACTION_DONE:
+                        if (TextUtils.isEmpty(edtCheepPromoCode.getText().toString())) {
+                            Utility.showToast(mContext, getString(R.string.validate_cheepcode));
+                            break;
+                        }
+                        validateCheepCode();
+                        cheepCodeDialog.dismiss();
+
+//       validateCheepCode(edtCheepPromoCode.getText().toString());
+                        break;
+                    default:
+                        break;
+                }
+                return false;
+            }
+        });
         view.findViewById(R.id.btn_apply).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -225,26 +308,9 @@ public class PackageSummaryFragment extends BaseFragment {
 //                validateCheepCode(edtCheepcode.getText().toString());
 
 
-                applyDiscount();
+                validateCheepCode();
+                cheepCodeDialog.dismiss();
 
-
-            }
-        });
-        edtCheepPromoCode.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
-                switch (actionId) {
-                    case EditorInfo.IME_ACTION_DONE:
-                        if (TextUtils.isEmpty(edtCheepPromoCode.getText().toString())) {
-                            Utility.showToast(mContext, getString(R.string.validate_cheepcode));
-                            break;
-                        }
-                        validateCheepCode(edtCheepPromoCode.getText().toString());
-                        break;
-                    default:
-                        break;
-                }
-                return false;
             }
         });
         cheepCodeDialog.setTitle(getString(R.string.label_cheepcode));
@@ -258,30 +324,17 @@ public class PackageSummaryFragment extends BaseFragment {
         edtCheepMateCode = view.findViewById(R.id.edit_cheepcode);
         edtCheepMateCode.setHint(R.string.hint_apply_cheep_mate_code);
         cheepCodeDialog = new BottomAlertDialog(mContext);
-        view.findViewById(R.id.btn_apply).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (TextUtils.isEmpty(edtCheepMateCode.getText().toString())) {
-                    Utility.showToast(mContext, getString(R.string.validate_cheepcode));
-                    return;
-                }
-//                validateCheepCode(edtCheepcode.getText().toString());
-                Utility.hideKeyboard(mPackageCustomizationActivity, edtCheepMateCode);
-                hideErrorMateCode();
-
-
-            }
-        });
         edtCheepMateCode.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
                 switch (actionId) {
                     case EditorInfo.IME_ACTION_DONE:
                         if (TextUtils.isEmpty(edtCheepMateCode.getText().toString())) {
-                            Utility.showToast(mContext, getString(R.string.validate_cheepcode));
+                            Utility.showToast(mContext, getString(R.string.validate_cheep_mate_code));
                             break;
                         }
-                        hideErrorMateCode();
+                        validateCheepMateCode();
+                        cheepCodeDialog.dismiss();
                         break;
                     default:
                         break;
@@ -289,94 +342,64 @@ public class PackageSummaryFragment extends BaseFragment {
                 return false;
             }
         });
-        cheepCodeDialog.setTitle(getString(R.string.label_cheepcode));
+        view.findViewById(R.id.btn_apply).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (TextUtils.isEmpty(edtCheepMateCode.getText().toString())) {
+                    Utility.showToast(mContext, getString(R.string.validate_cheepcode));
+
+                    return;
+
+                }
+                validateCheepMateCode();
+                cheepCodeDialog.dismiss();
+
+//                validateCheepCode(edtCheepcode.getText().toString());
+                Utility.hideKeyboard(mPackageCustomizationActivity, edtCheepMateCode);
+
+
+            }
+        });
+        cheepCodeDialog.setTitle(getString(R.string.label_cheep_mate_code));
         cheepCodeDialog.setCustomView(view);
         cheepCodeDialog.showDialog();
     }
 
+    private void validateCheepMateCode() {
+        cheepMateCode = edtCheepMateCode.getText().toString().trim();
+        mBinding.ivTickMateCode.setSelected(true);
+        mBinding.ivTickMateCode.setVisibility(View.VISIBLE);
+        mBinding.ivInfoMateCode.setVisibility(View.INVISIBLE);
+        mBinding.txtMateCodeMessage.setVisibility(View.INVISIBLE);
+        mBinding.txtApplyMateCode.setText(cheepMateCode);
+    }
+
 
     private void resetPromoCodeValue() {
-        mBinding.ivInfoPromoCode.setVisibility(View.GONE);
-        mBinding.ivTickPromoCode.setVisibility(View.INVISIBLE);
+
+        cheepCode = "";
+        discountPrice = 0;
+        discountRate = 0;
+        calculateTotalPrice();
+        mBinding.ivTickPromoCode.setVisibility(View.GONE);
+        mBinding.ivInfoPromoCode.setVisibility(View.INVISIBLE);
         mBinding.txtPromoCodeMessage.setVisibility(View.INVISIBLE);
         mBinding.txtApplyPromoCode.setText(getString(R.string.hint_apply_cheep_promo_code));
     }
 
     private void resetMateCodeValue() {
-        mBinding.ivTickMateCode.setVisibility(View.INVISIBLE);
-        mBinding.ivInfoMateCode.setVisibility(View.GONE);
+        mBinding.ivTickMateCode.setVisibility(View.GONE);
+        mBinding.ivInfoMateCode.setVisibility(View.INVISIBLE);
         mBinding.txtMateCodeMessage.setVisibility(View.INVISIBLE);
         mBinding.txtApplyPromoCode.setText(getString(R.string.hint_apply_cheep_mate_code));
-
-    }
-
-    private void hideErrorPromoCode() {
-        mBinding.ivTickPromoCode.setVisibility(View.VISIBLE);
-        mBinding.ivTickPromoCode.setSelected(true);
-
-        mBinding.ivInfoPromoCode.setVisibility(View.INVISIBLE);
-        mBinding.txtPromoCodeMessage.setVisibility(View.INVISIBLE);
-
-        mBinding.txtApplyPromoCode.setText(edtCheepPromoCode.getText().toString().trim());
     }
 
 
-    private void hideErrorMateCode() {
-        mBinding.ivTickPromoCode.setVisibility(View.VISIBLE);
-        mBinding.ivTickPromoCode.setSelected(true);
-
-        mBinding.ivInfoPromoCode.setVisibility(View.INVISIBLE);
-        mBinding.txtPromoCodeMessage.setVisibility(View.INVISIBLE);
-
-        mBinding.txtApplyMateCode.setText(edtCheepMateCode.getText().toString().trim());
-    }
-
-    private void showErrorPromoCode() {
-        mBinding.ivInfoPromoCode.setVisibility(View.VISIBLE);
-        mBinding.ivTickPromoCode.setVisibility(View.VISIBLE);
-        mBinding.ivTickPromoCode.setSelected(false);
-        mBinding.txtPromoCodeMessage.setVisibility(View.VISIBLE);
-        mBinding.txtPromoCodeMessage.setText(getString(R.string.label_invalid_code));
-    }
-
-    private void showErrorMateCode() {
-        mBinding.ivInfoMateCode.setVisibility(View.VISIBLE);
-        mBinding.txtMateCodeMessage.setVisibility(View.VISIBLE);
-        mBinding.ivTickMateCode.setVisibility(View.VISIBLE);
-        mBinding.ivTickMateCode.setSelected(false);
-        mBinding.txtMateCodeMessage.setText(getString(R.string.label_invalid_code));
-    }
-
-
-    private void applyDiscount() {
-
+    private void validateCheepCode() {
         // TODO : remove this dummy validation
-
-        if (edtCheepPromoCode.getText().toString().trim().equalsIgnoreCase("GOCHEEP")) {
-            rate = 10;
-
-            gstRate = 18;
-
-            discountPrice = totalPrice * (rate / 100);
-
-            payableAmount = totalPrice - discountPrice;
-
-            gstPrice = payableAmount * (gstRate / 100);
-
-            payableAmount = payableAmount + gstRate;
-
-            hideErrorPromoCode();
-
-            mBinding.textTotal.setText(getString(R.string.rupee_symbol_x, Utility.getQuotePriceFormatter(String.valueOf(payableAmount))));
-
-        } else {
-            showErrorPromoCode();
-        }
+        cheepCode = edtCheepPromoCode.getText().toString().trim();
 
 
-    }
-
-    private void validateCheepCode(String cheepCode) {
         if (!Utility.isConnected(mContext)) {
             Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mBinding.getRoot());
             return;
@@ -389,20 +412,29 @@ public class PackageSummaryFragment extends BaseFragment {
         //Add Header parameters
         Map<String, String> mHeaderParams = new HashMap<>();
         mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
-        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, userDetails.UserID);
+        if (userDetails != null)
+            mHeaderParams.put(NetworkUtility.TAGS.USER_ID, userDetails.UserID);
 
         //Add Params
         Map<String, Object> mParams = new HashMap<>();
 
+
+        mParams.put(NetworkUtility.TAGS.PACKAGE_CITY_ID, mPackageCustomizationActivity.mCityDetail.id);
+        mParams.put(NetworkUtility.TAGS.CHEEP_CARE_CODE, cheepCode);
+        mParams.put(NetworkUtility.TAGS.PACKAGE_ID, mPackageAdapter.getList().get(0).id);
+
         //Url is based on condition if address id is greater then 0 then it means we need to update the existing address
-        String url = NetworkUtility.WS.VALIDATE_CHEEP_CODE;
+        String url = NetworkUtility.WS.CHECK_CHEEP_CARE_CODE;
         VolleyNetworkRequest mVolleyNetworkRequestForSPList = new VolleyNetworkRequest(url
                 , mCallValidateCheepCodeWSErrorListener
                 , mCallValidateCheepCodeWSResponseListener
                 , mHeaderParams
                 , mParams
                 , null);
-        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequestForSPList);
+        Volley.getInstance(mContext).
+
+                addToRequestQueue(mVolleyNetworkRequestForSPList);
+
     }
 
     private Response.ErrorListener mCallValidateCheepCodeWSErrorListener = new Response.ErrorListener() {
@@ -431,26 +463,32 @@ public class PackageSummaryFragment extends BaseFragment {
                 switch (statusCode) {
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
 
-                        if (edtCheepPromoCode != null) {
-                            cheepCode = edtCheepPromoCode.getText().toString().trim();
-                            cheepCodeDialog.dismiss();
-
-                            String total = jsonObject.optString(NetworkUtility.TAGS.QUOTE_AMOUNT);
-                            String discount = jsonObject.optString(NetworkUtility.TAGS.DISCOUNT_AMOUNT);
-                            String payable = jsonObject.optString(NetworkUtility.TAGS.PAYABLE_AMOUNT);
-
-
-                        }
-
+                        JSONObject jsonData = jsonObject.optJSONObject(NetworkUtility.TAGS.DATA);
+                        String rate = jsonData.optString(NetworkUtility.TAGS.DISCOUNT);
+                        discountRate = Double.parseDouble(rate);
+                        calculateTotalPrice();
+                        mBinding.ivTickPromoCode.setVisibility(View.VISIBLE);
+                        mBinding.ivTickPromoCode.setSelected(true);
+                        mBinding.ivInfoPromoCode.setVisibility(View.GONE);
+                        mBinding.txtPromoCodeMessage.setVisibility(View.VISIBLE);
+                        mBinding.txtPromoCodeMessage.setText(getString(R.string.label_applied_promo_code_message_cheep_care, rate, "%"));
+                        mBinding.txtApplyPromoCode.setText(cheepCode);
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
                         // Show Toast
                         Utility.showToast(mContext, getString(R.string.label_something_went_wrong));
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
-                        error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
-                        // Show message
-                        Utility.showToast(mContext, error_message);
+                        discountRate = 0;
+                        discountPrice = 0;
+
+                        mBinding.ivTickPromoCode.setVisibility(View.VISIBLE);
+                        mBinding.ivTickPromoCode.setSelected(false);
+                        mBinding.ivInfoPromoCode.setVisibility(View.VISIBLE);
+                        mBinding.txtPromoCodeMessage.setVisibility(View.VISIBLE);
+                        mBinding.txtPromoCodeMessage.setText(getString(R.string.label_invalid_code));
+                        mBinding.txtApplyPromoCode.setText(cheepCode);
+
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
                     case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:

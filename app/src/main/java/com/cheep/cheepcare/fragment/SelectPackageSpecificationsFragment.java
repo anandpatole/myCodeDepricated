@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
-import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -129,20 +128,6 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
         mBinding.recyclerView.setLayoutManager(linearLayoutManager);
         mBinding.recyclerView.setNestedScrollingEnabled(false);
 
-        SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(getString(R.string.msg_bundle_other_packages));
-
-        /*DottedUnderlineSpan dottedUnderlineSpan = new DottedUnderlineSpan(
-                ContextCompat.getColor(mContext, R.color.splash_gradient_end)
-                , getString(R.string.msg_cheep_assurance_select_time)
-                , Utility.convertDpToPixel(2f, mContext)
-                , Utility.convertDpToPixel(1f, mContext)
-                , Utility.convertDpToPixel(1f, mContext)
-        );
-        spannableStringBuilder.setSpan(dottedUnderlineSpan
-                , 0
-                , getString(R.string.msg_cheep_assurance_select_time).length()
-                , Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);*/
-        mBinding.tvOtherBundlePackages.setText(spannableStringBuilder);
 
         callPackageOptionListWS();
         initAddressUI();
@@ -306,14 +291,15 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
 
         // Spinner initialisation for select address view
         UserDetails userDetails = PreferenceUtility.getInstance(mPackageCustomizationActivity).getUserDetails();
+        GuestUserDetails guestUserDetails = PreferenceUtility.getInstance(mPackageCustomizationActivity).getGuestUserDetails();
         mList = new ArrayList<>();
         mList.clear();
 
         if (userDetails != null && !userDetails.addressList.isEmpty())
             mList.addAll(userDetails.addressList);
         else {
-            GuestUserDetails guestUserDetails = PreferenceUtility.getInstance(mPackageCustomizationActivity).getGuestUserDetails();
-            mList.addAll(guestUserDetails.addressList);
+            if (guestUserDetails.addressList != null)
+                mList.addAll(guestUserDetails.addressList);
         }
 
         if (mList.isEmpty()) {

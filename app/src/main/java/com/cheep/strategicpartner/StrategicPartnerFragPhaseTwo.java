@@ -1159,8 +1159,14 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment implements Reques
 
                 //Saving information in shared preference
                 UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
-                userDetails.addressList = addressRecyclerViewAdapter.getmList();
-                PreferenceUtility.getInstance(mContext).saveUserDetails(userDetails);
+                if (userDetails != null) {
+                    userDetails.addressList = addressRecyclerViewAdapter.getmList();
+                    PreferenceUtility.getInstance(mContext).saveUserDetails(userDetails);
+                } else {
+                    GuestUserDetails guestUserDetails = PreferenceUtility.getInstance(mContext).getGuestUserDetails();
+                    guestUserDetails.addressList = addressRecyclerViewAdapter.getmList();
+                    PreferenceUtility.getInstance(mContext).saveGuestUserDetails(guestUserDetails);
+                }
 
 
                 if (dialog != null) {
@@ -1179,8 +1185,14 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment implements Reques
 
                 //Saving information in shared preference
                 UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
-                userDetails.addressList = addressRecyclerViewAdapter.getmList();
-                PreferenceUtility.getInstance(mContext).saveUserDetails(userDetails);
+                if (userDetails != null) {
+                    userDetails.addressList = addressRecyclerViewAdapter.getmList();
+                    PreferenceUtility.getInstance(mContext).saveUserDetails(userDetails);
+                } else {
+                    GuestUserDetails guestUserDetails = PreferenceUtility.getInstance(mContext).getGuestUserDetails();
+                    guestUserDetails.addressList = addressRecyclerViewAdapter.getmList();
+                    PreferenceUtility.getInstance(mContext).saveGuestUserDetails(guestUserDetails);
+                }
 
 
                 if (dialog != null) {

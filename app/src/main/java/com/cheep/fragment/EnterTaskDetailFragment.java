@@ -969,6 +969,7 @@ public class EnterTaskDetailFragment extends BaseFragment implements RequestPerm
         if (PreferenceUtility.getInstance(mContext).getUserDetails() != null) {
             addressList = PreferenceUtility.getInstance(mContext).getUserDetails().addressList;
         } else {
+
             addressList = PreferenceUtility.getInstance(mContext).getGuestUserDetails().addressList;
         }
         //Setting RecyclerView Adapter

@@ -20,8 +20,8 @@
                 app:cardCornerRadius="@dimen/scale_0dp">
 
                 <RelativeLayout
-                    android:layout_width="match_parent"
                     android:id="@+id/rl_chip_tips"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/scale_3dp"
                     android:background="@drawable/bottom_stroke_gray">
@@ -37,8 +37,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:layout_toLeftOf="@id/iv_cross"
                         android:layout_marginLeft="@dimen/scale_70dp"
+                        android:layout_toLeftOf="@id/iv_cross"
                         android:background="@android:color/transparent"
                         android:checked="true"
                         android:gravity="center_vertical"
@@ -48,29 +48,29 @@
                         android:textSize="@dimen/text_size_14sp"/>
 
                     <com.cheep.custom_view.CFTextViewRegular
-                        android:visibility="visible"
                         android:id="@+id/tv_cheep_tips_desc"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/tv_cheep_tips_title"
                         android:layout_gravity="center_vertical"
-                        android:layout_toLeftOf="@id/iv_cross"
                         android:layout_marginLeft="@dimen/scale_70dp"
+                        android:layout_toLeftOf="@id/iv_cross"
                         android:background="@android:color/transparent"
                         android:checked="true"
                         android:gravity="center_vertical"
                         android:maxLines="2"
                         android:text="vd dff sdf sdfs fsdf sdf fsd sdfsfs fdsdfsdfsdfsd fs dfsdfs dfsdfsdf sdfdsf"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/text_size_11sp"/>
+                        android:textSize="@dimen/text_size_11sp"
+                        android:visibility="visible"/>
 
                     <ImageView
                         android:id="@+id/iv_cross"
                         android:layout_width="15dp"
                         android:layout_height="15dp"
                         android:layout_alignParentRight="true"
-                        android:layout_marginTop="@dimen/scale_5dp"
                         android:layout_marginRight="@dimen/scale_15dp"
+                        android:layout_marginTop="@dimen/scale_5dp"
                         android:src="@drawable/icon_cross_blue"/>
 
                 </RelativeLayout>
@@ -186,6 +186,7 @@
                 android:dropDownWidth="@dimen/scale_256dp"
                 android:focusable="true"
                 android:paddingTop="6dp"
+                android:spinnerMode="dropdown"
                 android:textSize="@dimen/text_size_14sp"
                 android:theme="@style/AppTheme.AppBarWhite.ColorControlNormalBlue"
                 android:visibility="invisible"/>
@@ -254,17 +255,16 @@
                 </RelativeLayout>
             </RelativeLayout>
 
-            <com.cheep.custom_view.DashedBlueUnderlineCFTextViewRegular
+            <!--
+                        <com.cheep.custom_view.DashedBlueUnderlineCFTextViewRegular
+            -->
+            <com.cheep.custom_view.CFTextViewRegular
                 android:id="@+id/tv_other_bundle_packages"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginBottom="@dimen/scale_12dp"
-                android:layout_marginEnd="@dimen/scale_67dp"
-                android:layout_marginLeft="@dimen/scale_65dp"
-                android:layout_marginRight="@dimen/scale_67dp"
-                android:layout_marginStart="@dimen/scale_65dp"
-                android:background="@color/grey_varient_25"
+                android:drawableBottom="@drawable/blue_horizontal_dashes"
                 android:gravity="center"
                 android:text="@string/msg_bundle_other_packages"
                 android:textColor="@color/splash_gradient_end"

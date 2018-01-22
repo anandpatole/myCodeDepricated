@@ -46,6 +46,7 @@ import com.cheep.firebase.FirebaseUtils;
 import com.cheep.firebase.model.ChatUserModel;
 import com.cheep.interfaces.DrawerLayoutInteractionListener;
 import com.cheep.model.AddressModel;
+import com.cheep.model.GuestUserDetails;
 import com.cheep.model.UserDetails;
 import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
@@ -781,8 +782,14 @@ public class ProfileTabFragment extends BaseFragment {
 
                 //Saving information in sharedpreference
                 UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
-                userDetails.addressList = addressList;
-                PreferenceUtility.getInstance(mContext).saveUserDetails(userDetails);
+                if (userDetails != null) {
+                    userDetails.addressList = addressList;
+                    PreferenceUtility.getInstance(mContext).saveUserDetails(userDetails);
+                } else {
+                    GuestUserDetails guestUserDetails = PreferenceUtility.getInstance(mContext).getGuestUserDetails();
+                    guestUserDetails.addressList = addressList;
+                    PreferenceUtility.getInstance(mContext).saveGuestUserDetails(guestUserDetails);
+                }
 
                 if (dialog != null) {
                     dialog.dismiss();

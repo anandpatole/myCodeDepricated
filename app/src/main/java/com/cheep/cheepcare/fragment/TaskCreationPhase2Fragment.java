@@ -10,7 +10,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.databinding.DataBindingUtil;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -28,7 +27,6 @@ import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
-import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -1821,8 +1819,14 @@ public class TaskCreationPhase2Fragment extends BaseFragment
 
                 //Saving information in sharedpreference
                 UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
-                userDetails.addressList = addressRecyclerViewAdapter.getmList();
-                PreferenceUtility.getInstance(mContext).saveUserDetails(userDetails);
+                if (userDetails != null) {
+                    userDetails.addressList = addressRecyclerViewAdapter.getmList();
+                    PreferenceUtility.getInstance(mContext).saveUserDetails(userDetails);
+                } else {
+                    GuestUserDetails guestUserDetails = PreferenceUtility.getInstance(mContext).getGuestUserDetails();
+                    guestUserDetails.addressList = addressRecyclerViewAdapter.getmList();
+                    PreferenceUtility.getInstance(mContext).saveGuestUserDetails(guestUserDetails);
+                }
 
                 if (addAddressDialog != null) {
                     addAddressDialog.dismiss();
@@ -1844,9 +1848,14 @@ public class TaskCreationPhase2Fragment extends BaseFragment
 
                 //Saving information in sharedpreference
                 UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
-                userDetails.addressList = addressRecyclerViewAdapter.getmList();
-                PreferenceUtility.getInstance(mContext).saveUserDetails(userDetails);
-
+                if (userDetails != null) {
+                    userDetails.addressList = addressRecyclerViewAdapter.getmList();
+                    PreferenceUtility.getInstance(mContext).saveUserDetails(userDetails);
+                } else {
+                    GuestUserDetails guestUserDetails = PreferenceUtility.getInstance(mContext).getGuestUserDetails();
+                    guestUserDetails.addressList = addressRecyclerViewAdapter.getmList();
+                    PreferenceUtility.getInstance(mContext).saveGuestUserDetails(guestUserDetails);
+                }
 
                 if (dialog != null) {
                     dialog.dismiss();

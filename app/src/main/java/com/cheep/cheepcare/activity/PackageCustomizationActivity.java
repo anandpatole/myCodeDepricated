@@ -85,6 +85,8 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
     @Override
     protected void initiateUI() {
 
+        updateCartCount();
+
         if (getIntent().hasExtra(Utility.Extra.MODEL)) {
             mPackageModel = (PackageDetail) getIntent().getExtras().getSerializable(Utility.Extra.MODEL);
             mCityDetail = (CityLandingPageModel.CityDetail) Utility.getObjectFromJsonString(getIntent().getExtras().getString(Utility.Extra.CITY_NAME), CityLandingPageModel.CityDetail.class);
@@ -319,7 +321,7 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
 */
     }
 
-    private void showAlertDialog() {
+    public void showAlertDialog() {
         AlertDialog alertDialog = new AlertDialog.Builder(this).create();
         alertDialog.setTitle(getString(R.string.app_name));
         alertDialog.setMessage(getString(R.string.cheep_care_alert_message));
@@ -391,9 +393,9 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
 
                                 for (PackageSubOption option1 : service.getChildList()) {
                                     if (option1.qty > 1) {
-                                        detail.monthlyPrice = detail.monthlyPrice * (option1.qty - 1);
-                                        detail.yearlyPrice = detail.yearlyPrice * (option1.qty - 1) * 12;
-                                        detail.halfYearlyPrice = detail.halfYearlyPrice * (option1.qty - 1) * 6;
+                                        detail.monthlyPrice += Double.valueOf(option1.unitPrice) * (option1.qty - 1);
+                                        detail.yearlyPrice += Double.valueOf(option1.unitPrice) * (option1.qty - 1) * 12;
+                                        detail.halfYearlyPrice += Double.valueOf(option1.unitPrice) * (option1.qty - 1) * 6;
                                     }
                                 }
                             }
@@ -406,7 +408,8 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
         }
     }
 
-    private void updateCartCount() {
+    public void updateCartCount() {
+        mBinding.tvBadgeCartCount.setVisibility(cartCount == 0 ? View.GONE : View.VISIBLE);
         mBinding.tvBadgeCartCount.setText(String.valueOf(cartCount));
     }
 
@@ -518,7 +521,6 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
                 break;
             }
         }
-        calculateTotalPrice();
     }
 
     public void setContinueButtonText(String selectedService, String price) {
@@ -531,36 +533,5 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
         mBinding.textPrice.setText(Utility.getMonthlyPrice(price, this));
     }
 
-    private void calculateTotalPrice() {
-        for (PackageDetail detail : mPackageList) {
-            if (detail.packageOptionList != null && detail.isSelected) {
-                for (PackageOption service : detail.packageOptionList) {
-                    if (service.selectionType.equalsIgnoreCase(PackageOption.SELECTION_TYPE.RADIO)) {
-                        for (PackageSubOption option : service.getChildList()) {
-                            if (option.isSelected) {
-                                detail.monthlyPrice = Double.parseDouble(option.monthlyPrice);
-                                detail.yearlyPrice = Double.parseDouble(option.annualPrice);
-                                detail.halfYearlyPrice = Double.parseDouble(option.sixmonthPrice);
-                            }
-                        }
-                    } else {
-                        PackageSubOption option = service.getChildList().get(0);
-
-                        detail.monthlyPrice = Double.parseDouble(option.monthlyPrice);
-                        detail.yearlyPrice = Double.parseDouble(option.annualPrice);
-                        detail.halfYearlyPrice = Double.parseDouble(option.sixmonthPrice);
-
-                        for (PackageSubOption option1 : service.getChildList()) {
-                            if (option1.qty > 1) {
-                                detail.monthlyPrice = detail.monthlyPrice * (option1.qty - 1);
-                                detail.yearlyPrice = detail.yearlyPrice * (option1.qty - 1) * 12;
-                                detail.halfYearlyPrice = detail.halfYearlyPrice * (option1.qty - 1) * 6;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
 
 }

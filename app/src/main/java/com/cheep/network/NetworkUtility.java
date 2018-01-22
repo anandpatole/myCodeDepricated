@@ -139,6 +139,7 @@ public class NetworkUtility {
         public static final String GET_CITY_CARE_DETAIL = BASE_URL + "customers/care/getCityCareDetail";
         public static final String GET_CARE_PACKAGE_DETAILS = BASE_URL + "customers/care/getCarePackageDetails";
         public static final String VERIFY_ADDRESS_CHEEP_CARE = BASE_URL + "customers/profile/verify_address";
+        public static final String CHECK_CHEEP_CARE_CODE = BASE_URL + "customers/care/check_cheepcarecode";
 
     }
 
@@ -416,6 +417,10 @@ public class NetworkUtility {
         String PINCODE = "pincode";
         String NICKNAME = "nickname";
         String PACKAGE_OPTION_DETAILS = "package_option_details";
+        String PACKAGE_CITY_ID= "package_city_id";
+        String CHEEP_CARE_CODE= "cheepcarecode";
+        String PACKAGE_ID= "package_id";
+        String DISCOUNT= "discount";
 
         interface VERSION_CHANGE_TYPE {
             int NORMAL = 0;

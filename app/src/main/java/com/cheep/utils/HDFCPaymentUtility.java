@@ -211,4 +211,53 @@ public class HDFCPaymentUtility {
         void onPostOfEncryption(String encryptedData);
     }
 
+    /**
+     * @param fcmToken    device token
+     * @param userDetails preference user data
+     * @param payAmount   final amount to pay
+     * @return map params
+     */
+    public static Map<String, String> getPaymentTransactionFieldsForCheepCare(String fcmToken,
+                                                                              UserDetails userDetails,
+                                                                              String payAmount) {
+
+        Map<String, String> mTransactionFieldsParams;
+        mTransactionFieldsParams = new HashMap<>();
+        // Create Unique Transaction ID
+        String transaction_Id = Utility.getUniqueTransactionId();
+
+        mTransactionFieldsParams.put(TXN_ID, transaction_Id);
+        mTransactionFieldsParams.put(DEVICE_TYPE, "1");
+        mTransactionFieldsParams.put(ISMOBILEVIEW, "1");
+        mTransactionFieldsParams.put(PRODUCTINFO, userDetails.UserID);
+        mTransactionFieldsParams.put(KEY, BuildConfig.PAYUBIZ_HDFC_KEY);
+        mTransactionFieldsParams.put(USER_CREDENTIALS, BuildConfig.PAYUBIZ_HDFC_KEY + ":" + userDetails.Email);
+        mTransactionFieldsParams.put(INSTRUMENT_TYPE, fcmToken);
+        mTransactionFieldsParams.put(SURL, BuildConfig.PAYUBIZ_SUCCESS_URL);
+        mTransactionFieldsParams.put(FURL, BuildConfig.PAYUBIZ_FAIL_URL);
+        mTransactionFieldsParams.put(INSTRUMENT_ID, BuildConfig.PAYUBIZ_INSTRUMENT_ID);
+
+        // User Details
+        mTransactionFieldsParams.put(FIRSTNAME, userDetails.UserName);
+        mTransactionFieldsParams.put(EMAIL, userDetails.Email);
+        mTransactionFieldsParams.put(PHONE, userDetails.PhoneNumber);
+        // Total Amount
+        mTransactionFieldsParams.put(AMOUNT, payAmount);
+
+        // Start DateTime(In Milliseconds- Timestamp)
+        mTransactionFieldsParams.put(UDF1, "Task Start Date : " + transaction_Id);
+        // We don't have Provider ID so pass it empty.
+        mTransactionFieldsParams.put(UDF2, Utility.EMPTY_STRING);
+
+        // Platform
+        mTransactionFieldsParams.put(UDF3, NetworkUtility.TAGS.PLATFORMTYPE.ANDROID);
+
+        mTransactionFieldsParams.put(UDF4, Utility.EMPTY_STRING);
+        mTransactionFieldsParams.put(UDF5, Utility.EMPTY_STRING);
+        mTransactionFieldsParams.put(HASH, Utility.EMPTY_STRING);
+
+
+        return mTransactionFieldsParams;
+    }
+
 }
