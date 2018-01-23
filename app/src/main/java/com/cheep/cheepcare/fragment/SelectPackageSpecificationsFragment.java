@@ -123,9 +123,10 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mContext);
         mBinding.recyclerView.setLayoutManager(linearLayoutManager);
         mBinding.recyclerView.setNestedScrollingEnabled(false);
-
+        mBinding.cvCheepTip.setVisibility(View.GONE);
 
         callPackageOptionListWS();
+        callPackageCheepTipWS();
         initAddressUI();
         initChipTipsUI();
     }
@@ -168,6 +169,78 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
         Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequestForCategoryList, NetworkUtility.WS.GET_CARE_PACKAGE_DETAILS);
 
     }
+
+    private void callPackageCheepTipWS() {
+        LogUtils.LOGD(TAG, "callPackageCheepTipWS() called with: catId = [" + mPackageCustomizationActivity.mPackageId + "]");
+        if (!Utility.isConnected(mContext)) {
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mBinding.getRoot());
+            return;
+        }
+
+        //Add Header parameters
+        Map<String, String> mHeaderParams = new HashMap<>();
+        mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
+
+        //Add Params
+        Map<String, String> mParams = new HashMap<>();
+        mParams.put(CARE_PACKAGE_ID, mPackageCustomizationActivity.mPackageId);
+
+        //noinspection unchecked
+        VolleyNetworkRequest mVolleyNetworkRequestForCategoryList = new VolleyNetworkRequest(NetworkUtility.WS.GET_CARE_PACKAGE_TIP
+                , mCallGetCareTipWSErrorListener
+                , mCallGetCheepTipResponseListener
+                , mHeaderParams
+                , mParams
+                , null);
+
+        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequestForCategoryList, NetworkUtility.WS.GET_CARE_PACKAGE_TIP);
+
+    }
+
+    private Response.Listener mCallGetCheepTipResponseListener = new Response.Listener() {
+        @Override
+        public void onResponse(Object response) {
+            LogUtils.LOGD(TAG, "onResponse() called with: response = [" + response + "]");
+            String strResponse = (String) response;
+            try {
+                JSONObject jsonObject = new JSONObject(strResponse);
+                LogUtils.LOGI(TAG, "onResponse: " + jsonObject.toString());
+                int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
+                String error_message;
+                switch (statusCode) {
+                    case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
+                        JSONObject data = jsonObject.getJSONObject(NetworkUtility.TAGS.DATA);
+                        String title = data.optString(NetworkUtility.TAGS.TITLE);
+                        String subTitle = data.optString(NetworkUtility.TAGS.SUBTITLE);
+                        mBinding.tvCheepTipsTitle.setText(title);
+                        mBinding.tvCheepTipsDesc.setText(subTitle);
+                        mBinding.cvCheepTip.setVisibility(View.VISIBLE);
+                        break;
+                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
+                        // Show Toast
+                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
+                        break;
+                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
+                        error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
+                        // Show message
+                        Utility.showSnackBar(error_message, mBinding.getRoot());
+                        break;
+                    case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
+                    case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
+                        //Logout and finish the current activity
+                        Utility.logout(mContext, true, statusCode);
+                        mPackageCustomizationActivity.finish();
+                        break;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                mCallGetCarePackageDetailsSingWSErrorListener.onErrorResponse(new VolleyError(e.getMessage()));
+            }
+
+        }
+    };
+    ;
+
 
     private void showHideProgress(boolean showProgress) {
         mBinding.progressLoad.setVisibility(showProgress ? View.VISIBLE : View.GONE);
@@ -239,6 +312,13 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
         @Override
         public void onErrorResponse(VolleyError error) {
             showHideProgress(false);
+            LogUtils.LOGD(TAG, "onErrorResponse() called with: error = [" + error + "]");
+            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
+        }
+    };
+    private Response.ErrorListener mCallGetCareTipWSErrorListener = new Response.ErrorListener() {
+        @Override
+        public void onErrorResponse(VolleyError error) {
             LogUtils.LOGD(TAG, "onErrorResponse() called with: error = [" + error + "]");
             Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
         }
@@ -501,7 +581,7 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
                 , mHeaderParams
                 , mParams
                 , null);
-        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest, NetworkUtility.WS.CHECK_PRO_AVAILABILITY_FOR_STRATEGIC_TASK);
+        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest, NetworkUtility.WS.VERIFY_ADDRESS_CHEEP_CARE);
 
     }
 
@@ -540,4 +620,11 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
         });
     }
 
+    @Override
+    public void onDestroy() {
+        Volley.getInstance(mPackageCustomizationActivity).getRequestQueue().cancelAll(NetworkUtility.WS.GET_CARE_PACKAGE_DETAILS);
+        Volley.getInstance(mPackageCustomizationActivity).getRequestQueue().cancelAll(NetworkUtility.WS.VERIFY_ADDRESS_CHEEP_CARE);
+        Volley.getInstance(mPackageCustomizationActivity).getRequestQueue().cancelAll(NetworkUtility.WS.GET_CARE_PACKAGE_TIP);
+        super.onDestroy();
+    }
 }

@@ -48,7 +48,7 @@ public class CheepCarePackageAdapter extends LoadMoreRecyclerAdapter<CheepCarePa
 
 
         Glide.with(holder.mBinding.getRoot().getContext())
-                .load(R.drawable.banner_appliance_care)
+                .load(model.packageImage)
                 .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                 .into(holder.mBinding.ivItemBackground);
 

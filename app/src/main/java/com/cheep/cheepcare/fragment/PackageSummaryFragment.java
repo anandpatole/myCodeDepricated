@@ -21,6 +21,7 @@ import com.cheep.R;
 import com.cheep.activity.BaseAppCompatActivity;
 import com.cheep.cheepcare.activity.PackageCustomizationActivity;
 import com.cheep.cheepcare.adapter.SelectedPackageSummaryAdapter;
+import com.cheep.cheepcare.model.CheepCarePaymentDataModel;
 import com.cheep.cheepcare.model.PackageDetail;
 import com.cheep.custom_view.BottomAlertDialog;
 import com.cheep.databinding.FragmentPackageSummaryBinding;
@@ -102,6 +103,7 @@ public class PackageSummaryFragment extends BaseFragment {
             mPackageCustomizationActivity.setTaskState(PackageCustomizationActivity.STEP_THREE_UNVERIFIED);
         }
         resetPromoCodeValue();
+        gstRate = Double.valueOf(mPackageCustomizationActivity.settingModel.gstRate);
 
         if (mPackageAdapter != null && mPackageAdapter.getList() != null) {
             mPackageAdapter.getList().clear();
@@ -241,27 +243,26 @@ public class PackageSummaryFragment extends BaseFragment {
             int bundledPkgCnt = mPackageAdapter.getList().size() - 1;
             bundledDiscountRate = 5 * bundledPkgCnt;
             bundledDiscountPrice = totalPrice * bundledDiscountRate / 100;
-            totalPrice = totalPrice - bundledDiscountPrice;
+            payableAmount = totalPrice - bundledDiscountPrice;
             LogUtils.LOGE(TAG, "calculateTotalPrice: discountPrice :: " + bundledDiscountPrice);
         } else {
             discountPrice = totalPrice * discountRate / 100;
-            totalPrice = totalPrice - discountPrice;
+            payableAmount = totalPrice - discountPrice;
             LogUtils.LOGE(TAG, "calculateTotalPrice: discountPrice :: " + discountPrice);
         }
 
         // apply GST RATE
         LogUtils.LOGE(TAG, "calculateTotalPrice: totalPrice :: " + totalPrice);
 
-        gstRate = 18;
-        gstPrice = totalPrice * gstRate / 100;
-        totalPrice = totalPrice + gstPrice;
+        gstPrice = payableAmount * gstRate / 100;
+        payableAmount = payableAmount + gstPrice;
 
 
         LogUtils.LOGE(TAG, "calculateTotalPrice: gstPrice :: " + gstPrice);
         LogUtils.LOGE(TAG, "calculateTotalPrice: totalPrice :: " + totalPrice);
 
 
-        mBinding.textTotal.setText(getString(R.string.rupee_symbol_x, Utility.getQuotePriceFormatter(String.valueOf(totalPrice))));
+        mBinding.textTotal.setText(getString(R.string.rupee_symbol_x, Utility.getQuotePriceFormatter(String.valueOf(payableAmount))));
     }
 
     private List<PackageDetail> getList() {
@@ -503,6 +504,21 @@ public class PackageSummaryFragment extends BaseFragment {
             }
         }
     };
+
+    public CheepCarePaymentDataModel getPaymentData() {
+        CheepCarePaymentDataModel paymentDataModel = new CheepCarePaymentDataModel();
+        paymentDataModel.bundlediscountPercent = bundledDiscountRate;
+        paymentDataModel.bundlediscountPrice = bundledDiscountPrice;
+        paymentDataModel.careCityId = mPackageCustomizationActivity.mCityDetail.id;
+        paymentDataModel.dsaCode = cheepMateCode;
+        paymentDataModel.isAnnually = isYearly ? Utility.BOOLEAN.YES : Utility.BOOLEAN.NO;
+        paymentDataModel.payableAmount = payableAmount;
+        paymentDataModel.totalAmount = totalPrice;
+        paymentDataModel.promocode = cheepCode;
+        paymentDataModel.promocodePrice = discountPrice;
+        paymentDataModel.taxAmount = String.valueOf(gstPrice);
+        return paymentDataModel;
+    }
 
 
 }

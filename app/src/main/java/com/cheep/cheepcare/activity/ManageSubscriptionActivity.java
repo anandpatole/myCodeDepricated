@@ -19,8 +19,8 @@ import com.cheep.R;
 import com.cheep.activity.BaseAppCompatActivity;
 import com.cheep.cheepcare.adapter.ExpandableBoughtPackagesRecyclerAdapter;
 import com.cheep.cheepcare.adapter.ManageSubscriptionAddPackageAdapter;
-import com.cheep.cheepcare.model.CheepCareBannerModel;
 import com.cheep.cheepcare.model.CheepCarePackageModel;
+import com.cheep.cheepcare.model.CityDetail;
 import com.cheep.databinding.ActivityManageSubscriptionBinding;
 import com.cheep.utils.Utility;
 
@@ -34,11 +34,11 @@ public class ManageSubscriptionActivity extends BaseAppCompatActivity {
 
     private static final String TAG = ManageSubscriptionActivity.class.getSimpleName();
     private ActivityManageSubscriptionBinding mBinding;
-    private CheepCareBannerModel mCity;
+    private CityDetail mCity;
     private List<AnimatorSet> animators;
     private int activityType;
 
-    public static void newInstance(Context context, CheepCareBannerModel city) {
+    public static void newInstance(Context context, CityDetail city) {
         Intent intent = new Intent(context, ManageSubscriptionActivity.class);
         intent.putExtra(Utility.Extra.CITY_DETAIL, Utility.getJsonStringFromObject(city));
         context.startActivity(intent);
@@ -55,8 +55,10 @@ public class ManageSubscriptionActivity extends BaseAppCompatActivity {
     @Override
     protected void initiateUI() {
         if (getIntent().hasExtra(Utility.Extra.CITY_DETAIL)) {
-            mCity = (CheepCareBannerModel) Utility.getObjectFromJsonString(getIntent().getExtras().getString(Utility.Extra.CITY_DETAIL), CheepCareBannerModel.class);
+            mCity = (CityDetail) Utility.getObjectFromJsonString(getIntent().getExtras().getString(Utility.Extra.CITY_DETAIL), CityDetail.class);
         }
+        if (mCity==null)
+            return;
 
         // Calculate Pager Height and Width
         ViewTreeObserver mViewTreeObserver = mBinding.ivCityImage.getViewTreeObserver();

@@ -210,18 +210,22 @@
         <activity
             android:name=".cheepcare.activity.LandingScreenPickPackageActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize|stateAlwaysHidden"></activity>
+            android:windowSoftInputMode="adjustResize|stateAlwaysHidden"/>
 
         <activity
             android:name=".cheepcare.activity.PackageCustomizationActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
 
+
         <activity
             android:name=".cheepcare.activity.ManageSubscriptionActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize|stateAlwaysHidden"></activity>
-
+            android:windowSoftInputMode="adjustResize|stateAlwaysHidden"/>
+        <activity
+            android:name=".cheepcare.activity.PaymentChoiceCheepCareActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize|stateAlwaysHidden"/>
         <!-- Facebook Ids -->
         <activity
             android:name="com.facebook.FacebookActivity"

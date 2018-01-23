@@ -86,9 +86,14 @@ public class PaytmUtility {
                             //TODO: snackbar message to be changed in case required. now displaying generalized message of something went wrong
                             listener.paytmAccountBlocked();
                             break;
+                        default:
+                            listener.showGeneralizedErrorMessage();
+                            break;
+
                     }
 
                 } catch (JSONException e) {
+                    listener.showGeneralizedErrorMessage();
                     e.printStackTrace();
                 }
             }
@@ -958,7 +963,7 @@ public class PaytmUtility {
                 NetworkUtility.WS.FETCH_CALLBACK_RESPONSE_FROM_PAYTM,
                 mVerifyTransactionMoneyErrorListener,
                 mVerifyTransactionMoneyResponseListener,
-                mHeaderParams ,
+                mHeaderParams,
                 params,
                 null);
         Volley.getInstance(mContext).addToRequestQueue(paytmNetworkRequest, NetworkUtility.WS.FETCH_CALLBACK_RESPONSE_FROM_PAYTM);

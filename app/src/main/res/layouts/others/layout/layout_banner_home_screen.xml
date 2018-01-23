@@ -67,11 +67,11 @@
                     android:layout_height="match_parent"
                     android:layout_centerHorizontal="true"
                     android:layout_centerVertical="true"
-                    app:ci_drawable="@drawable/xml_circular_indicator_selected_white"
-                    app:ci_drawable_unselected="@drawable/xml_circular_indicator_unselected_white"
-                    app:ci_height="@dimen/scale_3dp"
+                    app:ci_drawable="@drawable/xml_circular_indicator_selected"
+                    app:ci_drawable_unselected="@drawable/xml_circular_indicator_unselected_cc"
+                    app:ci_height="@dimen/scale_5dp"
                     app:ci_orientation="vertical"
-                    app:ci_width="@dimen/scale_3dp"/>
+                    app:ci_width="@dimen/scale_5dp"/>
             </RelativeLayout>
         </RelativeLayout>
 

@@ -13,7 +13,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.cheep.R;
 import com.cheep.cheepcare.activity.LandingScreenPickPackageActivity;
 import com.cheep.cheepcare.activity.ManageSubscriptionActivity;
-import com.cheep.cheepcare.model.CheepCareBannerModel;
+import com.cheep.cheepcare.model.CityDetail;
 import com.cheep.databinding.FragmentSubscriptionBannerImageBinding;
 import com.cheep.fragment.BaseFragment;
 import com.cheep.network.NetworkUtility;
@@ -24,11 +24,11 @@ import java.util.ArrayList;
 public class SubscriptionBannerFragment extends BaseFragment {
 
     private static final String TAG = "SubscriptionBannerFragm";
-    private CheepCareBannerModel bannerImageModel;
+    private CityDetail bannerImageModel;
     private FragmentSubscriptionBannerImageBinding binding;
 
 
-    public ArrayList<CheepCareBannerModel> cheepCareBannerModels;
+    public ArrayList<CityDetail> cheepCareBannerModels;
 
     public SubscriptionBannerFragment() {
         // Required empty public constructor
@@ -45,12 +45,12 @@ public class SubscriptionBannerFragment extends BaseFragment {
     }
 
     @SuppressLint("ValidFragment")
-    public SubscriptionBannerFragment(CheepCareBannerModel bannerModel) {
+    public SubscriptionBannerFragment(CityDetail bannerModel) {
         // Required empty public constructor
         this.bannerImageModel = bannerModel;
     }
 
-    public static SubscriptionBannerFragment getInstance(CheepCareBannerModel bannerModel) {
+    public static SubscriptionBannerFragment getInstance(CityDetail bannerModel) {
         return new SubscriptionBannerFragment(bannerModel);
     }
 

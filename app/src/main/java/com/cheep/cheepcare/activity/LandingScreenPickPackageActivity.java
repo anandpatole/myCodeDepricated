@@ -9,6 +9,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.ImageSpan;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -21,10 +22,11 @@ import com.cheep.R;
 import com.cheep.activity.BaseAppCompatActivity;
 import com.cheep.cheepcare.adapter.CheepCareFeatureAdapter;
 import com.cheep.cheepcare.adapter.CheepCarePackageAdapter;
-import com.cheep.cheepcare.model.CheepCareBannerModel;
+import com.cheep.cheepcare.model.CityDetail;
 import com.cheep.cheepcare.model.CityLandingPageModel;
 import com.cheep.cheepcare.model.PackageDetail;
 import com.cheep.databinding.ActivityLandingScreenPickPackageBinding;
+import com.cheep.model.MessageEvent;
 import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
@@ -32,6 +34,9 @@ import com.cheep.utils.LogUtils;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.Utility;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -50,9 +55,9 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
     private CheepCareFeatureAdapter mFeatureAdapter;
     private CheepCarePackageAdapter mPackageAdapter;
     private CityLandingPageModel model;
-    private CheepCareBannerModel mCity;
+    private CityDetail mCity;
 
-    public static void newInstance(Context context, CheepCareBannerModel city) {
+    public static void newInstance(Context context, CityDetail city) {
         Intent intent = new Intent(context, LandingScreenPickPackageActivity.class);
         intent.putExtra(Utility.Extra.CITY_DETAIL, Utility.getJsonStringFromObject(city));
         context.startActivity(intent);
@@ -70,8 +75,9 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
     @Override
     protected void initiateUI() {
 
+        EventBus.getDefault().register(this);
         if (getIntent().hasExtra(Utility.Extra.CITY_DETAIL)) {
-            mCity = (CheepCareBannerModel) Utility.getObjectFromJsonString(getIntent().getExtras().getString(Utility.Extra.CITY_DETAIL), CheepCareBannerModel.class);
+            mCity = (CityDetail) Utility.getObjectFromJsonString(getIntent().getExtras().getString(Utility.Extra.CITY_DETAIL), CityDetail.class);
         }
 
         ViewTreeObserver mViewTreeObserver = mBinding.ivCityImage.getViewTreeObserver();
@@ -190,7 +196,7 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
         @Override
         public void onPackageItemClick(int position, PackageDetail packageModel) {
             String packageList = Utility.getJsonStringFromObject(model.packageDetailList);
-            PackageCustomizationActivity.newInstance(mContext, position, packageModel, model.cityDetail, packageModel.id, packageList);
+            PackageCustomizationActivity.newInstance(mContext, packageModel, model.cityDetail, packageModel.id, packageList, model.adminSetting);
         }
     };
 
@@ -273,8 +279,23 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
         }
     };
 
+    /**
+     * Event Bus Callbacks
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(MessageEvent event) {
+        Log.d(TAG, "onMessageEvent() called with: event = [" + event.BROADCAST_ACTION + "]");
+        switch (event.BROADCAST_ACTION) {
+            case Utility.BROADCAST_TYPE.PACKAGE_SUBSCRIBED_SUCCESSFULLY:
+                finish();
+                break;
+        }
+
+    }
+
     @Override
     protected void onDestroy() {
+        EventBus.getDefault().unregister(this);
         Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.WS.GET_CITY_CARE_DETAIL);
         super.onDestroy();
     }

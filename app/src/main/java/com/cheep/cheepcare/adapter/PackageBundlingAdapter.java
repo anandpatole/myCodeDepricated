@@ -1,14 +1,21 @@
 package com.cheep.cheepcare.adapter;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
+import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.style.LeadingMarginSpan;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -17,6 +24,8 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.cheep.R;
 import com.cheep.cheepcare.model.PackageDetail;
 import com.cheep.databinding.RowBundledPackageHeaderBinding;
@@ -30,7 +39,9 @@ import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.Utility;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by pankaj on 12/22/17.
@@ -94,7 +105,10 @@ public class PackageBundlingAdapter extends LoadMoreRecyclerAdapter<PackageBundl
         switch (viewType) {
             case ROW_PACKAGE_NOT_SELECTED:
                 context = holder.mRowNotSelectedBinding.getRoot().getContext();
-                Utility.loadImageView(context, holder.mRowNotSelectedBinding.ivItemBackground, "https://s3.ap-south-1.amazonaws.com/cheepapp/category/banner_image/medium/Untitled.jpg");
+                Glide.with(holder.mRowNotSelectedBinding.getRoot().getContext())
+                        .load(model.packageImage)
+                        .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                        .into(holder.mRowNotSelectedBinding.ivItemBackground);
                 SpannableString spannableString = new SpannableString(context.getString(R.string.rupee_symbol_x_package_price, model.price));
                 spannableString = Utility.getCheepCarePackageMonthlyPrice(spannableString, spannableString.length() - 3, spannableString.length());
                 holder.mRowNotSelectedBinding.tvPrice.setText(spannableString);
@@ -109,10 +123,16 @@ public class PackageBundlingAdapter extends LoadMoreRecyclerAdapter<PackageBundl
                         mListener.onPackageItemClick(holder.getAdapterPosition(), model);
                     }
                 });
+
+                holder.bindLiveFeedForPackagedBundle(holder.mRowNotSelectedBinding);
                 break;
             case ROW_PACKAGE_SELECTED:
                 context = holder.mRowSelectedBinding.getRoot().getContext();
-                Utility.loadImageView(context, holder.mRowSelectedBinding.ivItemBackground, "https://s3.ap-south-1.amazonaws.com/cheepapp/category/banner_image/medium/Untitled.jpg");
+                Glide.with(holder.mRowSelectedBinding.getRoot().getContext())
+                        .load(model.packageImage)
+                        .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                        .into(holder.mRowSelectedBinding.ivItemBackground);
+
                 SpannableString spannableString1 = new SpannableString(context.getString(R.string.rupee_symbol_x_package_price, model.price));
                 spannableString1 = Utility.getCheepCarePackageMonthlyPrice(spannableString1, spannableString1.length() - 3, spannableString1.length());
                 holder.mRowSelectedBinding.tvPrice.setText(spannableString1);
@@ -135,6 +155,7 @@ public class PackageBundlingAdapter extends LoadMoreRecyclerAdapter<PackageBundl
                     public void onClick(View v) {
                     }
                 });
+                holder.bindLiveFeedForPackagedBundle(holder.mRowSelectedBinding);
                 break;
             case ROW_PACKAGE_HEADER:
 //                holder.mBindingBundledPackageHeaderBinding.txtRibbon.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT));
@@ -157,15 +178,16 @@ public class PackageBundlingAdapter extends LoadMoreRecyclerAdapter<PackageBundl
         RowBundledPackageSelectedBinding mRowSelectedBinding;
         RowBundledPackageHeaderBinding mRowHeaderBinding;
         RowBundledPackagetNoSelectedBinding mRowNotSelectedBinding;
+        private List<AnimatorSet> animators;
 
 
         PackageViewHolder(ViewDataBinding binding) {
             super(binding.getRoot());
             if (binding instanceof RowBundledPackageHeaderBinding)
                 mRowHeaderBinding = (RowBundledPackageHeaderBinding) binding;
-            else if (binding instanceof RowBundledPackagetNoSelectedBinding)
+            else if (binding instanceof RowBundledPackagetNoSelectedBinding) {
                 mRowNotSelectedBinding = (RowBundledPackagetNoSelectedBinding) binding;
-            else
+            } else
                 mRowSelectedBinding = (RowBundledPackageSelectedBinding) binding;
 
             if (mRowSelectedBinding != null)
@@ -175,6 +197,134 @@ public class PackageBundlingAdapter extends LoadMoreRecyclerAdapter<PackageBundl
                         showDropDownMenu(mRowSelectedBinding.lnAddressRow, getAdapterPosition());
                     }
                 });
+            animators = new ArrayList<>();
+
+        }
+
+        private void bindLiveFeedForPackagedBundle(final RowBundledPackagetNoSelectedBinding binding) {
+            final PackageDetail model = mList.get(getAdapterPosition());
+            final int liveFeedCounter = model.live_lable_arr != null ? model.live_lable_arr.size() : 0;
+            final Map<String, Integer> mOfferIndexMap = new HashMap<>();
+            if (liveFeedCounter > 0) {
+                binding.ivLiveAnimated.setVisibility(View.VISIBLE);
+                binding.tvLiveFeed.setVisibility(View.VISIBLE);
+
+                // Live Icon offset
+                int offset = binding.getRoot().getResources().getDimensionPixelSize(R.dimen.scale_5dp);
+                final int mLiveIconOffset = binding.getRoot().getResources().getDimensionPixelSize(R.dimen.icon_live_width) + offset;
+
+                // Start live image animations
+                binding.ivLiveAnimated.setBackgroundResource(R.drawable.ic_live);
+                ((AnimationDrawable) binding.ivLiveAnimated.getBackground()).start();
+
+                AnimatorSet offerAnimation = loadBannerScrollAnimation(binding.tvLiveFeed, 2000, 100, new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        super.onAnimationEnd(animation);
+                        int offerIndex = mOfferIndexMap.containsKey(model.id) ? mOfferIndexMap.get(model.id) : 0;
+                        SpannableString labelOffer = new SpannableString(model.live_lable_arr.get(offerIndex));
+                        labelOffer.setSpan(new LeadingMarginSpan.Standard(mLiveIconOffset, 0), 0, labelOffer.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+                        binding.tvLiveFeed.setText(labelOffer);
+                        offerIndex = (offerIndex == (liveFeedCounter - 1) ? 0 : offerIndex + 1);
+                        mOfferIndexMap.put(model.id, offerIndex);
+                    }
+                });
+                offerAnimation.start();
+                removeAnimations();
+                addAnimator(offerAnimation);
+                int offerIndex = mOfferIndexMap.containsKey(model.id) ? mOfferIndexMap.get(model.id) : 0;
+                SpannableString labelOffer = new SpannableString(model.live_lable_arr.get(offerIndex));
+                labelOffer.setSpan(new LeadingMarginSpan.Standard(mLiveIconOffset, 0), 0, labelOffer.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+                binding.tvLiveFeed.setText(labelOffer);
+                offerIndex = (offerIndex == (liveFeedCounter - 1) ? 0 : offerIndex + 1);
+                mOfferIndexMap.put(model.id, offerIndex);
+            } else {
+                binding.ivLiveAnimated.setVisibility(View.GONE);
+                binding.tvLiveFeed.setVisibility(View.GONE);
+            }
+
+        }
+
+        private void bindLiveFeedForPackagedBundle(final RowBundledPackageSelectedBinding binding) {
+            final PackageDetail model = mList.get(getAdapterPosition());
+            final int liveFeedCounter = model.live_lable_arr != null ? model.live_lable_arr.size() : 0;
+            final Map<String, Integer> mOfferIndexMap = new HashMap<>();
+            if (liveFeedCounter > 0) {
+                binding.ivLiveAnimated.setVisibility(View.VISIBLE);
+                binding.tvLiveFeed.setVisibility(View.VISIBLE);
+
+                // Live Icon offset
+                int offset = binding.getRoot().getResources().getDimensionPixelSize(R.dimen.scale_5dp);
+                final int mLiveIconOffset = binding.getRoot().getResources().getDimensionPixelSize(R.dimen.icon_live_width) + offset;
+
+                // Start live image animations
+                binding.ivLiveAnimated.setBackgroundResource(R.drawable.ic_live);
+                ((AnimationDrawable) binding.ivLiveAnimated.getBackground()).start();
+
+                AnimatorSet offerAnimation = loadBannerScrollAnimation(binding.tvLiveFeed, 2000, 100, new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        super.onAnimationEnd(animation);
+                        int offerIndex = mOfferIndexMap.containsKey(model.id) ? mOfferIndexMap.get(model.id) : 0;
+                        SpannableString labelOffer = new SpannableString(model.live_lable_arr.get(offerIndex));
+                        labelOffer.setSpan(new LeadingMarginSpan.Standard(mLiveIconOffset, 0), 0, labelOffer.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+                        binding.tvLiveFeed.setText(labelOffer);
+                        offerIndex = (offerIndex == (liveFeedCounter - 1) ? 0 : offerIndex + 1);
+                        mOfferIndexMap.put(model.id, offerIndex);
+                    }
+                });
+                offerAnimation.start();
+                removeAnimations();
+                addAnimator(offerAnimation);
+                int offerIndex = mOfferIndexMap.containsKey(model.id) ? mOfferIndexMap.get(model.id) : 0;
+                SpannableString labelOffer = new SpannableString(model.live_lable_arr.get(offerIndex));
+                labelOffer.setSpan(new LeadingMarginSpan.Standard(mLiveIconOffset, 0), 0, labelOffer.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+                binding.tvLiveFeed.setText(labelOffer);
+                offerIndex = (offerIndex == (liveFeedCounter - 1) ? 0 : offerIndex + 1);
+                mOfferIndexMap.put(model.id, offerIndex);
+            } else {
+                binding.ivLiveAnimated.setVisibility(View.GONE);
+                binding.tvLiveFeed.setVisibility(View.GONE);
+            }
+
+        }
+
+        private AnimatorSet loadBannerScrollAnimation(View view, int offset, int distance, AnimatorListenerAdapter midEndListener) {
+            ObjectAnimator moveOut = ObjectAnimator.ofFloat(view, View.TRANSLATION_Y, 0, (-1 * distance));
+            if (midEndListener != null) {
+                moveOut.addListener(midEndListener);
+            }
+            ObjectAnimator moveIn = ObjectAnimator.ofFloat(view, View.TRANSLATION_Y, distance, 0);
+            final AnimatorSet set = new AnimatorSet();
+            set.setDuration(1000);
+            set.setStartDelay(offset);
+            set.playSequentially(moveOut, moveIn);
+            set.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    super.onAnimationEnd(animation);
+                    set.start();
+                }
+            });
+            return set;
+        }
+
+        public void addAnimator(AnimatorSet animator) {
+            if (animator != null) {
+                animators.add(animator);
+            }
+        }
+
+        public void removeAnimations() {
+            for (AnimatorSet animatorSet : animators) {
+                for (Animator child : animatorSet.getChildAnimations()) {
+                    child.removeAllListeners();
+                }
+                animatorSet.removeAllListeners();
+                animatorSet.end();
+                animatorSet.cancel();
+            }
+            animators.clear();
         }
     }
 

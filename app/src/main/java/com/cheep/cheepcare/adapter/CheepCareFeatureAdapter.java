@@ -56,7 +56,7 @@ public class CheepCareFeatureAdapter extends LoadMoreRecyclerAdapter<CheepCareFe
             Utility.loadImageView(leftBinding.getRoot().getContext()
                     , leftBinding.ivNoHiddenCharges
                     , model.image
-                    , R.drawable.ic_rupee_stroked_in_glass);
+                    , R.drawable.hotline_ic_image_loading_placeholder);
             leftBinding.tvTitle.setText(model.title);
             leftBinding.tvDescription.setText(model.description);
             leftBinding.getRoot().setOnClickListener(null);
@@ -66,7 +66,7 @@ public class CheepCareFeatureAdapter extends LoadMoreRecyclerAdapter<CheepCareFe
             Utility.loadImageView(rightBinding.getRoot().getContext()
                     , rightBinding.ivNoHiddenCharges
                     , model.image
-                    , R.drawable.ic_rupee_stroked_in_glass);
+                    , R.drawable.hotline_ic_image_loading_placeholder);
             rightBinding.tvTitle.setText(model.title);
             rightBinding.tvDescription.setText(model.description);
             rightBinding.getRoot().setOnClickListener(null);

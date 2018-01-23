@@ -6,8 +6,22 @@ import com.cheep.utils.Utility;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
+import java.util.List;
+
 @Keep
-public class CheepCareBannerModel {
+public class CityDetail implements Serializable {
+
+
+    @SerializedName("greeting_message")
+    @Expose
+    public String greetingMessage;
+    @SerializedName("description")
+    @Expose
+    public String description;
+    @SerializedName("city_tutorials")
+    @Expose
+    public List<CityLandingPageModel.CityTutorials> cityTutorials = null;
 
     @SerializedName("id")
     public String id;

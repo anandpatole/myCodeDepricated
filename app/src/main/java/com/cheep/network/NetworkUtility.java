@@ -140,6 +140,9 @@ public class NetworkUtility {
         public static final String GET_CARE_PACKAGE_DETAILS = BASE_URL + "customers/care/getCarePackageDetails";
         public static final String VERIFY_ADDRESS_CHEEP_CARE = BASE_URL + "customers/profile/verify_address";
         public static final String CHECK_CHEEP_CARE_CODE = BASE_URL + "customers/care/check_cheepcarecode";
+        public static final String GET_CARE_PACKAGE_TIP = BASE_URL + "customers/care/getCarePackageTip";
+        public static final String GENERATE_HASH_FOR_CHEEPCARE = BASE_URL + "customers/payment/generate_hash_for_cheepcare";
+        public static final String PURCHASE_CARE_PACKAGE = BASE_URL + "customers/care/purchaseCarePackage";
 
     }
 
@@ -417,10 +420,22 @@ public class NetworkUtility {
         String PINCODE = "pincode";
         String NICKNAME = "nickname";
         String PACKAGE_OPTION_DETAILS = "package_option_details";
-        String PACKAGE_CITY_ID= "package_city_id";
-        String CHEEP_CARE_CODE= "cheepcarecode";
-        String PACKAGE_ID= "package_id";
-        String DISCOUNT= "discount";
+        String PACKAGE_CITY_ID = "package_city_id";
+        String CHEEP_CARE_CODE = "cheepcarecode";
+        String PACKAGE_ID = "package_id";
+        String DISCOUNT = "discount";
+        String ADMIN_SETTING = "admin_setting";
+        String GST_RATE = "GST_RATE";
+        String SUBTITLE = "subtitle";
+        String TOTAL_AMOUNT = "total_amount";
+        String PROMOCODE = "promocode";
+        String TAX_AMOUNT = "tax_amount";
+        String IS_ANNUALLY = "is_annually";
+        String CARE_CITY_ID ="care_city_id";
+        String DSA_CODE ="dsaCode";
+        String BUNDLE_DISCOUNT_PERCENT ="bundlediscount_percent";
+        String BUNDLE_DISCOUNT_PRICE ="bundlediscount_price";
+        String CART_DETAIL ="cart_detail";
 
         interface VERSION_CHANGE_TYPE {
             int NORMAL = 0;
