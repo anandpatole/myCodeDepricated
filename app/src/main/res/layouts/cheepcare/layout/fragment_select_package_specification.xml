@@ -255,17 +255,13 @@
                 </RelativeLayout>
             </RelativeLayout>
 
-            <!--
-                        <com.cheep.custom_view.DashedBlueUnderlineCFTextViewRegular
-            -->
             <com.cheep.custom_view.CFTextViewRegular
                 android:id="@+id/tv_other_bundle_packages"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginBottom="@dimen/scale_12dp"
-                android:drawableBottom="@drawable/blue_horizontal_dashes"
-                android:gravity="center"
+                android:background="@drawable/blue_horizontal_dashes"
                 android:text="@string/msg_bundle_other_packages"
                 android:textColor="@color/splash_gradient_end"
                 android:textSize="@dimen/text_size_10sp"/>

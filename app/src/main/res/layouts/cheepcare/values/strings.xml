@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="cheep_tips">Chips Tips: %1s</string>
+    <string name="cheep_tips">CHEEP Tips: %1s</string>
     <string name="cheep_care_alert_message">Your package details will be lost, Are you sure want to go back?</string>
     <string name="label_cheep_mate_code">Cheep Mate Code</string>
     <string name="label_error_promo_code_with_bundled_discount">Oops! You cannot apply promo as you have already availed bundled discount.</string>

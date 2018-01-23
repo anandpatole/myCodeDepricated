@@ -30,11 +30,11 @@
             <ImageView
                 android:id="@+id/imgAdd"
                 android:layout_width="wrap_content"
-                android:layout_height="@dimen/h_camera_que_fragment"
+                android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/scale_10dp"
                 android:layout_marginRight="@dimen/scale_10dp"
                 android:layout_marginTop="@dimen/scale_10dp"
-                android:src="@drawable/ic_camera"
+                android:src="@drawable/ic_task_camera_video"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/recycler_view" />
 

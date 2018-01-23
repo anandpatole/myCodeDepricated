@@ -21,7 +21,6 @@ import com.cheep.R;
 import com.cheep.activity.BaseAppCompatActivity;
 import com.cheep.activity.HomeActivity;
 import com.cheep.activity.LoginActivity;
-import com.cheep.activity.PaymentDetailsActivity;
 import com.cheep.cheepcare.adapter.TaskCreationPagerAdapter;
 import com.cheep.cheepcare.fragment.TaskCreationPhase2Fragment;
 import com.cheep.databinding.ActivityTaskCreateBinding;
@@ -32,7 +31,7 @@ import com.cheep.dialogs.InstaBookProDialog;
 import com.cheep.firebase.FirebaseHelper;
 import com.cheep.firebase.FirebaseUtils;
 import com.cheep.firebase.model.ChatTaskModel;
-import com.cheep.fragment.SelectSubCategoryFragment;
+import com.cheep.cheepcare.fragment.SelectSubCategoryFragment;
 import com.cheep.model.InstaBookingProDetail;
 import com.cheep.model.JobCategoryModel;
 import com.cheep.model.MessageEvent;
@@ -67,7 +66,7 @@ import java.util.Map;
  */
 public class TaskCreationCCActivity extends BaseAppCompatActivity {
     private static final String TAG = TaskCreationCCActivity.class.getSimpleName();
-    private ActivityTaskCreateBinding mActivityTaskCreateBinding;
+    private ActivityTaskCreateBinding mBinding;
     public JobCategoryModel mJobCategoryModel;
     TaskCreationPagerAdapter mTaskCreationPagerAdapter;
     private List<SubServiceDetailModel> mSelectedSubServiceList;
@@ -84,7 +83,7 @@ public class TaskCreationCCActivity extends BaseAppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mActivityTaskCreateBinding = DataBindingUtil.setContentView(this, R.layout.activity_task_create);
+        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_task_create);
         initiateUI();
         setListeners();
         EventBus.getDefault().register(this);
@@ -99,11 +98,11 @@ public class TaskCreationCCActivity extends BaseAppCompatActivity {
         }
 
         // Setting up Toolbar
-        setSupportActionBar(mActivityTaskCreateBinding.toolbar);
+        setSupportActionBar(mBinding.toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setTitle(Utility.EMPTY_STRING);
-            mActivityTaskCreateBinding.toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            mBinding.toolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Utility.hideKeyboard(mContext);
@@ -112,30 +111,32 @@ public class TaskCreationCCActivity extends BaseAppCompatActivity {
             });
         }
 
+        showPostTaskButton(true, true);
+
         // Set category
-        mActivityTaskCreateBinding.textTitle.setText(mJobCategoryModel.catName != null ? mJobCategoryModel.catName : Utility.EMPTY_STRING);
+        mBinding.textTitle.setText(mJobCategoryModel.catName != null ? mJobCategoryModel.catName : Utility.EMPTY_STRING);
 
         // Set up image
-        Utility.loadImageView(mContext, mActivityTaskCreateBinding.imgService, mJobCategoryModel.catImage, R.drawable.gradient_black);
-        Utility.loadImageView(mContext, mActivityTaskCreateBinding.imgService, mJobCategoryModel.catImageExtras.thumb, R.drawable.gradient_black);
+        Utility.loadImageView(mContext, mBinding.imgService, mJobCategoryModel.catImage, R.drawable.gradient_black);
+        Utility.loadImageView(mContext, mBinding.imgService, mJobCategoryModel.catImageExtras.thumb, R.drawable.gradient_black);
 
         // Setting viewpager
-        setupViewPager(mActivityTaskCreateBinding.viewpager);
+        setupViewPager(mBinding.viewpager);
 
         // Change description
-        mActivityTaskCreateBinding.textStepDesc.setText(getString(R.string.step_1_desc));
+        mBinding.textStepDesc.setText(getString(R.string.step_1_desc));
 
         // Set the default step
         setTaskState(STEP_ONE_NORMAL);
 
         // Manage Click events of TaskCreation steps
-        mActivityTaskCreateBinding.textStep1.setOnClickListener(new View.OnClickListener() {
+        mBinding.textStep1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 gotoStep(STAGE_1);
             }
         });
-        mActivityTaskCreateBinding.textStep2.setOnClickListener(new View.OnClickListener() {
+        mBinding.textStep2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 /*
@@ -144,19 +145,35 @@ public class TaskCreationCCActivity extends BaseAppCompatActivity {
                 if (mCurrentStep > 2) {
                     gotoStep(STAGE_2);
                 } else {
-                    Utility.showSnackBar(getString(R.string.step_1_desc), mActivityTaskCreateBinding.getRoot());
+                    Utility.showSnackBar(getString(R.string.step_1_desc), mBinding.getRoot());
                 }
 
             }
         });
 
-
     }
 
+    private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            if (v.getId() == mBinding.textPostTask.getId()) {
+                if (mBinding.viewpager.getCurrentItem() == mTaskCreationPagerAdapter.SELECT_SUB_CATEGORY_FRAGMENT) {
+                    List<SubServiceDetailModel> list
+                            = mTaskCreationPagerAdapter.mSelectSubCategoryFragment.getSelectedSubServices();
+                    if (list != null && !list.isEmpty()) {
+                        mSelectedSubServiceList = list;
+                        gotoStep(STAGE_2);
+                    } else {
+                        Utility.showSnackBar(getString(R.string.step_1_desc), mBinding.getRoot());
+                    }
+                }
+            }
+        }
+    };
 
     @Override
     protected void setListeners() {
-
+        mBinding.textPostTask.setOnClickListener(mOnClickListener);
     }
 
 
@@ -167,7 +184,7 @@ public class TaskCreationCCActivity extends BaseAppCompatActivity {
      */
     private void setupViewPager(ViewPager pager) {
         mTaskCreationPagerAdapter = new TaskCreationPagerAdapter(getSupportFragmentManager());
-//        mTaskCreationPagerAdapter.addFragment(SelectSubCategoryFragment.TAG);
+        mTaskCreationPagerAdapter.addFragment(SelectSubCategoryFragment.TAG);
         mTaskCreationPagerAdapter.addFragment(TaskCreationPhase2Fragment.TAG);
         pager.setAdapter(mTaskCreationPagerAdapter);
     }
@@ -190,83 +207,83 @@ public class TaskCreationCCActivity extends BaseAppCompatActivity {
         mCurrentStep = step_state;
         switch (step_state) {
             case STEP_ONE_NORMAL:
-                mActivityTaskCreateBinding.textStep1.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_steps_normal));
-                mActivityTaskCreateBinding.textStep1.setTextColor(ContextCompat.getColor(mContext, R.color.white));
+                mBinding.textStep1.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_steps_normal));
+                mBinding.textStep1.setTextColor(ContextCompat.getColor(mContext, R.color.white));
 
-                mActivityTaskCreateBinding.textStep2.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_steps_normal));
-                mActivityTaskCreateBinding.textStep2.setTextColor(ContextCompat.getColor(mContext, R.color.white));
+                mBinding.textStep2.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_steps_normal));
+                mBinding.textStep2.setTextColor(ContextCompat.getColor(mContext, R.color.white));
 
-                mActivityTaskCreateBinding.textStep3.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_steps_normal));
-                mActivityTaskCreateBinding.textStep3.setTextColor(ContextCompat.getColor(mContext, R.color.white));
+                mBinding.textStep3.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_steps_normal));
+                mBinding.textStep3.setTextColor(ContextCompat.getColor(mContext, R.color.white));
 
 
                 break;
             case STEP_ONE_UNVERIFIED:
-                mActivityTaskCreateBinding.textStep1.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_steps_unverified));
-                mActivityTaskCreateBinding.textStep1.setTextColor(ContextCompat.getColor(mContext, R.color.splash_gradient_end));
+                mBinding.textStep1.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_steps_unverified));
+                mBinding.textStep1.setTextColor(ContextCompat.getColor(mContext, R.color.splash_gradient_end));
 
-                mActivityTaskCreateBinding.textStep2.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_steps_normal));
-                mActivityTaskCreateBinding.textStep2.setTextColor(ContextCompat.getColor(mContext, R.color.white));
+                mBinding.textStep2.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_steps_normal));
+                mBinding.textStep2.setTextColor(ContextCompat.getColor(mContext, R.color.white));
 
-                mActivityTaskCreateBinding.textStep3.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_steps_normal));
-                mActivityTaskCreateBinding.textStep3.setTextColor(ContextCompat.getColor(mContext, R.color.white));
+                mBinding.textStep3.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_steps_normal));
+                mBinding.textStep3.setTextColor(ContextCompat.getColor(mContext, R.color.white));
 
                 break;
             case STEP_ONE_VERIFIED:
             case STEP_TWO_NORMAL:
-                mActivityTaskCreateBinding.textStep1.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_steps_verified));
-                mActivityTaskCreateBinding.textStep1.setTextColor(ContextCompat.getColor(mContext, R.color.white));
+                mBinding.textStep1.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_steps_verified));
+                mBinding.textStep1.setTextColor(ContextCompat.getColor(mContext, R.color.white));
 
-                mActivityTaskCreateBinding.textStep2.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_steps_normal));
-                mActivityTaskCreateBinding.textStep2.setTextColor(ContextCompat.getColor(mContext, R.color.white));
+                mBinding.textStep2.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_steps_normal));
+                mBinding.textStep2.setTextColor(ContextCompat.getColor(mContext, R.color.white));
 
-                mActivityTaskCreateBinding.textStep3.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_steps_normal));
-                mActivityTaskCreateBinding.textStep3.setTextColor(ContextCompat.getColor(mContext, R.color.white));
+                mBinding.textStep3.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_steps_normal));
+                mBinding.textStep3.setTextColor(ContextCompat.getColor(mContext, R.color.white));
 
                 break;
             case STEP_TWO_UNVERIFIED:
-                mActivityTaskCreateBinding.textStep1.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_steps_verified));
-                mActivityTaskCreateBinding.textStep1.setTextColor(ContextCompat.getColor(mContext, R.color.white));
+                mBinding.textStep1.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_steps_verified));
+                mBinding.textStep1.setTextColor(ContextCompat.getColor(mContext, R.color.white));
 
-                mActivityTaskCreateBinding.textStep2.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_steps_unverified));
-                mActivityTaskCreateBinding.textStep2.setTextColor(ContextCompat.getColor(mContext, R.color.splash_gradient_end));
+                mBinding.textStep2.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_steps_unverified));
+                mBinding.textStep2.setTextColor(ContextCompat.getColor(mContext, R.color.splash_gradient_end));
 
-                mActivityTaskCreateBinding.textStep3.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_steps_normal));
-                mActivityTaskCreateBinding.textStep3.setTextColor(ContextCompat.getColor(mContext, R.color.white));
+                mBinding.textStep3.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_steps_normal));
+                mBinding.textStep3.setTextColor(ContextCompat.getColor(mContext, R.color.white));
 
                 break;
             case STEP_TWO_VERIFIED:
             case STEP_THREE_NORMAL:
-                mActivityTaskCreateBinding.textStep1.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_steps_verified));
-                mActivityTaskCreateBinding.textStep1.setTextColor(ContextCompat.getColor(mContext, R.color.white));
+                mBinding.textStep1.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_steps_verified));
+                mBinding.textStep1.setTextColor(ContextCompat.getColor(mContext, R.color.white));
 
-                mActivityTaskCreateBinding.textStep2.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_steps_verified));
-                mActivityTaskCreateBinding.textStep2.setTextColor(ContextCompat.getColor(mContext, R.color.white));
+                mBinding.textStep2.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_steps_verified));
+                mBinding.textStep2.setTextColor(ContextCompat.getColor(mContext, R.color.white));
 
-                mActivityTaskCreateBinding.textStep3.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_steps_normal));
-                mActivityTaskCreateBinding.textStep3.setTextColor(ContextCompat.getColor(mContext, R.color.white));
+                mBinding.textStep3.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_steps_normal));
+                mBinding.textStep3.setTextColor(ContextCompat.getColor(mContext, R.color.white));
 
                 break;
             case STEP_THREE_UNVERIFIED:
-                mActivityTaskCreateBinding.textStep1.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_steps_verified));
-                mActivityTaskCreateBinding.textStep1.setTextColor(ContextCompat.getColor(mContext, R.color.white));
+                mBinding.textStep1.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_steps_verified));
+                mBinding.textStep1.setTextColor(ContextCompat.getColor(mContext, R.color.white));
 
-                mActivityTaskCreateBinding.textStep2.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_steps_verified));
-                mActivityTaskCreateBinding.textStep2.setTextColor(ContextCompat.getColor(mContext, R.color.white));
+                mBinding.textStep2.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_steps_verified));
+                mBinding.textStep2.setTextColor(ContextCompat.getColor(mContext, R.color.white));
 
-                mActivityTaskCreateBinding.textStep3.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_steps_unverified));
-                mActivityTaskCreateBinding.textStep3.setTextColor(ContextCompat.getColor(mContext, R.color.splash_gradient_end));
+                mBinding.textStep3.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_steps_unverified));
+                mBinding.textStep3.setTextColor(ContextCompat.getColor(mContext, R.color.splash_gradient_end));
 
                 break;
             case STEP_THREE_VERIFIED:
-                mActivityTaskCreateBinding.textStep1.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_steps_verified));
-                mActivityTaskCreateBinding.textStep1.setTextColor(ContextCompat.getColor(mContext, R.color.white));
+                mBinding.textStep1.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_steps_verified));
+                mBinding.textStep1.setTextColor(ContextCompat.getColor(mContext, R.color.white));
 
-                mActivityTaskCreateBinding.textStep2.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_steps_verified));
-                mActivityTaskCreateBinding.textStep2.setTextColor(ContextCompat.getColor(mContext, R.color.white));
+                mBinding.textStep2.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_steps_verified));
+                mBinding.textStep2.setTextColor(ContextCompat.getColor(mContext, R.color.white));
 
-                mActivityTaskCreateBinding.textStep3.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_steps_verified));
-                mActivityTaskCreateBinding.textStep3.setTextColor(ContextCompat.getColor(mContext, R.color.white));
+                mBinding.textStep3.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_steps_verified));
+                mBinding.textStep3.setTextColor(ContextCompat.getColor(mContext, R.color.white));
 
                 break;
         }
@@ -278,14 +295,14 @@ public class TaskCreationCCActivity extends BaseAppCompatActivity {
     public void gotoStep(int step) {
         switch (step) {
             case STAGE_1:
-                mActivityTaskCreateBinding.viewpager.setCurrentItem(0);
+                mBinding.viewpager.setCurrentItem(0);
                 // Change description
-                mActivityTaskCreateBinding.textStepDesc.setText(getString(R.string.step_1_desc));
+                mBinding.textStepDesc.setText(getString(R.string.step_1_desc));
                 break;
             case STAGE_2:
-                mActivityTaskCreateBinding.viewpager.setCurrentItem(1);
+                mBinding.viewpager.setCurrentItem(1);
                 // Change description
-                mActivityTaskCreateBinding.textStepDesc.setText(getString(R.string.step_2_desc));
+                mBinding.textStepDesc.setText(getString(R.string.step_2_desc));
                 break;
         }
     }
@@ -293,7 +310,7 @@ public class TaskCreationCCActivity extends BaseAppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (mActivityTaskCreateBinding.viewpager.getCurrentItem() == 1) {
+        if (mBinding.viewpager.getCurrentItem() == 1) {
             gotoStep(STAGE_1);
             return;
         }
@@ -302,24 +319,24 @@ public class TaskCreationCCActivity extends BaseAppCompatActivity {
 
     public void showPostTaskButton(boolean needsToShow, boolean isEnabled) {
 
-        /*if (needsToShow) {
-            mActivityTaskCreateBinding.textPostTask.setVisibility(View.GONE);
+        if (needsToShow) {
+            mBinding.textPostTask.setVisibility(View.VISIBLE);
         } else {
-            mActivityTaskCreateBinding.textPostTask.setVisibility(View.GONE);
+            mBinding.textPostTask.setVisibility(View.GONE);
         }
 
 
         if (isEnabled) {
-            mActivityTaskCreateBinding.textPostTask.setSelected(true);
-            mActivityTaskCreateBinding.textPostTask.setBackgroundColor(ContextCompat.getColor(mContext, R.color.splash_gradient_end));
+            mBinding.textPostTask.setSelected(true);
+//            mBinding.textPostTask.setBackgroundColor(ContextCompat.getColor(mContext, R.color.splash_gradient_end));
         } else {
-            mActivityTaskCreateBinding.textPostTask.setSelected(false);
-            mActivityTaskCreateBinding.textPostTask.setBackgroundColor(ContextCompat.getColor(mContext, R.color.grey_varient_12));
-        }*/
+            mBinding.textPostTask.setSelected(false);
+//            mBinding.textPostTask.setBackgroundColor(ContextCompat.getColor(mContext, R.color.grey_varient_12));
+        }
     }
 
     public int getPostButtonHeight() {
-        return mActivityTaskCreateBinding.textPostTask.getHeight();
+        return mBinding.textPostTask.getHeight();
     }
 
     public void setSelectedSubService(List<SubServiceDetailModel> subServiceList) {
@@ -327,17 +344,7 @@ public class TaskCreationCCActivity extends BaseAppCompatActivity {
     }
 
     public List<SubServiceDetailModel> getSelectedSubServices() {
-        return new ArrayList<SubServiceDetailModel>() {{
-            add(new SubServiceDetailModel() {{
-                name = "tap tap tap tap tap tap tap tap tap tap";
-            }});
-            add(new SubServiceDetailModel() {{
-                name = "basin tap tap tap tap tap tap tap tap ";
-            }});
-            add(new SubServiceDetailModel() {{
-                name = "pipe tap tap tap tap tap tap tap tap ";
-            }});
-        }};
+        return mSelectedSubServiceList;
     }
 
     @Override
@@ -350,7 +357,7 @@ public class TaskCreationCCActivity extends BaseAppCompatActivity {
                     //startIntentFileChooser(Utility.REQUEST_CODE_GET_FILE_ADD_COVER);
                 } else if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_DENIED) {
                     Log.i(TAG, "onRequestPermissionsResult: Permission Denied");
-                    Utility.showSnackBar(getString(R.string.permission_denied_read), mActivityTaskCreateBinding.getRoot());
+                    Utility.showSnackBar(getString(R.string.permission_denied_read), mBinding.getRoot());
                 }
                 break;
             case Utility.REQUEST_CODE_READ_EXTERNAL_STORAGE_ADD_PROFILE_GALLERY:
@@ -359,7 +366,7 @@ public class TaskCreationCCActivity extends BaseAppCompatActivity {
                     // startIntentFileChooser(Utility.REQUEST_CODE_GET_FILE_ADD_PROFILE_GALLERY);
                 } else if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_DENIED) {
                     Log.i(TAG, "onRequestPermissionsResult: Permission Denied");
-                    Utility.showSnackBar(getString(R.string.permission_denied_read), mActivityTaskCreateBinding.getRoot());
+                    Utility.showSnackBar(getString(R.string.permission_denied_read), mBinding.getRoot());
                 }
                 break;
             case Utility.REQUEST_CODE_ADD_PROFILE_CAMERA:
@@ -368,7 +375,7 @@ public class TaskCreationCCActivity extends BaseAppCompatActivity {
                     //  startCameraCaptureChooser(Utility.REQUEST_CODE_IMAGE_CAPTURE_ADD_PROFILE);
                 } else if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_DENIED) {
                     Log.i(TAG, "onRequestPermissionsResult: Permission Denied Camera");
-                    Utility.showSnackBar(getString(R.string.permission_denied_camera), mActivityTaskCreateBinding.getRoot());
+                    Utility.showSnackBar(getString(R.string.permission_denied_camera), mBinding.getRoot());
                 }
                 break;
         }
@@ -402,12 +409,12 @@ public class TaskCreationCCActivity extends BaseAppCompatActivity {
 
         // Check Internet connection
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityTaskCreateBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mBinding.getRoot());
             return;
         }
 
         /*if (mTaskCreationPagerAdapter.mEnterTaskDetailFragment.superCalendar == null) {
-            Utility.showSnackBar(getString(R.string.can_only_start_task_after_3_hours), mActivityTaskCreateBinding.getRoot());
+            Utility.showSnackBar(getString(R.string.can_only_start_task_after_3_hours), mBinding.getRoot());
             return;
         }*/
 
@@ -516,12 +523,12 @@ public class TaskCreationCCActivity extends BaseAppCompatActivity {
 
         // Check Internet connection
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityTaskCreateBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mBinding.getRoot());
             return;
         }
 
         if (mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.superCalendar == null) {
-            Utility.showSnackBar(getString(R.string.can_only_start_task_after_3_hours), mActivityTaskCreateBinding.getRoot());
+            Utility.showSnackBar(getString(R.string.can_only_start_task_after_3_hours), mBinding.getRoot());
             return;
         }
 
@@ -539,7 +546,7 @@ public class TaskCreationCCActivity extends BaseAppCompatActivity {
         SuperCalendar calAfter3Hours = SuperCalendar.getInstance().getNext3HoursTime();
 
         if (superCalendar.getTimeInMillis() < calAfter3Hours.getTimeInMillis()) {
-            Utility.showSnackBar(getString(R.string.can_only_start_task_after_3_hours), mActivityTaskCreateBinding.getRoot());
+            Utility.showSnackBar(getString(R.string.can_only_start_task_after_3_hours), mBinding.getRoot());
             return;
         }*/
 
@@ -691,12 +698,12 @@ public class TaskCreationCCActivity extends BaseAppCompatActivity {
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
                         // Show Toast
-                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityTaskCreateBinding.getRoot());
+                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
                         String error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
                         // Show message
-                        Utility.showSnackBar(error_message, mActivityTaskCreateBinding.getRoot());
+                        Utility.showSnackBar(error_message, mBinding.getRoot());
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
                     case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
@@ -751,12 +758,12 @@ public class TaskCreationCCActivity extends BaseAppCompatActivity {
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
                         // Show Toast
-                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityTaskCreateBinding.getRoot());
+                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
                         String error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
                         // Show message
-                        Utility.showSnackBar(error_message, mActivityTaskCreateBinding.getRoot());
+                        Utility.showSnackBar(error_message, mBinding.getRoot());
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
                     case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
@@ -963,7 +970,7 @@ public class TaskCreationCCActivity extends BaseAppCompatActivity {
             hideProgressDialog();
 
             // Show Toast
-            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityTaskCreateBinding.getRoot());
+            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
         }
     };
 
@@ -978,26 +985,26 @@ public class TaskCreationCCActivity extends BaseAppCompatActivity {
             }
 
             // Show Toast
-            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityTaskCreateBinding.getRoot());
+            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
         }
     };
 
     public boolean isValidationCompleted() {
         // Task Description
         if (!mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.isTaskDescriptionVerified) {
-            Utility.showSnackBar(getString(R.string.validate_task_desc), mActivityTaskCreateBinding.getRoot());
+            Utility.showSnackBar(getString(R.string.validate_task_desc), mBinding.getRoot());
             return false;
         }
 
         // Date-Time of Task
         if (mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.superCalendar == null) {
-            Utility.showSnackBar(getString(R.string.validate_date), mActivityTaskCreateBinding.getRoot());
+            Utility.showSnackBar(getString(R.string.validate_date), mBinding.getRoot());
             return false;
         }
 
         // place of Task
         if (!mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.isTaskWhereVerified) {
-            Utility.showSnackBar(getString(R.string.validate_address_new_task), mActivityTaskCreateBinding.getRoot());
+            Utility.showSnackBar(getString(R.string.validate_address_new_task), mBinding.getRoot());
             return false;
         }
 

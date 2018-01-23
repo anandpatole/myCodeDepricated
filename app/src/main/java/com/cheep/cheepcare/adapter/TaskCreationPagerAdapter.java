@@ -5,8 +5,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import com.cheep.cheepcare.fragment.TaskCreationPhase2Fragment;
-import com.cheep.fragment.EnterTaskDetailFragment;
-import com.cheep.fragment.SelectSubCategoryFragment;
+import com.cheep.cheepcare.fragment.SelectSubCategoryFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,21 +16,25 @@ import java.util.List;
 
 public class TaskCreationPagerAdapter extends FragmentPagerAdapter {
     private final List<String> mTitleList = new ArrayList<>();
-    //    public SelectSubCategoryFragment mSelectSubCategoryFragment;
+
+    public final int SELECT_SUB_CATEGORY_FRAGMENT = 0;
+    public final int TASK_CREATION_PHASE_2_FRAGMENT = 1;
+
+    public SelectSubCategoryFragment mSelectSubCategoryFragment;
     public TaskCreationPhase2Fragment mTaskCreationPhase2Fragment;
 
     public TaskCreationPagerAdapter(FragmentManager fm) {
         super(fm);
-//        mSelectSubCategoryFragment = SelectSubCategoryFragment.newInstance();
+        mSelectSubCategoryFragment = SelectSubCategoryFragment.newInstance();
         mTaskCreationPhase2Fragment = TaskCreationPhase2Fragment.newInstance();
     }
 
     @Override
     public Fragment getItem(int position) {
         switch (position) {
-//            case 0:
-//                return mSelectSubCategoryFragment;
-            case 0:
+            case SELECT_SUB_CATEGORY_FRAGMENT:
+                return mSelectSubCategoryFragment;
+            case TASK_CREATION_PHASE_2_FRAGMENT:
                 return mTaskCreationPhase2Fragment;
             default:
                 return null;

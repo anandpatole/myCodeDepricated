@@ -631,6 +631,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
         after working hours, simply pay an additional charge of ₹%1s and get the PRO to come when you want!</string>
     <string name="label_select_time">Select Time</string>
     <string name="label_no_thanks">No, Thanks</string>
+    <string name="label_next">Next</string>
 
     <string name="hint_apply_cheep_promo_code">Apply CHEEP Promo code?</string>
     <string name="hint_apply_cheep_mate_code">Have a CHEEP Mate Code?</string>

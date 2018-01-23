@@ -47,7 +47,6 @@ import com.android.volley.VolleyError;
 import com.cheep.BuildConfig;
 import com.cheep.R;
 import com.cheep.activity.BaseAppCompatActivity;
-import com.cheep.activity.TaskCreationActivity;
 import com.cheep.adapter.AddressRecyclerViewAdapter;
 import com.cheep.adapter.SelectedSubServiceAdapter;
 import com.cheep.cheepcare.activity.TaskCreationCCActivity;
@@ -185,10 +184,10 @@ public class TaskCreationPhase2Fragment extends BaseFragment
     private void updateFinalVerificationFlag() {
         if (isTaskDescriptionVerified /*&& isTaskWhenVerified*/ && isTaskWhereVerified) {
             isTotalVerified = true;
-            mTaskCreationCCActivity.setTaskState(TaskCreationActivity.STEP_TWO_VERIFIED);
+            mTaskCreationCCActivity.setTaskState(TaskCreationCCActivity.STEP_TWO_VERIFIED);
         } else {
             isTotalVerified = false;
-            mTaskCreationCCActivity.setTaskState(TaskCreationActivity.STEP_TWO_UNVERIFIED);
+            mTaskCreationCCActivity.setTaskState(TaskCreationCCActivity.STEP_TWO_UNVERIFIED);
         }
 
         // let activity know that post task button needs to be shown now.
@@ -218,8 +217,6 @@ public class TaskCreationPhase2Fragment extends BaseFragment
         // Update Task related details
         updateTaskDetails();
 
-        resetWhenUI();
-
         /*mBinding.editTaskDesc.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -238,7 +235,7 @@ public class TaskCreationPhase2Fragment extends BaseFragment
         });*/
 
         //Update Where label with icon
-        updateWhenLabelWithIcon(/*false*/true, Utility.EMPTY_STRING);
+        updateWhenLabelWithIcon(/*false*/false, Utility.EMPTY_STRING);
 
         /*//On Click event of attachment
         mBinding.imgAdd.setOnClickListene(new View.OnClickListener() {
@@ -405,15 +402,20 @@ public class TaskCreationPhase2Fragment extends BaseFragment
         }
     }
 
-    public void updateWhenLabelWithIcon(boolean isEnabled, String whereValue) {
+    public void updateWhenLabelWithIcon(boolean isEnabled, String whenValue) {
         mBinding.iconTaskWhen.setSelected(isEnabled);
         mBinding.textWhen.setSelected(isEnabled);
-        if (!isEnabled) {
-            mBinding.iconWhenInfo.setVisibility(View.GONE);
-            mBinding.textTaskWhen.setText(Utility.EMPTY_STRING);
+        if (isEnabled) {
+            mBinding.iconWhenInfo.setVisibility(View.INVISIBLE);
+            mBinding.textTaskWhen.setText(whenValue);
         } else {
             mBinding.iconWhenInfo.setVisibility(View.VISIBLE);
-//            mBinding.textTaskWhen.setText(whereValue);
+
+            ForegroundColorSpan colorSpan = new ForegroundColorSpan(ContextCompat.getColor(mContext, R.color.splash_gradient_end));
+            String cheepGuarantee = getString(R.string.msg_cheep_assurance_select_time);
+            SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(cheepGuarantee);
+            spannableStringBuilder.setSpan(colorSpan, cheepGuarantee.indexOf("click"), cheepGuarantee.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            mBinding.textTaskWhen.setText(spannableStringBuilder);
         }
     }
 
@@ -857,7 +859,7 @@ public class TaskCreationPhase2Fragment extends BaseFragment
     @Override
     public void onNoThanksClicked() {
         Log.d(TAG, "onNoThanksClicked() called");
-        resetWhenUI();
+        updateWhenLabelWithIcon(false, Utility.EMPTY_STRING);
     }
 
     private class UploadListener implements TransferListener {
@@ -996,7 +998,7 @@ public class TaskCreationPhase2Fragment extends BaseFragment
 //                                mBinding.textTaskWhen.setVisibility(View.GONE);
                                 updateTaskVerificationFlags();
                                 superCalendar = null;
-                                resetWhenUI();
+                                updateWhenLabelWithIcon(false, Utility.EMPTY_STRING);
                                 return;
                             }
 //                            }
@@ -1005,13 +1007,10 @@ public class TaskCreationPhase2Fragment extends BaseFragment
                                 String selectedDateTime = startDateTimeSuperCalendar.format(Utility.DATE_FORMAT_DD_MMM)
                                         + getString(R.string.label_at)
                                         + startDateTimeSuperCalendar.format(Utility.DATE_FORMAT_HH_MM_AM);
-                                mBinding.textTaskWhen.setText(selectedDateTime);
-                                mBinding.textTaskWhen.setVisibility(View.VISIBLE);
-                                mBinding.iconWhenInfo.setVisibility(View.INVISIBLE);
+                                updateWhenLabelWithIcon(true, selectedDateTime);
                                 updateTaskVerificationFlags();
                             } else {
-                                mBinding.textTaskWhen.setText(Utility.EMPTY_STRING);
-                                mBinding.textTaskWhen.setVisibility(View.GONE);
+                                updateWhenLabelWithIcon(false, Utility.EMPTY_STRING);
                                 Utility.showSnackBar(getString(R.string.validate_future_date), mBinding.getRoot());
                                 updateTaskVerificationFlags();
                             }
@@ -1022,15 +1021,6 @@ public class TaskCreationPhase2Fragment extends BaseFragment
 
     }
 
-    private void resetWhenUI() {
-        mBinding.iconWhenInfo.setVisibility(View.VISIBLE);
-
-        ForegroundColorSpan colorSpan = new ForegroundColorSpan(ContextCompat.getColor(mContext, R.color.splash_gradient_end));
-        String cheepGuarantee = getString(R.string.msg_cheep_assurance_select_time);
-        SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(cheepGuarantee);
-        spannableStringBuilder.setSpan(colorSpan, cheepGuarantee.indexOf("click"), cheepGuarantee.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        mBinding.textTaskWhen.setText(spannableStringBuilder);
-    }
     ///////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////WHEN Feature [END]//////////////////////
     ///////////////////////////////////////////////////////////////////////////////////////////////
