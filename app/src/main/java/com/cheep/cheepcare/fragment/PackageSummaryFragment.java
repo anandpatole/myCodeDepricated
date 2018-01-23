@@ -481,7 +481,7 @@ public class PackageSummaryFragment extends BaseFragment {
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
                         discountRate = 0;
                         discountPrice = 0;
-
+                        calculateTotalPrice();
                         mBinding.ivTickPromoCode.setVisibility(View.VISIBLE);
                         mBinding.ivTickPromoCode.setSelected(false);
                         mBinding.ivInfoPromoCode.setVisibility(View.VISIBLE);
