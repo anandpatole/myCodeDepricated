@@ -516,6 +516,7 @@ public class Utility {
         String POSITION = "position";
         String SELECTED_PACKAGE_ID = "selectedPackageID";
         String PACKAGE_LIST = "packageList";
+        String ACTIVITY_TYPE = "activityType";
     }
 
 
