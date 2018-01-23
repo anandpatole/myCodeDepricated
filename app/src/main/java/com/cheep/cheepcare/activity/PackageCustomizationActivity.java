@@ -8,6 +8,7 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -20,15 +21,20 @@ import com.cheep.cheepcare.adapter.PackageCustomizationPagerAdapter;
 import com.cheep.cheepcare.fragment.PackageBundlingFragment;
 import com.cheep.cheepcare.fragment.PackageSummaryFragment;
 import com.cheep.cheepcare.fragment.SelectPackageSpecificationsFragment;
-import com.cheep.cheepcare.model.CityLandingPageModel;
+import com.cheep.cheepcare.model.AdminSettingModel;
+import com.cheep.cheepcare.model.CityDetail;
 import com.cheep.cheepcare.model.PackageDetail;
 import com.cheep.cheepcare.model.PackageOption;
 import com.cheep.cheepcare.model.PackageSubOption;
 import com.cheep.databinding.ActivityPackageCustomizationBinding;
+import com.cheep.model.MessageEvent;
 import com.cheep.network.NetworkUtility;
 import com.cheep.utils.LogUtils;
 import com.cheep.utils.Utility;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -44,8 +50,9 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
     private ActivityPackageCustomizationBinding mBinding;
     private PackageCustomizationPagerAdapter mPackageCustomizationPagerAdapter;
     private PackageDetail mPackageModel;
-    public CityLandingPageModel.CityDetail mCityDetail;
+    public CityDetail mCityDetail;
     public String mPackageId = "";
+    public AdminSettingModel settingModel;
     private ArrayList<PackageDetail> mPackageList = new ArrayList<>();
     private static final String TAG = "PackageCustomizationAct";
     private int mPreviousState = 0;
@@ -64,19 +71,20 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
         return mPackageList;
     }
 
-    public static void newInstance(Context context, int position, PackageDetail model, CityLandingPageModel.CityDetail cityDetail, String selectedPackageID, String packageList) {
+    public static void newInstance(Context context, PackageDetail model, CityDetail cityDetail, String selectedPackageID, String packageList, AdminSettingModel adminSetting) {
         Intent intent = new Intent(context, PackageCustomizationActivity.class);
-        intent.putExtra(Utility.Extra.POSITION, position);
         intent.putExtra(Utility.Extra.MODEL, model);
         intent.putExtra(Utility.Extra.CITY_NAME, Utility.getJsonStringFromObject(cityDetail));
         intent.putExtra(Utility.Extra.SELECTED_PACKAGE_ID, selectedPackageID);
         intent.putExtra(Utility.Extra.PACKAGE_LIST, packageList);
+        intent.putExtra(Utility.Extra.ADMIN_SETTING, Utility.getJsonStringFromObject(adminSetting));
         context.startActivity(intent);
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_package_customization);
         initiateUI();
         setListeners();
@@ -89,10 +97,10 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
 
         if (getIntent().hasExtra(Utility.Extra.MODEL)) {
             mPackageModel = (PackageDetail) getIntent().getExtras().getSerializable(Utility.Extra.MODEL);
-            mCityDetail = (CityLandingPageModel.CityDetail) Utility.getObjectFromJsonString(getIntent().getExtras().getString(Utility.Extra.CITY_NAME), CityLandingPageModel.CityDetail.class);
+            mCityDetail = (CityDetail) Utility.getObjectFromJsonString(getIntent().getExtras().getString(Utility.Extra.CITY_NAME), CityDetail.class);
+            settingModel = (AdminSettingModel) Utility.getObjectFromJsonString(getIntent().getExtras().getString(Utility.Extra.ADMIN_SETTING), AdminSettingModel.class);
             mPackageId = getIntent().getExtras().getString(Utility.Extra.SELECTED_PACKAGE_ID);
             mPackageList = Utility.getObjectListFromJsonString(getIntent().getExtras().getString(Utility.Extra.PACKAGE_LIST), PackageDetail[].class);
-             /*position = getIntent().getExtras().getInt(Utility.Extra.POSITION);*/
         }
 
         // Calculate Pager Height and Width
@@ -356,7 +364,9 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
                     } else if (mBinding.viewpager.getCurrentItem() == STAGE_2) {
                         gotoStep(STAGE_3);
                     } else {
-                        createSubscriptionPackageRequest();
+                        PackageSummaryFragment summaryFragment = (PackageSummaryFragment) mPackageCustomizationPagerAdapter.getItem(STAGE_3);
+                        if (summaryFragment != null)
+                            PaymentChoiceCheepCareActivity.newInstance(PackageCustomizationActivity.this, createSubscriptionPackageRequest(), summaryFragment.getPaymentData(),mCityDetail);
                     }
                     break;
             }
@@ -413,78 +423,75 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
         mBinding.tvBadgeCartCount.setText(String.valueOf(cartCount));
     }
 
-    private void createSubscriptionPackageRequest() {
+    private String createSubscriptionPackageRequest() {
 
         JSONArray cartArray = new JSONArray();
-        double totalPrice = 0;
 
         for (PackageDetail detail : mPackageList) {
-            {
-                JSONObject packageObject = new JSONObject();
-                if (detail.isSelected) {
+            JSONObject packageObject = new JSONObject();
+            if (detail.isSelected) {
+                try {
+                    packageObject.put("package_id", detail.id);
+                    JSONArray multiPackageArray = new JSONArray();
+                    JSONObject singleObj = new JSONObject();
+                    JSONObject addressObject = new JSONObject();
+                    int addressId;
                     try {
-                        packageObject.put("package_id", detail.id);
-                        JSONArray multiPackageArray = new JSONArray();
-                        JSONObject singleObj = new JSONObject();
-                        JSONObject addressObject = new JSONObject();
-                        int addressId;
-                        try {
-                            addressId = Integer.parseInt(detail.mSelectedAddress.address_id);
-                        } catch (Exception e) {
-                            addressId = 0;
-                        }
-                        if (addressId <= 0) {
-                            addressObject.put(NetworkUtility.TAGS.ADDRESS, detail.mSelectedAddress.address);
-                            addressObject.put(NetworkUtility.TAGS.ADDRESS_INITIALS, detail.mSelectedAddress.address_initials);
-                            addressObject.put(NetworkUtility.TAGS.CATEGORY, detail.mSelectedAddress.category);
-                            addressObject.put(NetworkUtility.TAGS.LAT, detail.mSelectedAddress.lat);
-                            addressObject.put(NetworkUtility.TAGS.LNG, detail.mSelectedAddress.lng);
-                            addressObject.put(NetworkUtility.TAGS.COUNTRY, detail.mSelectedAddress.countryName);
-                            addressObject.put(NetworkUtility.TAGS.STATE, detail.mSelectedAddress.stateName);
-                            addressObject.put(NetworkUtility.TAGS.CITY_NAME, detail.mSelectedAddress.cityName);
-                        } else {
-                            addressObject.put(NetworkUtility.TAGS.ADDRESS_ID, addressId);
-                        }
+                        addressId = Integer.parseInt(detail.mSelectedAddress.address_id);
+                    } catch (Exception e) {
+                        addressId = 0;
+                    }
+                    if (addressId <= 0) {
+                        addressObject.put(NetworkUtility.TAGS.ADDRESS, detail.mSelectedAddress.address);
+                        addressObject.put(NetworkUtility.TAGS.ADDRESS_INITIALS, detail.mSelectedAddress.address_initials);
+                        addressObject.put(NetworkUtility.TAGS.CATEGORY, detail.mSelectedAddress.category);
+                        addressObject.put(NetworkUtility.TAGS.LAT, detail.mSelectedAddress.lat);
+                        addressObject.put(NetworkUtility.TAGS.LNG, detail.mSelectedAddress.lng);
+                        addressObject.put(NetworkUtility.TAGS.COUNTRY, detail.mSelectedAddress.countryName);
+                        addressObject.put(NetworkUtility.TAGS.STATE, detail.mSelectedAddress.stateName);
+                        addressObject.put(NetworkUtility.TAGS.CITY_NAME, detail.mSelectedAddress.cityName);
+                    } else {
+                        addressObject.put(NetworkUtility.TAGS.ADDRESS_ID, addressId);
+                    }
 
-                        double price = 0;
-                        singleObj.put("address", addressObject);
-                        JSONArray optionArray = new JSONArray();
-                        for (PackageOption servicesModel : detail.packageOptionList) {
-                            JSONObject optionObj = new JSONObject();
-                            optionObj.put("package_option_id", servicesModel.packageId);
+                    singleObj.put("address", addressObject);
+                    JSONArray optionArray = new JSONArray();
+                    for (PackageOption servicesModel : detail.packageOptionList) {
+                        JSONObject optionObj = new JSONObject();
+                        optionObj.put("package_option_id", servicesModel.packageId);
 
-                            JSONArray subOptionArray = new JSONArray();
-                            if (servicesModel.selectionType.equalsIgnoreCase(PackageOption.SELECTION_TYPE.RADIO))
-                                for (PackageSubOption option : servicesModel.getChildList()) {
-                                    if (option.isSelected) {
-                                        JSONObject object = new JSONObject();
-                                        object.put("package_suboption_id", option.packageOptionId);
-                                        object.put("unit", "1");
-                                        subOptionArray.put(object);
-                                    }
-                                }
-                            else
-                                for (PackageSubOption option : servicesModel.getChildList()) {
+                        JSONArray subOptionArray = new JSONArray();
+                        if (servicesModel.selectionType.equalsIgnoreCase(PackageOption.SELECTION_TYPE.RADIO))
+                            for (PackageSubOption option : servicesModel.getChildList()) {
+                                if (option.isSelected) {
                                     JSONObject object = new JSONObject();
                                     object.put("package_suboption_id", option.packageOptionId);
-                                    object.put("unit", option.qty);
+                                    object.put("selected_unit", "1");
                                     subOptionArray.put(object);
                                 }
+                            }
+                        else
+                            for (PackageSubOption option : servicesModel.getChildList()) {
+                                JSONObject object = new JSONObject();
+                                object.put("package_suboption_id", option.packageOptionId);
+                                object.put("selected_unit", option.qty);
+                                subOptionArray.put(object);
+                            }
 
-                            optionObj.put("package_suboptions", subOptionArray);
-                            optionArray.put(optionObj);
-                        }
-                        singleObj.put("package_options", optionArray);
-                        multiPackageArray.put(singleObj);
-                        packageObject.put("package", multiPackageArray);
-                        cartArray.put(packageObject);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+                        optionObj.put("package_suboption", subOptionArray);
+                        optionArray.put(optionObj);
                     }
+                    singleObj.put("package_options", optionArray);
+                    multiPackageArray.put(singleObj);
+                    packageObject.put("package_details", multiPackageArray);
+                    cartArray.put(packageObject);
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
             }
         }
         LogUtils.LOGE(TAG, "createSubscriptionPackageRequest: " + cartArray.toString());
+        return cartArray.toString();
     }
 
     public void loadAnotherPackage() {
@@ -533,5 +540,23 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
         mBinding.textPrice.setText(Utility.getMonthlyPrice(price, this));
     }
 
+    @Override
+    protected void onDestroy() {
+        EventBus.getDefault().unregister(this);
+        super.onDestroy();
+    }
 
+    /**
+     * Event Bus Callbacks
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(MessageEvent event) {
+        Log.d(TAG, "onMessageEvent() called with: event = [" + event.BROADCAST_ACTION + "]");
+        switch (event.BROADCAST_ACTION) {
+            case Utility.BROADCAST_TYPE.PACKAGE_SUBSCRIBED_SUCCESSFULLY:
+                finish();
+                break;
+        }
+
+    }
 }

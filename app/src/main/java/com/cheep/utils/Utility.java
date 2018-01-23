@@ -266,6 +266,7 @@ public class Utility {
     public static final int ADDITIONAL_REQUEST_START_PAYMENT = 300;
     public static final int REQUEST_START_PAYMENT_FOR_STRATEGIC_PARTNER = 400;
     public static final int REQUEST_CODE_TASK_CREATE_FOR_STRATEGIC_PARTNER = 401;
+    public static final int REQUEST_START_PAYMENT_CHEEP_CARE = 500;
 
     public static final String REMOVE = "remove";
     public static final String ADD = "add";
@@ -517,6 +518,7 @@ public class Utility {
         String SELECTED_PACKAGE_ID = "selectedPackageID";
         String PACKAGE_LIST = "packageList";
         String ACTIVITY_TYPE = "activityType";
+        String ADMIN_SETTING = "adminSetting";
     }
 
 
@@ -1219,6 +1221,7 @@ public class Utility {
         // when pro is booked
         int TASK_PRO_BOOKED = 20;
         int TASK_PAID_SUCCESSFULLY = 21;
+        int PACKAGE_SUBSCRIBED_SUCCESSFULLY = 22;
     }
 
     public interface REQUEST_TYPE {

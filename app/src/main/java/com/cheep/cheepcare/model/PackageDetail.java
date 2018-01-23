@@ -3,11 +3,11 @@ package com.cheep.cheepcare.model;
 import android.support.annotation.Nullable;
 
 import com.cheep.model.AddressModel;
-import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 public class PackageDetail implements Serializable {
 
@@ -24,6 +24,14 @@ public class PackageDetail implements Serializable {
 
     @SerializedName("package_slug")
     public String packageSlug;
+
+    @SerializedName("package_image")
+    public String packageImage;
+
+
+    @SerializedName("live_lable_arr")
+    public List<String> live_lable_arr;
+
     private final static long serialVersionUID = -4061560571461215516L;
     @Nullable
     public ArrayList<PackageOption> packageOptionList;

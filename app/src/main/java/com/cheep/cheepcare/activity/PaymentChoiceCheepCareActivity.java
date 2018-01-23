@@ -19,9 +19,10 @@ import com.cheep.activity.BaseAppCompatActivity;
 import com.cheep.activity.HDFCPaymentGatewayActivity;
 import com.cheep.activity.SendOtpActivity;
 import com.cheep.activity.WithdrawMoneyActivity;
+import com.cheep.cheepcare.model.CheepCarePaymentDataModel;
+import com.cheep.cheepcare.model.CityDetail;
 import com.cheep.databinding.ActivityPaymentChoiceBinding;
 import com.cheep.model.MessageEvent;
-import com.cheep.model.TaskDetailModel;
 import com.cheep.model.UserDetails;
 import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
@@ -49,19 +50,25 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
 
     private static final String TAG = LogUtils.makeLogTag(PaymentChoiceCheepCareActivity.class);
     private ActivityPaymentChoiceBinding mBinding;
-    private String paymentMethod;
     private Map<String, String> mTransactionParams;
-    private String amount;
     public static final int PAYTM_SEND_OTP = 0;
     public static final int PAYTM_ADD_MONEY = 1;
     public static final int PAYTM_WITHDRAW = 2;
+    private String cartDetail = "";
+    private CheepCarePaymentDataModel paymentDataModel;
     private Map<String, Object> mTaskCreationParams;
 
     private int PAYTM_STEP = -1;
+    private String paymentMethod;
+    private double paytmPayableAmount;
+    private CityDetail cityDetail;
 
-    public static void newInstance(Context context, TaskDetailModel taskDetailModel) {
+
+    public static void newInstance(Context context, String cartDetails, CheepCarePaymentDataModel paymentDataModel, CityDetail mCityDetail) {
         Intent intent = new Intent(context, PaymentChoiceCheepCareActivity.class);
-        intent.putExtra(Utility.Extra.DATA, Utility.getJsonStringFromObject(taskDetailModel));
+        intent.putExtra(Utility.Extra.DATA, cartDetails);
+        intent.putExtra(Utility.Extra.DATA_2, Utility.getJsonStringFromObject(paymentDataModel));
+        intent.putExtra(Utility.Extra.DATA_3, Utility.getJsonStringFromObject(mCityDetail));
         context.startActivity(intent);
     }
 
@@ -74,14 +81,19 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
         initiateUI();
         setListeners();
 
-
         // Register and Event Buss to get callback from various payment gateways
         EventBus.getDefault().register(this);
     }
 
     @Override
     protected void initiateUI() {
-        mBinding.rlCashPayment.setVisibility(View.GONE);
+
+        mBinding.llCashPayment.setVisibility(View.GONE);
+        cartDetail = getIntent().getStringExtra(Utility.Extra.DATA);
+        paymentDataModel = (CheepCarePaymentDataModel) Utility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA_2), CheepCarePaymentDataModel.class);
+        cityDetail = (CityDetail) Utility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA_2), CityDetail.class);
+
+        LogUtils.LOGE(TAG, "initiateUI: paymentDataModel \n============\n" + paymentDataModel);
         setupActionbar();
     }
 
@@ -89,7 +101,7 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
 
         // set final payment amount which user going to pay
 
-        mBinding.textTitle.setText(getString(R.string.label_please_pay_x, amount));
+        mBinding.textTitle.setText(getString(R.string.label_please_pay_x, String.valueOf(paymentDataModel.payableAmount)));
 
         setSupportActionBar(mBinding.toolbar);
         ActionBar actionBar = getSupportActionBar();
@@ -120,14 +132,14 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
 
                 switch (PAYTM_STEP) {
                     case PAYTM_SEND_OTP:
-                        SendOtpActivity.newInstance(mContext, true, amount);
+                        SendOtpActivity.newInstance(mContext, true, String.valueOf(paymentDataModel.payableAmount));
                         break;
                     case PAYTM_ADD_MONEY:
-                        AddMoneyActivity.newInstance(mContext, amount, payableAmount, paytmUserDetail.paytmAccessToken,
+                        AddMoneyActivity.newInstance(mContext, String.valueOf(paymentDataModel.payableAmount), paytmPayableAmount, paytmUserDetail.paytmAccessToken,
                                 paytmUserDetail.paytmphoneNumber, paytmUserDetail.paytmCustId, paytmWalletBalance);
                         break;
                     case PAYTM_WITHDRAW:
-                        WithdrawMoneyActivity.newInstance(mContext, amount, payableAmount, paytmUserDetail.paytmAccessToken,
+                        WithdrawMoneyActivity.newInstance(mContext, String.valueOf(paymentDataModel.payableAmount), paytmPayableAmount, paytmUserDetail.paytmAccessToken,
                                 paytmUserDetail.paytmphoneNumber, paytmUserDetail.paytmCustId, paytmWalletBalance, true);
                         break;
                 }
@@ -160,7 +172,7 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
         // = new HashMap<String, Object>();
 
         mTransactionParams = HDFCPaymentUtility.getPaymentTransactionFieldsForCheepCare(
-                PreferenceUtility.getInstance(this).getFCMRegID(), userDetails, String.valueOf(payableAmount));
+                PreferenceUtility.getInstance(this).getFCMRegID(), userDetails, String.valueOf(paymentDataModel.payableAmount));
 
         new HDFCPaymentUtility.AsyncFetchEncryptedString(new HDFCPaymentUtility.EncryptTransactionParamsListener() {
             @Override
@@ -179,7 +191,7 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
                 // if payment is done using insta feature then
                 // post data will be generated like strategic partner feature
                 // call startegic generate hash for payment
-                url = NetworkUtility.WS.GET_PAYMENT_HASH_FOR_STRATEGIC_PARTNER;
+                url = NetworkUtility.WS.GENERATE_HASH_FOR_CHEEPCARE;
                 //Url is based on condition if address id is greater then 0 then it means we need to update the existing address
                 VolleyNetworkRequest mVolleyNetworkRequestForSPList = new VolleyNetworkRequest(url
                         , mCallGenerateHashWSErrorListener
@@ -230,7 +242,7 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
 
                             HDFCPaymentGatewayActivity.newInstance(PaymentChoiceCheepCareActivity.this,
                                     HDFCPaymentUtility.getPaymentUrl(mTransactionParams, jsonObject.optString(NetworkUtility.TAGS.HASH_STRING)),
-                                    Utility.REQUEST_START_PAYMENT);
+                                    Utility.REQUEST_START_PAYMENT_CHEEP_CARE);
 
 
                         }
@@ -259,7 +271,48 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
     };
 
     private void callCreateCheepCarePackageWS(String paymentLog) {
+        LogUtils.LOGE(TAG, "callCreateCheepCarePackageWS: paymentLog \n" + paymentLog);
 
+
+        if (!Utility.isConnected(mContext)) {
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mBinding.getRoot());
+            return;
+        }
+        showProgressDialog();
+
+        UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
+        //Add Header parameters
+
+        Map<String, String> mHeaderParams = new HashMap<>();
+        mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
+        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, userDetails.UserID);
+
+        //Add Params
+        Map<String, String> mParams = new HashMap<>();
+        mParams.put(NetworkUtility.TAGS.TOTAL_AMOUNT, String.valueOf(paymentDataModel.totalAmount));
+        mParams.put(NetworkUtility.TAGS.PROMOCODE, paymentDataModel.promocode);
+        mParams.put(NetworkUtility.TAGS.PROMOCODE_PRICE, String.valueOf(paymentDataModel.promocodePrice));
+        mParams.put(NetworkUtility.TAGS.PAYABLE_AMOUNT, String.valueOf(paymentDataModel.payableAmount));
+        mParams.put(NetworkUtility.TAGS.TAX_AMOUNT, String.valueOf(paymentDataModel.taxAmount));
+        mParams.put(NetworkUtility.TAGS.IS_ANNUALLY, String.valueOf(paymentDataModel.isAnnually));
+        mParams.put(NetworkUtility.TAGS.CARE_CITY_ID, String.valueOf(paymentDataModel.careCityId));
+        mParams.put(NetworkUtility.TAGS.PAYMENT_METHOD, paymentMethod);
+        mParams.put(NetworkUtility.TAGS.PAYMENT_LOG, paymentLog);
+        mParams.put(NetworkUtility.TAGS.DSA_CODE, paymentDataModel.dsaCode);
+        mParams.put(NetworkUtility.TAGS.BUNDLE_DISCOUNT_PERCENT, String.valueOf(paymentDataModel.bundlediscountPercent));
+        mParams.put(NetworkUtility.TAGS.BUNDLE_DISCOUNT_PRICE, String.valueOf(paymentDataModel.bundlediscountPrice));
+        mParams.put(NetworkUtility.TAGS.CART_DETAIL, cartDetail);
+
+        LogUtils.LOGE(TAG, "callBookProAndPayForNormalTaskWS: mParams " + mParams);
+
+        // Url is based on condition if address id is greater then 0 then it means we need to update the existing address
+        VolleyNetworkRequest mVolleyNetworkRequestForSPList = new VolleyNetworkRequest(NetworkUtility.WS.PURCHASE_CARE_PACKAGE
+                , mCallGenerateHashWSErrorListener
+                , mCallBookProForNormalTaskWSResponseListener
+                , mHeaderParams
+                , mParams
+                , null);
+        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequestForSPList);
     }
 
     Response.ErrorListener mCallGenerateHashWSErrorListener = new Response.ErrorListener() {
@@ -268,7 +321,6 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
             hideProgressDialog();
             LogUtils.LOGD(TAG, "onErrorResponse() called with: error = [" + error + "]");
             Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
-
         }
     };
 
@@ -277,7 +329,7 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
-            case Utility.REQUEST_START_PAYMENT:
+            case Utility.REQUEST_START_PAYMENT_CHEEP_CARE:
 //            Toast.makeText(mContext, "OnActivityResult called with resultCode:" + resultCode + ", requestCode:" + requestCode, Toast.LENGTH_SHORT).show();
                 if (resultCode == RESULT_OK) {
                     //success
@@ -329,6 +381,7 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
         // Unregister the listerners you register in OnCreate method
         try {
             Volley.getInstance(PaymentChoiceCheepCareActivity.this).getRequestQueue().cancelAll(NetworkUtility.WS.PAY_TASK_PAYMENT);
+            Volley.getInstance(PaymentChoiceCheepCareActivity.this).getRequestQueue().cancelAll(NetworkUtility.WS.PURCHASE_CARE_PACKAGE);
             EventBus.getDefault().unregister(this);
         } catch (Exception e) {
 
@@ -408,7 +461,7 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
     }
 
     double paytmWalletBalance;
-    private double payableAmount = 0;
+
     private final PaytmUtility.CheckBalanceResponseListener mCheckBalanceResponseListener = new PaytmUtility.CheckBalanceResponseListener() {
         @Override
         public void paytmCheckBalanceSuccessResponse(JSONObject jsonObject) {
@@ -425,11 +478,8 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
                 e.printStackTrace();
             }
 
-            if (amount.contains(Utility.COMMA)) {
-                amount = amount.replace(Utility.COMMA, Utility.EMPTY_STRING);
-            }
-            boolean isLowBalance = paytmWalletBalance < Double.parseDouble(amount);
-            payableAmount = Double.parseDouble(amount) - paytmWalletBalance;
+            boolean isLowBalance = paytmWalletBalance < paymentDataModel.payableAmount;
+            paytmPayableAmount = paymentDataModel.payableAmount - paytmWalletBalance;
             mBinding.tvPaytmBalance.setVisibility(View.VISIBLE);
 
             mBinding.tvPaytmBalance.setText("(" + getString(R.string.rupee_symbol_x, String.valueOf(paytmWalletBalance)) + ")");
@@ -441,7 +491,7 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
                 //TODO: add amount
                 mBinding.tvLowBalancePaytm.setVisibility(View.VISIBLE);
                 mBinding.tvLowBalancePaytm.setText("Low balance. You need " +
-                        getString(R.string.rupee_symbol_x, Utility.getQuotePriceFormatter(String.valueOf(payableAmount))) /*+ "..."*/);
+                        getString(R.string.rupee_symbol_x, Utility.getQuotePriceFormatter(String.valueOf(paytmPayableAmount))) /*+ "..."*/);
                 PAYTM_STEP = PAYTM_ADD_MONEY;
 
             } else {
@@ -509,6 +559,17 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
                 hideProgressDialog();
                 switch (statusCode) {
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
+
+
+                        ManageSubscriptionActivity.newInstance(PaymentChoiceCheepCareActivity.this, cityDetail);
+                        MessageEvent messageEvent = new MessageEvent();
+                        messageEvent.id = cityDetail.id;
+                        messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.PACKAGE_SUBSCRIBED_SUCCESSFULLY;
+
+                        EventBus.getDefault().post(messageEvent);
+
+                        finish();
+
 
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:

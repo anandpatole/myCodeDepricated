@@ -19,6 +19,7 @@
                 android:id="@+id/iv_item_background"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:background="#e1e1e1"
                 android:scaleType="centerCrop"
                 tools:src="@drawable/banner_appliance_care"/>
 
