@@ -9,6 +9,8 @@ import android.databinding.DataBindingUtil;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.CardView;
+import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.LeadingMarginSpan;
@@ -16,6 +18,7 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 
 import com.cheep.R;
 import com.cheep.cheepcare.model.CheepCarePackageModel;
@@ -97,11 +100,13 @@ public class ExpandableBoughtPackagesRecyclerAdapter extends ExpandableRecyclerA
             , final int parentPosition
             , @NonNull CheepCarePackageModel parent) {
 
+        final Context context = parentViewHolder.mBinding.getRoot().getContext();
+
         if (mList.get(parentPosition).subItems != null && mList.get(parentPosition).subItems.size() != 0) {
             parentViewHolder.mBinding.cardView.setContentPadding(0
                     , 0
                     , 0
-                    , (int) Utility.convertDpToPixel(24, parentViewHolder.mBinding.getRoot().getContext()));
+                    , (int) Utility.convertDpToPixel(24, context));
         } else {
             parentViewHolder.mBinding.cardView.setContentPadding(0
                     , 0
@@ -132,7 +137,7 @@ public class ExpandableBoughtPackagesRecyclerAdapter extends ExpandableRecyclerA
                                 parentViewHolder.mBinding.cardView.setContentPadding(0
                                         , 0
                                         , 0
-                                        , (int) Utility.convertDpToPixel(24, parentViewHolder.mBinding.getRoot().getContext()));
+                                        , (int) Utility.convertDpToPixel(24, context));
                             } else {
                                 parentViewHolder.mBinding.cardView.setContentPadding(0
                                         , 0
