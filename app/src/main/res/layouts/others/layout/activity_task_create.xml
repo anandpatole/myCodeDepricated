@@ -139,10 +139,10 @@ asdadasdasdasdadasdasd" />
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
-                android:background="@color/grey_varient_12"
+                android:background="@drawable/bg_selector_898989_blue"
                 android:gravity="center"
                 android:padding="@dimen/scale_10dp"
-                android:text="@string/label_post_it"
+                android:text="@string/label_next"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_size_17sp"
                 android:visibility="gone" />

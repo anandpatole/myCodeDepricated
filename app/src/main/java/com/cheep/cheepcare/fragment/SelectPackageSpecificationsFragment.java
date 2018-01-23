@@ -50,10 +50,6 @@ import static com.cheep.network.NetworkUtility.TAGS.CARE_PACKAGE_ID;
 import static com.cheep.network.NetworkUtility.TAGS.DATA;
 import static com.cheep.network.NetworkUtility.TAGS.PACKAGE_OPTION_DETAILS;
 
-/**
- * Created by pankaj on 12/25/17.
- */
-
 public class SelectPackageSpecificationsFragment extends BaseFragment {
 
     public static final String TAG = SelectPackageSpecificationsFragment.class.getSimpleName();

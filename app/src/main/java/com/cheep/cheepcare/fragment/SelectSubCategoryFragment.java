@@ -1,4 +1,4 @@
-package com.cheep.fragment;
+package com.cheep.cheepcare.fragment;
 
 import android.content.Context;
 import android.databinding.DataBindingUtil;
@@ -15,9 +15,10 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.cheep.R;
 import com.cheep.activity.BaseAppCompatActivity;
-import com.cheep.activity.TaskCreationActivity;
-import com.cheep.adapter.SubServiceRecyclerViewAdapter;
+import com.cheep.cheepcare.activity.TaskCreationCCActivity;
+import com.cheep.cheepcare.adapter.SubServiceUnitAdapter;
 import com.cheep.databinding.FragmentSelectSubserviceBinding;
+import com.cheep.fragment.BaseFragment;
 import com.cheep.model.SubServiceDetailModel;
 import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
@@ -31,6 +32,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static com.cheep.network.NetworkUtility.TAGS.CAT_ID;
@@ -42,9 +44,9 @@ import static com.cheep.network.NetworkUtility.TAGS.CAT_ID;
 public class SelectSubCategoryFragment extends BaseFragment {
     public static final String TAG = SelectSubCategoryFragment.class.getSimpleName();
     private FragmentSelectSubserviceBinding mFragmentSelectSubserviceBinding;
-    private SubServiceRecyclerViewAdapter mSubServiceRecyclerViewAdapter;
+    private SubServiceUnitAdapter mSubServiceUnitAdapter;
     ErrorLoadingHelper errorLoadingHelper;
-    private TaskCreationActivity mTaskCreationActivity;
+    private TaskCreationCCActivity mTaskCreationCCActivity;
     private boolean isVerified = false;
 
     @SuppressWarnings("unused")
@@ -73,18 +75,18 @@ public class SelectSubCategoryFragment extends BaseFragment {
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         Log.d(TAG, "setUserVisibleHint() called with: isVisibleToUser = [" + isVisibleToUser + "]");
-        if (!isVisibleToUser || mTaskCreationActivity == null) {
+        if (!isVisibleToUser || mTaskCreationCCActivity == null) {
             return;
         }
 
-        if (isVerified) {
-            mTaskCreationActivity.setTaskState(TaskCreationActivity.STEP_ONE_VERIFIED);
+        if (!mSubServiceUnitAdapter.getSelectedList().isEmpty()) {
+            mTaskCreationCCActivity.setTaskState(TaskCreationCCActivity.STEP_ONE_VERIFIED);
         } else {
-            mTaskCreationActivity.setTaskState(TaskCreationActivity.STEP_ONE_NORMAL);
+            mTaskCreationCCActivity.setTaskState(TaskCreationCCActivity.STEP_ONE_NORMAL);
         }
 
         // Hide the post task button
-        mTaskCreationActivity.showPostTaskButton(false, false);
+        mTaskCreationCCActivity.showPostTaskButton(true, true);
     }
 
     @Override
@@ -101,10 +103,10 @@ public class SelectSubCategoryFragment extends BaseFragment {
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mContext);
         mFragmentSelectSubserviceBinding.recyclerView.setLayoutManager(linearLayoutManager);
-        mSubServiceRecyclerViewAdapter = new SubServiceRecyclerViewAdapter(mSubServiceListInteractionListener);
-        mFragmentSelectSubserviceBinding.recyclerView.setAdapter(mSubServiceRecyclerViewAdapter);
+        mSubServiceUnitAdapter = new SubServiceUnitAdapter(/*mSubServiceListInteractionListener*/);
+        mFragmentSelectSubserviceBinding.recyclerView.setAdapter(mSubServiceUnitAdapter);
         errorLoadingHelper.showLoading();
-        fetchListOfSubCategory(mTaskCreationActivity.mJobCategoryModel.catId);
+        fetchListOfSubCategory(mTaskCreationCCActivity.mJobCategoryModel.catId);
     }
 
     @Override
@@ -112,38 +114,38 @@ public class SelectSubCategoryFragment extends BaseFragment {
         Log.d(TAG, "setListener() called");
     }
 
-    public interface SubServiceListInteractionListener {
+    /*public interface SubServiceListInteractionListener {
         void onSubCategoryRowItemClicked(SubServiceDetailModel subServiceDetailModel);
     }
 
     private SubServiceListInteractionListener mSubServiceListInteractionListener = new SubServiceListInteractionListener() {
         @Override
         public void onSubCategoryRowItemClicked(SubServiceDetailModel subServiceDetailModel) {
-            mTaskCreationActivity.setSelectedSubService(subServiceDetailModel);
+//            mTaskCreationCCActivity.setSelectedSubService(subServiceDetailModel);
 
             Log.d(TAG, "onSubCategoryRowItemClicked() called with: subServiceDetailModel = [" + subServiceDetailModel.name + "]");
             // Make the status Verified
             isVerified = true;
 
-            //Alert The activity that step one is been verified.
-            mTaskCreationActivity.setTaskState(TaskCreationActivity.STEP_ONE_VERIFIED);
+            //Alert The activity that step one is been varified.
+            mTaskCreationCCActivity.setTaskState(TaskCreationCCActivity.STEP_ONE_VERIFIED);
 
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    mTaskCreationActivity.gotoStep(TaskCreationActivity.STAGE_2);
+                    mTaskCreationCCActivity.gotoStep(TaskCreationCCActivity.STAGE_2);
                 }
             }, 500);
 
         }
-    };
+    };*/
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         BaseAppCompatActivity activity = (BaseAppCompatActivity) context;
-        if (activity instanceof TaskCreationActivity) {
-            mTaskCreationActivity = (TaskCreationActivity) activity;
+        if (activity instanceof TaskCreationCCActivity) {
+            mTaskCreationCCActivity = (TaskCreationCCActivity) activity;
         }
     }
 
@@ -191,7 +193,7 @@ public class SelectSubCategoryFragment extends BaseFragment {
                 switch (statusCode) {
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
                         ArrayList<SubServiceDetailModel> list = Utility.getObjectListFromJsonString(jsonObject.optString(NetworkUtility.TAGS.DATA), SubServiceDetailModel[].class);
-                        mSubServiceRecyclerViewAdapter.addList(list, getString(R.string.label_other_sub_service));
+                        mSubServiceUnitAdapter.addList(list, getString(R.string.label_other_sub_service));
                         errorLoadingHelper.success();
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
@@ -240,12 +242,13 @@ public class SelectSubCategoryFragment extends BaseFragment {
     }
 
     /**
-     * This method would return whether the stage is verified or not
+     * This method would return the selected list by getting
+     * from adapter
      *
      * @return
      */
-    public boolean isVerified() {
-        return isVerified;
+    public List<SubServiceDetailModel> getSelectedSubServices() {
+        return mSubServiceUnitAdapter.getSelectedList();
     }
 
 }
