@@ -10,7 +10,7 @@
         android:layout_marginLeft="@dimen/scale_8dp"
         android:layout_marginRight="@dimen/scale_8dp"
         android:layout_marginTop="-16dp"
-        app:cardElevation="@dimen/scale_4dp">
+        app:cardElevation="@dimen/scale_14dp">
 
         <LinearLayout
             android:id="@+id/front_layout"

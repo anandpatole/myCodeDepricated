@@ -38,7 +38,7 @@ import java.util.List;
 
 public class PackageBundlingAdapter extends LoadMoreRecyclerAdapter<PackageBundlingAdapter.PackageViewHolder> {
 
-    private static final String TAG = "PackageBundlingAdapter";
+    private static final String TAG = PackageBundlingAdapter.class.getSimpleName();
     private final PackageItemClickListener mListener;
     private List<PackageDetail> mList = new ArrayList<>();
 
