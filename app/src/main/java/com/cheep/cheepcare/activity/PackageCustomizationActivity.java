@@ -406,7 +406,7 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
                 for (PackageDetail detail : mPackageList) {
                     if (detail.id.equalsIgnoreCase(mPackageId)) {
                         detail.isSelected = true;
-                        detail.mSelectedAddress = fragment.mSelectedAddress;
+                        detail.mSelectedAddressList.add(fragment.mSelectedAddress);
                     }
                     if (detail.packageOptionList != null && detail.isSelected) {
                         cartCount++;
@@ -466,22 +466,22 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
                     JSONObject addressObject = new JSONObject();
                     int addressId;
                     try {
-                        addressId = Integer.parseInt(detail.mSelectedAddress.address_id);
+                        addressId = Integer.parseInt(detail.mSelectedAddressList.get(0).address_id);
                     } catch (Exception e) {
                         addressId = 0;
                     }
                     if (addressId <= 0) {
-                        addressObject.put(NetworkUtility.TAGS.ADDRESS, detail.mSelectedAddress.address);
-                        addressObject.put(NetworkUtility.TAGS.ADDRESS_INITIALS, detail.mSelectedAddress.address_initials);
-                        addressObject.put(NetworkUtility.TAGS.CATEGORY, detail.mSelectedAddress.category);
-                        addressObject.put(NetworkUtility.TAGS.LAT, detail.mSelectedAddress.lat);
-                        addressObject.put(NetworkUtility.TAGS.LNG, detail.mSelectedAddress.lng);
-                        addressObject.put(NetworkUtility.TAGS.COUNTRY, detail.mSelectedAddress.countryName);
-                        addressObject.put(NetworkUtility.TAGS.STATE, detail.mSelectedAddress.stateName);
-                        addressObject.put(NetworkUtility.TAGS.CITY_NAME, detail.mSelectedAddress.cityName);
-                        addressObject.put(NetworkUtility.TAGS.LANDMARK, detail.mSelectedAddress.landmark);
-                        addressObject.put(NetworkUtility.TAGS.PINCODE, detail.mSelectedAddress.pincode);
-                        addressObject.put(NetworkUtility.TAGS.NICKNAME, detail.mSelectedAddress.nickname);
+                        addressObject.put(NetworkUtility.TAGS.ADDRESS, detail.mSelectedAddressList.get(0).address);
+                        addressObject.put(NetworkUtility.TAGS.ADDRESS_INITIALS, detail.mSelectedAddressList.get(0).address_initials);
+                        addressObject.put(NetworkUtility.TAGS.CATEGORY, detail.mSelectedAddressList.get(0).category);
+                        addressObject.put(NetworkUtility.TAGS.LAT, detail.mSelectedAddressList.get(0).lat);
+                        addressObject.put(NetworkUtility.TAGS.LNG, detail.mSelectedAddressList.get(0).lng);
+                        addressObject.put(NetworkUtility.TAGS.COUNTRY, detail.mSelectedAddressList.get(0).countryName);
+                        addressObject.put(NetworkUtility.TAGS.STATE, detail.mSelectedAddressList.get(0).stateName);
+                        addressObject.put(NetworkUtility.TAGS.CITY_NAME, detail.mSelectedAddressList.get(0).cityName);
+                        addressObject.put(NetworkUtility.TAGS.LANDMARK, detail.mSelectedAddressList.get(0).landmark);
+                        addressObject.put(NetworkUtility.TAGS.PINCODE, detail.mSelectedAddressList.get(0).pincode);
+                        addressObject.put(NetworkUtility.TAGS.NICKNAME, detail.mSelectedAddressList.get(0).nickname);
                     } else {
                         addressObject.put(NetworkUtility.TAGS.ADDRESS_ID, addressId);
                     }

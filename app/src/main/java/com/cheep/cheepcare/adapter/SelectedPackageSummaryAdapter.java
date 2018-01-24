@@ -62,8 +62,10 @@ public class SelectedPackageSummaryAdapter extends LoadMoreRecyclerAdapter<Selec
         spannableString1 = Utility.getCheepCarePackageMonthlyPrice(spannableString1, spannableString1.length() - 3, spannableString1.length());
 
         // set address category icon
-        holder.mBinding.ivAddressIcon.setImageResource(Utility.getAddressCategoryBlueIcon(model.mSelectedAddress.category));
-        holder.mBinding.tvAddress.setText(model.mSelectedAddress.address_initials + ", " + model.mSelectedAddress.address);
+        if (model.mSelectedAddressList != null && !model.mSelectedAddressList.isEmpty()) {
+            holder.mBinding.ivAddressIcon.setImageResource(Utility.getAddressCategoryBlueIcon(model.mSelectedAddressList.get(0).category));
+            holder.mBinding.tvAddress.setText(model.mSelectedAddressList.get(0).address_initials + ", " + model.mSelectedAddressList.get(0).address);
+        }
 
         holder.mBinding.ivIsAddressSelected.setSelected(model.isSelected);
 
