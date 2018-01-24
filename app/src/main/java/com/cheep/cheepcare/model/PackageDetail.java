@@ -3,6 +3,7 @@ package com.cheep.cheepcare.model;
 import android.support.annotation.Nullable;
 
 import com.cheep.model.AddressModel;
+import com.cheep.model.JobCategoryModel;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
@@ -36,8 +37,14 @@ public class PackageDetail implements Serializable {
     @Nullable
     public ArrayList<PackageOption> packageOptionList;
     public boolean isSelected = false;
+
     @Nullable
-    public AddressModel mSelectedAddress;
+    @SerializedName("address")
+    public List<AddressModel> mSelectedAddressList;
+
+    @Nullable
+    @SerializedName("categoryBannerData")
+    public List<JobCategoryModel> categoryList;
     public int rowType = 0;
 
     public double monthlyPrice = 0;

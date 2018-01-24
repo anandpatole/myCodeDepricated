@@ -209,7 +209,7 @@ public class PackageBundlingFragment extends BaseFragment {
                             // strategic partner pro id for given location
                             String city_id = jsonData.optString(NetworkUtility.TAGS.CITY_ID);
                             if (mPackageCustomizationActivity.mCityDetail.id.equalsIgnoreCase(city_id)) {
-                                mPackageAdapter.getList().get(adapterPosition).mSelectedAddress = model;
+                                mPackageAdapter.getList().get(adapterPosition).mSelectedAddressList.add(model);
                                 mPackageAdapter.notifyItemChanged(adapterPosition);
                             } else {
                                 Utility.showToast(mPackageCustomizationActivity, getString(R.string.validation_message_cheep_care_address,mPackageCustomizationActivity.mCityDetail.cityName));

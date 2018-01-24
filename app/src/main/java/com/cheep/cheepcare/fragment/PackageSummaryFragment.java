@@ -150,7 +150,7 @@ public class PackageSummaryFragment extends BaseFragment {
                 for (PackageDetail detail : mPackageCustomizationActivity.getPackageList())
                     if (detail.id.equalsIgnoreCase(packageModel.id)) {
                         detail.isSelected = false;
-                        detail.mSelectedAddress = null;
+                        detail.mSelectedAddressList = null;
                         detail.packageOptionList = null;
                         mPackageAdapter.getList().remove(position);
                         calculateTotalPrice();

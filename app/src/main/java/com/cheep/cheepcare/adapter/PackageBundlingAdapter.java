@@ -140,15 +140,14 @@ public class PackageBundlingAdapter extends LoadMoreRecyclerAdapter<PackageBundl
                 holder.mRowSelectedBinding.tvDescription.setText(model.subtitle);
                 holder.mRowSelectedBinding.tvTitle.setText(model.title);
 
-                if (model.mSelectedAddress != null) {
-                    if (!TextUtils.isEmpty(model.mSelectedAddress.nickname))
-                        holder.mRowSelectedBinding.tvAddressNickname.setText(model.mSelectedAddress.nickname);
+                if (model.mSelectedAddressList != null && !model.mSelectedAddressList.isEmpty()) {
+                    if (!TextUtils.isEmpty(model.mSelectedAddressList.get(0).nickname))
+                        holder.mRowSelectedBinding.tvAddressNickname.setText(model.mSelectedAddressList.get(0).nickname);
                     else
-                        holder.mRowSelectedBinding.tvAddressNickname.setText(Utility.getAddressCategoryString(model.mSelectedAddress.category));
-                    holder.mRowSelectedBinding.ivAddressIcon.setImageResource(Utility.getAddressCategoryBlueIcon(model.mSelectedAddress.category));
+                        holder.mRowSelectedBinding.tvAddressNickname.setText(Utility.getAddressCategoryString(model.mSelectedAddressList.get(0).category));
+                    holder.mRowSelectedBinding.ivAddressIcon.setImageResource(Utility.getAddressCategoryBlueIcon(model.mSelectedAddressList.get(0).category));
+                    holder.mRowSelectedBinding.tvAddress.setText(model.mSelectedAddressList.get(0).address_initials + ", " + model.mSelectedAddressList.get(0).address);
                 }
-                holder.mRowSelectedBinding.tvAddress.setText(model.mSelectedAddress.address_initials + ", " + model.mSelectedAddress.address);
-
 
                 holder.mRowSelectedBinding.getRoot().setOnClickListener(new View.OnClickListener() {
                     @Override
