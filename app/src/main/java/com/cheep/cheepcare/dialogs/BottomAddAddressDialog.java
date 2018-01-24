@@ -434,7 +434,7 @@ public class BottomAddAddressDialog {
                             addressModel.lng = String.valueOf(mLocationIno.lng);
 
 
-                            mParams = NetworkUtility.getAddressParamHashmap(mParams, addressModel);
+                            mParams = NetworkUtility.addGuestAddressParams(mParams, addressModel);
 
                             Utility.hideKeyboard(mContext);
                             //Url is based on condition if address id is greater then 0 then it means we need to update the existing address

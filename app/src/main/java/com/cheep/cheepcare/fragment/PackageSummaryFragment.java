@@ -420,11 +420,11 @@ public class PackageSummaryFragment extends BaseFragment {
         Map<String, Object> mParams = new HashMap<>();
 
 
-        mParams.put(NetworkUtility.TAGS.PACKAGE_CITY_ID, mPackageCustomizationActivity.mCityDetail.id);
+        mParams.put(NetworkUtility.TAGS.CARE_CITY_ID, mPackageCustomizationActivity.mCityDetail.id);
         mParams.put(NetworkUtility.TAGS.CHEEP_CARE_CODE, cheepCode);
-        mParams.put(NetworkUtility.TAGS.PACKAGE_ID, mPackageAdapter.getList().get(0).id);
-
-        //Url is based on condition if address id is greater then 0 then it means we need to update the existing address
+        mParams.put(NetworkUtility.TAGS.CARE_PACKAGE_ID, mPackageAdapter.getList().get(0).id);
+        //Url is bas
+        // ed on condition if address id is greater then 0 then it means we need to update the existing address
         String url = NetworkUtility.WS.CHECK_CHEEP_CARE_CODE;
         VolleyNetworkRequest mVolleyNetworkRequestForSPList = new VolleyNetworkRequest(url
                 , mCallValidateCheepCodeWSErrorListener

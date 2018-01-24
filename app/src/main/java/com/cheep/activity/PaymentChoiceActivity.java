@@ -970,14 +970,8 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
             mParams.put(NetworkUtility.TAGS.ADDRESS_ID, mSelectedAddressModel.address_id);
         } else {
             // In case its negative then provide other address information
-            mParams.put(NetworkUtility.TAGS.ADDRESS_INITIALS, mSelectedAddressModel.address_initials);
-            mParams.put(NetworkUtility.TAGS.ADDRESS, mSelectedAddressModel.address);
-            mParams.put(NetworkUtility.TAGS.CATEGORY, mSelectedAddressModel.category);
-            mParams.put(NetworkUtility.TAGS.LAT, mSelectedAddressModel.lat);
-            mParams.put(NetworkUtility.TAGS.LNG, mSelectedAddressModel.lng);
-            mParams.put(NetworkUtility.TAGS.CITY_NAME, mSelectedAddressModel.cityName);
-            mParams.put(NetworkUtility.TAGS.COUNTRY, mSelectedAddressModel.countryName);
-            mParams.put(NetworkUtility.TAGS.STATE, mSelectedAddressModel.stateName);
+            NetworkUtility.addGuestAddressParams(mTaskCreationParams, mSelectedAddressModel);
+
         }
         mParams.put(NetworkUtility.TAGS.CITY_ID, userDetails.CityID);
         mParams.put(NetworkUtility.TAGS.CAT_ID, taskDetailModel.categoryId);
@@ -1028,14 +1022,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
             mTaskCreationParams.put(NetworkUtility.TAGS.ADDRESS_ID, mSelectedAddressModel.address_id);
         } else {
             // In case its nagative then provide other address information
-            mTaskCreationParams.put(NetworkUtility.TAGS.ADDRESS_INITIALS, mSelectedAddressModel.address_initials);
-            mTaskCreationParams.put(NetworkUtility.TAGS.ADDRESS, mSelectedAddressModel.address);
-            mTaskCreationParams.put(NetworkUtility.TAGS.CATEGORY, mSelectedAddressModel.category);
-            mTaskCreationParams.put(NetworkUtility.TAGS.LAT, mSelectedAddressModel.lat);
-            mTaskCreationParams.put(NetworkUtility.TAGS.LNG, mSelectedAddressModel.lng);
-            mTaskCreationParams.put(NetworkUtility.TAGS.CITY_NAME, mSelectedAddressModel.cityName);
-            mTaskCreationParams.put(NetworkUtility.TAGS.COUNTRY, mSelectedAddressModel.countryName);
-            mTaskCreationParams.put(NetworkUtility.TAGS.STATE, mSelectedAddressModel.stateName);
+            NetworkUtility.addGuestAddressParams(mTaskCreationParams, mSelectedAddressModel);
         }
         mTaskCreationParams.put(NetworkUtility.TAGS.CITY_ID, userDetails.CityID);
         mTaskCreationParams.put(NetworkUtility.TAGS.CAT_ID, taskDetailModel.categoryId);
@@ -1155,20 +1142,15 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
         LogUtils.LOGE(TAG, "gmt time " + String.valueOf(superCalendar.getTimeInMillis()));
         LogUtils.LOGE(TAG, "Payment method type" + String.valueOf(superCalendar.getTimeInMillis()));
 
-        Map<String, String> mParams = new HashMap<>();
+        Map<String, Object> mParams = new HashMap<>();
         if (mSelectedAddressModel != null)
             if (Integer.parseInt(mSelectedAddressModel.address_id) > 0) {
                 mParams.put(NetworkUtility.TAGS.ADDRESS_ID, mSelectedAddressModel.address_id);
                 mParams.put(NetworkUtility.TAGS.ADDRESS_ID, userDetails.CityID);
             } else {
-                mParams.put(NetworkUtility.TAGS.ADDRESS_INITIALS, mSelectedAddressModel.address_initials);
-                mParams.put(NetworkUtility.TAGS.ADDRESS, mSelectedAddressModel.address);
-                mParams.put(NetworkUtility.TAGS.CATEGORY, mSelectedAddressModel.category);
-                mParams.put(NetworkUtility.TAGS.LAT, mSelectedAddressModel.lat);
-                mParams.put(NetworkUtility.TAGS.LNG, mSelectedAddressModel.lng);
-                mParams.put(NetworkUtility.TAGS.CITY_NAME, mSelectedAddressModel.cityName);
-                mParams.put(NetworkUtility.TAGS.COUNTRY, mSelectedAddressModel.countryName);
-                mParams.put(NetworkUtility.TAGS.STATE, mSelectedAddressModel.stateName);
+
+                mParams = NetworkUtility.addGuestAddressParams(mParams, mSelectedAddressModel);
+
             }
 
         mParams.put(NetworkUtility.TAGS.CAT_ID, taskDetailModel.categoryId);
@@ -1220,14 +1202,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
              public String lat;
              public String lng;
              */
-                mTaskCreationParams.put(NetworkUtility.TAGS.ADDRESS_INITIALS, mSelectedAddressModel.address_initials);
-                mTaskCreationParams.put(NetworkUtility.TAGS.ADDRESS, mSelectedAddressModel.address);
-                mTaskCreationParams.put(NetworkUtility.TAGS.CATEGORY, mSelectedAddressModel.category);
-                mTaskCreationParams.put(NetworkUtility.TAGS.LAT, mSelectedAddressModel.lat);
-                mTaskCreationParams.put(NetworkUtility.TAGS.LNG, mSelectedAddressModel.lng);
-                mTaskCreationParams.put(NetworkUtility.TAGS.CITY_NAME, mSelectedAddressModel.cityName);
-                mTaskCreationParams.put(NetworkUtility.TAGS.COUNTRY, mSelectedAddressModel.countryName);
-                mTaskCreationParams.put(NetworkUtility.TAGS.STATE, mSelectedAddressModel.stateName);
+           mTaskCreationParams =     NetworkUtility.addGuestAddressParams(mTaskCreationParams, mSelectedAddressModel);
             }
         mTaskCreationParams.put(NetworkUtility.TAGS.CAT_ID, taskDetailModel.categoryId);
         mTaskCreationParams.put(NetworkUtility.TAGS.START_DATETIME, taskDetailModel.taskStartdate);

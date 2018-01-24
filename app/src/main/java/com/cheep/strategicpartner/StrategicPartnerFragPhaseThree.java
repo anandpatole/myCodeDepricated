@@ -114,7 +114,7 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
     @Override
     public void initiateUI() {
         LogUtils.LOGD(TAG, "initiateUI() called");
-        mFragmentStrategicPartnerPhaseThreeBinding.textDescPayNow.setText(getString(R.string.description_pay_now)+ " " +new String(Character.toChars(0x1F499)) );
+        mFragmentStrategicPartnerPhaseThreeBinding.textDescPayNow.setText(getString(R.string.description_pay_now) + " " + new String(Character.toChars(0x1F499)));
 
         mFragmentStrategicPartnerPhaseThreeBinding.recycleSelectedService.setLayoutManager(new LinearLayoutManager(mStrategicPartnerTaskCreationAct));
         mFragmentStrategicPartnerPhaseThreeBinding.recycleSelectedService.setNestedScrollingEnabled(false);
@@ -200,6 +200,15 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
             @Override
             public void onClick(View view) {
                 mStrategicPartnerTaskCreationAct.isPayNow = true;
+                if (!Utility.isConnected(mContext)) {
+                    Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mFragmentStrategicPartnerPhaseThreeBinding.getRoot());
+                    return;
+                }
+
+                if (PreferenceUtility.getInstance(mContext).getUserDetails() == null) {
+                    LoginActivity.newInstance(mContext);
+                    return;
+                }
 
                 TaskDetailModel taskDetailModel = new TaskDetailModel();
                 taskDetailModel.mQuesList = mStrategicPartnerTaskCreationAct.getQuestionsList();
@@ -217,7 +226,7 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
                 taskDetailModel.quoteAmountStrategicPartner = mStrategicPartnerTaskCreationAct.totalOfBasePrice;
                 taskDetailModel.cheepCode = cheepCode;
                 taskDetailModel.taskDiscountAmount = promocode_price;
-                taskDetailModel.taskStatus= Utility.TASK_STATUS.PENDING;
+                taskDetailModel.taskStatus = Utility.TASK_STATUS.PENDING;
                 taskDetailModel.taskPaidAmount = TextUtils.isEmpty(taskDetailModel.cheepCode) ? mStrategicPartnerTaskCreationAct.totalOfGSTPrice
                         : payableAmount;
 
@@ -346,14 +355,7 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
             addressId = 0;
         }
         if (addressId <= 0) {
-            mParams.put(NetworkUtility.TAGS.ADDRESS, mStrategicPartnerTaskCreationAct.mSelectedAddressModel.address);
-            mParams.put(NetworkUtility.TAGS.ADDRESS_INITIALS, mStrategicPartnerTaskCreationAct.mSelectedAddressModel.address_initials);
-            mParams.put(NetworkUtility.TAGS.CATEGORY, mStrategicPartnerTaskCreationAct.mSelectedAddressModel.category);
-            mParams.put(NetworkUtility.TAGS.LAT, mStrategicPartnerTaskCreationAct.mSelectedAddressModel.lat);
-            mParams.put(NetworkUtility.TAGS.LNG, mStrategicPartnerTaskCreationAct.mSelectedAddressModel.lng);
-            mParams.put(NetworkUtility.TAGS.COUNTRY, mStrategicPartnerTaskCreationAct.mSelectedAddressModel.countryName);
-            mParams.put(NetworkUtility.TAGS.STATE, mStrategicPartnerTaskCreationAct.mSelectedAddressModel.stateName);
-            mParams.put(NetworkUtility.TAGS.CITY_NAME, mStrategicPartnerTaskCreationAct.mSelectedAddressModel.cityName);
+            NetworkUtility.addGuestAddressParams(mTaskCreationParams, mStrategicPartnerTaskCreationAct.mSelectedAddressModel);
         } else {
             mParams.put(NetworkUtility.TAGS.ADDRESS_ID, addressId);
         }
@@ -555,20 +557,13 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
         LogUtils.LOGE(TAG, "gmt time " + String.valueOf(superCalendar.getTimeInMillis()));
         LogUtils.LOGE(TAG, "Payment method type" + String.valueOf(superCalendar.getTimeInMillis()));
 
-        Map<String, String> mParams = new HashMap<>();
+        Map<String, Object> mParams = new HashMap<>();
         if (mStrategicPartnerTaskCreationAct.mSelectedAddressModel != null)
             if (Integer.parseInt(mStrategicPartnerTaskCreationAct.mSelectedAddressModel.address_id) > 0) {
                 mParams.put(NetworkUtility.TAGS.ADDRESS_ID, mStrategicPartnerTaskCreationAct.mSelectedAddressModel.address_id);
                 mParams.put(NetworkUtility.TAGS.ADDRESS_ID, userDetails.CityID);
             } else {
-                mParams.put(NetworkUtility.TAGS.ADDRESS_INITIALS, mStrategicPartnerTaskCreationAct.mSelectedAddressModel.address_initials);
-                mParams.put(NetworkUtility.TAGS.ADDRESS, mStrategicPartnerTaskCreationAct.mSelectedAddressModel.address);
-                mParams.put(NetworkUtility.TAGS.CATEGORY, mStrategicPartnerTaskCreationAct.mSelectedAddressModel.category);
-                mParams.put(NetworkUtility.TAGS.LAT, mStrategicPartnerTaskCreationAct.mSelectedAddressModel.lat);
-                mParams.put(NetworkUtility.TAGS.LNG, mStrategicPartnerTaskCreationAct.mSelectedAddressModel.lng);
-                mParams.put(NetworkUtility.TAGS.CITY_NAME, mStrategicPartnerTaskCreationAct.mSelectedAddressModel.cityName);
-                mParams.put(NetworkUtility.TAGS.COUNTRY, mStrategicPartnerTaskCreationAct.mSelectedAddressModel.countryName);
-                mParams.put(NetworkUtility.TAGS.STATE, mStrategicPartnerTaskCreationAct.mSelectedAddressModel.stateName);
+                mParams = NetworkUtility.addGuestAddressParams(mParams, mStrategicPartnerTaskCreationAct.mSelectedAddressModel);
             }
 
         mParams.put(NetworkUtility.TAGS.CAT_ID, mStrategicPartnerTaskCreationAct.mBannerImageModel.cat_id);
@@ -615,14 +610,7 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
              public String lat;
              public String lng;
              */
-                mTaskCreationParams.put(NetworkUtility.TAGS.ADDRESS_INITIALS, mStrategicPartnerTaskCreationAct.mSelectedAddressModel.address_initials);
-                mTaskCreationParams.put(NetworkUtility.TAGS.ADDRESS, mStrategicPartnerTaskCreationAct.mSelectedAddressModel.address);
-                mTaskCreationParams.put(NetworkUtility.TAGS.CATEGORY, mStrategicPartnerTaskCreationAct.mSelectedAddressModel.category);
-                mTaskCreationParams.put(NetworkUtility.TAGS.LAT, mStrategicPartnerTaskCreationAct.mSelectedAddressModel.lat);
-                mTaskCreationParams.put(NetworkUtility.TAGS.LNG, mStrategicPartnerTaskCreationAct.mSelectedAddressModel.lng);
-                mTaskCreationParams.put(NetworkUtility.TAGS.CITY_NAME, mStrategicPartnerTaskCreationAct.mSelectedAddressModel.cityName);
-                mTaskCreationParams.put(NetworkUtility.TAGS.COUNTRY, mStrategicPartnerTaskCreationAct.mSelectedAddressModel.countryName);
-                mTaskCreationParams.put(NetworkUtility.TAGS.STATE, mStrategicPartnerTaskCreationAct.mSelectedAddressModel.stateName);
+                mTaskCreationParams = NetworkUtility.addGuestAddressParams(mTaskCreationParams, mStrategicPartnerTaskCreationAct.mSelectedAddressModel);
             }
         mTaskCreationParams.put(NetworkUtility.TAGS.CAT_ID, mStrategicPartnerTaskCreationAct.mBannerImageModel.cat_id);
         mTaskCreationParams.put(NetworkUtility.TAGS.START_DATETIME, start_datetime);

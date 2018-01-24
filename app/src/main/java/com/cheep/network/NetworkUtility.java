@@ -420,9 +420,7 @@ public class NetworkUtility {
         String PINCODE = "pincode";
         String NICKNAME = "nickname";
         String PACKAGE_OPTION_DETAILS = "package_option_details";
-        String PACKAGE_CITY_ID = "package_city_id";
-        String CHEEP_CARE_CODE = "cheepcarecode";
-        String PACKAGE_ID = "package_id";
+        String  CHEEP_CARE_CODE = "cheepcarecode";
         String DISCOUNT = "discount";
         String ADMIN_SETTING = "admin_setting";
         String GST_RATE = "GST_RATE";
@@ -431,11 +429,11 @@ public class NetworkUtility {
         String PROMOCODE = "promocode";
         String TAX_AMOUNT = "tax_amount";
         String IS_ANNUALLY = "is_annually";
-        String CARE_CITY_ID ="care_city_id";
-        String DSA_CODE ="dsaCode";
-        String BUNDLE_DISCOUNT_PERCENT ="bundlediscount_percent";
-        String BUNDLE_DISCOUNT_PRICE ="bundlediscount_price";
-        String CART_DETAIL ="cart_detail";
+        String CARE_CITY_ID = "care_city_id";
+        String DSA_CODE = "dsaCode";
+        String BUNDLE_DISCOUNT_PERCENT = "bundlediscount_percent";
+        String BUNDLE_DISCOUNT_PRICE = "bundlediscount_price";
+        String CART_DETAIL = "cart_detail";
 
         interface VERSION_CHANGE_TYPE {
             int NORMAL = 0;
@@ -551,23 +549,19 @@ public class NetworkUtility {
         String APPLIANCE_CARE = "appliancecare";
     }
 
-    public static Map<String, Object> getAddressParamHashmap(Map<String, Object> mParams, AddressModel model) {
 
-        mParams.put(NetworkUtility.TAGS.CATEGORY, model.category);
-        mParams.put(NetworkUtility.TAGS.ADDRESS, model.address);
-        mParams.put(NetworkUtility.TAGS.ADDRESS_INITIALS, model.address_initials);
-        mParams.put(NetworkUtility.TAGS.LAT, model.lat);
-        mParams.put(NetworkUtility.TAGS.LNG, model.lng);
-        mParams.put(NetworkUtility.TAGS.COUNTRY, model.countryName);
-        mParams.put(NetworkUtility.TAGS.STATE, model.stateName);
-        mParams.put(NetworkUtility.TAGS.CITY_NAME, model.cityName);
-        mParams.put(NetworkUtility.TAGS.LANDMARK, model.landmark);
-        mParams.put(NetworkUtility.TAGS.NICKNAME, model.nickname);
-        mParams.put(NetworkUtility.TAGS.PINCODE, model.pincode);
-
-        return mParams;
+    public static Map<String, Object> addGuestAddressParams(Map<String, Object> mParams, AddressModel mSelectedAddressModelForInsta) {
+        mParams.put(NetworkUtility.TAGS.ADDRESS_INITIALS, mSelectedAddressModelForInsta.address_initials);
+        mParams.put(NetworkUtility.TAGS.ADDRESS, mSelectedAddressModelForInsta.address);
+        mParams.put(NetworkUtility.TAGS.CATEGORY, mSelectedAddressModelForInsta.category);
+        mParams.put(NetworkUtility.TAGS.LAT, mSelectedAddressModelForInsta.lat);
+        mParams.put(NetworkUtility.TAGS.LNG, mSelectedAddressModelForInsta.lng);
+        mParams.put(NetworkUtility.TAGS.CITY_NAME, mSelectedAddressModelForInsta.cityName);
+        mParams.put(NetworkUtility.TAGS.COUNTRY, mSelectedAddressModelForInsta.countryName);
+        mParams.put(NetworkUtility.TAGS.STATE, mSelectedAddressModelForInsta.stateName);
+        mParams.put(NetworkUtility.TAGS.LANDMARK, mSelectedAddressModelForInsta.landmark);
+        mParams.put(NetworkUtility.TAGS.NICKNAME, mSelectedAddressModelForInsta.nickname);
+        mParams.put(NetworkUtility.TAGS.PINCODE, mSelectedAddressModelForInsta.pincode);   return mParams;
     }
-
-
 }
 

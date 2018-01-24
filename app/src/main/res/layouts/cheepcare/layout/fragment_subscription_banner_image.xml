@@ -12,10 +12,10 @@
             android:id="@+id/img_cover"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@color/light_grey_color_1"
             android:orientation="vertical"
             android:scaleType="fitXY"
-            tools:ignore="ContentDescription"
-            tools:src="@drawable/banner_mumbai"/>
+            tools:ignore="ContentDescription"/>
 
         <ProgressBar
             android:id="@+id/progress"

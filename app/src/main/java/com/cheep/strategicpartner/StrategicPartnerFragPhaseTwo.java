@@ -1236,14 +1236,8 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment implements Reques
              public String lat;
              public String lng;
              */
-            mParams.put(NetworkUtility.TAGS.ADDRESS_INITIALS, model.address_initials);
-            mParams.put(NetworkUtility.TAGS.ADDRESS, model.address);
-            mParams.put(NetworkUtility.TAGS.CATEGORY, model.category);
-            mParams.put(NetworkUtility.TAGS.LAT, model.lat);
-            mParams.put(NetworkUtility.TAGS.LNG, model.lng);
-            mParams.put(NetworkUtility.TAGS.CITY_NAME, model.cityName);
-            mParams.put(NetworkUtility.TAGS.COUNTRY, model.countryName);
-            mParams.put(NetworkUtility.TAGS.STATE, model.stateName);
+           mParams = NetworkUtility.addGuestAddressParams(mParams, model);
+
         } else {
             mParams.put(NetworkUtility.TAGS.ADDRESS_ID, model.address_id);
         }
