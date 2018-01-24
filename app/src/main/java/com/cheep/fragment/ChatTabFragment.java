@@ -127,7 +127,7 @@ public class ChatTabFragment extends BaseFragment {
         UserDetails mUserDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
 
         if (mUserDetails != null) {
-            formattedSenderId = FirebaseUtils.getPrefixUserId(mUserDetails.UserID);
+            formattedSenderId = FirebaseUtils.getPrefixUserId(mUserDetails.userID);
         }
     }
 

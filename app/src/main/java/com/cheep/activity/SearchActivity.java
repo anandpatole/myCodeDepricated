@@ -75,8 +75,8 @@ public class SearchActivity extends BaseAppCompatActivity implements SearchAdapt
         UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
 
         //Setting search placeholder
-        if (userDetails != null && TextUtils.isEmpty(userDetails.UserName) == false && userDetails.UserName.trim().length() > 1) {
-            String name = userDetails.UserName.substring(0, 1).toUpperCase() + userDetails.UserName.substring(1);
+        if (userDetails != null && TextUtils.isEmpty(userDetails.userName) == false && userDetails.userName.trim().length() > 1) {
+            String name = userDetails.userName.substring(0, 1).toUpperCase() + userDetails.userName.substring(1);
             //Used to get only first word, e.g "Pankaj" from "pankaj sharma"
             mActivitySearchBinding.editSearch.setHint(getString(R.string.hint_search_placeholder, name));
 //            mActivitySearchBinding.editSearch.setHint(getString(R.string.hint_search_placeholder, name.split(" ")[0]));
@@ -85,7 +85,7 @@ public class SearchActivity extends BaseAppCompatActivity implements SearchAdapt
         }
 
 
-//        mActivitySearchBinding.editSearch.setHint(getString(R.string.hint_search_placeholder, userDetails.UserName));
+//        mActivitySearchBinding.editSearch.setHint(getString(R.string.hint_search_placeholder, userDetails.userName));
 
         mActivitySearchBinding.editSearch.postDelayed(new Runnable() {
             @Override

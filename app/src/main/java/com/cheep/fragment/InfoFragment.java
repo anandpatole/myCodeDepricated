@@ -149,7 +149,7 @@ public class InfoFragment extends BaseFragment {
 
         //Checking if user is logged in then send userid because this fragment also opens from SignupActivity->(InfoActivity)
         if (PreferenceUtility.getInstance(mContext).getUserDetails() != null) {
-            mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
+            mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().userID);
         }
 
         //Checking if new XAPI Key is not null then send that else send default apk key from BuildConfig

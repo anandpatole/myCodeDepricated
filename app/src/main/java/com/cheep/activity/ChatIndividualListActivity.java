@@ -143,7 +143,7 @@ public class ChatIndividualListActivity extends BaseAppCompatActivity implements
         }
         UserDetails mUserDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
         if (mUserDetails != null) {
-            formattedSenderId = FirebaseUtils.getPrefixUserId(mUserDetails.UserID);
+            formattedSenderId = FirebaseUtils.getPrefixUserId(mUserDetails.userID);
         }
     }
 

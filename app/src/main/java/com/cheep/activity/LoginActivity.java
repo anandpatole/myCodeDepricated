@@ -78,7 +78,7 @@ public class LoginActivity extends BaseAppCompatActivity implements FacebookHelp
     private static final String TAG = LoginActivity.class.getSimpleName();
     private ActivityLoginBinding mActivityLoginBinding;
 
-    //Temporary variables for storing Email and Username in case of social media signup
+    //Temporary variables for storing email and Username in case of social media signup
     private String TEMP_EMAIL;
     private String TEMP_NAME;
     private String TEMP_LOGIN_WITH;
@@ -585,7 +585,7 @@ public class LoginActivity extends BaseAppCompatActivity implements FacebookHelp
             // Signed in successfully, show authenticated UI.
             GoogleSignInAccount acct = result.getSignInAccount();
             if (acct != null) {
-                Log.i(TAG, "handleGoogleSignInResult: Display Name" + acct.getDisplayName() + " ,Email: " + acct.getEmail());
+                Log.i(TAG, "handleGoogleSignInResult: Display Name" + acct.getDisplayName() + " ,email: " + acct.getEmail());
                 //Now Signout from google
                 signOutFromGoogle();
 
@@ -667,7 +667,7 @@ public class LoginActivity extends BaseAppCompatActivity implements FacebookHelp
      */
     public boolean isValidate() {
 
-       /* //Email address
+       /* //email address
         if (TextUtils.isEmpty(mActivityLoginBinding.editUsername.getText())) {
             Utility.showSnackBar(getString(R.string.validate_empty_email), mActivityLoginBinding.getRoot());
             return false;
@@ -811,7 +811,7 @@ public class LoginActivity extends BaseAppCompatActivity implements FacebookHelp
 
                         // If User is trying to login through MOBILE, App needs to verify Mobile number before going to Homescreen,
                         // Rest of the case we can directly redirect the user to login screen
-                        if (NetworkUtility.TAGS.LOGINWITHTYPE.MOBILE.equals(userDetails.LoginWith)) {
+                        if (NetworkUtility.TAGS.LOGINWITHTYPE.MOBILE.equals(userDetails.loginWith)) {
                             //Redirect user to Home Screen
                             VerificationActivity.newInstance(mContext, jsonObject.getJSONObject(NetworkUtility.TAGS.DATA).toString(), Utility.ACTION_LOGIN);
                         } else {
@@ -825,9 +825,9 @@ public class LoginActivity extends BaseAppCompatActivity implements FacebookHelp
                                 * @Sanjay 20 Feb 2016
                                 * */
                                     ChatUserModel chatUserModel = new ChatUserModel();
-                                    chatUserModel.setUserId(FirebaseUtils.getPrefixUserId(userDetails.UserID));
-                                    chatUserModel.setUserName(userDetails.UserName);
-                                    chatUserModel.setProfileImg(userDetails.ProfileImg);
+                                    chatUserModel.setUserId(FirebaseUtils.getPrefixUserId(userDetails.userID));
+                                    chatUserModel.setUserName(userDetails.userName);
+                                    chatUserModel.setProfileImg(userDetails.profileImg);
                                     FirebaseHelper.getUsersRef(chatUserModel.getUserId()).setValue(chatUserModel);
 
                                 /*
@@ -916,10 +916,10 @@ public class LoginActivity extends BaseAppCompatActivity implements FacebookHelp
     private void redirectUserToSignUp(String email, String name, String loginwith, String phoneNumber, String FB_APP_ID, String TWITTER_APP_ID, String GOOGLE_PLUS_APP_ID) {
         // Go to SignUp Activity with the fetched details
         UserDetails mUserDetails = new UserDetails();
-        mUserDetails.Email = email;
-        mUserDetails.UserName = name;
-        mUserDetails.LoginWith = loginwith;
-        mUserDetails.PhoneNumber = phoneNumber;
+        mUserDetails.email = email;
+        mUserDetails.userName = name;
+        mUserDetails.loginWith = loginwith;
+        mUserDetails.phoneNumber = phoneNumber;
         mUserDetails.fb_app_id = FB_APP_ID;
         mUserDetails.tw_app_id = TWITTER_APP_ID;
         mUserDetails.gp_app_id = GOOGLE_PLUS_APP_ID;

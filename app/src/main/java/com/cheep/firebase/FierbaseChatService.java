@@ -98,9 +98,9 @@ public class FierbaseChatService extends Service
      */
     public void removeRecentChatListener()
     {
-        if(mUserDetails!=null && !TextUtils.isEmpty(mUserDetails.UserID))
+        if(mUserDetails!=null && !TextUtils.isEmpty(mUserDetails.userID))
         {
-            DatabaseReference databaseReference = FirebaseHelper.getRecentChatRef(mUserDetails.UserID);
+            DatabaseReference databaseReference = FirebaseHelper.getRecentChatRef(mUserDetails.userID);
             databaseReference.removeEventListener(chatChildEventListener);
         }
     }

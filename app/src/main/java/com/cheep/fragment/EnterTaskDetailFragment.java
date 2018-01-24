@@ -596,7 +596,7 @@ public class EnterTaskDetailFragment extends BaseFragment implements RequestPerm
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == Utility.PLACE_PICKER_REQUEST) {
-                dialog.onActivityResult(resultCode, data);
+            dialog.onActivityResult(resultCode, data);
             hideProgressDialog();
         } else if (requestCode == Utility.REQUEST_CODE_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
             Log.i(TAG, "onActivityResult: CurrentPath" + mCurrentPhotoPath);
@@ -1348,7 +1348,7 @@ public class EnterTaskDetailFragment extends BaseFragment implements RequestPerm
         Map<String, String> mHeaderParams = new HashMap<>();
         mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
         if (PreferenceUtility.getInstance(mContext).getUserDetails() != null) {
-            mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
+            mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().userID);
         }
 
         //Add Params
@@ -1459,7 +1459,7 @@ public class EnterTaskDetailFragment extends BaseFragment implements RequestPerm
         Map<String, String> mHeaderParams = new HashMap<>();
         mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
         if (PreferenceUtility.getInstance(mContext).getUserDetails() != null) {
-            mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
+            mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().userID);
         }
 
         // Add Params

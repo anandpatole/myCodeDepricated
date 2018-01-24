@@ -771,7 +771,7 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
         //Add Header parameters
         Map<String, String> mHeaderParams = new HashMap<>();
         mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
-        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
+        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().userID);
 
         //Add Params
         Map<String, Object> mParams = new HashMap<>();
@@ -883,7 +883,7 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
 
         //Add Header parameters
         Map<String, String> mHeaderParams = new HashMap<>();
-        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, userDetails.UserID);
+        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, userDetails.userID);
         mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
 
         SuperCalendar superCalendar = SuperCalendar.getInstance();
@@ -994,7 +994,7 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
         UserDetails user = PreferenceUtility.getInstance(mContext).getUserDetails();
         final BottomAlertDialog dialog = new BottomAlertDialog(mContext);
         dialog.setTitle(getString(R.string.label_task_status));
-        dialog.setMessage(getString(R.string.label_thanks_feedback_no, user.UserName));
+        dialog.setMessage(getString(R.string.label_thanks_feedback_no, user.userName));
         dialog.addPositiveButton(getString(R.string.label_call), new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -1067,7 +1067,7 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
 
         //Add Header parameters
         Map<String, String> mHeaderParams = new HashMap<>();
-        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, userDetails.UserID);
+        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, userDetails.userID);
         mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
 
         //Add Params
@@ -1203,7 +1203,7 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
 
         //Add Header parameters
         Map<String, String> mHeaderParams = new HashMap<>();
-        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, userDetails.UserID);
+        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, userDetails.userID);
         mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
 
         //Add Params
@@ -1368,7 +1368,7 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
         //Add Header parameters
         Map<String, String> mHeaderParams = new HashMap<>();
         mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
-        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
+        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().userID);
 
         //Add Params
         Map<String, String> mParams = new HashMap<>();
@@ -1462,7 +1462,7 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
 
         //Add Header parameters
         Map<String, String> mHeaderParams = new HashMap<>();
-        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, userDetails.UserID);
+        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, userDetails.userID);
         mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
 
         //Add Params
@@ -1541,8 +1541,8 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
     private void manageUnreadBadgeCounterForChat() {
         Log.d(TAG, "manageUnreadBadgeCounterForChat() called");
         // Read task chat unread count from firebase
-        String t_sp_u_formattedId = FirebaseUtils.get_T_SP_U_FormattedId(mTaskDetailModel.taskId, mTaskDetailModel.selectedProvider.providerId, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
-        FirebaseHelper.getRecentChatRef(FirebaseUtils.getPrefixUserId(PreferenceUtility.getInstance(mContext).getUserDetails().UserID)).child(t_sp_u_formattedId).child(FirebaseHelper.KEY_UNREADCOUNT).addValueEventListener(new ValueEventListener() {
+        String t_sp_u_formattedId = FirebaseUtils.get_T_SP_U_FormattedId(mTaskDetailModel.taskId, mTaskDetailModel.selectedProvider.providerId, PreferenceUtility.getInstance(mContext).getUserDetails().userID);
+        FirebaseHelper.getRecentChatRef(FirebaseUtils.getPrefixUserId(PreferenceUtility.getInstance(mContext).getUserDetails().userID)).child(t_sp_u_formattedId).child(FirebaseHelper.KEY_UNREADCOUNT).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Log.d(TAG, "onDataChange() called with: dataSnapshot = [" + dataSnapshot + "]");
@@ -1582,7 +1582,7 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
         //Add Header parameters
         Map<String, String> mHeaderParams = new HashMap<>();
         mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
-        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
+        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().userID);
 
         //Add Params
         Map<String, Object> mParams = new HashMap<>();

@@ -55,7 +55,7 @@ public class VerificationActivity extends BaseAppCompatActivity {
         Intent intent = new Intent(context, VerificationActivity.class);
         intent.putExtra(Utility.Extra.USER_DETAILS, Utility.getJsonStringFromObject(userDetails));
         intent.putExtra(Utility.Extra.SELECTED_IMAGE_PATH, selectedImagePath);
-        intent.putExtra(Utility.Extra.PHONE_NUMBER, userDetails.PhoneNumber);
+        intent.putExtra(Utility.Extra.PHONE_NUMBER, userDetails.phoneNumber);
         intent.putExtra(Utility.Extra.INFO_TYPE, Utility.ACTION_REGISTER);
         context.startActivity(intent);
     }
@@ -74,7 +74,7 @@ public class VerificationActivity extends BaseAppCompatActivity {
         Intent intent = new Intent(context, VerificationActivity.class);
         intent.putExtra(Utility.Extra.USER_DETAILS, userDetails);
         final UserDetails details = (UserDetails) Utility.getObjectFromJsonString(userDetails, UserDetails.class);
-        intent.putExtra(Utility.Extra.PHONE_NUMBER, details.PhoneNumber);
+        intent.putExtra(Utility.Extra.PHONE_NUMBER, details.phoneNumber);
         intent.putExtra(Utility.Extra.INFO_TYPE, action);
         context.startActivity(intent);
     }
@@ -262,7 +262,7 @@ public class VerificationActivity extends BaseAppCompatActivity {
         //Checking this condition because this screen opens from register time (There are no user details in PreferenceUtility) and change phone number from ProfileTabFragment (There is user detail in PreferenceUtils)
         if (PreferenceUtility.getInstance(mContext).getUserDetails() != null) {
             mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
-            mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
+            mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().userID);
             webService = NetworkUtility.WS.VERIFY_OTP_CODE;
         }
 
@@ -396,9 +396,9 @@ public class VerificationActivity extends BaseAppCompatActivity {
                                 * @Sanjay 20 Feb 2016
                                 * */
                 ChatUserModel chatUserModel = new ChatUserModel();
-                chatUserModel.setUserId(FirebaseUtils.getPrefixUserId(mUserDetails.UserID));
-                chatUserModel.setUserName(mUserDetails.UserName);
-                chatUserModel.setProfileImg(mUserDetails.ProfileImg);
+                chatUserModel.setUserId(FirebaseUtils.getPrefixUserId(mUserDetails.userID));
+                chatUserModel.setUserName(mUserDetails.userName);
+                chatUserModel.setProfileImg(mUserDetails.profileImg);
                 FirebaseHelper.getUsersRef(chatUserModel.getUserId()).setValue(chatUserModel);
                                 /*
                                 * Start fierbase chat service
@@ -522,10 +522,10 @@ public class VerificationActivity extends BaseAppCompatActivity {
      */
     private Map<String, String> fetchKeyValuesForRegisteration() {
         Map<String, String> mParams = new HashMap<>();
-        mParams.put(NetworkUtility.TAGS.LOGINWITH, mUserDetails.LoginWith);
-        mParams.put(NetworkUtility.TAGS.USERNAME, mUserDetails.UserName);
-        mParams.put(NetworkUtility.TAGS.EMAIL_ADDRESS, mUserDetails.Email);
-        mParams.put(NetworkUtility.TAGS.PHONE_NUMBER, mUserDetails.PhoneNumber);
+        mParams.put(NetworkUtility.TAGS.LOGINWITH, mUserDetails.loginWith);
+        mParams.put(NetworkUtility.TAGS.USERNAME, mUserDetails.userName);
+        mParams.put(NetworkUtility.TAGS.EMAIL_ADDRESS, mUserDetails.email);
+        mParams.put(NetworkUtility.TAGS.PHONE_NUMBER, mUserDetails.phoneNumber);
 
         if (!TextUtils.isEmpty(mUserDetails.fb_app_id)) {
             mParams.put(NetworkUtility.TAGS.FB_APP_ID, mUserDetails.fb_app_id);
@@ -567,10 +567,10 @@ public class VerificationActivity extends BaseAppCompatActivity {
      */
     private Map<String, Object> fetchKeyValuesForRegisterationWithObject() {
         Map<String, Object> mParams = new HashMap<>();
-        mParams.put(NetworkUtility.TAGS.LOGINWITH, mUserDetails.LoginWith);
-        mParams.put(NetworkUtility.TAGS.USERNAME, mUserDetails.UserName);
-        mParams.put(NetworkUtility.TAGS.EMAIL_ADDRESS, mUserDetails.Email);
-        mParams.put(NetworkUtility.TAGS.PHONE_NUMBER, mUserDetails.PhoneNumber);
+        mParams.put(NetworkUtility.TAGS.LOGINWITH, mUserDetails.loginWith);
+        mParams.put(NetworkUtility.TAGS.USERNAME, mUserDetails.userName);
+        mParams.put(NetworkUtility.TAGS.EMAIL_ADDRESS, mUserDetails.email);
+        mParams.put(NetworkUtility.TAGS.PHONE_NUMBER, mUserDetails.phoneNumber);
 
         if (!TextUtils.isEmpty(mUserDetails.fb_app_id)) {
             mParams.put(NetworkUtility.TAGS.FB_APP_ID, mUserDetails.fb_app_id);
@@ -628,9 +628,9 @@ public class VerificationActivity extends BaseAppCompatActivity {
                                 * @Sanjay 20 Feb 2016
                                 * */
                                 ChatUserModel chatUserModel = new ChatUserModel();
-                                chatUserModel.setUserId(FirebaseUtils.getPrefixUserId(userDetails.UserID));
-                                chatUserModel.setUserName(userDetails.UserName);
-                                chatUserModel.setProfileImg(userDetails.ProfileImg);
+                                chatUserModel.setUserId(FirebaseUtils.getPrefixUserId(userDetails.userID));
+                                chatUserModel.setUserName(userDetails.userName);
+                                chatUserModel.setProfileImg(userDetails.profileImg);
                                 FirebaseHelper.getUsersRef(chatUserModel.getUserId()).setValue(chatUserModel);
 
                                 /*
@@ -641,20 +641,20 @@ public class VerificationActivity extends BaseAppCompatActivity {
                             }
 
                             // Send Custom AppsFlyer Event Tracking
-                            if (NetworkUtility.TAGS.LOGINWITHTYPE.MOBILE.equals(mUserDetails.LoginWith)) {
+                            if (NetworkUtility.TAGS.LOGINWITHTYPE.MOBILE.equals(mUserDetails.loginWith)) {
 //                                AppsFlyerLib.getInstance().set
                                 AppsFlyerLib.getInstance().trackEvent(mContext
                                         , NetworkUtility.TAGS.APPSFLYER_CUSTOM_TRACK_EVENTS.REG_MOBILE
                                         , fetchKeyValuesForRegisterationWithObject());
-                            } else if (NetworkUtility.TAGS.LOGINWITHTYPE.FACEBOOK.equals(mUserDetails.LoginWith)) {
+                            } else if (NetworkUtility.TAGS.LOGINWITHTYPE.FACEBOOK.equals(mUserDetails.loginWith)) {
                                 AppsFlyerLib.getInstance().trackEvent(mContext
                                         , NetworkUtility.TAGS.APPSFLYER_CUSTOM_TRACK_EVENTS.REG_FB
                                         , fetchKeyValuesForRegisterationWithObject());
-                            } else if (NetworkUtility.TAGS.LOGINWITHTYPE.GOOGLEPLUS.equals(mUserDetails.LoginWith)) {
+                            } else if (NetworkUtility.TAGS.LOGINWITHTYPE.GOOGLEPLUS.equals(mUserDetails.loginWith)) {
                                 AppsFlyerLib.getInstance().trackEvent(mContext
                                         , NetworkUtility.TAGS.APPSFLYER_CUSTOM_TRACK_EVENTS.REG_GOOGLE
                                         , fetchKeyValuesForRegisterationWithObject());
-                            } else if (NetworkUtility.TAGS.LOGINWITHTYPE.TWITTER.equals(mUserDetails.LoginWith)) {
+                            } else if (NetworkUtility.TAGS.LOGINWITHTYPE.TWITTER.equals(mUserDetails.loginWith)) {
                                 AppsFlyerLib.getInstance().trackEvent(mContext
                                         , NetworkUtility.TAGS.APPSFLYER_CUSTOM_TRACK_EVENTS.REG_TWITTER
                                         , fetchKeyValuesForRegisterationWithObject());
@@ -738,7 +738,7 @@ public class VerificationActivity extends BaseAppCompatActivity {
         //Add Header parameters
         Map<String, String> mHeaderParams = new HashMap<>();
         mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
-        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
+        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().userID);
 
         //Add Params
         Map<String, String> mParams = new HashMap<>();
@@ -790,8 +790,8 @@ public class VerificationActivity extends BaseAppCompatActivity {
 
         //Add Params
         Map<String, String> mParams = new HashMap<>();
-        mParams.put(NetworkUtility.TAGS.EMAIL_ADDRESS, mUserDetails.Email);
-        mParams.put(NetworkUtility.TAGS.PHONE_NUMBER, mUserDetails.PhoneNumber);
+        mParams.put(NetworkUtility.TAGS.EMAIL_ADDRESS, mUserDetails.email);
+        mParams.put(NetworkUtility.TAGS.PHONE_NUMBER, mUserDetails.phoneNumber);
 
         VolleyNetworkRequest mVolleyNetworkRequest = new VolleyNetworkRequest(NetworkUtility.WS.SEND_OTP
                 , mCallReSendOTPWSErrorListener

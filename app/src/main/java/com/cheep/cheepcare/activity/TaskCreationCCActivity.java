@@ -432,7 +432,7 @@ public class TaskCreationCCActivity extends BaseAppCompatActivity {
 
         // Add Header parameters
         Map<String, String> mHeaderParams = new HashMap<>();
-        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, userDetails.UserID);
+        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, userDetails.userID);
         mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
 
         // Add Params
@@ -557,7 +557,7 @@ public class TaskCreationCCActivity extends BaseAppCompatActivity {
 
         // Add Header parameters
         Map<String, String> mHeaderParams = new HashMap<>();
-        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, userDetails.UserID);
+        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, userDetails.userID);
         mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
 
         // Add Params
@@ -872,12 +872,12 @@ public class TaskCreationCCActivity extends BaseAppCompatActivity {
             chatTaskModel.categoryName = taskDetailModel.categoryName;
             chatTaskModel.selectedSPId = "";
             UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
-            chatTaskModel.userId = FirebaseUtils.getPrefixUserId(userDetails.UserID);
+            chatTaskModel.userId = FirebaseUtils.getPrefixUserId(userDetails.userID);
             FirebaseHelper.getTaskRef(chatTaskModel.taskId).setValue(chatTaskModel);
         }
 
         String message = mContext.getString(R.string.desc_task_creation_acknowledgement
-                , PreferenceUtility.getInstance(mContext).getUserDetails().UserName);
+                , PreferenceUtility.getInstance(mContext).getUserDetails().userName);
         String title = mContext.getString(R.string.label_your_task_is_posted);
         AcknowledgementDialogWithoutProfilePic mAcknowledgementDialogWithoutProfilePic = AcknowledgementDialogWithoutProfilePic.newInstance(R.drawable.ic_bird_with_heart_illustration, title, message, new AcknowledgementInteractionListener() {
 
@@ -930,7 +930,7 @@ public class TaskCreationCCActivity extends BaseAppCompatActivity {
 
         // Add Header parameters
         Map<String, String> mHeaderParams = new HashMap<>();
-        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, userDetails.UserID);
+        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, userDetails.userID);
         mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
 
         // Add Params

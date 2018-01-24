@@ -1610,7 +1610,7 @@ public class Utility {
         String formattedUserId = "";
         final UserDetails userDetails = PreferenceUtility.getInstance(context).getUserDetails();
         if (userDetails != null) {
-            formattedUserId = FirebaseUtils.getPrefixUserId(userDetails.UserID);
+            formattedUserId = FirebaseUtils.getPrefixUserId(userDetails.userID);
         }
         FirebaseHelper.getRecentChatRef(formattedUserId).child(formattedTaskId).removeValue();
         if (!TextUtils.isEmpty(formattedTaskId) && !TextUtils.isEmpty(formattedSpId)) {
@@ -1642,7 +1642,7 @@ public class Utility {
                         chatTaskModel.categoryName = taskDetailModel.categoryName;
                         chatTaskModel.selectedSPId = providerModel.providerId;
                         UserDetails userDetails = PreferenceUtility.getInstance(context).getUserDetails();
-                        chatTaskModel.userId = FirebaseUtils.getPrefixUserId(userDetails.UserID);
+                        chatTaskModel.userId = FirebaseUtils.getPrefixUserId(userDetails.userID);
                         FirebaseHelper.getTaskRef(chatTaskModel.taskId).setValue(chatTaskModel);
                     }
 

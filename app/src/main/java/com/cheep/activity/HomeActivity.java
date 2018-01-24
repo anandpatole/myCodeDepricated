@@ -435,12 +435,12 @@ public class HomeActivity extends BaseAppCompatActivity
     public void profileUpdated() {
         //Update Header view
         final UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
-        if (userDetails != null && userDetails.ProfileImg != null && (!TextUtils.isEmpty(userDetails.ProfileImg)))
-            Utility.showCircularImageView(mContext, TAG, navHeaderHomeBinding.imgProfile, userDetails.ProfileImg, R.drawable.icon_profile_img, true);
+        if (userDetails != null && userDetails.profileImg != null && (!TextUtils.isEmpty(userDetails.profileImg)))
+            Utility.showCircularImageView(mContext, TAG, navHeaderHomeBinding.imgProfile, userDetails.profileImg, R.drawable.icon_profile_img, true);
 
         //Update the name
-        if (userDetails != null && TextUtils.isEmpty(userDetails.UserName) == false && userDetails.UserName.trim().length() > 1) {
-            String name = userDetails.UserName.substring(0, 1).toUpperCase() + userDetails.UserName.substring(1);
+        if (userDetails != null && TextUtils.isEmpty(userDetails.userName) == false && userDetails.userName.trim().length() > 1) {
+            String name = userDetails.userName.substring(0, 1).toUpperCase() + userDetails.userName.substring(1);
             //Used to get only first word, e.g "Pankaj" from "pankaj sharma"
             navHeaderHomeBinding.textName.setText(name);
         }
@@ -581,7 +581,7 @@ public class HomeActivity extends BaseAppCompatActivity
 
         //Add Header parameters
         Map<String, String> mHeaderParams = new HashMap<>();
-        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, userDetails.UserID);
+        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, userDetails.userID);
         mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
 
         //Add Params
@@ -745,7 +745,7 @@ public class HomeActivity extends BaseAppCompatActivity
 
         //Add Header parameters
         Map<String, String> mHeaderParams = new HashMap<>();
-        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, userDetails.UserID);
+        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, userDetails.userID);
         mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
 
         //Add Params
@@ -994,19 +994,19 @@ public class HomeActivity extends BaseAppCompatActivity
 
                 //Update Header view
                 final UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
-                if (userDetails != null && userDetails.ProfileImg != null && (!TextUtils.isEmpty(userDetails.ProfileImg)))
-                    Utility.showCircularImageView(mContext, TAG, navHeaderHomeBinding.imgProfile, userDetails.ProfileImg, R.drawable.icon_profile_img, true);
+                if (userDetails != null && userDetails.profileImg != null && (!TextUtils.isEmpty(userDetails.profileImg)))
+                    Utility.showCircularImageView(mContext, TAG, navHeaderHomeBinding.imgProfile, userDetails.profileImg, R.drawable.icon_profile_img, true);
 
                 //Update the name
-                if (userDetails != null && !TextUtils.isEmpty(userDetails.UserName) && userDetails.UserName.trim().length() > 1) {
-                    navHeaderHomeBinding.textName.setText(userDetails.UserName.substring(0, 1).toUpperCase() + userDetails.UserName.substring(1));
+                if (userDetails != null && !TextUtils.isEmpty(userDetails.userName) && userDetails.userName.trim().length() > 1) {
+                    navHeaderHomeBinding.textName.setText(userDetails.userName.substring(0, 1).toUpperCase() + userDetails.userName.substring(1));
                 } else {
                     if (PreferenceUtility.getInstance(mContext).getUserDetails() == null) {
                         navHeaderHomeBinding.textName.setText(Utility.GUEST_STATIC_INFO.USERNAME);
                     }
                 }
 
-//                navHeaderHomeBinding.textName.setText(userDetails.UserName);
+//                navHeaderHomeBinding.textName.setText(userDetails.userName);
 
 
                 navHeaderHomeBinding.radioHindi.setVisibility(View.GONE);
@@ -1092,7 +1092,7 @@ public class HomeActivity extends BaseAppCompatActivity
         //Add Header parameters
         Map<String, String> mHeaderParams = new HashMap<>();
         mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
-        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
+        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().userID);
 
         //Add Params
         Map<String, Object> mParams = new HashMap<>();
@@ -1222,7 +1222,7 @@ public class HomeActivity extends BaseAppCompatActivity
 
         //Add Header parameters
         Map<String, String> mHeaderParams = new HashMap<>();
-        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
+        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().userID);
         mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
 
         //Add Params
@@ -1428,7 +1428,7 @@ public class HomeActivity extends BaseAppCompatActivity
 
         //Add Header parameters
         Map<String, String> mHeaderParams = new HashMap<>();
-        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, userDetails.UserID);
+        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, userDetails.userID);
         mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
 
         //Add Params
@@ -1530,7 +1530,7 @@ public class HomeActivity extends BaseAppCompatActivity
 
         //Add Header parameters
         Map<String, String> mHeaderParams = new HashMap<>();
-        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
+        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().userID);
         mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
 
         //Add Params

@@ -331,7 +331,7 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
     ////////////////////////////////////////////////////////////////////////////////////////////
     private void manageUnreadBadgeCounterForChat() {
         // Read task chat unread count from firebase
-        String t_sp_u_formattedId = FirebaseUtils.get_T_SP_U_FormattedId(taskDetailModel.taskId, providerModel.providerId, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
+        String t_sp_u_formattedId = FirebaseUtils.get_T_SP_U_FormattedId(taskDetailModel.taskId, providerModel.providerId, PreferenceUtility.getInstance(mContext).getUserDetails().userID);
         FirebaseHelper.getTaskChatRef(FirebaseUtils.getPrefixTaskId(taskDetailModel.taskId)).child(t_sp_u_formattedId).child(FirebaseHelper.KEY_UNREADCOUNT).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -623,7 +623,7 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
         //Add Header parameters
         Map<String, String> mHeaderParams = new HashMap<>();
         mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
-        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
+        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().userID);
 
         //Add Params
         Map<String, Object> mParams = new HashMap<>();
@@ -720,7 +720,7 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
         //Add Header parameters
         Map<String, String> mHeaderParams = new HashMap<>();
         mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
-        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
+        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().userID);
 
         //Add Params
         Map<String, Object> mParams = new HashMap<>();
@@ -807,7 +807,7 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
         //Add Header parameters
         Map<String, String> mHeaderParams = new HashMap<>();
         mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
-        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
+        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().userID);
 
         //Add Params
         Map<String, Object> mParams = new HashMap<>();
@@ -946,7 +946,7 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
         //Add Header parameters
         Map<String, String> mHeaderParams = new HashMap<>();
         mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
-        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
+        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().userID);
 
         //Add Params
         Map<String, Object> mParams = new HashMap<>();
@@ -982,7 +982,7 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
         //Add Header parameters
         Map<String, String> mHeaderParams = new HashMap<>();
         mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
-        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
+        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().userID);
 
         //Add Params
         Map<String, Object> mParams = new HashMap<>();
@@ -1164,7 +1164,7 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
         //Add Header parameters
         Map<String, String> mHeaderParams = new HashMap<>();
         mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
-        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
+        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().userID);
 
         //Add Params
         Map<String, String> mParams = new HashMap<>();
@@ -1299,7 +1299,7 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
         //Add Header parameters
         Map<String, String> mHeaderParams = new HashMap<>();
         mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
-        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
+        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().userID);
 
         //Add Params
         Map<String, String> mParams = new HashMap<>();
@@ -1387,7 +1387,7 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
         //Add Header parameters
         Map<String, String> mHeaderParams = new HashMap<>();
         mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
-        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
+        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().userID);
 
         //Add Params
         Map<String, Object> mParams = new HashMap<>();

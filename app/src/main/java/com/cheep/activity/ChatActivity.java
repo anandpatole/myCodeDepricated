@@ -305,7 +305,7 @@ public class ChatActivity extends BaseAppCompatActivity implements View.OnClickL
 
         if (taskChatModel != null && mUserDetails != null) {
             formattedTaskId = FirebaseUtils.getPrefixTaskId(taskChatModel.taskId);
-            formattedSenderId = FirebaseUtils.getPrefixUserId(mUserDetails.UserID);
+            formattedSenderId = FirebaseUtils.getPrefixUserId(mUserDetails.userID);
 
             if (taskChatModel.senderId.startsWith("SP")) {
                 formattedReceiverId = FirebaseUtils.getPrefixSPId(taskChatModel.senderId);
@@ -613,7 +613,7 @@ public class ChatActivity extends BaseAppCompatActivity implements View.OnClickL
          * and will set media & thumb url in case @chatType is @{@link Utility.CHAT_TYPE_MEDIA}
          */
         if (chatType.equalsIgnoreCase(Utility.CHAT_TYPE_MESSAGE)) {
-            chatMessageModel.message = mActivityChatBinding.editMessage.getText().toString().replaceAll(Utility.MOBILE_REGREX,Utility.EMPTY_STRING).trim();
+            chatMessageModel.message = mActivityChatBinding.editMessage.getText().toString().replaceAll(Utility.MOBILE_REGREX, Utility.EMPTY_STRING).trim();
         } else if (chatType.equalsIgnoreCase(Utility.CHAT_TYPE_MEDIA)) {
             chatMessageModel.mediaUrl = mediaUrl;
             chatMessageModel.mediaThumbUrl = mediaThumbUrl;
@@ -885,7 +885,7 @@ public class ChatActivity extends BaseAppCompatActivity implements View.OnClickL
         //Add Header parameters
         Map<String, String> mHeaderParams = new HashMap<>();
         mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
-        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
+        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().userID);
 
         //Add Params
         HashMap<String, File> mFileParams = new HashMap<>();
@@ -982,7 +982,7 @@ public class ChatActivity extends BaseAppCompatActivity implements View.OnClickL
         //Add Header parameters
         Map<String, String> mHeaderParams = new HashMap<>();
         mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
-        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
+        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().userID);
 
         //Add Params
         HashMap<String, String> mParams = new HashMap<>();

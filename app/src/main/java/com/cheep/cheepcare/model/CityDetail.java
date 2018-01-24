@@ -23,14 +23,14 @@ public class CityDetail implements Serializable {
     @Expose
     public List<CityLandingPageModel.CityTutorials> cityTutorials = null;
 
-    @SerializedName("id")
+    @SerializedName("care_city_id")
     public String id;
 
-    @SerializedName("city_name")
+    @SerializedName("care_city_name")
     @Expose
     public String cityName;
 
-    @SerializedName("city_slug")
+    @SerializedName("care_city_slug")
     @Expose
     public String citySlug;
 

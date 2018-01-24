@@ -116,7 +116,7 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
         SpannableString sVerified = null;
         if (provider.isVerified.equalsIgnoreCase(Utility.BOOLEAN.YES)) {
             sVerified = new SpannableString(" " + mContext.getString(R.string.label_verified_pro) + " ");
-            sVerified.setSpan(new RoundedBackgroundSpan(mTagBackgroundColor, mTagTextColor,0), 0, sVerified.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+            sVerified.setSpan(new RoundedBackgroundSpan(mTagBackgroundColor, mTagTextColor, 0), 0, sVerified.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
         }
         holder.tvName.setText(sVerified != null ? TextUtils.concat(sName, " ", sVerified) : sName);
 
@@ -142,7 +142,7 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
             holder.tvExperience.setText(Utility.checkNonNullAndSet(mContext.getString(R.string.label_experience_zero)));
         } else {
 //            holder.tvExperience.setText(holder.mView.getContext().getResources().getQuantityString(R.plurals.getExperienceString, Integer.parseInt(provider.experience), provider.experience));
-            holder.tvExperience.setText(Utility.getExperienceString(provider.experience,"\n"));
+            holder.tvExperience.setText(Utility.getExperienceString(provider.experience, "\n"));
         }
 
         // price - Checking if amount present then show call and paid lables else hide
@@ -397,7 +397,9 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
         });*/
 
         // Read task chat unread count from firebase
-        String t_sp_u_formattedId = FirebaseUtils.get_T_SP_U_FormattedId(mTaskDetailModel.taskId, provider.providerId, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
+        String t_sp_u_formattedId = FirebaseUtils.get_T_SP_U_FormattedId(mTaskDetailModel.taskId
+                , provider.providerId
+                , PreferenceUtility.getInstance(mContext).getUserDetails().userID);
         FirebaseHelper.getTaskChatRef(FirebaseUtils.getPrefixTaskId(mTaskDetailModel.taskId)).
 
                 child(t_sp_u_formattedId).

@@ -140,27 +140,27 @@ public class SignupActivity extends BaseAppCompatActivity {
         }
 
         //Update FirstName & LastName, if Found
-        if (!TextUtils.isEmpty(userDetails.UserName)) {
-            String firstName = userDetails.UserName.split(Utility.ONE_CHARACTER_SPACE)[0];
-            String lastName = userDetails.UserName.split(Utility.ONE_CHARACTER_SPACE).length > 1
-                    ? userDetails.UserName.split(Utility.ONE_CHARACTER_SPACE)[1]
+        if (!TextUtils.isEmpty(userDetails.userName)) {
+            String firstName = userDetails.userName.split(Utility.ONE_CHARACTER_SPACE)[0];
+            String lastName = userDetails.userName.split(Utility.ONE_CHARACTER_SPACE).length > 1
+                    ? userDetails.userName.split(Utility.ONE_CHARACTER_SPACE)[1]
                     : Utility.EMPTY_STRING;
             mActivitySignupBinding.editFirstName.setText(firstName);
             mActivitySignupBinding.editLastName.setText(lastName);
         }
 
         // Update Mobile number if found
-        if (!TextUtils.isEmpty(userDetails.PhoneNumber)) {
-            mActivitySignupBinding.editUserMobileNumber.setText(userDetails.PhoneNumber);
+        if (!TextUtils.isEmpty(userDetails.phoneNumber)) {
+            mActivitySignupBinding.editUserMobileNumber.setText(userDetails.phoneNumber);
         }
 
-        //Update Name and Email if Found
-        if (!TextUtils.isEmpty(userDetails.Email)) {
-            mActivitySignupBinding.editEmailAddress.setText(userDetails.Email);
+        //Update Name and email if Found
+        if (!TextUtils.isEmpty(userDetails.email)) {
+            mActivitySignupBinding.editEmailAddress.setText(userDetails.email);
         }
 
         // Check if User comes from Mobile, User can not change Mobile Number
-        if (!TextUtils.isEmpty(userDetails.LoginWith) && userDetails.LoginWith.equalsIgnoreCase(NetworkUtility.TAGS.LOGINWITHTYPE.MOBILE)) {
+        if (!TextUtils.isEmpty(userDetails.loginWith) && userDetails.loginWith.equalsIgnoreCase(NetworkUtility.TAGS.LOGINWITHTYPE.MOBILE)) {
             mActivitySignupBinding.editUserMobileNumber.setEnabled(false);
         } else {
             mActivitySignupBinding.editUserMobileNumber.setEnabled(true);
@@ -592,11 +592,11 @@ public class SignupActivity extends BaseAppCompatActivity {
 
         if (isValidate()) {
             //Set diffeerent Details
-            userDetails.UserName = mActivitySignupBinding.editFirstName.getText().toString().trim()
+            userDetails.userName = mActivitySignupBinding.editFirstName.getText().toString().trim()
                     + " "
                     + mActivitySignupBinding.editLastName.getText().toString().trim();
-            userDetails.Email = mActivitySignupBinding.editEmailAddress.getText().toString().trim();
-            userDetails.PhoneNumber = mActivitySignupBinding.editUserMobileNumber.getText().toString().trim();
+            userDetails.email = mActivitySignupBinding.editEmailAddress.getText().toString().trim();
+            userDetails.phoneNumber = mActivitySignupBinding.editUserMobileNumber.getText().toString().trim();
             callsendOTPWS();
         }
     }
@@ -617,7 +617,7 @@ public class SignupActivity extends BaseAppCompatActivity {
             return false;
         }
 
-        /*//Email address
+        /*//email address
         if (TextUtils.isEmpty(mActivitySignupBinding.editEmailAddress.getText())) {
             Utility.showSnackBar(getString(R.string.validate_empty_email), mActivitySignupBinding.getRoot());
             return false;
@@ -700,8 +700,8 @@ public class SignupActivity extends BaseAppCompatActivity {
 
         //Add Params
         Map<String, String> mParams = new HashMap<>();
-        mParams.put(NetworkUtility.TAGS.PHONE_NUMBER, userDetails.PhoneNumber);
-        mParams.put(NetworkUtility.TAGS.EMAIL_ADDRESS, userDetails.Email);
+        mParams.put(NetworkUtility.TAGS.PHONE_NUMBER, userDetails.phoneNumber);
+        mParams.put(NetworkUtility.TAGS.EMAIL_ADDRESS, userDetails.email);
 
         VolleyNetworkRequest mVolleyNetworkRequest = new VolleyNetworkRequest(NetworkUtility.WS.SEND_OTP
                 , mCallSendOTPWSErrorListener

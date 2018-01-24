@@ -46,10 +46,10 @@ public class HotlineHelper {
         HotlineUser hlUser = Hotline.getInstance(mContext).getUser();
 
         if (hlUser != null) {
-            hlUser.setName(userDetails.UserName);
-            hlUser.setEmail(userDetails.Email);
-            hlUser.setPhone("", userDetails.PhoneNumber);
-            hlUser.setExternalId(userDetails.UserName + "." + userDetails.UserID);
+            hlUser.setName(userDetails.userName);
+            hlUser.setEmail(userDetails.email);
+            hlUser.setPhone("", userDetails.phoneNumber);
+            hlUser.setExternalId(userDetails.userName + "." + userDetails.userID);
 
             /*try {
                 Hotline.getInstance(mContext).updateUserProperty("id", "1");

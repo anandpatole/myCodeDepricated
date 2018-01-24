@@ -181,7 +181,7 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
                 //Add Header parameters
                 Map<String, String> mHeaderParams = new HashMap<>();
                 mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
-                mHeaderParams.put(NetworkUtility.TAGS.USER_ID, userDetails.UserID);
+                mHeaderParams.put(NetworkUtility.TAGS.USER_ID, userDetails.userID);
 
                 Map<String, Object> mFinalParams = new HashMap<>();
                 mFinalParams.put(NetworkUtility.TAGS.DATA, encryptedData);
@@ -285,7 +285,7 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
 
         Map<String, String> mHeaderParams = new HashMap<>();
         mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
-        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, userDetails.UserID);
+        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, userDetails.userID);
 
         //Add Params
         Map<String, String> mParams = new HashMap<>();
@@ -561,7 +561,8 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
 
 
-                        ManageSubscriptionActivity.newInstance(PaymentChoiceCheepCareActivity.this, cityDetail);
+                        ManageSubscriptionActivity.newInstance(PaymentChoiceCheepCareActivity.this, cityDetail
+                                , false);
                         MessageEvent messageEvent = new MessageEvent();
                         messageEvent.id = cityDetail.id;
                         messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.PACKAGE_SUBSCRIBED_SUCCESSFULLY;

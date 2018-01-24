@@ -57,7 +57,7 @@ public class ChatMessageRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
 
     public ChatMessageRecyclerViewAdapter(Activity mActivity) {
         this.mContext = mActivity;
-        this.senderId = FirebaseUtils.getPrefixUserId(PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
+        this.senderId = FirebaseUtils.getPrefixUserId(PreferenceUtility.getInstance(mContext).getUserDetails().userID);
         this.calendar = Calendar.getInstance();
     }
 

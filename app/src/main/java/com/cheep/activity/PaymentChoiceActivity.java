@@ -258,7 +258,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
                 //Add Header parameters
                 Map<String, String> mHeaderParams = new HashMap<>();
                 mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
-                mHeaderParams.put(NetworkUtility.TAGS.USER_ID, userDetails.UserID);
+                mHeaderParams.put(NetworkUtility.TAGS.USER_ID, userDetails.userID);
 
                 Map<String, Object> mFinalParams = new HashMap<>();
                 mFinalParams.put(NetworkUtility.TAGS.DATA, encryptedData);
@@ -397,7 +397,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
 
         Map<String, String> mHeaderParams = new HashMap<>();
         mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
-        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, userDetails.UserID);
+        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, userDetails.userID);
 
         //Add Params
         Map<String, Object> mParams = new HashMap<>();
@@ -539,7 +539,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
                 //Add Header parameters
                 Map<String, String> mHeaderParams = new HashMap<>();
                 mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
-                mHeaderParams.put(NetworkUtility.TAGS.USER_ID, userDetails.UserID);
+                mHeaderParams.put(NetworkUtility.TAGS.USER_ID, userDetails.userID);
 
                 Map<String, Object> mFinalParams = new HashMap<>();
                 mFinalParams.put(NetworkUtility.TAGS.DATA, encryptedData);
@@ -756,7 +756,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
 
         Map<String, String> mHeaderParams = new HashMap<>();
         mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
-        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, userDetails.UserID);
+        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, userDetails.userID);
 
         //Add Params
         Map<String, Object> mParams = new HashMap<>();
@@ -852,7 +852,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
                              *  Need to show Model Dialog once Payment has been made successful. Once
                              *  User clicks on OK. we will finish of the activity.
                              */
-//                            String title = mContext.getString(R.string.label_great_choice_x, PreferenceUtility.getInstance(mContext).getUserDetails().UserName);
+//                            String title = mContext.getString(R.string.label_great_choice_x, PreferenceUtility.getInstance(mContext).getUserDetails().userName);
                             String title = mContext.getString(R.string.label_brilliant) + "!";
                             final SuperCalendar superStartDateTimeCalendar = SuperCalendar.getInstance();
                             superStartDateTimeCalendar.setTimeZone(SuperCalendar.SuperTimeZone.GMT.GMT);
@@ -960,7 +960,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
         //Add Header parameters
         Map<String, String> mHeaderParams = new HashMap<>();
         mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
-        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, userDetails.UserID);
+        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, userDetails.userID);
 
         //Add Params
         Map<String, Object> mParams = new HashMap<>();
@@ -1136,7 +1136,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
 
         // Add Header parameters
         Map<String, String> mHeaderParams = new HashMap<>();
-        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, userDetails.UserID);
+        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, userDetails.userID);
         mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
 
         // Add Params
@@ -1356,7 +1356,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
 
         //Add Header parameters
         Map<String, String> mHeaderParams = new HashMap<>();
-        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, userDetails.UserID);
+        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, userDetails.userID);
         mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
 
         SuperCalendar superCalendar = SuperCalendar.getInstance();

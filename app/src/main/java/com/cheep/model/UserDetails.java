@@ -14,32 +14,32 @@ import java.util.ArrayList;
 public class UserDetails {
 
     @SerializedName("user_id")
-    public String UserID;
+    public String userID;
 
     @SerializedName("user_name")
-    public String UserName;
+    public String userName;
 
     @SerializedName("email_address")
-    public String Email;
+    public String email;
 
     @SerializedName("user_info")
-    public String UserInfo;
+    public String userInfo;
 
     @SerializedName("profile_img")
-    public String ProfileImg;
+    public String profileImg;
 
     @SerializedName("profile_banner")
-    public String ProfileBanner;
+    public String profileBanner;
 
     @SerializedName("phone_number")
-    public String PhoneNumber;
+    public String phoneNumber;
 
     public String getDisplayLocationName() {
         return TextUtils.isEmpty(mLocality) ? mCityName : mLocality;
     }
 
     @SerializedName("login_with")
-    public String LoginWith;
+    public String loginWith;
 
     @SerializedName("address")
     public ArrayList<AddressModel> addressList;

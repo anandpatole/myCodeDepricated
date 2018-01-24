@@ -193,14 +193,14 @@ public class ProfileTabFragment extends BaseFragment {
     private void fillFields(UserDetails userDetails) {
         if (PreferenceUtility.getInstance(mContext).getUserDetails() != null) {
             //loading rounded image on profile
-            loadImage(userDetails.ProfileImg);
-            loadCoverImage(userDetails.ProfileBanner);
+            loadImage(userDetails.profileImg);
+            loadCoverImage(userDetails.profileBanner);
 
             //Update Name
-            mFragmentTabProfileBinding.userName.setText(userDetails.UserName);
+            mFragmentTabProfileBinding.userName.setText(userDetails.userName);
 
-            //Update Email
-            mFragmentTabProfileBinding.textEmail.setText(userDetails.Email);
+            //Update email
+            mFragmentTabProfileBinding.textEmail.setText(userDetails.email);
         } else {
             // Static details for Guest Users
             mFragmentTabProfileBinding.userName.setText(Utility.GUEST_STATIC_INFO.USERNAME);
@@ -240,10 +240,10 @@ public class ProfileTabFragment extends BaseFragment {
                     showChangePasswordDialog();
                     break;*/
                 case R.id.img_edit_username:
-                    showChangeUsernameDialog(userDetails.UserName);
+                    showChangeUsernameDialog(userDetails.userName);
                     break;
                 case R.id.img_edit_email:
-                    showChangeEmailDialog(userDetails.Email);
+                    showChangeEmailDialog(userDetails.email);
                     break;
                 case R.id.img_profile_photo_edit:
                     if (Utility.isConnected(mContext)) {
@@ -462,13 +462,13 @@ public class ProfileTabFragment extends BaseFragment {
 
         //Fetch User Details from Preference
         final UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
-        dialogChangePhoneNumberBinding.editPhoneNumber.setText(userDetails.PhoneNumber);
+        dialogChangePhoneNumberBinding.editPhoneNumber.setText(userDetails.phoneNumber);
         dialogChangePhoneNumberBinding.btnUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
                 String phoneNumber = dialogChangePhoneNumberBinding.editPhoneNumber.getText().toString();
-                if (!phoneNumber.equals(userDetails.PhoneNumber)) {
+                if (!phoneNumber.equals(userDetails.phoneNumber)) {
                     TEMP_PHONE_NUMBER = phoneNumber;
                     changePhoneNumber(phoneNumber);
                 } else {
@@ -862,7 +862,7 @@ public class ProfileTabFragment extends BaseFragment {
         //Add Header parameters
         Map<String, String> mHeaderParams = new HashMap<>();
         mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
-        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
+        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().userID);
 
         VolleyNetworkRequest mVolleyNetworkRequest = new VolleyNetworkRequest(NetworkUtility.WS.UPDATE_PROFILE
                 , mCallUpdateProfileWSErrorListener
@@ -902,9 +902,9 @@ public class ProfileTabFragment extends BaseFragment {
                             * Update user detail in fierbase
                             * */
                             ChatUserModel chatUserModel = new ChatUserModel();
-                            chatUserModel.setUserId(FirebaseUtils.getPrefixUserId(userDetails.UserID));
-                            chatUserModel.setUserName(userDetails.UserName);
-                            chatUserModel.setProfileImg(userDetails.ProfileImg);
+                            chatUserModel.setUserId(FirebaseUtils.getPrefixUserId(userDetails.userID));
+                            chatUserModel.setUserName(userDetails.userName);
+                            chatUserModel.setProfileImg(userDetails.profileImg);
                             FirebaseHelper.getUsersRef(chatUserModel.getUserId()).setValue(chatUserModel);
                         }
                         break;
@@ -963,7 +963,7 @@ public class ProfileTabFragment extends BaseFragment {
         //Add Header parameters
         Map<String, String> mHeaderParams = new HashMap<>();
         mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
-        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
+        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().userID);
 
         //Add Params
         Map<String, String> mParams = new HashMap<>();
@@ -1058,7 +1058,7 @@ public class ProfileTabFragment extends BaseFragment {
         //Add Header parameters
         Map<String, String> mHeaderParams = new HashMap<>();
         mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
-        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
+        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().userID);
 
         //Add Params
         Map<String, Object> mParams = new HashMap<>();
@@ -1153,7 +1153,7 @@ public class ProfileTabFragment extends BaseFragment {
         //Add Header parameters
         Map<String, String> mHeaderParams = new HashMap<>();
         mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
-        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
+        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().userID);
 
         //Add Params
         Map<String, Object> mParams = new HashMap<>();
@@ -1253,7 +1253,7 @@ public class ProfileTabFragment extends BaseFragment {
         //Add Header parameters
         Map<String, String> mHeaderParams = new HashMap<>();
         mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
-        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
+        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().userID);
 
         //Add Params
         Map<String, String> mParams = new HashMap<>();
@@ -1380,7 +1380,7 @@ public class ProfileTabFragment extends BaseFragment {
 
         //Add Header parameters
         Map<String, String> mHeaderParams = new HashMap<>();
-        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
+        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().userID);
         mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
 
         //Add Params

@@ -57,8 +57,8 @@ public class HDFCPaymentUtility {
 
 
         mParams.put(KEY, BuildConfig.PAYUBIZ_HDFC_KEY);
-        mParams.put(EMAIL, userDetails.Email);
-        mParams.put(FIRSTNAME, userDetails.UserName);
+        mParams.put(EMAIL, userDetails.email);
+        mParams.put(FIRSTNAME, userDetails.userName);
 
         mParams.put(AMOUNT, isPayNow ? providerModel.quotePrice : taskDetailModel.taskTotalPendingAmount);
 
@@ -70,21 +70,21 @@ public class HDFCPaymentUtility {
             mParams.put(PRODUCTINFO, taskDetailModel.taskId);
         } else {
             mParams.put(TASK_ID, Utility.EMPTY_STRING);
-            mParams.put(PRODUCTINFO, userDetails.UserID);
+            mParams.put(PRODUCTINFO, userDetails.userID);
         }
         mParams.put(UDF2, providerModel.providerId);
         mParams.put(UDF1, "Task Start Date : " + taskDetailModel.taskStartdate);
         mParams.put(UDF3, NetworkUtility.TAGS.PLATFORMTYPE.ANDROID);
         mParams.put(UDF4, Utility.EMPTY_STRING);
         mParams.put(UDF5, Utility.EMPTY_STRING);
-        mParams.put(USER_CREDENTIALS, BuildConfig.PAYUBIZ_HDFC_KEY + ":" + userDetails.Email);
+        mParams.put(USER_CREDENTIALS, BuildConfig.PAYUBIZ_HDFC_KEY + ":" + userDetails.email);
         mParams.put(DEVICE_TYPE, "1");
         mParams.put(ISMOBILEVIEW, "1");
         mParams.put(INSTRUMENT_TYPE, fcmToken);
         mParams.put(SURL, BuildConfig.PAYUBIZ_SUCCESS_URL);
         mParams.put(FURL, BuildConfig.PAYUBIZ_FAIL_URL);
         mParams.put(INSTRUMENT_ID, BuildConfig.PAYUBIZ_INSTRUMENT_ID);
-        mParams.put(PHONE, userDetails.PhoneNumber);
+        mParams.put(PHONE, userDetails.phoneNumber);
         mParams.put(HASH, Utility.EMPTY_STRING);
         LogUtils.LOGE(TAG, "getPaymentTransactionFieldsForNormalTask: mparams " + mParams);
         return mParams;
@@ -104,18 +104,18 @@ public class HDFCPaymentUtility {
         mTransactionFieldsParams.put(TXN_ID, transaction_Id);
         mTransactionFieldsParams.put(DEVICE_TYPE, "1");
         mTransactionFieldsParams.put(ISMOBILEVIEW, "1");
-        mTransactionFieldsParams.put(PRODUCTINFO, userDetails.UserID);
+        mTransactionFieldsParams.put(PRODUCTINFO, userDetails.userID);
         mTransactionFieldsParams.put(KEY, BuildConfig.PAYUBIZ_HDFC_KEY);
-        mTransactionFieldsParams.put(USER_CREDENTIALS, BuildConfig.PAYUBIZ_HDFC_KEY + ":" + userDetails.Email);
+        mTransactionFieldsParams.put(USER_CREDENTIALS, BuildConfig.PAYUBIZ_HDFC_KEY + ":" + userDetails.email);
         mTransactionFieldsParams.put(INSTRUMENT_TYPE, fcmToken);
         mTransactionFieldsParams.put(SURL, BuildConfig.PAYUBIZ_SUCCESS_URL);
         mTransactionFieldsParams.put(FURL, BuildConfig.PAYUBIZ_FAIL_URL);
         mTransactionFieldsParams.put(INSTRUMENT_ID, BuildConfig.PAYUBIZ_INSTRUMENT_ID);
 
         // User Details
-        mTransactionFieldsParams.put(FIRSTNAME, userDetails.UserName);
-        mTransactionFieldsParams.put(EMAIL, userDetails.Email);
-        mTransactionFieldsParams.put(PHONE, userDetails.PhoneNumber);
+        mTransactionFieldsParams.put(FIRSTNAME, userDetails.userName);
+        mTransactionFieldsParams.put(EMAIL, userDetails.email);
+        mTransactionFieldsParams.put(PHONE, userDetails.phoneNumber);
         // Total Amount
         mTransactionFieldsParams.put(AMOUNT, payAmount);
 
@@ -183,16 +183,16 @@ public class HDFCPaymentUtility {
           postData = "&txnid=" + transaction_Id +
                   "&device_type=1" +
                   "&ismobileview=1" +
-                  "&productinfo=" + (isInstaBooking ? userDetails.UserID : taskDetailModel.taskId) +
-                  "&user_credentials=" + userDetails.Email +
+                  "&productinfo=" + (isInstaBooking ? userDetails.userID : taskDetailModel.taskId) +
+                  "&user_credentials=" + userDetails.email +
                   "&key=" + BuildConfig.PAYUBIZ_HDFC_KEY +
                   "&instrument_type=" + PreferenceUtility.getInstance(mContext).getFCMRegID() +
                   "&surl=" + BuildConfig.PAYUBIZ_SUCCESS_URL +
                   "&furl=" + BuildConfig.PAYUBIZ_FAIL_URL + "" +
                   "&instrument_id=7dd17561243c202" +
-                  "&firstname=" + userDetails.UserName +
-                  "&email=" + userDetails.Email +
-                  "&phone=" + userDetails.PhoneNumber +
+                  "&firstname=" + userDetails.userName +
+                  "&email=" + userDetails.email +
+                  "&phone=" + userDetails.phoneNumber +
                   "&amount=" + (isAdditionalPayment ? taskDetailModel.additionalQuoteAmount : providerModel.quotePrice) +
   //                "&bankcode=PAYUW" + //for PayU Money
   //                "&pg=WALLET"+//for PayU Money
@@ -229,18 +229,18 @@ public class HDFCPaymentUtility {
         mTransactionFieldsParams.put(TXN_ID, transaction_Id);
         mTransactionFieldsParams.put(DEVICE_TYPE, "1");
         mTransactionFieldsParams.put(ISMOBILEVIEW, "1");
-        mTransactionFieldsParams.put(PRODUCTINFO, userDetails.UserID);
+        mTransactionFieldsParams.put(PRODUCTINFO, userDetails.userID);
         mTransactionFieldsParams.put(KEY, BuildConfig.PAYUBIZ_HDFC_KEY);
-        mTransactionFieldsParams.put(USER_CREDENTIALS, BuildConfig.PAYUBIZ_HDFC_KEY + ":" + userDetails.Email);
+        mTransactionFieldsParams.put(USER_CREDENTIALS, BuildConfig.PAYUBIZ_HDFC_KEY + ":" + userDetails.email);
         mTransactionFieldsParams.put(INSTRUMENT_TYPE, fcmToken);
         mTransactionFieldsParams.put(SURL, BuildConfig.PAYUBIZ_SUCCESS_URL);
         mTransactionFieldsParams.put(FURL, BuildConfig.PAYUBIZ_FAIL_URL);
         mTransactionFieldsParams.put(INSTRUMENT_ID, BuildConfig.PAYUBIZ_INSTRUMENT_ID);
 
         // User Details
-        mTransactionFieldsParams.put(FIRSTNAME, userDetails.UserName);
-        mTransactionFieldsParams.put(EMAIL, userDetails.Email);
-        mTransactionFieldsParams.put(PHONE, userDetails.PhoneNumber);
+        mTransactionFieldsParams.put(FIRSTNAME, userDetails.userName);
+        mTransactionFieldsParams.put(EMAIL, userDetails.email);
+        mTransactionFieldsParams.put(PHONE, userDetails.phoneNumber);
         // Total Amount
         mTransactionFieldsParams.put(AMOUNT, payAmount);
 

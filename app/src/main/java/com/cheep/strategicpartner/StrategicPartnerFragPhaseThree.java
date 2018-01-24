@@ -329,7 +329,7 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
         Map<String, String> mHeaderParams = new HashMap<>();
         mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
         if (userDetails != null)
-            mHeaderParams.put(NetworkUtility.TAGS.USER_ID, userDetails.UserID);
+            mHeaderParams.put(NetworkUtility.TAGS.USER_ID, userDetails.userID);
 
         //Add Params
         Map<String, Object> mParams = new HashMap<>();
@@ -538,7 +538,7 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
 
         // Add Header parameters
         Map<String, String> mHeaderParams = new HashMap<>();
-        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, userDetails.UserID);
+        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, userDetails.userID);
         mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
 
         // Add Params

@@ -141,13 +141,13 @@ public class HomeTabFragment extends BaseFragment {
 
         // Normal User so, go ahead as per earlier flow.
         // Update the name
-        if (userDetails != null && TextUtils.isEmpty(userDetails.UserName) == false && userDetails.UserName.trim().length() > 1) {
-            String name = userDetails.UserName.substring(0, 1).toUpperCase() + userDetails.UserName.substring(1);
+        if (userDetails != null && TextUtils.isEmpty(userDetails.userName) == false && userDetails.userName.trim().length() > 1) {
+            String name = userDetails.userName.substring(0, 1).toUpperCase() + userDetails.userName.substring(1);
             //Used to get only first word, e.g "Pankaj" from "pankaj sharma"
             mFragmentTabHomeBinding.textSearch.setText(getString(R.string.hint_search_placeholder, name));
 //            mFragmentTabHomeBinding.textSearch.setText(getString(R.string.hint_search_placeholder, name.split(" ")[0]));
         } else {
-            mFragmentTabHomeBinding.textSearch.setText(getString(R.string.hint_search_placeholder, userDetails.UserName));
+            mFragmentTabHomeBinding.textSearch.setText(getString(R.string.hint_search_placeholder, userDetails.userName));
         }
         updateCounter();
     }
@@ -531,7 +531,7 @@ public class HomeTabFragment extends BaseFragment {
             //Add Header parameters
             Map<String, String> mHeaderParams = new HashMap<>();
             mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
-            mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
+            mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().userID);
 
             //Add Params
             Map<String, String> mParams = new HashMap<>();
@@ -652,7 +652,7 @@ public class HomeTabFragment extends BaseFragment {
         Map<String, String> mHeaderParams = new HashMap<>();
         mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
         if (PreferenceUtility.getInstance(mContext).getUserDetails() != null)
-            mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
+            mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().userID);
 
         /*//Add Params
         Map<String, String> mParams = new HashMap<>();
@@ -791,7 +791,7 @@ public class HomeTabFragment extends BaseFragment {
         Map<String, String> mHeaderParams = new HashMap<>();
         mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
         if (PreferenceUtility.getInstance(mContext).getUserDetails() != null)
-            mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
+            mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().userID);
 
         //Add Params
         Map<String, String> mParams = new HashMap<>();
@@ -1007,7 +1007,7 @@ public class HomeTabFragment extends BaseFragment {
         Map<String, String> mHeaderParams = new HashMap<>();
         mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
         if (PreferenceUtility.getInstance(mContext).getUserDetails() != null)
-            mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
+            mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().userID);
 
         //Add Params
         Map<String, String> mParams = new HashMap<>();
@@ -1529,7 +1529,7 @@ public class HomeTabFragment extends BaseFragment {
         //Add Header parameters
         Map<String, String> mHeaderParams = new HashMap<>();
         mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
-        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
+        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().userID);
 
         //Add Params
         Map<String, String> mParams = new HashMap<>();

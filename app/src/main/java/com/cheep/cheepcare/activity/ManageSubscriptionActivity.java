@@ -36,17 +36,17 @@ public class ManageSubscriptionActivity extends BaseAppCompatActivity {
     private ActivityManageSubscriptionBinding mBinding;
     private CityDetail mCity;
     private List<AnimatorSet> animators;
-    private int activityType;
+    private boolean isManageSubscription;
 
-    public interface ACTIVITY_TYPES {
+    /*public interface ACTIVITY_TYPES {
         int WELCOME_TO_CC_ACTIVITY = 0;
         int MANAGE_SUBSCRIPTION_ACTIVITY = 1;
-    }
+    }*/
 
-    public static void newInstance(Context context, CityDetail city, int activityType) {
+    public static void newInstance(Context context, CityDetail city, boolean isManageSubscription) {
         Intent intent = new Intent(context, ManageSubscriptionActivity.class);
         intent.putExtra(Utility.Extra.CITY_DETAIL, Utility.getJsonStringFromObject(city));
-        intent.putExtra(Utility.Extra.ACTIVITY_TYPE, Utility.getJsonStringFromObject(city));
+        intent.putExtra(Utility.Extra.ACTIVITY_TYPE, isManageSubscription);
         context.startActivity(intent);
     }
 
@@ -62,8 +62,9 @@ public class ManageSubscriptionActivity extends BaseAppCompatActivity {
     protected void initiateUI() {
         if (getIntent().hasExtra(Utility.Extra.CITY_DETAIL)) {
             mCity = (CityDetail) Utility.getObjectFromJsonString(getIntent().getExtras().getString(Utility.Extra.CITY_DETAIL), CityDetail.class);
+            isManageSubscription = getIntent().getExtras().getBoolean(Utility.Extra.ACTIVITY_TYPE);
         }
-        if (mCity==null)
+        if (mCity == null)
             return;
 
         // Calculate Pager Height and Width
@@ -96,7 +97,7 @@ public class ManageSubscriptionActivity extends BaseAppCompatActivity {
 
         mBinding.tvCityName.setText(mCity.cityName);
 
-        if (activityType == ACTIVITY_TYPES.WELCOME_TO_CC_ACTIVITY) {
+        if (!isManageSubscription) {
             SpannableStringBuilder spannableStringBuilder
                     = new SpannableStringBuilder(getString(R.string.msg_welcome_x, "Nikita"));
             spannableStringBuilder.append(Utility.ONE_CHARACTER_SPACE).append(Utility.ONE_CHARACTER_SPACE);
@@ -104,8 +105,10 @@ public class ManageSubscriptionActivity extends BaseAppCompatActivity {
             spannableStringBuilder.setSpan(span, spannableStringBuilder.length() - 1
                     , spannableStringBuilder.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
             mBinding.tvWelcomeText.setText(spannableStringBuilder);
+            mBinding.tvWelcomeText.setVisibility(View.VISIBLE);
             mBinding.tvInfoText.setText(getString(R.string.msg_welcoming_on_subscription));
         } else {
+            mBinding.tvWelcomeText.setVisibility(View.GONE);
             mBinding.tvInfoText.setText(getString(R.string.cheep_care_work_flow_desc, "Nikita"));
         }
 
