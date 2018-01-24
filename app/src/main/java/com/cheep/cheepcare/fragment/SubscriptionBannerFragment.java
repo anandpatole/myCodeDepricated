@@ -125,7 +125,7 @@ public class SubscriptionBannerFragment extends BaseFragment {
                     if (!processingClick) {
                         processingClick = true;
                         if (bannerImageModel.isSubscribed.equalsIgnoreCase(Utility.BOOLEAN.YES)) {
-                            ManageSubscriptionActivity.newInstance(mContext, bannerImageModel);
+                            ManageSubscriptionActivity.newInstance(mContext, bannerImageModel, ManageSubscriptionActivity.ACTIVITY_TYPES.MANAGE_SUBSCRIPTION_ACTIVITY);
                         } else {
                             LandingScreenPickPackageActivity.newInstance(mContext, bannerImageModel);
                         }

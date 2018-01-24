@@ -38,9 +38,15 @@ public class ManageSubscriptionActivity extends BaseAppCompatActivity {
     private List<AnimatorSet> animators;
     private int activityType;
 
-    public static void newInstance(Context context, CityDetail city) {
+    public interface ACTIVITY_TYPES {
+        int WELCOME_TO_CC_ACTIVITY = 0;
+        int MANAGE_SUBSCRIPTION_ACTIVITY = 1;
+    }
+
+    public static void newInstance(Context context, CityDetail city, int activityType) {
         Intent intent = new Intent(context, ManageSubscriptionActivity.class);
         intent.putExtra(Utility.Extra.CITY_DETAIL, Utility.getJsonStringFromObject(city));
+        intent.putExtra(Utility.Extra.ACTIVITY_TYPE, Utility.getJsonStringFromObject(city));
         context.startActivity(intent);
     }
 
@@ -90,7 +96,7 @@ public class ManageSubscriptionActivity extends BaseAppCompatActivity {
 
         mBinding.tvCityName.setText(mCity.cityName);
 
-        if (activityType == 0) {
+        if (activityType == ACTIVITY_TYPES.WELCOME_TO_CC_ACTIVITY) {
             SpannableStringBuilder spannableStringBuilder
                     = new SpannableStringBuilder(getString(R.string.msg_welcome_x, "Nikita"));
             spannableStringBuilder.append(Utility.ONE_CHARACTER_SPACE).append(Utility.ONE_CHARACTER_SPACE);
