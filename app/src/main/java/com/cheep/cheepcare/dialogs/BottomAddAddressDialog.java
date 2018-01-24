@@ -67,7 +67,6 @@ public class BottomAddAddressDialog {
 
     public interface AddAddressListener {
         void onAddAddress(AddressModel addressModel);
-
         void onUpdateAddress(AddressModel addressModel);
     }
 
@@ -190,6 +189,9 @@ public class BottomAddAddressDialog {
                     Utility.showToast(mContext, mContext.getString(R.string.validate_address));
                 } else if (TextUtils.isEmpty(binding.editAddressInitials.getText().toString().trim())) {
                     Utility.showToast(mContext, mContext.getString(R.string.validate_address_initials));
+                } else if (TextUtils.isEmpty(binding.editPincode.getText().toString().trim())
+                        || binding.editPincode.getText().toString().trim().length() < 6) {
+                    Utility.showToast(mContext, mContext.getString(R.string.validate_pincode));
                 } else {
 
                     if (mAddressModel != null) {
@@ -478,12 +480,12 @@ public class BottomAddAddressDialog {
                         AddressModel addressModel = (AddressModel) getObjectFromJsonString(jsonObject.getJSONObject(NetworkUtility.TAGS.DATA).toString(), AddressModel.class);
                         addAddressListener.onAddAddress(addressModel);
 
-
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
                         // Show Toast
 //                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityHireNewJobBinding.getRoot());
                         Utility.showToast(mContext, mContext.getString(R.string.label_something_went_wrong));
+
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
                         error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);

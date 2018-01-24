@@ -379,12 +379,8 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
             switch (v.getId()) {
                 case R.id.text_continue:
                     if (mBinding.viewpager.getCurrentItem() == STAGE_1) {
-                        if (PreferenceUtility.getInstance(mContext).getUserDetails() == null) {
-                            LogUtils.LOGE(TAG, "onClick: login required");
-                            LoginActivity.newInstance(mContext);
-                            return;
-                        } else
-                            goToPackageBundling(STAGE_3);
+
+                        goToPackageBundling(STAGE_3);
                     } else if (mBinding.viewpager.getCurrentItem() == STAGE_2) {
                         if (PreferenceUtility.getInstance(mContext).getUserDetails() == null) {
                             LogUtils.LOGE(TAG, "onClick: login required");
@@ -441,7 +437,11 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
                         }
                     }
                 }
-                gotoStep(step);
+                if (PreferenceUtility.getInstance(mContext).getUserDetails() == null) {
+                    LogUtils.LOGE(TAG, "onClick: login required");
+                    LoginActivity.newInstance(mContext);
+                } else
+                    gotoStep(step);
             }
             updateCartCount();
         }
@@ -648,7 +648,7 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
                         //Add Header parameters
                         Map<String, String> mHeaderParams = new HashMap<>();
                         mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
-                        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
+                        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().userID);
 
                         //Add Params
                         Map<String, Object> mParams = new HashMap<>();

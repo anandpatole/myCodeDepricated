@@ -138,8 +138,28 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
         SpannableStringBuilder spannableStringBuilder
                 = new SpannableStringBuilder(model.cityDetail.greetingMessage);
 
+
+        int resId = R.drawable.emoji_mic;
+        switch (mCity.citySlug) {
+            case NetworkUtility.CARE_CITY_SLUG.MUMBAI:
+                resId = R.drawable.emoji_mic;
+                break;
+            case NetworkUtility.CARE_CITY_SLUG.HYDRABAD:
+                resId = R.drawable.emoji_mustache;
+                break;
+            case NetworkUtility.CARE_CITY_SLUG.BENGALURU:
+                resId = R.drawable.emoji_folded_hands;
+                break;
+            case NetworkUtility.CARE_CITY_SLUG.DELHI:
+                resId = R.drawable.emoji_heart;
+                break;
+            case NetworkUtility.CARE_CITY_SLUG.CHENNAI:
+                resId = R.drawable.emoji_mobile_phone;
+                break;
+        }
+
         spannableStringBuilder.append(Utility.ONE_CHARACTER_SPACE).append(Utility.ONE_CHARACTER_SPACE);
-        ImageSpan span = new ImageSpan(mContext, R.drawable.ic_mic, ImageSpan.ALIGN_BASELINE);
+        ImageSpan span = new ImageSpan(mContext,resId, ImageSpan.ALIGN_BASELINE);
         spannableStringBuilder.setSpan(span, spannableStringBuilder.length() - 1
                 , spannableStringBuilder.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
         mBinding.tvGoodMorningText.setText(spannableStringBuilder);

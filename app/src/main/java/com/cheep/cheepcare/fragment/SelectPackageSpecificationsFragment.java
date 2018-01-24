@@ -18,6 +18,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.cheep.R;
 import com.cheep.activity.BaseAppCompatActivity;
+import com.cheep.activity.LoginActivity;
 import com.cheep.cheepcare.activity.PackageCustomizationActivity;
 import com.cheep.cheepcare.adapter.AddressPackageCustomizationAdapter;
 import com.cheep.cheepcare.adapter.ExpandablePackageServicesRecyclerAdapter;
@@ -136,7 +137,11 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
         mBinding.tvOtherBundlePackages.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mPackageCustomizationActivity.goToPackageBundling(PackageCustomizationActivity.STAGE_2);
+                if (PreferenceUtility.getInstance(mContext).getUserDetails() == null) {
+                    LogUtils.LOGE(TAG, "onClick: login required");
+                    LoginActivity.newInstance(mContext);
+                } else
+                    mPackageCustomizationActivity.goToPackageBundling(PackageCustomizationActivity.STAGE_2);
             }
         });
 
