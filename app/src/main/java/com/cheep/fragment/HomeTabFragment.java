@@ -35,8 +35,8 @@ import com.cheep.R;
 import com.cheep.activity.HomeActivity;
 import com.cheep.activity.SearchActivity;
 import com.cheep.activity.SelectLocationActivity;
+import com.cheep.activity.TaskCreationActivity;
 import com.cheep.adapter.HomeTabRecyclerViewAdapter;
-import com.cheep.cheepcare.activity.TaskCreationCCActivity;
 import com.cheep.cheepcare.fragment.SubscriptionBannerFragment;
 import com.cheep.cheepcare.model.CityDetail;
 import com.cheep.databinding.FragmentTabHomeBinding;
@@ -243,7 +243,7 @@ public class HomeTabFragment extends BaseFragment {
 
         initSwipeToRefreshLayout();
 
-        if (EventBus.getDefault().isRegistered(this) == false)
+        if (!EventBus.getDefault().isRegistered(this))
             EventBus.getDefault().register(this);
 
         // Set Height of Viewpager according to 16:9 resolution to make the things work
@@ -1042,7 +1042,8 @@ public class HomeTabFragment extends BaseFragment {
                         if (categoryType.equalsIgnoreCase(Utility.NORMAL)) {
                             JobCategoryModel model = (JobCategoryModel) Utility.getObjectFromJsonString(
                                     jsonObject.getString(NetworkUtility.TAGS.DATA), JobCategoryModel.class);
-                            TaskCreationCCActivity.getInstance(mContext, model);
+//                            TaskCreationCCActivity.getInstance(mContext, model);
+                            TaskCreationActivity.getInstance(mContext, model);
                         } else {
                             BannerImageModel model = (BannerImageModel) Utility.getObjectFromJsonString(
                                     jsonObject.getString(NetworkUtility.TAGS.DATA), BannerImageModel.class);

@@ -1615,14 +1615,7 @@ public class TaskCreationPhase2Fragment extends BaseFragment
             if (!TextUtils.isEmpty(addressId)) {
                 mParams.put(NetworkUtility.TAGS.ADDRESS_ID, addressId);
             } else {
-                mParams.put(NetworkUtility.TAGS.ADDRESS, addressModel.address);
-                mParams.put(NetworkUtility.TAGS.ADDRESS_INITIALS, addressModel.address_initials);
-                mParams.put(NetworkUtility.TAGS.CATEGORY, addressModel.category);
-                mParams.put(NetworkUtility.TAGS.LAT, addressModel.lat);
-                mParams.put(NetworkUtility.TAGS.LNG, addressModel.lng);
-                mParams.put(NetworkUtility.TAGS.COUNTRY, addressModel.countryName);
-                mParams.put(NetworkUtility.TAGS.STATE, addressModel.stateName);
-                mParams.put(NetworkUtility.TAGS.CITY_NAME, addressModel.cityName);
+              mParams =  NetworkUtility.addGuestAddressParams(mParams, addressModel);
             }
         } else {
             // Check if user is logged in if yes pass the address details accordingly.

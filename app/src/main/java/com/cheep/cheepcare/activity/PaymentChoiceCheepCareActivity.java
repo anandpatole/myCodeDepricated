@@ -91,7 +91,7 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
         mBinding.llCashPayment.setVisibility(View.GONE);
         cartDetail = getIntent().getStringExtra(Utility.Extra.DATA);
         paymentDataModel = (CheepCarePaymentDataModel) Utility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA_2), CheepCarePaymentDataModel.class);
-        cityDetail = (CityDetail) Utility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA_2), CityDetail.class);
+        cityDetail = (CityDetail) Utility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA_3), CityDetail.class);
 
         LogUtils.LOGE(TAG, "initiateUI: paymentDataModel \n============\n" + paymentDataModel);
         setupActionbar();

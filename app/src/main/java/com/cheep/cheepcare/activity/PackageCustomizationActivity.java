@@ -1,9 +1,12 @@
 package com.cheep.cheepcare.activity;
 
+import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -13,10 +16,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.cheep.R;
 import com.cheep.activity.BaseAppCompatActivity;
+import com.cheep.activity.LoginActivity;
 import com.cheep.cheepcare.adapter.PackageCustomizationPagerAdapter;
 import com.cheep.cheepcare.fragment.PackageBundlingFragment;
 import com.cheep.cheepcare.fragment.PackageSummaryFragment;
@@ -27,9 +33,16 @@ import com.cheep.cheepcare.model.PackageDetail;
 import com.cheep.cheepcare.model.PackageOption;
 import com.cheep.cheepcare.model.PackageSubOption;
 import com.cheep.databinding.ActivityPackageCustomizationBinding;
+import com.cheep.model.AddressModel;
+import com.cheep.model.LocationInfo;
 import com.cheep.model.MessageEvent;
+import com.cheep.model.UserDetails;
 import com.cheep.network.NetworkUtility;
+import com.cheep.network.Volley;
+import com.cheep.network.VolleyNetworkRequest;
+import com.cheep.utils.FetchLocationInfoUtility;
 import com.cheep.utils.LogUtils;
+import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.Utility;
 
 import org.greenrobot.eventbus.EventBus;
@@ -40,6 +53,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
+import static com.cheep.utils.Utility.getObjectFromJsonString;
 
 /**
  * Created by pankaj on 12/22/17.
@@ -86,6 +103,8 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
         super.onCreate(savedInstanceState);
         EventBus.getDefault().register(this);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_package_customization);
+        mContext.registerReceiver(mBR_OnLoginSuccess, new IntentFilter(Utility.BR_ON_LOGIN_SUCCESS));
+
         initiateUI();
         setListeners();
     }
@@ -360,13 +379,23 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
             switch (v.getId()) {
                 case R.id.text_continue:
                     if (mBinding.viewpager.getCurrentItem() == STAGE_1) {
-                        goToPackageBundling(STAGE_3);
+                        if (PreferenceUtility.getInstance(mContext).getUserDetails() == null) {
+                            LogUtils.LOGE(TAG, "onClick: login required");
+                            LoginActivity.newInstance(mContext);
+                            return;
+                        } else
+                            goToPackageBundling(STAGE_3);
                     } else if (mBinding.viewpager.getCurrentItem() == STAGE_2) {
-                        gotoStep(STAGE_3);
+                        if (PreferenceUtility.getInstance(mContext).getUserDetails() == null) {
+                            LogUtils.LOGE(TAG, "onClick: login required");
+                            LoginActivity.newInstance(mContext);
+                            return;
+                        } else
+                            gotoStep(STAGE_3);
                     } else {
                         PackageSummaryFragment summaryFragment = (PackageSummaryFragment) mPackageCustomizationPagerAdapter.getItem(STAGE_3);
                         if (summaryFragment != null)
-                            PaymentChoiceCheepCareActivity.newInstance(PackageCustomizationActivity.this, createSubscriptionPackageRequest(), summaryFragment.getPaymentData(),mCityDetail);
+                            PaymentChoiceCheepCareActivity.newInstance(PackageCustomizationActivity.this, createSubscriptionPackageRequest(), summaryFragment.getPaymentData(), mCityDetail);
                     }
                     break;
             }
@@ -450,6 +479,9 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
                         addressObject.put(NetworkUtility.TAGS.COUNTRY, detail.mSelectedAddress.countryName);
                         addressObject.put(NetworkUtility.TAGS.STATE, detail.mSelectedAddress.stateName);
                         addressObject.put(NetworkUtility.TAGS.CITY_NAME, detail.mSelectedAddress.cityName);
+                        addressObject.put(NetworkUtility.TAGS.LANDMARK, detail.mSelectedAddress.landmark);
+                        addressObject.put(NetworkUtility.TAGS.PINCODE, detail.mSelectedAddress.pincode);
+                        addressObject.put(NetworkUtility.TAGS.NICKNAME, detail.mSelectedAddress.nickname);
                     } else {
                         addressObject.put(NetworkUtility.TAGS.ADDRESS_ID, addressId);
                     }
@@ -459,7 +491,6 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
                     for (PackageOption servicesModel : detail.packageOptionList) {
                         JSONObject optionObj = new JSONObject();
                         optionObj.put("package_option_id", servicesModel.packageId);
-
                         JSONArray subOptionArray = new JSONArray();
                         if (servicesModel.selectionType.equalsIgnoreCase(PackageOption.SELECTION_TYPE.RADIO))
                             for (PackageSubOption option : servicesModel.getChildList()) {
@@ -543,6 +574,7 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
     @Override
     protected void onDestroy() {
         EventBus.getDefault().unregister(this);
+        mContext.unregisterReceiver(mBR_OnLoginSuccess);
         super.onDestroy();
     }
 
@@ -559,4 +591,167 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
         }
 
     }
+
+    /**
+     * BroadCast that would restart the screen once login has been done.
+     */
+    private BroadcastReceiver mBR_OnLoginSuccess = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            LogUtils.LOGD(TAG, "Login onReceive() called with:");
+            Utility.hideKeyboard(mContext);
+            // Initiating the payment now
+            // As User is currently logged in, we need to add FullAddressModel to existing addresslist.
+
+            UserDetails mUserDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
+            if (mUserDetails != null) {
+                if (mUserDetails.addressList.isEmpty()) {
+                    mUserDetails.addressList = new ArrayList<>();
+                }
+                SelectPackageSpecificationsFragment fragment = (SelectPackageSpecificationsFragment) mPackageCustomizationPagerAdapter.getItem(STAGE_1);
+                if (fragment != null && fragment.mSelectedAddress != null)
+                    callAddAddressWS(fragment.mSelectedAddress);
+
+                // Add additional selected addressmodel here.
+                // mUserDetails.addressList.add(.mSelectedAddressModel);
+                // Save the user now.
+
+                PreferenceUtility.getInstance(mContext).saveUserDetails(mUserDetails);
+            }
+
+//            payNow();
+        }
+    };
+
+    /**
+     * Calling Add Address WS
+     *
+     * @param addressModel address model of selected address
+     */
+    private void callAddAddressWS(final AddressModel addressModel) {
+        if (!Utility.isConnected(mContext)) {
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mBinding.getRoot());
+            return;
+        }
+
+        /**
+         * Logged In User so first need to fetch other location info and then call add address
+         * Webservice.
+         */
+        ((BaseAppCompatActivity) mContext).showProgressDialog();
+        FetchLocationInfoUtility mFetchLocationInfoUtility = new FetchLocationInfoUtility(
+                mContext,
+                new FetchLocationInfoUtility.FetchLocationInfoCallBack() {
+                    @Override
+                    public void onLocationInfoAvailable(LocationInfo mLocationIno) {
+
+                        //Add Header parameters
+                        Map<String, String> mHeaderParams = new HashMap<>();
+                        mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
+                        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
+
+                        //Add Params
+                        Map<String, Object> mParams = new HashMap<>();
+
+
+                        addressModel.cityName = mLocationIno.City;
+                        addressModel.countryName = mLocationIno.Country;
+                        addressModel.stateName = mLocationIno.State;
+                        addressModel.lat = String.valueOf(mLocationIno.lat);
+                        addressModel.lng = String.valueOf(mLocationIno.lng);
+
+
+                        mParams = NetworkUtility.addGuestAddressParams(mParams, addressModel);
+
+                        Utility.hideKeyboard(mContext);
+                        //Url is based on condition if address id is greater then 0 then it means we need to update the existing address
+                        VolleyNetworkRequest mVolleyNetworkRequest = new VolleyNetworkRequest(NetworkUtility.WS.ADD_ADDRESS
+                                , mCallAddAddressWSErrorListener
+                                , mCallAddAddressResponseListener
+                                , mHeaderParams
+                                , mParams
+                                , null);
+                        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest, NetworkUtility.WS.ADD_ADDRESS);
+                    }
+
+                    @Override
+                    public void internetConnectionNotFound() {
+                        ((BaseAppCompatActivity) mContext).hideProgressDialog();
+                        Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mBinding.getRoot());
+                    }
+                },
+                false
+        );
+        mFetchLocationInfoUtility.getLocationInfo(String.valueOf(addressModel.lat), String.valueOf(addressModel.lng));
+        return;
+
+    }
+
+
+    Response.Listener mCallAddAddressResponseListener = new Response.Listener() {
+        @Override
+        public void onResponse(Object response) {
+
+            String strResponse = (String) response;
+            try {
+                JSONObject jsonObject = new JSONObject(strResponse);
+                Log.i(TAG, "onResponse: " + jsonObject.toString());
+                int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
+                String error_message;
+
+                switch (statusCode) {
+                    case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
+                        SelectPackageSpecificationsFragment fragment = (SelectPackageSpecificationsFragment) mPackageCustomizationPagerAdapter.getItem(STAGE_1);
+                        AddressModel addressModel = (AddressModel) getObjectFromJsonString(jsonObject.getJSONObject(NetworkUtility.TAGS.DATA).toString(), AddressModel.class);
+                        UserDetails mUserDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
+                        mUserDetails.addressList.add(addressModel);
+                        PreferenceUtility.getInstance(mContext).saveUserDetails(mUserDetails);
+
+                        if (fragment != null) {
+                            fragment.mSelectedAddress = addressModel;
+                            fragment.verifyAddressForCity(addressModel);
+                        }
+
+                        break;
+                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
+                        // Show Toast
+//                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityHireNewJobBinding.getRoot());
+                        Utility.showToast(mContext, mContext.getString(R.string.label_something_went_wrong));
+                        break;
+                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
+                        error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
+                        // Show message
+//                        Utility.showSnackBar(error_message, mActivityHireNewJobBinding.getRoot());
+                        Utility.showToast(mContext, error_message);
+                        break;
+                    case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
+                    case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
+                        //Logout and finish the current activity
+                        Utility.logout(mContext, true, statusCode);
+                        ((Activity) mContext).finish();
+                        break;
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+                mCallAddAddressWSErrorListener.onErrorResponse(new VolleyError(e.getMessage()));
+            }
+            ((BaseAppCompatActivity) mContext).hideProgressDialog();
+        }
+    };
+
+    Response.ErrorListener mCallAddAddressWSErrorListener = new Response.ErrorListener() {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
+
+            // Close Progressbar
+            ((BaseAppCompatActivity) mContext).hideProgressDialog();
+
+            // Show Toast
+//            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityHireNewJobBinding.getRoot());
+            Utility.showToast(mContext, mContext.getString(R.string.label_something_went_wrong));
+        }
+    };
+
+
 }

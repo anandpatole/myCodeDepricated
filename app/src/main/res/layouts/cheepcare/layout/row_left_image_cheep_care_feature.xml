@@ -6,7 +6,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/scale_41dp"
+        android:layout_marginTop="@dimen/scale_38dp"
         android:orientation="horizontal"
         android:paddingEnd="@dimen/scale_20dp"
         android:paddingLeft="@dimen/scale_20dp"
@@ -17,7 +17,7 @@
             android:id="@+id/iv_no_hidden_charges"
             android:layout_width="@dimen/scale_57dp"
             android:layout_height="@dimen/scale_57dp"
-            android:layout_gravity="top"
+            android:layout_gravity="center_vertical"
             android:layout_marginEnd="@dimen/scale_17dp"
             android:layout_marginRight="@dimen/scale_17dp"
             tools:src="@drawable/ic_rupee_stroked_in_glass"/>

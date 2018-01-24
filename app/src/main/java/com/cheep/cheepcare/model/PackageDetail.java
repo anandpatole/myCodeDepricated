@@ -11,7 +11,7 @@ import java.util.List;
 
 public class PackageDetail implements Serializable {
 
-    @SerializedName("id")
+    @SerializedName("care_package_id")
     public String id;
     @SerializedName("title")
     public String title;

@@ -49,7 +49,6 @@ import com.cheep.adapter.FAQRecyclerViewAdapter;
 import com.cheep.adapter.FavouriteRecyclerViewAdapter;
 import com.cheep.adapter.HistoryRecyclerViewAdapter;
 import com.cheep.adapter.SlideMenuAdapter;
-import com.cheep.cheepcare.activity.TaskCreationCCActivity;
 import com.cheep.custom_view.BottomAlertDialog;
 import com.cheep.databinding.ActivityHomeBinding;
 import com.cheep.databinding.NavHeaderHomeBinding;
@@ -878,7 +877,7 @@ public class HomeActivity extends BaseAppCompatActivity
     public void onCategoryRowClicked(JobCategoryModel model, int position) {
         // Changes on 27thApril,2017
 //        HireNewJobActivity.newInstance(mContext, model);
-        TaskCreationCCActivity.getInstance(mContext, model);
+        TaskCreationActivity.getInstance(mContext, model);
     }
 
     @Override

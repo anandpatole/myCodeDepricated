@@ -212,9 +212,13 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
                         JSONObject data = jsonObject.getJSONObject(NetworkUtility.TAGS.DATA);
                         String title = data.optString(NetworkUtility.TAGS.TITLE);
                         String subTitle = data.optString(NetworkUtility.TAGS.SUBTITLE);
-                        mBinding.tvCheepTipsTitle.setText(title);
-                        mBinding.tvCheepTipsDesc.setText(subTitle);
-                        mBinding.cvCheepTip.setVisibility(View.VISIBLE);
+                        if (TextUtils.isEmpty(title) && TextUtils.isEmpty(subTitle)) {
+                            mBinding.cvCheepTip.setVisibility(View.GONE);
+                        } else {
+                            mBinding.tvCheepTipsTitle.setText(title);
+                            mBinding.tvCheepTipsDesc.setText(subTitle);
+                            mBinding.cvCheepTip.setVisibility(View.VISIBLE);
+                        }
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
                         // Show Toast
@@ -443,7 +447,7 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
 
         mBinding.tvAddressNickname.setText(category);
 
-        mBinding.tvAddress.setText(model.address);
+        mBinding.tvAddress.setText(model.address_initials + ", " + model.address);
         mBinding.ivIsAddressSelected.setSelected(true);
         mSelectedAddress = model;
     }
@@ -490,15 +494,18 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
         return true;
     }
 
-    private void verifyAddressForCity(final AddressModel model) {
-
-        showProgressDialog();
+    public void verifyAddressForCity(final AddressModel model) {
 
         //Add Header parameters
+        showProgressDialog();
         Map<String, String> mHeaderParams = new HashMap<>();
         mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
-        if (PreferenceUtility.getInstance(mContext).getUserDetails() != null)
+        if (PreferenceUtility.getInstance(mContext).getUserDetails() != null) {
             mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().UserID);
+            mList.clear();
+            mList.addAll(PreferenceUtility.getInstance(mContext).getUserDetails().addressList);
+        }
+
 
         //Add Params
         Map<String, Object> mParams = new HashMap<>();
@@ -514,7 +521,9 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
             mParams.put(NetworkUtility.TAGS.CITY_NAME, model.cityName);
         } else {
             mParams.put(NetworkUtility.TAGS.ADDRESS_ID, model.address_id);
+            mParams.put(NetworkUtility.TAGS.CARE_CITY_ID, mPackageCustomizationActivity.mCityDetail.id);
             mParams.put(NetworkUtility.TAGS.CITY_NAME, Utility.EMPTY_STRING);
+            mParams.put(NetworkUtility.TAGS.CARE_PACKAGE_ID, mPackageCustomizationActivity.mPackageId);
         }
 
         Utility.hideKeyboard(mContext);
@@ -552,6 +561,8 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
                                 fillAddressView(model);
                             } else {
                                 Utility.showToast(mPackageCustomizationActivity, getString(R.string.validation_message_cheep_care_address, mPackageCustomizationActivity.mCityDetail.cityName));
+                                mBinding.llAddressContainer.setVisibility(View.GONE);
+                                mBinding.tvSelectAddress.setVisibility(View.VISIBLE);
                             }
 
                             break;

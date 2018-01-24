@@ -1475,14 +1475,8 @@ public class EnterTaskDetailFragment extends BaseFragment implements RequestPerm
             if (!TextUtils.isEmpty(addressId)) {
                 mParams.put(NetworkUtility.TAGS.ADDRESS_ID, addressId);
             } else {
-                mParams.put(NetworkUtility.TAGS.ADDRESS, addressModel.address);
-                mParams.put(NetworkUtility.TAGS.ADDRESS_INITIALS, addressModel.address_initials);
-                mParams.put(NetworkUtility.TAGS.CATEGORY, addressModel.category);
-                mParams.put(NetworkUtility.TAGS.LAT, addressModel.lat);
-                mParams.put(NetworkUtility.TAGS.LNG, addressModel.lng);
-                mParams.put(NetworkUtility.TAGS.COUNTRY, addressModel.countryName);
-                mParams.put(NetworkUtility.TAGS.STATE, addressModel.stateName);
-                mParams.put(NetworkUtility.TAGS.CITY_NAME, addressModel.cityName);
+                mParams = NetworkUtility.addGuestAddressParams(mParams, mSelectedAddressModel);
+
             }
         } else {
             // Check if user is logged in if yes pass the address details accordingly.
@@ -1669,8 +1663,14 @@ public class EnterTaskDetailFragment extends BaseFragment implements RequestPerm
 
                 //Saving information in sharedpreference
                 UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
-                userDetails.addressList = addressRecyclerViewAdapter.getmList();
-                PreferenceUtility.getInstance(mContext).saveUserDetails(userDetails);
+                if (userDetails != null) {
+                    userDetails.addressList =  addressRecyclerViewAdapter.getmList();
+                    PreferenceUtility.getInstance(mContext).saveUserDetails(userDetails);
+                } else {
+                    GuestUserDetails guestUserDetails = PreferenceUtility.getInstance(mContext).getGuestUserDetails();
+                    guestUserDetails.addressList = addressRecyclerViewAdapter.getmList();
+                    PreferenceUtility.getInstance(mContext).saveGuestUserDetails(guestUserDetails);
+                }
 
                 if (addAddressDialog != null) {
                     addAddressDialog.dismiss();
@@ -1692,8 +1692,15 @@ public class EnterTaskDetailFragment extends BaseFragment implements RequestPerm
 
                 //Saving information in sharedpreference
                 UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
-                userDetails.addressList = addressRecyclerViewAdapter.getmList();
-                PreferenceUtility.getInstance(mContext).saveUserDetails(userDetails);
+                if (userDetails != null) {
+                    userDetails.addressList =  addressRecyclerViewAdapter.getmList();
+                    PreferenceUtility.getInstance(mContext).saveUserDetails(userDetails);
+                } else {
+                    GuestUserDetails guestUserDetails = PreferenceUtility.getInstance(mContext).getGuestUserDetails();
+                    guestUserDetails.addressList = addressRecyclerViewAdapter.getmList();
+                    PreferenceUtility.getInstance(mContext).saveGuestUserDetails(guestUserDetails);
+                }
+
 
 
                 if (dialog != null) {

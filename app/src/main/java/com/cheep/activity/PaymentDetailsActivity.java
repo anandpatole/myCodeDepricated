@@ -766,14 +766,8 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
                 addressId = 0;
             }
             if (addressId <= 0) {
-                mParams.put(NetworkUtility.TAGS.ADDRESS, mSelectedAddressModelForInsta.address);
-                mParams.put(NetworkUtility.TAGS.ADDRESS_INITIALS, mSelectedAddressModelForInsta.address_initials);
-                mParams.put(NetworkUtility.TAGS.CATEGORY, mSelectedAddressModelForInsta.category);
-                mParams.put(NetworkUtility.TAGS.LAT, mSelectedAddressModelForInsta.lat);
-                mParams.put(NetworkUtility.TAGS.LNG, mSelectedAddressModelForInsta.lng);
-                mParams.put(NetworkUtility.TAGS.COUNTRY, mSelectedAddressModelForInsta.countryName);
-                mParams.put(NetworkUtility.TAGS.STATE, mSelectedAddressModelForInsta.stateName);
-                mParams.put(NetworkUtility.TAGS.CITY_NAME, mSelectedAddressModelForInsta.cityName);
+                NetworkUtility.addGuestAddressParams(mTaskCreationParams, mSelectedAddressModelForInsta);
+
             } else {
                 mParams.put(NetworkUtility.TAGS.ADDRESS_ID, addressId);
             }
@@ -1338,14 +1332,8 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
             mParams.put(NetworkUtility.TAGS.ADDRESS_ID, mSelectedAddressModelForInsta.address_id);
         } else {
             // In case its negative then provide other address information
-            mParams.put(NetworkUtility.TAGS.ADDRESS_INITIALS, mSelectedAddressModelForInsta.address_initials);
-            mParams.put(NetworkUtility.TAGS.ADDRESS, mSelectedAddressModelForInsta.address);
-            mParams.put(NetworkUtility.TAGS.CATEGORY, mSelectedAddressModelForInsta.category);
-            mParams.put(NetworkUtility.TAGS.LAT, mSelectedAddressModelForInsta.lat);
-            mParams.put(NetworkUtility.TAGS.LNG, mSelectedAddressModelForInsta.lng);
-            mParams.put(NetworkUtility.TAGS.CITY_NAME, mSelectedAddressModelForInsta.cityName);
-            mParams.put(NetworkUtility.TAGS.COUNTRY, mSelectedAddressModelForInsta.countryName);
-            mParams.put(NetworkUtility.TAGS.STATE, mSelectedAddressModelForInsta.stateName);
+          mParams =  NetworkUtility.addGuestAddressParams(mParams, mSelectedAddressModelForInsta);
+
         }
         mParams.put(NetworkUtility.TAGS.CITY_ID, userDetails.CityID);
         mParams.put(NetworkUtility.TAGS.CAT_ID, taskDetailModel.categoryId);
@@ -1384,14 +1372,7 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
             mTaskCreationParams.put(NetworkUtility.TAGS.ADDRESS_ID, mSelectedAddressModelForInsta.address_id);
         } else {
             // In case its nagative then provide other address information
-            mTaskCreationParams.put(NetworkUtility.TAGS.ADDRESS_INITIALS, mSelectedAddressModelForInsta.address_initials);
-            mTaskCreationParams.put(NetworkUtility.TAGS.ADDRESS, mSelectedAddressModelForInsta.address);
-            mTaskCreationParams.put(NetworkUtility.TAGS.CATEGORY, mSelectedAddressModelForInsta.category);
-            mTaskCreationParams.put(NetworkUtility.TAGS.LAT, mSelectedAddressModelForInsta.lat);
-            mTaskCreationParams.put(NetworkUtility.TAGS.LNG, mSelectedAddressModelForInsta.lng);
-            mTaskCreationParams.put(NetworkUtility.TAGS.CITY_NAME, mSelectedAddressModelForInsta.cityName);
-            mTaskCreationParams.put(NetworkUtility.TAGS.COUNTRY, mSelectedAddressModelForInsta.countryName);
-            mTaskCreationParams.put(NetworkUtility.TAGS.STATE, mSelectedAddressModelForInsta.stateName);
+            NetworkUtility.addGuestAddressParams(mTaskCreationParams, mSelectedAddressModelForInsta);
         }
         mTaskCreationParams.put(NetworkUtility.TAGS.CITY_ID, userDetails.CityID);
         mTaskCreationParams.put(NetworkUtility.TAGS.CAT_ID, taskDetailModel.categoryId);
@@ -1427,6 +1408,7 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
         Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequestForSPList);
 
     }
+
 
     Response.Listener mCallCreateInstaTaskWSResponseListener = new Response.Listener() {
         @Override
