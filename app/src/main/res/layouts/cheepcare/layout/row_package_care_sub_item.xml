@@ -10,7 +10,7 @@
         android:layout_marginLeft="@dimen/scale_8dp"
         android:layout_marginRight="@dimen/scale_8dp"
         android:layout_marginTop="-16dp"
-        app:cardElevation="@dimen/scale_14dp">
+        app:cardElevation="@dimen/scale_4dp">
 
         <LinearLayout
             android:id="@+id/front_layout"
@@ -26,19 +26,20 @@
                 android:layout_marginRight="@dimen/scale_4dp"
                 android:padding="@dimen/scale_4dp">
 
-                <android.support.v7.widget.CardView
+                <!--<android.support.v7.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:cardElevation="@dimen/scale_4dp">
+                    app:cardElevation="@dimen/scale_4dp">-->
 
                     <ImageView
                         android:id="@+id/img_category_background"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:src="@drawable/banner_mumbai"
                         android:scaleType="centerCrop"
                         tools:ignore="ContentDescription"/>
 
-                </android.support.v7.widget.CardView>
+                <!--</android.support.v7.widget.CardView>-->
 
                 <ImageView
                     android:id="@+id/img_subscribed"

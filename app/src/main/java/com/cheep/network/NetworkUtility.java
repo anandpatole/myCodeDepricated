@@ -143,6 +143,7 @@ public class NetworkUtility {
         public static final String GET_CARE_PACKAGE_TIP = BASE_URL + "customers/care/getCarePackageTip";
         public static final String GENERATE_HASH_FOR_CHEEPCARE = BASE_URL + "customers/payment/generate_hash_for_cheepcare";
         public static final String PURCHASE_CARE_PACKAGE = BASE_URL + "customers/care/purchaseCarePackage";
+        public static final String GET_USER_SUBSCRIBED_CARE_PACKAGE = BASE_URL + "/customers/care/getUserSubscribedCarePackage";
 
     }
 
@@ -434,6 +435,9 @@ public class NetworkUtility {
         String BUNDLE_DISCOUNT_PERCENT = "bundlediscount_percent";
         String BUNDLE_DISCOUNT_PRICE = "bundlediscount_price";
         String CART_DETAIL = "cart_detail";
+        String CITY_DETAIL = "cityDetail";
+        String USER_PACKAGE_DETAIL = "userPackageDetail";
+        String PACKAGE_DETAIL = "packageDetail";
 
         interface VERSION_CHANGE_TYPE {
             int NORMAL = 0;

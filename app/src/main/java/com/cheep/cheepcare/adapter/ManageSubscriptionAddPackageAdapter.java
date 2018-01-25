@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 
 import com.cheep.R;
 import com.cheep.cheepcare.model.CheepCarePackageModel;
+import com.cheep.cheepcare.model.PackageDetail;
 import com.cheep.databinding.RowManageSubscriptionAddPackagesBinding;
 import com.cheep.utils.Utility;
 
@@ -32,14 +33,14 @@ import java.util.Map;
 public class ManageSubscriptionAddPackageAdapter extends
         RecyclerView.Adapter<ManageSubscriptionAddPackageAdapter.AddPackageViewHolder> {
 
-    private final List<CheepCarePackageModel> mList;
+    private final List<PackageDetail> mList;
     private final AddPackageInteractionListener mListener;
 
     public interface AddPackageInteractionListener {
         void onPackageItemClick(CheepCarePackageModel model);
     }
 
-    public ManageSubscriptionAddPackageAdapter(AddPackageInteractionListener listener, List<CheepCarePackageModel> list) {
+    public ManageSubscriptionAddPackageAdapter(AddPackageInteractionListener listener, List<PackageDetail> list) {
         mListener = listener;
         mList = list;
     }
@@ -58,14 +59,14 @@ public class ManageSubscriptionAddPackageAdapter extends
 
     @Override
     public void onBindViewHolder(final AddPackageViewHolder holder, int position) {
-        final CheepCarePackageModel model = mList.get(holder.getAdapterPosition());
+        final PackageDetail model = mList.get(holder.getAdapterPosition());
         Context context = holder.mBinding.getRoot().getContext();
 
         Utility.loadImageView(context, holder.mBinding.ivItemBackground
-                , R.drawable.banner_appliance_care, R.drawable.gradient_black);
+                , model.packageImage, R.drawable.gradient_black);
 
-        holder.mBinding.tvTitle.setText(model.packageTitle);
-        holder.mBinding.tvDescription.setText(model.packageDescription);
+        holder.mBinding.tvTitle.setText(model.title);
+        holder.mBinding.tvDescription.setText(model.subtitle);
 
         SpannableString spannableString = new SpannableString(context.getString(R.string.rupee_symbol_x_package_price
                 , model.price));
@@ -91,23 +92,23 @@ public class ManageSubscriptionAddPackageAdapter extends
                 @Override
                 public void onAnimationEnd(Animator animation) {
                     super.onAnimationEnd(animation);
-                    int offerIndex = mOfferIndexMap.containsKey(model.catId) ? mOfferIndexMap.get(model.catId) : 0;
+                    int offerIndex = mOfferIndexMap.containsKey(model.id) ? mOfferIndexMap.get(model.id) : 0;
                     SpannableString labelOffer = new SpannableString(model.live_lable_arr.get(offerIndex));
                     labelOffer.setSpan(new LeadingMarginSpan.Standard(mLiveIconOffset, 0), 0, labelOffer.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
                     holder.mBinding.tvLiveFeed.setText(labelOffer);
                     offerIndex = (offerIndex == (liveFeedCounter - 1) ? 0 : offerIndex + 1);
-                    mOfferIndexMap.put(model.catId, offerIndex);
+                    mOfferIndexMap.put(model.id, offerIndex);
                 }
             });
             offerAnimation.start();
             removeAnimations(holder.animators);
             addAnimator(holder.animators, offerAnimation);
-            int offerIndex = mOfferIndexMap.containsKey(model.catId) ? mOfferIndexMap.get(model.catId) : 0;
+            int offerIndex = mOfferIndexMap.containsKey(model.id) ? mOfferIndexMap.get(model.id) : 0;
             SpannableString labelOffer = new SpannableString(model.live_lable_arr.get(offerIndex));
             labelOffer.setSpan(new LeadingMarginSpan.Standard(mLiveIconOffset, 0), 0, labelOffer.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
             holder.mBinding.tvLiveFeed.setText(labelOffer);
             offerIndex = (offerIndex == (liveFeedCounter - 1) ? 0 : offerIndex + 1);
-            mOfferIndexMap.put(model.catId, offerIndex);
+            mOfferIndexMap.put(model.id, offerIndex);
         } else {
             holder.mBinding.ivLiveAnimated.setVisibility(View.GONE);
             holder.mBinding.tvLiveFeed.setVisibility(View.GONE);

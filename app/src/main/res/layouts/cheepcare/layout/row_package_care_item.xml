@@ -10,8 +10,8 @@
         android:layout_marginLeft="@dimen/scale_8dp"
         android:layout_marginRight="@dimen/scale_8dp"
         android:layout_marginTop="@dimen/scale_8dp"
-        app:cardElevation="@dimen/scale_14dp"
-        app:contentPadding="0dp">
+        android:layout_marginBottom="@dimen/scale_8dp"
+        app:cardElevation="@dimen/scale_4dp">
 
         <android.support.constraint.ConstraintLayout
             android:id="@+id/constraint_layout"
@@ -26,7 +26,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:src="@drawable/banner_appliance_care" />
+                tools:src="@drawable/banner_mumbai" />
 
             <ImageView
                 android:id="@+id/iv_subscribed"

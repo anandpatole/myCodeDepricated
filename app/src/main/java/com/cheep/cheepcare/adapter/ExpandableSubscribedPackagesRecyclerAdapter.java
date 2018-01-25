@@ -9,8 +9,6 @@ import android.databinding.DataBindingUtil;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Handler;
 import android.support.annotation.NonNull;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.LeadingMarginSpan;
@@ -18,10 +16,10 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 
 import com.cheep.R;
 import com.cheep.cheepcare.model.CheepCarePackageModel;
+import com.cheep.cheepcare.model.PackageDetail;
 import com.cheep.custom_view.expandablerecycleview.ChildViewHolder;
 import com.cheep.custom_view.expandablerecycleview.ExpandableRecyclerAdapter;
 import com.cheep.custom_view.expandablerecycleview.ParentViewHolder;
@@ -39,14 +37,14 @@ import java.util.Map;
  * Created by pankaj on 1/1/18.
  */
 
-public class ExpandableBoughtPackagesRecyclerAdapter extends ExpandableRecyclerAdapter<CheepCarePackageModel
+public class ExpandableSubscribedPackagesRecyclerAdapter extends ExpandableRecyclerAdapter<PackageDetail
         , JobCategoryModel
-        , ExpandableBoughtPackagesRecyclerAdapter.ParentCategoryViewHolder
-        , ExpandableBoughtPackagesRecyclerAdapter.ChildCategoryViewHolder> {
+        , ExpandableSubscribedPackagesRecyclerAdapter.ParentCategoryViewHolder
+        , ExpandableSubscribedPackagesRecyclerAdapter.ChildCategoryViewHolder> {
 
     private final boolean isSingleSelection;
-    private final List<CheepCarePackageModel> mList;
-    private static final String TAG = ExpandableBoughtPackagesRecyclerAdapter.class.getSimpleName();
+    private final List<PackageDetail> mList;
+    private static final String TAG = ExpandableSubscribedPackagesRecyclerAdapter.class.getSimpleName();
 
     /**
      * Primary constructor. Sets up {@link #mParentList} and {@link #mFlatItemList}.
@@ -64,7 +62,7 @@ public class ExpandableBoughtPackagesRecyclerAdapter extends ExpandableRecyclerA
      * @param parentList List of all parents to be displayed in the RecyclerView that this
      *                   adapter is linked to
      */
-    public ExpandableBoughtPackagesRecyclerAdapter(@NonNull List<CheepCarePackageModel> parentList
+    public ExpandableSubscribedPackagesRecyclerAdapter(@NonNull List<PackageDetail> parentList
             , boolean isSingleSelection) {
         super(parentList);
 
@@ -74,7 +72,7 @@ public class ExpandableBoughtPackagesRecyclerAdapter extends ExpandableRecyclerA
 
     @NonNull
     @Override
-    public ExpandableBoughtPackagesRecyclerAdapter.ParentCategoryViewHolder onCreateParentViewHolder(@NonNull ViewGroup parentViewGroup
+    public ExpandableSubscribedPackagesRecyclerAdapter.ParentCategoryViewHolder onCreateParentViewHolder(@NonNull ViewGroup parentViewGroup
             , int viewType) {
         RowPackageCareItemBinding binding =
                 DataBindingUtil.inflate(LayoutInflater.from(parentViewGroup.getContext())
@@ -86,7 +84,7 @@ public class ExpandableBoughtPackagesRecyclerAdapter extends ExpandableRecyclerA
 
     @NonNull
     @Override
-    public ExpandableBoughtPackagesRecyclerAdapter.ChildCategoryViewHolder onCreateChildViewHolder(@NonNull ViewGroup childViewGroup, int viewType) {
+    public ExpandableSubscribedPackagesRecyclerAdapter.ChildCategoryViewHolder onCreateChildViewHolder(@NonNull ViewGroup childViewGroup, int viewType) {
         final RowPackageCareSubItemBinding binding = DataBindingUtil.inflate(LayoutInflater.from(childViewGroup.getContext())
                 , R.layout.row_package_care_sub_item
                 , childViewGroup
@@ -96,13 +94,13 @@ public class ExpandableBoughtPackagesRecyclerAdapter extends ExpandableRecyclerA
     }
 
     @Override
-    public void onBindParentViewHolder(@NonNull final ExpandableBoughtPackagesRecyclerAdapter.ParentCategoryViewHolder parentViewHolder
+    public void onBindParentViewHolder(@NonNull final ExpandableSubscribedPackagesRecyclerAdapter.ParentCategoryViewHolder parentViewHolder
             , final int parentPosition
-            , @NonNull CheepCarePackageModel parent) {
+            , @NonNull PackageDetail parent) {
 
         final Context context = parentViewHolder.mBinding.getRoot().getContext();
 
-        if (mList.get(parentPosition).subItems != null && mList.get(parentPosition).subItems.size() != 0) {
+        if (mList.get(parentPosition).categoryList != null && mList.get(parentPosition).categoryList.size() != 0) {
             parentViewHolder.mBinding.cardView.setContentPadding(0
                     , 0
                     , 0
@@ -121,7 +119,7 @@ public class ExpandableBoughtPackagesRecyclerAdapter extends ExpandableRecyclerA
                     @Override
                     public void run() {
                         if (!parentViewHolder.isExpanded()) {
-                            if (mList.get(parentPosition).subItems != null && !mList.get(parentPosition).subItems.isEmpty()) {
+                            if (mList.get(parentPosition).categoryList != null && !mList.get(parentPosition).categoryList.isEmpty()) {
                                 parentViewHolder.mBinding.cardView.setContentPadding(0
                                         , 0
                                         , 0
@@ -133,7 +131,7 @@ public class ExpandableBoughtPackagesRecyclerAdapter extends ExpandableRecyclerA
                                         , 0);
                             }
                         } else {
-                            if (mList.get(parentPosition).subItems != null && !mList.get(parentPosition).subItems.isEmpty()) {
+                            if (mList.get(parentPosition).categoryList != null && !mList.get(parentPosition).categoryList.isEmpty()) {
                                 parentViewHolder.mBinding.cardView.setContentPadding(0
                                         , 0
                                         , 0
@@ -156,16 +154,16 @@ public class ExpandableBoughtPackagesRecyclerAdapter extends ExpandableRecyclerA
     }
 
     @Override
-    public void onBindChildViewHolder(@NonNull ExpandableBoughtPackagesRecyclerAdapter.ChildCategoryViewHolder childViewHolder
+    public void onBindChildViewHolder(@NonNull ExpandableSubscribedPackagesRecyclerAdapter.ChildCategoryViewHolder childViewHolder
             , int parentPosition, int childPosition, @NonNull JobCategoryModel child) {
 
-        if (childPosition < (mList.get(childPosition).subItems.size() - 1)) {
-            childViewHolder.mBinding.cardView.setContentPadding(0
+        if (childPosition < (mList.get(parentPosition).categoryList.size() - 1)) {
+            childViewHolder.mBinding.cardView.setPadding(0
                     , 0
                     , 0
                     , (int) Utility.convertDpToPixel(24, childViewHolder.mBinding.getRoot().getContext()));
         } else {
-            childViewHolder.mBinding.cardView.setContentPadding(0
+            childViewHolder.mBinding.cardView.setPadding(0
                     , 0
                     , 0
                     , 0);
@@ -190,16 +188,16 @@ public class ExpandableBoughtPackagesRecyclerAdapter extends ExpandableRecyclerA
         }
 
         // bind data with view parent row
-        public void bind(@NonNull CheepCarePackageModel model) {
+        public void bind(@NonNull PackageDetail model) {
 
             Context context = mBinding.getRoot().getContext();
 
             Utility.loadImageView(context, mBinding.ivCareImage
-                    , "https://s3.ap-south-1.amazonaws.com/cheepapp/category/banner_image/medium/Untitled.jpg");
+                    , model.packageImage);
 
-            mBinding.tvCareName.setText(model.packageTitle);
-            mBinding.tvDescription.setText(model.packageDescription);
-            if (model.subItems == null || model.subItems.size() == 0) {
+            mBinding.tvCareName.setText(model.title);
+            mBinding.tvDescription.setText(model.subtitle);
+            if (model.categoryList == null || model.categoryList.size() == 0) {
                 mBinding.tvDescription.setCompoundDrawablesWithIntrinsicBounds(0
                         , 0
                         , R.drawable.ic_right_arrow_in_white_circle
@@ -211,52 +209,55 @@ public class ExpandableBoughtPackagesRecyclerAdapter extends ExpandableRecyclerA
                         , 0);
             }
 
-            if (model.daysLeft != null /*&& model.daysLeft.length() != 0*/) {
-                switch (model.daysLeft.length()) {
-                    case 0:
-                        mBinding.tvDaysLeft1.setVisibility(View.GONE);
-                        mBinding.tvDaysLeft2.setVisibility(View.GONE);
-                        mBinding.tvDaysLeft3.setVisibility(View.GONE);
-                        mBinding.tvLeftDays.setVisibility(View.GONE);
-                        break;
-                    case 1:
-                        mBinding.tvDaysLeft1.setVisibility(View.VISIBLE);
-                        mBinding.tvDaysLeft2.setVisibility(View.VISIBLE);
-                        mBinding.tvDaysLeft3.setVisibility(View.VISIBLE);
+            if (model.mSelectedAddressList != null && !model.mSelectedAddressList.isEmpty()) {
+                String daysLeft = model.getDaysLeft(model.mSelectedAddressList.get(0).end_date);
+                if (daysLeft != null) {
+                    switch (daysLeft.length()) {
+                        case 0:
+                            mBinding.tvDaysLeft1.setVisibility(View.GONE);
+                            mBinding.tvDaysLeft2.setVisibility(View.GONE);
+                            mBinding.tvDaysLeft3.setVisibility(View.GONE);
+                            mBinding.tvLeftDays.setVisibility(View.GONE);
+                            break;
+                        case 1:
+                            mBinding.tvDaysLeft1.setVisibility(View.VISIBLE);
+                            mBinding.tvDaysLeft2.setVisibility(View.VISIBLE);
+                            mBinding.tvDaysLeft3.setVisibility(View.VISIBLE);
 
-                        mBinding.tvDaysLeft1.setText("0");
-                        mBinding.tvDaysLeft2.setText("0");
-                        mBinding.tvDaysLeft3.setText(model.daysLeft);
-                        break;
-                    case 2:
-                        mBinding.tvDaysLeft1.setVisibility(View.VISIBLE);
-                        mBinding.tvDaysLeft2.setVisibility(View.VISIBLE);
-                        mBinding.tvDaysLeft3.setVisibility(View.VISIBLE);
+                            mBinding.tvDaysLeft1.setText("0");
+                            mBinding.tvDaysLeft2.setText("0");
+                            mBinding.tvDaysLeft3.setText(daysLeft);
+                            break;
+                        case 2:
+                            mBinding.tvDaysLeft1.setVisibility(View.VISIBLE);
+                            mBinding.tvDaysLeft2.setVisibility(View.VISIBLE);
+                            mBinding.tvDaysLeft3.setVisibility(View.VISIBLE);
 
-                        mBinding.tvDaysLeft1.setText("0");
-                        mBinding.tvDaysLeft2.setText(model.daysLeft.subSequence(0, 1));
-                        mBinding.tvDaysLeft3.setText(model.daysLeft.subSequence(1, 2));
-                        break;
-                    case 3:
-                        mBinding.tvDaysLeft1.setVisibility(View.VISIBLE);
-                        mBinding.tvDaysLeft2.setVisibility(View.VISIBLE);
-                        mBinding.tvDaysLeft3.setVisibility(View.VISIBLE);
+                            mBinding.tvDaysLeft1.setText("0");
+                            mBinding.tvDaysLeft2.setText(daysLeft.subSequence(0, 1));
+                            mBinding.tvDaysLeft3.setText(daysLeft.subSequence(1, 2));
+                            break;
+                        case 3:
+                            mBinding.tvDaysLeft1.setVisibility(View.VISIBLE);
+                            mBinding.tvDaysLeft2.setVisibility(View.VISIBLE);
+                            mBinding.tvDaysLeft3.setVisibility(View.VISIBLE);
 
-                        mBinding.tvDaysLeft1.setText(model.daysLeft.subSequence(0, 1));
-                        mBinding.tvDaysLeft2.setText(model.daysLeft.subSequence(1, 2));
-                        mBinding.tvDaysLeft3.setText(model.daysLeft.subSequence(2, 3));
-                        break;
+                            mBinding.tvDaysLeft1.setText(daysLeft.subSequence(0, 1));
+                            mBinding.tvDaysLeft2.setText(daysLeft.subSequence(1, 2));
+                            mBinding.tvDaysLeft3.setText(daysLeft.subSequence(2, 3));
+                            break;
+                    }
+                } else {
+                    mBinding.tvDaysLeft1.setVisibility(View.GONE);
+                    mBinding.tvDaysLeft2.setVisibility(View.GONE);
+                    mBinding.tvDaysLeft3.setVisibility(View.GONE);
+                    mBinding.tvLeftDays.setVisibility(View.GONE);
                 }
-            } else {
-                mBinding.tvDaysLeft1.setVisibility(View.GONE);
-                mBinding.tvDaysLeft2.setVisibility(View.GONE);
-                mBinding.tvDaysLeft3.setVisibility(View.GONE);
-                mBinding.tvLeftDays.setVisibility(View.GONE);
-            }
 
-            if (Short.parseShort(model.daysLeft) <= 10) {
-                mBinding.llRenewContainer.setVisibility(View.VISIBLE);
-                mBinding.tvRenewText.setText(context.getString(R.string.msg_renew_subscription_ends, model.daysLeft));
+                /*if (Short.parseShort(daysLeft) <= 10) {
+                    mBinding.llRenewContainer.setVisibility(View.VISIBLE);
+                    mBinding.tvRenewText.setText(context.getString(R.string.msg_renew_subscription_ends, model.daysLeft));
+                }*/
             }
         }
     }
@@ -280,7 +281,7 @@ public class ExpandableBoughtPackagesRecyclerAdapter extends ExpandableRecyclerA
         public void bind(@NonNull final JobCategoryModel model, Context context) {
             //Background image
             Utility.loadImageView(context, mBinding.imgCategoryBackground, model.catImage, R.drawable.gradient_black);
-            Utility.loadImageView(context, mBinding.imgCategoryBackground, model.catImageExtras.thumb, R.drawable.gradient_black);
+//            Utility.loadImageView(context, mBinding.imgCategoryBackground, model.catImageExtras.thumb, R.drawable.gradient_black);
 
             //Category Icon
             Utility.loadImageView(context, mBinding.imgCategoryIcon, model.catIcon, 0);

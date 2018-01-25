@@ -8,8 +8,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/scale_10dp"
-        android:layout_marginLeft="@dimen/scale_4dp"
-        android:layout_marginRight="@dimen/scale_4dp"
+        android:layout_marginLeft="@dimen/scale_8dp"
+        android:layout_marginRight="@dimen/scale_8dp"
         app:cardCornerRadius="@dimen/scale_4dp"
         app:cardElevation="@dimen/scale_4dp">
 

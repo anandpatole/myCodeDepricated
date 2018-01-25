@@ -152,7 +152,6 @@ public class Utility {
     }
 
 
-
     public interface GUEST_STATIC_INFO {
         public static final String USERNAME = "Guest";
     }
@@ -185,6 +184,7 @@ public class Utility {
 
     //Date Formats
     public static final String DATE_FORMAT_DD_MM_YY = SuperFormatter.DATE + "/" + SuperFormatter.MONTH_NUMBER + "/" + SuperFormatter.YEAR_4_DIGIT;
+    public static final String DATE_FORMAT_YYYY_MM_DD = SuperFormatter.YEAR_4_DIGIT + "-" + SuperFormatter.MONTH_NUMBER + "-" + SuperFormatter.DATE;
     public static final String DATE_FORMAT_DD_MMM = SuperFormatter.DATE + " " + SuperFormatter.MONTH_JAN;
     public static final String DATE_FORMAT_DD_MMMM = SuperFormatter.DATE + " " + SuperFormatter.MONTH_JANUARY;
     public static final String DATE_FORMAT_DD_MMM_YYYY = SuperFormatter.DATE + " " + SuperFormatter.MONTH_JAN + " " + SuperFormatter.YEAR_4_DIGIT;
