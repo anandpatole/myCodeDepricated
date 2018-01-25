@@ -17,14 +17,21 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.cheep.R;
 import com.cheep.activity.BaseAppCompatActivity;
-import com.cheep.cheepcare.adapter.ExpandableBoughtPackagesRecyclerAdapter;
+import com.cheep.cheepcare.adapter.ExpandableSubscribedPackagesRecyclerAdapter;
 import com.cheep.cheepcare.adapter.ManageSubscriptionAddPackageAdapter;
 import com.cheep.cheepcare.model.CheepCarePackageModel;
 import com.cheep.cheepcare.model.CityDetail;
+import com.cheep.cheepcare.model.PackageDetail;
 import com.cheep.databinding.ActivityManageSubscriptionBinding;
+import com.cheep.network.NetworkUtility;
+import com.cheep.network.Volley;
+import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.Utility;
+import com.cheep.utils.WebCallClass;
 
 import java.util.List;
+
+import retrofit2.http.PUT;
 
 /**
  * Created by pankaj on 12/28/17.
@@ -34,9 +41,12 @@ public class ManageSubscriptionActivity extends BaseAppCompatActivity {
 
     private static final String TAG = ManageSubscriptionActivity.class.getSimpleName();
     private ActivityManageSubscriptionBinding mBinding;
-    private CityDetail mCity;
     private List<AnimatorSet> animators;
     private boolean isManageSubscription;
+    private ExpandableSubscribedPackagesRecyclerAdapter subscribedPackagesAdapter;
+    private List<PackageDetail> mSubscribedPackageList;
+    private List<PackageDetail> mAllPackagesList;
+    private CityDetail mCityDetail;
 
     /*public interface ACTIVITY_TYPES {
         int WELCOME_TO_CC_ACTIVITY = 0;
@@ -56,72 +66,17 @@ public class ManageSubscriptionActivity extends BaseAppCompatActivity {
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_manage_subscription);
         initiateUI();
         setListeners();
+        callGetUserSubscribedPackages();
     }
 
     @Override
     protected void initiateUI() {
         if (getIntent().hasExtra(Utility.Extra.CITY_DETAIL)) {
-            mCity = (CityDetail) Utility.getObjectFromJsonString(getIntent().getExtras().getString(Utility.Extra.CITY_DETAIL), CityDetail.class);
+            mCityDetail = (CityDetail) Utility.getObjectFromJsonString(getIntent().getExtras().getString(Utility.Extra.CITY_DETAIL), CityDetail.class);
             isManageSubscription = getIntent().getExtras().getBoolean(Utility.Extra.ACTIVITY_TYPE);
         }
-        if (mCity == null)
+        if (mCityDetail == null)
             return;
-
-        // Calculate Pager Height and Width
-        ViewTreeObserver mViewTreeObserver = mBinding.ivCityImage.getViewTreeObserver();
-        mViewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                mBinding.ivCityImage.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                int width = mBinding.ivCityImage.getMeasuredWidth();
-                ViewGroup.LayoutParams params = mBinding.ivCityImage.getLayoutParams();
-                params.height = Utility.getHeightFromWidthForOneHalfIsToOneRatio(width);
-                mBinding.ivCityImage.setLayoutParams(params);
-
-                // Load the image now.
-                Utility.loadImageView(mContext, mBinding.ivCityImage
-                        , R.drawable.img_landing_screen_mumbai
-                        , R.drawable.hotline_ic_image_loading_placeholder);
-            }
-        });
-
-        Glide.with(mContext)
-                .load(R.drawable.ic_home_with_heart_text)
-                .asGif()
-                .dontAnimate()
-                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                .into(mBinding.ivCheepCareGif);
-        /*// Start cheep care animations
-        mBinding.ivCheepCareGif.setBackgroundResource(R.drawable.cheep_care_animation);
-        ((AnimationDrawable) mBinding.ivCheepCareGif.getBackground()).start();*/
-
-        mBinding.tvCityName.setText(mCity.cityName);
-
-        if (!isManageSubscription) {
-            SpannableStringBuilder spannableStringBuilder
-                    = new SpannableStringBuilder(getString(R.string.msg_welcome_x, "Nikita"));
-            spannableStringBuilder.append(Utility.ONE_CHARACTER_SPACE).append(Utility.ONE_CHARACTER_SPACE);
-            ImageSpan span = new ImageSpan(getBaseContext(), R.drawable.ic_smiley_folded_hands_big, ImageSpan.ALIGN_BASELINE);
-            spannableStringBuilder.setSpan(span, spannableStringBuilder.length() - 1
-                    , spannableStringBuilder.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
-            mBinding.tvWelcomeText.setText(spannableStringBuilder);
-            mBinding.tvWelcomeText.setVisibility(View.VISIBLE);
-            mBinding.tvInfoText.setText(getString(R.string.msg_welcoming_on_subscription));
-        } else {
-            mBinding.tvWelcomeText.setVisibility(View.GONE);
-            mBinding.tvInfoText.setText(getString(R.string.cheep_care_work_flow_desc, "Nikita"));
-        }
-
-        mBinding.rvBoughtPackages.setNestedScrollingEnabled(false);
-        ExpandableBoughtPackagesRecyclerAdapter boughtAdapter =
-                new ExpandableBoughtPackagesRecyclerAdapter(CheepCarePackageModel.getCheepCareBoughtPackages(), true);
-        mBinding.rvBoughtPackages.setAdapter(boughtAdapter);
-
-        mBinding.rvAddPackage.setNestedScrollingEnabled(false);
-        ManageSubscriptionAddPackageAdapter addPackageAdapter =
-                new ManageSubscriptionAddPackageAdapter(addPackageInteractionListener
-                        , CheepCarePackageModel.getManageSubscriptionAddPackageList());
-        mBinding.rvAddPackage.setAdapter(addPackageAdapter);
 
         // Setting up Toolbar
         setSupportActionBar(mBinding.toolbar);
@@ -136,11 +91,103 @@ public class ManageSubscriptionActivity extends BaseAppCompatActivity {
                 }
             });
         }
+
+        // Calculate Pager Height and Width
+        ViewTreeObserver mViewTreeObserver = mBinding.ivCityImage.getViewTreeObserver();
+        mViewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                mBinding.ivCityImage.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                int width = mBinding.ivCityImage.getMeasuredWidth();
+                ViewGroup.LayoutParams params = mBinding.ivCityImage.getLayoutParams();
+                params.height = Utility.getHeightFromWidthForOneHalfIsToOneRatio(width);
+                mBinding.ivCityImage.setLayoutParams(params);
+
+                int resId = R.drawable.img_landing_screen_mumbai;
+                switch (mCityDetail.citySlug) {
+                    case NetworkUtility.CARE_CITY_SLUG.MUMBAI:
+                        resId = R.drawable.img_landing_screen_mumbai;
+                        break;
+                    case NetworkUtility.CARE_CITY_SLUG.HYDRABAD:
+                        resId = R.drawable.img_landing_screen_hydrabad;
+                        break;
+                    case NetworkUtility.CARE_CITY_SLUG.BENGALURU:
+                        resId = R.drawable.img_landing_screen_bengaluru;
+                        break;
+                    case NetworkUtility.CARE_CITY_SLUG.DELHI:
+                        resId = R.drawable.img_landing_screen_delhi;
+                        break;
+                    case NetworkUtility.CARE_CITY_SLUG.CHENNAI:
+                        resId = R.drawable.img_landing_screen_chennai;
+                        break;
+                }
+
+                // Load the image now.
+                Utility.loadImageView(mContext, mBinding.ivCityImage
+                        , resId
+                        , R.drawable.hotline_ic_image_loading_placeholder);
+            }
+        });
+
+        Glide.with(mContext)
+                .load(R.drawable.ic_home_with_heart_text)
+                .asGif()
+                .dontAnimate()
+                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                .into(mBinding.ivCheepCareGif);
+        /*// Start cheep care animations
+        mBinding.ivCheepCareGif.setBackgroundResource(R.drawable.cheep_care_animation);
+        ((AnimationDrawable) mBinding.ivCheepCareGif.getBackground()).start();*/
+
+        mBinding.tvCityName.setText(mCityDetail.cityName);
+
+        if (!isManageSubscription) {
+            SpannableStringBuilder spannableStringBuilder
+                    = new SpannableStringBuilder(getString(R.string.msg_welcome_x
+            , PreferenceUtility.getInstance(mContext).getUserDetails().userName));
+            spannableStringBuilder.append(Utility.ONE_CHARACTER_SPACE).append(Utility.ONE_CHARACTER_SPACE);
+            ImageSpan span = new ImageSpan(getBaseContext(), R.drawable.ic_smiley_folded_hands_big, ImageSpan.ALIGN_BASELINE);
+            spannableStringBuilder.setSpan(span, spannableStringBuilder.length() - 1
+                    , spannableStringBuilder.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+            mBinding.tvWelcomeText.setText(spannableStringBuilder);
+            mBinding.tvWelcomeText.setVisibility(View.VISIBLE);
+            mBinding.tvInfoText.setText(getString(R.string.msg_welcoming_on_subscription));
+        } else {
+            mBinding.tvWelcomeText.setVisibility(View.GONE);
+            mBinding.tvInfoText.setText(getString(R.string.cheep_care_work_flow_desc
+                    , PreferenceUtility.getInstance(mContext).getUserDetails().userName));
+        }
     }
 
     @Override
     protected void setListeners() {
 
+    }
+
+    private void callGetUserSubscribedPackages() {
+        if (!Utility.isConnected(mContext)) {
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mBinding.getRoot());
+            return;
+        }
+
+        showProgressDialog();
+
+        WebCallClass.getSubscribedCarePackage(mContext, mCityDetail.citySlug
+                , mCommonResponseListener, mGetSubscribedCarePackageResponseListener);
+    }
+
+    private void initiateDynamicUI() {
+
+        mBinding.rvBoughtPackages.setNestedScrollingEnabled(false);
+        subscribedPackagesAdapter =
+                new ExpandableSubscribedPackagesRecyclerAdapter(mSubscribedPackageList, true);
+        mBinding.rvBoughtPackages.setAdapter(subscribedPackagesAdapter);
+
+        mBinding.rvAddPackage.setNestedScrollingEnabled(false);
+        ManageSubscriptionAddPackageAdapter addPackageAdapter =
+                new ManageSubscriptionAddPackageAdapter(addPackageInteractionListener
+                        , mAllPackagesList);
+        mBinding.rvAddPackage.setAdapter(addPackageAdapter);
     }
 
     private final ManageSubscriptionAddPackageAdapter.AddPackageInteractionListener addPackageInteractionListener =
@@ -150,4 +197,46 @@ public class ManageSubscriptionActivity extends BaseAppCompatActivity {
 
                 }
             };
+
+    private final WebCallClass.CommonResponseListener mCommonResponseListener =
+            new WebCallClass.CommonResponseListener() {
+                @Override
+                public void volleyError() {
+                    hideProgressDialog();
+                    Utility.showToast(mContext, getString(R.string.label_something_went_wrong));
+                }
+
+                @Override
+                public void showSpecificMessage(String message) {
+                    hideProgressDialog();
+                    Utility.showToast(mContext, message);
+                }
+
+                @Override
+                public void forceLogout() {
+                    hideProgressDialog();
+                    finish();
+                }
+            };
+
+    private final WebCallClass.GetSubscribedCarePackageResponseListener mGetSubscribedCarePackageResponseListener =
+            new WebCallClass.GetSubscribedCarePackageResponseListener() {
+                @Override
+                public void getSubscribedCarePackageSuccessResponse(CityDetail cityDetail, List<PackageDetail> subscribedList, List<PackageDetail> allPackageList) {
+                    mCityDetail = cityDetail;
+                    mSubscribedPackageList = subscribedList;
+                    mAllPackagesList = allPackageList;
+                    hideProgressDialog();
+                    initiateDynamicUI();
+                    setListeners();
+                }
+            };
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        //remove volley callbacks
+        Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.WS.GET_USER_SUBSCRIBED_CARE_PACKAGE);
+    }
 }
