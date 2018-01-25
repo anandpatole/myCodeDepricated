@@ -74,6 +74,7 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
     private static final String TAG = "PackageCustomizationAct";
     private int mPreviousState = 0;
     int cartCount = 0;
+    int nextStep = 0;
 
     public static final int STAGE_1 = 0;
     public static final int STAGE_2 = 1;
@@ -406,6 +407,8 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
                 for (PackageDetail detail : mPackageList) {
                     if (detail.id.equalsIgnoreCase(mPackageId)) {
                         detail.isSelected = true;
+                        if (detail.mSelectedAddressList == null)
+                            detail.mSelectedAddressList = new ArrayList<>();
                         detail.mSelectedAddressList.add(fragment.mSelectedAddress);
                     }
                     if (detail.packageOptionList != null && detail.isSelected) {
@@ -438,10 +441,12 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
                     }
                 }
                 if (PreferenceUtility.getInstance(mContext).getUserDetails() == null) {
+                    nextStep = step;
                     LogUtils.LOGE(TAG, "onClick: login required");
                     LoginActivity.newInstance(mContext);
-                } else
+                } else {
                     gotoStep(step);
+                }
             }
             updateCartCount();
         }
@@ -708,8 +713,15 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
                         PreferenceUtility.getInstance(mContext).saveUserDetails(mUserDetails);
 
                         if (fragment != null) {
-                            fragment.mSelectedAddress = addressModel;
-                            fragment.verifyAddressForCity(addressModel);
+                            for (PackageDetail detail : mPackageList) {
+                                if (detail.id.equalsIgnoreCase(mPackageId)) {
+                                    if (detail.mSelectedAddressList != null) {
+                                        LogUtils.LOGE(TAG, "onResponse: replace");
+                                        detail.mSelectedAddressList.set(0, addressModel);
+                                    }
+                                }
+                            }
+                            fragment.verifyAddressForCity(addressModel, true, nextStep);
                         }
 
                         break;

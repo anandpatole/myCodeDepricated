@@ -210,8 +210,8 @@
 
                         <ImageView
                             android:id="@+id/iv_info_promo_code"
-                            android:layout_width="10dp"
-                            android:layout_height="10dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
                             android:layout_marginRight="@dimen/scale_3dp"
                             android:src="@drawable/ic_info_grey"

@@ -420,7 +420,7 @@ public class NetworkUtility {
         String PINCODE = "pincode";
         String NICKNAME = "nickname";
         String PACKAGE_OPTION_DETAILS = "package_option_details";
-        String  CHEEP_CARE_CODE = "cheepcarecode";
+        String CHEEP_CARE_CODE = "cheepcarecode";
         String DISCOUNT = "discount";
         String ADMIN_SETTING = "admin_setting";
         String GST_RATE = "GST_RATE";
@@ -561,7 +561,8 @@ public class NetworkUtility {
         mParams.put(NetworkUtility.TAGS.STATE, mSelectedAddressModelForInsta.stateName);
         mParams.put(NetworkUtility.TAGS.LANDMARK, mSelectedAddressModelForInsta.landmark);
         mParams.put(NetworkUtility.TAGS.NICKNAME, mSelectedAddressModelForInsta.nickname);
-        mParams.put(NetworkUtility.TAGS.PINCODE, mSelectedAddressModelForInsta.pincode);   return mParams;
+        mParams.put(NetworkUtility.TAGS.PINCODE, mSelectedAddressModelForInsta.pincode);
+        return mParams;
     }
 }
 

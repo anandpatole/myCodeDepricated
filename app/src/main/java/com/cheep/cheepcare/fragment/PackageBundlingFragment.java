@@ -183,7 +183,9 @@ public class PackageBundlingFragment extends BaseFragment {
             mParams.put(NetworkUtility.TAGS.CITY_NAME, model.cityName);
         } else {
             mParams.put(NetworkUtility.TAGS.ADDRESS_ID, model.address_id);
+            mParams.put(NetworkUtility.TAGS.CARE_CITY_ID, mPackageCustomizationActivity.mCityDetail.id);
             mParams.put(NetworkUtility.TAGS.CITY_NAME, Utility.EMPTY_STRING);
+            mParams.put(NetworkUtility.TAGS.CARE_PACKAGE_ID, mPackageCustomizationActivity.mPackageId);
         }
 
         Utility.hideKeyboard(mContext);
@@ -212,7 +214,7 @@ public class PackageBundlingFragment extends BaseFragment {
                                 mPackageAdapter.getList().get(adapterPosition).mSelectedAddressList.add(model);
                                 mPackageAdapter.notifyItemChanged(adapterPosition);
                             } else {
-                                Utility.showToast(mPackageCustomizationActivity, getString(R.string.validation_message_cheep_care_address,mPackageCustomizationActivity.mCityDetail.cityName));
+                                Utility.showToast(mPackageCustomizationActivity, getString(R.string.validation_message_cheep_care_address, mPackageCustomizationActivity.mCityDetail.cityName));
                             }
 
                             break;

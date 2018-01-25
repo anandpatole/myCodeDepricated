@@ -38,7 +38,7 @@ public class WebCallClass {
                 , ArrayList<PackageDetail> allPackagelist);
     }
 
-    public static void getSubscribedCarePackage(Context context, String careCitySlug
+    public static void getSubscribedCarePackage(final Context context, String careCitySlug
             , final CommonResponseListener commonListener
             , final GetSubscribedCarePackageResponseListener successListener) {
 
@@ -57,8 +57,8 @@ public class WebCallClass {
                 try {
                     JSONObject jsonObject = new JSONObject(response.toString());
                     if (!TextUtils.isEmpty(jsonObject.getString(NetworkUtility.TAGS.DATA))) {
-                        successListener.getSubscribedCarePackageSuccessResponse(jsonObject.getJSONObject(NetworkUtility.TAGS.DATA)
-                                .getJSONObject(NetworkUtility.TAGS.SUB_DATA).getString(NetworkUtility.TAGS.DESCRIPTION));
+//                        successListener.getSubscribedCarePackageSuccessResponse(jsonObject.getJSONObject(NetworkUtility.TAGS.DATA)
+//                                .getJSONObject(NetworkUtility.TAGS.SUB_DATA).getString(NetworkUtility.TAGS.DESCRIPTION));
                     } else {
                         commonListener.volleyError();
                     }

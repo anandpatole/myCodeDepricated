@@ -18,7 +18,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.cheep.R;
 import com.cheep.activity.BaseAppCompatActivity;
-import com.cheep.activity.LoginActivity;
 import com.cheep.cheepcare.activity.PackageCustomizationActivity;
 import com.cheep.cheepcare.adapter.AddressPackageCustomizationAdapter;
 import com.cheep.cheepcare.adapter.ExpandablePackageServicesRecyclerAdapter;
@@ -52,7 +51,7 @@ import static com.cheep.network.NetworkUtility.TAGS.PACKAGE_OPTION_DETAILS;
 
 public class SelectPackageSpecificationsFragment extends BaseFragment {
 
-    public static final String TAG = SelectPackageSpecificationsFragment.class.getSimpleName();
+    public static final String TAG = "SelectPackageSpecificat";
     private PackageCustomizationActivity mPackageCustomizationActivity;
     private FragmentSelectPackageSpecificationBinding mBinding;
     private boolean isVerified = false;
@@ -137,11 +136,7 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
         mBinding.tvOtherBundlePackages.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (PreferenceUtility.getInstance(mContext).getUserDetails() == null) {
-                    LogUtils.LOGE(TAG, "onClick: login required");
-                    LoginActivity.newInstance(mContext);
-                } else
-                    mPackageCustomizationActivity.goToPackageBundling(PackageCustomizationActivity.STAGE_2);
+                mPackageCustomizationActivity.goToPackageBundling(PackageCustomizationActivity.STAGE_2);
             }
         });
 
@@ -355,7 +350,7 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
                             PreferenceUtility.getInstance(mContext).saveUserDetails(userDetails);
                         }
                         mList.add(addressModel);
-                        verifyAddressForCity(addressModel);
+                        verifyAddressForCity(addressModel, false, 0);
                         addressDialog.dismiss();
                         if (!mList.isEmpty()) {
                             mBinding.llAddressView.setVisibility(View.VISIBLE);
@@ -416,7 +411,7 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
                 }
 
                 AddressModel model = mList.get(position);
-                verifyAddressForCity(model);
+                verifyAddressForCity(model, false, 0);
             }
 
             @Override
@@ -499,7 +494,7 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
         return true;
     }
 
-    public void verifyAddressForCity(final AddressModel model) {
+    public void verifyAddressForCity(final AddressModel model, final boolean isCalledAfterLogin, final int step) {
 
         //Add Header parameters
         showProgressDialog();
@@ -564,11 +559,18 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
                             String city_id = jsonData.optString(NetworkUtility.TAGS.CITY_ID);
                             if (mPackageCustomizationActivity.mCityDetail.id.equalsIgnoreCase(city_id)) {
                                 fillAddressView(model);
+                                if (isCalledAfterLogin) {
+                                    mPackageCustomizationActivity.gotoStep(step);
+                                }
+
                             } else {
                                 Utility.showToast(mPackageCustomizationActivity, getString(R.string.validation_message_cheep_care_address, mPackageCustomizationActivity.mCityDetail.cityName));
-                                mBinding.llAddressContainer.setVisibility(View.GONE);
-                                mBinding.tvSelectAddress.setVisibility(View.VISIBLE);
+                                if (isCalledAfterLogin) {
+                                    mBinding.llAddressContainer.setVisibility(View.GONE);
+                                    mBinding.tvSelectAddress.setVisibility(View.VISIBLE);
+                                }
                             }
+
 
                             break;
                         case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:

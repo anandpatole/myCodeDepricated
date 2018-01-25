@@ -22,6 +22,7 @@ import com.cheep.cheepcare.adapter.ManageSubscriptionAddPackageAdapter;
 import com.cheep.cheepcare.model.CheepCarePackageModel;
 import com.cheep.cheepcare.model.CityDetail;
 import com.cheep.databinding.ActivityManageSubscriptionBinding;
+import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.Utility;
 
 import java.util.List;
@@ -97,9 +98,10 @@ public class ManageSubscriptionActivity extends BaseAppCompatActivity {
 
         mBinding.tvCityName.setText(mCity.cityName);
 
+        String name = PreferenceUtility.getInstance(this).getUserDetails().userName;
         if (!isManageSubscription) {
             SpannableStringBuilder spannableStringBuilder
-                    = new SpannableStringBuilder(getString(R.string.msg_welcome_x, "Nikita"));
+                    = new SpannableStringBuilder(getString(R.string.msg_welcome_x, name));
             spannableStringBuilder.append(Utility.ONE_CHARACTER_SPACE).append(Utility.ONE_CHARACTER_SPACE);
             ImageSpan span = new ImageSpan(getBaseContext(), R.drawable.ic_smiley_folded_hands_big, ImageSpan.ALIGN_BASELINE);
             spannableStringBuilder.setSpan(span, spannableStringBuilder.length() - 1
@@ -109,7 +111,7 @@ public class ManageSubscriptionActivity extends BaseAppCompatActivity {
             mBinding.tvInfoText.setText(getString(R.string.msg_welcoming_on_subscription));
         } else {
             mBinding.tvWelcomeText.setVisibility(View.GONE);
-            mBinding.tvInfoText.setText(getString(R.string.cheep_care_work_flow_desc, "Nikita"));
+            mBinding.tvInfoText.setText(getString(R.string.cheep_care_work_flow_desc, name));
         }
 
         mBinding.rvBoughtPackages.setNestedScrollingEnabled(false);
