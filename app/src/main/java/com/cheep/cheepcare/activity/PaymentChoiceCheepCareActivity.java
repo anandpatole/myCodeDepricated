@@ -101,8 +101,7 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
 
         // set final payment amount which user going to pay
 
-        mBinding.textTitle.setText(getString(R.string.label_please_pay_x, String.valueOf(paymentDataModel.payableAmount)));
-
+        mBinding.textTitle.setText(getString(R.string.label_please_pay_x, Utility.getQuotePriceFormatter(String.valueOf(paymentDataModel.payableAmount))));
         setSupportActionBar(mBinding.toolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle(Utility.EMPTY_STRING);

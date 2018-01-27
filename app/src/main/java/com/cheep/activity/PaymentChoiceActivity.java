@@ -970,7 +970,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
             mParams.put(NetworkUtility.TAGS.ADDRESS_ID, mSelectedAddressModel.address_id);
         } else {
             // In case its negative then provide other address information
-            NetworkUtility.addGuestAddressParams(mTaskCreationParams, mSelectedAddressModel);
+            NetworkUtility.addGuestAddressParams(mParams, mSelectedAddressModel);
 
         }
         mParams.put(NetworkUtility.TAGS.CITY_ID, userDetails.CityID);

@@ -27,8 +27,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/scale_12dp"
-                android:layout_marginTop="@dimen/scale_12dp"
+                android:layout_marginBottom="@dimen/scale_8dp"
+                android:layout_marginTop="@dimen/scale_8dp"
                 android:orientation="horizontal"
                 android:paddingEnd="@dimen/scale_20dp"
                 android:paddingLeft="@dimen/scale_29dp"
@@ -76,6 +76,7 @@
                             android:layout_height="@dimen/home_screen_near_by_pro_image_height_width"
                             android:layout_gravity="end"
                             android:maxLines="2"
+                            android:lineSpacingMultiplier="1.2"
                             android:textColor="@color/white"
                             android:textSize="@dimen/text_size_11sp"
                             tools:text="17 people trolled by Anurag Kulkarni todayasdad sdassdasd asd dasdasdad"/>
@@ -86,7 +87,7 @@
                             android:layout_height="@dimen/icon_live_home_screen_height"
                             android:layout_alignLeft="@id/tv_live_feed"
                             android:layout_alignStart="@id/tv_live_feed"
-                            android:src="@drawable/ic_live_0001"/>
+                       />
                     </RelativeLayout>
 
                 </LinearLayout>

@@ -161,6 +161,7 @@
                         android:layout_height="@dimen/home_screen_near_by_pro_image_height_width"
                         android:layout_gravity="right"
                         android:lines="2"
+                        android:lineSpacingMultiplier="1.2"
                         android:text="17 people trolled by Anurag Kulkarni todayasdad sdassdasd asd dasdasdad"
                         android:textColor="@color/white"
                         android:textSize="@dimen/text_size_11sp"/>
@@ -170,7 +171,7 @@
                         android:layout_width="@dimen/icon_live_home_screen_width"
                         android:layout_height="@dimen/icon_live_home_screen_height"
                         android:layout_alignLeft="@+id/tv_live_feed"
-                        android:src="@drawable/ic_live_0001"/>
+                        />
                 </RelativeLayout>
 
             </RelativeLayout>

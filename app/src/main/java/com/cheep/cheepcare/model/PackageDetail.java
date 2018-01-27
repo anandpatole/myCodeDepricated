@@ -13,9 +13,10 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 public class PackageDetail implements Parent<JobCategoryModel>, Serializable {
 
@@ -60,16 +61,21 @@ public class PackageDetail implements Parent<JobCategoryModel>, Serializable {
 
     public String getDaysLeft(String stringDate) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(Utility.DATE_FORMAT_YYYY_MM_DD, Locale.US);
+        SimpleDateFormat dateFormat = new SimpleDateFormat(Utility.DATE_FORMAT_DD_MM_YY, Locale.US);
+        String todayString = dateFormat.format(Calendar.getInstance().getTime());
+        Date todayDate = null;
         Date date = null;
         try {
             date = simpleDateFormat.parse(stringDate);
+            todayDate = dateFormat.parse(todayString);
+
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        if (date != null) {
-            long currentTimeMillis = Calendar.getInstance().getTimeInMillis();
+        if (date != null && todayDate != null) {
+            long currentTimeMillis = /*Calendar.getInstance().getTimeInMillis()*/todayDate.getTime();
             long expirationTimeMillis = date.getTime();
-
+            System.out.println("Days: " + TimeUnit.DAYS.convert((expirationTimeMillis - currentTimeMillis), TimeUnit.MILLISECONDS));
             return String.valueOf((expirationTimeMillis - currentTimeMillis) / (1000 * 60 * 60 * 24));
         }
         return Utility.EMPTY_STRING;

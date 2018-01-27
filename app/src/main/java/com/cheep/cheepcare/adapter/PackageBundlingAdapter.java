@@ -109,9 +109,7 @@ public class PackageBundlingAdapter extends LoadMoreRecyclerAdapter<PackageBundl
                         .load(model.packageImage)
                         .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                         .into(holder.mRowNotSelectedBinding.ivItemBackground);
-                SpannableString spannableString = new SpannableString(context.getString(R.string.rupee_symbol_x_package_price, model.price));
-                spannableString = Utility.getCheepCarePackageMonthlyPrice(spannableString, spannableString.length() - 3, spannableString.length());
-                holder.mRowNotSelectedBinding.tvPrice.setText(spannableString);
+                holder.mRowNotSelectedBinding.tvPrice.setText(Utility.getCheepCarePackageMonthlyPrice(context,R.string.rupee_symbol_x_package_price, model.price));
                 holder.mRowNotSelectedBinding.ivIsAddressSelected.setSelected(model.isSelected);
                 holder.mRowNotSelectedBinding.tvDescription.setText(model.subtitle);
                 holder.mRowNotSelectedBinding.tvTitle.setText(model.title);
@@ -133,9 +131,7 @@ public class PackageBundlingAdapter extends LoadMoreRecyclerAdapter<PackageBundl
                         .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                         .into(holder.mRowSelectedBinding.ivItemBackground);
 
-                SpannableString spannableString1 = new SpannableString(context.getString(R.string.rupee_symbol_x_package_price, model.price));
-                spannableString1 = Utility.getCheepCarePackageMonthlyPrice(spannableString1, spannableString1.length() - 3, spannableString1.length());
-                holder.mRowSelectedBinding.tvPrice.setText(spannableString1);
+                holder.mRowSelectedBinding.tvPrice.setText(Utility.getCheepCarePackageMonthlyPrice(context,R.string.rupee_symbol_x_package_price, model.price));
                 holder.mRowSelectedBinding.ivIsAddressSelected.setSelected(model.isSelected);
                 holder.mRowSelectedBinding.tvDescription.setText(model.subtitle);
                 holder.mRowSelectedBinding.tvTitle.setText(model.title);

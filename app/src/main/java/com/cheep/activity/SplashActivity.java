@@ -92,9 +92,9 @@ public class SplashActivity extends BaseAppCompatActivity {
         @Override
         public void run() {
 
-            /*
-             * For Guest Login We would directly redirect the user to HomeScreen
-             */
+ /*
+ * For Guest Login We would directly redirect the user to HomeScreen
+ */
             FirebaseDynamicLinks.getInstance()
                     .getDynamicLink(getIntent())
                     .addOnSuccessListener(SplashActivity.this, new OnSuccessListener<PendingDynamicLinkData>() {
@@ -104,12 +104,12 @@ public class SplashActivity extends BaseAppCompatActivity {
                             Uri deepLink = null;
                             if (pendingDynamicLinkData != null) {
                                 deepLink = pendingDynamicLinkData.getLink();
+                                HomeActivity.newInstance(mContext, deepLink);
                             } else {
                                 HomeActivity.newInstance(mContext, null);
-                                return;
                             }
 
-                            HomeActivity.newInstance(mContext, deepLink);
+                            finish();
                             // Handle the deep link. For example, open the linked
                             // content, or apply promotional credit to the user's
                             // account.
@@ -122,38 +122,39 @@ public class SplashActivity extends BaseAppCompatActivity {
                         @Override
                         public void onFailure(@NonNull Exception e) {
                             Log.w(TAG, "getDynamicLink:onFailure", e);
+                            HomeActivity.newInstance(mContext, null);
+                            finish();
                         }
                     });
 
 
 
 
-            /*if (!TextUtils.isEmpty(getIntent().getDataString()))
-                HomeActivity.newInstance(mContext, getIntent().getData());
-            else
-                HomeActivity.newInstance(mContext, null);*/
-            finish();
+ /*if (!TextUtils.isEmpty(getIntent().getDataString()))
+ HomeActivity.newInstance(mContext, getIntent().getData());
+ else
+ HomeActivity.newInstance(mContext, null);*/
 
-            /*if (PreferenceUtility.getInstance(mContext).getUserDetails() == null) {
-                if (!PreferenceUtility.getInstance(mContext).getIntroScreenStatus()) {
-                    //Start the Introduction activity
-//                    TODO: This would be enabled once new INTROScreen Available
-//                    IntroScreenActivity.newInstance(mContext);
+ /*if (PreferenceUtility.getInstance(mContext).getUserDetails() == null) {
+ if (!PreferenceUtility.getInstance(mContext).getIntroScreenStatus()) {
+ //Start the Introduction activity
+// TODO: This would be enabled once new INTROScreen Available
+// IntroScreenActivity.newInstance(mContext);
 
 
-                    // Temporary intiating Login Screen
-                    PreferenceUtility.getInstance(mContext).updateIntroScreenStatus(true);
-                    //Start the Login activity
-                    LoginActivity.newInstance(mContext);
-                } else {
-                    //Start the Login activity
-                    LoginActivity.newInstance(mContext);
-                }
-                finish();
-            } else {
-                HomeActivity.newInstance(mContext);
-                finish();
-            }*/
+ // Temporary intiating Login Screen
+ PreferenceUtility.getInstance(mContext).updateIntroScreenStatus(true);
+ //Start the Login activity
+ LoginActivity.newInstance(mContext);
+ } else {
+ //Start the Login activity
+ LoginActivity.newInstance(mContext);
+ }
+ finish();
+ } else {
+ HomeActivity.newInstance(mContext);
+ finish();
+ }*/
         }
     };
 

@@ -599,7 +599,6 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="soci_care">Soci Care</string>
     <string name="label_select_address">Select Address</string>
     <string name="label_add_another_address">Add another address</string>
-    <string name="rupee_symbol_x_package_price">₹%1s/MTH*</string>
     <string name="label_half_yearly">Half-Yearly</string>
     <string name="description_half_yearly_package">Hassel-free goodness with CHEEP CARE for 6 whole months.</string>
     <string name="label_yearly">Yearly</string>
@@ -646,5 +645,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_applied_promo_code_message_cheep_care">Yay! You saved %1$s %2$s</string>
 
     <string name="validate_cheep_mate_code">Mate code can\'t be empty.</string>
+    <string name="rupee_symbol_x_package_price_with_star">₹%1s/MTH*</string>
+    <string name="rupee_symbol_x_package_price">₹%1s/MTH</string>
 
 </resources>

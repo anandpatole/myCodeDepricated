@@ -1153,8 +1153,12 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment implements Reques
             @Override
             public void onAddAddress(AddressModel addressModel) {
 
+                if (dialog != null) {
+                    dialog.dismiss();
+                }
                 if (addressRecyclerViewAdapter != null) {
                     addressRecyclerViewAdapter.add(addressModel);
+                    addressDialog.view.findViewById(R.id.btn_submit).setVisibility(View.VISIBLE);
                 }
 
                 //Saving information in shared preference
@@ -1169,14 +1173,14 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment implements Reques
                 }
 
 
-                if (dialog != null) {
-                    dialog.dismiss();
-                }
             }
 
             @Override
             public void onUpdateAddress(AddressModel addressModel) {
 
+                if (dialog != null) {
+                    dialog.dismiss();
+                }
                 if (!TextUtils.isEmpty(TEMP_ADDRESS_ID)) {
                     if (addressRecyclerViewAdapter != null) {
                         addressRecyclerViewAdapter.updateItem(addressModel);
@@ -1194,10 +1198,6 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment implements Reques
                     PreferenceUtility.getInstance(mContext).saveGuestUserDetails(guestUserDetails);
                 }
 
-
-                if (dialog != null) {
-                    dialog.dismiss();
-                }
 
             }
         }, new ArrayList<String>(), model);
@@ -1236,7 +1236,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment implements Reques
              public String lat;
              public String lng;
              */
-           mParams = NetworkUtility.addGuestAddressParams(mParams, model);
+            mParams = NetworkUtility.addGuestAddressParams(mParams, model);
 
         } else {
             mParams.put(NetworkUtility.TAGS.ADDRESS_ID, model.address_id);

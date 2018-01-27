@@ -3,7 +3,6 @@ package com.cheep.cheepcare.adapter;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.support.v7.widget.RecyclerView;
-import android.text.SpannableString;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,9 +57,6 @@ public class SelectedPackageSummaryAdapter extends LoadMoreRecyclerAdapter<Selec
         // set montly price of package
 
 
-        SpannableString spannableString1 = new SpannableString(context.getString(R.string.rupee_symbol_x_package_price, String.valueOf(model.monthlyPrice)));
-        spannableString1 = Utility.getCheepCarePackageMonthlyPrice(spannableString1, spannableString1.length() - 3, spannableString1.length());
-
         // set address category icon
         if (model.mSelectedAddressList != null && !model.mSelectedAddressList.isEmpty()) {
             holder.mBinding.ivAddressIcon.setImageResource(Utility.getAddressCategoryBlueIcon(model.mSelectedAddressList.get(0).category));
@@ -70,7 +66,7 @@ public class SelectedPackageSummaryAdapter extends LoadMoreRecyclerAdapter<Selec
         holder.mBinding.ivIsAddressSelected.setSelected(model.isSelected);
 
 
-        holder.mBinding.tvPrice.setText(spannableString1);
+        holder.mBinding.tvPrice.setText(Utility.getCheepCarePackageMonthlyPrice(context,R.string.rupee_symbol_x_package_price, String.valueOf(model.monthlyPrice)));
 
         /*Glide.with(holder.mBinding.getRoot().getContext())
                 .load(R.drawable.home_care_price_mumbai)

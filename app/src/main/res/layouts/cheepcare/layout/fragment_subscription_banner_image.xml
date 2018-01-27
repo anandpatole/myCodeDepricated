@@ -25,21 +25,41 @@
             android:layout_centerInParent="true"
             android:visibility="gone"/>
 
-        <ImageView
-            android:id="@+id/img_cheep_care_gif"
-            android:layout_width="@dimen/scale_50dp"
-            android:layout_height="@dimen/scale_50dp"
-            android:layout_alignParentRight="true"
-            android:layout_marginBottom="@dimen/home_screen_general_margin"
-            android:layout_marginLeft="@dimen/home_screen_general_margin"
-            android:layout_marginRight="@dimen/scale_15dp"
-            android:layout_marginTop="@dimen/home_screen_general_margin"/>
+        <RelativeLayout
+            android:id="@+id/rl_right"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true">
+
+            <ImageView
+                android:id="@+id/img_cheep_care_gif"
+                android:layout_width="@dimen/scale_50dp"
+                android:layout_height="@dimen/scale_50dp"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="@dimen/home_screen_general_margin"
+                android:layout_marginLeft="@dimen/home_screen_general_margin"
+                android:layout_marginRight="@dimen/scale_15dp"
+                android:layout_marginTop="@dimen/home_screen_general_margin"/>
+
+            <ImageView
+                android:id="@+id/iv_subscribe"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginRight="@dimen/scale_15dp"
+                android:paddingBottom="@dimen/scale_5dp"
+                android:src="@drawable/ic_subscribe"/>
+
+        </RelativeLayout>
+
 
         <com.cheep.custom_view.CFTextViewBold
             android:id="@+id/tv_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_toLeftOf="@+id/img_cheep_care_gif"
+            android:layout_toLeftOf="@+id/rl_right"
             android:gravity="center_vertical"
             android:paddingLeft="@dimen/home_screen_general_margin"
             android:paddingTop="@dimen/home_screen_general_margin"
@@ -52,14 +72,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/tv_title"
-            android:layout_toLeftOf="@+id/img_cheep_care_gif"
+            android:layout_toLeftOf="@+id/rl_right"
             android:gravity="center_vertical"
             android:paddingLeft="@dimen/home_screen_general_margin"
             android:textColor="@color/white"
             android:textSize="14sp"
             tools:text="Tap here for zippy, doorstep services "/>
 
-        <com.cheep.custom_view.CFTextViewBold
+        <com.cheep.custom_view.CFTextViewRegular
             android:id="@+id/tv_city_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -67,9 +87,9 @@
             android:gravity="center_vertical"
             android:paddingLeft="@dimen/home_screen_general_margin"
             android:paddingTop="@dimen/home_screen_general_margin"
-            android:text="Mumbai"
             android:textColor="@color/white"
-            android:textSize="@dimen/text_size_23sp"/>
+            android:textSize="@dimen/text_size_23sp"
+            tools:text="Mumbai"/>
 
         <!--  <com.cheep.custom_view.CFTextViewRegular
               android:id="@+id/tv_home_biz_soci"
@@ -82,20 +102,26 @@
               android:text="HOME"
               android:textColor="@color/white"
               android:textSize="14sp"/>-->
+
+
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            android:layout_marginBottom="@dimen/scale_5dp"
-            android:layout_marginRight="@dimen/scale_15dp"
-            android:orientation="horizontal">
+            android:layout_marginLeft="@dimen/scale_5dp"
+            android:layout_toLeftOf="@id/rl_right"
+            android:layout_toRightOf="@+id/tv_city_name"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal"
+            android:paddingBottom="@dimen/scale_5dp">
 
             <com.cheep.custom_view.CFTextViewRegular
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:text="HOME"
+                android:maxLines="1"
+                android:text="@string/label_home"
+                android:textAllCaps="true"
                 android:textColor="@color/white"
                 android:textSize="12sp"/>
 
@@ -117,7 +143,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:text="BIZ"
+                android:maxLines="1"
+                android:text="@string/label_biz"
+                android:textAllCaps="true"
                 android:textColor="@color/white"
                 android:textSize="12sp"/>
 
@@ -139,7 +167,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:text="SOCIETY"
+                android:maxLines="1"
+                android:text="@string/label_society"
                 android:textColor="@color/white"
                 android:textSize="12sp"/>
 
@@ -153,6 +182,7 @@
                 android:layout_gravity="center_vertical"
                 android:src="@drawable/ic_heart_subscription"/>
         </LinearLayout>
+
 
     </RelativeLayout>
 </layout>

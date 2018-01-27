@@ -568,12 +568,12 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
 
     public void setContinueButtonText(String selectedService, String price) {
         mBinding.textService.setText(selectedService);
-        mBinding.textPrice.setText(Utility.getMonthlyPrice(price, this));
+        mBinding.textPrice.setText(Utility.getCheepCarePackageMonthlyPrice(this, R.string.rupee_symbol_x_package_price, price));
     }
 
     public void setContinueButtonText(int totalAppliance, String price) {
         mBinding.textService.setText(getString(R.string.label_appliance, totalAppliance));
-        mBinding.textPrice.setText(Utility.getMonthlyPrice(price, this));
+        mBinding.textPrice.setText(Utility.getCheepCarePackageMonthlyPrice(this, R.string.rupee_symbol_x_package_price, price));
     }
 
     @Override

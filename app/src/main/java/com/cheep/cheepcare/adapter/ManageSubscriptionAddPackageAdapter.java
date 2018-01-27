@@ -68,10 +68,8 @@ public class ManageSubscriptionAddPackageAdapter extends
         holder.mBinding.tvTitle.setText(model.title);
         holder.mBinding.tvDescription.setText(model.subtitle);
 
-        SpannableString spannableString = new SpannableString(context.getString(R.string.rupee_symbol_x_package_price
+        holder.mBinding.tvPrice.setText(Utility.getCheepCarePackageMonthlyPrice(context,R.string.rupee_symbol_x_package_price
                 , model.price));
-        spannableString = Utility.getCheepCarePackageMonthlyPrice(spannableString, spannableString.length() - 2, spannableString.length());
-        holder.mBinding.tvPrice.setText(spannableString);
 
         // Start LIVE tracking and Text changes
         final int liveFeedCounter = model.live_lable_arr != null ? model.live_lable_arr.size() : 0;

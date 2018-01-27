@@ -53,7 +53,7 @@
                 android:layout_marginTop="@dimen/scale_45dp"
                 android:orientation="vertical"
                 android:paddingBottom="@dimen/scale_45dp"
-                android:visibility="gone">
+                android:visibility="visible">
 
                 <com.cheep.custom_view.CFTextViewRegular
                     android:layout_width="wrap_content"

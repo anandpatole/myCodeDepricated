@@ -6,6 +6,9 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -96,5 +99,18 @@ public class AcknowledgementDialogWithoutProfilePic extends DialogFragment {
         });
         return mDialogFragmentAcknowledgementBinding.getRoot();
     }
+
+    @Override
+    public void show(FragmentManager manager, String tag) {
+
+        try {
+            FragmentTransaction ft = manager.beginTransaction();
+            ft.add(this, tag);
+            ft.commit();
+        } catch (IllegalStateException e) {
+            Log.d(TAG, "Exception", e);
+        }
+    }
+
 
 }

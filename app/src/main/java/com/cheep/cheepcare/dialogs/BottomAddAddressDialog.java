@@ -389,11 +389,11 @@ public class BottomAddAddressDialog {
 
 
                             //Saving information in sharedpreference
-                            if (guestUserDetails.addressList == null)
-                                guestUserDetails.addressList = new ArrayList<>();
-
-                            guestUserDetails.addressList.add(addressModel);
-                            PreferenceUtility.getInstance(mContext).saveGuestUserDetails(guestUserDetails);
+//                            if (guestUserDetails.addressList == null)
+//                                guestUserDetails.addressList = new ArrayList<>();
+//
+//                            guestUserDetails.addressList.add(addressModel);
+//                            PreferenceUtility.getInstance(mContext).saveGuestUserDetails(guestUserDetails);
                             addAddressListener.onAddAddress(addressModel);
 
                         }

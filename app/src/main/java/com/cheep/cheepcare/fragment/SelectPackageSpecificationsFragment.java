@@ -348,6 +348,12 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
                         if (userDetails != null) {
                             userDetails.addressList.add(addressModel);
                             PreferenceUtility.getInstance(mContext).saveUserDetails(userDetails);
+                        } else {
+                            GuestUserDetails guestUserDetails = PreferenceUtility.getInstance(mContext).getGuestUserDetails();
+                            if (guestUserDetails.addressList == null)
+                                guestUserDetails.addressList = new ArrayList<>();
+                            guestUserDetails.addressList.add(addressModel);
+                            PreferenceUtility.getInstance(mContext).saveGuestUserDetails(guestUserDetails);
                         }
                         mList.add(addressModel);
                         verifyAddressForCity(addressModel, false, 0);
@@ -500,8 +506,9 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
         showProgressDialog();
         Map<String, String> mHeaderParams = new HashMap<>();
         mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
-        if (PreferenceUtility.getInstance(mContext).getUserDetails() != null) {
+        if (PreferenceUtility.getInstance(mContext).getUserDetails() != null)
             mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().userID);
+        if (isCalledAfterLogin) {
             mList.clear();
             mList.addAll(PreferenceUtility.getInstance(mContext).getUserDetails().addressList);
         }

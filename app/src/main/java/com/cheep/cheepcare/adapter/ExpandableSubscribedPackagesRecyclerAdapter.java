@@ -7,24 +7,33 @@ import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.graphics.drawable.AnimationDrawable;
+import android.graphics.drawable.BitmapDrawable;
+import android.os.Build;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.text.style.LeadingMarginSpan;
+import android.util.Log;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
+import android.widget.PopupWindow;
 
 import com.cheep.R;
-import com.cheep.cheepcare.model.CheepCarePackageModel;
 import com.cheep.cheepcare.model.PackageDetail;
 import com.cheep.custom_view.expandablerecycleview.ChildViewHolder;
 import com.cheep.custom_view.expandablerecycleview.ExpandableRecyclerAdapter;
 import com.cheep.custom_view.expandablerecycleview.ParentViewHolder;
 import com.cheep.databinding.RowPackageCareItemBinding;
 import com.cheep.databinding.RowPackageCareSubItemBinding;
+import com.cheep.model.AddressModel;
 import com.cheep.model.JobCategoryModel;
 import com.cheep.utils.Utility;
 
@@ -158,12 +167,12 @@ public class ExpandableSubscribedPackagesRecyclerAdapter extends ExpandableRecyc
             , int parentPosition, int childPosition, @NonNull JobCategoryModel child) {
 
         if (childPosition < (mList.get(parentPosition).categoryList.size() - 1)) {
-            childViewHolder.mBinding.cardView.setPadding(0
+            childViewHolder.mBinding.cardView.setContentPadding(0
                     , 0
                     , 0
                     , (int) Utility.convertDpToPixel(24, childViewHolder.mBinding.getRoot().getContext()));
         } else {
-            childViewHolder.mBinding.cardView.setPadding(0
+            childViewHolder.mBinding.cardView.setContentPadding(0
                     , 0
                     , 0
                     , 0);
@@ -184,7 +193,12 @@ public class ExpandableSubscribedPackagesRecyclerAdapter extends ExpandableRecyc
             super(binding.getRoot());
 
             mBinding = binding;
-
+            mBinding.lnAddressRow.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    showDropDownMenu(mBinding.lnAddressRow, getAdapterPosition());
+                }
+            });
         }
 
         // bind data with view parent row
@@ -210,6 +224,17 @@ public class ExpandableSubscribedPackagesRecyclerAdapter extends ExpandableRecyc
             }
 
             if (model.mSelectedAddressList != null && !model.mSelectedAddressList.isEmpty()) {
+
+
+                if (model.mSelectedAddressList != null && !model.mSelectedAddressList.isEmpty()) {
+                    if (!TextUtils.isEmpty(model.mSelectedAddressList.get(0).nickname))
+                        mBinding.tvAddressNickname.setText(model.mSelectedAddressList.get(0).nickname);
+                    else
+                        mBinding.tvAddressNickname.setText(Utility.getAddressCategoryString(model.mSelectedAddressList.get(0).category));
+                    mBinding.ivAddressIcon.setImageResource(Utility.getAddressCategoryBlueIcon(model.mSelectedAddressList.get(0).category));
+                    mBinding.tvAddress.setText(model.mSelectedAddressList.get(0).address_initials + ", " + model.mSelectedAddressList.get(0).address);
+                }
+
                 String daysLeft = model.getDaysLeft(model.mSelectedAddressList.get(0).end_date);
                 if (daysLeft != null) {
                     switch (daysLeft.length()) {
@@ -479,4 +504,63 @@ public class ExpandableSubscribedPackagesRecyclerAdapter extends ExpandableRecyc
         ///////////////////////////////////////////////////////////////////////////////////////////////
 
     }
+
+    private void showDropDownMenu(final View view, final int adapterPosition) {
+        Log.i(TAG, "showDropDownMenu: ");
+        final View mFilterPopupWindow = View.inflate(view.getContext(), R.layout.layout_address_drop_down, null);
+
+        final PopupWindow mPopupWindow = new PopupWindow(view.getContext());
+        RecyclerView recyclerview = mFilterPopupWindow.findViewById(R.id.listMultipleChoice);
+        recyclerview.setLayoutManager(new LinearLayoutManager(view.getContext()));
+
+        final DropDownAddressAdapter dropDownAdapter;
+        dropDownAdapter = new DropDownAddressAdapter((ArrayList<AddressModel>) mList.get(adapterPosition).mSelectedAddressList);
+        recyclerview.setAdapter(dropDownAdapter);
+        DropDownAddressAdapter.ClickItem clickListener = new DropDownAddressAdapter.ClickItem() {
+            @Override
+            public void clickItem(int i) {
+//                for (int j = 0; j < userDetails.addressList.size(); j++) {
+//                    AddressModel model1 = userDetails.addressList.get(j);
+//                }
+//                dropDownAdapter.setSelected(i);
+//                textView.setText(model.dropDownList.get(i).dropdown_answer);
+//                textView.setSelected(true);
+//                model.answer = model.dropDownList.get(i).dropdown_answer;
+//                mFragmentStrategicPartnerPhaseTwoBinding.linMain.findViewWithTag(model.questionId).setSelected(true);
+
+//                if (userDetails != null)
+//                    mListener.onUpdateOfAddress(adapterPosition, userDetails.addressList.get(i));
+//                else
+//                    mListener.onUpdateOfAddress(adapterPosition, guestUserDetails.addressList.get(i));
+
+
+                mPopupWindow.dismiss();
+
+
+            }
+
+            @Override
+            public void dismissDialog() {
+                mPopupWindow.dismiss();
+            }
+        };
+        dropDownAdapter.setListener(clickListener);
+
+        mPopupWindow.setBackgroundDrawable(new BitmapDrawable());
+        mPopupWindow.setContentView(mFilterPopupWindow);
+        mPopupWindow.setWidth(view.getWidth());
+        mPopupWindow.setHeight(ListView.LayoutParams.WRAP_CONTENT);
+        mPopupWindow.setFocusable(true);
+
+        // No animation at present
+        mPopupWindow.setAnimationStyle(0);
+
+        // Displaying the popup at the specified location, + offsets.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            mPopupWindow.showAsDropDown(view, 0, -view.getHeight(), Gravity.NO_GRAVITY);
+        } else {
+            mPopupWindow.showAsDropDown(view, 0, -view.getHeight());
+        }
+    }
+
 }

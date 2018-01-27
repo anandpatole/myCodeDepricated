@@ -265,7 +265,7 @@ public class ExpandablePackageServicesRecyclerAdapter extends ExpandableRecycler
 //                SpannableString spannableString = new SpannableString(context.getString(R.string.rupee_symbol_x_package_price, subServicesModel.monthlyPrice));
 //                spannableString = Utility.getCheepCarePackageMonthlyPrice(spannableString, spannableString.length() - 2, spannableString.length());
 //                mSelectionBinding.tvSubServicePrice.setText(spannableString);
-                mSelectionBinding.tvSubServicePrice.setText(Utility.getMonthlyPrice(subServicesModel.monthlyPrice, context));
+                mSelectionBinding.tvSubServicePrice.setText(Utility.getCheepCarePackageMonthlyPrice(context, R.string.rupee_symbol_x_package_price_with_star, subServicesModel.monthlyPrice));
 
             /*mBinding.tvSubServicePrice.setText(itemView.getContext().getString(R.string.rupee_symbol_x
                     , *//*Utility.getQuotePriceFormatter(String.valueOf(*//*subServicesModel.price)*//*))*//*);*/
@@ -280,7 +280,7 @@ public class ExpandablePackageServicesRecyclerAdapter extends ExpandableRecycler
 //                SpannableString spannableString = new SpannableString(context.getString(R.string.rupee_symbol_x_package_price, subServicesModel.unitPrice));
 //                spannableString = Utility.getCheepCarePackageMonthlyPrice(spannableString, spannableString.length() - 2, spannableString.length());
                 double price = Double.parseDouble(subServicesModel.unitPrice) * (subServicesModel.qty - 1);
-                mUnitBinding.tvSubServicePrice.setText(Utility.getMonthlyPrice(String.valueOf(price), context));
+                mUnitBinding.tvSubServicePrice.setText(Utility.getCheepCarePackageMonthlyPrice(context, R.string.rupee_symbol_x_package_price_with_star, String.valueOf(price)));
                 mUnitBinding.tvSubServicePrice.setSelected(true);
 
                 mUnitBinding.tvSubServiceName.setText(subServicesModel.packageSuboptionTitle);

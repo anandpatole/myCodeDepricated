@@ -30,8 +30,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal|center_vertical"
                 android:gravity="center_horizontal"
-                android:layout_marginRight="@dimen/scale_5dp"
-                android:layout_marginLeft="@dimen/scale_5dp"
+                android:layout_marginRight="@dimen/scale_3dp"
+                android:layout_marginLeft="@dimen/scale_3dp"
                 android:text="Save an additional 5% when you add one more package"
                 android:textSize="@dimen/text_size_12sp"/>
 

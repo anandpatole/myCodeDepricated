@@ -1656,6 +1656,9 @@ public class EnterTaskDetailFragment extends BaseFragment implements RequestPerm
             @Override
             public void onAddAddress(AddressModel addressModel) {
 //                    mList.add(addressModel);
+                if (dialog != null) {
+                    dialog.dismiss();
+                }
                 if (addressRecyclerViewAdapter != null) {
                     addressRecyclerViewAdapter.add(addressModel);
                     addressDialog.view.findViewById(R.id.btn_submit).setVisibility(View.VISIBLE);
@@ -1664,7 +1667,7 @@ public class EnterTaskDetailFragment extends BaseFragment implements RequestPerm
                 //Saving information in sharedpreference
                 UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
                 if (userDetails != null) {
-                    userDetails.addressList =  addressRecyclerViewAdapter.getmList();
+                    userDetails.addressList = addressRecyclerViewAdapter.getmList();
                     PreferenceUtility.getInstance(mContext).saveUserDetails(userDetails);
                 } else {
                     GuestUserDetails guestUserDetails = PreferenceUtility.getInstance(mContext).getGuestUserDetails();
@@ -1672,18 +1675,15 @@ public class EnterTaskDetailFragment extends BaseFragment implements RequestPerm
                     PreferenceUtility.getInstance(mContext).saveGuestUserDetails(guestUserDetails);
                 }
 
-                if (addAddressDialog != null) {
-                    addAddressDialog.dismiss();
-                }
 
-                if (dialog != null) {
-                    dialog.dismiss();
-                }
             }
 
             @Override
             public void onUpdateAddress(AddressModel addressModel) {
 
+                if (dialog != null) {
+                    dialog.dismiss();
+                }
                 if (!TextUtils.isEmpty(TEMP_ADDRESS_ID)) {
                     if (addressRecyclerViewAdapter != null) {
                         addressRecyclerViewAdapter.updateItem(addressModel);
@@ -1693,7 +1693,7 @@ public class EnterTaskDetailFragment extends BaseFragment implements RequestPerm
                 //Saving information in sharedpreference
                 UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
                 if (userDetails != null) {
-                    userDetails.addressList =  addressRecyclerViewAdapter.getmList();
+                    userDetails.addressList = addressRecyclerViewAdapter.getmList();
                     PreferenceUtility.getInstance(mContext).saveUserDetails(userDetails);
                 } else {
                     GuestUserDetails guestUserDetails = PreferenceUtility.getInstance(mContext).getGuestUserDetails();
@@ -1701,11 +1701,6 @@ public class EnterTaskDetailFragment extends BaseFragment implements RequestPerm
                     PreferenceUtility.getInstance(mContext).saveGuestUserDetails(guestUserDetails);
                 }
 
-
-
-                if (dialog != null) {
-                    dialog.dismiss();
-                }
 
             }
         }, new ArrayList<String>(), model);

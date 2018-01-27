@@ -1405,7 +1405,7 @@ public class Utility {
             return "0.00";
         if (quotePrice.equalsIgnoreCase("") || quotePrice.equalsIgnoreCase("0") || quotePrice.equalsIgnoreCase("0.0") || quotePrice.equalsIgnoreCase("0.00"))
             return "0.00";
-        DecimalFormat formatter = new DecimalFormat("##,##0.00");
+        DecimalFormat formatter = new DecimalFormat("#,##,##0.00");
         double price = Double.parseDouble(quotePrice);
         return formatter.format(price);
     }
@@ -1714,25 +1714,17 @@ public class Utility {
         return selectedServiceArray.toString();
     }
 
-    public static SpannableString getCheepCarePackageMonthlyPrice(SpannableString spannableString, int start, int end) {
-        RelativeSizeSpan relativeSizeSpan = new RelativeSizeSpan(0.5f);
-
-        spannableString.setSpan(relativeSizeSpan, start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        spannableString.setSpan(new CustomCharacterSpan(), start, end,
-                SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-        return spannableString;
-    }
-
-
-    public static SpannableString getMonthlyPrice(String amount, Context context) {
+    public static SpannableString getCheepCarePackageMonthlyPrice(Context context, int resId, String price) {
         DecimalFormat format = new DecimalFormat();
         format.setDecimalSeparatorAlwaysShown(false);
-
-        SpannableString spannableString = new SpannableString(context.getString(R.string.rupee_symbol_x_package_price, format.format(Double.valueOf(amount))));
+        SpannableString spannableString = new SpannableString(context.getString(resId, format.format(Double.valueOf(price))));
+        int start = spannableString.toString().lastIndexOf("T");
         RelativeSizeSpan relativeSizeSpan = new RelativeSizeSpan(0.5f);
-        spannableString.setSpan(relativeSizeSpan, spannableString.length() - 3, spannableString.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        spannableString.setSpan(new CustomCharacterSpan(), spannableString.length() - 3, spannableString.length(), SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        spannableString.setSpan(relativeSizeSpan, start, spannableString.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannableString.setSpan(new CustomCharacterSpan(), start, spannableString.length(),
+                SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE);
+
         return spannableString;
     }
 
