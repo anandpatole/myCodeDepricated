@@ -22,6 +22,7 @@ public class ErrorLoadingHelper {
     private TextView textErrorAction;
     private ProgressBar progressBar;
     private LinearLayout mEmptyFavouriteLayout;
+    private LinearLayout mEmptySubscribedLayout;
 
     public ErrorLoadingHelper(RecyclerView recyclerView) {
         this.recyclerView = recyclerView;
@@ -32,6 +33,7 @@ public class ErrorLoadingHelper {
         textError = (TextView) view.findViewById(R.id.text_error);
         textErrorAction = (TextView) view.findViewById(R.id.text_error_action);
         mEmptyFavouriteLayout = (LinearLayout) view.findViewById(R.id.ln_empty_favourite_list);
+        mEmptySubscribedLayout = (LinearLayout) view.findViewById(R.id.ln_empty_subscribed_list);
     }
 
     public void showLoading() {
@@ -71,7 +73,7 @@ public class ErrorLoadingHelper {
         failed(errorMessage, errorRes, btnText, clickListener, null);
     }
 
-    public void showEmptyFavouriteCategorySection() {
+    public void showEmptyCategorySection(String mSelectedFilterType) {
         recyclerView.setVisibility(View.GONE);
         progressBar.setVisibility(View.GONE);
         textError.setVisibility(View.GONE);
@@ -80,6 +82,14 @@ public class ErrorLoadingHelper {
         // Hide Favourite section view
         if (mEmptyFavouriteLayout != null)
             mEmptyFavouriteLayout.setVisibility(View.VISIBLE);
+
+        if (!mSelectedFilterType.equalsIgnoreCase(Utility.FILTER_TYPES.FILTER_TYPE_FAVOURITES)) {
+            mEmptyFavouriteLayout.setVisibility(View.VISIBLE);
+            mEmptySubscribedLayout.setVisibility(View.GONE);
+        } else /*if (mSelectedFilterType.equalsIgnoreCase(Utility.FILTER_TYPES.FILTER_TYPE_SUBSCRIBED)) */{
+            mEmptyFavouriteLayout.setVisibility(View.GONE);
+            mEmptySubscribedLayout.setVisibility(View.VISIBLE);
+        }
     }
 
     public void failed(String errorMessage, int errorRes, String btnText, View.OnClickListener clickListener, View.OnClickListener postaTaskClickListener) {
