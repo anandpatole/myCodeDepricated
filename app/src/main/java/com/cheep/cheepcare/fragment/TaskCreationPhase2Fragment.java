@@ -2,6 +2,7 @@ package com.cheep.cheepcare.fragment;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.app.IntentService;
 import android.app.TimePickerDialog;
 import android.content.ClipData;
 import android.content.Context;
@@ -52,6 +53,7 @@ import com.cheep.adapter.SelectedSubServiceAdapter;
 import com.cheep.cheepcare.activity.TaskCreationCCActivity;
 import com.cheep.cheepcare.adapter.AddressTaskCreateAdapter;
 import com.cheep.cheepcare.dialogs.BottomAddAddressDialog;
+import com.cheep.cheepcare.dialogs.NotSubscribedAddressDialog;
 import com.cheep.cheepcare.dialogs.SelectSpecificTimeDialog;
 import com.cheep.custom_view.BottomAlertDialog;
 import com.cheep.custom_view.DividerItemDecoration;
@@ -99,7 +101,8 @@ import static android.app.Activity.RESULT_OK;
 public class TaskCreationPhase2Fragment extends BaseFragment
         implements
         RequestPermission.OnRequestPermissionResult
-        , SelectSpecificTimeDialog.DialogInteractionListener {
+        , SelectSpecificTimeDialog.DialogInteractionListener
+        , NotSubscribedAddressDialog.DialogInteractionListener {
     public static final String TAG = TaskCreationPhase2Fragment.class.getSimpleName();
     private FragmentTaskCreationPhase2Binding mBinding;
     private TaskCreationCCActivity mTaskCreationCCActivity;
@@ -115,6 +118,9 @@ public class TaskCreationPhase2Fragment extends BaseFragment
     private BottomAddAddressDialog dialog;
     private AddressTaskCreateAdapter<AddressModel> mAddressAdapter;
     private AddressModel mSelectedAddress;
+
+    private boolean isClicked = false;
+
 
     @SuppressWarnings("unused")
     public static TaskCreationPhase2Fragment newInstance() {
@@ -202,9 +208,17 @@ public class TaskCreationPhase2Fragment extends BaseFragment
         }
     }
 
+    IntentService intentService = new IntentService("testIntentService") {
+        @Override
+        protected void onHandleIntent(@Nullable Intent intent) {
+            Log.d(TAG, "onHandleIntent() called with: intent = [" + intent + "]");
+        }
+    };
+
     @Override
     public void initiateUI() {
         Log.d(TAG, "initiateUI() called");
+        isClicked = false;
         mRequestPermission = new RequestPermission(TaskCreationPhase2Fragment.this, this);
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -322,10 +336,16 @@ public class TaskCreationPhase2Fragment extends BaseFragment
 //        mBinding.recycleImg.setAdapter(mMediaRecycleAdapter);
 
         final List<AddressModel> mAddressList = new ArrayList<>();
-        AddressModel addressModel = new AddressModel();
-        mAddressList.add(addressModel);
-        mAddressList.add(addressModel);
-        mAddressList.add(addressModel);
+        AddressModel addressModel1 = new AddressModel();
+        AddressModel addressModel2 = new AddressModel();
+        addressModel2.isSubscribedAddress = true;
+        AddressModel addressModel3 = new AddressModel();
+        mAddressList.add(addressModel1);
+        mAddressList.add(addressModel2);
+        mAddressList.add(addressModel3);
+        mAddressList.add(0, new AddressModel() {{
+            address = getString(R.string.label_select_address);
+        }});
 
         mAddressAdapter = new AddressTaskCreateAdapter<>(mContext
                 , android.R.layout.simple_spinner_item
@@ -335,33 +355,36 @@ public class TaskCreationPhase2Fragment extends BaseFragment
         mBinding.spinnerAddressSelection.setPrompt("Prompt");
         mBinding.spinnerAddressSelection.setSelected(false);
         mBinding.spinnerAddressSelection.setFocusableInTouchMode(false);
-        mBinding.spinnerAddressSelection.setSelection(-1);
         mBinding.spinnerAddressSelection.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-                if (position == mAddressList.size() - 1) {
+                if (!isClicked && position == 0) {
+                    Log.d(TAG, "onItemSelected: 0th position default selection");
+                } else if (position == mAddressList.size() - 1) {
                     showBottomAddressDialog(null);
-                } else {
+                } else if (mAddressList.get(position).isSubscribedAddress) {
                     Log.d(TAG, "onItemSelected: ");
+                    AddressModel model = mAddressList.get(position);
+
+                    mBinding.iconTaskWhere.setImageDrawable(ContextCompat.getDrawable(mContext
+                            , Utility.getAddressCategoryBlueIcon(model.category)));
+
+                    // show address's nick name or nick name is null then show category
+                    String category;
+                    if (!TextUtils.isEmpty(model.nickname))
+                        category = model.nickname;
+                    else
+                        category = model.category;
+
+                    mBinding.tvAddressNickname.setText(category);
+
+                    mBinding.tvAddress.setText(model.address);
+                    mSelectedAddress = model;
+                } else {
+                    NotSubscribedAddressDialog notSubscribedAddressDialog = new NotSubscribedAddressDialog();
+                    notSubscribedAddressDialog.show(((AppCompatActivity) mContext).getSupportFragmentManager(), SelectSpecificTimeDialog.TAG);
+                    notSubscribedAddressDialog.setTargetFragment(TaskCreationPhase2Fragment.this, 0);
                 }
-
-               /* AddressModel model = mAddressList.get(position);
-
-                mBinding.iconTaskWhere.setImageDrawable(ContextCompat.getDrawable(mContext
-                        , Utility.getAddressCategoryBlueIcon(model.category)));
-
-                // show address's nick name or nick name is null then show category
-                String category;
-                if (!TextUtils.isEmpty(model.nickname))
-                    category = model.nickname;
-                else
-                    category = model.category;
-
-                mBinding.tvAddressNickname.setText(category);
-
-                mBinding.tvAddress.setText(model.address);
-                mSelectedAddress = model;*/
             }
 
             @Override
@@ -760,6 +783,8 @@ public class TaskCreationPhase2Fragment extends BaseFragment
 //                        Utility.showSnackBar(getString(R.string.validate_date), mBinding.getRoot());
 //                        return;
 //                    }
+
+                    isClicked = true;
                     mBinding.spinnerAddressSelection.performClick();
 //                    Utility.hideKeyboard(mContext, mBinding.editTaskDesc);
 //                    showAddressDialog();
@@ -860,6 +885,16 @@ public class TaskCreationPhase2Fragment extends BaseFragment
     public void onNoThanksClicked() {
         Log.d(TAG, "onNoThanksClicked() called");
         updateWhenLabelWithIcon(false, Utility.EMPTY_STRING);
+    }
+
+    @Override
+    public void onSubscribeClicked() {
+        Log.d(TAG, "onSubscribeClicked() called");
+    }
+
+    @Override
+    public void onNotNowClicked() {
+        Log.d(TAG, "onNotNowClicked() called");
     }
 
     private class UploadListener implements TransferListener {
@@ -1615,7 +1650,7 @@ public class TaskCreationPhase2Fragment extends BaseFragment
             if (!TextUtils.isEmpty(addressId)) {
                 mParams.put(NetworkUtility.TAGS.ADDRESS_ID, addressId);
             } else {
-              mParams =  NetworkUtility.addGuestAddressParams(mParams, addressModel);
+                mParams = NetworkUtility.addGuestAddressParams(mParams, addressModel);
             }
         } else {
             // Check if user is logged in if yes pass the address details accordingly.

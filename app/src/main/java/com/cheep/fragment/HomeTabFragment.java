@@ -755,7 +755,7 @@ public class HomeTabFragment extends BaseFragment {
 
     public void onListCategoryListGetsEmpty() {
 //        Log.d(TAG, "onListCategoryListGetsEmpty() called");
-        errorLoadingHelper.showEmptyFavouriteCategorySection();
+        errorLoadingHelper.showEmptyCategorySection(mSelectedFilterType);
     }
 
 
@@ -854,8 +854,6 @@ public class HomeTabFragment extends BaseFragment {
 //                       Condition for changing the location icon
                         Log.v("Closest Area", jsonObject.optString(NetworkUtility.TAGS.CLOSEST_AREA).toString());
                         String cat = jsonObject.optString(NetworkUtility.TAGS.CLOSEST_AREA).toString();
-//                       Condition for changing the location icon
-                        Log.v("Closest Area", jsonObject.optString(NetworkUtility.TAGS.CLOSEST_AREA).toString());
                         if (cat.equals("{}") || cat.equals("[]") || cat.equals("null") || TextUtils.isEmpty(cat)) {
                             String Category = "";
                             Log.v("Closest Area if", Category);
@@ -880,7 +878,8 @@ public class HomeTabFragment extends BaseFragment {
 
                         toggleErrorScreen(false);
                         if (list.size() <= 0) {
-                            if (mSelectedFilterType.equalsIgnoreCase(Utility.FILTER_TYPES.FILTER_TYPE_FAVOURITES)) {
+                            if (mSelectedFilterType.equalsIgnoreCase(Utility.FILTER_TYPES.FILTER_TYPE_FAVOURITES) ||
+                                    mSelectedFilterType.equalsIgnoreCase(Utility.FILTER_TYPES.FILTER_TYPE_SUBSCRIBED)) {
                                 onListCategoryListGetsEmpty();
                             } else {
                                 errorLoadingHelper.failed(null, R.drawable.img_empty_category, onRetryBtnClickListener);
@@ -1455,7 +1454,7 @@ public class HomeTabFragment extends BaseFragment {
                 mSelectedFilterType = Utility.FILTER_TYPES.FILTER_TYPE_SUBSCRIBED;
                 updateFilterSelectionInPopup(mLayoutFilterHomePopupBinding);
                 updateFilterText();
-//                getCategoryListFromServer(true);
+                getCategoryListFromServer(true);
                 Utility.showToast(mContext, "Subscribed Clicked!!");
                 mPopupWindow.dismiss();
             }

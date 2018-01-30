@@ -94,8 +94,14 @@ public class AddressTaskCreateAdapter<T> extends ArrayAdapter<T> {
             );
             mHolder.mBinding.ivHome.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.icon_address_home_active));
             mHolder.mBinding.tvAddressNickname.setText(context.getString(R.string.label_home));
-            mHolder.mBinding.viewDot.setVisibility(View.VISIBLE);
-            mHolder.mBinding.tvLabelAddressSubscribed.setVisibility(View.VISIBLE);
+            mHolder.mBinding.viewDot.setVisibility(mList.get(position).isSubscribedAddress
+                    ? View.VISIBLE
+                    : View.GONE
+            );
+            mHolder.mBinding.tvLabelAddressSubscribed.setVisibility(mList.get(position).isSubscribedAddress
+                    ? View.VISIBLE
+                    : View.GONE
+            );
             mHolder.mBinding.tvAddress.setVisibility(View.VISIBLE);
         }
 

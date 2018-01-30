@@ -29,6 +29,8 @@ public class AddressModel implements Serializable {
     public String countryName;
     public String stateName;
 
+    public boolean isSubscribedAddress = false;
+
     public LatLng getLatLng() {
         try {
             return new LatLng(Double.parseDouble(lat), Double.parseDouble(lng));

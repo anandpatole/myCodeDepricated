@@ -394,6 +394,10 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_featured">Featured</string>
     <string name="empty_favourited_list_1">Haven\'t favourited a service\ncategory yet?</string>
     <string name="empty_favourited_list_2">If you like a service which you often use,\njust tap the heart on it.</string>
+    <string name="empty_subscribed_list">Now with CHEEP Care, enjoy unbelievable
+         offers on your favourite services! Check out the
+         packages and get the best care for your home,
+         office and societies.</string>
 
     <string name="no_pros_in_this_category">No PROs in this category</string>
     <string name="step_1_desc_for_strategic_partner">Please select as many services you need from the list below</string>
@@ -554,7 +558,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_enter_amount">Enter Amount</string>
     <string name="label_amount_payable">Amount Payable</string>
     <string name="label_notify_paying_by_wallet">You are about to pay using your %1s wallet</string>
-    <string name="no_pro_available_title"/>
+    <string name="no_pro_available_title" />
     <string name="no_pro_available_description">No PROs is available for this address</string>
     <string name="validate_comment">Please provide valid comment.</string>
     <string name="title_booking_confimation">Booking Confirmation</string>
@@ -624,13 +628,18 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="msg_cheep_assurance_select_time">As per our guarantee, CHEEP will instantly provide a verified PRO to get your job done within 24 hours of
         booking. If you wish to choose a specific time, please click here!</string>
     <string name="label_subscribed">Subscribed</string>
+    <string name="label_subscribe_now">Subscribe Now</string>
     <string name="label_sort">Sort</string>
     <string name="label_add_new">Add new</string>
     <string name="label_busy_no_worries">BUSY? No worries!</string>
     <string name="msg_choose_specific_time">To choose a specific time slot for the PRO during the day or in any Emergency
         after working hours, simply pay an additional charge of ₹%1s and get the PRO to come when you want!</string>
+    <string name="msg_not_subscribed_address">Money Saving Tip &#32;&#32; : Why don\'t you add this address under the CHEEP Care
+        Subscription package for as low as ₹199/MTH* and get unlimited repairs and maintenance all year-long?</string>
+    <string name="label_new_address">Hey we\'ve noticed this is\na new address! </string>
     <string name="label_select_time">Select Time</string>
     <string name="label_no_thanks">No, Thanks</string>
+    <string name="label_not_now">Not Now</string>
     <string name="label_next">Next</string>
 
     <string name="hint_apply_cheep_promo_code">Apply CHEEP Promo code?</string>
@@ -647,5 +656,8 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="validate_cheep_mate_code">Mate code can\'t be empty.</string>
     <string name="rupee_symbol_x_package_price_with_star">₹%1s/MTH*</string>
     <string name="rupee_symbol_x_package_price">₹%1s/MTH</string>
+    <string name="msg_not_cc_user">Hi, it seems that you\'re not a\nCHEEP Care user!</string>
+    <string name="label_starting_price_cc">Available as low as %1s</string>
+    <string name="msg_become_cc_member">Become a CHEEP Care Member</string>
 
 </resources>
