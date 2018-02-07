@@ -208,13 +208,6 @@ public class TaskCreationPhase2Fragment extends BaseFragment
         }
     }
 
-    IntentService intentService = new IntentService("testIntentService") {
-        @Override
-        protected void onHandleIntent(@Nullable Intent intent) {
-            Log.d(TAG, "onHandleIntent() called with: intent = [" + intent + "]");
-        }
-    };
-
     @Override
     public void initiateUI() {
         Log.d(TAG, "initiateUI() called");

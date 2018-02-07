@@ -1,10 +1,12 @@
+<!DOCTYPE resources [<!ENTITY cheep "Cheep">]>
+
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="app_name" translatable="false">Cheep</string>
+    <string name="app_name" translatable="false">&cheep;</string>
 
     <!--IDs-->
     <string name="facebook_app_id" translatable="false">1594162450609778</string>
 
-    <string name="label_copywrite">Copyright © 2017 Cheep</string>
+    <string name="label_copywrite">Copyright © 2017 &cheep;</string>
     <string name="hint_email">Email ID (optional)</string>
     <string name="hint_password">Password</string>
     <string name="hint_password_signup">Create Password for CHEEP</string>
@@ -180,15 +182,16 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_something_went_wrong">Oops! Seems like something went wrong, why don’t you try again or get in touch!</string>
     <string name="label_playservice_not_available">Google Play Service not available.</string>
     <string name="permission_denied_location">Please allow cheep to detect your location</string>
-    <string name="permission_denied_read">Please allow Cheep to access your photos</string>
-    <string name="permission_denied_camera">Please allow Cheep to access your photos</string>
+    <string name="permission_denied_read">Please allow &cheep; to access your photos</string>
+    <string name="permission_denied_camera">Please allow &cheep; to access your photos</string>
     <string name="social_email_not_found">Hey we can\'t seem to identify this social account! Are you sure you are using the correct email address for your social media account? Why dont you try again?</string>
     <string name="confirmation_logout">Are you sure you want to Logout?</string>
     <string name="label_pay_now">Pay Now</string>
     <string name="label_pay_X">Book the PRO for ₹%1$s</string>
     <string name="label_pay_X_X_X">Pay ₹ %1$s - ₹ %2$s = ₹ %3$s</string>
     <string name="label_thanks_for_choosing_x_summary">Thanks for choosing %1$s\nPlease confirm the summary below</string>
-    <string name="label_thanks_feedback_no">Thank you %1$s for your feedback. We would like to know more. Please call with our Cheep team so that we can help to complete the task to your satisfaction.</string><!--or chat-->
+    <string name="label_thanks_feedback_no">Thank you %1$s for your feedback. We would like to know more. Please call with our &cheep;
+        team so that we can help to complete the task to your satisfaction.</string><!--or chat-->
     <string name="custom_care_phone_number">18002660777</string>
     <string name="label_verify">Verify</string>
     <string name="label_name">Name</string>
@@ -208,7 +211,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="desc_user_deleted">It seems your account temporarily blocked, Please contact our support team.</string>
     <string name="tab_report">Report</string>
     <string name="tab_unreport">Un Report</string>
-    <string name="label_report_user_msg">You have just raised a red flag. Are you sure you want to report this Pro to Cheep?</string>
+    <string name="label_report_user_msg">You have just raised a red flag. Are you sure you want to report this Pro to &cheep;?</string>
     <string name="label_un_report_user_msg">You sure you want to unflag the Pro?</string>
     <string name="label_enter_cheepcode">Enter Your Promo Code</string>
     <string name="label_cheepcode">Promocode</string>
@@ -617,7 +620,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="cheep_care_work_flow_desc">Hi %1s, simply tell us what needs to be done and then leave the hard
     work to our PROS! CHEEP will sort it out for you within 24 hours.  </string>
     <string name="city_image">City Image</string>
-    <string name="cheep_care_gif">Cheep Care Gif</string>
+    <string name="cheep_care_gif">&cheep; Care Gif</string>
     <string name="hint_landmark">Landmark</string>
     <string name="hint_pincode">Pincode</string>
     <string name="hint_nickname">Nickname</string>
