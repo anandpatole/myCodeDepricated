@@ -1,10 +1,12 @@
 package com.cheep.cheepcare.activity;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
@@ -39,6 +41,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -56,10 +59,13 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
     private CheepCarePackageAdapter mPackageAdapter;
     private CityLandingPageModel model;
     private CityDetail mCity;
+    private ArrayList<CityDetail> bannerCityDetailsList;
+    private static final String TAG = "LandingScreenPickPackag";
 
-    public static void newInstance(Context context, CityDetail city) {
+    public static void newInstance(Context context, CityDetail city, String cheepcareBannerListString) {
         Intent intent = new Intent(context, LandingScreenPickPackageActivity.class);
         intent.putExtra(Utility.Extra.CITY_DETAIL, Utility.getJsonStringFromObject(city));
+        intent.putExtra(Utility.Extra.DATA, cheepcareBannerListString);
         context.startActivity(intent);
     }
 
@@ -78,8 +84,13 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
         EventBus.getDefault().register(this);
         if (getIntent().hasExtra(Utility.Extra.CITY_DETAIL)) {
             mCity = (CityDetail) Utility.getObjectFromJsonString(getIntent().getExtras().getString(Utility.Extra.CITY_DETAIL), CityDetail.class);
+            bannerCityDetailsList = Utility.getObjectListFromJsonString(getIntent().getExtras().getString(Utility.Extra.DATA), CityDetail[].class);
         }
 
+        setCityBannerData();
+    }
+
+    private void setCityBannerData() {
         ViewTreeObserver mViewTreeObserver = mBinding.ivCityImage.getViewTreeObserver();
         mViewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
@@ -135,6 +146,8 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
         if (model.cityDetail.id.isEmpty())
             return;
 
+        mBinding.nestedScrollView.scrollTo(0, 0);
+
         SpannableStringBuilder spannableStringBuilder
                 = new SpannableStringBuilder(model.cityDetail.greetingMessage);
 
@@ -159,7 +172,7 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
         }
 
         spannableStringBuilder.append(Utility.ONE_CHARACTER_SPACE).append(Utility.ONE_CHARACTER_SPACE);
-        ImageSpan span = new ImageSpan(mContext,resId, ImageSpan.ALIGN_BASELINE);
+        ImageSpan span = new ImageSpan(mContext, resId, ImageSpan.ALIGN_BASELINE);
         spannableStringBuilder.setSpan(span, spannableStringBuilder.length() - 1
                 , spannableStringBuilder.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
         mBinding.tvGoodMorningText.setText(spannableStringBuilder);
@@ -208,7 +221,40 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
 
     @Override
     protected void setListeners() {
+        mBinding.tvCityName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openCitySelectionDialog();
+            }
+        });
+    }
 
+    private void openCitySelectionDialog() {
+
+        String[] cityArray = new String[bannerCityDetailsList.size()];
+        for (int i = 0; i < bannerCityDetailsList.size(); i++) {
+            CityDetail cityDetail = bannerCityDetailsList.get(i);
+            cityArray[i] = cityDetail.cityName;
+        }
+        Log.d(TAG, "showPictureChooserDialog() called");
+        final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        builder.setTitle(R.string.select_city)
+                .setItems(cityArray, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // The 'which' argument contains the index position
+                        // of the selected item
+                        LogUtils.LOGE(TAG, "onClick alert dialog : " + bannerCityDetailsList.get(which).cityName);
+                        if (!mCity.cityName.equalsIgnoreCase(bannerCityDetailsList.get(which).cityName)) {
+                            mCity = bannerCityDetailsList.get(which);
+                            setCityBannerData();
+                        }
+                        dialog.dismiss();
+                    }
+                });
+        builder.create();
+
+        //Show the dialog
+        builder.show();
     }
 
     private final CheepCarePackageAdapter.PackageItemClickListener mPackageItemClickListener
@@ -220,8 +266,6 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
         }
     };
 
-
-    private static final String TAG = "LandingScreenPickPackag";
 
     private void callGetCityLandingCareDetailWS() {
         LogUtils.LOGD(TAG, "callGetCityLandingCareDetailWS() called with: catId = [" + mCity + "]");

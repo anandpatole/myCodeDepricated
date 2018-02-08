@@ -53,7 +53,7 @@
             <com.cheep.cheepcare.customview.VerticalViewPager
                 android:id="@+id/view_pager_subscription_banner_images"
                 android:layout_width="match_parent"
-                android:layout_height="100dp"/>
+                android:layout_height="@dimen/height_cheep_care_banner"/>
 
             <RelativeLayout
                 android:layout_width="@dimen/scale_12dp"

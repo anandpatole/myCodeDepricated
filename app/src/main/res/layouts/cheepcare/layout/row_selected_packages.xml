@@ -30,7 +30,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:src="@drawable/selector_filled_tick"/>
+                android:src="@drawable/selector_filled_tick_cheep_care_payment_summary"/>
 
 
             <LinearLayout

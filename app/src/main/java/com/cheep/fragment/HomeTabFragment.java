@@ -92,7 +92,7 @@ public class HomeTabFragment extends BaseFragment {
 
     // For storing category Cover image list
     private ArrayList<BannerImageModel> bannerImageModelArrayList;
-    private ArrayList<CityDetail> careBannerModelArrayList;
+    public ArrayList<CityDetail> careBannerModelArrayList;
     private String mSelectedFilterType = Utility.FILTER_TYPES.FILTER_TYPE_FEATURED;
 
 

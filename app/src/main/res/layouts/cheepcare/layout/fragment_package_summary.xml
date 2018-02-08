@@ -41,7 +41,8 @@
                         android:id="@+id/iv_half_yearly_package"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/selector_filled_tick"/>
+                        android:layout_marginTop="@dimen/scale_1dp"
+                        android:src="@drawable/selector_filled_tick_cheep_care_payment_summary"/>
 
                     <com.cheep.custom_view.CFTextViewSemiBold
                         android:id="@+id/text_half_yearly"
@@ -51,7 +52,7 @@
                         android:layout_toRightOf="@+id/iv_half_yearly_package"
                         android:text="@string/label_half_yearly"
                         android:textColor="@color/grey_varient_8"
-                        android:textSize="@dimen/text_size_16sp"/>
+                        android:textSize="@dimen/text_size_15sp"/>
 
                     <com.cheep.custom_view.CFTextViewRegular
                         android:layout_width="match_parent"
@@ -83,7 +84,8 @@
                         android:id="@+id/iv_yearly_package"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/selector_filled_tick"/>
+                        android:layout_marginTop="@dimen/scale_1dp"
+                        android:src="@drawable/selector_filled_tick_cheep_care_payment_summary"/>
 
                     <com.cheep.custom_view.CFTextViewSemiBold
                         android:id="@+id/text_yearly"
@@ -91,9 +93,10 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/scale_5dp"
                         android:layout_toRightOf="@+id/iv_yearly_package"
+                        android:gravity="top"
                         android:text="@string/label_yearly"
                         android:textColor="@color/grey_varient_8"
-                        android:textSize="@dimen/text_size_16sp"/>
+                        android:textSize="@dimen/text_size_15sp"/>
 
                     <com.cheep.custom_view.CFTextViewRegular
                         android:id="@+id/text_desc_yearly"
@@ -138,16 +141,25 @@
                     tools:text="₹3,600"/>
 
                 <com.cheep.custom_view.CFTextViewRegular
+                    android:id="@+id/tv_1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/scale_3dp"
                     android:layout_marginTop="@dimen/scale_6dp"
                     android:layout_toRightOf="@+id/text_total"
-                    android:drawablePadding="@dimen/scale_3dp"
-                    android:drawableRight="@drawable/ic_info_blue"
                     android:text="@string/label_inclusive_of_taxes"
                     android:textColor="@color/grey_varient_10"
                     android:textSize="@dimen/text_size_11sp"/>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/scale_7dp"
+                    android:layout_marginRight="@dimen/scale_10dp"
+                    android:layout_marginTop="@dimen/scale_8dp"
+                    android:layout_toRightOf="@+id/tv_1"
+                    android:src="@drawable/ic_i_for_taxes"/>
+
 
             </RelativeLayout>
 

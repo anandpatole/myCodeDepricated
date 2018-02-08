@@ -16,6 +16,8 @@ import com.cheep.cheepcare.activity.ManageSubscriptionActivity;
 import com.cheep.cheepcare.model.CityDetail;
 import com.cheep.databinding.FragmentSubscriptionBannerImageBinding;
 import com.cheep.fragment.BaseFragment;
+import com.cheep.fragment.HomeFragment;
+import com.cheep.fragment.HomeTabFragment;
 import com.cheep.network.NetworkUtility;
 import com.cheep.utils.Utility;
 
@@ -117,6 +119,12 @@ public class SubscriptionBannerFragment extends BaseFragment {
                     .into(binding.imgCover);
 
 
+            if (bannerImageModel.isSubscribed.equalsIgnoreCase(Utility.BOOLEAN.YES)) {
+                binding.tvSubscribe.setText(R.string.label_book_now);
+            } else {
+                binding.tvSubscribe.setText(R.string.label_subscribe);
+            }
+
             //Click event of banner
             binding.imgCover.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -127,7 +135,15 @@ public class SubscriptionBannerFragment extends BaseFragment {
                         if (bannerImageModel.isSubscribed.equalsIgnoreCase(Utility.BOOLEAN.YES)) {
                             ManageSubscriptionActivity.newInstance(mContext, bannerImageModel, true);
                         } else {
-                            LandingScreenPickPackageActivity.newInstance(mContext, bannerImageModel);
+
+                            HomeFragment homeFragment = (HomeFragment) getActivity().getSupportFragmentManager().findFragmentByTag(HomeFragment.TAG);
+                            if (homeFragment != null) {
+                                HomeTabFragment fragmentByTag = (HomeTabFragment) homeFragment.getChildFragmentManager().findFragmentByTag(HomeTabFragment.TAG);
+                                if (fragmentByTag != null) {
+                                    String cheepcareBannerListString = Utility.getJsonStringFromObject(fragmentByTag.careBannerModelArrayList);
+                                    LandingScreenPickPackageActivity.newInstance(mContext, bannerImageModel, cheepcareBannerListString);
+                                }
+                            }
                         }
                     }
                 }
