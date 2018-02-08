@@ -12,7 +12,7 @@ android {
     defaultConfig {
         applicationId "com.cheep"
         minSdkVersion 16
-        targetSdkVersion 25
+        targetSdkVersion 27
         versionCode 30
 //        versionName "1.1.18" // PLEASE FIRST MAKE SURE MIN-VERSION IS 16.
         versionName "1.1.21" // PLEASE FIRST MAKE SURE MIN-VERSION IS 16.
