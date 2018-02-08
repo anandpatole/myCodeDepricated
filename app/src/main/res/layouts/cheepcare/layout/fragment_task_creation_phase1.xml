@@ -1,0 +1,99 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/cv_cheep_tip"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:cardCornerRadius="@dimen/scale_0dp">
+
+            <RelativeLayout
+                android:id="@+id/rl_chip_tips"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/scale_3dp"
+                android:background="@drawable/bottom_stroke_gray">
+
+                <ImageView
+                    android:id="@+id/iv_bird"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_cheep_bird_tip_big" />
+
+                <com.cheep.custom_view.CFTextViewSemiBold
+                    android:id="@+id/tv_cheep_tips_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="@dimen/scale_70dp"
+                    android:layout_toLeftOf="@id/iv_cross"
+                    android:background="@android:color/transparent"
+                    android:checked="true"
+                    android:gravity="center_vertical"
+                    android:singleLine="true"
+                    android:text="@string/cheep_tips"
+                    android:textColor="@color/splash_gradient_end"
+                    android:textSize="@dimen/text_size_14sp" />
+
+                <com.cheep.custom_view.CFTextViewRegular
+                    android:id="@+id/tv_cheep_tips_desc"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tv_cheep_tips_title"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="@dimen/scale_70dp"
+                    android:layout_toLeftOf="@id/iv_cross"
+                    android:background="@android:color/transparent"
+                    android:checked="true"
+                    android:gravity="center_vertical"
+                    android:maxLines="2"
+                    android:text="vd dff sdf sdfs fsdf sdf fsd sdfsfs fdsdfsdfsdfsd fs dfsdfs dfsdfsdf sdfdsf"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_11sp"
+                    android:visibility="visible" />
+
+                <ImageView
+                    android:id="@+id/iv_cross"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="@dimen/scale_15dp"
+                    android:layout_marginTop="@dimen/scale_5dp"
+                    android:src="@drawable/icon_cross_blue" />
+
+            </RelativeLayout>
+        </android.support.v7.widget.CardView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <android.support.design.widget.TabLayout
+                android:id="@+id/tab_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/scale_40dp"
+                android:background="@drawable/bottom_stroke_gray"
+                app:tabIndicatorHeight="0dp"
+                app:tabPadding="@dimen/scale_0dp"
+                app:tabSelectedTextColor="@color/splash_gradient_end"
+                app:tabTextAppearance="@style/AppTabTextAppearance"
+                app:tabTextColor="@color/selector_text_535353_blue" />
+
+            <android.support.v4.view.ViewPager
+                android:id="@+id/view_pager"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+        </LinearLayout>
+
+    </FrameLayout>
+</layout>

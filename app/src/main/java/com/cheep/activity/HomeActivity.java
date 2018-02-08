@@ -879,6 +879,7 @@ public class HomeActivity extends BaseAppCompatActivity
         // Changes on 27thApril,2017
 //        HireNewJobActivity.newInstance(mContext, model);
         TaskCreationCCActivity.getInstance(mContext, model);
+//        TaskSummaryForMultiCatActivity.getInstance(mContext, "0");
     }
 
     @Override

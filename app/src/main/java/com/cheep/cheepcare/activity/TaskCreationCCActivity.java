@@ -22,7 +22,7 @@ import com.cheep.activity.BaseAppCompatActivity;
 import com.cheep.activity.HomeActivity;
 import com.cheep.activity.LoginActivity;
 import com.cheep.cheepcare.adapter.TaskCreationPagerAdapter;
-import com.cheep.cheepcare.fragment.SelectSubCategoryFragment;
+import com.cheep.cheepcare.fragment.FreeSubCategoryFragment;
 import com.cheep.cheepcare.fragment.TaskCreationPhase2Fragment;
 import com.cheep.databinding.ActivityTaskCreateBinding;
 import com.cheep.dialogs.AcknowledgementDialogWithoutProfilePic;
@@ -157,9 +157,9 @@ public class TaskCreationCCActivity extends BaseAppCompatActivity {
         @Override
         public void onClick(View v) {
             if (v.getId() == mBinding.textPostTask.getId()) {
-                if (mBinding.viewpager.getCurrentItem() == mTaskCreationPagerAdapter.SELECT_SUB_CATEGORY_FRAGMENT) {
+                if (mBinding.viewpager.getCurrentItem() == mTaskCreationPagerAdapter.TASK_CREATION_PHASE_1_FRAGMENT) {
                     List<SubServiceDetailModel> list
-                            = mTaskCreationPagerAdapter.mSelectSubCategoryFragment.getSelectedSubServices();
+                            = mTaskCreationPagerAdapter.mTaskCreationPhase1Fragment.getSelectedSubServices();
                     if (list != null && !list.isEmpty()) {
                         mSelectedSubServiceList = list;
                         gotoStep(STAGE_2);
@@ -184,7 +184,7 @@ public class TaskCreationCCActivity extends BaseAppCompatActivity {
      */
     private void setupViewPager(ViewPager pager) {
         mTaskCreationPagerAdapter = new TaskCreationPagerAdapter(getSupportFragmentManager());
-        mTaskCreationPagerAdapter.addFragment(SelectSubCategoryFragment.TAG);
+        mTaskCreationPagerAdapter.addFragment(FreeSubCategoryFragment.TAG);
         mTaskCreationPagerAdapter.addFragment(TaskCreationPhase2Fragment.TAG);
         pager.setAdapter(mTaskCreationPagerAdapter);
     }

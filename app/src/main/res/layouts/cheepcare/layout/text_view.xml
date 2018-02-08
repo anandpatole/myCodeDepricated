@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.cheep.custom_view.CFTextViewSemiBold xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:background="@drawable/bottom_stroke_blue_2dp"
+    android:paddingBottom="@dimen/scale_8dp"
+    android:paddingTop="@dimen/scale_8dp"
+    android:textColor="@color/selector_text_535353_blue"
+    tools:text="@string/label_free_with_cc" />

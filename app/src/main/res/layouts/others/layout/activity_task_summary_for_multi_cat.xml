@@ -473,9 +473,7 @@
                         <!--Second Section(Task Description)-->
                         <RelativeLayout
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:paddingLeft="@dimen/scale_16dp"
-                            android:paddingRight="@dimen/scale_16dp">
+                            android:layout_height="wrap_content">
 
                             <LinearLayout
                                 android:id="@+id/ln_task_desc"
@@ -486,43 +484,28 @@
                                 android:layout_toStartOf="@+id/frame_select_picture"
                                 android:orientation="vertical">
 
-                                <LinearLayout
-                                    android:id="@+id/ln_sub_category"
+                                <android.support.v7.widget.RecyclerView
+                                    android:id="@+id/recycler_view"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:orientation="horizontal">
-
-                                    <ImageView
-                                        android:id="@+id/img_icon_correct"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_gravity="center_vertical"
-                                        android:src="@drawable/ic_tick"
-                                        tools:ignore="ContentDescription"/>
-
-                                    <com.cheep.custom_view.CFTextViewSemiBold
-                                        android:id="@+id/text_sub_category_name"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
-                                        android:paddingLeft="@dimen/scale_15dp"
-                                        android:textColor="@color/splash_gradient_end"
-                                        android:textSize="@dimen/text_size_18sp"
-                                        tools:text="RestaurantRestaurantRestaurantRestaurant"/>
-                                </LinearLayout>
+                                    tools:itemCount="3"
+                                    tools:listitem="@layout/row_selected_sub_service"/>
 
                                 <com.cheep.custom_view.CFTextViewRegular
                                     android:id="@+id/text_task_desc"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:layout_below="@+id/ln_sub_category"
+                                    android:layout_marginTop="@dimen/scale_12dp"
                                     android:background="@color/transparent"
                                     android:gravity="start"
                                     android:maxLines="2"
-                                    android:paddingRight="@dimen/scale_8dp"
+                                    android:paddingLeft="@dimen/scale_16dp"
+                                    android:paddingRight="@dimen/scale_16dp"
                                     android:textColor="@color/black"
                                     android:textColorHint="@color/grey_dark_color_2"
                                     android:textSize="@dimen/text_size_12sp"
-                                    tools:text="asdasdasddasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdsdasdasdasdasdasdasdasdasdasdasdas"/>
+                                    tools:text="I need a Plumber to repair the problem I’m facing."/>
                             </LinearLayout>
 
                             <FrameLayout
@@ -616,7 +599,7 @@
                             android:layout_height="@dimen/scale_0_5dp"
                             android:layout_marginLeft="@dimen/scale_10dp"
                             android:layout_marginRight="@dimen/scale_10dp"
-                            android:layout_marginTop="@dimen/scale_5dp"
+                            android:layout_marginTop="@dimen/scale_13dp"
                             android:background="@color/grey_varient_11"/>
 
                         <!--Third Section(When)-->
@@ -756,10 +739,10 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_horizontal"
                             android:layout_marginBottom="@dimen/scale_16dp"
-                            tools:text="werw"
                             android:textColor="@color/grey_varient_23"
                             android:textSize="@dimen/text_size_14sp"
-                            android:visibility="visible"/>
+                            android:visibility="visible"
+                            tools:text="werw"/>
 
                         <!--Task Completion Request-->
                         <LinearLayout
