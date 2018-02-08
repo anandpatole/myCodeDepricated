@@ -662,5 +662,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="msg_not_cc_user">Hi, it seems that you\'re not a\nCHEEP Care user!</string>
     <string name="label_starting_price_cc">Available as low as %1s</string>
     <string name="msg_become_cc_member">Become a CHEEP Care Member</string>
+    <string name="label_free_with_cc">Free with Cheep Care</string>
+    <string name="label_paid_cheep_services">Paid Cheep Services</string>
 
 </resources>

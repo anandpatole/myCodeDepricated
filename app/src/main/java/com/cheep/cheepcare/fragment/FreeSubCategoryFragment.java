@@ -3,7 +3,6 @@ package com.cheep.cheepcare.fragment;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
@@ -41,8 +40,8 @@ import static com.cheep.network.NetworkUtility.TAGS.CAT_ID;
  * Created by bhavesh on 28/4/17.
  */
 
-public class SelectSubCategoryFragment extends BaseFragment {
-    public static final String TAG = SelectSubCategoryFragment.class.getSimpleName();
+public class FreeSubCategoryFragment extends BaseFragment {
+    public static final String TAG = FreeSubCategoryFragment.class.getSimpleName();
     private FragmentSelectSubserviceBinding mFragmentSelectSubserviceBinding;
     private SubServiceUnitAdapter mSubServiceUnitAdapter;
     ErrorLoadingHelper errorLoadingHelper;
@@ -50,8 +49,8 @@ public class SelectSubCategoryFragment extends BaseFragment {
     private boolean isVerified = false;
 
     @SuppressWarnings("unused")
-    public static SelectSubCategoryFragment newInstance() {
-        SelectSubCategoryFragment fragment = new SelectSubCategoryFragment();
+    public static FreeSubCategoryFragment newInstance() {
+        FreeSubCategoryFragment fragment = new FreeSubCategoryFragment();
         return fragment;
     }
 
@@ -143,6 +142,7 @@ public class SelectSubCategoryFragment extends BaseFragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        mContext = context;
         BaseAppCompatActivity activity = (BaseAppCompatActivity) context;
         if (activity instanceof TaskCreationCCActivity) {
             mTaskCreationCCActivity = (TaskCreationCCActivity) activity;

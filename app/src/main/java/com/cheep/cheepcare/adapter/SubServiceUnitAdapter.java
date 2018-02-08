@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 
 import com.cheep.R;
 import com.cheep.databinding.RowSubServiceUnitTickBinding;
-import com.cheep.cheepcare.fragment.SelectSubCategoryFragment;
 import com.cheep.model.SubServiceDetailModel;
 
 import java.util.ArrayList;
@@ -24,9 +23,9 @@ import java.util.List;
 public class SubServiceUnitAdapter extends RecyclerView.Adapter<SubServiceUnitAdapter.ViewHolder> {
     private static final String TAG = SubServiceUnitAdapter.class.getSimpleName();
     ArrayList<SubServiceDetailModel> mList = new ArrayList<>();
-//    private SelectSubCategoryFragment.SubServiceListInteractionListener mSubServiceListInteractionListener;
+//    private FreeSubCategoryFragment.SubServiceListInteractionListener mSubServiceListInteractionListener;
 
-    public SubServiceUnitAdapter(/*SelectSubCategoryFragment.SubServiceListInteractionListener listener*/) {
+    public SubServiceUnitAdapter(/*FreeSubCategoryFragment.SubServiceListInteractionListener listener*/) {
 //        this.mSubServiceListInteractionListener = listener;
     }
 

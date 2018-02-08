@@ -5,4 +5,7 @@
     <string name="label_cheep_mate_code">Cheep Mate Code</string>
     <string name="label_error_promo_code_with_bundled_discount">Oops! You cannot apply promo as you have already availed bundled discount.</string>
     <string name="label_society">SOCIETY</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
