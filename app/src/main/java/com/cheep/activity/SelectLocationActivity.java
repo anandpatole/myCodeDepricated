@@ -140,9 +140,10 @@ public class SelectLocationActivity extends BaseAppCompatActivity {
                     onLocationSelected(String.valueOf(mLocationTrackService.mLocation.getLatitude()), String.valueOf(mLocationTrackService.mLocation.getLongitude()));
                 } else {
                     // Location not there fetch
-                    if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    if (ActivityCompat.checkSelfPermission(SelectLocationActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(SelectLocationActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                         //Let the activity know that location permission not granted
-                        if (ActivityCompat.shouldShowRequestPermissionRationale(SelectLocationActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION)) {
+                        if (ActivityCompat.shouldShowRequestPermissionRationale(SelectLocationActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) &&
+                                ActivityCompat.shouldShowRequestPermissionRationale(SelectLocationActivity.this, Manifest.permission.ACCESS_FINE_LOCATION)) {
                             ActivityCompat.requestPermissions(SelectLocationActivity.this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION}, Utility.REQUEST_CODE_PERMISSION_LOCATION);
                         } else {
                             ActivityCompat.requestPermissions(SelectLocationActivity.this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION}, Utility.REQUEST_CODE_PERMISSION_LOCATION);
@@ -165,7 +166,7 @@ public class SelectLocationActivity extends BaseAppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == Utility.REQUEST_CODE_PERMISSION_LOCATION) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
                 Log.i(TAG, "onRequestPermissionsResult: Permission Granted");
 //                //So, ask service to fetch the location now
                 initiateLocationRequestWithProgress();

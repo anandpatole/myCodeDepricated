@@ -25,6 +25,7 @@ import android.widget.TextView;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.appsflyer.AppsFlyerLib;
+import com.cheep.BuildConfig;
 import com.cheep.R;
 import com.cheep.activity.BaseAppCompatActivity;
 import com.cheep.activity.LoginActivity;
@@ -114,7 +115,7 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
     @Override
     public void initiateUI() {
         LogUtils.LOGD(TAG, "initiateUI() called");
-        mFragmentStrategicPartnerPhaseThreeBinding.textDescPayNow.setText(getString(R.string.description_pay_now)+ " " +new String(Character.toChars(0x1F499)) );
+        mFragmentStrategicPartnerPhaseThreeBinding.textDescPayNow.setText(getString(R.string.description_pay_now) + " " + new String(Character.toChars(0x1F499)));
 
         mFragmentStrategicPartnerPhaseThreeBinding.recycleSelectedService.setLayoutManager(new LinearLayoutManager(mStrategicPartnerTaskCreationAct));
         mFragmentStrategicPartnerPhaseThreeBinding.recycleSelectedService.setNestedScrollingEnabled(false);
@@ -217,7 +218,7 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
                 taskDetailModel.quoteAmountStrategicPartner = mStrategicPartnerTaskCreationAct.totalOfBasePrice;
                 taskDetailModel.cheepCode = cheepCode;
                 taskDetailModel.taskDiscountAmount = promocode_price;
-                taskDetailModel.taskStatus= Utility.TASK_STATUS.PENDING;
+                taskDetailModel.taskStatus = Utility.TASK_STATUS.PENDING;
                 taskDetailModel.taskPaidAmount = TextUtils.isEmpty(taskDetailModel.cheepCode) ? mStrategicPartnerTaskCreationAct.totalOfGSTPrice
                         : payableAmount;
 
@@ -681,6 +682,11 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
 
                         // Send Event tracking for AppsFlyer
                         AppsFlyerLib.getInstance().trackEvent(mContext, NetworkUtility.TAGS.APPSFLYER_CUSTOM_TRACK_EVENTS.TASK_CREATE, mTaskCreationParams);
+                        if (!TextUtils.isEmpty(cheepCode) && cheepCode.startsWith(Utility.COUPON_DUNIA_CODE_PREFIX))
+                            if (!BuildConfig.BUILD_TYPE.equalsIgnoreCase("release"))
+                                AppsFlyerLib.getInstance().trackEvent(mContext, NetworkUtility.TAGS.APPSFLYER_CUSTOM_TRACK_EVENTS.COUPON_DUNIA_TASK_DEBUG, mTaskCreationParams);
+                            else
+                                AppsFlyerLib.getInstance().trackEvent(mContext, NetworkUtility.TAGS.APPSFLYER_CUSTOM_TRACK_EVENTS.COUPON_DUNIA_TASK_LIVE, mTaskCreationParams);
 
                         /*
                           Now according to the new flow, once task created

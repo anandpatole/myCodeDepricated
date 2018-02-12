@@ -14,7 +14,6 @@ import android.databinding.DataBindingUtil;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
-import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
@@ -27,7 +26,6 @@ import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.appsflyer.AppsFlyerLib;
 import com.cheep.BuildConfig;
 import com.cheep.R;
 import com.cheep.databinding.ActivityLoginBinding;
@@ -136,30 +134,11 @@ public class LoginActivity extends BaseAppCompatActivity implements FacebookHelp
             showSessionExpireDialog();
         }
 
-        initiateAppsFlyerSDK();
 
         // Register Broadcast app
         registerReceiver(mBR_OnLoginSuccess, new IntentFilter(Utility.BR_ON_LOGIN_SUCCESS));
     }
 
-    /**
-     * This method would initiate AppsFlyer SDK
-     */
-    private void initiateAppsFlyerSDK() {
-        // Collect IMEI & AndroidID and set them via Appsflyer SDK
-        /*TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-        String deviceIMEINumber = telephonyManager.getDeviceId();
-        if (!TextUtils.isEmpty(deviceIMEINumber))
-            AppsFlyerLib.getInstance().setImeiData(deviceIMEINumber);*/
-
-        String android_id = Settings.Secure.getString(mContext.getContentResolver(),
-                Settings.Secure.ANDROID_ID);
-        AppsFlyerLib.getInstance().setAndroidIdData(android_id);
-
-        // Start Tracking for AppsFlyer
-        AppsFlyerLib.getInstance().startTracking(this.getApplication(), BuildConfig.APPSFLYER_DEV_KEY);
-
-    }
 
     @Override
     protected void onResume() {
@@ -340,12 +319,13 @@ public class LoginActivity extends BaseAppCompatActivity implements FacebookHelp
         /*
           Check if Location service is enabled or not, if not ask for user to accept it and stop the ongoing service
          */
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             //Let the activity know that location permission not granted
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_COARSE_LOCATION)) {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, Utility.REQUEST_CODE_PERMISSION_LOCATION);
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_COARSE_LOCATION) &&
+                    ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION}, Utility.REQUEST_CODE_PERMISSION_LOCATION);
             } else {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, Utility.REQUEST_CODE_PERMISSION_LOCATION);
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION}, Utility.REQUEST_CODE_PERMISSION_LOCATION);
             }
         } else {
             requestLocationUpdateFromService();
@@ -356,7 +336,7 @@ public class LoginActivity extends BaseAppCompatActivity implements FacebookHelp
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == Utility.REQUEST_CODE_PERMISSION_LOCATION) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED ) {
                 Log.i(TAG, "onRequestPermissionsResult: Permission Granted");
                 //So, ask service to fetch the location now
                 requestLocationUpdateFromService();

@@ -109,6 +109,7 @@ public class Utility {
     public static final String FACEBOOK_FIELDS_KEY = "fields";
     public static final String NORMAL = "normal";
     public static final String DYNAMIC_LINK_CATEGORY_HOME = "home";
+    public static final java.lang.String COUPON_DUNIA_CODE_PREFIX = "CHPCD";
 
     public static boolean allPermissionGranted(String[] permissions, int[] grantResults) {
         boolean allGranted = true;

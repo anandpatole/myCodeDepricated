@@ -46,7 +46,7 @@ public class SplashActivity extends BaseAppCompatActivity {
         Log.d(TAG, "onCreate: intent [ " + getIntent() + " ] + intent action [ " + getIntent().getAction() + " ]"
                 + " ]  + intent data [ " + getIntent().getData());
         super.onCreate(savedInstanceState);
-        getWindow().setBackgroundDrawableResource(R.drawable.splash_gradient);
+        getWindow().setBackgroundDrawableResource(R.drawable.bg_splash);
         if (getIntent() != null && getIntent().getExtras() != null)
             Log.d(TAG, "SPLASH DATA : " + getIntent().getExtras().toString() + "");
 
@@ -104,10 +104,12 @@ public class SplashActivity extends BaseAppCompatActivity {
                             Uri deepLink = null;
                             if (pendingDynamicLinkData != null) {
                                 deepLink = pendingDynamicLinkData.getLink();
+                                HomeActivity.newInstance(mContext, deepLink);
                             } else {
                                 HomeActivity.newInstance(mContext, null);
-                                return;
                             }
+
+                            finish();
 
                             HomeActivity.newInstance(mContext, deepLink);
                             // Handle the deep link. For example, open the linked
@@ -122,6 +124,7 @@ public class SplashActivity extends BaseAppCompatActivity {
                         @Override
                         public void onFailure(@NonNull Exception e) {
                             Log.w(TAG, "getDynamicLink:onFailure", e);
+                            finish();
                         }
                     });
 
@@ -132,7 +135,6 @@ public class SplashActivity extends BaseAppCompatActivity {
                 HomeActivity.newInstance(mContext, getIntent().getData());
             else
                 HomeActivity.newInstance(mContext, null);*/
-            finish();
 
             /*if (PreferenceUtility.getInstance(mContext).getUserDetails() == null) {
                 if (!PreferenceUtility.getInstance(mContext).getIntroScreenStatus()) {

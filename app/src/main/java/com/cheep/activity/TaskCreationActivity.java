@@ -623,7 +623,6 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
                         // Send Event tracking for AppsFlyer
                         AppsFlyerLib.getInstance().trackEvent(mContext, NetworkUtility.TAGS.APPSFLYER_CUSTOM_TRACK_EVENTS.TASK_CREATE, mTaskCreationParams);
 
-
                         /*
                           Now according to the new flow, once task created
                           app will be redirected to MyTask Detail screen.

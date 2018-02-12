@@ -1860,8 +1860,8 @@ public class ProfileTabFragment extends BaseFragment {
                 switch (statusCode) {
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
 
-                        String message = jsonObject.getString(NetworkUtility.TAGS.OTP_CODE);
-                        VerificationActivity.newInstance(mContext, PreferenceUtility.getInstance(mContext).getUserDetails(), TEMP_PHONE_NUMBER, message);
+//                        String message = jsonObject.getString(NetworkUtility.TAGS.OTP_CODE);
+                        VerificationActivity.newInstance(mContext, PreferenceUtility.getInstance(mContext).getUserDetails(), TEMP_PHONE_NUMBER, "");
                         if (changePhoneNumberDialog != null) {
                             changePhoneNumberDialog.dismiss();
                         }

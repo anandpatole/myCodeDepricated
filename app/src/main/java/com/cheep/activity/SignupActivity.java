@@ -728,10 +728,10 @@ public class SignupActivity extends BaseAppCompatActivity {
                 switch (statusCode) {
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
 
-                        String correct_otp = jsonObject.getString(NetworkUtility.TAGS.OTP_CODE);
+//                        String correct_otp = jsonObject.getString(NetworkUtility.TAGS.OTP_CODE);
 
                         //Redirect the VerificationActivity
-                        VerificationActivity.newInstance(mContext, userDetails, null, mCurrentPhotoPath, correct_otp);
+                        VerificationActivity.newInstance(mContext, userDetails, null, mCurrentPhotoPath, "");
 
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:

@@ -482,6 +482,8 @@ public class NetworkUtility {
             public static final String REG_TWITTER = "RegisterWithTwitter";
             public static final String REG_GOOGLE = "RegisterWithGPlus";
             public static final String TASK_CREATE = "TaskCreation";
+            public static final String COUPON_DUNIA_TASK_DEBUG = "CouponDuniaTaskDebug";
+            public static final String COUPON_DUNIA_TASK_LIVE = "CouponDuniaTask";
 //            public static final String INSTA_BOOK = "InstaBook";
         }
     }

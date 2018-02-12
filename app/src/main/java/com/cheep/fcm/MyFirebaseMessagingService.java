@@ -17,10 +17,12 @@
 package com.cheep.fcm;
 
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
@@ -43,6 +45,7 @@ import com.cheep.firebase.model.ChatNotification;
 import com.cheep.firebase.model.TaskChatModel;
 import com.cheep.model.MessageEvent;
 import com.cheep.network.NetworkUtility;
+import com.cheep.utils.LogUtils;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.Utility;
 import com.freshdesk.hotline.Hotline;
@@ -61,6 +64,8 @@ import java.util.Map;
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     private static final String TAG = MyFirebaseMessagingService.class.getSimpleName();
+    public static final String ANDROID_CHANNEL_ID = "com.cheep.notification";
+    public static final String ANDROID_CHANNEL_NAME = "Notification Channel";
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
@@ -108,6 +113,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         /*
           In case Message is Empty DON'T Go ahead as it might be Dummy Notification sent by
          */
+
+
         if (TextUtils.isEmpty(message)) {
             return;
         }
@@ -123,6 +130,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
           In some cases it may be useful to show a notification indicating to the user
           that a message was received.
          */
+        createChannels();
+
         int notificationId = 0;
         try {
             notificationId = Integer.parseInt(bnd.getString(NetworkUtility.TAGS.TASK_ID));
@@ -236,8 +245,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 //            intent.putExtras(bnd);
 //            PendingIntent pendingIntent = PendingIntent.getActivity(this, 0/* Pass 0 to make the WebNotification ID Unique*/, intent, PendingIntent.FLAG_UPDATE_CURRENT);
             Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-            NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
-                    .setSmallIcon(R.drawable.notification_app_icon)
+            NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, ANDROID_CHANNEL_ID).setSmallIcon(R.drawable.notification_app_icon)
                     .setContentTitle(title)
                     .setColor(ContextCompat.getColor(getApplicationContext(), R.color.splash_gradient_end))
                     .setContentText(message)
@@ -260,7 +268,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             intent.putExtras(bnd);
             PendingIntent pendingIntent = PendingIntent.getActivity(this, notificationId /* Request code */, intent, PendingIntent.FLAG_UPDATE_CURRENT);
             Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-            NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
+            NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, ANDROID_CHANNEL_ID)
                     .setSmallIcon(R.drawable.notification_app_icon)
                     .setContentTitle(title)
                     .setColor(ContextCompat.getColor(getApplicationContext(), R.color.splash_gradient_end))
@@ -326,7 +334,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     }
 
     private static NotificationCompat.Builder createMessageNotificationBuilder(Context context, ChatNotification chatNotification) {
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, ANDROID_CHANNEL_ID);
         if (mapMessages.size() > 1) {
             String formatedText = String.format(Locale.US, "%d" + context.getString(R.string.new_) + " %s", getActiveMessageCount(), getActiveMessageCount() > 1
                     ? context.getString(R.string.messages) : context.getString(R.string.message));
@@ -484,4 +492,38 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         if (privateMessages != null)
             privateMessages.clear();
     }
+
+    public void createChannels() {
+
+
+        // create android channel
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            LogUtils.LOGE(TAG, "createChannels: if");
+            NotificationChannel androidChannel = new NotificationChannel(ANDROID_CHANNEL_ID,
+                    ANDROID_CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT);
+            // Sets whether notifications posted to this channel should display notification lights
+            androidChannel.enableLights(true);
+            // Sets whether notification posted to this channel should vibrate.
+            androidChannel.enableVibration(true);
+            // Sets the notification light color for notifications posted to this channel
+            androidChannel.setLightColor(Color.GREEN);
+            // Sets whether notifications posted to this channel appear on the lockscreen or not
+            androidChannel.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
+
+            getManager().createNotificationChannel(androidChannel);
+
+        } else {
+            LogUtils.LOGE(TAG, "createChannels: else");
+        }
+    }
+
+    private NotificationManager mManager;
+
+    private NotificationManager getManager() {
+        if (mManager == null) {
+            mManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        }
+        return mManager;
+    }
+
 }

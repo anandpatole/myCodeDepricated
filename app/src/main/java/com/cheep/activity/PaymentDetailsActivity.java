@@ -25,6 +25,7 @@ import android.widget.TextView;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.appsflyer.AppsFlyerLib;
+import com.cheep.BuildConfig;
 import com.cheep.R;
 import com.cheep.custom_view.BottomAlertDialog;
 import com.cheep.custom_view.CFEditTextRegular;
@@ -1179,6 +1180,14 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
 
                         JSONObject jsonData = jsonObject.optJSONObject(NetworkUtility.TAGS.DATA);
                         String taskStatus = jsonData.optString(NetworkUtility.TAGS.TASK_STATUS);
+                        if (!TextUtils.isEmpty(taskDetailModel.cheepCode) && taskDetailModel.cheepCode.startsWith(Utility.COUPON_DUNIA_CODE_PREFIX))
+                        {
+                            LogUtils.LOGE(TAG, "onResponse: Appsflyer for coupon dunia*************");
+                            if (!BuildConfig.BUILD_TYPE.equalsIgnoreCase("release"))
+                                AppsFlyerLib.getInstance().trackEvent(mContext, NetworkUtility.TAGS.APPSFLYER_CUSTOM_TRACK_EVENTS.COUPON_DUNIA_TASK_DEBUG, mTaskCreationParams);
+                            else
+                                AppsFlyerLib.getInstance().trackEvent(mContext, NetworkUtility.TAGS.APPSFLYER_CUSTOM_TRACK_EVENTS.COUPON_DUNIA_TASK_LIVE, mTaskCreationParams);
+                        }
 
 //                        callTaskDetailWS();
 
@@ -1443,6 +1452,11 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
                         // Send Event tracking for AppsFlyer
                         AppsFlyerLib.getInstance().trackEvent(mContext, NetworkUtility.TAGS.APPSFLYER_CUSTOM_TRACK_EVENTS.TASK_CREATE, mTaskCreationParams);
+                        if (!TextUtils.isEmpty(taskDetailModel.cheepCode) && taskDetailModel.cheepCode.startsWith(Utility.COUPON_DUNIA_CODE_PREFIX))
+                            if (!BuildConfig.BUILD_TYPE.equalsIgnoreCase("release"))
+                                AppsFlyerLib.getInstance().trackEvent(mContext, NetworkUtility.TAGS.APPSFLYER_CUSTOM_TRACK_EVENTS.COUPON_DUNIA_TASK_DEBUG, mTaskCreationParams);
+                            else
+                                AppsFlyerLib.getInstance().trackEvent(mContext, NetworkUtility.TAGS.APPSFLYER_CUSTOM_TRACK_EVENTS.COUPON_DUNIA_TASK_LIVE, mTaskCreationParams);
                         Utility.onSuccessfulInstaBookingTaskCompletion(PaymentDetailsActivity.this, jsonObject, providerModel);
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
