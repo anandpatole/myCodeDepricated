@@ -8,13 +8,11 @@ repositories {
 
 android {
     compileSdkVersion 27
-    buildToolsVersion "26.0.2"
     defaultConfig {
         applicationId "com.cheep"
         minSdkVersion 16
         targetSdkVersion 27
         versionCode 32
-//        versionName "1.1.18" // PLEASE FIRST MAKE SURE MIN-VERSION IS 16.
         versionName "1.1.21" // PLEASE FIRST MAKE SURE MIN-VERSION IS 16.
         renderscriptTargetApi 18
         renderscriptSupportModeEnabled true
@@ -332,7 +330,9 @@ dependencies {
     compile 'com.payu.custombrowser:payu-custom-browser:5.3.7'
     compile 'com.payu.magicretry:magicretry:1.0.0'
     compile 'com.github.freshdesk:hotline-android:1.2.5'
-    compile 'com.appsflyer:af-android-sdk:4.7.2@aar'
+//    compile 'com.appsflyer:af-android-sdk:4.7.2@aar'
+    compile 'com.appsflyer:af-android-sdk:4.8.7@aar'
+
     compile 'com.amazonaws:aws-android-sdk-s3:2.2.22'
 //    compile 'org.jsoup:jsoup:1.10.3'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'

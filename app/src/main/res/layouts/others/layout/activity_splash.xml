@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:tools="http://schemas.android.com/tools"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools">
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -13,22 +13,29 @@
         <!--android:layout_centerInParent="true"-->
         <!--android:src="@drawable/icon_cheep_logo" />-->
         <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_india_map"
+            tools:ignore="ContentDescription"/>
+
+        <ImageView
             android:id="@+id/iv_logo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:src="@drawable/ic_cheep_india"
-            tools:ignore="ContentDescription" />
+            tools:ignore="ContentDescription"/>
 
         <ImageView
             android:id="@+id/iv_sparrow"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginBottom="76dp"
+            android:layout_marginBottom="84dp"
             android:layout_marginLeft="15dp"
             android:src="@drawable/ic_sparrow"
-            tools:ignore="ContentDescription" />
+            tools:ignore="ContentDescription"/>
 
         <com.cheep.custom_view.CFTextViewRegular
             android:id="@+id/tv_copyright"
@@ -40,7 +47,7 @@
             android:layout_marginBottom="@dimen/scale_35dp"
 
             android:text="@string/label_copywrite"
-            android:textColor="@color/colorPrimary" />
+            android:textColor="@color/colorPrimary"/>
 
         <com.cheep.custom_view.CFTextViewRegular
             android:id="@+id/text_version"
@@ -51,7 +58,7 @@
             android:layout_gravity="center_horizontal|bottom"
             android:layout_marginBottom="@dimen/scale_12dp"
             android:text="@string/label_version_x"
-            android:textColor="@color/colorPrimary" />
+            android:textColor="@color/colorPrimary"/>
 
     </FrameLayout>
 </layout>

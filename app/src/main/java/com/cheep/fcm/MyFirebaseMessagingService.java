@@ -113,6 +113,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         /*
           In case Message is Empty DON'T Go ahead as it might be Dummy Notification sent by
          */
+
+
         if (TextUtils.isEmpty(message)) {
             return;
         }

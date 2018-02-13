@@ -46,7 +46,7 @@ public class SplashActivity extends BaseAppCompatActivity {
         Log.d(TAG, "onCreate: intent [ " + getIntent() + " ] + intent action [ " + getIntent().getAction() + " ]"
                 + " ]  + intent data [ " + getIntent().getData());
         super.onCreate(savedInstanceState);
-        getWindow().setBackgroundDrawableResource(R.drawable.splash_gradient);
+        getWindow().setBackgroundDrawableResource(R.drawable.bg_splash);
         if (getIntent() != null && getIntent().getExtras() != null)
             Log.d(TAG, "SPLASH DATA : " + getIntent().getExtras().toString() + "");
 

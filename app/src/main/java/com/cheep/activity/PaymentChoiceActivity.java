@@ -790,6 +790,36 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
         mParams.put(NetworkUtility.TAGS.PAYMENT_METHOD, paymentMethod);
         mParams.put(NetworkUtility.TAGS.TASK_ID, taskDetailModel.taskId);
 
+
+        //Add Params
+        mTaskCreationParams = new HashMap<>();
+        mTaskCreationParams.put(NetworkUtility.TAGS.SP_USER_ID, providerModel.providerId);
+        mTaskCreationParams.put(NetworkUtility.TAGS.TASK_ID, taskDetailModel.taskId);
+        mTaskCreationParams.put(NetworkUtility.TAGS.IS_REFER_CODE, taskDetailModel.isReferCode);
+        mTaskCreationParams.put(NetworkUtility.TAGS.PAYABLE_AMOUNT, providerModel.quotePrice);
+        mTaskCreationParams.put(NetworkUtility.TAGS.USED_WALLET_BALANCE, taskDetailModel.usedWalletAmount);
+        LogUtils.LOGE(TAG, "callBookProForNormalTaskWS: quote amount" + providerModel.spWithoutGstQuotePrice);
+        mTaskCreationParams.put(NetworkUtility.TAGS.QUOTE_AMOUNT, providerModel.spWithoutGstQuotePrice);
+
+        if (!TextUtils.isEmpty(taskDetailModel.cheepCode)) {
+            mTaskCreationParams.put(NetworkUtility.TAGS.CHEEPCODE, taskDetailModel.cheepCode);
+            mTaskCreationParams.put(NetworkUtility.TAGS.PROMOCODE_PRICE, taskDetailModel.taskDiscountAmount);
+        } else {
+            mTaskCreationParams.put(NetworkUtility.TAGS.CHEEPCODE, Utility.EMPTY_STRING);
+            mTaskCreationParams.put(NetworkUtility.TAGS.PROMOCODE_PRICE, Utility.ZERO_STRING);
+        }
+
+
+        // TODO: Changes are per new flow pay now/later: 16/11/17
+        // as per new flow if user selects pay now then book and pay will be done together
+        // so setting task book pro params and payment params
+        mTaskCreationParams.put(NetworkUtility.TAGS.TRANSACTION_ID, mParams.get(NetworkUtility.TAGS.TRANSACTION_ID));
+        mTaskCreationParams.put(NetworkUtility.TAGS.PAYMENT_LOG, paymentLog);
+        mTaskCreationParams.put(NetworkUtility.TAGS.PAYMENT_STATUS, Utility.PAYMENT_STATUS.COMPLETED);
+        mTaskCreationParams.put(NetworkUtility.TAGS.PAYMENT_METHOD, paymentMethod);
+        mTaskCreationParams.put(NetworkUtility.TAGS.TASK_ID, taskDetailModel.taskId);
+
+
         LogUtils.LOGE(TAG, "callBookProAndPayForNormalTaskWS: mParams " + mParams);
 
         // Url is based on condition if address id is greater then 0 then it means we need to update the existing address
@@ -819,6 +849,11 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
 
                         JSONObject jsonData = jsonObject.optJSONObject(NetworkUtility.TAGS.DATA);
                         String taskStatus = jsonData.optString(NetworkUtility.TAGS.TASK_STATUS);
+                        if (!TextUtils.isEmpty(taskDetailModel.cheepCode) && taskDetailModel.cheepCode.startsWith(Utility.COUPON_DUNIA_CODE_PREFIX))
+                            if (!BuildConfig.BUILD_TYPE.equalsIgnoreCase("release"))
+                                AppsFlyerLib.getInstance().trackEvent(mContext, NetworkUtility.TAGS.APPSFLYER_CUSTOM_TRACK_EVENTS.COUPON_DUNIA_TASK_DEBUG, mTaskCreationParams);
+                            else
+                                AppsFlyerLib.getInstance().trackEvent(mContext, NetworkUtility.TAGS.APPSFLYER_CUSTOM_TRACK_EVENTS.COUPON_DUNIA_TASK_LIVE, mTaskCreationParams);
 
 
                         // AS PER new flow pay later task status will be pending
@@ -1074,6 +1109,12 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
                         // Send Event tracking for AppsFlyer
                         AppsFlyerLib.getInstance().trackEvent(mContext, NetworkUtility.TAGS.APPSFLYER_CUSTOM_TRACK_EVENTS.TASK_CREATE, mTaskCreationParams);
+                        if (!TextUtils.isEmpty(taskDetailModel.cheepCode) && taskDetailModel.cheepCode.startsWith(Utility.COUPON_DUNIA_CODE_PREFIX)) {
+                            if (!BuildConfig.BUILD_TYPE.equalsIgnoreCase("release"))
+                                AppsFlyerLib.getInstance().trackEvent(mContext, NetworkUtility.TAGS.APPSFLYER_CUSTOM_TRACK_EVENTS.COUPON_DUNIA_TASK_DEBUG, mTaskCreationParams);
+                            else
+                                AppsFlyerLib.getInstance().trackEvent(mContext, NetworkUtility.TAGS.APPSFLYER_CUSTOM_TRACK_EVENTS.COUPON_DUNIA_TASK_LIVE, mTaskCreationParams);
+                        }
                         Utility.onSuccessfulInstaBookingTaskCompletion(PaymentChoiceActivity.this, jsonObject, providerModel);
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
@@ -1242,6 +1283,11 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
 
                         // Send Event tracking for AppsFlyer
                         AppsFlyerLib.getInstance().trackEvent(mContext, NetworkUtility.TAGS.APPSFLYER_CUSTOM_TRACK_EVENTS.TASK_CREATE, mTaskCreationParams);
+                        if (!TextUtils.isEmpty(taskDetailModel.cheepCode) && taskDetailModel.cheepCode.startsWith(Utility.COUPON_DUNIA_CODE_PREFIX))
+                            if (!BuildConfig.BUILD_TYPE.equalsIgnoreCase("release"))
+                                AppsFlyerLib.getInstance().trackEvent(mContext, NetworkUtility.TAGS.APPSFLYER_CUSTOM_TRACK_EVENTS.COUPON_DUNIA_TASK_DEBUG, mTaskCreationParams);
+                            else
+                                AppsFlyerLib.getInstance().trackEvent(mContext, NetworkUtility.TAGS.APPSFLYER_CUSTOM_TRACK_EVENTS.COUPON_DUNIA_TASK_LIVE, mTaskCreationParams);
 
                         /*
                           Now according to the new flow, once task created

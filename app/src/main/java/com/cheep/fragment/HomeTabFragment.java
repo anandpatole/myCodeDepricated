@@ -640,7 +640,6 @@ public class HomeTabFragment extends BaseFragment {
             return;
         }
 
-
         if (!Utility.isConnected(mContext)) {
             errorLoadingHelper.failed(Utility.NO_INTERNET_CONNECTION, 0, onRetryBtnClickListener);
             return;

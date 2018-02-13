@@ -6,14 +6,17 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.databinding.DataBindingUtil;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.Spannable;
+import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
+import android.text.style.ImageSpan;
 import android.text.style.StyleSpan;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -25,6 +28,7 @@ import android.widget.TextView;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.appsflyer.AppsFlyerLib;
+import com.cheep.BuildConfig;
 import com.cheep.R;
 import com.cheep.activity.BaseAppCompatActivity;
 import com.cheep.activity.LoginActivity;
@@ -114,7 +118,20 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
     @Override
     public void initiateUI() {
         LogUtils.LOGD(TAG, "initiateUI() called");
-        mFragmentStrategicPartnerPhaseThreeBinding.textDescPayNow.setText(getString(R.string.description_pay_now) + " " + new String(Character.toChars(0x1F499)));
+
+        String text = getString(R.string.description_pay_now);
+        StringBuilder description = new StringBuilder(text);
+        // appending two space for two smiley at the end of description
+        description.append("  ");
+        Spannable span = new SpannableString(description);
+        Drawable img = ContextCompat.getDrawable(mContext, R.drawable.ic_blue_heart);
+        img.setBounds(0, 0, img.getIntrinsicWidth(), img.getIntrinsicHeight());
+        ImageSpan image = new ImageSpan(img, ImageSpan.ALIGN_BOTTOM);
+        span.setSpan(image, span.length() - 1, span.length(), Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
+        mFragmentStrategicPartnerPhaseThreeBinding.textDescPayNow.setText(span);
+
+
+//        mFragmentStrategicPartnerPhaseThreeBinding.textDescPayNow.setText(getString(R.string.description_pay_now) + " " + new String(Character.toChars(0x1F499)));
 
         mFragmentStrategicPartnerPhaseThreeBinding.recycleSelectedService.setLayoutManager(new LinearLayoutManager(mStrategicPartnerTaskCreationAct));
         mFragmentStrategicPartnerPhaseThreeBinding.recycleSelectedService.setNestedScrollingEnabled(false);
@@ -669,6 +686,11 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
 
                         // Send Event tracking for AppsFlyer
                         AppsFlyerLib.getInstance().trackEvent(mContext, NetworkUtility.TAGS.APPSFLYER_CUSTOM_TRACK_EVENTS.TASK_CREATE, mTaskCreationParams);
+                        if (!TextUtils.isEmpty(cheepCode) && cheepCode.startsWith(Utility.COUPON_DUNIA_CODE_PREFIX))
+                            if (!BuildConfig.BUILD_TYPE.equalsIgnoreCase("release"))
+                                AppsFlyerLib.getInstance().trackEvent(mContext, NetworkUtility.TAGS.APPSFLYER_CUSTOM_TRACK_EVENTS.COUPON_DUNIA_TASK_DEBUG, mTaskCreationParams);
+                            else
+                                AppsFlyerLib.getInstance().trackEvent(mContext, NetworkUtility.TAGS.APPSFLYER_CUSTOM_TRACK_EVENTS.COUPON_DUNIA_TASK_LIVE, mTaskCreationParams);
 
                         /*
                           Now according to the new flow, once task created

@@ -177,7 +177,8 @@ public class LocationTrackService extends Service implements GoogleApiClient.Con
                         // applications that do not require a fine-grained location and that do not need location
                         // updates. Gets the best and most recent location currently available, which may be null
                         // in rare cases when a location is not available.
-                        if (ActivityCompat.checkSelfPermission(LocationTrackService.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                        if (ActivityCompat.checkSelfPermission(LocationTrackService.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                                ActivityCompat.checkSelfPermission(LocationTrackService.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                             Log.i(TAG, "onConnected: Permission not granted returning..");
                             return;
                         }
