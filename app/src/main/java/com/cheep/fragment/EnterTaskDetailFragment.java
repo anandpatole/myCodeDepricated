@@ -617,11 +617,13 @@ public class EnterTaskDetailFragment extends BaseFragment implements RequestPerm
                     edtAddress.setTag(place.getLatLng());
                 }
             } else {
-                if (TextUtils.isEmpty(edtAddress.getText().toString().trim())) {
-                    isAddressPickYouLocationVerified = false;
-                } else {
-                    isAddressPickYouLocationVerified = true;
-                    isAddressNameVerified = true;
+                if (edtAddress != null) {
+                    if (TextUtils.isEmpty(edtAddress.getText().toString().trim())) {
+                        isAddressPickYouLocationVerified = false;
+                    } else {
+                        isAddressPickYouLocationVerified = true;
+                        isAddressNameVerified = true;
+                    }
                 }
             }
             checkAddAddressVerified();
@@ -1214,7 +1216,7 @@ public class EnterTaskDetailFragment extends BaseFragment implements RequestPerm
                     Utility.showToast(mContext, getString(R.string.validate_address));
                 } else if (TextUtils.isEmpty(edtAddressInitials.getText().toString().trim())) {
                     Utility.showToast(mContext, getString(R.string.validate_address_initials));
-                }  else {
+                } else {
                     if (addressModel != null) {
                         callUpdateAddressWS(addressModel.address_id,
                                 (radioHome.isChecked()

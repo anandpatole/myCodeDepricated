@@ -621,6 +621,9 @@ public class HomeTabFragment extends BaseFragment {
         /*if (PreferenceUtility.getInstance(mContext).getUserDetails() == null) {
             return;
         }*/
+        if (getActivity() == null)
+            return;
+
         ((HomeActivity) getActivity()).isReadyToLoad = true;
 
         if (!Utility.isConnected(mContext)) {
