@@ -15,6 +15,7 @@
     <dimen name="radio_button_padding_for_address">2dp</dimen>
     <dimen name="height_banner_refer_and_earn">175dp</dimen>
     <dimen name="height_sign_up_btn">40dp</dimen>
+    <dimen name="height_cheep_care_banner">120dp</dimen>
 
 
     <!--For HDPI devices, Strategic partner description for creation pages

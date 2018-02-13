@@ -185,6 +185,7 @@
     <!--Verification Screen-->
     <dimen name="verification_screen_margin_logo_description">28.250dp</dimen>
     <dimen name="text_size_seek_support">14sp</dimen>
+    <dimen name="height_cheep_care_banner">120dp</dimen>
 
 </resources>
 
