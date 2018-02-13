@@ -441,7 +441,8 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="progress_dialog_body">We are searching for a suitable PRO in your neighbourhood.</string>
     <string name="all_done">All Done</string>
     <string name="total_experience">%s years of experience</string>
-    <string name="merchant_detail_body">Your task is assigned to our PRO, %1$s. He will be at your selected address on %2$s. You can also contact your PRO via chat or call within the App. We are always available 24x7 for any help!</string>
+    <string name="merchant_detail_body">    Your task is assigned to, %1$s. Your PRO will be at your selected address on %2$s. You can also contact your PRO via chat or call within the App. We are always available 24x7 for any help!</string>
+
     <string name="alert_no_pro_found">Thank you for your order. All our PROs in your city are busy due to heavy demand. We have noted your requirements and we will revert back to you very shortly.</string>
     <string name="cheep_all_caps">CHEEP</string>
     <string name="label_address_delete_message">Are you sure you want to delete this address?</string>
