@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
@@ -17,8 +17,9 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:adjustViewBounds="true"
             tools:scaleType="centerCrop"
-            tools:src="@drawable/img_landing_screen_mumbai" />
+            tools:src="@drawable/img_landing_screen_mumbai"/>
 
+<!--
         <ImageView
             android:id="@+id/iv_cheep_care_gif"
             android:layout_width="wrap_content"
@@ -30,7 +31,36 @@
             android:adjustViewBounds="true"
             android:src="@drawable/ic_home_with_heart_text"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"/>
+-->
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginEnd="@dimen/scale_36dp"
+            android:layout_marginRight="@dimen/scale_36dp"
+            android:layout_marginTop="@dimen/scale_16dp"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/iv_cheep_care_gif"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/scale_108dp"
+                android:layout_gravity="center_horizontal"
+                android:adjustViewBounds="true"
+                android:src="@drawable/ic_home_with_heart_text"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:src="@drawable/ic_cheep_care_text_landing"/>
+
+        </LinearLayout>
+
 
         <com.cheep.custom_view.CFTextViewLight
             android:id="@+id/tv_city_name"
@@ -44,7 +74,7 @@
             android:textSize="@dimen/text_size_25sp"
             app:layout_constraintBottom_toBottomOf="@id/iv_city_image"
             app:layout_constraintStart_toStartOf="parent"
-            tools:text="@string/label_mumbai" />
+            tools:text="@string/label_mumbai"/>
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
@@ -52,7 +82,7 @@
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
             android:theme="@style/AppTheme.AppBarWhite.ColorControlNormalBlue"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"/>
 
         <android.support.v4.widget.NestedScrollView
             android:layout_width="match_parent"
@@ -86,7 +116,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    tools:text="@string/msg_welcome_x" />
+                    tools:text="@string/msg_welcome_x"/>
 
                 <com.cheep.custom_view.CFTextViewRegular
                     android:id="@+id/tv_info_text"
@@ -103,27 +133,27 @@
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_welcome_text"
-                    tools:text="@string/cheep_care_work_flow_desc" />
+                    tools:text="@string/cheep_care_work_flow_desc"/>
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_right_arrow_in_white_circle"
                     app:layout_constraintBottom_toBottomOf="@id/tv_info_text"
-                    app:layout_constraintStart_toEndOf="@id/tv_info_text" />
+                    app:layout_constraintStart_toEndOf="@id/tv_info_text"/>
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/rv_bought_packages"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/scale_18dp"
                     android:layout_marginBottom="@dimen/scale_15dp"
+                    android:layout_marginTop="@dimen/scale_18dp"
                     app:layoutManager="LinearLayoutManager"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_info_text"
                     tools:itemCount="2"
-                    tools:listitem="@layout/row_package_care_item" />
+                    tools:listitem="@layout/row_package_care_item"/>
 
                 <LinearLayout
                     android:id="@+id/ll_add_packages"
@@ -142,7 +172,7 @@
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:src="@drawable/ic_celebrate_big" />
+                        android:src="@drawable/ic_celebrate_big"/>
 
                     <com.cheep.custom_view.CFTextViewRegular
                         android:layout_width="0dp"
@@ -154,12 +184,12 @@
                         android:paddingTop="@dimen/scale_8dp"
                         android:text="@string/msg_mng_subs_add_packages"
                         android:textColor="@color/grey_varient_16"
-                        android:textSize="@dimen/text_size_11sp" />
+                        android:textSize="@dimen/text_size_11sp"/>
 
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:src="@drawable/ic_celebrate_big_2" />
+                        android:src="@drawable/ic_celebrate_big_2"/>
 
                 </LinearLayout>
 
@@ -173,7 +203,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/ll_add_packages"
                     tools:itemCount="2"
-                    tools:listitem="@layout/row_manage_subscription_add_packages" />
+                    tools:listitem="@layout/row_manage_subscription_add_packages"/>
 
                 <com.cheep.custom_view.CFTextViewRegular
                     android:id="@+id/text_error"
@@ -186,7 +216,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    tools:text="Work In Progress" />
+                    tools:text="Work In Progress"/>
 
             </android.support.constraint.ConstraintLayout>
 

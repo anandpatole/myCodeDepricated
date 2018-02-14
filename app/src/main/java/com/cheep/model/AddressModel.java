@@ -30,6 +30,7 @@ public class AddressModel implements Serializable {
     public String stateName;
 
     public boolean isSubscribedAddress = false;
+    public boolean isSelected = false;
 
     public LatLng getLatLng() {
         try {

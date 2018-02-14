@@ -43,23 +43,30 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:src="@drawable/ic_cheep_care_text"/>
+                    android:src="@drawable/ic_cheep_care_text_landing"/>
 
             </LinearLayout>
 
-            <com.cheep.custom_view.CFTextViewLight
-                android:id="@+id/tv_city_name"
-                android:layout_width="wrap_content"
+            <FrameLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|start"
-                android:layout_marginBottom="@dimen/scale_8dp"
-                android:layout_marginLeft="@dimen/scale_18dp"
-                android:layout_marginStart="@dimen/scale_18dp"
-                android:drawablePadding="@dimen/scale_10dp"
-                android:drawableRight="@drawable/ic_arrow_down_white"
-                android:textColor="@color/white"
-                android:textSize="@dimen/text_size_25sp"
-                tools:text="@string/label_mumbai"/>
+                android:background="@drawable/landing_screen_gradient">
+
+                <com.cheep.custom_view.CFTextViewLight
+                    android:id="@+id/tv_city_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/scale_8dp"
+                    android:layout_marginTop="@dimen/scale_8dp"
+                    android:layout_marginLeft="@dimen/scale_18dp"
+                    android:layout_marginStart="@dimen/scale_18dp"
+                    android:drawablePadding="@dimen/scale_10dp"
+                    android:drawableRight="@drawable/ic_arrow_down_white"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_size_25sp"
+                    tools:text="@string/label_mumbai"/>
+            </FrameLayout>
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"

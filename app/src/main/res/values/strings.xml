@@ -561,7 +561,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_enter_amount">Enter Amount</string>
     <string name="label_amount_payable">Amount Payable</string>
     <string name="label_notify_paying_by_wallet">You are about to pay using your %1s wallet</string>
-    <string name="no_pro_available_title" />
+    <string name="no_pro_available_title"/>
     <string name="no_pro_available_description">No PROs is available for this address</string>
     <string name="validate_comment">Please provide valid comment.</string>
     <string name="title_booking_confimation">Booking Confirmation</string>
@@ -664,5 +664,19 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="msg_become_cc_member">Become a CHEEP Care Member</string>
     <string name="label_free_with_cc">Free with Cheep Care</string>
     <string name="label_paid_cheep_services">Paid Cheep Services</string>
+    <string name="cheep_tips">CHEEP Tips: %1s</string>
+    <string name="cheep_care_alert_message">Your package details will be lost, Are you sure want to go back?</string>
+    <string name="label_cheep_mate_code">Cheep Mate Code</string>
+    <string name="label_error_promo_code_with_bundled_discount">Oops! You cannot apply promo as you have already availed bundled discount.</string>
+    <string name="label_society">SOCIETY</string>
+    <string name="label_subscribe">Subscribe</string>
+    <string name="select_city">Select City</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="label_payment_failed_title">Your Payment Failed!</string>
+    <string name="label_payment_failed_desc">Your payment for the task was unsuccessful. Please try again. If money has been deducted from your card/bank account, it would be refunded within 2-3 business days.</string>
+    <string name="label_retry_payment">Retry Payment</string>
+    <string name="validation_message_already_purchased_package_for_this_address">You have already purchased subscription for this package</string>
 
 </resources>

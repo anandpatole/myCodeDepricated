@@ -19,9 +19,11 @@ import com.cheep.activity.BaseAppCompatActivity;
 import com.cheep.activity.HDFCPaymentGatewayActivity;
 import com.cheep.activity.SendOtpActivity;
 import com.cheep.activity.WithdrawMoneyActivity;
+import com.cheep.cheepcare.dialogs.PaymentFailedDialog;
 import com.cheep.cheepcare.model.CheepCarePaymentDataModel;
 import com.cheep.cheepcare.model.CityDetail;
 import com.cheep.databinding.ActivityPaymentChoiceBinding;
+import com.cheep.dialogs.AcknowledgementInteractionListener;
 import com.cheep.model.MessageEvent;
 import com.cheep.model.UserDetails;
 import com.cheep.network.NetworkUtility;
@@ -122,26 +124,11 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
             case R.id.rl_card:
             case R.id.rl_netbanking:
                 paymentMethod = NetworkUtility.PAYMENT_METHOD_TYPE.PAYU;
-                generateHashForNormalTask();
+                doPaymentOfNetBanking();
                 break;
             case R.id.rl_paytm:
                 paymentMethod = NetworkUtility.PAYMENT_METHOD_TYPE.PAYTM;
-                UserDetails userDetails = PreferenceUtility.getInstance(PaymentChoiceCheepCareActivity.this).getUserDetails();
-                UserDetails.PaytmUserDetail paytmUserDetail = userDetails.mPaytmUserDetail;
-
-                switch (PAYTM_STEP) {
-                    case PAYTM_SEND_OTP:
-                        SendOtpActivity.newInstance(mContext, true, String.valueOf(paymentDataModel.payableAmount));
-                        break;
-                    case PAYTM_ADD_MONEY:
-                        AddMoneyActivity.newInstance(mContext, String.valueOf(paymentDataModel.payableAmount), paytmPayableAmount, paytmUserDetail.paytmAccessToken,
-                                paytmUserDetail.paytmphoneNumber, paytmUserDetail.paytmCustId, paytmWalletBalance);
-                        break;
-                    case PAYTM_WITHDRAW:
-                        WithdrawMoneyActivity.newInstance(mContext, String.valueOf(paymentDataModel.payableAmount), paytmPayableAmount, paytmUserDetail.paytmAccessToken,
-                                paytmUserDetail.paytmphoneNumber, paytmUserDetail.paytmCustId, paytmWalletBalance, true);
-                        break;
-                }
+                doPaymentOfPaytm();
 
                 break;
 
@@ -341,7 +328,8 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
                     //failed
                     if (data != null) {
                         LogUtils.LOGE(TAG, "onActivityResult() called with failed: result= [" + data.getStringExtra(Utility.Extra.PAYU_RESPONSE) + "]");
-                        Utility.showSnackBar(getString(R.string.msg_payment_failed), mBinding.getRoot());
+//                        Utility.showSnackBar(getString(R.string.msg_payment_failed), mBinding.getRoot());
+                        showPaymentFailedDialog();
                     }
                 }
                 break;
@@ -437,7 +425,8 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
 //                TODO: Need to start the task from here
                     callCreateCheepCarePackageWS(event.paytmResponse.ResponsePayLoad);
                 } else {
-                    Utility.showToast(mContext, getString(R.string.msg_payment_failed));
+//                    Utility.showToast(mContext, getString(R.string.msg_payment_failed));
+                    showPaymentFailedDialog();
                 }
                 break;
             case Utility.BROADCAST_TYPE.PAYMENT_COMPLETED_NEED_TO_REDIRECT_TO_MY_TASK_SCREEN:
@@ -600,6 +589,51 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////           Create Strategic task + payment  [end]                        /////////////////
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
+    private void showPaymentFailedDialog() {
+        LogUtils.LOGE(TAG, "showPaymentFailedDialog: ");
+        PaymentFailedDialog paymentFailedDialog = PaymentFailedDialog.newInstance(
+                new AcknowledgementInteractionListener() {
+
+                    @Override
+                    public void onAcknowledgementAccepted() {
+                        // Finish the current activity
+                        LogUtils.LOGE(TAG, "show: ------------------ ");
+
+                        if (paymentMethod.equalsIgnoreCase(NetworkUtility.PAYMENT_METHOD_TYPE.PAYU)) {
+                            doPaymentOfNetBanking();
+                        } else {
+                            doPaymentOfPaytm();
+                        }
+                    }
+                });
+        paymentFailedDialog.setCancelable(true);
+        paymentFailedDialog.show(getSupportFragmentManager(), PaymentFailedDialog.TAG);
+    }
+
+    private void doPaymentOfPaytm() {
+        paymentMethod = NetworkUtility.PAYMENT_METHOD_TYPE.PAYTM;
+        UserDetails userDetails = PreferenceUtility.getInstance(PaymentChoiceCheepCareActivity.this).getUserDetails();
+        UserDetails.PaytmUserDetail paytmUserDetail = userDetails.mPaytmUserDetail;
+
+        switch (PAYTM_STEP) {
+            case PAYTM_SEND_OTP:
+                SendOtpActivity.newInstance(mContext, true, String.valueOf(paymentDataModel.payableAmount));
+                break;
+            case PAYTM_ADD_MONEY:
+                AddMoneyActivity.newInstance(mContext, String.valueOf(paymentDataModel.payableAmount), paytmPayableAmount, paytmUserDetail.paytmAccessToken,
+                        paytmUserDetail.paytmphoneNumber, paytmUserDetail.paytmCustId, paytmWalletBalance);
+                break;
+            case PAYTM_WITHDRAW:
+                WithdrawMoneyActivity.newInstance(mContext, String.valueOf(paymentDataModel.payableAmount), paytmPayableAmount, paytmUserDetail.paytmAccessToken,
+                        paytmUserDetail.paytmphoneNumber, paytmUserDetail.paytmCustId, paytmWalletBalance, true);
+                break;
+        }
+    }
+
+    private void doPaymentOfNetBanking() {
+        paymentMethod = NetworkUtility.PAYMENT_METHOD_TYPE.PAYU;
+        generateHashForNormalTask();
+    }
 
 
 }
