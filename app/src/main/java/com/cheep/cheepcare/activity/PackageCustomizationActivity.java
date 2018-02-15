@@ -44,6 +44,8 @@ import com.cheep.utils.FetchLocationInfoUtility;
 import com.cheep.utils.LogUtils;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.Utility;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -330,9 +332,18 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
 
 
         if (mBinding.viewpager.getCurrentItem() == 0) {
-            if (cartCount > 0)
+            if (cartCount > 0) {
                 showAlertDialog();
-            else
+                JSONObject object = new JSONObject();
+                try {
+                    Gson gson = new GsonBuilder().create();
+                    object.put(NetworkUtility.TAGS.CITY_DETAIL, Utility.getJsonStringFromObject(mCityDetail));
+                    object.put(NetworkUtility.TAGS.PACKAGE_DETAIL, gson.toJsonTree(mPackageList).getAsJsonArray());
+                    LogUtils.LOGE(TAG, "onBackPressed: " + object.toString());
+                } catch (JSONException ignored) {
+
+                }
+            } else
                 super.onBackPressed();
         } else gotoStep(mPreviousState);
 
@@ -460,7 +471,7 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
     private String createSubscriptionPackageRequest() {
 
         JSONArray cartArray = new JSONArray();
-
+        String cartDetail = Utility.getJsonStringFromObject(mPackageList);
         for (PackageDetail detail : mPackageList) {
             JSONObject packageObject = new JSONObject();
             if (detail.isSelected) {

@@ -196,7 +196,7 @@ public class ExpandableSubscribedPackagesRecyclerAdapter extends ExpandableRecyc
             mBinding.lnAddressRow.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    showDropDownMenu(mBinding.lnAddressRow, getAdapterPosition());
+                    showDropDownMenu(mBinding.lnAddressRow, getParentAdapterPosition());
                 }
             });
         }
@@ -211,15 +211,15 @@ public class ExpandableSubscribedPackagesRecyclerAdapter extends ExpandableRecyc
 
             mBinding.tvCareName.setText(model.title);
             mBinding.tvDescription.setText(model.subtitle);
-            if (model.categoryList == null || model.categoryList.size() == 0) {
+            if (model.categoryList != null && !model.categoryList.isEmpty()) {
                 mBinding.tvDescription.setCompoundDrawablesWithIntrinsicBounds(0
                         , 0
-                        , R.drawable.ic_right_arrow_in_white_circle
+                        , R.drawable.ic_white_arrow_filled_blue
                         , 0);
             } else {
                 mBinding.tvDescription.setCompoundDrawablesWithIntrinsicBounds(0
                         , 0
-                        , R.drawable.ic_white_arrow_filled_blue
+                        , R.drawable.ic_right_arrow_in_white_circle
                         , 0);
             }
 
