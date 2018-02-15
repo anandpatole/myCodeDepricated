@@ -199,4 +199,17 @@ public class PreferenceUtility {
         }
         return true;
     }
+
+
+    /**
+     * @param citySlug    slug of cart city
+     * @param cartDetails it will have whole care package list with its sub services data, selected address, payment data
+     */
+    public void setCityCartDetail(String citySlug, String cartDetails) {
+        mSharedPreferences.edit().putString(citySlug, cartDetails).apply();
+    }
+
+    public String getCityCartDetail(String citySlug) {
+        return mSharedPreferences.getString(citySlug, "");
+    }
 }

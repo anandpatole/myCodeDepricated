@@ -1026,7 +1026,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
             mParams.put(NetworkUtility.TAGS.PROMOCODE_PRICE, Utility.ZERO_STRING);
         }
         mParams.put(NetworkUtility.TAGS.IS_REFER_CODE, taskDetailModel.isReferCode);
-        mParams.put(NetworkUtility.TAGS.QUOTE_AMOUNT, TextUtils.isEmpty(taskDetailModel.cheepCode) ? providerModel.quotePrice : providerModel.actualQuotePrice);
+        mParams.put(NetworkUtility.TAGS.QUOTE_AMOUNT, providerModel.spWithoutGstQuotePrice);
         mParams.put(NetworkUtility.TAGS.PAYABLE_AMOUNT, providerModel.quotePrice);
         mParams.put(NetworkUtility.TAGS.PAYMENT_LOG, Utility.EMPTY_STRING);
         mParams.put(NetworkUtility.TAGS.PAYMENT_METHOD, NetworkUtility.PAYMENT_METHOD_TYPE.PAY_LATER);
