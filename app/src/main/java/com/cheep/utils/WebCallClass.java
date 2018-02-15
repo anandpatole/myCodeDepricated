@@ -6,9 +6,8 @@ import android.util.Log;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.cheep.R;
+import com.cheep.cheepcare.model.AdminSettingModel;
 import com.cheep.cheepcare.model.CityDetail;
-import com.cheep.cheepcare.model.CityLandingPageModel;
 import com.cheep.cheepcare.model.PackageDetail;
 import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
@@ -17,13 +16,11 @@ import com.cheep.network.VolleyNetworkRequest;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static com.cheep.network.NetworkUtility.TAGS.CARE_CITY_SLUG;
-import static com.cheep.network.NetworkUtility.TAGS.DATA;
 
 /**
  * Created by bhavesh on 24/1/18.
@@ -47,7 +44,7 @@ public class WebCallClass {
 
         void getSubscribedCarePackageSuccessResponse(CityDetail cityDetail
                 , List<PackageDetail> subscribedList
-                , List<PackageDetail> allPackageList);
+                , List<PackageDetail> allPackageList, AdminSettingModel adminSettingModel);
     }
 
     public static void getSubscribedCarePackage(final Context mContext, final String careCitySlug
@@ -89,11 +86,15 @@ public class WebCallClass {
                                         jsonData.getString(NetworkUtility.TAGS.PACKAGE_DETAIL)
                                         , PackageDetail[].class);
 
+                                AdminSettingModel adminSettingModel = (AdminSettingModel) Utility.getObjectFromJsonString(
+                                        jsonData.getString(NetworkUtility.TAGS.ADMIN_SETTING)
+                                        , AdminSettingModel.class);
 
                                 successListener.getSubscribedCarePackageSuccessResponse(
                                         cityDetail
                                         , subscribedList
-                                        , allPackageList);
+                                        , allPackageList,
+                                        adminSettingModel);
                                 ;
                             }
                             break;

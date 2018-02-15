@@ -16,7 +16,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.cheep.R;
-import com.cheep.cheepcare.model.CheepCarePackageModel;
 import com.cheep.cheepcare.model.PackageDetail;
 import com.cheep.databinding.RowManageSubscriptionAddPackagesBinding;
 import com.cheep.utils.Utility;
@@ -37,7 +36,7 @@ public class ManageSubscriptionAddPackageAdapter extends
     private final AddPackageInteractionListener mListener;
 
     public interface AddPackageInteractionListener {
-        void onPackageItemClick(CheepCarePackageModel model);
+        void onPackageItemClick(PackageDetail model);
     }
 
     public ManageSubscriptionAddPackageAdapter(AddPackageInteractionListener listener, List<PackageDetail> list) {
@@ -68,7 +67,7 @@ public class ManageSubscriptionAddPackageAdapter extends
         holder.mBinding.tvTitle.setText(model.title);
         holder.mBinding.tvDescription.setText(model.subtitle);
 
-        holder.mBinding.tvPrice.setText(Utility.getCheepCarePackageMonthlyPrice(context,R.string.rupee_symbol_x_package_price
+        holder.mBinding.tvPrice.setText(Utility.getCheepCarePackageMonthlyPrice(context, R.string.rupee_symbol_x_package_price
                 , model.price));
 
         // Start LIVE tracking and Text changes
@@ -167,6 +166,12 @@ public class ManageSubscriptionAddPackageAdapter extends
         public AddPackageViewHolder(RowManageSubscriptionAddPackagesBinding binding) {
             super(binding.getRoot());
             mBinding = binding;
+            mBinding.getRoot().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mListener.onPackageItemClick(mList.get(getAdapterPosition()));
+                }
+            });
         }
     }
 }

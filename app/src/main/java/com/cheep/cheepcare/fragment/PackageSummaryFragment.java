@@ -512,7 +512,7 @@ public class PackageSummaryFragment extends BaseFragment {
         paymentDataModel.careCityId = mPackageCustomizationActivity.mCityDetail.id;
         paymentDataModel.dsaCode = cheepMateCode;
         paymentDataModel.isAnnually = isYearly ? Utility.BOOLEAN.YES : Utility.BOOLEAN.NO;
-        paymentDataModel.payableAmount = payableAmount;
+        paymentDataModel.payableAmount =  (double) Math.round(payableAmount * 100) / 100;
         paymentDataModel.totalAmount = totalPrice;
         paymentDataModel.promocode = cheepCode;
         paymentDataModel.promocodePrice = discountPrice;

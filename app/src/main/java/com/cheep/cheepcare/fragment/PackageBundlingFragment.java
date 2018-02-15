@@ -210,9 +210,14 @@ public class PackageBundlingFragment extends BaseFragment {
                             JSONObject jsonData = jsonObject.getJSONObject(NetworkUtility.TAGS.DATA);
                             // strategic partner pro id for given location
                             String city_id = jsonData.optString(NetworkUtility.TAGS.CITY_ID);
+                            String isPurchased = jsonData.optString(NetworkUtility.TAGS.IS_PURCHASED);
                             if (mPackageCustomizationActivity.mCityDetail.id.equalsIgnoreCase(city_id)) {
-                                mPackageAdapter.getList().get(adapterPosition).mSelectedAddressList.add(model);
-                                mPackageAdapter.notifyItemChanged(adapterPosition);
+                                if (isPurchased.equalsIgnoreCase(Utility.BOOLEAN.YES)) {
+                                    Utility.showToast(mPackageCustomizationActivity, getString(R.string.validation_message_already_purchased_package_for_this_address));
+                                } else {
+                                    mPackageAdapter.getList().get(adapterPosition).mSelectedAddressList.add(model);
+                                    mPackageAdapter.notifyItemChanged(adapterPosition);
+                                }
                             } else {
                                 Utility.showToast(mPackageCustomizationActivity, getString(R.string.validation_message_cheep_care_address, mPackageCustomizationActivity.mCityDetail.cityName));
                             }

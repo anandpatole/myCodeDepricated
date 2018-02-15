@@ -564,10 +564,15 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
                             JSONObject jsonData = jsonObject.getJSONObject(NetworkUtility.TAGS.DATA);
                             // strategic partner pro id for given location
                             String city_id = jsonData.optString(NetworkUtility.TAGS.CITY_ID);
+                            String isPurchased = jsonData.optString(NetworkUtility.TAGS.IS_PURCHASED);
                             if (mPackageCustomizationActivity.mCityDetail.id.equalsIgnoreCase(city_id)) {
-                                fillAddressView(model);
-                                if (isCalledAfterLogin) {
-                                    mPackageCustomizationActivity.gotoStep(step);
+                                if (isPurchased.equalsIgnoreCase(Utility.BOOLEAN.YES)) {
+                                    Utility.showToast(mPackageCustomizationActivity, getString(R.string.validation_message_already_purchased_package_for_this_address));
+                                } else {
+                                    fillAddressView(model);
+                                    if (isCalledAfterLogin) {
+                                        mPackageCustomizationActivity.gotoStep(step);
+                                    }
                                 }
 
                             } else {

@@ -83,7 +83,7 @@
     <dimen name="scale_90dp">90dp</dimen>
     <dimen name="scale_96dp">96dp</dimen>
     <dimen name="scale_100dp">100dp</dimen>
-    <dimen name="scale_108dp">108dp</dimen>
+    <dimen name="scale_108dp">70dp</dimen>
     <dimen name="scale_113dp">113dp</dimen>
     <dimen name="scale_120dp">120dp</dimen>
     <dimen name="scale_129dp">129dp</dimen>
@@ -185,6 +185,7 @@
     <!--Verification Screen-->
     <dimen name="verification_screen_margin_logo_description">28.250dp</dimen>
     <dimen name="text_size_seek_support">14sp</dimen>
+    <dimen name="height_cheep_care_banner">120dp</dimen>
 
 </resources>
 

@@ -19,7 +19,7 @@ import com.cheep.R;
 import com.cheep.activity.BaseAppCompatActivity;
 import com.cheep.cheepcare.adapter.ExpandableSubscribedPackagesRecyclerAdapter;
 import com.cheep.cheepcare.adapter.ManageSubscriptionAddPackageAdapter;
-import com.cheep.cheepcare.model.CheepCarePackageModel;
+import com.cheep.cheepcare.model.AdminSettingModel;
 import com.cheep.cheepcare.model.CityDetail;
 import com.cheep.cheepcare.model.PackageDetail;
 import com.cheep.databinding.ActivityManageSubscriptionBinding;
@@ -45,6 +45,7 @@ public class ManageSubscriptionActivity extends BaseAppCompatActivity {
     private List<PackageDetail> mSubscribedPackageList;
     private List<PackageDetail> mAllPackagesList;
     private CityDetail mCityDetail;
+    private AdminSettingModel mAdminSettingModel;
 
     /*public interface ACTIVITY_TYPES {
         int WELCOME_TO_CC_ACTIVITY = 0;
@@ -190,8 +191,9 @@ public class ManageSubscriptionActivity extends BaseAppCompatActivity {
     private final ManageSubscriptionAddPackageAdapter.AddPackageInteractionListener addPackageInteractionListener =
             new ManageSubscriptionAddPackageAdapter.AddPackageInteractionListener() {
                 @Override
-                public void onPackageItemClick(CheepCarePackageModel model) {
-
+                public void onPackageItemClick(PackageDetail model) {
+                    String packageList = Utility.getJsonStringFromObject(mAllPackagesList);
+                    PackageCustomizationActivity.newInstance(mContext, model, mCityDetail, model.id, packageList, mAdminSettingModel);
                 }
             };
 
@@ -219,10 +221,11 @@ public class ManageSubscriptionActivity extends BaseAppCompatActivity {
     private final WebCallClass.GetSubscribedCarePackageResponseListener mGetSubscribedCarePackageResponseListener =
             new WebCallClass.GetSubscribedCarePackageResponseListener() {
                 @Override
-                public void getSubscribedCarePackageSuccessResponse(CityDetail cityDetail, List<PackageDetail> subscribedList, List<PackageDetail> allPackageList) {
+                public void getSubscribedCarePackageSuccessResponse(CityDetail cityDetail, List<PackageDetail> subscribedList, List<PackageDetail> allPackageList, AdminSettingModel adminSettingModel) {
                     mCityDetail = cityDetail;
                     mSubscribedPackageList = subscribedList;
                     mAllPackagesList = allPackageList;
+                    mAdminSettingModel = adminSettingModel;
                     hideProgressDialog();
                     initiateDynamicUI();
                     setListeners();

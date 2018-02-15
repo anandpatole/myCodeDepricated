@@ -331,6 +331,7 @@ public class NetworkUtility {
 
         String TASK_DESC = "task_desc";
         String CITY_ID = "city_id";
+        String IS_PURCHASED= "is_purchased";
         String CAT_ID = "cat_id";
         String SUBCATEGORY_ID = "subcategory_id";
 
@@ -496,6 +497,7 @@ public class NetworkUtility {
         }
 
         String MESSAGE = "message";
+        String TEXT_OKAY = "textOkay";
         String PICTURE_URL = "picture_url";
         String RESOURCE_ID = "resourceid";
         String PROFILE_PIC_NEEDS_TOBE_SHOWN = "is_profile_pic_needs_be_shown";
@@ -523,6 +525,8 @@ public class NetworkUtility {
             public static final String REG_TWITTER = "RegisterWithTwitter";
             public static final String REG_GOOGLE = "RegisterWithGPlus";
             public static final String TASK_CREATE = "TaskCreation";
+            public static final String COUPON_DUNIA_TASK_DEBUG = "CouponDuniaTaskDebug";
+            public static final String COUPON_DUNIA_TASK_LIVE = "CouponDuniaTask";
 //            public static final String INSTA_BOOK = "InstaBook";
         }
     }
