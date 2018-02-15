@@ -22,6 +22,8 @@ public class AddressModel implements Serializable {
     public String pincode;
     public String nickname;
     public String end_date;
+    public String is_subscribe;
+
     /**
      * This would only be useful in case of Guest
      */

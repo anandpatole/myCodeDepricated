@@ -128,7 +128,7 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
         callPackageOptionListWS();
         callPackageCheepTipWS();
         initAddressUI();
-        initChipTipsUI();
+        initCheepTipsUI();
     }
 
     @Override
@@ -610,7 +610,7 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
 
     }
 
-    private void initChipTipsUI() {
+    private void initCheepTipsUI() {
         ViewGroup.LayoutParams params = mBinding.rlChipTips.getLayoutParams();
         params.height = (int) getResources().getDimension(R.dimen.scale_30dp);
         mBinding.rlChipTips.setLayoutParams(params);

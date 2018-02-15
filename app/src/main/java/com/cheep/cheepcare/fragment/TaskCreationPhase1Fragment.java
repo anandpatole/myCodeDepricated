@@ -11,7 +11,6 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.cheep.R;
 import com.cheep.activity.BaseAppCompatActivity;
@@ -87,6 +86,7 @@ public class TaskCreationPhase1Fragment extends BaseFragment {
     @Override
     public void initiateUI() {
         setUpViewPager();
+        initCheepTipsUI();
     }
 
     private void setUpViewPager() {
@@ -94,41 +94,70 @@ public class TaskCreationPhase1Fragment extends BaseFragment {
         mPagerAdapter.addFragment(getString(R.string.label_free_with_cc));
         mPagerAdapter.addFragment(getString(R.string.label_paid_cheep_services));
         mBinding.viewPager.setAdapter(mPagerAdapter);
-        mBinding.tabLayout.setupWithViewPager(mBinding.viewPager);
 
-        TextView textView =
-                (TextView) LayoutInflater.from(mContext).inflate(R.layout.text_view, mBinding.tabLayout, false);
-        textView.setText(getString(R.string.label_free_with_cc));
-        textView.setSelected(true);
-        mBinding.tabLayout.getTabAt(0).setCustomView(textView);
-        textView =
-                (TextView) LayoutInflater.from(mContext).inflate(R.layout.text_view, mBinding.tabLayout, false);
-        textView.setText(getString(R.string.label_paid_cheep_services));
-        textView.setSelected(false);
-        mBinding.tabLayout.getTabAt(1).setCustomView(textView);
-//        mBinding.tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-//            @Override
-//            public void onTabSelected(TabLayout.Tab tab) {
-//                tab.getCustomView().setSelected(true);
-//            }
-//
-//            @Override
-//            public void onTabUnselected(TabLayout.Tab tab) {
-//                tab.getCustomView().setSelected(false);
-//            }
-//
-//            @Override
-//            public void onTabReselected(TabLayout.Tab tab) {
-//
-//            }
-//        });
-//        Utility.wrapTabIndicatorToTitle(mBinding.tabLayout, 0, 0);
+        mBinding.flFreeCcContainer.setSelected(true);
+        mBinding.flPaidServicesContainer.setSelected(false);
+    }
+
+    private void initCheepTipsUI() {
+        ViewGroup.LayoutParams params = mBinding.rlChipTips.getLayoutParams();
+        params.height = (int) getResources().getDimension(R.dimen.scale_30dp);
+        mBinding.rlChipTips.setLayoutParams(params);
+        mBinding.rlChipTips.setSelected(false);
+        mBinding.ivBird.setImageResource(R.drawable.ic_cheep_bird_tip);
+        mBinding.ivCross.setImageResource(R.drawable.ic_drop_down_arrow);
+        mBinding.ivCross.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mBinding.rlChipTips.isSelected()) {
+
+                    mBinding.ivCross.setImageResource(R.drawable.ic_drop_down_arrow);
+                    mBinding.ivBird.setImageResource(R.drawable.ic_cheep_bird_tip);
+                    mBinding.rlChipTips.setSelected(false);
+
+                    ViewGroup.LayoutParams params = mBinding.rlChipTips.getLayoutParams();
+                    params.height = (int) getResources().getDimension(R.dimen.scale_30dp);
+                    mBinding.rlChipTips.setLayoutParams(params);
+
+                } else {
+
+                    mBinding.ivCross.setImageResource(R.drawable.icon_cross_blue);
+                    mBinding.rlChipTips.setSelected(true);
+                    mBinding.ivBird.setImageResource(R.drawable.ic_cheep_bird_tip_big);
+
+                    ViewGroup.LayoutParams params = mBinding.rlChipTips.getLayoutParams();
+                    params.height = (int) getResources().getDimension(R.dimen.scale_50dp);
+                    mBinding.rlChipTips.setLayoutParams(params);
+
+                }
+            }
+        });
     }
 
     @Override
     public void setListener() {
-
+        mBinding.flFreeCcContainer.setOnClickListener(mOnClickListener);
+        mBinding.flPaidServicesContainer.setOnClickListener(mOnClickListener);
     }
+
+    private final View.OnClickListener mOnClickListener =
+            new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    switch (v.getId()) {
+                        case R.id.fl_free_cc_container:
+                            mBinding.flFreeCcContainer.setSelected(true);
+                            mBinding.flPaidServicesContainer.setSelected(false);
+                            mBinding.viewPager.setCurrentItem(0);
+                            break;
+                        case R.id.fl_paid_services_container:
+                            mBinding.flPaidServicesContainer.setSelected(true);
+                            mBinding.flFreeCcContainer.setSelected(false);
+                            mBinding.viewPager.setCurrentItem(1);
+                            break;
+                    }
+                }
+            };
 
     public List<SubServiceDetailModel> getSelectedSubServices() {
         List<SubServiceDetailModel> list =
