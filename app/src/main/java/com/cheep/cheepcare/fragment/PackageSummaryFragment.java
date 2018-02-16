@@ -136,14 +136,20 @@ public class PackageSummaryFragment extends BaseFragment {
 
             @Override
             public void onPackageItemClick(int position, PackageDetail packageModel) {
-
+                SelectPackageSpecificationsFragment fragment = (SelectPackageSpecificationsFragment) mPackageCustomizationActivity.mPackageCustomizationPagerAdapter.getItem(PackageCustomizationActivity.STAGE_1);
+                mPackageCustomizationActivity.mPackageId = packageModel.id;
+                if (fragment != null)
+                {
+                    fragment.initiateUI();
+                    mPackageCustomizationActivity.gotoStep(PackageCustomizationActivity.STAGE_1);
+                }
             }
 
             @Override
             public void onRemovePackage(int position, PackageDetail packageModel) {
 
                 if (mPackageAdapter.getList().size() == 1) {
-                    mPackageCustomizationActivity.showAlertDialog();
+                    mPackageCustomizationActivity.showAlertDialog(true);
                     return;
                 }
 
@@ -512,7 +518,7 @@ public class PackageSummaryFragment extends BaseFragment {
         paymentDataModel.careCityId = mPackageCustomizationActivity.mCityDetail.id;
         paymentDataModel.dsaCode = cheepMateCode;
         paymentDataModel.isAnnually = isYearly ? Utility.BOOLEAN.YES : Utility.BOOLEAN.NO;
-        paymentDataModel.payableAmount =  (double) Math.round(payableAmount * 100) / 100;
+        paymentDataModel.payableAmount = (double) Math.round(payableAmount * 100) / 100;
         paymentDataModel.totalAmount = totalPrice;
         paymentDataModel.promocode = cheepCode;
         paymentDataModel.promocodePrice = discountPrice;
