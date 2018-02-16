@@ -301,6 +301,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
 
     <string name="step_1_desc">Please tell us what needs to be done</string>
     <string name="step_2_desc">Please tell us when and where</string>
+    <string name="step_3_desc">Please check details below and book</string>
     <string name="hint_task_desc">Please tell us more about your requirement</string>
     <string name="format_date_time">%1$s at %2$s</string>
 
@@ -347,7 +348,6 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_reason">Reason</string>
 
     <string name="label_you_nearly_there">You\'re nearly there</string>
-    <string name="label_please_chk_detail">Please check details below and book</string>
     <string name="label_enter_promocode">Apply Promo Code</string>
     <!--<string name="label_enter_promocode">Enter Promo Code</string>-->
     <string name="label_by">&#160;by&#160;</string>
@@ -561,7 +561,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_enter_amount">Enter Amount</string>
     <string name="label_amount_payable">Amount Payable</string>
     <string name="label_notify_paying_by_wallet">You are about to pay using your %1s wallet</string>
-    <string name="no_pro_available_title"/>
+    <string name="no_pro_available_title" />
     <string name="no_pro_available_description">No PROs is available for this address</string>
     <string name="validate_comment">Please provide valid comment.</string>
     <string name="title_booking_confimation">Booking Confirmation</string>
@@ -672,11 +672,12 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_subscribe">Subscribe</string>
     <string name="select_city">Select City</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="label_book_and_pay">Book &amp; Pay</string>
     <string name="label_payment_failed_title">Your Payment Failed!</string>
     <string name="label_payment_failed_desc">Your payment for the task was unsuccessful. Please try again. If money has been deducted from your card/bank account, it would be refunded within 2-3 business days.</string>
     <string name="label_retry_payment">Retry Payment</string>
     <string name="validation_message_already_purchased_package_for_this_address">You have already purchased subscription for this package</string>
+    <string name="msg_task_description">Your tasks will be completed on 25th April, 1100 hrs - 1300 hrs at
+        1401/dgdfgfhfghhhhh jmndfmsfksfmksfkfm fnfjfnsj mnkfndskgnsd</string>
 
 </resources>

@@ -103,7 +103,7 @@ public class FreeSubCategoryFragment extends BaseFragment {
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mContext);
         mFragmentSelectSubserviceBinding.recyclerView.setLayoutManager(linearLayoutManager);
-        mSubCategoryUnitAdapter = new ExpandableSubCategoryUnitAdapter(null);
+        mSubCategoryUnitAdapter = new ExpandableSubCategoryUnitAdapter(new ArrayList<SubServiceDetailModel>());
         mFragmentSelectSubserviceBinding.recyclerView.setAdapter(mSubCategoryUnitAdapter);
         errorLoadingHelper.showLoading();
         fetchListOfSubCategory(mTaskCreationCCActivity.mJobCategoryModel.catId);

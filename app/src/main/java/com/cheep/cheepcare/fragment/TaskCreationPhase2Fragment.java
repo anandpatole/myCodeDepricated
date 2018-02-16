@@ -2,7 +2,6 @@ package com.cheep.cheepcare.fragment;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
-import android.app.IntentService;
 import android.app.TimePickerDialog;
 import android.content.ClipData;
 import android.content.Context;
@@ -49,7 +48,7 @@ import com.cheep.BuildConfig;
 import com.cheep.R;
 import com.cheep.activity.BaseAppCompatActivity;
 import com.cheep.adapter.AddressRecyclerViewAdapter;
-import com.cheep.adapter.SelectedSubServiceAdapter;
+import com.cheep.cheepcare.adapter.SelectedSubServiceAdapter;
 import com.cheep.cheepcare.activity.TaskCreationCCActivity;
 import com.cheep.cheepcare.adapter.AddressTaskCreateAdapter;
 import com.cheep.cheepcare.dialogs.BottomAddAddressDialog;
@@ -103,6 +102,7 @@ public class TaskCreationPhase2Fragment extends BaseFragment
         RequestPermission.OnRequestPermissionResult
         , SelectSpecificTimeDialog.DialogInteractionListener
         , NotSubscribedAddressDialog.DialogInteractionListener {
+
     public static final String TAG = TaskCreationPhase2Fragment.class.getSimpleName();
     private FragmentTaskCreationPhase2Binding mBinding;
     private TaskCreationCCActivity mTaskCreationCCActivity;

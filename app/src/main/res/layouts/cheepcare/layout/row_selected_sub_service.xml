@@ -29,7 +29,7 @@
         </RelativeLayout>
 
         <com.cheep.custom_view.CFTextViewRegular
-            android:id="@+id/txtQueStr"
+            android:id="@+id/tv_sub_service"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/scale_15dp"

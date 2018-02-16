@@ -1,4 +1,4 @@
-package com.cheep.adapter;
+package com.cheep.cheepcare.adapter;
 
 import android.databinding.DataBindingUtil;
 import android.support.v7.widget.RecyclerView;
@@ -39,7 +39,7 @@ public class SelectedSubServiceAdapter extends RecyclerView.Adapter<SelectedSubS
         if (holder.getAdapterPosition() == (mList.size() - 1)) {
             holder.mBinding.txtVerticalLine.setVisibility(View.GONE);
         }
-        holder.mBinding.txtQueStr.setText(mList.get(holder.getAdapterPosition()).name);
+        holder.mBinding.tvSubService.setText(mList.get(holder.getAdapterPosition()).name);
     }
 
     @Override

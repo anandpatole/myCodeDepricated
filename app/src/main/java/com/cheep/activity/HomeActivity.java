@@ -49,6 +49,8 @@ import com.cheep.adapter.FAQRecyclerViewAdapter;
 import com.cheep.adapter.FavouriteRecyclerViewAdapter;
 import com.cheep.adapter.HistoryRecyclerViewAdapter;
 import com.cheep.adapter.SlideMenuAdapter;
+import com.cheep.cheepcare.activity.BookingConfirmationCcActivity;
+import com.cheep.cheepcare.activity.TaskCreationCCActivity;
 import com.cheep.custom_view.BottomAlertDialog;
 import com.cheep.databinding.ActivityHomeBinding;
 import com.cheep.databinding.NavHeaderHomeBinding;
@@ -67,6 +69,7 @@ import com.cheep.fragment.ReferAndEarnFragment;
 import com.cheep.interfaces.DrawerLayoutInteractionListener;
 import com.cheep.interfaces.NotificationClickInteractionListener;
 import com.cheep.interfaces.TaskRowDataInteractionListener;
+import com.cheep.model.AddressModel;
 import com.cheep.model.BannerImageModel;
 import com.cheep.model.FAQModel;
 import com.cheep.model.HistoryModel;
@@ -878,8 +881,10 @@ public class HomeActivity extends BaseAppCompatActivity
         // Changes on 27thApril,2017
 //        HireNewJobActivity.newInstance(mContext, model);
 //        TaskCreationCCActivity.getInstance(mContext, model);
-        TaskCreationActivity.getInstance(mContext, model);
+//        TaskCreationActivity.getInstance(mContext, model);
 //        TaskSummaryForMultiCatActivity.getInstance(mContext, "0");
+//        TaskSummaryActivity.getInstance(mContext, "0");
+        BookingConfirmationCcActivity.newInstance(mContext, null);
     }
 
     @Override
@@ -1802,7 +1807,7 @@ public class HomeActivity extends BaseAppCompatActivity
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == Utility.REQUEST_CODE_PERMISSION_LOCATION) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED ) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
                 Log.i(TAG, "onRequestPermissionsResult: Permission Granted");
                 //So, ask service to fetch the location now
                 requestLocationUpdateFromService();
