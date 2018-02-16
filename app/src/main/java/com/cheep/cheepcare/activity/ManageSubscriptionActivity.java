@@ -23,6 +23,7 @@ import com.cheep.cheepcare.model.AdminSettingModel;
 import com.cheep.cheepcare.model.CityDetail;
 import com.cheep.cheepcare.model.PackageDetail;
 import com.cheep.databinding.ActivityManageSubscriptionBinding;
+import com.cheep.model.JobCategoryModel;
 import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
 import com.cheep.utils.PreferenceUtility;
@@ -46,11 +47,6 @@ public class ManageSubscriptionActivity extends BaseAppCompatActivity {
     private List<PackageDetail> mAllPackagesList;
     private CityDetail mCityDetail;
     private AdminSettingModel mAdminSettingModel;
-
-    /*public interface ACTIVITY_TYPES {
-        int WELCOME_TO_CC_ACTIVITY = 0;
-        int MANAGE_SUBSCRIPTION_ACTIVITY = 1;
-    }*/
 
     public static void newInstance(Context context, CityDetail city, boolean isManageSubscription) {
         Intent intent = new Intent(context, ManageSubscriptionActivity.class);
@@ -178,7 +174,8 @@ public class ManageSubscriptionActivity extends BaseAppCompatActivity {
 
         mBinding.rvBoughtPackages.setNestedScrollingEnabled(false);
         subscribedPackagesAdapter =
-                new ExpandableSubscribedPackagesRecyclerAdapter(mSubscribedPackageList, true);
+                new ExpandableSubscribedPackagesRecyclerAdapter(mSubscribedPackageList, true
+                        , childViewsClickListener);
         mBinding.rvBoughtPackages.setAdapter(subscribedPackagesAdapter);
 
         mBinding.rvAddPackage.setNestedScrollingEnabled(false);
@@ -187,6 +184,14 @@ public class ManageSubscriptionActivity extends BaseAppCompatActivity {
                         , mAllPackagesList);
         mBinding.rvAddPackage.setAdapter(addPackageAdapter);
     }
+
+    private final ExpandableSubscribedPackagesRecyclerAdapter.ChildViewsClickListener childViewsClickListener =
+            new ExpandableSubscribedPackagesRecyclerAdapter.ChildViewsClickListener() {
+                @Override
+                public void onBookClicked(JobCategoryModel model, int childAdapterPosition) {
+                    TaskCreationCCActivity.getInstance(mContext, model);
+                }
+            };
 
     private final ManageSubscriptionAddPackageAdapter.AddPackageInteractionListener addPackageInteractionListener =
             new ManageSubscriptionAddPackageAdapter.AddPackageInteractionListener() {

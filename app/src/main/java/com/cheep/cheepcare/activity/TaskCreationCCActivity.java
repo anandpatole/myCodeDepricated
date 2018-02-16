@@ -118,7 +118,7 @@ public class TaskCreationCCActivity extends BaseAppCompatActivity {
 
         // Set up image
         Utility.loadImageView(mContext, mBinding.imgService, mJobCategoryModel.catImage, R.drawable.gradient_black);
-        Utility.loadImageView(mContext, mBinding.imgService, mJobCategoryModel.catImageExtras.thumb, R.drawable.gradient_black);
+//        Utility.loadImageView(mContext, mBinding.imgService, mJobCategoryModel.catImageExtras.thumb, R.drawable.gradient_black);
 
         // Setting viewpager
         setupViewPager(mBinding.viewpager);

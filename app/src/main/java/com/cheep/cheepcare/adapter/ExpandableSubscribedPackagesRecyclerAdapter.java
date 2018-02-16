@@ -54,6 +54,11 @@ public class ExpandableSubscribedPackagesRecyclerAdapter extends ExpandableRecyc
     private final boolean isSingleSelection;
     private final List<PackageDetail> mList;
     private static final String TAG = ExpandableSubscribedPackagesRecyclerAdapter.class.getSimpleName();
+    private final ChildViewsClickListener mListener;
+
+    public interface ChildViewsClickListener {
+        void onBookClicked(JobCategoryModel model, int childAdapterPosition);
+    }
 
     /**
      * Primary constructor. Sets up {@link #mParentList} and {@link #mFlatItemList}.
@@ -72,9 +77,10 @@ public class ExpandableSubscribedPackagesRecyclerAdapter extends ExpandableRecyc
      *                   adapter is linked to
      */
     public ExpandableSubscribedPackagesRecyclerAdapter(@NonNull List<PackageDetail> parentList
-            , boolean isSingleSelection) {
+            , boolean isSingleSelection, ChildViewsClickListener listener) {
         super(parentList);
 
+        mListener = listener;
         mList = parentList;
         this.isSingleSelection = isSingleSelection;
     }
@@ -369,6 +375,13 @@ public class ExpandableSubscribedPackagesRecyclerAdapter extends ExpandableRecyc
 
             // LIVE Pro stacks
             updateLIVEProStackImages(mBinding, (ArrayList<String>) model.proImagesPerCategory, context);
+
+            mBinding.tvBook.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mListener.onBookClicked(model, ChildCategoryViewHolder.this.getChildAdapterPosition());
+                }
+            });
         }
 
         private AnimatorSet loadBannerScrollAnimation(View view, int offset, int distance, AnimatorListenerAdapter midEndListener) {
