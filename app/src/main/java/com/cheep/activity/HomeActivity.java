@@ -876,8 +876,9 @@ public class HomeActivity extends BaseAppCompatActivity
     @Override
     public void onCategoryRowClicked(JobCategoryModel model, int position) {
         // Changes on 27thApril,2017
-        TaskCreationActivity.getInstance(mContext, model);
+//        HireNewJobActivity.newInstance(mContext, model);
 //        TaskCreationCCActivity.getInstance(mContext, model);
+        TaskCreationActivity.getInstance(mContext, model);
 //        TaskSummaryForMultiCatActivity.getInstance(mContext, "0");
     }
 

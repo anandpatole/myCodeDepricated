@@ -49,6 +49,8 @@ public class ErrorLoadingHelper {
         // Hide Favourite section view
         if (mEmptyFavouriteLayout != null)
             mEmptyFavouriteLayout.setVisibility(View.GONE);
+        if (mEmptySubscribedLayout != null)
+            mEmptySubscribedLayout.setVisibility(View.GONE);
     }
 
     public void success() {
@@ -63,6 +65,9 @@ public class ErrorLoadingHelper {
         // Hide Favourite section view
         if (mEmptyFavouriteLayout != null)
             mEmptyFavouriteLayout.setVisibility(View.GONE);
+        if (mEmptySubscribedLayout != null)
+            mEmptySubscribedLayout.setVisibility(View.GONE);
+
     }
 
     public void failed(String errorMessage, int errorRes, View.OnClickListener clickListener) {
@@ -79,16 +84,16 @@ public class ErrorLoadingHelper {
         textError.setVisibility(View.GONE);
         imgError.setVisibility(View.GONE);
 
-        // Hide Favourite section view
-        if (mEmptyFavouriteLayout != null)
-            mEmptyFavouriteLayout.setVisibility(View.VISIBLE);
-
         if (!mSelectedFilterType.equalsIgnoreCase(Utility.FILTER_TYPES.FILTER_TYPE_FAVOURITES)) {
-            mEmptyFavouriteLayout.setVisibility(View.VISIBLE);
-            mEmptySubscribedLayout.setVisibility(View.GONE);
-        } else /*if (mSelectedFilterType.equalsIgnoreCase(Utility.FILTER_TYPES.FILTER_TYPE_SUBSCRIBED)) */{
-            mEmptyFavouriteLayout.setVisibility(View.GONE);
-            mEmptySubscribedLayout.setVisibility(View.VISIBLE);
+            if (mEmptyFavouriteLayout != null)
+                mEmptyFavouriteLayout.setVisibility(View.VISIBLE);
+            if (mEmptySubscribedLayout != null)
+                mEmptySubscribedLayout.setVisibility(View.GONE);
+        } else /*if (mSelectedFilterType.equalsIgnoreCase(Utility.FILTER_TYPES.FILTER_TYPE_SUBSCRIBED)) */ {
+            if (mEmptyFavouriteLayout != null)
+                mEmptyFavouriteLayout.setVisibility(View.GONE);
+            if (mEmptySubscribedLayout != null)
+                mEmptySubscribedLayout.setVisibility(View.VISIBLE);
         }
     }
 
@@ -97,6 +102,8 @@ public class ErrorLoadingHelper {
         // Hide Favourite section view
         if (mEmptyFavouriteLayout != null)
             mEmptyFavouriteLayout.setVisibility(View.GONE);
+        if (mEmptySubscribedLayout != null)
+            mEmptySubscribedLayout.setVisibility(View.GONE);
 
         // Changing it to null so retry button is not visible
         clickListener = null;
