@@ -59,6 +59,17 @@ public class PackageDetail implements Parent<JobCategoryModel>, Serializable {
     public double yearlyPrice = 0;
     public double halfYearlyPrice = 0;
 
+
+    @Override
+    public List<JobCategoryModel> getChildList() {
+        return categoryList;
+    }
+
+    @Override
+    public boolean isInitiallyExpanded() {
+        return true;
+    }
+
     public String getDaysLeft(String stringDate) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(Utility.DATE_FORMAT_YYYY_MM_DD, Locale.US);
         SimpleDateFormat dateFormat = new SimpleDateFormat(Utility.DATE_FORMAT_DD_MM_YY, Locale.US);
@@ -81,13 +92,5 @@ public class PackageDetail implements Parent<JobCategoryModel>, Serializable {
         return Utility.EMPTY_STRING;
     }
 
-    @Override
-    public List<JobCategoryModel> getChildList() {
-        return categoryList;
-    }
 
-    @Override
-    public boolean isInitiallyExpanded() {
-        return true;
-    }
 }

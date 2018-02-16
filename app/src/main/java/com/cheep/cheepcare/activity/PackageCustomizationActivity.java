@@ -44,8 +44,6 @@ import com.cheep.utils.FetchLocationInfoUtility;
 import com.cheep.utils.LogUtils;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.Utility;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -67,7 +65,7 @@ import static com.cheep.utils.Utility.getObjectFromJsonString;
 public class PackageCustomizationActivity extends BaseAppCompatActivity {
 
     private ActivityPackageCustomizationBinding mBinding;
-    private PackageCustomizationPagerAdapter mPackageCustomizationPagerAdapter;
+    public PackageCustomizationPagerAdapter mPackageCustomizationPagerAdapter;
     private PackageDetail mPackageModel;
     public CityDetail mCityDetail;
     public String mPackageId = "";
@@ -115,7 +113,6 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
     @Override
     protected void initiateUI() {
 
-        updateCartCount();
 
         if (getIntent().hasExtra(Utility.Extra.MODEL)) {
             mPackageModel = (PackageDetail) getIntent().getExtras().getSerializable(Utility.Extra.MODEL);
@@ -125,6 +122,12 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
             mPackageList = Utility.getObjectListFromJsonString(getIntent().getExtras().getString(Utility.Extra.PACKAGE_LIST), PackageDetail[].class);
         }
 
+        cartCount = 0;
+        for (PackageDetail detail : getPackageList()) {
+            if (detail.isSelected)
+                cartCount++;
+        }
+        updateCartCount();
         // Calculate Pager Height and Width
         ViewTreeObserver mViewTreeObserver = mBinding.ivCityImage.getViewTreeObserver();
         mViewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -308,6 +311,7 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
                 setContinueButtonText();
                 break;
             case STAGE_2:
+                PreferenceUtility.getInstance(this).setCityCartDetail(mCityDetail.citySlug, Utility.getJsonStringFromObject(mPackageList));
                 mBinding.viewpager.setCurrentItem(1);
                 // Change description
                 mBinding.textStepDesc.setText(getString(R.string.step_2_desc_cheep_care));
@@ -316,6 +320,7 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
                 mBinding.textPrice.setText(Utility.EMPTY_STRING);
                 break;
             case STAGE_3:
+                PreferenceUtility.getInstance(this).setCityCartDetail(mCityDetail.citySlug, Utility.getJsonStringFromObject(mPackageList));
                 mBinding.viewpager.setCurrentItem(2);
                 // Change description
                 mBinding.textStepDesc.setText(getString(R.string.step_3_desc_cheep_care));
@@ -333,16 +338,9 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
 
         if (mBinding.viewpager.getCurrentItem() == 0) {
             if (cartCount > 0) {
-                showAlertDialog();
-                JSONObject object = new JSONObject();
-                try {
-                    Gson gson = new GsonBuilder().create();
-                    object.put(NetworkUtility.TAGS.CITY_DETAIL, Utility.getJsonStringFromObject(mCityDetail));
-                    object.put(NetworkUtility.TAGS.PACKAGE_DETAIL, gson.toJsonTree(mPackageList).getAsJsonArray());
-                    LogUtils.LOGE(TAG, "onBackPressed: " + object.toString());
-                } catch (JSONException ignored) {
-
-                }
+                PreferenceUtility.getInstance(this).setCityCartDetail(mCityDetail.citySlug, Utility.getJsonStringFromObject(mPackageList));
+//                showAlertDialog(false);
+                super.onBackPressed();
             } else
                 super.onBackPressed();
         } else gotoStep(mPreviousState);
@@ -360,7 +358,7 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
 */
     }
 
-    public void showAlertDialog() {
+    public void showAlertDialog(final boolean isAllPackageRemoved) {
         AlertDialog alertDialog = new AlertDialog.Builder(this).create();
         alertDialog.setTitle(getString(R.string.app_name));
         alertDialog.setMessage(getString(R.string.cheep_care_alert_message));
@@ -369,6 +367,8 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
                 PackageCustomizationActivity.super.onBackPressed();
+                if (isAllPackageRemoved)
+                    PreferenceUtility.getInstance(PackageCustomizationActivity.this).removeCityCartDetail(mCityDetail.citySlug);
             }
         });
         alertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.label_cancel), new DialogInterface.OnClickListener() {
@@ -420,7 +420,7 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
                         detail.isSelected = true;
                         if (detail.mSelectedAddressList == null)
                             detail.mSelectedAddressList = new ArrayList<>();
-                        detail.mSelectedAddressList.add(fragment.mSelectedAddress);
+                        detail.mSelectedAddressList.add(0, fragment.mSelectedAddress);
                     }
                     if (detail.packageOptionList != null && detail.isSelected) {
                         cartCount++;
@@ -583,6 +583,7 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
     }
 
     public void setContinueButtonText(int totalAppliance, String price) {
+        LogUtils.LOGE(TAG, "setContinueButtonText() called with: totalAppliance = [" + totalAppliance + "], price = [" + price + "]");
         mBinding.textService.setText(getString(R.string.label_appliance, totalAppliance));
         mBinding.textPrice.setText(Utility.getCheepCarePackageMonthlyPrice(this, R.string.rupee_symbol_x_package_price, price));
     }
@@ -602,6 +603,7 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
         Log.d(TAG, "onMessageEvent() called with: event = [" + event.BROADCAST_ACTION + "]");
         switch (event.BROADCAST_ACTION) {
             case Utility.BROADCAST_TYPE.PACKAGE_SUBSCRIBED_SUCCESSFULLY:
+                PreferenceUtility.getInstance(this).removeCityCartDetail(mCityDetail.citySlug);
                 finish();
                 break;
         }

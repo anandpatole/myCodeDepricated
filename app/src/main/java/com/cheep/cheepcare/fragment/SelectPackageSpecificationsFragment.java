@@ -243,7 +243,6 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
 
         }
     };
-    ;
 
 
     private void showHideProgress(boolean showProgress) {
@@ -266,8 +265,11 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
                         String jsonData = jsonObject.optJSONObject(DATA).optString(PACKAGE_OPTION_DETAILS);
                         ArrayList<PackageOption> list;
                         list = Utility.getObjectListFromJsonString(jsonData, PackageOption[].class);
+
                         addPackagesOptionListToPackages(mPackageCustomizationActivity.mPackageId, list);
-                        mPackageCustomizationActivity.setContinueButtonText();
+
+//                        mPackageCustomizationActivity.setContinueButtonText();
+
                         mBinding.recyclerView.setAdapter(new ExpandablePackageServicesRecyclerAdapter(list, new ExpandablePackageServicesRecyclerAdapter.OnClickOfPackSubServiceListener() {
                             @Override
                             public void updateBottomButtonForSingleService(String selectedService, String price) {
@@ -304,12 +306,51 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
         }
     };
 
+    /**
+     * if user has saved details for given care package then set selected sub options and quantity of sub option
+     *
+     * @param id   care package id
+     * @param list list of packageoption fetched from web service
+     */
     private void addPackagesOptionListToPackages(String id, ArrayList<PackageOption> list) {
+        int totalCount = 0;
+        double monthlyPrice = 0;
+
+        // main care package list
         for (PackageDetail detail : mPackageCustomizationActivity.getPackageList()) {
             if (detail.id.equalsIgnoreCase(id)) {
+                ArrayList<PackageOption> tempList = detail.packageOptionList;
+                if (tempList != null && !tempList.isEmpty())
+                    for (PackageOption packageOption : list) {
+                        for (PackageOption tempPackageOption : tempList) {
+                            if (tempPackageOption.packageId.equalsIgnoreCase(packageOption.packageId)) {
+                                LogUtils.LOGE(TAG, "packageId : " + tempPackageOption.packageId);
+                                monthlyPrice = Double.parseDouble(packageOption.getChildList().get(0).monthlyPrice);
+                                LogUtils.LOGE(TAG, "monthly price : " + monthlyPrice);
+                                for (PackageSubOption packageSubOption : packageOption.packageOptionList) {
+                                    for (PackageSubOption tempSubOption : tempPackageOption.packageOptionList) {
+                                        if (packageSubOption.packageOptionId.equalsIgnoreCase(tempSubOption.packageOptionId))
+                                            if (packageOption.selectionType.equalsIgnoreCase(PackageOption.SELECTION_TYPE.RADIO)) {
+                                                packageSubOption.isSelected = tempSubOption.isSelected;
+                                            } else {
+                                                packageSubOption.qty = tempSubOption.qty;
+                                                totalCount += packageSubOption.qty;
+                                                monthlyPrice += Double.parseDouble(packageSubOption.unitPrice) * (packageSubOption.qty - 1);
+                                                LogUtils.LOGE(TAG, "monthly price calculatd: " + monthlyPrice);
+
+                                            }
+                                    }
+
+                                }
+                                if (packageOption.selectionType.equalsIgnoreCase(PackageOption.SELECTION_TYPE.CHECK_BOX))
+                                    mPackageCustomizationActivity.setContinueButtonText(totalCount, String.valueOf(monthlyPrice));
+                            }
+                        }
+                    }
                 detail.packageOptionList = list;
             }
         }
+
     }
 
     private Response.ErrorListener mCallGetCarePackageDetailsSingWSErrorListener = new Response.ErrorListener() {
@@ -328,6 +369,9 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
         }
     };
 
+    /**
+     * set spinner data with guest user address list of logged in user address list
+     */
     private void initAddressUI() {
         // init ui for add address
         mBinding.lnAddAddress.setOnClickListener(new View.OnClickListener() {
@@ -392,8 +436,10 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
             mBinding.llAddressView.setVisibility(View.GONE);
         }
 
+
         mList.add(0, new AddressModel() {{
             address = getString(R.string.label_select_address);
+            address_id = "";
         }});
 
         mAdapter = new AddressPackageCustomizationAdapter<>(mContext
@@ -416,6 +462,7 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
                     return;
                 }
 
+
                 AddressModel model = mList.get(position);
                 verifyAddressForCity(model, false, 0);
             }
@@ -426,6 +473,22 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
             }
         });
 
+        // if package option are being loaded from cart detail then set selected address
+        for (PackageDetail detail : mPackageCustomizationActivity.getPackageList()) {
+            if (detail.id.equalsIgnoreCase(mPackageCustomizationActivity.mPackageId)) {
+                if (detail.mSelectedAddressList != null && !detail.mSelectedAddressList.isEmpty()) {
+                    AddressModel addressModel = detail.mSelectedAddressList.get(0);
+                    if (addressModel != null) {
+                        for (int i = 0; i < mList.size(); i++) {
+                            AddressModel tempAdd = mList.get(i);
+                            if (tempAdd.address_id.equalsIgnoreCase(addressModel.address_id))
+                                mBinding.spinnerAddressSelection.setSelection(i);
+                        }
+                    }
+                }
+            }
+        }
+
         mBinding.flAddressContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -435,27 +498,33 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
         });
     }
 
-    private void fillAddressView(AddressModel model) {
+    /**
+     * fill UI of address row
+     * if address is correct for selected city and user has no subcription of given address
+     *
+     * @param addressModel
+     */
+    private void fillAddressView(AddressModel addressModel) {
 
         mBinding.llAddressContainer.setVisibility(View.VISIBLE);
         mBinding.tvSelectAddress.setVisibility(View.GONE);
 
 
         mBinding.iconTaskWhere.setImageDrawable(ContextCompat.getDrawable(mContext
-                , Utility.getAddressCategoryBlueIcon(model.category)));
+                , Utility.getAddressCategoryBlueIcon(addressModel.category)));
 
         // show address's nick name or nick name is null then show category
         String category;
-        if (!TextUtils.isEmpty(model.nickname))
-            category = model.nickname;
+        if (!TextUtils.isEmpty(addressModel.nickname))
+            category = addressModel.nickname;
         else
-            category = model.category;
+            category = addressModel.category;
 
         mBinding.tvAddressNickname.setText(category);
 
-        mBinding.tvAddress.setText(model.address_initials + ", " + model.address);
+        mBinding.tvAddress.setText(addressModel.address_initials + ", " + addressModel.address);
         mBinding.ivIsAddressSelected.setSelected(true);
-        mSelectedAddress = model;
+        mSelectedAddress = addressModel;
     }
 
 
@@ -467,19 +536,24 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
 
     }
 
+
+    /**
+     * @return true if address and service is selected
+     * false if address or service is not selected
+     */
     public boolean validateData() {
         boolean isAnyServiceSelected = false;
         for (PackageDetail detail : mPackageCustomizationActivity.getPackageList()) {
             if (detail.id.equalsIgnoreCase(mPackageCustomizationActivity.mPackageId)) {
-                PackageOption model = null;
+                PackageOption packageOption = null;
                 if (detail.packageOptionList != null) {
-                    model = detail.packageOptionList.get(0);
+                    packageOption = detail.packageOptionList.get(0);
                 }
-                if (model == null)
+                if (packageOption == null)
                     return false;
 
-                if (model.selectionType.equalsIgnoreCase(PackageOption.SELECTION_TYPE.RADIO))
-                    for (PackageSubOption option : model.getChildList()) {
+                if (packageOption.selectionType.equalsIgnoreCase(PackageOption.SELECTION_TYPE.RADIO))
+                    for (PackageSubOption option : packageOption.getChildList()) {
                         if (option.isSelected) {
                             isAnyServiceSelected = true;
                         }
@@ -500,6 +574,13 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
         return true;
     }
 
+    /**
+     * verfiy selected address is correct for selected city, and also if user has already purchased subscription
+     *
+     * @param model              address model
+     * @param isCalledAfterLogin true if it is called from payment summary screen
+     * @param step               after successful of login go next step of stage could be payment summary fragment or package bundling screen
+     */
     public void verifyAddressForCity(final AddressModel model, final boolean isCalledAfterLogin, final int step) {
 
         //Add Header parameters
@@ -615,6 +696,9 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
 
     }
 
+    /**
+     * cheep tips UI manage code
+     */
     private void initCheepTipsUI() {
         ViewGroup.LayoutParams params = mBinding.rlChipTips.getLayoutParams();
         params.height = (int) getResources().getDimension(R.dimen.scale_30dp);

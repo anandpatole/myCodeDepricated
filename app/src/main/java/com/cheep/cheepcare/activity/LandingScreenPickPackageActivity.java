@@ -10,6 +10,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.text.style.ImageSpan;
 import android.util.Log;
 import android.view.View;
@@ -57,8 +58,9 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
     private ActivityLandingScreenPickPackageBinding mBinding;
     private CheepCareFeatureAdapter mFeatureAdapter;
     private CheepCarePackageAdapter mPackageAdapter;
-    private CityLandingPageModel model;
+    private CityLandingPageModel mCityLandingPageModel;
     private CityDetail mCity;
+    private String mPackageListString = Utility.EMPTY_STRING;
     private ArrayList<CityDetail> bannerCityDetailsList;
     private static final String TAG = "LandingScreenPickPackag";
 
@@ -143,13 +145,13 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
     }
 
     private void setData() {
-        if (model.cityDetail.id.isEmpty())
+        if (mCityLandingPageModel.cityDetail.id.isEmpty())
             return;
 
         mBinding.nestedScrollView.scrollTo(0, 0);
 
         SpannableStringBuilder spannableStringBuilder
-                = new SpannableStringBuilder(model.cityDetail.greetingMessage);
+                = new SpannableStringBuilder(mCityLandingPageModel.cityDetail.greetingMessage);
 
 
         int resId = R.drawable.emoji_mic;
@@ -183,7 +185,7 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
         mFeatureAdapter = new CheepCareFeatureAdapter();
 
         // cheep care feature list
-        mFeatureAdapter.addFeatureList(model.cityDetail.cityTutorials);
+        mFeatureAdapter.addFeatureList(mCityLandingPageModel.cityDetail.cityTutorials);
 
         mBinding.recyclerViewCheepCareFeature.setLayoutManager(new LinearLayoutManager(
                 mContext
@@ -195,7 +197,7 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
         mBinding.recyclerViewCheepCarePackages.setNestedScrollingEnabled(false);
 
         mPackageAdapter = new CheepCarePackageAdapter(mPackageItemClickListener);
-        mPackageAdapter.addPackageList(model.packageDetailList);
+        mPackageAdapter.addPackageList(mCityLandingPageModel.packageDetailList);
 
         mBinding.recyclerViewCheepCarePackages.setLayoutManager(new LinearLayoutManager(
                 mContext
@@ -261,8 +263,9 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
             = new CheepCarePackageAdapter.PackageItemClickListener() {
         @Override
         public void onPackageItemClick(int position, PackageDetail packageModel) {
-            String packageList = Utility.getJsonStringFromObject(model.packageDetailList);
-            PackageCustomizationActivity.newInstance(mContext, packageModel, model.cityDetail, packageModel.id, packageList, model.adminSetting);
+//            String packageList = Utility.getJsonStringFromObject(mCityLandingPageModel.packageDetailList);
+            String packageList = Utility.getJsonStringFromObject(mCityLandingPageModel.packageDetailList);
+            PackageCustomizationActivity.newInstance(mContext, packageModel, mCityLandingPageModel.cityDetail, packageModel.id, packageList, mCityLandingPageModel.adminSetting);
         }
     };
 
@@ -273,6 +276,7 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
             Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mBinding.getRoot());
             return;
         }
+
         showProgressDialog();
 
         //Add Header parameters
@@ -308,7 +312,9 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
                 String error_message;
                 switch (statusCode) {
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
-                        model = (CityLandingPageModel) Utility.getObjectFromJsonString(jsonObject.optString(DATA), CityLandingPageModel.class);
+                        mCityLandingPageModel = (CityLandingPageModel) Utility.getObjectFromJsonString(jsonObject.optString(DATA), CityLandingPageModel.class);
+                        mPackageListString = Utility.getJsonStringFromObject(mCityLandingPageModel.packageDetailList);
+                        getSavedData();
                         setData();
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
@@ -362,5 +368,53 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
         EventBus.getDefault().unregister(this);
         Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.WS.GET_CITY_CARE_DETAIL);
         super.onDestroy();
+    }
+
+    private void getSavedData() {
+        ArrayList<PackageDetail> savedPackageList = new ArrayList<>();
+        String cartDetail = PreferenceUtility.getInstance(this).getCityCartDetail(mCityLandingPageModel.cityDetail.citySlug);
+        if (!TextUtils.isEmpty(cartDetail)) {
+            ArrayList<PackageDetail> list = Utility.getObjectListFromJsonString(cartDetail, PackageDetail[].class);
+            savedPackageList.clear();
+            savedPackageList.addAll(list);
+            String webData = Utility.getJsonStringFromObject(mCityLandingPageModel.packageDetailList);
+            LogUtils.LOGE(TAG, "Saved data--- " + cartDetail);
+            LogUtils.LOGE(TAG, "---------------------------------------------------------------------");
+            LogUtils.LOGE(TAG, "Saved web data--- " + webData);
+
+            if (!savedPackageList.isEmpty()) {
+                for (int i = 0; i < mCityLandingPageModel.packageDetailList.size(); i++) {
+                    PackageDetail webPakegDetail = mCityLandingPageModel.packageDetailList.get(i);
+                    for (PackageDetail detail : savedPackageList) {
+                        if (detail.packageOptionList != null && !detail.packageOptionList.isEmpty() && detail.packageSlug.equalsIgnoreCase(webPakegDetail.packageSlug) && detail.isSelected) {
+                            webPakegDetail.packageOptionList = detail.packageOptionList;
+                            webPakegDetail.mSelectedAddressList = detail.mSelectedAddressList;
+                            webPakegDetail.isSelected = true;
+                        }
+                    }
+                }
+                LogUtils.LOGE(TAG, "replacedData: " + Utility.getJsonStringFromObject(mCityLandingPageModel.packageDetailList));
+            }
+        } else {
+            if (!TextUtils.isEmpty(mPackageListString)) {
+                ArrayList<PackageDetail> list = Utility.getObjectListFromJsonString(mPackageListString, PackageDetail[].class);
+                mCityLandingPageModel.packageDetailList.clear();
+                mCityLandingPageModel.packageDetailList.addAll(list);
+            }
+            LogUtils.LOGE(TAG, "getSavedData: no cart data found");
+        }
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (mCityLandingPageModel != null) {
+            LogUtils.LOGE(TAG, "onResume:cart detail found");
+            getSavedData();
+        } else {
+            LogUtils.LOGE(TAG, "onResume: no city data found");
+
+        }
     }
 }

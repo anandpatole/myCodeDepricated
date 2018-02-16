@@ -4,6 +4,7 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.cheep.model.GuestUserDetails;
@@ -35,6 +36,7 @@ public class PreferenceUtility {
     //Guest User Pref
     private static final String PREF_FILE_GUEST = "com.cheep.guest";
     private static final String PREF_GUEST_USER_INFO = "com.cheep.guest.userinfo";
+    private static final String CITY_DATA = "com.cheep.guest.citydata";
     private SharedPreferences mGuestSharedPreferences;
 
     private PreferenceUtility(Context mContext) {
@@ -138,6 +140,16 @@ public class PreferenceUtility {
         // Clear Unread otification counter
         mSharedPreferences.edit().remove(PREF_NOTIFICATION_COUNTER).apply();
 
+        // Clear cart detail of all cities
+        String[] ciryArray = mSharedPreferences.getString(CITY_DATA, "").split("\\s*,\\s*");
+        if (ciryArray.length > 0) {
+            for (String s : ciryArray) {
+                removeCityCartDetail(s);
+            }
+            mSharedPreferences.edit().remove(CITY_DATA).apply();
+        }
+
+
         // Clear all Guest User Details if any
         mGuestUserDetails = null;
         mGuestSharedPreferences.edit().remove(PREF_GUEST_USER_INFO).apply();
@@ -198,5 +210,36 @@ public class PreferenceUtility {
             return mSharedPreferences.getBoolean(PREF_HOME_SCREEN_VISIBLE, true);
         }
         return true;
+    }
+
+
+    /**
+     * @param citySlug    slug of cart city
+     * @param cartDetails it will have whole care package list with its sub services data, selected address, payment data
+     */
+    public void setCityCartDetail(String citySlug, String cartDetails) {
+        mSharedPreferences.edit().putString(citySlug, cartDetails).apply();
+
+        String s = getCityData();
+        if (s != null && !TextUtils.isEmpty(s) && !s.contains(citySlug)) {
+            mSharedPreferences.edit().putString(CITY_DATA, s + "," + citySlug).apply();
+        } else {
+            mSharedPreferences.edit().putString(CITY_DATA, citySlug).apply();
+        }
+        LogUtils.LOGE(TAG, "setCityCartDetail: " + mSharedPreferences.getString(CITY_DATA, ""));
+    }
+
+    public String getCityCartDetail(String citySlug) {
+        return mSharedPreferences.getString(citySlug, "");
+    }
+
+    public void removeCityCartDetail(String citySlug) {
+        LogUtils.LOGE(TAG, "removeCityCartDetail() called with: citySlug = [" + citySlug + "]");
+        mSharedPreferences.edit().remove(citySlug).apply();
+    }
+
+
+    public String getCityData() {
+        return mSharedPreferences.getString(CITY_DATA, "");
     }
 }
