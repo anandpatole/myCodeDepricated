@@ -35,6 +35,7 @@ import com.cheep.databinding.RowPackageCareItemBinding;
 import com.cheep.databinding.RowPackageCareSubItemBinding;
 import com.cheep.model.AddressModel;
 import com.cheep.model.JobCategoryModel;
+import com.cheep.network.NetworkUtility;
 import com.cheep.utils.Utility;
 
 import java.util.ArrayList;
@@ -233,16 +234,19 @@ public class ExpandableSubscribedPackagesRecyclerAdapter extends ExpandableRecyc
         }
 
         // bind data with view parent row
-        public void bind(@NonNull PackageDetail model) {
-
+        public void bind(@NonNull PackageDetail packageDetail) {
+            if (packageDetail.packageSlug.equalsIgnoreCase(NetworkUtility.CARE_PACKAGE_SLUG.APPLIANCE_CARE) ||
+                    packageDetail.packageSlug.equalsIgnoreCase(NetworkUtility.CARE_PACKAGE_SLUG.TECH_CARE)) {
+                setIsExpandable(false);
+            }
             Context context = mBinding.getRoot().getContext();
 
             Utility.loadImageView(context, mBinding.ivCareImage
-                    , model.packageImage);
+                    , packageDetail.packageImage);
 
-            mBinding.tvCareName.setText(model.title);
-            mBinding.tvDescription.setText(model.subtitle);
-            if (model.categoryList != null && !model.categoryList.isEmpty()) {
+            mBinding.tvCareName.setText(packageDetail.title);
+            mBinding.tvDescription.setText(packageDetail.subtitle);
+            if (packageDetail.categoryList != null && !packageDetail.categoryList.isEmpty()) {
                 if (isExpanded()) {
                     mBinding.tvDescription.setCompoundDrawablesWithIntrinsicBounds(0
                             , 0
@@ -261,19 +265,19 @@ public class ExpandableSubscribedPackagesRecyclerAdapter extends ExpandableRecyc
                         , 0);
             }
 
-            if (model.mSelectedAddressList != null && !model.mSelectedAddressList.isEmpty()) {
+            if (packageDetail.mSelectedAddressList != null && !packageDetail.mSelectedAddressList.isEmpty()) {
 
 
-                if (model.mSelectedAddressList != null && !model.mSelectedAddressList.isEmpty()) {
+                if (packageDetail.mSelectedAddressList != null && !packageDetail.mSelectedAddressList.isEmpty()) {
 
                     AddressModel addressModel = null;
-                    for (AddressModel addressModel1 : model.mSelectedAddressList) {
+                    for (AddressModel addressModel1 : packageDetail.mSelectedAddressList) {
                         if (addressModel1.isSelected) {
                             addressModel = addressModel1;
                         }
                     }
                     if (addressModel == null)
-                        addressModel = model.mSelectedAddressList.get(0);
+                        addressModel = packageDetail.mSelectedAddressList.get(0);
 
                     if (!TextUtils.isEmpty(addressModel.nickname))
                         mBinding.tvAddressNickname.setText(addressModel.nickname);
@@ -282,7 +286,7 @@ public class ExpandableSubscribedPackagesRecyclerAdapter extends ExpandableRecyc
                     mBinding.ivAddressIcon.setImageResource(Utility.getAddressCategoryBlueIcon(addressModel.category));
                     mBinding.tvAddress.setText(addressModel.address_initials + ", " + addressModel.address);
 
-                    String daysLeft = model.getDaysLeft(addressModel.end_date);
+                    String daysLeft = packageDetail.getDaysLeft(addressModel.end_date);
                     if (daysLeft != null) {
                         switch (daysLeft.length()) {
                             case 0:

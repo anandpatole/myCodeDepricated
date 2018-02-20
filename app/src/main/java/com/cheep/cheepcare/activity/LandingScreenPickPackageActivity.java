@@ -247,8 +247,14 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
                         // of the selected item
                         LogUtils.LOGE(TAG, "onClick alert dialog : " + bannerCityDetailsList.get(which).cityName);
                         if (!mCity.cityName.equalsIgnoreCase(bannerCityDetailsList.get(which).cityName)) {
-                            mCity = bannerCityDetailsList.get(which);
-                            setCityBannerData();
+                            if (bannerCityDetailsList.get(which).isSubscribed.equalsIgnoreCase(Utility.BOOLEAN.YES)) {
+                                String cheepcareBannerListString = Utility.getJsonStringFromObject(bannerCityDetailsList);
+                                ManageSubscriptionActivity.newInstance(LandingScreenPickPackageActivity.this, bannerCityDetailsList.get(which), true, cheepcareBannerListString);
+                                finish();
+                            } else {
+                                mCity = bannerCityDetailsList.get(which);
+                                setCityBannerData();
+                            }
                         }
                         dialog.dismiss();
                     }

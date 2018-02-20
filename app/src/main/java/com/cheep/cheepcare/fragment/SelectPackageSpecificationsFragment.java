@@ -700,6 +700,7 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
      * cheep tips UI manage code
      */
     private void initCheepTipsUI() {
+        mBinding.rlChipTips.setVisibility(View.VISIBLE);
         ViewGroup.LayoutParams params = mBinding.rlChipTips.getLayoutParams();
         params.height = (int) getResources().getDimension(R.dimen.scale_30dp);
         mBinding.rlChipTips.setLayoutParams(params);
@@ -710,11 +711,10 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 if (mBinding.rlChipTips.isSelected()) {
-
+                    mBinding.rlChipTips.setVisibility(View.GONE);
                     mBinding.ivCross.setImageResource(R.drawable.ic_drop_down_arrow);
                     mBinding.ivBird.setImageResource(R.drawable.ic_cheep_bird_tip);
                     mBinding.rlChipTips.setSelected(false);
-
                     ViewGroup.LayoutParams params = mBinding.rlChipTips.getLayoutParams();
                     params.height = (int) getResources().getDimension(R.dimen.scale_30dp);
                     mBinding.rlChipTips.setLayoutParams(params);

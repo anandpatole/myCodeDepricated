@@ -138,16 +138,29 @@ public class ExpandablePackageServicesRecyclerAdapter extends ExpandableRecycler
         }
 
         // bind data with view parent row
-        public void bind(@NonNull PackageOption servicesModel) {
+        public void bind(@NonNull PackageOption packageOption) {
             mBinding.imgIconCorrect.setSelected(true);
-            if (mList.get(getParentAdapterPosition()).selectionType.equalsIgnoreCase(PackageOption.SELECTION_TYPE.RADIO))
+            if (mList.get(getParentAdapterPosition()).selectionType.equalsIgnoreCase(PackageOption.SELECTION_TYPE.RADIO)) {
                 mBinding.imgDownArrow.setVisibility(View.VISIBLE);
-            else
+                mBinding.imgIconCorrect.setSelected(checkIfAnySubServiceIsSelected(getParentAdapterPosition(), packageOption));
+            } else {
                 mBinding.imgDownArrow.setVisibility(View.GONE);
+            }
+            mBinding.tvServiceName.setText(packageOption.packageOptionTitle);
 
-            mBinding.tvServiceName.setText(servicesModel.packageOptionTitle);
+
         }
 
+    }
+
+    private boolean checkIfAnySubServiceIsSelected(int parentPosition, PackageOption packageOption) {
+        for (PackageSubOption packageSubOption : packageOption.packageOptionList) {
+            if (packageSubOption.isSelected) {
+                packageOption.isSelected = true;
+            }
+        }
+        return packageOption.isSelected;
+//        notifyParentChanged(parentPosition);
     }
 
     /**
@@ -186,11 +199,11 @@ public class ExpandablePackageServicesRecyclerAdapter extends ExpandableRecycler
                     // if single child is selected then parent also should be selected
                     // if all children are deselected then parent should be deselected
                     for (int i = 0; i < mList.size(); i++) {
-
-                        for (int j = 0; j < mList.get(i).packageOptionList.size(); j++) {
-
-                            mList.get(i).packageOptionList.get(j).isSelected = (i == parentPos && j == childPos);
-                            mList.get(i).isSelected = i == parentPos;
+                        PackageOption packageOption = mList.get(i);
+                        for (int j = 0; j < packageOption.packageOptionList.size(); j++) {
+                            PackageSubOption packageSubOption = packageOption.packageOptionList.get(j);
+                            packageSubOption.isSelected = (i == parentPos && j == childPos);
+                            packageOption.isSelected = i == parentPos;
                         }
                     }
                     notifyDataSetChanged();

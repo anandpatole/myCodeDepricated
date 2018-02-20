@@ -2,13 +2,16 @@ package com.cheep.cheepcare.activity;
 
 import android.animation.AnimatorSet;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.ImageSpan;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -26,10 +29,12 @@ import com.cheep.databinding.ActivityManageSubscriptionBinding;
 import com.cheep.model.JobCategoryModel;
 import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
+import com.cheep.utils.LogUtils;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.Utility;
 import com.cheep.utils.WebCallClass;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -47,11 +52,13 @@ public class ManageSubscriptionActivity extends BaseAppCompatActivity {
     private List<PackageDetail> mAllPackagesList;
     private CityDetail mCityDetail;
     private AdminSettingModel mAdminSettingModel;
+    private ArrayList<CityDetail> bannerCityDetailsList;
 
-    public static void newInstance(Context context, CityDetail city, boolean isManageSubscription) {
+    public static void newInstance(Context context, CityDetail city, boolean isManageSubscription, String cheepcareBannerListString) {
         Intent intent = new Intent(context, ManageSubscriptionActivity.class);
         intent.putExtra(Utility.Extra.CITY_DETAIL, Utility.getJsonStringFromObject(city));
         intent.putExtra(Utility.Extra.ACTIVITY_TYPE, isManageSubscription);
+        intent.putExtra(Utility.Extra.DATA, cheepcareBannerListString);
         context.startActivity(intent);
     }
 
@@ -61,7 +68,6 @@ public class ManageSubscriptionActivity extends BaseAppCompatActivity {
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_manage_subscription);
         initiateUI();
         setListeners();
-        callGetUserSubscribedPackages();
     }
 
     @Override
@@ -69,6 +75,13 @@ public class ManageSubscriptionActivity extends BaseAppCompatActivity {
         if (getIntent().hasExtra(Utility.Extra.CITY_DETAIL)) {
             mCityDetail = (CityDetail) Utility.getObjectFromJsonString(getIntent().getExtras().getString(Utility.Extra.CITY_DETAIL), CityDetail.class);
             isManageSubscription = getIntent().getExtras().getBoolean(Utility.Extra.ACTIVITY_TYPE);
+            if (isManageSubscription) {
+                bannerCityDetailsList = Utility.getObjectListFromJsonString(getIntent().getExtras().getString(Utility.Extra.DATA), CityDetail[].class);
+            }
+            else{
+                mBinding.tvCityName.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+            }
+
         }
         if (mCityDetail == null)
             return;
@@ -88,6 +101,10 @@ public class ManageSubscriptionActivity extends BaseAppCompatActivity {
         }
 
         // Calculate Pager Height and Width
+        setCityBannerData();
+    }
+
+    private void setCityBannerData() {
         ViewTreeObserver mViewTreeObserver = mBinding.ivCityImage.getViewTreeObserver();
         mViewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
@@ -151,11 +168,55 @@ public class ManageSubscriptionActivity extends BaseAppCompatActivity {
             mBinding.tvWelcomeText.setVisibility(View.GONE);
             mBinding.tvInfoText.setText(getString(R.string.cheep_care_work_flow_desc, name));
         }
+
+        callGetUserSubscribedPackages();
+
     }
 
     @Override
     protected void setListeners() {
+        mBinding.tvCityName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isManageSubscription)
+                openCitySelectionDialog();
+            }
+        });
+    }
 
+    private void openCitySelectionDialog() {
+
+        String[] cityArray = new String[bannerCityDetailsList.size()];
+        for (int i = 0; i < bannerCityDetailsList.size(); i++) {
+            CityDetail cityDetail = bannerCityDetailsList.get(i);
+            cityArray[i] = cityDetail.cityName;
+        }
+        Log.d(TAG, "showPictureChooserDialog() called");
+        final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        builder.setTitle(R.string.select_city)
+                .setItems(cityArray, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // The 'which' argument contains the index position
+                        // of the selected item
+                        LogUtils.LOGE(TAG, "onClick alert dialog : " + bannerCityDetailsList.get(which).cityName);
+                        if (!mCityDetail.cityName.equalsIgnoreCase(bannerCityDetailsList.get(which).cityName)) {
+                            if (bannerCityDetailsList.get(which).isSubscribed.equalsIgnoreCase(Utility.BOOLEAN.YES)) {
+                                mCityDetail = bannerCityDetailsList.get(which);
+                                setCityBannerData();
+                            } else {
+                                String cheepcareBannerListString = Utility.getJsonStringFromObject(bannerCityDetailsList);
+                                LandingScreenPickPackageActivity.newInstance(ManageSubscriptionActivity.this,
+                                        bannerCityDetailsList.get(which), cheepcareBannerListString);
+                                finish();
+                            }
+                        }
+                        dialog.dismiss();
+                    }
+                });
+        builder.create();
+
+        //Show the dialog
+        builder.show();
     }
 
     private void callGetUserSubscribedPackages() {

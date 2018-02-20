@@ -286,29 +286,66 @@
                         tools:ignore="ContentDescription"/>
                 </LinearLayout>
 
-                <FrameLayout
+                <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1.5"
-                    android:paddingLeft="@dimen/scale_15dp"
-                    android:paddingRight="@dimen/scale_10dp">
+                    android:orientation="vertical">
 
-                    <com.cheep.custom_view.CFTextViewRegular
-                        android:id="@+id/tvLiveFeed"
+                    <FrameLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:gravity="left|top"
-                        android:lineSpacingMultiplier="1.3"
-                        android:textColor="@color/grey_dark_color_3"
-                        android:textSize="@dimen/text_size_11sp"
-                        tools:text="17 Home made happy by Lokesh Shah today we are ready for go"/>
+                        android:paddingLeft="@dimen/scale_15dp"
+                        android:paddingRight="@dimen/scale_10dp">
+
+                        <com.cheep.custom_view.CFTextViewRegular
+                            android:id="@+id/tvLiveFeed"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="left|top"
+                            android:lineSpacingMultiplier="1.3"
+                            android:textColor="@color/grey_dark_color_3"
+                            android:textSize="@dimen/text_size_11sp"
+                            tools:text="17 Home made happy by Lokesh Shah today we are ready for go"/>
+
+                        <ImageView
+                            android:id="@+id/ivLiveAnimated"
+                            android:layout_width="@dimen/icon_live_width"
+                            android:layout_height="@dimen/icon_live_height"
+                            tools:ignore="ContentDescription"/>
+                    </FrameLayout>
+
+                    <com.cheep.custom_view.CFTextViewSemiBold
+                        android:id="@+id/tvDiscount"
+                        android:layout_width="@dimen/scale_80dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical|right"
+                        android:layout_marginRight="@dimen/scale_8dp"
+                        android:layout_marginTop="@dimen/scale_8dp"
+                        android:background="@drawable/ic_offer_tag_small"
+                        android:ellipsize="marquee"
+                        android:marqueeRepeatLimit="marquee_forever"
+                        android:maxLines="1"
+                        android:paddingLeft="@dimen/scale_4dp"
+                        android:paddingRight="@dimen/scale_16dp"
+                        android:singleLine="true"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/text_size_12sp"
+                        android:visibility="visible"
+                        tools:text="-40% Cheeper"/>
 
                     <ImageView
-                        android:id="@+id/ivLiveAnimated"
-                        android:layout_width="@dimen/icon_live_width"
-                        android:layout_height="@dimen/icon_live_height"
-                        tools:ignore="ContentDescription"/>
-                </FrameLayout>
+                        android:id="@+id/tv_subscribed"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical|right"
+                        android:layout_marginRight="@dimen/scale_8dp"
+                        android:layout_marginTop="@dimen/scale_8dp"
+                        android:background="@drawable/ic_subscribed_text"
+                        android:paddingLeft="@dimen/scale_4dp"
+                        android:paddingRight="@dimen/scale_16dp"
+                        android:visibility="visible"/>
+                </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="@dimen/scale_0dp"
@@ -318,11 +355,17 @@
                     android:minHeight="@dimen/scale_50dp"
                     android:orientation="vertical">
 
+                    <com.cheep.custom_view.CFTextViewSemiBold
+                        android:id="@+id/text_paid_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/black"
+                        tools:text="sdfdssd"/>
+
                     <com.cheep.custom_view.CFTextViewRegular
                         android:id="@+id/text_paid"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
                         android:textColor="@color/grey_varient_23"
                         tools:text="sdfdssd"/>
 
@@ -363,6 +406,8 @@
                         android:visibility="gone"/>
                 </LinearLayout>
             </LinearLayout>
+
+
         </LinearLayout>
     </com.daimajia.swipe.SwipeLayout>
 </layout>
