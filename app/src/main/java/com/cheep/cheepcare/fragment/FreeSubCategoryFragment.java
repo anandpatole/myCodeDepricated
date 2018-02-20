@@ -16,7 +16,6 @@ import com.cheep.R;
 import com.cheep.activity.BaseAppCompatActivity;
 import com.cheep.cheepcare.activity.TaskCreationCCActivity;
 import com.cheep.cheepcare.adapter.ExpandableSubCategoryUnitAdapter;
-import com.cheep.cheepcare.adapter.SubServiceUnitAdapter;
 import com.cheep.databinding.FragmentSelectSubserviceBinding;
 import com.cheep.fragment.BaseFragment;
 import com.cheep.model.SubServiceDetailModel;
@@ -103,10 +102,23 @@ public class FreeSubCategoryFragment extends BaseFragment {
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mContext);
         mFragmentSelectSubserviceBinding.recyclerView.setLayoutManager(linearLayoutManager);
-        mSubCategoryUnitAdapter = new ExpandableSubCategoryUnitAdapter(new ArrayList<SubServiceDetailModel>());
+        mSubCategoryUnitAdapter = new ExpandableSubCategoryUnitAdapter(getDummyList());
         mFragmentSelectSubserviceBinding.recyclerView.setAdapter(mSubCategoryUnitAdapter);
         errorLoadingHelper.showLoading();
         fetchListOfSubCategory(mTaskCreationCCActivity.mJobCategoryModel.catId);
+    }
+
+    private List<SubServiceDetailModel> getDummyList() {
+        ArrayList<SubServiceDetailModel> subServiceDetailModels = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            SubServiceDetailModel subServiceDetailModel = new SubServiceDetailModel();
+            subServiceDetailModel.name = "I need my leaking tap to be fixed";
+            subServiceDetailModel.catId = i;
+            subServiceDetailModel.monthlyPrice = String.valueOf(100);
+            subServiceDetailModel.subServiceList = new ArrayList<>();
+            subServiceDetailModels.add(subServiceDetailModel);
+        }
+        return subServiceDetailModels;
     }
 
     @Override

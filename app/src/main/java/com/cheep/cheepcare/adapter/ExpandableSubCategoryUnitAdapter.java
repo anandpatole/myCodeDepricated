@@ -1,29 +1,18 @@
 package com.cheep.cheepcare.adapter;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.animation.AnimatorSet;
-import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
-import android.graphics.drawable.AnimationDrawable;
 import android.support.annotation.NonNull;
-import android.text.SpannableString;
-import android.text.Spanned;
-import android.text.style.LeadingMarginSpan;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.cheep.R;
-import com.cheep.cheepcare.model.PackageSubOption;
 import com.cheep.custom_view.expandablerecycleview.ChildViewHolder;
 import com.cheep.custom_view.expandablerecycleview.ExpandableRecyclerAdapter;
 import com.cheep.custom_view.expandablerecycleview.ParentViewHolder;
-import com.cheep.databinding.RowPackageCareItemBinding;
-import com.cheep.databinding.RowPackageCareSubItemBinding;
+import com.cheep.databinding.RowPackageSubServiceUnitBinding;
 import com.cheep.databinding.RowSubCategoryUnitTickPriceBinding;
 import com.cheep.model.SubServiceDetailModel;
 import com.cheep.utils.Utility;
@@ -68,7 +57,7 @@ public class ExpandableSubCategoryUnitAdapter extends ExpandableRecyclerAdapter<
     @NonNull
     @Override
     public ParentCategoryViewHolder onCreateParentViewHolder(@NonNull ViewGroup parentViewGroup, int viewType) {
-        RowSubCategoryUnitTickPriceBinding binding =
+        RowPackageSubServiceUnitBinding binding =
                 DataBindingUtil.inflate(LayoutInflater.from(parentViewGroup.getContext())
                         , R.layout.row_package_sub_service_unit
                         , parentViewGroup
@@ -103,9 +92,9 @@ public class ExpandableSubCategoryUnitAdapter extends ExpandableRecyclerAdapter<
      */
     class ParentCategoryViewHolder extends ParentViewHolder {
 
-        RowSubCategoryUnitTickPriceBinding mBinding;
+        RowPackageSubServiceUnitBinding mBinding;
 
-        ParentCategoryViewHolder(@NonNull RowSubCategoryUnitTickPriceBinding binding) {
+        ParentCategoryViewHolder(@NonNull RowPackageSubServiceUnitBinding binding) {
             // init views
             super(binding.getRoot());
             mBinding = binding;
@@ -117,18 +106,18 @@ public class ExpandableSubCategoryUnitAdapter extends ExpandableRecyclerAdapter<
             mBinding.tvSubServiceName.setText(subServicesModel.name);
             Context context = holder.mBinding.getRoot().getContext();
 
-            if (subServicesModel.subServiceList.size() == 0) {
+            if (subServicesModel.subServiceList.isEmpty()) {
                 mBinding.clCenter.setVisibility(View.GONE);
                 mBinding.tvSubServicePrice.setVisibility(View.GONE);
-                mBinding.ivIsExpanded.setVisibility(View.GONE);
+//                mBinding.ivIsExpanded.setVisibility(View.GONE);
             } else {
                 mBinding.clCenter.setVisibility(View.GONE);
                 mBinding.tvSubServicePrice.setVisibility(View.GONE);
-                mBinding.ivIsExpanded.setVisibility(View.VISIBLE);
+//                mBinding.ivIsExpanded.setVisibility(View.VISIBLE);
             }
 
-            mBinding.ivIsExpanded.setSelected(subServicesModel.isSelected);
-            mBinding.imgIconCorrect.setSelected(subServicesModel.isSelected);
+//            mBinding.ivIsExpanded.setSelected(subServicesModel.isSelected);
+//            mBinding.imgIconCorrect.setSelected(subServicesModel.isSelected);
 
             mBinding.tvSubServicePrice.setText(Utility.getCheepCarePackageMonthlyPrice(
                     context
@@ -137,7 +126,7 @@ public class ExpandableSubCategoryUnitAdapter extends ExpandableRecyclerAdapter<
 
             /*mBinding.tvSubServicePrice.setText(itemView.getContext().getString(R.string.rupee_symbol_x
                     , *//*Utility.getQuotePriceFormatter(String.valueOf(*//*subServicesModel.price)*//*))*//*);*/
-            mBinding.imgIconCorrect.setSelected(subServicesModel.isSelected);
+//            mBinding.imgIconCorrect.setSelected(subServicesModel.isSelected);
             mBinding.tvSubServicePrice.setSelected(subServicesModel.isSelected);
 
             mBinding.getRoot().setOnClickListener(new View.OnClickListener() {
@@ -147,18 +136,18 @@ public class ExpandableSubCategoryUnitAdapter extends ExpandableRecyclerAdapter<
                         if (subServicesModel.isSelected) {
                             mBinding.clCenter.setVisibility(View.GONE);
                             mBinding.tvSubServicePrice.setVisibility(View.GONE);
-                            mBinding.ivIsExpanded.setVisibility(View.GONE);
+//                            mBinding.ivIsExpanded.setVisibility(View.GONE);
                         } else {
                             mBinding.clCenter.setVisibility(View.VISIBLE);
                             mBinding.tvSubServicePrice.setVisibility(View.VISIBLE);
-                            mBinding.ivIsExpanded.setVisibility(View.GONE);
+//                            mBinding.ivIsExpanded.setVisibility(View.GONE);
                         }
                     } else {
                         if (subServicesModel.isSelected) {
                             // doing reverse as this is based on previous selection value
-                            mBinding.ivIsExpanded.setSelected(false);
+//                            mBinding.ivIsExpanded.setSelected(false);
                         } else {
-                            mBinding.ivIsExpanded.setSelected(true);
+//                            mBinding.ivIsExpanded.setSelected(true);
                         }
                     }
                     subServicesModel.isSelected = !subServicesModel.isSelected;

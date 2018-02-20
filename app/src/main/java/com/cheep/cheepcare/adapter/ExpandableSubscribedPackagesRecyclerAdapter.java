@@ -205,6 +205,31 @@ public class ExpandableSubscribedPackagesRecyclerAdapter extends ExpandableRecyc
                     showDropDownMenu(mBinding.lnAddressRow, getParentAdapterPosition());
                 }
             });
+
+
+        }
+
+        @Override
+        public void onExpansionToggled(boolean expanded) {
+            super.onExpansionToggled(expanded);
+            if (mList.get(getParentAdapterPosition()).categoryList != null && !mList.get(getParentAdapterPosition()).categoryList.isEmpty()) {
+                if (isExpanded()) {
+                    mBinding.tvDescription.setCompoundDrawablesWithIntrinsicBounds(0
+                            , 0
+                            , R.drawable.ic_up_dropdown_white_arrow_blue
+                            , 0);
+                } else {
+                    mBinding.tvDescription.setCompoundDrawablesWithIntrinsicBounds(0
+                            , 0
+                            , R.drawable.ic_blue_arrow_filled_white
+                            , 0);
+                }
+            } else {
+                mBinding.tvDescription.setCompoundDrawablesWithIntrinsicBounds(0
+                        , 0
+                        , R.drawable.ic_blue_arrow_filled_white
+                        , 0);
+            }
         }
 
         // bind data with view parent row
@@ -218,14 +243,21 @@ public class ExpandableSubscribedPackagesRecyclerAdapter extends ExpandableRecyc
             mBinding.tvCareName.setText(model.title);
             mBinding.tvDescription.setText(model.subtitle);
             if (model.categoryList != null && !model.categoryList.isEmpty()) {
-                mBinding.tvDescription.setCompoundDrawablesWithIntrinsicBounds(0
-                        , 0
-                        , R.drawable.ic_white_arrow_filled_blue
-                        , 0);
+                if (isExpanded()) {
+                    mBinding.tvDescription.setCompoundDrawablesWithIntrinsicBounds(0
+                            , 0
+                            , R.drawable.ic_up_dropdown_white_arrow_blue
+                            , 0);
+                } else {
+                    mBinding.tvDescription.setCompoundDrawablesWithIntrinsicBounds(0
+                            , 0
+                            , R.drawable.ic_blue_arrow_filled_white
+                            , 0);
+                }
             } else {
                 mBinding.tvDescription.setCompoundDrawablesWithIntrinsicBounds(0
                         , 0
-                        , R.drawable.ic_right_arrow_in_white_circle
+                        , R.drawable.ic_blue_arrow_filled_white
                         , 0);
             }
 
