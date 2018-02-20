@@ -132,26 +132,25 @@ public class SubscriptionBannerFragment extends BaseFragment {
 
                     if (!processingClick) {
                         processingClick = true;
+                        HomeFragment homeFragment = (HomeFragment) getActivity().getSupportFragmentManager().findFragmentByTag(HomeFragment.TAG);
+                        if (homeFragment == null)
+                            return;
+                        HomeTabFragment fragmentByTag = (HomeTabFragment) homeFragment.getChildFragmentManager().findFragmentByTag(HomeTabFragment.TAG);
+                        if (fragmentByTag == null)
+                            return;
+                        String cheepcareBannerListString = Utility.getJsonStringFromObject(fragmentByTag.careBannerModelArrayList);
                         if (bannerImageModel.isSubscribed.equalsIgnoreCase(Utility.BOOLEAN.YES)) {
-                            ManageSubscriptionActivity.newInstance(mContext, bannerImageModel, true);
+                            ManageSubscriptionActivity.newInstance(mContext, bannerImageModel, true, cheepcareBannerListString);
                         } else {
-
-                            HomeFragment homeFragment = (HomeFragment) getActivity().getSupportFragmentManager().findFragmentByTag(HomeFragment.TAG);
-                            if (homeFragment != null) {
-                                HomeTabFragment fragmentByTag = (HomeTabFragment) homeFragment.getChildFragmentManager().findFragmentByTag(HomeTabFragment.TAG);
-                                if (fragmentByTag != null) {
-                                    String cheepcareBannerListString = Utility.getJsonStringFromObject(fragmentByTag.careBannerModelArrayList);
-                                    LandingScreenPickPackageActivity.newInstance(mContext, bannerImageModel, cheepcareBannerListString);
-                                }
-                            }
+                            LandingScreenPickPackageActivity.newInstance(mContext, bannerImageModel, cheepcareBannerListString);
                         }
                     }
                 }
             });
-
         } else {
             binding.progress.setVisibility(View.GONE);
         }
+
     }
 
     @Override

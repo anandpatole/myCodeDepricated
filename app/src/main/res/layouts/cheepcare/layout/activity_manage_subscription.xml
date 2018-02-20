@@ -19,20 +19,20 @@
             tools:scaleType="centerCrop"
             tools:src="@drawable/img_landing_screen_mumbai"/>
 
-<!--
-        <ImageView
-            android:id="@+id/iv_cheep_care_gif"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/scale_108dp"
-            android:layout_gravity="end"
-            android:layout_marginEnd="@dimen/scale_36dp"
-            android:layout_marginRight="@dimen/scale_36dp"
-            android:layout_marginTop="@dimen/scale_16dp"
-            android:adjustViewBounds="true"
-            android:src="@drawable/ic_home_with_heart_text"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
--->
+        <!--
+                <ImageView
+                    android:id="@+id/iv_cheep_care_gif"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/scale_108dp"
+                    android:layout_gravity="end"
+                    android:layout_marginEnd="@dimen/scale_36dp"
+                    android:layout_marginRight="@dimen/scale_36dp"
+                    android:layout_marginTop="@dimen/scale_16dp"
+                    android:adjustViewBounds="true"
+                    android:src="@drawable/ic_home_with_heart_text"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"/>
+        -->
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -61,20 +61,30 @@
 
         </LinearLayout>
 
-
-        <com.cheep.custom_view.CFTextViewLight
-            android:id="@+id/tv_city_name"
-            android:layout_width="wrap_content"
+        <FrameLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+
             android:layout_gravity="bottom|start"
-            android:layout_marginBottom="@dimen/scale_8dp"
-            android:layout_marginLeft="@dimen/scale_18dp"
-            android:layout_marginStart="@dimen/scale_18dp"
-            android:textColor="@color/white"
-            android:textSize="@dimen/text_size_25sp"
+            android:background="@drawable/landing_screen_gradient"
             app:layout_constraintBottom_toBottomOf="@id/iv_city_image"
-            app:layout_constraintStart_toStartOf="parent"
-            tools:text="@string/label_mumbai"/>
+            app:layout_constraintStart_toStartOf="parent">
+
+            <com.cheep.custom_view.CFTextViewLight
+                android:id="@+id/tv_city_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/scale_8dp"
+                android:layout_marginLeft="@dimen/scale_18dp"
+                android:layout_marginStart="@dimen/scale_18dp"
+                android:layout_marginTop="@dimen/scale_8dp"
+                android:drawablePadding="@dimen/scale_10dp"
+                android:drawableRight="@drawable/ic_arrow_down_white"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_25sp"
+                tools:text="@string/label_mumbai"/>
+        </FrameLayout>
+
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"

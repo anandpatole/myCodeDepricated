@@ -23,6 +23,10 @@ public class SubServiceDetailModel implements Parent<SubServiceDetailModel> {
 
     public String monthlyPrice;
 
+    public int minQty = 1;
+    public int maxQty = 3;
+    public int qty = 1;
+
     public boolean isSelected = false;
 
     public List<SubServiceDetailModel> subServiceList;
