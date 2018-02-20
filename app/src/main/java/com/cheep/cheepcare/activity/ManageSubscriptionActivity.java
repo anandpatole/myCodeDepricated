@@ -190,6 +190,7 @@ public class ManageSubscriptionActivity extends BaseAppCompatActivity {
                 @Override
                 public void onBookClicked(JobCategoryModel model, int childAdapterPosition) {
                     TaskCreationCCActivity.getInstance(mContext, model);
+//                    BookingConfirmationCcActivity.newInstance(mContext,null);
                 }
             };
 

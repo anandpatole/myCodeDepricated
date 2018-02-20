@@ -242,7 +242,7 @@ public class FreeSubCategoryFragment extends BaseFragment {
     @Override
     public void onDetach() {
         super.onDetach();
-
+        Log.d(TAG, "onDetach: "+mSubCategoryUnitAdapter.toString());
         Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.WS.FETCH_SUB_SERVICE_LIST);
     }
 

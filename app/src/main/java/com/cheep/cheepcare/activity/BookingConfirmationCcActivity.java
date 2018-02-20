@@ -13,6 +13,7 @@ import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
+import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.ImageSpan;
@@ -162,8 +163,19 @@ public class BookingConfirmationCcActivity extends BaseAppCompatActivity {
         // Enable Step Three Unverified state
         setTaskState(STEP_THREE_UNVERIFIED);
 
-//        SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(getString())
-//        mBinding.tvAdditionalCharges.setText();
+        String taskDescription = getString(R.string.msg_task_description, "25th April", "1100", "1400"
+                , "1401/1402 Ghanshyam Enclave, Lalji Pada, ICICI Bank, New Link Road, Kandivali West, Mumbai, Maharashtra");
+        SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(taskDescription);
+
+        ForegroundColorSpan colorSpan = new ForegroundColorSpan(ContextCompat.getColor(mContext, R.color.black));
+        spannableStringBuilder.setSpan(colorSpan, taskDescription.indexOf("at")
+                , (taskDescription.indexOf("at") + 2), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        ForegroundColorSpan colorSpan1 = new ForegroundColorSpan(ContextCompat.getColor(mContext, R.color.black));
+        spannableStringBuilder.setSpan(colorSpan1, taskDescription.indexOf("on")
+                , (taskDescription.indexOf("on") + 2), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        mBinding.tvTaskDescription.setText(spannableStringBuilder);
 
         List<SubServiceDetailModel> freeList = new ArrayList<>();
         SubServiceDetailModel subServiceDetailModel = new SubServiceDetailModel();
@@ -179,12 +191,12 @@ public class BookingConfirmationCcActivity extends BaseAppCompatActivity {
         List<SubServiceDetailModel> paidList = new ArrayList<>();
         subServiceDetailModel = new SubServiceDetailModel();
         subServiceDetailModel.name = "I need my wash basin to be fixed ( x3 )";
-        subServiceDetailModel.monthlyPrice = "₹300";
+        subServiceDetailModel.monthlyPrice = "₹149";
         paidList.add(subServiceDetailModel);
 
         subServiceDetailModel = new SubServiceDetailModel();
         subServiceDetailModel.name = "I need my WC to be repaired ( x3 )";
-        subServiceDetailModel.monthlyPrice = "₹300";
+        subServiceDetailModel.monthlyPrice = "₹349";
         paidList.add(subServiceDetailModel);
 
         mBinding.recyclerViewFree.setAdapter(new SelectedSubServicePriceAdapter(freeList));
@@ -320,7 +332,7 @@ public class BookingConfirmationCcActivity extends BaseAppCompatActivity {
             mBinding.txtsubtotal.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf(paymentSummaryModel.subTotalAmount))));
             mBinding.txttotal.setText(getRuppeAmount(paymentSummaryModel.totalAmount));
 
-            mBinding.textPayNow.setOnClickListener(new View.OnClickListener() {
+            mBinding.lnPayNow.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     payPendingAmount = true;

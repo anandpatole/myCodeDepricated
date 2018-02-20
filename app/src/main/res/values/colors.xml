@@ -40,7 +40,7 @@
     <color name="grey_varient_27">#909090</color>
     <color name="grey_varient_26">#6E6D6E</color>
     <color name="grey_varient_28">#66252525</color>
-
+    <color name="c_f7f7f7">#F7F7F7</color>
 
     <color name="brown_varient_1">#f0f0f0</color>
 
@@ -65,7 +65,7 @@
     <color name="grey_dark_color">#b9b9b9</color>
     <color name="grey_dark_color_2">#6A6A6A</color>
     <color name="grey_dark_color_3">#22a27c</color>
-    <color name="grey_dark_color_4">#dbdde2</color>
+    <color name="grey_dark_color_4">#DBDDE2</color>
     <color name="grey_dark_color_5">#525252</color>
     <color name="grey_dark_color_6">#787878</color>
     <color name="grey_dark_color_7">#707172</color>
@@ -92,12 +92,12 @@
     <color name="white">#FFFFFF</color>
 
     <color name="colorGray">#5f5f5f</color>
-    <color name="colorSemiGray">#acacac</color>
+    <color name="colorSemiGray">#ACACAC</color>
 
     <color name="light_blue_line_color">#99C8E2F9</color>
     <color name="red">#E20505</color>
     <color name="yellow">#FF9501</color>
-    <color name="yellow_varient_1">#fff8de</color>
+    <color name="yellow_varient_1">#FFF8DE</color>
     <color name="yellow_varient_2">#FEF3BE</color>
     <color name="colorSaffron">#f16609</color>
     <color name="color_red_varient_1">#f82e2e</color>

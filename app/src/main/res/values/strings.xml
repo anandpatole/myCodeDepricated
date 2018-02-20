@@ -674,10 +674,23 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
 
     <string name="label_book_and_pay">Book &amp; Pay</string>
     <string name="label_payment_failed_title">Your Payment Failed!</string>
-    <string name="label_payment_failed_desc">Your payment for the task was unsuccessful. Please try again. If money has been deducted from your card/bank account, it would be refunded within 2-3 business days.</string>
+    <string name="label_payment_failed_desc">Your payment for the task was unsuccessful. Please try again. If money has been deducted from your card/bank account, it would be refunded within 2–3 business days.</string>
     <string name="label_retry_payment">Retry Payment</string>
     <string name="validation_message_already_purchased_package_for_this_address">You have already purchased subscription for this package</string>
-    <string name="msg_task_description">Your tasks will be completed on 25th April, 1100 hrs - 1300 hrs at
-        1401/1402 Ghanshyam Enclave, Lalji Pada, ICICI Bank, New Link Road, Kandivali West, Mumbai, Maharashtra.</string>
-
+    <string name="msg_task_description">Your tasks will be completed on %1s, %2s hrs - %3s hrs at
+        %4s.</string>
+    <string name="label_non_working_hour_fee">Non-Working Hours Fee</string>
+    <string name="msg_non_working_hr">Task booked outside 1000 hrs - 1900 hrs</string>
+    <string name="label_excess_limit_fee">Excess Limit Fee</string>
+    <string name="msg_excess_limit">36/36 FREE Tasks availed</string>
+    <string name="label_booking_confirmation">Booking Confirmation</string>
+    <string name="msg_why_additional_charges">Additional charges have been applied because the task is booked on
+    exceeding the subscription limit.</string>
+    <string name="msg_pro_will_be_assigned">PRO will be assigned shortly</string>
+    <string name="assured_best_pro">Your task is confirmed. Cheep will assign the best PRO for the task.</string>
+    <string name="label_confirm_availability">Confirm Availability</string>
+    <string name="msg_confirm_availability_info">Kindly confirm your availability for the Cheep Care task.</string>
+    <string name="msg_rate_and_review">Please rate and review the PRO\'s service, and help other users like
+    you to hire better!</string>
+    <string name="label_rate_and_review_this_task">Rate &amp; Review this task</string>
 </resources>

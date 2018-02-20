@@ -172,20 +172,24 @@ public class TaskCreationPhase1Fragment extends BaseFragment {
         private static final int FREE_SERVICES = 0;
         private static final int PAID_SERVICES = 1;
         private final List<String> mTitleList = new ArrayList<>();
+        private final FreeSubCategoryFragment mFreeSubCategoryFragment;
+        private final FreeSubCategoryFragment mPaidSubCategoryFragment;
 
         public PagerAdapter(FragmentManager fm) {
             super(fm);
+            mFreeSubCategoryFragment = FreeSubCategoryFragment.newInstance();
+            mPaidSubCategoryFragment = FreeSubCategoryFragment.newInstance();
         }
 
         @Override
         public Fragment getItem(int position) {
             switch (position) {
                 case FREE_SERVICES:
-                    return FreeSubCategoryFragment.newInstance();
+                    return mFreeSubCategoryFragment;
                 case PAID_SERVICES:
-                    return FreeSubCategoryFragment.newInstance();
+                    return mPaidSubCategoryFragment;
                 default:
-                    return FreeSubCategoryFragment.newInstance();
+                    return mFreeSubCategoryFragment;
             }
         }
 

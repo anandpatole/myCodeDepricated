@@ -357,7 +357,7 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
         mActivityTaskSummaryBinding.textTaskWhere.setText(mTaskDetailModel.taskAddress);
 
 
-        // Onclick of when and Where section
+        /*// Onclick of when and Where section
         mActivityTaskSummaryBinding.lnTaskDesc.setOnClickListener(new View.OnClickListener()
 
         {
@@ -371,8 +371,24 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
             public void onClick(View view) {
                 showFullDesc(getString(R.string.label_address), mActivityTaskSummaryBinding.textTaskWhere.getText().toString());
             }
-        });
+        });*/
     }
+
+    private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()){
+                // Onclick of when and Where section
+                case R.id.ln_task_where:
+                    showFullDesc(getString(R.string.label_address), mActivityTaskSummaryBinding.textTaskWhere.getText().toString());
+                    break;
+                case R.id.ln_task_desc:
+                    showFullDesc(getString(R.string.label_desc), mActivityTaskSummaryBinding.textTaskDesc.getText().toString());
+                    break;
+                // Onclick of when and Where section
+            }
+        }
+    };
 
     private void updateUIBasedOnTaskStatus() {
         if (Utility.TASK_STATUS.PENDING.equalsIgnoreCase(mTaskDetailModel.taskStatus)) {
@@ -637,6 +653,10 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
 
     @Override
     protected void setListeners() {
+        mActivityTaskSummaryBinding.lnTaskDesc.setOnClickListener(mOnClickListener);
+        mActivityTaskSummaryBinding.textTaskWhere.setOnClickListener(mOnClickListener);
+        mActivityTaskSummaryBinding.lnWhere.setOnClickListener(mOnClickListener);
+
         mActivityTaskSummaryBinding.frameSelectPicture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

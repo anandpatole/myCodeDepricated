@@ -64,6 +64,7 @@ import static com.cheep.utils.Utility.getObjectFromJsonString;
 
 public class PackageCustomizationActivity extends BaseAppCompatActivity {
 
+    private static final String TAG = PackageCustomizationActivity.class.getSimpleName();
     private ActivityPackageCustomizationBinding mBinding;
     public PackageCustomizationPagerAdapter mPackageCustomizationPagerAdapter;
     private PackageDetail mPackageModel;
@@ -71,7 +72,6 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
     public String mPackageId = "";
     public AdminSettingModel settingModel;
     private ArrayList<PackageDetail> mPackageList = new ArrayList<>();
-    private static final String TAG = "PackageCustomizationAct";
     private int mPreviousState = 0;
     int cartCount = 0;
     int nextStep = 0;

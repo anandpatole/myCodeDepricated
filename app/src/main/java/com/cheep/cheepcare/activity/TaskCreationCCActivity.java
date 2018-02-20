@@ -160,12 +160,13 @@ public class TaskCreationCCActivity extends BaseAppCompatActivity {
                 if (mBinding.viewpager.getCurrentItem() == mTaskCreationPagerAdapter.TASK_CREATION_PHASE_1_FRAGMENT) {
                     List<SubServiceDetailModel> list
                             = mTaskCreationPagerAdapter.mTaskCreationPhase1Fragment.getSelectedSubServices();
-                    if (list != null && !list.isEmpty()) {
-                        mSelectedSubServiceList = list;
-                        gotoStep(STAGE_2);
-                    } else {
-                        Utility.showSnackBar(getString(R.string.step_1_desc), mBinding.getRoot());
-                    }
+                    //lines to be uncommented
+//                    if (list != null && !list.isEmpty()) {
+                    mSelectedSubServiceList = list;
+                    gotoStep(STAGE_2);
+//                    } else {
+//                        Utility.showSnackBar(getString(R.string.step_1_desc), mBinding.getRoot());
+//                    }
                 }
             }
         }
@@ -175,7 +176,6 @@ public class TaskCreationCCActivity extends BaseAppCompatActivity {
     protected void setListeners() {
         mBinding.textPostTask.setOnClickListener(mOnClickListener);
     }
-
 
     /**
      * This will setup the viewpager and tabs as well
@@ -806,7 +806,8 @@ public class TaskCreationCCActivity extends BaseAppCompatActivity {
                     providerModel.spWithoutGstQuotePrice = instaBookingProDetail.rate;
                     providerModel.rating = instaBookingProDetail.rating;
                     taskDetailModel.taskStatus = Utility.TASK_STATUS.PENDING;
-//                    PaymentDetailsActivity.newInstance(TaskCreationCCActivity.this, taskDetailModel, providerModel, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel);
+                    BookingConfirmationCcActivity.newInstance(TaskCreationCCActivity.this, taskDetailModel
+                            , providerModel, mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.mSelectedAddressModel);
 
                     //Log.i("myLog", "tasks:"+mJobCategoryModel.catName+"::"+mSelectedSubServiceDetailModel.name+"::"+mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mAddress);
 
@@ -1045,4 +1046,10 @@ public class TaskCreationCCActivity extends BaseAppCompatActivity {
             }
         }
     };
+
+    //TODO: to be removed
+    public void startBookingConfirmationActivity() {
+        BookingConfirmationCcActivity.newInstance(TaskCreationCCActivity.this, null
+                /*, providerModel, mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.mSelectedAddressModel*/);
+    }
 }

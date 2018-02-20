@@ -188,7 +188,7 @@ public class TaskCreationPhase2Fragment extends BaseFragment
     }
 
     private void updateFinalVerificationFlag() {
-        if (isTaskDescriptionVerified /*&& isTaskWhenVerified*/ && isTaskWhereVerified) {
+        if (/*isTaskDescriptionVerified && isTaskWhenVerified && */isTaskWhereVerified) {
             isTotalVerified = true;
             mTaskCreationCCActivity.setTaskState(TaskCreationCCActivity.STEP_TWO_VERIFIED);
         } else {
@@ -762,7 +762,9 @@ public class TaskCreationPhase2Fragment extends BaseFragment
                     break;
                 case R.id.cvInstaBook:
                     Log.i("myLog", "" + isTotalVerified);
-                    mTaskCreationCCActivity.onInstaBookClicked();
+                    //TODO: uncomment this and remove the line to start bookingConfirmation activity
+//                    mTaskCreationCCActivity.onInstaBookClicked();
+                    mTaskCreationCCActivity.startBookingConfirmationActivity();
                     break;
                 case R.id.text_where:
                 case R.id.iv_home:

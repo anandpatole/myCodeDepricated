@@ -205,7 +205,7 @@ public class HomeActivity extends BaseAppCompatActivity
                 String taskID = bundle.getString(NetworkUtility.TAGS.TASK_ID);
                 String spUserId = bundle.getString(NetworkUtility.TAGS.SP_USER_ID);
                 // Redirecting the user to Quote Screen
-                TaskSummaryActivity.getInstance(mContext, bundle.getString(TASK_ID));
+                TaskSummaryForMultiCatActivity.getInstance(mContext, bundle.getString(TASK_ID));
 //                HireNewJobActivity.newInstance(mContext, taskID, spUserId);
             } else if (bundle.getString(NetworkUtility.TAGS.TYPE).equalsIgnoreCase(Utility.NOTIFICATION_TYPE.WEB_CUSTOM_NOTIFICATION)
                     || bundle.getString(NetworkUtility.TAGS.TYPE).equalsIgnoreCase(Utility.NOTIFICATION_TYPE.TASK_CREATE)) {
@@ -222,7 +222,7 @@ public class HomeActivity extends BaseAppCompatActivity
                     if (taskType.equalsIgnoreCase(Utility.TASK_TYPE.STRATEGIC))
                         TaskSummaryStrategicPartnerActivity.getInstance(mContext, taskId);
                     else
-                        TaskSummaryActivity.getInstance(mContext, taskId);
+                        TaskSummaryForMultiCatActivity.getInstance(mContext, taskId);
             }
             // Changed due to the fact that we should allow user goto detail screen in each of the
             // case when notification comes.
@@ -465,15 +465,15 @@ public class HomeActivity extends BaseAppCompatActivity
                     || Utility.TASK_STATUS.ELAPSED.equalsIgnoreCase(taskDetailModel.taskStatus)) {
             } else {
 //                HireNewJobActivity.newInstance(mContext, taskDetailModel, false);
-//                TaskSummaryActivity.getInstance(mContext, taskDetailModel);
-                TaskSummaryActivity.getInstance(mContext, taskDetailModel.taskId);
+//                TaskSummaryForMultiCatActivity.getInstance(mContext, taskDetailModel);
+                TaskSummaryForMultiCatActivity.getInstance(mContext, taskDetailModel.taskId);
             }
         } else {
 //            JobSummaryActivity.newInstance(mContext, taskDetailModel, taskDetailModel.selectedProvider);
             if (taskDetailModel.taskType.equalsIgnoreCase(Utility.TASK_TYPE.STRATEGIC))
                 TaskSummaryStrategicPartnerActivity.getInstance(mContext, taskDetailModel.taskId);
             else
-                TaskSummaryActivity.getInstance(mContext, taskDetailModel.taskId);
+                TaskSummaryForMultiCatActivity.getInstance(mContext, taskDetailModel.taskId);
         }
     }
 
