@@ -124,7 +124,7 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
         // appending two space for two smiley at the end of description
         description.append("  ");
         Spannable span = new SpannableString(description);
-        Drawable img = ContextCompat.getDrawable(mContext, R.drawable.ic_blue_heart);
+        Drawable img = ContextCompat.getDrawable(mContext, R.drawable.emoji_blue_heart);
         img.setBounds(0, 0, img.getIntrinsicWidth(), img.getIntrinsicHeight());
         ImageSpan image = new ImageSpan(img, ImageSpan.ALIGN_BOTTOM);
         span.setSpan(image, span.length() - 1, span.length(), Spannable.SPAN_INCLUSIVE_EXCLUSIVE);

@@ -36,14 +36,16 @@ import java.util.Map;
 public class HomeTabRecyclerViewAdapter extends RecyclerView.Adapter<HomeTabRecyclerViewAdapter.ViewHolder> {
     private static final String TAG = HomeTabRecyclerViewAdapter.class.getSimpleName();
     ArrayList<JobCategoryModel> mList;
+    String mSelectedFilterType;
     HomeTabFragment.CategoryRowInteractionListener mListener;
     Context mContext;
 //    //saves the index of the upcoming offer to display
 //    private Map<String, Integer> mOfferIndexMap;
 
-    public HomeTabRecyclerViewAdapter(ArrayList<JobCategoryModel> mList, HomeTabFragment.CategoryRowInteractionListener mListener) {
+    public HomeTabRecyclerViewAdapter(ArrayList<JobCategoryModel> mList, HomeTabFragment.CategoryRowInteractionListener mListener, String selectedFilterType) {
         this.mList = mList != null ? mList : new ArrayList<JobCategoryModel>();
         this.mListener = mListener;
+        this.mSelectedFilterType = selectedFilterType;
 //        mOfferIndexMap = new HashMap<>();
     }
 
@@ -52,7 +54,8 @@ public class HomeTabRecyclerViewAdapter extends RecyclerView.Adapter<HomeTabRecy
      *
      * @param list
      */
-    public void addItems(ArrayList<JobCategoryModel> list) {
+    public void addItems(ArrayList<JobCategoryModel> list, String selectedFilterType) {
+        mSelectedFilterType = selectedFilterType;
         this.mList = list;
         notifyDataSetChanged();
 //        notifyItemRangeChanged(0, getItemCount());
@@ -120,6 +123,14 @@ public class HomeTabRecyclerViewAdapter extends RecyclerView.Adapter<HomeTabRecy
                 }
             }
         });
+
+        if (mSelectedFilterType.equalsIgnoreCase(Utility.FILTER_TYPES.FILTER_TYPE_SUBSCRIBED)) {
+            holder.mRowTabHomeBinding.imgCategorySubscribe.setVisibility(View.VISIBLE);
+            holder.mRowTabHomeBinding.imgCategoryFavourite.setVisibility(View.GONE);
+        } else {
+            holder.mRowTabHomeBinding.imgCategorySubscribe.setVisibility(View.GONE);
+            holder.mRowTabHomeBinding.imgCategoryFavourite.setVisibility(View.VISIBLE);
+        }
 
 
         // Start LIVE tracking and Text changes

@@ -597,11 +597,11 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
                         // Finish the current activity
                         LogUtils.LOGE(TAG, "show: ------------------ ");
 
-                        if (paymentMethod.equalsIgnoreCase(NetworkUtility.PAYMENT_METHOD_TYPE.PAYU)) {
-                            doPaymentOfNetBanking();
-                        } else {
-                            doPaymentOfPaytm();
-                        }
+//                        if (paymentMethod.equalsIgnoreCase(NetworkUtility.PAYMENT_METHOD_TYPE.PAYU)) {
+//                            doPaymentOfNetBanking();
+//                        } else {
+//                            doPaymentOfPaytm();
+//                        }
                     }
                 });
         paymentFailedDialog.setCancelable(true);

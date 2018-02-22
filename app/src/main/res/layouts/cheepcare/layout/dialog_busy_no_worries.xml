@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+        xmlns:tools="http://schemas.android.com/tools">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -24,7 +24,7 @@
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
                 android:src="@drawable/bg_add_money_model_background"
-                tools:ignore="ContentDescription" />
+                tools:ignore="ContentDescription"/>
 
             <LinearLayout
                 android:id="@+id/ln_bottom_section"
@@ -33,7 +33,7 @@
                 android:layout_below="@+id/img_header"
                 android:background="@drawable/rounded_bottom_part_only_fill_white_5x5"
                 android:orientation="vertical"
-                android:paddingTop="50dp">
+                android:paddingTop="@dimen/scale_55dp">
 
                 <com.cheep.custom_view.CFTextViewSemiBold
                     android:id="@+id/title"
@@ -45,7 +45,7 @@
                     android:paddingRight="@dimen/scale_50dp"
                     android:text="@string/label_busy_no_worries"
                     android:textColor="@color/grey_variant_20"
-                    android:textSize="@dimen/text_size_18sp" />
+                    android:textSize="@dimen/text_size_18sp"/>
 
                 <com.cheep.custom_view.CFTextViewRegular
                     android:id="@+id/text_add_money_description"
@@ -60,7 +60,7 @@
                     android:paddingTop="@dimen/scale_8dp"
                     android:text="@string/msg_choose_specific_time"
                     android:textColor="@color/grey_dark_color_2"
-                    android:textSize="@dimen/text_size_11sp" />
+                    android:textSize="@dimen/text_size_11sp"/>
 
                 <View
                     android:layout_width="match_parent"
@@ -68,7 +68,7 @@
                     android:layout_marginLeft="@dimen/scale_8dp"
                     android:layout_marginRight="@dimen/scale_8dp"
                     android:layout_marginTop="@dimen/scale_15dp"
-                    android:background="@color/grey_dark_color_8" />
+                    android:background="@color/grey_dark_color_8"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -84,14 +84,14 @@
                         android:gravity="center"
                         android:text="@string/label_select_time"
                         android:textColor="@color/splash_gradient_end"
-                        android:textSize="@dimen/text_size_16sp" />
+                        android:textSize="@dimen/text_size_16sp"/>
 
                     <View
                         android:layout_width="@dimen/scale_1dp"
                         android:layout_height="match_parent"
                         android:layout_marginBottom="@dimen/scale_8dp"
                         android:layout_marginTop="@dimen/scale_8dp"
-                        android:background="@color/splash_gradient_end" />
+                        android:background="@color/grey_dark_color_8"/>
 
                     <com.cheep.custom_view.CFTextViewSemiBold
                         android:id="@+id/tv_no_thanks"
@@ -102,7 +102,7 @@
                         android:gravity="center"
                         android:text="@string/label_no_thanks"
                         android:textColor="@color/splash_gradient_end"
-                        android:textSize="@dimen/text_size_16sp" />
+                        android:textSize="@dimen/text_size_16sp"/>
 
                 </LinearLayout>
             </LinearLayout>
@@ -118,7 +118,7 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/icon_cheep_logo" />
+                    android:src="@drawable/ic_cheep_bird_no_worries"/>
 
             </FrameLayout>
         </RelativeLayout>

@@ -9,6 +9,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.cheep.R;
+import com.cheep.custom_view.CFTextViewRegular;
 
 /**
  * Created by pankaj on 11/10/16.
@@ -33,7 +34,14 @@ public class ErrorLoadingHelper {
         textError = (TextView) view.findViewById(R.id.text_error);
         textErrorAction = (TextView) view.findViewById(R.id.text_error_action);
         mEmptyFavouriteLayout = (LinearLayout) view.findViewById(R.id.ln_empty_favourite_list);
+
         mEmptySubscribedLayout = (LinearLayout) view.findViewById(R.id.ln_empty_subscribed_list);
+
+        if (mEmptySubscribedLayout != null) {
+            CFTextViewRegular tvStartingPrice = mEmptySubscribedLayout.findViewById(R.id.tv_starting_price);
+            tvStartingPrice.setText(Utility.getCheepCarePackageMonthlyPrice(tvStartingPrice.getContext()
+                    , R.string.label_starting_price_cc, "199"));
+        }
     }
 
     public void showLoading() {
@@ -84,16 +92,22 @@ public class ErrorLoadingHelper {
         textError.setVisibility(View.GONE);
         imgError.setVisibility(View.GONE);
 
-        if (!mSelectedFilterType.equalsIgnoreCase(Utility.FILTER_TYPES.FILTER_TYPE_FAVOURITES)) {
+        if (mSelectedFilterType.equalsIgnoreCase(Utility.FILTER_TYPES.FILTER_TYPE_FAVOURITES)) {
             if (mEmptyFavouriteLayout != null)
                 mEmptyFavouriteLayout.setVisibility(View.VISIBLE);
             if (mEmptySubscribedLayout != null)
                 mEmptySubscribedLayout.setVisibility(View.GONE);
-        } else /*if (mSelectedFilterType.equalsIgnoreCase(Utility.FILTER_TYPES.FILTER_TYPE_SUBSCRIBED)) */ {
+        } else if (mSelectedFilterType.equalsIgnoreCase(Utility.FILTER_TYPES.FILTER_TYPE_SUBSCRIBED)) {
             if (mEmptyFavouriteLayout != null)
                 mEmptyFavouriteLayout.setVisibility(View.GONE);
             if (mEmptySubscribedLayout != null)
                 mEmptySubscribedLayout.setVisibility(View.VISIBLE);
+        }
+    }
+
+    public void setBecomeCheepMemberClick(View.OnClickListener onClickListener) {
+        if (mEmptySubscribedLayout != null) {
+            mEmptySubscribedLayout.findViewById(R.id.tv_become_a_cheep_member).setOnClickListener(onClickListener);
         }
     }
 

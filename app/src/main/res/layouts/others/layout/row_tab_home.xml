@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+        xmlns:tools="http://schemas.android.com/tools">
 
     <LinearLayout
         android:id="@+id/front_layout"
@@ -21,7 +21,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scaleType="centerCrop"
-                tools:ignore="ContentDescription" />
+                tools:ignore="ContentDescription"/>
 
             <ImageView
                 android:id="@+id/img_category_favourite"
@@ -29,7 +29,15 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/home_screen_category_image_inner_margin"
                 android:layout_marginTop="@dimen/home_screen_category_image_inner_margin"
-                android:src="@drawable/heart_icon_selected" />
+                android:src="@drawable/heart_icon_selected"/>
+
+            <ImageView
+                android:id="@+id/img_category_subscribe"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/home_screen_category_image_inner_margin"
+                android:layout_marginTop="@dimen/home_screen_category_image_inner_margin"
+                android:src="@drawable/ic_subscribed_text_big"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -52,7 +60,7 @@
                         android:layout_height="@dimen/scale_50dp"
                         android:adjustViewBounds="false"
                         android:visibility="gone"
-                        tools:ignore="ContentDescription" />
+                        tools:ignore="ContentDescription"/>
 
                     <com.cheep.custom_view.CFTextViewSemiBold
                         android:id="@+id/text_category_name"
@@ -63,7 +71,7 @@
                         android:text="@string/label_plumber"
                         android:textAllCaps="false"
                         android:textColor="@color/white"
-                        android:textSize="@dimen/text_size_18sp" />
+                        android:textSize="@dimen/text_size_18sp"/>
                 </LinearLayout>
 
                 <com.cheep.custom_view.CFTextViewSemiBold
@@ -76,7 +84,7 @@
                     android:padding="@dimen/scale_6dp"
                     android:text="@string/label_book"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/text_size_11sp" />
+                    android:textSize="@dimen/text_size_11sp"/>
 
                 <!--<com.cheep.custom_view.CFTextViewSemiBold
                     android:id="@+id/text_jobs_count"
@@ -117,7 +125,7 @@
                     android:layout_width="@dimen/home_screen_near_by_pro_image_height_width"
                     android:layout_height="@dimen/home_screen_near_by_pro_image_height_width"
                     android:src="@drawable/dummy_person1"
-                    tools:ignore="ContentDescription" />
+                    tools:ignore="ContentDescription"/>
 
                 <ImageView
                     android:id="@+id/img_2"
@@ -125,7 +133,7 @@
                     android:layout_height="@dimen/home_screen_near_by_pro_image_height_width"
                     android:layout_marginLeft="-20dp"
                     android:src="@drawable/dummy_person1"
-                    tools:ignore="ContentDescription" />
+                    tools:ignore="ContentDescription"/>
 
                 <ImageView
                     android:id="@+id/img_3"
@@ -133,7 +141,7 @@
                     android:layout_height="@dimen/home_screen_near_by_pro_image_height_width"
                     android:layout_marginLeft="-20dp"
                     android:src="@drawable/dummy_person1"
-                    tools:ignore="ContentDescription" />
+                    tools:ignore="ContentDescription"/>
 
                 <com.cheep.custom_view.CFTextViewSemiBold
                     android:id="@+id/extra_pro_count"
@@ -144,7 +152,7 @@
                     android:gravity="center"
                     android:textColor="@color/white"
                     android:textSize="@dimen/home_screen_extra_category_count_text_size_one_digits"
-                    tools:text="+0" />
+                    tools:text="+0"/>
 
                 <com.cheep.custom_view.CFTextViewSemiBold
                     android:id="@+id/text_task_response_status"
@@ -157,7 +165,7 @@
                     android:scrollHorizontally="true"
                     android:textColor="@color/splash_gradient_end"
                     android:textSize="@dimen/home_screen_pro_available_text_size"
-                    tools:text="@string/label_pros_available" />
+                    tools:text="@string/label_pros_available"/>
             </LinearLayout>
 
             <RelativeLayout
@@ -177,7 +185,7 @@
                     android:lines="2"
                     android:textColor="@color/task_quote_offer_color"
                     android:textSize="@dimen/text_size_11sp"
-                    tools:text="17 people trolled by Anurag Kulkarni todayasdad sdassdasd asd dasdasdad" />
+                    tools:text="17 people trolled by Anurag Kulkarni todayasdad sdassdasd asd dasdasdad"/>
 
                 <ImageView
                     android:id="@+id/ivLiveAnimated"
@@ -185,14 +193,14 @@
                     android:layout_height="@dimen/icon_live_home_screen_height"
                     android:layout_alignLeft="@+id/tv_live_feed"
                     tools:ignore="ContentDescription"
-                    tools:src="@drawable/ic_live_0001" />
+                    tools:src="@drawable/ic_live_0001"/>
             </RelativeLayout>
         </LinearLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="@dimen/home_screen_divider_height"
-            android:background="@color/grey_dark_color_4" />
+            android:background="@color/grey_dark_color_4"/>
 
     </LinearLayout>
 </layout>

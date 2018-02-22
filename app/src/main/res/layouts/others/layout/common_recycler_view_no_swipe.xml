@@ -118,25 +118,24 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginBottom="@dimen/scale_20dp"
                     android:layout_marginLeft="@dimen/scale_32dp"
                     android:layout_marginRight="@dimen/scale_32dp"
                     android:layout_marginTop="@dimen/scale_15dp"
                     android:src="@drawable/empty_state_no_subscribed_category" />
 
                 <com.cheep.custom_view.CFTextViewRegular
+                    android:id="@+id/tv_starting_price"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginBottom="@dimen/scale_9dp"
-                    android:layout_marginTop="@dimen/scale_35dp"
+                    android:layout_marginTop="@dimen/scale_25dp"
                     android:gravity="center_horizontal"
-                    android:text="@string/label_starting_price_cc"
-                    android:textAllCaps="true"
                     android:textColor="@color/grey_dark_color_6"
                     android:textSize="@dimen/text_size_15sp" />
 
                 <com.cheep.custom_view.CFTextViewRegular
+                    android:id="@+id/tv_become_a_cheep_member"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/scale_17dp"

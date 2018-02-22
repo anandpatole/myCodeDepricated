@@ -32,6 +32,7 @@ import com.cheep.dialogs.InstaBookProDialog;
 import com.cheep.firebase.FirebaseHelper;
 import com.cheep.firebase.FirebaseUtils;
 import com.cheep.firebase.model.ChatTaskModel;
+import com.cheep.model.AddressModel;
 import com.cheep.model.InstaBookingProDetail;
 import com.cheep.model.JobCategoryModel;
 import com.cheep.model.MessageEvent;
@@ -73,10 +74,12 @@ public class TaskCreationCCActivity extends BaseAppCompatActivity {
     Map<String, Object> mTaskCreationParams;
     CustomLoadingDialog mDialog;
     private boolean isInstaBooking = false;
+    public AddressModel mAddressModel;
 
-    public static void getInstance(Context mContext, JobCategoryModel model) {
+    public static void getInstance(Context mContext, JobCategoryModel model, AddressModel addressModel) {
         Intent intent = new Intent(mContext, TaskCreationCCActivity.class);
         intent.putExtra(Utility.Extra.DATA, Utility.getJsonStringFromObject(model));
+        intent.putExtra(Utility.Extra.SELECTED_ADDRESS_MODEL, Utility.getJsonStringFromObject(addressModel));
         mContext.startActivity(intent);
     }
 
@@ -95,6 +98,7 @@ public class TaskCreationCCActivity extends BaseAppCompatActivity {
         if (getIntent().getExtras() != null) {
             // Fetch JobCategory Model
             mJobCategoryModel = (JobCategoryModel) Utility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA), JobCategoryModel.class);
+            mAddressModel = (AddressModel) Utility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.SELECTED_ADDRESS_MODEL), AddressModel.class);
         }
 
         // Setting up Toolbar
@@ -440,8 +444,8 @@ public class TaskCreationCCActivity extends BaseAppCompatActivity {
         mParams.put(NetworkUtility.TAGS.CITY_ID, userDetails.CityID);
         mParams.put(NetworkUtility.TAGS.CAT_ID, mJobCategoryModel.catId);
 
-        if (Integer.parseInt(mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.mSelectedAddressModel.address_id) > 0) {
-            mParams.put(NetworkUtility.TAGS.ADDRESS_ID, mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.mSelectedAddressModel.address_id);
+        if (Integer.parseInt(mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.mSelectedAddress.address_id) > 0) {
+            mParams.put(NetworkUtility.TAGS.ADDRESS_ID, mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.mSelectedAddress.address_id);
         } else {
             // In case its nagative then provide other address information
             /*
@@ -451,15 +455,15 @@ public class TaskCreationCCActivity extends BaseAppCompatActivity {
              public String lat;
              public String lng;
              */
-            mParams = NetworkUtility.addGuestAddressParams(mParams, mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.mSelectedAddressModel);
+            mParams = NetworkUtility.addGuestAddressParams(mParams, mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.mSelectedAddress);
         }
 //        mParams.put(NetworkUtility.TAGS.SUBCATEGORY_ID, String.valueOf(mSelectedSubServiceDetailModel.sub_cat_id));
 
         mTaskCreationParams = new HashMap<>();
         mTaskCreationParams.put(NetworkUtility.TAGS.CITY_ID, userDetails.CityID);
         mTaskCreationParams.put(NetworkUtility.TAGS.CAT_ID, mJobCategoryModel.catId);
-        if (Integer.parseInt(mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.mSelectedAddressModel.address_id) > 0) {
-            mParams.put(NetworkUtility.TAGS.ADDRESS_ID, mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.mSelectedAddressModel.address_id);
+        if (Integer.parseInt(mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.mSelectedAddress.address_id) > 0) {
+            mParams.put(NetworkUtility.TAGS.ADDRESS_ID, mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.mSelectedAddress.address_id);
         } else {
             // In case its nagative then provide other address information
             /*
@@ -469,7 +473,7 @@ public class TaskCreationCCActivity extends BaseAppCompatActivity {
              public String lat;
              public String lng;
              */
-            mTaskCreationParams = NetworkUtility.addGuestAddressParams(mTaskCreationParams, mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.mSelectedAddressModel);
+            mTaskCreationParams = NetworkUtility.addGuestAddressParams(mTaskCreationParams, mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.mSelectedAddress);
         }
 //        mTaskCreationParams.put(NetworkUtility.TAGS.SUBCATEGORY_ID, String.valueOf(mSelectedSubServiceDetailModel.sub_cat_id));
 
@@ -533,8 +537,8 @@ public class TaskCreationCCActivity extends BaseAppCompatActivity {
         // Add Params
         Map<String, String> mParams = new HashMap<>();
 //        mParams.put(NetworkUtility.TAGS.TASK_DESC, mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.getTaskDescription());
-        if (Integer.parseInt(mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.mSelectedAddressModel.address_id) > 0) {
-            mParams.put(NetworkUtility.TAGS.ADDRESS_ID, mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.mSelectedAddressModel.address_id);
+        if (Integer.parseInt(mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.mSelectedAddress.address_id) > 0) {
+            mParams.put(NetworkUtility.TAGS.ADDRESS_ID, mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.mSelectedAddress.address_id);
         } else {
             // In case its nagative then provide other address information
             /*
@@ -546,28 +550,28 @@ public class TaskCreationCCActivity extends BaseAppCompatActivity {
              */
             mParams.put(
                     NetworkUtility.TAGS.ADDRESS_INITIALS
-                    , mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.mSelectedAddressModel.address_initials);
+                    , mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.mSelectedAddress.address_initials);
             mParams.put(
                     NetworkUtility.TAGS.ADDRESS
-                    , mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.mSelectedAddressModel.address);
+                    , mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.mSelectedAddress.address);
             mParams.put(
                     NetworkUtility.TAGS.CATEGORY
-                    , mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.mSelectedAddressModel.category);
+                    , mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.mSelectedAddress.category);
             mParams.put(
                     NetworkUtility.TAGS.LAT
-                    , mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.mSelectedAddressModel.lat);
+                    , mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.mSelectedAddress.lat);
             mParams.put(
                     NetworkUtility.TAGS.LNG
-                    , mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.mSelectedAddressModel.lng);
+                    , mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.mSelectedAddress.lng);
             mParams.put(
                     NetworkUtility.TAGS.CITY_NAME
-                    , mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.mSelectedAddressModel.cityName);
+                    , mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.mSelectedAddress.cityName);
             mParams.put(
                     NetworkUtility.TAGS.COUNTRY
-                    , mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.mSelectedAddressModel.countryName);
+                    , mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.mSelectedAddress.countryName);
             mParams.put(
                     NetworkUtility.TAGS.STATE
-                    , mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.mSelectedAddressModel.stateName);
+                    , mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.mSelectedAddress.stateName);
         }
 
         mParams.put(NetworkUtility.TAGS.CITY_ID, userDetails.CityID);
@@ -584,8 +588,8 @@ public class TaskCreationCCActivity extends BaseAppCompatActivity {
         // Create Params for AppsFlyer event track
         mTaskCreationParams = new HashMap<>();
 //        mTaskCreationParams.put(NetworkUtility.TAGS.TASK_DESC, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.getTaskDescription());
-        if (Integer.parseInt(mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.mSelectedAddressModel.address_id) > 0) {
-            mTaskCreationParams.put(NetworkUtility.TAGS.ADDRESS_ID, mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.mSelectedAddressModel.address_id);
+        if (Integer.parseInt(mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.mSelectedAddress.address_id) > 0) {
+            mTaskCreationParams.put(NetworkUtility.TAGS.ADDRESS_ID, mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.mSelectedAddress.address_id);
         } else {
             // In case its nagative then provide other address information
             /**
@@ -598,7 +602,7 @@ public class TaskCreationCCActivity extends BaseAppCompatActivity {
              public String countryName;
              public String stateName;
              */
-            mTaskCreationParams = NetworkUtility.addGuestAddressParams(mTaskCreationParams, mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.mSelectedAddressModel);
+            mTaskCreationParams = NetworkUtility.addGuestAddressParams(mTaskCreationParams, mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.mSelectedAddress);
         }
 //        mTaskCreationParams.put(NetworkUtility.TAGS.CITY_DETAIL, userDetails.CityID);
         mTaskCreationParams.put(NetworkUtility.TAGS.CAT_ID, mJobCategoryModel.catId);
@@ -784,8 +788,8 @@ public class TaskCreationCCActivity extends BaseAppCompatActivity {
                     TaskDetailModel taskDetailModel = new TaskDetailModel();
                     taskDetailModel.categoryName = mJobCategoryModel.catName;
 //                    taskDetailModel.subCategoryName = mSelectedSubServiceDetailModel.name;
-//                    taskDetailModel.taskAddress = mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.address;
-//                    taskDetailModel.taskAddressId = mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.address_id;
+//                    taskDetailModel.taskAddress = mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddress.address;
+//                    taskDetailModel.taskAddressId = mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddress.address_id;
                     taskDetailModel.taskPaidAmount = instaBookingProDetail.rate;
                     taskDetailModel.categoryId = mJobCategoryModel.catId;
 //                    taskDetailModel.taskDesc = mTaskCreationPagerAdapter.mEnterTaskDetailFragment.getTaskDescription();
@@ -807,7 +811,7 @@ public class TaskCreationCCActivity extends BaseAppCompatActivity {
                     providerModel.rating = instaBookingProDetail.rating;
                     taskDetailModel.taskStatus = Utility.TASK_STATUS.PENDING;
                     BookingConfirmationCcActivity.newInstance(TaskCreationCCActivity.this, taskDetailModel
-                            , providerModel, mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.mSelectedAddressModel);
+                            , providerModel, mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.mSelectedAddress);
 
                     //Log.i("myLog", "tasks:"+mJobCategoryModel.catName+"::"+mSelectedSubServiceDetailModel.name+"::"+mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mAddress);
 
@@ -1039,7 +1043,7 @@ public class TaskCreationCCActivity extends BaseAppCompatActivity {
                 }
 
                 // Add additional selected addressmodel here.
-//                mUserDetails.addressList.add(mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel);
+//                mUserDetails.addressList.add(mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddress);
 
                 // Save the user now.
                 PreferenceUtility.getInstance(mContext).saveUserDetails(mUserDetails);
@@ -1050,6 +1054,6 @@ public class TaskCreationCCActivity extends BaseAppCompatActivity {
     //TODO: to be removed
     public void startBookingConfirmationActivity() {
         BookingConfirmationCcActivity.newInstance(TaskCreationCCActivity.this, null
-                /*, providerModel, mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.mSelectedAddressModel*/);
+                /*, providerModel, mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.mSelectedAddress*/);
     }
 }
