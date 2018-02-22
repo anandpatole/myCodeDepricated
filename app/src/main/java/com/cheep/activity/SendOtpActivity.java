@@ -913,7 +913,7 @@ public class SendOtpActivity extends BaseAppCompatActivity implements View.OnCli
 
         double edtAmount = Double.parseDouble(mEtText);
         if (edtAmount < payableAmount) {
-            Utility.showToast(mContext, getString(R.string.enter_min_amount, payableAmount));
+            Utility.showToast(mContext, getString(R.string.enter_min_amount, String.valueOf(payableAmount)));
             return;
         }
 
@@ -1043,13 +1043,10 @@ public class SendOtpActivity extends BaseAppCompatActivity implements View.OnCli
         /**
          * cancel all callbacks
          */
-        Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.PAYTM.OAUTH_APIS.SEND_OTP);
-        Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.PAYTM.OAUTH_APIS.GET_ACCESS_TOKEN_SENDING_OTP);
-        Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.PAYTM.CHECK_BALANCE_API);
         Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.WS.GET_CHECKSUM_HASH);
         Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.PAYTM.WALLET_APIS.ADD_MONEY);
         Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.WS.SAVE_PAYTM_USER_DETAILS);
-        Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.PAYTM.WALLET_APIS.WITHDRAW_MONEY);
+//        Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.PAYTM.WALLET_APIS.WITHDRAW_MONEY);
         try {
             EventBus.getDefault().unregister(this);
 

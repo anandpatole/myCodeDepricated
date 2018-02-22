@@ -143,7 +143,7 @@ public class AddMoneyActivity extends BaseAppCompatActivity {
         actionBar.setTitle(Utility.EMPTY_STRING);
         actionBar.setDisplayHomeAsUpEnabled(true);
         //noinspection RestrictedApi
-        actionBar.setDefaultDisplayHomeAsUpEnabled(true);
+        actionBar.setDisplayHomeAsUpEnabled(true);
     }
 
     private final View.OnClickListener mOnClickListener = new View.OnClickListener() {

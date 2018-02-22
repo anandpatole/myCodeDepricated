@@ -84,12 +84,12 @@ public class ErrorLoadingHelper {
         textError.setVisibility(View.GONE);
         imgError.setVisibility(View.GONE);
 
-        if (!mSelectedFilterType.equalsIgnoreCase(Utility.FILTER_TYPES.FILTER_TYPE_FAVOURITES)) {
+        if (mSelectedFilterType.equalsIgnoreCase(Utility.FILTER_TYPES.FILTER_TYPE_FAVOURITES)) {
             if (mEmptyFavouriteLayout != null)
                 mEmptyFavouriteLayout.setVisibility(View.VISIBLE);
             if (mEmptySubscribedLayout != null)
                 mEmptySubscribedLayout.setVisibility(View.GONE);
-        } else /*if (mSelectedFilterType.equalsIgnoreCase(Utility.FILTER_TYPES.FILTER_TYPE_SUBSCRIBED)) */ {
+        } else if (mSelectedFilterType.equalsIgnoreCase(Utility.FILTER_TYPES.FILTER_TYPE_SUBSCRIBED))  {
             if (mEmptyFavouriteLayout != null)
                 mEmptyFavouriteLayout.setVisibility(View.GONE);
             if (mEmptySubscribedLayout != null)

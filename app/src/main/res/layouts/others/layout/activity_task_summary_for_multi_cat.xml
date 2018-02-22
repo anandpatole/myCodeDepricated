@@ -201,7 +201,7 @@
                             android:paddingLeft="@dimen/scale_16dp"
                             android:paddingRight="@dimen/scale_20dp"
                             android:paddingTop="@dimen/scale_16dp"
-                            android:visibility="visible">
+                            android:visibility="gone">
 
                             <ImageView
                                 android:id="@+id/iv_placeholder_image"
@@ -244,7 +244,7 @@
                             android:paddingLeft="@dimen/scale_16dp"
                             android:paddingRight="@dimen/scale_20dp"
                             android:paddingTop="@dimen/scale_16dp"
-                            android:visibility="gone">
+                            android:visibility="visible">
 
                             <FrameLayout
                                 android:id="@+id/layout_individual_profile"

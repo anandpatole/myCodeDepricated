@@ -208,9 +208,19 @@
             android:name=".strategicpartner.PaymentsSummaryStrategicPartnerActivity"
             android:screenOrientation="portrait" />
 
-        <activity android:name=".activity.VerifyOtpActivity" />
-        <activity android:name=".activity.WithdrawMoneyActivity" />
-        <activity android:name=".activity.AddMoneyActivity" />
+        <activity
+            android:name=".activity.VerifyOtpActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.WithdrawMoneyActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.AddMoneyActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".cheepcare.activity.RateAndReviewActivity"
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".cheepcare.activity.LandingScreenPickPackageActivity"

@@ -148,27 +148,28 @@ public class NetworkUtility {
     }
 
     public static class PAYTM {
-        public static class OAUTH_APIS {
+        //This direct urls are not needed as payTM recommends to call these URLs from server side
+        /*public static class OAUTH_APIS {
             private static final String BASE_URL = BuildConfig.PAYTM_OAUTH_BASE_URL;
 
             //End points
             public static final String SEND_OTP = BASE_URL + "/signin/otp";
             public static final String GET_ACCESS_TOKEN_SENDING_OTP = BASE_URL + "/signin/validate/otp";
             public static final String GET_USER_DETAILS_BY_VALIDATING_TOKEN = BASE_URL + "/user/details";
-        }
+        }*/
 
         public static final class WALLET_APIS {
             private static final String BASE_URL = BuildConfig.PAYTM_WALLET_BASE_URL;
 
             //End points
             public static final String ADD_MONEY = BASE_URL + "/oltp-web/processTransaction";
-            public static final String WITHDRAW_MONEY = BASE_URL + "/oltp/HANDLER_FF/withdrawScw";
-            public static final String STATUS_QUERY = BASE_URL + "/oltp/HANDLER_INTERNAL/getTxnStatus";
-            public static final String REFUND_MONEY = BASE_URL + "/oltp/HANDLER_INTERNAL/REFUND";
-            public static final String REFUND_STATUS = BASE_URL + "/oltp/HANDLER_INTERNAL/REFUND_STATUS";
+//            public static final String WITHDRAW_MONEY = BASE_URL + "/oltp/HANDLER_FF/withdrawScw";
+//            public static final String STATUS_QUERY = BASE_URL + "/oltp/HANDLER_INTERNAL/getTxnStatus";
+//            public static final String REFUND_MONEY = BASE_URL + "/oltp/HANDLER_INTERNAL/REFUND";
+//            public static final String REFUND_STATUS = BASE_URL + "/oltp/HANDLER_INTERNAL/REFUND_STATUS";
         }
 
-        public static final String CHECK_BALANCE_API = BuildConfig.PAYTM_CHECK_BALANCE_URL;
+//        public static final String CHECK_BALANCE_API = BuildConfig.PAYTM_CHECK_BALANCE_URL;
 
         public static final class PARAMETERS {
 

@@ -909,12 +909,12 @@ public class PaytmUtility {
         PaytmNetworkRequest paytmNetworkRequest = new PaytmNetworkRequest(
                 true,
                 Request.Method.POST,
-                NetworkUtility.PAYTM.WALLET_APIS.WITHDRAW_MONEY,
+                NetworkUtility.PAYTM.WALLET_APIS.ADD_MONEY,
                 mGetTxnStatusResponseListener,
                 mGetTxnStatusErrorListener,
                 null,
                 requestString);
-        Volley.getInstance(mContext).addToRequestQueue(paytmNetworkRequest, NetworkUtility.PAYTM.WALLET_APIS.WITHDRAW_MONEY);
+        Volley.getInstance(mContext).addToRequestQueue(paytmNetworkRequest, NetworkUtility.PAYTM.WALLET_APIS.ADD_MONEY);
     }
 
     ///////////////////////////////////////////////////////Paytm Get Txn Status API call ends///////////////////////////////////////////////////////

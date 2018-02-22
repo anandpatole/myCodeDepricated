@@ -388,18 +388,20 @@ public class BookingConfirmationCcActivity extends BaseAppCompatActivity {
             }
         });
 
+        mBinding.textPayNow.setOnClickListener(onPayClickListener);
+
     }
 
     // Changes are per new flow pay now/later: 15/11/17
     View.OnClickListener onPayClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            isPayNow = true;
-            setTaskState(STEP_THREE_VERIFIED);
-            taskDetailModel.usedWalletAmount = String.valueOf(usedWalletBalance);
-
-            PaymentChoiceActivity.newInstance(mContext, taskDetailModel, providerModel, mSelectedAddressModelForInsta);
-
+//            isPayNow = true;
+//            setTaskState(STEP_THREE_VERIFIED);
+//            taskDetailModel.usedWalletAmount = String.valueOf(usedWalletBalance);
+//
+//            PaymentChoiceActivity.newInstance(mContext, taskDetailModel, providerModel, mSelectedAddressModelForInsta);
+            RateAndReviewActivity.newInstance(mContext);
         }
     };
     // Changes are per new flow pay now/later: 15/11/17

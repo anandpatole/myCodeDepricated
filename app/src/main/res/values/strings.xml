@@ -561,7 +561,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_enter_amount">Enter Amount</string>
     <string name="label_amount_payable">Amount Payable</string>
     <string name="label_notify_paying_by_wallet">You are about to pay using your %1s wallet</string>
-    <string name="no_pro_available_title"/>
+    <string name="no_pro_available_title" />
     <string name="no_pro_available_description">No PROs is available for this address</string>
     <string name="validate_comment">Please provide valid comment.</string>
     <string name="title_booking_confimation">Booking Confirmation</string>
@@ -695,4 +695,17 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="msg_rate_and_review">Please rate and review the PRO\'s service, and help other users like
     you to hire better!</string>
     <string name="label_rate_and_review_this_task">Rate &amp; Review this task</string>
+    <string name="label_submit_review">Submit Review</string>
+    <string name="msg_submit_review">Excellent   Your feedback on the quality of job undertaken and your experience with the PRO
+        , will assist other Users like you and help us build an effective service community that delivers  </string>
+    <string name="msg_submitted_review">Awesome! Your review is now ready to go live on Cheep and help other users
+            like yourself find the best PROs for all their needs. </string>
+    <string name="hint_submit_review">Please write your experience with the PRO here</string>
+    <string name="label_how_rate_pro">How would you rate the PRO?</string>
+    <string name="label_communication">Communication</string>
+    <string name="label_punctuality">Punctuality</string>
+    <string name="label_value_for_money">Value for Money</string>
+    <string name="label_quality_of_job">Quality of Job</string>
+    <string name="label_presentation">Presentation</string>
+    <string name="msg_would_you_recommend_pro">Would you like to recommend this PRO to your friends?</string>
 </resources>

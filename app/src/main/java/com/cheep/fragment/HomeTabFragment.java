@@ -1454,7 +1454,6 @@ public class HomeTabFragment extends BaseFragment {
                 updateFilterSelectionInPopup(mLayoutFilterHomePopupBinding);
                 updateFilterText();
                 getCategoryListFromServer(true);
-                Utility.showToast(mContext, "Subscribed Clicked!!");
                 mPopupWindow.dismiss();
             }
         });

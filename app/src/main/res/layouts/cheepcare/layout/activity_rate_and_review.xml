@@ -6,13 +6,15 @@
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/c_f7f7f7">
+        android:background="@color/c_f7f7f7"
+        android:orientation="vertical">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
+            android:focusableInTouchMode="true"
             android:theme="@style/AppTheme.AppBarWhite.ColorControlNormalBlue"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -57,20 +59,20 @@
         <com.cheep.custom_view.CFTextViewRegular
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/scale_18dp"
+            android:layout_marginTop="@dimen/scale_3dp"
+            android:background="@drawable/blue_rounded_border_sf1"
+            android:paddingBottom="@dimen/scale_4dp"
             android:paddingLeft="@dimen/scale_7dp"
             android:paddingRight="@dimen/scale_7dp"
             android:paddingTop="@dimen/scale_4dp"
-            android:paddingBottom="@dimen/scale_4dp"
-            android:background="@drawable/blue_rounded_border_sf1"
-            app:layout_constraintEnd_toStartOf="@+id/iv_badge"
-            app:layout_constraintStart_toEndOf="@id/img_profile"
-            android:layout_marginLeft="@dimen/scale_18dp"
-            app:layout_constraintTop_toBottomOf="@id/text_provider_name"
             android:text="Plumber"
-            android:layout_marginTop="@dimen/scale_3dp"
             android:textColor="@color/splash_gradient_end"
             android:textSize="@dimen/text_size_10sp"
-            app:layout_constraintHorizontal_bias="0"/>
+            app:layout_constraintEnd_toStartOf="@+id/iv_badge"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintStart_toEndOf="@id/img_profile"
+            app:layout_constraintTop_toBottomOf="@id/text_provider_name" />
 
         <ImageView
             android:id="@+id/iv_badge"
@@ -83,18 +85,317 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <View
+            android:id="@+id/separator"
             android:layout_width="match_parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_height="@dimen/scale_1dp"
             android:layout_marginTop="@dimen/scale_16dp"
-            app:layout_constraintTop_toBottomOf="@id/img_profile"
             android:background="@color/light_grey_color"
-            android:layout_height="@dimen/scale_1dp"/>
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/img_profile" />
 
-        <com.cheep.custom_view.CFTextViewRegular
+        <ScrollView
+            android:id="@+id/scrollView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            />
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@id/text_bottom_action"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/separator">
+
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="@dimen/scale_29dp"
+                android:paddingTop="@dimen/scale_19dp">
+
+                <com.cheep.custom_view.CFTextViewRegular
+                    android:id="@+id/tv_submit_review_description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/scale_19dp"
+                    android:layout_marginRight="@dimen/scale_19dp"
+                    android:text="@string/msg_submit_review"
+                    android:textColor="@color/selector_6a6a6a_blue"
+                    android:textSize="@dimen/text_size_15sp"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+                <com.cheep.custom_view.CFEditTextRegular
+                    android:id="@+id/et_review"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/scale_15dp"
+                    android:layout_marginRight="@dimen/scale_15dp"
+                    android:layout_marginTop="@dimen/scale_17dp"
+                    android:background="@drawable/selector_border_grey_blue"
+                    android:gravity="top"
+                    android:hint="@string/hint_submit_review"
+                    android:minLines="4"
+                    android:paddingBottom="@dimen/scale_21dp"
+                    android:paddingLeft="@dimen/scale_10dp"
+                    android:paddingRight="@dimen/scale_10dp"
+                    android:paddingTop="@dimen/scale_9dp"
+                    android:textColor="@color/c_808080"
+                    android:textSize="@dimen/text_size_12sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_submit_review_description" />
+
+                <com.cheep.custom_view.CFTextViewSemiBold
+                    android:id="@+id/tv_how_rate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/scale_12dp"
+                    android:layout_marginRight="@dimen/scale_12dp"
+                    android:layout_marginTop="@dimen/scale_22dp"
+                    android:text="@string/label_how_rate_pro"
+                    android:textColor="@color/grey_varient_8"
+                    android:textSize="@dimen/text_size_17sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/et_review" />
+
+                <com.cheep.custom_view.CFTextViewRegular
+                    android:id="@+id/tv_communication"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/scale_46dp"
+                    android:paddingRight="@dimen/scale_4dp"
+                    android:text="@string/label_communication"
+                    android:textColor="@color/splash_gradient_end"
+                    android:textSize="@dimen/text_size_18sp"
+                    app:layout_constraintBottom_toBottomOf="@+id/rating_communication"
+                    app:layout_constraintEnd_toStartOf="@+id/rating_communication"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/rating_communication" />
+
+                <RatingBar
+                    android:id="@+id/rating_communication"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/scale_17dp"
+                    android:layout_marginRight="@dimen/scale_34dp"
+                    android:layout_marginTop="@dimen/scale_37dp"
+                    android:numStars="5"
+                    android:progressDrawable="@drawable/rating_bar_selector_rate_review"
+                    android:rating="0"
+                    android:stepSize="1"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/tv_communication"
+                    app:layout_constraintTop_toBottomOf="@id/tv_how_rate" />
+
+                <com.cheep.custom_view.CFTextViewRegular
+                    android:id="@+id/tv_punctuality"
+                    android:layout_width="@dimen/scale_0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/scale_46dp"
+                    android:paddingRight="@dimen/scale_4dp"
+                    android:text="@string/label_punctuality"
+                    android:textColor="@color/splash_gradient_end"
+                    android:textSize="@dimen/text_size_18sp"
+                    app:layout_constraintBottom_toBottomOf="@+id/rating_punctuality"
+                    app:layout_constraintEnd_toStartOf="@+id/rating_punctuality"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/rating_punctuality" />
+
+                <RatingBar
+                    android:id="@+id/rating_punctuality"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/scale_17dp"
+                    android:layout_marginRight="@dimen/scale_34dp"
+                    android:layout_marginTop="@dimen/scale_31dp"
+                    android:numStars="5"
+                    android:progressDrawable="@drawable/rating_bar_selector_rate_review"
+                    android:rating="0"
+                    android:stepSize="1"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/tv_punctuality"
+                    app:layout_constraintTop_toBottomOf="@id/rating_communication" />
+
+                <com.cheep.custom_view.CFTextViewRegular
+                    android:id="@+id/tv_value_for_money"
+                    android:layout_width="@dimen/scale_0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/scale_46dp"
+                    android:paddingRight="@dimen/scale_4dp"
+                    android:text="@string/label_value_for_money"
+                    android:textColor="@color/splash_gradient_end"
+                    android:textSize="@dimen/text_size_18sp"
+                    app:layout_constraintBottom_toBottomOf="@+id/rating_value_for_money"
+                    app:layout_constraintEnd_toStartOf="@+id/rating_value_for_money"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/rating_value_for_money" />
+
+                <RatingBar
+                    android:id="@+id/rating_value_for_money"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/scale_17dp"
+                    android:layout_marginRight="@dimen/scale_34dp"
+                    android:layout_marginTop="@dimen/scale_31dp"
+                    android:numStars="5"
+                    android:progressDrawable="@drawable/rating_bar_selector_rate_review"
+                    android:rating="0"
+                    android:stepSize="1"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/tv_value_for_money"
+                    app:layout_constraintTop_toBottomOf="@id/rating_punctuality" />
+
+                <com.cheep.custom_view.CFTextViewRegular
+                    android:id="@+id/tv_quality_of_job"
+                    android:layout_width="@dimen/scale_0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/scale_46dp"
+                    android:paddingRight="@dimen/scale_4dp"
+                    android:text="@string/label_quality_of_job"
+                    android:textColor="@color/splash_gradient_end"
+                    android:textSize="@dimen/text_size_18sp"
+                    app:layout_constraintBottom_toBottomOf="@+id/rating_quality_of_job"
+                    app:layout_constraintEnd_toStartOf="@+id/rating_quality_of_job"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/rating_quality_of_job" />
+
+                <RatingBar
+                    android:id="@+id/rating_quality_of_job"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/scale_17dp"
+                    android:layout_marginRight="@dimen/scale_34dp"
+                    android:layout_marginTop="@dimen/scale_31dp"
+                    android:numStars="5"
+                    android:progressDrawable="@drawable/rating_bar_selector_rate_review"
+                    android:rating="0"
+                    android:stepSize="1"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/tv_quality_of_job"
+                    app:layout_constraintTop_toBottomOf="@id/rating_value_for_money" />
+
+                <com.cheep.custom_view.CFTextViewRegular
+                    android:id="@+id/tv_presentation"
+                    android:layout_width="@dimen/scale_0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/scale_46dp"
+                    android:paddingRight="@dimen/scale_4dp"
+                    android:text="@string/label_presentation"
+                    android:textColor="@color/splash_gradient_end"
+                    android:textSize="@dimen/text_size_18sp"
+                    app:layout_constraintBottom_toBottomOf="@+id/rating_presentation"
+                    app:layout_constraintEnd_toStartOf="@+id/rating_presentation"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/rating_presentation" />
+
+                <RatingBar
+                    android:id="@+id/rating_presentation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/scale_17dp"
+                    android:layout_marginRight="@dimen/scale_34dp"
+                    android:layout_marginTop="@dimen/scale_31dp"
+                    android:numStars="5"
+                    android:progressDrawable="@drawable/rating_bar_selector_rate_review"
+                    android:rating="0"
+                    android:stepSize="1"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/tv_presentation"
+                    app:layout_constraintTop_toBottomOf="@id/rating_quality_of_job" />
+
+                <com.cheep.custom_view.CFTextViewRegular
+                    android:id="@+id/tv_your_rating"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/scale_12dp"
+                    android:layout_marginRight="@dimen/scale_12dp"
+                    android:layout_marginTop="@dimen/scale_31dp"
+                    android:text="@string/label_your_rating"
+                    android:textColor="@color/grey_varient_8"
+                    android:textSize="@dimen/text_size_14sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/rating_presentation" />
+
+                <com.cheep.custom_view.CFTextViewSemiBold
+                    android:id="@+id/tv_rating"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="4.0"
+                    android:textColor="@color/splash_gradient_end"
+                    android:textSize="@dimen/text_size_29sp"
+                    app:layout_constraintStart_toStartOf="@id/tv_your_rating"
+                    app:layout_constraintTop_toBottomOf="@id/tv_your_rating" />
+
+                <ImageView
+                    android:id="@+id/iv_star"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/scale_6dp"
+                    android:src="@drawable/ic_star_rate_review"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_rating"
+                    app:layout_constraintStart_toEndOf="@id/tv_rating"
+                    app:layout_constraintTop_toTopOf="@id/tv_rating" />
+
+                <com.cheep.custom_view.CFTextViewRegular
+                    android:id="@+id/tv_recommend_rating"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/scale_12dp"
+                    android:layout_marginRight="@dimen/scale_12dp"
+                    android:layout_marginTop="@dimen/scale_29dp"
+                    android:gravity="center"
+                    android:text="@string/msg_would_you_recommend_pro"
+                    android:textColor="@color/grey_varient_8"
+                    android:textSize="@dimen/text_size_17sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintHorizontal_chainStyle="packed"
+                    app:layout_constraintTop_toBottomOf="@id/iv_star" />
+
+                <com.cheep.custom_view.CFTextViewRegular
+                    android:id="@+id/tv_yes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/scale_21dp"
+                    android:background="@drawable/btn_blue_rounded_border"
+                    android:gravity="center"
+                    android:paddingBottom="@dimen/scale_12dp"
+                    android:paddingLeft="@dimen/scale_41dp"
+                    android:paddingRight="@dimen/scale_41dp"
+                    android:layout_marginRight="@dimen/scale_26dp"
+                    android:paddingTop="@dimen/scale_12dp"
+                    android:text="@string/label_yes"
+                    android:textColor="@color/splash_gradient_end"
+                    android:textSize="@dimen/text_size_14sp"
+                    app:layout_constraintEnd_toStartOf="@+id/tv_no"
+                    app:layout_constraintHorizontal_chainStyle="packed"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_recommend_rating" />
+
+                <com.cheep.custom_view.CFTextViewRegular
+                    android:id="@+id/tv_no"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/scale_21dp"
+                    android:background="@drawable/btn_blue_rounded_border"
+                    android:gravity="center"
+                    android:paddingBottom="@dimen/scale_12dp"
+                    android:paddingLeft="@dimen/scale_41dp"
+                    android:paddingRight="@dimen/scale_41dp"
+                    android:paddingTop="@dimen/scale_12dp"
+                    android:text="@string/label_no"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:textColor="@color/splash_gradient_end"
+                    android:textSize="@dimen/text_size_14sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/tv_yes"
+                    app:layout_constraintTop_toBottomOf="@id/tv_recommend_rating" />
+
+                <android.support.constraint.Group
+                    android:id="@+id/group_rating_submitted"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    app:constraint_referenced_ids="tv_your_rating,tv_rating
+                    ,iv_star,tv_recommend_rating,tv_yes,tv_no" />
+
+            </android.support.constraint.ConstraintLayout>
+        </ScrollView>
 
         <com.cheep.custom_view.CFTextViewSemiBold
             android:id="@+id/text_bottom_action"
@@ -104,13 +405,13 @@
             android:background="@color/splash_gradient_end"
             android:gravity="center"
             android:padding="@dimen/scale_10dp"
-            android:text="@string/label_rate_and_review_this_task"
+            android:text="@string/label_submit_review"
             android:textColor="@color/white"
             android:textSize="@dimen/text_size_17sp"
             android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/scrollView" />
     </android.support.constraint.ConstraintLayout>
 </layout>

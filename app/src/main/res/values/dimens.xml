@@ -58,6 +58,7 @@
     <dimen name="scale_34dp">34dp</dimen>
     <dimen name="scale_35dp">35dp</dimen>
     <dimen name="scale_36dp">36dp</dimen>
+    <dimen name="scale_37dp">37dp</dimen>
     <dimen name="scale_38dp">38dp</dimen>
     <dimen name="scale_40dp">40dp</dimen>
     <dimen name="scale_41dp">41dp</dimen>
@@ -113,6 +114,7 @@
     <dimen name="text_size_19sp">19sp</dimen>
     <dimen name="text_size_20sp">20sp</dimen>
     <dimen name="text_size_25sp">25sp</dimen>
+    <dimen name="text_size_29sp">29sp</dimen>
     <dimen name="text_size_30sp">30sp</dimen>
     <dimen name="text_size_11sp">11sp</dimen>
     <dimen name="text_size_9sp">9sp</dimen>
