@@ -37,6 +37,7 @@ import com.cheep.activity.SearchActivity;
 import com.cheep.activity.SelectLocationActivity;
 import com.cheep.activity.TaskCreationActivity;
 import com.cheep.adapter.HomeTabRecyclerViewAdapter;
+import com.cheep.cheepcare.activity.LandingScreenPickPackageActivity;
 import com.cheep.cheepcare.fragment.SubscriptionBannerFragment;
 import com.cheep.cheepcare.model.CityDetail;
 import com.cheep.databinding.FragmentTabHomeBinding;
@@ -95,6 +96,9 @@ public class HomeTabFragment extends BaseFragment {
     public ArrayList<CityDetail> careBannerModelArrayList;
     private String mSelectedFilterType = Utility.FILTER_TYPES.FILTER_TYPE_FEATURED;
 
+    public String getmSelectedFilterType() {
+        return mSelectedFilterType;
+    }
 
     public static HomeTabFragment newInstance(DrawerLayoutInteractionListener mListener, Uri link) {
         Bundle args = new Bundle();
@@ -229,6 +233,12 @@ public class HomeTabFragment extends BaseFragment {
         }
 
         errorLoadingHelper = new ErrorLoadingHelper(mFragmentTabHomeBinding.commonRecyclerView.recyclerView);
+        errorLoadingHelper.setBecomeCheepMemberClick(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LandingScreenPickPackageActivity.newInstance(mContext, careBannerModelArrayList.get(0), Utility.getJsonStringFromObject(careBannerModelArrayList));
+            }
+        });
 
         if (mFragmentTabHomeBinding.toolbar != null) {
             mFragmentTabHomeBinding.toolbar.setTitle(Utility.EMPTY_STRING);
@@ -312,7 +322,7 @@ public class HomeTabFragment extends BaseFragment {
 
     private void initiateRecyclerView(ArrayList<JobCategoryModel> list) {
 //        Log.d(TAG, "initiateRecyclerView() called with: list = [" + list + "]");
-        homeTabRecyclerViewAdapter = new HomeTabRecyclerViewAdapter(list, mCategoryRowInteractionListener);
+        homeTabRecyclerViewAdapter = new HomeTabRecyclerViewAdapter(list, mCategoryRowInteractionListener, mSelectedFilterType);
         mFragmentTabHomeBinding.commonRecyclerView.recyclerView.setHasFixedSize(true);
 //        int padding_In_px = (int) Utility.convertDpToPixel(10, mContext);
 //        mFragmentTabHomeBinding.commonRecyclerView.recyclerView.setPadding(0, 0, 0, padding_In_px);
@@ -873,7 +883,7 @@ public class HomeTabFragment extends BaseFragment {
                         addCoverImageListing(bannerImageModelArrayList, careBannerModelArrayList);
 
                         // Setting RecyclerView Adapter
-                        homeTabRecyclerViewAdapter.addItems(list);
+                        homeTabRecyclerViewAdapter.addItems(list, mSelectedFilterType);
 
                         toggleErrorScreen(false);
                         if (list.size() <= 0) {

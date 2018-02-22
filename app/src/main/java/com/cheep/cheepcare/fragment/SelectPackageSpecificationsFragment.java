@@ -711,7 +711,7 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 if (mBinding.rlChipTips.isSelected()) {
-                    mBinding.rlChipTips.setVisibility(View.GONE);
+//                    mBinding.rlChipTips.setVisibility(View.GONE);
                     mBinding.ivCross.setImageResource(R.drawable.ic_drop_down_arrow);
                     mBinding.ivBird.setImageResource(R.drawable.ic_cheep_bird_tip);
                     mBinding.rlChipTips.setSelected(false);

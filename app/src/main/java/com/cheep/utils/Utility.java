@@ -26,7 +26,6 @@ import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.design.widget.Snackbar;
-import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.AppCompatEditText;
@@ -37,7 +36,6 @@ import android.text.format.DateUtils;
 import android.text.style.RelativeSizeSpan;
 import android.util.DisplayMetrics;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.RatingBar;
@@ -115,6 +113,7 @@ public class Utility {
     public static final String NORMAL = "normal";
     public static final String DYNAMIC_LINK_CATEGORY_HOME = "home";
     public static final java.lang.String COUPON_DUNIA_CODE_PREFIX = "CHPCD";
+    public static final String NEW_LINE = "\n";
 
     public static boolean allPermissionGranted(String[] permissions, int[] grantResults) {
         boolean allGranted = true;

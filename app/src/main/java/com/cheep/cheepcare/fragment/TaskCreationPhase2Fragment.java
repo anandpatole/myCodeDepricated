@@ -22,7 +22,6 @@ import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
@@ -32,11 +31,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.DatePicker;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener;
@@ -47,15 +42,12 @@ import com.android.volley.VolleyError;
 import com.cheep.BuildConfig;
 import com.cheep.R;
 import com.cheep.activity.BaseAppCompatActivity;
-import com.cheep.adapter.AddressRecyclerViewAdapter;
-import com.cheep.cheepcare.adapter.SelectedSubServiceAdapter;
 import com.cheep.cheepcare.activity.TaskCreationCCActivity;
 import com.cheep.cheepcare.adapter.AddressTaskCreateAdapter;
+import com.cheep.cheepcare.adapter.SelectedSubServiceAdapter;
 import com.cheep.cheepcare.dialogs.BottomAddAddressDialog;
 import com.cheep.cheepcare.dialogs.NotSubscribedAddressDialog;
 import com.cheep.cheepcare.dialogs.SelectSpecificTimeDialog;
-import com.cheep.custom_view.BottomAlertDialog;
-import com.cheep.custom_view.DividerItemDecoration;
 import com.cheep.databinding.FragmentTaskCreationPhase2Binding;
 import com.cheep.fragment.BaseFragment;
 import com.cheep.model.AddressModel;
@@ -74,10 +66,6 @@ import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.RequestPermission;
 import com.cheep.utils.SuperCalendar;
 import com.cheep.utils.Utility;
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
-import com.google.android.gms.common.GooglePlayServicesRepairableException;
-import com.google.android.gms.location.places.ui.PlacePicker;
-import com.google.android.gms.maps.model.LatLng;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -117,7 +105,7 @@ public class TaskCreationPhase2Fragment extends BaseFragment
     private RequestPermission mRequestPermission;
     private BottomAddAddressDialog dialog;
     private AddressTaskCreateAdapter<AddressModel> mAddressAdapter;
-    private AddressModel mSelectedAddress;
+    public AddressModel mSelectedAddress;
 
     private boolean isClicked = false;
 
@@ -328,16 +316,30 @@ public class TaskCreationPhase2Fragment extends BaseFragment
 //        mBinding.recycleImg.setLayoutManager(new LinearLayoutManager(mTaskCreationCCActivity, LinearLayoutManager.HORIZONTAL, false));
 //        mBinding.recycleImg.setAdapter(mMediaRecycleAdapter);
 
-        final List<AddressModel> mAddressList = new ArrayList<>();
-        AddressModel addressModel1 = new AddressModel();
-        AddressModel addressModel2 = new AddressModel();
-        addressModel2.isSubscribedAddress = true;
-        AddressModel addressModel3 = new AddressModel();
-        mAddressList.add(addressModel1);
-        mAddressList.add(addressModel2);
-        mAddressList.add(addressModel3);
+        initAddressUI();
+    }
+
+    private void initAddressUI() {
+
+
+        final ArrayList<AddressModel> mAddressList;
+        if (PreferenceUtility.getInstance(mContext).getUserDetails() != null) {
+            mAddressList = PreferenceUtility.getInstance(mContext).getUserDetails().addressList;
+        } else {
+
+            mAddressList = PreferenceUtility.getInstance(mContext).getGuestUserDetails().addressList;
+        }
+
+        // add dummy select address at first position
         mAddressList.add(0, new AddressModel() {{
             address = getString(R.string.label_select_address);
+            address_id = "";
+        }});
+
+        // add dummy select adderss at last position for "Add new Address" row
+        mAddressList.add(new AddressModel() {{
+            address = getString(R.string.label_select_address);
+            address_id = "";
         }});
 
         mAddressAdapter = new AddressTaskCreateAdapter<>(mContext
@@ -348,6 +350,15 @@ public class TaskCreationPhase2Fragment extends BaseFragment
         mBinding.spinnerAddressSelection.setPrompt("Prompt");
         mBinding.spinnerAddressSelection.setSelected(false);
         mBinding.spinnerAddressSelection.setFocusableInTouchMode(false);
+
+        if (mTaskCreationCCActivity.mAddressModel != null)
+            for (int i = 0; i < mAddressList.size(); i++) {
+                AddressModel addressModel = mAddressList.get(i);
+                if (addressModel.address_id.equalsIgnoreCase(mTaskCreationCCActivity.mAddressModel.address_id)) {
+                    mBinding.spinnerAddressSelection.setSelection(i);
+                }
+            }
+
         mBinding.spinnerAddressSelection.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -358,7 +369,6 @@ public class TaskCreationPhase2Fragment extends BaseFragment
                 } else if (mAddressList.get(position).isSubscribedAddress) {
                     Log.d(TAG, "onItemSelected: ");
                     AddressModel model = mAddressList.get(position);
-
                     mBinding.iconTaskWhere.setImageDrawable(ContextCompat.getDrawable(mContext
                             , Utility.getAddressCategoryBlueIcon(model.category)));
 
@@ -371,7 +381,7 @@ public class TaskCreationPhase2Fragment extends BaseFragment
 
                     mBinding.tvAddressNickname.setText(category);
 
-                    mBinding.tvAddress.setText(model.address);
+                    mBinding.tvAddress.setText(model.address_initials + ", " + model.address);
                     mSelectedAddress = model;
                 } else {
                     NotSubscribedAddressDialog notSubscribedAddressDialog = new NotSubscribedAddressDialog();
@@ -1057,558 +1067,6 @@ public class TaskCreationPhase2Fragment extends BaseFragment
 
 
     ///////////////////////////////////////////////////////////////////////////////////////////////
-    /////////////////////////////////////WHERE Feature [START]/////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////////////////////////
-
-    private BottomAlertDialog addressDialog;
-    private AddressRecyclerViewAdapter addressRecyclerViewAdapter;
-    @Nullable
-    public AddressModel mSelectedAddressModel;
-
-    private void showAddressDialog() {
-        View view = View.inflate(mContext, R.layout.dialog_choose_address_new_task, null);
-        boolean shouldOpenAddAddress = fillAddressRecyclerView((RecyclerView) view.findViewById(R.id.recycler_view));
-        addressDialog = new BottomAlertDialog(mContext);
-        view.findViewById(R.id.btn_add_address).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showBottomAddressDialog(null);
-//                addAddressDialog.dismiss();
-            }
-        });
-        view.findViewById(R.id.btn_submit).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (addressRecyclerViewAdapter != null && addressRecyclerViewAdapter.getmList().isEmpty() == false) {
-                    AddressModel model = addressRecyclerViewAdapter.getSelectedAddress();
-                    if (model != null) {
-                        String address;
-                        if (model.address_initials.length() > 0) {
-                            address = model.address_initials + ", " + model.address;
-                        } else {
-                            address = model.address;
-                        }
-//                        updateWhereLabelWithIcon(true, address);
-                        mSelectedAddressModel = model;
-                        updateTaskVerificationFlags();
-                        addressDialog.dismiss();
-                    }
-
-                    //refresh list based on address
-//                    TODO: This would needs to be changed
-//                    pageNo = 0;
-//                    isFilterApplied = false;
-//                    errorLoadingHelper.showLoading();
-//                    final UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
-                    if (mSelectedAddressModel != null)
-                        if (Integer.parseInt(mSelectedAddressModel.address_id) < 0) {
-                            // Guest User so pass the data accordingly
-                            callSPListWS(mTaskCreationCCActivity.mJobCategoryModel.catId,
-                                    true,
-                                    null,
-                                    model);
-                        } else {
-                            callSPListWS(mTaskCreationCCActivity.mJobCategoryModel.catId,
-                                    true,
-                                    mSelectedAddressModel.address_id,
-                                    null);
-                        }
-
-                }
-            }
-        });
-        addressDialog.setTitle(getString(R.string.label_address));
-        addressDialog.setCustomView(view);
-        addressDialog.setExpandedInitially(true);
-        addressDialog.showDialog();
-
-        if (shouldOpenAddAddress) {
-            addressDialog.view.findViewById(R.id.btn_submit).setVisibility(View.GONE);
-            showBottomAddressDialog(null);
-        }
-    }
-
-    /**
-     * Loads address in choose address dialog box in recycler view
-     */
-    private String TEMP_ADDRESS_ID = "";
-
-    private boolean fillAddressRecyclerView(RecyclerView recyclerView) {
-
-        ArrayList<AddressModel> addressList;
-
-        if (PreferenceUtility.getInstance(mContext).getUserDetails() != null) {
-            addressList = PreferenceUtility.getInstance(mContext).getUserDetails().addressList;
-        } else {
-            addressList = PreferenceUtility.getInstance(mContext).getGuestUserDetails().addressList;
-        }
-        //Setting RecyclerView Adapter
-        addressRecyclerViewAdapter = new AddressRecyclerViewAdapter(addressList, new AddressRecyclerViewAdapter.AddressItemInteractionListener() {
-            @Override
-            public void onEditClicked(AddressModel model, int position) {
-                TEMP_ADDRESS_ID = model.address_id;
-                showBottomAddressDialog(model);
-            }
-
-            @Override
-            public void onDeleteClicked(AddressModel model, int position) {
-//                TEMP_ADDRESS_ID = model.address_id;
-//                callDeleteAddressWS(model.address_id);
-                showAddressDeletionConfirmationDialog(model);
-            }
-
-            @Override
-            public void onRowClicked(AddressModel model, int position) {
-
-            }
-        });
-        addressRecyclerViewAdapter.setSelectedAddressId(mSelectedAddressModel == null ? Utility.EMPTY_STRING : mSelectedAddressModel.address_id);
-        recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
-        recyclerView.setAdapter(addressRecyclerViewAdapter);
-        recyclerView.addItemDecoration(new DividerItemDecoration(mContext, R.drawable.divider_grey_normal, (int) getResources().getDimension(R.dimen.scale_16dp)));
-
-        //Here we are checking if address is not there then open add address dialog immediatly
-        return addressList == null || (addressList != null && addressList.isEmpty());
-    }
-///////////////////////////// DELETE CONFIRMATION DIALOG//////////////////////////////////////
-
-    private void showAddressDeletionConfirmationDialog(final AddressModel model) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(mContext, R.style.MyAlertDialogStyle);
-        builder.setCancelable(false);
-        builder.setTitle(getString(R.string.cheep_all_caps));
-        builder.setMessage(getString(R.string.label_address_delete_message));
-        builder.setPositiveButton(getString(R.string.label_Ok), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                Log.d(TAG, "onClick() called with: dialogInterface = [" + dialogInterface + "], i = [" + i + "]");
-                TEMP_ADDRESS_ID = model.address_id;
-                callDeleteAddressWS(model);
-            }
-        });
-        builder.setNegativeButton(getString(R.string.label_cancel), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                Log.d(TAG, "onClick() called with: dialogInterface = [" + dialogInterface + "], i = [" + i + "]");
-            }
-        });
-        builder.show();
-    }
-
-    private BottomAlertDialog addAddressDialog;
-    private TextView edtAddress;
-    private EditText edtAddressInitials;
-    private LinearLayout ln_pick_your_location;
-    private LinearLayout ln_address_row;
-    private Button btnAdd;
-    private boolean isAddressNameVerified = false;
-    private boolean isAddressPickYouLocationVerified = false;
-    private boolean isAddressFlatNoVerified = false;
-
-/*
-    private void showAddAddressDialog(final AddressModel addressModel) {
-        if (addressModel == null) {
-            isAddressPickYouLocationVerified = false;
-            isAddressNameVerified = false;
-        } else {
-            isAddressPickYouLocationVerified = true;
-            isAddressNameVerified = true;
-        }
-
-        View view = View.inflate(mContext, R.layout.dialog_add_address, null);
-        final RadioButton radioHome = (RadioButton) view.findViewById(R.id.radio_home);
-        final RadioButton radio_office = (RadioButton) view.findViewById(R.id.radio_office);
-        final RadioButton radioOther = (RadioButton) view.findViewById(R.id.radio_other);
-//        final EditText edtName = (EditText) view.findViewById(R.id.edit_name);
-        edtAddress = (TextView) view.findViewById(edit_address);
-        edtAddressInitials = (EditText) view.findViewById(edit_address_initials);
-        ln_pick_your_location = (LinearLayout) view.findViewById(R.id.ln_pick_your_location);
-        ln_address_row = (LinearLayout) view.findViewById(R.id.ln_address_row);
-
-        */
-/*edtName.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                if (edtName.getText().toString().trim().length() > 0) {
-                    isAddressNameVerified = true;
-                    checkAddAddressVerified();
-                } else {
-                    isAddressNameVerified = false;
-                    checkAddAddressVerified();
-                }
-            }
-        });*//*
-
-
-        edtAddressInitials.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                if (edtAddressInitials.getText().toString().trim().length() > 0) {
-                    isAddressFlatNoVerified = true;
-                    checkAddAddressVerified();
-                } else {
-                    isAddressFlatNoVerified = false;
-                    checkAddAddressVerified();
-                }
-            }
-        });
-
-        ln_pick_your_location.setOnClickListene(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showPlacePickerDialog(false);
-            }
-        });
-
-        edtAddress.setOnClickListene(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showPlacePickerDialog(false);
-            }
-        });
-
-        if (addressModel != null) {
-            ln_address_row.setVisibility(View.VISIBLE);
-            ln_pick_your_location.setVisibility(View.GONE);
-        } else {
-            ln_address_row.setVisibility(View.GONE);
-            ln_pick_your_location.setVisibility(View.VISIBLE);
-        }
-       */
-/* edtAddress.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent event) {
-
-                if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    final int DRAWABLE_LEFT = 0;
-                    final int DRAWABLE_TOP = 1;
-                    final int DRAWABLE_RIGHT = 2;
-                    final int DRAWABLE_BOTTOM = 3;
-
-                    if (edtAddress.getTag() != null && event.getAction() == MotionEvent.ACTION_DOWN) {
-                        if (event.getRawX() >= (edtAddress.getRight() - edtAddress.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
-                            // your action here
-                            showPlacePickerDialog(false);
-                            return true;
-                        }
-                    } else if (edtAddress.getTag() == null) {
-                        showPlacePickerDialog(false);
-                        return true;
-                    }
-                }
-                return false;
-            }
-        });*//*
-
-        btnAdd = (Button) view.findViewById(R.id.btn_add);
-
-        if (addressModel != null) {
-            if (NetworkUtility.TAGS.ADDRESS_TYPE.HOME.equalsIgnoreCase(addressModel.category)) {
-                radioHome.setChecked(true);
-//                radioHome.setSelected(true);
-            } else if (NetworkUtility.TAGS.ADDRESS_TYPE.OFFICE.equalsIgnoreCase(addressModel.category)) {
-                radio_office.setChecked(true);
-//                radioOther.setSelected(true);
-            } else {
-                radioOther.setChecked(true);
-            }
-            edtAddress.setTag(addressModel.getLatLng());
-//            edtName.setText(addressModel.name);
-            edtAddress.setText(addressModel.address);
-            edtAddressInitials.setText(addressModel.address_initials);
-            btnAdd.setText(getString(R.string.label_update));
-
-            // Initiaze the varfication tags accordingly.
-            isAddressFlatNoVerified = true;
-           */
-/* isAddressNameVerified = true;
-            isAddressPickYouLocationVerified = addressModel.address_initials.trim().length() > 0;*//*
-
-            checkAddAddressVerified();
-
-        } else {
-            btnAdd.setText(getString(R.string.label_add));
-            radioHome.setChecked(true);
-           */
-/* edtAddress.setFocusable(false);
-            edtAddress.setFocusableInTouchMode(false);*//*
-
-        }
-
-        addAddressDialog = new BottomAlertDialog(mContext);
-        btnAdd.setOnClickListene(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-               */
-/* if (TextUtils.isEmpty(edtName.getText().toString().trim())) {
-                    Utility.showToast(mContext, getString(R.string.validate_address_nickname));
-                } else*//*
-
-                if (TextUtils.isEmpty(edtAddress.getText().toString().trim())) {
-                    Utility.showToast(mContext, getString(R.string.validate_address));
-                } else if (TextUtils.isEmpty(edtAddressInitials.getText().toString().trim())) {
-                    Utility.showToast(mContext, getString(R.string.validate_address_initials));
-                } else {
-                    if (addressModel != null) {
-                        callUpdateAddressWS(addressModel.address_id,
-                                (radioHome.isChecked()
-                                        ? NetworkUtility.TAGS.ADDRESS_TYPE.HOME
-                                        : radio_office.isChecked() ? NetworkUtility.TAGS.ADDRESS_TYPE.OFFICE : NetworkUtility.TAGS.ADDRESS_TYPE.OTHERS)
-                                */
-/*, edtName.getText().toString().trim()*//*
-
-                                , edtAddress.getText().toString().trim()
-                                , edtAddressInitials.getText().toString().trim()
-                                , (LatLng) edtAddress.getTag());
-                    } else {
-
-                        AddressModel model = new AddressModel();
-                        model.category = radioHome.isChecked()
-                                ? NetworkUtility.TAGS.ADDRESS_TYPE.HOME
-                                : radio_office.isChecked() ? NetworkUtility.TAGS.ADDRESS_TYPE.OFFICE : NetworkUtility.TAGS.ADDRESS_TYPE.OTHERS;
-                        model.address = edtAddress.getText().toString().trim();
-                        model.address_initials = edtAddressInitials.getText().toString().trim();
-
-                        callAddAddressWS(model, (LatLng) edtAddress.getTag());
-                    }
-                }
-            }
-        });
-        if (addressModel == null) {
-            addAddressDialog.setTitle(getString(R.string.label_add_address));
-        } else {
-            addAddressDialog.setTitle(getString(R.string.label_update_address));
-        }
-        addAddressDialog.setCustomView(view);
-        addAddressDialog.showDialog();
-
-        checkAddAddressVerified();
-    }
-*/
-
-    private void checkAddAddressVerified() {
-        /*if (isAddressFlatNoVerified
-                && isAddressPickYouLocationVerified
-                && isAddressNameVerified) {
-            btnAdd.setBackgroundColor(ContextCompat.getColor(mContext, R.color.splash_gradient_end));
-        } else {
-            btnAdd.setBackgroundColor(ContextCompat.getColor(mContext, R.color.grey_varient_14));
-        }*/
-        if (isAddressPickYouLocationVerified
-                && isAddressNameVerified) {
-            btnAdd.setBackgroundColor(ContextCompat.getColor(mContext, R.color.splash_gradient_end));
-        } else {
-            btnAdd.setBackgroundColor(ContextCompat.getColor(mContext, R.color.grey_varient_14));
-        }
-    }
-
-
-    public void showPlacePickerDialog(boolean isForceShow) {
-
-        /*if (isForceShow == false) {
-            if (mTaskCreationCCActivity.mLocationTrackService != null) {
-                isPlacePickerClicked = true;
-                mTaskCreationCCActivity.mLocationTrackService.requestLocationUpdate();
-                return;
-            }
-            *//*if (isLocationEnabled() == false) {
-                if (isGPSEnabled() == false) {
-                    showGPSEnableDialog();
-                    return;
-                }
-            }*//*
-
-            *//*String locationProviders = Settings.Secure.getString(getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
-            if (locationProviders == null || locationProviders.equals("")) {
-                //show gps disabled and enable gps dialog here
-                showGPSEnableDialog();
-                return;
-            }
-
-            LocationManager manager = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
-            if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-                //show gps disabled and enable gps dialog here
-                showGPSEnableDialog();
-                return;
-            }*//*
-        }*/
-
-        try {
-            Utility.hideKeyboard(mContext);
-            showProgressDialog();
-            PlacePicker.IntentBuilder intentBuilder = new PlacePicker.IntentBuilder();
-            Intent intent = intentBuilder.build(mTaskCreationCCActivity);
-            startActivityForResult(intent, Utility.PLACE_PICKER_REQUEST);
-        } catch (GooglePlayServicesRepairableException | GooglePlayServicesNotAvailableException e) {
-
-            //TODO: Adding dummy place when playservice is not there
-            if (edtAddress != null) {
-//                edtAddress.setText("Dummy Address with " + Utility.STATIC_LAT + "," + Utility.STATIC_LNG);
-                edtAddress.setText(getString(R.string.label_dummy_address, Utility.STATIC_LAT, Utility.STATIC_LNG));
-                edtAddress.setFocusable(true);
-                edtAddress.setFocusableInTouchMode(true);
-                try {
-                    edtAddress.setTag(new LatLng(Double.parseDouble(Utility.STATIC_LAT), Double.parseDouble(Utility.STATIC_LNG)));
-                } catch (Exception exe) {
-                    exe.printStackTrace();
-                    edtAddress.setTag(new LatLng(0, 0));
-                }
-            }
-
-            e.printStackTrace();
-            Utility.showToast(mContext, getString(R.string.label_playservice_not_available));
-        }
-    }
-
-    /**
-     * Calling delete address Web service
-     *
-     * @param addressModel
-     */
-    private void callDeleteAddressWS(AddressModel addressModel) {
-        if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mBinding.getRoot());
-            return;
-        }
-
-        if (PreferenceUtility.getInstance(mContext).getUserDetails() == null) {
-            GuestUserDetails guestUserDetails = PreferenceUtility.getInstance(mContext).getGuestUserDetails();
-            if (addressRecyclerViewAdapter != null) {
-                addressRecyclerViewAdapter.delete(addressModel);
-                // Saving information in sharedpreference
-                guestUserDetails.addressList = addressRecyclerViewAdapter.getmList();
-                if (addressRecyclerViewAdapter.getItemCount() == 0)
-                    addressDialog.view.findViewById(R.id.btn_submit).setVisibility(View.GONE);
-
-                if (mSelectedAddressModel != null && mSelectedAddressModel.address_id.equalsIgnoreCase(addressModel.address_id)) {
-                    mSelectedAddressModel = null;
-//                    updateWhereLabelWithIcon(false, "");
-                    updateTaskVerificationFlags();
-                }
-
-            }
-            PreferenceUtility.getInstance(mContext).saveGuestUserDetails(guestUserDetails);
-            return;
-        }
-
-        //Show Progress
-        showProgressDialog();
-
-        //Add Header parameters
-        Map<String, String> mHeaderParams = new HashMap<>();
-        mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
-        if (PreferenceUtility.getInstance(mContext).getUserDetails() != null) {
-            mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().userID);
-        }
-
-        //Add Params
-        Map<String, String> mParams = new HashMap<>();
-        mParams.put(NetworkUtility.TAGS.ADDRESS_ID, String.valueOf(addressModel.address_id));
-
-        VolleyNetworkRequest mVolleyNetworkRequest = new VolleyNetworkRequest(NetworkUtility.WS.DELETE_ADDRESS
-                , mCallDeleteAddressWSErrorListener
-                , mCallDeleteAddressResponseListener
-                , mHeaderParams
-                , mParams
-                , null);
-        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest, NetworkUtility.WS.DELETE_ADDRESS);
-    }
-
-    Response.Listener mCallDeleteAddressResponseListener = new Response.Listener() {
-        @Override
-        public void onResponse(Object response) {
-
-            String strResponse = (String) response;
-            try {
-                JSONObject jsonObject = new JSONObject(strResponse);
-                Log.i(TAG, "onResponse: " + jsonObject.toString());
-                int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
-                String error_message;
-
-                switch (statusCode) {
-                    case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
-                        if (addressRecyclerViewAdapter != null) {
-                            addressRecyclerViewAdapter.delete(TEMP_ADDRESS_ID);
-                            if (addressRecyclerViewAdapter.getItemCount() == 0)
-                                addressDialog.view.findViewById(R.id.btn_submit).setVisibility(View.GONE);
-
-                            // Saving information in sharedpreference
-                            UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
-                            userDetails.addressList = addressRecyclerViewAdapter.getmList();
-                            PreferenceUtility.getInstance(mContext).saveUserDetails(userDetails);
-
-
-                            if (mSelectedAddressModel != null && mSelectedAddressModel.address_id.equalsIgnoreCase(TEMP_ADDRESS_ID)) {
-                                mSelectedAddressModel = null;
-//                                updateWhereLabelWithIcon(false, "");
-                                updateTaskVerificationFlags();
-                            }
-                        }
-                        break;
-                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
-                        // Show Toast
-                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
-                        break;
-                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
-                        error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
-                        // Show message
-                        Utility.showSnackBar(error_message, mBinding.getRoot());
-                        break;
-                    case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
-                    case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
-                        //Logout and finish the current activity
-                        Utility.logout(mContext, true, statusCode);
-                        mTaskCreationCCActivity.finish();
-                        break;
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-                mCallDeleteAddressWSErrorListener.onErrorResponse(new VolleyError(e.getMessage()));
-            }
-            hideProgressDialog();
-        }
-    };
-
-    Response.ErrorListener mCallDeleteAddressWSErrorListener = new Response.ErrorListener() {
-        @Override
-        public void onErrorResponse(VolleyError error) {
-            Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
-
-            // Close Progressbar
-            hideProgressDialog();
-
-            // Show Toast
-            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
-        }
-    };
-
-
-    ///////////////////////////////////////////////////////////////////////////////////////////////
-    /////////////////////////////////////WHERE Feature [START]/////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////////////////////////
-
-
-    ///////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////Reload SP Listing based on AddressID [START]//////////////
     ///////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -1820,30 +1278,26 @@ public class TaskCreationPhase2Fragment extends BaseFragment
         }
     }
 
-    private void showBottomAddressDialog(AddressModel model) {
+    private void showBottomAddressDialog(AddressModel addressModel) {
         dialog = new BottomAddAddressDialog(TaskCreationPhase2Fragment.this, new BottomAddAddressDialog.AddAddressListener() {
             @Override
             public void onAddAddress(AddressModel addressModel) {
 //                    mList.add(addressModel);
-                if (addressRecyclerViewAdapter != null) {
-                    addressRecyclerViewAdapter.add(addressModel);
-                    addressDialog.view.findViewById(R.id.btn_submit).setVisibility(View.VISIBLE);
+                if (mAddressAdapter != null) {
+                    mAddressAdapter.add(addressModel);
                 }
 
                 //Saving information in sharedpreference
                 UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
                 if (userDetails != null) {
-                    userDetails.addressList = addressRecyclerViewAdapter.getmList();
+                    userDetails.addressList = mAddressAdapter.getmList();
                     PreferenceUtility.getInstance(mContext).saveUserDetails(userDetails);
                 } else {
                     GuestUserDetails guestUserDetails = PreferenceUtility.getInstance(mContext).getGuestUserDetails();
-                    guestUserDetails.addressList = addressRecyclerViewAdapter.getmList();
+                    guestUserDetails.addressList = mAddressAdapter.getmList();
                     PreferenceUtility.getInstance(mContext).saveGuestUserDetails(guestUserDetails);
                 }
 
-                if (addAddressDialog != null) {
-                    addAddressDialog.dismiss();
-                }
 
                 if (dialog != null) {
                     dialog.dismiss();
@@ -1853,29 +1307,29 @@ public class TaskCreationPhase2Fragment extends BaseFragment
             @Override
             public void onUpdateAddress(AddressModel addressModel) {
 
-                if (!TextUtils.isEmpty(TEMP_ADDRESS_ID)) {
-                    if (addressRecyclerViewAdapter != null) {
-                        addressRecyclerViewAdapter.updateItem(addressModel);
-                    }
-                }
-
-                //Saving information in sharedpreference
-                UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
-                if (userDetails != null) {
-                    userDetails.addressList = addressRecyclerViewAdapter.getmList();
-                    PreferenceUtility.getInstance(mContext).saveUserDetails(userDetails);
-                } else {
-                    GuestUserDetails guestUserDetails = PreferenceUtility.getInstance(mContext).getGuestUserDetails();
-                    guestUserDetails.addressList = addressRecyclerViewAdapter.getmList();
-                    PreferenceUtility.getInstance(mContext).saveGuestUserDetails(guestUserDetails);
-                }
-
-                if (dialog != null) {
-                    dialog.dismiss();
-                }
+//                if (!TextUtils.isEmpty(TEMP_ADDRESS_ID)) {
+//                    if (mAddressAdapter!= null) {
+//                        mAddressAdapter.updateItem(addressModel);
+//                    }
+//                }
+//
+//                //Saving information in sharedpreference
+//                UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
+//                if (userDetails != null) {
+//                    userDetails.addressList = addressRecyclerViewAdapter.getmList();
+//                    PreferenceUtility.getInstance(mContext).saveUserDetails(userDetails);
+//                } else {
+//                    GuestUserDetails guestUserDetails = PreferenceUtility.getInstance(mContext).getGuestUserDetails();
+//                    guestUserDetails.addressList = addressRecyclerViewAdapter.getmList();
+//                    PreferenceUtility.getInstance(mContext).saveGuestUserDetails(guestUserDetails);
+//                }
+//
+//                if (dialog != null) {
+//                    dialog.dismiss();
+//                }
 
             }
-        }, new ArrayList<String>(), model);
+        }, new ArrayList<String>(), addressModel);
 
         dialog.showDialog();
     }

@@ -26,6 +26,7 @@ import com.cheep.cheepcare.model.AdminSettingModel;
 import com.cheep.cheepcare.model.CityDetail;
 import com.cheep.cheepcare.model.PackageDetail;
 import com.cheep.databinding.ActivityManageSubscriptionBinding;
+import com.cheep.model.AddressModel;
 import com.cheep.model.JobCategoryModel;
 import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
@@ -77,8 +78,7 @@ public class ManageSubscriptionActivity extends BaseAppCompatActivity {
             isManageSubscription = getIntent().getExtras().getBoolean(Utility.Extra.ACTIVITY_TYPE);
             if (isManageSubscription) {
                 bannerCityDetailsList = Utility.getObjectListFromJsonString(getIntent().getExtras().getString(Utility.Extra.DATA), CityDetail[].class);
-            }
-            else{
+            } else {
                 mBinding.tvCityName.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
             }
 
@@ -158,7 +158,7 @@ public class ManageSubscriptionActivity extends BaseAppCompatActivity {
             SpannableStringBuilder spannableStringBuilder
                     = new SpannableStringBuilder(getString(R.string.msg_welcome_x, name));
             spannableStringBuilder.append(Utility.ONE_CHARACTER_SPACE).append(Utility.ONE_CHARACTER_SPACE);
-            ImageSpan span = new ImageSpan(getBaseContext(), R.drawable.ic_smiley_folded_hands_big, ImageSpan.ALIGN_BASELINE);
+            ImageSpan span = new ImageSpan(getBaseContext(), R.drawable.emoji_folded_hands_big, ImageSpan.ALIGN_BASELINE);
             spannableStringBuilder.setSpan(span, spannableStringBuilder.length() - 1
                     , spannableStringBuilder.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
             mBinding.tvWelcomeText.setText(spannableStringBuilder);
@@ -179,7 +179,7 @@ public class ManageSubscriptionActivity extends BaseAppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (isManageSubscription)
-                openCitySelectionDialog();
+                    openCitySelectionDialog();
             }
         });
     }
@@ -249,8 +249,23 @@ public class ManageSubscriptionActivity extends BaseAppCompatActivity {
     private final ExpandableSubscribedPackagesRecyclerAdapter.ChildViewsClickListener childViewsClickListener =
             new ExpandableSubscribedPackagesRecyclerAdapter.ChildViewsClickListener() {
                 @Override
-                public void onBookClicked(JobCategoryModel model, int childAdapterPosition) {
-                    TaskCreationCCActivity.getInstance(mContext, model);
+                public void onBookClicked(JobCategoryModel model, int childAdapterPosition, PackageDetail packageDetail) {
+                    AddressModel addressModel = null;
+                    if (packageDetail.mSelectedAddressList != null) {
+                        for (AddressModel addressModel1 : packageDetail.mSelectedAddressList) {
+                            if (addressModel1.isSelected)
+                                addressModel = addressModel1;
+                        }
+                    }
+//                    CheepCareNotInYourCityDialog cheepCareNotInYourCityDialog =CheepCareNotInYourCityDialog.newInstance(new AcknowledgementInteractionListener() {
+//                        @Override
+//                        public void onAcknowledgementAccepted() {
+//
+//                        }
+//                    });
+//                    cheepCareNotInYourCityDialog.show(getSupportFragmentManager(),CheepCareNotInYourCityDialog.TAG);
+
+//                    TaskCreationCCActivity.getInstance(mContext, model, addressModel);
 //                    BookingConfirmationCcActivity.newInstance(mContext,null);
                 }
             };

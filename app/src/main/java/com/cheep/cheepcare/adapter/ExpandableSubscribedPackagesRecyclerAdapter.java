@@ -58,7 +58,7 @@ public class ExpandableSubscribedPackagesRecyclerAdapter extends ExpandableRecyc
     private final ChildViewsClickListener mListener;
 
     public interface ChildViewsClickListener {
-        void onBookClicked(JobCategoryModel model, int childAdapterPosition);
+        void onBookClicked(JobCategoryModel model, int childAdapterPosition, PackageDetail packageDetail);
     }
 
     /**
@@ -266,78 +266,75 @@ public class ExpandableSubscribedPackagesRecyclerAdapter extends ExpandableRecyc
             }
 
             if (packageDetail.mSelectedAddressList != null && !packageDetail.mSelectedAddressList.isEmpty()) {
-
-
-                if (packageDetail.mSelectedAddressList != null && !packageDetail.mSelectedAddressList.isEmpty()) {
-
-                    AddressModel addressModel = null;
-                    for (AddressModel addressModel1 : packageDetail.mSelectedAddressList) {
-                        if (addressModel1.isSelected) {
-                            addressModel = addressModel1;
-                        }
+                AddressModel addressModel = null;
+                for (AddressModel addressModel1 : packageDetail.mSelectedAddressList) {
+                    if (addressModel1.isSelected) {
+                        addressModel = addressModel1;
                     }
-                    if (addressModel == null)
-                        addressModel = packageDetail.mSelectedAddressList.get(0);
-
-                    if (!TextUtils.isEmpty(addressModel.nickname))
-                        mBinding.tvAddressNickname.setText(addressModel.nickname);
-                    else
-                        mBinding.tvAddressNickname.setText(Utility.getAddressCategoryString(addressModel.category));
-                    mBinding.ivAddressIcon.setImageResource(Utility.getAddressCategoryBlueIcon(addressModel.category));
-                    mBinding.tvAddress.setText(addressModel.address_initials + ", " + addressModel.address);
-
-                    String daysLeft = packageDetail.getDaysLeft(addressModel.end_date);
-                    if (daysLeft != null) {
-                        switch (daysLeft.length()) {
-                            case 0:
-                                mBinding.tvDaysLeft1.setVisibility(View.GONE);
-                                mBinding.tvDaysLeft2.setVisibility(View.GONE);
-                                mBinding.tvDaysLeft3.setVisibility(View.GONE);
-                                mBinding.tvLeftDays.setVisibility(View.GONE);
-                                break;
-                            case 1:
-                                mBinding.tvDaysLeft1.setVisibility(View.VISIBLE);
-                                mBinding.tvDaysLeft2.setVisibility(View.VISIBLE);
-                                mBinding.tvDaysLeft3.setVisibility(View.VISIBLE);
-
-                                mBinding.tvDaysLeft1.setText("0");
-                                mBinding.tvDaysLeft2.setText("0");
-                                mBinding.tvDaysLeft3.setText(daysLeft);
-                                break;
-                            case 2:
-                                mBinding.tvDaysLeft1.setVisibility(View.VISIBLE);
-                                mBinding.tvDaysLeft2.setVisibility(View.VISIBLE);
-                                mBinding.tvDaysLeft3.setVisibility(View.VISIBLE);
-
-                                mBinding.tvDaysLeft1.setText("0");
-                                mBinding.tvDaysLeft2.setText(daysLeft.subSequence(0, 1));
-                                mBinding.tvDaysLeft3.setText(daysLeft.subSequence(1, 2));
-                                break;
-                            case 3:
-                                mBinding.tvDaysLeft1.setVisibility(View.VISIBLE);
-                                mBinding.tvDaysLeft2.setVisibility(View.VISIBLE);
-                                mBinding.tvDaysLeft3.setVisibility(View.VISIBLE);
-
-                                mBinding.tvDaysLeft1.setText(daysLeft.subSequence(0, 1));
-                                mBinding.tvDaysLeft2.setText(daysLeft.subSequence(1, 2));
-                                mBinding.tvDaysLeft3.setText(daysLeft.subSequence(2, 3));
-                                break;
-                        }
-                    } else {
-                        mBinding.tvDaysLeft1.setVisibility(View.GONE);
-                        mBinding.tvDaysLeft2.setVisibility(View.GONE);
-                        mBinding.tvDaysLeft3.setVisibility(View.GONE);
-                        mBinding.tvLeftDays.setVisibility(View.GONE);
-                    }
-
                 }
+                if (addressModel == null) {
+                    addressModel = packageDetail.mSelectedAddressList.get(0);
+                    addressModel.isSelected = true;
+                }
+
+                if (!TextUtils.isEmpty(addressModel.nickname))
+                    mBinding.tvAddressNickname.setText(addressModel.nickname);
+                else
+                    mBinding.tvAddressNickname.setText(Utility.getAddressCategoryString(addressModel.category));
+                mBinding.ivAddressIcon.setImageResource(Utility.getAddressCategoryBlueIcon(addressModel.category));
+                mBinding.tvAddress.setText(addressModel.address_initials + ", " + addressModel.address);
+
+                String daysLeft = packageDetail.getDaysLeft(addressModel.end_date);
+                if (daysLeft != null) {
+                    switch (daysLeft.length()) {
+                        case 0:
+                            mBinding.tvDaysLeft1.setVisibility(View.GONE);
+                            mBinding.tvDaysLeft2.setVisibility(View.GONE);
+                            mBinding.tvDaysLeft3.setVisibility(View.GONE);
+                            mBinding.tvLeftDays.setVisibility(View.GONE);
+                            break;
+                        case 1:
+                            mBinding.tvDaysLeft1.setVisibility(View.VISIBLE);
+                            mBinding.tvDaysLeft2.setVisibility(View.VISIBLE);
+                            mBinding.tvDaysLeft3.setVisibility(View.VISIBLE);
+
+                            mBinding.tvDaysLeft1.setText("0");
+                            mBinding.tvDaysLeft2.setText("0");
+                            mBinding.tvDaysLeft3.setText(daysLeft);
+                            break;
+                        case 2:
+                            mBinding.tvDaysLeft1.setVisibility(View.VISIBLE);
+                            mBinding.tvDaysLeft2.setVisibility(View.VISIBLE);
+                            mBinding.tvDaysLeft3.setVisibility(View.VISIBLE);
+
+                            mBinding.tvDaysLeft1.setText("0");
+                            mBinding.tvDaysLeft2.setText(daysLeft.subSequence(0, 1));
+                            mBinding.tvDaysLeft3.setText(daysLeft.subSequence(1, 2));
+                            break;
+                        case 3:
+                            mBinding.tvDaysLeft1.setVisibility(View.VISIBLE);
+                            mBinding.tvDaysLeft2.setVisibility(View.VISIBLE);
+                            mBinding.tvDaysLeft3.setVisibility(View.VISIBLE);
+
+                            mBinding.tvDaysLeft1.setText(daysLeft.subSequence(0, 1));
+                            mBinding.tvDaysLeft2.setText(daysLeft.subSequence(1, 2));
+                            mBinding.tvDaysLeft3.setText(daysLeft.subSequence(2, 3));
+                            break;
+                    }
+                } else {
+                    mBinding.tvDaysLeft1.setVisibility(View.GONE);
+                    mBinding.tvDaysLeft2.setVisibility(View.GONE);
+                    mBinding.tvDaysLeft3.setVisibility(View.GONE);
+                    mBinding.tvLeftDays.setVisibility(View.GONE);
+                }
+
+            }
 
 
                 /*if (Short.parseShort(daysLeft) <= 10) {
                     mBinding.llRenewContainer.setVisibility(View.VISIBLE);
                     mBinding.tvRenewText.setText(context.getString(R.string.msg_renew_subscription_ends, model.daysLeft));
                 }*/
-            }
         }
     }
 
@@ -415,7 +412,7 @@ public class ExpandableSubscribedPackagesRecyclerAdapter extends ExpandableRecyc
             mBinding.tvBook.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mListener.onBookClicked(model, ChildCategoryViewHolder.this.getChildAdapterPosition());
+                    mListener.onBookClicked(model, ChildCategoryViewHolder.this.getChildAdapterPosition(), mList.get(getParentAdapterPosition()));
                 }
             });
         }

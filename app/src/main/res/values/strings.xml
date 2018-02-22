@@ -660,7 +660,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="rupee_symbol_x_package_price_with_star">₹%1s/MTH*</string>
     <string name="rupee_symbol_x_package_price">₹%1s/MTH</string>
     <string name="msg_not_cc_user">Hi, it seems that you\'re not a\nCHEEP Care user!</string>
-    <string name="label_starting_price_cc">Available as low as %1s</string>
+    <string name="label_starting_price_cc">AVAILABLE AS LOW AS ₹%1s/MTH*</string>
     <string name="msg_become_cc_member">Become a CHEEP Care Member</string>
     <string name="label_free_with_cc">Free with Cheep Care</string>
     <string name="label_paid_cheep_services">Paid Cheep Services</string>
@@ -708,4 +708,13 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_quality_of_job">Quality of Job</string>
     <string name="label_presentation">Presentation</string>
     <string name="msg_would_you_recommend_pro">Would you like to recommend this PRO to your friends?</string>
+    <string name="label_all_done">All Done!</string>
+    <string name="label_title_cheep_is_here">Don\'t worry, Cheep is here</string>
+    <string name="label_title_we_hear_you">We hear you</string>
+    <string name="label_desc_cheep_is_here_1">Hey there, while Cheep Care isn\'t in your city as yet, you can still get all your tasks done through Cheep by booking your task below</string>
+    <string name="label_desc_cheep_is_here_2">If you want Cheep Care to come to your city as much as we do, please vote now</string>
+    <string name="label_desc_we_hear_you">Your vote means Cheep Care will come to your city even sooner! Until we bring Cheep Care to you, go ahead and book using Cheep now.</string>
+    <string name="label_book_task">Book Task</string>
+    <string name="label_vote">Vote</string>
+    <string name="hint_enter_your_mobile_number_to_vote">Enter your mobile number to vote</string>
 </resources>
