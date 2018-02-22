@@ -26,8 +26,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.view.animation.DecelerateInterpolator;
+import android.view.animation.Interpolator;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.Scroller;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -67,6 +70,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -1140,29 +1144,41 @@ public class HomeTabFragment extends BaseFragment {
         }
         // Sliding of Viewpager image
         mHandlerSubscriptionBanner.postDelayed(mAutoSlideRunnableSubscriptionBanner, 4000);
+        mFragmentTabHomeBinding.layoutBannerHeader.viewPagerSubscriptionBannerImages.addOnPageChangeListener(new CircularViewPagerHandler(mFragmentTabHomeBinding.layoutBannerHeader.viewPagerSubscriptionBannerImages));
 
-        mFragmentTabHomeBinding.layoutBannerHeader.viewPagerSubscriptionBannerImages.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int i, float v, int i1) {
-                mFragmentTabHomeBinding.layoutBannerHeader.viewPagerSubscriptionBannerImages.getParent().requestDisallowInterceptTouchEvent(true);
-            }
+        try {
+            Field mScroller = ViewPager.class.getDeclaredField("mScroller");
+            mScroller.setAccessible(true);
+            mScroller.set(mFragmentTabHomeBinding.layoutBannerHeader.viewPagerSubscriptionBannerImages, new CustomScroller(mContext, new DecelerateInterpolator(), 700));
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
 
-            @Override
-            public void onPageSelected(int i) {
-                if (mHandlerSubscriptionBanner == null) {
-                    return;
-                }
-                //Reset the sliding
-                mHandlerSubscriptionBanner.removeCallbacks(mAutoSlideRunnableSubscriptionBanner);
-                // reset the sliding
-                mHandlerSubscriptionBanner.postDelayed(mAutoSlideRunnableSubscriptionBanner, 4000);
-            }
 
-            @Override
-            public void onPageScrollStateChanged(int i) {
-
-            }
-        });
+//        mFragmentTabHomeBinding.layoutBannerHeader.viewPagerSubscriptionBannerImages.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+//            @Override
+//            public void onPageScrolled(int i, float v, int i1) {
+//                mFragmentTabHomeBinding.layoutBannerHeader.viewPagerSubscriptionBannerImages.getParent().requestDisallowInterceptTouchEvent(true);
+//            }
+//
+//            @Override
+//            public void onPageSelected(int i) {
+//                if (mHandlerSubscriptionBanner == null) {
+//                    return;
+//                }
+//                //Reset the sliding
+//                mHandlerSubscriptionBanner.removeCallbacks(mAutoSlideRunnableSubscriptionBanner);
+//                // reset the sliding
+//                mHandlerSubscriptionBanner.postDelayed(mAutoSlideRunnableSubscriptionBanner, 4000);
+//            }
+//
+//            @Override
+//            public void onPageScrollStateChanged(int i) {
+//
+//            }
+//        });
     }
 
     private void setupCoverViewPager(ArrayList<BannerImageModel> mBannerListModels) {
@@ -1225,13 +1241,23 @@ public class HomeTabFragment extends BaseFragment {
     private Runnable mAutoSlideRunnableSubscriptionBanner = new Runnable() {
         @Override
         public void run() {
-            int currentPosition = mFragmentTabHomeBinding.layoutBannerHeader.viewPagerSubscriptionBannerImages.getCurrentItem();
-            if (currentPosition == (cheepCareBannerViewPagerAdapter.getCount() - 1)) {
-                currentPosition = 0;
+//            int currentPosition = mFragmentTabHomeBinding.layoutBannerHeader.viewPagerSubscriptionBannerImages.getCurrentItem();
+//            if (currentPosition == (cheepCareBannerViewPagerAdapter.getCount() - 1)) {
+//                currentPosition = 0;
+//            } else {
+//                currentPosition = currentPosition + 1;
+//            }
+
+            final int lastPosition = mFragmentTabHomeBinding.layoutBannerHeader.viewPagerSubscriptionBannerImages.getAdapter().getCount() - 1;
+            if (mCurrentCityBannerPosition == 0) {
+                mFragmentTabHomeBinding.layoutBannerHeader.viewPagerSubscriptionBannerImages.setCurrentItem(mCurrentCityBannerPosition + 1, true);
+            } else if (mCurrentCityBannerPosition == lastPosition) {
+                mFragmentTabHomeBinding.layoutBannerHeader.viewPagerSubscriptionBannerImages.setCurrentItem(0, false);
             } else {
-                currentPosition = currentPosition + 1;
+                mFragmentTabHomeBinding.layoutBannerHeader.viewPagerSubscriptionBannerImages.setCurrentItem(mCurrentCityBannerPosition + 1, true);
             }
-            mFragmentTabHomeBinding.layoutBannerHeader.viewPagerSubscriptionBannerImages.setCurrentItem(currentPosition);
+
+            mFragmentTabHomeBinding.layoutBannerHeader.viewPagerSubscriptionBannerImages.setCurrentItem(mCurrentCityBannerPosition);
         }
     };
 
@@ -1604,4 +1630,79 @@ public class HomeTabFragment extends BaseFragment {
     /////////////////////////////////////// Favourite Category [End]/////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////            Vertical view pager smooth scrooling           [start]       /////////////////
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public class CustomScroller extends Scroller {
+
+        private int mDuration;
+
+        public CustomScroller(Context context, Interpolator interpolator, int duration) {
+            super(context, interpolator);
+            mDuration = duration;
+        }
+
+        @Override
+        public void startScroll(int startX, int startY, int dx, int dy, int duration) {
+            // Ignore received duration, use fixed one instead
+            super.startScroll(startX, startY, dx, dy, mDuration);
+        }
+    }
+
+    private int mCurrentCityBannerPosition;
+
+    public class CircularViewPagerHandler implements ViewPager.OnPageChangeListener {
+        private ViewPager mViewPager;
+        private int mScrollState;
+
+        public CircularViewPagerHandler(final ViewPager viewPager) {
+            mViewPager = viewPager;
+        }
+
+        @Override
+        public void onPageSelected(final int position) {
+            mCurrentCityBannerPosition = position;
+            if (mHandler == null) {
+                return;
+            }
+            mHandler.removeCallbacks(mAutoSlideRunnableSubscriptionBanner);
+            mHandler.postDelayed(mAutoSlideRunnableSubscriptionBanner, 4000);
+        }
+
+        @Override
+        public void onPageScrollStateChanged(final int state) {
+            handleScrollState(state);
+            mScrollState = state;
+        }
+
+        private void handleScrollState(final int state) {
+            if (state == ViewPager.SCROLL_STATE_IDLE) {
+                setNextItemIfNeeded();
+            }
+        }
+
+        private void setNextItemIfNeeded() {
+            if (!isScrollStateSettling()) {
+                handleSetNextItem();
+            }
+        }
+
+        private boolean isScrollStateSettling() {
+            return mScrollState == ViewPager.SCROLL_STATE_SETTLING;
+        }
+
+        private void handleSetNextItem() {
+        }
+
+        @Override
+        public void onPageScrolled(final int position, final float positionOffset, final int positionOffsetPixels) {
+        }
+    }
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////            Vertical view pager smooth scrooling           [end]         /////////////////
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }
