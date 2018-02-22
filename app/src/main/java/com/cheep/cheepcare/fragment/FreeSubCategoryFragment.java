@@ -16,6 +16,7 @@ import com.cheep.R;
 import com.cheep.activity.BaseAppCompatActivity;
 import com.cheep.cheepcare.activity.TaskCreationCCActivity;
 import com.cheep.cheepcare.adapter.ExpandableSubCategoryUnitAdapter;
+import com.cheep.cheepcare.adapter.FreeServicesAdapter;
 import com.cheep.databinding.FragmentSelectSubserviceBinding;
 import com.cheep.fragment.BaseFragment;
 import com.cheep.model.SubServiceDetailModel;
@@ -43,7 +44,7 @@ import static com.cheep.network.NetworkUtility.TAGS.CAT_ID;
 public class FreeSubCategoryFragment extends BaseFragment {
     public static final String TAG = FreeSubCategoryFragment.class.getSimpleName();
     private FragmentSelectSubserviceBinding mFragmentSelectSubserviceBinding;
-    private ExpandableSubCategoryUnitAdapter mSubCategoryUnitAdapter;
+    private FreeServicesAdapter mFreeServicesAdapter;
     ErrorLoadingHelper errorLoadingHelper;
     private TaskCreationCCActivity mTaskCreationCCActivity;
     private boolean isVerified = false;
@@ -78,7 +79,7 @@ public class FreeSubCategoryFragment extends BaseFragment {
             return;
         }
 
-        if (!mSubCategoryUnitAdapter.getSelectedList().isEmpty()) {
+        if (!mFreeServicesAdapter.getSelectedList().isEmpty()) {
             mTaskCreationCCActivity.setTaskState(TaskCreationCCActivity.STEP_ONE_VERIFIED);
         } else {
             mTaskCreationCCActivity.setTaskState(TaskCreationCCActivity.STEP_ONE_NORMAL);
@@ -102,8 +103,8 @@ public class FreeSubCategoryFragment extends BaseFragment {
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mContext);
         mFragmentSelectSubserviceBinding.recyclerView.setLayoutManager(linearLayoutManager);
-        mSubCategoryUnitAdapter = new ExpandableSubCategoryUnitAdapter(getDummyList());
-        mFragmentSelectSubserviceBinding.recyclerView.setAdapter(mSubCategoryUnitAdapter);
+        mFreeServicesAdapter = new FreeServicesAdapter(/*getDummyList()*/);
+        mFragmentSelectSubserviceBinding.recyclerView.setAdapter(mFreeServicesAdapter);
         errorLoadingHelper.showLoading();
         fetchListOfSubCategory(mTaskCreationCCActivity.mJobCategoryModel.catId);
     }
@@ -210,7 +211,7 @@ public class FreeSubCategoryFragment extends BaseFragment {
                                         jsonObject.optString(NetworkUtility.TAGS.DATA)
                                         , SubServiceDetailModel[].class);
 
-                        mSubCategoryUnitAdapter.addList(list/*, getString(R.string.label_other_sub_service)*/);
+                        mFreeServicesAdapter.addAll(list/*, getString(R.string.label_other_sub_service)*/);
                         errorLoadingHelper.success();
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
@@ -254,7 +255,6 @@ public class FreeSubCategoryFragment extends BaseFragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        Log.d(TAG, "onDetach: "+mSubCategoryUnitAdapter.toString());
         Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.WS.FETCH_SUB_SERVICE_LIST);
     }
 
@@ -265,7 +265,7 @@ public class FreeSubCategoryFragment extends BaseFragment {
      * @return
      */
     public List<SubServiceDetailModel> getSelectedSubServices() {
-        return mSubCategoryUnitAdapter.getSelectedList();
+        return mFreeServicesAdapter.getSelectedList();
     }
 
 }

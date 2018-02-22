@@ -36,8 +36,7 @@ public class TaskCreationPhase1Fragment extends BaseFragment {
     /*private TaskCreationCCActivity mTaskCreationCCActivity;*/
 
     public static TaskCreationPhase1Fragment newInstance() {
-        TaskCreationPhase1Fragment fragment = new TaskCreationPhase1Fragment();
-        return fragment;
+        return new TaskCreationPhase1Fragment();
     }
 
     public TaskCreationPhase1Fragment() {

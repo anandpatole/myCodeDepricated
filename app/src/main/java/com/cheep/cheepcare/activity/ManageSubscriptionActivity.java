@@ -265,7 +265,7 @@ public class ManageSubscriptionActivity extends BaseAppCompatActivity {
 //                    });
 //                    cheepCareNotInYourCityDialog.show(getSupportFragmentManager(),CheepCareNotInYourCityDialog.TAG);
 
-//                    TaskCreationCCActivity.getInstance(mContext, model, addressModel);
+                    TaskCreationCCActivity.getInstance(mContext, model, addressModel);
 //                    BookingConfirmationCcActivity.newInstance(mContext,null);
                 }
             };
@@ -306,6 +306,11 @@ public class ManageSubscriptionActivity extends BaseAppCompatActivity {
                 public void getSubscribedCarePackageSuccessResponse(CityDetail cityDetail, List<PackageDetail> subscribedList, List<PackageDetail> allPackageList, AdminSettingModel adminSettingModel) {
                     mCityDetail = cityDetail;
                     mSubscribedPackageList = subscribedList;
+                    /*for (PackageDetail subscribedPackageDetail : mSubscribedPackageList) {
+                        for (AddressModel selectedAddressModel : subscribedPackageDetail.mSelectedAddressList) {
+                            selectedAddressModel.isSubscribedAddress = true;
+                        }
+                    }*/
                     mAllPackagesList = allPackageList;
                     mAdminSettingModel = adminSettingModel;
                     hideProgressDialog();

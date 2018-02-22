@@ -125,14 +125,15 @@ asdadasdasdasdadasdasd" />
             </LinearLayout>
         </FrameLayout>
 
-        <FrameLayout
+        <!--<FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-
+-->
             <com.cheep.custom_view.NonSwipeableViewPager
                 android:id="@+id/viewpager"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="0dp"
+                android:layout_weight="1"/>
 
             <com.cheep.custom_view.CFTextViewSemiBold
                 android:id="@+id/text_post_task"
@@ -146,6 +147,6 @@ asdadasdasdasdadasdasd" />
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_size_17sp"
                 android:visibility="gone" />
-        </FrameLayout>
+      <!--  </FrameLayout>-->
     </LinearLayout>
 </layout>

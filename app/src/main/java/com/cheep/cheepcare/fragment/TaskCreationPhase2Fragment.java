@@ -362,11 +362,11 @@ public class TaskCreationPhase2Fragment extends BaseFragment
         mBinding.spinnerAddressSelection.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (!isClicked && position == 0) {
+                if (mAddressList.get(position).address.equalsIgnoreCase(getString(R.string.label_select_address))) {
                     Log.d(TAG, "onItemSelected: 0th position default selection");
                 } else if (position == mAddressList.size() - 1) {
                     showBottomAddressDialog(null);
-                } else if (mAddressList.get(position).isSubscribedAddress) {
+                } else if (mAddressList.get(position).is_subscribe.equals("1")) {
                     Log.d(TAG, "onItemSelected: ");
                     AddressModel model = mAddressList.get(position);
                     mBinding.iconTaskWhere.setImageDrawable(ContextCompat.getDrawable(mContext
@@ -383,10 +383,10 @@ public class TaskCreationPhase2Fragment extends BaseFragment
 
                     mBinding.tvAddress.setText(model.address_initials + ", " + model.address);
                     mSelectedAddress = model;
-                } else {
-                    NotSubscribedAddressDialog notSubscribedAddressDialog = new NotSubscribedAddressDialog();
-                    notSubscribedAddressDialog.show(((AppCompatActivity) mContext).getSupportFragmentManager(), SelectSpecificTimeDialog.TAG);
-                    notSubscribedAddressDialog.setTargetFragment(TaskCreationPhase2Fragment.this, 0);
+                } else if (mAddressList.get(position).is_subscribe.equals("0")){
+//                    NotSubscribedAddressDialog notSubscribedAddressDialog = new NotSubscribedAddressDialog();
+//                    notSubscribedAddressDialog.show(((AppCompatActivity) mContext).getSupportFragmentManager(), NotSubscribedAddressDialog.TAG);
+//                    notSubscribedAddressDialog.setTargetFragment(TaskCreationPhase2Fragment.this, 0);
                 }
             }
 

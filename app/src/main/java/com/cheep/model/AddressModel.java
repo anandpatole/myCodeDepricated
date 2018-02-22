@@ -31,7 +31,7 @@ public class AddressModel implements Serializable {
     public String countryName;
     public String stateName;
 
-    public boolean isSubscribedAddress = false;
+//    public boolean isSubscribedAddress = is_subscribe.equals("1");
     public boolean isSelected = false;
 
     public LatLng getLatLng() {
