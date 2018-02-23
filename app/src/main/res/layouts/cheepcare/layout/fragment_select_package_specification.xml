@@ -61,7 +61,7 @@
                         android:checked="true"
                         android:gravity="center_vertical"
                         android:maxLines="2"
-                        android:text="vd dff sdf sdfs fsdf sdf fsd sdfsfs fdsdfsdfsdfsd fs dfsdfs dfsdfsdf sdfdsf"
+                        tools:text="vd dff sdf sdfs fsdf sdf fsd sdfsfs fdsdfsdfsdfsd fs dfsdfs dfsdfsdf sdfdsf"
                         android:textColor="@color/black"
                         android:textSize="@dimen/text_size_11sp"
                         android:visibility="visible"/>
@@ -131,7 +131,7 @@
                             android:gravity="center"
                             android:includeFontPadding="false"
                             android:paddingLeft="@dimen/scale_8dp"
-                            android:text="home"
+                            tools:text="home"
                             android:textColor="@color/splash_gradient_end"
                             app:layout_constraintBottom_toBottomOf="@+id/view_dot"
                             app:layout_constraintStart_toEndOf="@id/iv_home"
@@ -151,7 +151,7 @@
                             android:gravity="center_vertical"
                             android:includeFontPadding="false"
                             android:singleLine="true"
-                            android:text="Subscribed under CHEEP care"
+                            tools:text="Subscribed under CHEEP care"
                             android:textColor="@color/grey_varient_8"
                             android:textSize="@dimen/text_size_14sp"/>
                     </LinearLayout>

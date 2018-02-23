@@ -115,10 +115,7 @@ public class PreferenceUtility {
     }
 
     public boolean getIntroScreenStatus() {
-        if (mSharedPreferences.contains(PREF_INTRO_SCREEN_STATUS)) {
-            return mSharedPreferences.getBoolean(PREF_INTRO_SCREEN_STATUS, false);
-        }
-        return false;
+        return mSharedPreferences.contains(PREF_INTRO_SCREEN_STATUS) && mSharedPreferences.getBoolean(PREF_INTRO_SCREEN_STATUS, false);
     }
 
     /**
@@ -206,10 +203,7 @@ public class PreferenceUtility {
     }
 
     public boolean isHomeScreenVisible() {
-        if (mSharedPreferences.contains(PREF_HOME_SCREEN_VISIBLE)) {
-            return mSharedPreferences.getBoolean(PREF_HOME_SCREEN_VISIBLE, true);
-        }
-        return true;
+        return !mSharedPreferences.contains(PREF_HOME_SCREEN_VISIBLE) || mSharedPreferences.getBoolean(PREF_HOME_SCREEN_VISIBLE, true);
     }
 
 

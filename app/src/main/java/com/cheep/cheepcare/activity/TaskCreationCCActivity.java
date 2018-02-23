@@ -24,7 +24,6 @@ import com.cheep.activity.LoginActivity;
 import com.cheep.cheepcare.adapter.TaskCreationPagerAdapter;
 import com.cheep.cheepcare.fragment.FreeSubCategoryFragment;
 import com.cheep.cheepcare.fragment.TaskCreationPhase2Fragment;
-import com.cheep.databinding.ActivityTaskCreateBinding;
 import com.cheep.databinding.ActivityTaskCreateCcBinding;
 import com.cheep.dialogs.AcknowledgementDialogWithoutProfilePic;
 import com.cheep.dialogs.AcknowledgementInteractionListener;

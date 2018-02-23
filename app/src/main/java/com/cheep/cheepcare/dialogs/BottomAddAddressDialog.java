@@ -407,7 +407,6 @@ public class BottomAddAddressDialog {
                     false
             );
             mFetchLocationInfoUtility.getLocationInfo(String.valueOf(latLng.latitude), String.valueOf(latLng.longitude));
-            return;
         } else {
             /**
              * Logged In User so first need to fetch other location info and then call add address
@@ -458,7 +457,6 @@ public class BottomAddAddressDialog {
                     false
             );
             mFetchLocationInfoUtility.getLocationInfo(String.valueOf(latLng.latitude), String.valueOf(latLng.longitude));
-            return;
         }
     }
 

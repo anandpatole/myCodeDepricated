@@ -1,7 +1,6 @@
 package com.cheep.cheepcare.model;
 
 import com.cheep.custom_view.expandablerecycleview.Parent;
-import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;

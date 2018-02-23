@@ -865,8 +865,8 @@ public class HomeTabFragment extends BaseFragment {
                         }
 
 //                       Condition for changing the location icon
-                        Log.v("Closest Area", jsonObject.optString(NetworkUtility.TAGS.CLOSEST_AREA).toString());
-                        String cat = jsonObject.optString(NetworkUtility.TAGS.CLOSEST_AREA).toString();
+                        Log.v("Closest Area", jsonObject.optString(NetworkUtility.TAGS.CLOSEST_AREA));
+                        String cat = jsonObject.optString(NetworkUtility.TAGS.CLOSEST_AREA);
                         if (cat.equals("{}") || cat.equals("[]") || cat.equals("null") || TextUtils.isEmpty(cat)) {
                             String Category = "";
                             Log.v("Closest Area if", Category);

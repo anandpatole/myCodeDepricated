@@ -224,11 +224,11 @@ public class LoginActivity extends BaseAppCompatActivity implements FacebookHelp
                 case R.id.img_login_submit:
                     onClickOnSignIn();
                     break;
-                case R.id.layout_signup:
+//                case R.id.layout_signup:
 //                    redirectUserToSignUp(null, null, NetworkUtility.TAGS.LOGINWITHTYPE.EMAIL);
-                    break;
+//                    break;
                /* case R.id.text_forgot_password:
-                    showForgotPasswordDialog();
+//                    showForgotPasswordDialog();
                     break;*/
                 case R.id.iv_twitter:
                     onClickOfTwitter();

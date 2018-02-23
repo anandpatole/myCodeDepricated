@@ -112,7 +112,6 @@ public class VerifyOtpActivity extends BaseAppCompatActivity {
         actionBar.setTitle(Utility.EMPTY_STRING);
         actionBar.setDisplayHomeAsUpEnabled(true);
         //noinspection RestrictedApi
-        actionBar.setDefaultDisplayHomeAsUpEnabled(true);
     }
 
     @Override

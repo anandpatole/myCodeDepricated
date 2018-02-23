@@ -52,7 +52,7 @@
                     android:checked="true"
                     android:gravity="center_vertical"
                     android:maxLines="2"
-                    android:text="vd dff sdf sdfs fsdf sdf fsd sdfsfs fdsdfsdfsdfsd fs dfsdfs dfsdfsdf sdfdsf"
+                    tools:text="vd dff sdf sdfs fsdf sdf fsd sdfsfs fdsdfsdfsdfsd fs dfsdfs dfsdfsdf sdfdsf"
                     android:textColor="@color/black"
                     android:textSize="@dimen/text_size_11sp"
                     android:visibility="visible" />

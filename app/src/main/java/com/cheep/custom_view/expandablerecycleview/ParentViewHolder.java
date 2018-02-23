@@ -25,7 +25,7 @@ public class ParentViewHolder<P extends Parent<C>, C> extends RecyclerView.ViewH
     ExpandableRecyclerAdapter mExpandableAdapter;
 
     /**
-     * Empowers {@link com.bignerdranch.expandablerecyclerview.ExpandableRecyclerAdapter}
+     * Empowers
      * implementations to be notified of expand/collapse state change events.
      */
     public interface ParentViewHolderExpandCollapseListener {
@@ -132,7 +132,6 @@ public class ParentViewHolder<P extends Parent<C>, C> extends RecyclerView.ViewH
 
     /**
      * Setter for the {@link ParentViewHolderExpandCollapseListener} implementedycle in
-     * {@link com.bignerdranch.expandablerecyclerview.ExpandableRecrAdapter}.
      *
      * @param parentViewHolderExpandCollapseListener The {@link ParentViewHolderExpandCollapseListener} to set on the {@link ParentViewHolder}
      */

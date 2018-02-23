@@ -77,11 +77,11 @@ public class ChatMessageRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
                 TaskChatMessageModel message = messages.get(i);
                 if (message != null) {
                     Boolean isnewDate = false;
-                    if (mList.size() == 0) {
+                    if (mList.isEmpty()) {
                         isnewDate = true;
                     } else {
                         TaskChatMessageModel preMsg = mList.get(0);
-                        if (DateUtils.isEqual(preMsg.timestamp, message.timestamp) == false) {
+                        if (!DateUtils.isEqual(preMsg.timestamp, message.timestamp)) {
                             isnewDate = true;
                         } else if (preMsg.messageType.equalsIgnoreCase(Utility.CHAT_TYPE_DATE)) {
                             mList.remove(preMsg);
@@ -117,7 +117,7 @@ public class ChatMessageRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
                 mList.add(msg);
             } else {
                 TaskChatMessageModel preMsg = mList.get(mList.size() - 1);
-                if (DateUtils.isEqual(preMsg.timestamp, message.timestamp) == false) {
+                if (!DateUtils.isEqual(preMsg.timestamp, message.timestamp)) {
                     TaskChatMessageModel hederMsg = new TaskChatMessageModel();
                     hederMsg.messageType = Utility.CHAT_TYPE_DATE;
                     hederMsg.timestamp = message.timestamp;

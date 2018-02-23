@@ -15,14 +15,9 @@ import android.view.ViewGroup;
 
 import com.cheep.R;
 import com.cheep.activity.BaseAppCompatActivity;
-import com.cheep.cheepcare.activity.TaskCreationCCActivity;
-import com.cheep.cheepcare.dialogs.LimitExceededDialog;
-import com.cheep.cheepcare.dialogs.PaymentFailedDialog;
 import com.cheep.databinding.FragmentTaskCreationPhase1Binding;
-import com.cheep.dialogs.AcknowledgementInteractionListener;
 import com.cheep.fragment.BaseFragment;
 import com.cheep.model.SubServiceDetailModel;
-import com.cheep.utils.LogUtils;
 
 import java.util.ArrayList;
 import java.util.List;

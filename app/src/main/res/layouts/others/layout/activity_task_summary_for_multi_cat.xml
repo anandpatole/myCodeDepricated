@@ -130,7 +130,6 @@
                                 android:id="@+id/img_1"
                                 android:layout_width="@dimen/scale_40dp"
                                 android:layout_height="@dimen/scale_40dp"
-                                android:src="@drawable/dummy_person1"
                                 tools:ignore="ContentDescription" />
 
                             <ImageView
@@ -138,7 +137,6 @@
                                 android:layout_width="@dimen/scale_40dp"
                                 android:layout_height="@dimen/scale_40dp"
                                 android:layout_marginLeft="-20dp"
-                                android:src="@drawable/dummy_person1"
                                 tools:ignore="ContentDescription" />
 
                             <ImageView
@@ -146,7 +144,6 @@
                                 android:layout_width="@dimen/scale_40dp"
                                 android:layout_height="@dimen/scale_40dp"
                                 android:layout_marginLeft="-20dp"
-                                android:src="@drawable/dummy_person1"
                                 tools:ignore="ContentDescription" />
 
                             <ImageView
@@ -154,7 +151,6 @@
                                 android:layout_width="@dimen/scale_40dp"
                                 android:layout_height="@dimen/scale_40dp"
                                 android:layout_marginLeft="-20dp"
-                                android:src="@drawable/dummy_person1"
                                 tools:ignore="ContentDescription" />
 
                             <ImageView
@@ -162,7 +158,6 @@
                                 android:layout_width="@dimen/scale_40dp"
                                 android:layout_height="@dimen/scale_40dp"
                                 android:layout_marginLeft="-20dp"
-                                android:src="@drawable/dummy_person1"
                                 tools:ignore="ContentDescription" />
 
                             <com.cheep.custom_view.CFTextViewSemiBold
@@ -579,7 +574,7 @@
                                     android:layout_gravity="center"
                                     android:background="@drawable/xml_circular_indicator_selected_with_border"
                                     android:gravity="center_vertical|center_horizontal"
-                                    android:text="+1"
+                                    android:text="@string/label_plus_1"
                                     android:textColor="@color/white"
                                     android:textSize="@dimen/text_size_11sp" />
                             </FrameLayout>
@@ -609,7 +604,7 @@
                                     android:layout_gravity="center"
                                     android:background="@drawable/xml_circular_indicator_selected_with_border"
                                     android:gravity="center_vertical|center_horizontal"
-                                    android:text="+2"
+                                    android:text="@string/label_plus_2"
                                     android:textColor="@color/white"
                                     android:textSize="@dimen/text_size_11sp" />
                             </FrameLayout>

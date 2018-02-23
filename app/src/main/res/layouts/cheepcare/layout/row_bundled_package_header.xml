@@ -32,7 +32,7 @@
                 android:gravity="center_horizontal"
                 android:layout_marginRight="@dimen/scale_3dp"
                 android:layout_marginLeft="@dimen/scale_3dp"
-                android:text="Save an additional 5% when you add one more package"
+                android:text="@string/label_save_an_additional_5_when_you_add_one_more_package"
                 android:textSize="@dimen/text_size_12sp"/>
 
             <ImageView
@@ -52,7 +52,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="@dimen/scale_5dp"
             android:background="@drawable/bg_ribbon"
-            android:text="Save 10% when you add two more packages"
+            android:text="@string/label_save_10_when_you_add_two_more_packages"
             android:textColor="@color/white"
             android:textSize="@dimen/text_size_12sp"/>
 

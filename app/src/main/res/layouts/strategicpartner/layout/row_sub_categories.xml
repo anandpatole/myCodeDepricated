@@ -20,10 +20,11 @@
 
         <com.cheep.custom_view.CFTextViewSemiBold
             android:id="@+id/text_sub_category_name"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_marginLeft="@dimen/scale_16dp"
+            android:layout_marginStart="@dimen/scale_16dp"
             android:textColor="@color/selector_text_name_subservice"
             android:textSize="@dimen/text_size_18sp"
             tools:text="Restaurant"/>

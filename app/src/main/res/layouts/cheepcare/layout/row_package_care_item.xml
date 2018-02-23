@@ -123,7 +123,7 @@
                 android:id="@+id/tv_left_days"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Days Left"
+                android:text="@string/label_days_left"
                 android:textColor="@color/white"
                 app:layout_constraintEnd_toEndOf="@id/tv_days_left3"
                 app:layout_constraintStart_toEndOf="@id/ln_address_row"
@@ -169,7 +169,7 @@
                     android:layout_marginStart="@dimen/scale_2dp"
                     android:layout_weight="1"
                     android:singleLine="true"
-                    android:text="Home 12"
+                    tools:text="Home 12"
                     android:textColor="@color/splash_gradient_end"
                     android:textSize="@dimen/text_size_12sp"/>
 
@@ -183,7 +183,7 @@
                     android:drawableEnd="@drawable/ic_drop_down_arrow"
                     android:drawableRight="@drawable/ic_drop_down_arrow"
                     android:singleLine="true"
-                    android:text="121, Ghanshyam Enclave, New Mumbai"
+                    tools:text="121, Ghanshyam Enclave, New Mumbai"
                     android:textColor="@color/grey_varient_10"
                     android:textSize="@dimen/text_size_12sp"/>
 

@@ -10,7 +10,6 @@ import android.text.TextUtils;
 import com.cheep.R;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.DecimalFormat;
@@ -50,7 +49,7 @@ public class FirebaseUtils
             String formattedTaskId=getPrefixTaskId(taskId);
             String formattedSpId=getPrefixSPId(mSpId);
             String formattedUserId=getPrefixUserId(mUserId);
-            return String.format(String.format("%s_%s_%s",formattedTaskId,formattedSpId,formattedUserId));
+            return String.format("%s_%s_%s",formattedTaskId,formattedSpId,formattedUserId);
         }
         return "";
     }

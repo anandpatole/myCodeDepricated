@@ -302,7 +302,6 @@
                     android:id="@+id/img_1"
                     android:layout_width="@dimen/scale_60dp"
                     android:layout_height="@dimen/scale_60dp"
-                    android:src="@drawable/dummy_person1"
                     tools:ignore="ContentDescription" />
 
                 <ImageView
@@ -310,7 +309,6 @@
                     android:layout_width="@dimen/scale_60dp"
                     android:layout_height="@dimen/scale_60dp"
                     android:layout_marginLeft="-20dp"
-                    android:src="@drawable/dummy_person1"
                     tools:ignore="ContentDescription" />
 
                 <ImageView
@@ -318,7 +316,6 @@
                     android:layout_width="@dimen/scale_60dp"
                     android:layout_height="@dimen/scale_60dp"
                     android:layout_marginLeft="-20dp"
-                    android:src="@drawable/dummy_person1"
                     tools:ignore="ContentDescription" />
 
                 <ImageView
@@ -326,7 +323,6 @@
                     android:layout_width="@dimen/scale_60dp"
                     android:layout_height="@dimen/scale_60dp"
                     android:layout_marginLeft="-20dp"
-                    android:src="@drawable/dummy_person1"
                     tools:ignore="ContentDescription" />
 
                 <ImageView
@@ -334,7 +330,6 @@
                     android:layout_width="@dimen/scale_60dp"
                     android:layout_height="@dimen/scale_60dp"
                     android:layout_marginLeft="-20dp"
-                    android:src="@drawable/dummy_person1"
                     tools:ignore="ContentDescription" />
 
                 <com.cheep.custom_view.CFTextViewSemiBold

@@ -30,8 +30,7 @@ public class SelectedSubCatSummaryAdapter extends RecyclerView.Adapter<SelectedS
                         , parent
                         , false
                 );
-        SelectedSubServiceViewHolder holder = new SelectedSubServiceViewHolder(binding);
-        return holder;
+        return new SelectedSubServiceViewHolder(binding);
     }
 
     @Override

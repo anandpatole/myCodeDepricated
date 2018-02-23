@@ -647,7 +647,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
 
     <string name="hint_apply_cheep_promo_code">Apply CHEEP Promo code?</string>
     <string name="hint_apply_cheep_mate_code">Have a CHEEP Mate Code?</string>
-    <string name="label_empty_string"></string>
+    <string name="label_empty_string"/>
     <string name="label_proceed_to_checkout">Proceed to Checkout</string>
     <string name="add_package_to_cart">Add Package to Cart</string>
     <string name="label_appliance">%1d Appliances</string>
@@ -716,4 +716,15 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_book_task">Book Task</string>
     <string name="label_vote">Vote</string>
     <string name="hint_enter_your_mobile_number_to_vote">Enter your mobile number to vote</string>
+
+    <string name="label_plus_1">+1</string>
+    <string name="label_plus_2">+2</string>
+    <string name="label_non_working_hours_fee">Non-Working Hours Fee</string>
+    <string name="label_save_an_additional_5_when_you_add_one_more_package">Save an additional 5% when you add one more package</string>
+    <string name="label_save_10_when_you_add_two_more_packages">Save 10% when you add two more packages</string>
+    <string name="label_days_left">Days Left</string>
+    <string name="label_minus">-</string>
+    <string name="label_plus">+</string>
+
+
 </resources>

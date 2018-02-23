@@ -908,11 +908,11 @@ public class EnterTaskDetailFragment extends BaseFragment implements RequestPerm
         view.findViewById(R.id.btn_submit).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (addressRecyclerViewAdapter != null && addressRecyclerViewAdapter.getmList().isEmpty() == false) {
+                if (addressRecyclerViewAdapter != null && !addressRecyclerViewAdapter.getmList().isEmpty()) {
                     AddressModel model = addressRecyclerViewAdapter.getSelectedAddress();
                     if (model != null) {
                         String address;
-                        if (model.address_initials.length() > 0) {
+                        if (!model.address_initials.isEmpty()) {
                             address = model.address_initials + ", " + model.address;
                         } else {
                             address = model.address;

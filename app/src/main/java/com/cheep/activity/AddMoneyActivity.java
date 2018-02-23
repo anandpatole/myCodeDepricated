@@ -537,13 +537,9 @@ public class AddMoneyActivity extends BaseAppCompatActivity {
                 MessageEvent.PaytmResponse paytmResponse = new MessageEvent.PaytmResponse();
                 paytmResponse.ResponseCode = responseCode;
                 paytmResponse.ResponsePayLoad = responseInJsonOrInHTML;
-                if (!TextUtils.isEmpty(responseCode) && responseCode.equalsIgnoreCase(NetworkUtility.PAYTM.RESPONSE_CODES.LOGIN)) {
-                    // Close the screen and pass the success message to @com.cheep.activity.PaymentChoiceActivity
-                    paytmResponse.isSuccess = true;
-                } else {
-                    // Close the screen and pass the failure message to @com.cheep.activity.PaymentChoiceActivity
-                    paytmResponse.isSuccess = false;
-                }
+                // Close the screen and pass the success message to @com.cheep.activity.PaymentChoiceActivity
+// Close the screen and pass the failure message to @com.cheep.activity.PaymentChoiceActivity
+                paytmResponse.isSuccess = !TextUtils.isEmpty(responseCode) && responseCode.equalsIgnoreCase(NetworkUtility.PAYTM.RESPONSE_CODES.LOGIN);
 
                 // Create the message event and sent the broadcast to @PaymentChoiceActivity
                 MessageEvent messageEvent = new MessageEvent();

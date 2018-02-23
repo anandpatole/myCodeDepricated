@@ -98,7 +98,7 @@
                         android:layout_weight="1"
                         android:ellipsize="end"
                         android:maxLines="1"
-                        android:text="121, ddfdf dsfsdf sdfsdf  sdf "
+                        tools:text="121, ddfdf dsfsdf sdfsdf  sdf "
                         android:textColor="@color/grey_varient_10"
                         android:textSize="@dimen/text_size_12sp"/>
 

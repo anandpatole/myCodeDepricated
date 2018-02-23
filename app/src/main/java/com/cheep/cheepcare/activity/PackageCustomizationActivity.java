@@ -701,7 +701,6 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
                 false
         );
         mFetchLocationInfoUtility.getLocationInfo(String.valueOf(addressModel.lat), String.valueOf(addressModel.lng));
-        return;
 
     }
 

@@ -215,10 +215,10 @@ public class AddressRecyclerViewAdapter extends RecyclerView.Adapter<AddressRecy
     }
 
     public interface AddressItemInteractionListener {
-        public void onEditClicked(AddressModel model, int position);
+        void onEditClicked(AddressModel model, int position);
 
-        public void onDeleteClicked(AddressModel model, int position);
+        void onDeleteClicked(AddressModel model, int position);
 
-        public void onRowClicked(AddressModel model, int position);
+        void onRowClicked(AddressModel model, int position);
     }
 }

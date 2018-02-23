@@ -57,11 +57,11 @@ public class CFButtonRegular extends AppCompatButton {
         init();
         TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.CustomViews, defStyleAttr, 0);
         letterSpacing = a.getFloat(R.styleable.CustomViews_letterSpacing, 0);
+        a.recycle();
     }
 
     private void applyLetterSpacing(float letterSpacing) {
 
-        if (this.getText().toString() == null) return;
         StringBuilder builder = new StringBuilder();
         for (int i = 0; i < getText().toString().length(); i++) {
             String c = "" + getText().toString().charAt(i);

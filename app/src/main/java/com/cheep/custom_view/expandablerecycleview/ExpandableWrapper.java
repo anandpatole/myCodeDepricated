@@ -110,9 +110,7 @@ public class ExpandableWrapper<P extends Parent<C>, C> {
 
         final ExpandableWrapper<?, ?> that = (ExpandableWrapper<?, ?>) o;
 
-        if (mParent != null ? !mParent.equals(that.mParent) : that.mParent != null)
-            return false;
-        return mChild != null ? mChild.equals(that.mChild) : that.mChild == null;
+        return (mParent != null ? mParent.equals(that.mParent) : that.mParent == null) && (mChild != null ? mChild.equals(that.mChild) : that.mChild == null);
 
     }
 

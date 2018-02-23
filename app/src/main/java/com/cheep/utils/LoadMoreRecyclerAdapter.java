@@ -197,7 +197,7 @@ public abstract class LoadMoreRecyclerAdapter<VH extends RecyclerView.ViewHolder
 
         public ProgressViewHolder(View v) {
             super(v);
-            progressBar = (ProgressBar) v.findViewById(android.R.id.progress);
+            progressBar = v.findViewById(android.R.id.progress);
         }
     }
 }

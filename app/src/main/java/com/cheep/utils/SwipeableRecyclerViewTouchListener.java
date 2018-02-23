@@ -124,7 +124,7 @@ public class SwipeableRecyclerViewTouchListener implements RecyclerView.OnItemTo
           If a scroll listener is already assigned, the caller should still pass scroll changes through
           to this listener.
          */
-        mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 setEnabled(newState != RecyclerView.SCROLL_STATE_DRAGGING);

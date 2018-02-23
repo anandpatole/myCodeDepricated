@@ -150,7 +150,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
 
         if (mTaskDetailModel.mMediaModelList != null && !mTaskDetailModel.mMediaModelList.isEmpty()) {
             if (mTaskDetailModel.mMediaModelList.size() > 1)
-                mActivityTaskSummaryBinding.tvCounter.setText("+" + (mTaskDetailModel.mMediaModelList.size() - 1));
+                mActivityTaskSummaryBinding.tvCounter.setText(getString(R.string.label_plus) + (mTaskDetailModel.mMediaModelList.size() - 1));
             else
                 mActivityTaskSummaryBinding.tvCounter.setVisibility(View.GONE);
 

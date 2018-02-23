@@ -108,7 +108,8 @@
             android:paddingBottom="@dimen/home_screen_general_margin"
             android:paddingLeft="@dimen/home_screen_pro_available_section_left_right_margin"
             android:paddingRight="@dimen/home_screen_pro_available_section_left_right_margin"
-            android:paddingTop="@dimen/home_screen_general_margin">
+            android:paddingTop="@dimen/home_screen_general_margin"
+            android:baselineAligned="false">
 
             <!-- Below is the UI for Actions which are reported for particular task. -->
             <LinearLayout
@@ -124,7 +125,6 @@
                     android:id="@+id/img_1"
                     android:layout_width="@dimen/home_screen_near_by_pro_image_height_width"
                     android:layout_height="@dimen/home_screen_near_by_pro_image_height_width"
-                    android:src="@drawable/dummy_person1"
                     tools:ignore="ContentDescription"/>
 
                 <ImageView
@@ -132,7 +132,6 @@
                     android:layout_width="@dimen/home_screen_near_by_pro_image_height_width"
                     android:layout_height="@dimen/home_screen_near_by_pro_image_height_width"
                     android:layout_marginLeft="-20dp"
-                    android:src="@drawable/dummy_person1"
                     tools:ignore="ContentDescription"/>
 
                 <ImageView
@@ -140,7 +139,6 @@
                     android:layout_width="@dimen/home_screen_near_by_pro_image_height_width"
                     android:layout_height="@dimen/home_screen_near_by_pro_image_height_width"
                     android:layout_marginLeft="-20dp"
-                    android:src="@drawable/dummy_person1"
                     tools:ignore="ContentDescription"/>
 
                 <com.cheep.custom_view.CFTextViewSemiBold

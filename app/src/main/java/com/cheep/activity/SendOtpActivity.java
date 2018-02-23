@@ -237,13 +237,9 @@ public class SendOtpActivity extends BaseAppCompatActivity implements View.OnCli
                 MessageEvent.PaytmResponse paytmResponse = new MessageEvent.PaytmResponse();
                 paytmResponse.ResponseCode = responseCode;
                 paytmResponse.ResponsePayLoad = responseInJsonOrInHTML;
-                if (!TextUtils.isEmpty(responseCode) && responseCode.equalsIgnoreCase(NetworkUtility.PAYTM.RESPONSE_CODES.LOGIN)) {
-                    // Close the screen and pass the success message to @com.cheep.activity.PaymentChoiceActivity
-                    paytmResponse.isSuccess = true;
-                } else {
-                    // Close the screen and pass the failure message to @com.cheep.activity.PaymentChoiceActivity
-                    paytmResponse.isSuccess = false;
-                }
+                // Close the screen and pass the success message to @com.cheep.activity.PaymentChoiceActivity
+// Close the screen and pass the failure message to @com.cheep.activity.PaymentChoiceActivity
+                paytmResponse.isSuccess = !TextUtils.isEmpty(responseCode) && responseCode.equalsIgnoreCase(NetworkUtility.PAYTM.RESPONSE_CODES.LOGIN);
 
                 // Create the message event and sent the broadcast to @PaymentChoiceActivity
                 MessageEvent messageEvent = new MessageEvent();
@@ -379,8 +375,6 @@ public class SendOtpActivity extends BaseAppCompatActivity implements View.OnCli
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle(Utility.EMPTY_STRING);
         actionBar.setDisplayHomeAsUpEnabled(true);
-        //noinspection RestrictedApi
-        actionBar.setDefaultDisplayHomeAsUpEnabled(true);
     }
 
     @Override
@@ -997,32 +991,33 @@ public class SendOtpActivity extends BaseAppCompatActivity implements View.OnCli
 
     private boolean isValidated() {
         LogUtils.LOGD(TAG, "isValidated() which button clicked " + BTN_WHICH);
-        if (BTN_WHICH == BTN_IS_SEND_OTP) {
-            if (TextUtils.isEmpty(mActivitySendOtpBinding.etMobileNumber.getText())) {
-                Utility.showSnackBar(getString(R.string.validate_phone_number_wallet), mActivitySendOtpBinding.getRoot());
-                return false;
-            }
+        switch (BTN_WHICH) {
+            case BTN_IS_SEND_OTP:
+                if (TextUtils.isEmpty(mActivitySendOtpBinding.etMobileNumber.getText())) {
+                    Utility.showSnackBar(getString(R.string.validate_phone_number_wallet), mActivitySendOtpBinding.getRoot());
+                    return false;
+                }
 
-            //Length of phone number must bhi 10 in length
-            if (!Utility.isValidPhoneNumber(mActivitySendOtpBinding.etMobileNumber.getText().toString().trim().replace(" ", ""))) {
-                Utility.showSnackBar(getString(R.string.validate_phone_number_length), mActivitySendOtpBinding.getRoot());
-                return false;
-            }
-            return true;
-        } else if (BTN_WHICH == BTN_IS_PROCEED) {
-            if (TextUtils.isEmpty(mActivitySendOtpBinding.etMobileNumber.getText())) {
-                Utility.showSnackBar(getString(R.string.validate_otp_empty), mActivitySendOtpBinding.getRoot());
-                return false;
-            }
-            return true;
-        } else if (BTN_WHICH == BTN_IS_ADD_AMOUNT) {
-            if (TextUtils.isEmpty(mActivitySendOtpBinding.etMobileNumber.getText())) {
-                Utility.showSnackBar(getString(R.string.validate_empty_amount), mActivitySendOtpBinding.getRoot());
-                return false;
-            }
-            return true;
-        } else if (BTN_WHICH == BTN_IS_CONFIRM) {
-            return true;
+                //Length of phone number must bhi 10 in length
+                if (!Utility.isValidPhoneNumber(mActivitySendOtpBinding.etMobileNumber.getText().toString().trim().replace(" ", ""))) {
+                    Utility.showSnackBar(getString(R.string.validate_phone_number_length), mActivitySendOtpBinding.getRoot());
+                    return false;
+                }
+                return true;
+            case BTN_IS_PROCEED:
+                if (TextUtils.isEmpty(mActivitySendOtpBinding.etMobileNumber.getText())) {
+                    Utility.showSnackBar(getString(R.string.validate_otp_empty), mActivitySendOtpBinding.getRoot());
+                    return false;
+                }
+                return true;
+            case BTN_IS_ADD_AMOUNT:
+                if (TextUtils.isEmpty(mActivitySendOtpBinding.etMobileNumber.getText())) {
+                    Utility.showSnackBar(getString(R.string.validate_empty_amount), mActivitySendOtpBinding.getRoot());
+                    return false;
+                }
+                return true;
+            case BTN_IS_CONFIRM:
+                return true;
         }
         return false;
     }

@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.cheep.R;
-import com.cheep.cheepcare.model.CheepCarePackageModel;
 import com.cheep.databinding.RowSubCategoryUnitFreeBinding;
 import com.cheep.model.SubServiceDetailModel;
 

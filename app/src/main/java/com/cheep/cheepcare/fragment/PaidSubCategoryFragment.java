@@ -15,7 +15,6 @@ import com.android.volley.VolleyError;
 import com.cheep.R;
 import com.cheep.activity.BaseAppCompatActivity;
 import com.cheep.cheepcare.activity.TaskCreationCCActivity;
-import com.cheep.cheepcare.adapter.FreeServicesAdapter;
 import com.cheep.cheepcare.adapter.PaidServicesAdapter;
 import com.cheep.cheepcare.dialogs.LimitExceededDialog;
 import com.cheep.databinding.FragmentSelectSubCategoryBinding;

@@ -63,7 +63,7 @@
                             android:maxLines="1"
                             android:textColor="@color/white"
                             android:textSize="@dimen/text_size_17sp"
-                            android:text="Home Care "/>
+                            tools:text="Home Care "/>
 
                         <com.cheep.custom_view.CFTextViewSemiBold
                             android:id="@+id/tv_price"
@@ -74,7 +74,7 @@
                             android:maxLines="1"
                             android:textColor="@color/white"
                             android:textSize="@dimen/text_size_17sp"
-                            android:text="$200/MTH"/>
+                            tools:text="$200/MTH"/>
                     </LinearLayout>
 
 
@@ -88,7 +88,7 @@
                         android:lines="2"
                         android:textColor="@color/white"
                         android:textSize="@dimen/text_size_12sp"
-                        android:text="Please enter minimum %1s amount to proceed Please enter minimum %1s amount to proceed"/>
+                        tools:text="Please enter minimum %1s amount to proceed Please enter minimum %1s amount to proceed"/>
 
                 </LinearLayout>
 
@@ -111,7 +111,7 @@
                         android:lineSpacingMultiplier="1.2"
                         android:textColor="@color/white"
                         android:textSize="@dimen/text_size_11sp"
-                        android:text="17 people trolled by Anurag Kulkarni todayasdad sdassdasd asd dasdasdad"/>
+                        tools:text="17 people trolled by Anurag Kulkarni todayasdad sdassdasd asd dasdasdad"/>
 
                     <ImageView
                         android:id="@+id/ivLiveAnimated"

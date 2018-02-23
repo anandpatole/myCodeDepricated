@@ -362,11 +362,9 @@
                             <View
                                 android:layout_width="match_parent"
                                 android:layout_height="@dimen/scale_1dp"
-                                android:layout_above="@+id/action_layout"
                                 android:layout_marginLeft="@dimen/scale_15dp"
                                 android:layout_marginRight="@dimen/scale_15dp"
                                 android:layout_marginTop="@dimen/scale_16dp"
-                                android:layout_toRightOf="@+id/profile_layout"
                                 android:background="@color/black"/>
 
                             <RelativeLayout

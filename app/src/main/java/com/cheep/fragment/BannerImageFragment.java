@@ -62,8 +62,8 @@ public class BannerImageFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         FrameLayout view = (FrameLayout) inflater.inflate(R.layout.fragment_banner_image, container, false);
-        img_cover = (ImageView) view.findViewById(R.id.img_cover);
-        progress = (ProgressBar) view.findViewById(R.id.progress);
+        img_cover = view.findViewById(R.id.img_cover);
+        progress = view.findViewById(R.id.progress);
         return view;
     }
 

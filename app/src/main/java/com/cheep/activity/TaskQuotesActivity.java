@@ -167,7 +167,6 @@ public class TaskQuotesActivity extends BaseAppCompatActivity implements TaskQuo
         setSupportActionBar(mToolbar);
         getSupportActionBar().setTitle(Utility.EMPTY_STRING);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDefaultDisplayHomeAsUpEnabled(true);
     }
 
     private void callSPListWS() {

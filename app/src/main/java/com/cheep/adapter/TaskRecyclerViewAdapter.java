@@ -128,15 +128,19 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
         context = parent.getContext();
         startDateTimeCalendar = Calendar.getInstance();
         superStartDateTimeCalendar = SuperCalendar.getInstance();
-        if (viewType == VIEW_TYPE_UPCOMING) {
-            ViewDataBinding mRowTaskBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), R.layout.row_upcoming_task, parent, false);
-            return new ViewHolder(mRowTaskBinding);
-        } else if (viewType == VIEW_TYPE_GROUP) {
-            ViewDataBinding mRowTaskBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), R.layout.row_task_group, parent, false);
-            return new ViewHolder(mRowTaskBinding);
-        } else {
-            ViewDataBinding mRowTaskBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), R.layout.row_task, parent, false);
-            return new ViewHolder(mRowTaskBinding);
+        switch (viewType) {
+            case VIEW_TYPE_UPCOMING: {
+                ViewDataBinding mRowTaskBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), R.layout.row_upcoming_task, parent, false);
+                return new ViewHolder(mRowTaskBinding);
+            }
+            case VIEW_TYPE_GROUP: {
+                ViewDataBinding mRowTaskBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), R.layout.row_task_group, parent, false);
+                return new ViewHolder(mRowTaskBinding);
+            }
+            default: {
+                ViewDataBinding mRowTaskBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), R.layout.row_task, parent, false);
+                return new ViewHolder(mRowTaskBinding);
+            }
         }
     }
 

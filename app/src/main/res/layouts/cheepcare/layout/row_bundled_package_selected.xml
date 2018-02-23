@@ -61,7 +61,7 @@
                             android:layout_weight="1.5"
                             android:ellipsize="end"
                             android:maxLines="1"
-                            android:text="Appliance Care"
+                            tools:text="Appliance Care"
                             android:textColor="@color/white"
                             android:textSize="@dimen/text_size_17sp"/>
 
@@ -73,7 +73,7 @@
                             android:ellipsize="end"
                             android:gravity="right"
                             android:maxLines="1"
-                            android:text="$200/MTH"
+                            tools:text="$200/MTH"
                             android:textColor="@color/white"
                             android:textSize="@dimen/text_size_17sp"/>
                     </LinearLayout>
@@ -139,7 +139,7 @@
                         android:ellipsize="end"
                         android:lines="2"
                         android:maxLines="2"
-                        android:text="Please enter minimum %1s amount to proceed Please enter minimum %1s amount to proceed"
+                        tools:text="Please enter minimum %1s amount to proceed Please enter minimum %1s amount to proceed"
                         android:textColor="@color/white"
                         android:textSize="@dimen/text_size_12sp"/>
 
@@ -162,7 +162,7 @@
                         android:layout_gravity="right"
                         android:lines="2"
                         android:lineSpacingMultiplier="1.2"
-                        android:text="17 people trolled by Anurag Kulkarni todayasdad sdassdasd asd dasdasdad"
+                        tools:text="17 people trolled by Anurag Kulkarni todayasdad sdassdasd asd dasdasdad"
                         android:textColor="@color/white"
                         android:textSize="@dimen/text_size_11sp"/>
 
