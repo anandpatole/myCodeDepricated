@@ -786,7 +786,7 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
         String message = mContext.getString(R.string.desc_task_creation_acknowledgement
                 , PreferenceUtility.getInstance(mContext).getUserDetails().userName);
         String title = mContext.getString(R.string.label_your_task_is_posted);
-        AcknowledgementDialogWithoutProfilePic mAcknowledgementDialogWithoutProfilePic = AcknowledgementDialogWithoutProfilePic.newInstance(R.drawable.ic_bird_with_heart_illustration, title, message, new AcknowledgementInteractionListener() {
+        AcknowledgementDialogWithoutProfilePic mAcknowledgementDialogWithoutProfilePic = AcknowledgementDialogWithoutProfilePic.newInstance(R.drawable.dialog_top_bird_heart, title, message, new AcknowledgementInteractionListener() {
 
             @Override
             public void onAcknowledgementAccepted() {

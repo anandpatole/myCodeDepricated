@@ -28,7 +28,7 @@
                     android:drawablePadding="@dimen/scale_10dp"
                     android:drawableTop="@drawable/icon_delete_white"
                     android:gravity="center"
-                    android:text="@string/label_cancel_task"
+                    android:text="@string/label_cancel"
                     android:textAllCaps="false"
                     android:textColor="@color/white"
                     android:textSize="@dimen/text_size_10sp" />

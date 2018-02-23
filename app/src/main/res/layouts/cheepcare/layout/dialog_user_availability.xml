@@ -21,7 +21,7 @@
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
                 android:background="@drawable/rounded_top_part_only_fill_white_5x5"
-                android:src="@drawable/dialog_top_payment_failed"
+                android:src="@drawable/dialog_top_probird_marker_way"
                 tools:ignore="ContentDescription"/>
 
             <LinearLayout
@@ -29,6 +29,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/img_header"
+                android:layout_marginTop="@dimen/scale_8dp"
                 android:background="@drawable/rounded_bottom_part_only_fill_white_5x5"
                 android:orientation="vertical">
 
@@ -36,39 +37,59 @@
                     android:id="@+id/title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:includeFontPadding="false"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="@dimen/scale_8dp"
-                    android:text="@string/label_payment_failed_title"
+                    android:text="@string/label_hey_no_worries"
                     android:textColor="@color/grey_varient_8"
                     android:textSize="@dimen/text_size_18sp"/>
 
                 <com.cheep.custom_view.CFTextViewSemiBold
-                    android:id="@+id/text_task_creation_acknowledgment"
+                    android:id="@+id/tv_message"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="@dimen/scale_8dp"
+                    android:layout_marginTop="@dimen/scale_4dp"
+                    android:layout_marginBottom="@dimen/scale_15dp"
                     android:gravity="left"
                     android:padding="@dimen/scale_8dp"
-                    android:text="@string/label_payment_failed_desc"
+                    android:text="@string/msg_user_unavailable"
                     android:textColor="@color/grey_dark_color_2"
                     android:textSize="@dimen/text_size_11sp"/>
 
-                <View
+                <com.cheep.custom_view.CFTextViewSemiBold
+                    android:id="@+id/text_somenone_else_will_attend"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/scale_1dp"
-                    android:layout_marginTop="@dimen/scale_3dp"
-                    android:background="@color/grey_dark_color_2"/>
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/scale_17dp"
+                    android:gravity="center"
+                    android:text="@string/label_someone_else_will_attend"
+                    android:textColor="@color/splash_gradient_end"/>
 
                 <com.cheep.custom_view.CFTextViewSemiBold
-                    android:id="@+id/text_okay"
+                    android:id="@+id/text_reschedule_task"
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/scale_15dp"
                     android:gravity="center"
-                    android:layout_marginTop="@dimen/scale_20dp"
-                    android:layout_marginBottom="@dimen/scale_20dp"
-                    android:text="@string/label_retry_payment"
+                    android:text="@string/label_reschedule_task"
+                    android:textColor="@color/splash_gradient_end"/>
+
+                <com.cheep.custom_view.CFTextViewSemiBold
+                    android:id="@+id/text_cancel_task"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/scale_15dp"
+                    android:gravity="center"
+                    android:text="@string/label_cancel_task"
+                    android:textColor="@color/splash_gradient_end"/>
+
+                <com.cheep.custom_view.CFTextViewSemiBold
+                    android:id="@+id/text_wait_i_ll_be_available"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/scale_15dp"
+                    android:gravity="center"
+                    android:text="@string/label_wait_i_ll_be_available"
                     android:textColor="@color/splash_gradient_end"/>
             </LinearLayout>
 

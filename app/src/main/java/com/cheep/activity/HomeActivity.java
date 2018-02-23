@@ -289,7 +289,7 @@ public class HomeActivity extends BaseAppCompatActivity
     private static ArrayList<SlideMenuListModel> getSlideMenuData(Context mContext) {
         ArrayList<SlideMenuListModel> list = new ArrayList<>();
         list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.label_home), R.drawable.icon_side_home_blue, true, false));
-        list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.label_favourites), R.drawable.icon_favourite, false, false));
+        list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.label_favourites), R.drawable.icon_fav_off, false, false));
         list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.tab_me), R.drawable.icon_logout, false, false));
         list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.label_history), R.drawable.icon_history, false, false));
         // TODO: Icon change Refer And Earn
@@ -557,7 +557,7 @@ public class HomeActivity extends BaseAppCompatActivity
                 callCancelTaskWS(exploreDataModel.taskId, radioOther.isChecked() ? edtReason.getText().toString().trim() : radioBtnReason.getText().toString().trim());
             }
         });
-        cancelTaskDialog.setTitle(getString(R.string.label_cancel_task));
+        cancelTaskDialog.setTitle(getString(R.string.label_cancel));
         cancelTaskDialog.setCustomView(view);
         cancelTaskDialog.showDialog();
     }

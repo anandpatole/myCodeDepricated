@@ -75,7 +75,6 @@
     <string name="label_upcoming_tasks">Upcoming</string>
     <string name="label_past_tasks">Past</string>
 
-    <string name="label_cancel_task">Cancel</string>
     <string name="label_reschedule">Reschedule</string>
 
     <string name="rupee_symbol_x_space">₹ %1$s</string>
@@ -637,9 +636,9 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_busy_no_worries">BUSY? No worries!</string>
     <string name="msg_choose_specific_time">To choose a specific time slot for the PRO during the day or in any Emergency
         after working hours, simply pay an additional charge of ₹%1s and get the PRO to come when you want!</string>
-    <string name="msg_not_subscribed_address">Money Saving Tip &#32;&#32; : Why don\'t you add this address under the CHEEP Care
-        Subscription package for as low as ₹199/MTH* and get unlimited repairs and maintenance all year-long?</string>
-    <string name="label_new_address">Hey we\'ve noticed this is\na new address! </string>
+    <string name="msg_not_subscribed_address"><pre>Money Saving Tip    : Why don\'t you add this address under the CHEEP Care
+        Subscription package for as low as ₹199/MTH* and get unlimited repairs and maintenance all year-long?</pre></string>
+    <string name="label_new_address">Hey we\'ve noticed this is\na new address!</string>
     <string name="label_select_time">Select Time</string>
     <string name="label_no_thanks">No, Thanks</string>
     <string name="label_not_now">Not Now</string>
@@ -647,7 +646,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
 
     <string name="hint_apply_cheep_promo_code">Apply CHEEP Promo code?</string>
     <string name="hint_apply_cheep_mate_code">Have a CHEEP Mate Code?</string>
-    <string name="label_empty_string"/>
+    <string name="label_empty_string" />
     <string name="label_proceed_to_checkout">Proceed to Checkout</string>
     <string name="add_package_to_cart">Add Package to Cart</string>
     <string name="label_appliance">%1d Appliances</string>
@@ -676,7 +675,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_payment_failed_title">Your Payment Failed!</string>
     <string name="label_payment_failed_desc">Your payment for the task was unsuccessful. Please try again. If money has been deducted from your card/bank account, it would be refunded within 2–3 business days.</string>
     <string name="label_limit_exceed_title">Limit Exceeded!</string>
-    <string name="label_limit_exceed_desc">Unfortunately, you are exceeding the number of appliances under your %1s Package subscription.</string>
+    <string name="msg_limit_exceed_desc">Unfortunately, you are exceeding the number of appliances under your %1s Package subscription.</string>
     <string name="label_retry_payment">Retry Payment</string>
     <string name="validation_message_already_purchased_package_for_this_address">You have already purchased subscription for this package</string>
     <string name="msg_task_description">Your tasks will be completed on</string>
@@ -716,6 +715,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_book_task">Book Task</string>
     <string name="label_vote">Vote</string>
     <string name="hint_enter_your_mobile_number_to_vote">Enter your mobile number to vote</string>
+    <string name="hint_enter_name_of_person">Enter the name of the person here</string>
 
     <string name="label_plus_1">+1</string>
     <string name="label_plus_2">+2</string>
@@ -725,6 +725,17 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_days_left">Days Left</string>
     <string name="label_minus">-</string>
     <string name="label_plus">+</string>
-
-
+    <string name="label_hey_no_worries">Hey, no worries!</string>
+    <string name="msg_user_unavailable">It\'s okay that you are not available at that time, there are still other ways to avail your Cheep Care service
+        . Please let us know how you would like to proceed.</string>
+    <string name="label_someone_else_will_attend">Someone Else Will Attend</string>
+    <string name="label_reschedule_task">Reschedule Task</string>
+    <string name="label_cancel_task">Cancel Task</string>
+    <string name="label_wait_i_ll_be_available">Wait! I\'ll Be Available</string>
+    <string name="label_are_you_sure_want_to_cancel">Are you sure you want to cancel?</string>
+    <string name="msg_cancel_reschedule_task">Did you know you can reschedule your task? Or if you still want to cancel, please select yes.</string>
+    <string name="label_title_someone_will_attend">Great! Who will coordinate with the PRO?</string>
+    <string name="msg_someone_will_attend">Please tell us the name of the person who will be attending the PRO in your absence. </string>
+    <string name="label_title_perfect">Perfect!</string>
+    <string name="msg_user_confirm_availablity">Thank you for confirming your availability. Your Pro will be arriving shortly.</string>
 </resources>

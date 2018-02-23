@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center"
         android:paddingLeft="@dimen/scale_10dp"
-        android:paddingRight="@dimen/scale_10dp"
-        tools:background="@color/white">
+        android:paddingRight="@dimen/scale_10dp">
 
         <RelativeLayout
             android:layout_width="wrap_content"
@@ -18,22 +17,15 @@
             android:layout_marginRight="@dimen/scale_10dp"
             android:orientation="vertical">
 
-            <ImageView
-                android:id="@+id/img_header"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:adjustViewBounds="true"
-                android:src="@drawable/bg_add_money_model_background"
-                tools:ignore="ContentDescription"/>
-
             <LinearLayout
                 android:id="@+id/ln_bottom_section"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/img_header"
+                android:layout_marginTop="-50dp"
                 android:background="@drawable/rounded_bottom_part_only_fill_white_5x5"
                 android:orientation="vertical"
-                android:paddingTop="@dimen/scale_55dp">
+                android:paddingTop="50dp">
 
                 <com.cheep.custom_view.CFTextViewSemiBold
                     android:id="@+id/title"
@@ -41,26 +33,26 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:gravity="center_horizontal"
-                    android:paddingLeft="@dimen/scale_50dp"
-                    android:paddingRight="@dimen/scale_50dp"
-                    android:text="@string/label_busy_no_worries"
+                    android:paddingLeft="@dimen/scale_14dp"
+                    android:paddingRight="@dimen/scale_14dp"
+                    android:text="@string/label_are_you_sure_want_to_cancel"
                     android:textColor="@color/grey_variant_20"
-                    android:textSize="@dimen/text_size_18sp"/>
+                    android:textSize="@dimen/text_size_18sp" />
 
                 <com.cheep.custom_view.CFTextViewRegular
-                    android:id="@+id/text_add_money_description"
+                    android:id="@+id/text_description"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="@dimen/scale_8dp"
-                    android:gravity="left"
+                    android:gravity="center"
                     android:paddingBottom="@dimen/scale_8dp"
                     android:paddingLeft="6dp"
                     android:paddingRight="6dp"
                     android:paddingTop="@dimen/scale_8dp"
-                    android:text="@string/msg_choose_specific_time"
+                    android:text="@string/msg_cancel_reschedule_task"
                     android:textColor="@color/grey_dark_color_2"
-                    android:textSize="@dimen/text_size_11sp"/>
+                    android:textSize="@dimen/text_size_11sp" />
 
                 <View
                     android:layout_width="match_parent"
@@ -68,7 +60,7 @@
                     android:layout_marginLeft="@dimen/scale_8dp"
                     android:layout_marginRight="@dimen/scale_8dp"
                     android:layout_marginTop="@dimen/scale_15dp"
-                    android:background="@color/grey_dark_color_8"/>
+                    android:background="@color/grey_dark_color_8" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -76,51 +68,53 @@
                     android:orientation="horizontal">
 
                     <com.cheep.custom_view.CFTextViewSemiBold
-                        android:id="@+id/tv_select_time"
+                        android:id="@+id/tv_subscribe_now"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:text="@string/label_select_time"
+                        android:text="@string/label_yes"
                         android:textColor="@color/splash_gradient_end"
-                        android:textSize="@dimen/text_size_16sp"/>
+                        android:textSize="@dimen/text_size_16sp" />
 
                     <View
                         android:layout_width="@dimen/scale_1dp"
                         android:layout_height="match_parent"
                         android:layout_marginBottom="@dimen/scale_8dp"
                         android:layout_marginTop="@dimen/scale_8dp"
-                        android:background="@color/grey_dark_color_8"/>
+                        android:background="@color/grey_dark_color_8" />
 
                     <com.cheep.custom_view.CFTextViewSemiBold
-                        android:id="@+id/tv_no_thanks"
+                        android:id="@+id/tv_not_now"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:text="@string/label_no_thanks"
+                        android:text="@string/label_reschedule_task"
                         android:textColor="@color/splash_gradient_end"
-                        android:textSize="@dimen/text_size_16sp"/>
+                        android:textSize="@dimen/text_size_16sp" />
 
                 </LinearLayout>
             </LinearLayout>
 
-            <FrameLayout
+            <ImageView
+                android:id="@+id/img_header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:src="@drawable/dialog_top_probird_question_mark"
+                tools:ignore="ContentDescription" />
+
+            <ImageView
+                android:id="@+id/iv_back_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/img_header"
-                android:layout_centerHorizontal="true"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="-88dp">
+                android:layout_marginLeft="@dimen/scale_12dp"
+                android:layout_marginTop="@dimen/scale_12dp"
+                android:src="@drawable/icon_arrow_back" />
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/bird_pro_clock"/>
-
-            </FrameLayout>
         </RelativeLayout>
     </LinearLayout>
 

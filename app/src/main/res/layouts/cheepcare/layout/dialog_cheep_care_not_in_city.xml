@@ -120,7 +120,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
-                android:src="@drawable/bg_banner_cheep_care_not_in_city"
+                android:src="@drawable/dialog_top_cheep_care_not_in_city"
                 tools:ignore="ContentDescription"/>
 
         </RelativeLayout>

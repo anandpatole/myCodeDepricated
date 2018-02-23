@@ -1120,7 +1120,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal|bottom"
             android:layout_marginBottom="@dimen/scale_120dp"
-            android:src="@drawable/ic_bird_yellow_stars" />
+            android:src="@drawable/bird_yellow_stars" />
 
         <ProgressBar
             android:id="@+id/progress"

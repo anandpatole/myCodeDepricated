@@ -1,21 +1,25 @@
 package com.cheep.cheepcare.dialogs;
 
+import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
+import android.text.style.DynamicDrawableSpan;
 import android.text.style.ForegroundColorSpan;
+import android.text.style.ImageSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.cheep.R;
-import com.cheep.databinding.DialogBusyNoWorriesBinding;
 import com.cheep.databinding.DialogNewAddressBinding;
 import com.cheep.utils.Utility;
 
@@ -34,15 +38,14 @@ public class NotSubscribedAddressDialog extends DialogFragment {
         void onNotNowClicked();
     }
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public static void newInstance(Context context, @NonNull DialogInteractionListener listener) {
+        NotSubscribedAddressDialog dialog = new NotSubscribedAddressDialog();
+        dialog.setListener(listener);
+        dialog.show(((AppCompatActivity) context).getSupportFragmentManager(), NotSubscribedAddressDialog.TAG);
+    }
 
-        if (!(getTargetFragment() instanceof DialogInteractionListener)) {
-            throw new RuntimeException("getTargetFragment() " + getTargetFragment() + " must be an instance of DialogInteractionListener!!");
-        } else {
-            mListener = (DialogInteractionListener) getTargetFragment();
-        }
+    private void setListener(DialogInteractionListener listener) {
+        mListener = listener;
     }
 
     @Nullable
@@ -63,6 +66,11 @@ public class NotSubscribedAddressDialog extends DialogFragment {
                 new SpannableStringBuilder(string);
         ForegroundColorSpan colorSpan =
                 new ForegroundColorSpan(ContextCompat.getColor(getContext(), R.color.splash_gradient_end));
+
+        ImageSpan imageSpan = new ImageSpan(getContext(), R.drawable.emoji_dollar_money, DynamicDrawableSpan.ALIGN_BASELINE);
+        int colonIndex = string.indexOf(Utility.COLON);
+
+        spannableStringBuilder.setSpan(imageSpan, colonIndex, colonIndex + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         spannableStringBuilder.setSpan(colorSpan, 0, string.indexOf(Utility.COLON), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         mDialogNewAddressBinding.textDescription.setText(spannableStringBuilder);
 

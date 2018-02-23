@@ -23,7 +23,7 @@
                     android:id="@+id/iv_bird"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_cheep_bird_tip_big" />
+                    android:src="@drawable/bird_cheep_tip_big" />
 
                 <com.cheep.custom_view.CFTextViewSemiBold
                     android:id="@+id/tv_cheep_tips_title"

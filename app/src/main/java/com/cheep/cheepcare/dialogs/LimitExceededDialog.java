@@ -71,7 +71,7 @@ public class LimitExceededDialog extends DialogFragment {
         }
         mDialogFragmentAcknowledgementBinding = DataBindingUtil.inflate(inflater, R.layout.dialog_limit_exceed, container, false);
 
-        mDialogFragmentAcknowledgementBinding.tvMessage.setText(getString(R.string.label_limit_exceed_desc, mCarePackageName));
+        mDialogFragmentAcknowledgementBinding.tvMessage.setText(getString(R.string.msg_limit_exceed_desc, mCarePackageName));
 
         // Click event of Okay button
         mDialogFragmentAcknowledgementBinding.textOkay.setOnClickListener(new View.OnClickListener() {

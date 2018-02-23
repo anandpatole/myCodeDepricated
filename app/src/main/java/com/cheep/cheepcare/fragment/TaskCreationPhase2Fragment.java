@@ -20,7 +20,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
@@ -375,9 +374,7 @@ public class TaskCreationPhase2Fragment extends BaseFragment
                     mBinding.tvAddress.setText(model.address_initials + ", " + model.address);
                     mSelectedAddress = model;
                 } else if (isClicked && mAddressList.get(position).is_subscribe.equals("0")) {
-                    NotSubscribedAddressDialog notSubscribedAddressDialog = new NotSubscribedAddressDialog();
-                    notSubscribedAddressDialog.show(((AppCompatActivity) mContext).getSupportFragmentManager(), NotSubscribedAddressDialog.TAG);
-                    notSubscribedAddressDialog.setTargetFragment(TaskCreationPhase2Fragment.this, 0);
+                    NotSubscribedAddressDialog.newInstance(mContext, TaskCreationPhase2Fragment.this);
                 }
             }
 
@@ -754,9 +751,7 @@ public class TaskCreationPhase2Fragment extends BaseFragment
                     // On Click event of When
 //                    Utility.hideKeyboard(mContext, mBinding.editTaskDesc);
                     if (!isDialogOnceShown) {
-                        SelectSpecificTimeDialog selectSpecificTimeDialog = new SelectSpecificTimeDialog();
-                        selectSpecificTimeDialog.show(((AppCompatActivity) mContext).getSupportFragmentManager(), SelectSpecificTimeDialog.TAG);
-                        selectSpecificTimeDialog.setTargetFragment(TaskCreationPhase2Fragment.this, 0);
+                        SelectSpecificTimeDialog.newInstance(mContext, TaskCreationPhase2Fragment.this);
                     } else {
                         showDateTimePickerDialog();
                     }

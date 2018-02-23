@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools">
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -21,8 +21,16 @@
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
                 android:background="@drawable/rounded_top_part_only_fill_white_5x5"
-                android:src="@drawable/dialog_top_payment_failed"
-                tools:ignore="ContentDescription"/>
+                android:src="@drawable/dialog_top_probird_unknown_face"
+                tools:ignore="ContentDescription" />
+
+            <ImageView
+                android:id="@+id/iv_back_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/scale_12dp"
+                android:layout_marginTop="@dimen/scale_12dp"
+                android:src="@drawable/icon_arrow_back" />
 
             <LinearLayout
                 android:id="@+id/ln_bottom_section"
@@ -38,38 +46,51 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="@dimen/scale_8dp"
-                    android:text="@string/label_payment_failed_title"
+                    android:text="@string/label_title_someone_will_attend"
                     android:textColor="@color/grey_varient_8"
-                    android:textSize="@dimen/text_size_18sp"/>
+                    android:textSize="@dimen/text_size_18sp" />
 
                 <com.cheep.custom_view.CFTextViewSemiBold
-                    android:id="@+id/text_task_creation_acknowledgment"
+                    android:id="@+id/tv_message"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="@dimen/scale_8dp"
                     android:gravity="left"
                     android:padding="@dimen/scale_8dp"
-                    android:text="@string/label_payment_failed_desc"
+                    android:text="@string/msg_someone_will_attend"
                     android:textColor="@color/grey_dark_color_2"
-                    android:textSize="@dimen/text_size_11sp"/>
+                    android:textSize="@dimen/text_size_11sp" />
+
+                <com.cheep.custom_view.CFEditTextRegular
+                    android:id="@+id/edt_mobile_number"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/scale_12dp"
+                    android:gravity="left"
+                    android:hint="@string/hint_enter_name_of_person"
+                    android:padding="@dimen/scale_12dp"
+                    android:textColor="@color/grey_varient_8"
+                    android:textColorHint="@color/grey_varient_17"
+                    android:textSize="@dimen/text_size_12sp"
+                    android:visibility="visible" />
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/scale_1dp"
-                    android:layout_marginTop="@dimen/scale_3dp"
-                    android:background="@color/grey_dark_color_2"/>
+                    android:layout_marginTop="@dimen/scale_20dp"
+                    android:background="@color/grey_dark_color_2" />
 
                 <com.cheep.custom_view.CFTextViewSemiBold
                     android:id="@+id/text_okay"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
+                    android:layout_marginBottom="@dimen/scale_20dp"
+                    android:layout_marginTop="@dimen/scale_20dp"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:layout_marginTop="@dimen/scale_20dp"
-                    android:layout_marginBottom="@dimen/scale_20dp"
-                    android:text="@string/label_retry_payment"
-                    android:textColor="@color/splash_gradient_end"/>
+                    android:text="@string/label_Ok_small"
+                    android:textColor="@color/splash_gradient_end" />
             </LinearLayout>
 
         </RelativeLayout>

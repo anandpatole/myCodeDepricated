@@ -21,7 +21,7 @@
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
                 android:background="@drawable/rounded_top_part_only_fill_white_5x5"
-                android:src="@drawable/bg_banner_payment_failed"
+                android:src="@drawable/dialog_top_payment_failed"
                 tools:ignore="ContentDescription"/>
 
             <LinearLayout

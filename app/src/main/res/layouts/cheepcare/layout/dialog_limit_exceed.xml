@@ -21,7 +21,7 @@
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
                 android:background="@drawable/rounded_top_part_only_fill_white_5x5"
-                android:src="@drawable/bg_banner_limit_exceed"
+                android:src="@drawable/dialog_top_limit_exceed"
                 tools:ignore="ContentDescription"/>
 
             <LinearLayout
@@ -50,7 +50,7 @@
                     android:layout_marginTop="@dimen/scale_8dp"
                     android:gravity="left"
                     android:padding="@dimen/scale_8dp"
-                    android:text="@string/label_limit_exceed_desc"
+                    android:text="@string/msg_limit_exceed_desc"
                     android:textColor="@color/grey_dark_color_2"
                     android:textSize="@dimen/text_size_11sp"/>
 

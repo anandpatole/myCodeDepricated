@@ -1,11 +1,14 @@
 package com.cheep.cheepcare.dialogs;
 
+import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +21,7 @@ import com.cheep.databinding.DialogBusyNoWorriesBinding;
  */
 
 public class SelectSpecificTimeDialog extends DialogFragment {
+
     public static final String TAG = SelectSpecificTimeDialog.class.getSimpleName();
     private DialogBusyNoWorriesBinding mDialogBusyNoWorriesBinding;
     private DialogInteractionListener mListener;
@@ -28,15 +32,19 @@ public class SelectSpecificTimeDialog extends DialogFragment {
         void onNoThanksClicked();
     }
 
+    public static void newInstance(Context context, @NonNull DialogInteractionListener listener) {
+        SelectSpecificTimeDialog dialog = new SelectSpecificTimeDialog();
+        dialog.setListener(listener);
+        dialog.show(((AppCompatActivity) context).getSupportFragmentManager(), SelectSpecificTimeDialog.TAG);
+    }
+
+    private void setListener(DialogInteractionListener listener) {
+        mListener = listener;
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        if (!(getTargetFragment() instanceof DialogInteractionListener)) {
-            throw new RuntimeException("getTargetFragment() " + getTargetFragment() + " must be an instance of DialogInteractionListener!!");
-        } else {
-            mListener = (DialogInteractionListener) getTargetFragment();
-        }
     }
 
     @Nullable

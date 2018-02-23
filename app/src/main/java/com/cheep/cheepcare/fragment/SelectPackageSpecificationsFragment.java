@@ -705,7 +705,7 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
         params.height = (int) getResources().getDimension(R.dimen.scale_30dp);
         mBinding.rlChipTips.setLayoutParams(params);
         mBinding.rlChipTips.setSelected(false);
-        mBinding.ivBird.setImageResource(R.drawable.ic_cheep_bird_tip);
+        mBinding.ivBird.setImageResource(R.drawable.bird_cheep_tip);
         mBinding.ivCross.setImageResource(R.drawable.ic_drop_down_arrow);
         mBinding.ivCross.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -713,7 +713,7 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
                 if (mBinding.rlChipTips.isSelected()) {
 //                    mBinding.rlChipTips.setVisibility(View.GONE);
                     mBinding.ivCross.setImageResource(R.drawable.ic_drop_down_arrow);
-                    mBinding.ivBird.setImageResource(R.drawable.ic_cheep_bird_tip);
+                    mBinding.ivBird.setImageResource(R.drawable.bird_cheep_tip);
                     mBinding.rlChipTips.setSelected(false);
                     ViewGroup.LayoutParams params = mBinding.rlChipTips.getLayoutParams();
                     params.height = (int) getResources().getDimension(R.dimen.scale_30dp);
@@ -723,7 +723,7 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
 
                     mBinding.ivCross.setImageResource(R.drawable.icon_cross_blue);
                     mBinding.rlChipTips.setSelected(true);
-                    mBinding.ivBird.setImageResource(R.drawable.ic_cheep_bird_tip_big);
+                    mBinding.ivBird.setImageResource(R.drawable.bird_cheep_tip_big);
 
                     ViewGroup.LayoutParams params = mBinding.rlChipTips.getLayoutParams();
                     params.height = (int) getResources().getDimension(R.dimen.scale_50dp);

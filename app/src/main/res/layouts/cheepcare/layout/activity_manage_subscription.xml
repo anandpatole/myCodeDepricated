@@ -182,7 +182,7 @@
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:src="@drawable/ic_celebrate_big"/>
+                        android:src="@drawable/emoji_celebrate_big"/>
 
                     <com.cheep.custom_view.CFTextViewRegular
                         android:layout_width="0dp"
@@ -199,7 +199,7 @@
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:src="@drawable/ic_celebrate_big_2"/>
+                        android:src="@drawable/emoji_celebrate_big_2"/>
 
                 </LinearLayout>
 
