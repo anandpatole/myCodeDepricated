@@ -738,4 +738,5 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="msg_someone_will_attend">Please tell us the name of the person who will be attending the PRO in your absence. </string>
     <string name="label_title_perfect">Perfect!</string>
     <string name="msg_user_confirm_availablity">Thank you for confirming your availability. Your Pro will be arriving shortly.</string>
+    <string name="label_rebook_task">Rebook Task</string>
 </resources>

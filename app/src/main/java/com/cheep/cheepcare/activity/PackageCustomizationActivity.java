@@ -477,6 +477,7 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
             if (detail.isSelected) {
                 try {
                     packageObject.put("package_id", detail.id);
+                    packageObject.put("package_type", detail.packageType);
                     JSONArray multiPackageArray = new JSONArray();
                     JSONObject singleObj = new JSONObject();
                     JSONObject addressObject = new JSONObject();

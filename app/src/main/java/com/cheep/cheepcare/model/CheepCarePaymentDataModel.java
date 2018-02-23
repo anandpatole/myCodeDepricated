@@ -12,15 +12,19 @@ import com.google.gson.annotations.SerializedName;
 @Keep
 public class CheepCarePaymentDataModel {
 
+
+    // this total amount is without tax and discount amount
     @SerializedName("total_amount")
     @Expose
     public double totalAmount;
+
     @SerializedName("promocode")
     @Expose
     public String promocode;
     @SerializedName("promocode_price")
     @Expose
     public double promocodePrice;
+    // this payable amount is with tax and applied discount amount
     @SerializedName("payable_amount")
     @Expose
     public double payableAmount;

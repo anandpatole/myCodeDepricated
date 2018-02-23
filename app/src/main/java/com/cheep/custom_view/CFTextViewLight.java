@@ -58,7 +58,6 @@ public class CFTextViewLight extends AppCompatTextView {
 
     private void applyLetterSpacing(float letterSpacing) {
 
-        if (this.getText().toString() == null) return;
         StringBuilder builder = new StringBuilder();
         for (int i = 0; i < getText().toString().length(); i++) {
             String c = "" + getText().toString().charAt(i);

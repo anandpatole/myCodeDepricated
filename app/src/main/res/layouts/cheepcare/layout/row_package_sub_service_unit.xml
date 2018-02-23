@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/ln_root"
@@ -18,15 +18,17 @@
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:maxLines="2"
+            android:paddingEnd="@dimen/scale_3dp"
             android:paddingRight="@dimen/scale_3dp"
             android:textColor="@color/grey_varient_8"
             android:textSize="@dimen/text_size_16sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/cl_center"
             app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintHorizontal_weight="2"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="Washing machine Washing machine Washing machine" />
+            tools:text="Washing machine Washing machine Washing machine"/>
 
         <android.support.constraint.ConstraintLayout
             android:id="@+id/cl_center"
@@ -54,7 +56,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toLeftOf="@+id/tv_digit"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"/>
 
             <com.cheep.custom_view.CFTextViewSemiBold
                 android:id="@+id/tv_digit"
@@ -71,7 +73,7 @@
                 app:layout_constraintLeft_toRightOf="@id/tv_minus"
                 app:layout_constraintRight_toLeftOf="@+id/tv_plus"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:text="10" />
+                tools:text="10"/>
 
             <com.cheep.custom_view.CFTextViewSemiBold
                 android:id="@+id/tv_plus"
@@ -88,12 +90,12 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toRightOf="@id/tv_digit"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"/>
         </android.support.constraint.ConstraintLayout>
 
         <com.cheep.custom_view.CFTextViewRegular
             android:id="@+id/tv_sub_service_price"
-            android:layout_width="wrap_content"
+            android:layout_width="@dimen/scale_80dp"
             android:layout_height="match_parent"
             android:layout_marginEnd="@dimen/scale_14dp"
             android:layout_marginLeft="@dimen/scale_10dp"
@@ -108,7 +110,7 @@
             app:layout_constraintStart_toEndOf="@id/cl_center"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0"
-            tools:text="#ddsd.asd" />
+            tools:text="#ddsd.asd"/>
 
 
     </android.support.constraint.ConstraintLayout>

@@ -94,7 +94,7 @@
                         android:id="@+id/imgFav"
                         android:layout_width="@dimen/scale_20dp"
                         android:layout_height="@dimen/scale_20dp"
-                        android:layout_gravity="right|bottom"
+                        android:layout_gravity="end|bottom"
                         android:layout_marginBottom="@dimen/scale_5dp"
                         android:background="@drawable/icon_fav_selector"
                         tools:ignore="ContentDescription"/>
@@ -120,9 +120,12 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/scale_15dp"
+                    android:layout_marginStart="@dimen/scale_15dp"
                     android:layout_weight="1.5"
                     android:orientation="vertical"
-                    android:paddingRight="@dimen/scale_10dp">
+                    android:paddingEnd="@dimen/scale_10dp"
+                    android:paddingRight="@dimen/scale_10dp"
+                    >
 
 
                     <com.cheep.custom_view.CFTextViewSemiBold
@@ -171,7 +174,7 @@
                         android:layout_marginBottom="@dimen/scale_8dp"
                         android:layout_marginTop="@dimen/scale_5dp"
                         android:ellipsize="end"
-                        android:gravity="left|top"
+                        android:gravity="start|top"
                         android:lines="2"
                         android:text="@string/dummy_chat"
                         android:textColor="@color/black"
@@ -202,10 +205,11 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:ellipsize="end"
-                            android:gravity="left|top"
+                            android:gravity="start|top"
                             android:lineSpacingExtra="@dimen/scale_2dp"
                             android:lines="3"
                             android:paddingLeft="@dimen/scale_3dp"
+                            android:paddingStart="@dimen/scale_3dp"
                             android:textColor="@color/colorSaffron"
                             android:textSize="@dimen/text_size_11sp"
                             tools:text="Task book for 24 Apr 11:00am"/>
@@ -229,10 +233,11 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:ellipsize="end"
-                            android:gravity="left|top"
+                            android:gravity="start|top"
                             android:lineSpacingExtra="@dimen/scale_2dp"
                             android:lines="2"
                             android:paddingLeft="@dimen/scale_3dp"
+                            android:paddingStart="@dimen/scale_3dp"
                             android:textColor="@color/color_red_varient_1"
                             android:textSize="@dimen/text_size_11sp"
                             tools:text="Task start in 2:30 hrs"/>
@@ -259,6 +264,7 @@
                         android:gravity="center"
                         android:lines="2"
                         android:paddingLeft="@dimen/scale_3dp"
+                        android:paddingStart="@dimen/scale_3dp"
                         android:textColor="@color/black"
                         android:textSize="@dimen/text_size_11sp"
                         android:visibility="gone"
@@ -295,14 +301,17 @@
                     <FrameLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:paddingEnd="@dimen/scale_10dp"
                         android:paddingLeft="@dimen/scale_15dp"
-                        android:paddingRight="@dimen/scale_10dp">
+                        android:paddingRight="@dimen/scale_10dp"
+                        android:paddingStart="@dimen/scale_15dp"
+                        >
 
                         <com.cheep.custom_view.CFTextViewRegular
                             android:id="@+id/tvLiveFeed"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:gravity="left|top"
+                            android:gravity="start|top"
                             android:lineSpacingMultiplier="1.3"
                             android:textColor="@color/grey_dark_color_3"
                             android:textSize="@dimen/text_size_11sp"
@@ -319,15 +328,17 @@
                         android:id="@+id/tvDiscount"
                         android:layout_width="@dimen/scale_80dp"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical|right"
+                        android:layout_gravity="center_vertical|end"
                         android:layout_marginRight="@dimen/scale_8dp"
+                        android:layout_marginEnd="@dimen/scale_8dp"
                         android:layout_marginTop="@dimen/scale_8dp"
                         android:background="@drawable/ic_offer_tag_small"
                         android:ellipsize="marquee"
                         android:marqueeRepeatLimit="marquee_forever"
-                        android:maxLines="1"
+                        android:paddingEnd="@dimen/scale_16dp"
                         android:paddingLeft="@dimen/scale_4dp"
                         android:paddingRight="@dimen/scale_16dp"
+                        android:paddingStart="@dimen/scale_4dp"
                         android:singleLine="true"
                         android:textColor="@color/white"
                         android:textSize="@dimen/text_size_12sp"
@@ -338,13 +349,17 @@
                         android:id="@+id/tv_subscribed"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical|right"
+                        android:layout_gravity="center_vertical|end"
                         android:layout_marginRight="@dimen/scale_8dp"
+                        android:layout_marginEnd="@dimen/scale_8dp"
                         android:layout_marginTop="@dimen/scale_8dp"
                         android:background="@drawable/ic_subscribed_text"
                         android:paddingLeft="@dimen/scale_4dp"
+                        android:paddingStart="@dimen/scale_4dp"
                         android:paddingRight="@dimen/scale_16dp"
-                        android:visibility="visible"/>
+                        android:paddingEnd="@dimen/scale_16dp"
+                        android:visibility="visible"
+                        tools:ignore="ContentDescription"/>
                 </LinearLayout>
 
                 <LinearLayout
