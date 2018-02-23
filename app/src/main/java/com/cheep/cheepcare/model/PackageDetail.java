@@ -30,6 +30,9 @@ public class PackageDetail implements Parent<JobCategoryModel>, Serializable {
     @SerializedName("price")
     public String price;
 
+    @SerializedName("package_type")
+    public String packageType;
+
 
     @SerializedName("package_slug")
     public String packageSlug;

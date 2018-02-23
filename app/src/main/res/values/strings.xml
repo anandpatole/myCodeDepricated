@@ -725,6 +725,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_days_left">Days Left</string>
     <string name="label_minus">-</string>
     <string name="label_plus">+</string>
+    <string name="label_rebook_task">Rebook Task</string>
 
 
 </resources>
