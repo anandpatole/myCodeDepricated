@@ -78,10 +78,11 @@
             <FrameLayout
                 android:id="@+id/fl_free_cc_container"
                 android:layout_width="0dp"
-                android:background="?attr/selectableItemBackground"
                 android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackground"
                 app:layout_constraintEnd_toStartOf="@+id/fl_paid_services_container"
-                app:layout_constraintLeft_toLeftOf="parent">
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
 
                 <com.cheep.custom_view.CFTextViewSemiBold
                     android:id="@+id/tv_free_cc"
@@ -101,8 +102,8 @@
                 android:id="@+id/fl_paid_services_container"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                app:layout_constraintEnd_toEndOf="parent"
                 android:background="?attr/selectableItemBackground"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/fl_free_cc_container">
 
                 <com.cheep.custom_view.CFTextViewSemiBold
@@ -127,24 +128,12 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/fl_free_cc_container" />
 
-            <!--<android.support.design.widget.TabLayout
-                android:id="@+id/tab_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/scale_40dp"
-                android:background="@drawable/bottom_stroke_gray"
-                app:tabIndicatorHeight="0dp"
-                app:tabPadding="@dimen/scale_0dp"
-                app:tabSelectedTextColor="@color/splash_gradient_end"
-                app:tabTextAppearance="@style/AppTabTextAppearance"
-                app:tabTextColor="@color/selector_text_535353_blue" />-->
-
             <android.support.v4.view.ViewPager
                 android:id="@+id/view_pager"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_marginRight="@dimen/scale_14dp"
-                android:layout_marginTop="@dimen/scale_24dp"
+                android:layout_marginTop="@dimen/scale_12dp"
                 android:layout_weight="1"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

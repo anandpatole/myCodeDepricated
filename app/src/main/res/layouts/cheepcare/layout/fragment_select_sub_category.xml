@@ -8,68 +8,6 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <android.support.v7.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:cardCornerRadius="@dimen/scale_0dp">
-
-            <RelativeLayout
-                android:id="@+id/rl_cheep_tips"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/scale_3dp"
-                android:background="@drawable/bottom_stroke_gray">
-
-                <ImageView
-                    android:id="@+id/iv_bird"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_cheep_bird_tip_big" />
-
-                <com.cheep.custom_view.CFTextViewSemiBold
-                    android:id="@+id/tv_cheep_tips_title"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_toLeftOf="@id/iv_cross"
-                    android:layout_toRightOf="@+id/iv_bird"
-                    android:background="@android:color/transparent"
-                    android:checked="true"
-                    android:gravity="center_vertical"
-                    android:singleLine="true"
-                    android:text="@string/cheep_tips"
-                    android:textColor="@color/splash_gradient_end"
-                    android:textSize="@dimen/text_size_14sp" />
-
-                <com.cheep.custom_view.CFTextViewRegular
-                    android:id="@+id/tv_cheep_tips_desc"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/tv_cheep_tips_title"
-                    android:layout_gravity="center_vertical"
-                    android:layout_toLeftOf="@id/iv_cross"
-                    android:layout_toRightOf="@+id/iv_bird"
-                    android:background="@android:color/transparent"
-                    android:checked="true"
-                    android:gravity="center_vertical"
-                    android:maxLines="2"
-                    android:text="vd dff sdf sdfs fsdf sdf fsd sdfsfs fdsdfsdfsdfsd fs dfsdfs dfsdfsdf sdfdsf"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/text_size_11sp"
-                    android:visibility="visible" />
-
-                <ImageView
-                    android:id="@+id/iv_cross"
-                    android:layout_width="15dp"
-                    android:layout_height="15dp"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginRight="@dimen/scale_15dp"
-                    android:layout_marginTop="@dimen/scale_5dp"
-                    android:src="@drawable/icon_cross_blue" />
-
-            </RelativeLayout>
-        </android.support.v7.widget.CardView>
-
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"

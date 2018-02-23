@@ -8,6 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/scale_10dp"
+        android:layout_marginBottom="@dimen/scale_10dp"
         android:orientation="horizontal">
 
         <ImageView
@@ -15,13 +16,12 @@
             android:layout_width="@dimen/scale_15dp"
             android:layout_height="@dimen/scale_15dp"
             android:layout_gravity="center_vertical"
-            android:layout_marginEnd="@dimen/scale_14dp"
             android:layout_marginLeft="@dimen/scale_17dp"
             android:layout_marginRight="@dimen/scale_14dp"
-            android:layout_marginStart="@dimen/scale_17dp"
-            android:src="@drawable/ic_tick_selector"
+            android:src="@drawable/selector_filled_tick_cheep_care_payment_summary"
             app:layout_constraintBottom_toBottomOf="@id/tv_sub_service_name"
-            app:layout_constraintRight_toLeftOf="@+id/tv_sub_service_name"
+            app:layout_constraintEnd_toStartOf="@+id/tv_sub_service_name"
+            app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/tv_sub_service_name"
             tools:ignore="ContentDescription" />
@@ -36,9 +36,9 @@
             android:textColor="@color/grey_varient_8"
             android:textSize="@dimen/text_size_16sp"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/cl_center"
             app:layout_constraintHorizontal_weight="1"
-            app:layout_constraintLeft_toRightOf="@id/img_icon_correct"
-            app:layout_constraintRight_toLeftOf="@+id/cl_center"
+            app:layout_constraintStart_toEndOf="@id/img_icon_correct"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Washing machine" />
 
@@ -47,10 +47,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/background_grey_border_rounded_rect"
+            android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toRightOf="@id/tv_sub_service_name"
-            app:layout_constraintRight_toLeftOf="@+id/tv_sub_service_price"
-            app:layout_constraintVertical_bias="0">
+            app:layout_constraintRight_toLeftOf="@+id/tv_sub_service_price">
 
             <com.cheep.custom_view.CFTextViewSemiBold
                 android:id="@+id/tv_minus"
@@ -79,6 +79,7 @@
                 android:paddingLeft="@dimen/scale_5dp"
                 android:paddingRight="@dimen/scale_5dp"
                 android:paddingTop="@dimen/scale_2dp"
+                android:text="1"
                 android:textColor="@color/splash_gradient_end"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toRightOf="@id/tv_minus"
@@ -106,7 +107,7 @@
 
         <com.cheep.custom_view.CFTextViewSemiBold
             android:id="@+id/tv_sub_service_price"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginEnd="@dimen/scale_14dp"
             android:layout_marginLeft="@dimen/scale_10dp"
@@ -117,10 +118,11 @@
             android:singleLine="true"
             android:textColor="@color/splash_gradient_end"
             android:textSize="@dimen/text_size_16sp"
+            android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_weight="0.8"
-            app:layout_constraintLeft_toRightOf="@+id/cl_center"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toEndOf="@id/cl_center"
             app:layout_constraintVertical_bias="0"
             tools:text="@string/rupee_symbol_x" />
 

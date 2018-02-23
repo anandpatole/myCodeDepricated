@@ -25,6 +25,7 @@ import com.cheep.cheepcare.adapter.TaskCreationPagerAdapter;
 import com.cheep.cheepcare.fragment.FreeSubCategoryFragment;
 import com.cheep.cheepcare.fragment.TaskCreationPhase2Fragment;
 import com.cheep.databinding.ActivityTaskCreateBinding;
+import com.cheep.databinding.ActivityTaskCreateCcBinding;
 import com.cheep.dialogs.AcknowledgementDialogWithoutProfilePic;
 import com.cheep.dialogs.AcknowledgementInteractionListener;
 import com.cheep.dialogs.CustomLoadingDialog;
@@ -67,7 +68,7 @@ import java.util.Map;
  */
 public class TaskCreationCCActivity extends BaseAppCompatActivity {
     private static final String TAG = TaskCreationCCActivity.class.getSimpleName();
-    private ActivityTaskCreateBinding mBinding;
+    private ActivityTaskCreateCcBinding mBinding;
     public JobCategoryModel mJobCategoryModel;
     TaskCreationPagerAdapter mTaskCreationPagerAdapter;
     private List<SubServiceDetailModel> mSelectedSubServiceList;
@@ -86,7 +87,7 @@ public class TaskCreationCCActivity extends BaseAppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_task_create);
+        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_task_create_cc);
         initiateUI();
         setListeners();
         EventBus.getDefault().register(this);
@@ -105,14 +106,14 @@ public class TaskCreationCCActivity extends BaseAppCompatActivity {
         setSupportActionBar(mBinding.toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setTitle(Utility.EMPTY_STRING);
-            mBinding.toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Utility.hideKeyboard(mContext);
-                    onBackPressed();
-                }
-            });
+            getSupportActionBar().setTitle(null);
+//            mBinding.toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    Utility.hideKeyboard(mContext);
+//                    onBackPressed();
+//                }
+//            });
         }
 
         showPostTaskButton(true, true);
@@ -165,12 +166,12 @@ public class TaskCreationCCActivity extends BaseAppCompatActivity {
                     List<SubServiceDetailModel> list
                             = mTaskCreationPagerAdapter.mTaskCreationPhase1Fragment.getSelectedSubServices();
                     //lines to be uncommented
-//                    if (list != null && !list.isEmpty()) {
-                    mSelectedSubServiceList = list;
-                    gotoStep(STAGE_2);
-//                    } else {
-//                        Utility.showSnackBar(getString(R.string.step_1_desc), mBinding.getRoot());
-//                    }
+                    if (list != null && !list.isEmpty()) {
+                        mSelectedSubServiceList = list;
+                        gotoStep(STAGE_2);
+                    } else {
+                        Utility.showSnackBar(getString(R.string.step_1_desc), mBinding.getRoot());
+                    }
                 }
             }
         }

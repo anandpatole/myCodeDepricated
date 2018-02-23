@@ -118,9 +118,9 @@
                     android:text="@string/msg_submit_review"
                     android:textColor="@color/selector_6a6a6a_blue"
                     android:textSize="@dimen/text_size_15sp"
-                    app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent" />
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <com.cheep.custom_view.CFEditTextRegular
                     android:id="@+id/et_review"
@@ -326,7 +326,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/scale_6dp"
-                    android:src="@drawable/ic_star_rate_review"
+                    android:src="@drawable/ic_yellow_100x91"
                     app:layout_constraintBottom_toBottomOf="@id/tv_rating"
                     app:layout_constraintStart_toEndOf="@id/tv_rating"
                     app:layout_constraintTop_toTopOf="@id/tv_rating" />
@@ -343,21 +343,21 @@
                     android:textColor="@color/grey_varient_8"
                     android:textSize="@dimen/text_size_17sp"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintHorizontal_chainStyle="packed"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/iv_star" />
 
                 <com.cheep.custom_view.CFTextViewRegular
                     android:id="@+id/tv_yes"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/scale_26dp"
                     android:layout_marginTop="@dimen/scale_21dp"
                     android:background="@drawable/btn_blue_rounded_border"
                     android:gravity="center"
                     android:paddingBottom="@dimen/scale_12dp"
                     android:paddingLeft="@dimen/scale_41dp"
                     android:paddingRight="@dimen/scale_41dp"
-                    android:layout_marginRight="@dimen/scale_26dp"
                     android:paddingTop="@dimen/scale_12dp"
                     android:text="@string/label_yes"
                     android:textColor="@color/splash_gradient_end"
@@ -379,9 +379,9 @@
                     android:paddingRight="@dimen/scale_41dp"
                     android:paddingTop="@dimen/scale_12dp"
                     android:text="@string/label_no"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     android:textColor="@color/splash_gradient_end"
                     android:textSize="@dimen/text_size_14sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/tv_yes"
                     app:layout_constraintTop_toBottomOf="@id/tv_recommend_rating" />
@@ -390,7 +390,7 @@
                     android:id="@+id/group_rating_submitted"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:visibility="gone"
+                    android:visibility="visible"
                     app:constraint_referenced_ids="tv_your_rating,tv_rating
                     ,iv_star,tv_recommend_rating,tv_yes,tv_no" />
 

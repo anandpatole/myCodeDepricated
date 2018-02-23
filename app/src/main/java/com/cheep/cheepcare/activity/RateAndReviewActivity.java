@@ -5,6 +5,9 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.style.DynamicDrawableSpan;
 import android.text.style.ImageSpan;
 import android.view.View;
 
@@ -35,12 +38,22 @@ public class RateAndReviewActivity extends BaseAppCompatActivity {
 
     @Override
     protected void initiateUI() {
-
-        String submitReviewString  = getString(R.string.msg_submit_review);
-        int excellentEndIndex = submitReviewString.indexOf("Your");
+        // initialize indexes where image spans are to be put
+        String submitReviewString = getString(R.string.msg_submit_review);
+        int excellentEndIndex = "Excellent".length();
         int endIndex = submitReviewString.length() - 1;
 
-        ImageSpan smileSpan = new ImageSpan(mContext,R.drawable.emoji_folded_hands);
+        //initialize variables for setting image spans
+        SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(submitReviewString);
+        ImageSpan smileSpan = new ImageSpan(mContext, R.drawable.emoji_smile_blush, DynamicDrawableSpan.ALIGN_BASELINE);
+        ImageSpan handsSpan = new ImageSpan(mContext, R.drawable.emoji_folded_hands, DynamicDrawableSpan.ALIGN_BASELINE);
+
+        // set image spans in spannableStringBuilder
+        spannableStringBuilder.setSpan(smileSpan, excellentEndIndex, excellentEndIndex + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannableStringBuilder.setSpan(handsSpan, endIndex, endIndex + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        // set spannableStringBuilder text in submitReview textView
+        mBinding.tvSubmitReviewDescription.setText(spannableStringBuilder);
 
         // Setting up Toolbar
         setSupportActionBar(mBinding.toolbar);
@@ -72,6 +85,12 @@ public class RateAndReviewActivity extends BaseAppCompatActivity {
                     mBinding.etReview.setSelected(true);
                     mBinding.tvSubmitReviewDescription.setSelected(true);
                     mBinding.tvSubmitReviewDescription.setText(getString(R.string.msg_submitted_review));
+                    mBinding.ratingCommunication.setIsIndicator(true);
+                    mBinding.ratingPunctuality.setIsIndicator(true);
+                    mBinding.ratingValueForMoney.setIsIndicator(true);
+                    mBinding.ratingQualityOfJob.setIsIndicator(true);
+                    mBinding.ratingPresentation.setIsIndicator(true);
+                    mBinding.etReview.setEnabled(false);
                     break;
             }
         }

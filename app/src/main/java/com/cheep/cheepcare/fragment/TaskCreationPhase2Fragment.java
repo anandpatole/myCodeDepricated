@@ -185,7 +185,7 @@ public class TaskCreationPhase2Fragment extends BaseFragment
         }
 
         // let activity know that post task button needs to be shown now.
-        mTaskCreationCCActivity.showPostTaskButton(true, isTotalVerified);
+        mTaskCreationCCActivity.showPostTaskButton(false, isTotalVerified);
     }
 
     private void updateTaskDetails() {
@@ -321,20 +321,13 @@ public class TaskCreationPhase2Fragment extends BaseFragment
 
     private void initAddressUI() {
 
-
-        final ArrayList<AddressModel> mAddressList;
+        final ArrayList<AddressModel> mAddressList = new ArrayList<>();
         if (PreferenceUtility.getInstance(mContext).getUserDetails() != null) {
-            mAddressList = PreferenceUtility.getInstance(mContext).getUserDetails().addressList;
+            mAddressList.addAll(PreferenceUtility.getInstance(mContext).getUserDetails().addressList);
         } else {
-
-            mAddressList = PreferenceUtility.getInstance(mContext).getGuestUserDetails().addressList;
+            mAddressList.addAll(PreferenceUtility.getInstance(mContext).getGuestUserDetails().addressList);
         }
 
-        // add dummy select address at first position
-        mAddressList.add(0, new AddressModel() {{
-            address = getString(R.string.label_select_address);
-            address_id = "";
-        }});
 
         // add dummy select adderss at last position for "Add new Address" row
         mAddressList.add(new AddressModel() {{
@@ -351,22 +344,20 @@ public class TaskCreationPhase2Fragment extends BaseFragment
         mBinding.spinnerAddressSelection.setSelected(false);
         mBinding.spinnerAddressSelection.setFocusableInTouchMode(false);
 
-        if (mTaskCreationCCActivity.mAddressModel != null)
+       /* if (mTaskCreationCCActivity.mAddressModel != null)
             for (int i = 0; i < mAddressList.size(); i++) {
                 AddressModel addressModel = mAddressList.get(i);
                 if (addressModel.address_id.equalsIgnoreCase(mTaskCreationCCActivity.mAddressModel.address_id)) {
                     mBinding.spinnerAddressSelection.setSelection(i);
                 }
-            }
+            }*/
 
         mBinding.spinnerAddressSelection.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (!isClicked && position == 0) {
-                    Log.d(TAG, "onItemSelected: 0th position default selection");
-                } else if (position == mAddressList.size() - 1) {
+                if (position == mAddressList.size() - 1) {
                     showBottomAddressDialog(null);
-                } else if (mAddressList.get(position).isSubscribedAddress) {
+                } else if (mAddressList.get(position).is_subscribe.equals("1")) {
                     Log.d(TAG, "onItemSelected: ");
                     AddressModel model = mAddressList.get(position);
                     mBinding.iconTaskWhere.setImageDrawable(ContextCompat.getDrawable(mContext
@@ -383,9 +374,9 @@ public class TaskCreationPhase2Fragment extends BaseFragment
 
                     mBinding.tvAddress.setText(model.address_initials + ", " + model.address);
                     mSelectedAddress = model;
-                } else {
+                } else if (isClicked && mAddressList.get(position).is_subscribe.equals("0")) {
                     NotSubscribedAddressDialog notSubscribedAddressDialog = new NotSubscribedAddressDialog();
-                    notSubscribedAddressDialog.show(((AppCompatActivity) mContext).getSupportFragmentManager(), SelectSpecificTimeDialog.TAG);
+                    notSubscribedAddressDialog.show(((AppCompatActivity) mContext).getSupportFragmentManager(), NotSubscribedAddressDialog.TAG);
                     notSubscribedAddressDialog.setTargetFragment(TaskCreationPhase2Fragment.this, 0);
                 }
             }

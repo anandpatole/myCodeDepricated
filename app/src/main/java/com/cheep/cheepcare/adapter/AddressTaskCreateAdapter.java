@@ -101,11 +101,11 @@ public class AddressTaskCreateAdapter<T> extends ArrayAdapter<T> {
             else
                 mHolder.mBinding.tvAddressNickname.setText(Utility.getAddressCategoryString(addressModel.category));
 
-            mHolder.mBinding.viewDot.setVisibility(mList.get(position).isSubscribedAddress
+            mHolder.mBinding.viewDot.setVisibility(mList.get(position).is_subscribe.equals("1")
                     ? View.VISIBLE
                     : View.GONE
             );
-            mHolder.mBinding.tvLabelAddressSubscribed.setVisibility(mList.get(position).isSubscribedAddress
+            mHolder.mBinding.tvLabelAddressSubscribed.setVisibility(mList.get(position).is_subscribe.equals("1")
                     ? View.VISIBLE
                     : View.GONE
             );

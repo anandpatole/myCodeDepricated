@@ -38,13 +38,16 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/recycler_view" />
 
-            <com.cheep.custom_view.CFTextViewRegular
-                android:id="@+id/tv_service_description"
+            <com.cheep.custom_view.CFEditTextRegular
+                android:id="@+id/edit_task_desc"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/scale_16dp"
-                android:text="I need a Plumber to repair the problem I’m facing."
+                android:background="@color/transparent"
+                android:hint="@string/hint_task_desc"
                 android:textColor="@color/black"
+
+                android:textColorHint="@color/grey_dark_color_2"
                 android:textSize="@dimen/text_size_11sp"
                 app:layout_constraintEnd_toEndOf="@id/recycler_view"
                 app:layout_constraintStart_toStartOf="@id/recycler_view"
@@ -56,7 +59,7 @@
                 android:layout_height="@dimen/scale_1dp"
                 android:layout_marginTop="@dimen/scale_23dp"
                 android:background="@drawable/bottom_stroke_gray"
-                app:layout_constraintTop_toBottomOf="@id/tv_service_description" />
+                app:layout_constraintTop_toBottomOf="@id/edit_task_desc" />
 
 
             <ImageView

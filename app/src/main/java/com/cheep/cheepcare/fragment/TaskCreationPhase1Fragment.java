@@ -8,12 +8,14 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.cheep.R;
 import com.cheep.activity.BaseAppCompatActivity;
+import com.cheep.cheepcare.activity.TaskCreationCCActivity;
 import com.cheep.cheepcare.dialogs.LimitExceededDialog;
 import com.cheep.cheepcare.dialogs.PaymentFailedDialog;
 import com.cheep.databinding.FragmentTaskCreationPhase1Binding;
@@ -36,8 +38,7 @@ public class TaskCreationPhase1Fragment extends BaseFragment {
     /*private TaskCreationCCActivity mTaskCreationCCActivity;*/
 
     public static TaskCreationPhase1Fragment newInstance() {
-        TaskCreationPhase1Fragment fragment = new TaskCreationPhase1Fragment();
-        return fragment;
+        return new TaskCreationPhase1Fragment();
     }
 
     public TaskCreationPhase1Fragment() {
@@ -69,23 +70,24 @@ public class TaskCreationPhase1Fragment extends BaseFragment {
         setListener();
     }
 
-    /*@Override
+    @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         Log.d(TAG, "setUserVisibleHint() called with: isVisibleToUser = [" + isVisibleToUser + "]");
-        if (!isVisibleToUser || mTaskCreationCCActivity == null) {
+      /*  if (!isVisibleToUser || mTaskCreationCCActivity == null) {
             return;
         }
 
-        *//*if (!mSubServiceUnitAdapter.getSelectedList().isEmpty()) {
-            mTaskCreationCCActivity.setTaskState(TaskCreationCCActivity.STEP_ONE_VERIFIED);
+        if (!(((FreeSubCategoryFragment) mPagerAdapter.getItem(1)).getSelectedSubServices().isEmpty()) ||
+                !(((PaidSubCategoryFragment) mPagerAdapter.getItem(1)).getSelectedSubServices().isEmpty())) {
+            ma.setTaskState(TaskCreationCCActivity.STEP_ONE_VERIFIED);
         } else {
             mTaskCreationCCActivity.setTaskState(TaskCreationCCActivity.STEP_ONE_NORMAL);
-        }*//*
+        }
 
         // Hide the post task button
-        mTaskCreationCCActivity.showPostTaskButton(true, true);
-    }*/
+        mTaskCreationCCActivity.showPostTaskButton(true, true);*/
+    }
 
     @Override
     public void initiateUI() {
@@ -166,7 +168,7 @@ public class TaskCreationPhase1Fragment extends BaseFragment {
     public List<SubServiceDetailModel> getSelectedSubServices() {
         List<SubServiceDetailModel> list =
                 ((FreeSubCategoryFragment) mPagerAdapter.getItem(0)).getSelectedSubServices();
-        list.addAll(((FreeSubCategoryFragment) mPagerAdapter.getItem(1)).getSelectedSubServices());
+        list.addAll(((PaidSubCategoryFragment) mPagerAdapter.getItem(1)).getSelectedSubServices());
         return list;
     }
 
@@ -177,12 +179,12 @@ public class TaskCreationPhase1Fragment extends BaseFragment {
         private static final int PAID_SERVICES = 1;
         private final List<String> mTitleList = new ArrayList<>();
         private final FreeSubCategoryFragment mFreeSubCategoryFragment;
-        private final FreeSubCategoryFragment mPaidSubCategoryFragment;
+        private final PaidSubCategoryFragment mPaidSubCategoryFragment;
 
         public PagerAdapter(FragmentManager fm) {
             super(fm);
             mFreeSubCategoryFragment = FreeSubCategoryFragment.newInstance();
-            mPaidSubCategoryFragment = FreeSubCategoryFragment.newInstance();
+            mPaidSubCategoryFragment = PaidSubCategoryFragment.newInstance();
         }
 
         @Override
@@ -211,19 +213,5 @@ public class TaskCreationPhase1Fragment extends BaseFragment {
         public void addFragment(String title) {
             mTitleList.add(title);
         }
-    }
-
-    private void showLimitExceedDialog() {
-        LogUtils.LOGE(TAG, "showLimitExceedDialog: ");
-        // TODO remove dummy name in dialog params
-        LimitExceededDialog limitExceededDialog = LimitExceededDialog.newInstance("fdsfds",
-                new AcknowledgementInteractionListener() {
-
-                    @Override
-                    public void onAcknowledgementAccepted() {
-                    }
-                });
-        limitExceededDialog.setCancelable(true);
-        limitExceededDialog.show(getChildFragmentManager(), PaymentFailedDialog.TAG);
     }
 }

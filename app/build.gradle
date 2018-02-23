@@ -11,9 +11,9 @@ android {
     defaultConfig {
         applicationId "com.cheep"
         minSdkVersion 16
-        targetSdkVersion 27
+        targetSdkVersion 26
         versionCode 32
-        versionName "1.1.23" // PLEASE FIRST MAKE SURE MIN-VERSION IS 16.
+        versionName "1.1.24" // PLEASE FIRST MAKE SURE MIN-VERSION IS 16.
         renderscriptTargetApi 18
         renderscriptSupportModeEnabled true
 

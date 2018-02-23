@@ -22,7 +22,7 @@ public class AddressModel implements Serializable {
     public String pincode;
     public String nickname;
     public String end_date;
-    public String is_subscribe;
+    public String is_subscribe = "0";
 
     /**
      * This would only be useful in case of Guest
@@ -31,7 +31,7 @@ public class AddressModel implements Serializable {
     public String countryName;
     public String stateName;
 
-    public boolean isSubscribedAddress = false;
+    //    public boolean isSubscribedAddress = is_subscribe.equals("1");
     public boolean isSelected = false;
 
     public LatLng getLatLng() {
