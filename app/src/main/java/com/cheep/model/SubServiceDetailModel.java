@@ -5,13 +5,14 @@ import android.support.annotation.Keep;
 import com.cheep.custom_view.expandablerecycleview.Parent;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by bhavesh on 28/4/17.
  */
 @Keep
-public class SubServiceDetailModel implements Parent<SubServiceDetailModel> {
+public class SubServiceDetailModel implements Serializable, Parent<SubServiceDetailModel> {
     @SerializedName("cat_id")
     public int catId;
 
@@ -21,7 +22,7 @@ public class SubServiceDetailModel implements Parent<SubServiceDetailModel> {
     @SerializedName("name")
     public String name;
 
-    public String monthlyPrice;
+    public String monthlyPrice = "120";
 
     public int minQty = 1;
     public int maxQty = 3;

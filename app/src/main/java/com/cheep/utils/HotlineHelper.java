@@ -32,7 +32,7 @@ public class HotlineHelper {
         if (hotlineHelper == null) {
             hotlineHelper = new HotlineHelper(context);
         }
-        return hotlineHelper;su
+        return hotlineHelper;
     }
 
     public void updateUserInfo(UserDetails userDetails, Context mContext) {

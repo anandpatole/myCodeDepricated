@@ -31,6 +31,7 @@ import com.cheep.BuildConfig;
 import com.cheep.R;
 import com.cheep.activity.BaseAppCompatActivity;
 import com.cheep.activity.PaymentChoiceActivity;
+import com.cheep.activity.TaskSummaryForMultiCatActivity;
 import com.cheep.cheepcare.adapter.SelectedSubServicePriceAdapter;
 import com.cheep.custom_view.BottomAlertDialog;
 import com.cheep.custom_view.CFEditTextRegular;
@@ -163,17 +164,26 @@ public class BookingConfirmationCcActivity extends BaseAppCompatActivity {
         // Enable Step Three Unverified state
         setTaskState(STEP_THREE_UNVERIFIED);
 
-        String taskDescription = getString(R.string.msg_task_description, "25th April", "1100", "1400"
-                , "1401/1402 Ghanshyam Enclave, Lalji Pada, ICICI Bank, New Link Road, Kandivali West, Mumbai, Maharashtra");
-        SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(taskDescription);
+//        String taskDescription = getString(R.string.msg_task_description, "25th April", "1100", "1400"
+//                , );
+//        SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(taskDescription);
+//
+//        ForegroundColorSpan colorSpan = new ForegroundColorSpan(ContextCompat.getColor(mContext, R.color.black));
+//        spannableStringBuilder.setSpan(colorSpan, taskDescription.indexOf("at")
+//                , (taskDescription.indexOf("at") + 2), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+//
+//        ForegroundColorSpan colorSpan1 = new ForegroundColorSpan(ContextCompat.getColor(mContext, R.color.black));
+//        spannableStringBuilder.setSpan(colorSpan1, taskDescription.indexOf("on")
+//                , (taskDescription.indexOf("on") + 2), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-        ForegroundColorSpan colorSpan = new ForegroundColorSpan(ContextCompat.getColor(mContext, R.color.black));
-        spannableStringBuilder.setSpan(colorSpan, taskDescription.indexOf("at")
-                , (taskDescription.indexOf("at") + 2), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-        ForegroundColorSpan colorSpan1 = new ForegroundColorSpan(ContextCompat.getColor(mContext, R.color.black));
-        spannableStringBuilder.setSpan(colorSpan1, taskDescription.indexOf("on")
-                , (taskDescription.indexOf("on") + 2), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder();
+        spannableStringBuilder.append(getSpannableString(getString(R.string.msg_task_description), ContextCompat.getColor(this, R.color.splash_gradient_end), true));
+        spannableStringBuilder.append(getSpannableString(getString(R.string.label_on), ContextCompat.getColor(this, R.color.grey_varient_8), false));
+        spannableStringBuilder.append(getSpannableString("25th April, 1100 hrs - 1400 hrs", ContextCompat.getColor(this, R.color.splash_gradient_end), true));
+        spannableStringBuilder.append(getSpannableString(getString(R.string.label_at), ContextCompat.getColor(this, R.color.grey_varient_8), false));
+        spannableStringBuilder.append(getSpannableString("1401/1402 Ghanshyam Enclave, Lalji Pada, ICICI Bank, New Link Road, Kandivali West, Mumbai, Maharashtra", ContextCompat.getColor(this, R.color.splash_gradient_end), true));
+
 
         mBinding.tvTaskDescription.setText(spannableStringBuilder);
 
@@ -215,9 +225,18 @@ public class BookingConfirmationCcActivity extends BaseAppCompatActivity {
 
 
     }
+
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //////////////////////////// Payment Detail Detail Service[Start] ////////////////////////////////////////////////
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public SpannableStringBuilder getSpannableString(String fullstring, int color, boolean isBold) {
+        SpannableStringBuilder text = new SpannableStringBuilder(fullstring);
+        text.setSpan(new ForegroundColorSpan(color), 0, fullstring.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        if (isBold) {
+            text.setSpan(new StyleSpan(Typeface.BOLD), 0, fullstring.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
+        return text;
+    }
 
     /**
      * Call Payment Detail web service
@@ -401,7 +420,7 @@ public class BookingConfirmationCcActivity extends BaseAppCompatActivity {
 //            taskDetailModel.usedWalletAmount = String.valueOf(usedWalletBalance);
 //
 //            PaymentChoiceActivity.newInstance(mContext, taskDetailModel, providerModel, mSelectedAddressModelForInsta);
-            RateAndReviewActivity.newInstance(mContext);
+            TaskSummaryForMultiCatActivity.getInstance(mContext, Utility.EMPTY_STRING);
         }
     };
     // Changes are per new flow pay now/later: 15/11/17

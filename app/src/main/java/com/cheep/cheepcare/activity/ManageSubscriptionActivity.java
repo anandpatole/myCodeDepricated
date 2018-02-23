@@ -308,7 +308,7 @@ public class ManageSubscriptionActivity extends BaseAppCompatActivity {
                     mSubscribedPackageList = subscribedList;
                     /*for (PackageDetail subscribedPackageDetail : mSubscribedPackageList) {
                         for (AddressModel selectedAddressModel : subscribedPackageDetail.mSelectedAddressList) {
-                            selectedAddressModel.isSubscribedAddress = true;
+                            selectedAddressModel.is_subscribe = "1";
                         }
                     }*/
                     mAllPackagesList = allPackageList;

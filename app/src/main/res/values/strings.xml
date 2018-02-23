@@ -679,8 +679,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_limit_exceed_desc">Unfortunately, you are exceeding the number of appliances under your %1s Package subscription.</string>
     <string name="label_retry_payment">Retry Payment</string>
     <string name="validation_message_already_purchased_package_for_this_address">You have already purchased subscription for this package</string>
-    <string name="msg_task_description">Your tasks will be completed on %1s, %2s hrs - %3s hrs at
-        %4s.</string>
+    <string name="msg_task_description">Your tasks will be completed on</string>
     <string name="label_non_working_hour_fee">Non-Working Hours Fee</string>
     <string name="msg_non_working_hr">Task booked outside 1000 hrs - 1900 hrs</string>
     <string name="label_excess_limit_fee">Excess Limit Fee</string>

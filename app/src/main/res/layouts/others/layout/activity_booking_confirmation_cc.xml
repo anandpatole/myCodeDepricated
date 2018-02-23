@@ -135,7 +135,7 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
-                <com.cheep.custom_view.CFTextViewRegular
+                <com.cheep.custom_view.CFTextViewSemiBold
                     android:id="@+id/tv_task_description"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

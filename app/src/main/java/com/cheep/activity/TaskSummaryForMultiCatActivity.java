@@ -28,6 +28,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.cheep.R;
 import com.cheep.adapter.SelectedSubCatSummaryAdapter;
+import com.cheep.cheepcare.activity.RateAndReviewActivity;
 import com.cheep.custom_view.BottomAlertDialog;
 import com.cheep.databinding.ActivityTaskSummaryForMultiCatBinding;
 import com.cheep.databinding.DialogChangePhoneNumberBinding;
@@ -127,7 +128,16 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
 //        } else {
 //            setUpTaskDetails(mTaskDetailModel);
 //        }
+        showProgressBar(false);
+        mActivityTaskSummaryBinding.lnTaskAdditionalQuoteRequested.setVisibility(View.GONE);
+        mActivityTaskSummaryBinding.lnTaskCompletionRequested.setVisibility(View.GONE);
 
+        mActivityTaskSummaryBinding.textBottomAction.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RateAndReviewActivity.newInstance(mContext);
+            }
+        });
 
     }
 
@@ -377,7 +387,7 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
     private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            switch (v.getId()){
+            switch (v.getId()) {
                 // Onclick of when and Where section
                 case R.id.ln_task_where:
                     showFullDesc(getString(R.string.label_address), mActivityTaskSummaryBinding.textTaskWhere.getText().toString());

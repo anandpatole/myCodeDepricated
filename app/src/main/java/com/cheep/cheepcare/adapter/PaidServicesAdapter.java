@@ -8,23 +8,22 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.cheep.R;
-import com.cheep.cheepcare.model.CheepCarePackageModel;
-import com.cheep.databinding.RowSubCategoryUnitFreeBinding;
+import com.cheep.databinding.RowSubCategoryUnitPaidBinding;
 import com.cheep.model.SubServiceDetailModel;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by kruti on 22/2/18.
+ * Created by bhavesh on 22/2/18.
  */
 
-public class FreeServicesAdapter extends RecyclerView.Adapter<FreeServicesAdapter.ViewHolder> {
+public class PaidServicesAdapter extends RecyclerView.Adapter<PaidServicesAdapter.ViewHolder> {
 
     private final List<SubServiceDetailModel> mList = new ArrayList<>();
     private final ItemInteractionListener mListener;
 
-    public FreeServicesAdapter(ItemInteractionListener listener) {
+    public PaidServicesAdapter(ItemInteractionListener listener) {
         mListener = listener;
     }
 
@@ -36,28 +35,32 @@ public class FreeServicesAdapter extends RecyclerView.Adapter<FreeServicesAdapte
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        RowSubCategoryUnitFreeBinding binding =
+        RowSubCategoryUnitPaidBinding binding =
                 DataBindingUtil.inflate(LayoutInflater.from(parent.getContext())
-                        , R.layout.row_sub_category_unit_free
+                        , R.layout.row_sub_category_unit_paid
                         , parent
                         , false);
         return new ViewHolder(binding);
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, final int position) {
+    public void onBindViewHolder(final ViewHolder holder, int position) {
         final SubServiceDetailModel subServicesModel = mList.get(holder.getAdapterPosition());
 
         holder.mBinding.tvSubServiceName.setText(subServicesModel.name);
-        Context context = holder.mBinding.getRoot().getContext();
+        final Context context = holder.mBinding.getRoot().getContext();
 
         holder.mBinding.tvDigit.setText(String.valueOf(subServicesModel.qty));
+
         if (subServicesModel.isSelected) {
             holder.mBinding.imgIconCorrect.setSelected(true);
             holder.mBinding.clCenter.setVisibility(View.VISIBLE);
+            holder.mBinding.tvSubServicePrice.setVisibility(View.VISIBLE);
+            holder.mBinding.tvSubServicePrice.setText(context.getString(R.string.rupee_symbol_x, "152"));
         } else {
             holder.mBinding.imgIconCorrect.setSelected(false);
             holder.mBinding.clCenter.setVisibility(View.INVISIBLE);
+            holder.mBinding.tvSubServicePrice.setVisibility(View.INVISIBLE);
         }
 
         holder.mBinding.tvSubServicePrice.setSelected(subServicesModel.isSelected);
@@ -69,12 +72,11 @@ public class FreeServicesAdapter extends RecyclerView.Adapter<FreeServicesAdapte
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
-        RowSubCategoryUnitFreeBinding mBinding;
+        RowSubCategoryUnitPaidBinding mBinding;
 
-        public ViewHolder(RowSubCategoryUnitFreeBinding binding) {
+        public ViewHolder(RowSubCategoryUnitPaidBinding binding) {
             super(binding.getRoot());
             mBinding = binding;
-
             mBinding.tvSubServiceName.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

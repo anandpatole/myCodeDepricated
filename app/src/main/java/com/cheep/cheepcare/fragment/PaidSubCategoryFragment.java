@@ -16,6 +16,7 @@ import com.cheep.R;
 import com.cheep.activity.BaseAppCompatActivity;
 import com.cheep.cheepcare.activity.TaskCreationCCActivity;
 import com.cheep.cheepcare.adapter.FreeServicesAdapter;
+import com.cheep.cheepcare.adapter.PaidServicesAdapter;
 import com.cheep.cheepcare.dialogs.LimitExceededDialog;
 import com.cheep.databinding.FragmentSelectSubCategoryBinding;
 import com.cheep.dialogs.AcknowledgementInteractionListener;
@@ -43,17 +44,17 @@ import static com.cheep.network.NetworkUtility.TAGS.CAT_ID;
  * Created by bhavesh on 28/4/17.
  */
 
-public class FreeSubCategoryFragment extends BaseFragment {
-    public static final String TAG = FreeSubCategoryFragment.class.getSimpleName();
+public class PaidSubCategoryFragment extends BaseFragment {
+    public static final String TAG = PaidSubCategoryFragment.class.getSimpleName();
     private FragmentSelectSubCategoryBinding mBinding;
-    private FreeServicesAdapter mFreeServicesAdapter;
+    private PaidServicesAdapter mFreeServicesAdapter;
     ErrorLoadingHelper errorLoadingHelper;
     private TaskCreationCCActivity mTaskCreationCCActivity;
     private boolean isVerified = false;
 
     @SuppressWarnings("unused")
-    public static FreeSubCategoryFragment newInstance() {
-        FreeSubCategoryFragment fragment = new FreeSubCategoryFragment();
+    public static PaidSubCategoryFragment newInstance() {
+        PaidSubCategoryFragment fragment = new PaidSubCategoryFragment();
         return fragment;
     }
 
@@ -100,12 +101,24 @@ public class FreeSubCategoryFragment extends BaseFragment {
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mContext);
         mBinding.recyclerView.setLayoutManager(linearLayoutManager);
-        mFreeServicesAdapter = new FreeServicesAdapter(mFreeItemInteractionListener);
+        mFreeServicesAdapter = new PaidServicesAdapter(mFreeItemInteractionListener);
         mBinding.recyclerView.setAdapter(mFreeServicesAdapter);
         errorLoadingHelper.showLoading();
         fetchListOfSubCategory(mTaskCreationCCActivity.mJobCategoryModel.catId);
     }
 
+    private List<SubServiceDetailModel> getDummyList() {
+        ArrayList<SubServiceDetailModel> subServiceDetailModels = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            SubServiceDetailModel subServiceDetailModel = new SubServiceDetailModel();
+            subServiceDetailModel.name = "I need my leaking tap to be fixed";
+            subServiceDetailModel.catId = i;
+            subServiceDetailModel.monthlyPrice = String.valueOf(100);
+            subServiceDetailModel.subServiceList = new ArrayList<>();
+            subServiceDetailModels.add(subServiceDetailModel);
+        }
+        return subServiceDetailModels;
+    }
 
     @Override
     public void setListener() {
@@ -253,8 +266,8 @@ public class FreeSubCategoryFragment extends BaseFragment {
         Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.WS.FETCH_SUB_SERVICE_LIST);
     }
 
-    private final FreeServicesAdapter.ItemInteractionListener mFreeItemInteractionListener =
-            new FreeServicesAdapter.ItemInteractionListener() {
+    private final PaidServicesAdapter.ItemInteractionListener mFreeItemInteractionListener =
+            new PaidServicesAdapter.ItemInteractionListener() {
                 @Override
                 public void onLimitExceeded(SubServiceDetailModel subServiceDetailModel, int position) {
                     showLimitExceedDialog();
