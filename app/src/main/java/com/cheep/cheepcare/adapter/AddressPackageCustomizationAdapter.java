@@ -70,7 +70,7 @@ public class AddressPackageCustomizationAdapter<T> extends ArrayAdapter<T> {
             mHolder.mBinding.ivAddressIcon.setImageResource(Utility.getAddressCategoryBlueIcon(model.category));
             mHolder.mBinding.llAddressContainer.setVisibility(View.VISIBLE);
         }
-        mHolder.mBinding.tvAddress.setText(model.address_initials + ", " + model.address);
+        mHolder.mBinding.tvAddress.setText(model.getAddressWithInitials());
 
         return convertView;
     }

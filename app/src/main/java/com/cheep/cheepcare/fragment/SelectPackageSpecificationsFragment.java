@@ -522,7 +522,7 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
 
         mBinding.tvAddressNickname.setText(category);
 
-        mBinding.tvAddress.setText(addressModel.address_initials + ", " + addressModel.address);
+        mBinding.tvAddress.setText(addressModel.getAddressWithInitials());
         mBinding.ivIsAddressSelected.setSelected(true);
         mSelectedAddress = addressModel;
     }

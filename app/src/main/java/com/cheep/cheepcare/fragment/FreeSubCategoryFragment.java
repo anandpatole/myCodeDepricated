@@ -51,6 +51,8 @@ public class FreeSubCategoryFragment extends BaseFragment {
     private TaskCreationCCActivity mTaskCreationCCActivity;
     private boolean isVerified = false;
 
+
+
     @SuppressWarnings("unused")
     public static FreeSubCategoryFragment newInstance() {
         FreeSubCategoryFragment fragment = new FreeSubCategoryFragment();
@@ -103,9 +105,8 @@ public class FreeSubCategoryFragment extends BaseFragment {
         mFreeServicesAdapter = new FreeServicesAdapter(mFreeItemInteractionListener);
         mBinding.recyclerView.setAdapter(mFreeServicesAdapter);
         errorLoadingHelper.showLoading();
-        fetchListOfSubCategory(mTaskCreationCCActivity.mJobCategoryModel.catId);
+//        fetchListOfSubCategory(mTaskCreationCCActivity.mJobCategoryModel.catId);
     }
-
 
     @Override
     public void setListener() {
@@ -179,6 +180,7 @@ public class FreeSubCategoryFragment extends BaseFragment {
         Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequestForCategoryList, NetworkUtility.WS.FETCH_SUB_SERVICE_LIST);
     }
 
+
     Response.Listener mCallFetchSubServiceListingWSResponseListener = new Response.Listener() {
         @Override
         public void onResponse(Object response) {
@@ -245,6 +247,10 @@ public class FreeSubCategoryFragment extends BaseFragment {
      */
     public List<SubServiceDetailModel> getSelectedSubServices() {
         return mFreeServicesAdapter.getSelectedList();
+    }
+
+    public void setSubCatList(ArrayList<SubServiceDetailModel> list){
+        mFreeServicesAdapter.addAll(list);
     }
 
     @Override

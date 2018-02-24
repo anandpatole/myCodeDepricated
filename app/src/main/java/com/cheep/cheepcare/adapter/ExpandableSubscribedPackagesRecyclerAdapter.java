@@ -116,7 +116,7 @@ public class ExpandableSubscribedPackagesRecyclerAdapter extends ExpandableRecyc
 
         final Context context = parentViewHolder.mBinding.getRoot().getContext();
 
-        if (mList.get(parentPosition).categoryList != null && mList.get(parentPosition).categoryList.size() != 0) {
+        if (mList.get(parentPosition).categoryList != null && !mList.get(parentPosition).categoryList.isEmpty()) {
             parentViewHolder.mBinding.cardView.setContentPadding(0
                     , 0
                     , 0
@@ -207,7 +207,6 @@ public class ExpandableSubscribedPackagesRecyclerAdapter extends ExpandableRecyc
                 }
             });
 
-
         }
 
         @Override
@@ -282,8 +281,7 @@ public class ExpandableSubscribedPackagesRecyclerAdapter extends ExpandableRecyc
                 else
                     mBinding.tvAddressNickname.setText(Utility.getAddressCategoryString(addressModel.category));
                 mBinding.ivAddressIcon.setImageResource(Utility.getAddressCategoryBlueIcon(addressModel.category));
-                mBinding.tvAddress.setText(addressModel.address_initials + ", " + addressModel.address);
-
+                mBinding.tvAddress.setText(addressModel.getAddressWithInitials());
                 String daysLeft = packageDetail.getDaysLeft(addressModel.end_date);
                 if (daysLeft != null) {
                     switch (daysLeft.length()) {

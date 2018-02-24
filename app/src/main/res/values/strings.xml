@@ -560,7 +560,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_enter_amount">Enter Amount</string>
     <string name="label_amount_payable">Amount Payable</string>
     <string name="label_notify_paying_by_wallet">You are about to pay using your %1s wallet</string>
-    <string name="no_pro_available_title" />
+    <string name="no_pro_available_title"/>
     <string name="no_pro_available_description">No PROs is available for this address</string>
     <string name="validate_comment">Please provide valid comment.</string>
     <string name="title_booking_confimation">Booking Confirmation</string>
@@ -569,7 +569,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_task_created_successfully">Task Created Successfully</string>
     <string name="label_yes_pay_now">Yes, Pay Now</string>
     <string name="label_seek_support">Seek Support</string>
-    <string name="label_book_now">Book Now</string>
+    <string name="label_book_now">Book Task</string>
     <string name="label_book_the_pro">Book the PRO</string>
     <string name="label_done">Done</string>
     <string name="desc_pay_by_cash">Thank you for your business. Please pay ₹%1s to our PRO, %2s as your task is successfully completed.</string>
@@ -646,7 +646,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
 
     <string name="hint_apply_cheep_promo_code">Apply CHEEP Promo code?</string>
     <string name="hint_apply_cheep_mate_code">Have a CHEEP Mate Code?</string>
-    <string name="label_empty_string" />
+    <string name="label_empty_string"/>
     <string name="label_proceed_to_checkout">Proceed to Checkout</string>
     <string name="add_package_to_cart">Add Package to Cart</string>
     <string name="label_appliance">%1d Appliances</string>
@@ -740,4 +740,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="msg_user_confirm_availablity">Thank you for confirming your availability. Your Pro will be arriving shortly.</string>
     <string name="label_rebook_task">Rebook Task</string>
     <string name="validate_person_name">Please enter the name of the person who will coordinate with the PRO</string>
+    <string name="msg_task_confirmed_cheep_care">Our Cheep PRO will be arriving at your location on %1s. Heads up! We will also ask you to confirm your availability %2s prior to the task, please confirm for a smooth experience on Cheep.</string>
+    <string name="msg_task_confirmed_instabook_1">Your task has been confirmed</string>
+    <string name="msg_task_confirmed_instabook_2">Our Cheep PRO will be arriving at your location on %1s.</string>
 </resources>

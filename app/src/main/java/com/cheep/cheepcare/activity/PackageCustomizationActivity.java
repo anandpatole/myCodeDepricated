@@ -515,6 +515,8 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
                                     JSONObject object = new JSONObject();
                                     object.put("package_suboption_id", option.packageOptionId);
                                     object.put("selected_unit", "1");
+                                    object.put("monthly_price", option.monthlyPrice);
+                                    object.put("unit_price", Utility.ZERO_STRING);
                                     subOptionArray.put(object);
                                 }
                             }
@@ -523,6 +525,8 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
                                 JSONObject object = new JSONObject();
                                 object.put("package_suboption_id", option.packageOptionId);
                                 object.put("selected_unit", option.qty);
+                                object.put("monthly_price", Utility.ZERO_STRING);
+                                object.put("unit_price", option.unitPrice);
                                 subOptionArray.put(object);
                             }
 

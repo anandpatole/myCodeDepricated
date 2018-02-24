@@ -1,6 +1,6 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -23,7 +23,7 @@
                     android:id="@+id/iv_bird"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/bird_cheep_tip_big" />
+                    android:src="@drawable/bird_cheep_tip_big"/>
 
                 <com.cheep.custom_view.CFTextViewSemiBold
                     android:id="@+id/tv_cheep_tips_title"
@@ -38,7 +38,7 @@
                     android:singleLine="true"
                     android:text="@string/cheep_tips"
                     android:textColor="@color/splash_gradient_end"
-                    android:textSize="@dimen/text_size_14sp" />
+                    android:textSize="@dimen/text_size_14sp"/>
 
                 <com.cheep.custom_view.CFTextViewRegular
                     android:id="@+id/tv_cheep_tips_desc"
@@ -52,10 +52,10 @@
                     android:checked="true"
                     android:gravity="center_vertical"
                     android:maxLines="2"
-                    tools:text="vd dff sdf sdfs fsdf sdf fsd sdfsfs fdsdfsdfsdfsd fs dfsdfs dfsdfsdf sdfdsf"
                     android:textColor="@color/black"
                     android:textSize="@dimen/text_size_11sp"
-                    android:visibility="visible" />
+                    android:visibility="visible"
+                    tools:text="vd dff sdf sdfs fsdf sdf fsd sdfsfs fdsdfsdfsdfsd fs dfsdfs dfsdfsdf sdfdsf"/>
 
                 <ImageView
                     android:id="@+id/iv_cross"
@@ -64,7 +64,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_marginRight="@dimen/scale_15dp"
                     android:layout_marginTop="@dimen/scale_5dp"
-                    android:src="@drawable/icon_cross_blue" />
+                    android:src="@drawable/icon_cross_blue"/>
 
             </RelativeLayout>
         </android.support.v7.widget.CardView>
@@ -94,7 +94,7 @@
                     android:paddingBottom="@dimen/scale_11dp"
                     android:paddingTop="@dimen/scale_11dp"
                     android:text="@string/label_free_with_cc"
-                    android:textColor="@color/selector_text_535353_blue" />
+                    android:textColor="@color/selector_text_535353_blue"/>
 
             </FrameLayout>
 
@@ -116,7 +116,7 @@
                     android:paddingBottom="@dimen/scale_11dp"
                     android:paddingTop="@dimen/scale_11dp"
                     android:text="@string/label_paid_cheep_services"
-                    android:textColor="@color/selector_text_535353_blue" />
+                    android:textColor="@color/selector_text_535353_blue"/>
             </FrameLayout>
 
             <View
@@ -126,7 +126,7 @@
                 android:background="@color/light_grey_color"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/fl_free_cc_container" />
+                app:layout_constraintTop_toBottomOf="@id/fl_free_cc_container"/>
 
             <android.support.v4.view.ViewPager
                 android:id="@+id/view_pager"
@@ -138,7 +138,33 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/stroke" />
+                app:layout_constraintTop_toBottomOf="@id/stroke"/>
+
+            <ProgressBar
+                android:id="@+id/progress_load"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:visibility="visible"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/stroke"/>
+
+            <com.cheep.custom_view.CFTextViewRegular
+                android:id="@+id/text_error"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:padding="@dimen/scale_16dp"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/stroke"
+                tools:text="Work In Progress"/>
+
 
         </android.support.constraint.ConstraintLayout>
 

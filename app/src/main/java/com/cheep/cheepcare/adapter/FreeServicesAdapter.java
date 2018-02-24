@@ -97,7 +97,7 @@ public class FreeServicesAdapter extends RecyclerView.Adapter<FreeServicesAdapte
                 public void onClick(View view) {
 
                     SubServiceDetailModel subServicesModel = mList.get(getAdapterPosition());
-                    int maxQty = /*Integer.valueOf(*/subServicesModel.maxQty/*)*/;
+                    int maxQty = Integer.valueOf(subServicesModel.maxUnit);
                     if (subServicesModel.qty < maxQty) {
                         subServicesModel.qty++;
                         notifyItemChanged(getAdapterPosition());
@@ -112,7 +112,7 @@ public class FreeServicesAdapter extends RecyclerView.Adapter<FreeServicesAdapte
                 public void onClick(View view) {
 
                     SubServiceDetailModel subServicesModel = mList.get(getAdapterPosition());
-                    int minQty = /*Integer.valueOf(*/subServicesModel.minQty/*)*/;
+                    int minQty = Integer.valueOf(subServicesModel.minUnit);
                     if (subServicesModel.qty > minQty) {
                         subServicesModel.qty--;
                         notifyItemChanged(getAdapterPosition());

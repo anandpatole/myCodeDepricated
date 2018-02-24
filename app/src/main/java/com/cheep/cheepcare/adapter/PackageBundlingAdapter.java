@@ -142,7 +142,7 @@ public class PackageBundlingAdapter extends LoadMoreRecyclerAdapter<PackageBundl
                     else
                         holder.mRowSelectedBinding.tvAddressNickname.setText(Utility.getAddressCategoryString(model.mSelectedAddressList.get(0).category));
                     holder.mRowSelectedBinding.ivAddressIcon.setImageResource(Utility.getAddressCategoryBlueIcon(model.mSelectedAddressList.get(0).category));
-                    holder.mRowSelectedBinding.tvAddress.setText(model.mSelectedAddressList.get(0).address_initials + ", " + model.mSelectedAddressList.get(0).address);
+                    holder.mRowSelectedBinding.tvAddress.setText(model.mSelectedAddressList.get(0).getAddressWithInitials());
                 }
 
                 holder.mRowSelectedBinding.getRoot().setOnClickListener(new View.OnClickListener() {
