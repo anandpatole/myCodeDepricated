@@ -58,6 +58,7 @@ public class BottomAddAddressDialog {
     private boolean isAddressNameVerified = false;
     private boolean isAddressPickYouLocationVerified = false;
     private boolean isAddressFlatNoVerified = false;
+    private boolean isAddressPinCodeVerified = false;
     private Context mContext;
     private Fragment fragment;
     private AddAddressListener addAddressListener;
@@ -67,6 +68,7 @@ public class BottomAddAddressDialog {
 
     public interface AddAddressListener {
         void onAddAddress(AddressModel addressModel);
+
         void onUpdateAddress(AddressModel addressModel);
     }
 
@@ -161,6 +163,31 @@ public class BottomAddAddressDialog {
                 }
             }
         });
+
+        binding.editPincode.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (!binding.editPincode.getText().toString().trim().isEmpty()
+                        && binding.editPincode.getText().toString().trim().length() > 5) {
+                    isAddressPinCodeVerified = true;
+                    checkAddAddressVerified();
+                } else {
+                    isAddressPinCodeVerified = false;
+                    checkAddAddressVerified();
+                }
+            }
+        });
+
 
         if (mAddressModel == null) {
             binding.lnPickYourLocation.setVisibility(View.VISIBLE);
@@ -332,7 +359,7 @@ public class BottomAddAddressDialog {
 
     private void checkAddAddressVerified() {
         if (isAddressPickYouLocationVerified
-                && isAddressNameVerified && isAddressFlatNoVerified) {
+                && isAddressNameVerified && isAddressFlatNoVerified && isAddressPinCodeVerified) {
             binding.btnAdd.setBackgroundColor(ContextCompat.getColor(mContext, R.color.splash_gradient_end));
         } else {
             binding.btnAdd.setBackgroundColor(ContextCompat.getColor(mContext, R.color.grey_varient_14));
