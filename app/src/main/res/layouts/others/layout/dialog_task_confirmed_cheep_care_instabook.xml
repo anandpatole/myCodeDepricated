@@ -21,7 +21,7 @@
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
                 android:background="@drawable/rounded_top_part_only_fill_white_5x5"
-                android:src="@drawable/dialog_top_payment_failed"
+                android:src="@drawable/dialog_top_task_confirmed"
                 tools:ignore="ContentDescription"/>
 
             <LinearLayout
@@ -50,7 +50,7 @@
                     android:layout_marginTop="@dimen/scale_8dp"
                     android:gravity="left"
                     android:padding="@dimen/scale_8dp"
-                    android:text="@string/label_payment_failed_desc"
+                    android:text="@string/msg_task_confirmed_cheep_care"
                     android:textColor="@color/grey_dark_color_2"
                     android:textSize="@dimen/text_size_11sp"/>
 
@@ -66,7 +66,7 @@
                     android:orientation="horizontal">
 
                     <com.cheep.custom_view.CFTextViewSemiBold
-                        android:id="@+id/tv_select_time"
+                        android:id="@+id/tv_okay"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
@@ -84,7 +84,7 @@
                         android:background="@color/grey_dark_color_2"/>
 
                     <com.cheep.custom_view.CFTextViewSemiBold
-                        android:id="@+id/tv_no_thanks"
+                        android:id="@+id/tv_reschedule"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"

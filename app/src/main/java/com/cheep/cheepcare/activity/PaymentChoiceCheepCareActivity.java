@@ -177,7 +177,7 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
                 // if payment is done using insta feature then
                 // post data will be generated like strategic partner feature
                 // call startegic generate hash for payment
-                url = NetworkUtility.WS.GENERATE_HASH_FOR_CHEEPCARE;
+                url = NetworkUtility.WS.GENERATE_HASH_FOR_CHEEP_CARE;
                 //Url is based on condition if address id is greater then 0 then it means we need to update the existing address
                 VolleyNetworkRequest mVolleyNetworkRequestForSPList = new VolleyNetworkRequest(url
                         , mCallGenerateHashWSErrorListener

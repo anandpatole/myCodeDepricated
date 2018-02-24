@@ -13,14 +13,33 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.cheep.R;
 import com.cheep.activity.BaseAppCompatActivity;
+import com.cheep.cheepcare.activity.TaskCreationCCActivity;
 import com.cheep.databinding.FragmentTaskCreationPhase1Binding;
 import com.cheep.fragment.BaseFragment;
 import com.cheep.model.SubServiceDetailModel;
+import com.cheep.network.NetworkUtility;
+import com.cheep.network.Volley;
+import com.cheep.network.VolleyNetworkRequest;
+import com.cheep.utils.PreferenceUtility;
+import com.cheep.utils.Utility;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import static com.cheep.network.NetworkUtility.TAGS.ADDRESS_ID;
+import static com.cheep.network.NetworkUtility.TAGS.CAT_ID;
+import static com.cheep.network.NetworkUtility.TAGS.FREE_SERVICE;
+import static com.cheep.network.NetworkUtility.TAGS.PACKAGE_TYPE;
+import static com.cheep.network.NetworkUtility.TAGS.PAID_SERVICE;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -30,7 +49,7 @@ public class TaskCreationPhase1Fragment extends BaseFragment {
     private static final String TAG = TaskCreationPhase1Fragment.class.getSimpleName();
     private FragmentTaskCreationPhase1Binding mBinding;
     private PagerAdapter mPagerAdapter;
-    /*private TaskCreationCCActivity mTaskCreationCCActivity;*/
+    private TaskCreationCCActivity mTaskCreationCCActivity;
 
     public static TaskCreationPhase1Fragment newInstance() {
         return new TaskCreationPhase1Fragment();
@@ -88,6 +107,7 @@ public class TaskCreationPhase1Fragment extends BaseFragment {
     public void initiateUI() {
         setUpViewPager();
         initCheepTipsUI();
+        fetchListOfSubCategory();
     }
 
     private void setUpViewPager() {
@@ -209,4 +229,118 @@ public class TaskCreationPhase1Fragment extends BaseFragment {
             mTitleList.add(title);
         }
     }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////// Fetch SubService Listing[START] ////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private void fetchListOfSubCategory() {
+        if (!Utility.isConnected(mContext)) {
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mBinding.getRoot());
+            return;
+        }
+
+
+        //Add Header parameters
+        showLoading(true);
+        Map<String, String> mHeaderParams = new HashMap<>();
+        mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
+        if (PreferenceUtility.getInstance(mContext).getUserDetails() != null) {
+            mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().userID);
+        }
+
+        //Add Params
+        Map<String, String> mParams = new HashMap<>();
+        mParams.put(CAT_ID, mTaskCreationCCActivity.mJobCategoryModel.catId);
+        mParams.put(PACKAGE_TYPE, mTaskCreationCCActivity.mPackageType);
+        mParams.put(ADDRESS_ID, mTaskCreationCCActivity.mAddressModel.address_id);
+
+        VolleyNetworkRequest mVolleyNetworkRequestForCategoryList = new VolleyNetworkRequest(NetworkUtility.WS.GET_CARE_FREE_PAID_SERVICES_FOR_CATEGORY
+                , mCallFetchSubServiceListingWSErrorListener
+                , mCallFetchSubServiceListingWSResponseListener
+                , mHeaderParams
+                , mParams
+                , null);
+
+        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequestForCategoryList, NetworkUtility.WS.GET_CARE_FREE_PAID_SERVICES_FOR_CATEGORY);
+    }
+
+    Response.Listener mCallFetchSubServiceListingWSResponseListener = new Response.Listener() {
+        @Override
+        public void onResponse(Object response) {
+            Log.d(TAG, "onResponse() called with: response = [" + response + "]");
+            showLoading(false);
+            String strResponse = (String) response;
+            try {
+                JSONObject jsonObject = new JSONObject(strResponse);
+                Log.i(TAG, "onResponse: " + jsonObject.toString());
+                int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
+                String error_message;
+                switch (statusCode) {
+                    case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
+
+                        JSONObject object = jsonObject.optJSONObject(NetworkUtility.TAGS.DATA);
+                        ArrayList<SubServiceDetailModel> freeCatList = Utility.getObjectListFromJsonString(object.getString(FREE_SERVICE), SubServiceDetailModel[].class);
+                        ArrayList<SubServiceDetailModel> paidCatList = Utility.getObjectListFromJsonString(object.getString(PAID_SERVICE), SubServiceDetailModel[].class);
+
+                        ((FreeSubCategoryFragment) mPagerAdapter.getItem(0)).setSubCatList(freeCatList);
+                        ((PaidSubCategoryFragment) mPagerAdapter.getItem(1)).setSubCatList(paidCatList);
+
+//                        addList(list, getString(R.string.label_other_sub_service));
+                        break;
+                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
+                        // Show Toast
+                        showErrorMessage(getString(R.string.label_something_went_wrong));
+//                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
+                        break;
+                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
+                        error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
+                        showErrorMessage(error_message);
+
+                        // Show message
+//                        Utility.showSnackBar(error_message, mBinding.getRoot());
+                        break;
+                    case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
+                    case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
+                        //Logout and finish the current activity
+                        Utility.logout(mContext, true, statusCode);
+                        if (getActivity() != null)
+                            getActivity().finish();
+                        break;
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+                mCallFetchSubServiceListingWSErrorListener.onErrorResponse(new VolleyError(e.getMessage()));
+            }
+
+        }
+    };
+    Response.ErrorListener mCallFetchSubServiceListingWSErrorListener = new Response.ErrorListener() {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            showLoading(false);
+            Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
+            showErrorMessage(getString(R.string.label_something_went_wrong));
+//            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
+        }
+    };
+
+    private void showLoading(boolean isShowing) {
+        mBinding.progressLoad.setVisibility(isShowing ? View.VISIBLE : View.GONE);
+    }
+
+    private void showErrorMessage(String message) {
+        mBinding.textError.setText(message);
+    }
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////// Fetch SubService Listing[END] ////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+
+        Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.WS.GET_CARE_FREE_PAID_SERVICES_FOR_CATEGORY);
+    }
+
 }

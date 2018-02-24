@@ -265,7 +265,7 @@ public class ManageSubscriptionActivity extends BaseAppCompatActivity {
 //                    });
 //                    cheepCareNotInYourCityDialog.show(getSupportFragmentManager(),CheepCareNotInYourCityDialog.TAG);
 
-                    TaskCreationCCActivity.getInstance(mContext, model, addressModel);
+                    TaskCreationCCActivity.getInstance(mContext, model, addressModel,packageDetail.packageType);
 //                    BookingConfirmationCcActivity.newInstance(mContext,null);
                 }
             };

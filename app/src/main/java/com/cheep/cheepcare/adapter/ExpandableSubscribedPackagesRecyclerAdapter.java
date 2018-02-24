@@ -116,7 +116,7 @@ public class ExpandableSubscribedPackagesRecyclerAdapter extends ExpandableRecyc
 
         final Context context = parentViewHolder.mBinding.getRoot().getContext();
 
-        if (mList.get(parentPosition).categoryList != null && mList.get(parentPosition).categoryList.size() != 0) {
+        if (mList.get(parentPosition).categoryList != null && !mList.get(parentPosition).categoryList.isEmpty()) {
             parentViewHolder.mBinding.cardView.setContentPadding(0
                     , 0
                     , 0
@@ -206,7 +206,6 @@ public class ExpandableSubscribedPackagesRecyclerAdapter extends ExpandableRecyc
                     showDropDownMenu(mBinding.lnAddressRow, getParentAdapterPosition());
                 }
             });
-
 
         }
 

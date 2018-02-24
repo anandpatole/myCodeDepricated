@@ -46,7 +46,7 @@ import static com.cheep.network.NetworkUtility.TAGS.CAT_ID;
 public class PaidSubCategoryFragment extends BaseFragment {
     public static final String TAG = PaidSubCategoryFragment.class.getSimpleName();
     private FragmentSelectSubCategoryBinding mBinding;
-    private PaidServicesAdapter mFreeServicesAdapter;
+    private PaidServicesAdapter mPaidServicesAdapter;
     ErrorLoadingHelper errorLoadingHelper;
     private TaskCreationCCActivity mTaskCreationCCActivity;
     private boolean isVerified = false;
@@ -81,7 +81,7 @@ public class PaidSubCategoryFragment extends BaseFragment {
             return;
         }
 
-        if (!mFreeServicesAdapter.getSelectedList().isEmpty()) {
+        if (!mPaidServicesAdapter.getSelectedList().isEmpty()) {
             mTaskCreationCCActivity.setTaskState(TaskCreationCCActivity.STEP_ONE_VERIFIED);
         } else {
             mTaskCreationCCActivity.setTaskState(TaskCreationCCActivity.STEP_ONE_NORMAL);
@@ -89,6 +89,10 @@ public class PaidSubCategoryFragment extends BaseFragment {
 
         // Hide the post task button
         mTaskCreationCCActivity.showPostTaskButton(true, true);
+    }
+
+    public void setSubCatList(ArrayList<SubServiceDetailModel> list) {
+        mPaidServicesAdapter.addAll(list);
     }
 
     @Override
@@ -100,24 +104,12 @@ public class PaidSubCategoryFragment extends BaseFragment {
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mContext);
         mBinding.recyclerView.setLayoutManager(linearLayoutManager);
-        mFreeServicesAdapter = new PaidServicesAdapter(mFreeItemInteractionListener);
-        mBinding.recyclerView.setAdapter(mFreeServicesAdapter);
+        mPaidServicesAdapter = new PaidServicesAdapter(mFreeItemInteractionListener);
+        mBinding.recyclerView.setAdapter(mPaidServicesAdapter);
         errorLoadingHelper.showLoading();
         fetchListOfSubCategory(mTaskCreationCCActivity.mJobCategoryModel.catId);
     }
 
-    private List<SubServiceDetailModel> getDummyList() {
-        ArrayList<SubServiceDetailModel> subServiceDetailModels = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            SubServiceDetailModel subServiceDetailModel = new SubServiceDetailModel();
-            subServiceDetailModel.name = "I need my leaking tap to be fixed";
-            subServiceDetailModel.catId = i;
-            subServiceDetailModel.monthlyPrice = String.valueOf(100);
-            subServiceDetailModel.subServiceList = new ArrayList<>();
-            subServiceDetailModels.add(subServiceDetailModel);
-        }
-        return subServiceDetailModels;
-    }
 
     @Override
     public void setListener() {
@@ -208,7 +200,7 @@ public class PaidSubCategoryFragment extends BaseFragment {
                                         jsonObject.optString(NetworkUtility.TAGS.DATA)
                                         , SubServiceDetailModel[].class);
 
-                        mFreeServicesAdapter.addAll(list/*, getString(R.string.label_other_sub_service)*/);
+                        mPaidServicesAdapter.addAll(list/*, getString(R.string.label_other_sub_service)*/);
                         errorLoadingHelper.success();
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
@@ -256,7 +248,7 @@ public class PaidSubCategoryFragment extends BaseFragment {
      * @return
      */
     public List<SubServiceDetailModel> getSelectedSubServices() {
-        return mFreeServicesAdapter.getSelectedList();
+        return mPaidServicesAdapter.getSelectedList();
     }
 
     @Override
