@@ -10,6 +10,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.text.style.ImageSpan;
 import android.util.Log;
 import android.view.View;
@@ -239,10 +240,12 @@ public class ManageSubscriptionActivity extends BaseAppCompatActivity {
                         , childViewsClickListener);
         mBinding.rvBoughtPackages.setAdapter(subscribedPackagesAdapter);
 
+        setAllPackageListData();
+    }
+
+    private void setAllPackageListData() {
         mBinding.rvAddPackage.setNestedScrollingEnabled(false);
-        ManageSubscriptionAddPackageAdapter addPackageAdapter =
-                new ManageSubscriptionAddPackageAdapter(addPackageInteractionListener
-                        , mAllPackagesList);
+        ManageSubscriptionAddPackageAdapter addPackageAdapter = new ManageSubscriptionAddPackageAdapter(addPackageInteractionListener, mAllPackagesList);
         mBinding.rvAddPackage.setAdapter(addPackageAdapter);
     }
 
@@ -265,7 +268,7 @@ public class ManageSubscriptionActivity extends BaseAppCompatActivity {
 //                    });
 //                    cheepCareNotInYourCityDialog.show(getSupportFragmentManager(),CheepCareNotInYourCityDialog.TAG);
 
-                    TaskCreationCCActivity.getInstance(mContext, model, addressModel,packageDetail.packageType);
+                    TaskCreationCCActivity.getInstance(mContext, model, addressModel, packageDetail.packageType);
 //                    BookingConfirmationCcActivity.newInstance(mContext,null);
                 }
             };
@@ -300,6 +303,7 @@ public class ManageSubscriptionActivity extends BaseAppCompatActivity {
                 }
             };
 
+    private String mPackageListString= Utility.EMPTY_STRING;
     private final WebCallClass.GetSubscribedCarePackageResponseListener mGetSubscribedCarePackageResponseListener =
             new WebCallClass.GetSubscribedCarePackageResponseListener() {
                 @Override
@@ -312,6 +316,7 @@ public class ManageSubscriptionActivity extends BaseAppCompatActivity {
                         }
                     }*/
                     mAllPackagesList = allPackageList;
+                    mPackageListString = Utility.getJsonStringFromObject(mAllPackagesList);
                     mAdminSettingModel = adminSettingModel;
                     hideProgressDialog();
                     initiateDynamicUI();
@@ -326,4 +331,52 @@ public class ManageSubscriptionActivity extends BaseAppCompatActivity {
         //remove volley callbacks
         Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.WS.GET_USER_SUBSCRIBED_CARE_PACKAGE);
     }
+
+    private void getSavedData() {
+        ArrayList<PackageDetail> savedPackageList = new ArrayList<>();
+        String cartDetail = PreferenceUtility.getInstance(this).getCityCartDetail(mCityDetail.citySlug);
+        if (!TextUtils.isEmpty(cartDetail)) {
+            ArrayList<PackageDetail> list = Utility.getObjectListFromJsonString(cartDetail, PackageDetail[].class);
+            savedPackageList.clear();
+            savedPackageList.addAll(list);
+            String webData = Utility.getJsonStringFromObject(mAllPackagesList);
+            LogUtils.LOGE(TAG, "Saved data--- " + cartDetail);
+            LogUtils.LOGE(TAG, "---------------------------------------------------------------------");
+            LogUtils.LOGE(TAG, "Saved web data--- " + webData);
+
+            if (!savedPackageList.isEmpty()) {
+                for (int i = 0; i < mAllPackagesList.size(); i++) {
+                    PackageDetail webPakegDetail = mAllPackagesList.get(i);
+                    for (PackageDetail detail : savedPackageList) {
+                        if (detail.packageOptionList != null && !detail.packageOptionList.isEmpty() && detail.packageSlug.equalsIgnoreCase(webPakegDetail.packageSlug) && detail.isSelected) {
+                            webPakegDetail.packageOptionList = detail.packageOptionList;
+                            webPakegDetail.mSelectedAddressList = detail.mSelectedAddressList;
+                            webPakegDetail.isSelected = true;
+                        }
+                    }
+                }
+                LogUtils.LOGE(TAG, "replacedData: " + Utility.getJsonStringFromObject(mAllPackagesList));
+            }
+        } else {
+            if (!TextUtils.isEmpty(mPackageListString)) {
+                ArrayList<PackageDetail> list = Utility.getObjectListFromJsonString(mPackageListString, PackageDetail[].class);
+                mAllPackagesList.clear();
+                mAllPackagesList.addAll(list);
+            }
+            LogUtils.LOGE(TAG, "getSavedData: no cart data found");
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (mCityDetail != null && mAllPackagesList != null) {
+            LogUtils.LOGE(TAG, "onResume:cart detail found");
+            getSavedData();
+        } else {
+            LogUtils.LOGE(TAG, "onResume: no city data found");
+
+        }
+    }
+
 }
