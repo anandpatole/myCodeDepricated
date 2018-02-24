@@ -781,7 +781,7 @@ public class TaskCreationPhase2Fragment extends BaseFragment
 //                    showAddressDialog();
                     break;
                 case R.id.cvGetQuote:
-                    mTaskCreationCCActivity.onGetQuoteClicked();
+//                    mTaskCreationCCActivity.onGetQuoteClicked();
                     break;
             }
         }

@@ -568,11 +568,12 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
                             }
                         else {
                             int totalCount = 0;
-                            String monthlyPrice = packageOption.getChildList().get(0).monthlyPrice;
+                            double monthlyPrice = Double.parseDouble(packageOption.getChildList().get(0).monthlyPrice);
                             for (PackageSubOption option : packageOption.getChildList()) {
                                 totalCount += option.qty;
+                                monthlyPrice += Double.parseDouble(option.unitPrice) * (option.qty - 1);
                             }
-                            setContinueButtonText(totalCount, monthlyPrice);
+                            setContinueButtonText(totalCount, String.valueOf(monthlyPrice));
                         }
                     }
                 }

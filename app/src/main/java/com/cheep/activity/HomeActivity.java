@@ -49,7 +49,6 @@ import com.cheep.adapter.FAQRecyclerViewAdapter;
 import com.cheep.adapter.FavouriteRecyclerViewAdapter;
 import com.cheep.adapter.HistoryRecyclerViewAdapter;
 import com.cheep.adapter.SlideMenuAdapter;
-import com.cheep.cheepcare.activity.TaskCreationCCActivity;
 import com.cheep.custom_view.BottomAlertDialog;
 import com.cheep.databinding.ActivityHomeBinding;
 import com.cheep.databinding.NavHeaderHomeBinding;
@@ -884,9 +883,9 @@ public class HomeActivity extends BaseAppCompatActivity
             if (mHomeTabFragment != null) {
                 Log.i(TAG, "onCategoryFavouriteClicked: Called for HomeTab");
                 ((HomeTabFragment) mHomeTabFragment).onCategoryFavouriteClicked(model, position);
-                if (((HomeTabFragment) mHomeTabFragment).getmSelectedFilterType().equalsIgnoreCase(Utility.FILTER_TYPES.FILTER_TYPE_SUBSCRIBED))
-                    TaskCreationCCActivity.getInstance(mContext, model, null);
-                else
+                if (((HomeTabFragment) mHomeTabFragment).getmSelectedFilterType().equalsIgnoreCase(Utility.FILTER_TYPES.FILTER_TYPE_SUBSCRIBED)) {
+//                  {  TaskCreationCCActivity.getInstance(mContext, model, null);{
+                } else
                     TaskCreationActivity.getInstance(mContext, model);
             } else
                 TaskCreationActivity.getInstance(mContext, model);

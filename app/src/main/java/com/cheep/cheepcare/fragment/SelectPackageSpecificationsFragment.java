@@ -337,10 +337,8 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
                                                 totalCount += packageSubOption.qty;
                                                 monthlyPrice += Double.parseDouble(packageSubOption.unitPrice) * (packageSubOption.qty - 1);
                                                 LogUtils.LOGE(TAG, "monthly price calculatd: " + monthlyPrice);
-
                                             }
                                     }
-
                                 }
                                 if (packageOption.selectionType.equalsIgnoreCase(PackageOption.SELECTION_TYPE.CHECK_BOX))
                                     mPackageCustomizationActivity.setContinueButtonText(totalCount, String.valueOf(monthlyPrice));

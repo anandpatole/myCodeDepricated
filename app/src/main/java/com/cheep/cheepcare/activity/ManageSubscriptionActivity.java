@@ -303,7 +303,7 @@ public class ManageSubscriptionActivity extends BaseAppCompatActivity {
                 }
             };
 
-    private String mPackageListString= Utility.EMPTY_STRING;
+    private String mPackageListString = Utility.EMPTY_STRING;
     private final WebCallClass.GetSubscribedCarePackageResponseListener mGetSubscribedCarePackageResponseListener =
             new WebCallClass.GetSubscribedCarePackageResponseListener() {
                 @Override
@@ -317,6 +317,7 @@ public class ManageSubscriptionActivity extends BaseAppCompatActivity {
                     }*/
                     mAllPackagesList = allPackageList;
                     mPackageListString = Utility.getJsonStringFromObject(mAllPackagesList);
+                    getSavedData();
                     mAdminSettingModel = adminSettingModel;
                     hideProgressDialog();
                     initiateDynamicUI();

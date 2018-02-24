@@ -181,23 +181,23 @@ public class BookingConfirmationCcActivity extends BaseAppCompatActivity {
         List<SubServiceDetailModel> freeList = new ArrayList<>();
         SubServiceDetailModel subServiceDetailModel = new SubServiceDetailModel();
         subServiceDetailModel.name = "My flush is not working ( x2 )";
-        subServiceDetailModel.monthlyPrice = "FREE";
+        subServiceDetailModel.unitPrice = "FREE";
         freeList.add(subServiceDetailModel);
 
         subServiceDetailModel = new SubServiceDetailModel();
         subServiceDetailModel.name = "I need my leaking tap to be fixed ( x3 )";
-        subServiceDetailModel.monthlyPrice = "FREE";
+        subServiceDetailModel.unitPrice= "FREE";
         freeList.add(subServiceDetailModel);
 
         List<SubServiceDetailModel> paidList = new ArrayList<>();
         subServiceDetailModel = new SubServiceDetailModel();
         subServiceDetailModel.name = "I need my wash basin to be fixed ( x3 )";
-        subServiceDetailModel.monthlyPrice = "₹149";
+        subServiceDetailModel.unitPrice= "₹149";
         paidList.add(subServiceDetailModel);
 
         subServiceDetailModel = new SubServiceDetailModel();
         subServiceDetailModel.name = "I need my WC to be repaired ( x3 )";
-        subServiceDetailModel.monthlyPrice = "₹349";
+        subServiceDetailModel.unitPrice= "₹349";
         paidList.add(subServiceDetailModel);
 
         mBinding.recyclerViewFree.setAdapter(new SelectedSubServicePriceAdapter(freeList));
