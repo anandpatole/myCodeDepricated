@@ -44,7 +44,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by pankaj on 1/1/18.
+ * Created by bhavesh on 1/1/18.
  */
 
 public class ExpandableSubscribedPackagesRecyclerAdapter extends ExpandableRecyclerAdapter<PackageDetail

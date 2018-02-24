@@ -106,13 +106,13 @@ public class TaskCreationCCActivity extends BaseAppCompatActivity {
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setTitle(null);
-//            mBinding.toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View view) {
-//                    Utility.hideKeyboard(mContext);
-//                    onBackPressed();
-//                }
-//            });
+            mBinding.toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Utility.hideKeyboard(mContext);
+                    onBackPressed();
+                }
+            });
         }
 
         showPostTaskButton(true, true);

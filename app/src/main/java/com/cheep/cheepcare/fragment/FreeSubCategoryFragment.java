@@ -264,15 +264,13 @@ public class FreeSubCategoryFragment extends BaseFragment {
     private void showLimitExceedDialog() {
         LogUtils.LOGE(TAG, "showLimitExceedDialog: ");
         // TODO remove dummy name in dialog params
-        LimitExceededDialog limitExceededDialog = LimitExceededDialog.newInstance("Appliance Care",
+        LimitExceededDialog.newInstance(mContext, "Appliance Care",
                 new AcknowledgementInteractionListener() {
 
                     @Override
                     public void onAcknowledgementAccepted() {
                     }
                 });
-        limitExceededDialog.setCancelable(true);
-        limitExceededDialog.show(getChildFragmentManager(), LimitExceededDialog.TAG);
     }
 
 }

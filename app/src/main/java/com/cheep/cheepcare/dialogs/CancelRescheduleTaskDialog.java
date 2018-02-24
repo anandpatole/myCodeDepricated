@@ -16,36 +16,38 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.cheep.R;
-import com.cheep.databinding.DialogLimitExceedBinding;
+import com.cheep.databinding.DialogUserAvailableBinding;
 import com.cheep.dialogs.AcknowledgementInteractionListener;
 import com.cheep.utils.LogUtils;
-import com.cheep.utils.Utility;
 
-public class LimitExceededDialog extends DialogFragment {
-    public static final String TAG = LimitExceededDialog.class.getSimpleName();
-    private DialogLimitExceedBinding mDialogFragmentAcknowledgementBinding;
+public class CancelRescheduleTaskDialog extends DialogFragment {
+    public static final String TAG = CancelRescheduleTaskDialog.class.getSimpleName();
+    private DialogUserAvailableBinding mBinding;
     private AcknowledgementInteractionListener mListener;
-    private String mCarePackageName;
 
     /*
     Empty Constructor
      */
-    public LimitExceededDialog() {
+    public CancelRescheduleTaskDialog() {
 
     }
+
+    public interface DialogInteractionListener {
+        void cancelTask();
+
+        void rescheduleTaskClicked();
+    }
+
 
     /**
      * Create a new instance of MyDialogFragment, providing "num"
      * as an argument.
      */
-    public static LimitExceededDialog newInstance(Context context, String carePackageName, AcknowledgementInteractionListener listener) {
-        LimitExceededDialog f = new LimitExceededDialog();
+    public static CancelRescheduleTaskDialog newInstance(Context context, AcknowledgementInteractionListener listener) {
+        CancelRescheduleTaskDialog f = new CancelRescheduleTaskDialog();
         f.setListener(listener);
-        Bundle args = new Bundle();
-        args.putString(Utility.Extra.DATA, carePackageName);
-        f.setArguments(args);
         f.setCancelable(true);
-        f.show(((AppCompatActivity) context).getSupportFragmentManager(), LimitExceededDialog.TAG);
+        f.show(((AppCompatActivity) context).getSupportFragmentManager(), CancelRescheduleTaskDialog.TAG);
         // Supply num input as an argument.
         return f;
     }
@@ -62,7 +64,6 @@ public class LimitExceededDialog extends DialogFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mCarePackageName = getArguments().getString(Utility.Extra.DATA);
 
     }
 
@@ -73,12 +74,10 @@ public class LimitExceededDialog extends DialogFragment {
         if (getDialog() != null) {
             getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         }
-        mDialogFragmentAcknowledgementBinding = DataBindingUtil.inflate(inflater, R.layout.dialog_limit_exceed, container, false);
-
-        mDialogFragmentAcknowledgementBinding.tvMessage.setText(getString(R.string.msg_limit_exceed_desc, mCarePackageName));
+        mBinding = DataBindingUtil.inflate(inflater, R.layout.dialog_user_available, container, false);
 
         // Click event of Okay button
-        mDialogFragmentAcknowledgementBinding.textOkay.setOnClickListener(new View.OnClickListener() {
+        mBinding.textOkay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //Callback to activity
@@ -88,7 +87,7 @@ public class LimitExceededDialog extends DialogFragment {
                 dismiss();
             }
         });
-        return mDialogFragmentAcknowledgementBinding.getRoot();
+        return mBinding.getRoot();
     }
 
     @Override

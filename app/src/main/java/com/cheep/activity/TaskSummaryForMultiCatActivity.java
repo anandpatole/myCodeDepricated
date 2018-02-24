@@ -1,5 +1,7 @@
 package com.cheep.activity;
 
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
@@ -20,18 +22,24 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.cheep.R;
 import com.cheep.adapter.SelectedSubCatSummaryAdapter;
 import com.cheep.cheepcare.activity.RateAndReviewActivity;
+import com.cheep.cheepcare.dialogs.SomeoneElseWillAttendDialog;
+import com.cheep.cheepcare.dialogs.UserAvailabilityDialog;
+import com.cheep.cheepcare.dialogs.UserAvailableDialog;
 import com.cheep.custom_view.BottomAlertDialog;
 import com.cheep.databinding.ActivityTaskSummaryForMultiCatBinding;
 import com.cheep.databinding.DialogChangePhoneNumberBinding;
+import com.cheep.dialogs.AcknowledgementInteractionListener;
 import com.cheep.firebase.FirebaseHelper;
 import com.cheep.firebase.FirebaseUtils;
 import com.cheep.firebase.model.TaskChatModel;
@@ -62,6 +70,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -73,7 +82,7 @@ import java.util.Map;
 
 public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
     private static final String TAG = TaskSummaryForMultiCatActivity.class.getSimpleName();
-    private ActivityTaskSummaryForMultiCatBinding mActivityTaskSummaryBinding;
+    private ActivityTaskSummaryForMultiCatBinding mBinding;
     private TaskDetailModel mTaskDetailModel;
 
     /*public static void getInstance(Context mContext, TaskDetailModel taskDetailModel) {
@@ -91,7 +100,7 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mActivityTaskSummaryBinding = DataBindingUtil.setContentView(this, R.layout.activity_task_summary_for_multi_cat);
+        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_task_summary_for_multi_cat);
         initiateUI();
         setListeners();
         EventBus.getDefault().register(this);
@@ -107,11 +116,11 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
         }
 
         // Setting up Toolbar
-        setSupportActionBar(mActivityTaskSummaryBinding.toolbar);
+        setSupportActionBar(mBinding.toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setTitle(Utility.EMPTY_STRING);
-            mActivityTaskSummaryBinding.toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            mBinding.toolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Utility.hideKeyboard(mContext);
@@ -121,18 +130,18 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
         }
 
         //TODO : remove comments
-        mActivityTaskSummaryBinding.recyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
-        mActivityTaskSummaryBinding.recyclerView.setAdapter(new SelectedSubCatSummaryAdapter(getList()));
+        mBinding.recyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
+        mBinding.recyclerView.setAdapter(new SelectedSubCatSummaryAdapter(getList()));
 //        if (mTaskDetailModel == null) {
 //            callTaskDetailWS(getIntent().getExtras().getString(Utility.Extra.TASK_ID));
 //        } else {
 //            setUpTaskDetails(mTaskDetailModel);
 //        }
         showProgressBar(false);
-        mActivityTaskSummaryBinding.lnTaskAdditionalQuoteRequested.setVisibility(View.GONE);
-        mActivityTaskSummaryBinding.lnTaskCompletionRequested.setVisibility(View.GONE);
+        mBinding.lnTaskAdditionalQuoteRequested.setVisibility(View.GONE);
+        mBinding.lnTaskCompletionRequested.setVisibility(View.GONE);
 
-        mActivityTaskSummaryBinding.textBottomAction.setOnClickListener(new View.OnClickListener() {
+        mBinding.textBottomAction.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 RateAndReviewActivity.newInstance(mContext);
@@ -163,27 +172,27 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
     private void setUpTaskDetails(final TaskDetailModel mTaskDetailModel) {
 
         // Set category
-        mActivityTaskSummaryBinding.textCategoryName.setText(mTaskDetailModel.categoryName != null ? mTaskDetailModel.categoryName : Utility.EMPTY_STRING);
+        mBinding.textCategoryName.setText(mTaskDetailModel.categoryName != null ? mTaskDetailModel.categoryName : Utility.EMPTY_STRING);
 
         // Set up image
-        Utility.loadImageView(mContext, mActivityTaskSummaryBinding.imgService, mTaskDetailModel.catImage, R.drawable.gradient_black);
-        Utility.loadImageView(mContext, mActivityTaskSummaryBinding.imgService, mTaskDetailModel.catImageExtras.thumb, R.drawable.gradient_black);
+        Utility.loadImageView(mContext, mBinding.imgService, mTaskDetailModel.catImage, R.drawable.gradient_black);
+        Utility.loadImageView(mContext, mBinding.imgService, mTaskDetailModel.catImageExtras.thumb, R.drawable.gradient_black);
 
 
         // By Default makethe task completion dialog as gone
         showTaskCompletionDialog(false);
         LogUtils.LOGE(TAG, "showTaskCompletionDialog: taskTotalPendingAmount :: " + mTaskDetailModel.taskTotalPendingAmount);
-        mActivityTaskSummaryBinding.lnTaskCancellation.setVisibility(View.GONE);
-        mActivityTaskSummaryBinding.lnRatingSection.setVisibility(View.GONE);
-        mActivityTaskSummaryBinding.lnTaskRescheduleRequested.setVisibility(View.GONE);
-        mActivityTaskSummaryBinding.lnTaskRescheduleRejected.setVisibility(View.GONE);
-        mActivityTaskSummaryBinding.lnTaskAdditionalQuoteRequested.setVisibility(View.GONE);
+        mBinding.lnTaskCancellation.setVisibility(View.GONE);
+        mBinding.lnRatingSection.setVisibility(View.GONE);
+        mBinding.lnTaskRescheduleRequested.setVisibility(View.GONE);
+        mBinding.lnTaskRescheduleRejected.setVisibility(View.GONE);
+        mBinding.lnTaskAdditionalQuoteRequested.setVisibility(View.GONE);
 
         //Bydefault show the chat call icons
         showChatCallButton(true);
 
         // Hide Bottom Action Button
-        mActivityTaskSummaryBinding.textBottomAction.setVisibility(View.GONE);
+        mBinding.textBottomAction.setVisibility(View.GONE);
         updateHeightOfLinearLayout(false);
 
 
@@ -191,51 +200,51 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
 
         if (mTaskDetailModel.selectedProvider == null) {
             // Provider is not final yet, so need to show the nearby available.
-            mActivityTaskSummaryBinding.lnResponseReceived.setVisibility(View.VISIBLE);
-            mActivityTaskSummaryBinding.lnProviderProfileSection.setVisibility(View.GONE);
+            mBinding.lnResponseReceived.setVisibility(View.VISIBLE);
+            mBinding.lnProviderProfileSection.setVisibility(View.GONE);
             // Update Task Status
-            mActivityTaskSummaryBinding.textTaskStatusTop.setText(getString(R.string.label_receiving_quotes));
+            mBinding.textTaskStatusTop.setText(getString(R.string.label_receiving_quotes));
 
             // Hide Payment Summary textview
-            mActivityTaskSummaryBinding.textViewPaymentSummary.setVisibility(View.GONE);
-            mActivityTaskSummaryBinding.textPaid.setVisibility(View.GONE);
+            mBinding.textViewPaymentSummary.setVisibility(View.GONE);
+            mBinding.textPaid.setVisibility(View.GONE);
 
             updateSPImageStacks(mTaskDetailModel.mQuotedSPList);
         } else {
             // Provider is final.
-            mActivityTaskSummaryBinding.lnResponseReceived.setVisibility(View.GONE);
-            mActivityTaskSummaryBinding.lnProviderProfileSection.setVisibility(View.VISIBLE);
+            mBinding.lnResponseReceived.setVisibility(View.GONE);
+            mBinding.lnProviderProfileSection.setVisibility(View.VISIBLE);
 
             // Show Payment Summary textview
-            mActivityTaskSummaryBinding.textViewPaymentSummary.setVisibility(View.VISIBLE);
+            mBinding.textViewPaymentSummary.setVisibility(View.VISIBLE);
             String s = "";
             if (!TextUtils.isEmpty(mTaskDetailModel.isAnyAmountPending))
                 s = mTaskDetailModel.isAnyAmountPending.equalsIgnoreCase(Utility.BOOLEAN.YES) ? getString(R.string.label_not_paid) : getString(R.string.label_paid);
 
-            mActivityTaskSummaryBinding.textPaid.setVisibility(View.VISIBLE);
-            mActivityTaskSummaryBinding.textPaid.setText("(" + s + ")");
+            mBinding.textPaid.setVisibility(View.VISIBLE);
+            mBinding.textPaid.setText("(" + s + ")");
 
 
             // Set rating
-            Utility.showRating(mTaskDetailModel.selectedProvider.rating, mActivityTaskSummaryBinding.providerRating);
-            mActivityTaskSummaryBinding.textExperience.setText(mTaskDetailModel.selectedProvider.rating);
+            Utility.showRating(mTaskDetailModel.selectedProvider.rating, mBinding.providerRating);
+            mBinding.textExperience.setText(mTaskDetailModel.selectedProvider.rating);
 
             if (Utility.BOOLEAN.YES.equals(mTaskDetailModel.selectedProvider.isFavourite))
-                mActivityTaskSummaryBinding.imgFav.setSelected(true);
+                mBinding.imgFav.setSelected(true);
             else
-                mActivityTaskSummaryBinding.imgFav.setSelected(false);
+                mBinding.imgFav.setSelected(false);
 
-            mActivityTaskSummaryBinding.imgFav.setOnClickListener(new View.OnClickListener() {
+            mBinding.imgFav.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    callAddToFavWS(mTaskDetailModel.selectedProvider.providerId, !mActivityTaskSummaryBinding.imgFav.isSelected());
-                    mActivityTaskSummaryBinding.imgFav.setSelected(!mActivityTaskSummaryBinding.imgFav.isSelected());
+                    callAddToFavWS(mTaskDetailModel.selectedProvider.providerId, !mBinding.imgFav.isSelected());
+                    mBinding.imgFav.setSelected(!mBinding.imgFav.isSelected());
 
                 }
             });
 
             // Name of Provider
-            mActivityTaskSummaryBinding.textProviderName.setText(mTaskDetailModel.selectedProvider.userName);
+            mBinding.textProviderName.setText(mTaskDetailModel.selectedProvider.userName);
 
             SpannableString sName = new SpannableString(mTaskDetailModel.selectedProvider.userName);
             SpannableString sVerified = null;
@@ -243,30 +252,30 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
                 sVerified = new SpannableString(" " + mContext.getString(R.string.label_verified_pro) + " ");
                 sVerified.setSpan(new RelativeSizeSpan(0.9f), 0, sVerified.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 sVerified.setSpan(new RoundedBackgroundSpan(ContextCompat.getColor(this, R.color.splash_gradient_end), ContextCompat.getColor(this, R.color.white), 0), 0, sVerified.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-                mActivityTaskSummaryBinding.textProviderName.setText(TextUtils.concat(sName, " ", sVerified));
+                mBinding.textProviderName.setText(TextUtils.concat(sName, " ", sVerified));
             }
             // Distanceof Provider
-            mActivityTaskSummaryBinding.textAddressKmAway.setText(mTaskDetailModel.selectedProvider.distance + getString(R.string.label_away));
+            mBinding.textAddressKmAway.setText(mTaskDetailModel.selectedProvider.distance + getString(R.string.label_away));
 
             // Profile Pic
-            Utility.showCircularImageView(mContext, TAG, mActivityTaskSummaryBinding.imgProfile, mTaskDetailModel.selectedProvider.profileUrl, Utility.DEFAULT_CHEEP_LOGO, true);
+            Utility.showCircularImageView(mContext, TAG, mBinding.imgProfile, mTaskDetailModel.selectedProvider.profileUrl, Utility.DEFAULT_CHEEP_LOGO, true);
 
 //            // Whether Provider Verified or not
 //            if (Utility.BOOLEAN.YES.equalsIgnoreCase(mTaskDetailModel.selectedProvider.isVerified)) {
-//                mActivityTaskSummaryBinding.textProVerified.setVisibility(View.VISIBLE);
+//                mBinding.textProVerified.setVisibility(View.VISIBLE);
 //            } else {
-//                mActivityTaskSummaryBinding.textProVerified.setVisibility(View.GONE);
+//                mBinding.textProVerified.setVisibility(View.GONE);
 //            }
 
             // Manage Click events of Call & Chat
-            mActivityTaskSummaryBinding.lnCall.setOnClickListener(new View.OnClickListener() {
+            mBinding.lnCall.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Log.i(TAG, "onClick: Call");
                     Utility.openCustomerCareCallDialer(mContext, mTaskDetailModel.selectedProvider.sp_phone_number);
                 }
             });
-            mActivityTaskSummaryBinding.lnChat.setOnClickListener(new View.OnClickListener() {
+            mBinding.lnChat.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Log.i(TAG, "onClick: Chat");
@@ -283,7 +292,7 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
 
 
             // On Click on Payment Summary
-            mActivityTaskSummaryBinding.textViewPaymentSummary.setOnClickListener(new View.OnClickListener() {
+            mBinding.textViewPaymentSummary.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     // Redirect the user to Payment Summary screen.
@@ -299,7 +308,7 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
 //                        PaymentChoiceActivity.newInstance(mContext, mTaskDetailModel);
                         PaymentDetailsActivity.newInstance(mContext, mTaskDetailModel);
                     } else {
-//                        mActivityTaskSummaryBinding.textTaskCompletionYes.setText(R.string.label_yes);
+//                        mBinding.textTaskCompletionYes.setText(R.string.label_yes);
                         PaymentSummaryActivity.newInstance(TaskSummaryForMultiCatActivity.this, mTaskDetailModel);
                     }
                 }
@@ -313,34 +322,34 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
         }
 
         // Set Second Section
-//        mActivityTaskSummaryBinding.textSubCategoryName.setText(mTaskDetailModel.subCategoryName);
-        mActivityTaskSummaryBinding.textTaskDesc.setText(mTaskDetailModel.taskDesc);
-//        Utility.loadImageView(mContext, mActivityTaskSummaryBinding.imgTaskPicture, mTaskDetailModel.taskImage, 0);
+//        mBinding.textSubCategoryName.setText(mTaskDetailModel.subCategoryName);
+        mBinding.textTaskDesc.setText(mTaskDetailModel.taskDesc);
+//        Utility.loadImageView(mContext, mBinding.imgTaskPicture, mTaskDetailModel.taskImage, 0);
         if (mTaskDetailModel.mMediaModelList != null && !mTaskDetailModel.mMediaModelList.isEmpty()) {
 //            if (mTaskDetailModel.mMediaModelList.size() > 1)
-//                mActivityTaskSummaryBinding.tvCounter.setText("+" + (mTaskDetailModel.mMediaModelList.size() - 1));
+//                mBinding.tvCounter.setText("+" + (mTaskDetailModel.mMediaModelList.size() - 1));
 //            else
-//                mActivityTaskSummaryBinding.tvCounter.setVisibility(View.GONE);
+//                mBinding.tvCounter.setVisibility(View.GONE);
 
             Collections.reverse(mTaskDetailModel.mMediaModelList);
-            Utility.loadImageView(this, mActivityTaskSummaryBinding.imgTaskPicture1, mTaskDetailModel.mMediaModelList.get(0).mediaThumbName);
+            Utility.loadImageView(this, mBinding.imgTaskPicture1, mTaskDetailModel.mMediaModelList.get(0).mediaThumbName);
             if (mTaskDetailModel.mMediaModelList.size() == 3) {
-                Utility.loadImageView(this, mActivityTaskSummaryBinding.imgTaskPicture1, mTaskDetailModel.mMediaModelList.get(0).mediaThumbName);
-                Utility.loadImageView(this, mActivityTaskSummaryBinding.imgTaskPicture2, mTaskDetailModel.mMediaModelList.get(1).mediaThumbName);
-                Utility.loadImageView(this, mActivityTaskSummaryBinding.imgTaskPicture3, mTaskDetailModel.mMediaModelList.get(2).mediaThumbName);
+                Utility.loadImageView(this, mBinding.imgTaskPicture1, mTaskDetailModel.mMediaModelList.get(0).mediaThumbName);
+                Utility.loadImageView(this, mBinding.imgTaskPicture2, mTaskDetailModel.mMediaModelList.get(1).mediaThumbName);
+                Utility.loadImageView(this, mBinding.imgTaskPicture3, mTaskDetailModel.mMediaModelList.get(2).mediaThumbName);
             } else if (mTaskDetailModel.mMediaModelList.size() == 2) {
-                mActivityTaskSummaryBinding.framePicture3.setVisibility(View.GONE);
-                Utility.loadImageView(this, mActivityTaskSummaryBinding.imgTaskPicture2, mTaskDetailModel.mMediaModelList.get(1).mediaThumbName);
-                Utility.loadImageView(this, mActivityTaskSummaryBinding.imgTaskPicture1, mTaskDetailModel.mMediaModelList.get(0).mediaThumbName);
+                mBinding.framePicture3.setVisibility(View.GONE);
+                Utility.loadImageView(this, mBinding.imgTaskPicture2, mTaskDetailModel.mMediaModelList.get(1).mediaThumbName);
+                Utility.loadImageView(this, mBinding.imgTaskPicture1, mTaskDetailModel.mMediaModelList.get(0).mediaThumbName);
 
             } else {
-                mActivityTaskSummaryBinding.framePicture3.setVisibility(View.GONE);
-                mActivityTaskSummaryBinding.framePicture2.setVisibility(View.GONE);
-                Utility.loadImageView(this, mActivityTaskSummaryBinding.imgTaskPicture1, mTaskDetailModel.mMediaModelList.get(0).mediaThumbName);
+                mBinding.framePicture3.setVisibility(View.GONE);
+                mBinding.framePicture2.setVisibility(View.GONE);
+                Utility.loadImageView(this, mBinding.imgTaskPicture1, mTaskDetailModel.mMediaModelList.get(0).mediaThumbName);
             }
 
         } else
-            mActivityTaskSummaryBinding.frameSelectPicture.setVisibility(View.GONE);
+            mBinding.frameSelectPicture.setVisibility(View.GONE);
 
 
         // Set Up Third Section WHEN
@@ -360,26 +369,26 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
         }
 
         String time = Utility.get2HourTimeSlots(mTaskDetailModel.taskStartdate);
-        mActivityTaskSummaryBinding.textTaskWhen.setText(task_original_date + time);
+        mBinding.textTaskWhen.setText(task_original_date + time);
 
 
         // Setup WHERE section
-        mActivityTaskSummaryBinding.textTaskWhere.setText(mTaskDetailModel.taskAddress);
+        mBinding.textTaskWhere.setText(mTaskDetailModel.taskAddress);
 
 
         /*// Onclick of when and Where section
-        mActivityTaskSummaryBinding.lnTaskDesc.setOnClickListener(new View.OnClickListener()
+        mBinding.lnTaskDesc.setOnClickListener(new View.OnClickListener()
 
         {
             @Override
             public void onClick(View view) {
-                showFullDesc(getString(R.string.label_desc), mActivityTaskSummaryBinding.textTaskDesc.getText().toString());
+                showFullDesc(getString(R.string.label_desc), mBinding.textTaskDesc.getText().toString());
             }
         });
-        mActivityTaskSummaryBinding.lnTaskWhere.setOnClickListener(new View.OnClickListener() {
+        mBinding.lnTaskWhere.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showFullDesc(getString(R.string.label_address), mActivityTaskSummaryBinding.textTaskWhere.getText().toString());
+                showFullDesc(getString(R.string.label_address), mBinding.textTaskWhere.getText().toString());
             }
         });*/
     }
@@ -389,39 +398,91 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
         public void onClick(View v) {
             switch (v.getId()) {
                 // Onclick of when and Where section
-                case R.id.ln_task_where:
-                    showFullDesc(getString(R.string.label_address), mActivityTaskSummaryBinding.textTaskWhere.getText().toString());
+                case R.id.ln_where:
+                case R.id.text_task_where:
+                    showFullDesc(getString(R.string.label_address), mBinding.textTaskWhere.getText().toString());
                     break;
                 case R.id.ln_task_desc:
-                    showFullDesc(getString(R.string.label_desc), mActivityTaskSummaryBinding.textTaskDesc.getText().toString());
+                    showFullDesc(getString(R.string.label_desc), mBinding.textTaskDesc.getText().toString());
+                    break;
+                case R.id.tv_confirm_availability:
+                    UserAvailabilityDialog.newInstance(mContext, userAvailabilityListener);
                     break;
                 // Onclick of when and Where section
             }
         }
     };
 
+    private final UserAvailabilityDialog.DialogInteractionListener userAvailabilityListener =
+            new UserAvailabilityDialog.DialogInteractionListener() {
+                @Override
+                public void someoneElseWillAttendClicked() {
+                    Log.d(TAG, "someoneElseWillAttendClicked() called");
+                    SomeoneElseWillAttendDialog.newInstance(mContext, someoneElseWillAttendListener);
+                }
+
+                @Override
+                public void rescheduleTaskClicked() {
+                    Log.d(TAG, "rescheduleTaskClicked() called");
+                    showDateTimePickerDialog();
+                }
+
+                @Override
+                public void cancelTaskClicked() {
+                    Log.d(TAG, "cancelTaskClicked() called");
+                }
+
+                @Override
+                public void userWillBeAvailableClicked() {
+                    Log.d(TAG, "userWillBeAvailableClicked() called");
+                    UserAvailableDialog.newInstance(mContext, userAvailableListener);
+                }
+            };
+
+    private final SomeoneElseWillAttendDialog.DialogInteractionListener someoneElseWillAttendListener =
+            new SomeoneElseWillAttendDialog.DialogInteractionListener() {
+                @Override
+                public void okClicked(String personName) {
+                    Log.d(TAG, "okClicked() called with: personName = [" + personName + "]");
+                }
+
+                @Override
+                public void onBackPressed() {
+                    UserAvailabilityDialog.newInstance(mContext, userAvailabilityListener);
+                }
+            };
+
+    private final AcknowledgementInteractionListener userAvailableListener =
+            new AcknowledgementInteractionListener() {
+                @Override
+                public void onAcknowledgementAccepted() {
+                    Log.d(TAG, "onAcknowledgementAccepted() called user available");
+                    setConfirmAvailabilityVisible(false);
+                }
+            };
+
     private void updateUIBasedOnTaskStatus() {
         if (Utility.TASK_STATUS.PENDING.equalsIgnoreCase(mTaskDetailModel.taskStatus)) {
-            mActivityTaskSummaryBinding.textTaskStatusTop.setText(getString(R.string.task_confirmed));
-            mActivityTaskSummaryBinding.textViewPaymentSummary.setVisibility(View.VISIBLE);
-            mActivityTaskSummaryBinding.textPaid.setVisibility(View.VISIBLE);
+            mBinding.textTaskStatusTop.setText(getString(R.string.task_confirmed));
+            mBinding.textViewPaymentSummary.setVisibility(View.VISIBLE);
+            mBinding.textPaid.setVisibility(View.VISIBLE);
 
         } else if (Utility.TASK_STATUS.PROCESSING.equalsIgnoreCase(mTaskDetailModel.taskStatus)) {
-            mActivityTaskSummaryBinding.textTaskStatusTop.setText(getString(R.string.task_status_processing));
-            mActivityTaskSummaryBinding.textViewPaymentSummary.setVisibility(View.VISIBLE);
-            mActivityTaskSummaryBinding.textPaid.setVisibility(View.VISIBLE);
+            mBinding.textTaskStatusTop.setText(getString(R.string.task_status_processing));
+            mBinding.textViewPaymentSummary.setVisibility(View.VISIBLE);
+            mBinding.textPaid.setVisibility(View.VISIBLE);
 
         } else if (Utility.TASK_STATUS.COMPLETION_REQUEST.equalsIgnoreCase(mTaskDetailModel.taskStatus)) {
-            mActivityTaskSummaryBinding.textTaskStatusTop.setText(getString(R.string.task_status_processing));
-            mActivityTaskSummaryBinding.textViewPaymentSummary.setVisibility(View.GONE);
-            mActivityTaskSummaryBinding.textPaid.setVisibility(View.GONE);
+            mBinding.textTaskStatusTop.setText(getString(R.string.task_status_processing));
+            mBinding.textViewPaymentSummary.setVisibility(View.GONE);
+            mBinding.textPaid.setVisibility(View.GONE);
 
             // Setup Task Completion Request Dialog
             showTaskCompletionDialog(true);
         } else if (Utility.TASK_STATUS.COMPLETION_CONFIRM.equalsIgnoreCase(mTaskDetailModel.taskStatus)) {
-            mActivityTaskSummaryBinding.textTaskStatusTop.setText(getString(R.string.label_task_complete));
-            mActivityTaskSummaryBinding.textViewPaymentSummary.setVisibility(View.VISIBLE);
-            mActivityTaskSummaryBinding.textPaid.setVisibility(View.VISIBLE);
+            mBinding.textTaskStatusTop.setText(getString(R.string.label_task_complete));
+            mBinding.textViewPaymentSummary.setVisibility(View.VISIBLE);
+            mBinding.textPaid.setVisibility(View.VISIBLE);
 
             // No need to hide ChatCall Button Now.
             showChatCallButton(false);
@@ -429,21 +490,21 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
             // Check if Rating is done or not
             if (Utility.BOOLEAN.YES.equalsIgnoreCase(mTaskDetailModel.ratingDone)) {
                 // Rating Section
-                mActivityTaskSummaryBinding.lnRatingSection.setVisibility(View.VISIBLE);
-                Utility.showRating(mTaskDetailModel.taskRatings, mActivityTaskSummaryBinding.taskRatingbar);
+                mBinding.lnRatingSection.setVisibility(View.VISIBLE);
+                Utility.showRating(mTaskDetailModel.taskRatings, mBinding.taskRatingbar);
 
                 // No need to Show bottom action button with rate and review
-                mActivityTaskSummaryBinding.textBottomAction.setVisibility(View.GONE);
-                mActivityTaskSummaryBinding.textBottomAction.setOnClickListener(null);
+                mBinding.textBottomAction.setVisibility(View.GONE);
+                mBinding.textBottomAction.setOnClickListener(null);
                 updateHeightOfLinearLayout(false);
             } else {
                 // Rating Section
-                mActivityTaskSummaryBinding.lnRatingSection.setVisibility(View.GONE);
+                mBinding.lnRatingSection.setVisibility(View.GONE);
 
                 // Show bottom action button with rate & review
-                mActivityTaskSummaryBinding.textBottomAction.setText(getString(R.string.label_rate_and_review));
-                mActivityTaskSummaryBinding.textBottomAction.setVisibility(View.VISIBLE);
-                mActivityTaskSummaryBinding.textBottomAction.setOnClickListener(new View.OnClickListener() {
+                mBinding.textBottomAction.setText(getString(R.string.label_rate_and_review));
+                mBinding.textBottomAction.setVisibility(View.VISIBLE);
+                mBinding.textBottomAction.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         showRateDialog();
@@ -452,33 +513,33 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
                 updateHeightOfLinearLayout(true);
             }
         } else if (Utility.TASK_STATUS.COD.equalsIgnoreCase(mTaskDetailModel.taskStatus) || Utility.TASK_STATUS.PAID.equalsIgnoreCase(mTaskDetailModel.taskStatus)) {
-            mActivityTaskSummaryBinding.textTaskStatusTop.setText(getString(R.string.task_confirmed));
-            mActivityTaskSummaryBinding.textViewPaymentSummary.setVisibility(View.VISIBLE);
-            mActivityTaskSummaryBinding.textPaid.setVisibility(View.VISIBLE);
+            mBinding.textTaskStatusTop.setText(getString(R.string.task_confirmed));
+            mBinding.textViewPaymentSummary.setVisibility(View.VISIBLE);
+            mBinding.textPaid.setVisibility(View.VISIBLE);
 
         } else if (Utility.TASK_STATUS.CANCELLED_CUSTOMER.equalsIgnoreCase(mTaskDetailModel.taskStatus)) {
-            mActivityTaskSummaryBinding.textTaskStatusTop.setText(getString(R.string.msg_task_cancelled_title));
-            mActivityTaskSummaryBinding.textViewPaymentSummary.setVisibility(View.VISIBLE);
-            mActivityTaskSummaryBinding.textPaid.setVisibility(View.VISIBLE);
+            mBinding.textTaskStatusTop.setText(getString(R.string.msg_task_cancelled_title));
+            mBinding.textViewPaymentSummary.setVisibility(View.VISIBLE);
+            mBinding.textPaid.setVisibility(View.VISIBLE);
 
             // Cancellation Reason
-            mActivityTaskSummaryBinding.lnTaskCancellation.setVisibility(View.VISIBLE);
+            mBinding.lnTaskCancellation.setVisibility(View.VISIBLE);
             if (!TextUtils.isEmpty(mTaskDetailModel.taskCancelReason)) {
-                mActivityTaskSummaryBinding.textTaskCancellationReason.setText(mTaskDetailModel.taskCancelReason);
+                mBinding.textTaskCancellationReason.setText(mTaskDetailModel.taskCancelReason);
             }
 
             // No need to hide ChatCall Button Now.
             showChatCallButton(false);
         } else if (Utility.TASK_STATUS.CANCELLED_SP.equalsIgnoreCase(mTaskDetailModel.taskStatus)) {
-//            mActivityTaskSummaryBinding.textTaskStatusTop.setText(getString(R.string.task_was_cancelled_by_x, mTaskDetailModel.selectedProvider.userName));
-            mActivityTaskSummaryBinding.textTaskStatusTop.setText(getString(R.string.msg_task_cancelled_title));
-            mActivityTaskSummaryBinding.textViewPaymentSummary.setVisibility(View.VISIBLE);
-            mActivityTaskSummaryBinding.textPaid.setVisibility(View.VISIBLE);
+//            mBinding.textTaskStatusTop.setText(getString(R.string.task_was_cancelled_by_x, mTaskDetailModel.selectedProvider.userName));
+            mBinding.textTaskStatusTop.setText(getString(R.string.msg_task_cancelled_title));
+            mBinding.textViewPaymentSummary.setVisibility(View.VISIBLE);
+            mBinding.textPaid.setVisibility(View.VISIBLE);
 
             // Cancellation Reason
-            mActivityTaskSummaryBinding.lnTaskCancellation.setVisibility(View.VISIBLE);
+            mBinding.lnTaskCancellation.setVisibility(View.VISIBLE);
             if (!TextUtils.isEmpty(mTaskDetailModel.taskCancelReason)) {
-                mActivityTaskSummaryBinding.textTaskCancellationReason.setText(mTaskDetailModel.taskCancelReason);
+                mBinding.textTaskCancellationReason.setText(mTaskDetailModel.taskCancelReason);
             }
 
             // No need to hide ChatCall Button Now.
@@ -486,12 +547,12 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
         }
         // reschedule task status
         else if (Utility.TASK_STATUS.RESCHEDULE_REQUESTED.equalsIgnoreCase(mTaskDetailModel.taskStatus)) {
-            mActivityTaskSummaryBinding.textTaskStatusTop.setText(getString(R.string.label_reschedule_requested));
-            mActivityTaskSummaryBinding.textViewPaymentSummary.setVisibility(View.VISIBLE);
-            mActivityTaskSummaryBinding.textPaid.setVisibility(View.VISIBLE);
+            mBinding.textTaskStatusTop.setText(getString(R.string.label_reschedule_requested));
+            mBinding.textViewPaymentSummary.setVisibility(View.VISIBLE);
+            mBinding.textPaid.setVisibility(View.VISIBLE);
 
             // Reschedule request desc
-            mActivityTaskSummaryBinding.lnTaskRescheduleRequested.setVisibility(View.VISIBLE);
+            mBinding.lnTaskRescheduleRequested.setVisibility(View.VISIBLE);
 
             //Calculate Reschedule Date & Time
             SuperCalendar superCalendar = SuperCalendar.getInstance();
@@ -505,19 +566,19 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
             String task_reschedule_date = superCalendar.format(Utility.DATE_FORMAT_DD_MMM);
             String task_reschedule_time = superCalendar.format(Utility.DATE_FORMAT_HH_MM_AM);
             String message = getString(R.string.label_reschedule_desc, task_reschedule_date + getString(R.string.label_at) + task_reschedule_time);
-            mActivityTaskSummaryBinding.textTaskRescheduleRequestDesc.setText(message);
+            mBinding.textTaskRescheduleRequestDesc.setText(message);
 
         }
         //Task's Reschedule request got cancelled
         else if (Utility.TASK_STATUS.RESCHEDULE_REQUEST_REJECTED.equalsIgnoreCase(mTaskDetailModel.taskStatus)) {
-            mActivityTaskSummaryBinding.textTaskStatusTop.setText(getString(R.string.label_reschedule_rejected));
-            mActivityTaskSummaryBinding.textViewPaymentSummary.setVisibility(View.VISIBLE);
-            mActivityTaskSummaryBinding.textPaid.setVisibility(View.VISIBLE);
+            mBinding.textTaskStatusTop.setText(getString(R.string.label_reschedule_rejected));
+            mBinding.textViewPaymentSummary.setVisibility(View.VISIBLE);
+            mBinding.textPaid.setVisibility(View.VISIBLE);
 
-            mActivityTaskSummaryBinding.lnTaskRescheduleRejected.setVisibility(View.VISIBLE);
+            mBinding.lnTaskRescheduleRejected.setVisibility(View.VISIBLE);
 
             // Chat & Call with @Cheep team click event of buttons
-            mActivityTaskSummaryBinding.textContactCheepViaCall.setOnClickListener(new View.OnClickListener() {
+            mBinding.textContactCheepViaCall.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     //callToCheepAdmin(mActivityHomeBinding.getRoot());
@@ -525,7 +586,7 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
                 }
             });
 
-            mActivityTaskSummaryBinding.textContactCheepViaChat.setOnClickListener(new View.OnClickListener() {
+            mBinding.textContactCheepViaChat.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     HotlineHelper.getInstance(mContext).showConversation(mContext);
@@ -537,15 +598,15 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
         }
         //Task's Additional Payment Request comes
         else if (Utility.TASK_STATUS.ADDITIONAL_PAYMENT_REQUESTED.equalsIgnoreCase(mTaskDetailModel.taskStatus)) {
-            mActivityTaskSummaryBinding.textTaskStatusTop.setText(getString(R.string.task_status_processing));
-            mActivityTaskSummaryBinding.textViewPaymentSummary.setVisibility(View.GONE);
-            mActivityTaskSummaryBinding.textPaid.setVisibility(View.GONE);
-            mActivityTaskSummaryBinding.lnTaskAdditionalQuoteRequested.setVisibility(View.VISIBLE);
+            mBinding.textTaskStatusTop.setText(getString(R.string.task_status_processing));
+            mBinding.textViewPaymentSummary.setVisibility(View.GONE);
+            mBinding.textPaid.setVisibility(View.GONE);
+            mBinding.lnTaskAdditionalQuoteRequested.setVisibility(View.VISIBLE);
 
             String additionalQuoteAmount = getString(R.string.rupee_symbol_x, mTaskDetailModel.additionalQuoteAmount);
-            mActivityTaskSummaryBinding.textAdditionalPaymentDesc.setText(getString(R.string.label_additional_payment_desc, additionalQuoteAmount));
+            mBinding.textAdditionalPaymentDesc.setText(getString(R.string.label_additional_payment_desc, additionalQuoteAmount));
 
-            mActivityTaskSummaryBinding.textAdditionalPaymentAccept.setOnClickListener(new View.OnClickListener() {
+            mBinding.textAdditionalPaymentAccept.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Log.i(TAG, "onClick: Accept Additional Payment");
@@ -558,7 +619,7 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
                 }
             });
 
-            mActivityTaskSummaryBinding.textAdditionalPaymentDecline.setOnClickListener(new View.OnClickListener() {
+            mBinding.textAdditionalPaymentDecline.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Log.i(TAG, "onClick: Decline Additional Payment");
@@ -575,15 +636,108 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
      */
     private void showChatCallButton(boolean flag) {
         if (flag) {
-            mActivityTaskSummaryBinding.lnChatCall.setVisibility(View.VISIBLE);
+            mBinding.lnChatCall.setVisibility(View.VISIBLE);
         } else {
-            mActivityTaskSummaryBinding.lnChatCall.setVisibility(View.GONE);
+            mBinding.lnChatCall.setVisibility(View.GONE);
         }
+    }
+
+    public SuperCalendar startDateTimeSuperCalendar = SuperCalendar.getInstance();
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////WHEN Feature [START]//////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+    private void showDateTimePickerDialog() {
+        // Get Current Date
+        final Calendar c = Calendar.getInstance();
+
+        DatePickerDialog datePickerDialog = new DatePickerDialog(mContext, new DatePickerDialog.OnDateSetListener() {
+
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                if (view.isShown()) {
+                    Log.d(TAG, "onDateSet() called with: view = [" + view + "], year = [" + year + "], monthOfYear = [" + monthOfYear + "], dayOfMonth = [" + dayOfMonth + "]");
+                    startDateTimeSuperCalendar.set(Calendar.YEAR, year);
+                    startDateTimeSuperCalendar.set(Calendar.MONTH, monthOfYear);
+                    startDateTimeSuperCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                    showTimePickerDialog();
+                }
+            }
+        }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH));
+
+        datePickerDialog.show();
+    }
+
+    public SuperCalendar superCalendar;
+
+    private void showTimePickerDialog() {
+        // Get Current Time
+        final Calendar c = Calendar.getInstance();
+        // Launch Time Picker Dialog
+        TimePickerDialog timePickerDialog = new TimePickerDialog(mContext,
+                new TimePickerDialog.OnTimeSetListener() {
+
+                    @Override
+                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                        if (view.isShown()) {
+
+                            Log.d(TAG, "onTimeSet() called with: view = [" + view + "], hourOfDay = [" + hourOfDay + "], minute = [" + minute + "]");
+
+                            startDateTimeSuperCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                            startDateTimeSuperCalendar.set(Calendar.MINUTE, minute);
+
+                            superCalendar = SuperCalendar.getInstance();
+                            superCalendar.setTimeInMillis(startDateTimeSuperCalendar.getTimeInMillis());
+                            superCalendar.setTimeZone(SuperCalendar.SuperTimeZone.GMT.GMT);
+
+                            // Get date-time for next 3 hours
+                            SuperCalendar calAfter3Hours = SuperCalendar.getInstance().getNext3HoursTime();
+
+//                            TODO: This needs to Be UNCOMMENTED DO NOT FORGET
+//                            if (!BuildConfig.BUILD_TYPE.equalsIgnoreCase(Utility.DEBUG)) {
+                            if (superCalendar.getTimeInMillis() < calAfter3Hours.getTimeInMillis()) {
+                                Utility.showSnackBar(getString(R.string.can_only_start_task_after_3_hours), mBinding.getRoot());
+//                                mBinding.textTaskWhen.setText(Utility.EMPTY_STRING);
+//                                mBinding.textTaskWhen.setVisibility(View.GONE);
+                                superCalendar = null;
+//                                updateWhenLabelWithIcon( Utility.EMPTY_STRING);
+                                return;
+                            }
+//                            }
+
+                            if (System.currentTimeMillis() < startDateTimeSuperCalendar.getTimeInMillis()) {
+                                String selectedDateTime = startDateTimeSuperCalendar.format(Utility.DATE_FORMAT_DD_MMM)
+                                        + getString(R.string.label_at)
+                                        + startDateTimeSuperCalendar.format(Utility.DATE_FORMAT_HH_MM_AM);
+                                updateWhenLabelWithIcon(selectedDateTime);
+                                setConfirmAvailabilityVisible(false);
+                            } else {
+//                                updateWhenLabelWithIcon( Utility.EMPTY_STRING);
+                                Utility.showSnackBar(getString(R.string.validate_future_date), mBinding.getRoot());
+                            }
+                        }
+                    }
+                }, c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE), false);
+        timePickerDialog.show();
+
+    }
+
+    public void updateWhenLabelWithIcon(String whenValue) {
+        mBinding.textTaskWhen.setText(whenValue);
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////WHEN Feature [END]//////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+
+    private void setConfirmAvailabilityVisible(boolean isConfirmAvailabilityVisible) {
+        mBinding.tvConfirmAvailability.setVisibility(isConfirmAvailabilityVisible ? View.VISIBLE : View.GONE);
+        mBinding.tvConfirmAvailabilityInfo.setVisibility(isConfirmAvailabilityVisible ? View.VISIBLE : View.GONE);
     }
 
     private void showTaskCompletionDialog(boolean flag) {
         if (flag) {
-            mActivityTaskSummaryBinding.lnTaskCompletionRequested.setVisibility(View.VISIBLE);
+            mBinding.lnTaskCompletionRequested.setVisibility(View.VISIBLE);
             String mainText = getString(R.string.label_complete_job_confirm, "PRO");
             String s = "";
             if (!TextUtils.isEmpty(mTaskDetailModel.isAnyAmountPending)) {
@@ -594,9 +748,9 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
                 String fullstring = mainText + s;
                 SpannableStringBuilder text = new SpannableStringBuilder(fullstring);
                 text.setSpan(new ForegroundColorSpan(ContextCompat.getColor(this, R.color.grey_varient_23)), fullstring.indexOf(s.charAt(0)), fullstring.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                mActivityTaskSummaryBinding.textConfirmText.setText(text);
+                mBinding.textConfirmText.setText(text);
             } else {
-                mActivityTaskSummaryBinding.textConfirmText.setText(mainText);
+                mBinding.textConfirmText.setText(mainText);
 
             }
 
@@ -610,12 +764,12 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
 //            }
 //            LogUtils.LOGE(TAG, "showTaskCompletionDialog: pendingAmount :: " + pendingAmount);
 //            if (pendingAmount > 0) {
-//                mActivityTaskSummaryBinding.textTaskCompletionYes.setText(R.string.label_yes_pay_now);
+//                mBinding.textTaskCompletionYes.setText(R.string.label_yes_pay_now);
 //            } else {
-//                mActivityTaskSummaryBinding.textTaskCompletionYes.setText(R.string.label_yes);
+//                mBinding.textTaskCompletionYes.setText(R.string.label_yes);
 //            }
 
-            mActivityTaskSummaryBinding.textTaskCompletionYes.setOnClickListener(new View.OnClickListener() {
+            mBinding.textTaskCompletionYes.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
 
@@ -638,17 +792,17 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
                         PaymentDetailsActivity.newInstance(mContext, mTaskDetailModel);
                     } else {
                         callCompleteTaskWS(Utility.TASK_STATUS.COMPLETION_CONFIRM);
-//                        mActivityTaskSummaryBinding.textTaskCompletionYes.setText(R.string.label_yes);
+//                        mBinding.textTaskCompletionYes.setText(R.string.label_yes);
                     }
                 }
             });
-            mActivityTaskSummaryBinding.textTaskCompletionNo.setOnClickListener(new View.OnClickListener() {
+            mBinding.textTaskCompletionNo.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     callCompleteTaskWS(Utility.TASK_STATUS.PROCESSING);
                 }
             });
-            mActivityTaskSummaryBinding.textTaskSeekSupport.setOnClickListener(new View.OnClickListener() {
+            mBinding.textTaskSeekSupport.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Utility.initiateCallToCheepHelpLine(mContext);
@@ -656,24 +810,25 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
             });
 
         } else {
-            mActivityTaskSummaryBinding.lnTaskCompletionRequested.setVisibility(View.GONE);
+            mBinding.lnTaskCompletionRequested.setVisibility(View.GONE);
         }
     }
 
 
     @Override
     protected void setListeners() {
-        mActivityTaskSummaryBinding.lnTaskDesc.setOnClickListener(mOnClickListener);
-        mActivityTaskSummaryBinding.textTaskWhere.setOnClickListener(mOnClickListener);
-        mActivityTaskSummaryBinding.lnWhere.setOnClickListener(mOnClickListener);
+        mBinding.lnTaskDesc.setOnClickListener(mOnClickListener);
+        mBinding.textTaskWhere.setOnClickListener(mOnClickListener);
+        mBinding.lnWhere.setOnClickListener(mOnClickListener);
+        mBinding.tvConfirmAvailability.setOnClickListener(mOnClickListener);
 
-        mActivityTaskSummaryBinding.frameSelectPicture.setOnClickListener(new View.OnClickListener() {
+        mBinding.frameSelectPicture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (mTaskDetailModel.mMediaModelList != null && !mTaskDetailModel.mMediaModelList.isEmpty()) {
 
                     SharedElementTransitionHelper sharedElementTransitionHelper = new SharedElementTransitionHelper(TaskSummaryForMultiCatActivity.this);
-                    sharedElementTransitionHelper.put(mActivityTaskSummaryBinding.imgTaskPicture1, R.string.transition_image_view);
+                    sharedElementTransitionHelper.put(mBinding.imgTaskPicture1, R.string.transition_image_view);
 //                    ZoomImageActivity.newInstance(mContext, sharedElementTransitionHelper.getBundle(), mTaskDetailModel.taskImage);
                     StrategicPartnerMediaViewActiivty.getInstance(TaskSummaryForMultiCatActivity.this, mTaskDetailModel.mMediaModelList, false);
                 }
@@ -711,8 +866,8 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
             @Override
             public void run() {
                 int paddingBottomInPix = (int) Utility.convertDpToPixel(20, mContext);
-                paddingBottomInPix = paddingBottomInPix + mActivityTaskSummaryBinding.textBottomAction.getHeight();
-                mActivityTaskSummaryBinding.lnBottomSection.setPadding(0, 0, 0, flag ? paddingBottomInPix : 0);
+                paddingBottomInPix = paddingBottomInPix + mBinding.textBottomAction.getHeight();
+                mBinding.lnBottomSection.setPadding(0, 0, 0, flag ? paddingBottomInPix : 0);
             }
         }, 500);
 
@@ -733,42 +888,42 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
             switch (i) {
                 case 0:
                     if (list.size() > 0 && list.get(i) != null) {
-                        Utility.showCircularImageView(mContext, TAG, mActivityTaskSummaryBinding.img1, list.get(i).profileUrl, R.drawable.ic_cheep_circular_icon, true);
-                        mActivityTaskSummaryBinding.img1.setVisibility(View.VISIBLE);
+                        Utility.showCircularImageView(mContext, TAG, mBinding.img1, list.get(i).profileUrl, R.drawable.ic_cheep_circular_icon, true);
+                        mBinding.img1.setVisibility(View.VISIBLE);
                     } else {
-                        mActivityTaskSummaryBinding.img1.setVisibility(View.GONE);
+                        mBinding.img1.setVisibility(View.GONE);
                     }
                     break;
                 case 1:
                     if (list.size() > 1 && list.get(i) != null) {
-                        Utility.showCircularImageView(mContext, TAG, mActivityTaskSummaryBinding.img2, list.get(i).profileUrl, R.drawable.ic_cheep_circular_icon, true);
-                        mActivityTaskSummaryBinding.img2.setVisibility(View.VISIBLE);
+                        Utility.showCircularImageView(mContext, TAG, mBinding.img2, list.get(i).profileUrl, R.drawable.ic_cheep_circular_icon, true);
+                        mBinding.img2.setVisibility(View.VISIBLE);
                     } else {
-                        mActivityTaskSummaryBinding.img2.setVisibility(View.GONE);
+                        mBinding.img2.setVisibility(View.GONE);
                     }
                     break;
                 case 2:
                     if (list.size() > 2 && list.get(i) != null) {
-                        Utility.showCircularImageView(mContext, TAG, mActivityTaskSummaryBinding.img3, list.get(i).profileUrl, R.drawable.ic_cheep_circular_icon, true);
-                        mActivityTaskSummaryBinding.img3.setVisibility(View.VISIBLE);
+                        Utility.showCircularImageView(mContext, TAG, mBinding.img3, list.get(i).profileUrl, R.drawable.ic_cheep_circular_icon, true);
+                        mBinding.img3.setVisibility(View.VISIBLE);
                     } else {
-                        mActivityTaskSummaryBinding.img3.setVisibility(View.GONE);
+                        mBinding.img3.setVisibility(View.GONE);
                     }
                     break;
                 case 3:
                     if (list.size() > 3 && list.get(i) != null) {
-                        Utility.showCircularImageView(mContext, TAG, mActivityTaskSummaryBinding.img4, list.get(i).profileUrl, R.drawable.ic_cheep_circular_icon, true);
-                        mActivityTaskSummaryBinding.img4.setVisibility(View.VISIBLE);
+                        Utility.showCircularImageView(mContext, TAG, mBinding.img4, list.get(i).profileUrl, R.drawable.ic_cheep_circular_icon, true);
+                        mBinding.img4.setVisibility(View.VISIBLE);
                     } else {
-                        mActivityTaskSummaryBinding.img4.setVisibility(View.GONE);
+                        mBinding.img4.setVisibility(View.GONE);
                     }
                     break;
                 case 4:
                     if (list.size() > 4 && list.get(i) != null) {
-                        Utility.showCircularImageView(mContext, TAG, mActivityTaskSummaryBinding.img5, list.get(i).profileUrl, R.drawable.ic_cheep_circular_icon, true);
-                        mActivityTaskSummaryBinding.img5.setVisibility(View.VISIBLE);
+                        Utility.showCircularImageView(mContext, TAG, mBinding.img5, list.get(i).profileUrl, R.drawable.ic_cheep_circular_icon, true);
+                        mBinding.img5.setVisibility(View.VISIBLE);
                     } else {
-                        mActivityTaskSummaryBinding.img5.setVisibility(View.GONE);
+                        mBinding.img5.setVisibility(View.GONE);
                     }
                     break;
             }
@@ -777,24 +932,24 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
         // Check if list size is more than 5
         if (list.size() > 5) {
             int extra_count = list.size() - 5;
-            mActivityTaskSummaryBinding.extraProCount.setVisibility(View.VISIBLE);
-            mActivityTaskSummaryBinding.extraProCount.setText("+" + String.valueOf(extra_count));
+            mBinding.extraProCount.setVisibility(View.VISIBLE);
+            mBinding.extraProCount.setText("+" + String.valueOf(extra_count));
         } else {
-            mActivityTaskSummaryBinding.extraProCount.setVisibility(View.GONE);
+            mBinding.extraProCount.setVisibility(View.GONE);
         }
 
         // Awaiting Response
         if (list.size() == 0) {
-            mActivityTaskSummaryBinding.textTaskResponseStatus.setText(getResources().getString(R.string.label_pros_around_you_reviewing_desc));
-            mActivityTaskSummaryBinding.textBottomAction.setVisibility(View.GONE);
-            mActivityTaskSummaryBinding.textTaskStatusTop.setVisibility(View.GONE);
+            mBinding.textTaskResponseStatus.setText(getResources().getString(R.string.label_pros_around_you_reviewing_desc));
+            mBinding.textBottomAction.setVisibility(View.GONE);
+            mBinding.textTaskStatusTop.setVisibility(View.GONE);
             updateHeightOfLinearLayout(false);
         } else {
-            mActivityTaskSummaryBinding.textTaskResponseStatus.setText(getResources().getQuantityText(R.plurals.getResponseReceivedString, list.size()));
-            mActivityTaskSummaryBinding.textBottomAction.setText(getString(R.string.label_view_quotes));
-            mActivityTaskSummaryBinding.textBottomAction.setVisibility(View.VISIBLE);
-            mActivityTaskSummaryBinding.textTaskStatusTop.setVisibility(View.VISIBLE);
-            mActivityTaskSummaryBinding.textBottomAction.setOnClickListener(new View.OnClickListener() {
+            mBinding.textTaskResponseStatus.setText(getResources().getQuantityText(R.plurals.getResponseReceivedString, list.size()));
+            mBinding.textBottomAction.setText(getString(R.string.label_view_quotes));
+            mBinding.textBottomAction.setVisibility(View.VISIBLE);
+            mBinding.textTaskStatusTop.setVisibility(View.VISIBLE);
+            mBinding.textBottomAction.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     TaskQuotesActivity.newInstance(mContext, mTaskDetailModel, false);
@@ -819,7 +974,7 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
      */
     private void callTaskDetailWS(String taskId) {
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityTaskSummaryBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mBinding.getRoot());
             return;
         }
 
@@ -867,12 +1022,12 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
                         // Show Toast
-                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityTaskSummaryBinding.getRoot());
+                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
                         error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
                         // Show message
-                        Utility.showSnackBar(error_message, mActivityTaskSummaryBinding.getRoot());
+                        Utility.showSnackBar(error_message, mBinding.getRoot());
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
                     case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
@@ -897,7 +1052,7 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
             // Close Progressbar
             showProgressBar(false);
 
-            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityTaskSummaryBinding.getRoot());
+            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
 
         }
     };
@@ -913,8 +1068,8 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
      * @param flag whether or not it would get visible
      */
     private void showProgressBar(boolean flag) {
-        mActivityTaskSummaryBinding.progress.setVisibility(flag ? View.VISIBLE : View.GONE);
-        mActivityTaskSummaryBinding.lnRoot.setVisibility(flag ? View.GONE : View.VISIBLE);
+        mBinding.progress.setVisibility(flag ? View.VISIBLE : View.GONE);
+        mBinding.lnRoot.setVisibility(flag ? View.GONE : View.VISIBLE);
     }
 
 
@@ -929,7 +1084,7 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
 
         //Validation
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityTaskSummaryBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mBinding.getRoot());
             return;
         }
 
@@ -978,7 +1133,7 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
                         String taskStatus = jsonObject.getString(NetworkUtility.TAGS.TASK_STATUS);
                         if (!TextUtils.isEmpty(taskStatus)) {
                             if (taskStatus.equalsIgnoreCase(Utility.TASK_STATUS.COMPLETION_CONFIRM)) {
-                                Utility.showSnackBar(getString(R.string.msg_thanks_for_confirmation), mActivityTaskSummaryBinding.getRoot());
+                                Utility.showSnackBar(getString(R.string.msg_thanks_for_confirmation), mBinding.getRoot());
 
                                 /*
                                   Update the UI Accordingly.
@@ -1012,12 +1167,12 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
                         // Show Toast
-                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityTaskSummaryBinding.getRoot());
+                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
                         String error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
                         // Show message
-                        Utility.showSnackBar(error_message, mActivityTaskSummaryBinding.getRoot());
+                        Utility.showSnackBar(error_message, mBinding.getRoot());
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
                     case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
@@ -1043,7 +1198,7 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
             hideProgressDialog();
 
             // Show Toast
-            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityTaskSummaryBinding.getRoot());
+            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
         }
     };
 
@@ -1113,7 +1268,7 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
 
         //Validation
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityTaskSummaryBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mBinding.getRoot());
             return;
         }
 
@@ -1159,7 +1314,7 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
                 int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
                 switch (statusCode) {
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
-                        Utility.showSnackBar(getString(R.string.msg_thanks_for_rating), mActivityTaskSummaryBinding.getRoot());
+                        Utility.showSnackBar(getString(R.string.msg_thanks_for_rating), mBinding.getRoot());
                         if (rateDialog != null)
                             rateDialog.dismiss();
                         mTaskDetailModel.ratingDone = Utility.BOOLEAN.YES;
@@ -1249,7 +1404,7 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
     private void callDeclineAdditionalPaymentRequest(String reason) {
         //Validation
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityTaskSummaryBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mBinding.getRoot());
             return;
         }
 
@@ -1291,7 +1446,7 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
                         JSONObject jData = jsonObject.getJSONObject(NetworkUtility.TAGS.DATA);
                         String taskID = jData.getString(NetworkUtility.TAGS.TASK_ID);
-                        Utility.showSnackBar(jsonObject.getString(NetworkUtility.TAGS.MESSAGE), mActivityTaskSummaryBinding.getRoot());
+                        Utility.showSnackBar(jsonObject.getString(NetworkUtility.TAGS.MESSAGE), mBinding.getRoot());
                        /* Utility.showSnackBar(getString(R.string.msg_thanks_for_confirmation), mActivityJobSummaryBinding.getRoot());
                         mActivityJobSummaryBinding.layoutStatusConfirmationRequired.setVisibility(View.GONE);
                         showRateDialog();*/
@@ -1301,12 +1456,12 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
                         // Show Toast
-                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityTaskSummaryBinding.getRoot());
+                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
                         String error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
                         // Show message
-                        Utility.showSnackBar(error_message, mActivityTaskSummaryBinding.getRoot());
+                        Utility.showSnackBar(error_message, mBinding.getRoot());
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
                     case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
@@ -1332,7 +1487,7 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
             hideProgressDialog();
 
             // Show Toast
-            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityTaskSummaryBinding.getRoot());
+            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
         }
     };
 
@@ -1415,7 +1570,7 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
      */
     private void callTaskDetailRequestAcceptWS(final String action, String taskID, final ProviderModel providerModel) {
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityTaskSummaryBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mBinding.getRoot());
             return;
         }
 
@@ -1443,7 +1598,7 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
                 hideProgressDialog();
 
                 // Show Toast
-                Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityTaskSummaryBinding.getRoot());
+                Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
             }
         }
                 , new Response.Listener() {
@@ -1468,18 +1623,18 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
                                 taskChatModel.participantPhotoUrl = providerModel.profileUrl;
                                 ChatActivity.newInstance(mContext, taskChatModel);
                             } else if (action.equalsIgnoreCase(Utility.ACTION_CALL)) {
-//                                callToOtherUser(mActivityTaskSummaryBinding.getRoot(), providerModel.providerId);
+//                                callToOtherUser(mBinding.getRoot(), providerModel.providerId);
                                 Utility.openCustomerCareCallDialer(mContext, providerModel.sp_phone_number);
                             }
                             break;
                         case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
                             // Show Toast
-                            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityTaskSummaryBinding.getRoot());
+                            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
                             break;
                         case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
                             error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
                             // Show message
-                            Utility.showSnackBar(error_message, mActivityTaskSummaryBinding.getRoot());
+                            Utility.showSnackBar(error_message, mBinding.getRoot());
                             break;
                         case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
                         case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
@@ -1508,7 +1663,7 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
     private void callAcceptAdditionalPaymentRequest() {
         //Validation
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityTaskSummaryBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mBinding.getRoot());
             return;
         }
 
@@ -1551,13 +1706,13 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
                         // Show Toast
-                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityTaskSummaryBinding.getRoot());
+                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
                         hideProgressDialog();
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
                         String error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
                         // Show message
-                        Utility.showSnackBar(error_message, mActivityTaskSummaryBinding.getRoot());
+                        Utility.showSnackBar(error_message, mBinding.getRoot());
                         hideProgressDialog();
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
@@ -1591,7 +1746,7 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
             hideProgressDialog();
 
             // Show Toast
-            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityTaskSummaryBinding.getRoot());
+            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
         }
     };
 
@@ -1607,13 +1762,13 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
                     Integer count = dataSnapshot.getValue(Integer.class);
                     Log.d(TAG, "onDataChange() called with: dataSnapshot = Unread Counter [" + count + "]");
                     if (count <= 0) {
-                        mActivityTaskSummaryBinding.tvChatUnreadCount.setVisibility(View.GONE);
+                        mBinding.tvChatUnreadCount.setVisibility(View.GONE);
                     } else {
-                        mActivityTaskSummaryBinding.tvChatUnreadCount.setVisibility(View.VISIBLE);
-                        mActivityTaskSummaryBinding.tvChatUnreadCount.setText(String.valueOf(count));
+                        mBinding.tvChatUnreadCount.setVisibility(View.VISIBLE);
+                        mBinding.tvChatUnreadCount.setText(String.valueOf(count));
                     }
                 } else {
-                    mActivityTaskSummaryBinding.tvChatUnreadCount.setVisibility(View.GONE);
+                    mBinding.tvChatUnreadCount.setVisibility(View.GONE);
                 }
             }
 
@@ -1632,7 +1787,7 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
      */
     private void callAddToFavWS(String providerId, boolean isAddToFav) {
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityTaskSummaryBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mBinding.getRoot());
             return;
         }
 
@@ -1673,12 +1828,12 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
                         // Show Toast
-                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityTaskSummaryBinding.getRoot());
+                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
                         error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
                         // Show message
-                        Utility.showSnackBar(error_message, mActivityTaskSummaryBinding.getRoot());
+                        Utility.showSnackBar(error_message, mBinding.getRoot());
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
                     case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
@@ -1702,7 +1857,7 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
 
             // Close Progressbar
 //            hideProgressDialog();
-            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityTaskSummaryBinding.getRoot());
+            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
 
         }
     };
