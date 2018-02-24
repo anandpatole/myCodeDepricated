@@ -110,7 +110,7 @@ public class AddressTaskCreateAdapter<T> extends ArrayAdapter<T> {
                     : View.GONE
             );
             mHolder.mBinding.tvAddress.setVisibility(View.VISIBLE);
-            mHolder.mBinding.tvAddress.setText(addressModel.address_initials + ", " + addressModel.address);
+            mHolder.mBinding.tvAddress.setText(addressModel.getAddressWithInitials());
         }
 
        /* AddressModel model = mList.get(position);

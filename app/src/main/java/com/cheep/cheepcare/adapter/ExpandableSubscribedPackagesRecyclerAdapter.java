@@ -282,8 +282,7 @@ public class ExpandableSubscribedPackagesRecyclerAdapter extends ExpandableRecyc
                 else
                     mBinding.tvAddressNickname.setText(Utility.getAddressCategoryString(addressModel.category));
                 mBinding.ivAddressIcon.setImageResource(Utility.getAddressCategoryBlueIcon(addressModel.category));
-                mBinding.tvAddress.setText(addressModel.address_initials + ", " + addressModel.address);
-
+                mBinding.tvAddress.setText(addressModel.getAddressWithInitials());
                 String daysLeft = packageDetail.getDaysLeft(addressModel.end_date);
                 if (daysLeft != null) {
                     switch (daysLeft.length()) {

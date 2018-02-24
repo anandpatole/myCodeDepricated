@@ -47,12 +47,7 @@ public class AddressRecyclerViewAdapter extends RecyclerView.Adapter<AddressRecy
 
 //        holder.mRowAddressBinding.textAddressNickname.setText(model.name);
 
-        if ((!TextUtils.isEmpty(model.address_initials))
-                && !model.address_initials.isEmpty()) {
-            holder.mRowAddressBinding.textFullAddress.setText(model.address_initials + ", " + model.address);
-        } else {
-            holder.mRowAddressBinding.textFullAddress.setText(model.address);
-        }
+            holder.mRowAddressBinding.textFullAddress.setText(model.getAddressWithInitials());
 
         if (TextUtils.isEmpty(selected) && position == 0) {
             selected = model.address_id;

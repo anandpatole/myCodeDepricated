@@ -60,7 +60,8 @@ class DropDownAddressAdapter extends RecyclerView.Adapter<DropDownAddressAdapter
         holder.binding.llAddressContainer.setVisibility(View.VISIBLE);
         holder.binding.ivUpArrow.setVisibility(position == 0 ? View.VISIBLE : View.GONE);
 
-        holder.binding.tvAddress.setText(model.address_initials + ", " + model.address);
+        holder.binding.tvAddress.setText(model.getAddressWithInitials());
+
     }
 
     @Override

@@ -371,7 +371,7 @@ public class TaskCreationPhase2Fragment extends BaseFragment
 
                     mBinding.tvAddressNickname.setText(category);
 
-                    mBinding.tvAddress.setText(model.address_initials + ", " + model.address);
+                    mBinding.tvAddress.setText(model.getAddressWithInitials());
                     mSelectedAddress = model;
                 } else if (isClicked && mAddressList.get(position).is_subscribe.equals("0")) {
                     NotSubscribedAddressDialog.newInstance(mContext, TaskCreationPhase2Fragment.this);

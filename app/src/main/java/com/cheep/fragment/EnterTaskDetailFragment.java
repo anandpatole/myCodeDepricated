@@ -912,11 +912,7 @@ public class EnterTaskDetailFragment extends BaseFragment implements RequestPerm
                     AddressModel model = addressRecyclerViewAdapter.getSelectedAddress();
                     if (model != null) {
                         String address;
-                        if (!model.address_initials.isEmpty()) {
-                            address = model.address_initials + ", " + model.address;
-                        } else {
-                            address = model.address;
-                        }
+                        address = model.getAddressWithInitials();
                         updateWhereLabelWithIcon(true, address);
                         mSelectedAddressModel = model;
                         updateTaskVerificationFlags();

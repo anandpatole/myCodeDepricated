@@ -60,7 +60,7 @@ public class SelectedPackageSummaryAdapter extends LoadMoreRecyclerAdapter<Selec
         // set address category icon
         if (packageDetail.mSelectedAddressList != null && !packageDetail.mSelectedAddressList.isEmpty()) {
             holder.mBinding.ivAddressIcon.setImageResource(Utility.getAddressCategoryBlueIcon(packageDetail.mSelectedAddressList.get(0).category));
-            holder.mBinding.tvAddress.setText(packageDetail.mSelectedAddressList.get(0).address_initials + ", " + packageDetail.mSelectedAddressList.get(0).address);
+            holder.mBinding.tvAddress.setText(packageDetail.mSelectedAddressList.get(0).getAddressWithInitials());
         }
 
         holder.mBinding.ivIsAddressSelected.setSelected(packageDetail.isSelected);

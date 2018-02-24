@@ -1,6 +1,7 @@
 package com.cheep.model;
 
 import android.support.annotation.Keep;
+import android.text.TextUtils;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -41,6 +42,14 @@ public class AddressModel implements Serializable {
             e.printStackTrace();
         }
         return new LatLng(0, 0);
+    }
+
+
+    public String getAddressWithInitials() {
+        if (TextUtils.isEmpty(address_initials))
+            return address;
+        else
+            return address_initials + ", " + address;
     }
 }
 
