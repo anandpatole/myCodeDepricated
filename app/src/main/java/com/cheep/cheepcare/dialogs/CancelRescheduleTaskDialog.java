@@ -16,36 +16,39 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.cheep.R;
-import com.cheep.databinding.DialogLimitExceedBinding;
-import com.cheep.dialogs.AcknowledgementInteractionListener;
+import com.cheep.databinding.DialogCancelRescheduleTaskBinding;
 import com.cheep.utils.LogUtils;
-import com.cheep.utils.Utility;
 
-public class LimitExceededDialog extends DialogFragment {
-    public static final String TAG = LimitExceededDialog.class.getSimpleName();
-    private DialogLimitExceedBinding mDialogFragmentAcknowledgementBinding;
-    private AcknowledgementInteractionListener mListener;
-    private String mCarePackageName;
+public class CancelRescheduleTaskDialog extends DialogFragment {
+    public static final String TAG = CancelRescheduleTaskDialog.class.getSimpleName();
+    private DialogCancelRescheduleTaskBinding mBinding;
+    private DialogInteractionListener mListener;
 
     /*
     Empty Constructor
      */
-    public LimitExceededDialog() {
+    public CancelRescheduleTaskDialog() {
 
     }
+
+    public interface DialogInteractionListener {
+        void cancelTaskClicked();
+
+        void rescheduleTaskClicked();
+
+        void onBackPressed();
+    }
+
 
     /**
      * Create a new instance of MyDialogFragment, providing "num"
      * as an argument.
      */
-    public static LimitExceededDialog newInstance(Context context, String carePackageName, AcknowledgementInteractionListener listener) {
-        LimitExceededDialog f = new LimitExceededDialog();
+    public static CancelRescheduleTaskDialog newInstance(Context context, DialogInteractionListener listener) {
+        CancelRescheduleTaskDialog f = new CancelRescheduleTaskDialog();
         f.setListener(listener);
-        Bundle args = new Bundle();
-        args.putString(Utility.Extra.DATA, carePackageName);
-        f.setArguments(args);
         f.setCancelable(true);
-        f.show(((AppCompatActivity) context).getSupportFragmentManager(), LimitExceededDialog.TAG);
+        f.show(((AppCompatActivity) context).getSupportFragmentManager(), CancelRescheduleTaskDialog.TAG);
         // Supply num input as an argument.
         return f;
     }
@@ -55,14 +58,13 @@ public class LimitExceededDialog extends DialogFragment {
      *
      * @param listener
      */
-    public void setListener(AcknowledgementInteractionListener listener) {
+    public void setListener(DialogInteractionListener listener) {
         this.mListener = listener;
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mCarePackageName = getArguments().getString(Utility.Extra.DATA);
 
     }
 
@@ -73,22 +75,41 @@ public class LimitExceededDialog extends DialogFragment {
         if (getDialog() != null) {
             getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         }
-        mDialogFragmentAcknowledgementBinding = DataBindingUtil.inflate(inflater, R.layout.dialog_limit_exceed, container, false);
+        mBinding = DataBindingUtil.inflate(inflater, R.layout.dialog_cancel_reschedule_task, container, false);
 
-        mDialogFragmentAcknowledgementBinding.tvMessage.setText(getString(R.string.msg_limit_exceed_desc, mCarePackageName));
 
-        // Click event of Okay button
-        mDialogFragmentAcknowledgementBinding.textOkay.setOnClickListener(new View.OnClickListener() {
+        mBinding.ivBackButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Callback to activity
-                mListener.onAcknowledgementAccepted();
-
-                // Dissmiss the dialog.
+                mListener.onBackPressed();
                 dismiss();
             }
         });
-        return mDialogFragmentAcknowledgementBinding.getRoot();
+
+        // Click event of yes button
+        mBinding.tvYes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Callback to activity
+                mListener.cancelTaskClicked();
+
+                // Dismiss the dialog.
+                dismiss();
+            }
+        });
+
+        // Click event of yes button
+        mBinding.tvRescheduleTask.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Callback to activity
+                mListener.rescheduleTaskClicked();
+
+                // Dismiss the dialog.
+                dismiss();
+            }
+        });
+        return mBinding.getRoot();
     }
 
     @Override

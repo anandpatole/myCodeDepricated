@@ -19,8 +19,6 @@ import com.cheep.databinding.FragmentSelectSubCategoryBinding;
 import com.cheep.dialogs.AcknowledgementInteractionListener;
 import com.cheep.fragment.BaseFragment;
 import com.cheep.model.SubServiceDetailModel;
-import com.cheep.network.NetworkUtility;
-import com.cheep.network.Volley;
 import com.cheep.utils.LogUtils;
 
 import java.util.ArrayList;
@@ -34,7 +32,6 @@ public class FreeSubCategoryFragment extends BaseFragment {
     public static final String TAG = FreeSubCategoryFragment.class.getSimpleName();
     private FragmentSelectSubCategoryBinding mBinding;
     private FreeServicesAdapter mFreeServicesAdapter;
-//    ErrorLoadingHelper errorLoadingHelper;
     private TaskCreationCCActivity mTaskCreationCCActivity;
     private boolean isVerified = false;
 
@@ -62,7 +59,7 @@ public class FreeSubCategoryFragment extends BaseFragment {
     }
 
 
-    @Override
+   /* @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         Log.d(TAG, "setUserVisibleHint() called with: isVisibleToUser = [" + isVisibleToUser + "]");
@@ -78,20 +75,18 @@ public class FreeSubCategoryFragment extends BaseFragment {
 
         // Hide the post task button
         mTaskCreationCCActivity.showPostTaskButton(true, true);
-    }
+    }*/
 
     @Override
     public void initiateUI() {
         Log.d(TAG, "initiateUI() called");
 
         //Setting recycler view
-//        errorLoadingHelper = new ErrorLoadingHelper(mBinding.recyclerView);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mContext);
         mBinding.recyclerView.setLayoutManager(linearLayoutManager);
         mFreeServicesAdapter = new FreeServicesAdapter(mFreeItemInteractionListener);
         mBinding.recyclerView.setAdapter(mFreeServicesAdapter);
-//        errorLoadingHelper.showLoading();
 //        fetchListOfSubCategory(mTaskCreationCCActivity.mJobCategoryModel.catId);
     }
 
@@ -136,9 +131,6 @@ public class FreeSubCategoryFragment extends BaseFragment {
         }
     }
 
-
-
-
     /**
      * This method would return the selected list by getting
      * from adapter
@@ -153,12 +145,6 @@ public class FreeSubCategoryFragment extends BaseFragment {
         mFreeServicesAdapter.addAll(list);
     }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.WS.FETCH_SUB_SERVICE_LIST);
-    }
-
     private final FreeServicesAdapter.ItemInteractionListener mFreeItemInteractionListener =
             new FreeServicesAdapter.ItemInteractionListener() {
                 @Override
@@ -170,15 +156,13 @@ public class FreeSubCategoryFragment extends BaseFragment {
     private void showLimitExceedDialog() {
         LogUtils.LOGE(TAG, "showLimitExceedDialog: ");
         // TODO remove dummy name in dialog params
-        LimitExceededDialog limitExceededDialog = LimitExceededDialog.newInstance("Appliance Care",
+        LimitExceededDialog.newInstance(mContext, "Appliance Care",
                 new AcknowledgementInteractionListener() {
 
                     @Override
                     public void onAcknowledgementAccepted() {
                     }
                 });
-        limitExceededDialog.setCancelable(true);
-        limitExceededDialog.show(getChildFragmentManager(), LimitExceededDialog.TAG);
     }
 
 }

@@ -10,10 +10,8 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
             android:layout_marginLeft="@dimen/scale_15dp"
-            android:layout_marginRight="@dimen/scale_15dp"
-            android:orientation="vertical">
+            android:layout_marginRight="@dimen/scale_15dp">
 
             <ImageView
                 android:id="@+id/img_header"
@@ -21,6 +19,7 @@
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
                 android:background="@drawable/rounded_top_part_only_fill_white_5x5"
+                android:focusableInTouchMode="true"
                 android:src="@drawable/dialog_top_probird_unknown_face"
                 tools:ignore="ContentDescription" />
 
@@ -45,17 +44,21 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="@dimen/scale_24dp"
+                    android:layout_marginRight="@dimen/scale_24dp"
                     android:layout_marginTop="@dimen/scale_8dp"
+                    android:gravity="center"
                     android:text="@string/label_title_someone_will_attend"
                     android:textColor="@color/grey_varient_8"
                     android:textSize="@dimen/text_size_18sp" />
 
-                <com.cheep.custom_view.CFTextViewSemiBold
+                <com.cheep.custom_view.CFTextViewRegular
                     android:id="@+id/tv_message"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="@dimen/scale_8dp"
+                    android:layout_marginBottom="@dimen/scale_4dp"
+                    android:layout_marginTop="@dimen/scale_4dp"
                     android:gravity="left"
                     android:padding="@dimen/scale_8dp"
                     android:text="@string/msg_someone_will_attend"
@@ -63,10 +66,12 @@
                     android:textSize="@dimen/text_size_11sp" />
 
                 <com.cheep.custom_view.CFEditTextRegular
-                    android:id="@+id/edt_mobile_number"
+                    android:id="@+id/et_person_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/scale_12dp"
+                    android:layout_marginBottom="@dimen/scale_8dp"
+                    android:layout_marginLeft="@dimen/scale_8dp"
+                    android:layout_marginRight="@dimen/scale_8dp"
                     android:gravity="left"
                     android:hint="@string/hint_enter_name_of_person"
                     android:padding="@dimen/scale_12dp"
@@ -78,19 +83,20 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/scale_1dp"
-                    android:layout_marginTop="@dimen/scale_20dp"
+                    android:layout_marginTop="@dimen/scale_15dp"
                     android:background="@color/grey_dark_color_2" />
 
                 <com.cheep.custom_view.CFTextViewSemiBold
                     android:id="@+id/text_okay"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_marginBottom="@dimen/scale_20dp"
-                    android:layout_marginTop="@dimen/scale_20dp"
+                    android:layout_marginBottom="@dimen/scale_15dp"
+                    android:layout_marginTop="@dimen/scale_15dp"
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="@string/label_Ok_small"
-                    android:textColor="@color/splash_gradient_end" />
+                    android:textColor="@color/splash_gradient_end"
+                    android:textSize="@dimen/text_size_16sp" />
             </LinearLayout>
 
         </RelativeLayout>

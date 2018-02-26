@@ -52,6 +52,7 @@ import com.cheep.fragment.BaseFragment;
 import com.cheep.model.AddressModel;
 import com.cheep.model.GuestUserDetails;
 import com.cheep.model.ProviderModel;
+import com.cheep.model.SubServiceDetailModel;
 import com.cheep.model.UserDetails;
 import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
@@ -84,11 +85,8 @@ import static android.app.Activity.RESULT_OK;
  * Created by bhavesh on 28/4/17.
  */
 
-public class TaskCreationPhase2Fragment extends BaseFragment
-        implements
-        RequestPermission.OnRequestPermissionResult
-        , SelectSpecificTimeDialog.DialogInteractionListener
-        , NotSubscribedAddressDialog.DialogInteractionListener {
+public class TaskCreationPhase2Fragment extends BaseFragment implements
+        RequestPermission.OnRequestPermissionResult {
 
     public static final String TAG = TaskCreationPhase2Fragment.class.getSimpleName();
     private FragmentTaskCreationPhase2Binding mBinding;
@@ -97,6 +95,7 @@ public class TaskCreationPhase2Fragment extends BaseFragment
 
     public boolean isTaskDescriptionVerified = false;
     public boolean isTaskWhereVerified = false;
+    public boolean isTaskWhenAdded = false;
 
     public MediaRecycleAdapter mMediaRecycleAdapter;
     // For When
@@ -157,13 +156,16 @@ public class TaskCreationPhase2Fragment extends BaseFragment
             return;
         }
 
-//        if (mTaskCreationCCActivity.getSelectedSubService() == null) {
-//            return;
-//        }
+        if (mTaskCreationCCActivity.getSelectedSubServices() == null) {
+            return;
+        }
 
-        // Task Description
-//        isTaskDescriptionVerified = mTaskCreationCCActivity.getSelectedSubService().sub_cat_id != -1 ||
-//                !TextUtils.isEmpty(mBinding.editTaskDesc.getText().toString().trim());
+        if (!mTaskCreationCCActivity.getSelectedSubServices().isEmpty())
+            for (SubServiceDetailModel model : mTaskCreationCCActivity.getSelectedSubServices()) {
+                // Task Description
+                isTaskDescriptionVerified = model.sub_cat_id != -1 ||
+                        !TextUtils.isEmpty(mBinding.editTaskDesc.getText().toString().trim());
+            }
 
         // When Verification
 //        isTaskWhenVerified = !TextUtils.isEmpty(mBinding.textTaskWhen.getText().toString().trim());
@@ -175,7 +177,7 @@ public class TaskCreationPhase2Fragment extends BaseFragment
     }
 
     private void updateFinalVerificationFlag() {
-        if (/*isTaskDescriptionVerified && isTaskWhenVerified && */isTaskWhereVerified) {
+        if (isTaskDescriptionVerified &&/* isTaskWhenVerified && */ isTaskWhereVerified) {
             isTotalVerified = true;
             mTaskCreationCCActivity.setTaskState(TaskCreationCCActivity.STEP_TWO_VERIFIED);
         } else {
@@ -374,7 +376,7 @@ public class TaskCreationPhase2Fragment extends BaseFragment
                     mBinding.tvAddress.setText(model.getAddressWithInitials());
                     mSelectedAddress = model;
                 } else if (isClicked && mAddressList.get(position).is_subscribe.equals("0")) {
-                    NotSubscribedAddressDialog.newInstance(mContext, TaskCreationPhase2Fragment.this);
+                    NotSubscribedAddressDialog.newInstance(mContext, notSubscribedInteractionListener);
                 }
             }
 
@@ -751,7 +753,7 @@ public class TaskCreationPhase2Fragment extends BaseFragment
                     // On Click event of When
 //                    Utility.hideKeyboard(mContext, mBinding.editTaskDesc);
                     if (!isDialogOnceShown) {
-                        SelectSpecificTimeDialog.newInstance(mContext, TaskCreationPhase2Fragment.this);
+                        SelectSpecificTimeDialog.newInstance(mContext, specificTimeInteractionListener);
                     } else {
                         showDateTimePickerDialog();
                     }
@@ -795,7 +797,6 @@ public class TaskCreationPhase2Fragment extends BaseFragment
         }
 
         // async task for uploading file on amazon
-
 //        new AsyncTask<Void, Void, Void>() {
 
         // thumb folder path for s3 amazon
@@ -866,27 +867,35 @@ public class TaskCreationPhase2Fragment extends BaseFragment
 
     }
 
-    @Override
-    public void onSelectTimeClicked() {
-        Log.d(TAG, "onSelectTimeClicked() called");
-        showDateTimePickerDialog();
-    }
+    private final SelectSpecificTimeDialog.DialogInteractionListener specificTimeInteractionListener =
+            new SelectSpecificTimeDialog.DialogInteractionListener() {
+                @Override
+                public void onSelectTimeClicked() {
+                    Log.d(TAG, "onSelectTimeClicked() called");
+                    showDateTimePickerDialog();
+                }
 
-    @Override
-    public void onNoThanksClicked() {
-        Log.d(TAG, "onNoThanksClicked() called");
-        updateWhenLabelWithIcon(false, Utility.EMPTY_STRING);
-    }
+                @Override
+                public void onNoThanksClicked() {
+                    Log.d(TAG, "onNoThanksClicked() called");
+                    updateWhenLabelWithIcon(false, Utility.EMPTY_STRING);
+                }
 
-    @Override
-    public void onSubscribeClicked() {
-        Log.d(TAG, "onSubscribeClicked() called");
-    }
+            };
 
-    @Override
-    public void onNotNowClicked() {
-        Log.d(TAG, "onNotNowClicked() called");
-    }
+    private final NotSubscribedAddressDialog.DialogInteractionListener notSubscribedInteractionListener =
+            new NotSubscribedAddressDialog.DialogInteractionListener() {
+                @Override
+                public void onSubscribeClicked() {
+                    Log.d(TAG, "onSubscribeClicked() called");
+                }
+
+                @Override
+                public void onNotNowClicked() {
+                    Log.d(TAG, "onNotNowClicked() called");
+                }
+
+            };
 
     private class UploadListener implements TransferListener {
         String s3PathThumb, s3pathOriginal, type, localFilePath;
@@ -988,7 +997,7 @@ public class TaskCreationPhase2Fragment extends BaseFragment
         datePickerDialog.show();
     }
 
-    public SuperCalendar superCalendar;
+    private SuperCalendar superCalendar;
 
     private void showTimePickerDialog() {
         // Get Current Time
@@ -1034,6 +1043,7 @@ public class TaskCreationPhase2Fragment extends BaseFragment
                                         + getString(R.string.label_at)
                                         + startDateTimeSuperCalendar.format(Utility.DATE_FORMAT_HH_MM_AM);
                                 updateWhenLabelWithIcon(true, selectedDateTime);
+                                isTaskWhenAdded = true;
                                 updateTaskVerificationFlags();
                             } else {
                                 updateWhenLabelWithIcon(false, Utility.EMPTY_STRING);

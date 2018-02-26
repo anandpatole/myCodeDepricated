@@ -19,13 +19,11 @@ import com.cheep.databinding.FragmentSelectSubCategoryBinding;
 import com.cheep.dialogs.AcknowledgementInteractionListener;
 import com.cheep.fragment.BaseFragment;
 import com.cheep.model.SubServiceDetailModel;
-import com.cheep.network.NetworkUtility;
-import com.cheep.network.Volley;
-import com.cheep.utils.ErrorLoadingHelper;
 import com.cheep.utils.LogUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+
 
 /**
  * Created by bhavesh on 28/4/17.
@@ -35,7 +33,7 @@ public class PaidSubCategoryFragment extends BaseFragment {
     public static final String TAG = PaidSubCategoryFragment.class.getSimpleName();
     private FragmentSelectSubCategoryBinding mBinding;
     private PaidServicesAdapter mPaidServicesAdapter;
-    ErrorLoadingHelper errorLoadingHelper;
+    //    ErrorLoadingHelper errorLoadingHelper;
     private TaskCreationCCActivity mTaskCreationCCActivity;
     private boolean isVerified = false;
 
@@ -61,7 +59,7 @@ public class PaidSubCategoryFragment extends BaseFragment {
     }
 
 
-    @Override
+   /* @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         Log.d(TAG, "setUserVisibleHint() called with: isVisibleToUser = [" + isVisibleToUser + "]");
@@ -77,7 +75,7 @@ public class PaidSubCategoryFragment extends BaseFragment {
 
         // Hide the post task button
         mTaskCreationCCActivity.showPostTaskButton(true, true);
-    }
+    }*/
 
     public void setSubCatList(ArrayList<SubServiceDetailModel> list) {
         mPaidServicesAdapter.addAll(list);
@@ -88,14 +86,13 @@ public class PaidSubCategoryFragment extends BaseFragment {
         Log.d(TAG, "initiateUI() called");
 
         //Setting recycler view
-        errorLoadingHelper = new ErrorLoadingHelper(mBinding.recyclerView);
+//        errorLoadingHelper = new ErrorLoadingHelper(mBinding.recyclerView);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mContext);
         mBinding.recyclerView.setLayoutManager(linearLayoutManager);
         mPaidServicesAdapter = new PaidServicesAdapter(mFreeItemInteractionListener);
         mBinding.recyclerView.setAdapter(mPaidServicesAdapter);
 //        errorLoadingHelper.showLoading();
-//        fetchListOfSubCategory(mTaskCreationCCActivity.mJobCategoryModel.catId);
     }
 
 
@@ -140,6 +137,7 @@ public class PaidSubCategoryFragment extends BaseFragment {
         }
     }
 
+
     /**
      * This method would return the selected list by getting
      * from adapter
@@ -148,12 +146,6 @@ public class PaidSubCategoryFragment extends BaseFragment {
      */
     public List<SubServiceDetailModel> getSelectedSubServices() {
         return mPaidServicesAdapter.getSelectedList();
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.WS.FETCH_SUB_SERVICE_LIST);
     }
 
     private final PaidServicesAdapter.ItemInteractionListener mFreeItemInteractionListener =
@@ -167,15 +159,13 @@ public class PaidSubCategoryFragment extends BaseFragment {
     private void showLimitExceedDialog() {
         LogUtils.LOGE(TAG, "showLimitExceedDialog: ");
         // TODO remove dummy name in dialog params
-        LimitExceededDialog limitExceededDialog = LimitExceededDialog.newInstance("Appliance Care",
+        LimitExceededDialog.newInstance(mContext, "Appliance Care",
                 new AcknowledgementInteractionListener() {
 
                     @Override
                     public void onAcknowledgementAccepted() {
                     }
                 });
-        limitExceededDialog.setCancelable(true);
-        limitExceededDialog.show(getChildFragmentManager(), LimitExceededDialog.TAG);
     }
 
 }
