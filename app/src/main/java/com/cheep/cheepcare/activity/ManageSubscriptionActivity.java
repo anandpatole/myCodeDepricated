@@ -261,15 +261,7 @@ public class ManageSubscriptionActivity extends BaseAppCompatActivity {
                                 addressModel = addressModel1;
                         }
                     }
-//                    CheepCareNotInYourCityDialog cheepCareNotInYourCityDialog =CheepCareNotInYourCityDialog.newInstance(new AcknowledgementInteractionListener() {
-//                        @Override
-//                        public void onAcknowledgementAccepted() {
-//
-//                        }
-//                    });
-//                    cheepCareNotInYourCityDialog.show(getSupportFragmentManager(),CheepCareNotInYourCityDialog.TAG);
                     TaskCreationCCActivity.getInstance(mContext, model, addressModel, packageDetail.packageType, packageDetail.id);
-//                    BookingConfirmationCcActivity.newInstance(mContext,null);
                 }
             };
 

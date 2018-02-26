@@ -27,6 +27,7 @@ import android.widget.ListView;
 import android.widget.PopupWindow;
 
 import com.cheep.R;
+import com.cheep.cheepcare.activity.TaskCreationCCActivity;
 import com.cheep.cheepcare.model.PackageDetail;
 import com.cheep.custom_view.expandablerecycleview.ChildViewHolder;
 import com.cheep.custom_view.expandablerecycleview.ExpandableRecyclerAdapter;
@@ -139,13 +140,25 @@ public class ExpandableSubscribedPackagesRecyclerAdapter extends ExpandableRecyc
                     , 0
                     , 0);
         }
-        if (mList.get(parentPosition).packageSlug.equalsIgnoreCase(NetworkUtility.CARE_PACKAGE_SLUG.APPLIANCE_CARE) || mList.get(parentPosition).packageSlug.equalsIgnoreCase(NetworkUtility.CARE_PACKAGE_SLUG.TECH_CARE)) {
-            parentViewHolder.setIsExpandable(false);
-            parentViewHolder.setExpanded(false);
-        } else {
-            parentViewHolder.mBinding.getRoot().setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(final View v) {
+        parentViewHolder.mBinding.getRoot().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View v) {
+
+                if (mList.get(parentPosition).packageSlug.equalsIgnoreCase(NetworkUtility.CARE_PACKAGE_SLUG.APPLIANCE_CARE) || mList.get(parentPosition).packageSlug.equalsIgnoreCase(NetworkUtility.CARE_PACKAGE_SLUG.TECH_CARE)) {
+                    parentViewHolder.setIsExpandable(false);
+                    parentViewHolder.setExpanded(false);
+                    AddressModel addressModel = null;
+                    if (mList.get(parentPosition).mSelectedAddressList != null) {
+                        if (mList.get(parentPosition).mSelectedAddressList != null) {
+                            for (AddressModel addressModel1 : mList.get(parentPosition).mSelectedAddressList) {
+                                if (addressModel1.isSelected)
+                                    addressModel = addressModel1;
+                            }
+                        }
+                    }
+                    TaskCreationCCActivity.getInstance(parentViewHolder.mBinding.cardView.getContext(), mList.get(parentPosition).getChildList().get(0), addressModel, mList.get(parentPosition).packageType, mList.get(parentPosition).id);
+
+                } else {
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
@@ -177,11 +190,10 @@ public class ExpandableSubscribedPackagesRecyclerAdapter extends ExpandableRecyc
                         }
                     }, 80);
                     parentViewHolder.onClick(v);
-
                 }
-            });
+            }
+        });
 
-        }
         parentViewHolder.bind(parent);
     }
 
@@ -218,7 +230,6 @@ public class ExpandableSubscribedPackagesRecyclerAdapter extends ExpandableRecyc
         ParentCategoryViewHolder(@NonNull RowPackageCareItemBinding binding, int viewType) {
             // init views
             super(binding.getRoot());
-
 
 
             mBinding = binding;
