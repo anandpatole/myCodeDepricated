@@ -68,7 +68,7 @@
                     android:orientation="horizontal">
 
                     <com.cheep.custom_view.CFTextViewSemiBold
-                        android:id="@+id/tv_subscribe_now"
+                        android:id="@+id/tv_yes"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
@@ -86,7 +86,7 @@
                         android:background="@color/grey_dark_color_8" />
 
                     <com.cheep.custom_view.CFTextViewSemiBold
-                        android:id="@+id/tv_not_now"
+                        android:id="@+id/tv_reschedule_task"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"

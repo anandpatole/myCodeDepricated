@@ -12,8 +12,6 @@ import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.cheep.R;
 import com.cheep.activity.BaseAppCompatActivity;
 import com.cheep.cheepcare.adapter.TaskCreationPagerAdapter;
@@ -49,24 +47,15 @@ public class TaskCreationCCActivity extends BaseAppCompatActivity {
     private boolean isInstaBooking = false;
     public AddressModel mAddressModel;
     public String mPackageType;
-    private Response.ErrorListener mErrorListener = new Response.ErrorListener() {
-        @Override
-        public void onErrorResponse(VolleyError error) {
-            Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
+    public String mCarePackageId;
 
-            // Close Progressbar
-            hideProgressDialog();
-
-            // Show Toast
-            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
-        }
-    };
-
-    public static void getInstance(Context mContext, JobCategoryModel model, AddressModel addressModel, String packageType) {
+    public static void getInstance(Context mContext, JobCategoryModel model, AddressModel addressModel, String packageType
+            , String carePackageId) {
         Intent intent = new Intent(mContext, TaskCreationCCActivity.class);
         intent.putExtra(Utility.Extra.DATA, Utility.getJsonStringFromObject(model));
-        intent.putExtra(Utility.Extra.DATA_2, Utility.getJsonStringFromObject(packageType));
+        intent.putExtra(Utility.Extra.DATA_2, packageType);
         intent.putExtra(Utility.Extra.SELECTED_ADDRESS_MODEL, Utility.getJsonStringFromObject(addressModel));
+        intent.putExtra(Utility.Extra.SELECTED_PACKAGE_ID, carePackageId);
         mContext.startActivity(intent);
     }
 
@@ -85,6 +74,7 @@ public class TaskCreationCCActivity extends BaseAppCompatActivity {
             // Fetch JobCategory Model
             mJobCategoryModel = (JobCategoryModel) Utility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA), JobCategoryModel.class);
             mPackageType = getIntent().getStringExtra(Utility.Extra.DATA_2);
+            mCarePackageId = getIntent().getStringExtra(Utility.Extra.SELECTED_PACKAGE_ID);
             mAddressModel = (AddressModel) Utility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.SELECTED_ADDRESS_MODEL), AddressModel.class);
         }
 

@@ -33,6 +33,7 @@ import com.android.volley.VolleyError;
 import com.cheep.R;
 import com.cheep.adapter.SelectedSubCatSummaryAdapter;
 import com.cheep.cheepcare.activity.RateAndReviewActivity;
+import com.cheep.cheepcare.dialogs.CancelRescheduleTaskDialog;
 import com.cheep.cheepcare.dialogs.SomeoneElseWillAttendDialog;
 import com.cheep.cheepcare.dialogs.UserAvailabilityDialog;
 import com.cheep.cheepcare.dialogs.UserAvailableDialog;
@@ -430,6 +431,7 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
                 @Override
                 public void cancelTaskClicked() {
                     Log.d(TAG, "cancelTaskClicked() called");
+                    CancelRescheduleTaskDialog.newInstance(mContext, cancelRescheduleTaskListener);
                 }
 
                 @Override
@@ -444,6 +446,24 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
                 @Override
                 public void okClicked(String personName) {
                     Log.d(TAG, "okClicked() called with: personName = [" + personName + "]");
+                }
+
+                @Override
+                public void onBackPressed() {
+                    UserAvailabilityDialog.newInstance(mContext, userAvailabilityListener);
+                }
+            };
+
+    private final CancelRescheduleTaskDialog.DialogInteractionListener cancelRescheduleTaskListener =
+            new CancelRescheduleTaskDialog.DialogInteractionListener() {
+                @Override
+                public void cancelTaskClicked() {
+                    Log.d(TAG, "cancelTaskClicked() called");
+                }
+
+                @Override
+                public void rescheduleTaskClicked() {
+                    showDateTimePickerDialog();
                 }
 
                 @Override

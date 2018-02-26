@@ -16,14 +16,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.cheep.R;
-import com.cheep.databinding.DialogUserAvailableBinding;
-import com.cheep.dialogs.AcknowledgementInteractionListener;
+import com.cheep.databinding.DialogCancelRescheduleTaskBinding;
 import com.cheep.utils.LogUtils;
 
 public class CancelRescheduleTaskDialog extends DialogFragment {
     public static final String TAG = CancelRescheduleTaskDialog.class.getSimpleName();
-    private DialogUserAvailableBinding mBinding;
-    private AcknowledgementInteractionListener mListener;
+    private DialogCancelRescheduleTaskBinding mBinding;
+    private DialogInteractionListener mListener;
 
     /*
     Empty Constructor
@@ -33,9 +32,11 @@ public class CancelRescheduleTaskDialog extends DialogFragment {
     }
 
     public interface DialogInteractionListener {
-        void cancelTask();
+        void cancelTaskClicked();
 
         void rescheduleTaskClicked();
+
+        void onBackPressed();
     }
 
 
@@ -43,7 +44,7 @@ public class CancelRescheduleTaskDialog extends DialogFragment {
      * Create a new instance of MyDialogFragment, providing "num"
      * as an argument.
      */
-    public static CancelRescheduleTaskDialog newInstance(Context context, AcknowledgementInteractionListener listener) {
+    public static CancelRescheduleTaskDialog newInstance(Context context, DialogInteractionListener listener) {
         CancelRescheduleTaskDialog f = new CancelRescheduleTaskDialog();
         f.setListener(listener);
         f.setCancelable(true);
@@ -57,7 +58,7 @@ public class CancelRescheduleTaskDialog extends DialogFragment {
      *
      * @param listener
      */
-    public void setListener(AcknowledgementInteractionListener listener) {
+    public void setListener(DialogInteractionListener listener) {
         this.mListener = listener;
     }
 
@@ -74,16 +75,37 @@ public class CancelRescheduleTaskDialog extends DialogFragment {
         if (getDialog() != null) {
             getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         }
-        mBinding = DataBindingUtil.inflate(inflater, R.layout.dialog_user_available, container, false);
+        mBinding = DataBindingUtil.inflate(inflater, R.layout.dialog_cancel_reschedule_task, container, false);
 
-        // Click event of Okay button
-        mBinding.textOkay.setOnClickListener(new View.OnClickListener() {
+
+        mBinding.ivBackButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mListener.onBackPressed();
+                dismiss();
+            }
+        });
+
+        // Click event of yes button
+        mBinding.tvYes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //Callback to activity
-                mListener.onAcknowledgementAccepted();
+                mListener.cancelTaskClicked();
 
-                // Dissmiss the dialog.
+                // Dismiss the dialog.
+                dismiss();
+            }
+        });
+
+        // Click event of yes button
+        mBinding.tvRescheduleTask.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Callback to activity
+                mListener.rescheduleTaskClicked();
+
+                // Dismiss the dialog.
                 dismiss();
             }
         });

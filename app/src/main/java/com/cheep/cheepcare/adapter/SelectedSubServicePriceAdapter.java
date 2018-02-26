@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.cheep.R;
-import com.cheep.databinding.RowSelectedSubServiceBinding;
 import com.cheep.databinding.RowSelectedSubServicePriceBinding;
 import com.cheep.model.SubServiceDetailModel;
 
@@ -40,7 +39,7 @@ public class SelectedSubServicePriceAdapter extends RecyclerView.Adapter<Selecte
             holder.mBinding.txtVerticalLine.setVisibility(View.GONE);
         }
         holder.mBinding.tvSubService.setText(mList.get(holder.getAdapterPosition()).name);
-        holder.mBinding.tvSubServicePrice.setText(mList.get(holder.getAdapterPosition()).monthlyPrice);
+        holder.mBinding.tvSubServicePrice.setText(mList.get(holder.getAdapterPosition()).unitPrice);
     }
 
     @Override

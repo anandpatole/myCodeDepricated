@@ -33,5 +33,5 @@ public class SubServiceDetailModel implements Serializable {
 
     public List<SubServiceDetailModel> subServiceList;
 
-    public int qty;
+    public int qty = 1;
 }

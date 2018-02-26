@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 
+import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.cheep.R;
@@ -265,7 +266,7 @@ public class ManageSubscriptionActivity extends BaseAppCompatActivity {
 //                    });
 //                    cheepCareNotInYourCityDialog.show(getSupportFragmentManager(),CheepCareNotInYourCityDialog.TAG);
 
-                    TaskCreationCCActivity.getInstance(mContext, model, addressModel,packageDetail.packageType);
+                    TaskCreationCCActivity.getInstance(mContext, model, addressModel, packageDetail.packageType);
 //                    BookingConfirmationCcActivity.newInstance(mContext,null);
                 }
             };
@@ -282,7 +283,7 @@ public class ManageSubscriptionActivity extends BaseAppCompatActivity {
     private final WebCallClass.CommonResponseListener mCommonResponseListener =
             new WebCallClass.CommonResponseListener() {
                 @Override
-                public void volleyError() {
+                public void volleyError(VolleyError error) {
                     hideProgressDialog();
                     Utility.showToast(mContext, getString(R.string.label_something_went_wrong));
                 }

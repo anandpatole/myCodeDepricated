@@ -1,5 +1,6 @@
 package com.cheep.cheepcare.adapter;
 
+import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -9,6 +10,7 @@ import android.view.ViewGroup;
 import com.cheep.R;
 import com.cheep.databinding.RowSelectedSubServiceBinding;
 import com.cheep.model.SubServiceDetailModel;
+import com.cheep.utils.Utility;
 
 import java.util.List;
 
@@ -36,10 +38,15 @@ public class SelectedSubServiceAdapter extends RecyclerView.Adapter<SelectedSubS
 
     @Override
     public void onBindViewHolder(SelectedSubServiceViewHolder holder, int position) {
+        SubServiceDetailModel model = mList.get(holder.getAdapterPosition());
+        Context context = holder.mBinding.getRoot().getContext();
+
         if (holder.getAdapterPosition() == (mList.size() - 1)) {
             holder.mBinding.txtVerticalLine.setVisibility(View.GONE);
         }
-        holder.mBinding.tvSubService.setText(mList.get(holder.getAdapterPosition()).name);
+        String subServiceText = model.name + Utility.ONE_CHARACTER_SPACE +
+                context.getString(R.string.number_of_services, String.valueOf(model.qty));
+        holder.mBinding.tvSubService.setText(subServiceText);
     }
 
     @Override

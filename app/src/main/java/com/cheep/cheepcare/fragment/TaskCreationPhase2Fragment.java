@@ -52,6 +52,7 @@ import com.cheep.fragment.BaseFragment;
 import com.cheep.model.AddressModel;
 import com.cheep.model.GuestUserDetails;
 import com.cheep.model.ProviderModel;
+import com.cheep.model.SubServiceDetailModel;
 import com.cheep.model.UserDetails;
 import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
@@ -94,6 +95,7 @@ public class TaskCreationPhase2Fragment extends BaseFragment implements
 
     public boolean isTaskDescriptionVerified = false;
     public boolean isTaskWhereVerified = false;
+    public boolean isTaskWhenAdded = false;
 
     public MediaRecycleAdapter mMediaRecycleAdapter;
     // For When
@@ -154,13 +156,16 @@ public class TaskCreationPhase2Fragment extends BaseFragment implements
             return;
         }
 
-//        if (mTaskCreationCCActivity.getSelectedSubService() == null) {
-//            return;
-//        }
+        if (mTaskCreationCCActivity.getSelectedSubServices() == null) {
+            return;
+        }
 
-        // Task Description
-//        isTaskDescriptionVerified = mTaskCreationCCActivity.getSelectedSubService().sub_cat_id != -1 ||
-//                !TextUtils.isEmpty(mBinding.editTaskDesc.getText().toString().trim());
+        if (!mTaskCreationCCActivity.getSelectedSubServices().isEmpty())
+            for (SubServiceDetailModel model : mTaskCreationCCActivity.getSelectedSubServices()) {
+                // Task Description
+                isTaskDescriptionVerified = model.sub_cat_id != -1 ||
+                        !TextUtils.isEmpty(mBinding.editTaskDesc.getText().toString().trim());
+            }
 
         // When Verification
 //        isTaskWhenVerified = !TextUtils.isEmpty(mBinding.textTaskWhen.getText().toString().trim());
@@ -172,7 +177,7 @@ public class TaskCreationPhase2Fragment extends BaseFragment implements
     }
 
     private void updateFinalVerificationFlag() {
-        if (/*isTaskDescriptionVerified && isTaskWhenVerified && */isTaskWhereVerified) {
+        if (isTaskDescriptionVerified &&/* isTaskWhenVerified && */ isTaskWhereVerified) {
             isTotalVerified = true;
             mTaskCreationCCActivity.setTaskState(TaskCreationCCActivity.STEP_TWO_VERIFIED);
         } else {
@@ -778,7 +783,7 @@ public class TaskCreationPhase2Fragment extends BaseFragment implements
 //                    showAddressDialog();
                     break;
                 case R.id.cvGetQuote:
-                    mTaskCreationCCActivity.onGetQuoteClicked();
+//                    mTaskCreationCCActivity.onGetQuoteClicked();
                     break;
             }
         }
@@ -792,7 +797,6 @@ public class TaskCreationPhase2Fragment extends BaseFragment implements
         }
 
         // async task for uploading file on amazon
-
 //        new AsyncTask<Void, Void, Void>() {
 
         // thumb folder path for s3 amazon
@@ -993,7 +997,7 @@ public class TaskCreationPhase2Fragment extends BaseFragment implements
         datePickerDialog.show();
     }
 
-    public SuperCalendar superCalendar;
+    private SuperCalendar superCalendar;
 
     private void showTimePickerDialog() {
         // Get Current Time
@@ -1039,6 +1043,7 @@ public class TaskCreationPhase2Fragment extends BaseFragment implements
                                         + getString(R.string.label_at)
                                         + startDateTimeSuperCalendar.format(Utility.DATE_FORMAT_HH_MM_AM);
                                 updateWhenLabelWithIcon(true, selectedDateTime);
+                                isTaskWhenAdded = true;
                                 updateTaskVerificationFlags();
                             } else {
                                 updateWhenLabelWithIcon(false, Utility.EMPTY_STRING);

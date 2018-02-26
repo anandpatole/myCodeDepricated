@@ -51,6 +51,7 @@ public class FreeServicesAdapter extends RecyclerView.Adapter<FreeServicesAdapte
         Context context = holder.mBinding.getRoot().getContext();
 
         holder.mBinding.tvDigit.setText(String.valueOf(subServicesModel.qty));
+
         if (subServicesModel.isSelected) {
             holder.mBinding.imgIconCorrect.setSelected(true);
             holder.mBinding.clCenter.setVisibility(View.VISIBLE);
