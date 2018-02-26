@@ -65,7 +65,7 @@ public class TaskCreationCCActivity extends BaseAppCompatActivity {
     public static void getInstance(Context mContext, JobCategoryModel model, AddressModel addressModel, String packageType) {
         Intent intent = new Intent(mContext, TaskCreationCCActivity.class);
         intent.putExtra(Utility.Extra.DATA, Utility.getJsonStringFromObject(model));
-        intent.putExtra(Utility.Extra.DATA_2, Utility.getJsonStringFromObject(packageType));
+        intent.putExtra(Utility.Extra.DATA_2, packageType);
         intent.putExtra(Utility.Extra.SELECTED_ADDRESS_MODEL, Utility.getJsonStringFromObject(addressModel));
         mContext.startActivity(intent);
     }

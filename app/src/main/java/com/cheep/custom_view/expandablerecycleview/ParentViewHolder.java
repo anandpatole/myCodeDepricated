@@ -151,11 +151,12 @@ public class ParentViewHolder<P extends Parent<C>, C> extends RecyclerView.ViewH
     @Override
     @UiThread
     public void onClick(View v) {
-        if (mExpanded) {
-            collapseView();
-        } else {
-            expandView();
-        }
+        if (mIsExpandable)
+            if (mExpanded) {
+                collapseView();
+            } else {
+                expandView();
+            }
     }
 
     /**

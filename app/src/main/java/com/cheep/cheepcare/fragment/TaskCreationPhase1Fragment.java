@@ -72,9 +72,9 @@ public class TaskCreationPhase1Fragment extends BaseFragment {
         super.onAttach(context);
         mContext = context;
         BaseAppCompatActivity activity = (BaseAppCompatActivity) context;
-        /*if (activity instanceof TaskCreationCCActivity) {
+        if (activity instanceof TaskCreationCCActivity) {
             mTaskCreationCCActivity = (TaskCreationCCActivity) activity;
-        }*/
+        }
     }
 
     @Override
@@ -280,8 +280,8 @@ public class TaskCreationPhase1Fragment extends BaseFragment {
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
 
                         JSONObject object = jsonObject.optJSONObject(NetworkUtility.TAGS.DATA);
-                        ArrayList<SubServiceDetailModel> freeCatList = Utility.getObjectListFromJsonString(object.getString(FREE_SERVICE), SubServiceDetailModel[].class);
-                        ArrayList<SubServiceDetailModel> paidCatList = Utility.getObjectListFromJsonString(object.getString(PAID_SERVICE), SubServiceDetailModel[].class);
+                        ArrayList<SubServiceDetailModel> freeCatList = Utility.getObjectListFromJsonString(object.optString(FREE_SERVICE), SubServiceDetailModel[].class);
+                        ArrayList<SubServiceDetailModel> paidCatList = Utility.getObjectListFromJsonString(object.optString(PAID_SERVICE), SubServiceDetailModel[].class);
 
                         ((FreeSubCategoryFragment) mPagerAdapter.getItem(0)).setSubCatList(freeCatList);
                         ((PaidSubCategoryFragment) mPagerAdapter.getItem(1)).setSubCatList(paidCatList);

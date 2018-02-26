@@ -411,7 +411,7 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
     };
 
     public void goToPackageBundling(int step) {
-        SelectPackageSpecificationsFragment fragment = (SelectPackageSpecificationsFragment) mPackageCustomizationPagerAdapter.getItem(mBinding.viewpager.getCurrentItem());
+        SelectPackageSpecificationsFragment fragment = (SelectPackageSpecificationsFragment) mPackageCustomizationPagerAdapter.getItem(0);
         cartCount = 0;
         if (fragment != null) {
             if (fragment.validateData()) {

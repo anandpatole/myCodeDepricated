@@ -55,7 +55,7 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
     private PackageCustomizationActivity mPackageCustomizationActivity;
     private FragmentSelectPackageSpecificationBinding mBinding;
     private boolean isVerified = false;
-    private AddressPackageCustomizationAdapter<AddressModel> mAdapter;
+    private AddressPackageCustomizationAdapter<AddressModel> mAddressAdapter;
     private List<AddressModel> mList;
     private boolean isClicked = false;
     BottomAddAddressDialog addressDialog;
@@ -101,6 +101,7 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
 
         // Hide the post task button
 //        mPackageCustomizationActivity.showPostTaskButton(false, false);
+
     }
 
     @Override
@@ -125,10 +126,10 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
         mBinding.recyclerView.setNestedScrollingEnabled(false);
         mBinding.cvCheepTip.setVisibility(View.GONE);
 
+        initCheepTipsUI();
+        initAddressUI();
         callPackageOptionListWS();
         callPackageCheepTipWS();
-        initAddressUI();
-        initCheepTipsUI();
     }
 
     @Override
@@ -372,6 +373,85 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
      */
     private void initAddressUI() {
         // init ui for add address
+
+        if (mList != null && !mList.isEmpty()) {
+            LogUtils.LOGE(TAG, "initAddressUI: called");
+            mBinding.spinnerAddressSelection.setFocusable(true);
+            mBinding.spinnerAddressSelection.setSelected(true);
+            mBinding.spinnerAddressSelection.setSelection(0);
+            return;
+        }
+
+        // Spinner initialisation for select address view
+        UserDetails userDetails = PreferenceUtility.getInstance(mPackageCustomizationActivity).getUserDetails();
+        GuestUserDetails guestUserDetails = PreferenceUtility.getInstance(mPackageCustomizationActivity).getGuestUserDetails();
+        mList = new ArrayList<>();
+        mList.clear();
+
+        if (userDetails != null && !userDetails.addressList.isEmpty())
+            mList.addAll(userDetails.addressList);
+        else {
+            if (guestUserDetails.addressList != null)
+                mList.addAll(guestUserDetails.addressList);
+        }
+
+        if (mList.isEmpty()) {
+            mBinding.llAddressView.setVisibility(View.GONE);
+        }
+
+
+        mList.add(0, new AddressModel() {{
+            address = getString(R.string.label_select_address);
+            address_id = "";
+        }});
+
+        mAddressAdapter = new AddressPackageCustomizationAdapter<>(mContext
+                , android.R.layout.simple_spinner_item
+                , mList);
+        mBinding.spinnerAddressSelection.setAdapter(mAddressAdapter);
+        mBinding.spinnerAddressSelection.setSelected(true);
+        mBinding.spinnerAddressSelection.setFocusableInTouchMode(true);
+
+        mBinding.spinnerAddressSelection.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (!isClicked && position == 0) {
+                    mBinding.tvSelectAddress.setText(getString(R.string.label_select_address));
+                    mBinding.ivIsAddressSelected.setSelected(false);
+                    mBinding.llAddressContainer.setVisibility(View.GONE);
+                    mBinding.tvSelectAddress.setVisibility(View.VISIBLE);
+                    return;
+                }
+
+
+                AddressModel model = mList.get(position);
+                verifyAddressForCity(model, false, 0);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                mBinding.tvSelectAddress.setText(getString(R.string.label_select_address));
+            }
+        });
+
+        // if package option are being loaded from cart detail then set selected address
+        for (PackageDetail detail : mPackageCustomizationActivity.getPackageList()) {
+            if (detail.id.equalsIgnoreCase(mPackageCustomizationActivity.mPackageId)) {
+                if (detail.mSelectedAddressList != null && !detail.mSelectedAddressList.isEmpty()) {
+                    AddressModel addressModel = detail.mSelectedAddressList.get(0);
+                    if (addressModel != null) {
+                        for (int i = 0; i < mList.size(); i++) {
+                            AddressModel tempAdd = mList.get(i);
+                            if (tempAdd.address_id.equalsIgnoreCase(addressModel.address_id))
+                                mBinding.spinnerAddressSelection.setSelection(i);
+                        }
+                    }
+                }
+            }
+        }
+
         mBinding.lnAddAddress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -415,77 +495,6 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
                 addressDialog.showDialog();
             }
         });
-
-
-        // Spinner initialisation for select address view
-        UserDetails userDetails = PreferenceUtility.getInstance(mPackageCustomizationActivity).getUserDetails();
-        GuestUserDetails guestUserDetails = PreferenceUtility.getInstance(mPackageCustomizationActivity).getGuestUserDetails();
-        mList = new ArrayList<>();
-        mList.clear();
-
-        if (userDetails != null && !userDetails.addressList.isEmpty())
-            mList.addAll(userDetails.addressList);
-        else {
-            if (guestUserDetails.addressList != null)
-                mList.addAll(guestUserDetails.addressList);
-        }
-
-        if (mList.isEmpty()) {
-            mBinding.llAddressView.setVisibility(View.GONE);
-        }
-
-
-        mList.add(0, new AddressModel() {{
-            address = getString(R.string.label_select_address);
-            address_id = "";
-        }});
-
-        mAdapter = new AddressPackageCustomizationAdapter<>(mContext
-                , android.R.layout.simple_spinner_item
-                , mList);
-        mBinding.spinnerAddressSelection.setAdapter(mAdapter);
-        mBinding.spinnerAddressSelection.setFocusable(false);
-        mBinding.spinnerAddressSelection.setPrompt("Prompt");
-        mBinding.spinnerAddressSelection.setSelected(false);
-        mBinding.spinnerAddressSelection.setFocusableInTouchMode(false);
-        mBinding.spinnerAddressSelection.setSelection(-1);
-        mBinding.spinnerAddressSelection.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (!isClicked && position == 0) {
-                    mBinding.tvSelectAddress.setText(getString(R.string.label_select_address));
-                    mBinding.ivIsAddressSelected.setSelected(false);
-                    mBinding.llAddressContainer.setVisibility(View.GONE);
-                    mBinding.tvSelectAddress.setVisibility(View.VISIBLE);
-                    return;
-                }
-
-
-                AddressModel model = mList.get(position);
-                verifyAddressForCity(model, false, 0);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                mBinding.tvSelectAddress.setText(getString(R.string.label_select_address));
-            }
-        });
-
-        // if package option are being loaded from cart detail then set selected address
-        for (PackageDetail detail : mPackageCustomizationActivity.getPackageList()) {
-            if (detail.id.equalsIgnoreCase(mPackageCustomizationActivity.mPackageId)) {
-                if (detail.mSelectedAddressList != null && !detail.mSelectedAddressList.isEmpty()) {
-                    AddressModel addressModel = detail.mSelectedAddressList.get(0);
-                    if (addressModel != null) {
-                        for (int i = 0; i < mList.size(); i++) {
-                            AddressModel tempAdd = mList.get(i);
-                            if (tempAdd.address_id.equalsIgnoreCase(addressModel.address_id))
-                                mBinding.spinnerAddressSelection.setSelection(i);
-                        }
-                    }
-                }
-            }
-        }
 
         mBinding.flAddressContainer.setOnClickListener(new View.OnClickListener() {
             @Override

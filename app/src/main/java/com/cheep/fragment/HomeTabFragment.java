@@ -697,6 +697,17 @@ public class HomeTabFragment extends BaseFragment {
                         bannerImageModelArrayList = Utility.getObjectListFromJsonString(dataObject.getString(NetworkUtility.TAGS.NORMAL_BANNER), BannerImageModel[].class);
                         careBannerModelArrayList = Utility.getObjectListFromJsonString(dataObject.getString(NetworkUtility.TAGS.CARE_BANNER), CityDetail[].class);
                         // Call Category listing webservice.
+
+                        for (CityDetail cityDetail : careBannerModelArrayList) {
+                            if (cityDetail.isSubscribed.equalsIgnoreCase(Utility.BOOLEAN.YES)) {
+                                LogUtils.LOGE(TAG, "cityDetail: " + cityDetail.cityName);
+                                mSelectedFilterType = Utility.FILTER_TYPES.FILTER_TYPE_SUBSCRIBED;
+                                updateFilterText();
+                                break;
+                            }
+                        }
+
+
                         getCategoryListFromServer();
 
                         /*ArrayList<JobCategoryModel> list;

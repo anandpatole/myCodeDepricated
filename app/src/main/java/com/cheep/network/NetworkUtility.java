@@ -143,8 +143,8 @@ public class NetworkUtility {
         public static final String GET_CARE_PACKAGE_TIP = BASE_URL + "customers/care/getCarePackageTip";
         public static final String GENERATE_HASH_FOR_CHEEP_CARE = BASE_URL + "customers/payment/generate_hash_for_cheepcare";
         public static final String PURCHASE_CARE_PACKAGE = BASE_URL + "customers/care/purchaseCarePackage";
-        public static final String GET_USER_SUBSCRIBED_CARE_PACKAGE = BASE_URL + "/customers/care/getUserSubscribedCarePackage";
-        public static final String GET_CARE_FREE_PAID_SERVICES_FOR_CATEGORY= BASE_URL + "/customers/care/getCareFreePaidServicesForCategory";
+        public static final String GET_USER_SUBSCRIBED_CARE_PACKAGE = BASE_URL + "customers/care/getUserSubscribedCarePackage";
+        public static final String GET_CARE_FREE_PAID_SERVICES_FOR_CATEGORY= BASE_URL + "customers/care/getCareFreePaidServicesForCategory";
 
     }
 
