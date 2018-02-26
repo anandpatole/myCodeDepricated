@@ -22,7 +22,6 @@ import com.cheep.model.SubServiceDetailModel;
 import com.cheep.utils.LogUtils;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by bhavesh on 28/4/17.
@@ -138,7 +137,7 @@ public class FreeSubCategoryFragment extends BaseFragment {
      *
      * @return
      */
-    public List<SubServiceDetailModel> getSelectedSubServices() {
+    public ArrayList<SubServiceDetailModel> getSelectedSubServices() {
         return mFreeServicesAdapter.getSelectedList();
     }
 

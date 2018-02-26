@@ -22,8 +22,10 @@ public class PackageDetail implements Parent<JobCategoryModel>, Serializable {
 
     @SerializedName("care_package_id")
     public String id;
+
     @SerializedName("title")
     public String title;
+
     @SerializedName("subtitle")
     public String subtitle;
 
@@ -32,7 +34,6 @@ public class PackageDetail implements Parent<JobCategoryModel>, Serializable {
 
     @SerializedName("package_type")
     public String packageType;
-
 
     @SerializedName("package_slug")
     public String packageSlug;

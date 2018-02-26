@@ -130,7 +130,7 @@ public class PaidServicesAdapter extends RecyclerView.Adapter<PaidServicesAdapte
         notifyDataSetChanged();
     }
 
-    public List<SubServiceDetailModel> getSelectedList() {
+    public ArrayList<SubServiceDetailModel> getSelectedList() {
         ArrayList<SubServiceDetailModel> list = new ArrayList<>();
         for (int i = 0; i < mList.size(); i++) {
             if (mList.get(i).isSelected) {

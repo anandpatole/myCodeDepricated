@@ -167,11 +167,18 @@ public class TaskCreationPhase1Fragment extends BaseFragment {
                 }
             };
 
-    public List<SubServiceDetailModel> getSelectedSubServices() {
-        List<SubServiceDetailModel> list =
-                ((FreeSubCategoryFragment) mPagerAdapter.getItem(0)).getSelectedSubServices();
-        list.addAll(((PaidSubCategoryFragment) mPagerAdapter.getItem(1)).getSelectedSubServices());
+    public ArrayList<SubServiceDetailModel> getSelectedSubServices() {
+        ArrayList<SubServiceDetailModel> list = getSelectedFreeServices();
+        list.addAll(getSelectedPaidServices());
         return list;
+    }
+
+    public ArrayList<SubServiceDetailModel> getSelectedFreeServices() {
+        return ((FreeSubCategoryFragment) mPagerAdapter.getItem(0)).getSelectedSubServices();
+    }
+
+    public ArrayList<SubServiceDetailModel> getSelectedPaidServices() {
+        return ((PaidSubCategoryFragment) mPagerAdapter.getItem(1)).getSelectedSubServices();
     }
 
     private static class PagerAdapter extends FragmentPagerAdapter {

@@ -53,7 +53,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 
@@ -78,6 +77,14 @@ public class BookingConfirmationCcActivity extends BaseAppCompatActivity {
     private BottomAlertDialog cheepCodeDialog;
     private String cheepCode;
 
+    //added by bhavesh 26/2/18
+    private String mCarePackageId;
+    private String mCategoryId;
+    private ArrayList<SubServiceDetailModel> freeList;
+    private ArrayList<SubServiceDetailModel> paidList;
+    private AddressModel mAddressModel;
+    //added by bhavesh 26/2/18
+
     /**
      * used while user is booking task and selects pay now/later buttons
      */
@@ -93,11 +100,11 @@ public class BookingConfirmationCcActivity extends BaseAppCompatActivity {
      *
      * @param context
      * @param taskDetailModel
-//     * @param providerModel
+     * @param providerModel
      */
-    public static void newInstance(Context context, TaskDetailModel taskDetailModel, /*ProviderModel providerModel, */AddressModel mSelectedAddressModel) {
+    public static void newInstance(Context context, TaskDetailModel taskDetailModel, ProviderModel providerModel, AddressModel mSelectedAddressModel) {
         Intent intent = new Intent(context, BookingConfirmationCcActivity.class);
-        /*intent.putExtra(Utility.Extra.DATA, Utility.getJsonStringFromObject(providerModel));*/
+        intent.putExtra(Utility.Extra.DATA, Utility.getJsonStringFromObject(providerModel));
         intent.putExtra(Utility.Extra.DATA_2, Utility.getJsonStringFromObject(taskDetailModel));
         intent.putExtra(Utility.Extra.SELECTED_ADDRESS_MODEL, Utility.getJsonStringFromObject(mSelectedAddressModel));
         intent.putExtra(Utility.Extra.DATA_3, false);
@@ -121,6 +128,18 @@ public class BookingConfirmationCcActivity extends BaseAppCompatActivity {
 
     }
 
+    //TODO: method to be removed
+    public static void newInstance(Context context, String carePackageId, String catId, ArrayList<SubServiceDetailModel> freeList
+            , ArrayList<SubServiceDetailModel> paidList, AddressModel addressModel) {
+        Intent intent = new Intent(context, BookingConfirmationCcActivity.class);
+        intent.putExtra(Utility.Extra.SELECTED_PACKAGE_ID, carePackageId);
+        intent.putExtra(Utility.Extra.CATEGORY_ID, catId);
+        intent.putExtra("Utility.Extra.DATA", freeList);
+        intent.putExtra("Utility.Extra.DATA_2", paidList);
+        intent.putExtra(Utility.Extra.SELECTED_ADDRESS_MODEL, addressModel);
+        context.startActivity(intent);
+    }
+
     @TargetApi(Build.VERSION_CODES.KITKAT)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,13 +150,23 @@ public class BookingConfirmationCcActivity extends BaseAppCompatActivity {
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_booking_confirmation_cc);
         // add event bus listener
         EventBus.getDefault().register(this);
-
         initiateUI();
         setListeners();
     }
 
     @Override
     protected void initiateUI() {
+
+        if (getIntent().getExtras() != null && getIntent().hasExtra(Utility.Extra.SELECTED_PACKAGE_ID))
+            mCarePackageId = getIntent().getExtras().getString(Utility.Extra.SELECTED_PACKAGE_ID);
+        if (getIntent().getExtras() != null && getIntent().hasExtra(Utility.Extra.CATEGORY_ID))
+            mCategoryId = getIntent().getExtras().getString(Utility.Extra.CATEGORY_ID);
+        if (getIntent().getExtras() != null && getIntent().hasExtra("Utility.Extra.DATA"))
+            freeList = (ArrayList<SubServiceDetailModel>) getIntent().getExtras().getSerializable("Utility.Extra.DATA");
+        if (getIntent().getExtras() != null && getIntent().hasExtra("Utility.Extra.DATA_2"))
+            paidList = (ArrayList<SubServiceDetailModel>) getIntent().getExtras().getSerializable("Utility.Extra.DATA_2");
+        if (getIntent().getExtras() != null && getIntent().hasExtra(Utility.Extra.SELECTED_ADDRESS_MODEL))
+            mAddressModel = (AddressModel) getIntent().getSerializableExtra(Utility.Extra.SELECTED_ADDRESS_MODEL);
 
         setSupportActionBar(mBinding.toolbar);
         if (getSupportActionBar() != null) {
@@ -177,28 +206,6 @@ public class BookingConfirmationCcActivity extends BaseAppCompatActivity {
 
 
         mBinding.tvTaskDescription.setText(spannableStringBuilder);
-
-        List<SubServiceDetailModel> freeList = new ArrayList<>();
-        SubServiceDetailModel subServiceDetailModel = new SubServiceDetailModel();
-        subServiceDetailModel.name = "My flush is not working ( x2 )";
-        subServiceDetailModel.unitPrice = "FREE";
-        freeList.add(subServiceDetailModel);
-
-        subServiceDetailModel = new SubServiceDetailModel();
-        subServiceDetailModel.name = "I need my leaking tap to be fixed ( x3 )";
-        subServiceDetailModel.unitPrice = "FREE";
-        freeList.add(subServiceDetailModel);
-
-        List<SubServiceDetailModel> paidList = new ArrayList<>();
-        subServiceDetailModel = new SubServiceDetailModel();
-        subServiceDetailModel.name = "I need my wash basin to be fixed ( x3 )";
-        subServiceDetailModel.unitPrice = "₹149";
-        paidList.add(subServiceDetailModel);
-
-        subServiceDetailModel = new SubServiceDetailModel();
-        subServiceDetailModel.name = "I need my WC to be repaired ( x3 )";
-        subServiceDetailModel.unitPrice = "₹349";
-        paidList.add(subServiceDetailModel);
 
         mBinding.recyclerViewFree.setAdapter(new SelectedSubServicePriceAdapter(freeList));
         mBinding.recyclerViewPaid.setAdapter(new SelectedSubServicePriceAdapter(paidList));
