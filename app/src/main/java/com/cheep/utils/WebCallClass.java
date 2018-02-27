@@ -17,10 +17,12 @@ import com.cheep.model.SubServiceDetailModel;
 import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
+import com.google.gson.Gson;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -28,10 +30,14 @@ import java.util.Map;
 
 import static com.cheep.network.NetworkUtility.TAGS.ADDRESS_ID;
 import static com.cheep.network.NetworkUtility.TAGS.CARE_CITY_SLUG;
+import static com.cheep.network.NetworkUtility.TAGS.CARE_PACKAGE_ID;
 import static com.cheep.network.NetworkUtility.TAGS.CAT_ID;
 import static com.cheep.network.NetworkUtility.TAGS.FREE_SERVICE;
 import static com.cheep.network.NetworkUtility.TAGS.PACKAGE_TYPE;
 import static com.cheep.network.NetworkUtility.TAGS.PAID_SERVICE;
+import static com.cheep.network.NetworkUtility.TAGS.PAYABLE_AMOUNT;
+import static com.cheep.network.NetworkUtility.TAGS.START_DATETIME;
+import static com.cheep.network.NetworkUtility.TAGS.TOTAL_PRICE;
 
 /**
  * Created by bhavesh on 24/1/18.
@@ -152,6 +158,7 @@ public class WebCallClass {
     }
     //////////////////////////Get Subscribed User Care Package call end//////////////////////////
 
+    //////////////////////////Fetch List Of Sub Category call start//////////////////////////
     public interface FetchListOfSubCategoryResponseListener {
         void fetchListOfSubCategorySuccessResponse(ArrayList<SubServiceDetailModel> paidList
                 , ArrayList<SubServiceDetailModel> freeList);
@@ -233,4 +240,35 @@ public class WebCallClass {
 
         Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequestForCategoryList, NetworkUtility.WS.GET_CARE_FREE_PAID_SERVICES_FOR_CATEGORY);
     }
+    //////////////////////////Fetch List Of Sub Category call end//////////////////////////
+
+    //////////////////////////Create task Cheep care call start//////////////////////////
+    public static void createTask(Context mContext, String carePackageId, String catId
+            , ArrayList<SubServiceDetailModel> freeList, ArrayList<SubServiceDetailModel> paidList, AddressModel mAddressModel
+            , String totalPrice, String payableAmount, String startDateTime) {
+
+        Map<String, String> mHeaderParams = new HashMap<>();
+        mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
+        if (PreferenceUtility.getInstance(mContext).getUserDetails() != null) {
+            mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().userID);
+        }
+
+        //Add Params
+        Map<String, String> mParams = new HashMap<>();
+        mParams.put(CARE_PACKAGE_ID, carePackageId);
+        mParams.put(CAT_ID, catId);
+        mParams.put(FREE_SERVICE, new Gson().toJson(freeList));
+        mParams.put(PAID_SERVICE, new Gson().toJson(paidList));
+        mParams.put(ADDRESS_ID, mAddressModel.address_id);
+        mParams.put(TOTAL_PRICE, totalPrice);
+        mParams.put(PAYABLE_AMOUNT, payableAmount);
+        mParams.put(START_DATETIME, startDateTime);
+
+        HashMap<String, File> mFileParams = new HashMap<>();
+
+        Log.d(TAG, "VolleyNetworkRequest() called with: url = [" + "url" + "], errorListener = [" + "errorListener" + "]" +
+                ", listener = [" + "listener" + "], headers = [" + mHeaderParams + "], stringData = [" + mParams + "], fileParam = [" + mFileParams + "]");
+    }
+    //////////////////////////Create task Cheep care call end//////////////////////////
+
 }

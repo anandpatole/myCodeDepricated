@@ -423,7 +423,8 @@ public class TaskCreationCCActivity extends BaseAppCompatActivity {
 
     //TODO: to be removed
     public void startBookingConfirmationActivity() {
-        BookingConfirmationCcActivity.newInstance(TaskCreationCCActivity.this, null
-                /*, providerModel, mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.mSelectedAddress*/);
+        BookingConfirmationCcActivity.newInstance(TaskCreationCCActivity.this, mCarePackageId, mJobCategoryModel.catId
+                , mTaskCreationPagerAdapter.mTaskCreationPhase1Fragment.getSelectedFreeServices()
+                , mTaskCreationPagerAdapter.mTaskCreationPhase1Fragment.getSelectedPaidServices(), mAddressModel,"");
     }
 }

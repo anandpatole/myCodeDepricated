@@ -144,7 +144,7 @@ public class NetworkUtility {
         public static final String GENERATE_HASH_FOR_CHEEP_CARE = BASE_URL + "customers/payment/generate_hash_for_cheepcare";
         public static final String PURCHASE_CARE_PACKAGE = BASE_URL + "customers/care/purchaseCarePackage";
         public static final String GET_USER_SUBSCRIBED_CARE_PACKAGE = BASE_URL + "customers/care/getUserSubscribedCarePackage";
-        public static final String GET_CARE_FREE_PAID_SERVICES_FOR_CATEGORY= BASE_URL + "customers/care/getCareFreePaidServicesForCategory";
+        public static final String GET_CARE_FREE_PAID_SERVICES_FOR_CATEGORY = BASE_URL + "customers/care/getCareFreePaidServicesForCategory";
 
     }
 
@@ -440,9 +440,10 @@ public class NetworkUtility {
         String CITY_DETAIL = "cityDetail";
         String USER_PACKAGE_DETAIL = "userPackageDetail";
         String PACKAGE_DETAIL = "packageDetail";
-        String PACKAGE_TYPE= "package_type";
-        String PAID_SERVICE= "paid_service";
-        String FREE_SERVICE= "free_service";
+        String PACKAGE_TYPE = "package_type";
+        String PAID_SERVICE = "paid_service";
+        String FREE_SERVICE = "free_service";
+        String TOTAL_PRICE = "total_price";
 
         String IS_PURCHASED= "is_purchased";
         String IS_SAME_PACKAGE_TYPE= "is_same_package_type";

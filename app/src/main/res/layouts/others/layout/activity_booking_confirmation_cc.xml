@@ -245,8 +245,8 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
                         android:layout_marginTop="@dimen/scale_10dp"
+                        android:orientation="horizontal"
                         android:paddingLeft="@dimen/scale_30dp"
                         android:paddingRight="@dimen/scale_24dp">
 
@@ -285,9 +285,9 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_marginTop="@dimen/scale_10dp"
                         android:layout_marginBottom="@dimen/scale_10dp"
+                        android:layout_marginTop="@dimen/scale_10dp"
+                        android:orientation="horizontal"
                         android:paddingLeft="@dimen/scale_30dp"
                         android:paddingRight="@dimen/scale_24dp">
 
@@ -493,7 +493,7 @@
             android:orientation="horizontal">
 
             <com.cheep.custom_view.CFTextViewSemiBold
-                android:id="@+id/text_pay_now"
+                android:id="@+id/tv_book_and_pay"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"

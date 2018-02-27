@@ -22,7 +22,6 @@ import com.cheep.model.SubServiceDetailModel;
 import com.cheep.utils.LogUtils;
 
 import java.util.ArrayList;
-import java.util.List;
 
 
 /**
@@ -144,7 +143,7 @@ public class PaidSubCategoryFragment extends BaseFragment {
      *
      * @return
      */
-    public List<SubServiceDetailModel> getSelectedSubServices() {
+    public ArrayList<SubServiceDetailModel> getSelectedSubServices() {
         return mPaidServicesAdapter.getSelectedList();
     }
 

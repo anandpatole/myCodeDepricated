@@ -261,6 +261,7 @@ public class ManageSubscriptionActivity extends BaseAppCompatActivity {
                                 addressModel = addressModel1;
                         }
                     }
+
                     TaskCreationCCActivity.getInstance(mContext, model, addressModel, packageDetail.packageType, packageDetail.id);
                 }
             };
