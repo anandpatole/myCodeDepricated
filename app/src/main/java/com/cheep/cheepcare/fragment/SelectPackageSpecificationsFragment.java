@@ -372,15 +372,6 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
      * set spinner data with guest user address list of logged in user address list
      */
     private void initAddressUI() {
-        // init ui for add address
-
-        if (mList != null && !mList.isEmpty()) {
-            LogUtils.LOGE(TAG, "initAddressUI: called");
-            mBinding.spinnerAddressSelection.setFocusable(true);
-            mBinding.spinnerAddressSelection.setSelected(true);
-            mBinding.spinnerAddressSelection.setSelection(0);
-            return;
-        }
 
         // Spinner initialisation for select address view
         UserDetails userDetails = PreferenceUtility.getInstance(mPackageCustomizationActivity).getUserDetails();
@@ -521,13 +512,7 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
                 , Utility.getAddressCategoryBlueIcon(addressModel.category)));
 
         // show address's nick name or nick name is null then show category
-        String category;
-        if (!TextUtils.isEmpty(addressModel.nickname))
-            category = addressModel.nickname;
-        else
-            category = addressModel.category;
-
-        mBinding.tvAddressNickname.setText(category);
+        mBinding.tvAddressNickname.setText(addressModel.getNicknameString(mContext));
 
         mBinding.tvAddress.setText(addressModel.getAddressWithInitials());
         mBinding.ivIsAddressSelected.setSelected(true);
@@ -594,7 +579,7 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
 
         PackageDetail detail = mPackageCustomizationActivity.mSelectedPackageModel;
         for (PackageDetail checkPackagedetail : mPackageCustomizationActivity.getPackageList()) {
-            if (checkPackagedetail.isSelected)
+            if (!detail.id.equalsIgnoreCase(checkPackagedetail.id) && checkPackagedetail.isSelected)
                 if (detail.packageType.equalsIgnoreCase(checkPackagedetail.packageType)) {
                     if (checkPackagedetail.mSelectedAddressList != null && !checkPackagedetail.mSelectedAddressList.isEmpty())
                         if (model.address_id.equalsIgnoreCase(checkPackagedetail.mSelectedAddressList.get(0).address_id)) {

@@ -41,13 +41,19 @@ import com.android.volley.VolleyError;
 import com.cheep.BuildConfig;
 import com.cheep.R;
 import com.cheep.activity.BaseAppCompatActivity;
+import com.cheep.cheepcare.activity.PackageCustomizationActivity;
 import com.cheep.cheepcare.activity.TaskCreationCCActivity;
 import com.cheep.cheepcare.adapter.AddressTaskCreateAdapter;
 import com.cheep.cheepcare.adapter.SelectedSubServiceAdapter;
 import com.cheep.cheepcare.dialogs.BottomAddAddressDialog;
+import com.cheep.cheepcare.dialogs.CheepCareNotInYourCityDialog;
 import com.cheep.cheepcare.dialogs.NotSubscribedAddressDialog;
 import com.cheep.cheepcare.dialogs.SelectSpecificTimeDialog;
+import com.cheep.cheepcare.model.CityDetail;
+import com.cheep.cheepcare.model.CityLandingPageModel;
+import com.cheep.cheepcare.model.PackageDetail;
 import com.cheep.databinding.FragmentTaskCreationPhase2Binding;
+import com.cheep.dialogs.AcknowledgementInteractionListener;
 import com.cheep.fragment.BaseFragment;
 import com.cheep.model.AddressModel;
 import com.cheep.model.GuestUserDetails;
@@ -66,6 +72,7 @@ import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.RequestPermission;
 import com.cheep.utils.SuperCalendar;
 import com.cheep.utils.Utility;
+import com.cheep.utils.WebCallClass;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -106,6 +113,27 @@ public class TaskCreationPhase2Fragment extends BaseFragment implements
     public AddressModel mSelectedAddress;
 
     private boolean isClicked = false;
+
+    private WebCallClass.CommonResponseListener commonErrorListener = new WebCallClass.CommonResponseListener() {
+        @Override
+        public void volleyError(VolleyError error) {
+            Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
+            mTaskCreationCCActivity.hideProgressDialog();
+            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
+        }
+
+        @Override
+        public void showSpecificMessage(String message) {
+            mTaskCreationCCActivity.hideProgressDialog();
+            Utility.showSnackBar(message, mBinding.getRoot());
+        }
+
+        @Override
+        public void forceLogout() {
+            mTaskCreationCCActivity.hideProgressDialog();
+            mTaskCreationCCActivity.finish();
+        }
+    };
 
 
     @SuppressWarnings("unused")
@@ -324,9 +352,14 @@ public class TaskCreationPhase2Fragment extends BaseFragment implements
 
         final ArrayList<AddressModel> mAddressList = new ArrayList<>();
         if (PreferenceUtility.getInstance(mContext).getUserDetails() != null) {
-            mAddressList.addAll(PreferenceUtility.getInstance(mContext).getUserDetails().addressList);
-        } else {
-            mAddressList.addAll(PreferenceUtility.getInstance(mContext).getGuestUserDetails().addressList);
+            ArrayList<AddressModel> unSubscibedAddressList = new ArrayList<>();
+            for (AddressModel addressModel : PreferenceUtility.getInstance(mContext).getUserDetails().addressList) {
+                if (addressModel.is_subscribe.equalsIgnoreCase(Utility.BOOLEAN.NO)) {
+                    unSubscibedAddressList.add(addressModel);
+                }
+            }
+            mAddressList.addAll(mTaskCreationCCActivity.mCareAddressList);
+            mAddressList.addAll(unSubscibedAddressList);
         }
 
 
@@ -345,38 +378,56 @@ public class TaskCreationPhase2Fragment extends BaseFragment implements
         mBinding.spinnerAddressSelection.setSelected(false);
         mBinding.spinnerAddressSelection.setFocusableInTouchMode(false);
 
-       /* if (mTaskCreationCCActivity.mAddressModel != null)
-            for (int i = 0; i < mAddressList.size(); i++) {
-                AddressModel addressModel = mAddressList.get(i);
-                if (addressModel.address_id.equalsIgnoreCase(mTaskCreationCCActivity.mAddressModel.address_id)) {
-                    mBinding.spinnerAddressSelection.setSelection(i);
-                }
-            }*/
 
         mBinding.spinnerAddressSelection.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (position == mAddressList.size() - 1) {
                     showBottomAddressDialog(null);
-                } else if (mAddressList.get(position).is_subscribe.equals("1")) {
+                } else if (mAddressList.get(position).is_subscribe.equalsIgnoreCase(Utility.BOOLEAN.YES)) {
                     Log.d(TAG, "onItemSelected: ");
-                    AddressModel model = mAddressList.get(position);
-                    mBinding.iconTaskWhere.setImageDrawable(ContextCompat.getDrawable(mContext
-                            , Utility.getAddressCategoryBlueIcon(model.category)));
+                    fillAddressView(mAddressList.get(position));
+                } else if (isClicked && mAddressList.get(position).is_subscribe.equals(Utility.BOOLEAN.NO)) {
 
-                    // show address's nick name or nick name is null then show category
-                    String category;
-                    if (!TextUtils.isEmpty(model.nickname))
-                        category = model.nickname;
-                    else
-                        category = model.category;
+                    WebCallClass.isCityAvailableForCare(mTaskCreationCCActivity, mAddressList.get(position).address_id, commonErrorListener, new WebCallClass.CityAvailableCheepCareListener() {
+                        @Override
+                        public void getCityDetails(final CityDetail cityDetail) {
+                            if (TextUtils.isEmpty(cityDetail.citySlug)) {
+                                CheepCareNotInYourCityDialog.newInstance(mContext, new AcknowledgementInteractionListener() {
+                                    @Override
+                                    public void onAcknowledgementAccepted() {
 
-                    mBinding.tvAddressNickname.setText(category);
+                                    }
+                                });
+                            } else {
+                                NotSubscribedAddressDialog.newInstance(mContext, new NotSubscribedAddressDialog.DialogInteractionListener() {
+                                    @Override
+                                    public void onSubscribeClicked() {
+//                                        mTaskCreationCCActivity.setResult(Utility.REQUEST_CODE_TASK_CREATION_CHEEP_CARE,
+//                                                new Intent().putExtra(Utility.Extra.DATA, careCitySlug));
+//                                        mTaskCreationCCActivity.finish();
+                                        WebCallClass.getCityCareDetail(mContext, cityDetail.citySlug, commonErrorListener, new WebCallClass.GetCityCareDataListener() {
+                                            @Override
+                                            public void getCityCareData(CityLandingPageModel cityLandingPageModel) {
+                                                for (PackageDetail detail : cityLandingPageModel.packageDetailList)
+                                                    if (detail.id.equalsIgnoreCase(mTaskCreationCCActivity.mCarePackageId)) {
+                                                        PackageCustomizationActivity.newInstance(mContext, cityLandingPageModel.cityDetail, detail, Utility.getJsonStringFromObject(cityLandingPageModel.packageDetailList), cityLandingPageModel.adminSetting);
+                                                        break;
+                                                    }
+                                            }
+                                        });
+                                    }
 
-                    mBinding.tvAddress.setText(model.getAddressWithInitials());
-                    mSelectedAddress = model;
-                } else if (isClicked && mAddressList.get(position).is_subscribe.equals("0")) {
-                    NotSubscribedAddressDialog.newInstance(mContext, notSubscribedInteractionListener);
+
+                                    @Override
+                                    public void onNotNowClicked() {
+
+                                    }
+                                });
+                            }
+                        }
+                    });
+
                 }
             }
 
@@ -385,6 +436,29 @@ public class TaskCreationPhase2Fragment extends BaseFragment implements
                 Log.d(TAG, "onNothingSelected() called with: parent = [" + parent + "]");
             }
         });
+
+        if (mTaskCreationCCActivity.mAddressModel != null)
+            for (int i = 0; i < mAddressList.size(); i++) {
+                AddressModel addressModel = mAddressList.get(i);
+                if (addressModel.address_id.equalsIgnoreCase(mTaskCreationCCActivity.mAddressModel.address_id)) {
+                    mBinding.spinnerAddressSelection.setSelection(i);
+                }
+            }
+    }
+
+    private void fillAddressView(AddressModel model) {
+        mBinding.iconTaskWhere.setImageDrawable(ContextCompat.getDrawable(mContext
+                , Utility.getAddressCategoryBlueIcon(model.category)));
+
+        // show address's nick name or nick name is null then show category
+
+        mBinding.tvAddressNickname.setText(model.getNicknameString(mTaskCreationCCActivity));
+        mBinding.tvLabelAddressSubscribed.setText(model.is_subscribe.equalsIgnoreCase(Utility.BOOLEAN.YES)
+                ? getString(R.string.label_address_subscribed)
+                : Utility.EMPTY_STRING);
+
+        mBinding.tvAddress.setText(model.getAddressWithInitials());
+        mSelectedAddress = model;
     }
 
     public void updateHeightOfLinearLayout() {
@@ -883,19 +957,6 @@ public class TaskCreationPhase2Fragment extends BaseFragment implements
 
             };
 
-    private final NotSubscribedAddressDialog.DialogInteractionListener notSubscribedInteractionListener =
-            new NotSubscribedAddressDialog.DialogInteractionListener() {
-                @Override
-                public void onSubscribeClicked() {
-                    Log.d(TAG, "onSubscribeClicked() called");
-                }
-
-                @Override
-                public void onNotNowClicked() {
-                    Log.d(TAG, "onNotNowClicked() called");
-                }
-
-            };
 
     private class UploadListener implements TransferListener {
         String s3PathThumb, s3pathOriginal, type, localFilePath;
@@ -1328,6 +1389,21 @@ public class TaskCreationPhase2Fragment extends BaseFragment implements
         }, new ArrayList<String>(), addressModel);
 
         dialog.showDialog();
+    }
+
+    /**
+     * Fetch Task Description
+     *
+     * @return
+     */
+    public String getTaskDescription() {
+        return mBinding.editTaskDesc.getText().toString();
+    }
+
+    public String getStartDateTime() {
+        if (superCalendar != null)
+            return String.valueOf(superCalendar.getTimeInMillis());
+        return Utility.EMPTY_STRING;
     }
 
 

@@ -1,5 +1,6 @@
 package com.cheep.cheepcare.dialogs;
 
+import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -10,6 +11,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.ImageSpan;
@@ -40,14 +42,14 @@ public class CheepCareNotInYourCityDialog extends DialogFragment {
      * Create a new instance of MyDialogFragment, providing "num"
      * as an argument.
      */
-    public static CheepCareNotInYourCityDialog newInstance(AcknowledgementInteractionListener listener) {
+    public static void newInstance(Context context,AcknowledgementInteractionListener listener) {
         CheepCareNotInYourCityDialog f = new CheepCareNotInYourCityDialog();
         f.setListener(listener);
 //        Bundle args = new Bundle();
 //        args.putString(Utility.Extra.DATA, carePackageName);
 //        f.setArguments(args);
         // Supply num input as an argument.
-        return f;
+        f.show(((AppCompatActivity) context).getSupportFragmentManager(), CheepCareNotInYourCityDialog.TAG);
     }
 
     /**

@@ -246,6 +246,7 @@ public class Utility {
     public static final int REQUEST_CODE_IMAGE_CAPTURE = 1112;
     public static final int REQUEST_CODE_VIDEO_SELECT = 1113;
     public static final int REQUEST_CODE_IMAGE_SELECT = 1114;
+//    public static final int REQUEST_CODE_TASK_CREATION_CHEEP_CARE = 1115;
 
     /*
     * @Sanjay
@@ -1316,6 +1317,7 @@ public class Utility {
         String STRATEGIC = "strategic"; //1->if task created and only quotes is there, 2-> task created and user paid to sp, but sp not started the task yet.
         String NORMAL = "normal";//if user payed and task is in progress
         String INSTA_BOOK = "instabook";//if user payed and task is in progress
+        String SUBSCRIBED = "subscribed";//if user payed and task is in progress
     }
 
     public interface STRATEGIC_PARTNER_BRAND {

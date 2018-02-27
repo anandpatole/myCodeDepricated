@@ -49,6 +49,7 @@ import com.cheep.adapter.FAQRecyclerViewAdapter;
 import com.cheep.adapter.FavouriteRecyclerViewAdapter;
 import com.cheep.adapter.HistoryRecyclerViewAdapter;
 import com.cheep.adapter.SlideMenuAdapter;
+import com.cheep.cheepcare.activity.ManageSubscriptionActivity;
 import com.cheep.custom_view.BottomAlertDialog;
 import com.cheep.databinding.ActivityHomeBinding;
 import com.cheep.databinding.NavHeaderHomeBinding;
@@ -884,7 +885,7 @@ public class HomeActivity extends BaseAppCompatActivity
                 Log.i(TAG, "onCategoryFavouriteClicked: Called for HomeTab");
                 ((HomeTabFragment) mHomeTabFragment).onCategoryFavouriteClicked(model, position);
                 if (((HomeTabFragment) mHomeTabFragment).getmSelectedFilterType().equalsIgnoreCase(Utility.FILTER_TYPES.FILTER_TYPE_SUBSCRIBED)) {
-//                    TaskCreationCCActivity.getInstance(mContext, model, null);
+                    ManageSubscriptionActivity.newInstance(mContext, model.careCityData.get(0), true, Utility.getJsonStringFromObject(((HomeTabFragment) mHomeTabFragment).careBannerModelArrayList));
                 } else
                     TaskCreationActivity.getInstance(mContext, model);
             } else

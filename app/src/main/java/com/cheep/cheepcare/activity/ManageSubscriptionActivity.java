@@ -157,12 +157,10 @@ public class ManageSubscriptionActivity extends BaseAppCompatActivity {
 
         String name = PreferenceUtility.getInstance(this).getUserDetails().userName;
         if (!isManageSubscription) {
-            SpannableStringBuilder spannableStringBuilder
-                    = new SpannableStringBuilder(getString(R.string.msg_welcome_x, name));
+            SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(getString(R.string.msg_welcome_x, name));
             spannableStringBuilder.append(Utility.ONE_CHARACTER_SPACE).append(Utility.ONE_CHARACTER_SPACE);
             ImageSpan span = new ImageSpan(getBaseContext(), R.drawable.emoji_folded_hands_big, ImageSpan.ALIGN_BASELINE);
-            spannableStringBuilder.setSpan(span, spannableStringBuilder.length() - 1
-                    , spannableStringBuilder.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+            spannableStringBuilder.setSpan(span, spannableStringBuilder.length() - 1, spannableStringBuilder.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
             mBinding.tvWelcomeText.setText(spannableStringBuilder);
             mBinding.tvWelcomeText.setVisibility(View.VISIBLE);
             mBinding.tvInfoText.setText(getString(R.string.msg_welcoming_on_subscription));
@@ -172,7 +170,6 @@ public class ManageSubscriptionActivity extends BaseAppCompatActivity {
         }
 
         callGetUserSubscribedPackages();
-
     }
 
     @Override
@@ -261,8 +258,8 @@ public class ManageSubscriptionActivity extends BaseAppCompatActivity {
                                 addressModel = addressModel1;
                         }
                     }
+                    TaskCreationCCActivity.getInstance(mContext, model, addressModel, packageDetail.packageType, packageDetail.id, packageDetail.mSelectedAddressList);
 
-                    TaskCreationCCActivity.getInstance(mContext, model, addressModel, packageDetail.packageType, packageDetail.id);
                 }
             };
 
@@ -271,7 +268,7 @@ public class ManageSubscriptionActivity extends BaseAppCompatActivity {
                 @Override
                 public void onPackageItemClick(PackageDetail model) {
                     String packageList = Utility.getJsonStringFromObject(mAllPackagesList);
-                    PackageCustomizationActivity.newInstance(mContext, model, mCityDetail, model, packageList, mAdminSettingModel);
+                    PackageCustomizationActivity.newInstance(mContext,  mCityDetail, model, packageList, mAdminSettingModel);
                 }
             };
 
@@ -373,4 +370,30 @@ public class ManageSubscriptionActivity extends BaseAppCompatActivity {
         }
     }
 
+/* // remve this TODO when flow completed
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == Utility.REQUEST_CODE_TASK_CREATION_CHEEP_CARE && resultCode == RESULT_OK) {
+            if (data != null) {
+                String citySlug = data.getStringExtra(Utility.Extra.DATA);
+
+                for (CityDetail cityDetail : bannerCityDetailsList)
+                    if (!cityDetail.citySlug.equalsIgnoreCase(citySlug)) {
+                        if (cityDetail.isSubscribed.equalsIgnoreCase(Utility.BOOLEAN.YES)) {
+                            mCityDetail = cityDetail;
+                            setCityBannerData();
+                        } else {
+                            String cheepcareBannerListString = Utility.getJsonStringFromObject(bannerCityDetailsList);
+                            LandingScreenPickPackageActivity.newInstance(ManageSubscriptionActivity.this,
+                                    cityDetail, cheepcareBannerListString);
+                            finish();
+                        }
+                    }
+
+            }
+
+        }
+    }
+*/
 }

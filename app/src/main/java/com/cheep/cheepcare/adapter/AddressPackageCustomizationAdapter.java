@@ -4,7 +4,6 @@ import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -63,10 +62,7 @@ public class AddressPackageCustomizationAdapter<T> extends ArrayAdapter<T> {
         if (position == 0) {
             mHolder.mBinding.llAddressContainer.setVisibility(View.GONE);
         } else {
-            if (!TextUtils.isEmpty(model.nickname))
-                mHolder.mBinding.tvAddressNickname.setText(model.nickname);
-            else
-                mHolder.mBinding.tvAddressNickname.setText(Utility.getAddressCategoryString(model.category));
+            mHolder.mBinding.tvAddressNickname.setText(model.getNicknameString(getContext()));
             mHolder.mBinding.ivAddressIcon.setImageResource(Utility.getAddressCategoryBlueIcon(model.category));
             mHolder.mBinding.llAddressContainer.setVisibility(View.VISIBLE);
         }

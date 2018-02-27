@@ -1,8 +1,10 @@
 package com.cheep.model;
 
+import android.content.Context;
 import android.support.annotation.Keep;
 import android.text.TextUtils;
 
+import com.cheep.utils.Utility;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.io.Serializable;
@@ -23,7 +25,7 @@ public class AddressModel implements Serializable {
     public String pincode;
     public String nickname;
     public String end_date;
-    public String is_subscribe = "0";
+    public String is_subscribe = Utility.BOOLEAN.NO;
 
     /**
      * This would only be useful in case of Guest
@@ -32,7 +34,6 @@ public class AddressModel implements Serializable {
     public String countryName;
     public String stateName;
 
-    //    public boolean isSubscribedAddress = is_subscribe.equals("1");
     public boolean isSelected = false;
 
     public LatLng getLatLng() {
@@ -50,6 +51,10 @@ public class AddressModel implements Serializable {
             return address;
         else
             return address_initials + ", " + address;
+    }
+
+    public String getNicknameString(Context context) {
+        return !TextUtils.isEmpty(nickname) ? nickname : context.getString(Utility.getAddressCategoryString(category));
     }
 }
 

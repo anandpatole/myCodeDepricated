@@ -89,11 +89,10 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
         return mPackageList;
     }
 
-    public static void newInstance(Context context, PackageDetail model, CityDetail cityDetail, PackageDetail packageDetail, String packageList, AdminSettingModel adminSetting) {
+    public static void newInstance(Context context, CityDetail cityDetail, PackageDetail model, String packageList, AdminSettingModel adminSetting) {
         Intent intent = new Intent(context, PackageCustomizationActivity.class);
         intent.putExtra(Utility.Extra.MODEL, model);
         intent.putExtra(Utility.Extra.CITY_NAME, Utility.getJsonStringFromObject(cityDetail));
-        intent.putExtra(Utility.Extra.SELECTED_PACKAGE_ID, Utility.getJsonStringFromObject(packageDetail));
         intent.putExtra(Utility.Extra.PACKAGE_LIST, packageList);
         intent.putExtra(Utility.Extra.ADMIN_SETTING, Utility.getJsonStringFromObject(adminSetting));
         context.startActivity(intent);
@@ -115,7 +114,7 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
 
 
         if (getIntent().hasExtra(Utility.Extra.MODEL)) {
-            mSelectedPackageModel = (PackageDetail) Utility.getObjectFromJsonString(getIntent().getExtras().getString(Utility.Extra.SELECTED_PACKAGE_ID), PackageDetail.class);
+            mSelectedPackageModel = (PackageDetail) Utility.getObjectFromJsonString(getIntent().getExtras().getString(Utility.Extra.MODEL), PackageDetail.class);
             mCityDetail = (CityDetail) Utility.getObjectFromJsonString(getIntent().getExtras().getString(Utility.Extra.CITY_NAME), CityDetail.class);
             settingModel = (AdminSettingModel) Utility.getObjectFromJsonString(getIntent().getExtras().getString(Utility.Extra.ADMIN_SETTING), AdminSettingModel.class);
 //            mSelectedPackageModel = getIntent().getExtras().getString(Utility.Extra.SELECTED_PACKAGE_ID);
@@ -471,7 +470,6 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
     private String createSubscriptionPackageRequest() {
 
         JSONArray cartArray = new JSONArray();
-        String cartDetail = Utility.getJsonStringFromObject(mPackageList);
         for (PackageDetail detail : mPackageList) {
             JSONObject packageObject = new JSONObject();
             if (detail.isSelected) {

@@ -30,6 +30,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -42,6 +43,7 @@ public class TaskCreationCCActivity extends BaseAppCompatActivity {
     public JobCategoryModel mJobCategoryModel;
     TaskCreationPagerAdapter mTaskCreationPagerAdapter;
     private List<SubServiceDetailModel> mSelectedSubServiceList;
+    public ArrayList<AddressModel> mCareAddressList;
     Map<String, Object> mTaskCreationParams;
     CustomLoadingDialog mDialog;
     private boolean isInstaBooking = false;
@@ -50,12 +52,14 @@ public class TaskCreationCCActivity extends BaseAppCompatActivity {
     public String mCarePackageId;
 
     public static void getInstance(Context mContext, JobCategoryModel model, AddressModel addressModel, String packageType
-            , String carePackageId) {
+            , String carePackageId, List<AddressModel> mSelectedAddressList) {
         Intent intent = new Intent(mContext, TaskCreationCCActivity.class);
         intent.putExtra(Utility.Extra.DATA, Utility.getJsonStringFromObject(model));
         intent.putExtra(Utility.Extra.DATA_2, packageType);
         intent.putExtra(Utility.Extra.SELECTED_ADDRESS_MODEL, Utility.getJsonStringFromObject(addressModel));
         intent.putExtra(Utility.Extra.SELECTED_PACKAGE_ID, carePackageId);
+        intent.putExtra(Utility.Extra.DATA_3, Utility.getJsonStringFromObject(mSelectedAddressList));
+//        ((Activity) mContext).startActivityForResult(intent, Utility.REQUEST_CODE_TASK_CREATION_CHEEP_CARE);
         mContext.startActivity(intent);
     }
 
@@ -76,6 +80,7 @@ public class TaskCreationCCActivity extends BaseAppCompatActivity {
             mPackageType = getIntent().getStringExtra(Utility.Extra.DATA_2);
             mCarePackageId = getIntent().getStringExtra(Utility.Extra.SELECTED_PACKAGE_ID);
             mAddressModel = (AddressModel) Utility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.SELECTED_ADDRESS_MODEL), AddressModel.class);
+            mCareAddressList = Utility.getObjectListFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA_3), AddressModel[].class);
         }
 
         // Setting up Toolbar
@@ -423,8 +428,13 @@ public class TaskCreationCCActivity extends BaseAppCompatActivity {
 
     //TODO: to be removed
     public void startBookingConfirmationActivity() {
-        BookingConfirmationCcActivity.newInstance(TaskCreationCCActivity.this, mCarePackageId, mJobCategoryModel.catId
+        BookingConfirmationCcActivity.newInstance(TaskCreationCCActivity.this
+                , mCarePackageId
+                , mJobCategoryModel.catId
                 , mTaskCreationPagerAdapter.mTaskCreationPhase1Fragment.getSelectedFreeServices()
-                , mTaskCreationPagerAdapter.mTaskCreationPhase1Fragment.getSelectedPaidServices(), mAddressModel,"");
+                , mTaskCreationPagerAdapter.mTaskCreationPhase1Fragment.getSelectedPaidServices()
+                , mAddressModel
+                , ((TaskCreationPhase2Fragment) mTaskCreationPagerAdapter.getItem(1)).getStartDateTime(),
+                ((TaskCreationPhase2Fragment) mTaskCreationPagerAdapter.getItem(1)).getTaskDescription());
     }
 }

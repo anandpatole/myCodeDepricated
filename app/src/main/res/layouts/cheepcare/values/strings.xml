@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="validation_message_same_address_for_same_group_of_care">You can\'t purchase care package home, biz and soci for same address</string>
-</resources>

@@ -34,9 +34,9 @@ public class CheepCarePaymentDataModel {
     @SerializedName("is_annually")
     @Expose
     public String isAnnually;
-    @SerializedName("care_city_id")
-    @Expose
-    public String careCityId;
+    //    @SerializedName("care_city_id")
+//    @Expose
+//    public String careCityId;
     @SerializedName("payment_type")
     @Expose
     public String paymentType;
@@ -60,7 +60,7 @@ public class CheepCarePaymentDataModel {
                 " payable_amount :: " + payableAmount + "\n " +
                 " taxAmount :: " + taxAmount + "\n " +
                 " isAnnually :: " + isAnnually + "\n " +
-                " careCityId :: " + careCityId + "\n " +
+//                " careCityId :: " + careCityId + "\n " +
                 "  paymentType :: " + paymentType + "\n " +
                 "  dsaCode :: " + dsaCode + "\n " +
                 "  bundlediscountPercent :: " + bundlediscountPercent + "\n " +

@@ -2,7 +2,6 @@ package com.cheep.cheepcare.adapter;
 
 import android.databinding.DataBindingUtil;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,10 +51,7 @@ class DropDownAddressAdapter extends RecyclerView.Adapter<DropDownAddressAdapter
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
         AddressModel model = mList.get(position);
-        if (!TextUtils.isEmpty(model.nickname))
-            holder.binding.tvAddressNickname.setText(model.nickname);
-        else
-            holder.binding.tvAddressNickname.setText(Utility.getAddressCategoryString(model.category));
+        holder.binding.tvAddressNickname.setText(model.getNicknameString(holder.binding.ivAddressIcon.getContext()));
         holder.binding.ivAddressIcon.setImageResource(Utility.getAddressCategoryBlueIcon(model.category));
         holder.binding.llAddressContainer.setVisibility(View.VISIBLE);
         holder.binding.ivUpArrow.setVisibility(position == 0 ? View.VISIBLE : View.GONE);

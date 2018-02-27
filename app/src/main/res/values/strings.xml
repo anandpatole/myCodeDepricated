@@ -560,7 +560,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_enter_amount">Enter Amount</string>
     <string name="label_amount_payable">Amount Payable</string>
     <string name="label_notify_paying_by_wallet">You are about to pay using your %1s wallet</string>
-    <string name="no_pro_available_title" />
+    <string name="no_pro_available_title"/>
     <string name="no_pro_available_description">No PROs is available for this address</string>
     <string name="validate_comment">Please provide valid comment.</string>
     <string name="title_booking_confimation">Booking Confirmation</string>
@@ -646,7 +646,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
 
     <string name="hint_apply_cheep_promo_code">Apply CHEEP Promo code?</string>
     <string name="hint_apply_cheep_mate_code">Have a CHEEP Mate Code?</string>
-    <string name="label_empty_string" />
+    <string name="label_empty_string"/>
     <string name="label_proceed_to_checkout">Proceed to Checkout</string>
     <string name="add_package_to_cart">Add Package to Cart</string>
     <string name="label_appliance">%1d Appliances</string>
@@ -745,4 +745,6 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="msg_task_confirmed_instabook_2">Our Cheep PRO will be arriving at your location on %1s.</string>
     <string name="number_of_services">( x%1s )</string>
     <string name="label_free">FREE</string>
+    <string name="validation_message_same_address_for_same_group_of_care">You can\'t purchase care package home, biz and soci for same address</string>
+    <string name="label_address_subscribed">Subscribed under CHEEP care</string>
 </resources>

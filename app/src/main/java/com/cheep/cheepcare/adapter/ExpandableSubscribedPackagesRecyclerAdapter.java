@@ -15,7 +15,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
 import android.text.Spanned;
-import android.text.TextUtils;
 import android.text.style.LeadingMarginSpan;
 import android.util.Log;
 import android.util.TypedValue;
@@ -156,7 +155,7 @@ public class ExpandableSubscribedPackagesRecyclerAdapter extends ExpandableRecyc
                             }
                         }
                     }
-                    TaskCreationCCActivity.getInstance(parentViewHolder.mBinding.cardView.getContext(), mList.get(parentPosition).getChildList().get(0), addressModel, mList.get(parentPosition).packageType, mList.get(parentPosition).id);
+                    TaskCreationCCActivity.getInstance(parentViewHolder.mBinding.cardView.getContext(), mList.get(parentPosition).getChildList().get(0), addressModel, mList.get(parentPosition).packageType, mList.get(parentPosition).id, mList.get(parentPosition).mSelectedAddressList);
 
                 } else {
                     new Handler().postDelayed(new Runnable() {
@@ -341,10 +340,7 @@ public class ExpandableSubscribedPackagesRecyclerAdapter extends ExpandableRecyc
                     addressModel.isSelected = true;
                 }
 
-                if (!TextUtils.isEmpty(addressModel.nickname))
-                    mBinding.tvAddressNickname.setText(addressModel.nickname);
-                else
-                    mBinding.tvAddressNickname.setText(Utility.getAddressCategoryString(addressModel.category));
+                mBinding.tvAddressNickname.setText(addressModel.getNicknameString(context));
                 mBinding.ivAddressIcon.setImageResource(Utility.getAddressCategoryBlueIcon(addressModel.category));
                 mBinding.tvAddress.setText(addressModel.getAddressWithInitials());
                 String daysLeft = packageDetail.getDaysLeft(addressModel.end_date);

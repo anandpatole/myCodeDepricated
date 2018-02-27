@@ -24,6 +24,7 @@ import com.cheep.cheepcare.model.CheepCarePaymentDataModel;
 import com.cheep.cheepcare.model.CityDetail;
 import com.cheep.databinding.ActivityPaymentChoiceBinding;
 import com.cheep.dialogs.AcknowledgementInteractionListener;
+import com.cheep.model.AddressModel;
 import com.cheep.model.MessageEvent;
 import com.cheep.model.UserDetails;
 import com.cheep.network.NetworkUtility;
@@ -34,13 +35,16 @@ import com.cheep.utils.LogUtils;
 import com.cheep.utils.PaytmUtility;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.Utility;
+import com.cheep.utils.WebCallClass;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -281,7 +285,7 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
         mParams.put(NetworkUtility.TAGS.PAYABLE_AMOUNT, String.valueOf(paymentDataModel.payableAmount));
         mParams.put(NetworkUtility.TAGS.TAX_AMOUNT, String.valueOf(paymentDataModel.taxAmount));
         mParams.put(NetworkUtility.TAGS.IS_ANNUALLY, String.valueOf(paymentDataModel.isAnnually));
-        mParams.put(NetworkUtility.TAGS.CARE_CITY_ID, String.valueOf(paymentDataModel.careCityId));
+        mParams.put(NetworkUtility.TAGS.CARE_CITY_ID, String.valueOf(cityDetail.id));
         mParams.put(NetworkUtility.TAGS.PAYMENT_METHOD, paymentMethod);
         mParams.put(NetworkUtility.TAGS.PAYMENT_LOG, paymentLog);
         mParams.put(NetworkUtility.TAGS.DSA_CODE, paymentDataModel.dsaCode);
@@ -294,7 +298,7 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
         // Url is based on condition if address id is greater then 0 then it means we need to update the existing address
         VolleyNetworkRequest mVolleyNetworkRequestForSPList = new VolleyNetworkRequest(NetworkUtility.WS.PURCHASE_CARE_PACKAGE
                 , mCallGenerateHashWSErrorListener
-                , mCallBookProForNormalTaskWSResponseListener
+                , mCallCreateCheepCareTaskWSResponseListener
                 , mHeaderParams
                 , mParams
                 , null);
@@ -342,6 +346,7 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
         public void onErrorResponse(VolleyError error) {
             Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
 
+            callProfileWsforUpdatedAddressList();
             // Close Progressbar
             hideProgressDialog();
 
@@ -529,12 +534,8 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
         }
     };
 
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////
-    ////////////////           Book and pay ws         [start]                               /////////////////
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
-    Response.Listener mCallBookProForNormalTaskWSResponseListener = new Response.Listener() {
+    Response.Listener mCallCreateCheepCareTaskWSResponseListener = new Response.Listener() {
         @Override
         public void onResponse(Object response) {
 
@@ -554,6 +555,7 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
                         messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.PACKAGE_SUBSCRIBED_SUCCESSFULLY;
 
                         EventBus.getDefault().post(messageEvent);
+                        callProfileWsforUpdatedAddressList();
 
                         finish();
 
@@ -562,11 +564,13 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
                         // Show Toast
                         Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
+                        callProfileWsforUpdatedAddressList();
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
                         error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
                         // Show message
                         Utility.showSnackBar(error_message, mBinding.getRoot());
+                        callProfileWsforUpdatedAddressList();
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
                     case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
@@ -574,19 +578,42 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
                         Utility.logout(mContext, true, statusCode);
                         finish();
                         break;
+
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
                 mCallErrorListener.onErrorResponse(new VolleyError(e.getMessage()));
             }
 
+
         }
     };
 
+    private void callProfileWsforUpdatedAddressList() {
+        WebCallClass.getProfileDetail(mContext, new WebCallClass.CommonResponseListener() {
+            @Override
+            public void volleyError(VolleyError error) {
 
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////
-    ////////////////           Create Strategic task + payment  [end]                        /////////////////
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////
+            }
+
+            @Override
+            public void showSpecificMessage(String message) {
+
+            }
+
+            @Override
+            public void forceLogout() {
+
+            }
+        }, new WebCallClass.GetProfileDetailListener() {
+            @Override
+            public void getUserDetails(UserDetails userDetails, JSONArray jsonEmergencyContacts, ArrayList<AddressModel> addressList) {
+
+            }
+        });
+    }
+
+
     private void showPaymentFailedDialog() {
         LogUtils.LOGE(TAG, "showPaymentFailedDialog: ");
         PaymentFailedDialog paymentFailedDialog = PaymentFailedDialog.newInstance(
