@@ -271,7 +271,7 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
         public void onPackageItemClick(int position, PackageDetail packageModel) {
 //            String packageList = Utility.getJsonStringFromObject(mCityLandingPageModel.packageDetailList);
             String packageList = Utility.getJsonStringFromObject(mCityLandingPageModel.packageDetailList);
-            PackageCustomizationActivity.newInstance(mContext, packageModel, mCityLandingPageModel.cityDetail, packageModel.id, packageList, mCityLandingPageModel.adminSetting);
+            PackageCustomizationActivity.newInstance(mContext, packageModel, mCityLandingPageModel.cityDetail, packageModel, packageList, mCityLandingPageModel.adminSetting);
         }
     };
 

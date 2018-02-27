@@ -137,7 +137,7 @@ public class PackageSummaryFragment extends BaseFragment {
             @Override
             public void onPackageItemClick(int position, PackageDetail packageModel) {
                 SelectPackageSpecificationsFragment fragment = (SelectPackageSpecificationsFragment) mPackageCustomizationActivity.mPackageCustomizationPagerAdapter.getItem(PackageCustomizationActivity.STAGE_1);
-                mPackageCustomizationActivity.mPackageId = packageModel.id;
+                mPackageCustomizationActivity.mSelectedPackageModel = packageModel;
                 if (fragment != null)
                 {
                     fragment.initiateUI();

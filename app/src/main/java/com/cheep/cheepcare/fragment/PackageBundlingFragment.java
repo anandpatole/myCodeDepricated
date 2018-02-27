@@ -85,7 +85,7 @@ public class PackageBundlingFragment extends BaseFragment {
         mPackageAdapter = new PackageBundlingAdapter(new PackageBundlingAdapter.PackageItemClickListener() {
             @Override
             public void onPackageItemClick(int position, PackageDetail packageModel) {
-                mPackageCustomizationActivity.mPackageId = packageModel.id;
+                mPackageCustomizationActivity.mSelectedPackageModel = packageModel;
                 mPackageCustomizationActivity.gotoStep(PackageCustomizationActivity.STAGE_1);
                 mPackageCustomizationActivity.loadAnotherPackage();
             }
@@ -185,7 +185,7 @@ public class PackageBundlingFragment extends BaseFragment {
             mParams.put(NetworkUtility.TAGS.ADDRESS_ID, model.address_id);
             mParams.put(NetworkUtility.TAGS.CARE_CITY_ID, mPackageCustomizationActivity.mCityDetail.id);
             mParams.put(NetworkUtility.TAGS.CITY_NAME, Utility.EMPTY_STRING);
-            mParams.put(NetworkUtility.TAGS.CARE_PACKAGE_ID, mPackageCustomizationActivity.mPackageId);
+            mParams.put(NetworkUtility.TAGS.CARE_PACKAGE_ID, mPackageCustomizationActivity.mSelectedPackageModel.id);
         }
 
         Utility.hideKeyboard(mContext);

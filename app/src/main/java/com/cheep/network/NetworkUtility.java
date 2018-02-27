@@ -333,7 +333,6 @@ public class NetworkUtility {
 
         String TASK_DESC = "task_desc";
         String CITY_ID = "city_id";
-        String IS_PURCHASED= "is_purchased";
         String CAT_ID = "cat_id";
         String SUBCATEGORY_ID = "subcategory_id";
 
@@ -444,6 +443,9 @@ public class NetworkUtility {
         String PACKAGE_TYPE= "package_type";
         String PAID_SERVICE= "paid_service";
         String FREE_SERVICE= "free_service";
+
+        String IS_PURCHASED= "is_purchased";
+        String IS_SAME_PACKAGE_TYPE= "is_same_package_type";
 
         interface VERSION_CHANGE_TYPE {
             int NORMAL = 0;

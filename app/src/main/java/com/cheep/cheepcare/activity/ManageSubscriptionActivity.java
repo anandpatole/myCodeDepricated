@@ -270,7 +270,7 @@ public class ManageSubscriptionActivity extends BaseAppCompatActivity {
                 @Override
                 public void onPackageItemClick(PackageDetail model) {
                     String packageList = Utility.getJsonStringFromObject(mAllPackagesList);
-                    PackageCustomizationActivity.newInstance(mContext, model, mCityDetail, model.id, packageList, mAdminSettingModel);
+                    PackageCustomizationActivity.newInstance(mContext, model, mCityDetail, model, packageList, mAdminSettingModel);
                 }
             };
 
