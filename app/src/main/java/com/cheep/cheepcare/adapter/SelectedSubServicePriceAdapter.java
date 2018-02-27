@@ -1,5 +1,6 @@
 package com.cheep.cheepcare.adapter;
 
+import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -35,11 +36,19 @@ public class SelectedSubServicePriceAdapter extends RecyclerView.Adapter<Selecte
 
     @Override
     public void onBindViewHolder(SelectedSubServiceViewHolder holder, int position) {
+        SubServiceDetailModel model = mList.get(holder.getAdapterPosition());
+        Context context = holder.mBinding.getRoot().getContext();
+
         if (holder.getAdapterPosition() == (mList.size() - 1)) {
             holder.mBinding.txtVerticalLine.setVisibility(View.GONE);
         }
-        holder.mBinding.tvSubService.setText(mList.get(holder.getAdapterPosition()).name);
-        holder.mBinding.tvSubServicePrice.setText(mList.get(holder.getAdapterPosition()).unitPrice);
+
+        holder.mBinding.tvSubService.setText(model.name);
+        if (Double.parseDouble(model.unitPrice) == 0) {
+            holder.mBinding.tvSubServicePrice.setText(context.getString(R.string.label_free));
+        } else {
+            holder.mBinding.tvSubServicePrice.setText(String.valueOf(model.qty * Double.parseDouble(model.unitPrice)));
+        }
     }
 
     @Override

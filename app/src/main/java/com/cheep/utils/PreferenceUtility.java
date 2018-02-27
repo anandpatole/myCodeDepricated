@@ -138,7 +138,8 @@ public class PreferenceUtility {
         mSharedPreferences.edit().remove(PREF_NOTIFICATION_COUNTER).apply();
 
         // Clear cart detail of all cities
-        String[] ciryArray = mSharedPreferences.getString(CITY_DATA, "").split("\\s*,\\s*");
+        String[] ciryArray = mSharedPreferences.getString(CITY_DATA, Utility.EMPTY_STRING).split(",");
+        LogUtils.LOGE(TAG, "onUserLogout: " + mSharedPreferences.getString(CITY_DATA, Utility.EMPTY_STRING));
         if (ciryArray.length > 0) {
             for (String s : ciryArray) {
                 removeCityCartDetail(s);
@@ -215,16 +216,17 @@ public class PreferenceUtility {
         mSharedPreferences.edit().putString(citySlug, cartDetails).apply();
 
         String s = getCityData();
-        if (s != null && !TextUtils.isEmpty(s) && !s.contains(citySlug)) {
-            mSharedPreferences.edit().putString(CITY_DATA, s + "," + citySlug).apply();
+        if (s != null && !TextUtils.isEmpty(s)) {
+            if (!s.contains(citySlug))
+                mSharedPreferences.edit().putString(CITY_DATA, s + "," + citySlug).apply();
         } else {
             mSharedPreferences.edit().putString(CITY_DATA, citySlug).apply();
         }
-        LogUtils.LOGE(TAG, "setCityCartDetail: " + mSharedPreferences.getString(CITY_DATA, ""));
+        LogUtils.LOGE(TAG, "setCityCartDetail: " + mSharedPreferences.getString(CITY_DATA, Utility.EMPTY_STRING));
     }
 
     public String getCityCartDetail(String citySlug) {
-        return mSharedPreferences.getString(citySlug, "");
+        return mSharedPreferences.getString(citySlug, Utility.EMPTY_STRING);
     }
 
     public void removeCityCartDetail(String citySlug) {
@@ -234,6 +236,6 @@ public class PreferenceUtility {
 
 
     public String getCityData() {
-        return mSharedPreferences.getString(CITY_DATA, "");
+        return mSharedPreferences.getString(CITY_DATA, Utility.EMPTY_STRING);
     }
 }

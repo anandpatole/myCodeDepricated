@@ -130,7 +130,6 @@ public class FreeSubCategoryFragment extends BaseFragment {
         }
     }
 
-
     /**
      * This method would return the selected list by getting
      * from adapter

@@ -425,6 +425,6 @@ public class TaskCreationCCActivity extends BaseAppCompatActivity {
     public void startBookingConfirmationActivity() {
         BookingConfirmationCcActivity.newInstance(TaskCreationCCActivity.this, mCarePackageId, mJobCategoryModel.catId
                 , mTaskCreationPagerAdapter.mTaskCreationPhase1Fragment.getSelectedFreeServices()
-                , mTaskCreationPagerAdapter.mTaskCreationPhase1Fragment.getSelectedPaidServices(), mAddressModel);
+                , mTaskCreationPagerAdapter.mTaskCreationPhase1Fragment.getSelectedPaidServices(), mAddressModel,"");
     }
 }

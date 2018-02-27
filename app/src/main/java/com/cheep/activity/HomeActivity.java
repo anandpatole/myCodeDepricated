@@ -883,11 +883,9 @@ public class HomeActivity extends BaseAppCompatActivity
             if (mHomeTabFragment != null) {
                 Log.i(TAG, "onCategoryFavouriteClicked: Called for HomeTab");
                 ((HomeTabFragment) mHomeTabFragment).onCategoryFavouriteClicked(model, position);
-                if (((HomeTabFragment) mHomeTabFragment).getmSelectedFilterType().equalsIgnoreCase(Utility.FILTER_TYPES.FILTER_TYPE_SUBSCRIBED))
-                {
+                if (((HomeTabFragment) mHomeTabFragment).getmSelectedFilterType().equalsIgnoreCase(Utility.FILTER_TYPES.FILTER_TYPE_SUBSCRIBED)) {
 //                    TaskCreationCCActivity.getInstance(mContext, model, null);
-                }
-                else
+                } else
                     TaskCreationActivity.getInstance(mContext, model);
             } else
                 TaskCreationActivity.getInstance(mContext, model);

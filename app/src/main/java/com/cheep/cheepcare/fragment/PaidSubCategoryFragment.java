@@ -23,6 +23,7 @@ import com.cheep.utils.LogUtils;
 
 import java.util.ArrayList;
 
+
 /**
  * Created by bhavesh on 28/4/17.
  */
@@ -31,7 +32,7 @@ public class PaidSubCategoryFragment extends BaseFragment {
     public static final String TAG = PaidSubCategoryFragment.class.getSimpleName();
     private FragmentSelectSubCategoryBinding mBinding;
     private PaidServicesAdapter mPaidServicesAdapter;
-//    ErrorLoadingHelper errorLoadingHelper;
+    //    ErrorLoadingHelper errorLoadingHelper;
     private TaskCreationCCActivity mTaskCreationCCActivity;
     private boolean isVerified = false;
 

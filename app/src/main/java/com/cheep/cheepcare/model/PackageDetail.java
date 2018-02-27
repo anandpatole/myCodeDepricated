@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import com.cheep.custom_view.expandablerecycleview.Parent;
 import com.cheep.model.AddressModel;
 import com.cheep.model.JobCategoryModel;
+import com.cheep.network.NetworkUtility;
 import com.cheep.utils.Utility;
 import com.google.gson.annotations.SerializedName;
 
@@ -71,7 +72,7 @@ public class PackageDetail implements Parent<JobCategoryModel>, Serializable {
 
     @Override
     public boolean isInitiallyExpanded() {
-        return true;
+        return !packageSlug.equalsIgnoreCase(NetworkUtility.CARE_PACKAGE_SLUG.APPLIANCE_CARE) && !packageSlug.equalsIgnoreCase(NetworkUtility.CARE_PACKAGE_SLUG.TECH_CARE);
     }
 
     public String getDaysLeft(String stringDate) {

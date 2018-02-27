@@ -44,6 +44,7 @@ import com.cheep.utils.LogUtils;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.SuperCalendar;
 import com.cheep.utils.Utility;
+import com.cheep.utils.WebCallClass;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -83,6 +84,7 @@ public class BookingConfirmationCcActivity extends BaseAppCompatActivity {
     private ArrayList<SubServiceDetailModel> freeList;
     private ArrayList<SubServiceDetailModel> paidList;
     private AddressModel mAddressModel;
+    private String startDateTime;
     //added by bhavesh 26/2/18
 
     /**
@@ -130,13 +132,14 @@ public class BookingConfirmationCcActivity extends BaseAppCompatActivity {
 
     //TODO: method to be removed
     public static void newInstance(Context context, String carePackageId, String catId, ArrayList<SubServiceDetailModel> freeList
-            , ArrayList<SubServiceDetailModel> paidList, AddressModel addressModel) {
+            , ArrayList<SubServiceDetailModel> paidList, AddressModel addressModel, String startDateTime) {
         Intent intent = new Intent(context, BookingConfirmationCcActivity.class);
         intent.putExtra(Utility.Extra.SELECTED_PACKAGE_ID, carePackageId);
         intent.putExtra(Utility.Extra.CATEGORY_ID, catId);
         intent.putExtra("Utility.Extra.DATA", freeList);
         intent.putExtra("Utility.Extra.DATA_2", paidList);
         intent.putExtra(Utility.Extra.SELECTED_ADDRESS_MODEL, addressModel);
+        intent.putExtra("startDateTime", startDateTime);
         context.startActivity(intent);
     }
 
@@ -167,6 +170,8 @@ public class BookingConfirmationCcActivity extends BaseAppCompatActivity {
             paidList = (ArrayList<SubServiceDetailModel>) getIntent().getExtras().getSerializable("Utility.Extra.DATA_2");
         if (getIntent().getExtras() != null && getIntent().hasExtra(Utility.Extra.SELECTED_ADDRESS_MODEL))
             mAddressModel = (AddressModel) getIntent().getSerializableExtra(Utility.Extra.SELECTED_ADDRESS_MODEL);
+        if (getIntent().getExtras() != null && getIntent().hasExtra("startDateTime"))
+            startDateTime = getIntent().getExtras().getString("startDateTime");
 
         setSupportActionBar(mBinding.toolbar);
         if (getSupportActionBar() != null) {
@@ -207,8 +212,19 @@ public class BookingConfirmationCcActivity extends BaseAppCompatActivity {
 
         mBinding.tvTaskDescription.setText(spannableStringBuilder);
 
-        mBinding.recyclerViewFree.setAdapter(new SelectedSubServicePriceAdapter(freeList));
-        mBinding.recyclerViewPaid.setAdapter(new SelectedSubServicePriceAdapter(paidList));
+        if (!freeList.isEmpty()) {
+            mBinding.recyclerViewFree.setAdapter(new SelectedSubServicePriceAdapter(freeList));
+        } else {
+            mBinding.tvFreeCc.setVisibility(View.GONE);
+            mBinding.recyclerViewFree.setVisibility(View.GONE);
+        }
+
+        if (!paidList.isEmpty()) {
+            mBinding.recyclerViewPaid.setAdapter(new SelectedSubServicePriceAdapter(paidList));
+        } else {
+            mBinding.tvPaidServices.setVisibility(View.GONE);
+            mBinding.recyclerViewPaid.setVisibility(View.GONE);
+        }
 
         mBinding.ivTermsTick.setSelected(true);
         if (getIntent().hasExtra(Utility.Extra.DATA_3)) {
@@ -337,7 +353,7 @@ public class BookingConfirmationCcActivity extends BaseAppCompatActivity {
     private void setUpDetailsForPayLater() {
 
         mBinding.lnPayNow.setVisibility(View.VISIBLE);
-        mBinding.textPayNow.setSelected(true);
+        mBinding.tvBookAndPay.setSelected(true);
 
         if (taskDetailModel != null && providerModel != null) {
 
@@ -368,7 +384,7 @@ public class BookingConfirmationCcActivity extends BaseAppCompatActivity {
      * When user selects book button
      */
     private void setUpDetailsForBooking() {
-        mBinding.lnPayNow.setVisibility(View.GONE);
+//        mBinding.lnPayNow.setVisibility(View.GONE);
 
         if (getIntent().hasExtra(Utility.Extra.DATA_2)) {
             //This is only when provider profile view for specific task (provider gives quote to specific task)
@@ -400,12 +416,12 @@ public class BookingConfirmationCcActivity extends BaseAppCompatActivity {
                 mBinding.ivTermsTick.setSelected(!mBinding.ivTermsTick.isSelected());
 
                 // Changes are per new flow pay now/later: 15/11/17
-                mBinding.textPayNow.setSelected(mBinding.ivTermsTick.isSelected());
-                mBinding.textPayNow.setEnabled(mBinding.ivTermsTick.isSelected());
+                mBinding.tvBookAndPay.setSelected(mBinding.ivTermsTick.isSelected());
+                mBinding.tvBookAndPay.setEnabled(mBinding.ivTermsTick.isSelected());
             }
         });
 
-        mBinding.textPayNow.setOnClickListener(onPayClickListener);
+        mBinding.tvBookAndPay.setOnClickListener(onPayClickListener);
 
     }
 
@@ -418,6 +434,12 @@ public class BookingConfirmationCcActivity extends BaseAppCompatActivity {
 //            taskDetailModel.usedWalletAmount = String.valueOf(usedWalletBalance);
 //
 //            PaymentChoiceActivity.newInstance(mContext, taskDetailModel, providerModel, mSelectedAddressModelForInsta);
+            double totalPrice;
+            for (int i = 0; i < paidList.size(); i++) {
+
+            }
+            WebCallClass.createTask(mContext, mCarePackageId, mCategoryId, freeList, paidList, mAddressModel
+                    , "0.00", "0.00", /*startDateTime*/"");
             TaskSummaryForMultiCatActivity.getInstance(mContext, Utility.EMPTY_STRING);
         }
     };
@@ -860,7 +882,6 @@ public class BookingConfirmationCcActivity extends BaseAppCompatActivity {
 
         }
     };
-
 
     // check is task is from insta booking or not
 

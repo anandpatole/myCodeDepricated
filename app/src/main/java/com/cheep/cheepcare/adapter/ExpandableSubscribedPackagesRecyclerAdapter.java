@@ -27,6 +27,7 @@ import android.widget.ListView;
 import android.widget.PopupWindow;
 
 import com.cheep.R;
+import com.cheep.cheepcare.activity.TaskCreationCCActivity;
 import com.cheep.cheepcare.model.PackageDetail;
 import com.cheep.custom_view.expandablerecycleview.ChildViewHolder;
 import com.cheep.custom_view.expandablerecycleview.ExpandableRecyclerAdapter;
@@ -36,6 +37,7 @@ import com.cheep.databinding.RowPackageCareSubItemBinding;
 import com.cheep.model.AddressModel;
 import com.cheep.model.JobCategoryModel;
 import com.cheep.network.NetworkUtility;
+import com.cheep.utils.LogUtils;
 import com.cheep.utils.Utility;
 
 import java.util.ArrayList;
@@ -56,6 +58,9 @@ public class ExpandableSubscribedPackagesRecyclerAdapter extends ExpandableRecyc
     private final List<PackageDetail> mList;
     private static final String TAG = ExpandableSubscribedPackagesRecyclerAdapter.class.getSimpleName();
     private final ChildViewsClickListener mListener;
+    private static final int VIEW_TYPE_CAN_EXPANDABLE = 1;
+    private static final int VIEW_TYPE_CAN_NOT_EXPANDABLE = 0;
+
 
     public interface ChildViewsClickListener {
         void onBookClicked(JobCategoryModel model, int childAdapterPosition, PackageDetail packageDetail);
@@ -77,6 +82,7 @@ public class ExpandableSubscribedPackagesRecyclerAdapter extends ExpandableRecyc
      * @param parentList List of all parents to be displayed in the RecyclerView that this
      *                   adapter is linked to
      */
+
     public ExpandableSubscribedPackagesRecyclerAdapter(@NonNull List<PackageDetail> parentList
             , boolean isSingleSelection, ChildViewsClickListener listener) {
         super(parentList);
@@ -85,6 +91,7 @@ public class ExpandableSubscribedPackagesRecyclerAdapter extends ExpandableRecyc
         mList = parentList;
         this.isSingleSelection = isSingleSelection;
     }
+
 
     @NonNull
     @Override
@@ -95,7 +102,13 @@ public class ExpandableSubscribedPackagesRecyclerAdapter extends ExpandableRecyc
                         , R.layout.row_package_care_item
                         , parentViewGroup
                         , false);
-        return new ParentCategoryViewHolder(binding);
+        return new ParentCategoryViewHolder(binding, viewType);
+    }
+
+    @Override
+    public int getParentViewType(int parentPosition) {
+
+        return super.getParentViewType(parentPosition);
     }
 
     @NonNull
@@ -127,42 +140,57 @@ public class ExpandableSubscribedPackagesRecyclerAdapter extends ExpandableRecyc
                     , 0
                     , 0);
         }
-
         parentViewHolder.mBinding.getRoot().setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (!parentViewHolder.isExpanded()) {
-                            if (mList.get(parentPosition).categoryList != null && !mList.get(parentPosition).categoryList.isEmpty()) {
-                                parentViewHolder.mBinding.cardView.setContentPadding(0
-                                        , 0
-                                        , 0
-                                        , 0/*(int) Utility.convertDpToPixel(24, mBinding.getRoot().getContext())*/);
-                            } else {
-                                parentViewHolder.mBinding.cardView.setContentPadding(0
-                                        , 0
-                                        , 0
-                                        , 0);
-                            }
-                        } else {
-                            if (mList.get(parentPosition).categoryList != null && !mList.get(parentPosition).categoryList.isEmpty()) {
-                                parentViewHolder.mBinding.cardView.setContentPadding(0
-                                        , 0
-                                        , 0
-                                        , (int) Utility.convertDpToPixel(24, context));
-                            } else {
-                                parentViewHolder.mBinding.cardView.setContentPadding(0
-                                        , 0
-                                        , 0
-                                        , 0);
+            public void onClick(final View v) {
+
+                if (mList.get(parentPosition).packageSlug.equalsIgnoreCase(NetworkUtility.CARE_PACKAGE_SLUG.APPLIANCE_CARE) || mList.get(parentPosition).packageSlug.equalsIgnoreCase(NetworkUtility.CARE_PACKAGE_SLUG.TECH_CARE)) {
+                    parentViewHolder.setIsExpandable(false);
+                    parentViewHolder.setExpanded(false);
+                    AddressModel addressModel = null;
+                    if (mList.get(parentPosition).mSelectedAddressList != null) {
+                        if (mList.get(parentPosition).mSelectedAddressList != null) {
+                            for (AddressModel addressModel1 : mList.get(parentPosition).mSelectedAddressList) {
+                                if (addressModel1.isSelected)
+                                    addressModel = addressModel1;
                             }
                         }
                     }
-                }, 80);
+                    TaskCreationCCActivity.getInstance(parentViewHolder.mBinding.cardView.getContext(), mList.get(parentPosition).getChildList().get(0), addressModel, mList.get(parentPosition).packageType, mList.get(parentPosition).id);
 
-                parentViewHolder.onClick(v);
+                } else {
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (!parentViewHolder.isExpanded()) {
+                                if (mList.get(parentPosition).categoryList != null && !mList.get(parentPosition).categoryList.isEmpty()) {
+                                    parentViewHolder.mBinding.cardView.setContentPadding(0
+                                            , 0
+                                            , 0
+                                            , 0/*(int) Utility.convertDpToPixel(24, mBinding.getRoot().getContext())*/);
+                                } else {
+                                    parentViewHolder.mBinding.cardView.setContentPadding(0
+                                            , 0
+                                            , 0
+                                            , 0);
+                                }
+                            } else {
+                                if (mList.get(parentPosition).categoryList != null && !mList.get(parentPosition).categoryList.isEmpty()) {
+                                    parentViewHolder.mBinding.cardView.setContentPadding(0
+                                            , 0
+                                            , 0
+                                            , (int) Utility.convertDpToPixel(24, context));
+                                } else {
+                                    parentViewHolder.mBinding.cardView.setContentPadding(0
+                                            , 0
+                                            , 0
+                                            , 0);
+                                }
+                            }
+                        }
+                    }, 80);
+                    parentViewHolder.onClick(v);
+                }
             }
         });
 
@@ -173,6 +201,10 @@ public class ExpandableSubscribedPackagesRecyclerAdapter extends ExpandableRecyc
     public void onBindChildViewHolder(@NonNull ExpandableSubscribedPackagesRecyclerAdapter.ChildCategoryViewHolder childViewHolder
             , int parentPosition, int childPosition, @NonNull JobCategoryModel child) {
 
+
+        if (mList.get(parentPosition).packageSlug.equalsIgnoreCase(NetworkUtility.CARE_PACKAGE_SLUG.APPLIANCE_CARE) ||
+                mList.get(parentPosition).packageSlug.equalsIgnoreCase(NetworkUtility.CARE_PACKAGE_SLUG.TECH_CARE))
+            parentCollapsedFromViewHolder(parentPosition);
         if (childPosition < (mList.get(parentPosition).categoryList.size() - 1)) {
             childViewHolder.mBinding.cardView.setContentPadding(0
                     , 0
@@ -195,11 +227,15 @@ public class ExpandableSubscribedPackagesRecyclerAdapter extends ExpandableRecyc
 
         RowPackageCareItemBinding mBinding;
 
-        ParentCategoryViewHolder(@NonNull RowPackageCareItemBinding binding) {
+        ParentCategoryViewHolder(@NonNull RowPackageCareItemBinding binding, int viewType) {
             // init views
             super(binding.getRoot());
 
+
             mBinding = binding;
+            LogUtils.LOGE(TAG, "ParentCategoryViewHolder: viewType :: " + viewType);
+
+
             mBinding.lnAddressRow.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -207,6 +243,8 @@ public class ExpandableSubscribedPackagesRecyclerAdapter extends ExpandableRecyc
                 }
             });
 
+
+//            setIsExpandable(viewType == VIEW_TYPE_CAN_EXPANDABLE);
         }
 
         @Override
@@ -234,10 +272,37 @@ public class ExpandableSubscribedPackagesRecyclerAdapter extends ExpandableRecyc
 
         // bind data with view parent row
         public void bind(@NonNull PackageDetail packageDetail) {
-            if (packageDetail.packageSlug.equalsIgnoreCase(NetworkUtility.CARE_PACKAGE_SLUG.APPLIANCE_CARE) ||
-                    packageDetail.packageSlug.equalsIgnoreCase(NetworkUtility.CARE_PACKAGE_SLUG.TECH_CARE)) {
-                setIsExpandable(false);
+
+            if (!isExpanded()) {
+                if (mList.get(getParentAdapterPosition()).categoryList != null && !mList.get(getParentAdapterPosition()).categoryList.isEmpty()) {
+                    mBinding.cardView.setContentPadding(0
+                            , 0
+                            , 0
+                            , 0/*(int) Utility.convertDpToPixel(24, mBinding.getRoot().getContext())*/);
+                } else {
+                    mBinding.cardView.setContentPadding(0
+                            , 0
+                            , 0
+                            , 0);
+                }
+            } else {
+                if (mList.get(getParentAdapterPosition()).categoryList != null && !mList.get(getParentAdapterPosition()).categoryList.isEmpty()) {
+                    mBinding.cardView.setContentPadding(0
+                            , 0
+                            , 0
+                            , (int) Utility.convertDpToPixel(24, mBinding.cardView.getContext()));
+                } else {
+                    mBinding.cardView.setContentPadding(0
+                            , 0
+                            , 0
+                            , 0);
+                }
             }
+//            if (packageDetail.packageSlug.equalsIgnoreCase(NetworkUtility.CARE_PACKAGE_SLUG.APPLIANCE_CARE) ||
+//                    packageDetail.packageSlug.equalsIgnoreCase(NetworkUtility.CARE_PACKAGE_SLUG.TECH_CARE)) {
+//                setIsExpandable(false);
+//            }
+
             Context context = mBinding.getRoot().getContext();
 
             Utility.loadImageView(context, mBinding.ivCareImage
@@ -353,6 +418,8 @@ public class ExpandableSubscribedPackagesRecyclerAdapter extends ExpandableRecyc
 
         // bind data with view for child row
         public void bind(@NonNull final JobCategoryModel model, Context context) {
+
+
             //Background image
             Utility.loadImageView(context, mBinding.imgCategoryBackground, model.catImage, R.drawable.gradient_black);
 //            Utility.loadImageView(context, mBinding.imgCategoryBackground, model.catImageExtras.thumb, R.drawable.gradient_black);
