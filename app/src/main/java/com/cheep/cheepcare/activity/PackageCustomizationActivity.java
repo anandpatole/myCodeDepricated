@@ -91,7 +91,7 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
 
     public static void newInstance(Context context, CityDetail cityDetail, PackageDetail model, String packageList, AdminSettingModel adminSetting) {
         Intent intent = new Intent(context, PackageCustomizationActivity.class);
-        intent.putExtra(Utility.Extra.MODEL, model);
+        intent.putExtra(Utility.Extra.MODEL, Utility.getJsonStringFromObject(model));
         intent.putExtra(Utility.Extra.CITY_NAME, Utility.getJsonStringFromObject(cityDetail));
         intent.putExtra(Utility.Extra.PACKAGE_LIST, packageList);
         intent.putExtra(Utility.Extra.ADMIN_SETTING, Utility.getJsonStringFromObject(adminSetting));
@@ -474,8 +474,8 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
             JSONObject packageObject = new JSONObject();
             if (detail.isSelected) {
                 try {
-                    packageObject.put("package_id", detail.id);
-                    packageObject.put("package_type", detail.packageType);
+                    packageObject.put(NetworkUtility.TAGS.PACKAGE_ID, detail.id);
+                    packageObject.put(NetworkUtility.TAGS.PACKAGE_TYPE, detail.packageType);
                     JSONArray multiPackageArray = new JSONArray();
                     JSONObject singleObj = new JSONObject();
                     JSONObject addressObject = new JSONObject();
@@ -501,39 +501,39 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
                         addressObject.put(NetworkUtility.TAGS.ADDRESS_ID, addressId);
                     }
 
-                    singleObj.put("address", addressObject);
+                    singleObj.put(NetworkUtility.TAGS.ADDRESS, addressObject);
                     JSONArray optionArray = new JSONArray();
                     for (PackageOption servicesModel : detail.packageOptionList) {
                         JSONObject optionObj = new JSONObject();
-                        optionObj.put("package_option_id", servicesModel.packageId);
+                        optionObj.put(NetworkUtility.TAGS.PACKAGE_OPTION_ID, servicesModel.packageId);
                         JSONArray subOptionArray = new JSONArray();
                         if (servicesModel.selectionType.equalsIgnoreCase(PackageOption.SELECTION_TYPE.RADIO))
                             for (PackageSubOption option : servicesModel.getChildList()) {
                                 if (option.isSelected) {
                                     JSONObject object = new JSONObject();
-                                    object.put("package_suboption_id", option.packageOptionId);
-                                    object.put("selected_unit", "1");
-                                    object.put("monthly_price", option.monthlyPrice);
-                                    object.put("unit_price", Utility.ZERO_STRING);
+                                    object.put(NetworkUtility.TAGS.PACKAGE_SUBOPTION_ID, option.packageOptionId);
+                                    object.put(NetworkUtility.TAGS.SELECTED_UNIT, "1");
+                                    object.put(NetworkUtility.TAGS.MONTHLY_PRICE, option.monthlyPrice);
+                                    object.put(NetworkUtility.TAGS.UNIT_PRICE, Utility.ZERO_STRING);
                                     subOptionArray.put(object);
                                 }
                             }
                         else
                             for (PackageSubOption option : servicesModel.getChildList()) {
                                 JSONObject object = new JSONObject();
-                                object.put("package_suboption_id", option.packageOptionId);
-                                object.put("selected_unit", option.qty);
-                                object.put("monthly_price", Utility.ZERO_STRING);
-                                object.put("unit_price", option.unitPrice);
+                                object.put(NetworkUtility.TAGS.PACKAGE_SUBOPTION_ID, option.packageOptionId);
+                                object.put(NetworkUtility.TAGS.SELECTED_UNIT, option.qty);
+                                object.put(NetworkUtility.TAGS.MONTHLY_PRICE, Utility.ZERO_STRING);
+                                object.put(NetworkUtility.TAGS.UNIT_PRICE, option.unitPrice);
                                 subOptionArray.put(object);
                             }
 
-                        optionObj.put("package_suboption", subOptionArray);
+                        optionObj.put(NetworkUtility.TAGS.PACKAGE_SUBOPTION, subOptionArray);
                         optionArray.put(optionObj);
                     }
-                    singleObj.put("package_options", optionArray);
+                    singleObj.put(NetworkUtility.TAGS.PACKAGE_OPTIONS, optionArray);
                     multiPackageArray.put(singleObj);
-                    packageObject.put("package_details", multiPackageArray);
+                    packageObject.put(NetworkUtility.TAGS.PACKAGE_DETAILS, multiPackageArray);
                     cartArray.put(packageObject);
                 } catch (JSONException e) {
                     e.printStackTrace();

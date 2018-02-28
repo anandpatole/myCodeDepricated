@@ -420,7 +420,7 @@ public class NetworkUtility {
         String NORMAL_BANNER = "normalBanner";
         String CARE_BANNER = "careBanner";
         String CARE_CITY_SLUG = "care_city_slug";
-        String CARE_CITY_NAME= "care_city_name";
+        String CARE_CITY_NAME = "care_city_name";
         String CARE_PACKAGE_ID = "care_package_id";
         String LANDMARK = "landmark";
         String PINCODE = "pincode";
@@ -443,14 +443,22 @@ public class NetworkUtility {
         String CITY_DETAIL = "cityDetail";
         String USER_PACKAGE_DETAIL = "userPackageDetail";
         String PACKAGE_DETAIL = "packageDetail";
-        String PACKAGE_TYPE = "package_type";
         String PAID_SERVICE = "paid_service";
         String FREE_SERVICE = "free_service";
         String UNIT = "unit";
         String SUB_CAT_ID = "sub_cat_id";
         String IS_PURCHASED = "is_purchased";
         String IS_SAME_PACKAGE_TYPE = "is_same_package_type";
+        String PACKAGE_ID = "package_id";
+        String PACKAGE_TYPE = "package_type";
+        String PACKAGE_OPTION_ID= "package_option_id";
+        String PACKAGE_SUBOPTION_ID= "package_suboption_id";
+        String SELECTED_UNIT= "selected_unit";
+        String MONTHLY_PRICE= "monthly_price";
         String UNIT_PRICE= "unit_price";
+        String PACKAGE_SUBOPTION= "package_suboption";
+        String PACKAGE_OPTIONS= "package_options";
+        String PACKAGE_DETAILS= "package_details";
 
         interface VERSION_CHANGE_TYPE {
             int NORMAL = 0;

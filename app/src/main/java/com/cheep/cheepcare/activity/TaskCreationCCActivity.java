@@ -421,6 +421,8 @@ public class TaskCreationCCActivity extends BaseAppCompatActivity {
         if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.TASK_PAID_FOR_INSTA_BOOKING) {
             // br for finished task creation activity
             finish();
+        } else if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.PACKAGE_SUBSCRIBED_SUCCESSFULLY) {
+            finish();
         }
 
     }

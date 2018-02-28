@@ -177,7 +177,7 @@
 
             </LinearLayout>
 
-            <Spinner
+            <com.cheep.custom_view.CustomSpinner
                 android:id="@+id/spinner_address_selection"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"

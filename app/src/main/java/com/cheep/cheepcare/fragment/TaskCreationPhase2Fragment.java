@@ -134,6 +134,7 @@ public class TaskCreationPhase2Fragment extends BaseFragment implements
             mTaskCreationCCActivity.finish();
         }
     };
+    private ArrayList<AddressModel> mAddressList;
 
 
     @SuppressWarnings("unused")
@@ -350,7 +351,7 @@ public class TaskCreationPhase2Fragment extends BaseFragment implements
 
     private void initAddressUI() {
 
-        final ArrayList<AddressModel> mAddressList = new ArrayList<>();
+        mAddressList = new ArrayList<>();
         if (PreferenceUtility.getInstance(mContext).getUserDetails() != null) {
             ArrayList<AddressModel> unSubscibedAddressList = new ArrayList<>();
             for (AddressModel addressModel : PreferenceUtility.getInstance(mContext).getUserDetails().addressList) {
@@ -1341,7 +1342,8 @@ public class TaskCreationPhase2Fragment extends BaseFragment implements
             public void onAddAddress(AddressModel addressModel) {
 //                    mList.add(addressModel);
                 if (mAddressAdapter != null) {
-                    mAddressAdapter.add(addressModel);
+                    mAddressList.add(mAddressList.size() - 1, addressModel);
+                    mAddressAdapter.notifyDataSetChanged();
                 }
 
                 //Saving information in sharedpreference

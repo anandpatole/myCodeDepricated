@@ -30,12 +30,16 @@ import com.cheep.cheepcare.model.PackageDetail;
 import com.cheep.databinding.ActivityManageSubscriptionBinding;
 import com.cheep.model.AddressModel;
 import com.cheep.model.JobCategoryModel;
+import com.cheep.model.MessageEvent;
 import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
 import com.cheep.utils.LogUtils;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.Utility;
 import com.cheep.utils.WebCallClass;
+
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -268,7 +272,7 @@ public class ManageSubscriptionActivity extends BaseAppCompatActivity {
                 @Override
                 public void onPackageItemClick(PackageDetail model) {
                     String packageList = Utility.getJsonStringFromObject(mAllPackagesList);
-                    PackageCustomizationActivity.newInstance(mContext,  mCityDetail, model, packageList, mAdminSettingModel);
+                    PackageCustomizationActivity.newInstance(mContext, mCityDetail, model, packageList, mAdminSettingModel);
                 }
             };
 
@@ -370,30 +374,11 @@ public class ManageSubscriptionActivity extends BaseAppCompatActivity {
         }
     }
 
-/* // remve this TODO when flow completed
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == Utility.REQUEST_CODE_TASK_CREATION_CHEEP_CARE && resultCode == RESULT_OK) {
-            if (data != null) {
-                String citySlug = data.getStringExtra(Utility.Extra.DATA);
-
-                for (CityDetail cityDetail : bannerCityDetailsList)
-                    if (!cityDetail.citySlug.equalsIgnoreCase(citySlug)) {
-                        if (cityDetail.isSubscribed.equalsIgnoreCase(Utility.BOOLEAN.YES)) {
-                            mCityDetail = cityDetail;
-                            setCityBannerData();
-                        } else {
-                            String cheepcareBannerListString = Utility.getJsonStringFromObject(bannerCityDetailsList);
-                            LandingScreenPickPackageActivity.newInstance(ManageSubscriptionActivity.this,
-                                    cityDetail, cheepcareBannerListString);
-                            finish();
-                        }
-                    }
-
-            }
-
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(MessageEvent event) {
+        if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.PACKAGE_SUBSCRIBED_SUCCESSFULLY) {
+            finish();
         }
     }
-*/
+
 }

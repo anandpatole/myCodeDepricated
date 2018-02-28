@@ -85,8 +85,11 @@ public class CheepCareNotInYourCityDialog extends DialogFragment {
         SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(getString(R.string.label_title_cheep_is_here));
         spannableStringBuilder.append(Utility.ONE_CHARACTER_SPACE).append(Utility.ONE_CHARACTER_SPACE);
 
+        Drawable img = ContextCompat.getDrawable(getContext(), R.drawable.emoji_bird);
+        img.setBounds(0, 0, 25, 25);
 
-        ImageSpan span = new ImageSpan(getContext(), R.drawable.emoji_bird, ImageSpan.ALIGN_BOTTOM);
+
+        ImageSpan span = new ImageSpan(img, ImageSpan.ALIGN_BOTTOM);
         spannableStringBuilder.setSpan(span, spannableStringBuilder.length() - 1
                 , spannableStringBuilder.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
 
