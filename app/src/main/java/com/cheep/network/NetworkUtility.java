@@ -451,14 +451,16 @@ public class NetworkUtility {
         String IS_SAME_PACKAGE_TYPE = "is_same_package_type";
         String PACKAGE_ID = "package_id";
         String PACKAGE_TYPE = "package_type";
-        String PACKAGE_OPTION_ID= "package_option_id";
-        String PACKAGE_SUBOPTION_ID= "package_suboption_id";
-        String SELECTED_UNIT= "selected_unit";
-        String MONTHLY_PRICE= "monthly_price";
-        String UNIT_PRICE= "unit_price";
-        String PACKAGE_SUBOPTION= "package_suboption";
-        String PACKAGE_OPTIONS= "package_options";
-        String PACKAGE_DETAILS= "package_details";
+        String PACKAGE_OPTION_ID = "package_option_id";
+        String PACKAGE_SUBOPTION_ID = "package_suboption_id";
+        String SELECTED_UNIT = "selected_unit";
+        String MONTHLY_PRICE = "monthly_price";
+        String UNIT_PRICE = "unit_price";
+        String PACKAGE_SUBOPTION = "package_suboption";
+        String PACKAGE_OPTIONS = "package_options";
+        String PACKAGE_DETAILS = "package_details";
+        String CHARGE_SPECIFIC_TIME = "charge_specific_time";
+        String CHARGE_EXCEED_LIMIT = "charge_exceed_limit";
 
         interface VERSION_CHANGE_TYPE {
             int NORMAL = 0;

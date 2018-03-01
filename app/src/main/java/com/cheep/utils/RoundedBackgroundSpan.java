@@ -11,7 +11,7 @@ import android.text.style.ReplacementSpan;
 
 public class RoundedBackgroundSpan extends ReplacementSpan {
 
-    private static int CORNER_RADIUS = 12;
+    private int CORNER_RADIUS = 12;
     private int backgroundColor = 0;
     private int textColor = 0;
 
@@ -22,6 +22,10 @@ public class RoundedBackgroundSpan extends ReplacementSpan {
         this.textsize = textsize;
     }
 
+    public void setCornerRadius(int cornerRadius) {
+        CORNER_RADIUS = cornerRadius;
+    }
+
     @Override
     public void draw(Canvas canvas, CharSequence text, int start, int end, float x, int top, int y, int bottom, Paint paint) {
         if (textsize!=0)
@@ -30,7 +34,7 @@ public class RoundedBackgroundSpan extends ReplacementSpan {
         paint.setColor(backgroundColor);
         canvas.drawRoundRect(rect, CORNER_RADIUS, CORNER_RADIUS, paint);
         paint.setColor(textColor);
-        canvas.drawText(text, start, end, x, y-3, paint);
+        canvas.drawText(text, start, end, x, y, paint);
     }
 
     float textsize = 0;

@@ -12,6 +12,7 @@ import com.cheep.cheepcare.model.AdminSettingModel;
 import com.cheep.cheepcare.model.CityDetail;
 import com.cheep.cheepcare.model.CityLandingPageModel;
 import com.cheep.cheepcare.model.PackageDetail;
+import com.cheep.cheepcare.model.SubscribedTaskDetailModel;
 import com.cheep.model.AddressModel;
 import com.cheep.model.JobCategoryModel;
 import com.cheep.model.SubServiceDetailModel;
@@ -127,6 +128,7 @@ public class WebCallClass {
                             break;
                     }
                 } catch (JSONException e) {
+                    commonListener.showSpecificMessage(mContext.getString(R.string.label_something_went_wrong));
                     e.printStackTrace();
                 }
             }
@@ -238,9 +240,14 @@ public class WebCallClass {
     //////////////////////////Fetch List Of Sub Category call end//////////////////////////
 
     //////////////////////////Create task Cheep care call start//////////////////////////
-    public static void createTask(Context mContext, String carePackageId, String catId
-            , ArrayList<SubServiceDetailModel> freeList, ArrayList<SubServiceDetailModel> paidList, AddressModel mAddressModel
-            , String totalPrice, String payableAmount, String startDateTime, String taskDesc, String mediaFiles, String paymentMethod) {
+
+    public interface SuccessOfTaskCreationListener {
+        void onSuccessOfTaskCreate();
+    }
+
+    public static void createTask(final Context mContext, SubscribedTaskDetailModel subscribedTaskDetailModel,
+                                  final CommonResponseListener commonListener,
+                                  final SuccessOfTaskCreationListener successListener) {
 
         Map<String, String> mHeaderParams = new HashMap<>();
         mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
@@ -248,39 +255,72 @@ public class WebCallClass {
             mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().userID);
         }
 
-//        JSONArray jsonArray = new JSONArray();
-        // creating free service json array
-//        for (SubServiceDetailModel subServiceDetailModel : freeList) {
-//            JSONObject object = new JSONObject();
-//            try {
-//                object.put(NetworkUtility.TAGS.UNIT, subServiceDetailModel.qty);
-//                object.put(NetworkUtility.TAGS.SUB_CAT_ID, subServiceDetailModel.sub_cat_id);
-//                object.put(NetworkUtility.TAGS.UNIT_PRICE, subServiceDetailModel.unitPrice);
-//                jsonArray.put(object);
-//            } catch (JSONException e) {
-//                e.printStackTrace();
-//            }
-//        }
+        final Response.ErrorListener errorListener = new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
+                commonListener.volleyError(error);
+            }
+        };
 
+        final Response.Listener responseListener = new Response.Listener() {
+            @Override
+            public void onResponse(Object response) {
+                Log.d(TAG, "onResponse() called with: response = [" + response + "]");
+                try {
+                    JSONObject jsonObject = new JSONObject(response.toString());
+                    int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
+
+                    String error_message;
+                    switch (statusCode) {
+                        case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
+                            successListener.onSuccessOfTaskCreate();
+                            break;
+                        case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
+                            // Show Toast
+                            commonListener.showSpecificMessage(mContext.getString(R.string.label_something_went_wrong));
+                            break;
+                        case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
+                            error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
+                            // Show message
+                            commonListener.showSpecificMessage(error_message);
+                            break;
+                        case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
+                        case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
+                            //Logout and finish the current activity
+                            Utility.logout(mContext, true, statusCode);
+                            commonListener.forceLogout();
+                            break;
+                    }
+                } catch (JSONException e) {
+                    commonListener.showSpecificMessage(mContext.getString(R.string.label_something_went_wrong));
+                    e.printStackTrace();
+                }
+            }
+        };
         //Add Params
         Map<String, String> mParams = new HashMap<>();
-        mParams.put(NetworkUtility.TAGS.CARE_PACKAGE_ID, carePackageId);
-        mParams.put(NetworkUtility.TAGS.CAT_ID, catId);
-        String json = new Gson().toJson(freeList);
-        mParams.put(NetworkUtility.TAGS.FREE_SERVICE, json);
-        mParams.put(NetworkUtility.TAGS.PAID_SERVICE, "");
-        mParams.put(NetworkUtility.TAGS.ADDRESS_ID, mAddressModel.address_id);
-        mParams.put(NetworkUtility.TAGS.TOTAL_AMOUNT, totalPrice);
-        mParams.put(NetworkUtility.TAGS.PAYABLE_AMOUNT, payableAmount);
-        mParams.put(NetworkUtility.TAGS.START_DATETIME, startDateTime);
-        mParams.put(NetworkUtility.TAGS.IS_REFER_CODE, Utility.EMPTY_STRING);
+        mParams.put(NetworkUtility.TAGS.CARE_PACKAGE_ID, subscribedTaskDetailModel.carePackageId);
+        mParams.put(NetworkUtility.TAGS.CAT_ID, subscribedTaskDetailModel.jobCategoryModel.catId);
+        String freeServicejson = new Gson().toJson(subscribedTaskDetailModel.freeServiceList);
+        mParams.put(NetworkUtility.TAGS.FREE_SERVICE, freeServicejson);
+        String paidServicejson = new Gson().toJson(subscribedTaskDetailModel.paidServiceList);
+        mParams.put(NetworkUtility.TAGS.PAID_SERVICE, paidServicejson);
+        mParams.put(NetworkUtility.TAGS.ADDRESS_ID, subscribedTaskDetailModel.addressModel.address_id);
+        mParams.put(NetworkUtility.TAGS.TOTAL_AMOUNT, String.valueOf(subscribedTaskDetailModel.total));
+        mParams.put(NetworkUtility.TAGS.PAYABLE_AMOUNT, subscribedTaskDetailModel.paybleAmount);
+        mParams.put(NetworkUtility.TAGS.START_DATETIME, subscribedTaskDetailModel.startDateTime);
+        mParams.put(NetworkUtility.TAGS.IS_REFER_CODE, Utility.BOOLEAN.NO);
         mParams.put(NetworkUtility.TAGS.TASK_TYPE, Utility.TASK_TYPE.SUBSCRIBED);
-        mParams.put(NetworkUtility.TAGS.TASK_DESC, taskDesc);
-        mParams.put(NetworkUtility.TAGS.MEDIA_FILE, mediaFiles);
+        mParams.put(NetworkUtility.TAGS.TASK_DESC, subscribedTaskDetailModel.taskDesc);
+        mParams.put(NetworkUtility.TAGS.MEDIA_FILE, Utility.getSelectedMediaJsonString(subscribedTaskDetailModel.mediaFileList));
         mParams.put(NetworkUtility.TAGS.PROMOCODE_PRICE, Utility.ZERO_STRING);
         mParams.put(NetworkUtility.TAGS.USED_WALLET_BALANCE, Utility.ZERO_STRING);
         mParams.put(NetworkUtility.TAGS.CHEEPCODE, Utility.EMPTY_STRING);
-        mParams.put(NetworkUtility.TAGS.PAYMENT_METHOD, paymentMethod);
+        mParams.put(NetworkUtility.TAGS.PAYMENT_METHOD, subscribedTaskDetailModel.paymentMethod);
+        mParams.put(NetworkUtility.TAGS.PAYMENT_LOG, subscribedTaskDetailModel.paymentLog);
+        mParams.put(NetworkUtility.TAGS.CHARGE_SPECIFIC_TIME, String.valueOf(subscribedTaskDetailModel.nonWorkingHourFees));
+        mParams.put(NetworkUtility.TAGS.CHARGE_EXCEED_LIMIT, String.valueOf(subscribedTaskDetailModel.taskExcessLimitFees));
 
         HashMap<String, File> mFileParams = new HashMap<>();
 
@@ -288,14 +328,14 @@ public class WebCallClass {
                 ", listener = [" + "listener" + "], headers = [" + mHeaderParams + "], stringData = [" + mParams + "], fileParam = [" + mFileParams + "]");
 
 
-//        VolleyNetworkRequest mVolleyNetworkRequestForCategoryList = new VolleyNetworkRequest(NetworkUtility.WS.CARE_CREATE_TASK
-//                , mCallFetchSubServiceListingWSErrorListener
-//                , mCallFetchSubServiceListingWSResponseListener
-//                , mHeaderParams
-//                , mParams
-//                , null);
-//
-//        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequestForCategoryList, NetworkUtility.WS.CARE_CREATE_TASK);
+        VolleyNetworkRequest mVolleyNetworkRequestForCategoryList = new VolleyNetworkRequest(NetworkUtility.WS.CARE_CREATE_TASK
+                , errorListener
+                , responseListener
+                , mHeaderParams
+                , mParams
+                , null);
+
+        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequestForCategoryList, NetworkUtility.WS.CARE_CREATE_TASK);
     }
     //////////////////////////Create task Cheep care call end//////////////////////////
 
@@ -359,6 +399,7 @@ public class WebCallClass {
                             break;
                     }
                 } catch (JSONException e) {
+                    commonListener.showSpecificMessage(mContext.getString(R.string.label_something_went_wrong));
                     e.printStackTrace();
                 }
             }
@@ -439,6 +480,7 @@ public class WebCallClass {
                             break;
                     }
                 } catch (JSONException e) {
+                    commonListener.showSpecificMessage(mContext.getString(R.string.label_something_went_wrong));
                     e.printStackTrace();
                 }
             }
@@ -514,6 +556,7 @@ public class WebCallClass {
                             break;
                     }
                 } catch (JSONException e) {
+                    commonListener.showSpecificMessage(mContext.getString(R.string.label_something_went_wrong));
                     e.printStackTrace();
                 }
             }

@@ -7,18 +7,18 @@ import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
-import android.graphics.Paint;
-import android.graphics.Rect;
 import android.graphics.drawable.AnimationDrawable;
 import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.Layout;
+import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.LeadingMarginSpan;
+import android.text.style.RelativeSizeSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +27,7 @@ import android.view.ViewTreeObserver;
 import android.widget.TextView;
 
 import com.cheep.R;
+import com.cheep.custom_view.CFTextViewRegular;
 import com.cheep.databinding.RowTaskBinding;
 import com.cheep.databinding.RowTaskGroupBinding;
 import com.cheep.databinding.RowUpcomingTaskBinding;
@@ -206,24 +207,70 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
 
                 // if pro is not decided yet
                 if (model.selectedProvider == null) {
-                    holder.mUpcomingTaskBinding.layoutIndividualProfile.setVisibility(View.GONE);
-                    holder.mUpcomingTaskBinding.layoutGroupProfile.setVisibility(View.VISIBLE);
-                    SpannableString sCat = new SpannableString(model.categoryName);
-                    holder.mUpcomingTaskBinding.tvProviderName.setText(TextUtils.concat(sCat, Utility.ONE_CHARACTER_SPACE, getMultiCategoryCount()));
+
+
+                    if (model.taskType.equalsIgnoreCase(Utility.TASK_TYPE.SUBSCRIBED)) {
+                        holder.mUpcomingTaskBinding.layoutIndividualProfile.setVisibility(View.GONE);
+                        holder.mUpcomingTaskBinding.layoutGroupProfile.setVisibility(View.GONE);
+                        holder.mUpcomingTaskBinding.layoutCheepCareProNotFound.setVisibility(View.VISIBLE);
+
+                        holder.mUpcomingTaskBinding.tvViewTask.setVisibility(View.VISIBLE);
+                        holder.mUpcomingTaskBinding.tvViewQuotes.setVisibility(View.GONE);
+
+                        holder.mUpcomingTaskBinding.tvTaskResponseStatus.setText(R.string.label_pro_will_be_assigned_shortly);
+                        holder.mUpcomingTaskBinding.textPaidPrice.setText(R.string.label_paid_with_cheep_care);
+                        holder.mUpcomingTaskBinding.textPaidLabel.setText(R.string.label_free);
+                        holder.mUpcomingTaskBinding.tvSubscribed.setVisibility(View.VISIBLE);
+                        holder.mUpcomingTaskBinding.tvDiscount.setVisibility(View.GONE);
+
+                    } else {
+
+                        holder.mUpcomingTaskBinding.layoutIndividualProfile.setVisibility(View.GONE);
+                        holder.mUpcomingTaskBinding.layoutGroupProfile.setVisibility(View.VISIBLE);
+                        holder.mUpcomingTaskBinding.layoutCheepCareProNotFound.setVisibility(View.GONE);
+
+                        holder.mUpcomingTaskBinding.tvViewTask.setVisibility(View.GONE);
+                        holder.mUpcomingTaskBinding.tvViewQuotes.setVisibility(View.VISIBLE);
+                        holder.mUpcomingTaskBinding.textPaidPrice.setText(Utility.EMPTY_STRING);
+                        holder.mUpcomingTaskBinding.textPaidLabel.setText(Utility.EMPTY_STRING);
+                        holder.mUpcomingTaskBinding.tvSubscribed.setVisibility(View.GONE);
+                        holder.mUpcomingTaskBinding.tvDiscount.setVisibility(View.VISIBLE);
+                        holder.mUpcomingTaskBinding.tvDiscount.setText("-40% Today");
+
+                         /*
+                  For the bug for lower version of Device like Kitkat, we have to store the padding before setting the background of textview,
+                  as due to bug it would reset the padding once resource set to the textview.
+                 */
+                        int pL = holder.mUpcomingTaskBinding.tvViewQuotes.getPaddingLeft();
+                        int pT = holder.mUpcomingTaskBinding.tvViewQuotes.getPaddingTop();
+                        int pR = holder.mUpcomingTaskBinding.tvViewQuotes.getPaddingRight();
+                        int pB = holder.mUpcomingTaskBinding.tvViewQuotes.getPaddingBottom();
+                        if (model.providerCount.equals(Utility.ZERO_STRING)) {
+                            holder.mUpcomingTaskBinding.tvTaskResponseStatus.setText(holder.mView.getContext().getString(R.string.label_awaiting_response));
+                            holder.mUpcomingTaskBinding.tvViewQuotes.setBackground(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.img_grey_rounded));
+                            holder.mUpcomingTaskBinding.tvViewQuotes.setEnabled(false);
+                            holder.mUpcomingTaskBinding.tvViewQuotes.setPadding(pL, pT, pR, pB);
+                        } else {
+                            int providerCount = Integer.parseInt(model.providerCount);
+                            holder.mUpcomingTaskBinding.tvTaskResponseStatus.setText(holder.mView.getContext().getResources().getQuantityText(R.plurals.getResponseReceivedString, providerCount));
+                            holder.mUpcomingTaskBinding.tvViewQuotes.setBackground(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.img_blue_rounded));
+                            holder.mUpcomingTaskBinding.tvViewQuotes.setEnabled(true);
+                            holder.mUpcomingTaskBinding.tvViewQuotes.setPadding(pL, pT, pR, pB);
+                        }
+
+                    }
+                    holder.mUpcomingTaskBinding.tvProviderName.setText(model.categoryName);
                     holder.mUpcomingTaskBinding.ratingBar.setVisibility(View.GONE);
                     holder.mUpcomingTaskBinding.imgBadge.setVisibility(View.GONE);
-                    holder.mUpcomingTaskBinding.tvViewTask.setVisibility(View.GONE);
-                    holder.mUpcomingTaskBinding.tvViewQuotes.setVisibility(View.VISIBLE);
                     holder.mUpcomingTaskBinding.tvTaskResponseStatus.setVisibility(View.VISIBLE);
-                    // Need to hide reschedule button as PRO is not Finalized now.
                     holder.mUpcomingTaskBinding.frameRescheduleTask.setVisibility(View.GONE);
-                    holder.mUpcomingTaskBinding.textPaid.setText(Utility.EMPTY_STRING);
 
                 }
                 // show task detail with SP data
                 else {
                     holder.mUpcomingTaskBinding.layoutIndividualProfile.setVisibility(View.VISIBLE);
                     holder.mUpcomingTaskBinding.layoutGroupProfile.setVisibility(View.GONE);
+                    holder.mUpcomingTaskBinding.layoutCheepCareProNotFound.setVisibility(View.GONE);
 
                     holder.mUpcomingTaskBinding.imgFav.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -288,10 +335,11 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
 
 
                     if (!TextUtils.isEmpty(model.isAnyAmountPending))
-                        holder.mUpcomingTaskBinding.textPaid.setText(model.isAnyAmountPending.equalsIgnoreCase(Utility.BOOLEAN.YES) ? context.getString(R.string.label_not_paid) : context.getString(R.string.label_paid));
+                        holder.mUpcomingTaskBinding.textPaidLabel.setText(model.isAnyAmountPending.equalsIgnoreCase(Utility.BOOLEAN.YES) ? context.getString(R.string.label_not_paid) : context.getString(R.string.label_paid));
                     else
-                        holder.mUpcomingTaskBinding.textPaid.setText(Utility.EMPTY_STRING);
+                        holder.mUpcomingTaskBinding.textPaidLabel.setText(Utility.EMPTY_STRING);
 
+                    holder.mUpcomingTaskBinding.textPaidPrice.setText(Utility.EMPTY_STRING);
                     holder.mUpcomingTaskBinding.tvTaskResponseStatus.setVisibility(View.GONE);
                     // Need to Show reschedule button as PRO is not Finalized now.
                     holder.mUpcomingTaskBinding.frameRescheduleTask.setVisibility(View.VISIBLE);
@@ -302,27 +350,6 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
 //            holder.mUpcomingTaskBinding.tvVerified.setLayoutParams(layoutParams);
 
 
-                /*
-                  For the bug for lower version of Device like Kitkat, we have to store the padding before setting the background of textview,
-                  as due to bug it would reset the padding once resource set to the textview.
-                 */
-                int pL = holder.mUpcomingTaskBinding.tvViewQuotes.getPaddingLeft();
-                int pT = holder.mUpcomingTaskBinding.tvViewQuotes.getPaddingTop();
-                int pR = holder.mUpcomingTaskBinding.tvViewQuotes.getPaddingRight();
-                int pB = holder.mUpcomingTaskBinding.tvViewQuotes.getPaddingBottom();
-                if (model.providerCount.equals(Utility.ZERO_STRING)) {
-                    holder.mUpcomingTaskBinding.tvTaskResponseStatus.setText(holder.mView.getContext().getString(R.string.label_awaiting_response));
-                    holder.mUpcomingTaskBinding.tvViewQuotes.setBackground(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.img_grey_rounded));
-                    holder.mUpcomingTaskBinding.tvViewQuotes.setEnabled(false);
-                    holder.mUpcomingTaskBinding.tvViewQuotes.setPadding(pL, pT, pR, pB);
-                } else {
-                    int providerCount = Integer.parseInt(model.providerCount);
-                    holder.mUpcomingTaskBinding.tvTaskResponseStatus.setText(holder.mView.getContext().getResources().getQuantityText(R.plurals.getResponseReceivedString, providerCount));
-                    holder.mUpcomingTaskBinding.tvViewQuotes.setBackground(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.img_blue_rounded));
-                    holder.mUpcomingTaskBinding.tvViewQuotes.setEnabled(true);
-                    holder.mUpcomingTaskBinding.tvViewQuotes.setPadding(pL, pT, pR, pB);
-                }
-
                 holder.mUpcomingTaskBinding.tvSubCategoryName.post(new Runnable() {
                     @Override
                     public void run() {
@@ -330,9 +357,10 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
                             holder.mUpcomingTaskBinding.tvSubCategoryNameStrPart.setText(getAllUniqueCategories(model.subSubCategoryList));
                             holder.mUpcomingTaskBinding.tvSubCategoryNameStrPart.setVisibility(View.VISIBLE);
                             holder.mUpcomingTaskBinding.tvSubCategoryName.setVisibility(View.GONE);
-//                        holder.mUpcomingTaskBinding.tvSubCategoryNameStrPart.editMore();
                         } else {
-                            holder.mUpcomingTaskBinding.tvSubCategoryName.setText(model.subCategoryName);
+
+                            setSubcategoryTitle(model, holder.mUpcomingTaskBinding.tvSubCategoryName);
+
                             holder.mUpcomingTaskBinding.tvSubCategoryNameStrPart.setVisibility(View.GONE);
                             holder.mUpcomingTaskBinding.tvSubCategoryName.setVisibility(View.VISIBLE);
                         }
@@ -345,7 +373,8 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
                         , superStartDateTimeCalendar.format(Utility.DATE_FORMAT_DD_MMM) + " " + Utility.get2HourTimeSlots(model.taskStartdate));
                 holder.mUpcomingTaskBinding.tvTaskBookedDateTime.setText(mBookingDate);
 
-                holder.mUpcomingTaskBinding.tvTaskStartedTime.setText(Utility.getDateDifference(holder.mView.getContext(), superStartDateTimeCalendar.format(Utility.DATE_FORMAT_FULL_DATE)));
+                holder.mUpcomingTaskBinding.tvTaskStartedTime.setText(Utility.getDateDifference(holder.mView.getContext(), superStartDateTimeCalendar.format(Utility.DATE_FORMAT_FULL_DATE), model.taskType));
+
                 holder.mUpcomingTaskBinding.textDelete.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -407,19 +436,15 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
 
                 final String dateTime = superStartDateTimeCalendar.format(Utility.DATE_FORMAT_DD_MMM) + " " + Utility.get2HourTimeSlotsForPastTaskScreen(model.taskStartdate);
 
-// old time format for past task
-//                String date_time = holder.mView.getContext().getString(R.string.format_date_time
-//                        , superStartDateTimeCalendar.format(Utility.DATE_FORMAT_DD_MMM)
-//                        , superStartDateTimeCalendar.format(Utility.DATE_FORMAT_HH_MM_AM));
 
                 holder.mRowTaskGroupBinding.textDateTime.setText(dateTime);
 
 
                 holder.mRowTaskGroupBinding.textDesc.setText(model.taskDesc);
                 holder.mRowTaskGroupBinding.textCategoryName.setText(model.categoryName);
-                holder.mRowTaskGroupBinding.textSubCategoryName.setText(model.subCategoryName);
+                setSubcategoryTitle(model, holder.mRowTaskGroupBinding.textSubCategoryName);
 
-                if (model.providerCount.equals("0")) {
+                if (model.providerCount.equals(Utility.ZERO_STRING)) {
                     holder.mRowTaskGroupBinding.textResponseCounter.setText(String.valueOf(model.providerCount));
                     holder.mRowTaskGroupBinding.textTaskResponseStatus.setText(holder.mView.getContext().getString(R.string.label_responses));
                 } else {
@@ -559,12 +584,12 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
                             holder.mRowTaskBinding.imgBadge.setImageResource(bagResId);
                     }
 
-                    if (!TextUtils.isEmpty(model.subCategoryName))
-                        holder.mRowTaskBinding.textSubCategoryName.setText(model.subCategoryName);
-                    else
+                    if (model.taskType.equalsIgnoreCase(Utility.TASK_TYPE.STRATEGIC)) {
                         holder.mRowTaskBinding.textSubCategoryName.setText(getAllUniqueCategories(model.subSubCategoryList));
+                    } else {
+                        setSubcategoryTitle(model, holder.mRowTaskBinding.textSubCategoryName);
 
-                    holder.mRowTaskBinding.imgProfile.setVisibility(View.VISIBLE);
+                    }
 
 
                     // Show Rating
@@ -581,7 +606,7 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
 
 
                     // Show Rating
-                    Utility.showRating("0", holder.mRowTaskBinding.ratingBar);
+                    Utility.showRating(Utility.ZERO_STRING, holder.mRowTaskBinding.ratingBar);
 
                 }
                 holder.mRowTaskBinding.swipeLayout.close(true);
@@ -684,6 +709,26 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
 
         }
     }
+
+    private void setSubcategoryTitle(TaskDetailModel model,CFTextViewRegular textView) {
+        if (model.subCatList != null && !model.subCatList.isEmpty()) {
+            if (model.subCatList.size() > 1) {
+                SpannableString sCatCount;
+                String str = Utility.ONE_CHARACTER_SPACE + context.getString(R.string.label_plus) + ((model.subCatList.size() - 1) + Utility.ONE_CHARACTER_SPACE);
+                sCatCount = new SpannableString(str);
+                RoundedBackgroundSpan roundedBackgroundSpan = new RoundedBackgroundSpan(ContextCompat.getColor(context, R.color.splash_gradient_end), ContextCompat.getColor(context, R.color.white), context.getResources().getDimension(R.dimen.text_size_10sp));
+                roundedBackgroundSpan.setCornerRadius(4);
+                sCatCount.setSpan(roundedBackgroundSpan, 0, sCatCount.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+                sCatCount.setSpan(new RelativeSizeSpan(4f), 0, str.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                textView.setText(TextUtils.concat(model.subCatList.get(0).name, Utility.ONE_CHARACTER_SPACE, sCatCount));
+            } else {
+                textView.setText(model.subCatList.get(0).name);
+            }
+        } else {
+            textView.setText(model.subCategoryName);
+        }
+    }
+
 
     @Override
     public int onActualItemCount() {
@@ -984,20 +1029,4 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
 
     }
 
-    private int getTextWidth(String text, float textSize) {
-        Rect bounds = new Rect();
-        Paint paint = new Paint();
-        paint.setTextSize(textSize);
-        paint.getTextBounds(text, 0, text.length(), bounds);
-
-        int width = (int) Math.ceil(bounds.width());
-        return width;
-    }
-
-    private SpannableString getMultiCategoryCount() {
-        SpannableString sPartner;
-        sPartner = new SpannableString(Utility.ONE_CHARACTER_SPACE + context.getString(R.string.label_plus) + "1" + Utility.ONE_CHARACTER_SPACE);
-        sPartner.setSpan(new RoundedBackgroundSpan(ContextCompat.getColor(context, R.color.splash_gradient_end), ContextCompat.getColor(context, R.color.white), context.getResources().getDimension(R.dimen.text_size_12sp)), 0, sPartner.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-        return sPartner;
-    }
 }

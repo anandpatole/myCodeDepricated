@@ -26,6 +26,7 @@ public class AddressModel implements Serializable {
     public String nickname;
     public String end_date;
     public String is_subscribe = Utility.BOOLEAN.NO;
+    public String limit_cnt;
 
     /**
      * This would only be useful in case of Guest

@@ -12,18 +12,23 @@ import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
 
+import com.android.volley.VolleyError;
 import com.cheep.R;
 import com.cheep.activity.BaseAppCompatActivity;
 import com.cheep.cheepcare.adapter.TaskCreationPagerAdapter;
 import com.cheep.cheepcare.fragment.FreeSubCategoryFragment;
 import com.cheep.cheepcare.fragment.TaskCreationPhase2Fragment;
+import com.cheep.cheepcare.model.AdminSettingModel;
+import com.cheep.cheepcare.model.SubscribedTaskDetailModel;
 import com.cheep.databinding.ActivityTaskCreateCcBinding;
 import com.cheep.dialogs.CustomLoadingDialog;
 import com.cheep.model.AddressModel;
 import com.cheep.model.JobCategoryModel;
 import com.cheep.model.MessageEvent;
 import com.cheep.model.SubServiceDetailModel;
+import com.cheep.utils.LogUtils;
 import com.cheep.utils.Utility;
+import com.cheep.utils.WebCallClass;
 import com.google.android.gms.common.api.Status;
 
 import org.greenrobot.eventbus.EventBus;
@@ -46,19 +51,20 @@ public class TaskCreationCCActivity extends BaseAppCompatActivity {
     public ArrayList<AddressModel> mCareAddressList;
     Map<String, Object> mTaskCreationParams;
     CustomLoadingDialog mDialog;
-    private boolean isInstaBooking = false;
     public AddressModel mAddressModel;
     public String mPackageType;
     public String mCarePackageId;
+    public AdminSettingModel mAdminSettingModel;
 
     public static void getInstance(Context mContext, JobCategoryModel model, AddressModel addressModel, String packageType
-            , String carePackageId, List<AddressModel> mSelectedAddressList) {
+            , String carePackageId, List<AddressModel> mSelectedAddressList, AdminSettingModel adminSettingModel) {
         Intent intent = new Intent(mContext, TaskCreationCCActivity.class);
         intent.putExtra(Utility.Extra.DATA, Utility.getJsonStringFromObject(model));
         intent.putExtra(Utility.Extra.DATA_2, packageType);
+        intent.putExtra(Utility.Extra.DATA_3, Utility.getJsonStringFromObject(mSelectedAddressList));
         intent.putExtra(Utility.Extra.SELECTED_ADDRESS_MODEL, Utility.getJsonStringFromObject(addressModel));
         intent.putExtra(Utility.Extra.SELECTED_PACKAGE_ID, carePackageId);
-        intent.putExtra(Utility.Extra.DATA_3, Utility.getJsonStringFromObject(mSelectedAddressList));
+        intent.putExtra(Utility.Extra.ADMIN_SETTING, Utility.getJsonStringFromObject(adminSettingModel));
 //        ((Activity) mContext).startActivityForResult(intent, Utility.REQUEST_CODE_TASK_CREATION_CHEEP_CARE);
         mContext.startActivity(intent);
     }
@@ -80,6 +86,7 @@ public class TaskCreationCCActivity extends BaseAppCompatActivity {
             mPackageType = getIntent().getStringExtra(Utility.Extra.DATA_2);
             mCarePackageId = getIntent().getStringExtra(Utility.Extra.SELECTED_PACKAGE_ID);
             mAddressModel = (AddressModel) Utility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.SELECTED_ADDRESS_MODEL), AddressModel.class);
+            mAdminSettingModel = (AdminSettingModel) Utility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.ADMIN_SETTING), AdminSettingModel.class);
             mCareAddressList = Utility.getObjectListFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA_3), AddressModel[].class);
         }
 
@@ -418,25 +425,65 @@ public class TaskCreationCCActivity extends BaseAppCompatActivity {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(MessageEvent event) {
-        if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.TASK_PAID_FOR_INSTA_BOOKING) {
-            // br for finished task creation activity
-            finish();
-        } else if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.PACKAGE_SUBSCRIBED_SUCCESSFULLY) {
-            finish();
+        LogUtils.LOGE(TAG, "onMessageEvent: "+event.BROADCAST_ACTION);
+        switch (event.BROADCAST_ACTION) {
+            case Utility.BROADCAST_TYPE.TASK_PAID_FOR_INSTA_BOOKING:
+                // br for finished task creation activity
+                finish();
+                break;
+            case Utility.BROADCAST_TYPE.PACKAGE_SUBSCRIBED_SUCCESSFULLY:
+                finish();
+                break;
+            case Utility.BROADCAST_TYPE.SUBSCRIBED_TASK_CREATE_SUCCESSFULLY:
+                finish();
+                break;
         }
 
     }
 
+    private final WebCallClass.CommonResponseListener mCommonResponseListener =
+            new WebCallClass.CommonResponseListener() {
+                @Override
+                public void volleyError(VolleyError error) {
+                    Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
+                    hideProgressDialog();
+                    Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
+                }
+
+                @Override
+                public void showSpecificMessage(String message) {
+                    hideProgressDialog();
+                    // Show message
+                    Utility.showSnackBar(message, mBinding.getRoot());
+                }
+
+                @Override
+                public void forceLogout() {
+                    hideProgressDialog();
+                    finish();
+                }
+            };
+
 
     //TODO: to be removed
     public void startBookingConfirmationActivity() {
-        BookingConfirmationCcActivity.newInstance(TaskCreationCCActivity.this
-                , mCarePackageId
-                , mJobCategoryModel.catId
-                , mTaskCreationPagerAdapter.mTaskCreationPhase1Fragment.getSelectedFreeServices()
-                , mTaskCreationPagerAdapter.mTaskCreationPhase1Fragment.getSelectedPaidServices()
-                , mAddressModel
-                , ((TaskCreationPhase2Fragment) mTaskCreationPagerAdapter.getItem(1)).getStartDateTime(),
-                ((TaskCreationPhase2Fragment) mTaskCreationPagerAdapter.getItem(1)).getTaskDescription());
+        SubscribedTaskDetailModel subscribedTaskDetailModel = new SubscribedTaskDetailModel();
+
+        subscribedTaskDetailModel.addressModel = mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.mSelectedAddress;
+        subscribedTaskDetailModel.jobCategoryModel = mJobCategoryModel;
+        subscribedTaskDetailModel.adminSettingModel = mAdminSettingModel;
+        subscribedTaskDetailModel.carePackageId = mCarePackageId;
+        subscribedTaskDetailModel.freeServiceList = mTaskCreationPagerAdapter.mTaskCreationPhase1Fragment.getSelectedFreeServices();
+        subscribedTaskDetailModel.paidServiceList = mTaskCreationPagerAdapter.mTaskCreationPhase1Fragment.getSelectedPaidServices();
+        subscribedTaskDetailModel.startDateTime = mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.getStartDateTime();
+        subscribedTaskDetailModel.taskDesc = mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.getTaskDescription();
+        subscribedTaskDetailModel.taskType =  subscribedTaskDetailModel.addressModel .is_subscribe.equalsIgnoreCase(Utility.BOOLEAN.YES) ? Utility.TASK_TYPE.SUBSCRIBED : Utility.TASK_TYPE.NORMAL;
+        subscribedTaskDetailModel.mediaFileList = mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.mMediaRecycleAdapter.getList();
+        BookingConfirmationCcActivity.newInstance(TaskCreationCCActivity.this, subscribedTaskDetailModel);
+    }
+
+    public void showSubscribedBadge(boolean show) {
+        mBinding.imgSubscribed.setVisibility(show ? View.VISIBLE : View.GONE);
     }
 }
+

@@ -6,6 +6,7 @@ import com.cheep.strategicpartner.model.MediaModel;
 import com.cheep.strategicpartner.model.QueAnsModel;
 import com.cheep.strategicpartner.model.ServiceTaskDetailModel;
 import com.cheep.strategicpartner.model.StrategicPartnerServiceModel;
+import com.cheep.utils.Utility;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
@@ -36,7 +37,11 @@ public class TaskDetailModel {
 
 
     @SerializedName("task_subcategory")
-    public String subCategoryName;
+    public String subCategoryName = Utility.EMPTY_STRING;
+
+    @SerializedName("task_subcategory_list")
+    public ArrayList<SubServiceDetailModel> subCatList;
+
 
     @SerializedName("task_subcategory_id")
     public String subCategoryID;

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,8 +21,10 @@ import com.cheep.activity.HDFCPaymentGatewayActivity;
 import com.cheep.activity.SendOtpActivity;
 import com.cheep.activity.WithdrawMoneyActivity;
 import com.cheep.cheepcare.dialogs.PaymentFailedDialog;
+import com.cheep.cheepcare.dialogs.TaskConfirmedCCInstaBookDialog;
 import com.cheep.cheepcare.model.CheepCarePaymentDataModel;
 import com.cheep.cheepcare.model.CityDetail;
+import com.cheep.cheepcare.model.SubscribedTaskDetailModel;
 import com.cheep.databinding.ActivityPaymentChoiceBinding;
 import com.cheep.dialogs.AcknowledgementInteractionListener;
 import com.cheep.model.AddressModel;
@@ -64,17 +67,40 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
     private CheepCarePaymentDataModel paymentDataModel;
     private Map<String, Object> mTaskCreationParams;
 
+    private SubscribedTaskDetailModel subscribedTaskDetailModel;
     private int PAYTM_STEP = -1;
     private String paymentMethod;
     private double paytmPayableAmount;
+    private double payableAmount;
     private CityDetail cityDetail;
+    private String paymentFor;
+
+    public static final String PAYMENT_FOR_SUBSCRIPTION = "payment_for_subscription";
+    public static final String PAYMENT_FOR_TASK_CREATION = "payment_for_task_creation";
 
 
+    /*
+         cart details - selected packages json array string
+         payment data model - payment info
+         city detail - selected city data for which user is purchasing subscription
+     */
     public static void newInstance(Context context, String cartDetails, CheepCarePaymentDataModel paymentDataModel, CityDetail mCityDetail) {
         Intent intent = new Intent(context, PaymentChoiceCheepCareActivity.class);
         intent.putExtra(Utility.Extra.DATA, cartDetails);
         intent.putExtra(Utility.Extra.DATA_2, Utility.getJsonStringFromObject(paymentDataModel));
         intent.putExtra(Utility.Extra.DATA_3, Utility.getJsonStringFromObject(mCityDetail));
+        intent.putExtra(Utility.Extra.PAYMENT_VIEW, PAYMENT_FOR_SUBSCRIPTION);
+        context.startActivity(intent);
+    }
+
+    /*
+    this is for payment of subscribed task with paid service payment or addtional charge of non working hours and excess limit of task bookinf
+    also if user selects non-subscribed address then user has to pay for free services as well
+     */
+    public static void newInstance(Context context, SubscribedTaskDetailModel subscribedTaskDetailModel) {
+        Intent intent = new Intent(context, PaymentChoiceCheepCareActivity.class);
+        intent.putExtra(Utility.Extra.DATA, Utility.getJsonStringFromObject(subscribedTaskDetailModel));
+        intent.putExtra(Utility.Extra.PAYMENT_VIEW, PAYMENT_FOR_TASK_CREATION);
         context.startActivity(intent);
     }
 
@@ -95,19 +121,25 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
     protected void initiateUI() {
 
         mBinding.llCashPayment.setVisibility(View.GONE);
-        cartDetail = getIntent().getStringExtra(Utility.Extra.DATA);
-        paymentDataModel = (CheepCarePaymentDataModel) Utility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA_2), CheepCarePaymentDataModel.class);
-        cityDetail = (CityDetail) Utility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA_3), CityDetail.class);
-
-        LogUtils.LOGE(TAG, "initiateUI: paymentDataModel \n============\n" + paymentDataModel);
+        paymentFor = getIntent().getStringExtra(Utility.Extra.PAYMENT_VIEW);
+        if (paymentFor.equalsIgnoreCase(PAYMENT_FOR_SUBSCRIPTION)) {
+            cartDetail = getIntent().getStringExtra(Utility.Extra.DATA);
+            paymentDataModel = (CheepCarePaymentDataModel) Utility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA_2),
+                    CheepCarePaymentDataModel.class);
+            cityDetail = (CityDetail) Utility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA_3), CityDetail.class);
+            payableAmount = paymentDataModel.payableAmount;
+            LogUtils.LOGE(TAG, "initiateUI: paymentDataModel \n============\n" + paymentDataModel);
+        } else {
+            subscribedTaskDetailModel = (SubscribedTaskDetailModel) Utility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA), SubscribedTaskDetailModel.class);
+            payableAmount = subscribedTaskDetailModel.total;
+        }
         setupActionbar();
     }
 
     private void setupActionbar() {
 
-        // set final payment amount which user going to pay
 
-        mBinding.textTitle.setText(getString(R.string.label_please_pay_x, Utility.getQuotePriceFormatter(String.valueOf(paymentDataModel.payableAmount))));
+        mBinding.textTitle.setText(getString(R.string.label_please_pay_x, Utility.getQuotePriceFormatter(String.valueOf(payableAmount))));
         setSupportActionBar(mBinding.toolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle(Utility.EMPTY_STRING);
@@ -143,12 +175,12 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
     }
 
 
-///////////////////////////////////////////////////////    NORMAL TASK PAYMENT METHOD [START] ///////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////    Cheep care task payment METHOD [START] ///////////////////////////////////////////////////////
 
     /**
      * Used for payment
      */
-    private void generateHashForNormalTask() {
+    private void generateHashForCheepCarePackagePurchase() {
         if (!Utility.isConnected(mContext)) {
             Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mBinding.getRoot());
             return;
@@ -160,9 +192,17 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
 
         //Add Params
         // = new HashMap<String, Object>();
-
+        String startDateTime;
+        if (paymentFor.equalsIgnoreCase(PAYMENT_FOR_SUBSCRIPTION)) {
+            startDateTime = Utility.EMPTY_STRING;
+        } else {
+            startDateTime = subscribedTaskDetailModel.startDateTime;
+        }
         mTransactionParams = HDFCPaymentUtility.getPaymentTransactionFieldsForCheepCare(
-                PreferenceUtility.getInstance(this).getFCMRegID(), userDetails, String.valueOf(paymentDataModel.payableAmount));
+                PreferenceUtility.getInstance(this).getFCMRegID(),
+                userDetails,
+                String.valueOf(payableAmount),
+                startDateTime);
 
         new HDFCPaymentUtility.AsyncFetchEncryptedString(new HDFCPaymentUtility.EncryptTransactionParamsListener() {
             @Override
@@ -218,7 +258,7 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
                         if (BuildConfig.NEED_TO_BYPASS_PAYMENT) {
 //                            PLEASE NOTE: THIS IS JUST TO BYPPASS THE PAYMENT GATEWAY. THIS IS NOT
 //                            GOING TO RUN IN LIVE ENVIRONMENT BUILDS
-                            callCreateCheepCarePackageWS(getString(R.string.message_payment_bypassed));
+                            onSuccessOfPayment(getString(R.string.message_payment_bypassed));
                         } else {
                             //TODO: Remove this when release and it is saving cc detail in clipboard only
                             if ("debug".equalsIgnoreCase(BuildConfig.BUILD_TYPE)) {
@@ -259,6 +299,76 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
             }
         }
     };
+
+    private void onSuccessOfPayment(String paymentLog) {
+        if (paymentFor.equalsIgnoreCase(PAYMENT_FOR_SUBSCRIPTION)) {
+            callCreateCheepCarePackageWS(paymentLog);
+        } else {
+            callCreateSubscribedTaskWS(paymentLog);
+        }
+    }
+
+    private void callCreateSubscribedTaskWS(String paymentLog) {
+
+        subscribedTaskDetailModel.paymentMethod = paymentMethod;
+        subscribedTaskDetailModel.paymentLog = paymentLog;
+        subscribedTaskDetailModel.paybleAmount = String.valueOf(payableAmount);
+
+        WebCallClass.createTask(mContext, subscribedTaskDetailModel, mCommonResponseListener, new WebCallClass.SuccessOfTaskCreationListener() {
+            @Override
+            public void onSuccessOfTaskCreate() {
+                hideProgressDialog();
+                LogUtils.LOGE(TAG, "onSuccessOfTaskCreate: ");
+                final String message;
+                if (TextUtils.isEmpty(subscribedTaskDetailModel.startDateTime)) {
+                    String datetime = Utility.getDate(Long.parseLong(subscribedTaskDetailModel.startDateTime), Utility.DATE_FORMAT_DD_MMMM) + getString(R.string.label_between) + Utility.get2HourTimeSlots(subscribedTaskDetailModel.startDateTime);
+                    message = getString(R.string.msg_task_confirmed_cheep_care, datetime, "3");
+                } else {
+                    message = getString(R.string.msg_task_confirmed_cheep_care_no_time_specified);
+                }
+
+
+                TaskConfirmedCCInstaBookDialog taskConfirmedCCInstaBookDialog = TaskConfirmedCCInstaBookDialog.newInstance(new TaskConfirmedCCInstaBookDialog.TaskConfirmActionListener() {
+                    @Override
+                    public void onAcknowledgementAccepted() {
+                        MessageEvent messageEvent = new MessageEvent();
+                        messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.SUBSCRIBED_TASK_CREATE_SUCCESSFULLY;
+                        EventBus.getDefault().post(messageEvent);
+                        finish();
+                    }
+
+                    @Override
+                    public void rescheduleTask() {
+
+                    }
+                }, message);
+                taskConfirmedCCInstaBookDialog.show(getSupportFragmentManager(), TaskConfirmedCCInstaBookDialog.TAG);
+            }
+        });
+    }
+
+    private final WebCallClass.CommonResponseListener mCommonResponseListener =
+            new WebCallClass.CommonResponseListener() {
+                @Override
+                public void volleyError(VolleyError error) {
+                    Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
+                    hideProgressDialog();
+                    Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
+                }
+
+                @Override
+                public void showSpecificMessage(String message) {
+                    hideProgressDialog();
+                    // Show message
+                    Utility.showSnackBar(message, mBinding.getRoot());
+                }
+
+                @Override
+                public void forceLogout() {
+                    hideProgressDialog();
+                    finish();
+                }
+            };
 
     private void callCreateCheepCarePackageWS(String paymentLog) {
         LogUtils.LOGE(TAG, "callCreateCheepCarePackageWS: paymentLog \n" + paymentLog);
@@ -325,7 +435,8 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
                     //success
                     if (data != null) {
                         LogUtils.LOGE(TAG, "onActivityResult() called with success: result= [" + data.getStringExtra(Utility.Extra.PAYU_RESPONSE) + "]");
-                        callCreateCheepCarePackageWS(data.getStringExtra(Utility.Extra.PAYU_RESPONSE));
+                        onSuccessOfPayment(data.getStringExtra(Utility.Extra.PAYU_RESPONSE));
+
                     }
                 }
                 if (resultCode == RESULT_CANCELED) {
@@ -428,7 +539,7 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
                 if (event.paytmResponse.isSuccess) {
                     // show dialog
 //                TODO: Need to start the task from here
-                    callCreateCheepCarePackageWS(event.paytmResponse.ResponsePayLoad);
+                    onSuccessOfPayment(event.paytmResponse.ResponsePayLoad);
                 } else {
 //                    Utility.showToast(mContext, getString(R.string.msg_payment_failed));
                     showPaymentFailedDialog();
@@ -471,8 +582,14 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
                 e.printStackTrace();
             }
 
-            boolean isLowBalance = paytmWalletBalance < paymentDataModel.payableAmount;
-            paytmPayableAmount = paymentDataModel.payableAmount - paytmWalletBalance;
+            boolean isLowBalance;
+            if (paymentDataModel != null) {
+                isLowBalance = paytmWalletBalance < paymentDataModel.payableAmount;
+                paytmPayableAmount = paymentDataModel.payableAmount - paytmWalletBalance;
+            } else {
+                isLowBalance = paytmWalletBalance < subscribedTaskDetailModel.total;
+                paytmPayableAmount = subscribedTaskDetailModel.total - paytmWalletBalance;
+            }
             mBinding.tvPaytmBalance.setVisibility(View.VISIBLE);
 
             mBinding.tvPaytmBalance.setText("(" + getString(R.string.rupee_symbol_x, String.valueOf(paytmWalletBalance)) + ")");
@@ -636,20 +753,21 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
     }
 
     private void doPaymentOfPaytm() {
+
         paymentMethod = NetworkUtility.PAYMENT_METHOD_TYPE.PAYTM;
         UserDetails userDetails = PreferenceUtility.getInstance(PaymentChoiceCheepCareActivity.this).getUserDetails();
         UserDetails.PaytmUserDetail paytmUserDetail = userDetails.mPaytmUserDetail;
 
         switch (PAYTM_STEP) {
             case PAYTM_SEND_OTP:
-                SendOtpActivity.newInstance(mContext, true, String.valueOf(paymentDataModel.payableAmount));
+                SendOtpActivity.newInstance(mContext, true, String.valueOf(payableAmount));
                 break;
             case PAYTM_ADD_MONEY:
-                AddMoneyActivity.newInstance(mContext, String.valueOf(paymentDataModel.payableAmount), paytmPayableAmount, paytmUserDetail.paytmAccessToken,
+                AddMoneyActivity.newInstance(mContext, String.valueOf(payableAmount), paytmPayableAmount, paytmUserDetail.paytmAccessToken,
                         paytmUserDetail.paytmphoneNumber, paytmUserDetail.paytmCustId, paytmWalletBalance);
                 break;
             case PAYTM_WITHDRAW:
-                WithdrawMoneyActivity.newInstance(mContext, String.valueOf(paymentDataModel.payableAmount), paytmPayableAmount, paytmUserDetail.paytmAccessToken,
+                WithdrawMoneyActivity.newInstance(mContext, String.valueOf(payableAmount), paytmPayableAmount, paytmUserDetail.paytmAccessToken,
                         paytmUserDetail.paytmphoneNumber, paytmUserDetail.paytmCustId, paytmWalletBalance, true);
                 break;
         }
@@ -657,7 +775,7 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
 
     private void doPaymentOfNetBanking() {
         paymentMethod = NetworkUtility.PAYMENT_METHOD_TYPE.PAYU;
-        generateHashForNormalTask();
+        generateHashForCheepCarePackagePurchase();
     }
 
 

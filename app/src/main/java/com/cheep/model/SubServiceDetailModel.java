@@ -26,6 +26,7 @@ public class SubServiceDetailModel implements Serializable {
     public String minUnit;
     @SerializedName("max_unit")
     public String maxUnit;
+
     @SerializedName("unit_price")
     public String unitPrice;
 
@@ -33,5 +34,5 @@ public class SubServiceDetailModel implements Serializable {
 
     public List<SubServiceDetailModel> subServiceList;
 
-    public int unit = 1;
+    public int selected_unit = 1;
 }

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="label_response_received">Response Received</string>
+    <string name="label_paid_with_cheep_care">With Cheep Care</string>
+</resources>

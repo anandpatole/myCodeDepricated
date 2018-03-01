@@ -398,7 +398,6 @@
                     android:background="@drawable/ic_offer_tag_small"
                     android:ellipsize="marquee"
                     android:marqueeRepeatLimit="marquee_forever"
-                    android:maxLines="1"
                     android:paddingLeft="@dimen/scale_4dp"
                     android:paddingRight="@dimen/scale_16dp"
                     android:singleLine="true"

@@ -118,6 +118,7 @@ public class TaskCreationPhase2Fragment extends BaseFragment implements
         @Override
         public void volleyError(VolleyError error) {
             Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
+            hideProgressDialog();
             mTaskCreationCCActivity.hideProgressDialog();
             Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
         }
@@ -125,12 +126,14 @@ public class TaskCreationPhase2Fragment extends BaseFragment implements
         @Override
         public void showSpecificMessage(String message) {
             mTaskCreationCCActivity.hideProgressDialog();
+            hideProgressDialog();
             Utility.showSnackBar(message, mBinding.getRoot());
         }
 
         @Override
         public void forceLogout() {
             mTaskCreationCCActivity.hideProgressDialog();
+            hideProgressDialog();
             mTaskCreationCCActivity.finish();
         }
     };
@@ -382,17 +385,23 @@ public class TaskCreationPhase2Fragment extends BaseFragment implements
 
         mBinding.spinnerAddressSelection.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemSelected(AdapterView<?> parent, View view, final int position, long id) {
                 if (position == mAddressList.size() - 1) {
                     showBottomAddressDialog(null);
                 } else if (mAddressList.get(position).is_subscribe.equalsIgnoreCase(Utility.BOOLEAN.YES)) {
                     Log.d(TAG, "onItemSelected: ");
+                    mTaskCreationCCActivity.showSubscribedBadge(true);
                     fillAddressView(mAddressList.get(position));
                 } else if (isClicked && mAddressList.get(position).is_subscribe.equals(Utility.BOOLEAN.NO)) {
-
+                    if (!Utility.isConnected(mContext)) {
+                        Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mBinding.getRoot());
+                        return;
+                    }
+                    showProgressDialog();
                     WebCallClass.isCityAvailableForCare(mTaskCreationCCActivity, mAddressList.get(position).address_id, commonErrorListener, new WebCallClass.CityAvailableCheepCareListener() {
                         @Override
                         public void getCityDetails(final CityDetail cityDetail) {
+                            hideProgressDialog();
                             if (TextUtils.isEmpty(cityDetail.citySlug)) {
                                 CheepCareNotInYourCityDialog.newInstance(mContext, new AcknowledgementInteractionListener() {
                                     @Override
@@ -407,9 +416,17 @@ public class TaskCreationPhase2Fragment extends BaseFragment implements
 //                                        mTaskCreationCCActivity.setResult(Utility.REQUEST_CODE_TASK_CREATION_CHEEP_CARE,
 //                                                new Intent().putExtra(Utility.Extra.DATA, careCitySlug));
 //                                        mTaskCreationCCActivity.finish();
+                                        if (!Utility.isConnected(mContext)) {
+                                            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mBinding.getRoot());
+                                            return;
+                                        }
+
+                                        showProgressDialog();
+
                                         WebCallClass.getCityCareDetail(mContext, cityDetail.citySlug, commonErrorListener, new WebCallClass.GetCityCareDataListener() {
                                             @Override
                                             public void getCityCareData(CityLandingPageModel cityLandingPageModel) {
+                                                hideProgressDialog();
                                                 for (PackageDetail detail : cityLandingPageModel.packageDetailList)
                                                     if (detail.id.equalsIgnoreCase(mTaskCreationCCActivity.mCarePackageId)) {
                                                         PackageCustomizationActivity.newInstance(mContext, cityLandingPageModel.cityDetail, detail, Utility.getJsonStringFromObject(cityLandingPageModel.packageDetailList), cityLandingPageModel.adminSetting);
@@ -422,7 +439,8 @@ public class TaskCreationPhase2Fragment extends BaseFragment implements
 
                                     @Override
                                     public void onNotNowClicked() {
-
+                                        fillAddressView(mAddressList.get(position));
+                                        mTaskCreationCCActivity.showSubscribedBadge(false);
                                     }
                                 });
                             }

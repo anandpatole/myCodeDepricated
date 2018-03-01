@@ -11,9 +11,10 @@
         <RelativeLayout
             android:id="@+id/rl_tick_container"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            app:layout_constraintEnd_toStartOf="@+id/txtQueStr"
-            app:layout_constraintStart_toStartOf="parent">
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
 
             <ImageView
@@ -36,8 +37,10 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/scale_15dp"
+            android:layout_marginEnd="@dimen/scale_15dp"
             android:layout_marginRight="@dimen/scale_15dp"
             android:paddingLeft="@dimen/scale_12dp"
+            android:paddingStart="@dimen/scale_12dp"
             android:textColor="@color/black"
             android:textSize="@dimen/text_size_14sp"
             app:layout_constraintBottom_toBottomOf="parent"

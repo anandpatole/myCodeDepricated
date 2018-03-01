@@ -59,16 +59,19 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
     private WebCallClass.CommonResponseListener commonErrorResponse = new WebCallClass.CommonResponseListener() {
         @Override
         public void volleyError(VolleyError error) {
+            hideProgressDialog();
             Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
         }
 
         @Override
         public void showSpecificMessage(String message) {
+            hideProgressDialog();
             Utility.showSnackBar(message, mBinding.getRoot());
         }
 
         @Override
         public void forceLogout() {
+            hideProgressDialog();
             finish();
         }
     };
@@ -155,9 +158,15 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
     }
 
     private void callGetCityLandingCareDetailWS() {
+        if (!Utility.isConnected(mContext)) {
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mBinding.getRoot());
+            return;
+        }
+        showProgressDialog();
         WebCallClass.getCityCareDetail(mContext, mCity.citySlug, commonErrorResponse, new WebCallClass.GetCityCareDataListener() {
             @Override
             public void getCityCareData(CityLandingPageModel cityLandingPageModel) {
+                hideProgressDialog();
                 mCityLandingPageModel = cityLandingPageModel;
                 mPackageListString = Utility.getJsonStringFromObject(mCityLandingPageModel.packageDetailList);
                 getSavedData();
@@ -293,7 +302,7 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
         public void onPackageItemClick(int position, PackageDetail packageModel) {
 //            String packageList = Utility.getJsonStringFromObject(mCityLandingPageModel.packageDetailList);
             String packageList = Utility.getJsonStringFromObject(mCityLandingPageModel.packageDetailList);
-            PackageCustomizationActivity.newInstance(mContext,  mCityLandingPageModel.cityDetail, packageModel, packageList, mCityLandingPageModel.adminSetting);
+            PackageCustomizationActivity.newInstance(mContext, mCityLandingPageModel.cityDetail, packageModel, packageList, mCityLandingPageModel.adminSetting);
         }
     };
 
