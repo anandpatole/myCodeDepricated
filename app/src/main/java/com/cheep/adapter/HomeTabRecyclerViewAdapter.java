@@ -64,7 +64,8 @@ public class HomeTabRecyclerViewAdapter extends RecyclerView.Adapter<HomeTabRecy
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         mContext = parent.getContext();
-        final RowTabHomeBinding mRowTabHomeBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), R.layout.row_tab_home, parent, false);
+        final RowTabHomeBinding mRowTabHomeBinding =
+                DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), R.layout.row_tab_home, parent, false);
 
         // TODO: This can be enabled in orderto make the category images in Listing according to 16:9 ratio.
         // TODO: Currently Its not needed so commenting it.

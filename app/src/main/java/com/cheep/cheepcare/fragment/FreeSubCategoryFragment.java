@@ -149,7 +149,7 @@ public class FreeSubCategoryFragment extends BaseFragment {
                 @Override
                 public void onLimitExceeded(SubServiceDetailModel subServiceDetailModel, int position) {
                     showLimitExceedDialog();
-                }
+                }       
             };
 
     private void showLimitExceedDialog() {

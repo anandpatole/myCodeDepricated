@@ -745,4 +745,10 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="msg_task_confirmed_instabook_2">Our Cheep PRO will be arriving at your location on %1s.</string>
     <string name="number_of_services">( x%1s )</string>
     <string name="label_free">FREE</string>
+    <string name="label_add_media">Add media</string>
+    <string name="number_of_media">%1s of %2s Media</string>
+    <string name="label_all">All</string>
+    <string name="label_your_tasks">Your Tasks</string>
+    <string name="label_chat_now">Chat Now</string>
+    <!--https:\/\/s3.ap-south-1.amazonaws.com\/cheepapp\/advertise\/banner_image\/thumb\/vlcc_banner_image.jpg-->
 </resources>

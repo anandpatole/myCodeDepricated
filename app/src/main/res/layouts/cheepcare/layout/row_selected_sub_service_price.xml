@@ -12,7 +12,6 @@
             android:id="@+id/rl_tick_container"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            app:layout_constraintEnd_toStartOf="@+id/txtQueStr"
             app:layout_constraintStart_toStartOf="parent">
 
 

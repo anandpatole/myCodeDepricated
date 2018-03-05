@@ -79,13 +79,14 @@
     <dimen name="scale_67dp">67dp</dimen>
     <dimen name="scale_68dp">68dp</dimen>
     <dimen name="scale_70dp">70dp</dimen>
+    <dimen name="scale_74dp">74dp</dimen>
     <dimen name="scale_76dp">76dp</dimen>
     <dimen name="scale_79dp">79dp</dimen>
     <dimen name="scale_80dp">80dp</dimen>
     <dimen name="scale_90dp">90dp</dimen>
     <dimen name="scale_96dp">96dp</dimen>
     <dimen name="scale_100dp">100dp</dimen>
-    <dimen name="scale_108dp">70dp</dimen>
+    <dimen name="scale_108dp">108dp</dimen>
     <dimen name="scale_113dp">113dp</dimen>
     <dimen name="scale_120dp">120dp</dimen>
     <dimen name="scale_129dp">129dp</dimen>
@@ -96,7 +97,8 @@
     <dimen name="scale_170dp">170dp</dimen>
     <dimen name="scale_174dp">174dp</dimen>
     <dimen name="scale_180dp">180dp</dimen>
-    <!--<dimen name="scale_190dp">190dp</dimen>-->
+    <dimen name="scale_190dp">190dp</dimen>
+    <dimen name="scale_200dp">200dp</dimen>
     <dimen name="scale_256dp">256dp</dimen>
     <dimen name="scale_260dp">260dp</dimen>
 
@@ -189,6 +191,11 @@
     <dimen name="verification_screen_margin_logo_description">28.250dp</dimen>
     <dimen name="text_size_seek_support">14sp</dimen>
     <dimen name="height_cheep_care_banner">120dp</dimen>
+
+    <!--dimens for add media cc-->
+    <dimen name="padding_item_width">240dp</dimen>
+    <dimen name="item_width">240dp</dimen>
+    <!--dimens for add media cc-->
 
 </resources>
 

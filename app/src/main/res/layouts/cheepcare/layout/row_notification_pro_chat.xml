@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingBottom="@dimen/scale_16dp"
+            android:paddingLeft="@dimen/scale_25dp"
+            android:paddingRight="@dimen/scale_11dp"
+            android:paddingTop="@dimen/scale_8dp">
+
+            <ImageView
+                android:id="@+id/img_profile"
+                android:layout_width="@dimen/scale_74dp"
+                android:layout_height="@dimen/scale_68dp"
+                android:layout_marginTop="@dimen/scale_14dp"
+                android:paddingRight="@dimen/scale_6dp"
+                android:src="@drawable/ic_cheep_circular_icon"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="ContentDescription" />
+
+            <ImageView
+                android:id="@+id/imgFav"
+                android:layout_width="@dimen/scale_24dp"
+                android:layout_height="@dimen/scale_24dp"
+                android:background="@drawable/icon_fav_selector"
+                app:layout_constraintBottom_toBottomOf="@id/img_profile"
+                app:layout_constraintRight_toRightOf="@id/img_profile"
+                tools:ignore="ContentDescription" />
+
+            <com.cheep.custom_view.CFTextViewSemiBold
+                android:id="@+id/text_provider_name"
+                android:layout_width="@dimen/scale_0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/scale_18dp"
+                android:layout_marginRight="@dimen/scale_8dp"
+                android:layout_marginTop="@dimen/scale_23dp"
+                android:includeFontPadding="false"
+                android:text="Lokesh Shah"
+                android:textColor="@color/splash_gradient_end"
+                android:textSize="@dimen/text_size_14sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/img_profile"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.cheep.custom_view.CFTextViewRegular
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/scale_18dp"
+                android:layout_marginTop="@dimen/scale_3dp"
+                android:background="@drawable/blue_rounded_border_sf1"
+                android:paddingBottom="@dimen/scale_4dp"
+                android:paddingLeft="@dimen/scale_7dp"
+                android:paddingRight="@dimen/scale_7dp"
+                android:paddingTop="@dimen/scale_4dp"
+                android:text="Plumber"
+                android:textColor="@color/splash_gradient_end"
+                android:textSize="@dimen/text_size_10sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintStart_toEndOf="@id/img_profile"
+                app:layout_constraintTop_toBottomOf="@id/text_provider_name" />
+
+            <com.cheep.custom_view.CFTextViewRegular
+                android:id="@+id/tvText"
+                android:layout_width="@dimen/scale_0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/scale_12dp"
+                android:layout_marginTop="@dimen/scale_16dp"
+                android:text="Hey Rahul, our Cheep PRO will be arriving at your location between 1000 hrs - 1300 hrs today for your Cheep Care task. Please confirm your availability."
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_13sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/img_profile" />
+
+            <com.cheep.custom_view.CFTextViewSemiBold
+                android:id="@+id/tvTimeAgo"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/home_screen_book_button_height"
+                android:layout_gravity="bottom"
+                android:layout_marginTop="@dimen/scale_14dp"
+                android:gravity="center_vertical"
+                android:paddingLeft="@dimen/scale_6dp"
+                android:paddingRight="@dimen/scale_6dp"
+                android:text="@string/label_no"
+                android:textColor="@color/grey_dark_color_2"
+                android:textSize="@dimen/text_size_11sp"
+                app:layout_constraintEnd_toStartOf="@id/tvYes"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvText"
+                tools:text="1 Minute ago" />
+
+            <com.cheep.custom_view.CFTextViewSemiBold
+                android:id="@+id/tvNo"
+                android:layout_width="@dimen/home_screen_book_button_width"
+                android:layout_height="@dimen/home_screen_book_button_height"
+                android:layout_gravity="bottom"
+                android:layout_marginTop="@dimen/scale_16dp"
+                android:background="@drawable/rounded_rect_blue"
+                android:gravity="center"
+                android:text="@string/label_chat_now"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_11sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintTop_toBottomOf="@id/tvText" />
+
+        </android.support.constraint.ConstraintLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/scale_6dp"
+            android:background="@color/grey_dark_color_4" />
+    </LinearLayout>
+</layout>

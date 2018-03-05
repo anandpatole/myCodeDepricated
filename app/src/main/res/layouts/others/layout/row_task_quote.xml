@@ -209,9 +209,9 @@
                     android:textSize="@dimen/text_size_11sp"
                     tools:text="20 mins away" />
             </FrameLayout>
-<!-- TODO: uncomment chat feature by giteeka -30 august 2017-->
-<!-- TODO: Only chat is enabled-->
-           <LinearLayout
+            <!-- TODO: uncomment chat feature by giteeka -30 august 2017-->
+            <!-- TODO: Only chat is enabled-->
+            <LinearLayout
                 android:id="@+id/ln_chat_call"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -220,15 +220,15 @@
                 android:gravity="center"
                 android:orientation="horizontal">
 
-             <!--   <ImageView
-                    android:id="@+id/img_call"
-                    android:layout_width="@dimen/scale_40dp"
-                    android:layout_height="@dimen/scale_40dp"
-                    android:layout_marginRight="@dimen/scale_5dp"
-                    android:adjustViewBounds="true"
-                    android:padding="@dimen/scale_5dp"
-                    android:src="@drawable/icon_call_smaller"
-                    tools:ignore="ContentDescription" />-->
+                <!--   <ImageView
+                       android:id="@+id/img_call"
+                       android:layout_width="@dimen/scale_40dp"
+                       android:layout_height="@dimen/scale_40dp"
+                       android:layout_marginRight="@dimen/scale_5dp"
+                       android:adjustViewBounds="true"
+                       android:padding="@dimen/scale_5dp"
+                       android:src="@drawable/icon_call_smaller"
+                       tools:ignore="ContentDescription" />-->
 
                 <RelativeLayout
                     android:id="@+id/rl_chat"
@@ -238,7 +238,6 @@
                     android:gravity="center">
 
                     <ImageView
-                        android:visibility="invisible"
                         android:id="@+id/img_chat"
                         android:layout_width="@dimen/scale_40dp"
                         android:layout_height="@dimen/scale_40dp"
@@ -246,21 +245,22 @@
                         android:adjustViewBounds="true"
                         android:padding="@dimen/scale_5dp"
                         android:src="@drawable/icon_chat_smaller"
+                        android:visibility="invisible"
                         tools:ignore="ContentDescription" />
 
-                 <!--<com.cheep.custom_view.CFTextViewRegular
-                        android:id="@+id/text_tab_chat"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:drawablePadding="@dimen/scale_5dp"
-                        android:drawableTop="@drawable/tab_chat"
-                        android:gravity="center"
-                        android:padding="@dimen/scale_5dp"
-                        android:text="@string/tab_chat"
-                        android:textAllCaps="false"
-                        android:textColor="@drawable/tab_text_color"
-                        android:textSize="@dimen/text_size_11sp"
-                        android:visibility="visible" />-->
+                    <!--<com.cheep.custom_view.CFTextViewRegular
+                           android:id="@+id/text_tab_chat"
+                           android:layout_width="wrap_content"
+                           android:layout_height="wrap_content"
+                           android:drawablePadding="@dimen/scale_5dp"
+                           android:drawableTop="@drawable/tab_chat"
+                           android:gravity="center"
+                           android:padding="@dimen/scale_5dp"
+                           android:text="@string/tab_chat"
+                           android:textAllCaps="false"
+                           android:textColor="@drawable/tab_text_color"
+                           android:textSize="@dimen/text_size_11sp"
+                           android:visibility="visible" />-->
 
                     <com.cheep.custom_view.CFTextViewSemiBold
                         android:id="@+id/tv_chat_unread_count"
@@ -286,14 +286,14 @@
                         tools:text="25" />
                 </RelativeLayout>
 
-               <!--<ImageView
-                    android:id="@+id/img_chat"
-                    android:layout_width="@dimen/scale_40dp"
-                    android:layout_height="@dimen/scale_40dp"
-                    android:layout_marginLeft="@dimen/scale_5dp"
-                    android:adjustViewBounds="true"
-                    android:padding="@dimen/scale_5dp"
-                    android:src="@drawable/icon_chat_smaller" />-->
+                <!--<ImageView
+                     android:id="@+id/img_chat"
+                     android:layout_width="@dimen/scale_40dp"
+                     android:layout_height="@dimen/scale_40dp"
+                     android:layout_marginLeft="@dimen/scale_5dp"
+                     android:adjustViewBounds="true"
+                     android:padding="@dimen/scale_5dp"
+                     android:src="@drawable/icon_chat_smaller" />-->
 
             </LinearLayout>
 
@@ -303,10 +303,10 @@
                 android:layout_height="wrap_content"
                 android:layout_alignBaseline="@id/tvLocation"
                 android:layout_toLeftOf="@id/flDistance"
+                android:ellipsize="middle"
+                android:maxLines="2"
                 android:textColor="@color/splash_gradient_end"
                 android:textSize="@dimen/text_size_12sp"
-                android:maxLines="2"
-                android:ellipsize="middle"
                 tools:text="Anurag Kulkarni sfsdf sdf sdf sddfsdfsdfsdfsdfsdf   sdf" />
 
             <com.cheep.custom_view.CFTextViewRegular
@@ -398,7 +398,6 @@
                     android:background="@drawable/ic_offer_tag_small"
                     android:ellipsize="marquee"
                     android:marqueeRepeatLimit="marquee_forever"
-                    android:maxLines="1"
                     android:paddingLeft="@dimen/scale_4dp"
                     android:paddingRight="@dimen/scale_16dp"
                     android:singleLine="true"

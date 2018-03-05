@@ -34,7 +34,7 @@
                 <ImageView
                     android:id="@+id/iv_cheep_care_gif"
                     android:layout_width="wrap_content"
-                    android:layout_height="@dimen/scale_108dp"
+                    android:layout_height="@dimen/scale_70dp"
                     android:layout_gravity="center_horizontal"
                     android:adjustViewBounds="true"
                     android:src="@drawable/ic_home_with_heart_text"/>

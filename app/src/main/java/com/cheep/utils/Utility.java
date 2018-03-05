@@ -90,6 +90,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import static com.cheep.utils.SuperCalendar.SuperFormatter;
@@ -638,6 +639,17 @@ public class Utility {
             e.printStackTrace();
         }
         return finalDate;
+    }
+
+    public static Date getDate(String dateTime, String fromFormat) {
+        Date date = null;
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(fromFormat, Locale.ENGLISH);
+        try {
+            date = simpleDateFormat.parse(dateTime);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return date;
     }
 
     /*

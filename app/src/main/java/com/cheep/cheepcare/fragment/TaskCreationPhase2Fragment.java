@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.databinding.DataBindingUtil;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -31,6 +32,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.DatePicker;
+import android.widget.ImageView;
 import android.widget.TimePicker;
 
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener;
@@ -38,6 +40,10 @@ import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.cheep.BuildConfig;
 import com.cheep.R;
 import com.cheep.activity.BaseAppCompatActivity;
@@ -58,7 +64,6 @@ import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
 import com.cheep.strategicpartner.AmazonUtils;
-import com.cheep.strategicpartner.MediaRecycleAdapter;
 import com.cheep.strategicpartner.model.MediaModel;
 import com.cheep.strategicpartner.recordvideo.RecordVideoNewActivity;
 import com.cheep.utils.LogUtils;
@@ -97,7 +102,8 @@ public class TaskCreationPhase2Fragment extends BaseFragment implements
     public boolean isTaskWhereVerified = false;
     public boolean isTaskWhenAdded = false;
 
-    public MediaRecycleAdapter mMediaRecycleAdapter;
+    //    public MediaRecycleAdapter mMediaRecycleAdapter;
+    private int numberOfMedia = 0;
     // For When
     public SuperCalendar startDateTimeSuperCalendar = SuperCalendar.getInstance();
     private RequestPermission mRequestPermission;
@@ -106,6 +112,7 @@ public class TaskCreationPhase2Fragment extends BaseFragment implements
     public AddressModel mSelectedAddress;
 
     private boolean isClicked = false;
+    private ArrayList<MediaModel> mediaList;
 
 
     @SuppressWarnings("unused")
@@ -304,8 +311,7 @@ public class TaskCreationPhase2Fragment extends BaseFragment implements
         // Update the SP lists
 //        callSPListWS(mTaskCreationCCActivity.mJobCategoryModel.catId, userDetails.CityID, Utility.EMPTY_STRING);
 
-
-        mMediaRecycleAdapter = new MediaRecycleAdapter(new MediaRecycleAdapter.ItemClick() {
+        /*mMediaRecycleAdapter = new MediaRecycleAdapter(new MediaRecycleAdapter.ItemClick() {
             @Override
             public void removeMedia() {
                 // after uploading 3 media file if any one is deleted then add image view again
@@ -313,7 +319,7 @@ public class TaskCreationPhase2Fragment extends BaseFragment implements
                     mBinding.imgAdd.setVisibility(View.VISIBLE);
 
             }
-        }, false);
+        }, false);*/
 //        mBinding.recycleImg.setLayoutManager(new LinearLayoutManager(mTaskCreationCCActivity, LinearLayoutManager.HORIZONTAL, false));
 //        mBinding.recycleImg.setAdapter(mMediaRecycleAdapter);
 
@@ -407,6 +413,7 @@ public class TaskCreationPhase2Fragment extends BaseFragment implements
         mBinding.viewDot.setOnClickListener(mOnClickListener);
         mBinding.tvLabelAddressSubscribed.setOnClickListener(mOnClickListener);
         mBinding.tvAddress.setOnClickListener(mOnClickListener);
+        mBinding.frameSelectPicture.setOnClickListener(mOnClickListener);
     }
 
     @Override
@@ -446,7 +453,7 @@ public class TaskCreationPhase2Fragment extends BaseFragment implements
 
     public String mCurrentPhotoPath;
 
-    private void showMediaChooserDialog() {
+    public void showMediaChooserDialog() {
         LogUtils.LOGD(TAG, "showPictureChooserDialog() called");
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
         builder.setTitle(getString(R.string.choose_media))
@@ -751,7 +758,7 @@ public class TaskCreationPhase2Fragment extends BaseFragment implements
                 case R.id.icon_task_when:
                 case R.id.text_when:
                     // On Click event of When
-//                    Utility.hideKeyboard(mContext, mBinding.editTaskDesc);
+                    Utility.hideKeyboard(mContext, mBinding.editTaskDesc);
                     if (!isDialogOnceShown) {
                         SelectSpecificTimeDialog.newInstance(mContext, specificTimeInteractionListener);
                     } else {
@@ -779,11 +786,20 @@ public class TaskCreationPhase2Fragment extends BaseFragment implements
 
                     isClicked = true;
                     mBinding.spinnerAddressSelection.performClick();
-//                    Utility.hideKeyboard(mContext, mBinding.editTaskDesc);
+                    Utility.hideKeyboard(mContext, mBinding.editTaskDesc);
 //                    showAddressDialog();
                     break;
                 case R.id.cvGetQuote:
 //                    mTaskCreationCCActivity.onGetQuoteClicked();
+                    break;
+                case R.id.frame_select_picture:
+                    //Hide Keyboard if already open
+                    Utility.hideKeyboard(mContext, mBinding.editTaskDesc);
+                    if (mediaList == null || mediaList.size() == 0) {
+                        showMediaChooserDialog();
+                    } else {
+                        mTaskCreationCCActivity.showMediaUI(mediaList);
+                    }
                     break;
             }
         }
@@ -898,6 +914,7 @@ public class TaskCreationPhase2Fragment extends BaseFragment implements
             };
 
     private class UploadListener implements TransferListener {
+
         String s3PathThumb, s3pathOriginal, type, localFilePath;
 
         UploadListener(String s3PathThumb, String s3pathOriginal, String type, String localFilePath) {
@@ -909,13 +926,14 @@ public class TaskCreationPhase2Fragment extends BaseFragment implements
 
         // Keep tracks for media uploading
         TransferObserver originalFileObserver;
-        TransferObserver thungFileObserver;
 
+        TransferObserver thungFileObserver;
 
         @Override
         public void onError(int id, Exception e) {
             LogUtils.LOGE(TAG, "Error during upload: " + id, e);
         }
+
 
         @Override
         public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {
@@ -941,7 +959,13 @@ public class TaskCreationPhase2Fragment extends BaseFragment implements
                     LogUtils.LOGE(TAG, "mediaThumbName: " + thumbUrl);
                     mediaModel.mediaType = type;
                     mediaModel.localFilePath = localFilePath;
-                    mMediaRecycleAdapter.addImage(mediaModel);
+                    if (mediaList == null)
+                        mediaList = new ArrayList<>();
+                    mediaList.add(mediaModel);
+                    mediaAdded(mediaModel);
+                    if (mediaList.size() != 1)
+                        mTaskCreationCCActivity.addMedia(mediaModel);
+//                    mMediaRecycleAdapter.addImage(mediaModel);
 
                     // set update media list for strategic partner activity
                     // for when  user is not creating tasks but he press back buttons
@@ -957,14 +981,113 @@ public class TaskCreationPhase2Fragment extends BaseFragment implements
 
     }
 
+    private void mediaAdded(MediaModel mediaModel) {
+        LogUtils.LOGI(TAG, "bind:>>  " + mediaModel.mediaName);
+
+        ImageView imageViewToLoadImage = new ImageView(mContext);
+
+        switch (numberOfMedia) {
+            case 0:
+                mBinding.imgTaskPicture1.setVisibility(View.VISIBLE);
+                imageViewToLoadImage = mBinding.imgTaskPicture1;
+                break;
+            case 1:
+                mBinding.framePicture2.setVisibility(View.VISIBLE);
+                imageViewToLoadImage = mBinding.imgTaskPicture2;
+                break;
+            case 2:
+                mBinding.framePicture3.setVisibility(View.VISIBLE);
+                imageViewToLoadImage = mBinding.imgTaskPicture3;
+                break;
+            default:
+                Log.d(TAG, "onStateChanged: numberOfMedia = " + numberOfMedia);
+                break;
+        }
+
+        loadImageByGlide(mediaModel.localFilePath, imageViewToLoadImage);
+
+        numberOfMedia++;
+    }
+
+    public void removeMediaItem(int position, MediaModel model) {
+        numberOfMedia--;
+        int itemPosition = -1;
+        for (int i = 0; i < mediaList.size(); i++) {
+            if (mediaList.get(i).localFilePath.equals(model.localFilePath)) {
+                itemPosition = i;
+                break;
+            }
+        }
+        if (itemPosition != -1) {
+            mediaList.remove(itemPosition);
+            refreshMediaUI();
+        }
+    }
+
+    private void refreshMediaUI() {
+        mBinding.imgTaskPicture1.setVisibility(View.GONE);
+        mBinding.framePicture2.setVisibility(View.GONE);
+        mBinding.framePicture3.setVisibility(View.GONE);
+
+        ImageView imageViewToLoadImage = new ImageView(mContext);
+
+        for (int i = 0; i < mediaList.size(); i++) {
+
+            switch (i) {
+                case 0:
+                    mBinding.imgTaskPicture1.setVisibility(View.VISIBLE);
+                    imageViewToLoadImage = mBinding.imgTaskPicture1;
+                    break;
+                case 1:
+                    mBinding.framePicture2.setVisibility(View.VISIBLE);
+                    imageViewToLoadImage = mBinding.imgTaskPicture2;
+                    break;
+                case 2:
+                    mBinding.framePicture3.setVisibility(View.VISIBLE);
+                    imageViewToLoadImage = mBinding.imgTaskPicture3;
+                    break;
+                default:
+                    Log.d(TAG, "onStateChanged: numberOfMedia = " + numberOfMedia);
+                    break;
+            }
+
+            loadImageByGlide(mediaList.get(i).localFilePath, imageViewToLoadImage);
+        }
+    }
+
+    private void loadImageByGlide(String localFilePath, final ImageView imageView) {
+        Glide.with(mContext)
+                .load(localFilePath)
+                .asBitmap()
+                .thumbnail(0.2f)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .listener(new RequestListener<String, Bitmap>() {
+
+                    @Override
+                    public boolean onException(Exception e, String model, Target<Bitmap> target, boolean isFirstResource) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Bitmap resource, String model, Target<Bitmap> target, boolean isFromMemoryCache, boolean isFirstResource) {
+//                        if (mIsStrategicPartner) {
+//                            mImgThumb.setImageBitmap(Utility.getRoundedCornerBitmap(resource, mImgThumb.getContext()));
+//                        } else {
+                        imageView.setImageBitmap(resource);
+//                        }
+                        return true;
+                    }
+                }).into(imageView);
+    }
+
     /**
      * check if 3 image/video is added then hide image add view
      * to preventing from adding more media files
      */
 
     private void checkMediaArraySize() {
-        if (mMediaRecycleAdapter.getItemCount() == 3) {
-            mBinding.imgAdd.setVisibility(View.GONE);
+        if (numberOfMedia == 3) {
+            mTaskCreationCCActivity.shouldAddMediaClickListener(false);
         }
     }
 
@@ -1340,5 +1463,11 @@ public class TaskCreationPhase2Fragment extends BaseFragment implements
         Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.WS.EDIT_ADDRESS);
         Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.WS.DELETE_ADDRESS);
         Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.WS.SP_LIST);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG, "onDestroy() called");
     }
 }

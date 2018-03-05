@@ -12,11 +12,12 @@
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarBlack" />
 
-    <ImageView
+    <com.cheep.custom_view.TouchImageView
         android:id="@+id/image_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:adjustViewBounds="true"
+        android:src="@drawable/ic_cheep_pro_logo_square_small"
         android:transitionName="@string/transition_image_view"
         tools:ignore="ContentDescription,UnusedAttribute" />
 </LinearLayout>

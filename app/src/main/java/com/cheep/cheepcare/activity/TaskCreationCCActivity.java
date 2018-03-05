@@ -4,16 +4,22 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Display;
 import android.view.View;
 
 import com.cheep.R;
 import com.cheep.activity.BaseAppCompatActivity;
+import com.cheep.activity.ZoomImageActivity;
+import com.cheep.cheepcare.adapter.MediaAdapter;
 import com.cheep.cheepcare.adapter.TaskCreationPagerAdapter;
 import com.cheep.cheepcare.fragment.FreeSubCategoryFragment;
 import com.cheep.cheepcare.fragment.TaskCreationPhase2Fragment;
@@ -23,6 +29,7 @@ import com.cheep.model.AddressModel;
 import com.cheep.model.JobCategoryModel;
 import com.cheep.model.MessageEvent;
 import com.cheep.model.SubServiceDetailModel;
+import com.cheep.strategicpartner.model.MediaModel;
 import com.cheep.utils.Utility;
 import com.google.android.gms.common.api.Status;
 
@@ -30,6 +37,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -48,6 +56,14 @@ public class TaskCreationCCActivity extends BaseAppCompatActivity {
     public AddressModel mAddressModel;
     public String mPackageType;
     public String mCarePackageId;
+
+    //variables for add media//
+    private float itemWidth;
+    private float padding;
+    private float allPixels;
+    private MediaAdapter mediaAdapter;
+    private int expectedPosition;
+    //variables for add media//
 
     public static void getInstance(Context mContext, JobCategoryModel model, AddressModel addressModel, String packageType
             , String carePackageId) {
@@ -132,23 +148,85 @@ public class TaskCreationCCActivity extends BaseAppCompatActivity {
             }
         });
 
+        initMediaRecyclerView();
+
+    }
+
+    private void initMediaRecyclerView() {
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        itemWidth = getResources().getDimension(R.dimen.item_width);
+        padding = (size.x - itemWidth) / 2;
+
+        allPixels = 0;
+
+        LinearLayoutManager shopItemslayoutManager = new LinearLayoutManager(getApplicationContext());
+        shopItemslayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        mBinding.addMedia.itemList.setLayoutManager(shopItemslayoutManager);
+
+        mBinding.addMedia.itemList.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                synchronized (this) {
+                    if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                        calculatePositionAndScroll(recyclerView);
+                    }
+                }
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                allPixels += dx;
+            }
+        });
+
+        mediaAdapter = new MediaAdapter(mediaInteractionListener);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false);
+        mBinding.addMedia.itemList.setLayoutManager(layoutManager);
+        mBinding.addMedia.itemList.setAdapter(mediaAdapter);
+    }
+
+    private void calculatePositionAndScroll(RecyclerView recyclerView) {
+        expectedPosition = Math.round((allPixels + padding ) / itemWidth);
+        scrollListToPosition(recyclerView, expectedPosition);
+        mBinding.addMedia.tvNumberOfMedia.setText(getString(R.string.number_of_media, String.valueOf(expectedPosition + 1/* + 1*/)
+                , String.valueOf(mediaAdapter.getListSize())));
+    }
+
+    private void scrollListToPosition(RecyclerView recyclerView, int expectedPosition) {
+        float targetScrollPos = expectedPosition * itemWidth - padding;
+        float missingPx = targetScrollPos - allPixels;
+        if (missingPx != 0) {
+            recyclerView.smoothScrollBy((int) missingPx, 0);
+        }
     }
 
     private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            if (v.getId() == mBinding.textPostTask.getId()) {
-                if (mBinding.viewpager.getCurrentItem() == mTaskCreationPagerAdapter.TASK_CREATION_PHASE_1_FRAGMENT) {
-                    List<SubServiceDetailModel> list
-                            = mTaskCreationPagerAdapter.mTaskCreationPhase1Fragment.getSelectedSubServices();
-                    //lines to be uncommented
-                    if (list != null && !list.isEmpty()) {
-                        mSelectedSubServiceList = list;
-                        gotoStep(STAGE_2);
-                    } else {
-                        Utility.showSnackBar(getString(R.string.step_1_desc), mBinding.getRoot());
+            switch (v.getId()) {
+                case R.id.text_post_task:
+                    if (mBinding.viewpager.getCurrentItem() == mTaskCreationPagerAdapter.TASK_CREATION_PHASE_1_FRAGMENT) {
+                        List<SubServiceDetailModel> list
+                                = mTaskCreationPagerAdapter.mTaskCreationPhase1Fragment.getSelectedSubServices();
+                        //lines to be uncommented
+                        if (list != null && !list.isEmpty()) {
+                            mSelectedSubServiceList = list;
+                            gotoStep(STAGE_2);
+                        } else {
+                            Utility.showSnackBar(getString(R.string.step_1_desc), mBinding.getRoot());
+                        }
                     }
-                }
+                    break;
+                case R.id.iv_hide_media_ui:
+                    mBinding.addMedia.getRoot().setVisibility(View.GONE);
+                    break;
+                case R.id.iv_plus:
+                    mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.showMediaChooserDialog();
+                    break;
             }
         }
     };
@@ -156,6 +234,8 @@ public class TaskCreationCCActivity extends BaseAppCompatActivity {
     @Override
     protected void setListeners() {
         mBinding.textPostTask.setOnClickListener(mOnClickListener);
+        mBinding.addMedia.ivHideMediaUi.setOnClickListener(mOnClickListener);
+        mBinding.addMedia.ivPlus.setOnClickListener(mOnClickListener);
     }
 
     /**
@@ -291,6 +371,10 @@ public class TaskCreationCCActivity extends BaseAppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        if (mBinding.addMedia.getRoot().getVisibility() == View.VISIBLE) {
+            mBinding.addMedia.ivHideMediaUi.performClick();
+            return;
+        }
         if (mBinding.viewpager.getCurrentItem() == 1) {
             gotoStep(STAGE_1);
             return;
@@ -425,6 +509,45 @@ public class TaskCreationCCActivity extends BaseAppCompatActivity {
     public void startBookingConfirmationActivity() {
         BookingConfirmationCcActivity.newInstance(TaskCreationCCActivity.this, mCarePackageId, mJobCategoryModel.catId
                 , mTaskCreationPagerAdapter.mTaskCreationPhase1Fragment.getSelectedFreeServices()
-                , mTaskCreationPagerAdapter.mTaskCreationPhase1Fragment.getSelectedPaidServices(), mAddressModel,"");
+                , mTaskCreationPagerAdapter.mTaskCreationPhase1Fragment.getSelectedPaidServices(), mAddressModel, "");
     }
+
+    public void showMediaUI(ArrayList<MediaModel> mediaList) {
+        Log.d(TAG, "showMediaUI() called with: mediaList = [" + mediaList + "]");
+        mBinding.addMedia.getRoot().setVisibility(View.VISIBLE);
+        mediaAdapter.addAll(mediaList);
+        mBinding.addMedia.tvNumberOfMedia.setText(getString(R.string.number_of_media, String.valueOf(1)
+                , String.valueOf(mediaList.size())));
+    }
+
+    public void addMedia(MediaModel media) {
+        Log.d(TAG, "addMedia() called with: media = [" + media + "]");
+        mediaAdapter.add(media);
+        mBinding.addMedia.tvNumberOfMedia.setText(getString(R.string.number_of_media, String.valueOf(expectedPosition + 1/* + 1*/)
+                , String.valueOf(mediaAdapter.getListSize())));
+    }
+
+    public void shouldAddMediaClickListener(boolean addMediaClickListener) {
+        mBinding.addMedia.ivPlus.setOnClickListener(addMediaClickListener ? mOnClickListener : null);
+    }
+
+    private final MediaAdapter.MediaInteractionListener mediaInteractionListener = new MediaAdapter.MediaInteractionListener() {
+        @Override
+        public void onItemClick(int position, MediaModel model) {
+            ZoomImageActivity.newInstance(mContext, null, model.localFilePath);
+        }
+
+        @Override
+        public void onRemoveClick(int position, MediaModel model) {
+            if (mediaAdapter.getListSize() == 3) {
+                shouldAddMediaClickListener(true);
+            }
+            if (mediaAdapter.getListSize() == 1) {
+                mBinding.addMedia.ivHideMediaUi.performClick();
+            }
+            mediaAdapter.removeItem(position, model);
+            calculatePositionAndScroll(mBinding.addMedia.itemList);
+            mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.removeMediaItem(position, model);
+        }
+    };
 }

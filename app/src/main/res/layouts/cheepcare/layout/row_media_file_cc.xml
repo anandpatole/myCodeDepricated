@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <FrameLayout
+        android:id="@+id/fl_container"
+        android:layout_width="@dimen/padding_item_width"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+
+        <ImageView
+            android:id="@+id/imgThumb"
+            android:layout_width="@dimen/scale_200dp"
+            android:layout_height="@dimen/scale_200dp"
+            android:layout_marginBottom="@dimen/scale_10dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/scale_10dp"
+            android:background="#eeeeee"
+            android:scaleType="fitXY" />
+
+        <ImageView
+            android:id="@+id/imgRemove"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right|top"
+            android:layout_marginRight="@dimen/scale_10dp"
+            android:padding="@dimen/scale_5dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_remove" />
+    </FrameLayout>
+</layout>

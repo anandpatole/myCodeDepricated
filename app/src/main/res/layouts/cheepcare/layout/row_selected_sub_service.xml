@@ -36,7 +36,7 @@
             android:layout_marginRight="@dimen/scale_15dp"
             android:textColor="@color/splash_gradient_end"
             android:textSize="@dimen/text_size_16sp"
-            tools:text="asdasd" />
+            tools:text="asdasdasdasdasdasdasdasdasdasdasdasd" />
 
     </LinearLayout>
 </layout>

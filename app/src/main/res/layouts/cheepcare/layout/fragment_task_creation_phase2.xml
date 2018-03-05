@@ -20,23 +20,107 @@
                 android:id="@+id/recycler_view"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                app:layout_constraintEnd_toStartOf="@id/imgAdd"
+                app:layout_constraintEnd_toStartOf="@id/frame_select_picture"
                 app:layout_constraintHorizontal_bias="0.8"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:itemCount="3"
                 tools:listitem="@layout/row_selected_sub_service" />
 
-            <ImageView
-                android:id="@+id/imgAdd"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            <FrameLayout
+                android:id="@+id/frame_select_picture"
+                android:layout_width="82dp"
+                android:layout_height="82dp"
                 android:layout_marginBottom="@dimen/scale_10dp"
                 android:layout_marginRight="@dimen/scale_10dp"
                 android:layout_marginTop="@dimen/scale_10dp"
-                android:src="@drawable/ic_task_camera_video"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/recycler_view" />
+                app:layout_constraintStart_toEndOf="@id/recycler_view"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:id="@+id/imgAdd"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="@dimen/scale_10dp"
+                    android:layout_marginRight="@dimen/scale_10dp"
+                    android:layout_marginTop="@dimen/scale_10dp"
+                    android:src="@drawable/ic_task_camera_video" />
+
+                <ImageView
+                    android:id="@+id/img_task_picture_1"
+                    android:layout_width="@dimen/scale_70dp"
+                    android:layout_height="@dimen/scale_70dp"
+                    android:adjustViewBounds="true"
+                    android:background="@drawable/bg_white_shadow"
+                    android:padding="@dimen/scale_3dp"
+                    android:scaleType="centerCrop"
+                    android:visibility="gone"
+                    tools:ignore="ContentDescription" />
+
+                <FrameLayout
+                    android:id="@+id/frame_picture_2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/scale_3dp"
+                    android:layout_marginTop="@dimen/scale_3dp"
+                    android:visibility="gone">
+
+                    <ImageView
+                        android:id="@+id/img_task_picture_2"
+                        android:layout_width="@dimen/scale_70dp"
+                        android:layout_height="@dimen/scale_70dp"
+                        android:adjustViewBounds="true"
+                        android:background="@drawable/bg_white_shadow"
+                        android:padding="@dimen/scale_3dp"
+                        android:scaleType="centerCrop"
+                        android:visibility="visible"
+                        tools:ignore="ContentDescription" />
+
+                    <TextView
+                        android:id="@+id/tv_counter_2"
+                        android:layout_width="@dimen/scale_20dp"
+                        android:layout_height="@dimen/scale_20dp"
+                        android:layout_gravity="center"
+                        android:background="@drawable/xml_circular_indicator_selected_with_border"
+                        android:gravity="center_vertical|center_horizontal"
+                        android:text="@string/label_plus_1"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/text_size_11sp" />
+                </FrameLayout>
+
+                <FrameLayout
+                    android:id="@+id/frame_picture_3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/scale_6dp"
+                    android:layout_marginTop="@dimen/scale_6dp"
+                    android:visibility="gone">
+
+                    <ImageView
+                        android:id="@+id/img_task_picture_3"
+                        android:layout_width="@dimen/scale_70dp"
+                        android:layout_height="@dimen/scale_70dp"
+                        android:adjustViewBounds="true"
+                        android:background="@drawable/bg_white_shadow"
+                        android:padding="@dimen/scale_3dp"
+                        android:scaleType="centerCrop"
+                        android:visibility="visible"
+                        tools:ignore="ContentDescription" />
+
+                    <TextView
+                        android:id="@+id/tv_counter_3"
+                        android:layout_width="@dimen/scale_20dp"
+                        android:layout_height="@dimen/scale_20dp"
+                        android:layout_gravity="center"
+                        android:background="@drawable/xml_circular_indicator_selected_with_border"
+                        android:gravity="center_vertical|center_horizontal"
+                        android:text="@string/label_plus_2"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/text_size_11sp" />
+                </FrameLayout>
+            </FrameLayout>
 
             <com.cheep.custom_view.CFEditTextRegular
                 android:id="@+id/edit_task_desc"
@@ -157,7 +241,6 @@
                 android:layout_height="0dp"
                 android:layout_marginTop="@dimen/scale_8dp"
                 android:background="@drawable/bg_spinner"
-                android:focusable="true"
                 android:paddingTop="6dp"
                 android:textSize="@dimen/text_size_14sp"
                 android:visibility="invisible"

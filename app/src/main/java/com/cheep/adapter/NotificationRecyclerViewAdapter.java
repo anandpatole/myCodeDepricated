@@ -40,7 +40,8 @@ public class NotificationRecyclerViewAdapter extends LoadMoreRecyclerAdapter<Not
     @Override
     public ViewHolder onActualCreateViewHolder(ViewGroup parent, int viewType) {
         superCalendar = SuperCalendar.getInstance();
-        RowNotificationBinding mRowNotificationBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), R.layout.row_notification, parent, false);
+        RowNotificationBinding mRowNotificationBinding =
+                DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), R.layout.row_notification, parent, false);
         return new NotificationRecyclerViewAdapter.ViewHolder(mRowNotificationBinding);
     }
 

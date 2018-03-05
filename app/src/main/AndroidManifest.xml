@@ -77,6 +77,7 @@
         </activity>
         <activity
             android:name=".activity.ZoomImageActivity"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.LoginActivity"
@@ -104,6 +105,11 @@
             android:windowSoftInputMode="adjustNothing" />
         <activity
             android:name=".activity.NotificationActivity"
+            android:parentActivityName=".activity.HomeActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustNothing" />
+        <activity
+            android:name=".cheepcare.activity.NotificationCCActivity"
             android:parentActivityName=".activity.HomeActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustNothing" />
