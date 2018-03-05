@@ -28,7 +28,7 @@ public class TaskConfirmedCCInstaBookDialog extends DialogFragment {
     private TaskConfirmActionListener mListener;
     private String description;
 
-    interface TaskConfirmActionListener {
+    public interface TaskConfirmActionListener {
 
         void onAcknowledgementAccepted();
 
@@ -91,7 +91,7 @@ public class TaskConfirmedCCInstaBookDialog extends DialogFragment {
         });
 
         // Click event of Reschedule button
-        mBinding.tvOkay.setOnClickListener(new View.OnClickListener() {
+        mBinding.tvReschedule.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //Callback to activity

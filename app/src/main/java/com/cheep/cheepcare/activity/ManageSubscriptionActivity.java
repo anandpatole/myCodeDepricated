@@ -1,6 +1,5 @@
 package com.cheep.cheepcare.activity;
 
-import android.animation.AnimatorSet;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -30,12 +29,17 @@ import com.cheep.cheepcare.model.PackageDetail;
 import com.cheep.databinding.ActivityManageSubscriptionBinding;
 import com.cheep.model.AddressModel;
 import com.cheep.model.JobCategoryModel;
+import com.cheep.model.MessageEvent;
 import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
 import com.cheep.utils.LogUtils;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.Utility;
 import com.cheep.utils.WebCallClass;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,14 +52,33 @@ public class ManageSubscriptionActivity extends BaseAppCompatActivity {
 
     private static final String TAG = ManageSubscriptionActivity.class.getSimpleName();
     private ActivityManageSubscriptionBinding mBinding;
-    private List<AnimatorSet> animators;
     private boolean isManageSubscription;
-    private ExpandableSubscribedPackagesRecyclerAdapter subscribedPackagesAdapter;
     private List<PackageDetail> mSubscribedPackageList;
     private List<PackageDetail> mAllPackagesList;
     private CityDetail mCityDetail;
     private AdminSettingModel mAdminSettingModel;
     private ArrayList<CityDetail> bannerCityDetailsList;
+
+
+    private ExpandableSubscribedPackagesRecyclerAdapter.ParentViewsClickListener parentClickListener = new ExpandableSubscribedPackagesRecyclerAdapter.ParentViewsClickListener() {
+        @Override
+        public void onParentViewClick(PackageDetail packageDetail) {
+            AddressModel addressModel = null;
+            if (packageDetail.mSelectedAddressList != null) {
+                for (AddressModel addressModel1 : packageDetail.mSelectedAddressList) {
+                    if (addressModel1.isSelected)
+                        addressModel = addressModel1;
+                }
+            }
+
+            TaskCreationCCActivity.getInstance(ManageSubscriptionActivity.this,
+                    packageDetail.getChildList().get(0),
+                    addressModel,
+                    packageDetail.packageType,
+                    packageDetail.id,
+                    packageDetail.mSelectedAddressList, mAdminSettingModel);
+        }
+    };
 
     public static void newInstance(Context context, CityDetail city, boolean isManageSubscription, String cheepcareBannerListString) {
         Intent intent = new Intent(context, ManageSubscriptionActivity.class);
@@ -71,6 +94,7 @@ public class ManageSubscriptionActivity extends BaseAppCompatActivity {
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_manage_subscription);
         initiateUI();
         setListeners();
+        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -157,12 +181,10 @@ public class ManageSubscriptionActivity extends BaseAppCompatActivity {
 
         String name = PreferenceUtility.getInstance(this).getUserDetails().userName;
         if (!isManageSubscription) {
-            SpannableStringBuilder spannableStringBuilder
-                    = new SpannableStringBuilder(getString(R.string.msg_welcome_x, name));
+            SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(getString(R.string.msg_welcome_x, name));
             spannableStringBuilder.append(Utility.ONE_CHARACTER_SPACE).append(Utility.ONE_CHARACTER_SPACE);
             ImageSpan span = new ImageSpan(getBaseContext(), R.drawable.emoji_folded_hands_big, ImageSpan.ALIGN_BASELINE);
-            spannableStringBuilder.setSpan(span, spannableStringBuilder.length() - 1
-                    , spannableStringBuilder.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+            spannableStringBuilder.setSpan(span, spannableStringBuilder.length() - 1, spannableStringBuilder.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
             mBinding.tvWelcomeText.setText(spannableStringBuilder);
             mBinding.tvWelcomeText.setVisibility(View.VISIBLE);
             mBinding.tvInfoText.setText(getString(R.string.msg_welcoming_on_subscription));
@@ -172,7 +194,6 @@ public class ManageSubscriptionActivity extends BaseAppCompatActivity {
         }
 
         callGetUserSubscribedPackages();
-
     }
 
     @Override
@@ -236,9 +257,8 @@ public class ManageSubscriptionActivity extends BaseAppCompatActivity {
     private void initiateDynamicUI() {
 
         mBinding.rvBoughtPackages.setNestedScrollingEnabled(false);
-        subscribedPackagesAdapter =
-                new ExpandableSubscribedPackagesRecyclerAdapter(mSubscribedPackageList, true
-                        , childViewsClickListener);
+        ExpandableSubscribedPackagesRecyclerAdapter subscribedPackagesAdapter = new ExpandableSubscribedPackagesRecyclerAdapter(mSubscribedPackageList, true
+                , childViewsClickListener, parentClickListener);
         mBinding.rvBoughtPackages.setAdapter(subscribedPackagesAdapter);
 
         setAllPackageListData();
@@ -253,7 +273,7 @@ public class ManageSubscriptionActivity extends BaseAppCompatActivity {
     private final ExpandableSubscribedPackagesRecyclerAdapter.ChildViewsClickListener childViewsClickListener =
             new ExpandableSubscribedPackagesRecyclerAdapter.ChildViewsClickListener() {
                 @Override
-                public void onBookClicked(JobCategoryModel model, int childAdapterPosition, PackageDetail packageDetail) {
+                public void onBookClicked(JobCategoryModel jobCategoryModel, int childAdapterPosition, PackageDetail packageDetail) {
                     AddressModel addressModel = null;
                     if (packageDetail.mSelectedAddressList != null) {
                         for (AddressModel addressModel1 : packageDetail.mSelectedAddressList) {
@@ -261,8 +281,14 @@ public class ManageSubscriptionActivity extends BaseAppCompatActivity {
                                 addressModel = addressModel1;
                         }
                     }
+                    TaskCreationCCActivity.getInstance(mContext,
+                            jobCategoryModel,
+                            addressModel,
+                            packageDetail.packageType,
+                            packageDetail.id,
+                            packageDetail.mSelectedAddressList,
+                            mAdminSettingModel);
 
-                    TaskCreationCCActivity.getInstance(mContext, model, addressModel, packageDetail.packageType, packageDetail.id);
                 }
             };
 
@@ -271,7 +297,7 @@ public class ManageSubscriptionActivity extends BaseAppCompatActivity {
                 @Override
                 public void onPackageItemClick(PackageDetail model) {
                     String packageList = Utility.getJsonStringFromObject(mAllPackagesList);
-                    PackageCustomizationActivity.newInstance(mContext, model, mCityDetail, model.id, packageList, mAdminSettingModel);
+                    PackageCustomizationActivity.newInstance(mContext, mCityDetail, model, packageList, mAdminSettingModel);
                 }
             };
 
@@ -321,7 +347,7 @@ public class ManageSubscriptionActivity extends BaseAppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
+        EventBus.getDefault().unregister(this);
         //remove volley callbacks
         Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.WS.GET_USER_SUBSCRIBED_CARE_PACKAGE);
     }
@@ -370,6 +396,14 @@ public class ManageSubscriptionActivity extends BaseAppCompatActivity {
         } else {
             LogUtils.LOGE(TAG, "onResume: no city data found");
 
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(MessageEvent event) {
+        LogUtils.LOGE(TAG, "onMessageEvent: " + event.BROADCAST_ACTION);
+        if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.PACKAGE_SUBSCRIBED_SUCCESSFULLY) {
+            finish();
         }
     }
 

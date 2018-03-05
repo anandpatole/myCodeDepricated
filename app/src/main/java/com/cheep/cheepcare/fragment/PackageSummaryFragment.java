@@ -137,9 +137,8 @@ public class PackageSummaryFragment extends BaseFragment {
             @Override
             public void onPackageItemClick(int position, PackageDetail packageModel) {
                 SelectPackageSpecificationsFragment fragment = (SelectPackageSpecificationsFragment) mPackageCustomizationActivity.mPackageCustomizationPagerAdapter.getItem(PackageCustomizationActivity.STAGE_1);
-                mPackageCustomizationActivity.mPackageId = packageModel.id;
-                if (fragment != null)
-                {
+                mPackageCustomizationActivity.mSelectedPackageModel = packageModel;
+                if (fragment != null) {
                     fragment.initiateUI();
                     mPackageCustomizationActivity.gotoStep(PackageCustomizationActivity.STAGE_1);
                 }
@@ -515,7 +514,7 @@ public class PackageSummaryFragment extends BaseFragment {
         CheepCarePaymentDataModel paymentDataModel = new CheepCarePaymentDataModel();
         paymentDataModel.bundlediscountPercent = bundledDiscountRate;
         paymentDataModel.bundlediscountPrice = bundledDiscountPrice;
-        paymentDataModel.careCityId = mPackageCustomizationActivity.mCityDetail.id;
+//        paymentDataModel.careCityId = mPackageCustomizationActivity.mCityDetail.id;
         paymentDataModel.dsaCode = cheepMateCode;
         paymentDataModel.isAnnually = isYearly ? Utility.BOOLEAN.YES : Utility.BOOLEAN.NO;
         paymentDataModel.payableAmount = (double) Math.round(payableAmount * 100) / 100;

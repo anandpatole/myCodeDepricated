@@ -17,7 +17,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 
-import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -32,22 +31,16 @@ import com.cheep.databinding.ActivityLandingScreenPickPackageBinding;
 import com.cheep.model.MessageEvent;
 import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
-import com.cheep.network.VolleyNetworkRequest;
 import com.cheep.utils.LogUtils;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.Utility;
+import com.cheep.utils.WebCallClass;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-
-import static com.cheep.network.NetworkUtility.TAGS.CARE_CITY_SLUG;
-import static com.cheep.network.NetworkUtility.TAGS.DATA;
 
 /**
  * Created by pankaj on 12/21/17.
@@ -63,6 +56,25 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
     private String mPackageListString = Utility.EMPTY_STRING;
     private ArrayList<CityDetail> bannerCityDetailsList;
     private static final String TAG = "LandingScreenPickPackag";
+    private WebCallClass.CommonResponseListener commonErrorResponse = new WebCallClass.CommonResponseListener() {
+        @Override
+        public void volleyError(VolleyError error) {
+            hideProgressDialog();
+            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
+        }
+
+        @Override
+        public void showSpecificMessage(String message) {
+            hideProgressDialog();
+            Utility.showSnackBar(message, mBinding.getRoot());
+        }
+
+        @Override
+        public void forceLogout() {
+            hideProgressDialog();
+            finish();
+        }
+    };
 
     public static void newInstance(Context context, CityDetail city, String cheepcareBannerListString) {
         Intent intent = new Intent(context, LandingScreenPickPackageActivity.class);
@@ -142,6 +154,25 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
         mBinding.tvCityName.setText(mCity.cityName);
 
         callGetCityLandingCareDetailWS();
+
+    }
+
+    private void callGetCityLandingCareDetailWS() {
+        if (!Utility.isConnected(mContext)) {
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mBinding.getRoot());
+            return;
+        }
+        showProgressDialog();
+        WebCallClass.getCityCareDetail(mContext, mCity.citySlug, commonErrorResponse, new WebCallClass.GetCityCareDataListener() {
+            @Override
+            public void getCityCareData(CityLandingPageModel cityLandingPageModel) {
+                hideProgressDialog();
+                mCityLandingPageModel = cityLandingPageModel;
+                mPackageListString = Utility.getJsonStringFromObject(mCityLandingPageModel.packageDetailList);
+                getSavedData();
+                setData();
+            }
+        });
     }
 
     private void setData() {
@@ -271,12 +302,12 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
         public void onPackageItemClick(int position, PackageDetail packageModel) {
 //            String packageList = Utility.getJsonStringFromObject(mCityLandingPageModel.packageDetailList);
             String packageList = Utility.getJsonStringFromObject(mCityLandingPageModel.packageDetailList);
-            PackageCustomizationActivity.newInstance(mContext, packageModel, mCityLandingPageModel.cityDetail, packageModel.id, packageList, mCityLandingPageModel.adminSetting);
+            PackageCustomizationActivity.newInstance(mContext, mCityLandingPageModel.cityDetail, packageModel, packageList, mCityLandingPageModel.adminSetting);
         }
     };
 
 
-    private void callGetCityLandingCareDetailWS() {
+  /*  private void callGetCityLandingCareDetailWS() {
         LogUtils.LOGD(TAG, "callGetCityLandingCareDetailWS() called with: catId = [" + mCity + "]");
         if (!Utility.isConnected(mContext)) {
             Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mBinding.getRoot());
@@ -354,6 +385,7 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
             Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
         }
     };
+*/
 
     /**
      * Event Bus Callbacks

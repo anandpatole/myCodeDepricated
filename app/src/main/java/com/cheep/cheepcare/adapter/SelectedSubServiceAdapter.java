@@ -45,7 +45,7 @@ public class SelectedSubServiceAdapter extends RecyclerView.Adapter<SelectedSubS
             holder.mBinding.txtVerticalLine.setVisibility(View.GONE);
         }
         String subServiceText = model.name + Utility.ONE_CHARACTER_SPACE +
-                context.getString(R.string.number_of_services, String.valueOf(model.qty));
+                context.getString(R.string.number_of_services, String.valueOf(model.selected_unit));
         holder.mBinding.tvSubService.setText(subServiceText);
     }
 

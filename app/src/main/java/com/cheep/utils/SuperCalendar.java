@@ -67,6 +67,11 @@ public class SuperCalendar {
         return DateFormat.format(formatDate, mCalendar).toString();
     }
 
+    public boolean isWorkingHour(String startTime, String endTime) {
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+        return false;
+    }
+
     public long getTimestampFromDate(String date, String dateFormat) {
         if (!TextUtils.isEmpty(date)) {
             // Create a DateFormatter object for displaying date in specified format.
@@ -95,16 +100,35 @@ public class SuperCalendar {
         return this;
     }
 
-    public SuperCalendar getNext3HoursTime() {
+    /**
+     * as per new logic in cheep care
+     * <p>
+     * if selected day is weekday then we need to calculate 3 hours difference
+     * for weekends it would be 6 hours.
+     *
+     * @param isWeekend
+     * @return
+     */
+    public SuperCalendar getNext3HoursTime(boolean isWeekend) {
         try {
             SuperCalendar superCalendar = clone();
-            superCalendar.mCalendar.add(Calendar.HOUR, 3);
+            superCalendar.mCalendar.add(Calendar.HOUR, isWeekend ? 6 : 3);
             return superCalendar;
         } catch (CloneNotSupportedException e) {
             e.printStackTrace();
         }
         return this;
     }
+//    public SuperCalendar getNext6HoursTime() {
+//        try {
+//            SuperCalendar superCalendar = clone();
+//            superCalendar.mCalendar.add(Calendar.HOUR, 6);
+//            return superCalendar;
+//        } catch (CloneNotSupportedException e) {
+//            e.printStackTrace();
+//        }
+//        return this;
+//    }
 
     public SuperCalendar getWeekEndDate() {
         try {
@@ -154,7 +178,7 @@ public class SuperCalendar {
     public interface SuperFormatter {
         //COMMON FORMATS, DONT CHANGE THE COMMON FORMATS
         String HOUR_24_HOUR = "HH";
-//        public static final String HOUR_12_HOUR_2_DIGIT = "hh";
+        //        public static final String HOUR_12_HOUR_2_DIGIT = "hh";
 //        public static final String HOUR_12_HOUR_1_DIGIT = "h";
         String MINUTE = "mm";
         String SECONDS = "ss";

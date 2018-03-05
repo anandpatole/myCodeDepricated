@@ -10,15 +10,18 @@ import android.view.ViewGroup;
 import com.cheep.R;
 import com.cheep.databinding.RowSelectedSubServicePriceBinding;
 import com.cheep.model.SubServiceDetailModel;
+import com.cheep.utils.Utility;
 
 import java.util.List;
 
 public class SelectedSubServicePriceAdapter extends RecyclerView.Adapter<SelectedSubServicePriceAdapter.SelectedSubServiceViewHolder> {
 
     private final List<SubServiceDetailModel> mList;
+    private String mServiceType;
 
-    public SelectedSubServicePriceAdapter(List<SubServiceDetailModel> list) {
+    public SelectedSubServicePriceAdapter(List<SubServiceDetailModel> list, String serviceType) {
         mList = list;
+        mServiceType = serviceType;
     }
 
     @Override
@@ -44,10 +47,11 @@ public class SelectedSubServicePriceAdapter extends RecyclerView.Adapter<Selecte
         }
 
         holder.mBinding.tvSubService.setText(model.name);
-        if (Double.parseDouble(model.unitPrice) == 0) {
+        if (/*Double.parseDouble(model.unitPrice) == 0 ||*/ mServiceType.equalsIgnoreCase(Utility.SERVICE_TYPE.FREE)) {
             holder.mBinding.tvSubServicePrice.setText(context.getString(R.string.label_free));
         } else {
-            holder.mBinding.tvSubServicePrice.setText(String.valueOf(model.qty * Double.parseDouble(model.unitPrice)));
+            holder.mBinding.tvSubServicePrice.setText(context.getString(R.string.rupee_symbol_x,
+                    String.valueOf(model.selected_unit * Double.parseDouble(model.unitPrice))));
         }
     }
 

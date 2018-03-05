@@ -47,18 +47,23 @@ import com.bumptech.glide.request.target.Target;
 import com.cheep.BuildConfig;
 import com.cheep.R;
 import com.cheep.activity.BaseAppCompatActivity;
+import com.cheep.cheepcare.activity.PackageCustomizationActivity;
 import com.cheep.cheepcare.activity.TaskCreationCCActivity;
 import com.cheep.cheepcare.adapter.AddressTaskCreateAdapter;
 import com.cheep.cheepcare.adapter.SelectedSubServiceAdapter;
 import com.cheep.cheepcare.dialogs.BottomAddAddressDialog;
+import com.cheep.cheepcare.dialogs.CheepCareNotInYourCityDialog;
 import com.cheep.cheepcare.dialogs.NotSubscribedAddressDialog;
 import com.cheep.cheepcare.dialogs.SelectSpecificTimeDialog;
+import com.cheep.cheepcare.model.CityDetail;
+import com.cheep.cheepcare.model.CityLandingPageModel;
+import com.cheep.cheepcare.model.PackageDetail;
 import com.cheep.databinding.FragmentTaskCreationPhase2Binding;
+import com.cheep.dialogs.AcknowledgementInteractionListener;
 import com.cheep.fragment.BaseFragment;
 import com.cheep.model.AddressModel;
 import com.cheep.model.GuestUserDetails;
 import com.cheep.model.ProviderModel;
-import com.cheep.model.SubServiceDetailModel;
 import com.cheep.model.UserDetails;
 import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
@@ -71,6 +76,7 @@ import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.RequestPermission;
 import com.cheep.utils.SuperCalendar;
 import com.cheep.utils.Utility;
+import com.cheep.utils.WebCallClass;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -98,7 +104,7 @@ public class TaskCreationPhase2Fragment extends BaseFragment implements
     private TaskCreationCCActivity mTaskCreationCCActivity;
     public boolean isTotalVerified = false;
 
-    public boolean isTaskDescriptionVerified = false;
+    //    public boolean isTaskDescriptionVerified = false;
     public boolean isTaskWhereVerified = false;
     public boolean isTaskWhenAdded = false;
 
@@ -113,6 +119,31 @@ public class TaskCreationPhase2Fragment extends BaseFragment implements
 
     private boolean isClicked = false;
     private ArrayList<MediaModel> mediaList;
+
+    private WebCallClass.CommonResponseListener commonErrorListener = new WebCallClass.CommonResponseListener() {
+        @Override
+        public void volleyError(VolleyError error) {
+            Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
+            hideProgressDialog();
+            mTaskCreationCCActivity.hideProgressDialog();
+            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
+        }
+
+        @Override
+        public void showSpecificMessage(String message) {
+            mTaskCreationCCActivity.hideProgressDialog();
+            hideProgressDialog();
+            Utility.showSnackBar(message, mBinding.getRoot());
+        }
+
+        @Override
+        public void forceLogout() {
+            mTaskCreationCCActivity.hideProgressDialog();
+            hideProgressDialog();
+            mTaskCreationCCActivity.finish();
+        }
+    };
+    private ArrayList<AddressModel> mAddressList;
 
 
     @SuppressWarnings("unused")
@@ -167,12 +198,12 @@ public class TaskCreationPhase2Fragment extends BaseFragment implements
             return;
         }
 
-        if (!mTaskCreationCCActivity.getSelectedSubServices().isEmpty())
-            for (SubServiceDetailModel model : mTaskCreationCCActivity.getSelectedSubServices()) {
-                // Task Description
-                isTaskDescriptionVerified = model.sub_cat_id != -1 ||
-                        !TextUtils.isEmpty(mBinding.editTaskDesc.getText().toString().trim());
-            }
+//        if (!mTaskCreationCCActivity.getSelectedSubServices().isEmpty())
+//            for (SubServiceDetailModel model : mTaskCreationCCActivity.getSelectedSubServices()) {
+//                // Task Description
+//                isTaskDescriptionVerified = model.sub_cat_id != -1 ||
+//                        !TextUtils.isEmpty(mBinding.editTaskDesc.getText().toString().trim());
+//            }
 
         // When Verification
 //        isTaskWhenVerified = !TextUtils.isEmpty(mBinding.textTaskWhen.getText().toString().trim());
@@ -184,13 +215,13 @@ public class TaskCreationPhase2Fragment extends BaseFragment implements
     }
 
     private void updateFinalVerificationFlag() {
-        if (isTaskDescriptionVerified &&/* isTaskWhenVerified && */ isTaskWhereVerified) {
-            isTotalVerified = true;
-            mTaskCreationCCActivity.setTaskState(TaskCreationCCActivity.STEP_TWO_VERIFIED);
-        } else {
-            isTotalVerified = false;
-            mTaskCreationCCActivity.setTaskState(TaskCreationCCActivity.STEP_TWO_UNVERIFIED);
-        }
+//        if (isTaskDescriptionVerified &&/* isTaskWhenVerified && */ isTaskWhereVerified) {
+//            isTotalVerified = true;
+//            mTaskCreationCCActivity.setTaskState(TaskCreationCCActivity.STEP_TWO_VERIFIED);
+//        } else {
+        isTotalVerified = false;
+        mTaskCreationCCActivity.setTaskState(TaskCreationCCActivity.STEP_TWO_UNVERIFIED);
+//        }
 
         // let activity know that post task button needs to be shown now.
         mTaskCreationCCActivity.showPostTaskButton(false, isTotalVerified);
@@ -201,6 +232,17 @@ public class TaskCreationPhase2Fragment extends BaseFragment implements
         if (mTaskCreationCCActivity != null && mTaskCreationCCActivity.getSelectedSubServices() != null) {
             mBinding.recyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
             mBinding.recyclerView.setAdapter(new SelectedSubServiceAdapter(mTaskCreationCCActivity.getSelectedSubServices()));
+
+            if (mTaskCreationCCActivity.getSelectedSubServices().size() > 3) {
+                ViewGroup.LayoutParams params = mBinding.recyclerView.getLayoutParams();
+                params.height = (int) mTaskCreationCCActivity.getResources().getDimension(R.dimen.scale_113dp);
+                mBinding.recyclerView.setLayoutParams(params);
+            } else {
+                ViewGroup.LayoutParams params = mBinding.recyclerView.getLayoutParams();
+                params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+                mBinding.recyclerView.setLayoutParams(params);
+            }
+
         }
     }
 
@@ -328,11 +370,16 @@ public class TaskCreationPhase2Fragment extends BaseFragment implements
 
     private void initAddressUI() {
 
-        final ArrayList<AddressModel> mAddressList = new ArrayList<>();
+        mAddressList = new ArrayList<>();
         if (PreferenceUtility.getInstance(mContext).getUserDetails() != null) {
-            mAddressList.addAll(PreferenceUtility.getInstance(mContext).getUserDetails().addressList);
-        } else {
-            mAddressList.addAll(PreferenceUtility.getInstance(mContext).getGuestUserDetails().addressList);
+            ArrayList<AddressModel> unSubscibedAddressList = new ArrayList<>();
+            for (AddressModel addressModel : PreferenceUtility.getInstance(mContext).getUserDetails().addressList) {
+                if (addressModel.is_subscribe.equalsIgnoreCase(Utility.BOOLEAN.NO)) {
+                    unSubscibedAddressList.add(addressModel);
+                }
+            }
+            mAddressList.addAll(mTaskCreationCCActivity.mCareAddressList);
+            mAddressList.addAll(unSubscibedAddressList);
         }
 
 
@@ -351,38 +398,71 @@ public class TaskCreationPhase2Fragment extends BaseFragment implements
         mBinding.spinnerAddressSelection.setSelected(false);
         mBinding.spinnerAddressSelection.setFocusableInTouchMode(false);
 
-       /* if (mTaskCreationCCActivity.mAddressModel != null)
-            for (int i = 0; i < mAddressList.size(); i++) {
-                AddressModel addressModel = mAddressList.get(i);
-                if (addressModel.address_id.equalsIgnoreCase(mTaskCreationCCActivity.mAddressModel.address_id)) {
-                    mBinding.spinnerAddressSelection.setSelection(i);
-                }
-            }*/
 
         mBinding.spinnerAddressSelection.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemSelected(AdapterView<?> parent, View view, final int position, long id) {
                 if (position == mAddressList.size() - 1) {
                     showBottomAddressDialog(null);
-                } else if (mAddressList.get(position).is_subscribe.equals("1")) {
+                } else if (mAddressList.get(position).is_subscribe.equalsIgnoreCase(Utility.BOOLEAN.YES)) {
                     Log.d(TAG, "onItemSelected: ");
-                    AddressModel model = mAddressList.get(position);
-                    mBinding.iconTaskWhere.setImageDrawable(ContextCompat.getDrawable(mContext
-                            , Utility.getAddressCategoryBlueIcon(model.category)));
+                    mTaskCreationCCActivity.showSubscribedBadge(true);
+                    fillAddressView(mAddressList.get(position));
+                } else if (isClicked && mAddressList.get(position).is_subscribe.equals(Utility.BOOLEAN.NO)) {
+                    if (!Utility.isConnected(mContext)) {
+                        Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mBinding.getRoot());
+                        return;
+                    }
+                    showProgressDialog();
+                    WebCallClass.isCityAvailableForCare(mTaskCreationCCActivity, mAddressList.get(position).address_id, commonErrorListener, new WebCallClass.CityAvailableCheepCareListener() {
+                        @Override
+                        public void getCityDetails(final CityDetail cityDetail) {
+                            hideProgressDialog();
+                            if (TextUtils.isEmpty(cityDetail.citySlug)) {
+                                CheepCareNotInYourCityDialog.newInstance(mContext, new AcknowledgementInteractionListener() {
+                                    @Override
+                                    public void onAcknowledgementAccepted() {
 
-                    // show address's nick name or nick name is null then show category
-                    String category;
-                    if (!TextUtils.isEmpty(model.nickname))
-                        category = model.nickname;
-                    else
-                        category = model.category;
+                                    }
+                                });
+                            } else {
+                                NotSubscribedAddressDialog.newInstance(mContext, new NotSubscribedAddressDialog.DialogInteractionListener() {
+                                    @Override
+                                    public void onSubscribeClicked() {
+//                                        mTaskCreationCCActivity.setResult(Utility.REQUEST_CODE_TASK_CREATION_CHEEP_CARE,
+//                                                new Intent().putExtra(Utility.Extra.DATA, careCitySlug));
+//                                        mTaskCreationCCActivity.finish();
+                                        if (!Utility.isConnected(mContext)) {
+                                            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mBinding.getRoot());
+                                            return;
+                                        }
 
-                    mBinding.tvAddressNickname.setText(category);
+                                        showProgressDialog();
 
-                    mBinding.tvAddress.setText(model.getAddressWithInitials());
-                    mSelectedAddress = model;
-                } else if (isClicked && mAddressList.get(position).is_subscribe.equals("0")) {
-                    NotSubscribedAddressDialog.newInstance(mContext, notSubscribedInteractionListener);
+                                        WebCallClass.getCityCareDetail(mContext, cityDetail.citySlug, commonErrorListener, new WebCallClass.GetCityCareDataListener() {
+                                            @Override
+                                            public void getCityCareData(CityLandingPageModel cityLandingPageModel) {
+                                                hideProgressDialog();
+                                                for (PackageDetail detail : cityLandingPageModel.packageDetailList)
+                                                    if (detail.id.equalsIgnoreCase(mTaskCreationCCActivity.mCarePackageId)) {
+                                                        PackageCustomizationActivity.newInstance(mContext, cityLandingPageModel.cityDetail, detail, Utility.getJsonStringFromObject(cityLandingPageModel.packageDetailList), cityLandingPageModel.adminSetting);
+                                                        break;
+                                                    }
+                                            }
+                                        });
+                                    }
+
+
+                                    @Override
+                                    public void onNotNowClicked() {
+                                        fillAddressView(mAddressList.get(position));
+                                        mTaskCreationCCActivity.showSubscribedBadge(false);
+                                    }
+                                });
+                            }
+                        }
+                    });
+
                 }
             }
 
@@ -391,6 +471,33 @@ public class TaskCreationPhase2Fragment extends BaseFragment implements
                 Log.d(TAG, "onNothingSelected() called with: parent = [" + parent + "]");
             }
         });
+
+        if (mTaskCreationCCActivity.mAddressModel != null)
+            for (int i = 0; i < mAddressList.size(); i++) {
+                AddressModel addressModel = mAddressList.get(i);
+                if (addressModel.address_id.equalsIgnoreCase(mTaskCreationCCActivity.mAddressModel.address_id)) {
+                    mBinding.spinnerAddressSelection.setSelection(i);
+                }
+            }
+    }
+
+    private void fillAddressView(AddressModel model) {
+        mBinding.iconTaskWhere.setImageDrawable(ContextCompat.getDrawable(mContext
+                , Utility.getAddressCategoryBlueIcon(model.category)));
+
+        // show address's nick name or nick name is null then show category
+
+        mBinding.tvAddressNickname.setText(model.getNicknameString(mTaskCreationCCActivity));
+        mBinding.tvLabelAddressSubscribed.setText(model.is_subscribe.equalsIgnoreCase(Utility.BOOLEAN.YES)
+                ? getString(R.string.label_address_subscribed)
+                : Utility.EMPTY_STRING);
+
+        mBinding.tvAddress.setText(model.getAddressWithInitials());
+        mSelectedAddress = model;
+    }
+
+    public ArrayList<MediaModel> getMediaList() {
+        return mediaList;
     }
 
     public void updateHeightOfLinearLayout() {
@@ -899,19 +1006,6 @@ public class TaskCreationPhase2Fragment extends BaseFragment implements
 
             };
 
-    private final NotSubscribedAddressDialog.DialogInteractionListener notSubscribedInteractionListener =
-            new NotSubscribedAddressDialog.DialogInteractionListener() {
-                @Override
-                public void onSubscribeClicked() {
-                    Log.d(TAG, "onSubscribeClicked() called");
-                }
-
-                @Override
-                public void onNotNowClicked() {
-                    Log.d(TAG, "onNotNowClicked() called");
-                }
-
-            };
 
     private class UploadListener implements TransferListener {
 
@@ -1145,13 +1239,17 @@ public class TaskCreationPhase2Fragment extends BaseFragment implements
                             superCalendar.setTimeInMillis(startDateTimeSuperCalendar.getTimeInMillis());
                             superCalendar.setTimeZone(SuperCalendar.SuperTimeZone.GMT.GMT);
 
-                            // Get date-time for next 3 hours
-                            SuperCalendar calAfter3Hours = SuperCalendar.getInstance().getNext3HoursTime();
+                            // Get date-time for next 3 hours if its weekday else for weekend it would be 6 hours
+
+                            int dayOfWeek = startDateTimeSuperCalendar.getCalendar().get(Calendar.DAY_OF_WEEK);
+                            boolean isWeekend = dayOfWeek == 1 || dayOfWeek == 7;
+
+                            SuperCalendar calAfter3Hours = SuperCalendar.getInstance().getNext3HoursTime(isWeekend);
 
 //                            TODO: This needs to Be UNCOMMENTED DO NOT FORGET
 //                            if (!BuildConfig.BUILD_TYPE.equalsIgnoreCase(Utility.DEBUG)) {
                             if (superCalendar.getTimeInMillis() < calAfter3Hours.getTimeInMillis()) {
-                                Utility.showSnackBar(getString(R.string.can_only_start_task_after_3_hours), mBinding.getRoot());
+                                Utility.showSnackBar(getString(R.string.can_only_start_task_after_3_hours, isWeekend ? "6" : "3"), mBinding.getRoot());
 //                                mBinding.textTaskWhen.setText(Utility.EMPTY_STRING);
 //                                mBinding.textTaskWhen.setVisibility(View.GONE);
                                 updateTaskVerificationFlags();
@@ -1403,7 +1501,8 @@ public class TaskCreationPhase2Fragment extends BaseFragment implements
             public void onAddAddress(AddressModel addressModel) {
 //                    mList.add(addressModel);
                 if (mAddressAdapter != null) {
-                    mAddressAdapter.add(addressModel);
+                    mAddressList.add(mAddressList.size() - 1, addressModel);
+                    mAddressAdapter.notifyDataSetChanged();
                 }
 
                 //Saving information in sharedpreference
@@ -1451,6 +1550,21 @@ public class TaskCreationPhase2Fragment extends BaseFragment implements
         }, new ArrayList<String>(), addressModel);
 
         dialog.showDialog();
+    }
+
+    /**
+     * Fetch Task Description
+     *
+     * @return
+     */
+    public String getTaskDescription() {
+        return mBinding.editTaskDesc.getText().toString();
+    }
+
+    public String getStartDateTime() {
+        if (superCalendar != null)
+            return String.valueOf(superCalendar.getTimeInMillis());
+        return Utility.EMPTY_STRING;
     }
 
 

@@ -14,7 +14,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
 import android.text.Spanned;
-import android.text.TextUtils;
 import android.text.style.LeadingMarginSpan;
 import android.util.Log;
 import android.view.Gravity;
@@ -109,7 +108,7 @@ public class PackageBundlingAdapter extends LoadMoreRecyclerAdapter<PackageBundl
                         .load(model.packageImage)
                         .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                         .into(holder.mRowNotSelectedBinding.ivItemBackground);
-                holder.mRowNotSelectedBinding.tvPrice.setText(Utility.getCheepCarePackageMonthlyPrice(context,R.string.rupee_symbol_x_package_price, model.price));
+                holder.mRowNotSelectedBinding.tvPrice.setText(Utility.getCheepCarePackageMonthlyPrice(context, R.string.rupee_symbol_x_package_price, model.price));
                 holder.mRowNotSelectedBinding.ivIsAddressSelected.setSelected(model.isSelected);
                 holder.mRowNotSelectedBinding.tvDescription.setText(model.subtitle);
                 holder.mRowNotSelectedBinding.tvTitle.setText(model.title);
@@ -131,16 +130,13 @@ public class PackageBundlingAdapter extends LoadMoreRecyclerAdapter<PackageBundl
                         .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                         .into(holder.mRowSelectedBinding.ivItemBackground);
 
-                holder.mRowSelectedBinding.tvPrice.setText(Utility.getCheepCarePackageMonthlyPrice(context,R.string.rupee_symbol_x_package_price, model.price));
+                holder.mRowSelectedBinding.tvPrice.setText(Utility.getCheepCarePackageMonthlyPrice(context, R.string.rupee_symbol_x_package_price, model.price));
                 holder.mRowSelectedBinding.ivIsAddressSelected.setSelected(model.isSelected);
                 holder.mRowSelectedBinding.tvDescription.setText(model.subtitle);
                 holder.mRowSelectedBinding.tvTitle.setText(model.title);
 
                 if (model.mSelectedAddressList != null && !model.mSelectedAddressList.isEmpty()) {
-                    if (!TextUtils.isEmpty(model.mSelectedAddressList.get(0).nickname))
-                        holder.mRowSelectedBinding.tvAddressNickname.setText(model.mSelectedAddressList.get(0).nickname);
-                    else
-                        holder.mRowSelectedBinding.tvAddressNickname.setText(Utility.getAddressCategoryString(model.mSelectedAddressList.get(0).category));
+                    holder.mRowSelectedBinding.tvAddressNickname.setText(model.mSelectedAddressList.get(0).getNicknameString(context));
                     holder.mRowSelectedBinding.ivAddressIcon.setImageResource(Utility.getAddressCategoryBlueIcon(model.mSelectedAddressList.get(0).category));
                     holder.mRowSelectedBinding.tvAddress.setText(model.mSelectedAddressList.get(0).getAddressWithInitials());
                 }

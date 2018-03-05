@@ -295,7 +295,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_address_hint">Click on the map to enter your address.</string>
     <string name="label_quote_received">Quote Received</string>
     <string name="label_photo">Photo</string>
-    <string name="can_only_start_task_after_3_hours">Date Time must be after 3 hour.</string>
+    <string name="can_only_start_task_after_3_hours">Date Time must be after %1s hour.</string>
     <string name="reschedule_task_must_within_one_month">Reschedule time must be within one month from start time of task.</string>
 
     <string name="step_1_desc">Please tell us what needs to be done</string>
@@ -306,6 +306,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
 
     <string name="format_task_book_date">Task booked for\n%s</string>
     <string name="format_task_start_time">Task starts \n%s</string>
+    <string name="format_task_start_time_cc">Cheep Care Task starts \n%s</string>
     <string name="format_task_start_soon">Task starts soon</string>
 
     <string name="hint_address_initials">Please enter house number / building name</string>
@@ -327,6 +328,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_my_flush">My flush is not working</string>
 
     <string name="label_responses_received">Responses\nReceived</string>
+    <string name="label_pro_will_be_assigned_shortly">Pro will be assigned shortly</string>
     <string name="label_cheepest_strip">Yay! Book the Cheepest PRO now!</string>
     <string name="label_highest_rated_strip">Book the most highly experienced PRO in your neighbourhood</string>
 
@@ -560,7 +562,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_enter_amount">Enter Amount</string>
     <string name="label_amount_payable">Amount Payable</string>
     <string name="label_notify_paying_by_wallet">You are about to pay using your %1s wallet</string>
-    <string name="no_pro_available_title" />
+    <string name="no_pro_available_title"/>
     <string name="no_pro_available_description">No PROs is available for this address</string>
     <string name="validate_comment">Please provide valid comment.</string>
     <string name="title_booking_confimation">Booking Confirmation</string>
@@ -646,7 +648,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
 
     <string name="hint_apply_cheep_promo_code">Apply CHEEP Promo code?</string>
     <string name="hint_apply_cheep_mate_code">Have a CHEEP Mate Code?</string>
-    <string name="label_empty_string" />
+    <string name="label_empty_string"/>
     <string name="label_proceed_to_checkout">Proceed to Checkout</string>
     <string name="add_package_to_cart">Add Package to Cart</string>
     <string name="label_appliance">%1d Appliances</string>
@@ -678,7 +680,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="msg_limit_exceed_desc">Unfortunately, you are exceeding the number of appliances under your %1s Package subscription.</string>
     <string name="label_retry_payment">Retry Payment</string>
     <string name="validation_message_already_purchased_package_for_this_address">You have already purchased subscription for this package</string>
-    <string name="msg_task_description">Your tasks will be completed on</string>
+    <string name="msg_task_description">Your tasks will be completed</string>
     <string name="label_non_working_hour_fee">Non-Working Hours Fee</string>
     <string name="msg_non_working_hr">Task booked outside 1000 hrs - 1900 hrs</string>
     <string name="label_excess_limit_fee">Excess Limit Fee</string>
@@ -751,4 +753,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_your_tasks">Your Tasks</string>
     <string name="label_chat_now">Chat Now</string>
     <!--https:\/\/s3.ap-south-1.amazonaws.com\/cheepapp\/advertise\/banner_image\/thumb\/vlcc_banner_image.jpg-->
+    <string name="validation_message_same_address_for_same_group_of_care">You can\'t purchase care package home, biz and soci for same address</string>
+    <string name="label_address_subscribed">Subscribed under CHEEP care</string>
+    <string name="msg_task_confirmed_cheep_care_no_time_specified">As per our guarantee, our PRO will be at your home within 24 hours. CHEEP will inform you of the exact time shortly. </string>
 </resources>

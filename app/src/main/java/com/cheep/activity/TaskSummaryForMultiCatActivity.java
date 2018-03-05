@@ -711,12 +711,12 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
                             superCalendar.setTimeZone(SuperCalendar.SuperTimeZone.GMT.GMT);
 
                             // Get date-time for next 3 hours
-                            SuperCalendar calAfter3Hours = SuperCalendar.getInstance().getNext3HoursTime();
+                            SuperCalendar calAfter3Hours = SuperCalendar.getInstance().getNext3HoursTime(false);
 
 //                            TODO: This needs to Be UNCOMMENTED DO NOT FORGET
 //                            if (!BuildConfig.BUILD_TYPE.equalsIgnoreCase(Utility.DEBUG)) {
                             if (superCalendar.getTimeInMillis() < calAfter3Hours.getTimeInMillis()) {
-                                Utility.showSnackBar(getString(R.string.can_only_start_task_after_3_hours), mBinding.getRoot());
+                                Utility.showSnackBar(getString(R.string.can_only_start_task_after_3_hours,"3"), mBinding.getRoot());
 //                                mBinding.textTaskWhen.setText(Utility.EMPTY_STRING);
 //                                mBinding.textTaskWhen.setVisibility(View.GONE);
                                 superCalendar = null;

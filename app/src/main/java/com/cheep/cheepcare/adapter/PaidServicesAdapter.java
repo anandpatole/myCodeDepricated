@@ -50,13 +50,13 @@ public class PaidServicesAdapter extends RecyclerView.Adapter<PaidServicesAdapte
         holder.mBinding.tvSubServiceName.setText(subServicesModel.name);
         final Context context = holder.mBinding.getRoot().getContext();
 
-        holder.mBinding.tvDigit.setText(String.valueOf(subServicesModel.qty));
+        holder.mBinding.tvDigit.setText(String.valueOf(subServicesModel.selected_unit));
 
         if (subServicesModel.isSelected) {
             holder.mBinding.imgIconCorrect.setSelected(true);
             holder.mBinding.clCenter.setVisibility(View.VISIBLE);
             holder.mBinding.tvSubServicePrice.setVisibility(View.VISIBLE);
-            holder.mBinding.tvSubServicePrice.setText(context.getString(R.string.rupee_symbol_x, "152"));
+            holder.mBinding.tvSubServicePrice.setText(context.getString(R.string.rupee_symbol_x, subServicesModel.unitPrice));
         } else {
             holder.mBinding.imgIconCorrect.setSelected(false);
             holder.mBinding.clCenter.setVisibility(View.INVISIBLE);
@@ -101,8 +101,8 @@ public class PaidServicesAdapter extends RecyclerView.Adapter<PaidServicesAdapte
 
                     SubServiceDetailModel subServicesModel = mList.get(getAdapterPosition());
                     int maxQty = Integer.valueOf(subServicesModel.maxUnit);
-                    if (subServicesModel.qty < maxQty) {
-                        subServicesModel.qty++;
+                    if (subServicesModel.selected_unit < maxQty) {
+                        subServicesModel.selected_unit++;
                         notifyItemChanged(getAdapterPosition());
                     } else {
                         mListener.onLimitExceeded(subServicesModel, getAdapterPosition());
@@ -116,8 +116,8 @@ public class PaidServicesAdapter extends RecyclerView.Adapter<PaidServicesAdapte
 
                     SubServiceDetailModel subServicesModel = mList.get(getAdapterPosition());
                     int minQty = Integer.valueOf(subServicesModel.minUnit);
-                    if (subServicesModel.qty > minQty) {
-                        subServicesModel.qty--;
+                    if (subServicesModel.selected_unit > minQty) {
+                        subServicesModel.selected_unit--;
                         notifyItemChanged(getAdapterPosition());
                     }
                 }

@@ -134,6 +134,7 @@
                         android:layout_height="wrap_content"
                         android:ellipsize="end"
                         android:lines="1"
+                        android:maxLines="2"
                         android:textAllCaps="false"
                         android:textColor="@color/splash_gradient_end"
                         android:textSize="@dimen/text_size_11sp"

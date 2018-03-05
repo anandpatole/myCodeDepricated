@@ -144,7 +144,7 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
     }
 
     private void callPackageOptionListWS() {
-        LogUtils.LOGD(TAG, "callGetCityLandingCareDetailWS() called with: catId = [" + mPackageCustomizationActivity.mPackageId + "]");
+        LogUtils.LOGD(TAG, "callGetCityLandingCareDetailWS() called with: catId = [" + mPackageCustomizationActivity.mSelectedPackageModel + "]");
         if (!Utility.isConnected(mContext)) {
             Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mBinding.getRoot());
             return;
@@ -157,7 +157,7 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
 
         //Add Params
         Map<String, String> mParams = new HashMap<>();
-        mParams.put(CARE_PACKAGE_ID, mPackageCustomizationActivity.mPackageId);
+        mParams.put(CARE_PACKAGE_ID, mPackageCustomizationActivity.mSelectedPackageModel.id);
 
         //noinspection unchecked
         VolleyNetworkRequest mVolleyNetworkRequestForCategoryList = new VolleyNetworkRequest(NetworkUtility.WS.GET_CARE_PACKAGE_DETAILS
@@ -172,7 +172,7 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
     }
 
     private void callPackageCheepTipWS() {
-        LogUtils.LOGD(TAG, "callPackageCheepTipWS() called with: catId = [" + mPackageCustomizationActivity.mPackageId + "]");
+        LogUtils.LOGD(TAG, "callPackageCheepTipWS() called with: catId = [" + mPackageCustomizationActivity.mSelectedPackageModel.id + "]");
         if (!Utility.isConnected(mContext)) {
             Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mBinding.getRoot());
             return;
@@ -184,7 +184,7 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
 
         //Add Params
         Map<String, String> mParams = new HashMap<>();
-        mParams.put(CARE_PACKAGE_ID, mPackageCustomizationActivity.mPackageId);
+        mParams.put(CARE_PACKAGE_ID, mPackageCustomizationActivity.mSelectedPackageModel.id);
 
         //noinspection unchecked
         VolleyNetworkRequest mVolleyNetworkRequestForCategoryList = new VolleyNetworkRequest(NetworkUtility.WS.GET_CARE_PACKAGE_TIP
@@ -267,7 +267,7 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
                         ArrayList<PackageOption> list;
                         list = Utility.getObjectListFromJsonString(jsonData, PackageOption[].class);
 
-                        addPackagesOptionListToPackages(mPackageCustomizationActivity.mPackageId, list);
+                        addPackagesOptionListToPackages(mPackageCustomizationActivity.mSelectedPackageModel.id, list);
 
 //                        mPackageCustomizationActivity.setContinueButtonText();
 
@@ -372,15 +372,6 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
      * set spinner data with guest user address list of logged in user address list
      */
     private void initAddressUI() {
-        // init ui for add address
-
-        if (mList != null && !mList.isEmpty()) {
-            LogUtils.LOGE(TAG, "initAddressUI: called");
-            mBinding.spinnerAddressSelection.setFocusable(true);
-            mBinding.spinnerAddressSelection.setSelected(true);
-            mBinding.spinnerAddressSelection.setSelection(0);
-            return;
-        }
 
         // Spinner initialisation for select address view
         UserDetails userDetails = PreferenceUtility.getInstance(mPackageCustomizationActivity).getUserDetails();
@@ -438,7 +429,7 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
 
         // if package option are being loaded from cart detail then set selected address
         for (PackageDetail detail : mPackageCustomizationActivity.getPackageList()) {
-            if (detail.id.equalsIgnoreCase(mPackageCustomizationActivity.mPackageId)) {
+            if (detail.id.equalsIgnoreCase(mPackageCustomizationActivity.mSelectedPackageModel.id)) {
                 if (detail.mSelectedAddressList != null && !detail.mSelectedAddressList.isEmpty()) {
                     AddressModel addressModel = detail.mSelectedAddressList.get(0);
                     if (addressModel != null) {
@@ -521,13 +512,7 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
                 , Utility.getAddressCategoryBlueIcon(addressModel.category)));
 
         // show address's nick name or nick name is null then show category
-        String category;
-        if (!TextUtils.isEmpty(addressModel.nickname))
-            category = addressModel.nickname;
-        else
-            category = addressModel.category;
-
-        mBinding.tvAddressNickname.setText(category);
+        mBinding.tvAddressNickname.setText(addressModel.getNicknameString(mContext));
 
         mBinding.tvAddress.setText(addressModel.getAddressWithInitials());
         mBinding.ivIsAddressSelected.setSelected(true);
@@ -551,7 +536,7 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
     public boolean validateData() {
         boolean isAnyServiceSelected = false;
         for (PackageDetail detail : mPackageCustomizationActivity.getPackageList()) {
-            if (detail.id.equalsIgnoreCase(mPackageCustomizationActivity.mPackageId)) {
+            if (detail.id.equalsIgnoreCase(mPackageCustomizationActivity.mSelectedPackageModel.id)) {
                 PackageOption packageOption = null;
                 if (detail.packageOptionList != null) {
                     packageOption = detail.packageOptionList.get(0);
@@ -591,12 +576,34 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
     public void verifyAddressForCity(final AddressModel model, final boolean isCalledAfterLogin, final int step) {
 
         //Add Header parameters
+
+        PackageDetail detail = mPackageCustomizationActivity.mSelectedPackageModel;
+        for (PackageDetail checkPackagedetail : mPackageCustomizationActivity.getPackageList()) {
+            if (!detail.id.equalsIgnoreCase(checkPackagedetail.id) && checkPackagedetail.isSelected)
+                if (detail.packageType.equalsIgnoreCase(checkPackagedetail.packageType)) {
+                    if (checkPackagedetail.mSelectedAddressList != null && !checkPackagedetail.mSelectedAddressList.isEmpty())
+                        if (model.address_id.equalsIgnoreCase(checkPackagedetail.mSelectedAddressList.get(0).address_id)) {
+                            Utility.showToast(mPackageCustomizationActivity, getString(R.string.validation_message_same_address_for_same_group_of_care));
+                            return;
+                        }
+                }
+        }
+
         showProgressDialog();
+
         Map<String, String> mHeaderParams = new HashMap<>();
-        mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
-        if (PreferenceUtility.getInstance(mContext).getUserDetails() != null)
-            mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().userID);
-        if (isCalledAfterLogin) {
+        mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).
+
+                getXAPIKey());
+        if (PreferenceUtility.getInstance(mContext).
+
+                getUserDetails() != null)
+            mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).
+
+                    getUserDetails().userID);
+        if (isCalledAfterLogin)
+
+        {
             mList.clear();
             mList.addAll(PreferenceUtility.getInstance(mContext).getUserDetails().addressList);
         }
@@ -605,20 +612,30 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
         //Add Params
         Map<String, Object> mParams = new HashMap<>();
         int addressId;
-        try {
+        try
+
+        {
             addressId = Integer.parseInt(model.address_id);
-        } catch (Exception e) {
+        } catch (
+                Exception e)
+
+        {
             addressId = 0;
         }
-        if (addressId <= 0) {
+        if (addressId <= 0)
+
+        {
             // In case its nagative then provide other address information
             mParams.put(NetworkUtility.TAGS.ADDRESS_ID, Utility.ZERO_STRING);
             mParams.put(NetworkUtility.TAGS.CITY_NAME, model.cityName);
-        } else {
+        } else
+
+        {
             mParams.put(NetworkUtility.TAGS.ADDRESS_ID, model.address_id);
             mParams.put(NetworkUtility.TAGS.CARE_CITY_ID, mPackageCustomizationActivity.mCityDetail.id);
             mParams.put(NetworkUtility.TAGS.CITY_NAME, Utility.EMPTY_STRING);
-            mParams.put(NetworkUtility.TAGS.CARE_PACKAGE_ID, mPackageCustomizationActivity.mPackageId);
+            mParams.put(NetworkUtility.TAGS.CARE_PACKAGE_ID, mPackageCustomizationActivity.mSelectedPackageModel.id);
+            mParams.put(NetworkUtility.TAGS.PACKAGE_TYPE, mPackageCustomizationActivity.mSelectedPackageModel.packageType);
         }
 
         Utility.hideKeyboard(mContext);
@@ -657,9 +674,14 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
                                 if (isPurchased.equalsIgnoreCase(Utility.BOOLEAN.YES)) {
                                     Utility.showToast(mPackageCustomizationActivity, getString(R.string.validation_message_already_purchased_package_for_this_address));
                                 } else {
-                                    fillAddressView(model);
-                                    if (isCalledAfterLogin) {
-                                        mPackageCustomizationActivity.gotoStep(step);
+                                    String isSamePackageType = jsonData.optString(NetworkUtility.TAGS.IS_SAME_PACKAGE_TYPE);
+                                    if (isSamePackageType.equalsIgnoreCase(Utility.BOOLEAN.YES)) {
+                                        Utility.showToast(mPackageCustomizationActivity, getString(R.string.validation_message_same_address_for_same_group_of_care));
+                                    } else {
+                                        fillAddressView(model);
+                                        if (isCalledAfterLogin) {
+                                            mPackageCustomizationActivity.gotoStep(step);
+                                        }
                                     }
                                 }
 
@@ -699,7 +721,9 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
                 , mHeaderParams
                 , mParams
                 , null);
-        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest, NetworkUtility.WS.VERIFY_ADDRESS_CHEEP_CARE);
+        Volley.getInstance(mContext).
+
+                addToRequestQueue(mVolleyNetworkRequest, NetworkUtility.WS.VERIFY_ADDRESS_CHEEP_CARE);
 
     }
 

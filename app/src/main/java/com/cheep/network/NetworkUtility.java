@@ -145,6 +145,8 @@ public class NetworkUtility {
         public static final String PURCHASE_CARE_PACKAGE = BASE_URL + "customers/care/purchaseCarePackage";
         public static final String GET_USER_SUBSCRIBED_CARE_PACKAGE = BASE_URL + "customers/care/getUserSubscribedCarePackage";
         public static final String GET_CARE_FREE_PAID_SERVICES_FOR_CATEGORY = BASE_URL + "customers/care/getCareFreePaidServicesForCategory";
+        public static final String CARE_CREATE_TASK = BASE_URL + "customers/care/createTask";
+        public static final String IS_CITY_AVAILABLE_FOR_CARE = BASE_URL + "customers/care/isCityAvailableForCare";
 
     }
 
@@ -333,7 +335,6 @@ public class NetworkUtility {
 
         String TASK_DESC = "task_desc";
         String CITY_ID = "city_id";
-        String IS_PURCHASED = "is_purchased";
         String CAT_ID = "cat_id";
         String SUBCATEGORY_ID = "subcategory_id";
 
@@ -419,6 +420,7 @@ public class NetworkUtility {
         String NORMAL_BANNER = "normalBanner";
         String CARE_BANNER = "careBanner";
         String CARE_CITY_SLUG = "care_city_slug";
+        String CARE_CITY_NAME = "care_city_name";
         String CARE_PACKAGE_ID = "care_package_id";
         String LANDMARK = "landmark";
         String PINCODE = "pincode";
@@ -441,10 +443,24 @@ public class NetworkUtility {
         String CITY_DETAIL = "cityDetail";
         String USER_PACKAGE_DETAIL = "userPackageDetail";
         String PACKAGE_DETAIL = "packageDetail";
-        String PACKAGE_TYPE = "package_type";
         String PAID_SERVICE = "paid_service";
         String FREE_SERVICE = "free_service";
-        String TOTAL_PRICE = "total_price";
+        String UNIT = "unit";
+        String SUB_CAT_ID = "sub_cat_id";
+        String IS_PURCHASED = "is_purchased";
+        String IS_SAME_PACKAGE_TYPE = "is_same_package_type";
+        String PACKAGE_ID = "package_id";
+        String PACKAGE_TYPE = "package_type";
+        String PACKAGE_OPTION_ID = "package_option_id";
+        String PACKAGE_SUBOPTION_ID = "package_suboption_id";
+        String SELECTED_UNIT = "selected_unit";
+        String MONTHLY_PRICE = "monthly_price";
+        String UNIT_PRICE = "unit_price";
+        String PACKAGE_SUBOPTION = "package_suboption";
+        String PACKAGE_OPTIONS = "package_options";
+        String PACKAGE_DETAILS = "package_details";
+        String CHARGE_SPECIFIC_TIME = "charge_specific_time";
+        String CHARGE_EXCEED_LIMIT = "charge_exceed_limit";
 
         interface VERSION_CHANGE_TYPE {
             int NORMAL = 0;

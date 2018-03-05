@@ -20,10 +20,14 @@
                 android:id="@+id/recycler_view"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/frame_select_picture"
+                app:layout_constraintHeight_max="@dimen/scale_10dp"
                 app:layout_constraintHorizontal_bias="0.8"
+                app:layout_constraintHorizontal_chainStyle="packed"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0"
                 tools:itemCount="3"
                 tools:listitem="@layout/row_selected_sub_service" />
 
@@ -130,9 +134,10 @@
                 android:background="@color/transparent"
                 android:hint="@string/hint_task_desc"
                 android:textColor="@color/black"
-
                 android:textColorHint="@color/grey_dark_color_2"
+
                 android:textSize="@dimen/text_size_11sp"
+                android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="@id/recycler_view"
                 app:layout_constraintStart_toStartOf="@id/recycler_view"
                 app:layout_constraintTop_toBottomOf="@id/recycler_view" />
@@ -235,7 +240,7 @@
                 app:layout_constraintStart_toEndOf="@id/icon_task_where"
                 app:layout_constraintTop_toBottomOf="@id/separator2" />
 
-            <Spinner
+            <com.cheep.custom_view.CustomSpinner
                 android:id="@+id/spinner_address_selection"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
@@ -244,6 +249,8 @@
                 android:paddingTop="6dp"
                 android:textSize="@dimen/text_size_14sp"
                 android:visibility="invisible"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/text_where" />
@@ -274,11 +281,11 @@
                 android:layout_height="wrap_content"
                 android:includeFontPadding="false"
                 android:paddingLeft="@dimen/scale_18dp"
-                android:text="HOME"
                 android:textColor="@color/splash_gradient_end"
                 app:layout_constraintBottom_toBottomOf="@+id/view_dot"
                 app:layout_constraintStart_toEndOf="@id/iv_home"
-                app:layout_constraintTop_toTopOf="@+id/view_dot" />
+                app:layout_constraintTop_toTopOf="@+id/view_dot"
+                tools:text="HOME" />
 
             <View
                 android:id="@+id/view_dot"
@@ -299,11 +306,11 @@
                 android:layout_marginLeft="@dimen/scale_4dp"
                 android:layout_marginTop="@dimen/scale_8dp"
                 android:includeFontPadding="false"
-                android:text="Subscribed under CHEEP care"
                 android:textColor="@color/grey_varient_17"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/view_dot"
-                app:layout_constraintTop_toBottomOf="@id/text_where" />
+                app:layout_constraintTop_toBottomOf="@id/text_where"
+                tools:text="@string/label_address_subscribed" />
 
             <com.cheep.custom_view.CFTextViewRegular
                 android:id="@+id/tv_address"
@@ -312,11 +319,11 @@
                 android:layout_marginTop="@dimen/scale_4dp"
                 android:includeFontPadding="false"
                 android:paddingLeft="@dimen/scale_32dp"
-                android:text="1202/1204 UniWorld Towers, Next to Palladium Mall, Opp Jijabai Kantabai Library, Mahatma Gandhi Phule Road, Elphinstone Road (West) Mumbai"
                 android:textColor="@color/black_varient_1"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_label_address_subscribed" />
+                app:layout_constraintTop_toBottomOf="@id/tv_label_address_subscribed"
+                tools:text="1202/1204 UniWorld Towers, Next to Palladium Mall, Opp Jijabai Kantabai Library, Mahatma Gandhi Phule Road, Elphinstone Road (West) Mumbai" />
 
             <View
                 android:id="@+id/separator3"

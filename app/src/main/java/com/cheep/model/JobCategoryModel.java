@@ -2,6 +2,7 @@ package com.cheep.model;
 
 import android.support.annotation.Keep;
 
+import com.cheep.cheepcare.model.CityDetail;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -26,12 +27,16 @@ public class JobCategoryModel implements Serializable {
     public String catType;
     @SerializedName("cat_icon")
     public String catIcon;
+
     @SerializedName("cat_image")
     public String catImage;
+
     @SerializedName("cat_jobs")
     public String catJobs;
+
     @SerializedName("cat_sp_count")
     public String spCount;
+
     @SerializedName("cat_image_extra")
     public AttachmentModel catImageExtras;
 
@@ -41,8 +46,12 @@ public class JobCategoryModel implements Serializable {
     public String isFavourite;
     @SerializedName("live_lable_arr")
     public List<String> live_lable_arr;
+
     @SerializedName("pro_image_per_cat")
     public List<String> proImagesPerCategory;
+
+    @SerializedName("care_city_arr")
+    public List<CityDetail> careCityData;
 
 
     /*public String categoryName;

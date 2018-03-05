@@ -154,6 +154,12 @@ public class HomeFragment extends BaseFragment {
                 // Need to rediretct the user to MyTask Screen
                 setCurrentTab(TAB_MY_TASK);
                 break;
+
+            case Utility.BROADCAST_TYPE.SUBSCRIBED_TASK_CREATE_SUCCESSFULLY:
+                // Need to rediretct the user to MyTask Screen
+                setCurrentTab(TAB_MY_TASK);
+                break;
+
         }
 
     }

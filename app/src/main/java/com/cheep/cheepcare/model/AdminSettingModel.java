@@ -11,4 +11,8 @@ public class AdminSettingModel {
     @SerializedName("GST_RATE")
     @Expose
     public String gstRate;
+
+    @SerializedName("ADDITIONAL_CHARGE_FOR_SELECTING_SPECIFIC_TIME")
+    @Expose
+    public String additionalChargeForSelectingSpecificTime;
 }

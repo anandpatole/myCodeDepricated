@@ -5,7 +5,6 @@ import android.databinding.DataBindingUtil;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
-import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -95,17 +94,13 @@ public class AddressTaskCreateAdapter<T> extends ArrayAdapter<T> {
             );
             mHolder.mBinding.ivHome.setImageResource(Utility.getAddressCategoryBlueIcon(addressModel.category));
 
+            mHolder.mBinding.tvAddressNickname.setText(addressModel.getNicknameString(context));
 
-            if (!TextUtils.isEmpty(addressModel.nickname))
-                mHolder.mBinding.tvAddressNickname.setText(addressModel.nickname);
-            else
-                mHolder.mBinding.tvAddressNickname.setText(Utility.getAddressCategoryString(addressModel.category));
-
-            mHolder.mBinding.viewDot.setVisibility(mList.get(position).is_subscribe.equals("1")
+            mHolder.mBinding.viewDot.setVisibility(mList.get(position).is_subscribe.equals(Utility.BOOLEAN.YES)
                     ? View.VISIBLE
                     : View.GONE
             );
-            mHolder.mBinding.tvLabelAddressSubscribed.setVisibility(mList.get(position).is_subscribe.equals("1")
+            mHolder.mBinding.tvLabelAddressSubscribed.setVisibility(mList.get(position).is_subscribe.equalsIgnoreCase(Utility.BOOLEAN.YES)
                     ? View.VISIBLE
                     : View.GONE
             );

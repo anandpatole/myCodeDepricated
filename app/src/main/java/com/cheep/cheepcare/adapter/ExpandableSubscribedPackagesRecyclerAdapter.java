@@ -15,7 +15,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
 import android.text.Spanned;
-import android.text.TextUtils;
 import android.text.style.LeadingMarginSpan;
 import android.util.Log;
 import android.util.TypedValue;
@@ -27,7 +26,6 @@ import android.widget.ListView;
 import android.widget.PopupWindow;
 
 import com.cheep.R;
-import com.cheep.cheepcare.activity.TaskCreationCCActivity;
 import com.cheep.cheepcare.model.PackageDetail;
 import com.cheep.custom_view.expandablerecycleview.ChildViewHolder;
 import com.cheep.custom_view.expandablerecycleview.ExpandableRecyclerAdapter;
@@ -57,13 +55,22 @@ public class ExpandableSubscribedPackagesRecyclerAdapter extends ExpandableRecyc
     private final boolean isSingleSelection;
     private final List<PackageDetail> mList;
     private static final String TAG = ExpandableSubscribedPackagesRecyclerAdapter.class.getSimpleName();
-    private final ChildViewsClickListener mListener;
+    private final ChildViewsClickListener mChildClickListener;
     private static final int VIEW_TYPE_CAN_EXPANDABLE = 1;
     private static final int VIEW_TYPE_CAN_NOT_EXPANDABLE = 0;
+    private final ParentViewsClickListener mParentClickListener;
 
 
     public interface ChildViewsClickListener {
         void onBookClicked(JobCategoryModel model, int childAdapterPosition, PackageDetail packageDetail);
+    }
+
+    /**
+     * if parent is not expandable (for app care and tech care)
+     * on parent click it will navigate to task spec screen for cheep care
+     */
+    public interface ParentViewsClickListener {
+        void onParentViewClick(PackageDetail packageDetail);
     }
 
     /**
@@ -84,10 +91,11 @@ public class ExpandableSubscribedPackagesRecyclerAdapter extends ExpandableRecyc
      */
 
     public ExpandableSubscribedPackagesRecyclerAdapter(@NonNull List<PackageDetail> parentList
-            , boolean isSingleSelection, ChildViewsClickListener listener) {
+            , boolean isSingleSelection, ChildViewsClickListener childClickListener,ParentViewsClickListener parentClickListener) {
         super(parentList);
 
-        mListener = listener;
+        mChildClickListener = childClickListener;
+        mParentClickListener= parentClickListener;
         mList = parentList;
         this.isSingleSelection = isSingleSelection;
     }
@@ -147,17 +155,7 @@ public class ExpandableSubscribedPackagesRecyclerAdapter extends ExpandableRecyc
                 if (mList.get(parentPosition).packageSlug.equalsIgnoreCase(NetworkUtility.CARE_PACKAGE_SLUG.APPLIANCE_CARE) || mList.get(parentPosition).packageSlug.equalsIgnoreCase(NetworkUtility.CARE_PACKAGE_SLUG.TECH_CARE)) {
                     parentViewHolder.setIsExpandable(false);
                     parentViewHolder.setExpanded(false);
-                    AddressModel addressModel = null;
-                    if (mList.get(parentPosition).mSelectedAddressList != null) {
-                        if (mList.get(parentPosition).mSelectedAddressList != null) {
-                            for (AddressModel addressModel1 : mList.get(parentPosition).mSelectedAddressList) {
-                                if (addressModel1.isSelected)
-                                    addressModel = addressModel1;
-                            }
-                        }
-                    }
-                    TaskCreationCCActivity.getInstance(parentViewHolder.mBinding.cardView.getContext(), mList.get(parentPosition).getChildList().get(0), addressModel, mList.get(parentPosition).packageType, mList.get(parentPosition).id);
-
+                    mParentClickListener.onParentViewClick(mList.get(parentPosition));
                 } else {
                     new Handler().postDelayed(new Runnable() {
                         @Override
@@ -341,10 +339,7 @@ public class ExpandableSubscribedPackagesRecyclerAdapter extends ExpandableRecyc
                     addressModel.isSelected = true;
                 }
 
-                if (!TextUtils.isEmpty(addressModel.nickname))
-                    mBinding.tvAddressNickname.setText(addressModel.nickname);
-                else
-                    mBinding.tvAddressNickname.setText(Utility.getAddressCategoryString(addressModel.category));
+                mBinding.tvAddressNickname.setText(addressModel.getNicknameString(context));
                 mBinding.ivAddressIcon.setImageResource(Utility.getAddressCategoryBlueIcon(addressModel.category));
                 mBinding.tvAddress.setText(addressModel.getAddressWithInitials());
                 String daysLeft = packageDetail.getDaysLeft(addressModel.end_date);
@@ -477,7 +472,7 @@ public class ExpandableSubscribedPackagesRecyclerAdapter extends ExpandableRecyc
             mBinding.tvBook.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mListener.onBookClicked(model, ChildCategoryViewHolder.this.getChildAdapterPosition(), mList.get(getParentAdapterPosition()));
+                    mChildClickListener.onBookClicked(model, ChildCategoryViewHolder.this.getChildAdapterPosition(), mList.get(getParentAdapterPosition()));
                 }
             });
         }

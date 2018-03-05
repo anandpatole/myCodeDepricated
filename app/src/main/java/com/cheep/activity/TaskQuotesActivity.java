@@ -250,7 +250,7 @@ public class TaskQuotesActivity extends BaseAppCompatActivity implements TaskQuo
             /*String mStartTime = mContext.getString(R.string.format_task_start_time
                     , Utility.getDateDifference(superCalendar.format(Utility.DATE_FORMAT_FULL_DATE)));
                     tvTaskStartsIn.setText(mStartTime);*/
-            tvTaskStartsIn.setText(Utility.getDateDifference(mContext, superCalendar.format(Utility.DATE_FORMAT_FULL_DATE)));
+            tvTaskStartsIn.setText(Utility.getDateDifference(mContext, superCalendar.format(Utility.DATE_FORMAT_FULL_DATE), Utility.EMPTY_STRING));
         }
     }
 

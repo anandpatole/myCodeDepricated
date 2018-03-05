@@ -50,7 +50,7 @@ public class FreeServicesAdapter extends RecyclerView.Adapter<FreeServicesAdapte
         holder.mBinding.tvSubServiceName.setText(subServicesModel.name);
         Context context = holder.mBinding.getRoot().getContext();
 
-        holder.mBinding.tvDigit.setText(String.valueOf(subServicesModel.qty));
+        holder.mBinding.tvDigit.setText(String.valueOf(subServicesModel.selected_unit));
 
         if (subServicesModel.isSelected) {
             holder.mBinding.imgIconCorrect.setSelected(true);
@@ -99,8 +99,8 @@ public class FreeServicesAdapter extends RecyclerView.Adapter<FreeServicesAdapte
 
                     SubServiceDetailModel subServicesModel = mList.get(getAdapterPosition());
                     int maxQty = Integer.valueOf(subServicesModel.maxUnit);
-                    if (subServicesModel.qty < maxQty) {
-                        subServicesModel.qty++;
+                    if (subServicesModel.selected_unit < maxQty) {
+                        subServicesModel.selected_unit++;
                         notifyItemChanged(getAdapterPosition());
                     } else {
                         mListener.onLimitExceeded(subServicesModel, getAdapterPosition());
@@ -114,8 +114,8 @@ public class FreeServicesAdapter extends RecyclerView.Adapter<FreeServicesAdapte
 
                     SubServiceDetailModel subServicesModel = mList.get(getAdapterPosition());
                     int minQty = Integer.valueOf(subServicesModel.minUnit);
-                    if (subServicesModel.qty > minQty) {
-                        subServicesModel.qty--;
+                    if (subServicesModel.selected_unit > minQty) {
+                        subServicesModel.selected_unit--;
                         notifyItemChanged(getAdapterPosition());
                     }
                 }

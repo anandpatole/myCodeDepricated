@@ -100,6 +100,28 @@
                         tools:ignore="ContentDescription"/>
                 </FrameLayout>
 
+
+                <FrameLayout
+                    android:id="@+id/layout_cheep_care_pro_not_found"
+                    android:layout_width="@dimen/chat_profile_layout_width"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="4dp"
+                    android:orientation="vertical"
+                    android:paddingTop="@dimen/scale_3dp"
+                    android:visibility="gone">
+
+                    <ImageView
+                        android:id="@+id/imgCCProfilePic"
+                        android:layout_width="@dimen/chat_width"
+                        android:layout_height="@dimen/chat_width"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:src="@drawable/placeholder_cheep_pro_not_assigned"
+                        tools:ignore="ContentDescription"/>
+
+                </FrameLayout>
+
+
                 <FrameLayout
                     android:id="@+id/layout_group_profile"
                     android:layout_width="@dimen/chat_profile_layout_width"
@@ -160,8 +182,9 @@
                         android:layout_height="0dp"
                         android:layout_weight="1"
                         android:ellipsize="end"
-                        android:lines="1"
-                        android:maxLines="1"
+                        android:lineSpacingMultiplier="1.3"
+                        android:lines="2"
+                        android:maxLines="2"
                         android:textAllCaps="false"
                         android:textColor="@color/splash_gradient_end"
                         android:textSize="@dimen/text_size_10sp"
@@ -235,12 +258,12 @@
                             android:ellipsize="end"
                             android:gravity="start|top"
                             android:lineSpacingExtra="@dimen/scale_2dp"
-                            android:lines="2"
+                            android:lines="3"
                             android:paddingLeft="@dimen/scale_3dp"
                             android:paddingStart="@dimen/scale_3dp"
                             android:textColor="@color/color_red_varient_1"
                             android:textSize="@dimen/text_size_11sp"
-                            tools:text="Task start in 2:30 hrs"/>
+                            tools:text="Cheep Care Task start in 2:30 hrs"/>
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
@@ -262,13 +285,13 @@
                         android:layout_height="wrap_content"
                         android:ellipsize="end"
                         android:gravity="center"
-                        android:lines="2"
+                        android:lines="3"
                         android:paddingLeft="@dimen/scale_3dp"
                         android:paddingStart="@dimen/scale_3dp"
                         android:textColor="@color/black"
                         android:textSize="@dimen/text_size_11sp"
                         android:visibility="gone"
-                        tools:text="Response Received"/>
+                        tools:text="@string/label_response_received"/>
 
                     <RatingBar
                         android:id="@+id/ratingBar"
@@ -313,6 +336,7 @@
                             android:layout_height="wrap_content"
                             android:gravity="start|top"
                             android:lineSpacingMultiplier="1.3"
+                            android:lines="@integer/line_count_live_feed"
                             android:textColor="@color/grey_dark_color_3"
                             android:textSize="@dimen/text_size_11sp"
                             tools:text="17 Home made happy by Lokesh Shah today we are ready for go"/>
@@ -329,8 +353,8 @@
                         android:layout_width="@dimen/scale_80dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical|end"
-                        android:layout_marginRight="@dimen/scale_8dp"
                         android:layout_marginEnd="@dimen/scale_8dp"
+                        android:layout_marginRight="@dimen/scale_8dp"
                         android:layout_marginTop="@dimen/scale_8dp"
                         android:background="@drawable/ic_offer_tag_small"
                         android:ellipsize="marquee"
@@ -350,14 +374,14 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical|end"
-                        android:layout_marginRight="@dimen/scale_8dp"
                         android:layout_marginEnd="@dimen/scale_8dp"
+                        android:layout_marginRight="@dimen/scale_8dp"
                         android:layout_marginTop="@dimen/scale_8dp"
                         android:background="@drawable/ic_subscribed_text"
-                        android:paddingLeft="@dimen/scale_4dp"
-                        android:paddingStart="@dimen/scale_4dp"
-                        android:paddingRight="@dimen/scale_16dp"
                         android:paddingEnd="@dimen/scale_16dp"
+                        android:paddingLeft="@dimen/scale_4dp"
+                        android:paddingRight="@dimen/scale_16dp"
+                        android:paddingStart="@dimen/scale_4dp"
                         android:visibility="visible"
                         tools:ignore="ContentDescription"/>
                 </LinearLayout>
@@ -365,6 +389,7 @@
                 <LinearLayout
                     android:layout_width="@dimen/scale_0dp"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
                     android:layout_weight="1"
                     android:gravity="bottom"
                     android:minHeight="@dimen/scale_50dp"
@@ -374,15 +399,17 @@
                         android:id="@+id/text_paid_label"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:textSize="@dimen/text_size_15sp"
                         android:textColor="@color/black"
                         tools:text="sdfdssd"/>
 
                     <com.cheep.custom_view.CFTextViewRegular
-                        android:id="@+id/text_paid"
+                        android:id="@+id/text_paid_price"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:textSize="@dimen/text_size_12sp"
                         android:textColor="@color/grey_varient_23"
-                        tools:text="sdfdssd"/>
+                        tools:text="@string/label_paid_with_cheep_care"/>
 
                     <com.cheep.custom_view.CFTextViewSemiBold
                         android:id="@+id/tvViewQuotes"

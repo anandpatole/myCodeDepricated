@@ -680,7 +680,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment implements Reques
 
                             startDateTimeSuperCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
                             startDateTimeSuperCalendar.set(Calendar.MINUTE, minute);
-                            SuperCalendar calAfter3Hours = SuperCalendar.getInstance().getNext3HoursTime();
+                            SuperCalendar calAfter3Hours = SuperCalendar.getInstance().getNext3HoursTime(false);
 
 
                             if (startDateTimeSuperCalendar.getTimeInMillis() < calAfter3Hours.getTimeInMillis()) {
@@ -1652,7 +1652,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment implements Reques
 
 
     private void resetTime(TextView txtAnswer, QueAnsModel model, TextView txtQueNo) {
-        SuperCalendar calAfter3Hours = SuperCalendar.getInstance().getNext3HoursTime();
+        SuperCalendar calAfter3Hours = SuperCalendar.getInstance().getNext3HoursTime(false);
 
     }
 
@@ -1664,7 +1664,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment implements Reques
     private String validateAllQueAndAns() {
         String message;
         // Get date-time for next 3 hours
-        SuperCalendar calAfter3Hours = SuperCalendar.getInstance().getNext3HoursTime();
+        SuperCalendar calAfter3Hours = SuperCalendar.getInstance().getNext3HoursTime(false);
         for (int i = 0; i < mList.size(); i++) {
             QueAnsModel queAnsModel = mList.get(i);
             // alert date is not selected

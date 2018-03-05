@@ -247,6 +247,7 @@ public class Utility {
     public static final int REQUEST_CODE_IMAGE_CAPTURE = 1112;
     public static final int REQUEST_CODE_VIDEO_SELECT = 1113;
     public static final int REQUEST_CODE_IMAGE_SELECT = 1114;
+//    public static final int REQUEST_CODE_TASK_CREATION_CHEEP_CARE = 1115;
 
     /*
     * @Sanjay
@@ -482,7 +483,7 @@ public class Utility {
         String USER_NAME = "user_name";
         String ADDRESS_ID = "address_id";
         String ADDRESS_TEXT = "address_text";
-        String CATEGORY_ID = "category_id";
+        String CATEGORY_DATA = "category_data";
         String IS_DATE_SELECTED = "is_date_selected";
         String DATE_TIME = "date_time";
         String TASK_DETAIL = "task_detail";
@@ -493,9 +494,7 @@ public class Utility {
         String PAYMENT_VIEW_IS_ADDITIONAL_CHARGE = "isAdditional";
         String CHAT_NOTIFICATION_DATA = "chat_notification_data";
         String PROFILE_FROM_FAVOURITE = "from_favorite";
-        String FROM_WHERE = "from_where";
-        String TASK_TYPE_IS_INSTA = "isInsta";
-        String TASK_TYPE_IS_STRATEGIC = "isStrategic";
+        String TASK_TYPE = "taskType";
         String SELECTED_ADDRESS_MODEL = "selectedAddressModel";
         String LOCATION_INFO = "location_info";
         String IS_INSTA_BOOKING_TASK = "isInstaBookingTask";
@@ -521,6 +520,7 @@ public class Utility {
         String PACKAGE_LIST = "packageList";
         String ACTIVITY_TYPE = "activityType";
         String ADMIN_SETTING = "adminSetting";
+        String START_DATETIME = "start_datetime";
     }
 
 
@@ -710,7 +710,7 @@ public class Utility {
         }*/
     }
 
-    public static String getDateDifference(Context mContext, String date) {
+    public static String getDateDifference(Context mContext, String date, String taskType) {
         if (TextUtils.isEmpty(date))
             return "";
 
@@ -722,7 +722,7 @@ public class Utility {
         String timespan = DateUtils.getRelativeTimeSpanString(mFutureDate != null ? mFutureDate.getTime() : 0, System.currentTimeMillis(), DateUtils.SECOND_IN_MILLIS).toString();
         LogUtils.LOGD(TAG, "getDateDifference() returned: " + timespan);
         if (diff > 0) {
-            return mContext.getString(R.string.format_task_start_time, timespan);
+            return mContext.getString(taskType.equalsIgnoreCase(TASK_TYPE.SUBSCRIBED) ? R.string.format_task_start_time_cc : R.string.format_task_start_time, timespan);
         } else {
             return mContext.getString(R.string.format_task_start_soon);
         }
@@ -1232,6 +1232,7 @@ public class Utility {
         int TASK_PRO_BOOKED = 20;
         int TASK_PAID_SUCCESSFULLY = 21;
         int PACKAGE_SUBSCRIBED_SUCCESSFULLY = 22;
+        int SUBSCRIBED_TASK_CREATE_SUCCESSFULLY = 23;
     }
 
     public interface REQUEST_TYPE {
@@ -1325,13 +1326,19 @@ public class Utility {
     }
 
     public interface TASK_TYPE {
-        String STRATEGIC = "strategic"; //1->if task created and only quotes is there, 2-> task created and user paid to sp, but sp not started the task yet.
-        String NORMAL = "normal";//if user payed and task is in progress
-        String INSTA_BOOK = "instabook";//if user payed and task is in progress
+        String STRATEGIC = "strategic";
+        String NORMAL = "normal";
+        String INSTA_BOOK = "instabook";
+        String SUBSCRIBED = "subscribed";
+    }
+
+    public interface SERVICE_TYPE {
+        String FREE = "free";
+        String PAID = "paid";
     }
 
     public interface STRATEGIC_PARTNER_BRAND {
-        String VLCC = "VLCC"; //1->if task created and only quotes is there, 2-> task created and user paid to sp, but sp not started the task yet.
+        String VLCC = "VLCC";
     }
 
     private static String urlEncodeUTF8(String s) {

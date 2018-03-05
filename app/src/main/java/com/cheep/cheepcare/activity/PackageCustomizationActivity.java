@@ -67,9 +67,9 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
     private static final String TAG = PackageCustomizationActivity.class.getSimpleName();
     private ActivityPackageCustomizationBinding mBinding;
     public PackageCustomizationPagerAdapter mPackageCustomizationPagerAdapter;
-    private PackageDetail mPackageModel;
+    //    private PackageDetail mPackageModel;
     public CityDetail mCityDetail;
-    public String mPackageId = "";
+    public PackageDetail mSelectedPackageModel;
     public AdminSettingModel settingModel;
     private ArrayList<PackageDetail> mPackageList = new ArrayList<>();
     private int mPreviousState = 0;
@@ -89,11 +89,10 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
         return mPackageList;
     }
 
-    public static void newInstance(Context context, PackageDetail model, CityDetail cityDetail, String selectedPackageID, String packageList, AdminSettingModel adminSetting) {
+    public static void newInstance(Context context, CityDetail cityDetail, PackageDetail model, String packageList, AdminSettingModel adminSetting) {
         Intent intent = new Intent(context, PackageCustomizationActivity.class);
-        intent.putExtra(Utility.Extra.MODEL, model);
+        intent.putExtra(Utility.Extra.MODEL, Utility.getJsonStringFromObject(model));
         intent.putExtra(Utility.Extra.CITY_NAME, Utility.getJsonStringFromObject(cityDetail));
-        intent.putExtra(Utility.Extra.SELECTED_PACKAGE_ID, selectedPackageID);
         intent.putExtra(Utility.Extra.PACKAGE_LIST, packageList);
         intent.putExtra(Utility.Extra.ADMIN_SETTING, Utility.getJsonStringFromObject(adminSetting));
         context.startActivity(intent);
@@ -115,10 +114,10 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
 
 
         if (getIntent().hasExtra(Utility.Extra.MODEL)) {
-            mPackageModel = (PackageDetail) getIntent().getExtras().getSerializable(Utility.Extra.MODEL);
+            mSelectedPackageModel = (PackageDetail) Utility.getObjectFromJsonString(getIntent().getExtras().getString(Utility.Extra.MODEL), PackageDetail.class);
             mCityDetail = (CityDetail) Utility.getObjectFromJsonString(getIntent().getExtras().getString(Utility.Extra.CITY_NAME), CityDetail.class);
             settingModel = (AdminSettingModel) Utility.getObjectFromJsonString(getIntent().getExtras().getString(Utility.Extra.ADMIN_SETTING), AdminSettingModel.class);
-            mPackageId = getIntent().getExtras().getString(Utility.Extra.SELECTED_PACKAGE_ID);
+//            mSelectedPackageModel = getIntent().getExtras().getString(Utility.Extra.SELECTED_PACKAGE_ID);
             mPackageList = Utility.getObjectListFromJsonString(getIntent().getExtras().getString(Utility.Extra.PACKAGE_LIST), PackageDetail[].class);
         }
 
@@ -416,7 +415,7 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
         if (fragment != null) {
             if (fragment.validateData()) {
                 for (PackageDetail detail : mPackageList) {
-                    if (detail.id.equalsIgnoreCase(mPackageId)) {
+                    if (detail.id.equalsIgnoreCase(mSelectedPackageModel.id)) {
                         detail.isSelected = true;
                         if (detail.mSelectedAddressList == null)
                             detail.mSelectedAddressList = new ArrayList<>();
@@ -471,13 +470,12 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
     private String createSubscriptionPackageRequest() {
 
         JSONArray cartArray = new JSONArray();
-        String cartDetail = Utility.getJsonStringFromObject(mPackageList);
         for (PackageDetail detail : mPackageList) {
             JSONObject packageObject = new JSONObject();
             if (detail.isSelected) {
                 try {
-                    packageObject.put("package_id", detail.id);
-                    packageObject.put("package_type", detail.packageType);
+                    packageObject.put(NetworkUtility.TAGS.PACKAGE_ID, detail.id);
+                    packageObject.put(NetworkUtility.TAGS.PACKAGE_TYPE, detail.packageType);
                     JSONArray multiPackageArray = new JSONArray();
                     JSONObject singleObj = new JSONObject();
                     JSONObject addressObject = new JSONObject();
@@ -503,39 +501,39 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
                         addressObject.put(NetworkUtility.TAGS.ADDRESS_ID, addressId);
                     }
 
-                    singleObj.put("address", addressObject);
+                    singleObj.put(NetworkUtility.TAGS.ADDRESS, addressObject);
                     JSONArray optionArray = new JSONArray();
                     for (PackageOption servicesModel : detail.packageOptionList) {
                         JSONObject optionObj = new JSONObject();
-                        optionObj.put("package_option_id", servicesModel.packageId);
+                        optionObj.put(NetworkUtility.TAGS.PACKAGE_OPTION_ID, servicesModel.packageId);
                         JSONArray subOptionArray = new JSONArray();
                         if (servicesModel.selectionType.equalsIgnoreCase(PackageOption.SELECTION_TYPE.RADIO))
                             for (PackageSubOption option : servicesModel.getChildList()) {
                                 if (option.isSelected) {
                                     JSONObject object = new JSONObject();
-                                    object.put("package_suboption_id", option.packageOptionId);
-                                    object.put("selected_unit", "1");
-                                    object.put("monthly_price", option.monthlyPrice);
-                                    object.put("unit_price", Utility.ZERO_STRING);
+                                    object.put(NetworkUtility.TAGS.PACKAGE_SUBOPTION_ID, option.packageOptionId);
+                                    object.put(NetworkUtility.TAGS.SELECTED_UNIT, "1");
+                                    object.put(NetworkUtility.TAGS.MONTHLY_PRICE, option.monthlyPrice);
+                                    object.put(NetworkUtility.TAGS.UNIT_PRICE, Utility.ZERO_STRING);
                                     subOptionArray.put(object);
                                 }
                             }
                         else
                             for (PackageSubOption option : servicesModel.getChildList()) {
                                 JSONObject object = new JSONObject();
-                                object.put("package_suboption_id", option.packageOptionId);
-                                object.put("selected_unit", option.qty);
-                                object.put("monthly_price", Utility.ZERO_STRING);
-                                object.put("unit_price", option.unitPrice);
+                                object.put(NetworkUtility.TAGS.PACKAGE_SUBOPTION_ID, option.packageOptionId);
+                                object.put(NetworkUtility.TAGS.SELECTED_UNIT, option.qty);
+                                object.put(NetworkUtility.TAGS.MONTHLY_PRICE, Utility.ZERO_STRING);
+                                object.put(NetworkUtility.TAGS.UNIT_PRICE, option.unitPrice);
                                 subOptionArray.put(object);
                             }
 
-                        optionObj.put("package_suboption", subOptionArray);
+                        optionObj.put(NetworkUtility.TAGS.PACKAGE_SUBOPTION, subOptionArray);
                         optionArray.put(optionObj);
                     }
-                    singleObj.put("package_options", optionArray);
+                    singleObj.put(NetworkUtility.TAGS.PACKAGE_OPTIONS, optionArray);
                     multiPackageArray.put(singleObj);
-                    packageObject.put("package_details", multiPackageArray);
+                    packageObject.put(NetworkUtility.TAGS.PACKAGE_DETAILS, multiPackageArray);
                     cartArray.put(packageObject);
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -557,8 +555,8 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
     public void setContinueButtonText() {
         mBinding.textContinue.setText(R.string.add_package_to_cart);
         for (PackageDetail detail : mPackageList) {
-            if (detail.id.equalsIgnoreCase(mPackageId)) {
-                if (detail.packageOptionList != null && detail.id.equalsIgnoreCase(mPackageId)) {
+            if (detail.id.equalsIgnoreCase(mSelectedPackageModel.id)) {
+                if (detail.packageOptionList != null && detail.id.equalsIgnoreCase(mSelectedPackageModel.id)) {
                     for (PackageOption packageOption : detail.packageOptionList) {
                         if (packageOption.selectionType.equalsIgnoreCase(PackageOption.SELECTION_TYPE.RADIO))
                             for (PackageSubOption option : packageOption.getChildList()) {
@@ -732,7 +730,7 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
 
                         if (fragment != null) {
                             for (PackageDetail detail : mPackageList) {
-                                if (detail.id.equalsIgnoreCase(mPackageId)) {
+                                if (detail.id.equalsIgnoreCase(mSelectedPackageModel.id)) {
                                     if (detail.mSelectedAddressList != null) {
                                         LogUtils.LOGE(TAG, "onResponse: replace");
                                         detail.mSelectedAddressList.set(0, addressModel);

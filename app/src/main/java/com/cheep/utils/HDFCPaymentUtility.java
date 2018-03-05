@@ -1,6 +1,7 @@
 package com.cheep.utils;
 
 import android.os.AsyncTask;
+import android.text.TextUtils;
 
 import com.cheep.BuildConfig;
 import com.cheep.model.ProviderModel;
@@ -212,6 +213,9 @@ public class HDFCPaymentUtility {
     }
 
     /**
+     * This generate hash is for cheep care subscription purchase payment
+     * and task creation of cheep care of subscribed task and paid task
+     *
      * @param fcmToken    device token
      * @param userDetails preference user data
      * @param payAmount   final amount to pay
@@ -219,10 +223,11 @@ public class HDFCPaymentUtility {
      */
     public static Map<String, String> getPaymentTransactionFieldsForCheepCare(String fcmToken,
                                                                               UserDetails userDetails,
-                                                                              String payAmount) {
+                                                                              String payAmount, String startDateTime) {
 
         Map<String, String> mTransactionFieldsParams;
         mTransactionFieldsParams = new HashMap<>();
+
         // Create Unique Transaction ID
         String transaction_Id = Utility.getUniqueTransactionId();
 
@@ -241,11 +246,13 @@ public class HDFCPaymentUtility {
         mTransactionFieldsParams.put(FIRSTNAME, userDetails.userName);
         mTransactionFieldsParams.put(EMAIL, userDetails.email);
         mTransactionFieldsParams.put(PHONE, userDetails.phoneNumber);
+
         // Total Amount
         mTransactionFieldsParams.put(AMOUNT, payAmount);
 
         // Start DateTime(In Milliseconds- Timestamp)
-        mTransactionFieldsParams.put(UDF1, "Task Start Date : " + transaction_Id);
+        mTransactionFieldsParams.put(UDF1, "Task Start Date : " + (TextUtils.isEmpty(startDateTime) ? transaction_Id : startDateTime));
+
         // We don't have Provider ID so pass it empty.
         mTransactionFieldsParams.put(UDF2, Utility.EMPTY_STRING);
 
@@ -259,5 +266,4 @@ public class HDFCPaymentUtility {
 
         return mTransactionFieldsParams;
     }
-
 }
