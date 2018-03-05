@@ -295,7 +295,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_address_hint">Click on the map to enter your address.</string>
     <string name="label_quote_received">Quote Received</string>
     <string name="label_photo">Photo</string>
-    <string name="can_only_start_task_after_3_hours">Date Time must be after 3 hour.</string>
+    <string name="can_only_start_task_after_3_hours">Date Time must be after %1s hour.</string>
     <string name="reschedule_task_must_within_one_month">Reschedule time must be within one month from start time of task.</string>
 
     <string name="step_1_desc">Please tell us what needs to be done</string>

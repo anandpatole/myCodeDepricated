@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 
@@ -425,7 +426,7 @@ public class TaskCreationCCActivity extends BaseAppCompatActivity {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(MessageEvent event) {
-        LogUtils.LOGE(TAG, "onMessageEvent: "+event.BROADCAST_ACTION);
+        LogUtils.LOGE(TAG, "onMessageEvent: " + event.BROADCAST_ACTION);
         switch (event.BROADCAST_ACTION) {
             case Utility.BROADCAST_TYPE.TASK_PAID_FOR_INSTA_BOOKING:
                 // br for finished task creation activity
@@ -467,8 +468,15 @@ public class TaskCreationCCActivity extends BaseAppCompatActivity {
 
     //TODO: to be removed
     public void startBookingConfirmationActivity() {
-        SubscribedTaskDetailModel subscribedTaskDetailModel = new SubscribedTaskDetailModel();
 
+
+        if (mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.mSelectedAddress.is_subscribe.equalsIgnoreCase(Utility.BOOLEAN.NO) &&
+                TextUtils.isEmpty(mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.getStartDateTime())) {
+            Utility.showSnackBar(getString(R.string.validate_date), mBinding.getRoot());
+            return;
+        }
+
+        SubscribedTaskDetailModel subscribedTaskDetailModel = new SubscribedTaskDetailModel();
         subscribedTaskDetailModel.addressModel = mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.mSelectedAddress;
         subscribedTaskDetailModel.jobCategoryModel = mJobCategoryModel;
         subscribedTaskDetailModel.adminSettingModel = mAdminSettingModel;
@@ -477,8 +485,10 @@ public class TaskCreationCCActivity extends BaseAppCompatActivity {
         subscribedTaskDetailModel.paidServiceList = mTaskCreationPagerAdapter.mTaskCreationPhase1Fragment.getSelectedPaidServices();
         subscribedTaskDetailModel.startDateTime = mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.getStartDateTime();
         subscribedTaskDetailModel.taskDesc = mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.getTaskDescription();
-        subscribedTaskDetailModel.taskType =  subscribedTaskDetailModel.addressModel .is_subscribe.equalsIgnoreCase(Utility.BOOLEAN.YES) ? Utility.TASK_TYPE.SUBSCRIBED : Utility.TASK_TYPE.NORMAL;
+        subscribedTaskDetailModel.taskType = subscribedTaskDetailModel.addressModel.is_subscribe.equalsIgnoreCase(Utility.BOOLEAN.YES) ? Utility.TASK_TYPE.SUBSCRIBED : Utility.TASK_TYPE.NORMAL;
         subscribedTaskDetailModel.mediaFileList = mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.mMediaRecycleAdapter.getList();
+
+
         BookingConfirmationCcActivity.newInstance(TaskCreationCCActivity.this, subscribedTaskDetailModel);
     }
 

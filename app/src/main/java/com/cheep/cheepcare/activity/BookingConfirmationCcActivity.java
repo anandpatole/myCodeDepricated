@@ -27,6 +27,7 @@ import com.cheep.model.MessageEvent;
 import com.cheep.model.SubServiceDetailModel;
 import com.cheep.network.NetworkUtility;
 import com.cheep.utils.LogUtils;
+import com.cheep.utils.SuperCalendar;
 import com.cheep.utils.Utility;
 import com.cheep.utils.WebCallClass;
 
@@ -145,30 +146,55 @@ public class BookingConfirmationCcActivity extends BaseAppCompatActivity {
 
         //
         mBinding.ivTermsTick.setSelected(true);
+        setPayButtonSelection();
+
+
+        // calculation of non working hour fees & task excess limit count;
+
+        /*
+         when its normal task non working hour fees will be applicable only when user has selected time beyound given slot like from 10 am to 7 pm.
+        this time slot will come from backed (cms)
+        for cheep care time non working hour fees will be applicable only when user has selected any time. (there will be no limitation of time slot)
+        */
 
         boolean isNonWorkingHourFeesApplied = false;
-        boolean isTaskExcessLimitFeesApplied = false;
-
-
-        //
-        if (!TextUtils.isEmpty(subscribedTaskDetailModel.startDateTime)) {
-            isNonWorkingHourFeesApplied = true;
-            mBinding.llNonWorkingHourFree.setVisibility(View.VISIBLE);
-            subscribedTaskDetailModel.nonWorkingHourFees = Double.valueOf(subscribedTaskDetailModel.adminSettingModel.additionalChargeForSelectingSpecificTime);
-            mBinding.tvNonWorkingHourCharges.setText(getString(R.string.rupee_symbol_x, new BigDecimal(subscribedTaskDetailModel.nonWorkingHourFees).toString()));
+        if (subscribedTaskDetailModel.taskType.equalsIgnoreCase(Utility.TASK_TYPE.NORMAL)) {
+            long timeStamp = Long.parseLong(subscribedTaskDetailModel.startDateTime);
+            SuperCalendar superCalendar = SuperCalendar.getInstance();
+            superCalendar.setTimeInMillis(timeStamp);
+            String time = superCalendar.format(SuperCalendar.SuperFormatter.FULL_DATE);
+            boolean isWorkingTime = superCalendar.isWorkingHour(10, 19);
+            LogUtils.LOGE(TAG, "initiateUI: time " + time + "\n" + isWorkingTime);
+            if (isWorkingTime) {
+                subscribedTaskDetailModel.nonWorkingHourFees = 0;
+                mBinding.llNonWorkingHourFree.setVisibility(View.GONE);
+            } else {
+                isNonWorkingHourFeesApplied = true;
+                mBinding.llNonWorkingHourFree.setVisibility(View.VISIBLE);
+                subscribedTaskDetailModel.nonWorkingHourFees = Double.valueOf(subscribedTaskDetailModel.adminSettingModel.additionalChargeForSelectingSpecificTime);
+                mBinding.tvNonWorkingHourCharges.setText(getString(R.string.rupee_symbol_x, new BigDecimal(subscribedTaskDetailModel.nonWorkingHourFees).toString()));
+            }
         } else {
-            subscribedTaskDetailModel.nonWorkingHourFees = 0;
-            mBinding.llNonWorkingHourFree.setVisibility(View.GONE);
+            if (!TextUtils.isEmpty(subscribedTaskDetailModel.startDateTime)) {
+                isNonWorkingHourFeesApplied = true;
+                mBinding.llNonWorkingHourFree.setVisibility(View.VISIBLE);
+                subscribedTaskDetailModel.nonWorkingHourFees = Double.valueOf(subscribedTaskDetailModel.adminSettingModel.additionalChargeForSelectingSpecificTime);
+                mBinding.tvNonWorkingHourCharges.setText(getString(R.string.rupee_symbol_x, new BigDecimal(subscribedTaskDetailModel.nonWorkingHourFees).toString()));
+            } else {
+                subscribedTaskDetailModel.nonWorkingHourFees = 0;
+                mBinding.llNonWorkingHourFree.setVisibility(View.GONE);
+            }
         }
 
+        boolean isTaskExcessLimitFeesApplied = false;
         int limitCount = 0;
         try {
             limitCount = Integer.valueOf(subscribedTaskDetailModel.addressModel.limit_cnt);
+            LogUtils.LOGE(TAG, "initiateUI: limit_cnt" + limitCount);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        if (limitCount < 1) {
-
+        if (subscribedTaskDetailModel.taskType.equalsIgnoreCase(Utility.TASK_TYPE.SUBSCRIBED) && limitCount < 1) {
             subscribedTaskDetailModel.taskExcessLimitFees = 100;
             mBinding.llExcessLimitFee.setVisibility(View.VISIBLE);
             mBinding.tvTaskExcessLimitCharges.setText(getString(R.string.rupee_symbol_x, new BigDecimal(subscribedTaskDetailModel.taskExcessLimitFees).toString()));
@@ -217,71 +243,92 @@ public class BookingConfirmationCcActivity extends BaseAppCompatActivity {
     @Override
     protected void setListeners() {
         mBinding.tvBookAndPay.setOnClickListener(onPayClickListener);
+        mBinding.rlPayNow.setOnClickListener(onPayClickListener);
+        mBinding.rlPayLater.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                callCreateSubscribedTask();
+            }
+        });
+
+
         mBinding.ivTermsTick.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mBinding.ivTermsTick.setSelected(!mBinding.ivTermsTick.isSelected());
 
                 // Changes are per new flow pay now/later: 15/11/17
-                mBinding.rlPayLater.setSelected(mBinding.ivTermsTick.isSelected());
-                mBinding.rlPayNow.setSelected(mBinding.ivTermsTick.isSelected());
-                mBinding.rlPayLater.setEnabled(mBinding.ivTermsTick.isSelected());
-                mBinding.rlPayNow.setEnabled(mBinding.ivTermsTick.isSelected());
-                mBinding.tvBookAndPay.setSelected(mBinding.ivTermsTick.isSelected());
-                mBinding.tvBookAndPay.setEnabled(mBinding.ivTermsTick.isSelected());
+                setPayButtonSelection();
             }
         });
 
+
+    }
+
+    private void setPayButtonSelection() {
+        mBinding.rlPayLater.setSelected(mBinding.ivTermsTick.isSelected());
+        mBinding.rlPayNow.setSelected(mBinding.ivTermsTick.isSelected());
+        mBinding.rlPayLater.setEnabled(mBinding.ivTermsTick.isSelected());
+        mBinding.rlPayNow.setEnabled(mBinding.ivTermsTick.isSelected());
+        mBinding.tvBookAndPay.setSelected(mBinding.ivTermsTick.isSelected());
+        mBinding.tvBookAndPay.setEnabled(mBinding.ivTermsTick.isSelected());
     }
 
     View.OnClickListener onPayClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
             if (subscribedTaskDetailModel.total == 0) {
-
-                if (!Utility.isConnected(mContext)) {
-                    Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mBinding.getRoot());
-                    return;
-                }
-                showProgressDialog();
-                subscribedTaskDetailModel.paymentMethod = NetworkUtility.PAYMENT_METHOD_TYPE.FREE;
-
-                final String message;
-                if (TextUtils.isEmpty(subscribedTaskDetailModel.startDateTime)) {
-                    String datetime = Utility.getDate(Long.parseLong(subscribedTaskDetailModel.startDateTime), Utility.DATE_FORMAT_DD_MMMM) + getString(R.string.label_between) + Utility.get2HourTimeSlots(subscribedTaskDetailModel.startDateTime);
-                    message = getString(R.string.msg_task_confirmed_cheep_care, datetime, "3");
-                } else {
-                    message = getString(R.string.msg_task_confirmed_cheep_care_no_time_specified);
-                }
-
-                WebCallClass.createTask(mContext, subscribedTaskDetailModel, mCommonResponseListener, new WebCallClass.SuccessOfTaskCreationListener() {
-                    @Override
-                    public void onSuccessOfTaskCreate() {
-                        hideProgressDialog();
-                        LogUtils.LOGE(TAG, "onSuccessOfTaskCreate: ");
-                        TaskConfirmedCCInstaBookDialog taskConfirmedCCInstaBookDialog = TaskConfirmedCCInstaBookDialog.newInstance(
-                                new TaskConfirmedCCInstaBookDialog.TaskConfirmActionListener() {
-                                    @Override
-                                    public void onAcknowledgementAccepted() {
-                                        MessageEvent messageEvent = new MessageEvent();
-                                        messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.SUBSCRIBED_TASK_CREATE_SUCCESSFULLY;
-                                        EventBus.getDefault().post(messageEvent);
-                                        finish();
-                                    }
-
-                                    @Override
-                                    public void rescheduleTask() {
-
-                                    }
-                                }, message);
-                        taskConfirmedCCInstaBookDialog.show(getSupportFragmentManager(), TaskConfirmedCCInstaBookDialog.TAG);
-                    }
-                });
+                callCreateSubscribedTask();
             } else {
-                PaymentChoiceCheepCareActivity.newInstance(BookingConfirmationCcActivity.this, subscribedTaskDetailModel);
+                openPaymentChoiceActivity();
             }
         }
     };
+
+    private void openPaymentChoiceActivity() {
+        PaymentChoiceCheepCareActivity.newInstance(BookingConfirmationCcActivity.this, subscribedTaskDetailModel);
+    }
+
+    private void callCreateSubscribedTask() {
+        if (!Utility.isConnected(mContext)) {
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mBinding.getRoot());
+            return;
+        }
+        showProgressDialog();
+        subscribedTaskDetailModel.paymentMethod = NetworkUtility.PAYMENT_METHOD_TYPE.FREE;
+
+        final String message;
+        if (!TextUtils.isEmpty(subscribedTaskDetailModel.startDateTime)) {
+            String datetime = Utility.getDate(Long.parseLong(subscribedTaskDetailModel.startDateTime), Utility.DATE_FORMAT_DD_MMMM) + getString(R.string.label_between) + Utility.get2HourTimeSlots(subscribedTaskDetailModel.startDateTime);
+            message = getString(R.string.msg_task_confirmed_cheep_care, datetime, "3");
+        } else {
+            message = getString(R.string.msg_task_confirmed_cheep_care_no_time_specified);
+        }
+
+        WebCallClass.createTask(mContext, subscribedTaskDetailModel, mCommonResponseListener, new WebCallClass.SuccessOfTaskCreationListener() {
+            @Override
+            public void onSuccessOfTaskCreate() {
+                hideProgressDialog();
+                LogUtils.LOGE(TAG, "onSuccessOfTaskCreate: ");
+                TaskConfirmedCCInstaBookDialog taskConfirmedCCInstaBookDialog = TaskConfirmedCCInstaBookDialog.newInstance(
+                        new TaskConfirmedCCInstaBookDialog.TaskConfirmActionListener() {
+                            @Override
+                            public void onAcknowledgementAccepted() {
+                                MessageEvent messageEvent = new MessageEvent();
+                                messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.SUBSCRIBED_TASK_CREATE_SUCCESSFULLY;
+                                EventBus.getDefault().post(messageEvent);
+                                finish();
+                            }
+
+                            @Override
+                            public void rescheduleTask() {
+
+                            }
+                        }, message);
+                taskConfirmedCCInstaBookDialog.show(getSupportFragmentManager(), TaskConfirmedCCInstaBookDialog.TAG);
+            }
+        });
+    }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //////////////////////////// Payment Detail Detail Service[Start] ////////////////////////////////////////////////

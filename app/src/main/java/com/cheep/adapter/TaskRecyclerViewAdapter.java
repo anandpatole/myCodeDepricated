@@ -43,6 +43,7 @@ import com.cheep.utils.RoundedBackgroundSpan;
 import com.cheep.utils.SuperCalendar;
 import com.cheep.utils.Utility;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -234,8 +235,23 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
                         holder.mUpcomingTaskBinding.textPaidPrice.setText(Utility.EMPTY_STRING);
                         holder.mUpcomingTaskBinding.textPaidLabel.setText(Utility.EMPTY_STRING);
                         holder.mUpcomingTaskBinding.tvSubscribed.setVisibility(View.GONE);
-                        holder.mUpcomingTaskBinding.tvDiscount.setVisibility(View.VISIBLE);
-                        holder.mUpcomingTaskBinding.tvDiscount.setText("-40% Today");
+                        //discount
+                        try {
+                            DecimalFormat df2 = new DecimalFormat(".##");
+                            double discount = Double.valueOf(model.discount);
+                            if (discount > 0) {
+                                holder.mUpcomingTaskBinding.tvDiscount.setVisibility(View.VISIBLE);
+                                holder.mUpcomingTaskBinding.tvDiscount.setText(TextUtils.concat(/*"-",*/ df2.format(Double.valueOf(model.discount)),
+                                        context.getString(R.string.label_quote_discount)));
+                                holder.mUpcomingTaskBinding.tvDiscount.setSelected(true);
+                            } else {
+                                holder.mUpcomingTaskBinding.tvDiscount.setVisibility(View.GONE);
+                                holder.mUpcomingTaskBinding.tvDiscount.setSelected(false);
+                            }
+                        } catch (Exception e) {
+                            holder.mUpcomingTaskBinding.tvDiscount.setVisibility(View.GONE);
+                            holder.mUpcomingTaskBinding.tvDiscount.setSelected(false);
+                        }
 
                          /*
                   For the bug for lower version of Device like Kitkat, we have to store the padding before setting the background of textview,
@@ -710,7 +726,7 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
         }
     }
 
-    private void setSubcategoryTitle(TaskDetailModel model,CFTextViewRegular textView) {
+    private void setSubcategoryTitle(TaskDetailModel model, CFTextViewRegular textView) {
         if (model.subCatList != null && !model.subCatList.isEmpty()) {
             if (model.subCatList.size() > 1) {
                 SpannableString sCatCount;

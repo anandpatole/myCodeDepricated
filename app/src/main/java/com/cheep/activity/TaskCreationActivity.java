@@ -392,7 +392,7 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
         }
 
         if (mTaskCreationPagerAdapter.mEnterTaskDetailFragment.superCalendar == null) {
-            Utility.showSnackBar(getString(R.string.can_only_start_task_after_3_hours), mActivityTaskCreateBinding.getRoot());
+            Utility.showSnackBar(getString(R.string.can_only_start_task_after_3_hours,"3"), mActivityTaskCreateBinding.getRoot());
             return;
         }
         if (PreferenceUtility.getInstance(mContext).getUserDetails() == null) {
@@ -475,7 +475,7 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
         }
 
         if (mTaskCreationPagerAdapter.mEnterTaskDetailFragment.superCalendar == null) {
-            Utility.showSnackBar(getString(R.string.can_only_start_task_after_3_hours), mActivityTaskCreateBinding.getRoot());
+            Utility.showSnackBar(getString(R.string.can_only_start_task_after_3_hours,"3"), mActivityTaskCreateBinding.getRoot());
             return;
         }
 

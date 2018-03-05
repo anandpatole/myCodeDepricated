@@ -126,6 +126,9 @@ public class TaskDetailModel {
     @SerializedName("is_prefed_quote")
     public String isPrefedQuote;
 
+    @SerializedName("sp_per_off")
+    public String discount;
+
 
     @SerializedName("task_total_pending_amount")
     public String taskTotalPendingAmount;

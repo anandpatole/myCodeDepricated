@@ -320,7 +320,7 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
                 hideProgressDialog();
                 LogUtils.LOGE(TAG, "onSuccessOfTaskCreate: ");
                 final String message;
-                if (TextUtils.isEmpty(subscribedTaskDetailModel.startDateTime)) {
+                if (!TextUtils.isEmpty(subscribedTaskDetailModel.startDateTime)) {
                     String datetime = Utility.getDate(Long.parseLong(subscribedTaskDetailModel.startDateTime), Utility.DATE_FORMAT_DD_MMMM) + getString(R.string.label_between) + Utility.get2HourTimeSlots(subscribedTaskDetailModel.startDateTime);
                     message = getString(R.string.msg_task_confirmed_cheep_care, datetime, "3");
                 } else {

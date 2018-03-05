@@ -848,12 +848,12 @@ public class EnterTaskDetailFragment extends BaseFragment implements RequestPerm
                             superCalendar.setTimeZone(SuperCalendar.SuperTimeZone.GMT.GMT);
 
                             // Get date-time for next 3 hours
-                            SuperCalendar calAfter3Hours = SuperCalendar.getInstance().getNext3HoursTime();
+                            SuperCalendar calAfter3Hours = SuperCalendar.getInstance().getNext3HoursTime(false);
 
 //                            TODO: This needs to Be UNCOMMENTED DO NOT FORGET
 //                            if (!BuildConfig.BUILD_TYPE.equalsIgnoreCase(Utility.DEBUG)) {
                             if (superCalendar.getTimeInMillis() < calAfter3Hours.getTimeInMillis()) {
-                                Utility.showSnackBar(getString(R.string.can_only_start_task_after_3_hours), mFragmentEnterTaskDetailBinding.getRoot());
+                                Utility.showSnackBar(getString(R.string.can_only_start_task_after_3_hours,"3"), mFragmentEnterTaskDetailBinding.getRoot());
                                 mFragmentEnterTaskDetailBinding.textTaskWhen.setText(Utility.EMPTY_STRING);
                                 mFragmentEnterTaskDetailBinding.textTaskWhen.setVisibility(View.GONE);
                                 updateTaskVerificationFlags();

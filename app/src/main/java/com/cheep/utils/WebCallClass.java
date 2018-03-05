@@ -300,26 +300,50 @@ public class WebCallClass {
         };
         //Add Params
         Map<String, String> mParams = new HashMap<>();
-        mParams.put(NetworkUtility.TAGS.CARE_PACKAGE_ID, subscribedTaskDetailModel.carePackageId);
+
+        //0
+        mParams.put(NetworkUtility.TAGS.CARE_PACKAGE_ID, subscribedTaskDetailModel.taskType.equalsIgnoreCase(Utility.TASK_TYPE.NORMAL) ? Utility.ZERO_STRING : subscribedTaskDetailModel.carePackageId);
+
         mParams.put(NetworkUtility.TAGS.CAT_ID, subscribedTaskDetailModel.jobCategoryModel.catId);
         String freeServicejson = new Gson().toJson(subscribedTaskDetailModel.freeServiceList);
+
         mParams.put(NetworkUtility.TAGS.FREE_SERVICE, freeServicejson);
+
         String paidServicejson = new Gson().toJson(subscribedTaskDetailModel.paidServiceList);
+
         mParams.put(NetworkUtility.TAGS.PAID_SERVICE, paidServicejson);
+
         mParams.put(NetworkUtility.TAGS.ADDRESS_ID, subscribedTaskDetailModel.addressModel.address_id);
+
         mParams.put(NetworkUtility.TAGS.TOTAL_AMOUNT, String.valueOf(subscribedTaskDetailModel.total));
+
         mParams.put(NetworkUtility.TAGS.PAYABLE_AMOUNT, subscribedTaskDetailModel.paybleAmount);
+
         mParams.put(NetworkUtility.TAGS.START_DATETIME, subscribedTaskDetailModel.startDateTime);
+
         mParams.put(NetworkUtility.TAGS.IS_REFER_CODE, Utility.BOOLEAN.NO);
-        mParams.put(NetworkUtility.TAGS.TASK_TYPE, Utility.TASK_TYPE.SUBSCRIBED);
-        mParams.put(NetworkUtility.TAGS.TASK_DESC, subscribedTaskDetailModel.taskDesc);
+
+        mParams.put(NetworkUtility.TAGS.TASK_TYPE, subscribedTaskDetailModel.startDateTime);
+
+//        mParams.put(NetworkUtility.TAGS.TASK_DESC, subscribedTaskDetailModel.taskDesc);
+
         mParams.put(NetworkUtility.TAGS.MEDIA_FILE, Utility.getSelectedMediaJsonString(subscribedTaskDetailModel.mediaFileList));
+
         mParams.put(NetworkUtility.TAGS.PROMOCODE_PRICE, Utility.ZERO_STRING);
+
+
         mParams.put(NetworkUtility.TAGS.USED_WALLET_BALANCE, Utility.ZERO_STRING);
+
         mParams.put(NetworkUtility.TAGS.CHEEPCODE, Utility.EMPTY_STRING);
-        mParams.put(NetworkUtility.TAGS.PAYMENT_METHOD, subscribedTaskDetailModel.paymentMethod);
+
+        // PENDING
+        mParams.put(NetworkUtility.TAGS.PAYMENT_METHOD, subscribedTaskDetailModel.taskType.equalsIgnoreCase(Utility.TASK_TYPE.NORMAL) ? Utility.TASK_STATUS.PENDING : subscribedTaskDetailModel.paymentMethod);
+
+
         mParams.put(NetworkUtility.TAGS.PAYMENT_LOG, subscribedTaskDetailModel.paymentLog);
+
         mParams.put(NetworkUtility.TAGS.CHARGE_SPECIFIC_TIME, String.valueOf(subscribedTaskDetailModel.nonWorkingHourFees));
+
         mParams.put(NetworkUtility.TAGS.CHARGE_EXCEED_LIMIT, String.valueOf(subscribedTaskDetailModel.taskExcessLimitFees));
 
         HashMap<String, File> mFileParams = new HashMap<>();

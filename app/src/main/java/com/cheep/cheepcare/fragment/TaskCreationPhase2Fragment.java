@@ -58,7 +58,6 @@ import com.cheep.fragment.BaseFragment;
 import com.cheep.model.AddressModel;
 import com.cheep.model.GuestUserDetails;
 import com.cheep.model.ProviderModel;
-import com.cheep.model.SubServiceDetailModel;
 import com.cheep.model.UserDetails;
 import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
@@ -100,7 +99,7 @@ public class TaskCreationPhase2Fragment extends BaseFragment implements
     private TaskCreationCCActivity mTaskCreationCCActivity;
     public boolean isTotalVerified = false;
 
-    public boolean isTaskDescriptionVerified = false;
+    //    public boolean isTaskDescriptionVerified = false;
     public boolean isTaskWhereVerified = false;
     public boolean isTaskWhenAdded = false;
 
@@ -192,12 +191,12 @@ public class TaskCreationPhase2Fragment extends BaseFragment implements
             return;
         }
 
-        if (!mTaskCreationCCActivity.getSelectedSubServices().isEmpty())
-            for (SubServiceDetailModel model : mTaskCreationCCActivity.getSelectedSubServices()) {
-                // Task Description
-                isTaskDescriptionVerified = model.sub_cat_id != -1 ||
-                        !TextUtils.isEmpty(mBinding.editTaskDesc.getText().toString().trim());
-            }
+//        if (!mTaskCreationCCActivity.getSelectedSubServices().isEmpty())
+//            for (SubServiceDetailModel model : mTaskCreationCCActivity.getSelectedSubServices()) {
+//                // Task Description
+//                isTaskDescriptionVerified = model.sub_cat_id != -1 ||
+//                        !TextUtils.isEmpty(mBinding.editTaskDesc.getText().toString().trim());
+//            }
 
         // When Verification
 //        isTaskWhenVerified = !TextUtils.isEmpty(mBinding.textTaskWhen.getText().toString().trim());
@@ -209,13 +208,13 @@ public class TaskCreationPhase2Fragment extends BaseFragment implements
     }
 
     private void updateFinalVerificationFlag() {
-        if (isTaskDescriptionVerified &&/* isTaskWhenVerified && */ isTaskWhereVerified) {
-            isTotalVerified = true;
-            mTaskCreationCCActivity.setTaskState(TaskCreationCCActivity.STEP_TWO_VERIFIED);
-        } else {
-            isTotalVerified = false;
-            mTaskCreationCCActivity.setTaskState(TaskCreationCCActivity.STEP_TWO_UNVERIFIED);
-        }
+//        if (isTaskDescriptionVerified &&/* isTaskWhenVerified && */ isTaskWhereVerified) {
+//            isTotalVerified = true;
+//            mTaskCreationCCActivity.setTaskState(TaskCreationCCActivity.STEP_TWO_VERIFIED);
+//        } else {
+        isTotalVerified = false;
+        mTaskCreationCCActivity.setTaskState(TaskCreationCCActivity.STEP_TWO_UNVERIFIED);
+//        }
 
         // let activity know that post task button needs to be shown now.
         mTaskCreationCCActivity.showPostTaskButton(false, isTotalVerified);
@@ -226,6 +225,17 @@ public class TaskCreationPhase2Fragment extends BaseFragment implements
         if (mTaskCreationCCActivity != null && mTaskCreationCCActivity.getSelectedSubServices() != null) {
             mBinding.recyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
             mBinding.recyclerView.setAdapter(new SelectedSubServiceAdapter(mTaskCreationCCActivity.getSelectedSubServices()));
+
+            if (mTaskCreationCCActivity.getSelectedSubServices().size() > 3) {
+                ViewGroup.LayoutParams params = mBinding.recyclerView.getLayoutParams();
+                params.height = (int) mTaskCreationCCActivity.getResources().getDimension(R.dimen.scale_113dp);
+                mBinding.recyclerView.setLayoutParams(params);
+            } else {
+                ViewGroup.LayoutParams params = mBinding.recyclerView.getLayoutParams();
+                params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+                mBinding.recyclerView.setLayoutParams(params);
+            }
+
         }
     }
 
@@ -1102,13 +1112,17 @@ public class TaskCreationPhase2Fragment extends BaseFragment implements
                             superCalendar.setTimeInMillis(startDateTimeSuperCalendar.getTimeInMillis());
                             superCalendar.setTimeZone(SuperCalendar.SuperTimeZone.GMT.GMT);
 
-                            // Get date-time for next 3 hours
-                            SuperCalendar calAfter3Hours = SuperCalendar.getInstance().getNext3HoursTime();
+                            // Get date-time for next 3 hours if its weekday else for weekend it would be 6 hours
+
+                            int dayOfWeek = startDateTimeSuperCalendar.getCalendar().get(Calendar.DAY_OF_WEEK);
+                            boolean isWeekend = dayOfWeek == 1 || dayOfWeek == 7;
+
+                            SuperCalendar calAfter3Hours = SuperCalendar.getInstance().getNext3HoursTime(isWeekend);
 
 //                            TODO: This needs to Be UNCOMMENTED DO NOT FORGET
 //                            if (!BuildConfig.BUILD_TYPE.equalsIgnoreCase(Utility.DEBUG)) {
                             if (superCalendar.getTimeInMillis() < calAfter3Hours.getTimeInMillis()) {
-                                Utility.showSnackBar(getString(R.string.can_only_start_task_after_3_hours), mBinding.getRoot());
+                                Utility.showSnackBar(getString(R.string.can_only_start_task_after_3_hours, isWeekend ? "6" : "3"), mBinding.getRoot());
 //                                mBinding.textTaskWhen.setText(Utility.EMPTY_STRING);
 //                                mBinding.textTaskWhen.setVisibility(View.GONE);
                                 updateTaskVerificationFlags();
