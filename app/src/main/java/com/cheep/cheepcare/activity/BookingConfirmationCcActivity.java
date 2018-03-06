@@ -163,7 +163,7 @@ public class BookingConfirmationCcActivity extends BaseAppCompatActivity {
             SuperCalendar superCalendar = SuperCalendar.getInstance();
             superCalendar.setTimeInMillis(timeStamp);
             String time = superCalendar.format(SuperCalendar.SuperFormatter.FULL_DATE);
-            boolean isWorkingTime = superCalendar.isWorkingHour(10, 19);
+            boolean isWorkingTime = superCalendar.isWorkingHour("10", "19");
             LogUtils.LOGE(TAG, "initiateUI: time " + time + "\n" + isWorkingTime);
             if (isWorkingTime) {
                 subscribedTaskDetailModel.nonWorkingHourFees = 0;
