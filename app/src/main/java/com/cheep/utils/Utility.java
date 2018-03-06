@@ -196,6 +196,7 @@ public class Utility {
 //    public static final String DATE_FORMAT_TASK_HAS_BEEN_PAID_TIME = SuperFormatter.HOUR_12_HOUR_2_DIGIT + ":" + SuperFormatter.MINUTE + "" + SuperFormatter.AM_PM;
 
     public static final String DATE_FORMAT_HH_MM_AM = SuperFormatter.HOUR_24_HOUR + ":" + SuperFormatter.MINUTE + " ";
+    public static final String DATE_FORMAT_HH_MM_SS = SuperFormatter.HOUR_24_HOUR + ":" + SuperFormatter.MINUTE + ":" + SuperFormatter.SECONDS;
     public static final String DATE_FORMAT_DD_MMM_HH_MM_AM = SuperFormatter.DATE + " " + SuperFormatter.MONTH_JAN + " " + SuperFormatter.HOUR_24_HOUR + ":" + SuperFormatter.MINUTE + "";
     public static final String DATE_FORMAT_TASK_HAS_BEEN_PAID_DATE = SuperFormatter.DATE + " " + SuperFormatter.MONTH_JAN;
     public static final String TIME_FORMAT_24HH_MM = SuperFormatter.HOUR_24_HOUR + ":" + SuperFormatter.MINUTE + "";

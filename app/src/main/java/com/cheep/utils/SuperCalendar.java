@@ -17,6 +17,7 @@ public class SuperCalendar {
     Calendar mCalendar;
     private static SuperCalendar superCalendar;
     TimeZone mTimeZone;
+    private static final String TAG = "SuperCalendar";
 
     private SuperCalendar() {
         mCalendar = Calendar.getInstance();
@@ -67,10 +68,6 @@ public class SuperCalendar {
         return DateFormat.format(formatDate, mCalendar).toString();
     }
 
-    public boolean isWorkingHour(String startTime, String endTime) {
-        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
-        return false;
-    }
 
     public long getTimestampFromDate(String date, String dateFormat) {
         if (!TextUtils.isEmpty(date)) {
@@ -119,16 +116,6 @@ public class SuperCalendar {
         }
         return this;
     }
-//    public SuperCalendar getNext6HoursTime() {
-//        try {
-//            SuperCalendar superCalendar = clone();
-//            superCalendar.mCalendar.add(Calendar.HOUR, 6);
-//            return superCalendar;
-//        } catch (CloneNotSupportedException e) {
-//            e.printStackTrace();
-//        }
-//        return this;
-//    }
 
     public SuperCalendar getWeekEndDate() {
         try {
@@ -162,6 +149,26 @@ public class SuperCalendar {
 
     public void set(int field, int value) {
         mCalendar.set(field, value);
+    }
+
+    public boolean isWorkingHour(String startTime, String endTime) {
+        SuperCalendar startDate = SuperCalendar.getInstance();
+        startDate.setTime(Utility.getDate(startTime, Utility.DATE_FORMAT_HH_MM_SS));
+        startDate.mCalendar.set(mCalendar.get(Calendar.YEAR), mCalendar.get(Calendar.MONTH), mCalendar.get(Calendar.DATE));
+
+        SuperCalendar endDate = SuperCalendar.getInstance();
+        endDate.setTime(Utility.getDate(endTime, Utility.DATE_FORMAT_HH_MM_SS));
+        endDate.mCalendar.set(mCalendar.get(Calendar.YEAR), mCalendar.get(Calendar.MONTH), mCalendar.get(Calendar.DATE));
+
+        LogUtils.LOGE(TAG, "initiateUI: date" + toString());
+        LogUtils.LOGE(TAG, "initiateUI: start date" + startDate.toString());
+        LogUtils.LOGE(TAG, "initiateUI: end date" + endDate.toString());
+
+
+        boolean isWorkingHour = mCalendar.after(startDate.mCalendar) && mCalendar.before(endDate.mCalendar);
+        LogUtils.LOGE(TAG, "initiateUI: isWorkingHour " + isWorkingHour);
+
+        return isWorkingHour;
     }
 
     public interface SuperTimeZone {
