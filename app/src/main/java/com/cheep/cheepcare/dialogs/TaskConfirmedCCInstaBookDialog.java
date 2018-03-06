@@ -73,7 +73,10 @@ public class TaskConfirmedCCInstaBookDialog extends DialogFragment {
         // Set Window Background as Transparent.
         if (getDialog() != null && getDialog().getWindow() != null) {
             getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            getDialog().setCanceledOnTouchOutside(false);
+            setCancelable(false);
         }
+
 
         DialogTaskConfirmedCheepCareInstabookBinding mBinding = DataBindingUtil.inflate(inflater, R.layout.dialog_task_confirmed_cheep_care_instabook, container, false);
 

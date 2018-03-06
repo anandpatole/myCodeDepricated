@@ -404,6 +404,8 @@ public class ManageSubscriptionActivity extends BaseAppCompatActivity {
         LogUtils.LOGE(TAG, "onMessageEvent: " + event.BROADCAST_ACTION);
         if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.PACKAGE_SUBSCRIBED_SUCCESSFULLY) {
             finish();
+        } else if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.SUBSCRIBED_TASK_CREATE_SUCCESSFULLY) {
+            finish();
         }
     }
 

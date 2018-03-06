@@ -15,4 +15,12 @@ public class AdminSettingModel {
     @SerializedName("ADDITIONAL_CHARGE_FOR_SELECTING_SPECIFIC_TIME")
     @Expose
     public String additionalChargeForSelectingSpecificTime;
+
+    @SerializedName("starttime")
+    @Expose
+    public String starttime;
+
+    @SerializedName("endtime")
+    @Expose
+    public String endtime;
 }
