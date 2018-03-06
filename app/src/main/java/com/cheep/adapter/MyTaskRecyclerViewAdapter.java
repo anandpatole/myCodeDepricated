@@ -14,6 +14,7 @@ import com.cheep.activity.ProviderProfileActivity;
 import com.cheep.databinding.RowPastTaskProProfileBinding;
 import com.cheep.model.CoverImageModel;
 import com.cheep.model.JobCategoryModel;
+import com.cheep.utils.GlideUtility;
 import com.cheep.utils.Utility;
 
 import java.util.ArrayList;
@@ -64,7 +65,7 @@ public class MyTaskRecyclerViewAdapter extends RecyclerView.Adapter<MyTaskRecycl
         holder.rowPastTaskBinding.imgpastwork.requestLayout();
 
         //Background image
-        Utility.loadImageView(mContext, holder.rowPastTaskBinding.imgpastwork, model.imgUrl, R.drawable.gradient_black);
+        GlideUtility.loadImageView(mContext, holder.rowPastTaskBinding.imgpastwork, model.imgUrl, R.drawable.gradient_black);
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override

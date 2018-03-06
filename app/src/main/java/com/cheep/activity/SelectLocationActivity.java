@@ -28,6 +28,7 @@ import com.cheep.model.GooglePlaceModel;
 import com.cheep.model.LocationInfo;
 import com.cheep.utils.FetchLocationInfoUtility;
 import com.cheep.utils.GoogleMapUtils;
+import com.cheep.utils.GsonUtility;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.SharedElementTransitionHelper;
 import com.cheep.utils.Utility;
@@ -197,7 +198,7 @@ public class SelectLocationActivity extends BaseAppCompatActivity {
         Log.d(TAG, "setLocation() called with: mLocationInfo = [" + mLocationInfo + "]");
         Intent data = new Intent();
         if (mLocationInfo != null)
-            data.putExtra(Utility.Extra.LOCATION_INFO, Utility.getJsonStringFromObject(mLocationInfo));
+            data.putExtra(Utility.Extra.LOCATION_INFO, GsonUtility.getJsonStringFromObject(mLocationInfo));
         setResult(RESULT_OK, data);
         finish();
     }

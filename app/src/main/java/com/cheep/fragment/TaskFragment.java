@@ -29,6 +29,7 @@ import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
 import com.cheep.utils.ErrorLoadingHelper;
+import com.cheep.utils.GsonUtility;
 import com.cheep.utils.LoadMoreSwipeRecyclerAdapter;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.Utility;
@@ -311,7 +312,7 @@ public class TaskFragment extends BaseFragment {
                 switch (statusCode) {
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
 
-                        ArrayList<TaskDetailModel> list = Utility.getObjectListFromJsonString(jsonObject.optString(NetworkUtility.TAGS.DATA), TaskDetailModel[].class);
+                        ArrayList<TaskDetailModel> list = GsonUtility.getObjectListFromJsonString(jsonObject.optString(NetworkUtility.TAGS.DATA), TaskDetailModel[].class);
 
                         //Setting RecyclerView Adapter
                         if (TextUtils.isEmpty(nextPageId)) {
@@ -400,7 +401,7 @@ public class TaskFragment extends BaseFragment {
         public void onReceive(Context context, Intent intent) {
             if (whichFrg == TAB_PAST_TASK) {
                 Log.d(TAG, "onReceive() called with: context = [" + context + "], intent = [" + intent + "]");
-                TaskDetailModel enquiryDetailModel = (TaskDetailModel) Utility.getObjectFromJsonString(intent.getExtras().getString(Utility.Extra.TASK_DETAIL), TaskDetailModel.class);
+                TaskDetailModel enquiryDetailModel = (TaskDetailModel) GsonUtility.getObjectFromJsonString(intent.getExtras().getString(Utility.Extra.TASK_DETAIL), TaskDetailModel.class);
                 taskRecyclerViewAdapter.addData(enquiryDetailModel);
             }
 

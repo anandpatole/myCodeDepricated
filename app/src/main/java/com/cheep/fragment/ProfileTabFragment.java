@@ -51,6 +51,9 @@ import com.cheep.model.UserDetails;
 import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
+import com.cheep.utils.GlideUtility;
+import com.cheep.utils.GsonUtility;
+import com.cheep.utils.MediaUtility;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.Utility;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
@@ -893,7 +896,7 @@ public class ProfileTabFragment extends BaseFragment {
                             changeUsernameOrEmail.dismiss();
                         }
                         JSONObject jsonData = jsonObject.getJSONObject(NetworkUtility.TAGS.DATA);
-                        UserDetails userDetails = (UserDetails) Utility.getObjectFromJsonString(jsonData.toString(), UserDetails.class);
+                        UserDetails userDetails = (UserDetails) GsonUtility.getObjectFromJsonString(jsonData.toString(), UserDetails.class);
                         PreferenceUtility.getInstance(mContext).saveUserDetails(jsonData);
                         fillFields(userDetails);
                         mListener.profileUpdated();
@@ -1090,12 +1093,12 @@ public class ProfileTabFragment extends BaseFragment {
 
                         JSONObject jsonData = jsonObject.getJSONObject(NetworkUtility.TAGS.DATA);
 
-                        UserDetails userDetails = (UserDetails) Utility.getObjectFromJsonString(jsonData.toString(), UserDetails.class);
+                        UserDetails userDetails = (UserDetails) GsonUtility.getObjectFromJsonString(jsonData.toString(), UserDetails.class);
                         PreferenceUtility.getInstance(mContext).saveUserDetails(jsonData);
                         fillFields(userDetails);
 
                         jsonEmergencyContacts = jsonData.optJSONArray(NetworkUtility.TAGS.EMERGENCY_DATA);
-                        addressList = Utility.getObjectListFromJsonString(jsonData.optJSONArray(NetworkUtility.TAGS.ADDRESS).toString(), AddressModel[].class);
+                        addressList = GsonUtility.getObjectListFromJsonString(jsonData.optJSONArray(NetworkUtility.TAGS.ADDRESS).toString(), AddressModel[].class);
 
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
@@ -1543,7 +1546,7 @@ public class ProfileTabFragment extends BaseFragment {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             if (resultCode == RESULT_OK) {
                 Uri resultUri = result.getUri();
-                String selectedImagePath = Utility.getPath(mContext, resultUri);
+                String selectedImagePath = MediaUtility.getPath(mContext, resultUri);
                 Log.i(TAG, "onActivityResult: Path:" + selectedImagePath);
                 //Load the image from Glide
                 loadImage(selectedImagePath);
@@ -1655,7 +1658,7 @@ public class ProfileTabFragment extends BaseFragment {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             if (resultCode == RESULT_OK) {
                 Uri resultUri = result.getUri();
-                String selectedImagePath = Utility.getPath(mContext, resultUri);
+                String selectedImagePath = MediaUtility.getPath(mContext, resultUri);
                 Log.i(TAG, "onActivityResult: Path:" + selectedImagePath);
                 //Load the image from Glide
                 loadImage(selectedImagePath);
@@ -1746,7 +1749,7 @@ public class ProfileTabFragment extends BaseFragment {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             if (resultCode == RESULT_OK) {
                 Uri resultUri = result.getUri();
-                String selectedImagePath = Utility.getPath(mContext, resultUri);
+                String selectedImagePath = MediaUtility.getPath(mContext, resultUri);
                 Log.i(TAG, "onActivityResult: Path:" + selectedImagePath);
                 loadCoverImage(selectedImagePath);
 
@@ -1761,7 +1764,7 @@ public class ProfileTabFragment extends BaseFragment {
     }
 
     private void loadImage(String selectedImagePath) {
-        Utility.showCircularImageView(mContext, TAG, mFragmentTabProfileBinding.imgProfile, selectedImagePath, Utility.DEFAULT_PROFILE_SRC, true);
+        GlideUtility.showCircularImageView(mContext, TAG, mFragmentTabProfileBinding.imgProfile, selectedImagePath, Utility.DEFAULT_PROFILE_SRC, true);
 
        /* if (!TextUtils.isEmpty(selectedImagePath))
         {
@@ -1788,7 +1791,7 @@ public class ProfileTabFragment extends BaseFragment {
     }
 
     private void loadCoverImage(String selectedImagePath) {
-        Utility.loadImageView(mContext, mFragmentTabProfileBinding.imgBanner, selectedImagePath, 0);
+        GlideUtility.loadImageView(mContext, mFragmentTabProfileBinding.imgBanner, selectedImagePath, 0);
     }
 
     private void showGuestProfile(boolean flag) {

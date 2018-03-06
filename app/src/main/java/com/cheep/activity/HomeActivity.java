@@ -82,6 +82,8 @@ import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
 import com.cheep.strategicpartner.StrategicPartnerTaskCreationAct;
 import com.cheep.strategicpartner.TaskSummaryStrategicPartnerActivity;
+import com.cheep.utils.GlideUtility;
+import com.cheep.utils.GsonUtility;
 import com.cheep.utils.HotlineHelper;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.SuperCalendar;
@@ -436,7 +438,7 @@ public class HomeActivity extends BaseAppCompatActivity
         //Update Header view
         final UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
         if (userDetails != null && userDetails.profileImg != null && (!TextUtils.isEmpty(userDetails.profileImg)))
-            Utility.showCircularImageView(mContext, TAG, navHeaderHomeBinding.imgProfile, userDetails.profileImg, R.drawable.icon_profile_img, true);
+            GlideUtility.showCircularImageView(mContext, TAG, navHeaderHomeBinding.imgProfile, userDetails.profileImg, R.drawable.icon_profile_img, true);
 
         //Update the name
         if (userDetails != null && TextUtils.isEmpty(userDetails.userName) == false && userDetails.userName.trim().length() > 1) {
@@ -486,7 +488,7 @@ public class HomeActivity extends BaseAppCompatActivity
         //Send Broadcast to Past task listing for adding the task, as it would get add
         //to there Need to send the broadcast to Enquiry Listing screen.
         Intent intent = new Intent(Utility.BR_NEW_TASK_ADDED);
-        intent.putExtra(Utility.Extra.TASK_DETAIL, Utility.getJsonStringFromObject(model));
+        intent.putExtra(Utility.Extra.TASK_DETAIL, GsonUtility.getJsonStringFromObject(model));
         mContext.sendBroadcast(intent);
     }
 
@@ -885,7 +887,7 @@ public class HomeActivity extends BaseAppCompatActivity
                 Log.i(TAG, "onCategoryFavouriteClicked: Called for HomeTab");
                 ((HomeTabFragment) mHomeTabFragment).onCategoryFavouriteClicked(model, position);
                 if (((HomeTabFragment) mHomeTabFragment).getmSelectedFilterType().equalsIgnoreCase(Utility.FILTER_TYPES.FILTER_TYPE_SUBSCRIBED)) {
-                    ManageSubscriptionActivity.newInstance(mContext, model.careCityData.get(0), true, Utility.getJsonStringFromObject(((HomeTabFragment) mHomeTabFragment).careBannerModelArrayList));
+                    ManageSubscriptionActivity.newInstance(mContext, model.careCityData.get(0), true, GsonUtility.getJsonStringFromObject(((HomeTabFragment) mHomeTabFragment).careBannerModelArrayList));
                 } else
                     TaskCreationActivity.getInstance(mContext, model);
             } else
@@ -1009,7 +1011,7 @@ public class HomeActivity extends BaseAppCompatActivity
                 //Update Header view
                 final UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
                 if (userDetails != null && userDetails.profileImg != null && (!TextUtils.isEmpty(userDetails.profileImg)))
-                    Utility.showCircularImageView(mContext, TAG, navHeaderHomeBinding.imgProfile, userDetails.profileImg, R.drawable.icon_profile_img, true);
+                    GlideUtility.showCircularImageView(mContext, TAG, navHeaderHomeBinding.imgProfile, userDetails.profileImg, R.drawable.icon_profile_img, true);
 
                 //Update the name
                 if (userDetails != null && !TextUtils.isEmpty(userDetails.userName) && userDetails.userName.trim().length() > 1) {
@@ -1579,7 +1581,7 @@ public class HomeActivity extends BaseAppCompatActivity
 
                         UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
                         userDetails.language = language;
-                        PreferenceUtility.getInstance(mContext).saveUserDetails(new JSONObject(Utility.getJsonStringFromObject(userDetails)));
+                        PreferenceUtility.getInstance(mContext).saveUserDetails(new JSONObject(GsonUtility.getJsonStringFromObject(userDetails)));
 
                         onLanguageChangedSuccessFully();
 

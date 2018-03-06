@@ -27,6 +27,7 @@ import com.cheep.databinding.ActivityVerifyOtpBinding;
 import com.cheep.model.MessageEvent;
 import com.cheep.model.UserDetails;
 import com.cheep.network.NetworkUtility;
+import com.cheep.utils.GsonUtility;
 import com.cheep.utils.LogUtils;
 import com.cheep.utils.PaytmUtility;
 import com.cheep.utils.PreferenceUtility;
@@ -410,7 +411,7 @@ public class VerifyOtpActivity extends BaseAppCompatActivity {
                         // save paytm data in preferences user details
                         String paytmData = jsonObject.getJSONObject(NetworkUtility.TAGS.DATA).getJSONObject(NetworkUtility.TAGS.PAYMENT_GATEWAY_DATA).toString();
                         UserDetails userDetails = PreferenceUtility.getInstance(VerifyOtpActivity.this).getUserDetails();
-                        userDetails.mPaytmUserDetail = (UserDetails.PaytmUserDetail) Utility.getObjectFromJsonString(paytmData, UserDetails.PaytmUserDetail.class);
+                        userDetails.mPaytmUserDetail = (UserDetails.PaytmUserDetail) GsonUtility.getObjectFromJsonString(paytmData, UserDetails.PaytmUserDetail.class);
                         PreferenceUtility.getInstance(VerifyOtpActivity.this).saveUserDetails(userDetails);
 
                         break;

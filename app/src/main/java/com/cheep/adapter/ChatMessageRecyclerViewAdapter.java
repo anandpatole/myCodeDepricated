@@ -24,6 +24,7 @@ import com.cheep.databinding.RowFooterProgressBinding;
 import com.cheep.firebase.DateUtils;
 import com.cheep.firebase.FirebaseUtils;
 import com.cheep.firebase.model.TaskChatMessageModel;
+import com.cheep.utils.GlideUtility;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.SharedElementTransitionHelper;
 import com.cheep.utils.Utility;
@@ -315,7 +316,7 @@ public class ChatMessageRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
             viewHolder.mRowChatSenderMediaBinding.progressBar.setVisibility(View.GONE);
             if (!TextUtils.isEmpty(model.mediaThumbUrl)) {
                 viewHolder.mRowChatSenderMediaBinding.progressBar.setVisibility(View.VISIBLE);
-                Utility.loadImageView(mContext, viewHolder.mRowChatSenderMediaBinding.imgMedia, model.mediaThumbUrl, 0, new RequestListener() {
+                GlideUtility.loadImageView(mContext, viewHolder.mRowChatSenderMediaBinding.imgMedia, model.mediaThumbUrl, 0, new RequestListener() {
                     @Override
                     public boolean onException(Exception e, Object obj, Target target, boolean isFirstResource) {
                         viewHolder.mRowChatSenderMediaBinding.progressBar.setVisibility(View.GONE);
@@ -330,7 +331,7 @@ public class ChatMessageRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
                 });
             } else if (!TextUtils.isEmpty(model.mediaUrl)) {
                 viewHolder.mRowChatSenderMediaBinding.progressBar.setVisibility(View.VISIBLE);
-                Utility.loadImageView(mContext, viewHolder.mRowChatSenderMediaBinding.imgMedia, model.mediaUrl, 0, new RequestListener() {
+                GlideUtility.loadImageView(mContext, viewHolder.mRowChatSenderMediaBinding.imgMedia, model.mediaUrl, 0, new RequestListener() {
                     @Override
                     public boolean onException(Exception e, Object model, Target target, boolean isFirstResource) {
                         viewHolder.mRowChatSenderMediaBinding.progressBar.setVisibility(View.GONE);
@@ -345,7 +346,7 @@ public class ChatMessageRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
                 });
             } else if (!TextUtils.isEmpty(model.localMediaUrl)) {
                 viewHolder.mRowChatSenderMediaBinding.progressBar.setVisibility(View.VISIBLE);
-                Utility.loadImageView(mContext, viewHolder.mRowChatSenderMediaBinding.imgMedia, model.localMediaUrl, 0);
+                GlideUtility.loadImageView(mContext, viewHolder.mRowChatSenderMediaBinding.imgMedia, model.localMediaUrl, 0);
             }
 
             viewHolder.mRowChatSenderMediaBinding.imgMedia.setOnClickListener(new View.OnClickListener() {
@@ -369,7 +370,7 @@ public class ChatMessageRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
             viewHolder.mRowChatReceiverMediaBinding.progressBar.setVisibility(View.GONE);
             if (!TextUtils.isEmpty(model.mediaThumbUrl)) {
                 viewHolder.mRowChatReceiverMediaBinding.progressBar.setVisibility(View.VISIBLE);
-                Utility.loadImageView(mContext, viewHolder.mRowChatReceiverMediaBinding.imgMedia, model.mediaThumbUrl, 0, new RequestListener() {
+                GlideUtility.loadImageView(mContext, viewHolder.mRowChatReceiverMediaBinding.imgMedia, model.mediaThumbUrl, 0, new RequestListener() {
                     @Override
                     public boolean onException(Exception e, Object obj, Target target, boolean isFirstResource) {
                         viewHolder.mRowChatReceiverMediaBinding.progressBar.setVisibility(View.GONE);
@@ -384,7 +385,7 @@ public class ChatMessageRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
                 });
             } else if (!TextUtils.isEmpty(model.mediaUrl)) {
                 viewHolder.mRowChatReceiverMediaBinding.progressBar.setVisibility(View.VISIBLE);
-                Utility.loadImageView(mContext, viewHolder.mRowChatReceiverMediaBinding.imgMedia, model.mediaUrl, 0, new RequestListener() {
+                GlideUtility.loadImageView(mContext, viewHolder.mRowChatReceiverMediaBinding.imgMedia, model.mediaUrl, 0, new RequestListener() {
                     @Override
                     public boolean onException(Exception e, Object model, Target target, boolean isFirstResource) {
                         viewHolder.mRowChatReceiverMediaBinding.progressBar.setVisibility(View.GONE);

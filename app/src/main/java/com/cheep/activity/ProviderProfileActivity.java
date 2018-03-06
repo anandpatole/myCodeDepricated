@@ -37,6 +37,8 @@ import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
 import com.cheep.utils.ErrorLoadingHelper;
+import com.cheep.utils.GlideUtility;
+import com.cheep.utils.GsonUtility;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.SharedElementTransitionHelper;
 import com.cheep.utils.Utility;
@@ -79,15 +81,15 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
     // Only to review Provider Profile
     public static void newInstance(Context context, ProviderModel model) {
         Intent intent = new Intent(context, ProviderProfileActivity.class);
-        intent.putExtra(Utility.Extra.DATA, Utility.getJsonStringFromObject(model));
+        intent.putExtra(Utility.Extra.DATA, GsonUtility.getJsonStringFromObject(model));
         context.startActivity(intent);
     }
 
     // Provider Profile for specific task
     public static void newInstance(Context context, ProviderModel model, TaskDetailModel taskDetailModel) {
         Intent intent = new Intent(context, ProviderProfileActivity.class);
-        intent.putExtra(Utility.Extra.DATA, Utility.getJsonStringFromObject(model));
-        intent.putExtra(Utility.Extra.DATA_2, Utility.getJsonStringFromObject(taskDetailModel));
+        intent.putExtra(Utility.Extra.DATA, GsonUtility.getJsonStringFromObject(model));
+        intent.putExtra(Utility.Extra.DATA_2, GsonUtility.getJsonStringFromObject(taskDetailModel));
         context.startActivity(intent);
     }
 
@@ -103,7 +105,7 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
     // Provider Profile from Favorite List Click
     public static void newInstance(Context context, ProviderModel model, boolean fromfavorite) {
         Intent intent = new Intent(context, ProviderProfileActivity.class);
-        intent.putExtra(Utility.Extra.DATA, Utility.getJsonStringFromObject(model));
+        intent.putExtra(Utility.Extra.DATA, GsonUtility.getJsonStringFromObject(model));
         intent.putExtra(Utility.Extra.PROFILE_FROM_FAVOURITE, fromfavorite);
         context.startActivity(intent);
     }
@@ -157,10 +159,10 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
                     callReviewList(providerID);
                 }
             } else {
-                providerModel = (ProviderModel) Utility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA), ProviderModel.class);
+                providerModel = (ProviderModel) GsonUtility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA), ProviderModel.class);
                 if (getIntent().hasExtra(Utility.Extra.DATA_2)) {
                     //This is only when provider profile view for specific task (provider gives quote to specific task)
-                    taskDetailModel = (TaskDetailModel) Utility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA_2), TaskDetailModel.class);
+                    taskDetailModel = (TaskDetailModel) GsonUtility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA_2), TaskDetailModel.class);
 
                 }
                 setData();
@@ -202,8 +204,8 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
         mActivityProviderProfileBinding.imgFav.setSelected(Utility.BOOLEAN.YES.equals(providerModel.isFavourite));
 
         //loading rounded image on profile
-        //  Utility.showCircularImageView(mContext, TAG, mActivityProviderProfileBinding.imgProfile, providerModel.profileUrl, Utility.DEFAULT_PROFILE_SRC, true);
-        Utility.showCircularImageViewWithColorBorder(
+        //  GlideUtility.showCircularImageView(mContext, TAG, mActivityProviderProfileBinding.imgProfile, providerModel.profileUrl, Utility.DEFAULT_PROFILE_SRC, true);
+        GlideUtility.showCircularImageViewWithColorBorder(
                 mContext,
                 TAG,
                 mActivityProviderProfileBinding.imgProfile,
@@ -211,7 +213,7 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
                 Utility.DEFAULT_CHEEP_LOGO,
                 R.color.splash_gradient_end
                 , true);
-//        Utility.loadImageView(mContext, mActivityProviderProfileBinding.imgProfile, providerModel.profileUrl, Utility.DEFAULT_PROFILE_SRC);
+//        GlideUtility.loadImageView(mContext, mActivityProviderProfileBinding.imgProfile, providerModel.profileUrl, Utility.DEFAULT_PROFILE_SRC);
 
         if (!TextUtils.isEmpty(providerModel.information)) {
             mActivityProviderProfileBinding.textDesc.setText(providerModel.information);
@@ -853,10 +855,10 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
                 switch (statusCode) {
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
 
-                        providerModel = (ProviderModel) Utility.getObjectFromJsonString(jsonObject.getString(NetworkUtility.TAGS.DATA), ProviderModel.class);
+                        providerModel = (ProviderModel) GsonUtility.getObjectFromJsonString(jsonObject.getString(NetworkUtility.TAGS.DATA), ProviderModel.class);
 
                         JSONObject jsonData = jsonObject.optJSONObject(NetworkUtility.TAGS.DATA);
-                        ArrayList<CoverImageModel> coverImageModelArrayList = Utility.getObjectListFromJsonString(jsonData.optString(NetworkUtility.TAGS.SP_EXTRA_IMAGES), CoverImageModel[].class);
+                        ArrayList<CoverImageModel> coverImageModelArrayList = GsonUtility.getObjectListFromJsonString(jsonData.optString(NetworkUtility.TAGS.SP_EXTRA_IMAGES), CoverImageModel[].class);
                         setupCoverViewPager(coverImageModelArrayList);
 
                         reportAbuse = Utility.BOOLEAN.YES.equalsIgnoreCase(providerModel.spReported);
@@ -1018,7 +1020,7 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
                 mActivityProviderProfileBinding.swipeRefreshLayout.setRefreshing(false);
                 switch (statusCode) {
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
-                        ArrayList<ReviewModel> reviewList = Utility.getObjectListFromJsonString(jsonObject.getString(NetworkUtility.TAGS.DATA), ReviewModel[].class);
+                        ArrayList<ReviewModel> reviewList = GsonUtility.getObjectListFromJsonString(jsonObject.getString(NetworkUtility.TAGS.DATA), ReviewModel[].class);
 
                         //Setting SP List recycler view adapter
                         if (reviewsRecyclerViewAdapter == null) {
@@ -1419,7 +1421,7 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
                 switch (statusCode) {
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
 
-                        taskDetailModel = (TaskDetailModel) Utility.getObjectFromJsonString(jsonObject.optString(NetworkUtility.TAGS.DATA), TaskDetailModel.class);
+                        taskDetailModel = (TaskDetailModel) GsonUtility.getObjectFromJsonString(jsonObject.optString(NetworkUtility.TAGS.DATA), TaskDetailModel.class);
                         /*
                           NOW REFRESHES the listings
                          */

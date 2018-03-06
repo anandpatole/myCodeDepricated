@@ -11,8 +11,8 @@ import com.cheep.R;
 import com.cheep.cheepcare.model.CityLandingPageModel;
 import com.cheep.databinding.RowLeftImageCheepCareFeatureBinding;
 import com.cheep.databinding.RowRightImageCheepCareFeatureBinding;
+import com.cheep.utils.GlideUtility;
 import com.cheep.utils.LoadMoreRecyclerAdapter;
-import com.cheep.utils.Utility;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,7 +53,7 @@ public class CheepCareFeatureAdapter extends LoadMoreRecyclerAdapter<CheepCareFe
         CityLandingPageModel.CityTutorials model = mList.get(position);
         if (holder instanceof LeftSideImageViewHolder) {
             RowLeftImageCheepCareFeatureBinding leftBinding = holder.getBinding();
-            Utility.loadImageView(leftBinding.getRoot().getContext()
+            GlideUtility.loadImageView(leftBinding.getRoot().getContext()
                     , leftBinding.ivNoHiddenCharges
                     , model.image
                     , R.drawable.hotline_ic_image_loading_placeholder);
@@ -63,7 +63,7 @@ public class CheepCareFeatureAdapter extends LoadMoreRecyclerAdapter<CheepCareFe
 
         } else if (holder instanceof RightSideImageViewHolder) {
             RowRightImageCheepCareFeatureBinding rightBinding = holder.getBinding();
-            Utility.loadImageView(rightBinding.getRoot().getContext()
+            GlideUtility.loadImageView(rightBinding.getRoot().getContext()
                     , rightBinding.ivNoHiddenCharges
                     , model.image
                     , R.drawable.hotline_ic_image_loading_placeholder);

@@ -37,7 +37,9 @@ import com.cheep.model.TaskDetailModel;
 import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
+import com.cheep.utils.CalendarUtility;
 import com.cheep.utils.ErrorLoadingHelper;
+import com.cheep.utils.GsonUtility;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.SuperCalendar;
 import com.cheep.utils.Utility;
@@ -59,7 +61,7 @@ public class TaskQuotesActivity extends BaseAppCompatActivity implements TaskQuo
 
     public static void newInstance(Context context, TaskDetailModel model, boolean isFirstTimeCreate) {
         Intent intent = new Intent(context, TaskQuotesActivity.class);
-        intent.putExtra(Utility.Extra.DATA, Utility.getJsonStringFromObject(model));
+        intent.putExtra(Utility.Extra.DATA, GsonUtility.getJsonStringFromObject(model));
         intent.putExtra(Utility.Extra.IS_FIRST_TIME, isFirstTimeCreate);
         intent.setAction(Utility.ACTION_HIRE_PROVIDER);
         context.startActivity(intent);
@@ -108,7 +110,7 @@ public class TaskQuotesActivity extends BaseAppCompatActivity implements TaskQuo
     protected void initiateUI() {
         //mIntentAction = getIntent().getAction();
         if (getIntent().getExtras() != null) {
-            mTaskDetailModel = (TaskDetailModel) Utility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA), TaskDetailModel.class);
+            mTaskDetailModel = (TaskDetailModel) GsonUtility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA), TaskDetailModel.class);
         }
         mGson = new Gson();
 //        mQuotesList = new ArrayList<>();
@@ -145,7 +147,7 @@ public class TaskQuotesActivity extends BaseAppCompatActivity implements TaskQuo
         /*if (getIntent().getExtras() != null) {
             Bundle bundle = getIntent().getExtras();
             //mIsFirstTime = bundle.getBoolean(Utility.Extra.IS_FIRST_TIME, false);
-            mTaskDetailModel = (TaskDetailModel) Utility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA), TaskDetailModel.class);
+            mTaskDetailModel = (TaskDetailModel) GsonUtility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA), TaskDetailModel.class);
             populateData();
         }*/
         if (mTaskDetailModel != null)
@@ -248,9 +250,9 @@ public class TaskQuotesActivity extends BaseAppCompatActivity implements TaskQuo
 
 
             /*String mStartTime = mContext.getString(R.string.format_task_start_time
-                    , Utility.getDateDifference(superCalendar.format(Utility.DATE_FORMAT_FULL_DATE)));
+                    , CalendarUtility.getDateDifference(superCalendar.format(Utility.DATE_FORMAT_FULL_DATE)));
                     tvTaskStartsIn.setText(mStartTime);*/
-            tvTaskStartsIn.setText(Utility.getDateDifference(mContext, superCalendar.format(Utility.DATE_FORMAT_FULL_DATE), Utility.EMPTY_STRING));
+            tvTaskStartsIn.setText(CalendarUtility.getDateDifference(mContext, superCalendar.format(Utility.DATE_FORMAT_FULL_DATE), Utility.EMPTY_STRING));
         }
     }
 

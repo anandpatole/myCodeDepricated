@@ -30,6 +30,8 @@ import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
 import com.cheep.strategicpartner.model.QueAnsModel;
+import com.cheep.utils.CalendarUtility;
+import com.cheep.utils.GsonUtility;
 import com.cheep.utils.HDFCPaymentUtility;
 import com.cheep.utils.LogUtils;
 import com.cheep.utils.PaytmUtility;
@@ -72,25 +74,25 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
 
     public static void newInstance(Context context, TaskDetailModel taskDetailModel) {
         Intent intent = new Intent(context, PaymentChoiceActivity.class);
-        intent.putExtra(Utility.Extra.DATA, Utility.getJsonStringFromObject(taskDetailModel));
+        intent.putExtra(Utility.Extra.DATA, GsonUtility.getJsonStringFromObject(taskDetailModel));
         intent.putExtra(Utility.Extra.IS_PAY_NOW, false);
         context.startActivity(intent);
     }
 
     public static void newInstance(Context context, TaskDetailModel taskDetailModel, ProviderModel providerModel, AddressModel mSelectedAddressModel) {
         Intent intent = new Intent(context, PaymentChoiceActivity.class);
-        intent.putExtra(Utility.Extra.DATA, Utility.getJsonStringFromObject(taskDetailModel));
-        intent.putExtra(Utility.Extra.DATA_2, Utility.getJsonStringFromObject(providerModel));
-        intent.putExtra(Utility.Extra.SELECTED_ADDRESS_MODEL, Utility.getJsonStringFromObject(mSelectedAddressModel));
+        intent.putExtra(Utility.Extra.DATA, GsonUtility.getJsonStringFromObject(taskDetailModel));
+        intent.putExtra(Utility.Extra.DATA_2, GsonUtility.getJsonStringFromObject(providerModel));
+        intent.putExtra(Utility.Extra.SELECTED_ADDRESS_MODEL, GsonUtility.getJsonStringFromObject(mSelectedAddressModel));
         intent.putExtra(Utility.Extra.IS_PAY_NOW, true);
         context.startActivity(intent);
     }
 
     public static void newInstance(BaseFragment baseFragment, TaskDetailModel taskDetailModel, AddressModel mSelectedAddressModel) {
         Intent intent = new Intent(baseFragment.getActivity(), PaymentChoiceActivity.class);
-        intent.putExtra(Utility.Extra.DATA, Utility.getJsonStringFromObject(taskDetailModel));
+        intent.putExtra(Utility.Extra.DATA, GsonUtility.getJsonStringFromObject(taskDetailModel));
         intent.putExtra(Utility.Extra.IS_PAY_NOW, true);
-        intent.putExtra(Utility.Extra.SELECTED_ADDRESS_MODEL, Utility.getJsonStringFromObject(mSelectedAddressModel));
+        intent.putExtra(Utility.Extra.SELECTED_ADDRESS_MODEL, GsonUtility.getJsonStringFromObject(mSelectedAddressModel));
         baseFragment.startActivity(intent);
     }
 
@@ -110,14 +112,14 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
         // TODO: Changes are per new flow pay now/later: 16/11/17
 
         if (getIntent().hasExtra(Utility.Extra.DATA)) {
-            taskDetailModel = (TaskDetailModel) Utility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA), TaskDetailModel.class);
+            taskDetailModel = (TaskDetailModel) GsonUtility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA), TaskDetailModel.class);
             if (getIntent().hasExtra(Utility.Extra.DATA_2)) {
-                providerModel = (ProviderModel) Utility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA_2), ProviderModel.class);
+                providerModel = (ProviderModel) GsonUtility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA_2), ProviderModel.class);
             } else {
                 providerModel = taskDetailModel.selectedProvider;
             }
             if (getIntent().hasExtra(Utility.Extra.SELECTED_ADDRESS_MODEL)) {
-                mSelectedAddressModel = (AddressModel) Utility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.SELECTED_ADDRESS_MODEL), AddressModel.class);
+                mSelectedAddressModel = (AddressModel) GsonUtility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.SELECTED_ADDRESS_MODEL), AddressModel.class);
             }
         }
         isPayNow = getIntent().getBooleanExtra(Utility.Extra.IS_PAY_NOW, false);
@@ -895,7 +897,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
                             superStartDateTimeCalendar.setLocaleTimeZone();
 
                             int onlydate = Integer.parseInt(superStartDateTimeCalendar.format("dd"));
-                            String message = Utility.fetchMessageFromDateOfMonth(mContext, onlydate, superStartDateTimeCalendar, providerModel);
+                            String message = CalendarUtility.fetchMessageFromDateOfMonth(mContext, onlydate, superStartDateTimeCalendar, providerModel);
 
 //                            final UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
                             int badgeResId = Utility.getProLevelBadge(providerModel.pro_level);

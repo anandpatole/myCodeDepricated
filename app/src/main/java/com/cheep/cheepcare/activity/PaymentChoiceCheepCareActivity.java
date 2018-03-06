@@ -33,6 +33,8 @@ import com.cheep.model.UserDetails;
 import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
+import com.cheep.utils.CalendarUtility;
+import com.cheep.utils.GsonUtility;
 import com.cheep.utils.HDFCPaymentUtility;
 import com.cheep.utils.LogUtils;
 import com.cheep.utils.PaytmUtility;
@@ -87,8 +89,8 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
     public static void newInstance(Context context, String cartDetails, CheepCarePaymentDataModel paymentDataModel, CityDetail mCityDetail) {
         Intent intent = new Intent(context, PaymentChoiceCheepCareActivity.class);
         intent.putExtra(Utility.Extra.DATA, cartDetails);
-        intent.putExtra(Utility.Extra.DATA_2, Utility.getJsonStringFromObject(paymentDataModel));
-        intent.putExtra(Utility.Extra.DATA_3, Utility.getJsonStringFromObject(mCityDetail));
+        intent.putExtra(Utility.Extra.DATA_2, GsonUtility.getJsonStringFromObject(paymentDataModel));
+        intent.putExtra(Utility.Extra.DATA_3, GsonUtility.getJsonStringFromObject(mCityDetail));
         intent.putExtra(Utility.Extra.PAYMENT_VIEW, PAYMENT_FOR_SUBSCRIPTION);
         context.startActivity(intent);
     }
@@ -99,7 +101,7 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
      */
     public static void newInstance(Context context, SubscribedTaskDetailModel subscribedTaskDetailModel) {
         Intent intent = new Intent(context, PaymentChoiceCheepCareActivity.class);
-        intent.putExtra(Utility.Extra.DATA, Utility.getJsonStringFromObject(subscribedTaskDetailModel));
+        intent.putExtra(Utility.Extra.DATA, GsonUtility.getJsonStringFromObject(subscribedTaskDetailModel));
         intent.putExtra(Utility.Extra.PAYMENT_VIEW, PAYMENT_FOR_TASK_CREATION);
         context.startActivity(intent);
     }
@@ -124,13 +126,13 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
         paymentFor = getIntent().getStringExtra(Utility.Extra.PAYMENT_VIEW);
         if (paymentFor.equalsIgnoreCase(PAYMENT_FOR_SUBSCRIPTION)) {
             cartDetail = getIntent().getStringExtra(Utility.Extra.DATA);
-            paymentDataModel = (CheepCarePaymentDataModel) Utility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA_2),
+            paymentDataModel = (CheepCarePaymentDataModel) GsonUtility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA_2),
                     CheepCarePaymentDataModel.class);
-            cityDetail = (CityDetail) Utility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA_3), CityDetail.class);
+            cityDetail = (CityDetail) GsonUtility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA_3), CityDetail.class);
             payableAmount = paymentDataModel.payableAmount;
             LogUtils.LOGE(TAG, "initiateUI: paymentDataModel \n============\n" + paymentDataModel);
         } else {
-            subscribedTaskDetailModel = (SubscribedTaskDetailModel) Utility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA), SubscribedTaskDetailModel.class);
+            subscribedTaskDetailModel = (SubscribedTaskDetailModel) GsonUtility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA), SubscribedTaskDetailModel.class);
             payableAmount = subscribedTaskDetailModel.total;
         }
         setupActionbar();
@@ -321,7 +323,7 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
                 LogUtils.LOGE(TAG, "onSuccessOfTaskCreate: ");
                 final String message;
                 if (!TextUtils.isEmpty(subscribedTaskDetailModel.startDateTime)) {
-                    String datetime = Utility.getDate(Long.parseLong(subscribedTaskDetailModel.startDateTime), Utility.DATE_FORMAT_DD_MMMM) + getString(R.string.label_between) + Utility.get2HourTimeSlots(subscribedTaskDetailModel.startDateTime);
+                    String datetime = CalendarUtility.getDate(Long.parseLong(subscribedTaskDetailModel.startDateTime), Utility.DATE_FORMAT_DD_MMMM) + getString(R.string.label_between) + CalendarUtility.get2HourTimeSlots(subscribedTaskDetailModel.startDateTime);
                     message = getString(R.string.msg_task_confirmed_cheep_care, datetime, "3");
                 } else {
                     message = getString(R.string.msg_task_confirmed_cheep_care_no_time_specified);

@@ -33,6 +33,7 @@ import com.cheep.model.UserDetails;
 import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
+import com.cheep.utils.GsonUtility;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.Utility;
 import com.google.android.gms.common.api.Status;
@@ -580,7 +581,7 @@ public class HomeFragment extends BaseFragment {
 
             if (intent.hasExtra(Utility.Extra.IS_INSTA_BOOKING_TASK))
                 if (!intent.getBooleanExtra(Utility.Extra.IS_INSTA_BOOKING_TASK, false)) {
-                    TaskDetailModel mTaskDetailModel = (TaskDetailModel) Utility.getObjectFromJsonString(intent.getStringExtra(Utility.Extra.DATA), TaskDetailModel.class);
+                    TaskDetailModel mTaskDetailModel = (TaskDetailModel) GsonUtility.getObjectFromJsonString(intent.getStringExtra(Utility.Extra.DATA), TaskDetailModel.class);
                     TaskQuotesActivity.newInstance(mContext, mTaskDetailModel, false);
                 }
 

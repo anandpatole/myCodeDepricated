@@ -28,6 +28,7 @@ import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
 import com.cheep.utils.FetchLocationInfoUtility;
+import com.cheep.utils.GsonUtility;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.Utility;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
@@ -44,7 +45,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static android.app.Activity.RESULT_OK;
-import static com.cheep.utils.Utility.getObjectFromJsonString;
 
 /**
  * Created by Giteeka on 28/12/2017.
@@ -502,7 +502,7 @@ public class BottomAddAddressDialog {
                 switch (statusCode) {
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
 
-                        AddressModel addressModel = (AddressModel) getObjectFromJsonString(jsonObject.getJSONObject(NetworkUtility.TAGS.DATA).toString(), AddressModel.class);
+                        AddressModel addressModel = (AddressModel) GsonUtility.getObjectFromJsonString(jsonObject.getJSONObject(NetworkUtility.TAGS.DATA).toString(), AddressModel.class);
                         addAddressListener.onAddAddress(addressModel);
 
                         break;
@@ -626,7 +626,7 @@ public class BottomAddAddressDialog {
                 String error_message;
                 switch (statusCode) {
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
-                        AddressModel addressModel = (AddressModel) getObjectFromJsonString(jsonObject.getJSONObject(NetworkUtility.TAGS.DATA).toString(), AddressModel.class);
+                        AddressModel addressModel = (AddressModel) GsonUtility.getObjectFromJsonString(jsonObject.getJSONObject(NetworkUtility.TAGS.DATA).toString(), AddressModel.class);
                         addAddressListener.onUpdateAddress(addressModel);
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:

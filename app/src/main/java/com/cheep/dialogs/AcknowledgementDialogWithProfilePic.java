@@ -18,6 +18,7 @@ import android.view.Window;
 import com.cheep.R;
 import com.cheep.databinding.DialogFragmentAcknowledgementWithProfilePicBinding;
 import com.cheep.network.NetworkUtility;
+import com.cheep.utils.GlideUtility;
 import com.cheep.utils.Utility;
 
 public class AcknowledgementDialogWithProfilePic extends DialogFragment {
@@ -90,8 +91,8 @@ public class AcknowledgementDialogWithProfilePic extends DialogFragment {
         mDialogFragmentAcknowledgementBinding = DataBindingUtil.inflate(inflater, R.layout.dialog_fragment_acknowledgement_with_profile_pic, container, false);
 
         if (pictureURL != null && (!TextUtils.isEmpty(pictureURL))) {
-//            Utility.showCircularImageView(mContext, TAG, mDialogFragmentAcknowledgementBinding.imgProfilePic, pictureURL, R.drawable.ic_cheep_circular_icon, false, 0);
-            Utility.showCircularImageViewWithColorBorder(mContext, TAG, mDialogFragmentAcknowledgementBinding.imgProfilePic, pictureURL, R.drawable.ic_cheep_circular_icon, R.color.white, true);
+//            GlideUtility.showCircularImageView(mContext, TAG, mDialogFragmentAcknowledgementBinding.imgProfilePic, pictureURL, R.drawable.ic_cheep_circular_icon, false, 0);
+            GlideUtility.showCircularImageViewWithColorBorder(mContext, TAG, mDialogFragmentAcknowledgementBinding.imgProfilePic, pictureURL, R.drawable.ic_cheep_circular_icon, R.color.white, true);
         } else {
             mDialogFragmentAcknowledgementBinding.imgProfilePic.setImageResource(Utility.DEFAULT_CHEEP_LOGO);
         }
@@ -109,7 +110,7 @@ public class AcknowledgementDialogWithProfilePic extends DialogFragment {
         // set badge for prp profile
         if (badgeResID != -1) {
 //            mDialogFragmentAcknowledgementBinding.ivBadge.setImageResource(badgeResID);
-            Utility.showCircularImageViewWithColorBorder(mContext, TAG, mDialogFragmentAcknowledgementBinding.ivBadge, badgeResID, R.color.white, true);
+            GlideUtility.showCircularImageViewWithColorBorder(mContext, TAG, mDialogFragmentAcknowledgementBinding.ivBadge, badgeResID, R.color.white, true);
         } else {
             mDialogFragmentAcknowledgementBinding.ivBadge.setVisibility(View.GONE);
         }

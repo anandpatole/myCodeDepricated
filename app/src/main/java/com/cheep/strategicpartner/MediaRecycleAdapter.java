@@ -14,7 +14,7 @@ import com.bumptech.glide.request.target.Target;
 import com.cheep.R;
 import com.cheep.strategicpartner.model.MediaModel;
 import com.cheep.utils.LogUtils;
-import com.cheep.utils.Utility;
+import com.cheep.utils.MediaUtility;
 
 import java.util.ArrayList;
 
@@ -111,7 +111,7 @@ public class MediaRecycleAdapter extends RecyclerView.Adapter<MediaRecycleAdapte
                 @Override
                 public boolean onResourceReady(Bitmap resource, String model, Target<Bitmap> target, boolean isFromMemoryCache, boolean isFirstResource) {
                     if (mIsStrategicPartner) {
-                        mImgThumb.setImageBitmap(Utility.getRoundedCornerBitmap(resource, mImgThumb.getContext()));
+                        mImgThumb.setImageBitmap(MediaUtility.getRoundedCornerBitmap(resource, mImgThumb.getContext()));
                     } else {
                         mImgThumb.setImageBitmap(resource);
                     }

@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.cheep.R;
+import com.cheep.utils.GlideUtility;
 import com.cheep.utils.SharedElementTransitionHelper;
 import com.cheep.utils.Utility;
 
@@ -58,7 +59,7 @@ public class ZoomImageActivity extends BaseAppCompatActivity {
 
         String imageUrl = getIntent().getStringExtra(Utility.Extra.IMAGE_URL);
         final ImageView imageView = (ImageView) findViewById(R.id.image_view);
-        Utility.loadImageView(ZoomImageActivity.this, imageView, imageUrl, R.drawable.ic_cheep_pro_logo_square_small);
+        GlideUtility.loadImageView(ZoomImageActivity.this, imageView, imageUrl, R.drawable.ic_cheep_pro_logo_square_small);
 
         /*Glide.with(mContext).load(imageUrl).asBitmap().into(new SimpleTarget<Bitmap>() {
             @Override

@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import com.cheep.R;
 import com.cheep.databinding.RowCommentsBinding;
 import com.cheep.model.CommentsModel;
+import com.cheep.utils.GlideUtility;
 import com.cheep.utils.SuperCalendar;
 import com.cheep.utils.Utility;
 
@@ -79,7 +80,7 @@ public class CommentsRecyclerViewAdapter extends RecyclerView.Adapter<CommentsRe
             holder.mRowCommentsBinding.textDate.setText(model.comment_date);
         }
 
-        Utility.showCircularImageView(holder.mRowCommentsBinding.textMessage.getContext(), TAG, holder.mRowCommentsBinding.imgProfile, model.commenter_profile_image, Utility.DEFAULT_CHEEP_LOGO);
+        GlideUtility.showCircularImageView(holder.mRowCommentsBinding.textMessage.getContext(), TAG, holder.mRowCommentsBinding.imgProfile, model.commenter_profile_image, Utility.DEFAULT_CHEEP_LOGO);
 
     }
 

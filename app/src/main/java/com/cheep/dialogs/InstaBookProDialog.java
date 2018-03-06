@@ -17,6 +17,7 @@ import android.view.Window;
 import com.cheep.R;
 import com.cheep.databinding.DialogInstabookProInfoBinding;
 import com.cheep.model.InstaBookingProDetail;
+import com.cheep.utils.GlideUtility;
 import com.cheep.utils.Utility;
 
 public class InstaBookProDialog extends DialogFragment {
@@ -80,7 +81,7 @@ public class InstaBookProDialog extends DialogFragment {
         mDialog = DataBindingUtil.inflate(inflater, R.layout.dialog_instabook_pro_info, container, false);
 
         if (!TextUtils.isEmpty(merchantDetail.profileImg)) {
-            Utility.showCircularImageView(mContext, TAG, mDialog.imgProfilePic, merchantDetail.profileImg, R.drawable.ic_cheep_circular_icon, false, 0);
+            GlideUtility.showCircularImageView(mContext, TAG, mDialog.imgProfilePic, merchantDetail.profileImg, R.drawable.ic_cheep_circular_icon, false, 0);
         } else {
             mDialog.imgProfilePic.setImageResource(Utility.DEFAULT_CHEEP_LOGO);
         }

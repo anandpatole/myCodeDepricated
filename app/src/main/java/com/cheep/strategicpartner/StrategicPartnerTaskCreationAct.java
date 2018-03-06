@@ -26,6 +26,8 @@ import com.cheep.strategicpartner.model.AllSubSubCat;
 import com.cheep.strategicpartner.model.MediaModel;
 import com.cheep.strategicpartner.model.QueAnsModel;
 import com.cheep.strategicpartner.model.StrategicPartnerServiceModel;
+import com.cheep.utils.GlideUtility;
+import com.cheep.utils.GsonUtility;
 import com.cheep.utils.LogUtils;
 import com.cheep.utils.Utility;
 import com.google.android.gms.common.api.Status;
@@ -65,7 +67,7 @@ public class StrategicPartnerTaskCreationAct extends BaseAppCompatActivity {
 
     public static void getInstance(Context mContext, BannerImageModel model) {
         Intent intent = new Intent(mContext, StrategicPartnerTaskCreationAct.class);
-        intent.putExtra(Utility.Extra.DATA, Utility.getJsonStringFromObject(model));
+        intent.putExtra(Utility.Extra.DATA, GsonUtility.getJsonStringFromObject(model));
         mContext.startActivity(intent);
     }
 
@@ -89,10 +91,10 @@ public class StrategicPartnerTaskCreationAct extends BaseAppCompatActivity {
         if (getIntent().getExtras() != null) {
             // Fetch banner Model
             LogUtils.LOGE(TAG, " data " + getIntent().getStringExtra(Utility.Extra.DATA));
-            mBannerImageModel = (BannerImageModel) Utility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA), BannerImageModel.class);
+            mBannerImageModel = (BannerImageModel) GsonUtility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA), BannerImageModel.class);
             if (mBannerImageModel != null) {
                 // Load PRO image
-                Utility.showCircularImageViewWithColorBorder(mContext, TAG, mActivityTaskCreationForStrategicPartnerBinding.imgLogo, mBannerImageModel.imgCatImageUrl, Utility.DEFAULT_CHEEP_LOGO, R.color.dark_blue_variant_1, true);
+                GlideUtility.showCircularImageViewWithColorBorder(mContext, TAG, mActivityTaskCreationForStrategicPartnerBinding.imgLogo, mBannerImageModel.imgCatImageUrl, Utility.DEFAULT_CHEEP_LOGO, R.color.dark_blue_variant_1, true);
 
                 isSingleSelection = mBannerImageModel.minimum_selection.equalsIgnoreCase("1");
                 mActivityTaskCreationForStrategicPartnerBinding.textTitle.setText(mBannerImageModel.name != null ? mBannerImageModel.name : Utility.EMPTY_STRING);
@@ -100,7 +102,7 @@ public class StrategicPartnerTaskCreationAct extends BaseAppCompatActivity {
         }
 
         mActivityTaskCreationForStrategicPartnerBinding.imgLogo.setVisibility(View.GONE);
-//        Utility.loadImageView(this, mActivityTaskCreationForStrategicPartnerBinding.imgLogo, mBannerImageModel.imgCatImageUrl, R.drawable.icon_profile_img);
+//        GlideUtility.loadImageView(this, mActivityTaskCreationForStrategicPartnerBinding.imgLogo, mBannerImageModel.imgCatImageUrl, R.drawable.icon_profile_img);
         mActivityTaskCreationForStrategicPartnerBinding.textStepDesc.setText(getString(R.string.step_1_desc_for_strategic_partner));
 
 
@@ -172,7 +174,7 @@ public class StrategicPartnerTaskCreationAct extends BaseAppCompatActivity {
                 mActivityTaskCreationForStrategicPartnerBinding.frameBannerImage.setLayoutParams(params);
 
                 // Load the image now.
-                Utility.loadImageView(mContext, mActivityTaskCreationForStrategicPartnerBinding.imgService, mBannerImageModel.bannerImage, R.drawable.gradient_black);
+                GlideUtility.loadImageView(mContext, mActivityTaskCreationForStrategicPartnerBinding.imgService, mBannerImageModel.bannerImage, R.drawable.gradient_black);
             }
         });
 

@@ -26,6 +26,9 @@ import com.cheep.databinding.ActivityBookingConfirmationCcBinding;
 import com.cheep.model.MessageEvent;
 import com.cheep.model.SubServiceDetailModel;
 import com.cheep.network.NetworkUtility;
+import com.cheep.utils.CalendarUtility;
+import com.cheep.utils.GlideUtility;
+import com.cheep.utils.GsonUtility;
 import com.cheep.utils.LogUtils;
 import com.cheep.utils.SuperCalendar;
 import com.cheep.utils.Utility;
@@ -48,7 +51,7 @@ public class BookingConfirmationCcActivity extends BaseAppCompatActivity {
 
     public static void newInstance(Context context, SubscribedTaskDetailModel subscribedTaskDetailModel) {
         Intent intent = new Intent(context, BookingConfirmationCcActivity.class);
-        intent.putExtra(Utility.Extra.DATA, Utility.getJsonStringFromObject(subscribedTaskDetailModel));
+        intent.putExtra(Utility.Extra.DATA, GsonUtility.getJsonStringFromObject(subscribedTaskDetailModel));
         context.startActivity(intent);
     }
 
@@ -72,7 +75,7 @@ public class BookingConfirmationCcActivity extends BaseAppCompatActivity {
 //        if (getIntent().getExtras() != null && getIntent().hasExtra(Utility.Extra.SELECTED_PACKAGE_ID))
 //            mCarePackageId = getIntent().getExtras().getString(Utility.Extra.SELECTED_PACKAGE_ID);
 //        if (getIntent().getExtras() != null && getIntent().hasExtra(Utility.Extra.CATEGORY_DATA))
-//            jobCategoryModel = (JobCategoryModel) Utility.getObjectFromJsonString(getIntent().getExtras().getString(Utility.Extra.CATEGORY_DATA), JobCategoryModel.class);
+//            jobCategoryModel = (JobCategoryModel) GsonUtility.getObjectFromJsonString(getIntent().getExtras().getString(Utility.Extra.CATEGORY_DATA), JobCategoryModel.class);
 //        if (getIntent().getExtras() != null && getIntent().hasExtra(Utility.Extra.DATA))
 //            freeList = (ArrayList<SubServiceDetailModel>) getIntent().getExtras().getSerializable(Utility.Extra.DATA);
 //        if (getIntent().getExtras() != null && getIntent().hasExtra(Utility.Extra.DATA_2))
@@ -86,10 +89,10 @@ public class BookingConfirmationCcActivity extends BaseAppCompatActivity {
 //        if (getIntent().getExtras() != null && getIntent().hasExtra(Utility.Extra.TASK_TYPE))
 //            taskType = getIntent().getExtras().getString(Utility.Extra.TASK_TYPE);
 //        if (getIntent().getExtras() != null && getIntent().hasExtra(Utility.Extra.ADMIN_SETTING))
-//            adminSettingModel = (AdminSettingModel) Utility.getObjectFromJsonString(getIntent().getExtras().getString(Utility.Extra.ADMIN_SETTING), AdminSettingModel.class);
+//            adminSettingModel = (AdminSettingModel) GsonUtility.getObjectFromJsonString(getIntent().getExtras().getString(Utility.Extra.ADMIN_SETTING), AdminSettingModel.class);
 
         if (getIntent().getExtras() != null && getIntent().hasExtra(Utility.Extra.DATA))
-            subscribedTaskDetailModel = (SubscribedTaskDetailModel) Utility.getObjectFromJsonString(getIntent().getExtras().getString(Utility.Extra.DATA), SubscribedTaskDetailModel.class);
+            subscribedTaskDetailModel = (SubscribedTaskDetailModel) GsonUtility.getObjectFromJsonString(getIntent().getExtras().getString(Utility.Extra.DATA), SubscribedTaskDetailModel.class);
 
 
         setSupportActionBar(mBinding.toolbar);
@@ -113,7 +116,7 @@ public class BookingConfirmationCcActivity extends BaseAppCompatActivity {
         spannableStringBuilder.append(getSpannableString(getString(R.string.msg_task_description), ContextCompat.getColor(this, R.color.splash_gradient_end), true));
         if (!TextUtils.isEmpty(subscribedTaskDetailModel.startDateTime)) {
             spannableStringBuilder.append(getSpannableString(getString(R.string.label_on), ContextCompat.getColor(this, R.color.grey_varient_8), false));
-            String datetime = Utility.getDate(Long.parseLong(subscribedTaskDetailModel.startDateTime), Utility.DATE_FORMAT_DD_MMMM) + ", " + Utility.get2HourTimeSlots(subscribedTaskDetailModel.startDateTime);
+            String datetime = CalendarUtility.getDate(Long.parseLong(subscribedTaskDetailModel.startDateTime), Utility.DATE_FORMAT_DD_MMMM) + ", " + CalendarUtility.get2HourTimeSlots(subscribedTaskDetailModel.startDateTime);
             spannableStringBuilder.append(getSpannableString(datetime, ContextCompat.getColor(this, R.color.splash_gradient_end), true));
         }
         spannableStringBuilder.append(getSpannableString(getString(R.string.label_at), ContextCompat.getColor(this, R.color.grey_varient_8), false));
@@ -122,7 +125,7 @@ public class BookingConfirmationCcActivity extends BaseAppCompatActivity {
         mBinding.tvTaskDescription.setText(spannableStringBuilder);
 
         // banner image of cat
-        Utility.loadImageView(mContext, mBinding.imgService, subscribedTaskDetailModel.jobCategoryModel.catImage, R.drawable.gradient_black);
+        GlideUtility.loadImageView(mContext, mBinding.imgService, subscribedTaskDetailModel.jobCategoryModel.catImage, R.drawable.gradient_black);
 
 
         // free service list
@@ -305,7 +308,7 @@ public class BookingConfirmationCcActivity extends BaseAppCompatActivity {
 
         final String message;
         if (!TextUtils.isEmpty(subscribedTaskDetailModel.startDateTime)) {
-            String datetime = Utility.getDate(Long.parseLong(subscribedTaskDetailModel.startDateTime), Utility.DATE_FORMAT_DD_MMMM) + getString(R.string.label_between) + Utility.get2HourTimeSlots(subscribedTaskDetailModel.startDateTime);
+            String datetime = CalendarUtility.getDate(Long.parseLong(subscribedTaskDetailModel.startDateTime), Utility.DATE_FORMAT_DD_MMMM) + getString(R.string.label_between) + CalendarUtility.get2HourTimeSlots(subscribedTaskDetailModel.startDateTime);
             message = getString(R.string.msg_task_confirmed_cheep_care, datetime, "3");
         } else {
             message = getString(R.string.msg_task_confirmed_cheep_care_no_time_specified);

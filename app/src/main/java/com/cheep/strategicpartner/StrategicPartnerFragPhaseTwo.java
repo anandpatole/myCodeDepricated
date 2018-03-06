@@ -66,7 +66,9 @@ import com.cheep.strategicpartner.model.MediaModel;
 import com.cheep.strategicpartner.model.QueAnsModel;
 import com.cheep.strategicpartner.model.StrategicPartnerServiceModel;
 import com.cheep.strategicpartner.recordvideo.RecordVideoNewActivity;
+import com.cheep.utils.GsonUtility;
 import com.cheep.utils.LogUtils;
+import com.cheep.utils.MediaUtility;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.RequestPermission;
 import com.cheep.utils.SuperCalendar;
@@ -321,7 +323,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment implements Reques
     private void inflateUI(String response) {
         // top layout
         // get question answer list
-        mList = Utility.getObjectListFromJsonString(response, QueAnsModel[].class);        // load list
+        mList = GsonUtility.getObjectListFromJsonString(response, QueAnsModel[].class);        // load list
 
         mStrategicPartnerTaskCreationAct.setQuestionsList(mList);
         for (QueAnsModel model : mList) {
@@ -1585,7 +1587,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment implements Reques
             Log.i(TAG, "onActivityResult: CurrentPath" + mCurrentPhotoPath);
             File f = new File(mCurrentPhotoPath);
             Uri contentUri = Uri.fromFile(f);
-            mCurrentPhotoPath = Utility.getPath(mStrategicPartnerTaskCreationAct, contentUri);
+            mCurrentPhotoPath = MediaUtility.getPath(mStrategicPartnerTaskCreationAct, contentUri);
             uploadFile(mCurrentPhotoPath, MediaModel.MediaType.TYPE_IMAGE);
 //            mMediaRecycleAdapter.addImage(new MediaModel(mCurrentPhotoPath, MediaModel.MediaType.TYPE_IMAGE));
 //            checkMediaArraySize();
@@ -1594,7 +1596,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment implements Reques
         // image chosen from gallery result
         else if (requestCode == Utility.REQUEST_CODE_IMAGE_SELECT && resultCode == Activity.RESULT_OK && data != null) {
             Log.i(TAG, "onActivityResult: " + data.getData().toString());
-            mCurrentPhotoPath = Utility.getPath(mStrategicPartnerTaskCreationAct, data.getData());
+            mCurrentPhotoPath = MediaUtility.getPath(mStrategicPartnerTaskCreationAct, data.getData());
             uploadFile(mCurrentPhotoPath, MediaModel.MediaType.TYPE_IMAGE);
 //            mMediaRecycleAdapter.addImage(new MediaModel(mCurrentPhotoPath, MediaModel.MediaType.TYPE_IMAGE));
 //            checkMediaArraySize();
@@ -1612,7 +1614,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment implements Reques
         // video chosen from gallery result
         else if (requestCode == Utility.REQUEST_CODE_VIDEO_SELECT && resultCode == RESULT_OK && data != null) {
             Uri selectedImageUri = data.getData();
-            mCurrentPhotoPath = Utility.getPath(mStrategicPartnerTaskCreationAct, selectedImageUri);
+            mCurrentPhotoPath = MediaUtility.getPath(mStrategicPartnerTaskCreationAct, selectedImageUri);
 
             if (mCurrentPhotoPath != null && !mCurrentPhotoPath.equals("")) {
                 if (AmazonUtils.getDuration(mCurrentPhotoPath) > 10) {

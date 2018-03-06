@@ -22,6 +22,7 @@ import com.cheep.network.VolleyNetworkRequest;
 import com.cheep.strategicpartner.model.AllSubSubCat;
 import com.cheep.strategicpartner.model.StrategicPartnerServiceModel;
 import com.cheep.utils.ErrorLoadingHelper;
+import com.cheep.utils.GsonUtility;
 import com.cheep.utils.LogUtils;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.Utility;
@@ -199,7 +200,7 @@ public class StrategicPartnerFragPhaseOne extends BaseFragment {
                 String error_message;
                 switch (statusCode) {
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
-                        list = Utility.getObjectListFromJsonString(jsonObject.optString(NetworkUtility.TAGS.DATA), StrategicPartnerServiceModel[].class);
+                        list = GsonUtility.getObjectListFromJsonString(jsonObject.optString(NetworkUtility.TAGS.DATA), StrategicPartnerServiceModel[].class);
                         ExpandableServicesRecycleAdapter expandableRecyclerViewAdapter = new ExpandableServicesRecycleAdapter(list, mStrategicPartnerTaskCreationAct.isSingleSelection);
                         mFragmentStrategicPartnerPhaseOneBinding.recyclerView.setAdapter(expandableRecyclerViewAdapter);
                         errorLoadingHelper.success();

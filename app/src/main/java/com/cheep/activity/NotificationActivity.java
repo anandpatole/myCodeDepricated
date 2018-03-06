@@ -22,6 +22,7 @@ import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
 import com.cheep.strategicpartner.TaskSummaryStrategicPartnerActivity;
 import com.cheep.utils.ErrorLoadingHelper;
+import com.cheep.utils.GsonUtility;
 import com.cheep.utils.LoadMoreRecyclerAdapter;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.Utility;
@@ -161,7 +162,7 @@ public class NotificationActivity extends BaseAppCompatActivity implements Notif
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
                         ArrayList<NotificationModel> list;
                         try {
-                            list = Utility.getObjectListFromJsonString(jsonObject.optString(NetworkUtility.TAGS.DATA), NotificationModel[].class);
+                            list = GsonUtility.getObjectListFromJsonString(jsonObject.optString(NetworkUtility.TAGS.DATA), NotificationModel[].class);
                         } catch (Exception e) {
                             Log.i(TAG, "onResponse: Error" + e.toString());
                             list = new ArrayList<>();
