@@ -85,6 +85,8 @@ public class Utility {
     public static final String DYNAMIC_LINK_CATEGORY_HOME = "home";
     public static final String COUPON_DUNIA_CODE_PREFIX = "CHPCD";
     public static final String NEW_LINE = "\n";
+    public static final String MIN_HOUR_DIFFERENCE_WEEKEND = "6";
+    public static final String MIN_HOUR_DIFFERENCE_WEEKDAY = "3";
 
     public static final String STATIC_LAT = "19.1363246";
     public static final String STATIC_LNG = "72.82766";

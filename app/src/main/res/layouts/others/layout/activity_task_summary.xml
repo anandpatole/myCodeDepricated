@@ -653,13 +653,44 @@
                                 android:id="@+id/text_task_when"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_below="@+id/ln_sub_category"
                                 android:background="@color/transparent"
                                 android:gravity="start"
-                                android:paddingBottom="@dimen/scale_8dp"
+                                android:paddingBottom="@dimen/scale_24dp"
                                 android:paddingTop="@dimen/scale_8dp"
                                 android:textColor="@color/black"
                                 android:textColorHint="@color/grey_dark_color_2"
+                                android:textSize="@dimen/text_size_12sp"
+                                android:visibility="visible"
+                                tools:text="25 Apr between 1600 hrs - 1800 hrs"/>
+
+                            <com.cheep.custom_view.CFTextViewRegular
+                                android:id="@+id/tv_confirm_availability"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="@dimen/scale_8dp"
+                                android:layout_marginTop="-16dp"
+                                android:background="@drawable/rounded_rect_blue"
+                                android:includeFontPadding="false"
+                                android:paddingBottom="@dimen/scale_4dp"
+                                android:paddingLeft="@dimen/scale_8dp"
+                                android:paddingRight="@dimen/scale_8dp"
+                                android:paddingTop="@dimen/scale_4dp"
+                                android:text="@string/label_confirm_availability"
+                                android:textColor="@color/white"
+                                android:textSize="@dimen/text_size_14sp"
+                                android:visibility="visible"/>
+
+                            <com.cheep.custom_view.CFTextViewRegular
+                                android:id="@+id/tv_confirm_availability_info"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="@dimen/scale_16dp"
+                                android:layout_marginRight="@dimen/scale_12dp"
+                                android:drawableLeft="@drawable/ic_info_blue"
+                                android:drawablePadding="@dimen/scale_8dp"
+                                android:paddingBottom="@dimen/scale_4dp"
+                                android:text="@string/msg_confirm_availability_info"
+                                android:textColor="@color/grey_varient_10"
                                 android:textSize="@dimen/text_size_12sp"
                                 android:visibility="visible"/>
                         </LinearLayout>

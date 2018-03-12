@@ -108,8 +108,13 @@ public class SuperCalendar {
      */
     public SuperCalendar getNext3HoursTime(boolean isWeekend) {
         try {
+
+            int minHourDiffWeekend = Integer.valueOf(Utility.MIN_HOUR_DIFFERENCE_WEEKEND);
+            int minHourDiffWeekDay = Integer.valueOf(Utility.MIN_HOUR_DIFFERENCE_WEEKDAY);
+
             SuperCalendar superCalendar = clone();
-            superCalendar.mCalendar.add(Calendar.HOUR, isWeekend ? 6 : 3);
+            superCalendar.mCalendar.add(Calendar.HOUR, isWeekend ? minHourDiffWeekend : minHourDiffWeekDay);
+
             return superCalendar;
         } catch (CloneNotSupportedException e) {
             e.printStackTrace();
