@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import com.cheep.R;
 import com.cheep.databinding.RowMediaFileCcBinding;
 import com.cheep.strategicpartner.model.MediaModel;
-import com.cheep.utils.Utility;
+import com.cheep.utils.GlideUtility;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -72,7 +72,7 @@ public class MediaAdapter extends RecyclerView.Adapter<MediaAdapter.MediaViewHol
         Context context = holder.mBinding.getRoot().getContext();
         holder.mBinding.imgRemove.setVisibility(View.VISIBLE);
         holder.mBinding.imgThumb.setVisibility(View.VISIBLE);
-        Utility.loadImageView(context
+        GlideUtility.loadImageView(context
                 , holder.mBinding.imgThumb
                 , model.localFilePath);
 //        }

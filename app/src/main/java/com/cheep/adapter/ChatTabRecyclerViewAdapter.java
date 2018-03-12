@@ -12,6 +12,7 @@ import com.cheep.databinding.RowFooterProgressBinding;
 import com.cheep.databinding.RowTabChatBinding;
 import com.cheep.firebase.FirebaseUtils;
 import com.cheep.firebase.model.TaskChatModel;
+import com.cheep.utils.GlideUtility;
 import com.cheep.utils.Utility;
 
 import java.util.ArrayList;
@@ -184,7 +185,7 @@ public class ChatTabRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                 holder.mRowTabHomeBinding.textDesc.setText(model.taskDesc);
             } else //Single participants
             {
-                Utility.showCircularImageView(holder.mRowTabHomeBinding.imgProfile.getContext(), TAG, holder.mRowTabHomeBinding.imgProfile, model.participantPhotoUrl, Utility.DEFAULT_CHEEP_LOGO);
+                GlideUtility.showCircularImageView(holder.mRowTabHomeBinding.imgProfile.getContext(), TAG, holder.mRowTabHomeBinding.imgProfile, model.participantPhotoUrl, Utility.DEFAULT_CHEEP_LOGO);
 
                 holder.mRowTabHomeBinding.textName.setText(model.participantName);
                 holder.mRowTabHomeBinding.imgProfile.setVisibility(View.VISIBLE);

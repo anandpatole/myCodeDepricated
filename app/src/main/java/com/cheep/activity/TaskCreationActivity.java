@@ -39,6 +39,8 @@ import com.cheep.model.UserDetails;
 import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
+import com.cheep.utils.GlideUtility;
+import com.cheep.utils.GsonUtility;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.SuperCalendar;
 import com.cheep.utils.Utility;
@@ -72,7 +74,7 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
 
     public static void getInstance(Context mContext, JobCategoryModel model) {
         Intent intent = new Intent(mContext, TaskCreationActivity.class);
-        intent.putExtra(Utility.Extra.DATA, Utility.getJsonStringFromObject(model));
+        intent.putExtra(Utility.Extra.DATA, GsonUtility.getJsonStringFromObject(model));
         mContext.startActivity(intent);
     }
 
@@ -90,7 +92,7 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
     protected void initiateUI() {
         if (getIntent().getExtras() != null) {
             // Fetch JobCategory Model
-            mJobCategoryModel = (JobCategoryModel) Utility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA), JobCategoryModel.class);
+            mJobCategoryModel = (JobCategoryModel) GsonUtility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA), JobCategoryModel.class);
         }
 
         // Setting up Toolbar
@@ -111,8 +113,8 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
         mActivityTaskCreateBinding.textTitle.setText(mJobCategoryModel.catName != null ? mJobCategoryModel.catName : Utility.EMPTY_STRING);
 
         // Set up image
-        Utility.loadImageView(mContext, mActivityTaskCreateBinding.imgService, mJobCategoryModel.catImage, R.drawable.gradient_black);
-        Utility.loadImageView(mContext, mActivityTaskCreateBinding.imgService, mJobCategoryModel.catImageExtras.thumb, R.drawable.gradient_black);
+        GlideUtility.loadImageView(mContext, mActivityTaskCreateBinding.imgService, mJobCategoryModel.catImage, R.drawable.gradient_black);
+        GlideUtility.loadImageView(mContext, mActivityTaskCreateBinding.imgService, mJobCategoryModel.catImageExtras.thumb, R.drawable.gradient_black);
 
         // Setting viewpager
         setupViewPager(mActivityTaskCreateBinding.viewpager);
@@ -586,7 +588,7 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
                         /*
                           Below was older approach when app needs to update the same task page.
                          */
-//                        TaskDetailModel taskDetailModel = (TaskDetailModel) Utility.getObjectFromJsonString(jsonObject.optString(NetworkUtility.TAGS.DATA), TaskDetailModel.class);
+//                        TaskDetailModel taskDetailModel = (TaskDetailModel) GsonUtility.getObjectFromJsonString(jsonObject.optString(NetworkUtility.TAGS.DATA), TaskDetailModel.class);
 //                        getIntent().putExtra(Utility.Extra.DATA, jsonObject.optString(NetworkUtility.TAGS.DATA));
 //                        getIntent().putExtra(Utility.Extra.IS_FIRST_TIME, true);
 //                        getIntent().setAction(Utility.ACTION_HIRE_PROVIDER);
@@ -646,7 +648,7 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
                         /*
                           Below was older approach when app needs to update the same task page.
                          */
-//                        TaskDetailModel taskDetailModel = (TaskDetailModel) Utility.getObjectFromJsonString(jsonObject.optString(NetworkUtility.TAGS.DATA), TaskDetailModel.class);
+//                        TaskDetailModel taskDetailModel = (TaskDetailModel) GsonUtility.getObjectFromJsonString(jsonObject.optString(NetworkUtility.TAGS.DATA), TaskDetailModel.class);
 //                        getIntent().putExtra(Utility.Extra.DATA, jsonObject.optString(NetworkUtility.TAGS.DATA));
 //                        getIntent().putExtra(Utility.Extra.IS_FIRST_TIME, true);
 //                        getIntent().setAction(Utility.ACTION_HIRE_PROVIDER);
@@ -657,7 +659,7 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
                           Now according to the new flow, once task created
                           app will be redirected to MyTask Detail screen.
                          */
-                        final InstaBookingProDetail taskDetailModel = (InstaBookingProDetail) Utility.getObjectFromJsonString(jsonObject.optString(NetworkUtility.TAGS.DATA), InstaBookingProDetail.class);
+                        final InstaBookingProDetail taskDetailModel = (InstaBookingProDetail) GsonUtility.getObjectFromJsonString(jsonObject.optString(NetworkUtility.TAGS.DATA), InstaBookingProDetail.class);
                         if (taskDetailModel != null && taskDetailModel.spId != null)
                             onSuccessOfGetProForInstaBooking(taskDetailModel);
                         else
@@ -767,7 +769,7 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
      * This method would going to call when task completed successfully
      */
     private void onSuccessfullTaskCompletion(JSONObject jsonObject) {
-        final TaskDetailModel taskDetailModel = (TaskDetailModel) Utility.getObjectFromJsonString(jsonObject.optString(NetworkUtility.TAGS.DATA), TaskDetailModel.class);
+        final TaskDetailModel taskDetailModel = (TaskDetailModel) GsonUtility.getObjectFromJsonString(jsonObject.optString(NetworkUtility.TAGS.DATA), TaskDetailModel.class);
         if (taskDetailModel != null) {
             /* * Add new task detail on firebase
              * @Sanjay 20 Feb 2016
@@ -800,7 +802,7 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
                 if (PreferenceUtility.getInstance(mContext).isHomeScreenVisible()) {
                     //Sending Broadcast to the HomeScreen Screen.
                     Intent intent = new Intent(Utility.BR_ON_TASK_CREATED);
-                    intent.putExtra(Utility.Extra.DATA, Utility.getJsonStringFromObject(taskDetailModel));
+                    intent.putExtra(Utility.Extra.DATA, GsonUtility.getJsonStringFromObject(taskDetailModel));
                     Log.d(TAG, "onAcknowledgementAccepted: prefed >>>>> " + taskDetailModel.isPrefedQuote);
                     intent.putExtra(Utility.Extra.IS_INSTA_BOOKING_TASK, Utility.BOOLEAN.NO.equalsIgnoreCase(taskDetailModel.isPrefedQuote));
                     sendBroadcast(intent);

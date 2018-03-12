@@ -19,6 +19,7 @@ import com.cheep.fragment.BaseFragment;
 import com.cheep.fragment.HomeFragment;
 import com.cheep.fragment.HomeTabFragment;
 import com.cheep.network.NetworkUtility;
+import com.cheep.utils.GsonUtility;
 import com.cheep.utils.Utility;
 
 import java.util.ArrayList;
@@ -138,7 +139,7 @@ public class SubscriptionBannerFragment extends BaseFragment {
                         HomeTabFragment fragmentByTag = (HomeTabFragment) homeFragment.getChildFragmentManager().findFragmentByTag(HomeTabFragment.TAG);
                         if (fragmentByTag == null)
                             return;
-                        String cheepcareBannerListString = Utility.getJsonStringFromObject(fragmentByTag.careBannerModelArrayList);
+                        String cheepcareBannerListString = GsonUtility.getJsonStringFromObject(fragmentByTag.careBannerModelArrayList);
                         if (bannerImageModel.isSubscribed.equalsIgnoreCase(Utility.BOOLEAN.YES)) {
                             ManageSubscriptionActivity.newInstance(mContext, bannerImageModel, true, cheepcareBannerListString);
                         } else {

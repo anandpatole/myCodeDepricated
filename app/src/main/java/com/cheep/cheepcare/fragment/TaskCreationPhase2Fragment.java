@@ -71,7 +71,10 @@ import com.cheep.network.VolleyNetworkRequest;
 import com.cheep.strategicpartner.AmazonUtils;
 import com.cheep.strategicpartner.model.MediaModel;
 import com.cheep.strategicpartner.recordvideo.RecordVideoNewActivity;
+import com.cheep.utils.GlideUtility;
+import com.cheep.utils.GsonUtility;
 import com.cheep.utils.LogUtils;
+import com.cheep.utils.MediaUtility;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.RequestPermission;
 import com.cheep.utils.SuperCalendar;
@@ -445,7 +448,7 @@ public class TaskCreationPhase2Fragment extends BaseFragment implements
                                                 hideProgressDialog();
                                                 for (PackageDetail detail : cityLandingPageModel.packageDetailList)
                                                     if (detail.id.equalsIgnoreCase(mTaskCreationCCActivity.mCarePackageId)) {
-                                                        PackageCustomizationActivity.newInstance(mContext, cityLandingPageModel.cityDetail, detail, Utility.getJsonStringFromObject(cityLandingPageModel.packageDetailList), cityLandingPageModel.adminSetting);
+                                                        PackageCustomizationActivity.newInstance(mContext, cityLandingPageModel.cityDetail, detail, GsonUtility.getJsonStringFromObject(cityLandingPageModel.packageDetailList), cityLandingPageModel.adminSetting);
                                                         break;
                                                     }
                                             }
@@ -812,14 +815,14 @@ public class TaskCreationPhase2Fragment extends BaseFragment implements
             Log.i(TAG, "onActivityResult: CurrentPath" + mCurrentPhotoPath);
             File f = new File(mCurrentPhotoPath);
             Uri contentUri = Uri.fromFile(f);
-            mCurrentPhotoPath = Utility.getPath(mTaskCreationCCActivity, contentUri);
+            mCurrentPhotoPath = MediaUtility.getPath(mTaskCreationCCActivity, contentUri);
             uploadFile(mCurrentPhotoPath, MediaModel.MediaType.TYPE_IMAGE);
         }
 
         // image chosen from gallery result
         else if (requestCode == Utility.REQUEST_CODE_IMAGE_SELECT && resultCode == Activity.RESULT_OK && data != null) {
             Log.i(TAG, "onActivityResult: " + data.getData().toString());
-            mCurrentPhotoPath = Utility.getPath(mTaskCreationCCActivity, data.getData());
+            mCurrentPhotoPath = MediaUtility.getPath(mTaskCreationCCActivity, data.getData());
             uploadFile(mCurrentPhotoPath, MediaModel.MediaType.TYPE_IMAGE);
         }
 
@@ -833,7 +836,7 @@ public class TaskCreationPhase2Fragment extends BaseFragment implements
         // video chosen from gallery result
         else if (requestCode == Utility.REQUEST_CODE_VIDEO_SELECT && resultCode == RESULT_OK && data != null) {
             Uri selectedImageUri = data.getData();
-            mCurrentPhotoPath = Utility.getPath(mTaskCreationCCActivity, selectedImageUri);
+            mCurrentPhotoPath = MediaUtility.getPath(mTaskCreationCCActivity, selectedImageUri);
 
             if (mCurrentPhotoPath != null && !mCurrentPhotoPath.equals("")) {
                 long duration = AmazonUtils.getDuration(mCurrentPhotoPath);
@@ -1362,7 +1365,7 @@ public class TaskCreationPhase2Fragment extends BaseFragment implements
                 hideProgressDialog();
                 switch (statusCode) {
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
-                        ArrayList<ProviderModel> list = Utility.getObjectListFromJsonString(jsonObject.getString(NetworkUtility.TAGS.DATA), ProviderModel[].class);
+                        ArrayList<ProviderModel> list = GsonUtility.getObjectListFromJsonString(jsonObject.getString(NetworkUtility.TAGS.DATA), ProviderModel[].class);
                         Log.i(TAG, "onResponse: size>>" + list.size());
 //                        if (list == null || list.isEmpty()) {
 //                            isProAvailableForGivenAddress = false;
@@ -1442,7 +1445,7 @@ public class TaskCreationPhase2Fragment extends BaseFragment implements
             switch (i) {
                 case 0:
                     if (!list.isEmpty() && list.get(i) != null) {
-                        Utility.showCircularImageView(mContext, TAG, mBinding.img1, list.get(i).profileUrl, R.drawable.ic_cheep_circular_icon, true);
+                        GlideUtility.showCircularImageView(mContext, TAG, mBinding.img1, list.get(i).profileUrl, R.drawable.ic_cheep_circular_icon, true);
                         mBinding.img1.setVisibility(View.VISIBLE);
                     } else {
                         mBinding.img1.setVisibility(View.GONE);
@@ -1450,7 +1453,7 @@ public class TaskCreationPhase2Fragment extends BaseFragment implements
                     break;
                 case 1:
                     if (list.size() > 1 && list.get(i) != null) {
-                        Utility.showCircularImageView(mContext, TAG, mBinding.img2, list.get(i).profileUrl, R.drawable.ic_cheep_circular_icon, true);
+                        GlideUtility.showCircularImageView(mContext, TAG, mBinding.img2, list.get(i).profileUrl, R.drawable.ic_cheep_circular_icon, true);
                         mBinding.img2.setVisibility(View.VISIBLE);
                     } else {
                         mBinding.img2.setVisibility(View.GONE);
@@ -1458,7 +1461,7 @@ public class TaskCreationPhase2Fragment extends BaseFragment implements
                     break;
                 case 2:
                     if (list.size() > 2 && list.get(i) != null) {
-                        Utility.showCircularImageView(mContext, TAG, mBinding.img3, list.get(i).profileUrl, R.drawable.ic_cheep_circular_icon, true);
+                        GlideUtility.showCircularImageView(mContext, TAG, mBinding.img3, list.get(i).profileUrl, R.drawable.ic_cheep_circular_icon, true);
                         mBinding.img3.setVisibility(View.VISIBLE);
                     } else {
                         mBinding.img3.setVisibility(View.GONE);
@@ -1466,7 +1469,7 @@ public class TaskCreationPhase2Fragment extends BaseFragment implements
                     break;
                 case 3:
                     if (list.size() > 3 && list.get(i) != null) {
-                        Utility.showCircularImageView(mContext, TAG, mBinding.img4, list.get(i).profileUrl, R.drawable.ic_cheep_circular_icon, true);
+                        GlideUtility.showCircularImageView(mContext, TAG, mBinding.img4, list.get(i).profileUrl, R.drawable.ic_cheep_circular_icon, true);
                         mBinding.img4.setVisibility(View.VISIBLE);
                     } else {
                         mBinding.img4.setVisibility(View.GONE);
@@ -1474,7 +1477,7 @@ public class TaskCreationPhase2Fragment extends BaseFragment implements
                     break;
                 case 4:
                     if (list.size() > 4 && list.get(i) != null) {
-                        Utility.showCircularImageView(mContext, TAG, mBinding.img5, list.get(i).profileUrl, R.drawable.ic_cheep_circular_icon, true);
+                        GlideUtility.showCircularImageView(mContext, TAG, mBinding.img5, list.get(i).profileUrl, R.drawable.ic_cheep_circular_icon, true);
                         mBinding.img5.setVisibility(View.VISIBLE);
                     } else {
                         mBinding.img5.setVisibility(View.GONE);

@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import com.cheep.R;
 import com.cheep.databinding.RowFavouriteBinding;
 import com.cheep.model.ProviderModel;
+import com.cheep.utils.GlideUtility;
 import com.cheep.utils.Utility;
 
 import java.util.ArrayList;
@@ -80,7 +81,7 @@ public class FavouriteRecyclerViewAdapter extends RecyclerView.Adapter<Favourite
     public void onBindViewHolder(final ViewHolder holder, int position) {
 
         final ProviderModel model = mList.get(holder.getAdapterPosition());
-        Utility.showCircularImageView(holder.mRowFavouriteBinding.imgProfile.getContext(), TAG, holder.mRowFavouriteBinding.imgProfile, model.profileUrl,Utility.DEFAULT_CHEEP_LOGO);
+        GlideUtility.showCircularImageView(holder.mRowFavouriteBinding.imgProfile.getContext(), TAG, holder.mRowFavouriteBinding.imgProfile, model.profileUrl,Utility.DEFAULT_CHEEP_LOGO);
         holder.mRowFavouriteBinding.textName.setText(model.userName);
 
         holder.mRowFavouriteBinding.textTotalReviews.setText(context.getString(R.string.label_x_reviews, model.reviews));

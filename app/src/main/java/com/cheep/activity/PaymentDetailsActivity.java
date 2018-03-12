@@ -41,6 +41,9 @@ import com.cheep.model.UserDetails;
 import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
+import com.cheep.utils.CalendarUtility;
+import com.cheep.utils.GlideUtility;
+import com.cheep.utils.GsonUtility;
 import com.cheep.utils.LogUtils;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.SuperCalendar;
@@ -96,9 +99,9 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
      */
     public static void newInstance(Context context, TaskDetailModel taskDetailModel, ProviderModel providerModel, AddressModel mSelectedAddressModel) {
         Intent intent = new Intent(context, PaymentDetailsActivity.class);
-        intent.putExtra(Utility.Extra.DATA, Utility.getJsonStringFromObject(providerModel));
-        intent.putExtra(Utility.Extra.DATA_2, Utility.getJsonStringFromObject(taskDetailModel));
-        intent.putExtra(Utility.Extra.SELECTED_ADDRESS_MODEL, Utility.getJsonStringFromObject(mSelectedAddressModel));
+        intent.putExtra(Utility.Extra.DATA, GsonUtility.getJsonStringFromObject(providerModel));
+        intent.putExtra(Utility.Extra.DATA_2, GsonUtility.getJsonStringFromObject(taskDetailModel));
+        intent.putExtra(Utility.Extra.SELECTED_ADDRESS_MODEL, GsonUtility.getJsonStringFromObject(mSelectedAddressModel));
         intent.putExtra(Utility.Extra.DATA_3, false);
         context.startActivity(intent);
     }
@@ -112,8 +115,8 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
      */
     public static void newInstance(Context mContext, TaskDetailModel taskDetailModel) {
         Intent intent = new Intent(mContext, PaymentDetailsActivity.class);
-        intent.putExtra(Utility.Extra.DATA, Utility.getJsonStringFromObject(taskDetailModel.selectedProvider));
-        intent.putExtra(Utility.Extra.DATA_2, Utility.getJsonStringFromObject(taskDetailModel));
+        intent.putExtra(Utility.Extra.DATA, GsonUtility.getJsonStringFromObject(taskDetailModel.selectedProvider));
+        intent.putExtra(Utility.Extra.DATA_2, GsonUtility.getJsonStringFromObject(taskDetailModel));
         intent.putExtra(Utility.Extra.DATA_3, true);
         mContext.startActivity(intent);
 
@@ -177,8 +180,8 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
 
         if (getIntent().hasExtra(Utility.Extra.DATA_2)) {
             //This is only when provider profile view for specific task (provider gives quote to specific task)
-            taskDetailModel = (TaskDetailModel) Utility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA_2), TaskDetailModel.class);
-            providerModel = (ProviderModel) Utility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA), ProviderModel.class);
+            taskDetailModel = (TaskDetailModel) GsonUtility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA_2), TaskDetailModel.class);
+            providerModel = (ProviderModel) GsonUtility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA), ProviderModel.class);
         }
 
         if (!Utility.isConnected(mContext)) {
@@ -223,7 +226,7 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
 //                showProgressBar(false);
                 switch (statusCode) {
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
-                        paymentSummaryModel = (PaymentSummaryModel) Utility.getObjectFromJsonString(jsonObject.optString(NetworkUtility.TAGS.DATA), PaymentSummaryModel.class);
+                        paymentSummaryModel = (PaymentSummaryModel) GsonUtility.getObjectFromJsonString(jsonObject.optString(NetworkUtility.TAGS.DATA), PaymentSummaryModel.class);
                         setUpDetailsForPayLater();
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
@@ -293,15 +296,15 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
             mActivityPaymentDetailBinding.textCategory.setText(taskDetailModel.categoryName);
 
             // top header image
-            Utility.loadImageView(mContext, mActivityPaymentDetailBinding.imgService, taskDetailModel.catImage, R.drawable.gradient_black);
-            Utility.showCircularImageViewWithColorBorder(mContext, TAG, mActivityPaymentDetailBinding.imgProfile, providerModel.profileUrl, Utility.DEFAULT_CHEEP_LOGO, R.color.dark_blue_variant_1, true);
+            GlideUtility.loadImageView(mContext, mActivityPaymentDetailBinding.imgService, taskDetailModel.catImage, R.drawable.gradient_black);
+            GlideUtility.showCircularImageViewWithColorBorder(mContext, TAG, mActivityPaymentDetailBinding.imgProfile, providerModel.profileUrl, Utility.DEFAULT_CHEEP_LOGO, R.color.dark_blue_variant_1, true);
             String datetime = "";
 
             // pro name
             mActivityPaymentDetailBinding.textName.setText(providerModel.userName);
             // set date & time
             if (!TextUtils.isEmpty(taskDetailModel.taskStartdate)) {
-                datetime = Utility.getDate(Long.parseLong(taskDetailModel.taskStartdate), Utility.DATE_FORMAT_DD_MMMM) + ", " + Utility.get2HourTimeSlots(taskDetailModel.taskStartdate);
+                datetime = CalendarUtility.getDate(Long.parseLong(taskDetailModel.taskStartdate), Utility.DATE_FORMAT_DD_MMMM) + ", " + CalendarUtility.get2HourTimeSlots(taskDetailModel.taskStartdate);
 //                dateTime = dateTime.replace(getString(R.string.label_am_caps), getString(R.string.label_am_small)).replace(getString(R.string.label_pm_caps), getString(R.string.label_pm_small));
 
             }
@@ -321,7 +324,7 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
 
             //badge
             int badgeResID = Utility.getProLevelBadge(providerModel.pro_level);
-            Utility.showCircularImageViewWithColorBorder(mContext, TAG, mActivityPaymentDetailBinding.ivBadge, badgeResID, R.color.splash_gradient_end, true);
+            GlideUtility.showCircularImageViewWithColorBorder(mContext, TAG, mActivityPaymentDetailBinding.ivBadge, badgeResID, R.color.splash_gradient_end, true);
 
             // pro verified text
             mActivityPaymentDetailBinding.textVerified.setVisibility(providerModel.isVerified.equalsIgnoreCase(Utility.BOOLEAN.YES) ? View.VISIBLE : View.GONE);
@@ -420,13 +423,13 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
 
         if (getIntent().hasExtra(Utility.Extra.DATA_2)) {
             //This is only when provider profile view for specific task (provider gives quote to specific task)
-            taskDetailModel = (TaskDetailModel) Utility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA_2), TaskDetailModel.class);
-            providerModel = (ProviderModel) Utility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA), ProviderModel.class);
+            taskDetailModel = (TaskDetailModel) GsonUtility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA_2), TaskDetailModel.class);
+            providerModel = (ProviderModel) GsonUtility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA), ProviderModel.class);
             isInstaBooking = taskDetailModel.taskType.equalsIgnoreCase(Utility.TASK_TYPE.INSTA_BOOK);
         }
 
         if (getIntent().hasExtra(Utility.Extra.SELECTED_ADDRESS_MODEL)) {
-            mSelectedAddressModelForInsta = (AddressModel) Utility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.SELECTED_ADDRESS_MODEL), AddressModel.class);
+            mSelectedAddressModelForInsta = (AddressModel) GsonUtility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.SELECTED_ADDRESS_MODEL), AddressModel.class);
         }
 
         if (taskDetailModel != null && providerModel != null) {
@@ -443,15 +446,15 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
             mActivityPaymentDetailBinding.textCategory.setText(taskDetailModel.categoryName);
 
             // top header image
-            Utility.loadImageView(mContext, mActivityPaymentDetailBinding.imgService, taskDetailModel.catImage, R.drawable.gradient_black);
-            Utility.showCircularImageViewWithColorBorder(mContext, TAG, mActivityPaymentDetailBinding.imgProfile, providerModel.profileUrl, Utility.DEFAULT_CHEEP_LOGO, R.color.dark_blue_variant_1, true);
+            GlideUtility.loadImageView(mContext, mActivityPaymentDetailBinding.imgService, taskDetailModel.catImage, R.drawable.gradient_black);
+            GlideUtility.showCircularImageViewWithColorBorder(mContext, TAG, mActivityPaymentDetailBinding.imgProfile, providerModel.profileUrl, Utility.DEFAULT_CHEEP_LOGO, R.color.dark_blue_variant_1, true);
             String datetime = "";
 
             // pro name
             mActivityPaymentDetailBinding.textName.setText(providerModel.userName);
             // set date & time
             if (!TextUtils.isEmpty(taskDetailModel.taskStartdate)) {
-                datetime = Utility.getDate(Long.parseLong(taskDetailModel.taskStartdate), Utility.DATE_FORMAT_DD_MMMM) + ", " + Utility.get2HourTimeSlots(taskDetailModel.taskStartdate);
+                datetime = CalendarUtility.getDate(Long.parseLong(taskDetailModel.taskStartdate), Utility.DATE_FORMAT_DD_MMMM) + ", " + CalendarUtility.get2HourTimeSlots(taskDetailModel.taskStartdate);
 //                dateTime = dateTime.replace(getString(R.string.label_am_caps), getString(R.string.label_am_small)).replace(getString(R.string.label_pm_caps), getString(R.string.label_pm_small));
 
             }
@@ -481,7 +484,7 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
 
             //badge
             int badgeResID = Utility.getProLevelBadge(providerModel.pro_level);
-            Utility.showCircularImageViewWithColorBorder(mContext, TAG, mActivityPaymentDetailBinding.ivBadge, badgeResID, R.color.splash_gradient_end, true);
+            GlideUtility.showCircularImageViewWithColorBorder(mContext, TAG, mActivityPaymentDetailBinding.ivBadge, badgeResID, R.color.splash_gradient_end, true);
 
             // pro verified text
             mActivityPaymentDetailBinding.textVerified.setVisibility(providerModel.isVerified.equalsIgnoreCase(Utility.BOOLEAN.YES) ? View.VISIBLE : View.GONE);
@@ -1224,7 +1227,7 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
                             superStartDateTimeCalendar.setLocaleTimeZone();
 
                             int onlydate = Integer.parseInt(superStartDateTimeCalendar.format("dd"));
-                            String message = Utility.fetchMessageFromDateOfMonth(mContext, onlydate, superStartDateTimeCalendar, providerModel);
+                            String message = CalendarUtility.fetchMessageFromDateOfMonth(mContext, onlydate, superStartDateTimeCalendar, providerModel);
 
 //                            final UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
                             int badgeResId = Utility.getProLevelBadge(providerModel.pro_level);

@@ -158,11 +158,11 @@ public class SuperCalendar {
 
     public boolean isWorkingHour(String startTime, String endTime) {
         SuperCalendar startDate = SuperCalendar.getInstance();
-        startDate.setTime(Utility.getDate(startTime, Utility.DATE_FORMAT_HH_MM_SS));
+        startDate.setTime(CalendarUtility.getDate(startTime, Utility.DATE_FORMAT_HH_MM_SS));
         startDate.mCalendar.set(mCalendar.get(Calendar.YEAR), mCalendar.get(Calendar.MONTH), mCalendar.get(Calendar.DATE));
 
         SuperCalendar endDate = SuperCalendar.getInstance();
-        endDate.setTime(Utility.getDate(endTime, Utility.DATE_FORMAT_HH_MM_SS));
+        endDate.setTime(CalendarUtility.getDate(endTime, Utility.DATE_FORMAT_HH_MM_SS));
         endDate.mCalendar.set(mCalendar.get(Calendar.YEAR), mCalendar.get(Calendar.MONTH), mCalendar.get(Calendar.DATE));
 
         LogUtils.LOGE(TAG, "initiateUI: date" + toString());

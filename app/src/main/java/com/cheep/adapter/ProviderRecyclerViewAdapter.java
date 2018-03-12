@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import com.cheep.R;
 import com.cheep.databinding.RowProviderBinding;
 import com.cheep.model.ProviderModel;
+import com.cheep.utils.GlideUtility;
 import com.cheep.utils.LoadMoreRecyclerAdapter;
 import com.cheep.utils.Utility;
 
@@ -88,7 +89,7 @@ public class ProviderRecyclerViewAdapter extends LoadMoreRecyclerAdapter<Provide
             holder.mRowProviderBinding.textCheapest.setVisibility(View.GONE);
         }
 
-        Utility.showCircularImageView(holder.mRowProviderBinding.imgProfile.getContext(), TAG, holder.mRowProviderBinding.imgProfile, model.profileUrl, Utility.DEFAULT_CHEEP_LOGO);
+        GlideUtility.showCircularImageView(holder.mRowProviderBinding.imgProfile.getContext(), TAG, holder.mRowProviderBinding.imgProfile, model.profileUrl, Utility.DEFAULT_CHEEP_LOGO);
         holder.mRowProviderBinding.textName.setText(model.userName);
         holder.mRowProviderBinding.textTotalJobs.setText(Utility.getJobs(context, model.jobsCount));
 //        holder.mRowProviderBinding.textTotalReviews.setText(context.getString(R.string.label_x_reviews, model.reviews));

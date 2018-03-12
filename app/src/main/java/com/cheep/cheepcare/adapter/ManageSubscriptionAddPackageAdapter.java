@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import com.cheep.R;
 import com.cheep.cheepcare.model.PackageDetail;
 import com.cheep.databinding.RowManageSubscriptionAddPackagesBinding;
+import com.cheep.utils.GlideUtility;
 import com.cheep.utils.Utility;
 
 import java.util.ArrayList;
@@ -61,7 +62,7 @@ public class ManageSubscriptionAddPackageAdapter extends
         final PackageDetail model = mList.get(holder.getAdapterPosition());
         Context context = holder.mBinding.getRoot().getContext();
 
-        Utility.loadImageView(context, holder.mBinding.ivItemBackground
+        GlideUtility.loadImageView(context, holder.mBinding.ivItemBackground
                 , model.packageImage, R.drawable.gradient_black);
 
         holder.mBinding.tvTitle.setText(model.title);

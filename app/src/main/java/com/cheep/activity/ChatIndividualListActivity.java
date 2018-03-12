@@ -20,6 +20,7 @@ import com.cheep.firebase.model.ChatServiceProviderModel;
 import com.cheep.firebase.model.ChatTaskModel;
 import com.cheep.firebase.model.TaskChatModel;
 import com.cheep.model.UserDetails;
+import com.cheep.utils.GsonUtility;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.Utility;
 import com.google.firebase.database.ChildEventListener;
@@ -58,7 +59,7 @@ public class ChatIndividualListActivity extends BaseAppCompatActivity implements
      */
     public static void newInstance(Context context, TaskChatModel taskChatModel) {
         Intent intent = new Intent(context, ChatIndividualListActivity.class);
-        intent.putExtra(Utility.Extra.DATA, Utility.getJsonStringFromObject(taskChatModel));
+        intent.putExtra(Utility.Extra.DATA, GsonUtility.getJsonStringFromObject(taskChatModel));
         context.startActivity(intent);
     }
 
@@ -136,7 +137,7 @@ public class ChatIndividualListActivity extends BaseAppCompatActivity implements
     private void initDATA() {
         Bundle bundle = getIntent().getExtras();
         if (bundle.containsKey(Utility.Extra.DATA) && !TextUtils.isEmpty(bundle.getString(Utility.Extra.DATA))) {
-            taskChatModel = (TaskChatModel) Utility.getObjectFromJsonString(bundle.getString(Utility.Extra.DATA), TaskChatModel.class);
+            taskChatModel = (TaskChatModel) GsonUtility.getObjectFromJsonString(bundle.getString(Utility.Extra.DATA), TaskChatModel.class);
             if (taskChatModel != null) {
                 formattedTaskId = taskChatModel.taskId;
             }

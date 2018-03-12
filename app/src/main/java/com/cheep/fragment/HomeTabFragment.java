@@ -59,6 +59,7 @@ import com.cheep.network.VolleyNetworkRequest;
 import com.cheep.strategicpartner.StrategicPartnerTaskCreationAct;
 import com.cheep.utils.ErrorLoadingHelper;
 import com.cheep.utils.FetchLocationInfoUtility;
+import com.cheep.utils.GsonUtility;
 import com.cheep.utils.LogUtils;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.SharedElementTransitionHelper;
@@ -240,7 +241,7 @@ public class HomeTabFragment extends BaseFragment {
         errorLoadingHelper.setBecomeCheepMemberClick(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                LandingScreenPickPackageActivity.newInstance(mContext, careBannerModelArrayList.get(0), Utility.getJsonStringFromObject(careBannerModelArrayList));
+                LandingScreenPickPackageActivity.newInstance(mContext, careBannerModelArrayList.get(0), GsonUtility.getJsonStringFromObject(careBannerModelArrayList));
             }
         });
 
@@ -484,7 +485,7 @@ public class HomeTabFragment extends BaseFragment {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == Utility.REQUEST_CODE_CHANGE_LOCATION && resultCode == AppCompatActivity.RESULT_OK) {
             if (data != null) {
-                LocationInfo mLocationInfo = (LocationInfo) Utility.getObjectFromJsonString(data.getStringExtra(Utility.Extra.LOCATION_INFO), LocationInfo.class);
+                LocationInfo mLocationInfo = (LocationInfo) GsonUtility.getObjectFromJsonString(data.getStringExtra(Utility.Extra.LOCATION_INFO), LocationInfo.class);
                 if (mLocationInfo != null) {
                     updateLatLongSuccess(mLocationInfo.getDisplayLocationName());
                     if (PreferenceUtility.getInstance(mContext).getUserDetails() != null) {
@@ -694,8 +695,8 @@ public class HomeTabFragment extends BaseFragment {
                 switch (statusCode) {
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
                         JSONObject dataObject = jsonObject.optJSONObject(NetworkUtility.TAGS.DATA);
-                        bannerImageModelArrayList = Utility.getObjectListFromJsonString(dataObject.getString(NetworkUtility.TAGS.NORMAL_BANNER), BannerImageModel[].class);
-                        careBannerModelArrayList = Utility.getObjectListFromJsonString(dataObject.getString(NetworkUtility.TAGS.CARE_BANNER), CityDetail[].class);
+                        bannerImageModelArrayList = GsonUtility.getObjectListFromJsonString(dataObject.getString(NetworkUtility.TAGS.NORMAL_BANNER), BannerImageModel[].class);
+                        careBannerModelArrayList = GsonUtility.getObjectListFromJsonString(dataObject.getString(NetworkUtility.TAGS.CARE_BANNER), CityDetail[].class);
                         // Call Category listing webservice.
 
                         for (CityDetail cityDetail : careBannerModelArrayList) {
@@ -889,7 +890,7 @@ public class HomeTabFragment extends BaseFragment {
                             updateLogoSuccess(Category);
                         }
                         ArrayList<JobCategoryModel> list;
-                        list = Utility.getObjectListFromJsonString(jsonObject.optString(NetworkUtility.TAGS.DATA), JobCategoryModel[].class);
+                        list = GsonUtility.getObjectListFromJsonString(jsonObject.optString(NetworkUtility.TAGS.DATA), JobCategoryModel[].class);
 
                         // SHow Banner view now
                         showBannerView(true);
@@ -1063,12 +1064,12 @@ public class HomeTabFragment extends BaseFragment {
                         String categoryType =
                                 jsonObject.getJSONObject(NetworkUtility.TAGS.DATA).getString(NetworkUtility.TAGS.CAT_TYPE);
                         if (categoryType.equalsIgnoreCase(Utility.NORMAL)) {
-                            JobCategoryModel model = (JobCategoryModel) Utility.getObjectFromJsonString(
+                            JobCategoryModel model = (JobCategoryModel) GsonUtility.getObjectFromJsonString(
                                     jsonObject.getString(NetworkUtility.TAGS.DATA), JobCategoryModel.class);
 //                            TaskCreationCCActivity.getInstance(mContext, model);
                             TaskCreationActivity.getInstance(mContext, model);
                         } else {
-                            BannerImageModel model = (BannerImageModel) Utility.getObjectFromJsonString(
+                            BannerImageModel model = (BannerImageModel) GsonUtility.getObjectFromJsonString(
                                     jsonObject.getString(NetworkUtility.TAGS.DATA), BannerImageModel.class);
                             StrategicPartnerTaskCreationAct.getInstance(mContext, model);
                         }

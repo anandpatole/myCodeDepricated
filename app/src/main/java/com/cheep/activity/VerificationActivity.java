@@ -28,6 +28,7 @@ import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
 import com.cheep.utils.FetchLocationInfoUtility;
+import com.cheep.utils.GsonUtility;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.Utility;
 
@@ -53,7 +54,7 @@ public class VerificationActivity extends BaseAppCompatActivity {
 
     public static void newInstance(Context context, UserDetails userDetails, String password, String selectedImagePath, String correctOTP) {
         Intent intent = new Intent(context, VerificationActivity.class);
-        intent.putExtra(Utility.Extra.USER_DETAILS, Utility.getJsonStringFromObject(userDetails));
+        intent.putExtra(Utility.Extra.USER_DETAILS, GsonUtility.getJsonStringFromObject(userDetails));
         intent.putExtra(Utility.Extra.SELECTED_IMAGE_PATH, selectedImagePath);
         intent.putExtra(Utility.Extra.PHONE_NUMBER, userDetails.phoneNumber);
         intent.putExtra(Utility.Extra.INFO_TYPE, Utility.ACTION_REGISTER);
@@ -63,7 +64,7 @@ public class VerificationActivity extends BaseAppCompatActivity {
     // While Changing Mobile number
     public static void newInstance(Context context, UserDetails userDetails, String phoneNumber, String action) {
         Intent intent = new Intent(context, VerificationActivity.class);
-        intent.putExtra(Utility.Extra.USER_DETAILS, Utility.getJsonStringFromObject(userDetails));
+        intent.putExtra(Utility.Extra.USER_DETAILS, GsonUtility.getJsonStringFromObject(userDetails));
         intent.putExtra(Utility.Extra.PHONE_NUMBER, phoneNumber);
         intent.putExtra(Utility.Extra.INFO_TYPE, action);
         context.startActivity(intent);
@@ -73,7 +74,7 @@ public class VerificationActivity extends BaseAppCompatActivity {
     public static void newInstance(Context context, String userDetails, String action) {
         Intent intent = new Intent(context, VerificationActivity.class);
         intent.putExtra(Utility.Extra.USER_DETAILS, userDetails);
-        final UserDetails details = (UserDetails) Utility.getObjectFromJsonString(userDetails, UserDetails.class);
+        final UserDetails details = (UserDetails) GsonUtility.getObjectFromJsonString(userDetails, UserDetails.class);
         intent.putExtra(Utility.Extra.PHONE_NUMBER, details.phoneNumber);
         intent.putExtra(Utility.Extra.INFO_TYPE, action);
         context.startActivity(intent);
@@ -96,7 +97,7 @@ public class VerificationActivity extends BaseAppCompatActivity {
         getWindow().setBackgroundDrawableResource(R.drawable.login_bg_blur);
         //Check if we got any user details that need to be updated
         if (getIntent().hasExtra(Utility.Extra.USER_DETAILS)) {
-            mUserDetails = (UserDetails) Utility.getObjectFromJsonString(getIntent().getExtras().getString(Utility.Extra.USER_DETAILS), UserDetails.class);
+            mUserDetails = (UserDetails) GsonUtility.getObjectFromJsonString(getIntent().getExtras().getString(Utility.Extra.USER_DETAILS), UserDetails.class);
         }
 
         //Check if we got password

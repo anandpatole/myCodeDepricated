@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import com.cheep.R;
 import com.cheep.databinding.RowNotificationBinding;
 import com.cheep.model.NotificationModel;
+import com.cheep.utils.GlideUtility;
 import com.cheep.utils.LoadMoreRecyclerAdapter;
 import com.cheep.utils.SuperCalendar;
 import com.cheep.utils.Utility;
@@ -73,9 +74,9 @@ public class NotificationRecyclerViewAdapter extends LoadMoreRecyclerAdapter<Not
         } else {
             // Show Circular image
             if (model.task_type.equalsIgnoreCase(Utility.TASK_TYPE.NORMAL)) {
-                Utility.showCircularImageView(holder.mRowNotificationBinding.imgPhoto.getContext(), TAG, holder.mRowNotificationBinding.imgPhoto, model.sp_profile_image, Utility.DEFAULT_CHEEP_LOGO);
+                GlideUtility.showCircularImageView(holder.mRowNotificationBinding.imgPhoto.getContext(), TAG, holder.mRowNotificationBinding.imgPhoto, model.sp_profile_image, Utility.DEFAULT_CHEEP_LOGO);
             } else {
-                Utility.showCircularImageViewWithColorBorder(holder.mRowNotificationBinding.imgPhoto.getContext(), TAG, holder.mRowNotificationBinding.imgPhoto, model.sp_profile_image, Utility.DEFAULT_CHEEP_LOGO, R.color.grey_dark_color, true);
+                GlideUtility.showCircularImageViewWithColorBorder(holder.mRowNotificationBinding.imgPhoto.getContext(), TAG, holder.mRowNotificationBinding.imgPhoto, model.sp_profile_image, Utility.DEFAULT_CHEEP_LOGO, R.color.grey_dark_color, true);
             }
         }
 

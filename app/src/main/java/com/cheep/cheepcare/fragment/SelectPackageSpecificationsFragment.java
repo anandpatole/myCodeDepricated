@@ -33,6 +33,7 @@ import com.cheep.model.UserDetails;
 import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
+import com.cheep.utils.GsonUtility;
 import com.cheep.utils.LogUtils;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.Utility;
@@ -265,7 +266,7 @@ public class SelectPackageSpecificationsFragment extends BaseFragment {
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
                         String jsonData = jsonObject.optJSONObject(DATA).optString(PACKAGE_OPTION_DETAILS);
                         ArrayList<PackageOption> list;
-                        list = Utility.getObjectListFromJsonString(jsonData, PackageOption[].class);
+                        list = GsonUtility.getObjectListFromJsonString(jsonData, PackageOption[].class);
 
                         addPackagesOptionListToPackages(mPackageCustomizationActivity.mSelectedPackageModel.id, list);
 

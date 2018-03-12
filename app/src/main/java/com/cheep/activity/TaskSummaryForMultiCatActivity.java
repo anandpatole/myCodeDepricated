@@ -53,6 +53,9 @@ import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
 import com.cheep.strategicpartner.StrategicPartnerMediaViewActiivty;
+import com.cheep.utils.CalendarUtility;
+import com.cheep.utils.GlideUtility;
+import com.cheep.utils.GsonUtility;
 import com.cheep.utils.HotlineHelper;
 import com.cheep.utils.LogUtils;
 import com.cheep.utils.PreferenceUtility;
@@ -112,7 +115,7 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
         if (getIntent().getExtras() != null) {
             if (getIntent().hasExtra(Utility.Extra.TASK_DETAIL_MODEL)) {
                 // Fetch Task Detail Model
-                mTaskDetailModel = (TaskDetailModel) Utility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.TASK_DETAIL_MODEL), TaskDetailModel.class);
+                mTaskDetailModel = (TaskDetailModel) GsonUtility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.TASK_DETAIL_MODEL), TaskDetailModel.class);
             }
         }
 
@@ -176,8 +179,8 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
         mBinding.textCategoryName.setText(mTaskDetailModel.categoryName != null ? mTaskDetailModel.categoryName : Utility.EMPTY_STRING);
 
         // Set up image
-        Utility.loadImageView(mContext, mBinding.imgService, mTaskDetailModel.catImage, R.drawable.gradient_black);
-        Utility.loadImageView(mContext, mBinding.imgService, mTaskDetailModel.catImageExtras.thumb, R.drawable.gradient_black);
+        GlideUtility.loadImageView(mContext, mBinding.imgService, mTaskDetailModel.catImage, R.drawable.gradient_black);
+        GlideUtility.loadImageView(mContext, mBinding.imgService, mTaskDetailModel.catImageExtras.thumb, R.drawable.gradient_black);
 
 
         // By Default makethe task completion dialog as gone
@@ -259,7 +262,7 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
             mBinding.textAddressKmAway.setText(mTaskDetailModel.selectedProvider.distance + getString(R.string.label_away));
 
             // Profile Pic
-            Utility.showCircularImageView(mContext, TAG, mBinding.imgProfile, mTaskDetailModel.selectedProvider.profileUrl, Utility.DEFAULT_CHEEP_LOGO, true);
+            GlideUtility.showCircularImageView(mContext, TAG, mBinding.imgProfile, mTaskDetailModel.selectedProvider.profileUrl, Utility.DEFAULT_CHEEP_LOGO, true);
 
 //            // Whether Provider Verified or not
 //            if (Utility.BOOLEAN.YES.equalsIgnoreCase(mTaskDetailModel.selectedProvider.isVerified)) {
@@ -325,7 +328,7 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
         // Set Second Section
 //        mBinding.textSubCategoryName.setText(mTaskDetailModel.subCategoryName);
         mBinding.textTaskDesc.setText(mTaskDetailModel.taskDesc);
-//        Utility.loadImageView(mContext, mBinding.imgTaskPicture, mTaskDetailModel.taskImage, 0);
+//        GlideUtility.loadImageView(mContext, mBinding.imgTaskPicture, mTaskDetailModel.taskImage, 0);
         if (mTaskDetailModel.mMediaModelList != null && !mTaskDetailModel.mMediaModelList.isEmpty()) {
 //            if (mTaskDetailModel.mMediaModelList.size() > 1)
 //                mBinding.tvCounter.setText("+" + (mTaskDetailModel.mMediaModelList.size() - 1));
@@ -333,20 +336,20 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
 //                mBinding.tvCounter.setVisibility(View.GONE);
 
             Collections.reverse(mTaskDetailModel.mMediaModelList);
-            Utility.loadImageView(this, mBinding.imgTaskPicture1, mTaskDetailModel.mMediaModelList.get(0).mediaThumbName);
+            GlideUtility.loadImageView(this, mBinding.imgTaskPicture1, mTaskDetailModel.mMediaModelList.get(0).mediaThumbName);
             if (mTaskDetailModel.mMediaModelList.size() == 3) {
-                Utility.loadImageView(this, mBinding.imgTaskPicture1, mTaskDetailModel.mMediaModelList.get(0).mediaThumbName);
-                Utility.loadImageView(this, mBinding.imgTaskPicture2, mTaskDetailModel.mMediaModelList.get(1).mediaThumbName);
-                Utility.loadImageView(this, mBinding.imgTaskPicture3, mTaskDetailModel.mMediaModelList.get(2).mediaThumbName);
+                GlideUtility.loadImageView(this, mBinding.imgTaskPicture1, mTaskDetailModel.mMediaModelList.get(0).mediaThumbName);
+                GlideUtility.loadImageView(this, mBinding.imgTaskPicture2, mTaskDetailModel.mMediaModelList.get(1).mediaThumbName);
+                GlideUtility.loadImageView(this, mBinding.imgTaskPicture3, mTaskDetailModel.mMediaModelList.get(2).mediaThumbName);
             } else if (mTaskDetailModel.mMediaModelList.size() == 2) {
                 mBinding.framePicture3.setVisibility(View.GONE);
-                Utility.loadImageView(this, mBinding.imgTaskPicture2, mTaskDetailModel.mMediaModelList.get(1).mediaThumbName);
-                Utility.loadImageView(this, mBinding.imgTaskPicture1, mTaskDetailModel.mMediaModelList.get(0).mediaThumbName);
+                GlideUtility.loadImageView(this, mBinding.imgTaskPicture2, mTaskDetailModel.mMediaModelList.get(1).mediaThumbName);
+                GlideUtility.loadImageView(this, mBinding.imgTaskPicture1, mTaskDetailModel.mMediaModelList.get(0).mediaThumbName);
 
             } else {
                 mBinding.framePicture3.setVisibility(View.GONE);
                 mBinding.framePicture2.setVisibility(View.GONE);
-                Utility.loadImageView(this, mBinding.imgTaskPicture1, mTaskDetailModel.mMediaModelList.get(0).mediaThumbName);
+                GlideUtility.loadImageView(this, mBinding.imgTaskPicture1, mTaskDetailModel.mMediaModelList.get(0).mediaThumbName);
             }
 
         } else
@@ -369,7 +372,7 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
             e.printStackTrace();
         }
 
-        String time = Utility.get2HourTimeSlots(mTaskDetailModel.taskStartdate);
+        String time = CalendarUtility.get2HourTimeSlots(mTaskDetailModel.taskStartdate);
         mBinding.textTaskWhen.setText(task_original_date + time);
 
 
@@ -908,7 +911,7 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
             switch (i) {
                 case 0:
                     if (list.size() > 0 && list.get(i) != null) {
-                        Utility.showCircularImageView(mContext, TAG, mBinding.img1, list.get(i).profileUrl, R.drawable.ic_cheep_circular_icon, true);
+                        GlideUtility.showCircularImageView(mContext, TAG, mBinding.img1, list.get(i).profileUrl, R.drawable.ic_cheep_circular_icon, true);
                         mBinding.img1.setVisibility(View.VISIBLE);
                     } else {
                         mBinding.img1.setVisibility(View.GONE);
@@ -916,7 +919,7 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
                     break;
                 case 1:
                     if (list.size() > 1 && list.get(i) != null) {
-                        Utility.showCircularImageView(mContext, TAG, mBinding.img2, list.get(i).profileUrl, R.drawable.ic_cheep_circular_icon, true);
+                        GlideUtility.showCircularImageView(mContext, TAG, mBinding.img2, list.get(i).profileUrl, R.drawable.ic_cheep_circular_icon, true);
                         mBinding.img2.setVisibility(View.VISIBLE);
                     } else {
                         mBinding.img2.setVisibility(View.GONE);
@@ -924,7 +927,7 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
                     break;
                 case 2:
                     if (list.size() > 2 && list.get(i) != null) {
-                        Utility.showCircularImageView(mContext, TAG, mBinding.img3, list.get(i).profileUrl, R.drawable.ic_cheep_circular_icon, true);
+                        GlideUtility.showCircularImageView(mContext, TAG, mBinding.img3, list.get(i).profileUrl, R.drawable.ic_cheep_circular_icon, true);
                         mBinding.img3.setVisibility(View.VISIBLE);
                     } else {
                         mBinding.img3.setVisibility(View.GONE);
@@ -932,7 +935,7 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
                     break;
                 case 3:
                     if (list.size() > 3 && list.get(i) != null) {
-                        Utility.showCircularImageView(mContext, TAG, mBinding.img4, list.get(i).profileUrl, R.drawable.ic_cheep_circular_icon, true);
+                        GlideUtility.showCircularImageView(mContext, TAG, mBinding.img4, list.get(i).profileUrl, R.drawable.ic_cheep_circular_icon, true);
                         mBinding.img4.setVisibility(View.VISIBLE);
                     } else {
                         mBinding.img4.setVisibility(View.GONE);
@@ -940,7 +943,7 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
                     break;
                 case 4:
                     if (list.size() > 4 && list.get(i) != null) {
-                        Utility.showCircularImageView(mContext, TAG, mBinding.img5, list.get(i).profileUrl, R.drawable.ic_cheep_circular_icon, true);
+                        GlideUtility.showCircularImageView(mContext, TAG, mBinding.img5, list.get(i).profileUrl, R.drawable.ic_cheep_circular_icon, true);
                         mBinding.img5.setVisibility(View.VISIBLE);
                     } else {
                         mBinding.img5.setVisibility(View.GONE);
@@ -1035,7 +1038,7 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
 
                         JSONObject jsonData = jsonObject.optJSONObject(NetworkUtility.TAGS.DATA);
 
-                        mTaskDetailModel = (TaskDetailModel) Utility.getObjectFromJsonString(jsonObject.optString(NetworkUtility.TAGS.DATA), TaskDetailModel.class);
+                        mTaskDetailModel = (TaskDetailModel) GsonUtility.getObjectFromJsonString(jsonObject.optString(NetworkUtility.TAGS.DATA), TaskDetailModel.class);
 
                         setUpTaskDetails(mTaskDetailModel);
 

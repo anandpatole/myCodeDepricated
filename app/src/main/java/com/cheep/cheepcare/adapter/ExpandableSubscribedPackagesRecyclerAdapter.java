@@ -35,6 +35,7 @@ import com.cheep.databinding.RowPackageCareSubItemBinding;
 import com.cheep.model.AddressModel;
 import com.cheep.model.JobCategoryModel;
 import com.cheep.network.NetworkUtility;
+import com.cheep.utils.GlideUtility;
 import com.cheep.utils.LogUtils;
 import com.cheep.utils.Utility;
 
@@ -303,7 +304,7 @@ public class ExpandableSubscribedPackagesRecyclerAdapter extends ExpandableRecyc
 
             Context context = mBinding.getRoot().getContext();
 
-            Utility.loadImageView(context, mBinding.ivCareImage
+            GlideUtility.loadImageView(context, mBinding.ivCareImage
                     , packageDetail.packageImage);
 
             mBinding.tvCareName.setText(packageDetail.title);
@@ -416,11 +417,11 @@ public class ExpandableSubscribedPackagesRecyclerAdapter extends ExpandableRecyc
 
 
             //Background image
-            Utility.loadImageView(context, mBinding.imgCategoryBackground, model.catImage, R.drawable.gradient_black);
-//            Utility.loadImageView(context, mBinding.imgCategoryBackground, model.catImageExtras.thumb, R.drawable.gradient_black);
+            GlideUtility.loadImageView(context, mBinding.imgCategoryBackground, model.catImage, R.drawable.gradient_black);
+//            GlideUtility.loadImageView(context, mBinding.imgCategoryBackground, model.catImageExtras.thumb, R.drawable.gradient_black);
 
             //Category Icon
-            Utility.loadImageView(context, mBinding.imgCategoryIcon, model.catIcon, 0);
+            GlideUtility.loadImageView(context, mBinding.imgCategoryIcon, model.catIcon, 0);
             mBinding.imgCategoryIcon.setVisibility(View.GONE);
 //        mBinding.textJobsCount.setText(String.valueOf(model.spCount));
             mBinding.textCategoryName.setText(String.valueOf(model.catName));
@@ -530,7 +531,7 @@ public class ExpandableSubscribedPackagesRecyclerAdapter extends ExpandableRecyc
                 switch (i) {
                     case 0:
                         if (list.size() > 0 && list.get(i) != null) {
-                            Utility.showCircularImageView(context, TAG, mBinding.img1, list.get(i), R.drawable.ic_cheep_circular_icon, true, 0.5f);
+                            GlideUtility.showCircularImageView(context, TAG, mBinding.img1, list.get(i), R.drawable.ic_cheep_circular_icon, true, 0.5f);
                             mBinding.img1.setVisibility(View.VISIBLE);
                         } else {
                             mBinding.img1.setVisibility(View.GONE);
@@ -538,7 +539,7 @@ public class ExpandableSubscribedPackagesRecyclerAdapter extends ExpandableRecyc
                         break;
                     case 1:
                         if (list.size() > 1 && list.get(i) != null) {
-                            Utility.showCircularImageView(context, TAG, mBinding.img2, list.get(i), R.drawable.ic_cheep_circular_icon, true, 0.5f);
+                            GlideUtility.showCircularImageView(context, TAG, mBinding.img2, list.get(i), R.drawable.ic_cheep_circular_icon, true, 0.5f);
                             mBinding.img2.setVisibility(View.VISIBLE);
                         } else {
                             mBinding.img2.setVisibility(View.GONE);
@@ -546,7 +547,7 @@ public class ExpandableSubscribedPackagesRecyclerAdapter extends ExpandableRecyc
                         break;
                     case 2:
                         if (list.size() > 2 && list.get(i) != null) {
-                            Utility.showCircularImageView(context, TAG, mBinding.img3, list.get(i), R.drawable.ic_cheep_circular_icon, true, 0.5f);
+                            GlideUtility.showCircularImageView(context, TAG, mBinding.img3, list.get(i), R.drawable.ic_cheep_circular_icon, true, 0.5f);
                             mBinding.img3.setVisibility(View.VISIBLE);
                         } else {
                             mBinding.img3.setVisibility(View.GONE);
@@ -554,7 +555,7 @@ public class ExpandableSubscribedPackagesRecyclerAdapter extends ExpandableRecyc
                         break;
                 /*case 3:
                     if (list.size() > 3 && list.get(i) != null) {
-                        Utility.showCircularImageView(context, TAG, mBinding.img4, list.get(i).profileUrl, R.drawable.ic_cheep_circular_icon, true);
+                        GlideUtility.showCircularImageView(context, TAG, mBinding.img4, list.get(i).profileUrl, R.drawable.ic_cheep_circular_icon, true);
                         mBinding.img4.setVisibility(View.VISIBLE);
                     } else {
                         mBinding.img4.setVisibility(View.GONE);
@@ -562,7 +563,7 @@ public class ExpandableSubscribedPackagesRecyclerAdapter extends ExpandableRecyc
                     break;
                 case 4:
                     if (list.size() > 4 && list.get(i) != null) {
-                        Utility.showCircularImageView(context, TAG, mActivityTaskSummaryBinding.img5, list.get(i).profileUrl, R.drawable.ic_cheep_circular_icon, true);
+                        GlideUtility.showCircularImageView(context, TAG, mActivityTaskSummaryBinding.img5, list.get(i).profileUrl, R.drawable.ic_cheep_circular_icon, true);
                         mBinding.img5.setVisibility(View.VISIBLE);
                     } else {
                         mBinding.img5.setVisibility(View.GONE);

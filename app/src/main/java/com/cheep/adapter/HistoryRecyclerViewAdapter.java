@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import com.cheep.R;
 import com.cheep.databinding.RowHistoryBinding;
 import com.cheep.model.HistoryModel;
+import com.cheep.utils.GlideUtility;
 import com.cheep.utils.Utility;
 
 import java.util.ArrayList;
@@ -52,8 +53,8 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecy
     public void onBindViewHolder(HistoryRecyclerViewAdapter.ViewHolder holder, int position) {
 
         final HistoryModel model = mList.get(holder.getAdapterPosition());
-//        Utility.showCircularImageView(holder.mRowHistoryBinding.imgProfile.getContext(), TAG, holder.mRowHistoryBinding.imgProfile, model.sp_profile_image, 0);
-        Utility.showCircularImageView(holder.mRowHistoryBinding.imgProfile.getContext(), TAG, holder.mRowHistoryBinding.imgProfile, model.sp_profile_image, Utility.DEFAULT_CHEEP_LOGO, true);
+//        GlideUtility.showCircularImageView(holder.mRowHistoryBinding.imgProfile.getContext(), TAG, holder.mRowHistoryBinding.imgProfile, model.sp_profile_image, 0);
+        GlideUtility.showCircularImageView(holder.mRowHistoryBinding.imgProfile.getContext(), TAG, holder.mRowHistoryBinding.imgProfile, model.sp_profile_image, Utility.DEFAULT_CHEEP_LOGO, true);
         holder.mRowHistoryBinding.textName.setText(model.sp_user_name);
         holder.mRowHistoryBinding.textCategoryName.setText(model.task_category);
 

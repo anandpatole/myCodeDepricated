@@ -31,6 +31,8 @@ import com.cheep.databinding.ActivityLandingScreenPickPackageBinding;
 import com.cheep.model.MessageEvent;
 import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
+import com.cheep.utils.GlideUtility;
+import com.cheep.utils.GsonUtility;
 import com.cheep.utils.LogUtils;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.Utility;
@@ -78,7 +80,7 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
 
     public static void newInstance(Context context, CityDetail city, String cheepcareBannerListString) {
         Intent intent = new Intent(context, LandingScreenPickPackageActivity.class);
-        intent.putExtra(Utility.Extra.CITY_DETAIL, Utility.getJsonStringFromObject(city));
+        intent.putExtra(Utility.Extra.CITY_DETAIL, GsonUtility.getJsonStringFromObject(city));
         intent.putExtra(Utility.Extra.DATA, cheepcareBannerListString);
         context.startActivity(intent);
     }
@@ -97,8 +99,8 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
 
         EventBus.getDefault().register(this);
         if (getIntent().hasExtra(Utility.Extra.CITY_DETAIL)) {
-            mCity = (CityDetail) Utility.getObjectFromJsonString(getIntent().getExtras().getString(Utility.Extra.CITY_DETAIL), CityDetail.class);
-            bannerCityDetailsList = Utility.getObjectListFromJsonString(getIntent().getExtras().getString(Utility.Extra.DATA), CityDetail[].class);
+            mCity = (CityDetail) GsonUtility.getObjectFromJsonString(getIntent().getExtras().getString(Utility.Extra.CITY_DETAIL), CityDetail.class);
+            bannerCityDetailsList = GsonUtility.getObjectListFromJsonString(getIntent().getExtras().getString(Utility.Extra.DATA), CityDetail[].class);
         }
 
         setCityBannerData();
@@ -135,7 +137,7 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
                 }
 
                 // Load the image now.
-                Utility.loadImageView(mContext, mBinding.ivCityImage
+                GlideUtility.loadImageView(mContext, mBinding.ivCityImage
                         , resId
                         , R.drawable.hotline_ic_image_loading_placeholder);
             }
@@ -168,7 +170,7 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
             public void getCityCareData(CityLandingPageModel cityLandingPageModel) {
                 hideProgressDialog();
                 mCityLandingPageModel = cityLandingPageModel;
-                mPackageListString = Utility.getJsonStringFromObject(mCityLandingPageModel.packageDetailList);
+                mPackageListString = GsonUtility.getJsonStringFromObject(mCityLandingPageModel.packageDetailList);
                 getSavedData();
                 setData();
             }
@@ -279,7 +281,7 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
                         LogUtils.LOGE(TAG, "onClick alert dialog : " + bannerCityDetailsList.get(which).cityName);
                         if (!mCity.cityName.equalsIgnoreCase(bannerCityDetailsList.get(which).cityName)) {
                             if (bannerCityDetailsList.get(which).isSubscribed.equalsIgnoreCase(Utility.BOOLEAN.YES)) {
-                                String cheepcareBannerListString = Utility.getJsonStringFromObject(bannerCityDetailsList);
+                                String cheepcareBannerListString = GsonUtility.getJsonStringFromObject(bannerCityDetailsList);
                                 ManageSubscriptionActivity.newInstance(LandingScreenPickPackageActivity.this, bannerCityDetailsList.get(which), true, cheepcareBannerListString);
                                 finish();
                             } else {
@@ -300,8 +302,8 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
             = new CheepCarePackageAdapter.PackageItemClickListener() {
         @Override
         public void onPackageItemClick(int position, PackageDetail packageModel) {
-//            String packageList = Utility.getJsonStringFromObject(mCityLandingPageModel.packageDetailList);
-            String packageList = Utility.getJsonStringFromObject(mCityLandingPageModel.packageDetailList);
+//            String packageList = GsonUtility.getJsonStringFromObject(mCityLandingPageModel.packageDetailList);
+            String packageList = GsonUtility.getJsonStringFromObject(mCityLandingPageModel.packageDetailList);
             PackageCustomizationActivity.newInstance(mContext, mCityLandingPageModel.cityDetail, packageModel, packageList, mCityLandingPageModel.adminSetting);
         }
     };
@@ -349,8 +351,8 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
                 String error_message;
                 switch (statusCode) {
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
-                        mCityLandingPageModel = (CityLandingPageModel) Utility.getObjectFromJsonString(jsonObject.optString(DATA), CityLandingPageModel.class);
-                        mPackageListString = Utility.getJsonStringFromObject(mCityLandingPageModel.packageDetailList);
+                        mCityLandingPageModel = (CityLandingPageModel) GsonUtility.getObjectFromJsonString(jsonObject.optString(DATA), CityLandingPageModel.class);
+                        mPackageListString = GsonUtility.getJsonStringFromObject(mCityLandingPageModel.packageDetailList);
                         getSavedData();
                         setData();
                         break;
@@ -412,10 +414,10 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
         ArrayList<PackageDetail> savedPackageList = new ArrayList<>();
         String cartDetail = PreferenceUtility.getInstance(this).getCityCartDetail(mCityLandingPageModel.cityDetail.citySlug);
         if (!TextUtils.isEmpty(cartDetail)) {
-            ArrayList<PackageDetail> list = Utility.getObjectListFromJsonString(cartDetail, PackageDetail[].class);
+            ArrayList<PackageDetail> list = GsonUtility.getObjectListFromJsonString(cartDetail, PackageDetail[].class);
             savedPackageList.clear();
             savedPackageList.addAll(list);
-            String webData = Utility.getJsonStringFromObject(mCityLandingPageModel.packageDetailList);
+            String webData = GsonUtility.getJsonStringFromObject(mCityLandingPageModel.packageDetailList);
             LogUtils.LOGE(TAG, "Saved data--- " + cartDetail);
             LogUtils.LOGE(TAG, "---------------------------------------------------------------------");
             LogUtils.LOGE(TAG, "Saved web data--- " + webData);
@@ -431,11 +433,11 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
                         }
                     }
                 }
-                LogUtils.LOGE(TAG, "replacedData: " + Utility.getJsonStringFromObject(mCityLandingPageModel.packageDetailList));
+                LogUtils.LOGE(TAG, "replacedData: " + GsonUtility.getJsonStringFromObject(mCityLandingPageModel.packageDetailList));
             }
         } else {
             if (!TextUtils.isEmpty(mPackageListString)) {
-                ArrayList<PackageDetail> list = Utility.getObjectListFromJsonString(mPackageListString, PackageDetail[].class);
+                ArrayList<PackageDetail> list = GsonUtility.getObjectListFromJsonString(mPackageListString, PackageDetail[].class);
                 mCityLandingPageModel.packageDetailList.clear();
                 mCityLandingPageModel.packageDetailList.addAll(list);
             }

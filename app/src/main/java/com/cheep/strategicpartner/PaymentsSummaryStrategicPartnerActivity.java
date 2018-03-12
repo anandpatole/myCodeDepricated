@@ -34,6 +34,9 @@ import com.cheep.model.TaskDetailModel;
 import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
+import com.cheep.utils.CalendarUtility;
+import com.cheep.utils.GlideUtility;
+import com.cheep.utils.GsonUtility;
 import com.cheep.utils.LogUtils;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.SuperCalendar;
@@ -54,7 +57,7 @@ public class PaymentsSummaryStrategicPartnerActivity extends BaseAppCompatActivi
 
     public static void newInstance(Context context, TaskDetailModel taskDetailModel) {
         Intent intent = new Intent(context, PaymentsSummaryStrategicPartnerActivity.class);
-        intent.putExtra(Utility.Extra.DATA, Utility.getJsonStringFromObject(taskDetailModel));
+        intent.putExtra(Utility.Extra.DATA, GsonUtility.getJsonStringFromObject(taskDetailModel));
         context.startActivity(intent);
     }
 
@@ -100,7 +103,7 @@ public class PaymentsSummaryStrategicPartnerActivity extends BaseAppCompatActivi
 
         if (getIntent().hasExtra(Utility.Extra.DATA)) {
             //This is only when provider profile view for specific task (provider gives quote to specific task)
-            taskDetailModel = (TaskDetailModel) Utility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA), TaskDetailModel.class);
+            taskDetailModel = (TaskDetailModel) GsonUtility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA), TaskDetailModel.class);
         }
 
         if (taskDetailModel != null) {
@@ -117,7 +120,7 @@ public class PaymentsSummaryStrategicPartnerActivity extends BaseAppCompatActivi
                     params.height = Utility.getHeightFromWidthForTwoOneRatio(width);
                     mActivityPaymentDetailBinding.frameBannerImage.setLayoutParams(params);
                     // Load the image now.
-                    Utility.loadImageView(mContext, mActivityPaymentDetailBinding.imgService, taskDetailModel.bannerImage, R.drawable.gradient_black);
+                    GlideUtility.loadImageView(mContext, mActivityPaymentDetailBinding.imgService, taskDetailModel.bannerImage, R.drawable.gradient_black);
                 }
             });
 
@@ -130,10 +133,10 @@ public class PaymentsSummaryStrategicPartnerActivity extends BaseAppCompatActivi
 
             callPaymentSummaryWS();
 
-            Utility.showCircularImageViewWithColorBorder(mContext, TAG, mActivityPaymentDetailBinding.imgLogo, taskDetailModel.catImage, Utility.DEFAULT_CHEEP_LOGO, R.color.dark_blue_variant_1, true);
+            GlideUtility.showCircularImageViewWithColorBorder(mContext, TAG, mActivityPaymentDetailBinding.imgLogo, taskDetailModel.catImage, Utility.DEFAULT_CHEEP_LOGO, R.color.dark_blue_variant_1, true);
             String dateTime = "";
             if (!TextUtils.isEmpty(taskDetailModel.taskStartdate)) {
-                dateTime = Utility.getDate(Long.parseLong(taskDetailModel.taskStartdate), Utility.DATE_TIME_DD_MMMM_HH_MM);
+                dateTime = CalendarUtility.getDate(Long.parseLong(taskDetailModel.taskStartdate), Utility.DATE_TIME_DD_MMMM_HH_MM);
                 dateTime = dateTime.replace(getString(R.string.label_am_caps), getString(R.string.label_am_small)).replace(getString(R.string.label_pm_caps), getString(R.string.label_pm_small));
             }
 
@@ -260,7 +263,7 @@ public class PaymentsSummaryStrategicPartnerActivity extends BaseAppCompatActivi
                 String error_message;
                 switch (statusCode) {
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
-                        paymentSummaryModel = (PaymentSummaryModel) Utility.getObjectFromJsonString(jsonObject.optString(NetworkUtility.TAGS.DATA), PaymentSummaryModel.class);
+                        paymentSummaryModel = (PaymentSummaryModel) GsonUtility.getObjectFromJsonString(jsonObject.optString(NetworkUtility.TAGS.DATA), PaymentSummaryModel.class);
                         setPaymentData();
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:

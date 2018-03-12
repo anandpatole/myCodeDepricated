@@ -21,6 +21,7 @@ import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
 import com.cheep.utils.ErrorLoadingHelper;
+import com.cheep.utils.GsonUtility;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.Utility;
 
@@ -63,7 +64,7 @@ public class CommentsActivity extends BaseAppCompatActivity {
      */
     public static void newInstance(Context context, ReviewModel reviewModel, String name) {
         Intent intent = new Intent(context, CommentsActivity.class);
-        intent.putExtra(Utility.Extra.DATA, Utility.getJsonStringFromObject(reviewModel));
+        intent.putExtra(Utility.Extra.DATA, GsonUtility.getJsonStringFromObject(reviewModel));
         intent.putExtra(Utility.Extra.USER_NAME, name);
         context.startActivity(intent);
     }
@@ -99,7 +100,7 @@ public class CommentsActivity extends BaseAppCompatActivity {
         errorLoadingHelper = new ErrorLoadingHelper(mActivityCommentsBinding.recyclerView);
 
         // Fetch the contents from Intents
-        reviewModel = (ReviewModel) Utility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA), ReviewModel.class);
+        reviewModel = (ReviewModel) GsonUtility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA), ReviewModel.class);
 
         // Setting up hint for comment label
         mActivityCommentsBinding.editComment.setHint(getString(R.string.hint_comments_edit_text, getIntent().getStringExtra(Utility.Extra.USER_NAME)));
@@ -204,7 +205,7 @@ public class CommentsActivity extends BaseAppCompatActivity {
                 switch (statusCode) {
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
 
-                        CommentsModel commentsModel = (CommentsModel) Utility.getObjectFromJsonString(jsonObject.getString(NetworkUtility.TAGS.DATA), CommentsModel.class);
+                        CommentsModel commentsModel = (CommentsModel) GsonUtility.getObjectFromJsonString(jsonObject.getString(NetworkUtility.TAGS.DATA), CommentsModel.class);
 
                         //Setting SP List recycler view adapter
                         if (commentsRecyclerViewAdapter == null) {
@@ -359,7 +360,7 @@ public class CommentsActivity extends BaseAppCompatActivity {
                 String error_message;
                 switch (statusCode) {
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
-                        ArrayList<CommentsModel> reviewList = Utility.getObjectListFromJsonString(jsonObject.getString(NetworkUtility.TAGS.DATA), CommentsModel[].class);
+                        ArrayList<CommentsModel> reviewList = GsonUtility.getObjectListFromJsonString(jsonObject.getString(NetworkUtility.TAGS.DATA), CommentsModel[].class);
 
                         //Setting SP List recycler view adapter
                         if (commentsRecyclerViewAdapter == null) {

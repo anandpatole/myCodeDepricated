@@ -45,6 +45,7 @@ import com.cheep.firebase.model.ChatNotification;
 import com.cheep.firebase.model.TaskChatModel;
 import com.cheep.model.MessageEvent;
 import com.cheep.network.NetworkUtility;
+import com.cheep.utils.GsonUtility;
 import com.cheep.utils.LogUtils;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.Utility;
@@ -447,7 +448,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             taskChatModel.messageType = chatNotification.messageType;
             taskChatModel.isSpSelected = chatNotification.isSpSelected;
             taskChatModel.timestamp = chatNotification.timestamp;
-            msgIntent.putExtra(Utility.Extra.DATA, Utility.getJsonStringFromObject(taskChatModel));
+            msgIntent.putExtra(Utility.Extra.DATA, GsonUtility.getJsonStringFromObject(taskChatModel));
         }
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
         //Add the back stack to the stack builder. This method also adds flags

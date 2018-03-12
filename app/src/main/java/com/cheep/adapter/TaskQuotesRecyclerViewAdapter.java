@@ -33,6 +33,7 @@ import com.cheep.firebase.FirebaseUtils;
 import com.cheep.model.ProviderModel;
 import com.cheep.model.TaskDetailModel;
 import com.cheep.utils.CustomTypefaceSpan;
+import com.cheep.utils.GlideUtility;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.RoundedBackgroundSpan;
 import com.cheep.utils.Utility;
@@ -109,7 +110,7 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
         holder.removeAnimations();
 
         //image
-        Utility.showCircularImageView(mContext, TAG, holder.ivAvatar, provider.profileUrl, Utility.DEFAULT_CHEEP_LOGO);
+        GlideUtility.showCircularImageView(mContext, TAG, holder.ivAvatar, provider.profileUrl, Utility.DEFAULT_CHEEP_LOGO);
 
         //basic info
         SpannableString sName = new SpannableString(Utility.checkNonNullAndSet(provider.userName));

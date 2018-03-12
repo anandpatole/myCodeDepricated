@@ -73,7 +73,7 @@ public class PreferenceUtility {
     }
 
     public void saveUserDetails(JSONObject jsonData) {
-        mUserDetails = (UserDetails) Utility.getObjectFromJsonString(jsonData.toString(), UserDetails.class);
+        mUserDetails = (UserDetails) GsonUtility.getObjectFromJsonString(jsonData.toString(), UserDetails.class);
         Log.d(TAG, "saveUserDetails() called with: jsonData = [" + jsonData + "]");
         mSharedPreferences.edit().putString(PREF_USER_INFO, jsonData.toString()).apply();
 
@@ -88,7 +88,7 @@ public class PreferenceUtility {
      */
     public void saveUserDetails(UserDetails model) {
         Log.d(TAG, "saveUserDetails() called with: model = [" + model + "]");
-        mSharedPreferences.edit().putString(PREF_USER_INFO, Utility.getJsonStringFromObject(model)).apply();
+        mSharedPreferences.edit().putString(PREF_USER_INFO, GsonUtility.getJsonStringFromObject(model)).apply();
         mUserDetails = model;
         //updating hotline profile
         HotlineHelper.getInstance(context).updateUserInfo(mUserDetails, context);
@@ -101,7 +101,7 @@ public class PreferenceUtility {
         if (mSharedPreferences.contains(PREF_USER_INFO)) {
             try {
                 JSONObject jsonObject = new JSONObject(mSharedPreferences.getString(PREF_USER_INFO, null));
-                mUserDetails = (UserDetails) Utility.getObjectFromJsonString(jsonObject.toString(), UserDetails.class);
+                mUserDetails = (UserDetails) GsonUtility.getObjectFromJsonString(jsonObject.toString(), UserDetails.class);
                 return mUserDetails;
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -180,7 +180,7 @@ public class PreferenceUtility {
         if (mGuestSharedPreferences.contains(PREF_GUEST_USER_INFO)) {
             try {
                 JSONObject jsonObject = new JSONObject(mGuestSharedPreferences.getString(PREF_GUEST_USER_INFO, null));
-                mGuestUserDetails = (GuestUserDetails) Utility.getObjectFromJsonString(jsonObject.toString(), GuestUserDetails.class);
+                mGuestUserDetails = (GuestUserDetails) GsonUtility.getObjectFromJsonString(jsonObject.toString(), GuestUserDetails.class);
                 return mGuestUserDetails;
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -191,7 +191,7 @@ public class PreferenceUtility {
 
     public void saveGuestUserDetails(GuestUserDetails model) {
         Log.d(TAG, "saveUserDetails() called with: model = [" + model + "]");
-        mGuestSharedPreferences.edit().putString(PREF_GUEST_USER_INFO, Utility.getJsonStringFromObject(model)).apply();
+        mGuestSharedPreferences.edit().putString(PREF_GUEST_USER_INFO, GsonUtility.getJsonStringFromObject(model)).apply();
         mGuestUserDetails = model;
     }
 

@@ -32,6 +32,8 @@ import com.cheep.model.JobCategoryModel;
 import com.cheep.model.MessageEvent;
 import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
+import com.cheep.utils.GlideUtility;
+import com.cheep.utils.GsonUtility;
 import com.cheep.utils.LogUtils;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.Utility;
@@ -82,7 +84,7 @@ public class ManageSubscriptionActivity extends BaseAppCompatActivity {
 
     public static void newInstance(Context context, CityDetail city, boolean isManageSubscription, String cheepcareBannerListString) {
         Intent intent = new Intent(context, ManageSubscriptionActivity.class);
-        intent.putExtra(Utility.Extra.CITY_DETAIL, Utility.getJsonStringFromObject(city));
+        intent.putExtra(Utility.Extra.CITY_DETAIL, GsonUtility.getJsonStringFromObject(city));
         intent.putExtra(Utility.Extra.ACTIVITY_TYPE, isManageSubscription);
         intent.putExtra(Utility.Extra.DATA, cheepcareBannerListString);
         context.startActivity(intent);
@@ -100,10 +102,10 @@ public class ManageSubscriptionActivity extends BaseAppCompatActivity {
     @Override
     protected void initiateUI() {
         if (getIntent().hasExtra(Utility.Extra.CITY_DETAIL)) {
-            mCityDetail = (CityDetail) Utility.getObjectFromJsonString(getIntent().getExtras().getString(Utility.Extra.CITY_DETAIL), CityDetail.class);
+            mCityDetail = (CityDetail) GsonUtility.getObjectFromJsonString(getIntent().getExtras().getString(Utility.Extra.CITY_DETAIL), CityDetail.class);
             isManageSubscription = getIntent().getExtras().getBoolean(Utility.Extra.ACTIVITY_TYPE);
             if (isManageSubscription) {
-                bannerCityDetailsList = Utility.getObjectListFromJsonString(getIntent().getExtras().getString(Utility.Extra.DATA), CityDetail[].class);
+                bannerCityDetailsList = GsonUtility.getObjectListFromJsonString(getIntent().getExtras().getString(Utility.Extra.DATA), CityDetail[].class);
             } else {
                 mBinding.tvCityName.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
             }
@@ -161,7 +163,7 @@ public class ManageSubscriptionActivity extends BaseAppCompatActivity {
                 }
 
                 // Load the image now.
-                Utility.loadImageView(mContext, mBinding.ivCityImage
+                GlideUtility.loadImageView(mContext, mBinding.ivCityImage
                         , resId
                         , R.drawable.hotline_ic_image_loading_placeholder);
             }
@@ -227,7 +229,7 @@ public class ManageSubscriptionActivity extends BaseAppCompatActivity {
                                 mCityDetail = bannerCityDetailsList.get(which);
                                 setCityBannerData();
                             } else {
-                                String cheepcareBannerListString = Utility.getJsonStringFromObject(bannerCityDetailsList);
+                                String cheepcareBannerListString = GsonUtility.getJsonStringFromObject(bannerCityDetailsList);
                                 LandingScreenPickPackageActivity.newInstance(ManageSubscriptionActivity.this,
                                         bannerCityDetailsList.get(which), cheepcareBannerListString);
                                 finish();
@@ -296,7 +298,7 @@ public class ManageSubscriptionActivity extends BaseAppCompatActivity {
             new ManageSubscriptionAddPackageAdapter.AddPackageInteractionListener() {
                 @Override
                 public void onPackageItemClick(PackageDetail model) {
-                    String packageList = Utility.getJsonStringFromObject(mAllPackagesList);
+                    String packageList = GsonUtility.getJsonStringFromObject(mAllPackagesList);
                     PackageCustomizationActivity.newInstance(mContext, mCityDetail, model, packageList, mAdminSettingModel);
                 }
             };
@@ -335,7 +337,7 @@ public class ManageSubscriptionActivity extends BaseAppCompatActivity {
                         }
                     }*/
                     mAllPackagesList = allPackageList;
-                    mPackageListString = Utility.getJsonStringFromObject(mAllPackagesList);
+                    mPackageListString = GsonUtility.getJsonStringFromObject(mAllPackagesList);
                     getSavedData();
                     mAdminSettingModel = adminSettingModel;
                     hideProgressDialog();
@@ -356,10 +358,10 @@ public class ManageSubscriptionActivity extends BaseAppCompatActivity {
         ArrayList<PackageDetail> savedPackageList = new ArrayList<>();
         String cartDetail = PreferenceUtility.getInstance(this).getCityCartDetail(mCityDetail.citySlug);
         if (!TextUtils.isEmpty(cartDetail)) {
-            ArrayList<PackageDetail> list = Utility.getObjectListFromJsonString(cartDetail, PackageDetail[].class);
+            ArrayList<PackageDetail> list = GsonUtility.getObjectListFromJsonString(cartDetail, PackageDetail[].class);
             savedPackageList.clear();
             savedPackageList.addAll(list);
-            String webData = Utility.getJsonStringFromObject(mAllPackagesList);
+            String webData = GsonUtility.getJsonStringFromObject(mAllPackagesList);
             LogUtils.LOGE(TAG, "Saved data--- " + cartDetail);
             LogUtils.LOGE(TAG, "---------------------------------------------------------------------");
             LogUtils.LOGE(TAG, "Saved web data--- " + webData);
@@ -375,11 +377,11 @@ public class ManageSubscriptionActivity extends BaseAppCompatActivity {
                         }
                     }
                 }
-                LogUtils.LOGE(TAG, "replacedData: " + Utility.getJsonStringFromObject(mAllPackagesList));
+                LogUtils.LOGE(TAG, "replacedData: " + GsonUtility.getJsonStringFromObject(mAllPackagesList));
             }
         } else {
             if (!TextUtils.isEmpty(mPackageListString)) {
-                ArrayList<PackageDetail> list = Utility.getObjectListFromJsonString(mPackageListString, PackageDetail[].class);
+                ArrayList<PackageDetail> list = GsonUtility.getObjectListFromJsonString(mPackageListString, PackageDetail[].class);
                 mAllPackagesList.clear();
                 mAllPackagesList.addAll(list);
             }

@@ -61,7 +61,10 @@ import com.cheep.strategicpartner.AmazonUtils;
 import com.cheep.strategicpartner.MediaRecycleAdapter;
 import com.cheep.strategicpartner.model.MediaModel;
 import com.cheep.strategicpartner.recordvideo.RecordVideoNewActivity;
+import com.cheep.utils.GlideUtility;
+import com.cheep.utils.GsonUtility;
 import com.cheep.utils.LogUtils;
+import com.cheep.utils.MediaUtility;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.RequestPermission;
 import com.cheep.utils.SuperCalendar;
@@ -602,14 +605,14 @@ public class EnterTaskDetailFragment extends BaseFragment implements RequestPerm
             Log.i(TAG, "onActivityResult: CurrentPath" + mCurrentPhotoPath);
             File f = new File(mCurrentPhotoPath);
             Uri contentUri = Uri.fromFile(f);
-            mCurrentPhotoPath = Utility.getPath(mTaskCreationActivity, contentUri);
+            mCurrentPhotoPath = MediaUtility.getPath(mTaskCreationActivity, contentUri);
             uploadFile(mCurrentPhotoPath, MediaModel.MediaType.TYPE_IMAGE);
         }
 
         // image chosen from gallery result
         else if (requestCode == Utility.REQUEST_CODE_IMAGE_SELECT && resultCode == Activity.RESULT_OK && data != null) {
             Log.i(TAG, "onActivityResult: " + data.getData().toString());
-            mCurrentPhotoPath = Utility.getPath(mTaskCreationActivity, data.getData());
+            mCurrentPhotoPath = MediaUtility.getPath(mTaskCreationActivity, data.getData());
             uploadFile(mCurrentPhotoPath, MediaModel.MediaType.TYPE_IMAGE);
         }
 
@@ -623,7 +626,7 @@ public class EnterTaskDetailFragment extends BaseFragment implements RequestPerm
         // video chosen from gallery result
         else if (requestCode == Utility.REQUEST_CODE_VIDEO_SELECT && resultCode == RESULT_OK && data != null) {
             Uri selectedImageUri = data.getData();
-            mCurrentPhotoPath = Utility.getPath(mTaskCreationActivity, selectedImageUri);
+            mCurrentPhotoPath = MediaUtility.getPath(mTaskCreationActivity, selectedImageUri);
 
             if (mCurrentPhotoPath != null && !mCurrentPhotoPath.equals("")) {
                 long duration = AmazonUtils.getDuration(mCurrentPhotoPath);
@@ -1516,7 +1519,7 @@ public class EnterTaskDetailFragment extends BaseFragment implements RequestPerm
                 hideProgressDialog();
                 switch (statusCode) {
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
-                        ArrayList<ProviderModel> list = Utility.getObjectListFromJsonString(jsonObject.getString(NetworkUtility.TAGS.DATA), ProviderModel[].class);
+                        ArrayList<ProviderModel> list = GsonUtility.getObjectListFromJsonString(jsonObject.getString(NetworkUtility.TAGS.DATA), ProviderModel[].class);
                         Log.i(TAG, "onResponse: size>>" + list.size());
 //                        if (list == null || list.isEmpty()) {
 //                            isProAvailableForGivenAddress = false;
@@ -1596,7 +1599,7 @@ public class EnterTaskDetailFragment extends BaseFragment implements RequestPerm
             switch (i) {
                 case 0:
                     if (!list.isEmpty() && list.get(i) != null) {
-                        Utility.showCircularImageView(mContext, TAG, mFragmentEnterTaskDetailBinding.img1, list.get(i).profileUrl, R.drawable.ic_cheep_circular_icon, true);
+                        GlideUtility.showCircularImageView(mContext, TAG, mFragmentEnterTaskDetailBinding.img1, list.get(i).profileUrl, R.drawable.ic_cheep_circular_icon, true);
                         mFragmentEnterTaskDetailBinding.img1.setVisibility(View.VISIBLE);
                     } else {
                         mFragmentEnterTaskDetailBinding.img1.setVisibility(View.GONE);
@@ -1604,7 +1607,7 @@ public class EnterTaskDetailFragment extends BaseFragment implements RequestPerm
                     break;
                 case 1:
                     if (list.size() > 1 && list.get(i) != null) {
-                        Utility.showCircularImageView(mContext, TAG, mFragmentEnterTaskDetailBinding.img2, list.get(i).profileUrl, R.drawable.ic_cheep_circular_icon, true);
+                        GlideUtility.showCircularImageView(mContext, TAG, mFragmentEnterTaskDetailBinding.img2, list.get(i).profileUrl, R.drawable.ic_cheep_circular_icon, true);
                         mFragmentEnterTaskDetailBinding.img2.setVisibility(View.VISIBLE);
                     } else {
                         mFragmentEnterTaskDetailBinding.img2.setVisibility(View.GONE);
@@ -1612,7 +1615,7 @@ public class EnterTaskDetailFragment extends BaseFragment implements RequestPerm
                     break;
                 case 2:
                     if (list.size() > 2 && list.get(i) != null) {
-                        Utility.showCircularImageView(mContext, TAG, mFragmentEnterTaskDetailBinding.img3, list.get(i).profileUrl, R.drawable.ic_cheep_circular_icon, true);
+                        GlideUtility.showCircularImageView(mContext, TAG, mFragmentEnterTaskDetailBinding.img3, list.get(i).profileUrl, R.drawable.ic_cheep_circular_icon, true);
                         mFragmentEnterTaskDetailBinding.img3.setVisibility(View.VISIBLE);
                     } else {
                         mFragmentEnterTaskDetailBinding.img3.setVisibility(View.GONE);
@@ -1620,7 +1623,7 @@ public class EnterTaskDetailFragment extends BaseFragment implements RequestPerm
                     break;
                 case 3:
                     if (list.size() > 3 && list.get(i) != null) {
-                        Utility.showCircularImageView(mContext, TAG, mFragmentEnterTaskDetailBinding.img4, list.get(i).profileUrl, R.drawable.ic_cheep_circular_icon, true);
+                        GlideUtility.showCircularImageView(mContext, TAG, mFragmentEnterTaskDetailBinding.img4, list.get(i).profileUrl, R.drawable.ic_cheep_circular_icon, true);
                         mFragmentEnterTaskDetailBinding.img4.setVisibility(View.VISIBLE);
                     } else {
                         mFragmentEnterTaskDetailBinding.img4.setVisibility(View.GONE);
@@ -1628,7 +1631,7 @@ public class EnterTaskDetailFragment extends BaseFragment implements RequestPerm
                     break;
                 case 4:
                     if (list.size() > 4 && list.get(i) != null) {
-                        Utility.showCircularImageView(mContext, TAG, mFragmentEnterTaskDetailBinding.img5, list.get(i).profileUrl, R.drawable.ic_cheep_circular_icon, true);
+                        GlideUtility.showCircularImageView(mContext, TAG, mFragmentEnterTaskDetailBinding.img5, list.get(i).profileUrl, R.drawable.ic_cheep_circular_icon, true);
                         mFragmentEnterTaskDetailBinding.img5.setVisibility(View.VISIBLE);
                     } else {
                         mFragmentEnterTaskDetailBinding.img5.setVisibility(View.GONE);

@@ -34,6 +34,8 @@ import com.cheep.model.JobCategoryModel;
 import com.cheep.model.MessageEvent;
 import com.cheep.model.SubServiceDetailModel;
 import com.cheep.strategicpartner.model.MediaModel;
+import com.cheep.utils.GlideUtility;
+import com.cheep.utils.GsonUtility;
 import com.cheep.utils.LogUtils;
 import com.cheep.utils.Utility;
 import com.cheep.utils.WebCallClass;
@@ -75,12 +77,12 @@ public class TaskCreationCCActivity extends BaseAppCompatActivity {
     public static void getInstance(Context mContext, JobCategoryModel model, AddressModel addressModel, String packageType
             , String carePackageId, List<AddressModel> mSelectedAddressList, AdminSettingModel adminSettingModel) {
         Intent intent = new Intent(mContext, TaskCreationCCActivity.class);
-        intent.putExtra(Utility.Extra.DATA, Utility.getJsonStringFromObject(model));
+        intent.putExtra(Utility.Extra.DATA, GsonUtility.getJsonStringFromObject(model));
         intent.putExtra(Utility.Extra.DATA_2, packageType);
-        intent.putExtra(Utility.Extra.DATA_3, Utility.getJsonStringFromObject(mSelectedAddressList));
-        intent.putExtra(Utility.Extra.SELECTED_ADDRESS_MODEL, Utility.getJsonStringFromObject(addressModel));
+        intent.putExtra(Utility.Extra.DATA_3, GsonUtility.getJsonStringFromObject(mSelectedAddressList));
+        intent.putExtra(Utility.Extra.SELECTED_ADDRESS_MODEL, GsonUtility.getJsonStringFromObject(addressModel));
         intent.putExtra(Utility.Extra.SELECTED_PACKAGE_ID, carePackageId);
-        intent.putExtra(Utility.Extra.ADMIN_SETTING, Utility.getJsonStringFromObject(adminSettingModel));
+        intent.putExtra(Utility.Extra.ADMIN_SETTING, GsonUtility.getJsonStringFromObject(adminSettingModel));
 //        ((Activity) mContext).startActivityForResult(intent, Utility.REQUEST_CODE_TASK_CREATION_CHEEP_CARE);
         mContext.startActivity(intent);
     }
@@ -98,12 +100,12 @@ public class TaskCreationCCActivity extends BaseAppCompatActivity {
     protected void initiateUI() {
         if (getIntent().getExtras() != null) {
             // Fetch JobCategory Model
-            mJobCategoryModel = (JobCategoryModel) Utility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA), JobCategoryModel.class);
+            mJobCategoryModel = (JobCategoryModel) GsonUtility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA), JobCategoryModel.class);
             mPackageType = getIntent().getStringExtra(Utility.Extra.DATA_2);
             mCarePackageId = getIntent().getStringExtra(Utility.Extra.SELECTED_PACKAGE_ID);
-            mAddressModel = (AddressModel) Utility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.SELECTED_ADDRESS_MODEL), AddressModel.class);
-            mAdminSettingModel = (AdminSettingModel) Utility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.ADMIN_SETTING), AdminSettingModel.class);
-            mCareAddressList = Utility.getObjectListFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA_3), AddressModel[].class);
+            mAddressModel = (AddressModel) GsonUtility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.SELECTED_ADDRESS_MODEL), AddressModel.class);
+            mAdminSettingModel = (AdminSettingModel) GsonUtility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.ADMIN_SETTING), AdminSettingModel.class);
+            mCareAddressList = GsonUtility.getObjectListFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA_3), AddressModel[].class);
         }
 
         // Setting up Toolbar
@@ -126,8 +128,8 @@ public class TaskCreationCCActivity extends BaseAppCompatActivity {
         mBinding.textTitle.setText(mJobCategoryModel.catName != null ? mJobCategoryModel.catName : Utility.EMPTY_STRING);
 
         // Set up image
-        Utility.loadImageView(mContext, mBinding.imgService, mJobCategoryModel.catImage, R.drawable.gradient_black);
-//        Utility.loadImageView(mContext, mBinding.imgService, mJobCategoryModel.catImageExtras.thumb, R.drawable.gradient_black);
+        GlideUtility.loadImageView(mContext, mBinding.imgService, mJobCategoryModel.catImage, R.drawable.gradient_black);
+//        GlideUtility.loadImageView(mContext, mBinding.imgService, mJobCategoryModel.catImageExtras.thumb, R.drawable.gradient_black);
 
         // Setting viewpager
         setupViewPager(mBinding.viewpager);

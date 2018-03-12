@@ -47,6 +47,8 @@ import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
 import com.cheep.strategicpartner.model.AllSubSubCat;
 import com.cheep.strategicpartner.model.StrategicPartnerServiceModel;
+import com.cheep.utils.GlideUtility;
+import com.cheep.utils.GsonUtility;
 import com.cheep.utils.HotlineHelper;
 import com.cheep.utils.LogUtils;
 import com.cheep.utils.PreferenceUtility;
@@ -102,7 +104,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
         if (getIntent().getExtras() != null) {
             if (getIntent().hasExtra(Utility.Extra.TASK_DETAIL_MODEL)) {
                 // Fetch Task Detail Model
-                mTaskDetailModel = (TaskDetailModel) Utility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.TASK_DETAIL_MODEL), TaskDetailModel.class);
+                mTaskDetailModel = (TaskDetailModel) GsonUtility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.TASK_DETAIL_MODEL), TaskDetailModel.class);
             }
         }
 
@@ -135,8 +137,8 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
         mActivityTaskSummaryBinding.textCategoryName.setText(mTaskDetailModel.categoryName != null ? mTaskDetailModel.categoryName : Utility.EMPTY_STRING);
 
         // Set up image
-//        Utility.loadImageView(mContext, mActivityTaskSummaryBinding.imgService, mTaskDetailModel.bannerImage);
-//        Utility.loadImageView(mContext, mActivityTaskSummaryBinding.imgService, mTaskDetailModel.catImageExtras.thumb);
+//        GlideUtility.loadImageView(mContext, mActivityTaskSummaryBinding.imgService, mTaskDetailModel.bannerImage);
+//        GlideUtility.loadImageView(mContext, mActivityTaskSummaryBinding.imgService, mTaskDetailModel.catImageExtras.thumb);
 
 
         // By Default makethe task completion dialog as gone
@@ -155,7 +157,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
                 mActivityTaskSummaryBinding.tvCounter.setVisibility(View.GONE);
 
 
-            Utility.loadImageView(this, mActivityTaskSummaryBinding.imgTaskPicture, mTaskDetailModel.mMediaModelList.get(0).mediaThumbName);
+            GlideUtility.loadImageView(this, mActivityTaskSummaryBinding.imgTaskPicture, mTaskDetailModel.mMediaModelList.get(0).mediaThumbName);
 
         } else
             mActivityTaskSummaryBinding.frameSelectPicture.setVisibility(View.GONE);
@@ -218,7 +220,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
             mActivityTaskSummaryBinding.textAddressKmAway.setText(mTaskDetailModel.selectedProvider.distance + getString(R.string.label_away));
 
             // Profile Pic
-            Utility.showCircularImageViewWithColorBorder(this, TAG, mActivityTaskSummaryBinding.imgProfile, mTaskDetailModel.catImageExtras.medium, Utility.DEFAULT_CHEEP_LOGO, R.color.grey_dark_color, true);
+            GlideUtility.showCircularImageViewWithColorBorder(this, TAG, mActivityTaskSummaryBinding.imgProfile, mTaskDetailModel.catImageExtras.medium, Utility.DEFAULT_CHEEP_LOGO, R.color.grey_dark_color, true);
 
             // Manage Click events of Call & Chat
             mActivityTaskSummaryBinding.lnCall.setOnClickListener(new View.OnClickListener() {
@@ -310,7 +312,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
                 mActivityTaskSummaryBinding.frameBannerImage.setLayoutParams(params);
 
                 // Load the image now.
-                Utility.loadImageView(mContext, mActivityTaskSummaryBinding.imgService, mTaskDetailModel.bannerImage, R.drawable.gradient_black);
+                GlideUtility.loadImageView(mContext, mActivityTaskSummaryBinding.imgService, mTaskDetailModel.bannerImage, R.drawable.gradient_black);
             }
         });
     }
@@ -713,7 +715,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
             switch (i) {
                 case 0:
                     if (list.size() > 0 && list.get(i) != null) {
-                        Utility.showCircularImageView(mContext, TAG, mActivityTaskSummaryBinding.img1, list.get(i).profileUrl, R.drawable.ic_cheep_circular_icon, true);
+                        GlideUtility.showCircularImageView(mContext, TAG, mActivityTaskSummaryBinding.img1, list.get(i).profileUrl, R.drawable.ic_cheep_circular_icon, true);
                         mActivityTaskSummaryBinding.img1.setVisibility(View.VISIBLE);
                     } else {
                         mActivityTaskSummaryBinding.img1.setVisibility(View.GONE);
@@ -721,7 +723,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
                     break;
                 case 1:
                     if (list.size() > 1 && list.get(i) != null) {
-                        Utility.showCircularImageView(mContext, TAG, mActivityTaskSummaryBinding.img2, list.get(i).profileUrl, R.drawable.ic_cheep_circular_icon, true);
+                        GlideUtility.showCircularImageView(mContext, TAG, mActivityTaskSummaryBinding.img2, list.get(i).profileUrl, R.drawable.ic_cheep_circular_icon, true);
                         mActivityTaskSummaryBinding.img2.setVisibility(View.VISIBLE);
                     } else {
                         mActivityTaskSummaryBinding.img2.setVisibility(View.GONE);
@@ -729,7 +731,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
                     break;
                 case 2:
                     if (list.size() > 2 && list.get(i) != null) {
-                        Utility.showCircularImageView(mContext, TAG, mActivityTaskSummaryBinding.img3, list.get(i).profileUrl, R.drawable.ic_cheep_circular_icon, true);
+                        GlideUtility.showCircularImageView(mContext, TAG, mActivityTaskSummaryBinding.img3, list.get(i).profileUrl, R.drawable.ic_cheep_circular_icon, true);
                         mActivityTaskSummaryBinding.img3.setVisibility(View.VISIBLE);
                     } else {
                         mActivityTaskSummaryBinding.img3.setVisibility(View.GONE);
@@ -737,7 +739,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
                     break;
                 case 3:
                     if (list.size() > 3 && list.get(i) != null) {
-                        Utility.showCircularImageView(mContext, TAG, mActivityTaskSummaryBinding.img4, list.get(i).profileUrl, R.drawable.ic_cheep_circular_icon, true);
+                        GlideUtility.showCircularImageView(mContext, TAG, mActivityTaskSummaryBinding.img4, list.get(i).profileUrl, R.drawable.ic_cheep_circular_icon, true);
                         mActivityTaskSummaryBinding.img4.setVisibility(View.VISIBLE);
                     } else {
                         mActivityTaskSummaryBinding.img4.setVisibility(View.GONE);
@@ -745,7 +747,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
                     break;
                 case 4:
                     if (list.size() > 4 && list.get(i) != null) {
-                        Utility.showCircularImageView(mContext, TAG, mActivityTaskSummaryBinding.img5, list.get(i).profileUrl, R.drawable.ic_cheep_circular_icon, true);
+                        GlideUtility.showCircularImageView(mContext, TAG, mActivityTaskSummaryBinding.img5, list.get(i).profileUrl, R.drawable.ic_cheep_circular_icon, true);
                         mActivityTaskSummaryBinding.img5.setVisibility(View.VISIBLE);
                     } else {
                         mActivityTaskSummaryBinding.img5.setVisibility(View.GONE);
@@ -840,7 +842,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
 
                         JSONObject jsonData = jsonObject.optJSONObject(NetworkUtility.TAGS.DATA);
 
-                        mTaskDetailModel = (TaskDetailModel) Utility.getObjectFromJsonString(jsonObject.optString(NetworkUtility.TAGS.DATA), TaskDetailModel.class);
+                        mTaskDetailModel = (TaskDetailModel) GsonUtility.getObjectFromJsonString(jsonObject.optString(NetworkUtility.TAGS.DATA), TaskDetailModel.class);
 
                         setUpTaskDetails(mTaskDetailModel);
 

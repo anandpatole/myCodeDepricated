@@ -33,6 +33,7 @@ import com.cheep.model.UserDetails;
 import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
+import com.cheep.utils.GsonUtility;
 import com.cheep.utils.Utility;
 
 import org.json.JSONException;
@@ -64,7 +65,7 @@ public class SignupActivity extends BaseAppCompatActivity {
     public static void newInstance(Context context, UserDetails userDetails) {
         Intent intent = new Intent(context, SignupActivity.class);
         if (userDetails != null) {
-            intent.putExtra(Utility.Extra.USER_DETAILS, Utility.getJsonStringFromObject(userDetails));
+            intent.putExtra(Utility.Extra.USER_DETAILS, GsonUtility.getJsonStringFromObject(userDetails));
         }
         context.startActivity(intent);
     }
@@ -136,7 +137,7 @@ public class SignupActivity extends BaseAppCompatActivity {
 
         //Check if we got any user details that need to be updated
         if (getIntent().hasExtra(Utility.Extra.USER_DETAILS)) {
-            userDetails = (UserDetails) Utility.getObjectFromJsonString(getIntent().getExtras().getString(Utility.Extra.USER_DETAILS), UserDetails.class);
+            userDetails = (UserDetails) GsonUtility.getObjectFromJsonString(getIntent().getExtras().getString(Utility.Extra.USER_DETAILS), UserDetails.class);
         }
 
         //Update FirstName & LastName, if Found
@@ -297,11 +298,11 @@ public class SignupActivity extends BaseAppCompatActivity {
                 //Checking if current path is already exist then no need to get it from result
                 if (TextUtils.isEmpty(mCurrentPhotoPath)) {
                     Uri resultUri = result.getUri();
-                    mCurrentPhotoPath = Utility.getPath(this, resultUri);
+                    mCurrentPhotoPath = MediaUtility.getPath(this, resultUri);
                 }
                 Log.i(TAG, "onActivityResult: Path:" + mCurrentPhotoPath);
                 //Load the image from Glide
-                Utility.showCircularImageView(mContext, TAG, mActivitySignupBinding.imgProfile, mCurrentPhotoPath, R.drawable.icon_profile_img, true);
+                GlideUtility.showCircularImageView(mContext, TAG, mActivitySignupBinding.imgProfile, mCurrentPhotoPath, R.drawable.icon_profile_img, true);
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 Exception error = result.getError();
                 Log.i(TAG, "onActivityResult: Crop Error" + error.toString());

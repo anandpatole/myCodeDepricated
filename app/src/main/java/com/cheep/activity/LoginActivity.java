@@ -40,6 +40,7 @@ import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
 import com.cheep.utils.FetchLocationInfoUtility;
+import com.cheep.utils.GsonUtility;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.Utility;
 import com.facebook.AccessToken;
@@ -787,7 +788,7 @@ public class LoginActivity extends BaseAppCompatActivity implements FacebookHelp
                 switch (statusCode) {
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
 
-                        final UserDetails userDetails = (UserDetails) Utility.getObjectFromJsonString(jsonObject.getJSONObject(NetworkUtility.TAGS.DATA).toString(), UserDetails.class);
+                        final UserDetails userDetails = (UserDetails) GsonUtility.getObjectFromJsonString(jsonObject.getJSONObject(NetworkUtility.TAGS.DATA).toString(), UserDetails.class);
 
                         // If User is trying to login through MOBILE, App needs to verify Mobile number before going to Homescreen,
                         // Rest of the case we can directly redirect the user to login screen

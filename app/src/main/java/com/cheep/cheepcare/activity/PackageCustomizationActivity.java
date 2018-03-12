@@ -41,6 +41,8 @@ import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
 import com.cheep.utils.FetchLocationInfoUtility;
+import com.cheep.utils.GlideUtility;
+import com.cheep.utils.GsonUtility;
 import com.cheep.utils.LogUtils;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.Utility;
@@ -55,8 +57,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-
-import static com.cheep.utils.Utility.getObjectFromJsonString;
 
 /**
  * Created by pankaj on 12/22/17.
@@ -91,10 +91,10 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
 
     public static void newInstance(Context context, CityDetail cityDetail, PackageDetail model, String packageList, AdminSettingModel adminSetting) {
         Intent intent = new Intent(context, PackageCustomizationActivity.class);
-        intent.putExtra(Utility.Extra.MODEL, Utility.getJsonStringFromObject(model));
-        intent.putExtra(Utility.Extra.CITY_NAME, Utility.getJsonStringFromObject(cityDetail));
+        intent.putExtra(Utility.Extra.MODEL, GsonUtility.getJsonStringFromObject(model));
+        intent.putExtra(Utility.Extra.CITY_NAME, GsonUtility.getJsonStringFromObject(cityDetail));
         intent.putExtra(Utility.Extra.PACKAGE_LIST, packageList);
-        intent.putExtra(Utility.Extra.ADMIN_SETTING, Utility.getJsonStringFromObject(adminSetting));
+        intent.putExtra(Utility.Extra.ADMIN_SETTING, GsonUtility.getJsonStringFromObject(adminSetting));
         context.startActivity(intent);
     }
 
@@ -114,11 +114,11 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
 
 
         if (getIntent().hasExtra(Utility.Extra.MODEL)) {
-            mSelectedPackageModel = (PackageDetail) Utility.getObjectFromJsonString(getIntent().getExtras().getString(Utility.Extra.MODEL), PackageDetail.class);
-            mCityDetail = (CityDetail) Utility.getObjectFromJsonString(getIntent().getExtras().getString(Utility.Extra.CITY_NAME), CityDetail.class);
-            settingModel = (AdminSettingModel) Utility.getObjectFromJsonString(getIntent().getExtras().getString(Utility.Extra.ADMIN_SETTING), AdminSettingModel.class);
+            mSelectedPackageModel = (PackageDetail) GsonUtility.getObjectFromJsonString(getIntent().getExtras().getString(Utility.Extra.MODEL), PackageDetail.class);
+            mCityDetail = (CityDetail) GsonUtility.getObjectFromJsonString(getIntent().getExtras().getString(Utility.Extra.CITY_NAME), CityDetail.class);
+            settingModel = (AdminSettingModel) GsonUtility.getObjectFromJsonString(getIntent().getExtras().getString(Utility.Extra.ADMIN_SETTING), AdminSettingModel.class);
 //            mSelectedPackageModel = getIntent().getExtras().getString(Utility.Extra.SELECTED_PACKAGE_ID);
-            mPackageList = Utility.getObjectListFromJsonString(getIntent().getExtras().getString(Utility.Extra.PACKAGE_LIST), PackageDetail[].class);
+            mPackageList = GsonUtility.getObjectListFromJsonString(getIntent().getExtras().getString(Utility.Extra.PACKAGE_LIST), PackageDetail[].class);
         }
 
         cartCount = 0;
@@ -161,7 +161,7 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
                 }
 
 
-                Utility.loadImageView(mContext, mBinding.ivCityImage
+                GlideUtility.loadImageView(mContext, mBinding.ivCityImage
                         , resId
                         , R.drawable.hotline_ic_image_loading_placeholder);
             }
@@ -310,7 +310,7 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
                 setContinueButtonText();
                 break;
             case STAGE_2:
-                PreferenceUtility.getInstance(this).setCityCartDetail(mCityDetail.citySlug, Utility.getJsonStringFromObject(mPackageList));
+                PreferenceUtility.getInstance(this).setCityCartDetail(mCityDetail.citySlug, GsonUtility.getJsonStringFromObject(mPackageList));
                 mBinding.viewpager.setCurrentItem(1);
                 // Change description
                 mBinding.textStepDesc.setText(getString(R.string.step_2_desc_cheep_care));
@@ -319,7 +319,7 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
                 mBinding.textPrice.setText(Utility.EMPTY_STRING);
                 break;
             case STAGE_3:
-                PreferenceUtility.getInstance(this).setCityCartDetail(mCityDetail.citySlug, Utility.getJsonStringFromObject(mPackageList));
+                PreferenceUtility.getInstance(this).setCityCartDetail(mCityDetail.citySlug, GsonUtility.getJsonStringFromObject(mPackageList));
                 mBinding.viewpager.setCurrentItem(2);
                 // Change description
                 mBinding.textStepDesc.setText(getString(R.string.step_3_desc_cheep_care));
@@ -337,7 +337,7 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
 
         if (mBinding.viewpager.getCurrentItem() == 0) {
             if (cartCount > 0) {
-                PreferenceUtility.getInstance(this).setCityCartDetail(mCityDetail.citySlug, Utility.getJsonStringFromObject(mPackageList));
+                PreferenceUtility.getInstance(this).setCityCartDetail(mCityDetail.citySlug, GsonUtility.getJsonStringFromObject(mPackageList));
 //                showAlertDialog(false);
                 super.onBackPressed();
             } else
@@ -723,7 +723,7 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
                 switch (statusCode) {
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
                         SelectPackageSpecificationsFragment fragment = (SelectPackageSpecificationsFragment) mPackageCustomizationPagerAdapter.getItem(STAGE_1);
-                        AddressModel addressModel = (AddressModel) getObjectFromJsonString(jsonObject.getJSONObject(NetworkUtility.TAGS.DATA).toString(), AddressModel.class);
+                        AddressModel addressModel = (AddressModel) GsonUtility.getObjectFromJsonString(jsonObject.getJSONObject(NetworkUtility.TAGS.DATA).toString(), AddressModel.class);
                         UserDetails mUserDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
                         mUserDetails.addressList.add(addressModel);
                         PreferenceUtility.getInstance(mContext).saveUserDetails(mUserDetails);

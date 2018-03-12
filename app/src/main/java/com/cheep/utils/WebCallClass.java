@@ -87,19 +87,19 @@ public class WebCallClass {
 
                                 JSONObject jsonData = jsonObject.getJSONObject(NetworkUtility.TAGS.DATA);
 
-                                CityDetail cityDetail = (CityDetail) Utility.getObjectFromJsonString(
+                                CityDetail cityDetail = (CityDetail) GsonUtility.getObjectFromJsonString(
                                         jsonData.getString(NetworkUtility.TAGS.CITY_DETAIL)
                                         , CityDetail.class);
 
-                                List<PackageDetail> subscribedList = Utility.getObjectListFromJsonString(
+                                List<PackageDetail> subscribedList = GsonUtility.getObjectListFromJsonString(
                                         jsonData.getString(NetworkUtility.TAGS.USER_PACKAGE_DETAIL)
                                         , PackageDetail[].class);
 
-                                List<PackageDetail> allPackageList = Utility.getObjectListFromJsonString(
+                                List<PackageDetail> allPackageList = GsonUtility.getObjectListFromJsonString(
                                         jsonData.getString(NetworkUtility.TAGS.PACKAGE_DETAIL)
                                         , PackageDetail[].class);
 
-                                AdminSettingModel adminSettingModel = (AdminSettingModel) Utility.getObjectFromJsonString(
+                                AdminSettingModel adminSettingModel = (AdminSettingModel) GsonUtility.getObjectFromJsonString(
                                         jsonData.getString(NetworkUtility.TAGS.ADMIN_SETTING)
                                         , AdminSettingModel.class);
 
@@ -188,8 +188,8 @@ public class WebCallClass {
                         case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
 
                             JSONObject object = jsonObject.optJSONObject(NetworkUtility.TAGS.DATA);
-                            ArrayList<SubServiceDetailModel> freeCatList = Utility.getObjectListFromJsonString(object.getString(NetworkUtility.TAGS.FREE_SERVICE), SubServiceDetailModel[].class);
-                            ArrayList<SubServiceDetailModel> paidCatList = Utility.getObjectListFromJsonString(object.getString(NetworkUtility.TAGS.PAID_SERVICE), SubServiceDetailModel[].class);
+                            ArrayList<SubServiceDetailModel> freeCatList = GsonUtility.getObjectListFromJsonString(object.getString(NetworkUtility.TAGS.FREE_SERVICE), SubServiceDetailModel[].class);
+                            ArrayList<SubServiceDetailModel> paidCatList = GsonUtility.getObjectListFromJsonString(object.getString(NetworkUtility.TAGS.PAID_SERVICE), SubServiceDetailModel[].class);
                             successListener.fetchListOfSubCategorySuccessResponse(freeCatList, paidCatList);
                             break;
                         case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
@@ -396,11 +396,11 @@ public class WebCallClass {
 
                                 JSONObject jsonData = jsonObject.getJSONObject(NetworkUtility.TAGS.DATA);
 
-                                UserDetails userDetails = (UserDetails) Utility.getObjectFromJsonString(jsonData.toString(), UserDetails.class);
+                                UserDetails userDetails = (UserDetails) GsonUtility.getObjectFromJsonString(jsonData.toString(), UserDetails.class);
                                 PreferenceUtility.getInstance(mContext).saveUserDetails(jsonData);
 
                                 JSONArray jsonEmergencyContacts = jsonData.optJSONArray(NetworkUtility.TAGS.EMERGENCY_DATA);
-                                ArrayList<AddressModel> addressList = Utility.getObjectListFromJsonString(jsonData.optJSONArray(NetworkUtility.TAGS.ADDRESS).toString(), AddressModel[].class);
+                                ArrayList<AddressModel> addressList = GsonUtility.getObjectListFromJsonString(jsonData.optJSONArray(NetworkUtility.TAGS.ADDRESS).toString(), AddressModel[].class);
 
                                 successListener.getUserDetails(userDetails, jsonEmergencyContacts, addressList);
 
@@ -560,7 +560,7 @@ public class WebCallClass {
                     String error_message;
                     switch (statusCode) {
                         case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
-                            CityLandingPageModel mCityLandingPageModel = (CityLandingPageModel) Utility.getObjectFromJsonString(jsonObject.optString(DATA), CityLandingPageModel.class);
+                            CityLandingPageModel mCityLandingPageModel = (CityLandingPageModel) GsonUtility.getObjectFromJsonString(jsonObject.optString(DATA), CityLandingPageModel.class);
                             successListener.getCityCareData(mCityLandingPageModel);
                             break;
                         case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:

@@ -17,6 +17,7 @@ import com.cheep.adapter.SearchAdapter;
 import com.cheep.databinding.ActivitySearchBinding;
 import com.cheep.model.JobCategoryModel;
 import com.cheep.model.UserDetails;
+import com.cheep.utils.GsonUtility;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.SharedElementTransitionHelper;
 import com.cheep.utils.Utility;
@@ -33,7 +34,7 @@ public class SearchActivity extends BaseAppCompatActivity implements SearchAdapt
 
     public static void newInstance(Context context, Bundle bnd, String cityName, ArrayList<JobCategoryModel> list) {
         Intent intent = new Intent(context, SearchActivity.class);
-        intent.putExtra(Utility.Extra.DATA, Utility.getJsonStringFromObject(list));
+        intent.putExtra(Utility.Extra.DATA, GsonUtility.getJsonStringFromObject(list));
         intent.putExtra(Utility.Extra.CITY_NAME, cityName);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             context.startActivity(intent, bnd);
@@ -99,7 +100,7 @@ public class SearchActivity extends BaseAppCompatActivity implements SearchAdapt
 
             mActivitySearchBinding.textLocation.setText(getIntent().getStringExtra(Utility.Extra.CITY_NAME));
 
-            final ArrayList<JobCategoryModel> list = Utility.getObjectListFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA), JobCategoryModel[].class);
+            final ArrayList<JobCategoryModel> list = GsonUtility.getObjectListFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA), JobCategoryModel[].class);
             final SearchAdapter adapter = new SearchAdapter(this);
             mActivitySearchBinding.commonRecyclerViewNoSwipe.recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
             mActivitySearchBinding.commonRecyclerViewNoSwipe.recyclerView.setAdapter(adapter);

@@ -38,6 +38,8 @@ import com.cheep.model.JobCategoryModel;
 import com.cheep.model.MessageEvent;
 import com.cheep.model.TaskDetailModel;
 import com.cheep.strategicpartner.model.ServiceTaskDetailModel;
+import com.cheep.utils.CalendarUtility;
+import com.cheep.utils.GlideUtility;
 import com.cheep.utils.LoadMoreSwipeRecyclerAdapter;
 import com.cheep.utils.RoundedBackgroundSpan;
 import com.cheep.utils.SuperCalendar;
@@ -329,7 +331,7 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
                         else
                             holder.mUpcomingTaskBinding.imgFav.setSelected(false);
                     }
-                    Utility.showCircularImageViewWithColorBorder(holder.mUpcomingTaskBinding.imgProfilePic.getContext(), TAG, holder.mUpcomingTaskBinding.imgProfilePic, model.selectedProvider.profileUrl, Utility.DEFAULT_CHEEP_LOGO, R.color.grey_dark_color, true);
+                    GlideUtility.showCircularImageViewWithColorBorder(holder.mUpcomingTaskBinding.imgProfilePic.getContext(), TAG, holder.mUpcomingTaskBinding.imgProfilePic, model.selectedProvider.profileUrl, Utility.DEFAULT_CHEEP_LOGO, R.color.grey_dark_color, true);
 
                     // Show Rating
                     holder.mUpcomingTaskBinding.ratingBar.setVisibility(View.VISIBLE);
@@ -386,10 +388,10 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
                 holder.mUpcomingTaskBinding.tvDesc.setText(model.taskDesc);
 
                 final String mBookingDate = holder.mView.getContext().getString(R.string.format_task_book_date
-                        , superStartDateTimeCalendar.format(Utility.DATE_FORMAT_DD_MMM) + " " + Utility.get2HourTimeSlots(model.taskStartdate));
+                        , superStartDateTimeCalendar.format(Utility.DATE_FORMAT_DD_MMM) + " " + CalendarUtility.get2HourTimeSlots(model.taskStartdate));
                 holder.mUpcomingTaskBinding.tvTaskBookedDateTime.setText(mBookingDate);
 
-                holder.mUpcomingTaskBinding.tvTaskStartedTime.setText(Utility.getDateDifference(holder.mView.getContext(), superStartDateTimeCalendar.format(Utility.DATE_FORMAT_FULL_DATE), model.taskType));
+                holder.mUpcomingTaskBinding.tvTaskStartedTime.setText(CalendarUtility.getDateDifference(holder.mView.getContext(), superStartDateTimeCalendar.format(Utility.DATE_FORMAT_FULL_DATE), model.taskType));
 
                 holder.mUpcomingTaskBinding.textDelete.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -450,7 +452,7 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
                 superStartDateTimeCalendar.setTimeInMillis(Long.parseLong(model.taskStartdate));
                 superStartDateTimeCalendar.setLocaleTimeZone();
 
-                final String dateTime = superStartDateTimeCalendar.format(Utility.DATE_FORMAT_DD_MMM) + " " + Utility.get2HourTimeSlotsForPastTaskScreen(model.taskStartdate);
+                final String dateTime = superStartDateTimeCalendar.format(Utility.DATE_FORMAT_DD_MMM) + " " + CalendarUtility.get2HourTimeSlotsForPastTaskScreen(model.taskStartdate);
 
 
                 holder.mRowTaskGroupBinding.textDateTime.setText(dateTime);
@@ -546,7 +548,7 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
                 superStartDateTimeCalendar.setTimeInMillis(Long.parseLong(model.taskStartdate));
                 superStartDateTimeCalendar.setLocaleTimeZone();
 
-                final String dateTime = superStartDateTimeCalendar.format(Utility.DATE_FORMAT_DD_MMM) + " " + Utility.get2HourTimeSlotsForPastTaskScreen(model.taskStartdate);
+                final String dateTime = superStartDateTimeCalendar.format(Utility.DATE_FORMAT_DD_MMM) + " " + CalendarUtility.get2HourTimeSlotsForPastTaskScreen(model.taskStartdate);
 
 // old time format for past task
 //                String date_time = holder.mView.getContext().getString(R.string.format_date_time
@@ -557,7 +559,7 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
                 holder.mRowTaskBinding.textDesc.setText(model.taskDesc);
 
                 if (model.selectedProvider != null) {
-                    Utility.showCircularImageViewWithColorBorder(holder.mRowTaskBinding.imgProfile.getContext(), TAG, holder.mRowTaskBinding.imgProfile, model.selectedProvider.profileUrl, Utility.DEFAULT_CHEEP_LOGO, R.color.grey_dark_color, true);
+                    GlideUtility.showCircularImageViewWithColorBorder(holder.mRowTaskBinding.imgProfile.getContext(), TAG, holder.mRowTaskBinding.imgProfile, model.selectedProvider.profileUrl, Utility.DEFAULT_CHEEP_LOGO, R.color.grey_dark_color, true);
                     //experience
 
                     if (model.taskType.equalsIgnoreCase(Utility.TASK_TYPE.STRATEGIC)) {
@@ -612,7 +614,7 @@ public class TaskRecyclerViewAdapter extends LoadMoreSwipeRecyclerAdapter<TaskRe
                     Utility.showRating(model.selectedProvider.rating, holder.mRowTaskBinding.ratingBar);
                 } else {
 
-                    Utility.showCircularImageView(holder.mRowTaskBinding.imgProfile.getContext(), TAG, holder.mRowTaskBinding.imgProfile, "", Utility.DEFAULT_PROFILE_SRC);
+                    GlideUtility.showCircularImageView(holder.mRowTaskBinding.imgProfile.getContext(), TAG, holder.mRowTaskBinding.imgProfile, "", Utility.DEFAULT_PROFILE_SRC);
                     holder.mRowTaskBinding.textTaskApprovedQuote.setText(holder.mRowTaskBinding.imgProfile.getContext().getString(R.string.rupee_symbol_x_space, Utility.getActualPrice("", "")));
 
                     holder.mRowTaskBinding.textProviderName.setText("");

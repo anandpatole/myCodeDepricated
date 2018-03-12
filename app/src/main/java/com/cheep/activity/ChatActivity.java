@@ -43,6 +43,9 @@ import com.cheep.model.UserDetails;
 import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
+import com.cheep.utils.GlideUtility;
+import com.cheep.utils.GsonUtility;
+import com.cheep.utils.MediaUtility;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.Utility;
 import com.google.firebase.database.ChildEventListener;
@@ -105,7 +108,7 @@ public class ChatActivity extends BaseAppCompatActivity implements View.OnClickL
      */
     public static void newInstance(Context context, TaskChatModel taskChatModel) {
         Intent intent = new Intent(context, ChatActivity.class);
-        intent.putExtra(Utility.Extra.DATA, Utility.getJsonStringFromObject(taskChatModel));
+        intent.putExtra(Utility.Extra.DATA, GsonUtility.getJsonStringFromObject(taskChatModel));
         context.startActivity(intent);
     }
 
@@ -162,7 +165,7 @@ public class ChatActivity extends BaseAppCompatActivity implements View.OnClickL
                 break;
             case Utility.REQUEST_CODE_GET_FILE_CHAT_MEDIA_GALLERY:
                 if (resultCode == RESULT_OK) {
-                    mSelectedMediaPath = Utility.getPath(ChatActivity.this, data.getData());
+                    mSelectedMediaPath = MediaUtility.getPath(ChatActivity.this, data.getData());
                     displayAndUploadFile();
                 }
                 break;
@@ -257,7 +260,7 @@ public class ChatActivity extends BaseAppCompatActivity implements View.OnClickL
         mActivityChatBinding.recyclerView.setAdapter(chatMessageRecyclerViewAdapter);
         mActivityChatBinding.recyclerView.scrollToPosition(chatMessageRecyclerViewAdapter.getItemCount());
 
-        Utility.showCircularImageView(mContext, TAG, mActivityChatBinding.imgProfile, taskChatModel.participantPhotoUrl, Utility.DEFAULT_CHEEP_LOGO);
+        GlideUtility.showCircularImageView(mContext, TAG, mActivityChatBinding.imgProfile, taskChatModel.participantPhotoUrl, Utility.DEFAULT_CHEEP_LOGO);
 
         // By Default its YES, so message would be EMPTY PHONE.
         enableChatAccess(mCurrentChatStatus, Utility.EMPTY_STRING);
@@ -301,7 +304,7 @@ public class ChatActivity extends BaseAppCompatActivity implements View.OnClickL
      */
     private void initDATA() {
         mUserDetails = PreferenceUtility.getInstance(ChatActivity.this).getUserDetails();
-        taskChatModel = (TaskChatModel) Utility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA), TaskChatModel.class);
+        taskChatModel = (TaskChatModel) GsonUtility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA), TaskChatModel.class);
 
         if (taskChatModel != null && mUserDetails != null) {
             formattedTaskId = FirebaseUtils.getPrefixTaskId(taskChatModel.taskId);
@@ -931,7 +934,7 @@ public class ChatActivity extends BaseAppCompatActivity implements View.OnClickL
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
                         JSONObject jsonData = jsonObject.getJSONObject(NetworkUtility.TAGS.DATA);
                         if (jsonData != null) {
-                            ChatImageModel chatImageModel = (ChatImageModel) Utility.getObjectFromJsonString(jsonData.toString(), ChatImageModel.class);
+                            ChatImageModel chatImageModel = (ChatImageModel) GsonUtility.getObjectFromJsonString(jsonData.toString(), ChatImageModel.class);
                             if (chatImageModel != null) {
                                 sendMessage(Utility.CHAT_TYPE_MEDIA, chatImageModel.original, chatImageModel.thumb);
                             }

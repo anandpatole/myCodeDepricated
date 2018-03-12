@@ -9,6 +9,7 @@ import android.view.View;
 import com.cheep.R;
 import com.cheep.databinding.ActivityFaqDescBinding;
 import com.cheep.model.FAQModel;
+import com.cheep.utils.GsonUtility;
 import com.cheep.utils.Utility;
 
 /**
@@ -20,7 +21,7 @@ public class FAQDescActivity extends BaseAppCompatActivity {
 
     public static void newInstance(Context context, FAQModel faqModel) {
         Intent intent = new Intent(context, FAQDescActivity.class);
-        intent.putExtra(Utility.Extra.DATA, Utility.getJsonStringFromObject(faqModel));
+        intent.putExtra(Utility.Extra.DATA, GsonUtility.getJsonStringFromObject(faqModel));
         context.startActivity(intent);
     }
 
@@ -52,7 +53,7 @@ public class FAQDescActivity extends BaseAppCompatActivity {
 
         mActivityFaqDescBinding.textTitle.setText(getString(R.string.label_faq));
 
-        FAQModel faqModel = (FAQModel) Utility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA), FAQModel.class);
+        FAQModel faqModel = (FAQModel) GsonUtility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA), FAQModel.class);
         mActivityFaqDescBinding.textFaqTitle.setText(faqModel.faq_title);
         mActivityFaqDescBinding.webview.loadDataWithBaseURL(null, faqModel.faq_content, "text/html", "utf-8", null);
        /* if (Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {

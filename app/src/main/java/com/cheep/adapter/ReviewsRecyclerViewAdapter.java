@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import com.cheep.R;
 import com.cheep.databinding.RowReviewsBinding;
 import com.cheep.model.ReviewModel;
+import com.cheep.utils.GlideUtility;
 import com.cheep.utils.SuperCalendar;
 import com.cheep.utils.Utility;
 
@@ -68,7 +69,7 @@ public class ReviewsRecyclerViewAdapter extends RecyclerView.Adapter<ReviewsRecy
     public void onBindViewHolder(final ViewHolder holder, int position) {
 
         final ReviewModel model = mList.get(holder.getAdapterPosition());
-        Utility.showCircularImageView(holder.mView.getContext(), TAG, holder.mRowReviewsBinding.imgProfile, model.reviewerProfileImage, Utility.DEFAULT_CHEEP_LOGO);
+        GlideUtility.showCircularImageView(holder.mView.getContext(), TAG, holder.mRowReviewsBinding.imgProfile, model.reviewerProfileImage, Utility.DEFAULT_CHEEP_LOGO);
         holder.mRowReviewsBinding.textName.setText(model.reviewerName);
 
         try {

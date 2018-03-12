@@ -22,6 +22,7 @@ import com.cheep.model.FAQModel;
 import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
+import com.cheep.utils.GsonUtility;
 import com.cheep.utils.HotlineHelper;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.Utility;
@@ -192,7 +193,7 @@ public class FAQFragment extends BaseFragment {
                 switch (statusCode) {
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
 
-                        ArrayList<FAQModel> faqModelArrayList = Utility.getObjectListFromJsonString(jsonObject.getJSONArray(NetworkUtility.TAGS.DATA).toString(), FAQModel[].class);
+                        ArrayList<FAQModel> faqModelArrayList = GsonUtility.getObjectListFromJsonString(jsonObject.getJSONArray(NetworkUtility.TAGS.DATA).toString(), FAQModel[].class);
 
                         //Update Recyclerview now
                         updateRecyclerView(faqModelArrayList);

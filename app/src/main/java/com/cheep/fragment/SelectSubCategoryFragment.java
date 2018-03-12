@@ -23,6 +23,7 @@ import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
 import com.cheep.utils.ErrorLoadingHelper;
+import com.cheep.utils.GsonUtility;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.Utility;
 
@@ -190,7 +191,7 @@ public class SelectSubCategoryFragment extends BaseFragment {
                 String error_message;
                 switch (statusCode) {
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
-                        ArrayList<SubServiceDetailModel> list = Utility.getObjectListFromJsonString(jsonObject.optString(NetworkUtility.TAGS.DATA), SubServiceDetailModel[].class);
+                        ArrayList<SubServiceDetailModel> list = GsonUtility.getObjectListFromJsonString(jsonObject.optString(NetworkUtility.TAGS.DATA), SubServiceDetailModel[].class);
                         mSubServiceRecyclerViewAdapter.addList(list, getString(R.string.label_other_sub_service));
                         errorLoadingHelper.success();
                         break;

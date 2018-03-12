@@ -22,6 +22,7 @@ import com.cheep.R;
 import com.cheep.databinding.RowTabHomeBinding;
 import com.cheep.fragment.HomeTabFragment;
 import com.cheep.model.JobCategoryModel;
+import com.cheep.utils.GlideUtility;
 import com.cheep.utils.Utility;
 
 import java.util.ArrayList;
@@ -91,11 +92,11 @@ public class HomeTabRecyclerViewAdapter extends RecyclerView.Adapter<HomeTabRecy
         final JobCategoryModel model = mList.get(holder.getAdapterPosition());
 
         //Background image
-        Utility.loadImageView(mContext, holder.mRowTabHomeBinding.imgCategoryBackground, model.catImage, R.drawable.gradient_black);
-        Utility.loadImageView(mContext, holder.mRowTabHomeBinding.imgCategoryBackground, model.catImageExtras.thumb, R.drawable.gradient_black);
+        GlideUtility.loadImageView(mContext, holder.mRowTabHomeBinding.imgCategoryBackground, model.catImage, R.drawable.gradient_black);
+        GlideUtility.loadImageView(mContext, holder.mRowTabHomeBinding.imgCategoryBackground, model.catImageExtras.thumb, R.drawable.gradient_black);
 
         //Category Icon
-        Utility.loadImageView(mContext, holder.mRowTabHomeBinding.imgCategoryIcon, model.catIcon, 0);
+        GlideUtility.loadImageView(mContext, holder.mRowTabHomeBinding.imgCategoryIcon, model.catIcon, 0);
         holder.mRowTabHomeBinding.imgCategoryIcon.setVisibility(View.GONE);
 //        holder.mRowTabHomeBinding.textJobsCount.setText(String.valueOf(model.spCount));
         holder.mRowTabHomeBinding.textCategoryName.setText(String.valueOf(model.catName));
@@ -282,7 +283,7 @@ public class HomeTabRecyclerViewAdapter extends RecyclerView.Adapter<HomeTabRecy
             switch (i) {
                 case 0:
                     if (list.size() > 0 && list.get(i) != null) {
-                        Utility.showCircularImageView(mContext, TAG, mRowTabHomeBinding.img1, list.get(i), R.drawable.ic_cheep_circular_icon, true, 0.5f);
+                        GlideUtility.showCircularImageView(mContext, TAG, mRowTabHomeBinding.img1, list.get(i), R.drawable.ic_cheep_circular_icon, true, 0.5f);
                         mRowTabHomeBinding.img1.setVisibility(View.VISIBLE);
                     } else {
                         mRowTabHomeBinding.img1.setVisibility(View.GONE);
@@ -290,7 +291,7 @@ public class HomeTabRecyclerViewAdapter extends RecyclerView.Adapter<HomeTabRecy
                     break;
                 case 1:
                     if (list.size() > 1 && list.get(i) != null) {
-                        Utility.showCircularImageView(mContext, TAG, mRowTabHomeBinding.img2, list.get(i), R.drawable.ic_cheep_circular_icon, true, 0.5f);
+                        GlideUtility.showCircularImageView(mContext, TAG, mRowTabHomeBinding.img2, list.get(i), R.drawable.ic_cheep_circular_icon, true, 0.5f);
                         mRowTabHomeBinding.img2.setVisibility(View.VISIBLE);
                     } else {
                         mRowTabHomeBinding.img2.setVisibility(View.GONE);
@@ -298,7 +299,7 @@ public class HomeTabRecyclerViewAdapter extends RecyclerView.Adapter<HomeTabRecy
                     break;
                 case 2:
                     if (list.size() > 2 && list.get(i) != null) {
-                        Utility.showCircularImageView(mContext, TAG, mRowTabHomeBinding.img3, list.get(i), R.drawable.ic_cheep_circular_icon, true, 0.5f);
+                        GlideUtility.showCircularImageView(mContext, TAG, mRowTabHomeBinding.img3, list.get(i), R.drawable.ic_cheep_circular_icon, true, 0.5f);
                         mRowTabHomeBinding.img3.setVisibility(View.VISIBLE);
                     } else {
                         mRowTabHomeBinding.img3.setVisibility(View.GONE);
@@ -306,7 +307,7 @@ public class HomeTabRecyclerViewAdapter extends RecyclerView.Adapter<HomeTabRecy
                     break;
                 /*case 3:
                     if (list.size() > 3 && list.get(i) != null) {
-                        Utility.showCircularImageView(mContext, TAG, mRowTabHomeBinding.img4, list.get(i).profileUrl, R.drawable.ic_cheep_circular_icon, true);
+                        GlideUtility.showCircularImageView(mContext, TAG, mRowTabHomeBinding.img4, list.get(i).profileUrl, R.drawable.ic_cheep_circular_icon, true);
                         mRowTabHomeBinding.img4.setVisibility(View.VISIBLE);
                     } else {
                         mRowTabHomeBinding.img4.setVisibility(View.GONE);
@@ -314,7 +315,7 @@ public class HomeTabRecyclerViewAdapter extends RecyclerView.Adapter<HomeTabRecy
                     break;
                 case 4:
                     if (list.size() > 4 && list.get(i) != null) {
-                        Utility.showCircularImageView(mContext, TAG, mActivityTaskSummaryBinding.img5, list.get(i).profileUrl, R.drawable.ic_cheep_circular_icon, true);
+                        GlideUtility.showCircularImageView(mContext, TAG, mActivityTaskSummaryBinding.img5, list.get(i).profileUrl, R.drawable.ic_cheep_circular_icon, true);
                         mRowTabHomeBinding.img5.setVisibility(View.VISIBLE);
                     } else {
                         mRowTabHomeBinding.img5.setVisibility(View.GONE);
