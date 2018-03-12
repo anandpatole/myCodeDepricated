@@ -241,17 +241,15 @@ configurations {
 
 // Description
 ext {
-    supportLibVer = '27.0.2'
-//    supportLibVer = '25.4.0'
+    supportLibVer = '27.1.0'
     gsonLibVer = '2.7'
     playServiceVer = '11.8.0'
-//    playServiceVer = '10.2.0'
 }
 
 dependencies {
-    implementation 'com.android.support:support-v4:27.0.2'
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
+    implementation "com.android.support:support-v4:$supportLibVer"
     // V7 Compat library, it also included v4 libraries under the hood.
     compile "com.android.support:appcompat-v7:$supportLibVer"
 

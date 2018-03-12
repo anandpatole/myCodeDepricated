@@ -42,28 +42,29 @@
                 android:layout_height="wrap_content"
                 android:layout_marginRight="@dimen/scale_12dp"
                 android:layout_marginTop="@dimen/scale_16dp"
-                android:text="Hey Rahul, our Cheep PRO will be arriving at your location between 1000 hrs - 1300 hrs today for your Cheep Care task. Please confirm your availability."
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_size_13sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/card_view" />
+                app:layout_constraintTop_toBottomOf="@id/card_view"
+                tools:text="Hey Rahul, our Cheep PRO will be arriving at your location between 1000 hrs - 1300 hrs today for your Cheep Care task. Please confirm your availability." />
 
             <com.cheep.custom_view.CFTextViewSemiBold
                 android:id="@+id/tvTimeAgo"
                 android:layout_width="0dp"
-                android:layout_height="@dimen/home_screen_book_button_height"
+                android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
-                android:layout_marginTop="@dimen/scale_14dp"
                 android:gravity="center_vertical"
                 android:paddingLeft="@dimen/scale_6dp"
                 android:paddingRight="@dimen/scale_6dp"
                 android:text="@string/label_no"
                 android:textColor="@color/grey_dark_color_2"
                 android:textSize="@dimen/text_size_11sp"
+                app:layout_constraintBottom_toBottomOf="@+id/tvDiscount"
                 app:layout_constraintEnd_toStartOf="@id/tvYes"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tvText"
+                app:layout_constraintTop_toTopOf="@id/tvDiscount"
                 tools:text="1 Minute ago" />
 
             <com.cheep.custom_view.CFTextViewSemiBold
@@ -72,7 +73,6 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginRight="@dimen/scale_8dp"
-                android:layout_marginTop="@dimen/scale_20dp"
                 android:background="@drawable/ic_offer_tag_small"
                 android:ellipsize="marquee"
                 android:marqueeRepeatLimit="marquee_forever"
@@ -82,8 +82,9 @@
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_size_12sp"
                 android:visibility="visible"
-                app:layout_constraintEnd_toStartOf="@id/tvChatNow"
-                app:layout_constraintTop_toBottomOf="@id/tvText"
+                app:layout_constraintBottom_toBottomOf="@+id/tvChatNow"
+                app:layout_constraintEnd_toStartOf="@+id/tvChatNow"
+                app:layout_constraintTop_toTopOf="@+id/tvChatNow"
                 tools:text="5% Cheeper" />
 
             <com.cheep.custom_view.CFTextViewSemiBold

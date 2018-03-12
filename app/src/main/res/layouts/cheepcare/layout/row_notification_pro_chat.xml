@@ -31,10 +31,10 @@
                 android:id="@+id/imgFav"
                 android:layout_width="@dimen/scale_24dp"
                 android:layout_height="@dimen/scale_24dp"
-                android:background="@drawable/icon_fav_selector"
                 app:layout_constraintBottom_toBottomOf="@id/img_profile"
                 app:layout_constraintRight_toRightOf="@id/img_profile"
-                tools:ignore="ContentDescription" />
+                tools:ignore="ContentDescription"
+                tools:src="@drawable/ic_badge_gold" />
 
             <com.cheep.custom_view.CFTextViewSemiBold
                 android:id="@+id/text_provider_name"
@@ -44,30 +44,28 @@
                 android:layout_marginRight="@dimen/scale_8dp"
                 android:layout_marginTop="@dimen/scale_23dp"
                 android:includeFontPadding="false"
-                android:text="Lokesh Shah"
                 android:textColor="@color/splash_gradient_end"
                 android:textSize="@dimen/text_size_14sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/img_profile"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Lokesh Shah" />
 
             <com.cheep.custom_view.CFTextViewRegular
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/scale_18dp"
                 android:layout_marginTop="@dimen/scale_3dp"
-                android:background="@drawable/blue_rounded_border_sf1"
                 android:paddingBottom="@dimen/scale_4dp"
-                android:paddingLeft="@dimen/scale_7dp"
                 android:paddingRight="@dimen/scale_7dp"
                 android:paddingTop="@dimen/scale_4dp"
-                android:text="Plumber"
                 android:textColor="@color/splash_gradient_end"
-                android:textSize="@dimen/text_size_10sp"
+                android:textSize="@dimen/text_size_11sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0"
                 app:layout_constraintStart_toEndOf="@id/img_profile"
-                app:layout_constraintTop_toBottomOf="@id/text_provider_name" />
+                app:layout_constraintTop_toBottomOf="@id/text_provider_name"
+                tools:text="Plumber" />
 
             <com.cheep.custom_view.CFTextViewRegular
                 android:id="@+id/tvText"
