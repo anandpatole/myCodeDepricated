@@ -1,5 +1,7 @@
 package com.cheep.activity;
 
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
@@ -19,17 +21,23 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.cheep.R;
+import com.cheep.cheepcare.dialogs.CancelRescheduleTaskDialog;
+import com.cheep.cheepcare.dialogs.SomeoneElseWillAttendDialog;
 import com.cheep.cheepcare.dialogs.UserAvailabilityDialog;
+import com.cheep.cheepcare.dialogs.UserAvailableDialog;
 import com.cheep.custom_view.BottomAlertDialog;
 import com.cheep.databinding.ActivityTaskSummaryBinding;
 import com.cheep.databinding.DialogChangePhoneNumberBinding;
+import com.cheep.dialogs.AcknowledgementInteractionListener;
 import com.cheep.firebase.FirebaseHelper;
 import com.cheep.firebase.FirebaseUtils;
 import com.cheep.firebase.model.TaskChatModel;
@@ -59,6 +67,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -206,7 +215,7 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
             if (Utility.BOOLEAN.YES.equalsIgnoreCase(mTaskDetailModel.selectedProvider.isVerified)) {
                 sVerified = new SpannableString(" " + mContext.getString(R.string.label_verified_pro) + " ");
                 sVerified.setSpan(new RelativeSizeSpan(0.9f), 0, sVerified.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                sVerified.setSpan(new RoundedBackgroundSpan(ContextCompat.getColor(this, R.color.splash_gradient_end), ContextCompat.getColor(this, R.color.white),0), 0, sVerified.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+                sVerified.setSpan(new RoundedBackgroundSpan(ContextCompat.getColor(this, R.color.splash_gradient_end), ContextCompat.getColor(this, R.color.white), 0), 0, sVerified.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
                 mBinding.textProviderName.setText(TextUtils.concat(sName, " ", sVerified));
             }
             // Distanceof Provider
@@ -335,6 +344,7 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
         mBinding.lnTaskDesc.setOnClickListener(mOnClickListener);
         mBinding.lnTaskWhere.setOnClickListener(mOnClickListener);
     }
+
     private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -354,6 +364,161 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
             }
         }
     };
+    private final UserAvailabilityDialog.DialogInteractionListener userAvailabilityListener =
+            new UserAvailabilityDialog.DialogInteractionListener() {
+                @Override
+                public void someoneElseWillAttendClicked() {
+                    Log.d(TAG, "someoneElseWillAttendClicked() called");
+                    SomeoneElseWillAttendDialog.newInstance(mContext, someoneElseWillAttendListener);
+                }
+
+                @Override
+                public void rescheduleTaskClicked() {
+                    Log.d(TAG, "rescheduleTaskClicked() called");
+                    showDateTimePickerDialog();
+                }
+
+                @Override
+                public void cancelTaskClicked() {
+                    Log.d(TAG, "cancelTaskClicked() called");
+                    CancelRescheduleTaskDialog.newInstance(mContext, cancelRescheduleTaskListener);
+                }
+
+                @Override
+                public void userWillBeAvailableClicked() {
+                    Log.d(TAG, "userWillBeAvailableClicked() called");
+                    UserAvailableDialog.newInstance(mContext, userAvailableListener);
+                }
+            };
+    private final SomeoneElseWillAttendDialog.DialogInteractionListener someoneElseWillAttendListener =
+            new SomeoneElseWillAttendDialog.DialogInteractionListener() {
+                @Override
+                public void okClicked(String personName) {
+                    Log.d(TAG, "okClicked() called with: personName = [" + personName + "]");
+                }
+
+                @Override
+                public void onBackPressed() {
+                    UserAvailabilityDialog.newInstance(mContext, userAvailabilityListener);
+                }
+            };
+
+    private final CancelRescheduleTaskDialog.DialogInteractionListener cancelRescheduleTaskListener =
+            new CancelRescheduleTaskDialog.DialogInteractionListener() {
+                @Override
+                public void cancelTaskClicked() {
+                    Log.d(TAG, "cancelTaskClicked() called");
+                }
+
+                @Override
+                public void rescheduleTaskClicked() {
+                    showDateTimePickerDialog();
+                }
+
+                @Override
+                public void onBackPressed() {
+                    UserAvailabilityDialog.newInstance(mContext, userAvailabilityListener);
+                }
+            };
+    private final AcknowledgementInteractionListener userAvailableListener =
+            new AcknowledgementInteractionListener() {
+                @Override
+                public void onAcknowledgementAccepted() {
+                    Log.d(TAG, "onAcknowledgementAccepted() called user available");
+                    setConfirmAvailabilityVisible(false);
+                }
+            };
+    public SuperCalendar startDateTimeSuperCalendar = SuperCalendar.getInstance();
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////WHEN Feature [START]//////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+    private void showDateTimePickerDialog() {
+        // Get Current Date
+        final Calendar c = Calendar.getInstance();
+
+        DatePickerDialog datePickerDialog = new DatePickerDialog(mContext, new DatePickerDialog.OnDateSetListener() {
+
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                if (view.isShown()) {
+                    Log.d(TAG, "onDateSet() called with: view = [" + view + "], year = [" + year + "], monthOfYear = [" + monthOfYear + "], dayOfMonth = [" + dayOfMonth + "]");
+                    startDateTimeSuperCalendar.set(Calendar.YEAR, year);
+                    startDateTimeSuperCalendar.set(Calendar.MONTH, monthOfYear);
+                    startDateTimeSuperCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                    showTimePickerDialog();
+                }
+            }
+        }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH));
+
+        datePickerDialog.show();
+    }
+
+    public SuperCalendar superCalendar;
+
+    private void showTimePickerDialog() {
+        // Get Current Time
+        final Calendar c = Calendar.getInstance();
+        // Launch Time Picker Dialog
+        TimePickerDialog timePickerDialog = new TimePickerDialog(mContext,
+                new TimePickerDialog.OnTimeSetListener() {
+
+                    @Override
+                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                        if (view.isShown()) {
+
+                            Log.d(TAG, "onTimeSet() called with: view = [" + view + "], hourOfDay = [" + hourOfDay + "], minute = [" + minute + "]");
+
+                            startDateTimeSuperCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                            startDateTimeSuperCalendar.set(Calendar.MINUTE, minute);
+
+                            superCalendar = SuperCalendar.getInstance();
+                            superCalendar.setTimeInMillis(startDateTimeSuperCalendar.getTimeInMillis());
+                            superCalendar.setTimeZone(SuperCalendar.SuperTimeZone.GMT.GMT);
+
+                            // Get date-time for next 3 hours
+                            SuperCalendar calAfter3Hours = SuperCalendar.getInstance().getNext3HoursTime(false);
+
+//                            TODO: This needs to Be UNCOMMENTED DO NOT FORGET
+//                            if (!BuildConfig.BUILD_TYPE.equalsIgnoreCase(Utility.DEBUG)) {
+                            if (superCalendar.getTimeInMillis() < calAfter3Hours.getTimeInMillis()) {
+                                Utility.showSnackBar(getString(R.string.can_only_start_task_after_3_hours, "3"), mBinding.getRoot());
+//                                mBinding.textTaskWhen.setText(Utility.EMPTY_STRING);
+//                                mBinding.textTaskWhen.setVisibility(View.GONE);
+                                superCalendar = null;
+//                                updateWhenLabelWithIcon( Utility.EMPTY_STRING);
+                                return;
+                            }
+//                            }
+
+                            if (System.currentTimeMillis() < startDateTimeSuperCalendar.getTimeInMillis()) {
+                                String selectedDateTime = startDateTimeSuperCalendar.format(Utility.DATE_FORMAT_DD_MMM)
+                                        + getString(R.string.label_at)
+                                        + startDateTimeSuperCalendar.format(Utility.DATE_FORMAT_HH_MM_AM);
+                                updateWhenLabelWithIcon(selectedDateTime);
+                                setConfirmAvailabilityVisible(false);
+                            } else {
+//                                updateWhenLabelWithIcon( Utility.EMPTY_STRING);
+                                Utility.showSnackBar(getString(R.string.validate_future_date), mBinding.getRoot());
+                            }
+                        }
+                    }
+                }, c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE), false);
+        timePickerDialog.show();
+
+    }
+
+    public void updateWhenLabelWithIcon(String whenValue) {
+        mBinding.textTaskWhen.setText(whenValue);
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////WHEN Feature [END]//////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+    private void setConfirmAvailabilityVisible(boolean isConfirmAvailabilityVisible) {
+        mBinding.tvConfirmAvailability.setVisibility(isConfirmAvailabilityVisible ? View.VISIBLE : View.GONE);
+        mBinding.tvConfirmAvailabilityInfo.setVisibility(isConfirmAvailabilityVisible ? View.VISIBLE : View.GONE);
+    }
 
     private void updateUIBasedOnTaskStatus() {
         if (Utility.TASK_STATUS.PENDING.equalsIgnoreCase(mTaskDetailModel.taskStatus)) {

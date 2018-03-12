@@ -1242,16 +1242,14 @@ public class TaskCreationPhase2Fragment extends BaseFragment implements
                             // Get date-time for next 3 hours if its weekday else for weekend it would be 6 hours
 
                             int dayOfWeek = startDateTimeSuperCalendar.getCalendar().get(Calendar.DAY_OF_WEEK);
-                            boolean isWeekend = dayOfWeek == 1 || dayOfWeek == 7;
+                            boolean isWeekend = dayOfWeek == Calendar.SUNDAY || dayOfWeek == Calendar.SATURDAY;
 
                             SuperCalendar calAfter3Hours = SuperCalendar.getInstance().getNext3HoursTime(isWeekend);
 
 //                            TODO: This needs to Be UNCOMMENTED DO NOT FORGET
 //                            if (!BuildConfig.BUILD_TYPE.equalsIgnoreCase(Utility.DEBUG)) {
                             if (superCalendar.getTimeInMillis() < calAfter3Hours.getTimeInMillis()) {
-                                Utility.showSnackBar(getString(R.string.can_only_start_task_after_3_hours, isWeekend ? "6" : "3"), mBinding.getRoot());
-//                                mBinding.textTaskWhen.setText(Utility.EMPTY_STRING);
-//                                mBinding.textTaskWhen.setVisibility(View.GONE);
+                                Utility.showSnackBar(getString(R.string.can_only_start_task_after_3_hours, isWeekend ? Utility.MIN_HOUR_DIFFERENCE_WEEKEND : Utility.MIN_HOUR_DIFFERENCE_WEEKDAY), mBinding.getRoot());
                                 updateTaskVerificationFlags();
                                 superCalendar = null;
                                 updateWhenLabelWithIcon(false, Utility.EMPTY_STRING);

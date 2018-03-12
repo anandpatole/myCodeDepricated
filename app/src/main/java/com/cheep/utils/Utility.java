@@ -115,6 +115,8 @@ public class Utility {
     public static final String DYNAMIC_LINK_CATEGORY_HOME = "home";
     public static final java.lang.String COUPON_DUNIA_CODE_PREFIX = "CHPCD";
     public static final String NEW_LINE = "\n";
+    public static final String MIN_HOUR_DIFFERENCE_WEEKEND = "6";
+    public static final String MIN_HOUR_DIFFERENCE_WEEKDAY = "3";
 
     public static boolean allPermissionGranted(String[] permissions, int[] grantResults) {
         boolean allGranted = true;
