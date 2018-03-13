@@ -146,16 +146,26 @@ public class TaskRecyclerViewAdapterNew extends LoadMoreSwipeRecyclerAdapter<Tas
         int viewType = getItemViewType(holder.getAdapterPosition());
         switch (viewType) {
             case VIEW_TYPE_UPCOMING: {
-                superStartDateTimeCalendar.setTimeZone(SuperCalendar.SuperTimeZone.GMT.GMT);
-                superStartDateTimeCalendar.setTimeInMillis(Long.parseLong(model.taskStartdate));
-                superStartDateTimeCalendar.setLocaleTimeZone();
-                final String mBookingDate = holder.mView.getContext().getString(R.string.format_task_book_date
-                        , superStartDateTimeCalendar.format(Utility.DATE_FORMAT_DD_MMM) + " " + CalendarUtility.get2HourTimeSlots(model.taskStartdate));
+                if (!TextUtils.isEmpty(model.taskStartdate)) {
+                    superStartDateTimeCalendar.setTimeZone(SuperCalendar.SuperTimeZone.GMT.GMT);
+                    superStartDateTimeCalendar.setTimeInMillis(Long.parseLong(model.taskStartdate));
+                    superStartDateTimeCalendar.setLocaleTimeZone();
+                    final String mBookingDate = holder.mView.getContext().getString(R.string.format_task_book_date
+                            , superStartDateTimeCalendar.format(Utility.DATE_FORMAT_DD_MMM) + " " + CalendarUtility.get2HourTimeSlots(model.taskStartdate));
+                    holder.mUpcomingTaskBinding.tvTaskBookedDateTime.setText(mBookingDate);
 
-                holder.mUpcomingTaskBinding.tvTaskBookedDateTime.setText(mBookingDate);
+                    holder.mUpcomingTaskBinding.tvTaskStartedTime.setText(CalendarUtility.getDateDifference(holder.mView.getContext(), superStartDateTimeCalendar.format(Utility.DATE_FORMAT_FULL_DATE), model.taskType));
+
+
+                } else {
+                    final String mBookingDate = holder.mView.getContext().getString(R.string.format_task_book_date
+                            , " " + " " + " ");
+                    holder.mUpcomingTaskBinding.tvTaskBookedDateTime.setText(mBookingDate);
+                    holder.mUpcomingTaskBinding.tvTaskStartedTime.setText(CalendarUtility.getDateDifference(holder.mView.getContext(), "", model.taskType));
+                }
+
+
                 holder.mUpcomingTaskBinding.tvDesc.setText(model.taskDesc);
-                holder.mUpcomingTaskBinding.tvTaskStartedTime.setText(CalendarUtility.getDateDifference(holder.mView.getContext(), superStartDateTimeCalendar.format(Utility.DATE_FORMAT_FULL_DATE), model.taskType));
-
                 final int liveFeedCounter = model.live_lable_arr != null ? model.live_lable_arr.size() : 0;
                 final Map<String, Integer> mOfferIndexMap = new HashMap<>();
                 if (liveFeedCounter > 0) {
@@ -544,17 +554,32 @@ public class TaskRecyclerViewAdapterNew extends LoadMoreSwipeRecyclerAdapter<Tas
 
             default: {
                 //======Individual item(when sp is selected for task)=====
-                superStartDateTimeCalendar.setTimeZone(SuperCalendar.SuperTimeZone.GMT.GMT);
-                superStartDateTimeCalendar.setTimeInMillis(Long.parseLong(model.taskStartdate));
-                superStartDateTimeCalendar.setLocaleTimeZone();
+//                superStartDateTimeCalendar.setTimeZone(SuperCalendar.SuperTimeZone.GMT.GMT);
+//                superStartDateTimeCalendar.setTimeInMillis(Long.parseLong(model.taskStartdate));
+//                superStartDateTimeCalendar.setLocaleTimeZone();
+//
+//                final String dateTime = superStartDateTimeCalendar.format(Utility.DATE_FORMAT_DD_MMM) + " " + CalendarUtility.get2HourTimeSlotsForPastTaskScreen(model.taskStartdate);
+//
+//// old time format for past task
+////                String date_time = holder.mView.getContext().getString(R.string.format_date_time
+////                        , superStartDateTimeCalendar.format(Utility.DATE_FORMAT_DD_MMM)
+////                        , superStartDateTimeCalendar.format(Utility.DATE_FORMAT_HH_MM_AM));
+//                holder.mRowTaskBinding.textDateTime.setText(dateTime);
 
-                final String dateTime = superStartDateTimeCalendar.format(Utility.DATE_FORMAT_DD_MMM) + " " + CalendarUtility.get2HourTimeSlotsForPastTaskScreen(model.taskStartdate);
+                if (!TextUtils.isEmpty(model.taskStartdate)) {
+                    superStartDateTimeCalendar.setTimeZone(SuperCalendar.SuperTimeZone.GMT.GMT);
+                    superStartDateTimeCalendar.setTimeInMillis(Long.parseLong(model.taskStartdate));
+                    superStartDateTimeCalendar.setLocaleTimeZone();
+                    final String mBookingDate = holder.mView.getContext().getString(R.string.format_task_book_date
+                            , superStartDateTimeCalendar.format(Utility.DATE_FORMAT_DD_MMM) + " " + CalendarUtility.get2HourTimeSlots(model.taskStartdate));
+                    holder.mRowTaskBinding.textDateTime.setText(mBookingDate);
 
-// old time format for past task
-//                String date_time = holder.mView.getContext().getString(R.string.format_date_time
-//                        , superStartDateTimeCalendar.format(Utility.DATE_FORMAT_DD_MMM)
-//                        , superStartDateTimeCalendar.format(Utility.DATE_FORMAT_HH_MM_AM));
-                holder.mRowTaskBinding.textDateTime.setText(dateTime);
+
+                } else {
+                    final String mBookingDate = holder.mView.getContext().getString(R.string.format_task_book_date
+                            , " " + " " + " ");
+                    holder.mRowTaskBinding.textDateTime.setText(mBookingDate);
+                }
 
                 holder.mRowTaskBinding.textDesc.setText(model.taskDesc);
 

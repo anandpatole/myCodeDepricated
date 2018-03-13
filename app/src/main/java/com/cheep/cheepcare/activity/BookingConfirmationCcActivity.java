@@ -203,13 +203,32 @@ public class BookingConfirmationCcActivity extends BaseAppCompatActivity {
             e.printStackTrace();
         }
         if (subscribedTaskDetailModel.taskType.equalsIgnoreCase(Utility.TASK_TYPE.SUBSCRIBED) && limitCount < 1) {
-            WebCallClass.getExtraChargeAfterExceedLimit(this, subscribedTaskDetailModel.carePackageId, subscribedTaskDetailModel.addressModel.address_id, mCommonResponseListener, new WebCallClass.GetExtraChargeAfterExceedLimitListener() {
+
+            if (!Utility.isConnected(mContext)) {
+                Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mBinding.getRoot());
+                return;
+            }
+            showProgressDialog();
+
+            WebCallClass.getExtraChargeAfterExceedLimit(this, subscribedTaskDetailModel.carePackageId, subscribedTaskDetailModel.addressModel.address_id, mErrorListnerForExcessLimitFees, new WebCallClass.GetExtraChargeAfterExceedLimitListener() {
                 @Override
                 public void getFinalExtraCharge(String finalExtraCharge) {
-                    subscribedTaskDetailModel.taskExcessLimitFees = Double.valueOf(finalExtraCharge);
+                    hideProgressDialog();
+                    try {
+                        subscribedTaskDetailModel.taskExcessLimitFees = Double.valueOf(finalExtraCharge);
+                    } catch (Exception e) {
+                        subscribedTaskDetailModel.taskExcessLimitFees = 0;
+                    }
                     mBinding.llExcessLimitFee.setVisibility(View.VISIBLE);
                     mBinding.tvTaskExcessLimitCharges.setText(getString(R.string.rupee_symbol_x, new BigDecimal(subscribedTaskDetailModel.taskExcessLimitFees).toString()));
                     isTaskExcessLimitFeesApplied = true;
+                    subscribedTaskDetailModel.subtotal = subscribedTaskDetailModel.freeServiceTotal
+                            + subscribedTaskDetailModel.paidServiceTotal
+                            + subscribedTaskDetailModel.nonWorkingHourFees
+                            + subscribedTaskDetailModel.taskExcessLimitFees;
+                    subscribedTaskDetailModel.total = subscribedTaskDetailModel.subtotal;
+                    mBinding.tvSubTotal.setText(getString(R.string.rupee_symbol_x, String.valueOf(subscribedTaskDetailModel.subtotal)));
+                    mBinding.tvTotal.setText(getString(R.string.rupee_symbol_x, String.valueOf(subscribedTaskDetailModel.total)));
                 }
             });
 
@@ -439,5 +458,31 @@ public class BookingConfirmationCcActivity extends BaseAppCompatActivity {
                     finish();
                 }
             };
+
+    private final WebCallClass.CommonResponseListener mErrorListnerForExcessLimitFees =
+            new WebCallClass.CommonResponseListener() {
+                @Override
+                public void volleyError(VolleyError error) {
+                    Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
+                    hideProgressDialog();
+                    Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
+                    mBinding.tvBookAndPay.setEnabled(false);
+                }
+
+                @Override
+                public void showSpecificMessage(String message) {
+                    hideProgressDialog();
+                    // Show message
+                    Utility.showSnackBar(message, mBinding.getRoot());
+                    mBinding.tvBookAndPay.setEnabled(false);
+                }
+
+                @Override
+                public void forceLogout() {
+                    hideProgressDialog();
+                    finish();
+                }
+            };
+
 
 }

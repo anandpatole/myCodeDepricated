@@ -256,7 +256,7 @@
                             android:id="@+id/tvTaskStartedTime"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:ellipsize="end"
+                            android:ellipsize="marquee"
                             android:gravity="start|top"
                             android:lineSpacingExtra="@dimen/scale_2dp"
                             android:lines="2"

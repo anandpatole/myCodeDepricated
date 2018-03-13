@@ -3,7 +3,7 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools">
 
-    <android.support.constraint.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
@@ -11,7 +11,7 @@
         <RelativeLayout
             android:id="@+id/rl_tick_container"
             android:layout_width="wrap_content"
-            android:layout_height="0dp"
+            android:layout_height="match_parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -35,6 +35,7 @@
         <com.cheep.custom_view.CFTextViewRegular
             android:id="@+id/tv_sub_service"
             android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/scale_15dp"
             android:layout_marginEnd="@dimen/scale_15dp"
@@ -60,5 +61,5 @@
             app:layout_constraintStart_toEndOf="@id/tv_sub_service"
             tools:text="FREE"/>
 
-    </android.support.constraint.ConstraintLayout>
+    </LinearLayout>
 </layout>

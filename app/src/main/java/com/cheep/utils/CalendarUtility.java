@@ -81,7 +81,7 @@ public class CalendarUtility {
 
     public static String getDateDifference(Context mContext, String date, String taskType) {
         if (TextUtils.isEmpty(date))
-            return "";
+            return (taskType.equalsIgnoreCase(Utility.TASK_TYPE.SUBSCRIBED) ? mContext.getString(R.string.cheep_care) : "") + mContext.getString(R.string.format_task_start_time, "");
 
         String sCurrentDt = com.cheep.firebase.DateUtils.getFormatedDate(Calendar.getInstance().getTime(), Utility.DATE_FORMAT_FULL_DATE);
         Date mFutureDate = com.cheep.firebase.DateUtils.getFormatedDate(date, Utility.DATE_FORMAT_FULL_DATE);
@@ -91,9 +91,10 @@ public class CalendarUtility {
         String timespan = DateUtils.getRelativeTimeSpanString(mFutureDate != null ? mFutureDate.getTime() : 0, System.currentTimeMillis(), DateUtils.SECOND_IN_MILLIS).toString();
         LogUtils.LOGD(TAG, "getDateDifference() returned: " + timespan);
         if (diff > 0) {
-            return mContext.getString(taskType.equalsIgnoreCase(Utility.TASK_TYPE.SUBSCRIBED) ? R.string.format_task_start_time_cc : R.string.format_task_start_time, timespan);
+            return (taskType.equalsIgnoreCase(Utility.TASK_TYPE.SUBSCRIBED) ? mContext.getString(R.string.cheep_care) : "") + mContext.getString(R.string.format_task_start_time, timespan);
         } else {
-            return mContext.getString(R.string.format_task_start_soon);
+            return (taskType.equalsIgnoreCase(Utility.TASK_TYPE.SUBSCRIBED) ? mContext.getString(R.string.cheep_care) : "") +
+                    mContext.getString(R.string.format_task_start_soon);
         }
     }
 

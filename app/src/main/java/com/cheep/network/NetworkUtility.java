@@ -311,6 +311,7 @@ public class NetworkUtility {
         String DISTANCE = "distance";
         String IS_FAVOURITE = "is_favourite";
         String DATA = "data";
+        String TASK_DETAIL = "task_detail";
         //        for closest area
         String CLOSEST_AREA = "closest_address";
         String CLOSEST_CATEGORY = "category";
