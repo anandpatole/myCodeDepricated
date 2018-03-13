@@ -102,7 +102,7 @@ import static android.app.Activity.RESULT_OK;
 public class TaskCreationPhase2Fragment extends BaseFragment implements
         RequestPermission.OnRequestPermissionResult {
 
-    public static final String TAG = TaskCreationPhase2Fragment.class.getSimpleName();
+    public static final String TAG = "TaskCreationPhase2Fragm";
     private FragmentTaskCreationPhase2Binding mBinding;
     private TaskCreationCCActivity mTaskCreationCCActivity;
     public boolean isTotalVerified = false;
