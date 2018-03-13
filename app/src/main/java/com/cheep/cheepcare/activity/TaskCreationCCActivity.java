@@ -68,7 +68,7 @@ public class TaskCreationCCActivity extends BaseAppCompatActivity {
 
     //variables for add media//
     private float itemWidth;
-    private float padding;
+//    private float padding;
     private float allPixels;
     private MediaAdapter mediaAdapter;
     private int expectedPosition;
@@ -171,7 +171,7 @@ public class TaskCreationCCActivity extends BaseAppCompatActivity {
         Point size = new Point();
         display.getSize(size);
         itemWidth = getResources().getDimension(R.dimen.item_width);
-        padding = (size.x - itemWidth) / 2;
+//        padding = (size.x - itemWidth) / 2;
 
         allPixels = 0;
 
@@ -204,14 +204,14 @@ public class TaskCreationCCActivity extends BaseAppCompatActivity {
     }
 
     private void calculatePositionAndScroll(RecyclerView recyclerView) {
-        expectedPosition = Math.round((allPixels + padding) / itemWidth);
+        expectedPosition = Math.round((allPixels/* + padding*/) / itemWidth);
         scrollListToPosition(recyclerView, expectedPosition);
         mBinding.addMedia.tvNumberOfMedia.setText(getString(R.string.number_of_media, String.valueOf(expectedPosition + 1/* + 1*/)
                 , String.valueOf(mediaAdapter.getListSize())));
     }
 
     private void scrollListToPosition(RecyclerView recyclerView, int expectedPosition) {
-        float targetScrollPos = expectedPosition * itemWidth - padding;
+        float targetScrollPos = expectedPosition * itemWidth/* - padding*/;
         float missingPx = targetScrollPos - allPixels;
         if (missingPx != 0) {
             recyclerView.smoothScrollBy((int) missingPx, 0);

@@ -20,6 +20,7 @@
                 android:id="@+id/recycler_view"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:minHeight="@dimen/scale_64dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/frame_select_picture"
                 app:layout_constraintHeight_max="@dimen/scale_10dp"
@@ -28,7 +29,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0"
-                tools:itemCount="3"
+                tools:itemCount="1"
                 tools:listitem="@layout/row_selected_sub_service" />
 
             <FrameLayout
@@ -37,7 +38,6 @@
                 android:layout_height="82dp"
                 android:layout_marginBottom="@dimen/scale_10dp"
                 android:layout_marginRight="@dimen/scale_10dp"
-                android:layout_marginTop="@dimen/scale_10dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/recycler_view"
                 app:layout_constraintTop_toTopOf="parent">

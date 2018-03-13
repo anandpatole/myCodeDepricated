@@ -5,7 +5,7 @@
 
     <FrameLayout
         android:id="@+id/fl_container"
-        android:layout_width="@dimen/padding_item_width"
+        android:layout_width="@dimen/item_width"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
