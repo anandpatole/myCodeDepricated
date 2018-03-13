@@ -891,7 +891,7 @@ public class HomeTabFragment extends BaseFragment {
                             updateLogoSuccess(Category);
                         }
                         ArrayList<JobCategoryModel> list;
-//                        list = GsonUtility.getObjectListFromJsonString(jsonObject.optString(NetworkUtility.TAGS.DATA), JobCategoryModel[].class);
+                        list = GsonUtility.getObjectListFromJsonString(jsonObject.optString(NetworkUtility.TAGS.DATA), JobCategoryModel[].class);
 
                         // SHow Banner view now
                         showBannerView(true);
@@ -900,10 +900,10 @@ public class HomeTabFragment extends BaseFragment {
                         addCoverImageListing(bannerImageModelArrayList, careBannerModelArrayList);
 
                         // Setting RecyclerView Adapter
-                        homeTabRecyclerViewAdapter.addItems(new ArrayList<JobCategoryModel>(), mSelectedFilterType);
+                        homeTabRecyclerViewAdapter.addItems(list, mSelectedFilterType);
 
                         toggleErrorScreen(false);
-                        if (new ArrayList<>().size() <= 0) {
+                        if (list.size() <= 0) {
                             if (mSelectedFilterType.equalsIgnoreCase(Utility.FILTER_TYPES.FILTER_TYPE_FAVOURITES) ||
                                     mSelectedFilterType.equalsIgnoreCase(Utility.FILTER_TYPES.FILTER_TYPE_SUBSCRIBED)) {
                                 onListCategoryListGetsEmpty();
