@@ -35,7 +35,6 @@
         <com.cheep.custom_view.CFTextViewRegular
             android:id="@+id/tv_sub_service"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/scale_15dp"
             android:layout_marginEnd="@dimen/scale_15dp"
