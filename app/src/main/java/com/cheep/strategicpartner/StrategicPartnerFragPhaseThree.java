@@ -39,6 +39,8 @@ import com.cheep.databinding.FragmentStrategicPartnerPhaseThreeBinding;
 import com.cheep.dialogs.AcknowledgementDialogWithProfilePic;
 import com.cheep.dialogs.AcknowledgementInteractionListener;
 import com.cheep.fragment.BaseFragment;
+import com.cheep.model.AttachmentModel;
+import com.cheep.model.JobCategoryModel;
 import com.cheep.model.MessageEvent;
 import com.cheep.model.ProviderModel;
 import com.cheep.model.TaskDetailModel;
@@ -237,7 +239,6 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
                         break;
                     }
                 taskDetailModel.taskStartdate = start_datetime;
-                taskDetailModel.categoryId = mStrategicPartnerTaskCreationAct.mBannerImageModel.cat_id;
                 taskDetailModel.taskType = Utility.TASK_TYPE.STRATEGIC;
 
                 taskDetailModel.quoteAmountStrategicPartner = mStrategicPartnerTaskCreationAct.totalOfBasePrice;
@@ -250,8 +251,19 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
                 ProviderModel provider = new ProviderModel();
                 provider.providerId = mStrategicPartnerTaskCreationAct.spUserId;
                 taskDetailModel.selectedProvider = provider;
-                taskDetailModel.categoryName = mStrategicPartnerTaskCreationAct.mBannerImageModel.name;
-                taskDetailModel.catImage = mStrategicPartnerTaskCreationAct.mBannerImageModel.imgCatImageUrl;
+
+
+                JobCategoryModel jobCategoryModel = new JobCategoryModel();
+                jobCategoryModel.catId = mStrategicPartnerTaskCreationAct.mBannerImageModel.cat_id;
+                jobCategoryModel.catName = mStrategicPartnerTaskCreationAct.mBannerImageModel.name;
+
+                AttachmentModel attachmentModel = new AttachmentModel();
+                attachmentModel.medium = mStrategicPartnerTaskCreationAct.mBannerImageModel.imgCatImageUrl;
+                attachmentModel.thumb = mStrategicPartnerTaskCreationAct.mBannerImageModel.imgCatImageUrl;
+                attachmentModel.original = mStrategicPartnerTaskCreationAct.mBannerImageModel.imgCatImageUrl;
+                jobCategoryModel.catImageExtras = attachmentModel;
+                taskDetailModel.categoryModel = jobCategoryModel;
+
 
                 PaymentChoiceActivity.newInstance(StrategicPartnerFragPhaseThree.this, taskDetailModel, mStrategicPartnerTaskCreationAct.mSelectedAddressModel);
 

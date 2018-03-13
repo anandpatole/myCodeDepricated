@@ -113,7 +113,7 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
         mActivityTaskCreateBinding.textTitle.setText(mJobCategoryModel.catName != null ? mJobCategoryModel.catName : Utility.EMPTY_STRING);
 
         // Set up image
-        GlideUtility.loadImageView(mContext, mActivityTaskCreateBinding.imgService, mJobCategoryModel.catImage, R.drawable.gradient_black);
+        GlideUtility.loadImageView(mContext, mActivityTaskCreateBinding.imgService, mJobCategoryModel.catImageExtras.original, R.drawable.gradient_black);
         GlideUtility.loadImageView(mContext, mActivityTaskCreateBinding.imgService, mJobCategoryModel.catImageExtras.thumb, R.drawable.gradient_black);
 
         // Setting viewpager
@@ -728,14 +728,15 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
                 public void onAcknowledgementAccepted() {
 
                     TaskDetailModel taskDetailModel = new TaskDetailModel();
-                    taskDetailModel.categoryName = mJobCategoryModel.catName;
+//                    taskDetailModel.categoryName = mJobCategoryModel.catName;
                     taskDetailModel.subCategoryName = mSelectedSubServiceDetailModel.name;
                     taskDetailModel.taskAddress = mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.address;
                     taskDetailModel.taskAddressId = mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.address_id;
                     taskDetailModel.taskPaidAmount = instaBookingProDetail.rate;
-                    taskDetailModel.categoryId = mJobCategoryModel.catId;
+//                    taskDetailModel.categoryId = mJobCategoryModel.catId;
                     taskDetailModel.taskDesc = mTaskCreationPagerAdapter.mEnterTaskDetailFragment.getTaskDescription();
-                    taskDetailModel.catImage = mJobCategoryModel.catImage;
+//                    taskDetailModel.catImage = mJobCategoryModel.catImage;
+                    taskDetailModel.categoryModel = mJobCategoryModel;
                     taskDetailModel.taskStartdate = String.valueOf(mTaskCreationPagerAdapter.mEnterTaskDetailFragment.superCalendar.getCalendar().getTimeInMillis());
                     taskDetailModel.subCategoryID = String.valueOf(mSelectedSubServiceDetailModel.sub_cat_id);
 //                    model.taskImage = mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mCurrentPhotoPath;
@@ -777,8 +778,8 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
             ChatTaskModel chatTaskModel = new ChatTaskModel();
             chatTaskModel.taskId = FirebaseUtils.getPrefixTaskId(taskDetailModel.taskId);
             chatTaskModel.taskDesc = taskDetailModel.taskDesc;
-            chatTaskModel.categoryId = taskDetailModel.categoryId;
-            chatTaskModel.categoryName = taskDetailModel.categoryName;
+            chatTaskModel.categoryId = taskDetailModel.categoryModel.catId;
+            chatTaskModel.categoryName = taskDetailModel.categoryModel.catName;
             chatTaskModel.selectedSPId = "";
             UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
             chatTaskModel.userId = FirebaseUtils.getPrefixUserId(userDetails.userID);

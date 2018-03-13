@@ -134,7 +134,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
     private void setUpTaskDetails(final TaskDetailModel mTaskDetailModel) {
 
         // Set category
-        mActivityTaskSummaryBinding.textCategoryName.setText(mTaskDetailModel.categoryName != null ? mTaskDetailModel.categoryName : Utility.EMPTY_STRING);
+        mActivityTaskSummaryBinding.textCategoryName.setText(mTaskDetailModel.categoryModel.catName != null ? mTaskDetailModel.categoryModel.catName: Utility.EMPTY_STRING);
 
         // Set up image
 //        GlideUtility.loadImageView(mContext, mActivityTaskSummaryBinding.imgService, mTaskDetailModel.bannerImage);
@@ -209,8 +209,8 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
             Utility.showRating(mTaskDetailModel.selectedProvider.rating, mActivityTaskSummaryBinding.providerRating);
 
             // Name of Provider
-            mActivityTaskSummaryBinding.textProviderName.setText(mTaskDetailModel.categoryName);
-            SpannableString sName = new SpannableString(mTaskDetailModel.categoryName);
+            mActivityTaskSummaryBinding.textProviderName.setText(mTaskDetailModel.categoryModel.catName);
+            SpannableString sName = new SpannableString(mTaskDetailModel.categoryModel.catName);
 
             SpannableString sVerified = new SpannableString(" " + mContext.getString(R.string.label_partner_pro) + " ");
             sVerified.setSpan(new RelativeSizeSpan(0.9f), 0, sVerified.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -220,7 +220,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
             mActivityTaskSummaryBinding.textAddressKmAway.setText(mTaskDetailModel.selectedProvider.distance + getString(R.string.label_away));
 
             // Profile Pic
-            GlideUtility.showCircularImageViewWithColorBorder(this, TAG, mActivityTaskSummaryBinding.imgProfile, mTaskDetailModel.catImageExtras.medium, Utility.DEFAULT_CHEEP_LOGO, R.color.grey_dark_color, true);
+            GlideUtility.showCircularImageViewWithColorBorder(this, TAG, mActivityTaskSummaryBinding.imgProfile, mTaskDetailModel.categoryModel.catImageExtras.original, Utility.DEFAULT_CHEEP_LOGO, R.color.grey_dark_color, true);
 
             // Manage Click events of Call & Chat
             mActivityTaskSummaryBinding.lnCall.setOnClickListener(new View.OnClickListener() {
@@ -366,7 +366,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
                 mActivityTaskSummaryBinding.lnTaskDetails.addView(view);
             }
 
-            if (mTaskDetailModel.categoryName.equalsIgnoreCase(Utility.STRATEGIC_PARTNER_BRAND.VLCC)) {
+            if (mTaskDetailModel.categoryModel.catName.equalsIgnoreCase(Utility.STRATEGIC_PARTNER_BRAND.VLCC)) {
                 View view = LayoutInflater.from(this).inflate(R.layout.layout_selected_service_task_summary, null);
                 TextView textSubCategoryName = view.findViewById(R.id.text_sub_category_name);
                 TextView textSubSubCategoryName = view.findViewById(R.id.text_sub_sub_category_name);
@@ -1069,7 +1069,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
         final RatingBar ratingBar = (RatingBar) view.findViewById(R.id.rating_bar);
         final EditText edtMessage = (EditText) view.findViewById(R.id.edit_message);
         final TextView txtLabel = (TextView) view.findViewById(R.id.text_label);
-        txtLabel.setText(getString(R.string.label_write_a_review, mTaskDetailModel.categoryName));
+        txtLabel.setText(getString(R.string.label_write_a_review, mTaskDetailModel.categoryModel.catName));
 
         rateDialog = new BottomAlertDialog(mContext);
         view.findViewById(R.id.btn_submit).setOnClickListener(new View.OnClickListener() {
@@ -1439,7 +1439,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
                         case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
                             if (action.equalsIgnoreCase(Utility.ACTION_CHAT)) {
                                 TaskChatModel taskChatModel = new TaskChatModel();
-                                taskChatModel.categoryName = mTaskDetailModel.categoryName;
+                                taskChatModel.categoryName = mTaskDetailModel.categoryModel.catName;
                                 taskChatModel.taskDesc = mTaskDetailModel.taskDesc;
                                 taskChatModel.taskId = mTaskDetailModel.taskId;
                                 taskChatModel.receiverId = FirebaseUtils.getPrefixSPId(providerModel.providerId);

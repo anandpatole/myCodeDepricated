@@ -94,7 +94,7 @@ public class PaymentSummaryActivity extends BaseAppCompatActivity {
 
         if (taskDetailModel != null) {
             callPaymentSummaryWS();
-            GlideUtility.loadImageView(mContext, mActivityPaymentDetailBinding.imgService, taskDetailModel.catImage, R.drawable.gradient_black);
+            GlideUtility.loadImageView(mContext, mActivityPaymentDetailBinding.imgService, taskDetailModel.categoryModel.catImageExtras.original, R.drawable.gradient_black);
             if (taskDetailModel.selectedProvider != null) {
                 GlideUtility.showCircularImageViewWithColorBorder(mContext, TAG, mActivityPaymentDetailBinding.imgProfile, taskDetailModel.selectedProvider.profileUrl, Utility.DEFAULT_CHEEP_LOGO, R.color.dark_blue_variant_1, true);
                 String dateTime = "";

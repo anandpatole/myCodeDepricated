@@ -128,7 +128,7 @@ public class TaskCreationCCActivity extends BaseAppCompatActivity {
         mBinding.textTitle.setText(mJobCategoryModel.catName != null ? mJobCategoryModel.catName : Utility.EMPTY_STRING);
 
         // Set up image
-        GlideUtility.loadImageView(mContext, mBinding.imgService, mJobCategoryModel.catImage, R.drawable.gradient_black);
+        GlideUtility.loadImageView(mContext, mBinding.imgService, mJobCategoryModel.catImageExtras.original, R.drawable.gradient_black);
 //        GlideUtility.loadImageView(mContext, mBinding.imgService, mJobCategoryModel.catImageExtras.thumb, R.drawable.gradient_black);
 
         // Setting viewpager

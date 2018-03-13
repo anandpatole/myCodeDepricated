@@ -1,0 +1,92 @@
+   superStartDateTimeCalendar.setTimeZone(SuperCalendar.SuperTimeZone.GMT.GMT);
+                superStartDateTimeCalendar.setTimeInMillis(Long.parseLong(model.taskStartdate));
+                superStartDateTimeCalendar.setLocaleTimeZone();
+
+                final String dateTime = superStartDateTimeCalendar.format(Utility.DATE_FORMAT_DD_MMM) + " " + CalendarUtility.get2HourTimeSlotsForPastTaskScreen(model.taskStartdate);
+
+
+                holder.mRowTaskGroupBinding.textDateTime.setText(dateTime);
+
+
+                holder.mRowTaskGroupBinding.textDesc.setText(model.taskDesc);
+                holder.mRowTaskGroupBinding.textCategoryName.setText(model.categoryModel.catName);
+                setSubcategoryTitle(model, holder.mRowTaskGroupBinding.textSubCategoryName);
+
+                if (model.providerCount.equals(Utility.ZERO_STRING)) {
+                    holder.mRowTaskGroupBinding.textResponseCounter.setText(String.valueOf(model.providerCount));
+                    holder.mRowTaskGroupBinding.textTaskResponseStatus.setText(holder.mView.getContext().getString(R.string.label_responses));
+                } else {
+                    int providerCount = Integer.parseInt(model.providerCount);
+                    if (providerCount == 1) {
+                        holder.mRowTaskGroupBinding.textResponseCounter.setText(String.valueOf(providerCount));
+                    } else {
+                        holder.mRowTaskGroupBinding.textResponseCounter.setText("+" + String.valueOf(providerCount - 1));
+                    }
+                    holder.mRowTaskGroupBinding.textTaskResponseStatus.setText(holder.mView.getContext().getString(R.string.label_responses));
+                }
+
+                if (Utility.TASK_STATUS.CANCELLED_CUSTOMER.equalsIgnoreCase(model.taskStatus)) {
+                    holder.mRowTaskGroupBinding.lnTaskStatusWithQuote.setVisibility(View.VISIBLE);
+                    holder.mRowTaskGroupBinding.textTaskApprovedQuote.setVisibility(View.GONE);
+
+                    holder.mRowTaskGroupBinding.imgIcon.setImageResource(R.drawable.ic_task_cancelled);
+                    holder.mRowTaskGroupBinding.textTaskStatus.setText(R.string.label_cancelled);
+                    holder.mRowTaskGroupBinding.textTaskStatus.setTextColor(ContextCompat.getColor(context, R.color.task_canceled_red));
+
+                } else if (Utility.TASK_STATUS.CANCELLED_SP.equalsIgnoreCase(model.taskStatus)) {
+                    holder.mRowTaskGroupBinding.lnTaskStatusWithQuote.setVisibility(View.VISIBLE);
+                    holder.mRowTaskGroupBinding.textTaskApprovedQuote.setVisibility(View.GONE);
+                    holder.mRowTaskGroupBinding.imgIcon.setImageResource(R.drawable.ic_task_cancelled);
+                    holder.mRowTaskGroupBinding.textTaskStatus.setText(R.string.label_cancelled);
+                    holder.mRowTaskGroupBinding.textTaskStatus.setTextColor(ContextCompat.getColor(context, R.color.task_canceled_red));
+                } else if (Utility.TASK_STATUS.ELAPSED.equalsIgnoreCase(model.taskStatus)) {
+                    holder.mRowTaskGroupBinding.lnTaskStatusWithQuote.setVisibility(View.VISIBLE);
+                    holder.mRowTaskGroupBinding.textTaskApprovedQuote.setVisibility(View.GONE);
+                    holder.mRowTaskGroupBinding.imgIcon.setImageResource(R.drawable.ic_task_elapsed);
+                    holder.mRowTaskGroupBinding.textTaskStatus.setText(R.string.label_lapsed);
+                    holder.mRowTaskGroupBinding.textTaskStatus.setTextColor(ContextCompat.getColor(context, R.color.task_elapses_red));
+
+                } else if (Utility.TASK_STATUS.DISPUTED.equalsIgnoreCase(model.taskStatus)) {
+                    holder.mRowTaskGroupBinding.lnTaskStatusWithQuote.setVisibility(View.VISIBLE);
+                    holder.mRowTaskGroupBinding.textTaskStatus.setText(context.getString(R.string.label_disputed));
+                    holder.mRowTaskGroupBinding.textTaskApprovedQuote.setVisibility(View.GONE);
+                    holder.mRowTaskGroupBinding.imgIcon.setImageResource(R.drawable.ic_support_in_progress);
+                    holder.mRowTaskGroupBinding.textTaskStatus.setText(R.string.label_support_in_progress);
+                    holder.mRowTaskGroupBinding.textTaskStatus.setTextColor(ContextCompat.getColor(context, R.color.task_elapses_red));
+                } else {
+                    holder.mRowTaskGroupBinding.lnTaskStatusWithQuote.setVisibility(View.GONE);
+                }
+
+                holder.mRowTaskGroupBinding.tvRebookTask.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        @Nullable BannerImageModel bannerImageModel;
+                        @Nullable JobCategoryModel jobCategoryModel;
+                        if (model.taskType.equalsIgnoreCase(Utility.TASK_TYPE.STRATEGIC)) {
+                            jobCategoryModel = null;
+
+                            bannerImageModel = new BannerImageModel();
+                            bannerImageModel.imgCatImageUrl = model.categoryModel.catImageExtras.medium;
+                            bannerImageModel.bannerImage = model.bannerImage;
+                            bannerImageModel.cat_id = model.categoryModel.catId;
+                            bannerImageModel.name = model.categoryModel.catName;
+                            bannerImageModel.minimum_selection = model.minimumSelection;
+
+                        } else {
+
+                            jobCategoryModel = new JobCategoryModel();
+                            jobCategoryModel.catId = model.categoryModel.catId;
+                            jobCategoryModel.catName = model.categoryModel.catName;
+                            jobCategoryModel.catImageExtras = model.categoryModel.catImageExtras;
+
+                            bannerImageModel = null;
+                        }
+                        listener.onBookSimilarTaskClicked(jobCategoryModel, bannerImageModel);
+
+                    }
+                });
+
+                holder.mRowTaskGroupBinding.swipeLayout.setSwipeEnabled(false);
+                mItemManger.bindView(holder.itemView, position);
+                break;
+            }

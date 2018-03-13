@@ -1,0 +1,20 @@
+-- sp data in past task listing task detail --
+experience
+sp_profile_image
+sp_quote_price
+sp_verified
+sp_user_name
+pro_level
+sp_ratings_count
+
+------------------
+
+taskStartdate
+taskType
+taskPaidAmount
+categoryModel
+subSubCategoryList - strategic partner
+taskStatus
+paymentMethod
+
+----------------------------------------------

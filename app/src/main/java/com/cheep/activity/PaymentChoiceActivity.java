@@ -205,7 +205,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
             case R.id.rl_cash_payment:
                 paymentMethod = NetworkUtility.PAYMENT_METHOD_TYPE.COD;
 
-                String proName = taskDetailModel.taskType.equalsIgnoreCase(Utility.TASK_TYPE.STRATEGIC) ? taskDetailModel.categoryName : providerModel.userName;
+                String proName = taskDetailModel.taskType.equalsIgnoreCase(Utility.TASK_TYPE.STRATEGIC) ? taskDetailModel.categoryModel.catName : providerModel.userName;
                 PayByCashDialog payByCashDialog = PayByCashDialog.newInstance(proName, amount, new PayByCashDialog.PayByCashDoneListener() {
                     @Override
                     public void onDoneClick() {
@@ -1011,7 +1011,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
 
         }
         mParams.put(NetworkUtility.TAGS.CITY_ID, userDetails.CityID);
-        mParams.put(NetworkUtility.TAGS.CAT_ID, taskDetailModel.categoryId);
+        mParams.put(NetworkUtility.TAGS.CAT_ID, taskDetailModel.categoryModel.catId);
         mParams.put(NetworkUtility.TAGS.START_DATETIME, taskDetailModel.taskStartdate);
         mParams.put(NetworkUtility.TAGS.SUBCATEGORY_ID, taskDetailModel.subCategoryID);
         mParams.put(NetworkUtility.TAGS.SP_USER_ID, providerModel.providerId);
@@ -1062,7 +1062,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
             NetworkUtility.addGuestAddressParams(mTaskCreationParams, mSelectedAddressModel);
         }
         mTaskCreationParams.put(NetworkUtility.TAGS.CITY_ID, userDetails.CityID);
-        mTaskCreationParams.put(NetworkUtility.TAGS.CAT_ID, taskDetailModel.categoryId);
+        mTaskCreationParams.put(NetworkUtility.TAGS.CAT_ID, taskDetailModel.categoryModel.catId);
         mTaskCreationParams.put(NetworkUtility.TAGS.START_DATETIME, taskDetailModel.taskStartdate);
         mTaskCreationParams.put(NetworkUtility.TAGS.PAYMENT_STATUS, Utility.PAYMENT_STATUS.COMPLETED);
         mTaskCreationParams.put(NetworkUtility.TAGS.SUBCATEGORY_ID, taskDetailModel.subCategoryID);
@@ -1197,7 +1197,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
 
             }
 
-        mParams.put(NetworkUtility.TAGS.CAT_ID, taskDetailModel.categoryId);
+        mParams.put(NetworkUtility.TAGS.CAT_ID, taskDetailModel.categoryModel.catId);
         mParams.put(NetworkUtility.TAGS.START_DATETIME, String.valueOf(superCalendar.getTimeInMillis()));
         mParams.put(NetworkUtility.TAGS.SUB_CATEGORY_DETAIL, subCategoryDetail);
         mParams.put(NetworkUtility.TAGS.QUESTION_DETAIL, question_detail);
@@ -1230,7 +1230,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
         LogUtils.LOGE(TAG, "task_desc= [ " + task_desc + " ] ");
         LogUtils.LOGE(TAG, "media_file= [ " + media_file + " ] ");
         LogUtils.LOGE(TAG, "SP_USER_ID= [ " + taskDetailModel.selectedProvider.providerId + " ] ");
-        LogUtils.LOGE(TAG, "cat_id = [ " + taskDetailModel.categoryId + " ] ");
+        LogUtils.LOGE(TAG, "cat_id = [ " + taskDetailModel.categoryModel.catId + " ] ");
 
         // Create Params for AppsFlyer event track
         mTaskCreationParams = new HashMap<>();
@@ -1248,7 +1248,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
              */
            mTaskCreationParams =     NetworkUtility.addGuestAddressParams(mTaskCreationParams, mSelectedAddressModel);
             }
-        mTaskCreationParams.put(NetworkUtility.TAGS.CAT_ID, taskDetailModel.categoryId);
+        mTaskCreationParams.put(NetworkUtility.TAGS.CAT_ID, taskDetailModel.categoryModel.catId);
         mTaskCreationParams.put(NetworkUtility.TAGS.START_DATETIME, taskDetailModel.taskStartdate);
         mTaskCreationParams.put(NetworkUtility.TAGS.SUB_CATEGORY_DETAIL, subCategoryDetail);
         mTaskCreationParams.put(NetworkUtility.TAGS.QUESTION_DETAIL, question_detail);
@@ -1307,7 +1307,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
                         String time = superCalendar.format(Utility.DATE_FORMAT_HH_MM_AM);
                         String date = superCalendar.format(Utility.DATE_FORMAT_DD_MMM_YYYY);
 
-                        String message = getString(R.string.label_strategic_task_confirmed, taskDetailModel.categoryName) +
+                        String message = getString(R.string.label_strategic_task_confirmed, taskDetailModel.categoryModel.catName) +
                                 date + getString(R.string.label_at) + time;
 
                         final AcknowledgementDialogWithProfilePic mAcknowledgementDialogWithProfilePic = AcknowledgementDialogWithProfilePic.newInstance(
@@ -1315,7 +1315,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
                                 R.drawable.ic_acknowledgement_dialog_header_background,
                                 getString(R.string.label_brilliant),
                                 message,
-                                taskDetailModel.catImage,
+                                taskDetailModel.categoryModel.catImageExtras.original,
                                 new AcknowledgementInteractionListener() {
 
                                     @Override

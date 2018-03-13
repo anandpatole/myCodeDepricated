@@ -417,7 +417,7 @@ public class ExpandableSubscribedPackagesRecyclerAdapter extends ExpandableRecyc
 
 
             //Background image
-            GlideUtility.loadImageView(context, mBinding.imgCategoryBackground, model.catImage, R.drawable.gradient_black);
+            GlideUtility.loadImageView(context, mBinding.imgCategoryBackground, model.catImageExtras.original, R.drawable.gradient_black);
 //            GlideUtility.loadImageView(context, mBinding.imgCategoryBackground, model.catImageExtras.thumb, R.drawable.gradient_black);
 
             //Category Icon

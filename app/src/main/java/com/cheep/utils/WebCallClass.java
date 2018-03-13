@@ -32,8 +32,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.cheep.network.NetworkUtility.TAGS.ADDRESS_ID;
 import static com.cheep.network.NetworkUtility.TAGS.CARE_CITY_SLUG;
+import static com.cheep.network.NetworkUtility.TAGS.CARE_PACKAGE_ID;
 import static com.cheep.network.NetworkUtility.TAGS.DATA;
+import static com.cheep.network.NetworkUtility.TAGS.FINAL_EXTRA_CHARGE;
 
 /**
  * Created by bhavesh on 24/1/18.
@@ -323,7 +326,7 @@ public class WebCallClass {
 
         mParams.put(NetworkUtility.TAGS.IS_REFER_CODE, Utility.BOOLEAN.NO);
 
-        mParams.put(NetworkUtility.TAGS.TASK_TYPE, subscribedTaskDetailModel.startDateTime);
+        mParams.put(NetworkUtility.TAGS.TASK_TYPE, subscribedTaskDetailModel.taskType);
 
 //        mParams.put(NetworkUtility.TAGS.TASK_DESC, subscribedTaskDetailModel.taskDesc);
 
@@ -348,7 +351,6 @@ public class WebCallClass {
 
         Log.d(TAG, "VolleyNetworkRequest() called with: url = [" + "url" + "], errorListener = [" + "errorListener" + "]" +
                 ", listener = [" + "listener" + "], headers = [" + mHeaderParams + "], stringData = [" + mParams + "], fileParam = [" + null + "]");
-
 
         //noinspection unchecked
         VolleyNetworkRequest mVolleyNetworkRequestForCategoryList = new VolleyNetworkRequest(NetworkUtility.WS.CARE_CREATE_TASK
@@ -691,8 +693,85 @@ public class WebCallClass {
                 , mHeaderParams
                 , mParams
                 , null);
-
         Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest, NetworkUtility.WS.NOTIFICATION_LIST);
     }
     ////////////////////////// Get notification list call end     //////////////////////////
+
+
+    ////////////////////////// GgetExtraChargeAfterExceedLimit call start     //////////////////////////
+    public interface GetExtraChargeAfterExceedLimitListener {
+
+        void getFinalExtraCharge(String finalExtraCharge);
+    }
+
+    public static void getExtraChargeAfterExceedLimit(final Context mContext, String care_package_id, String address_id, final CommonResponseListener commonListener
+            , final GetExtraChargeAfterExceedLimitListener successListener) {
+
+        final Response.ErrorListener errorListener = new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
+                commonListener.volleyError(error);
+            }
+        };
+
+        final Response.Listener responseListener = new Response.Listener() {
+            @Override
+            public void onResponse(Object response) {
+                Log.d(TAG, "onResponse() called with: response = [" + response + "]");
+                try {
+                    JSONObject jsonObject = new JSONObject(response.toString());
+                    int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
+
+                    String error_message;
+                    switch (statusCode) {
+                        case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
+                            String mCityLandingPageModel = jsonObject.optJSONObject(DATA).optString(FINAL_EXTRA_CHARGE);
+                            successListener.getFinalExtraCharge(mCityLandingPageModel);
+                            break;
+                        case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
+                            // Show Toast
+                            commonListener.showSpecificMessage(mContext.getString(R.string.label_something_went_wrong));
+                            break;
+                        case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
+                            error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
+                            // Show message
+                            commonListener.showSpecificMessage(error_message);
+                            break;
+                        case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
+                        case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
+                            //Logout and finish the current activity
+                            Utility.logout(mContext, true, statusCode);
+                            commonListener.forceLogout();
+                            break;
+                    }
+                } catch (JSONException e) {
+                    commonListener.showSpecificMessage(mContext.getString(R.string.label_something_went_wrong));
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        //Add Header parameters
+        Map<String, String> mHeaderParams = new HashMap<>();
+        mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
+
+        //Add Params
+        Map<String, String> mParams = new HashMap<>();
+        mParams.put(CARE_PACKAGE_ID, care_package_id);
+        mParams.put(ADDRESS_ID, address_id);
+
+
+        //noinspection unchecked
+        VolleyNetworkRequest mVolleyNetworkRequest = new VolleyNetworkRequest(NetworkUtility.WS.GET_EXTRA_CHARGE_AFTER_EXCEED_LIMIT
+                , errorListener
+                , responseListener
+                , mHeaderParams
+                , mParams
+                , null);
+
+        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest, NetworkUtility.WS.GET_EXTRA_CHARGE_AFTER_EXCEED_LIMIT);
+    }
+    ////////////////////////// getExtraChargeAfterExceedLimit call end     //////////////////////////
+
 }
