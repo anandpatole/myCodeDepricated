@@ -259,7 +259,8 @@ public class ManageSubscriptionActivity extends BaseAppCompatActivity {
     private void initiateDynamicUI() {
 
         mBinding.rvBoughtPackages.setNestedScrollingEnabled(false);
-        ExpandableSubscribedPackagesRecyclerAdapter subscribedPackagesAdapter = new ExpandableSubscribedPackagesRecyclerAdapter(mSubscribedPackageList, true
+        ExpandableSubscribedPackagesRecyclerAdapter subscribedPackagesAdapter =
+                new ExpandableSubscribedPackagesRecyclerAdapter(mSubscribedPackageList, true
                 , childViewsClickListener, parentClickListener);
         mBinding.rvBoughtPackages.setAdapter(subscribedPackagesAdapter);
 

@@ -95,11 +95,6 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
             };
     public SuperCalendar startDateTimeSuperCalendar = SuperCalendar.getInstance();
 
-    /*public static void getInstance(Context mContext, TaskDetailModel taskDetailModel) {
-        Intent intent = new Intent(mContext, TaskSummaryActivity.class);
-//        intent.putExtra(Utility.Extra.TASK_DETAIL_MODEL, Utility.getJsonStringFromObject(taskDetailModel));
-        mContext.startActivity(intent);
-    }*/
     public SuperCalendar superCalendar;
     ////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////  Rate Dialog //////////////////////////////////////////////////////

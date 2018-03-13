@@ -16,11 +16,11 @@ public class AdminSettingModel {
     @Expose
     public String additionalChargeForSelectingSpecificTime;
 
-    @SerializedName("starttime")
+    @SerializedName("WORKING_SLOT_START_TIME")
     @Expose
     public String starttime;
 
-    @SerializedName("endtime")
+    @SerializedName("WORKING_SLOT_END_TIME")
     @Expose
     public String endtime;
 }

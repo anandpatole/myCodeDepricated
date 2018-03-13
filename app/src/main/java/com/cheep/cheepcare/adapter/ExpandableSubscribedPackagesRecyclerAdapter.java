@@ -473,7 +473,8 @@ public class ExpandableSubscribedPackagesRecyclerAdapter extends ExpandableRecyc
             mBinding.tvBook.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mChildClickListener.onBookClicked(model, ChildCategoryViewHolder.this.getChildAdapterPosition(), mList.get(getParentAdapterPosition()));
+                    mChildClickListener.onBookClicked(model, ChildCategoryViewHolder.this.getChildAdapterPosition()
+                            , mList.get(getParentAdapterPosition()));
                 }
             });
         }
