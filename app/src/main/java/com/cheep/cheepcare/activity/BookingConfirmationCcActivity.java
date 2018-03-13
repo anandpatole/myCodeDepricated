@@ -170,7 +170,6 @@ public class BookingConfirmationCcActivity extends BaseAppCompatActivity {
                     subscribedTaskDetailModel.adminSettingModel.endtime);
             LogUtils.LOGE(TAG, "initiateUI: time " + time + "\n" + isWorkingTime);
 
-
             LogUtils.LOGE(TAG, "initiateUI: isWorkingTime " + isWorkingTime);
 
 

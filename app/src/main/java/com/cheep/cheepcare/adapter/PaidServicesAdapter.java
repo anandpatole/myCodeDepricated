@@ -56,7 +56,8 @@ public class PaidServicesAdapter extends RecyclerView.Adapter<PaidServicesAdapte
             holder.mBinding.imgIconCorrect.setSelected(true);
             holder.mBinding.clCenter.setVisibility(View.VISIBLE);
             holder.mBinding.tvSubServicePrice.setVisibility(View.VISIBLE);
-            holder.mBinding.tvSubServicePrice.setText(context.getString(R.string.rupee_symbol_x, subServicesModel.unitPrice));
+            holder.mBinding.tvSubServicePrice.setText(context.getString(R.string.rupee_symbol_x
+                    , String.valueOf(Float.parseFloat(subServicesModel.unitPrice) * subServicesModel.selected_unit)));
         } else {
             holder.mBinding.imgIconCorrect.setSelected(false);
             holder.mBinding.clCenter.setVisibility(View.INVISIBLE);

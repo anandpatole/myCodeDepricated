@@ -376,7 +376,8 @@ public class TaskCreationPhase2Fragment extends BaseFragment implements
         mAddressList = new ArrayList<>();
         if (PreferenceUtility.getInstance(mContext).getUserDetails() != null) {
             ArrayList<AddressModel> unSubscibedAddressList = new ArrayList<>();
-            for (AddressModel addressModel : PreferenceUtility.getInstance(mContext).getUserDetails().addressList) {
+            ArrayList<AddressModel> userAddressList = PreferenceUtility.getInstance(mContext).getUserDetails().addressList;
+            for (AddressModel addressModel : userAddressList) {
                 if (addressModel.is_subscribe.equalsIgnoreCase(Utility.BOOLEAN.NO)) {
                     unSubscibedAddressList.add(addressModel);
                 }
@@ -384,7 +385,6 @@ public class TaskCreationPhase2Fragment extends BaseFragment implements
             mAddressList.addAll(mTaskCreationCCActivity.mCareAddressList);
             mAddressList.addAll(unSubscibedAddressList);
         }
-
 
         // add dummy select adderss at last position for "Add new Address" row
         mAddressList.add(new AddressModel() {{
