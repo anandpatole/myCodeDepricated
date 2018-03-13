@@ -28,8 +28,8 @@ public class JobCategoryModel implements Serializable {
     @SerializedName("cat_icon")
     public String catIcon;
 
-    @SerializedName("cat_image")
-    public String catImage;
+//    @SerializedName("cat_image")
+//    public String catImage;
 
     @SerializedName("cat_jobs")
     public String catJobs;
@@ -37,7 +37,7 @@ public class JobCategoryModel implements Serializable {
     @SerializedName("cat_sp_count")
     public String spCount;
 
-    @SerializedName("cat_image_extra")
+    @SerializedName("cat_image")
     public AttachmentModel catImageExtras;
 
     // Newly added

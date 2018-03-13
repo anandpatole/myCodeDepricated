@@ -19,7 +19,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.cheep.R;
 import com.cheep.activity.HomeActivity;
-import com.cheep.adapter.TaskRecyclerViewAdapter;
+import com.cheep.adapter.TaskRecyclerViewAdapterNew;
 import com.cheep.custom_view.DividerItemDecoration;
 import com.cheep.databinding.CommonRecyclerViewBinding;
 import com.cheep.interfaces.TaskRowDataInteractionListener;
@@ -37,7 +37,6 @@ import com.cheep.utils.Utility;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -56,7 +55,7 @@ public class TaskFragment extends BaseFragment {
     public static final int TAB_PENDING_TASK = 0;
     public static final int TAB_PAST_TASK = 1;
 
-    private TaskRecyclerViewAdapter taskRecyclerViewAdapter;
+    private TaskRecyclerViewAdapterNew taskRecyclerViewAdapter;
     private TaskRowDataInteractionListener mListener;
     CommonRecyclerViewBinding commonRecyclerViewBinding;
     ErrorLoadingHelper errorLoadingHelper;
@@ -131,7 +130,7 @@ public class TaskFragment extends BaseFragment {
             loadMoreKey = NetworkUtility.TAGS.LAST_ID;
         }
 
-        taskRecyclerViewAdapter = new TaskRecyclerViewAdapter(mContext, whichFrg, mListener);
+        taskRecyclerViewAdapter = new TaskRecyclerViewAdapterNew(mContext, whichFrg, mListener);
         commonRecyclerViewBinding.recyclerView.setAdapter(taskRecyclerViewAdapter);
         //Set dividers to Recyclerview
         commonRecyclerViewBinding.recyclerView.addItemDecoration(new DividerItemDecoration(mContext, R.drawable.divider_grey_normal));
@@ -365,7 +364,7 @@ public class TaskFragment extends BaseFragment {
                             getActivity().finish();
                         break;
                 }
-            } catch (JSONException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
                 mCallPendingTaskWSErrorListener.onErrorResponse(new VolleyError(e.getMessage()));
             }

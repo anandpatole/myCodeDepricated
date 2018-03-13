@@ -133,7 +133,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:ellipsize="end"
-                        android:lines="1"
+                        android:lines="2"
                         android:maxLines="2"
                         android:textAllCaps="false"
                         android:textColor="@color/splash_gradient_end"
@@ -203,7 +203,7 @@
                         android:textColor="@color/black"
                         android:textSize="@dimen/text_size_11sp"/>
 
-                    <ImageView
+<!--                    <ImageView
                         android:id="@+id/tv_subscribed"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -217,7 +217,7 @@
                         android:paddingRight="@dimen/scale_16dp"
                         android:paddingStart="@dimen/scale_4dp"
                         android:visibility="visible"
-                        tools:ignore="ContentDescription"/>
+                        tools:ignore="ContentDescription"/>-->
 
                 </RelativeLayout>
 

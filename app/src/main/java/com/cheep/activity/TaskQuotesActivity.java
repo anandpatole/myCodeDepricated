@@ -235,7 +235,7 @@ public class TaskQuotesActivity extends BaseAppCompatActivity implements TaskQuo
 
     private void populateData() {
         if (mTaskDetailModel != null) {
-            tvTitle.setText(Utility.checkNonNullAndSet(mTaskDetailModel.categoryName));
+            tvTitle.setText(Utility.checkNonNullAndSet(mTaskDetailModel.categoryModel.catName));
             tvTaskTitle.setText(Utility.checkNonNullAndSet(mTaskDetailModel.subCategoryName));
             tvTaskDescription.setText(Utility.checkNonNullAndSet(mTaskDetailModel.taskDesc));
 
@@ -443,7 +443,7 @@ public class TaskQuotesActivity extends BaseAppCompatActivity implements TaskQuo
             if (providerModel != null && mTaskDetailModel != null) {
                 if (providerModel.request_detail_status.equalsIgnoreCase(Utility.SEND_TASK_DETAIL_REQUESTED_STATUS.ACCEPTED)) {
                     TaskChatModel taskChatModel = new TaskChatModel();
-                    taskChatModel.categoryName = mTaskDetailModel.categoryName;
+                    taskChatModel.categoryName = mTaskDetailModel.categoryModel.catName;
                     taskChatModel.taskDesc = mTaskDetailModel.taskDesc;
                     taskChatModel.taskId = mTaskDetailModel.taskId;
                     taskChatModel.receiverId = FirebaseUtils.getPrefixSPId(providerModel.providerId);
@@ -563,7 +563,7 @@ public class TaskQuotesActivity extends BaseAppCompatActivity implements TaskQuo
                         case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
                             if (action.equalsIgnoreCase(Utility.ACTION_CHAT)) {
                                 TaskChatModel taskChatModel = new TaskChatModel();
-                                taskChatModel.categoryName = mTaskDetailModel.categoryName;
+                                taskChatModel.categoryName = mTaskDetailModel.categoryModel.catName;
                                 taskChatModel.taskDesc = mTaskDetailModel.taskDesc;
                                 taskChatModel.taskId = mTaskDetailModel.taskId;
                                 taskChatModel.receiverId = FirebaseUtils.getPrefixSPId(providerModel.providerId);

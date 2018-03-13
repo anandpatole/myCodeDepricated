@@ -139,11 +139,11 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
     private void setUpTaskDetails(final TaskDetailModel mTaskDetailModel) {
 
         // Set category
-        mBinding.textCategoryName.setText(mTaskDetailModel.categoryName != null ? mTaskDetailModel.categoryName : Utility.EMPTY_STRING);
+        mBinding.textCategoryName.setText(mTaskDetailModel.categoryModel.catName != null ? mTaskDetailModel.categoryModel.catName: Utility.EMPTY_STRING);
 
         // Set up image
-        GlideUtility.loadImageView(mContext, mBinding.imgService, mTaskDetailModel.catImage, R.drawable.gradient_black);
-        GlideUtility.loadImageView(mContext, mBinding.imgService, mTaskDetailModel.catImageExtras.thumb, R.drawable.gradient_black);
+        GlideUtility.loadImageView(mContext, mBinding.imgService, mTaskDetailModel.categoryModel.catImageExtras.original, R.drawable.gradient_black);
+        GlideUtility.loadImageView(mContext, mBinding.imgService, mTaskDetailModel.categoryModel.catImageExtras.thumb, R.drawable.gradient_black);
 
 
         // By Default makethe task completion dialog as gone
@@ -214,7 +214,7 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
             mBinding.textProviderName.setText(mTaskDetailModel.selectedProvider.userName);
 
             SpannableString sName = new SpannableString(mTaskDetailModel.selectedProvider.userName);
-            SpannableString sVerified = null;
+            SpannableString sVerified;
             if (Utility.BOOLEAN.YES.equalsIgnoreCase(mTaskDetailModel.selectedProvider.isVerified)) {
                 sVerified = new SpannableString(" " + mContext.getString(R.string.label_verified_pro) + " ");
                 sVerified.setSpan(new RelativeSizeSpan(0.9f), 0, sVerified.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -247,7 +247,7 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
                 public void onClick(View v) {
                     Log.i(TAG, "onClick: Chat");
                     TaskChatModel taskChatModel = new TaskChatModel();
-                    taskChatModel.categoryName = mTaskDetailModel.categoryName;
+                    taskChatModel.categoryName = mTaskDetailModel.categoryModel.catName;
                     taskChatModel.taskDesc = mTaskDetailModel.taskDesc;
                     taskChatModel.taskId = mTaskDetailModel.taskId;
                     taskChatModel.receiverId = FirebaseUtils.getPrefixSPId(mTaskDetailModel.selectedProvider.providerId);
@@ -518,6 +518,8 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
     ///////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////WHEN Feature [END]//////////////////////
     ///////////////////////////////////////////////////////////////////////////////////////////////
+
+
     private void setConfirmAvailabilityVisible(boolean isConfirmAvailabilityVisible) {
         mBinding.tvConfirmAvailability.setVisibility(isConfirmAvailabilityVisible ? View.VISIBLE : View.GONE);
         mBinding.tvConfirmAvailabilityInfo.setVisibility(isConfirmAvailabilityVisible ? View.VISIBLE : View.GONE);
@@ -903,7 +905,7 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
         }
 
         // Awaiting Response
-        if (list.size() == 0) {
+        if (list.isEmpty()) {
             mBinding.textTaskResponseStatus.setText(getResources().getString(R.string.label_pros_around_you_reviewing_desc));
             mBinding.textBottomAction.setVisibility(View.GONE);
             mBinding.textTaskStatusTop.setVisibility(View.GONE);
@@ -1579,7 +1581,7 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
                         case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
                             if (action.equalsIgnoreCase(Utility.ACTION_CHAT)) {
                                 TaskChatModel taskChatModel = new TaskChatModel();
-                                taskChatModel.categoryName = mTaskDetailModel.categoryName;
+                                taskChatModel.categoryName = mTaskDetailModel.categoryModel.catName;
                                 taskChatModel.taskDesc = mTaskDetailModel.taskDesc;
                                 taskChatModel.taskId = mTaskDetailModel.taskId;
                                 taskChatModel.receiverId = FirebaseUtils.getPrefixSPId(providerModel.providerId);

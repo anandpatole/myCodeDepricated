@@ -180,8 +180,8 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
         mActivityProviderProfileBinding.textExpectedTime.setSelected(true);
 
         if (taskDetailModel != null) {
-            if (!TextUtils.isEmpty(taskDetailModel.categoryName)) {
-                mActivityProviderProfileBinding.textCategory.setText(taskDetailModel.categoryName);
+            if (!TextUtils.isEmpty(taskDetailModel.categoryModel.catName)) {
+                mActivityProviderProfileBinding.textCategory.setText(taskDetailModel.categoryModel.catName);
             } else {
                 mActivityProviderProfileBinding.textCategory.setVisibility(View.GONE);
             }
@@ -277,7 +277,7 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
                     if (providerModel != null && taskDetailModel != null) {
                         if (providerModel.request_detail_status.equalsIgnoreCase(Utility.SEND_TASK_DETAIL_REQUESTED_STATUS.ACCEPTED)) {
                             TaskChatModel taskChatModel = new TaskChatModel();
-                            taskChatModel.categoryName = taskDetailModel.categoryName;
+                            taskChatModel.categoryName = taskDetailModel.categoryModel.catName;
                             taskChatModel.taskDesc = taskDetailModel.taskDesc;
                             taskChatModel.taskId = taskDetailModel.taskId;
                             taskChatModel.receiverId = FirebaseUtils.getPrefixSPId(providerModel.providerId);
@@ -1336,7 +1336,7 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
                         case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
                             if (action.equalsIgnoreCase(Utility.ACTION_CHAT)) {
                                 TaskChatModel taskChatModel = new TaskChatModel();
-                                taskChatModel.categoryName = taskDetailModel.categoryName;
+                                taskChatModel.categoryName = taskDetailModel.categoryModel.catName;
                                 taskChatModel.taskDesc = taskDetailModel.taskDesc;
                                 taskChatModel.taskId = taskDetailModel.taskId;
                                 taskChatModel.receiverId = FirebaseUtils.getPrefixSPId(providerModel.providerId);

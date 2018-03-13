@@ -293,10 +293,10 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
 
             mActivityPaymentDetailBinding.textTitle.setText(getString(R.string.title_booking_confimation));
             mActivityPaymentDetailBinding.textCategory.setVisibility(View.VISIBLE);
-            mActivityPaymentDetailBinding.textCategory.setText(taskDetailModel.categoryName);
+            mActivityPaymentDetailBinding.textCategory.setText(taskDetailModel.categoryModel.catName);
 
             // top header image
-            GlideUtility.loadImageView(mContext, mActivityPaymentDetailBinding.imgService, taskDetailModel.catImage, R.drawable.gradient_black);
+            GlideUtility.loadImageView(mContext, mActivityPaymentDetailBinding.imgService, taskDetailModel.categoryModel.catImageExtras.original, R.drawable.gradient_black);
             GlideUtility.showCircularImageViewWithColorBorder(mContext, TAG, mActivityPaymentDetailBinding.imgProfile, providerModel.profileUrl, Utility.DEFAULT_CHEEP_LOGO, R.color.dark_blue_variant_1, true);
             String datetime = "";
 
@@ -443,10 +443,10 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
             mActivityPaymentDetailBinding.txtadditionalcharge.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf(0))));
             mActivityPaymentDetailBinding.txtsubtotal.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf(providerModel.quotePrice))));
             mActivityPaymentDetailBinding.textCategory.setVisibility(View.VISIBLE);
-            mActivityPaymentDetailBinding.textCategory.setText(taskDetailModel.categoryName);
+            mActivityPaymentDetailBinding.textCategory.setText(taskDetailModel.categoryModel.catName);
 
             // top header image
-            GlideUtility.loadImageView(mContext, mActivityPaymentDetailBinding.imgService, taskDetailModel.catImage, R.drawable.gradient_black);
+            GlideUtility.loadImageView(mContext, mActivityPaymentDetailBinding.imgService, taskDetailModel.categoryModel.catImageExtras.original, R.drawable.gradient_black);
             GlideUtility.showCircularImageViewWithColorBorder(mContext, TAG, mActivityPaymentDetailBinding.imgProfile, providerModel.profileUrl, Utility.DEFAULT_CHEEP_LOGO, R.color.dark_blue_variant_1, true);
             String datetime = "";
 
@@ -761,7 +761,7 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
         if (isInstaBooking) {
             mParams.put(NetworkUtility.TAGS.QUOTE_AMOUNT, providerModel.spWithoutGstQuotePrice);
             mParams.put(NetworkUtility.TAGS.CHEEPCODE, cheepCode);
-            mParams.put(NetworkUtility.TAGS.CAT_ID, taskDetailModel.categoryId);
+            mParams.put(NetworkUtility.TAGS.CAT_ID, taskDetailModel.categoryModel.catId);
             mParams.put(NetworkUtility.TAGS.IS_INSTA_BOOKING, Utility.BOOLEAN.YES);
             int addressId;
             try {
@@ -1177,8 +1177,7 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
 
                         JSONObject jsonData = jsonObject.optJSONObject(NetworkUtility.TAGS.DATA);
                         String taskStatus = jsonData.optString(NetworkUtility.TAGS.TASK_STATUS);
-                        if (!TextUtils.isEmpty(taskDetailModel.cheepCode) && taskDetailModel.cheepCode.startsWith(Utility.COUPON_DUNIA_CODE_PREFIX))
-                        {
+                        if (!TextUtils.isEmpty(taskDetailModel.cheepCode) && taskDetailModel.cheepCode.startsWith(Utility.COUPON_DUNIA_CODE_PREFIX)) {
                             LogUtils.LOGE(TAG, "onResponse: Appsflyer for coupon dunia*************");
                             if (!BuildConfig.BUILD_TYPE.equalsIgnoreCase("release"))
                                 AppsFlyerLib.getInstance().trackEvent(mContext, NetworkUtility.TAGS.APPSFLYER_CUSTOM_TRACK_EVENTS.COUPON_DUNIA_TASK_DEBUG, mTaskCreationParams);
@@ -1344,11 +1343,11 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
             mParams.put(NetworkUtility.TAGS.ADDRESS_ID, mSelectedAddressModelForInsta.address_id);
         } else {
             // In case its negative then provide other address information
-          mParams =  NetworkUtility.addGuestAddressParams(mParams, mSelectedAddressModelForInsta);
+            mParams = NetworkUtility.addGuestAddressParams(mParams, mSelectedAddressModelForInsta);
 
         }
         mParams.put(NetworkUtility.TAGS.CITY_ID, userDetails.CityID);
-        mParams.put(NetworkUtility.TAGS.CAT_ID, taskDetailModel.categoryId);
+        mParams.put(NetworkUtility.TAGS.CAT_ID, taskDetailModel.categoryModel.catId);
         mParams.put(NetworkUtility.TAGS.START_DATETIME, taskDetailModel.taskStartdate);
         mParams.put(NetworkUtility.TAGS.SUBCATEGORY_ID, taskDetailModel.subCategoryID);
         mParams.put(NetworkUtility.TAGS.SP_USER_ID, providerModel.providerId);
@@ -1387,7 +1386,7 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
             NetworkUtility.addGuestAddressParams(mTaskCreationParams, mSelectedAddressModelForInsta);
         }
         mTaskCreationParams.put(NetworkUtility.TAGS.CITY_ID, userDetails.CityID);
-        mTaskCreationParams.put(NetworkUtility.TAGS.CAT_ID, taskDetailModel.categoryId);
+        mTaskCreationParams.put(NetworkUtility.TAGS.CAT_ID, taskDetailModel.categoryModel.catId);
         mTaskCreationParams.put(NetworkUtility.TAGS.START_DATETIME, taskDetailModel.taskStartdate);
         mTaskCreationParams.put(NetworkUtility.TAGS.PAYMENT_STATUS, Utility.PAYMENT_STATUS.COMPLETED);
         mTaskCreationParams.put(NetworkUtility.TAGS.SUBCATEGORY_ID, taskDetailModel.subCategoryID);

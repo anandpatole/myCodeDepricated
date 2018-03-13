@@ -932,7 +932,7 @@ public class HomeTabFragment extends BaseFragment {
                             getActivity().finish();
                         break;
                 }
-            } catch (JSONException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
                 mCallCategoryListWSErrorListener.onErrorResponse(new VolleyError(e.getMessage()));
             }

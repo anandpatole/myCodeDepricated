@@ -133,7 +133,7 @@ public class PaymentsSummaryStrategicPartnerActivity extends BaseAppCompatActivi
 
             callPaymentSummaryWS();
 
-            GlideUtility.showCircularImageViewWithColorBorder(mContext, TAG, mActivityPaymentDetailBinding.imgLogo, taskDetailModel.catImage, Utility.DEFAULT_CHEEP_LOGO, R.color.dark_blue_variant_1, true);
+            GlideUtility.showCircularImageViewWithColorBorder(mContext, TAG, mActivityPaymentDetailBinding.imgLogo, taskDetailModel.categoryModel.catImageExtras.original, Utility.DEFAULT_CHEEP_LOGO, R.color.dark_blue_variant_1, true);
             String dateTime = "";
             if (!TextUtils.isEmpty(taskDetailModel.taskStartdate)) {
                 dateTime = CalendarUtility.getDate(Long.parseLong(taskDetailModel.taskStartdate), Utility.DATE_TIME_DD_MMMM_HH_MM);
@@ -150,7 +150,7 @@ public class PaymentsSummaryStrategicPartnerActivity extends BaseAppCompatActivi
             // set details of partner name user selected date time and address
             SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder();
             spannableStringBuilder.append(getSpannableString(getString(R.string.label_your_order_with), ContextCompat.getColor(this, R.color.grey_varient_8), false));
-            spannableStringBuilder.append(getSpannableString(taskDetailModel.categoryName, ContextCompat.getColor(this, R.color.splash_gradient_end), true));
+            spannableStringBuilder.append(getSpannableString(taskDetailModel.categoryModel.catName, ContextCompat.getColor(this, R.color.splash_gradient_end), true));
             spannableStringBuilder.append(getSpannableString(getString(R.string.label_on), ContextCompat.getColor(this, R.color.grey_varient_8), false));
             spannableStringBuilder.append(getSpannableString(selectedDate + ", " + selectedTime
                     , ContextCompat.getColor(this, R.color.splash_gradient_end), true));

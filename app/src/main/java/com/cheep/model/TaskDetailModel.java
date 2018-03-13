@@ -32,8 +32,11 @@ public class TaskDetailModel {
     @SerializedName("task_address")
     public String taskAddress;
 
+//    @SerializedName("task_category")
+//    public String categoryName;
+
     @SerializedName("task_category")
-    public String categoryName;
+    public JobCategoryModel categoryModel;
 
 
     @SerializedName("task_subcategory")
@@ -52,8 +55,8 @@ public class TaskDetailModel {
     @SerializedName("max_quote_price")
     public String maxQuotePrice;
 
-    @SerializedName("task_category_id")
-    public String categoryId;
+//    @SerializedName("task_category_id")
+//    public String categoryId;
 
     @SerializedName("task_status")
     public String taskStatus;
@@ -85,16 +88,16 @@ public class TaskDetailModel {
     public String taskType;
 
 
-    @SerializedName("cat_image")
-    public String catImage;
+//    @SerializedName("cat_image")
+//    public String catImage;
 
 
     @SerializedName("used_wallet_amount")
     public String usedWalletAmount;
 
 
-    @SerializedName("cat_image_extra")
-    public AttachmentModel catImageExtras;
+//    @SerializedName("cat_image_extra")
+//    public AttachmentModel catImageExtras;
 
     @SerializedName("profile_img_arr")
     public List<String> profile_img_arr;
@@ -156,14 +159,14 @@ public class TaskDetailModel {
 
     }
 
-    public TaskDetailModel(String taskId, String taskDesc, String taskStartdate, String taskImage, String taskAddress, ProviderModel selectedProvider, String categoryName, String providerCount) {
+    public TaskDetailModel(String taskId, String taskDesc, String taskStartdate, String taskImage, String taskAddress, ProviderModel selectedProvider, JobCategoryModel categoryName, String providerCount) {
         this.taskId = taskId;
         this.taskDesc = taskDesc;
         this.taskStartdate = taskStartdate;
         this.taskImage = taskImage;
         this.taskAddress = taskAddress;
         this.selectedProvider = selectedProvider;
-        this.categoryName = categoryName;
+        this.categoryModel= categoryName;
         this.providerCount = providerCount;
     }
 

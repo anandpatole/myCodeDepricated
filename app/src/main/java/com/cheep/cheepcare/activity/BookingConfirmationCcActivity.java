@@ -47,7 +47,7 @@ public class BookingConfirmationCcActivity extends BaseAppCompatActivity {
     private ActivityBookingConfirmationCcBinding mBinding;
     //    private String mCategoryId;
     private SubscribedTaskDetailModel subscribedTaskDetailModel;
-
+    boolean isTaskExcessLimitFeesApplied = false;
 
     public static void newInstance(Context context, SubscribedTaskDetailModel subscribedTaskDetailModel) {
         Intent intent = new Intent(context, BookingConfirmationCcActivity.class);
@@ -125,7 +125,7 @@ public class BookingConfirmationCcActivity extends BaseAppCompatActivity {
         mBinding.tvTaskDescription.setText(spannableStringBuilder);
 
         // banner image of cat
-        GlideUtility.loadImageView(mContext, mBinding.imgService, subscribedTaskDetailModel.jobCategoryModel.catImage, R.drawable.gradient_black);
+        GlideUtility.loadImageView(mContext, mBinding.imgService, subscribedTaskDetailModel.jobCategoryModel.catImageExtras.original, R.drawable.gradient_black);
 
 
         // free service list
@@ -195,7 +195,6 @@ public class BookingConfirmationCcActivity extends BaseAppCompatActivity {
             }
         }
 
-        boolean isTaskExcessLimitFeesApplied = false;
         int limitCount = 0;
         try {
             limitCount = Integer.valueOf(subscribedTaskDetailModel.addressModel.limit_cnt);
@@ -204,10 +203,16 @@ public class BookingConfirmationCcActivity extends BaseAppCompatActivity {
             e.printStackTrace();
         }
         if (subscribedTaskDetailModel.taskType.equalsIgnoreCase(Utility.TASK_TYPE.SUBSCRIBED) && limitCount < 1) {
-            subscribedTaskDetailModel.taskExcessLimitFees = 100;
-            mBinding.llExcessLimitFee.setVisibility(View.VISIBLE);
-            mBinding.tvTaskExcessLimitCharges.setText(getString(R.string.rupee_symbol_x, new BigDecimal(subscribedTaskDetailModel.taskExcessLimitFees).toString()));
-            isTaskExcessLimitFeesApplied = true;
+            WebCallClass.getExtraChargeAfterExceedLimit(this, subscribedTaskDetailModel.carePackageId, subscribedTaskDetailModel.addressModel.address_id, mCommonResponseListener, new WebCallClass.GetExtraChargeAfterExceedLimitListener() {
+                @Override
+                public void getFinalExtraCharge(String finalExtraCharge) {
+                    subscribedTaskDetailModel.taskExcessLimitFees = Double.valueOf(finalExtraCharge);
+                    mBinding.llExcessLimitFee.setVisibility(View.VISIBLE);
+                    mBinding.tvTaskExcessLimitCharges.setText(getString(R.string.rupee_symbol_x, new BigDecimal(subscribedTaskDetailModel.taskExcessLimitFees).toString()));
+                    isTaskExcessLimitFeesApplied = true;
+                }
+            });
+
         } else {
             subscribedTaskDetailModel.taskExcessLimitFees = 0;
             mBinding.llExcessLimitFee.setVisibility(View.GONE);

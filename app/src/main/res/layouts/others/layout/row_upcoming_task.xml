@@ -67,6 +67,7 @@
             android:paddingTop="@dimen/scale_15dp">
 
             <LinearLayout
+                android:background="#aeaeae"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:baselineAligned="false"
@@ -162,6 +163,7 @@
                         tools:text="vlcc dfcvfghfghfghfg ghjghjghj"/>
 
 
+<!--
                     <com.cheep.custom_view.CFTextViewRegular
                         android:id="@+id/tvSubCategoryNameStrPart"
                         android:layout_width="match_parent"
@@ -175,6 +177,7 @@
                         android:textColor="@color/splash_gradient_end"
                         android:textSize="@dimen/text_size_10sp"
                         tools:text="Veg food"/>
+-->
 
                     <com.cheep.custom_view.CFTextViewRegular
                         android:id="@+id/tvSubCategoryName"
@@ -269,6 +272,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:background="#efefef"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:baselineAligned="false"

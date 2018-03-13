@@ -92,7 +92,7 @@ public class HomeTabRecyclerViewAdapter extends RecyclerView.Adapter<HomeTabRecy
         final JobCategoryModel model = mList.get(holder.getAdapterPosition());
 
         //Background image
-        GlideUtility.loadImageView(mContext, holder.mRowTabHomeBinding.imgCategoryBackground, model.catImage, R.drawable.gradient_black);
+        GlideUtility.loadImageView(mContext, holder.mRowTabHomeBinding.imgCategoryBackground, model.catImageExtras.original, R.drawable.gradient_black);
         GlideUtility.loadImageView(mContext, holder.mRowTabHomeBinding.imgCategoryBackground, model.catImageExtras.thumb, R.drawable.gradient_black);
 
         //Category Icon
