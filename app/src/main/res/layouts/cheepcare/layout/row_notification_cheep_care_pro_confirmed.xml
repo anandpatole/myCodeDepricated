@@ -31,10 +31,10 @@
                 android:id="@+id/imgFav"
                 android:layout_width="@dimen/scale_24dp"
                 android:layout_height="@dimen/scale_24dp"
-                android:background="@drawable/icon_fav_selector"
                 app:layout_constraintBottom_toBottomOf="@id/img_profile"
                 app:layout_constraintRight_toRightOf="@id/img_profile"
-                tools:ignore="ContentDescription" />
+                tools:ignore="ContentDescription"
+                tools:src="@drawable/ic_badge_gold" />
 
             <com.cheep.custom_view.CFTextViewSemiBold
                 android:id="@+id/text_provider_name"
@@ -56,18 +56,16 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/scale_18dp"
                 android:layout_marginTop="@dimen/scale_3dp"
-                android:background="@drawable/blue_rounded_border_sf1"
                 android:paddingBottom="@dimen/scale_4dp"
-                android:paddingLeft="@dimen/scale_7dp"
                 android:paddingRight="@dimen/scale_7dp"
                 android:paddingTop="@dimen/scale_4dp"
-                android:text="Plumber"
                 android:textColor="@color/splash_gradient_end"
-                android:textSize="@dimen/text_size_10sp"
+                android:textSize="@dimen/text_size_11sp"
                 app:layout_constraintEnd_toStartOf="@+id/iv_cheep_care_text"
                 app:layout_constraintHorizontal_bias="0"
                 app:layout_constraintStart_toEndOf="@id/img_profile"
-                app:layout_constraintTop_toBottomOf="@id/text_provider_name" />
+                app:layout_constraintTop_toBottomOf="@id/text_provider_name"
+                tools:text="Plumber" />
 
             <ImageView
                 android:id="@+id/iv_cheep_care_gif"
@@ -99,12 +97,12 @@
                 android:layout_height="wrap_content"
                 android:layout_marginRight="@dimen/scale_12dp"
                 android:layout_marginTop="@dimen/scale_16dp"
-                android:text="Hey Rahul, our Cheep PRO will be arriving at your location between 1000 hrs - 1300 hrs today for your Cheep Care task. Please confirm your availability."
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_size_13sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/iv_cheep_care_text" />
+                app:layout_constraintTop_toBottomOf="@id/iv_cheep_care_text"
+                tools:text="Hey Rahul, our Cheep PRO will be arriving at your location between 1000 hrs - 1300 hrs today for your Cheep Care task. Please confirm your availability." />
 
             <com.cheep.custom_view.CFTextViewSemiBold
                 android:id="@+id/tvTimeAgo"

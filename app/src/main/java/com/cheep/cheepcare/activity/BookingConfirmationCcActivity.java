@@ -314,7 +314,7 @@ public class BookingConfirmationCcActivity extends BaseAppCompatActivity {
             message = getString(R.string.msg_task_confirmed_cheep_care_no_time_specified);
         }
 
-        WebCallClass.createTask(mContext, subscribedTaskDetailModel, mCommonResponseListener, new WebCallClass.SuccessOfTaskCreationListener() {
+        WebCallClass.createTask(mContext, subscribedTaskDetailModel, mCommonResponseListener, new WebCallClass.SuccessOfTaskCreationResponseListener() {
             @Override
             public void onSuccessOfTaskCreate() {
                 hideProgressDialog();

@@ -316,7 +316,7 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
         subscribedTaskDetailModel.paymentLog = paymentLog;
         subscribedTaskDetailModel.paybleAmount = String.valueOf(payableAmount);
 
-        WebCallClass.createTask(mContext, subscribedTaskDetailModel, mCommonResponseListener, new WebCallClass.SuccessOfTaskCreationListener() {
+        WebCallClass.createTask(mContext, subscribedTaskDetailModel, mCommonResponseListener, new WebCallClass.SuccessOfTaskCreationResponseListener() {
             @Override
             public void onSuccessOfTaskCreate() {
                 hideProgressDialog();
@@ -724,7 +724,7 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
             public void forceLogout() {
 
             }
-        }, new WebCallClass.GetProfileDetailListener() {
+        }, new WebCallClass.GetProfileDetailResponseListener() {
             @Override
             public void getUserDetails(UserDetails userDetails, JSONArray jsonEmergencyContacts, ArrayList<AddressModel> addressList) {
 
