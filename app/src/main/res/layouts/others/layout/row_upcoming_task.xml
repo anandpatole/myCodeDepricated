@@ -67,7 +67,6 @@
             android:paddingTop="@dimen/scale_15dp">
 
             <LinearLayout
-                android:background="#aeaeae"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:baselineAligned="false"
@@ -197,7 +196,6 @@
                         android:id="@+id/tvDesc"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/scale_8dp"
                         android:layout_marginTop="@dimen/scale_5dp"
                         android:ellipsize="end"
                         android:gravity="start|top"
@@ -261,7 +259,8 @@
                             android:ellipsize="end"
                             android:gravity="start|top"
                             android:lineSpacingExtra="@dimen/scale_2dp"
-                            android:lines="3"
+                            android:lines="2"
+                            android:maxLines="3"
                             android:paddingLeft="@dimen/scale_3dp"
                             android:paddingStart="@dimen/scale_3dp"
                             android:textColor="@color/color_red_varient_1"
@@ -272,7 +271,6 @@
             </LinearLayout>
 
             <LinearLayout
-                android:background="#efefef"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:baselineAligned="false"

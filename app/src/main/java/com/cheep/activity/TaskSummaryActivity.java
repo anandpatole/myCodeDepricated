@@ -81,20 +81,468 @@ import java.util.Map;
 
 public class TaskSummaryActivity extends BaseAppCompatActivity {
     private static final String TAG = TaskSummaryActivity.class.getSimpleName();
-    private ActivityTaskSummaryBinding mBinding;
-    private TaskDetailModel mTaskDetailModel;
+    private final SomeoneElseWillAttendDialog.DialogInteractionListener someoneElseWillAttendListener =
+            new SomeoneElseWillAttendDialog.DialogInteractionListener() {
+                @Override
+                public void okClicked(String personName) {
+                    Log.d(TAG, "okClicked() called with: personName = [" + personName + "]");
+                }
+
+                @Override
+                public void onBackPressed() {
+                    UserAvailabilityDialog.newInstance(mContext, userAvailabilityListener);
+                }
+            };
+    public SuperCalendar startDateTimeSuperCalendar = SuperCalendar.getInstance();
 
     /*public static void getInstance(Context mContext, TaskDetailModel taskDetailModel) {
         Intent intent = new Intent(mContext, TaskSummaryActivity.class);
 //        intent.putExtra(Utility.Extra.TASK_DETAIL_MODEL, Utility.getJsonStringFromObject(taskDetailModel));
         mContext.startActivity(intent);
     }*/
+    public SuperCalendar superCalendar;
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////  Rate Dialog //////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+    BottomAlertDialog rateDialog;
+    Response.ErrorListener mCallAddReviewWSErrorListener = new Response.ErrorListener() {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
+
+            // Close Progressbar
+            hideProgressDialog();
+
+            // Show Toast
+//            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityJobSummaryBinding.getRoot());
+            Utility.showToast(mContext, getString(R.string.label_something_went_wrong));
+        }
+    };
+    private ActivityTaskSummaryBinding mBinding;
+    private final CancelRescheduleTaskDialog.DialogInteractionListener cancelRescheduleTaskListener =
+            new CancelRescheduleTaskDialog.DialogInteractionListener() {
+                @Override
+                public void cancelTaskClicked() {
+                    Log.d(TAG, "cancelTaskClicked() called");
+                }
+
+                @Override
+                public void rescheduleTaskClicked() {
+                    showDateTimePickerDialog();
+                }
+
+                @Override
+                public void onBackPressed() {
+                    UserAvailabilityDialog.newInstance(mContext, userAvailabilityListener);
+                }
+            };
+    private final AcknowledgementInteractionListener userAvailableListener =
+            new AcknowledgementInteractionListener() {
+                @Override
+                public void onAcknowledgementAccepted() {
+                    Log.d(TAG, "onAcknowledgementAccepted() called user available");
+                    setConfirmAvailabilityVisible(false);
+                }
+            };
+    private final UserAvailabilityDialog.DialogInteractionListener userAvailabilityListener =
+            new UserAvailabilityDialog.DialogInteractionListener() {
+                @Override
+                public void someoneElseWillAttendClicked() {
+                    Log.d(TAG, "someoneElseWillAttendClicked() called");
+                    SomeoneElseWillAttendDialog.newInstance(mContext, someoneElseWillAttendListener);
+                }
+
+                @Override
+                public void rescheduleTaskClicked() {
+                    Log.d(TAG, "rescheduleTaskClicked() called");
+                    showDateTimePickerDialog();
+                }
+
+                @Override
+                public void cancelTaskClicked() {
+                    Log.d(TAG, "cancelTaskClicked() called");
+                    CancelRescheduleTaskDialog.newInstance(mContext, cancelRescheduleTaskListener);
+                }
+
+                @Override
+                public void userWillBeAvailableClicked() {
+                    Log.d(TAG, "userWillBeAvailableClicked() called");
+                    UserAvailableDialog.newInstance(mContext, userAvailableListener);
+                }
+            };
+    Response.ErrorListener mCallTaskDetailWSErrorListener = new Response.ErrorListener() {
+        @Override
+        public void onErrorResponse(final VolleyError error) {
+            Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
+
+            // Close Progressbar
+            showProgressBar(false);
+
+            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
+
+        }
+    };
+    Response.ErrorListener mCallCompleteTaskWSErrorListener = new Response.ErrorListener() {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
+
+            // Close Progressbar
+            hideProgressDialog();
+
+            // Show Toast
+            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
+        }
+    };
+    Response.ErrorListener mCallDeclineAdditionalPaymentRequestWSErrorListener = new Response.ErrorListener() {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
+
+            // Close Progressbar
+            hideProgressDialog();
+
+            // Show Toast
+            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
+        }
+    };
+    Response.ErrorListener mGetTaskStatusWSErrorListener = new Response.ErrorListener() {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
+
+            // Close Progressbar
+            hideProgressDialog();
+
+            // Show Toast
+            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
+        }
+    };
+    Response.ErrorListener mCallAddSPToFavWSErrorListener = new Response.ErrorListener() {
+        @Override
+        public void onErrorResponse(final VolleyError error) {
+            Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
+
+            // Close Progressbar
+//            hideProgressDialog();
+            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
+
+        }
+    };
+    Response.Listener mCallAddSPToFavWSResponseListener = new Response.Listener() {
+        @Override
+        public void onResponse(Object response) {
+
+            String strResponse = (String) response;
+            try {
+                JSONObject jsonObject = new JSONObject(strResponse);
+                Log.i(TAG, "onResponse: " + jsonObject.toString());
+                int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
+                String error_message;
+
+                switch (statusCode) {
+                    case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
+
+                        break;
+                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
+                        // Show Toast
+                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
+                        break;
+                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
+                        error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
+                        // Show message
+                        Utility.showSnackBar(error_message, mBinding.getRoot());
+                        break;
+                    case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
+                    case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
+                        //Logout and finish the current activity
+                        Utility.logout(mContext, true, statusCode);
+                        finish();
+                        break;
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+                mCallAddSPToFavWSErrorListener.onErrorResponse(new VolleyError(e.getMessage()));
+            }
+
+        }
+    };
+    private TaskDetailModel mTaskDetailModel;
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////WHEN Feature [END]//////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+    Response.Listener mCallDeclineAdditionalPaymentRequestWSResponseListener = new Response.Listener() {
+        @Override
+        public void onResponse(Object response) {
+
+            String strResponse = (String) response;
+            try {
+                JSONObject jsonObject = new JSONObject(strResponse);
+                Log.i(TAG, "onResponse: " + jsonObject.toString());
+                int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
+                switch (statusCode) {
+                    case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
+                        JSONObject jData = jsonObject.getJSONObject(NetworkUtility.TAGS.DATA);
+                        String taskID = jData.getString(NetworkUtility.TAGS.TASK_ID);
+                        Utility.showSnackBar(jsonObject.getString(NetworkUtility.TAGS.MESSAGE), mBinding.getRoot());
+                       /* Utility.showSnackBar(getString(R.string.msg_thanks_for_confirmation), mActivityJobSummaryBinding.getRoot());
+                        mActivityJobSummaryBinding.layoutStatusConfirmationRequired.setVisibility(View.GONE);
+                        showRateDialog();*/
+
+                        mTaskDetailModel.taskStatus = Utility.TASK_STATUS.PROCESSING;
+                        callTaskDetailWS(mTaskDetailModel.taskId);
+                        break;
+                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
+                        // Show Toast
+                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
+                        break;
+                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
+                        String error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
+                        // Show message
+                        Utility.showSnackBar(error_message, mBinding.getRoot());
+                        break;
+                    case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
+                    case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
+                        // Logout and finish the current activity
+                        Utility.logout(mContext, true, statusCode);
+                        finish();
+                        break;
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+                mCallCompleteTaskWSErrorListener.onErrorResponse(new VolleyError(e.getMessage()));
+            }
+            hideProgressDialog();
+        }
+    };
+    Response.Listener mAcceptAdditionalPaymentRequestWSResponseListener = new Response.Listener() {
+        @Override
+        public void onResponse(Object response) {
+            hideProgressDialog();
+            String strResponse = (String) response;
+            try {
+                JSONObject jsonObject = new JSONObject(strResponse);
+                Log.i(TAG, "onResponse: " + jsonObject.toString());
+                int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
+                switch (statusCode) {
+                    case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
+                        callTaskDetailWS(mTaskDetailModel.taskId);
+                        break;
+                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
+                        // Show Toast
+                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
+                        hideProgressDialog();
+                        break;
+                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
+                        String error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
+                        // Show message
+                        Utility.showSnackBar(error_message, mBinding.getRoot());
+                        hideProgressDialog();
+                        break;
+                    case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
+                    case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
+                        //Logout and finish the current activity
+                        Utility.logout(mContext, true, statusCode);
+                        finish();
+                        hideProgressDialog();
+                        break;
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+                mCallCompleteTaskWSErrorListener.onErrorResponse(new VolleyError(e.getMessage()));
+            }
+
+        }
+    };
+    Response.Listener mCallCompleteTaskWSResponseListener = new Response.Listener() {
+        @Override
+        public void onResponse(Object response) {
+
+            String strResponse = (String) response;
+            try {
+                JSONObject jsonObject = new JSONObject(strResponse);
+                Log.i(TAG, "onResponse: " + jsonObject.toString());
+                int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
+                switch (statusCode) {
+                    case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
+                        String taskStatus = jsonObject.getString(NetworkUtility.TAGS.TASK_STATUS);
+                        if (!TextUtils.isEmpty(taskStatus)) {
+                            if (taskStatus.equalsIgnoreCase(Utility.TASK_STATUS.COMPLETION_CONFIRM)) {
+                                Utility.showSnackBar(getString(R.string.msg_thanks_for_confirmation), mBinding.getRoot());
+
+                                /*
+                                  Update the UI Accordingly.
+                                 */
+                                mTaskDetailModel.taskStatus = taskStatus;
+
+                                //Refresh UI for Paid status
+                                setUpTaskDetails(mTaskDetailModel);
+
+                                // Notify the Home Screen to check for ongoing task counter.
+                                MessageEvent messageEvent = new MessageEvent();
+                                messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.TASK_START_ALERT;
+                                EventBus.getDefault().post(messageEvent);
+
+                            } else if (taskStatus.equalsIgnoreCase(Utility.TASK_STATUS.PROCESSING)) {
+
+                                /*
+                                  Update the UI Accordingly.
+                                 */
+                                mTaskDetailModel.taskStatus = taskStatus;
+
+                                //Refresh UI for Paid status
+                                setUpTaskDetails(mTaskDetailModel);
+
+                                /*
+                                   Show Information Dialog about getting Cheep Help
+                                 */
+                                showIncompleteTaskDialog();
+                            }
+                        }
+                        break;
+                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
+                        // Show Toast
+                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
+                        break;
+                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
+                        String error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
+                        // Show message
+                        Utility.showSnackBar(error_message, mBinding.getRoot());
+                        break;
+                    case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
+                    case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
+                        //Logout and finish the current activity
+                        Utility.logout(mContext, true, statusCode);
+                        finish();
+                        break;
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+                mCallCompleteTaskWSErrorListener.onErrorResponse(new VolleyError(e.getMessage()));
+            }
+            hideProgressDialog();
+        }
+    };
+    Response.Listener mCallTaskDetailWSResponseListener = new Response.Listener() {
+        @Override
+        public void onResponse(Object response) {
+
+            String strResponse = (String) response;
+            try {
+                JSONObject jsonObject = new JSONObject(strResponse);
+                Log.i(TAG, "onResponse: " + jsonObject.toString());
+                int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
+                String error_message;
+                showProgressBar(false);
+                switch (statusCode) {
+                    case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
+
+                        JSONObject jsonData = jsonObject.optJSONObject(NetworkUtility.TAGS.DATA);
+
+                        mTaskDetailModel = (TaskDetailModel) GsonUtility.getObjectFromJsonString(jsonObject.optString(NetworkUtility.TAGS.DATA), TaskDetailModel.class);
+
+                        setUpTaskDetails(mTaskDetailModel);
+
+                        break;
+                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
+                        // Show Toast
+                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
+                        break;
+                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
+                        error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
+                        // Show message
+                        Utility.showSnackBar(error_message, mBinding.getRoot());
+                        break;
+                    case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
+                    case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
+                        //Logout and finish the current activity
+                        Utility.logout(mContext, true, statusCode);
+                        finish();
+                        break;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                mCallTaskDetailWSErrorListener.onErrorResponse(new VolleyError(e.getMessage()));
+            }
+
+        }
+    };
+    Response.Listener mCallAddReviewWSResponseListener = new Response.Listener() {
+        @Override
+        public void onResponse(Object response) {
+
+            String strResponse = (String) response;
+            try {
+                JSONObject jsonObject = new JSONObject(strResponse);
+                Log.i(TAG, "onResponse: " + jsonObject.toString());
+                int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
+                switch (statusCode) {
+                    case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
+                        Utility.showSnackBar(getString(R.string.msg_thanks_for_rating), mBinding.getRoot());
+                        if (rateDialog != null)
+                            rateDialog.dismiss();
+                        mTaskDetailModel.ratingDone = Utility.BOOLEAN.YES;
+                        mTaskDetailModel.taskRatings = jsonObject.optString(NetworkUtility.TAGS.TASK_RATINGS);
+                        // Update the UI According to Updated Model.
+                        setUpTaskDetails(mTaskDetailModel);
+                        break;
+                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
+                        // Show Toast
+//                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityJobSummaryBinding.getRoot());
+                        Utility.showToast(mContext, getString(R.string.label_something_went_wrong));
+                        break;
+                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
+                        String error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
+                        // Show message
+//                        Utility.showSnackBar(error_message, mActivityJobSummaryBinding.getRoot());
+                        Utility.showToast(mContext, error_message);
+                        break;
+                    case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
+                    case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
+                        //Logout and finish the current activity
+                        Utility.logout(mContext, true, statusCode);
+                        finish();
+                        break;
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+                mCallAddReviewWSErrorListener.onErrorResponse(new VolleyError(e.getMessage()));
+            }
+            hideProgressDialog();
+        }
+    };
+    private BottomAlertDialog dialogDesc;
+    private TextView txtMessage;
+    private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()) {
+                // Onclick of when and Where section
+                case R.id.ln_where:
+                case R.id.text_task_where:
+                    showFullDesc(getString(R.string.label_address), mBinding.textTaskWhere.getText().toString());
+                    break;
+                case R.id.ln_task_desc:
+                    showFullDesc(getString(R.string.label_desc), mBinding.textTaskDesc.getText().toString());
+                    break;
+                case R.id.tv_confirm_availability:
+//                    UserAvailabilityDialog.newInstance(mContext, userAvailabilityListener);
+                    break;
+                // Onclick of when and Where section
+            }
+        }
+    };
 
     public static void getInstance(Context mContext, String taskId) {
         Intent intent = new Intent(mContext, TaskSummaryActivity.class);
         intent.putExtra(Utility.Extra.TASK_ID, taskId);
         mContext.startActivity(intent);
     }
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////Reload SP Listing based on AddressID [START]//////////////
+    ///////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -104,6 +552,16 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
         setListeners();
         EventBus.getDefault().register(this);
     }
+
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////Reload SP Listing based on AddressID [END]//////////////
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////// Task Detail Service[Start] ////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
     protected void initiateUI() {
@@ -139,7 +597,7 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
     private void setUpTaskDetails(final TaskDetailModel mTaskDetailModel) {
 
         // Set category
-        mBinding.textCategoryName.setText(mTaskDetailModel.categoryModel.catName != null ? mTaskDetailModel.categoryModel.catName: Utility.EMPTY_STRING);
+        mBinding.textCategoryName.setText(mTaskDetailModel.categoryModel.catName != null ? mTaskDetailModel.categoryModel.catName : Utility.EMPTY_STRING);
 
         // Set up image
         GlideUtility.loadImageView(mContext, mBinding.imgService, mTaskDetailModel.categoryModel.catImageExtras.original, R.drawable.gradient_black);
@@ -163,21 +621,7 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
         updateHeightOfLinearLayout(false);
 
 
-        // Setup First section whether SP is final or not
-
-        if (mTaskDetailModel.selectedProvider == null) {
-            // Provider is not final yet, so need to show the nearby available.
-            mBinding.lnResponseReceived.setVisibility(View.VISIBLE);
-            mBinding.lnProviderProfileSection.setVisibility(View.GONE);
-            // Update Task Status
-            mBinding.textTaskStatusTop.setText(getString(R.string.label_receiving_quotes));
-
-            // Hide Payment Summary textview
-            mBinding.textViewPaymentSummary.setVisibility(View.GONE);
-            mBinding.textPaid.setVisibility(View.GONE);
-
-            updateSPImageStacks(mTaskDetailModel.mQuotedSPList);
-        } else {
+        if (mTaskDetailModel.selectedProvider != null && !TextUtils.isEmpty(mTaskDetailModel.selectedProvider.providerId)) {
             // Provider is final.
             mBinding.lnResponseReceived.setVisibility(View.GONE);
             mBinding.lnProviderProfileSection.setVisibility(View.VISIBLE);
@@ -286,6 +730,19 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
 
             // Manage UnreadBadge count for Task
             manageUnreadBadgeCounterForChat();
+        } else {
+            // Setup First section whether SP is final or not
+            // Provider is not final yet, so need to show the nearby available.
+            mBinding.lnResponseReceived.setVisibility(View.VISIBLE);
+            mBinding.lnProviderProfileSection.setVisibility(View.GONE);
+            // Update Task Status
+            mBinding.textTaskStatusTop.setText(getString(R.string.label_receiving_quotes));
+
+            // Hide Payment Summary textview
+            mBinding.textViewPaymentSummary.setVisibility(View.GONE);
+            mBinding.textPaid.setVisibility(View.GONE);
+
+            updateSPImageStacks(mTaskDetailModel.mQuotedSPList);
         }
 
         // Set Second Section
@@ -348,91 +805,6 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
         mBinding.lnTaskWhere.setOnClickListener(mOnClickListener);
     }
 
-    private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            switch (v.getId()) {
-                // Onclick of when and Where section
-                case R.id.ln_where:
-                case R.id.text_task_where:
-                    showFullDesc(getString(R.string.label_address), mBinding.textTaskWhere.getText().toString());
-                    break;
-                case R.id.ln_task_desc:
-                    showFullDesc(getString(R.string.label_desc), mBinding.textTaskDesc.getText().toString());
-                    break;
-                case R.id.tv_confirm_availability:
-//                    UserAvailabilityDialog.newInstance(mContext, userAvailabilityListener);
-                    break;
-                // Onclick of when and Where section
-            }
-        }
-    };
-    private final UserAvailabilityDialog.DialogInteractionListener userAvailabilityListener =
-            new UserAvailabilityDialog.DialogInteractionListener() {
-                @Override
-                public void someoneElseWillAttendClicked() {
-                    Log.d(TAG, "someoneElseWillAttendClicked() called");
-                    SomeoneElseWillAttendDialog.newInstance(mContext, someoneElseWillAttendListener);
-                }
-
-                @Override
-                public void rescheduleTaskClicked() {
-                    Log.d(TAG, "rescheduleTaskClicked() called");
-                    showDateTimePickerDialog();
-                }
-
-                @Override
-                public void cancelTaskClicked() {
-                    Log.d(TAG, "cancelTaskClicked() called");
-                    CancelRescheduleTaskDialog.newInstance(mContext, cancelRescheduleTaskListener);
-                }
-
-                @Override
-                public void userWillBeAvailableClicked() {
-                    Log.d(TAG, "userWillBeAvailableClicked() called");
-                    UserAvailableDialog.newInstance(mContext, userAvailableListener);
-                }
-            };
-    private final SomeoneElseWillAttendDialog.DialogInteractionListener someoneElseWillAttendListener =
-            new SomeoneElseWillAttendDialog.DialogInteractionListener() {
-                @Override
-                public void okClicked(String personName) {
-                    Log.d(TAG, "okClicked() called with: personName = [" + personName + "]");
-                }
-
-                @Override
-                public void onBackPressed() {
-                    UserAvailabilityDialog.newInstance(mContext, userAvailabilityListener);
-                }
-            };
-
-    private final CancelRescheduleTaskDialog.DialogInteractionListener cancelRescheduleTaskListener =
-            new CancelRescheduleTaskDialog.DialogInteractionListener() {
-                @Override
-                public void cancelTaskClicked() {
-                    Log.d(TAG, "cancelTaskClicked() called");
-                }
-
-                @Override
-                public void rescheduleTaskClicked() {
-                    showDateTimePickerDialog();
-                }
-
-                @Override
-                public void onBackPressed() {
-                    UserAvailabilityDialog.newInstance(mContext, userAvailabilityListener);
-                }
-            };
-    private final AcknowledgementInteractionListener userAvailableListener =
-            new AcknowledgementInteractionListener() {
-                @Override
-                public void onAcknowledgementAccepted() {
-                    Log.d(TAG, "onAcknowledgementAccepted() called user available");
-                    setConfirmAvailabilityVisible(false);
-                }
-            };
-    public SuperCalendar startDateTimeSuperCalendar = SuperCalendar.getInstance();
-
     ///////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////WHEN Feature [START]//////////////////////
     ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -457,7 +829,9 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
         datePickerDialog.show();
     }
 
-    public SuperCalendar superCalendar;
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////// Task Detail WS[END] ///////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////
 
     private void showTimePickerDialog() {
         // Get Current Time
@@ -511,14 +885,14 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
 
     }
 
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////// Task Completion Yes /////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
     public void updateWhenLabelWithIcon(String whenValue) {
         mBinding.textTaskWhen.setText(whenValue);
     }
-
-    ///////////////////////////////////////////////////////////////////////////////////////////////
-    /////////////////////////////////////WHEN Feature [END]//////////////////////
-    ///////////////////////////////////////////////////////////////////////////////////////////////
-
 
     private void setConfirmAvailabilityVisible(boolean isConfirmAvailabilityVisible) {
         mBinding.tvConfirmAvailability.setVisibility(isConfirmAvailabilityVisible ? View.VISIBLE : View.GONE);
@@ -705,6 +1079,9 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
             mBinding.lnChatCall.setVisibility(View.GONE);
         }
     }
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////// Task Completion WS [END] ///////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////
 
     private void showTaskCompletionDialog(boolean flag) {
         if (flag) {
@@ -785,7 +1162,6 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
         }
     }
 
-
     @Override
     protected void setListeners() {
         mBinding.frameSelectPicture.setOnClickListener(new View.OnClickListener() {
@@ -801,9 +1177,6 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
             }
         });
     }
-
-    private BottomAlertDialog dialogDesc;
-    private TextView txtMessage;
 
     private void showFullDesc(String title, String message) {
         if (dialogDesc == null) {
@@ -839,105 +1212,106 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
 
     }
 
-    ///////////////////////////////////////////////////////////////////////////////////////////////
-    /////////////////////////////////////Reload SP Listing based on AddressID [START]//////////////
-    ///////////////////////////////////////////////////////////////////////////////////////////////
-
     /**
      * This method would going to update the SP list of images
      *
      * @param list of Providers available for task
      */
     private void updateSPImageStacks(ArrayList<ProviderModel> list) {
-        Log.d(TAG, "updateSPImageStacks() called with: list = [" + list.size() + "]");
-        for (int i = 0; i < 5; i++) {
-            switch (i) {
-                case 0:
-                    if (list.size() > 0 && list.get(i) != null) {
-                        GlideUtility.showCircularImageView(mContext, TAG, mBinding.img1, list.get(i).profileUrl, R.drawable.ic_cheep_circular_icon, true);
-                        mBinding.img1.setVisibility(View.VISIBLE);
-                    } else {
-                        mBinding.img1.setVisibility(View.GONE);
-                    }
-                    break;
-                case 1:
-                    if (list.size() > 1 && list.get(i) != null) {
-                        GlideUtility.showCircularImageView(mContext, TAG, mBinding.img2, list.get(i).profileUrl, R.drawable.ic_cheep_circular_icon, true);
-                        mBinding.img2.setVisibility(View.VISIBLE);
-                    } else {
-                        mBinding.img2.setVisibility(View.GONE);
-                    }
-                    break;
-                case 2:
-                    if (list.size() > 2 && list.get(i) != null) {
-                        GlideUtility.showCircularImageView(mContext, TAG, mBinding.img3, list.get(i).profileUrl, R.drawable.ic_cheep_circular_icon, true);
-                        mBinding.img3.setVisibility(View.VISIBLE);
-                    } else {
-                        mBinding.img3.setVisibility(View.GONE);
-                    }
-                    break;
-                case 3:
-                    if (list.size() > 3 && list.get(i) != null) {
-                        GlideUtility.showCircularImageView(mContext, TAG, mBinding.img4, list.get(i).profileUrl, R.drawable.ic_cheep_circular_icon, true);
-                        mBinding.img4.setVisibility(View.VISIBLE);
-                    } else {
-                        mBinding.img4.setVisibility(View.GONE);
-                    }
-                    break;
-                case 4:
-                    if (list.size() > 4 && list.get(i) != null) {
-                        GlideUtility.showCircularImageView(mContext, TAG, mBinding.img5, list.get(i).profileUrl, R.drawable.ic_cheep_circular_icon, true);
-                        mBinding.img5.setVisibility(View.VISIBLE);
-                    } else {
-                        mBinding.img5.setVisibility(View.GONE);
-                    }
-                    break;
-            }
-        }
-
-        // Check if list size is more than 5
-        if (list.size() > 5) {
-            int extra_count = list.size() - 5;
-            mBinding.extraProCount.setVisibility(View.VISIBLE);
-            mBinding.extraProCount.setText("+" + String.valueOf(extra_count));
-        } else {
-            mBinding.extraProCount.setVisibility(View.GONE);
-        }
-
-        // Awaiting Response
-        if (list.isEmpty()) {
+        if (list == null || list.isEmpty()) {
             mBinding.textTaskResponseStatus.setText(getResources().getString(R.string.label_pros_around_you_reviewing_desc));
             mBinding.textBottomAction.setVisibility(View.GONE);
             mBinding.textTaskStatusTop.setVisibility(View.GONE);
             updateHeightOfLinearLayout(false);
         } else {
-            mBinding.textTaskResponseStatus.setText(getResources().getQuantityText(R.plurals.getResponseReceivedString, list.size()));
-            mBinding.textBottomAction.setText(getString(R.string.label_view_quotes));
-            mBinding.textBottomAction.setVisibility(View.VISIBLE);
-            mBinding.textTaskStatusTop.setVisibility(View.VISIBLE);
-            mBinding.textBottomAction.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    TaskQuotesActivity.newInstance(mContext, mTaskDetailModel, false);
+            Log.d(TAG, "updateSPImageStacks() called with: list = [" + list.size() + "]");
+            for (int i = 0; i < 5; i++) {
+                switch (i) {
+                    case 0:
+                        if (!list.isEmpty() && list.get(i) != null) {
+                            GlideUtility.showCircularImageView(mContext, TAG, mBinding.img1, list.get(i).profileUrl, R.drawable.ic_cheep_circular_icon, true);
+                            mBinding.img1.setVisibility(View.VISIBLE);
+                        } else {
+                            mBinding.img1.setVisibility(View.GONE);
+                        }
+                        break;
+                    case 1:
+                        if (list.size() > 1 && list.get(i) != null) {
+                            GlideUtility.showCircularImageView(mContext, TAG, mBinding.img2, list.get(i).profileUrl, R.drawable.ic_cheep_circular_icon, true);
+                            mBinding.img2.setVisibility(View.VISIBLE);
+                        } else {
+                            mBinding.img2.setVisibility(View.GONE);
+                        }
+                        break;
+                    case 2:
+                        if (list.size() > 2 && list.get(i) != null) {
+                            GlideUtility.showCircularImageView(mContext, TAG, mBinding.img3, list.get(i).profileUrl, R.drawable.ic_cheep_circular_icon, true);
+                            mBinding.img3.setVisibility(View.VISIBLE);
+                        } else {
+                            mBinding.img3.setVisibility(View.GONE);
+                        }
+                        break;
+                    case 3:
+                        if (list.size() > 3 && list.get(i) != null) {
+                            GlideUtility.showCircularImageView(mContext, TAG, mBinding.img4, list.get(i).profileUrl, R.drawable.ic_cheep_circular_icon, true);
+                            mBinding.img4.setVisibility(View.VISIBLE);
+                        } else {
+                            mBinding.img4.setVisibility(View.GONE);
+                        }
+                        break;
+                    case 4:
+                        if (list.size() > 4 && list.get(i) != null) {
+                            GlideUtility.showCircularImageView(mContext, TAG, mBinding.img5, list.get(i).profileUrl, R.drawable.ic_cheep_circular_icon, true);
+                            mBinding.img5.setVisibility(View.VISIBLE);
+                        } else {
+                            mBinding.img5.setVisibility(View.GONE);
+                        }
+                        break;
                 }
-            });
-            updateHeightOfLinearLayout(true);
+            }
+
+            // Check if list size is more than 5
+            if (list.size() > 5) {
+                int extra_count = list.size() - 5;
+                mBinding.extraProCount.setVisibility(View.VISIBLE);
+                mBinding.extraProCount.setText("+" + String.valueOf(extra_count));
+            } else {
+                mBinding.extraProCount.setVisibility(View.GONE);
+            }
+
+            if (list.isEmpty()) {
+                mBinding.textTaskResponseStatus.setText(getResources().getString(R.string.label_pros_around_you_reviewing_desc));
+                mBinding.textBottomAction.setVisibility(View.GONE);
+                mBinding.textTaskStatusTop.setVisibility(View.GONE);
+                updateHeightOfLinearLayout(false);
+            } else {
+                mBinding.textTaskResponseStatus.setText(getResources().getQuantityText(R.plurals.getResponseReceivedString, list.size()));
+                mBinding.textBottomAction.setText(getString(R.string.label_view_quotes));
+                mBinding.textBottomAction.setVisibility(View.VISIBLE);
+                mBinding.textTaskStatusTop.setVisibility(View.VISIBLE);
+                mBinding.textBottomAction.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        TaskQuotesActivity.newInstance(mContext, mTaskDetailModel, false);
+                    }
+                });
+                updateHeightOfLinearLayout(true);
+            }
         }
     }
-
-
-    ///////////////////////////////////////////////////////////////////////////////////////////////
-    /////////////////////////////////////Reload SP Listing based on AddressID [END]//////////////
-    ///////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////// Rate Dialog ////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    //////////////////////////// Task Detail Service[Start] ////////////////////////////////////////////////
+    /////////////////////////Reject Additional Payment[START] //////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
     /**
      * Call Task Detail web service
      */
+
     private void callTaskDetailWS(String taskId) {
         if (!Utility.isConnected(mContext)) {
             Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mBinding.getRoot());
@@ -965,69 +1339,6 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
         Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequestForSPList, Utility.getUniqueTagForNetwork(this, NetworkUtility.WS.TASK_DETAIL));
     }
 
-    Response.Listener mCallTaskDetailWSResponseListener = new Response.Listener() {
-        @Override
-        public void onResponse(Object response) {
-
-            String strResponse = (String) response;
-            try {
-                JSONObject jsonObject = new JSONObject(strResponse);
-                Log.i(TAG, "onResponse: " + jsonObject.toString());
-                int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
-                String error_message;
-                showProgressBar(false);
-                switch (statusCode) {
-                    case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
-
-                        JSONObject jsonData = jsonObject.optJSONObject(NetworkUtility.TAGS.DATA);
-
-                        mTaskDetailModel = (TaskDetailModel) GsonUtility.getObjectFromJsonString(jsonObject.optString(NetworkUtility.TAGS.DATA), TaskDetailModel.class);
-
-                        setUpTaskDetails(mTaskDetailModel);
-
-                        break;
-                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
-                        // Show Toast
-                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
-                        break;
-                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
-                        error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
-                        // Show message
-                        Utility.showSnackBar(error_message, mBinding.getRoot());
-                        break;
-                    case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
-                    case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
-                        //Logout and finish the current activity
-                        Utility.logout(mContext, true, statusCode);
-                        finish();
-                        break;
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                mCallTaskDetailWSErrorListener.onErrorResponse(new VolleyError(e.getMessage()));
-            }
-
-        }
-    };
-
-    Response.ErrorListener mCallTaskDetailWSErrorListener = new Response.ErrorListener() {
-        @Override
-        public void onErrorResponse(final VolleyError error) {
-            Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
-
-            // Close Progressbar
-            showProgressBar(false);
-
-            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
-
-        }
-    };
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    //////////////////////// Task Detail WS[END] ///////////////////////////////////////////////////
-    /////////////////////////////////////////////////////////////////////////////////////////////////
-
-
     /**
      * Showing Progress Bar
      *
@@ -1037,11 +1348,6 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
         mBinding.progress.setVisibility(flag ? View.VISIBLE : View.GONE);
         mBinding.lnRoot.setVisibility(flag ? View.GONE : View.VISIBLE);
     }
-
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    ///////////////////////// Task Completion Yes /////////////////////////////////////////////////
-    ////////////////////////////////////////////////////////////////////////////////////////////////
 
     /**
      * Call Complete task
@@ -1085,89 +1391,6 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
 
     }
 
-    Response.Listener mCallCompleteTaskWSResponseListener = new Response.Listener() {
-        @Override
-        public void onResponse(Object response) {
-
-            String strResponse = (String) response;
-            try {
-                JSONObject jsonObject = new JSONObject(strResponse);
-                Log.i(TAG, "onResponse: " + jsonObject.toString());
-                int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
-                switch (statusCode) {
-                    case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
-                        String taskStatus = jsonObject.getString(NetworkUtility.TAGS.TASK_STATUS);
-                        if (!TextUtils.isEmpty(taskStatus)) {
-                            if (taskStatus.equalsIgnoreCase(Utility.TASK_STATUS.COMPLETION_CONFIRM)) {
-                                Utility.showSnackBar(getString(R.string.msg_thanks_for_confirmation), mBinding.getRoot());
-
-                                /*
-                                  Update the UI Accordingly.
-                                 */
-                                mTaskDetailModel.taskStatus = taskStatus;
-
-                                //Refresh UI for Paid status
-                                setUpTaskDetails(mTaskDetailModel);
-
-                                // Notify the Home Screen to check for ongoing task counter.
-                                MessageEvent messageEvent = new MessageEvent();
-                                messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.TASK_START_ALERT;
-                                EventBus.getDefault().post(messageEvent);
-
-                            } else if (taskStatus.equalsIgnoreCase(Utility.TASK_STATUS.PROCESSING)) {
-
-                                /*
-                                  Update the UI Accordingly.
-                                 */
-                                mTaskDetailModel.taskStatus = taskStatus;
-
-                                //Refresh UI for Paid status
-                                setUpTaskDetails(mTaskDetailModel);
-
-                                /*
-                                   Show Information Dialog about getting Cheep Help
-                                 */
-                                showIncompleteTaskDialog();
-                            }
-                        }
-                        break;
-                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
-                        // Show Toast
-                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
-                        break;
-                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
-                        String error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
-                        // Show message
-                        Utility.showSnackBar(error_message, mBinding.getRoot());
-                        break;
-                    case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
-                    case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
-                        //Logout and finish the current activity
-                        Utility.logout(mContext, true, statusCode);
-                        finish();
-                        break;
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-                mCallCompleteTaskWSErrorListener.onErrorResponse(new VolleyError(e.getMessage()));
-            }
-            hideProgressDialog();
-        }
-    };
-
-    Response.ErrorListener mCallCompleteTaskWSErrorListener = new Response.ErrorListener() {
-        @Override
-        public void onErrorResponse(VolleyError error) {
-            Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
-
-            // Close Progressbar
-            hideProgressDialog();
-
-            // Show Toast
-            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
-        }
-    };
-
     private void showIncompleteTaskDialog() {
         UserDetails user = PreferenceUtility.getInstance(mContext).getUserDetails();
         final BottomAlertDialog dialog = new BottomAlertDialog(mContext);
@@ -1193,14 +1416,10 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
         // dialog.hideNegativeButton(true);
         dialog.showDialog();
     }
-    /////////////////////////////////////////////////////////////////////////////////////////////////
-    /////////////////////////// Task Completion WS [END] ///////////////////////////////////////////
-    /////////////////////////////////////////////////////////////////////////////////////////////////
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    ////////////////////////////  Rate Dialog //////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////////////////////////
-    BottomAlertDialog rateDialog;
+    /////////////////////////Reject Additional Payment[END] //////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
 
     private void showRateDialog() {
 
@@ -1269,72 +1488,13 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
 
     }
 
-    Response.Listener mCallAddReviewWSResponseListener = new Response.Listener() {
-        @Override
-        public void onResponse(Object response) {
-
-            String strResponse = (String) response;
-            try {
-                JSONObject jsonObject = new JSONObject(strResponse);
-                Log.i(TAG, "onResponse: " + jsonObject.toString());
-                int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
-                switch (statusCode) {
-                    case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
-                        Utility.showSnackBar(getString(R.string.msg_thanks_for_rating), mBinding.getRoot());
-                        if (rateDialog != null)
-                            rateDialog.dismiss();
-                        mTaskDetailModel.ratingDone = Utility.BOOLEAN.YES;
-                        mTaskDetailModel.taskRatings = jsonObject.optString(NetworkUtility.TAGS.TASK_RATINGS);
-                        // Update the UI According to Updated Model.
-                        setUpTaskDetails(mTaskDetailModel);
-                        break;
-                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
-                        // Show Toast
-//                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityJobSummaryBinding.getRoot());
-                        Utility.showToast(mContext, getString(R.string.label_something_went_wrong));
-                        break;
-                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
-                        String error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
-                        // Show message
-//                        Utility.showSnackBar(error_message, mActivityJobSummaryBinding.getRoot());
-                        Utility.showToast(mContext, error_message);
-                        break;
-                    case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
-                    case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
-                        //Logout and finish the current activity
-                        Utility.logout(mContext, true, statusCode);
-                        finish();
-                        break;
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-                mCallAddReviewWSErrorListener.onErrorResponse(new VolleyError(e.getMessage()));
-            }
-            hideProgressDialog();
-        }
-    };
-
-    Response.ErrorListener mCallAddReviewWSErrorListener = new Response.ErrorListener() {
-        @Override
-        public void onErrorResponse(VolleyError error) {
-            Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
-
-            // Close Progressbar
-            hideProgressDialog();
-
-            // Show Toast
-//            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityJobSummaryBinding.getRoot());
-            Utility.showToast(mContext, getString(R.string.label_something_went_wrong));
-        }
-    };
-
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    ////////////////////////////////////// Rate Dialog ////////////////////////////////////////////
+    ///////////////////////// Get Task Status [START] //////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    /////////////////////////Reject Additional Payment[START] //////////////////////////////////////
+    ////////////////////////////////////////Accept-Reject Detail Service[Start] //////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
     private void showAdditionalPaymentRejectionDialog() {
@@ -1367,6 +1527,10 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
         reasonForAddiPaymentRejectionDialog.showDialog();
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////Accept Detail Service[START] //////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
     private void callDeclineAdditionalPaymentRequest(String reason) {
         //Validation
         if (!Utility.isConnected(mContext)) {
@@ -1398,68 +1562,6 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
         Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest, NetworkUtility.WS.DECLINE_ADDITIONAL_PAYMENT_REQUEST);
 
     }
-
-    Response.Listener mCallDeclineAdditionalPaymentRequestWSResponseListener = new Response.Listener() {
-        @Override
-        public void onResponse(Object response) {
-
-            String strResponse = (String) response;
-            try {
-                JSONObject jsonObject = new JSONObject(strResponse);
-                Log.i(TAG, "onResponse: " + jsonObject.toString());
-                int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
-                switch (statusCode) {
-                    case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
-                        JSONObject jData = jsonObject.getJSONObject(NetworkUtility.TAGS.DATA);
-                        String taskID = jData.getString(NetworkUtility.TAGS.TASK_ID);
-                        Utility.showSnackBar(jsonObject.getString(NetworkUtility.TAGS.MESSAGE), mBinding.getRoot());
-                       /* Utility.showSnackBar(getString(R.string.msg_thanks_for_confirmation), mActivityJobSummaryBinding.getRoot());
-                        mActivityJobSummaryBinding.layoutStatusConfirmationRequired.setVisibility(View.GONE);
-                        showRateDialog();*/
-
-                        mTaskDetailModel.taskStatus = Utility.TASK_STATUS.PROCESSING;
-                        callTaskDetailWS(mTaskDetailModel.taskId);
-                        break;
-                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
-                        // Show Toast
-                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
-                        break;
-                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
-                        String error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
-                        // Show message
-                        Utility.showSnackBar(error_message, mBinding.getRoot());
-                        break;
-                    case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
-                    case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
-                        // Logout and finish the current activity
-                        Utility.logout(mContext, true, statusCode);
-                        finish();
-                        break;
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-                mCallCompleteTaskWSErrorListener.onErrorResponse(new VolleyError(e.getMessage()));
-            }
-            hideProgressDialog();
-        }
-    };
-
-    Response.ErrorListener mCallDeclineAdditionalPaymentRequestWSErrorListener = new Response.ErrorListener() {
-        @Override
-        public void onErrorResponse(VolleyError error) {
-            Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
-
-            // Close Progressbar
-            hideProgressDialog();
-
-            // Show Toast
-            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
-        }
-    };
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    /////////////////////////Reject Additional Payment[END] //////////////////////////////////////
-    ////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(MessageEvent event) {
@@ -1505,6 +1607,11 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
         }
     }
 
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////Accept-Reject Detail Service[End] //////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
     @Override
     protected void onDestroy() {
         /*
@@ -1522,19 +1629,11 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
         super.onDestroy();
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    ///////////////////////// Get Task Status [START] //////////////////////////////////////
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    ////////////////////////////////////////Accept-Reject Detail Service[Start] //////////////////
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-
     /**
      * Calling accept request Web service
      */
-    private void callTaskDetailRequestAcceptWS(final String action, String taskID, final ProviderModel providerModel) {
+    private void callTaskDetailRequestAcceptWS(final String action, String taskID,
+                                               final ProviderModel providerModel) {
         if (!Utility.isConnected(mContext)) {
             Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mBinding.getRoot());
             return;
@@ -1621,11 +1720,6 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
         Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest);
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    ////////////////////////////////////////Accept Detail Service[START] //////////////////
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-
-
     private void callAcceptAdditionalPaymentRequest() {
         //Validation
         if (!Utility.isConnected(mContext)) {
@@ -1656,65 +1750,6 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
         Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest, NetworkUtility.WS.ACCEPT_ADDITIONAL_PAYMENT_REQUEST);
 
     }
-
-    Response.Listener mAcceptAdditionalPaymentRequestWSResponseListener = new Response.Listener() {
-        @Override
-        public void onResponse(Object response) {
-            hideProgressDialog();
-            String strResponse = (String) response;
-            try {
-                JSONObject jsonObject = new JSONObject(strResponse);
-                Log.i(TAG, "onResponse: " + jsonObject.toString());
-                int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
-                switch (statusCode) {
-                    case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
-                        callTaskDetailWS(mTaskDetailModel.taskId);
-                        break;
-                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
-                        // Show Toast
-                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
-                        hideProgressDialog();
-                        break;
-                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
-                        String error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
-                        // Show message
-                        Utility.showSnackBar(error_message, mBinding.getRoot());
-                        hideProgressDialog();
-                        break;
-                    case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
-                    case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
-                        //Logout and finish the current activity
-                        Utility.logout(mContext, true, statusCode);
-                        finish();
-                        hideProgressDialog();
-                        break;
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-                mCallCompleteTaskWSErrorListener.onErrorResponse(new VolleyError(e.getMessage()));
-            }
-
-        }
-    };
-
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    ////////////////////////////////////////Accept-Reject Detail Service[End] //////////////////
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-    Response.ErrorListener mGetTaskStatusWSErrorListener = new Response.ErrorListener() {
-        @Override
-        public void onErrorResponse(VolleyError error) {
-            Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
-
-            // Close Progressbar
-            hideProgressDialog();
-
-            // Show Toast
-            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
-        }
-    };
 
     private void manageUnreadBadgeCounterForChat() {
         Log.d(TAG, "manageUnreadBadgeCounterForChat() called");
@@ -1776,56 +1811,5 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
                 , null);
         Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequestForSPList);
     }
-
-    Response.Listener mCallAddSPToFavWSResponseListener = new Response.Listener() {
-        @Override
-        public void onResponse(Object response) {
-
-            String strResponse = (String) response;
-            try {
-                JSONObject jsonObject = new JSONObject(strResponse);
-                Log.i(TAG, "onResponse: " + jsonObject.toString());
-                int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
-                String error_message;
-
-                switch (statusCode) {
-                    case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
-
-                        break;
-                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
-                        // Show Toast
-                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
-                        break;
-                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
-                        error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
-                        // Show message
-                        Utility.showSnackBar(error_message, mBinding.getRoot());
-                        break;
-                    case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
-                    case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
-                        //Logout and finish the current activity
-                        Utility.logout(mContext, true, statusCode);
-                        finish();
-                        break;
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-                mCallAddSPToFavWSErrorListener.onErrorResponse(new VolleyError(e.getMessage()));
-            }
-
-        }
-    };
-
-    Response.ErrorListener mCallAddSPToFavWSErrorListener = new Response.ErrorListener() {
-        @Override
-        public void onErrorResponse(final VolleyError error) {
-            Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
-
-            // Close Progressbar
-//            hideProgressDialog();
-            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
-
-        }
-    };
 
 }
