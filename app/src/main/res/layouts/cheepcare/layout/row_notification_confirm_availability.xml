@@ -12,21 +12,24 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:paddingBottom="@dimen/scale_16dp"
+            android:paddingEnd="@dimen/scale_11dp"
             android:paddingLeft="@dimen/scale_25dp"
             android:paddingRight="@dimen/scale_11dp"
+            android:paddingStart="@dimen/scale_25dp"
             android:paddingTop="@dimen/scale_8dp">
 
             <com.cheep.custom_view.CFTextViewRegular
                 android:layout_width="@dimen/scale_0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/scale_12dp"
                 android:layout_marginRight="@dimen/scale_12dp"
                 android:layout_marginTop="@dimen/scale_8dp"
-                android:text="Hey Rahul, our Cheep PRO will be arriving at your location between 1000 hrs - 1300 hrs today for your Cheep Care task. Please confirm your availability."
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_size_13sp"
                 app:layout_constraintEnd_toStartOf="@+id/iv_cheep_care_text"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Hey Rahul, our Cheep PRO will be arriving at your location between 1000 hrs - 1300 hrs today for your Cheep Care task. Please confirm your availability." />
 
             <ImageView
                 android:id="@+id/iv_cheep_care_gif"

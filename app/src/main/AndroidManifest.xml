@@ -109,7 +109,7 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustNothing" />
         <activity
-            android:name=".cheepcare.activity.NotificationCCActivity"
+            android:name=".cheepcare.activity.NotificationCcActivity"
             android:parentActivityName=".activity.HomeActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustNothing" />

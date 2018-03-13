@@ -23,6 +23,7 @@
                 android:layout_marginTop="@dimen/scale_17dp"
                 android:orientation="horizontal"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
@@ -83,12 +84,12 @@
                 android:layout_height="wrap_content"
                 android:layout_marginRight="@dimen/scale_12dp"
                 android:layout_marginTop="@dimen/scale_16dp"
-                android:text="Hey Rahul, our Cheep PRO will be arriving at your location between 1000 hrs - 1300 hrs today for your Cheep Care task. Please confirm your availability."
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_size_13sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/ll_images_container" />
+                app:layout_constraintTop_toBottomOf="@id/ll_images_container"
+                tools:text="Hey Rahul, our Cheep PRO will be arriving at your location between 1000 hrs - 1300 hrs today for your Cheep Care task. Please confirm your availability." />
 
             <com.cheep.custom_view.CFTextViewSemiBold
                 android:id="@+id/tvTimeAgo"
@@ -115,7 +116,7 @@
                 android:layout_marginTop="@dimen/scale_16dp"
                 android:background="@drawable/rounded_rect_blue"
                 android:gravity="center"
-                android:text="@string/label_chat_now"
+                android:text="@string/label_view_quotes"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_size_11sp"
                 app:layout_constraintEnd_toEndOf="parent"

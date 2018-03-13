@@ -247,9 +247,9 @@ ext {
 }
 
 dependencies {
-    implementation "com.android.support:support-v4:$supportLibVer"
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
+    implementation "com.android.support:support-v4:$supportLibVer"
     // V7 Compat library, it also included v4 libraries under the hood.
     compile "com.android.support:appcompat-v7:$supportLibVer"
 

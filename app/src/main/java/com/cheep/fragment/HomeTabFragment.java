@@ -842,6 +842,7 @@ public class HomeTabFragment extends BaseFragment {
         // Sort Type Params
         mParams.put(NetworkUtility.TAGS.SORT_TYPE, mSelectedFilterType);
 
+        //noinspection unchecked
         VolleyNetworkRequest mVolleyNetworkRequestForCategoryList = new VolleyNetworkRequest(NetworkUtility.WS.CATEGORY_LIST
                 , mCallCategoryListWSErrorListener
                 , mCallCategoryListWSResponseListener
@@ -890,7 +891,7 @@ public class HomeTabFragment extends BaseFragment {
                             updateLogoSuccess(Category);
                         }
                         ArrayList<JobCategoryModel> list;
-                        list = GsonUtility.getObjectListFromJsonString(jsonObject.optString(NetworkUtility.TAGS.DATA), JobCategoryModel[].class);
+//                        list = GsonUtility.getObjectListFromJsonString(jsonObject.optString(NetworkUtility.TAGS.DATA), JobCategoryModel[].class);
 
                         // SHow Banner view now
                         showBannerView(true);
@@ -899,10 +900,10 @@ public class HomeTabFragment extends BaseFragment {
                         addCoverImageListing(bannerImageModelArrayList, careBannerModelArrayList);
 
                         // Setting RecyclerView Adapter
-                        homeTabRecyclerViewAdapter.addItems(list, mSelectedFilterType);
+                        homeTabRecyclerViewAdapter.addItems(new ArrayList<JobCategoryModel>(), mSelectedFilterType);
 
                         toggleErrorScreen(false);
-                        if (list.size() <= 0) {
+                        if (new ArrayList<>().size() <= 0) {
                             if (mSelectedFilterType.equalsIgnoreCase(Utility.FILTER_TYPES.FILTER_TYPE_FAVOURITES) ||
                                     mSelectedFilterType.equalsIgnoreCase(Utility.FILTER_TYPES.FILTER_TYPE_SUBSCRIBED)) {
                                 onListCategoryListGetsEmpty();
@@ -1037,6 +1038,7 @@ public class HomeTabFragment extends BaseFragment {
         Map<String, String> mParams = new HashMap<>();
         mParams.put(NetworkUtility.TAGS.CAT_SLUG, categorySlug);
 
+        //noinspection unchecked
         VolleyNetworkRequest mVolleyNetworkRequest = new VolleyNetworkRequest(NetworkUtility.WS.GET_CATEGORY_ID_BASED_ON_SLUG
                 , mCallGetCategoryIdWSErrorListener
                 , mCallGetCategoryIdWSResponseListener
@@ -1582,6 +1584,7 @@ public class HomeTabFragment extends BaseFragment {
         mParams.put(NetworkUtility.TAGS.CAT_ID, catId);
         mParams.put(NetworkUtility.TAGS.REQ_FOR, req_for);
 
+        //noinspection u
         VolleyNetworkRequest mVolleyNetworkRequestForCategoryList = new VolleyNetworkRequest(NetworkUtility.WS.FAVOURITE_CATEGORY
                 , mCallFavouriteCategoryWSErrorListener
                 , mCallFavouriteCategoryWSResponseListener
