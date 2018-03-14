@@ -63,6 +63,7 @@ import com.cheep.dialogs.AcknowledgementInteractionListener;
 import com.cheep.fragment.BaseFragment;
 import com.cheep.model.AddressModel;
 import com.cheep.model.GuestUserDetails;
+import com.cheep.model.MessageEvent;
 import com.cheep.model.ProviderModel;
 import com.cheep.model.UserDetails;
 import com.cheep.network.NetworkUtility;
@@ -81,6 +82,7 @@ import com.cheep.utils.SuperCalendar;
 import com.cheep.utils.Utility;
 import com.cheep.utils.WebCallClass;
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -411,6 +413,19 @@ public class TaskCreationPhase2Fragment extends BaseFragment implements
                     Log.d(TAG, "onItemSelected: ");
                     mTaskCreationCCActivity.showSubscribedBadge(true);
                     fillAddressView(mAddressList.get(position));
+                    if (isClicked) {
+                        MessageEvent messageEvent = new MessageEvent();
+                        messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.OTHER_SUBSCRIBED_ADDRESS_SELECTED;
+                        messageEvent.jobCategoryModel = mTaskCreationCCActivity.mJobCategoryModel;
+                        messageEvent.addressModel = mAddressList.get(position);
+                        messageEvent.packageType = mTaskCreationCCActivity.mPackageType;
+                        messageEvent.packageId = mTaskCreationCCActivity.mCarePackageId;
+                        messageEvent.selectedAddressList = mTaskCreationCCActivity.mCareAddressList;
+                        messageEvent.adminSettingModel = mTaskCreationCCActivity.mAdminSettingModel;
+                        EventBus.getDefault().post(messageEvent);
+                        if (getActivity() != null)
+                            getActivity().finish();
+                    }
                 } else if (isClicked && mAddressList.get(position).is_subscribe.equals(Utility.BOOLEAN.NO)) {
                     if (!Utility.isConnected(mContext)) {
                         Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mBinding.getRoot());

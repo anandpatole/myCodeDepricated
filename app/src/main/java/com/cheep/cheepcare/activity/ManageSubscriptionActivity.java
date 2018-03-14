@@ -261,7 +261,7 @@ public class ManageSubscriptionActivity extends BaseAppCompatActivity {
         mBinding.rvBoughtPackages.setNestedScrollingEnabled(false);
         ExpandableSubscribedPackagesRecyclerAdapter subscribedPackagesAdapter =
                 new ExpandableSubscribedPackagesRecyclerAdapter(mSubscribedPackageList, true
-                , childViewsClickListener, parentClickListener);
+                        , childViewsClickListener, parentClickListener);
         mBinding.rvBoughtPackages.setAdapter(subscribedPackagesAdapter);
 
         setAllPackageListData();
@@ -409,6 +409,14 @@ public class ManageSubscriptionActivity extends BaseAppCompatActivity {
             finish();
         } else if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.SUBSCRIBED_TASK_CREATE_SUCCESSFULLY) {
             finish();
+        } else if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.OTHER_SUBSCRIBED_ADDRESS_SELECTED) {
+            TaskCreationCCActivity.getInstance(mContext,
+                    event.jobCategoryModel,
+                    event.addressModel,
+                    event.packageType,
+                    event.id,
+                    event.selectedAddressList,
+                    event.adminSettingModel);
         }
     }
 

@@ -2,6 +2,10 @@ package com.cheep.model;
 
 import android.support.annotation.Keep;
 
+import com.cheep.cheepcare.model.AdminSettingModel;
+
+import java.util.List;
+
 @Keep
 public class MessageEvent {
     public int BROADCAST_ACTION;
@@ -29,6 +33,14 @@ public class MessageEvent {
     // Used for Making Alert Enable/Disable
     public String total_ongoing_task;
 
+    //for re-opening TaskCreationCCActivity when user selects
+    public JobCategoryModel jobCategoryModel;
+    public AddressModel addressModel;
+    public String packageType;
+    public String packageId;
+    public List<AddressModel> selectedAddressList;
+    public AdminSettingModel adminSettingModel;
+    //for re-opening TaskCreationCCActivity when user selects
 
     // class that would going to store the details we will get from Paytm Response
     public PaytmResponse paytmResponse;

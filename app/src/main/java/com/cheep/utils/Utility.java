@@ -709,6 +709,10 @@ public class Utility {
         int TASK_PAID_SUCCESSFULLY = 21;
         int PACKAGE_SUBSCRIBED_SUCCESSFULLY = 22;
         int SUBSCRIBED_TASK_CREATE_SUCCESSFULLY = 23;
+
+        //when user selects other subscribed address we need to re-open TaskCreationCcActivity as different addresses will hav
+        // different limits
+        int OTHER_SUBSCRIBED_ADDRESS_SELECTED = 24;
     }
 
     public interface REQUEST_TYPE {

@@ -81,6 +81,8 @@ import java.util.Map;
 
 public class TaskSummaryActivity extends BaseAppCompatActivity {
     private static final String TAG = TaskSummaryActivity.class.getSimpleName();
+    private TaskDetailModel mTaskDetailModel;
+
     private final SomeoneElseWillAttendDialog.DialogInteractionListener someoneElseWillAttendListener =
             new SomeoneElseWillAttendDialog.DialogInteractionListener() {
                 @Override
@@ -262,7 +264,6 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
 
         }
     };
-    private TaskDetailModel mTaskDetailModel;
 
     ///////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////WHEN Feature [END]//////////////////////
@@ -372,7 +373,7 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
                                 mTaskDetailModel.taskStatus = taskStatus;
 
                                 //Refresh UI for Paid status
-                                setUpTaskDetails(mTaskDetailModel);
+                                setUpUI();
 
                                 // Notify the Home Screen to check for ongoing task counter.
                                 MessageEvent messageEvent = new MessageEvent();
@@ -387,7 +388,7 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
                                 mTaskDetailModel.taskStatus = taskStatus;
 
                                 //Refresh UI for Paid status
-                                setUpTaskDetails(mTaskDetailModel);
+                                setUpUI();
 
                                 /*
                                    Show Information Dialog about getting Cheep Help
@@ -433,11 +434,11 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
                 switch (statusCode) {
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
 
-                        JSONObject jsonData = jsonObject.optJSONObject(NetworkUtility.TAGS.DATA);
+//                        JSONObject jsonData = jsonObject.optJSONObject(NetworkUtility.TAGS.DATA);
 
                         mTaskDetailModel = (TaskDetailModel) GsonUtility.getObjectFromJsonString(jsonObject.optString(NetworkUtility.TAGS.DATA), TaskDetailModel.class);
 
-                        setUpTaskDetails(mTaskDetailModel);
+                        setUpUI();
 
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
@@ -480,7 +481,7 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
                         mTaskDetailModel.ratingDone = Utility.BOOLEAN.YES;
                         mTaskDetailModel.taskRatings = jsonObject.optString(NetworkUtility.TAGS.TASK_RATINGS);
                         // Update the UI According to Updated Model.
-                        setUpTaskDetails(mTaskDetailModel);
+                        setUpUI();
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
                         // Show Toast
@@ -584,37 +585,38 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
         if (mTaskDetailModel == null) {
             callTaskDetailWS(getIntent().getExtras().getString(Utility.Extra.TASK_ID));
         } else {
-            setUpTaskDetails(mTaskDetailModel);
+            setUpUI();
         }
 
     }
 
-    private void setUpTaskDetails(final TaskDetailModel mTaskDetailModel) {
+    private void setUpUI(){
+        //set appbar type section
+        setAppBarSection();
 
+        //set pro section
+        setProSection();
+
+        //set task description
+        setUpTaskDetails();
+
+        //set task when
+        setTaskWhen();
+
+        //set task when
+        setTaskWhere();
+    }
+
+    private void setAppBarSection() {
         // Set category
         mBinding.textCategoryName.setText(mTaskDetailModel.categoryModel.catName != null ? mTaskDetailModel.categoryModel.catName : Utility.EMPTY_STRING);
 
         // Set up image
         GlideUtility.loadImageView(mContext, mBinding.imgService, mTaskDetailModel.categoryModel.catImageExtras.original, R.drawable.gradient_black);
         GlideUtility.loadImageView(mContext, mBinding.imgService, mTaskDetailModel.categoryModel.catImageExtras.thumb, R.drawable.gradient_black);
+    }
 
-
-        // By Default makethe task completion dialog as gone
-        showTaskCompletionDialog(false);
-        LogUtils.LOGE(TAG, "showTaskCompletionDialog: taskTotalPendingAmount :: " + mTaskDetailModel.taskTotalPendingAmount);
-        mBinding.lnTaskCancellation.setVisibility(View.GONE);
-        mBinding.lnRatingSection.setVisibility(View.GONE);
-        mBinding.lnTaskRescheduleRequested.setVisibility(View.GONE);
-        mBinding.lnTaskRescheduleRejected.setVisibility(View.GONE);
-        mBinding.lnTaskAdditionalQuoteRequested.setVisibility(View.GONE);
-
-        //Bydefault show the chat call icons
-        showChatCallButton(true);
-
-        // Hide Bottom Action Button
-        mBinding.textBottomAction.setVisibility(View.GONE);
-        updateHeightOfLinearLayout(false);
-
+    private void setProSection() {
 
         if (mTaskDetailModel.selectedProvider != null && !TextUtils.isEmpty(mTaskDetailModel.selectedProvider.providerId)) {
             // Provider is final.
@@ -739,6 +741,25 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
 
             updateSPImageStacks(mTaskDetailModel.mQuotedSPList);
         }
+    }
+
+    private void setUpTaskDetails() {
+
+        // By Default makethe task completion dialog as gone
+        showTaskCompletionDialog(false);
+        LogUtils.LOGE(TAG, "showTaskCompletionDialog: taskTotalPendingAmount :: " + mTaskDetailModel.taskTotalPendingAmount);
+        mBinding.lnTaskCancellation.setVisibility(View.GONE);
+        mBinding.lnRatingSection.setVisibility(View.GONE);
+        mBinding.lnTaskRescheduleRequested.setVisibility(View.GONE);
+        mBinding.lnTaskRescheduleRejected.setVisibility(View.GONE);
+        mBinding.lnTaskAdditionalQuoteRequested.setVisibility(View.GONE);
+
+        //Bydefault show the chat call icons
+        showChatCallButton(true);
+
+        // Hide Bottom Action Button
+        mBinding.textBottomAction.setVisibility(View.GONE);
+        updateHeightOfLinearLayout(false);
 
         // Set Second Section
         mBinding.textSubCategoryName.setText(mTaskDetailModel.subCategoryName);
@@ -770,14 +791,14 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
         } else
             mBinding.frameSelectPicture.setVisibility(View.GONE);
 
+        // Onclick of when and Where section
+        mBinding.lnTaskDesc.setOnClickListener(mOnClickListener);
+    }
 
-        // Set Up Third Section WHEN
-        /*
-          Setting dynamic fields based on current status of task(Job)
-         */
-
+    private void setTaskWhen() {
         SuperCalendar superCalendar = SuperCalendar.getInstance();
         superCalendar.setTimeZone(SuperCalendar.SuperTimeZone.GMT.GMT);
+
         String task_original_date = "";
         try {
             superCalendar.setTimeInMillis(Long.parseLong(mTaskDetailModel.taskStartdate));
@@ -786,17 +807,12 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
         } catch (NumberFormatException e) {
             e.printStackTrace();
         }
-
         String time = CalendarUtility.get2HourTimeSlots(mTaskDetailModel.taskStartdate);
         mBinding.textTaskWhen.setText(task_original_date + time);
+    }
 
-
-        // Setup WHERE section
+    private void setTaskWhere() {
         mBinding.textTaskWhere.setText(mTaskDetailModel.taskAddress);
-
-
-        // Onclick of when and Where section
-        mBinding.lnTaskDesc.setOnClickListener(mOnClickListener);
         mBinding.lnTaskWhere.setOnClickListener(mOnClickListener);
     }
 
@@ -1564,12 +1580,12 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
         switch (event.BROADCAST_ACTION) {
             case Utility.BROADCAST_TYPE.TASK_STATUS_CHANGE:
                 mTaskDetailModel.taskStatus = event.taskStatus;
-                setUpTaskDetails(mTaskDetailModel);
+                setUpUI();
                 break;
             case Utility.BROADCAST_TYPE.ADDITIONAL_PAYMENT_REQUESTED:
                 mTaskDetailModel.taskStatus = event.taskStatus;
                 mTaskDetailModel.additionalQuoteAmount = event.additional_quote_amount;
-                setUpTaskDetails(mTaskDetailModel);
+                setUpUI();
                 break;
             case Utility.BROADCAST_TYPE.TASK_PROCESSING:
                 // Call Task Detail update WS from here so that it can refresh the content.
@@ -1586,7 +1602,7 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
                 //Refresh UI for complete status
 //                mTaskDetailModel.taskStatus = event.taskStatus;
 //                mTaskDetailModel.isAnyAmountPending = Utility.BOOLEAN.NO;
-//                setUpTaskDetails(mTaskDetailModel);
+//                setUpUI();
 
                 LogUtils.LOGE(TAG, "onMessageEvent:taskStatus " + event.taskStatus);
 //                if (mTaskDetailModel.taskStatus.equalsIgnoreCase(Utility.TASK_STATUS.COMPLETION_REQUEST)) {
@@ -1596,7 +1612,7 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
                 mTaskDetailModel.taskStatus = event.taskStatus;
                 mTaskDetailModel.isAnyAmountPending = Utility.BOOLEAN.NO;
                 mTaskDetailModel.taskTotalPendingAmount = "0";
-                setUpTaskDetails(mTaskDetailModel);
+                setUpUI();
 //                }
                 break;
         }
