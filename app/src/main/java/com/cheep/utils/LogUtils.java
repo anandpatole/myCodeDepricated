@@ -30,7 +30,6 @@ public class LogUtils {
     private static final String LOG_PREFIX = "cheep";
     private static final int LOG_PREFIX_LENGTH = LOG_PREFIX.length();
     private static final int MAX_LOG_TAG_LENGTH = 23;
-
     public static boolean LOGGING_ENABLED = !BuildConfig.BUILD_TYPE.equalsIgnoreCase("release");
 
     public static String makeLogTag(String str) {
@@ -92,19 +91,23 @@ public class LogUtils {
     }
 
     public static void LOGW(final String tag, String message) {
-        Log.w(tag, message);
+        if (LOGGING_ENABLED)
+            Log.w(tag, message);
     }
 
     public static void LOGW(final String tag, String message, Throwable cause) {
-        Log.w(tag, message, cause);
+        if (LOGGING_ENABLED)
+            Log.w(tag, message, cause);
     }
 
     public static void LOGE(final String tag, String message) {
-        Log.e(tag, message);
+        if (LOGGING_ENABLED)
+            Log.e(tag, message);
     }
 
     public static void LOGE(final String tag, String message, Throwable cause) {
-        Log.e(tag, message, cause);
+        if (LOGGING_ENABLED)
+            Log.e(tag, message, cause);
     }
 
     private LogUtils() {

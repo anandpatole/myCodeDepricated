@@ -23,9 +23,7 @@ import java.util.Map;
  */
 
 public class PaytmUtility {
-
     private static final String TAG = LogUtils.makeLogTag(PaytmUtility.class.getSimpleName());
-
     private PaytmUtility() {
 
     }

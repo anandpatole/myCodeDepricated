@@ -920,7 +920,7 @@ public class TaskCreationPhase2Fragment extends BaseFragment implements
                 case R.id.frame_select_picture:
                     //Hide Keyboard if already open
                     Utility.hideKeyboard(mContext, mBinding.editTaskDesc);
-                    if (mediaList == null || mediaList.size() == 0) {
+                    if (mediaList == null || mediaList.isEmpty()) {
                         showMediaChooserDialog();
                     } else {
                         mTaskCreationCCActivity.showMediaUI(mediaList);

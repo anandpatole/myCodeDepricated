@@ -21,7 +21,7 @@ import com.android.volley.VolleyError;
 import com.cheep.R;
 import com.cheep.activity.BaseAppCompatActivity;
 import com.cheep.activity.ZoomImageActivity;
-import com.cheep.cheepcare.adapter.MediaAdapter;
+import com.cheep.cheepcare.adapter.MediaFullScreenAdapter;
 import com.cheep.cheepcare.adapter.TaskCreationPagerAdapter;
 import com.cheep.cheepcare.fragment.FreeSubCategoryFragment;
 import com.cheep.cheepcare.fragment.TaskCreationPhase2Fragment;
@@ -33,6 +33,7 @@ import com.cheep.model.AddressModel;
 import com.cheep.model.JobCategoryModel;
 import com.cheep.model.MessageEvent;
 import com.cheep.model.SubServiceDetailModel;
+import com.cheep.strategicpartner.AmazonUtils;
 import com.cheep.strategicpartner.model.MediaModel;
 import com.cheep.utils.GlideUtility;
 import com.cheep.utils.GsonUtility;
@@ -68,9 +69,9 @@ public class TaskCreationCCActivity extends BaseAppCompatActivity {
 
     //variables for add media//
     private float itemWidth;
-//    private float padding;
+    //    private float padding;
     private float allPixels;
-    private MediaAdapter mediaAdapter;
+    private MediaFullScreenAdapter mediaFullScreenAdapter;
     private int expectedPosition;
     //variables for add media//
 
@@ -197,17 +198,17 @@ public class TaskCreationCCActivity extends BaseAppCompatActivity {
             }
         });
 
-        mediaAdapter = new MediaAdapter(mediaInteractionListener);
+        mediaFullScreenAdapter = new MediaFullScreenAdapter(mediaInteractionListener);
         LinearLayoutManager layoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false);
         mBinding.addMedia.itemList.setLayoutManager(layoutManager);
-        mBinding.addMedia.itemList.setAdapter(mediaAdapter);
+        mBinding.addMedia.itemList.setAdapter(mediaFullScreenAdapter);
     }
 
     private void calculatePositionAndScroll(RecyclerView recyclerView) {
         expectedPosition = Math.round((allPixels/* + padding*/) / itemWidth);
         scrollListToPosition(recyclerView, expectedPosition);
         mBinding.addMedia.tvNumberOfMedia.setText(getString(R.string.number_of_media, String.valueOf(expectedPosition + 1/* + 1*/)
-                , String.valueOf(mediaAdapter.getListSize())));
+                , String.valueOf(mediaFullScreenAdapter.getListSize())));
     }
 
     private void scrollListToPosition(RecyclerView recyclerView, int expectedPosition) {
@@ -393,6 +394,17 @@ public class TaskCreationCCActivity extends BaseAppCompatActivity {
             gotoStep(STAGE_1);
             return;
         }
+        ArrayList<MediaModel> mediaModels = mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.getMediaList();
+        if (mediaModels != null && !mediaModels.isEmpty()) {
+            for (MediaModel mediaModel : mediaModels) {
+                LogUtils.LOGW(TAG, "onBackPressed() delete");
+                LogUtils.LOGW(TAG, "onBackPressed() " + mediaModel.mediaName);
+                LogUtils.LOGW(TAG, "onBackPressed() " + mediaModel.mediaThumbName);
+                LogUtils.LOGW(TAG, "onBackPressed() ============");
+                AmazonUtils.deleteFiles(this, mediaModel.mediaName, mediaModel.mediaThumbName);
+            }
+        }
+
         super.onBackPressed();
     }
 
@@ -583,23 +595,23 @@ public class TaskCreationCCActivity extends BaseAppCompatActivity {
     public void showMediaUI(ArrayList<MediaModel> mediaList) {
         Log.d(TAG, "showMediaUI() called with: mediaList = [" + mediaList + "]");
         mBinding.addMedia.getRoot().setVisibility(View.VISIBLE);
-        mediaAdapter.addAll(mediaList);
+        mediaFullScreenAdapter.addAll(mediaList);
         mBinding.addMedia.tvNumberOfMedia.setText(getString(R.string.number_of_media, String.valueOf(1)
                 , String.valueOf(mediaList.size())));
     }
 
     public void addMedia(MediaModel media) {
         Log.d(TAG, "addMedia() called with: media = [" + media + "]");
-        mediaAdapter.add(media);
+        mediaFullScreenAdapter.add(media);
         mBinding.addMedia.tvNumberOfMedia.setText(getString(R.string.number_of_media, String.valueOf(expectedPosition + 1/* + 1*/)
-                , String.valueOf(mediaAdapter.getListSize())));
+                , String.valueOf(mediaFullScreenAdapter.getListSize())));
     }
 
     public void shouldAddMediaClickListener(boolean addMediaClickListener) {
         mBinding.addMedia.ivPlus.setOnClickListener(addMediaClickListener ? mOnClickListener : null);
     }
 
-    private final MediaAdapter.MediaInteractionListener mediaInteractionListener = new MediaAdapter.MediaInteractionListener() {
+    private final MediaFullScreenAdapter.MediaInteractionListener mediaInteractionListener = new MediaFullScreenAdapter.MediaInteractionListener() {
         @Override
         public void onItemClick(int position, MediaModel model) {
             ZoomImageActivity.newInstance(mContext, null, model.localFilePath);
@@ -607,13 +619,13 @@ public class TaskCreationCCActivity extends BaseAppCompatActivity {
 
         @Override
         public void onRemoveClick(int position, MediaModel model) {
-            if (mediaAdapter.getListSize() == 3) {
+            if (mediaFullScreenAdapter.getListSize() == 3) {
                 shouldAddMediaClickListener(true);
             }
-            if (mediaAdapter.getListSize() == 1) {
+            if (mediaFullScreenAdapter.getListSize() == 1) {
                 mBinding.addMedia.ivHideMediaUi.performClick();
             }
-            mediaAdapter.removeItem(position, model);
+            mediaFullScreenAdapter.removeItem(TaskCreationCCActivity.this, position, model);
             calculatePositionAndScroll(mBinding.addMedia.itemList);
             mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.removeMediaItem(position, model);
         }

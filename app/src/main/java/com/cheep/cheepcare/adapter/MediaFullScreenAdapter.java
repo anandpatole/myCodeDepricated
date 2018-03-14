@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 
 import com.cheep.R;
 import com.cheep.databinding.RowMediaFileCcBinding;
+import com.cheep.strategicpartner.AmazonUtils;
 import com.cheep.strategicpartner.model.MediaModel;
 import com.cheep.utils.GlideUtility;
 
@@ -20,9 +21,9 @@ import java.util.List;
  * Created by bhavesh on 1/3/18.
  */
 
-public class MediaAdapter extends RecyclerView.Adapter<MediaAdapter.MediaViewHolder> {
+public class MediaFullScreenAdapter extends RecyclerView.Adapter<MediaFullScreenAdapter.MediaViewHolder> {
 
-    private static final String TAG = MediaAdapter.class.getSimpleName();
+    private static final String TAG = MediaFullScreenAdapter.class.getSimpleName();
 
     private static final int VIEW_TYPE_PADDING = 1;
     private static final int VIEW_TYPE_ITEM = 2;
@@ -38,7 +39,7 @@ public class MediaAdapter extends RecyclerView.Adapter<MediaAdapter.MediaViewHol
 
     }
 
-    public MediaAdapter(MediaInteractionListener listener) {
+    public MediaFullScreenAdapter(MediaInteractionListener listener) {
         mListener = listener;
     }
 
@@ -63,7 +64,7 @@ public class MediaAdapter extends RecyclerView.Adapter<MediaAdapter.MediaViewHol
     }
 
     @Override
-    public void onBindViewHolder(final MediaViewHolder holder, int position) {
+    public void onBindViewHolder(final MediaViewHolder holder, final int position) {
 //        if (getItemViewType(holder.getAdapterPosition()) == VIEW_TYPE_PADDING) {
 //            holder.mBinding.imgRemove.setVisibility(View.GONE);
 //            holder.mBinding.imgThumb.setVisibility(View.GONE);
@@ -126,8 +127,9 @@ public class MediaAdapter extends RecyclerView.Adapter<MediaAdapter.MediaViewHol
         notifyItemInserted(mList.size()/* + 1*/);
     }
 
-    public void removeItem(int position, MediaModel model) {
+    public void removeItem(Context context, int position, MediaModel model) {
         if (mList.contains(model)) {
+            AmazonUtils.deleteFiles(context, model.mediaName, model.mediaThumbName);
             mList.remove(model);
             notifyItemRemoved(position);
         }

@@ -31,7 +31,7 @@ import java.io.IOException;
 public class AmazonUtils {
     private static AmazonS3Client sS3Client;
     private static CognitoCachingCredentialsProvider sCredProvider;
-    private static TransferUtility sTransferUtility;
+    //    private static TransferUtility sTransferUtility;
     private static final String TAG = AmazonUtils.class.getSimpleName();
 
 
@@ -61,18 +61,24 @@ public class AmazonUtils {
         }
         return sS3Client;
     }
-
-    private static TransferUtility getTransferUtility(Context context) {
-        if (sTransferUtility == null) {
-            sTransferUtility = new TransferUtility(getS3Client(context.getApplicationContext()),
-                    context.getApplicationContext());
-        }
-
-        return sTransferUtility;
-    }
+//
+//    private static TransferUtility getTransferUtility(Context context) {
+//        if (sTransferUtility == null) {
+//            sTransferUtility = new TransferUtility(getS3Client(context.getApplicationContext()),
+//                    context.getApplicationContext());
+//        }
+//
+//        return sTransferUtility;
+//    }
 
     public static TransferObserver uploadMedia(final Context context, File file, String s3Path, TransferListener l) {
-        TransferObserver observer = getTransferUtility(context).upload(BuildConfig.BUCKET_NAME, s3Path, file);
+
+        TransferUtility sTransferUtility = TransferUtility.builder()
+                .context(context)
+                .s3Client(getS3Client(context))
+                .defaultBucket(BuildConfig.BUCKET_NAME)
+                .build();
+        TransferObserver observer = sTransferUtility.upload(BuildConfig.BUCKET_NAME, s3Path, file);
         observer.setTransferListener(l);
         return observer;
     }
@@ -157,7 +163,7 @@ public class AmazonUtils {
 
     /**
      * @param name folder path of
-     * @return
+     * @return path of uploaded file - amazon s3 url
      */
     public static String getOriginalURL(String name) {
         return BuildConfig.AMAZON_S3_URL + BuildConfig.BUCKET_NAME + File.separator + name;
@@ -175,7 +181,7 @@ public class AmazonUtils {
      * @param original
      * @param thumb
      */
-    static void deleteFiles(final Context context, final String original, final String thumb) {
+    public static void deleteFiles(final Context context, final String original, final String thumb) {
 
         new AsyncTask<Void, Void, Void>() {
 
@@ -184,6 +190,12 @@ public class AmazonUtils {
                 getS3Client(context).deleteObject(new DeleteObjectRequest(BuildConfig.BUCKET_NAME + File.separator + BuildConfig.TASK_ORIGINAL_FOLDER, AmazonUtils.getFileNameWithExt(original, true)));
                 getS3Client(context).deleteObject(new DeleteObjectRequest(BuildConfig.BUCKET_NAME + File.separator + BuildConfig.TASK_THUMB_FOLDER, AmazonUtils.getFileNameWithExt(thumb, true)));
                 return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+
             }
         }.execute();
     }

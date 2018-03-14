@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.databinding.DataBindingUtil;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -32,6 +33,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -41,6 +43,10 @@ import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.cheep.BuildConfig;
 import com.cheep.R;
 import com.cheep.activity.BaseAppCompatActivity;
@@ -58,7 +64,6 @@ import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
 import com.cheep.strategicpartner.AmazonUtils;
-import com.cheep.strategicpartner.MediaRecycleAdapter;
 import com.cheep.strategicpartner.model.MediaModel;
 import com.cheep.strategicpartner.recordvideo.RecordVideoNewActivity;
 import com.cheep.utils.GlideUtility;
@@ -101,11 +106,13 @@ public class EnterTaskDetailFragment extends BaseFragment implements RequestPerm
     public boolean isTaskDescriptionVerified = false;
     public boolean isTaskWhenVerified = false;
     public boolean isTaskWhereVerified = false;
-    public MediaRecycleAdapter mMediaRecycleAdapter;
+//    public MediaRecycleAdapter mMediaRecycleAdapter;
     // For When
     public SuperCalendar startDateTimeSuperCalendar = SuperCalendar.getInstance();
     private RequestPermission mRequestPermission;
     private BottomAddAddressDialog dialog;
+    private int numberOfMedia = 0;
+    private ArrayList<MediaModel> mediaList;
 
     @SuppressWarnings("unused")
     public static EnterTaskDetailFragment newInstance() {
@@ -223,16 +230,16 @@ public class EnterTaskDetailFragment extends BaseFragment implements RequestPerm
         updateWhereLabelWithIcon(false, Utility.EMPTY_STRING);
 
         //On Click event of attachment
-        mFragmentEnterTaskDetailBinding.imgAdd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                //Hide Keyboard if already open
-                Utility.hideKeyboard(mContext, mFragmentEnterTaskDetailBinding.editTaskDesc);
-
-                showMediaChooserDialog();
-            }
-        });
+//        mFragmentEnterTaskDetailBinding.imgAdd.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//                //Hide Keyboard if already open
+//                Utility.hideKeyboard(mContext, mFragmentEnterTaskDetailBinding.editTaskDesc);
+//
+//                showMediaChooserDialog();
+//            }
+//        });
 
         // On Click event of When
         mFragmentEnterTaskDetailBinding.lnWhen.setOnClickListener(new View.OnClickListener() {
@@ -290,21 +297,33 @@ public class EnterTaskDetailFragment extends BaseFragment implements RequestPerm
             }
         });
 
+        mFragmentEnterTaskDetailBinding.frameSelectPicture.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Utility.hideKeyboard(mContext, mFragmentEnterTaskDetailBinding.editTaskDesc);
+                if (mediaList == null || mediaList.isEmpty()) {
+                    showMediaChooserDialog();
+                } else {
+                    mTaskCreationActivity.showMediaUI(mediaList);
+                }
+            }
+        });
+
         // Update the SP lists
 //        callSPListWS(mTaskCreationActivity.mJobCategoryModel.catId, userDetails.CityID, Utility.EMPTY_STRING);
 
 
-        mMediaRecycleAdapter = new MediaRecycleAdapter(new MediaRecycleAdapter.ItemClick() {
-            @Override
-            public void removeMedia() {
-                // after uploading 3 media file if any one is deleted then add image view again
-                if (mMediaRecycleAdapter.getItemCount() < 3)
-                    mFragmentEnterTaskDetailBinding.imgAdd.setVisibility(View.VISIBLE);
-
-            }
-        }, false);
-        mFragmentEnterTaskDetailBinding.recycleImg.setLayoutManager(new LinearLayoutManager(mTaskCreationActivity, LinearLayoutManager.HORIZONTAL, false));
-        mFragmentEnterTaskDetailBinding.recycleImg.setAdapter(mMediaRecycleAdapter);
+//        mMediaRecycleAdapter = new MediaRecycleAdapter(new MediaRecycleAdapter.ItemClick() {
+//            @Override
+//            public void removeMedia() {
+//                // after uploading 3 media file if any one is deleted then add image view again
+//                if (mMediaRecycleAdapter.getItemCount() < 3)
+//                    mFragmentEnterTaskDetailBinding.imgAdd.setVisibility(View.VISIBLE);
+//
+//            }
+//        }, false);
+//        mFragmentEnterTaskDetailBinding.recycleImg.setLayoutManager(new LinearLayoutManager(mTaskCreationActivity, LinearLayoutManager.HORIZONTAL, false));
+//        mFragmentEnterTaskDetailBinding.recycleImg.setAdapter(mMediaRecycleAdapter);
     }
 
     public void updateHeightOfLinearLayout() {
@@ -353,7 +372,7 @@ public class EnterTaskDetailFragment extends BaseFragment implements RequestPerm
 
     public String mCurrentPhotoPath;
 
-    private void showMediaChooserDialog() {
+    public void showMediaChooserDialog() {
         LogUtils.LOGD(TAG, "showPictureChooserDialog() called");
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
         builder.setTitle(getString(R.string.choose_media))
@@ -771,7 +790,13 @@ public class EnterTaskDetailFragment extends BaseFragment implements RequestPerm
                     LogUtils.LOGE(TAG, "mediaThumbName: " + thumbUrl);
                     mediaModel.mediaType = type;
                     mediaModel.localFilePath = localFilePath;
-                    mMediaRecycleAdapter.addImage(mediaModel);
+                    if (mediaList == null)
+                        mediaList = new ArrayList<>();
+                    mediaList.add(mediaModel);
+                    mediaAdded(mediaModel);
+                    if (mediaList.size() != 1)
+                        mTaskCreationActivity.addMedia(mediaModel);
+//                    mMediaRecycleAdapter.addImage(mediaModel);
 
                     // set update media list for strategic partner activity
                     // for when  user is not creating tasks but he press back buttons
@@ -786,6 +811,104 @@ public class EnterTaskDetailFragment extends BaseFragment implements RequestPerm
         }
 
     }
+    private void mediaAdded(MediaModel mediaModel) {
+        LogUtils.LOGI(TAG, "bind:>>  " + mediaModel.mediaName);
+
+        ImageView imageViewToLoadImage = new ImageView(mContext);
+
+        switch (numberOfMedia) {
+            case 0:
+                mFragmentEnterTaskDetailBinding.imgTaskPicture1.setVisibility(View.VISIBLE);
+                imageViewToLoadImage = mFragmentEnterTaskDetailBinding.imgTaskPicture1;
+                break;
+            case 1:
+                mFragmentEnterTaskDetailBinding.framePicture2.setVisibility(View.VISIBLE);
+                imageViewToLoadImage = mFragmentEnterTaskDetailBinding.imgTaskPicture2;
+                break;
+            case 2:
+                mFragmentEnterTaskDetailBinding.framePicture3.setVisibility(View.VISIBLE);
+                imageViewToLoadImage = mFragmentEnterTaskDetailBinding.imgTaskPicture3;
+                break;
+            default:
+                Log.d(TAG, "onStateChanged: numberOfMedia = " + numberOfMedia);
+                break;
+        }
+
+        loadImageByGlide(mediaModel.localFilePath, imageViewToLoadImage);
+
+        numberOfMedia++;
+    }
+
+    public void removeMediaItem(int position, MediaModel model) {
+        numberOfMedia--;
+        int itemPosition = -1;
+        for (int i = 0; i < mediaList.size(); i++) {
+            if (mediaList.get(i).localFilePath.equals(model.localFilePath)) {
+                itemPosition = i;
+                break;
+            }
+        }
+        if (itemPosition != -1) {
+            mediaList.remove(itemPosition);
+            refreshMediaUI();
+        }
+    }
+
+    private void refreshMediaUI() {
+        mFragmentEnterTaskDetailBinding.imgTaskPicture1.setVisibility(View.GONE);
+        mFragmentEnterTaskDetailBinding.framePicture2.setVisibility(View.GONE);
+        mFragmentEnterTaskDetailBinding.framePicture3.setVisibility(View.GONE);
+
+        ImageView imageViewToLoadImage = new ImageView(mContext);
+
+        for (int i = 0; i < mediaList.size(); i++) {
+
+            switch (i) {
+                case 0:
+                    mFragmentEnterTaskDetailBinding.imgTaskPicture1.setVisibility(View.VISIBLE);
+                    imageViewToLoadImage = mFragmentEnterTaskDetailBinding.imgTaskPicture1;
+                    break;
+                case 1:
+                    mFragmentEnterTaskDetailBinding.framePicture2.setVisibility(View.VISIBLE);
+                    imageViewToLoadImage = mFragmentEnterTaskDetailBinding.imgTaskPicture2;
+                    break;
+                case 2:
+                    mFragmentEnterTaskDetailBinding.framePicture3.setVisibility(View.VISIBLE);
+                    imageViewToLoadImage = mFragmentEnterTaskDetailBinding.imgTaskPicture3;
+                    break;
+                default:
+                    Log.d(TAG, "onStateChanged: numberOfMedia = " + numberOfMedia);
+                    break;
+            }
+
+            loadImageByGlide(mediaList.get(i).localFilePath, imageViewToLoadImage);
+        }
+    }
+
+    private void loadImageByGlide(String localFilePath, final ImageView imageView) {
+        Glide.with(mContext)
+                .load(localFilePath)
+                .asBitmap()
+                .thumbnail(0.2f)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .listener(new RequestListener<String, Bitmap>() {
+
+                    @Override
+                    public boolean onException(Exception e, String model, Target<Bitmap> target, boolean isFirstResource) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Bitmap resource, String model, Target<Bitmap> target, boolean isFromMemoryCache, boolean isFirstResource) {
+//                        if (mIsStrategicPartner) {
+//                            mImgThumb.setImageBitmap(Utility.getRoundedCornerBitmap(resource, mImgThumb.getContext()));
+//                        } else {
+                        imageView.setImageBitmap(resource);
+//                        }
+                        return true;
+                    }
+                }).into(imageView);
+    }
 
     /**
      * check if 3 image/video is added then hide image add view
@@ -793,8 +916,8 @@ public class EnterTaskDetailFragment extends BaseFragment implements RequestPerm
      */
 
     private void checkMediaArraySize() {
-        if (mMediaRecycleAdapter.getItemCount() == 3) {
-            mFragmentEnterTaskDetailBinding.imgAdd.setVisibility(View.GONE);
+        if (numberOfMedia == 3) {
+            mTaskCreationActivity.shouldAddMediaClickListener(false);
         }
     }
 
@@ -1706,7 +1829,9 @@ public class EnterTaskDetailFragment extends BaseFragment implements RequestPerm
 
         dialog.showDialog();
     }
-
+    public ArrayList<MediaModel> getMediaList() {
+        return mediaList;
+    }
 
     @Override
     public void onDetach() {

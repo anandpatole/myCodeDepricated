@@ -811,6 +811,17 @@ public class Utility {
         String SUBSCRIBED = "subscribed";
     }
 
+    /**
+     * This category types for blue collar(instabook) and white collar(normal)
+     * if cat is instabook then get-quote button will be hidden
+     * if cat is normal then get-quote button will be show(hide) and instabook button will be hidden
+     */
+    public interface CAT_TASK_TYPE {
+        String NORMAL = "normal"; // get-quote white-collar
+        String INSTA_BOOK = "instabook";// instabook blue-collar
+    }
+
+
     public interface SERVICE_TYPE {
         String FREE = "free";
         String PAID = "paid";

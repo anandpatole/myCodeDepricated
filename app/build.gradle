@@ -331,7 +331,7 @@ dependencies {
 //    compile 'com.appsflyer:af-android-sdk:4.7.2@aar'
     compile 'com.appsflyer:af-android-sdk:4.8.7@aar'
 
-    compile 'com.amazonaws:aws-android-sdk-s3:2.2.22'
+    compile 'com.amazonaws:aws-android-sdk-s3:2.6.+'
 //    compile 'org.jsoup:jsoup:1.10.3'
     compile 'com.android.support.constraint:constraint-layout:1.1.0-beta5'
 }
