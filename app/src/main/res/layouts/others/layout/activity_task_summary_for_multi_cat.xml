@@ -186,8 +186,6 @@
                                 tools:text="Response\n Receiver" />
                         </LinearLayout>
 
-                        <!--Below is the information for selected PRO -->
-
                         <RelativeLayout
                             android:id="@+id/rl_unknown_pro"
                             android:layout_width="match_parent"
@@ -231,6 +229,7 @@
 
                         </RelativeLayout>
 
+                        <!--Below is the information for selected PRO -->
                         <RelativeLayout
                             android:id="@+id/ln_provider_profile_section"
                             android:layout_width="match_parent"

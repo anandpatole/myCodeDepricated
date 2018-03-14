@@ -501,7 +501,6 @@ public class TaskCreationCCActivity extends BaseAppCompatActivity {
         Log.d(TAG, "onDestroy() called");
         try {
             EventBus.getDefault().unregister(this);
-
         } catch (Exception e) {
             Log.i(TAG, "onDestroy: ");
         }

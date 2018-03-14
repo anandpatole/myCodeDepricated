@@ -185,6 +185,48 @@
                                     tools:text="Response\n Receiver"/>
                             </LinearLayout>
 
+                            <RelativeLayout
+                                android:id="@+id/rl_unknown_pro"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:paddingBottom="@dimen/scale_16dp"
+                                android:paddingLeft="@dimen/scale_16dp"
+                                android:paddingRight="@dimen/scale_20dp"
+                                android:paddingTop="@dimen/scale_16dp"
+                                android:visibility="gone">
+
+                                <ImageView
+                                    android:id="@+id/iv_placeholder_image"
+                                    android:layout_width="@dimen/scale_50dp"
+                                    android:layout_height="@dimen/scale_50dp"
+                                    android:layout_gravity="center_vertical"
+                                    android:layout_marginBottom="4dp"
+                                    android:layout_marginTop="@dimen/scale_3dp"
+                                    android:src="@drawable/icon_profile_img_solid"
+                                    tools:ignore="ContentDescription" />
+
+                                <com.cheep.custom_view.CFTextViewSemiBold
+                                    android:id="@+id/tv_pro_will_be_assigned"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="@dimen/scale_16dp"
+                                    android:layout_toRightOf="@id/iv_placeholder_image"
+                                    android:text="@string/msg_pro_will_be_assigned"
+                                    android:textColor="@color/grey_varient_16"
+                                    android:textSize="@dimen/text_size_16sp" />
+
+                                <com.cheep.custom_view.CFTextViewRegular
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_below="@id/tv_pro_will_be_assigned"
+                                    android:layout_marginLeft="@dimen/scale_16dp"
+                                    android:layout_marginTop="@dimen/scale_3dp"
+                                    android:layout_toRightOf="@id/iv_placeholder_image"
+                                    android:text="@string/assured_best_pro"
+                                    android:textColor="@color/grey_varient_16"
+                                    android:textSize="@dimen/text_size_13sp" />
+
+                            </RelativeLayout>
 
                             <!--Below is the information for selected PRO -->
                             <RelativeLayout
@@ -195,8 +237,7 @@
                                 android:paddingBottom="@dimen/scale_16dp"
                                 android:paddingLeft="@dimen/scale_16dp"
                                 android:paddingTop="@dimen/scale_16dp"
-                                android:visibility="visible">
-
+                                android:visibility="gone">
 
                                 <FrameLayout
                                     android:id="@+id/layout_individual_profile"
@@ -225,7 +266,6 @@
                                         android:background="@drawable/icon_fav_selector"
                                         tools:ignore="ContentDescription"/>
                                 </FrameLayout>
-
 
                                 <LinearLayout
                                     android:layout_width="wrap_content"
