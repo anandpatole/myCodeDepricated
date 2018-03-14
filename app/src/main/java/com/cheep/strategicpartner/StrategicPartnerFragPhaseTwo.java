@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.databinding.DataBindingUtil;
+import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Build;
@@ -46,6 +47,10 @@ import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.cheep.BuildConfig;
 import com.cheep.R;
 import com.cheep.activity.BaseAppCompatActivity;
@@ -54,6 +59,7 @@ import com.cheep.cheepcare.dialogs.BottomAddAddressDialog;
 import com.cheep.custom_view.BottomAlertDialog;
 import com.cheep.custom_view.DividerItemDecoration;
 import com.cheep.databinding.FragmentStrategicPartnerPhaseTwoBinding;
+import com.cheep.databinding.LayoutTemplateAnswerMediaBinding;
 import com.cheep.fragment.BaseFragment;
 import com.cheep.model.AddressModel;
 import com.cheep.model.GuestUserDetails;
@@ -108,12 +114,14 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment implements Reques
     private StrategicPartnerTaskCreationAct mStrategicPartnerTaskCreationAct;
     private SuperCalendar startDateTimeSuperCalendar = SuperCalendar.getInstance();
     private String mCurrentPhotoPath = "";
-    private MediaRecycleAdapter mMediaRecycleAdapter;
+    //    private MediaRecycleAdapter mMediaRecycleAdapter;
     private int count = 1;
     private ArrayList<QueAnsModel> mList;
     private boolean isVerified = false;
     private RequestPermission mRequestPermission;
     private BottomAddAddressDialog dialog;
+    private ArrayList<MediaModel> mediaList;
+    private int numberOfMedia = 0;
 
     @SuppressWarnings("unused")
     public static StrategicPartnerFragPhaseTwo newInstance() {
@@ -191,7 +199,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment implements Reques
                 if (message.equalsIgnoreCase(Utility.EMPTY_STRING)) {
                     for (QueAnsModel model : mList)
                         if (model.answerType.equalsIgnoreCase(Utility.TEMPLATE_UPLOAD)) {
-                            model.medialList = mMediaRecycleAdapter.getList();
+                            model.medialList = mediaList;
                             break;
                         }
                     mStrategicPartnerTaskCreationAct.setQuestionsList(mList);
@@ -734,8 +742,10 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment implements Reques
 
     /**
      * @param model media image/video selection question model
-     *              inflate ui for media image/video selection question
+     * inflate ui for media image/video selection question
      */
+    LayoutTemplateAnswerMediaBinding mediaBinding;
+
     private void inflateMediaTemplate(QueAnsModel model) {
 
         // question view
@@ -761,45 +771,49 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment implements Reques
 
         // answer view
         ViewGroup ansView = queView.findViewById(R.id.relAnsView);
-        View view = LayoutInflater.from(mStrategicPartnerTaskCreationAct).inflate(R.layout.layout_template_answer_media, null, false);
+//        View view = LayoutInflater.from(mStrategicPartnerTaskCreationAct).inflate(R.layout.layout_template_answer_media, null, false);
+        mediaBinding = DataBindingUtil.inflate(LayoutInflater.from(mStrategicPartnerTaskCreationAct), R.layout.layout_template_answer_media, null, false);
 
-        final ImageView imgAdd = view.findViewById(R.id.imgAdd);
+//        final ImageView imgAdd = view.findViewById(R.id.imgAdd);
         // this tag is set for onActivityResult to find image view by tag
-        imgAdd.setTag("AddImage");
+//        imgAdd.setTag("AddImage");
 
         // handles click for adding image/video chooser flow
-        imgAdd.setOnClickListener(new View.OnClickListener() {
+        mediaBinding.imgAdd.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                Utility.hideKeyboard(mContext);
-                showMediaChooserDialog();
+            public void onClick(View v) {
+                if (mediaList == null || mediaList.isEmpty()) {
+                    showMediaChooserDialog();
+                } else {
+                    mStrategicPartnerTaskCreationAct.showMediaUI(mediaList);
+                }
             }
         });
 
         // recycle view for thumbnails for media files
-        RecyclerView recycleImg = view.findViewById(R.id.recycleImg);
-        recycleImg.setNestedScrollingEnabled(false);
-        recycleImg.setLayoutManager(new LinearLayoutManager(mStrategicPartnerTaskCreationAct, LinearLayoutManager.HORIZONTAL, false));
+//        RecyclerView recycleImg = view.findViewById(R.id.recycleImg);
+//        recycleImg.setNestedScrollingEnabled(false);
+//        recycleImg.setLayoutManager(new LinearLayoutManager(mStrategicPartnerTaskCreationAct, LinearLayoutManager.HORIZONTAL, false));
+//
+//        mMediaRecycleAdapter = new MediaRecycleAdapter(new MediaRecycleAdapter.ItemClick() {
+//            @Override
+//            public void removeMedia() {
+//                // after uploading 3 media file if any one is deleted then add image view again
+//                if (mMediaRecycleAdapter.getItemCount() < 3)
+//                    imgAdd.setVisibility(View.VISIBLE);
+//                if (mMediaRecycleAdapter.getItemCount() < 1)
+//                    mFragmentStrategicPartnerPhaseTwoBinding.linMain.findViewWithTag(Utility.TEMPLATE_UPLOAD).setSelected(false);
+//
+//            }
+//        }, true);
+//
+//        recycleImg.setAdapter(mMediaRecycleAdapter);
 
-        mMediaRecycleAdapter = new MediaRecycleAdapter(new MediaRecycleAdapter.ItemClick() {
-            @Override
-            public void removeMedia() {
-                // after uploading 3 media file if any one is deleted then add image view again
-                if (mMediaRecycleAdapter.getItemCount() < 3)
-                    imgAdd.setVisibility(View.VISIBLE);
-                if (mMediaRecycleAdapter.getItemCount() < 1)
-                    mFragmentStrategicPartnerPhaseTwoBinding.linMain.findViewWithTag(Utility.TEMPLATE_UPLOAD).setSelected(false);
-
-            }
-        }, true);
-
-        recycleImg.setAdapter(mMediaRecycleAdapter);
-
-        ansView.addView(view);
+        ansView.addView(mediaBinding.getRoot());
 
     }
 
-    private void showMediaChooserDialog() {
+    public void showMediaChooserDialog() {
         LogUtils.LOGD(TAG, "showPictureChooserDialog() called");
         AlertDialog.Builder builder = new AlertDialog.Builder(mStrategicPartnerTaskCreationAct);
         builder.setTitle(getString(R.string.choose_media))
@@ -1642,16 +1656,131 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment implements Reques
      * to preventing from adding more media files
      */
 
-    private void checkMediaArraySize() {
-        if (mMediaRecycleAdapter.getItemCount() > 0)
-            mFragmentStrategicPartnerPhaseTwoBinding.linMain.findViewWithTag(Utility.TEMPLATE_UPLOAD).setSelected(true);
-        if (mMediaRecycleAdapter.getItemCount() == 3) {
-            ImageView imageView = mFragmentStrategicPartnerPhaseTwoBinding.linMain.findViewWithTag("AddImage");
-            if (imageView != null)
-                imageView.setVisibility(View.GONE);
+//    private void checkMediaArraySize() {
+//        if (mMediaRecycleAdapter.getItemCount() > 0)
+//            mFragmentStrategicPartnerPhaseTwoBinding.linMain.findViewWithTag(Utility.TEMPLATE_UPLOAD).setSelected(true);
+//        if (mMediaRecycleAdapter.getItemCount() == 3) {
+////            ImageView imageView = mFragmentStrategicPartnerPhaseTwoBinding.linMain.findViewWithTag("AddImage");
+//            if (mediaBinding != null)
+//                mediaBinding.imgAdd.setVisibility(View.GONE);
+//        }
+//    }
+    private void mediaAdded(MediaModel mediaModel) {
+        LogUtils.LOGI(TAG, "bind:>>  " + mediaModel.mediaName);
+
+        ImageView imageViewToLoadImage = new ImageView(mContext);
+
+        switch (numberOfMedia) {
+            case 0:
+                mediaBinding.imgTaskPicture1.setVisibility(View.VISIBLE);
+                imageViewToLoadImage = mediaBinding.imgTaskPicture1;
+                break;
+            case 1:
+                mediaBinding.framePicture2.setVisibility(View.VISIBLE);
+                imageViewToLoadImage = mediaBinding.imgTaskPicture2;
+                break;
+            case 2:
+                mediaBinding.framePicture3.setVisibility(View.VISIBLE);
+                imageViewToLoadImage = mediaBinding.imgTaskPicture3;
+                break;
+            default:
+                Log.d(TAG, "onStateChanged: numberOfMedia = " + numberOfMedia);
+                break;
+        }
+
+        loadImageByGlide(mediaModel.localFilePath, imageViewToLoadImage);
+
+        numberOfMedia++;
+    }
+
+    public void removeMediaItem(int position, MediaModel model) {
+        numberOfMedia--;
+        int itemPosition = -1;
+        for (int i = 0; i < mediaList.size(); i++) {
+            if (mediaList.get(i).localFilePath.equals(model.localFilePath)) {
+                itemPosition = i;
+                break;
+            }
+        }
+        if (itemPosition != -1) {
+            mediaList.remove(itemPosition);
+            refreshMediaUI();
+        }
+
+        checkMediaArraySize();
+    }
+
+    private void refreshMediaUI() {
+        mediaBinding.imgTaskPicture1.setVisibility(View.GONE);
+        mediaBinding.framePicture2.setVisibility(View.GONE);
+        mediaBinding.framePicture3.setVisibility(View.GONE);
+
+        ImageView imageViewToLoadImage = new ImageView(mContext);
+
+        for (int i = 0; i < mediaList.size(); i++) {
+
+            switch (i) {
+                case 0:
+                    mediaBinding.imgTaskPicture1.setVisibility(View.VISIBLE);
+                    imageViewToLoadImage = mediaBinding.imgTaskPicture1;
+                    break;
+                case 1:
+                    mediaBinding.framePicture2.setVisibility(View.VISIBLE);
+                    imageViewToLoadImage = mediaBinding.imgTaskPicture2;
+                    break;
+                case 2:
+                    mediaBinding.framePicture3.setVisibility(View.VISIBLE);
+                    imageViewToLoadImage = mediaBinding.imgTaskPicture3;
+                    break;
+                default:
+                    Log.d(TAG, "onStateChanged: numberOfMedia = " + numberOfMedia);
+                    break;
+            }
+
+            loadImageByGlide(mediaList.get(i).localFilePath, imageViewToLoadImage);
         }
     }
 
+    private void loadImageByGlide(String localFilePath, final ImageView imageView) {
+        Glide.with(mContext)
+                .load(localFilePath)
+                .asBitmap()
+                .thumbnail(0.2f)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .listener(new RequestListener<String, Bitmap>() {
+
+                    @Override
+                    public boolean onException(Exception e, String model, Target<Bitmap> target, boolean isFirstResource) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Bitmap resource, String model, Target<Bitmap> target, boolean isFromMemoryCache, boolean isFirstResource) {
+//                        if (mIsStrategicPartner) {
+//                            mImgThumb.setImageBitmap(Utility.getRoundedCornerBitmap(resource, mImgThumb.getContext()));
+//                        } else {
+                        imageView.setImageBitmap(resource);
+//                        }
+                        return true;
+                    }
+                }).into(imageView);
+    }
+
+    /**
+     * check if 3 image/video is added then hide image add view
+     * to preventing from adding more media files
+     */
+
+    private void checkMediaArraySize() {
+        if (numberOfMedia == 3) {
+            mStrategicPartnerTaskCreationAct.shouldAddMediaClickListener(false);
+        }
+        if (numberOfMedia > 0)
+            mFragmentStrategicPartnerPhaseTwoBinding.linMain.findViewWithTag(Utility.TEMPLATE_UPLOAD).setSelected(true);
+        else
+            mFragmentStrategicPartnerPhaseTwoBinding.linMain.findViewWithTag(Utility.TEMPLATE_UPLOAD).setSelected(false);
+
+    }
 
     private void resetTime(TextView txtAnswer, QueAnsModel model, TextView txtQueNo) {
         SuperCalendar calAfter3Hours = SuperCalendar.getInstance().getNext3HoursTime(false);
@@ -1848,7 +1977,12 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment implements Reques
                     LogUtils.LOGE(TAG, "mediaThumbName: " + thumbUrl);
                     mediaModel.mediaType = type;
                     mediaModel.localFilePath = localFilePath;
-                    mMediaRecycleAdapter.addImage(mediaModel);
+                    if (mediaList == null)
+                        mediaList = new ArrayList<>();
+                    mediaList.add(mediaModel);
+                    mediaAdded(mediaModel);
+                    if (mediaList.size() != 1)
+                        mStrategicPartnerTaskCreationAct.addMedia(mediaModel);
 
                     // set update media list for strategic partner activity
                     // for when  user is not creating tasks but he press back buttons
@@ -1856,7 +1990,7 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment implements Reques
 
                     for (QueAnsModel model : mList)
                         if (model.answerType.equalsIgnoreCase(Utility.TEMPLATE_UPLOAD)) {
-                            model.medialList = mMediaRecycleAdapter.getList();
+                            model.medialList = mediaList;
                             break;
                         }
 

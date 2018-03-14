@@ -98,9 +98,7 @@
                     android:layout_height="82dp"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-
-                    android:layout_marginBottom="@dimen/scale_10dp"
-                    android:layout_marginRight="@dimen/scale_10dp">
+                    android:layout_marginBottom="@dimen/scale_10dp">
 
                     <ImageView
                         android:id="@+id/imgAdd"

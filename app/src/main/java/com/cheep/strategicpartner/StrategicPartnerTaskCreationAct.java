@@ -5,19 +5,25 @@ import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 
 import com.cheep.R;
 import com.cheep.activity.BaseAppCompatActivity;
+import com.cheep.activity.ZoomImageActivity;
 import com.cheep.adapter.TaskCreationForStrategicPartnerPagerAdapter;
+import com.cheep.cheepcare.adapter.MediaFullScreenAdapter;
 import com.cheep.databinding.ActivityTaskCreationForStrategicPartnerBinding;
 import com.cheep.model.AddressModel;
 import com.cheep.model.BannerImageModel;
@@ -64,6 +70,15 @@ public class StrategicPartnerTaskCreationAct extends BaseAppCompatActivity {
     //
     public String totalOfGSTPrice = "";
     public String totalOfBasePrice = "";
+    private TaskCreationForStrategicPartnerPagerAdapter taskCreationPagerAdapter;
+
+    //variables for add media//
+    private float itemWidth;
+    //    private float padding;
+    private float allPixels;
+    private MediaFullScreenAdapter mediaFullScreenAdapter;
+    private int expectedPosition;
+    //variables for add media//
 
     public static void getInstance(Context mContext, BannerImageModel model) {
         Intent intent = new Intent(mContext, StrategicPartnerTaskCreationAct.class);
@@ -77,6 +92,7 @@ public class StrategicPartnerTaskCreationAct extends BaseAppCompatActivity {
         mActivityTaskCreationForStrategicPartnerBinding = DataBindingUtil.setContentView(this, R.layout.activity_task_creation_for_strategic_partner);
         EventBus.getDefault().register(this);
         initiateUI();
+        setListeners();
     }
 
     @Override
@@ -162,6 +178,7 @@ public class StrategicPartnerTaskCreationAct extends BaseAppCompatActivity {
         });
 
 
+
         // Calculat Pager Height and Width
         ViewTreeObserver mViewTreeObserver = mActivityTaskCreationForStrategicPartnerBinding.frameBannerImage.getViewTreeObserver();
         mViewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -178,12 +195,78 @@ public class StrategicPartnerTaskCreationAct extends BaseAppCompatActivity {
             }
         });
 
+
+        initMediaRecyclerView();
+
+    }
+    private void initMediaRecyclerView() {
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        itemWidth = getResources().getDimension(R.dimen.item_width);
+//        padding = (size.x - itemWidth) / 2;
+
+        allPixels = 0;
+
+        LinearLayoutManager shopItemslayoutManager = new LinearLayoutManager(getApplicationContext());
+        shopItemslayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        mActivityTaskCreationForStrategicPartnerBinding.addMedia.itemList.setLayoutManager(shopItemslayoutManager);
+
+        mActivityTaskCreationForStrategicPartnerBinding.addMedia.itemList.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                synchronized (this) {
+                    if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                        calculatePositionAndScroll(recyclerView);
+                    }
+                }
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                allPixels += dx;
+            }
+        });
+
+        mediaFullScreenAdapter = new MediaFullScreenAdapter(mediaInteractionListener);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false);
+        mActivityTaskCreationForStrategicPartnerBinding.addMedia.itemList.setLayoutManager(layoutManager);
+        mActivityTaskCreationForStrategicPartnerBinding.addMedia.itemList.setAdapter(mediaFullScreenAdapter);
+    }
+    private void calculatePositionAndScroll(RecyclerView recyclerView) {
+        expectedPosition = Math.round((allPixels/* + padding*/) / itemWidth);
+        scrollListToPosition(recyclerView, expectedPosition);
+        mActivityTaskCreationForStrategicPartnerBinding.addMedia.tvNumberOfMedia.setText(getString(R.string.number_of_media, String.valueOf(expectedPosition + 1/* + 1*/)
+                , String.valueOf(mediaFullScreenAdapter.getListSize())));
     }
 
+    private void scrollListToPosition(RecyclerView recyclerView, int expectedPosition) {
+        float targetScrollPos = expectedPosition * itemWidth/* - padding*/;
+        float missingPx = targetScrollPos - allPixels;
+        if (missingPx != 0) {
+            recyclerView.smoothScrollBy((int) missingPx, 0);
+        }
+    }
 
+    private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()) {
+                case R.id.iv_hide_media_ui:
+                    mActivityTaskCreationForStrategicPartnerBinding.addMedia.getRoot().setVisibility(View.GONE);
+                    break;
+                case R.id.iv_plus:
+                    taskCreationPagerAdapter.mStrategicPartnerFragPhaseTwo.showMediaChooserDialog();
+                    break;
+            }
+        }
+    };
     @Override
     protected void setListeners() {
-
+        mActivityTaskCreationForStrategicPartnerBinding.addMedia.ivHideMediaUi.setOnClickListener(mOnClickListener);
+        mActivityTaskCreationForStrategicPartnerBinding.addMedia.ivPlus.setOnClickListener(mOnClickListener);
     }
 
 
@@ -193,7 +276,7 @@ public class StrategicPartnerTaskCreationAct extends BaseAppCompatActivity {
      * @param pager view pager for 3 steps
      */
     private void setupViewPager(ViewPager pager) {
-        TaskCreationForStrategicPartnerPagerAdapter taskCreationPagerAdapter = new TaskCreationForStrategicPartnerPagerAdapter(getSupportFragmentManager());
+        taskCreationPagerAdapter = new TaskCreationForStrategicPartnerPagerAdapter(getSupportFragmentManager());
         taskCreationPagerAdapter.addFragment(StrategicPartnerFragPhaseOne.TAG);
         taskCreationPagerAdapter.addFragment(StrategicPartnerFragPhaseTwo.TAG);
         taskCreationPagerAdapter.addFragment(StrategicPartnerFragPhaseThree.TAG);
@@ -334,6 +417,11 @@ public class StrategicPartnerTaskCreationAct extends BaseAppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        if (mActivityTaskCreationForStrategicPartnerBinding.addMedia.getRoot().getVisibility() == View.VISIBLE) {
+            mActivityTaskCreationForStrategicPartnerBinding.addMedia.ivHideMediaUi.performClick();
+            return;
+        }
+
         if (mActivityTaskCreationForStrategicPartnerBinding.viewpager.getCurrentItem() == 1) {
             gotoStep(STAGE_1);
             return;
@@ -474,4 +562,43 @@ public class StrategicPartnerTaskCreationAct extends BaseAppCompatActivity {
         EventBus.getDefault().unregister(this);
         super.onDestroy();
     }
+
+    public void showMediaUI(ArrayList<MediaModel> mediaList) {
+        Log.d(TAG, "showMediaUI() called with: mediaList = [" + mediaList + "]");
+        mActivityTaskCreationForStrategicPartnerBinding.addMedia.getRoot().setVisibility(View.VISIBLE);
+        mediaFullScreenAdapter.addAll(mediaList);
+        mActivityTaskCreationForStrategicPartnerBinding.addMedia.tvNumberOfMedia.setText(getString(R.string.number_of_media, String.valueOf(1)
+                , String.valueOf(mediaList.size())));
+    }
+
+    public void addMedia(MediaModel media) {
+        Log.d(TAG, "addMedia() called with: media = [" + media + "]");
+        mediaFullScreenAdapter.add(media);
+        mActivityTaskCreationForStrategicPartnerBinding.addMedia.tvNumberOfMedia.setText(getString(R.string.number_of_media, String.valueOf(expectedPosition + 1/* + 1*/)
+                , String.valueOf(mediaFullScreenAdapter.getListSize())));
+    }
+
+    public void shouldAddMediaClickListener(boolean addMediaClickListener) {
+        mActivityTaskCreationForStrategicPartnerBinding.addMedia.ivPlus.setOnClickListener(addMediaClickListener ? mOnClickListener : null);
+    }
+
+    private final MediaFullScreenAdapter.MediaInteractionListener mediaInteractionListener = new MediaFullScreenAdapter.MediaInteractionListener() {
+        @Override
+        public void onItemClick(int position, MediaModel model) {
+            ZoomImageActivity.newInstance(mContext, null, model.localFilePath);
+        }
+
+        @Override
+        public void onRemoveClick(int position, MediaModel model) {
+            if (mediaFullScreenAdapter.getListSize() == 3) {
+                shouldAddMediaClickListener(true);
+            }
+            if (mediaFullScreenAdapter.getListSize() == 1) {
+                mActivityTaskCreationForStrategicPartnerBinding.addMedia.ivHideMediaUi.performClick();
+            }
+            mediaFullScreenAdapter.removeItem(StrategicPartnerTaskCreationAct.this, position, model);
+            calculatePositionAndScroll(mActivityTaskCreationForStrategicPartnerBinding.addMedia.itemList);
+            taskCreationPagerAdapter.mStrategicPartnerFragPhaseTwo.removeMediaItem(position, model);
+        }
+    };
 }
