@@ -881,14 +881,14 @@ public class HomeTabFragment extends BaseFragment {
                         Log.v("Closest Area", jsonObject.optString(NetworkUtility.TAGS.CLOSEST_AREA));
                         String cat = jsonObject.optString(NetworkUtility.TAGS.CLOSEST_AREA);
                         if (cat.equals("{}") || cat.equals("[]") || cat.equals("null") || TextUtils.isEmpty(cat)) {
-                            String Category = "";
-                            Log.v("Closest Area if", Category);
-                            updateLogoSuccess(Category);
+                            String category = "";
+                            Log.v("Closest Area if", category);
+                            updateLogoSuccess(category);
                         } else {
-                            String Category = "";
-                            Category = jsonObject.getJSONObject(NetworkUtility.TAGS.CLOSEST_AREA).getString(NetworkUtility.TAGS.CLOSEST_CATEGORY);
-                            Log.v("Closest Area else", Category);
-                            updateLogoSuccess(Category);
+                            String category = "";
+                            category = jsonObject.getJSONObject(NetworkUtility.TAGS.CLOSEST_AREA).getString(NetworkUtility.TAGS.CLOSEST_CATEGORY);
+                            Log.v("Closest Area else", category);
+                            updateLogoSuccess(category);
                         }
                         ArrayList<JobCategoryModel> list;
                         list = GsonUtility.getObjectListFromJsonString(jsonObject.optString(NetworkUtility.TAGS.DATA), JobCategoryModel[].class);
@@ -943,15 +943,23 @@ public class HomeTabFragment extends BaseFragment {
     private void updateLogoSuccess(String category) {
         Log.d(TAG, "updateLogoSuccess() called with: LogoCategory = [" + category + "]");
 
-        if (category.equalsIgnoreCase("home")) {
-            mFragmentTabHomeBinding.imgLocation.setImageDrawable(getResources().getDrawable(R.drawable.ab_home));
-        } else if (category.equalsIgnoreCase("office")) {
-            mFragmentTabHomeBinding.imgLocation.setImageDrawable(getResources().getDrawable(R.drawable.ab_office));
-        } else if (category.equalsIgnoreCase("other")) {
-            mFragmentTabHomeBinding.imgLocation.setImageDrawable(getResources().getDrawable(R.drawable.ab_other));
-        } else {
-            mFragmentTabHomeBinding.imgLocation.setImageDrawable(getResources().getDrawable(R.drawable.ab_pick_location));
-        }
+        int resId;
+        if (TextUtils.isEmpty(category))
+            resId = R.drawable.ab_pick_location;
+        else if (category.equalsIgnoreCase(NetworkUtility.TAGS.ADDRESS_TYPE.HOME))
+            resId = R.drawable.ab_home;
+        else if (category.equalsIgnoreCase(NetworkUtility.TAGS.ADDRESS_TYPE.OFFICE))
+            resId = R.drawable.ab_office;
+        else if (category.equalsIgnoreCase(NetworkUtility.TAGS.ADDRESS_TYPE.BIZ))
+            resId = R.drawable.ab_office;
+        else if (category.equalsIgnoreCase(NetworkUtility.TAGS.ADDRESS_TYPE.SOCI))
+            resId = R.drawable.ab_home;
+        else if (category.equalsIgnoreCase(NetworkUtility.TAGS.ADDRESS_TYPE.OTHERS))
+            resId = R.drawable.ab_other;
+        else
+            resId = R.drawable.ab_pick_location;
+
+        mFragmentTabHomeBinding.imgLocation.setImageResource(resId);
     }
 
     Response.ErrorListener mCallCategoryListWSErrorListener = new Response.ErrorListener() {

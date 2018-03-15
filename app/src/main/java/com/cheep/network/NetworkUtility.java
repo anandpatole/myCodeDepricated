@@ -448,8 +448,6 @@ public class NetworkUtility {
         String PACKAGE_DETAIL = "packageDetail";
         String PAID_SERVICE = "paid_service";
         String FREE_SERVICE = "free_service";
-        String UNIT = "unit";
-        String SUB_CAT_ID = "sub_cat_id";
         String IS_PURCHASED = "is_purchased";
         String IS_SAME_PACKAGE_TYPE = "is_same_package_type";
         String PACKAGE_ID = "package_id";
@@ -465,6 +463,7 @@ public class NetworkUtility {
         String CHARGE_SPECIFIC_TIME = "charge_specific_time";
         String CHARGE_EXCEED_LIMIT = "charge_exceed_limit";
         String FINAL_EXTRA_CHARGE= "finalExtraCharge";
+        String TASK_SUB_CATEGORIES= "task_subcategories";
 
         interface VERSION_CHANGE_TYPE {
             int NORMAL = 0;

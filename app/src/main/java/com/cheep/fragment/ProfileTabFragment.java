@@ -945,7 +945,7 @@ public class ProfileTabFragment extends BaseFragment {
             hideProgressDialog();
 
             // Show Toast
-            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mFragmentTabProfileBinding.getRoot());
+            Utility.showSnackBar(mContext.getString(R.string.label_something_went_wrong), mFragmentTabProfileBinding.getRoot());
         }
     };
 

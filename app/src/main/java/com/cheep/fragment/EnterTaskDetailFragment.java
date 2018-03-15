@@ -106,7 +106,7 @@ public class EnterTaskDetailFragment extends BaseFragment implements RequestPerm
     public boolean isTaskDescriptionVerified = false;
     public boolean isTaskWhenVerified = false;
     public boolean isTaskWhereVerified = false;
-//    public MediaRecycleAdapter mMediaRecycleAdapter;
+    //    public MediaRecycleAdapter mMediaRecycleAdapter;
     // For When
     public SuperCalendar startDateTimeSuperCalendar = SuperCalendar.getInstance();
     private RequestPermission mRequestPermission;
@@ -177,6 +177,14 @@ public class EnterTaskDetailFragment extends BaseFragment implements RequestPerm
         isTaskWhereVerified = !TextUtils.isEmpty(mFragmentEnterTaskDetailBinding.textTaskWhere.getText().toString().trim());
 
         updateFinalVerificationFlag();
+
+        if (mTaskCreationActivity.mJobCategoryModel.catTaskType.equalsIgnoreCase(Utility.CAT_TASK_TYPE.INSTA_BOOK)) {
+            mFragmentEnterTaskDetailBinding.cvInstaBook.setVisibility(View.VISIBLE);
+            mFragmentEnterTaskDetailBinding.cvGetQuote.setVisibility(View.GONE);
+        } else {
+            mFragmentEnterTaskDetailBinding.cvInstaBook.setVisibility(View.GONE);
+            mFragmentEnterTaskDetailBinding.cvGetQuote.setVisibility(View.VISIBLE);
+        }
     }
 
     private void updateFinalVerificationFlag() {
@@ -811,6 +819,7 @@ public class EnterTaskDetailFragment extends BaseFragment implements RequestPerm
         }
 
     }
+
     private void mediaAdded(MediaModel mediaModel) {
         LogUtils.LOGI(TAG, "bind:>>  " + mediaModel.mediaName);
 
@@ -979,7 +988,7 @@ public class EnterTaskDetailFragment extends BaseFragment implements RequestPerm
 //                            TODO: This needs to Be UNCOMMENTED DO NOT FORGET
 //                            if (!BuildConfig.BUILD_TYPE.equalsIgnoreCase(Utility.DEBUG)) {
                             if (superCalendar.getTimeInMillis() < calAfter3Hours.getTimeInMillis()) {
-                                Utility.showSnackBar(getString(R.string.can_only_start_task_after_3_hours,"3"), mFragmentEnterTaskDetailBinding.getRoot());
+                                Utility.showSnackBar(getString(R.string.can_only_start_task_after_3_hours, "3"), mFragmentEnterTaskDetailBinding.getRoot());
                                 mFragmentEnterTaskDetailBinding.textTaskWhen.setText(Utility.EMPTY_STRING);
                                 mFragmentEnterTaskDetailBinding.textTaskWhen.setVisibility(View.GONE);
                                 updateTaskVerificationFlags();
@@ -1829,6 +1838,7 @@ public class EnterTaskDetailFragment extends BaseFragment implements RequestPerm
 
         dialog.showDialog();
     }
+
     public ArrayList<MediaModel> getMediaList() {
         return mediaList;
     }

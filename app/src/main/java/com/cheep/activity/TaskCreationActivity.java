@@ -51,6 +51,7 @@ import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.SuperCalendar;
 import com.cheep.utils.Utility;
 import com.google.android.gms.common.api.Status;
+import com.google.gson.Gson;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -600,7 +601,13 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
         mParams.put(NetworkUtility.TAGS.CITY_ID, userDetails.CityID);
         mParams.put(NetworkUtility.TAGS.CAT_ID, mJobCategoryModel.catId);
         mParams.put(NetworkUtility.TAGS.TASK_TYPE, Utility.TASK_TYPE.NORMAL);
-        mParams.put(NetworkUtility.TAGS.SUBCATEGORY_ID, String.valueOf(mSelectedSubServiceDetailModel.sub_cat_id));
+
+        ArrayList<SubServiceDetailModel> subServiceDetailModels = new ArrayList<>();
+        mSelectedSubServiceDetailModel.selected_unit = 3;
+        subServiceDetailModels.add(mSelectedSubServiceDetailModel);
+
+        String selectedServices = new Gson().toJson(subServiceDetailModels);
+        mParams.put(NetworkUtility.TAGS.TASK_SUB_CATEGORIES, selectedServices);
         mParams.put(NetworkUtility.TAGS.START_DATETIME, String.valueOf(mTaskCreationPagerAdapter.mEnterTaskDetailFragment.superCalendar.getTimeInMillis()));
         mParams.put(NetworkUtility.TAGS.MEDIA_FILE, Utility.getSelectedMediaJsonString(mTaskCreationPagerAdapter.mEnterTaskDetailFragment.getMediaList()));
 

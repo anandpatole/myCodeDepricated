@@ -38,6 +38,6 @@ public class PackageOption implements Parent<PackageSubOption>, Serializable {
 
     @Override
     public boolean isInitiallyExpanded() {
-        return false;
+        return true;
     }
 }

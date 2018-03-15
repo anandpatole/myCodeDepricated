@@ -23,7 +23,7 @@ public class StrategicPartnerServiceModel implements Parent<AllSubSubCat>, Seria
     @SerializedName("sub_cat_id")
     public int sub_cat_id;
 
-    @SerializedName("name")
+    @SerializedName("sub_cat_name")
     public String name;
 
     @SerializedName("all_sub_sub_cats")

@@ -50,7 +50,7 @@
                             android:paddingLeft="@dimen/scale_15dp"
                             android:textColor="@color/splash_gradient_end"
                             android:textSize="@dimen/text_size_18sp"
-                            tools:text="Restaurant"/>
+                            tools:text="I need my Tap to be fiitesd"/>
                     </LinearLayout>
 
                     <com.cheep.custom_view.CFEditTextRegular

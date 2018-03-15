@@ -11,14 +11,14 @@ import java.util.List;
  * Created by bhavesh on 28/4/17.
  */
 @Keep
-public class SubServiceDetailModel implements Serializable {
+public class SubServiceDetailCCModel implements Serializable {
     @SerializedName("cat_id")
     public int catId;
 
     @SerializedName("sub_cat_id")
     public int sub_cat_id;
 
-    @SerializedName("sub_cat_name")
+    @SerializedName("name")
     public String name;
 
     //    public String monthlyPrice = "120";
@@ -30,14 +30,9 @@ public class SubServiceDetailModel implements Serializable {
     @SerializedName("unit_price")
     public String unitPrice;
 
-// "unit_price": "12000.00",
-//         "charge_type": "per month"
-    @SerializedName("charge_type")
-    public String chargeType;
-
     public boolean isSelected = false;
 
-    public List<SubServiceDetailModel> subServiceList;
+    public List<SubServiceDetailCCModel> subServiceList;
 
     public int selected_unit = 1;
 }
