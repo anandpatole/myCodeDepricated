@@ -154,7 +154,19 @@ public class EnterTaskDetailFragment extends BaseFragment implements RequestPerm
 
         // Manage Task Verification
         updateTaskVerificationFlags();
+        updateGetQuoteInstaButtonVisibility();
     }
+
+    private void updateGetQuoteInstaButtonVisibility() {
+        if (mTaskCreationActivity.mJobCategoryModel.catTaskType.equalsIgnoreCase(Utility.CAT_TASK_TYPE.INSTA_BOOK)) {
+            mFragmentEnterTaskDetailBinding.llInstaProceed.setVisibility(View.VISIBLE);
+            mFragmentEnterTaskDetailBinding.llGetQuotes.setVisibility(View.GONE);
+        } else {
+            mFragmentEnterTaskDetailBinding.llInstaProceed.setVisibility(View.GONE);
+            mFragmentEnterTaskDetailBinding.llGetQuotes.setVisibility(View.VISIBLE);
+        }
+    }
+
 
     private void updateTaskVerificationFlags() {
         // Check Whether because of any issues, activity reference is NULL or not.
@@ -167,7 +179,7 @@ public class EnterTaskDetailFragment extends BaseFragment implements RequestPerm
         }
 
         // Task Description
-        isTaskDescriptionVerified = mTaskCreationActivity.getSelectedSubService().sub_cat_id != -1 ||
+        isTaskDescriptionVerified = mTaskCreationActivity.getSelectedSubService().sub_cat_id.equalsIgnoreCase("-1") ||
                 !TextUtils.isEmpty(mFragmentEnterTaskDetailBinding.editTaskDesc.getText().toString().trim());
 
         // When Verification
@@ -178,13 +190,7 @@ public class EnterTaskDetailFragment extends BaseFragment implements RequestPerm
 
         updateFinalVerificationFlag();
 
-        if (mTaskCreationActivity.mJobCategoryModel.catTaskType.equalsIgnoreCase(Utility.CAT_TASK_TYPE.INSTA_BOOK)) {
-            mFragmentEnterTaskDetailBinding.cvInstaBook.setVisibility(View.VISIBLE);
-            mFragmentEnterTaskDetailBinding.cvGetQuote.setVisibility(View.GONE);
-        } else {
-            mFragmentEnterTaskDetailBinding.cvInstaBook.setVisibility(View.GONE);
-            mFragmentEnterTaskDetailBinding.cvGetQuote.setVisibility(View.VISIBLE);
-        }
+
     }
 
     private void updateFinalVerificationFlag() {
@@ -291,7 +297,8 @@ public class EnterTaskDetailFragment extends BaseFragment implements RequestPerm
             @Override
             public void onClick(View view) {
                 Log.i("myLog", "" + isTotalVerified);
-                mTaskCreationActivity.onInstaBookClicked();
+//                mTaskCreationActivity.onInstaBookClicked();
+                mTaskCreationActivity.onInstaBookClickedNew();
             }
         });
 

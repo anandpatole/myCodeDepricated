@@ -91,7 +91,7 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
     private boolean payPendingAmount = false;
 
     /**
-     * payment summary for task
+     * payment summary for task (Booking confirmation screen for booking get quotes)
      *
      * @param context
      * @param taskDetailModel

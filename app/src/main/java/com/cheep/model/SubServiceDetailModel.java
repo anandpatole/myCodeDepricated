@@ -13,10 +13,10 @@ import java.util.List;
 @Keep
 public class SubServiceDetailModel implements Serializable {
     @SerializedName("cat_id")
-    public int catId;
+    public String catId;
 
     @SerializedName("sub_cat_id")
-    public int sub_cat_id;
+    public String sub_cat_id;
 
     @SerializedName("sub_cat_name")
     public String name;

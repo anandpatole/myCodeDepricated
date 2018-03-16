@@ -845,7 +845,6 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
                         mTaskDetailModel = (TaskDetailModel) GsonUtility.getObjectFromJsonString(jsonObject.optString(NetworkUtility.TAGS.DATA), TaskDetailModel.class);
 
                         setUpTaskDetails(mTaskDetailModel);
-
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
                         // Show Toast

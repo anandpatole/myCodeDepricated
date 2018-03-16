@@ -307,7 +307,7 @@ public class NetworkUtility {
 
         String PROFILE_IMAGE = "profile_img";
         String PROFILE_BANNER = "profile_banner";
-        String PRICE = "price";
+//        String PRICE = "price";
         String DISTANCE = "distance";
         String IS_FAVOURITE = "is_favourite";
         String DATA = "data";
@@ -339,7 +339,7 @@ public class NetworkUtility {
         String TASK_DESC = "task_desc";
         String CITY_ID = "city_id";
         String CAT_ID = "cat_id";
-        String SUBCATEGORY_ID = "subcategory_id";
+        String SUBCATEGORY_ID = "sub_cat_id";
 
         String START_DATETIME = "start_datetime";
         String TASK_IMAGE = "task_image";
@@ -464,6 +464,7 @@ public class NetworkUtility {
         String CHARGE_EXCEED_LIMIT = "charge_exceed_limit";
         String FINAL_EXTRA_CHARGE= "finalExtraCharge";
         String TASK_SUB_CATEGORIES= "task_subcategories";
+        String PRICE = "price";
 
         interface VERSION_CHANGE_TYPE {
             int NORMAL = 0;

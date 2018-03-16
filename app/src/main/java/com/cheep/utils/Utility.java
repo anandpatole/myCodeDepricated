@@ -1107,15 +1107,14 @@ public class Utility {
 
     public static String getSelectedServicesJsonString(ArrayList<StrategicPartnerServiceModel> mSelectedServicesList) {
         JsonArray selectedServiceArray = new JsonArray();
-        ArrayList<StrategicPartnerServiceModel> list = mSelectedServicesList;
-        for (int i = 0; i < list.size(); i++) {
-            StrategicPartnerServiceModel model = list.get(i);
+        for (int i = 0; i < mSelectedServicesList.size(); i++) {
+            StrategicPartnerServiceModel model = mSelectedServicesList.get(i);
             for (int j = 0; j < model.allSubSubCats.size(); j++) {
                 AllSubSubCat allSubSubCat = model.allSubSubCats.get(j);
                 JsonObject obj = new JsonObject();
                 obj.addProperty(NetworkUtility.TAGS.SUBCATEGORY_ID, model.sub_cat_id);
                 obj.addProperty(NetworkUtility.TAGS.SUB_SUB_CAT_ID, allSubSubCat.subSubCatId);
-                obj.addProperty(NetworkUtility.TAGS.PRICE, allSubSubCat.price);
+                obj.addProperty(NetworkUtility.TAGS.UNIT_PRICE, allSubSubCat.price);
                 selectedServiceArray.add(obj);
             }
         }

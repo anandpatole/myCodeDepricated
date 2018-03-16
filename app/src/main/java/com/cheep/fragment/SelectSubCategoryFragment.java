@@ -54,6 +54,15 @@ public class SelectSubCategoryFragment extends BaseFragment {
         return fragment;
     }
 
+    public ArrayList<SubServiceDetailModel> getSubCatList() {
+        ArrayList<SubServiceDetailModel> subServiceDetailModels = new ArrayList<>();
+        for (SubServiceDetailModel subServiceDetailModel : mSubServiceRecyclerViewAdapter.getList()) {
+            if (subServiceDetailModel.isSelected)
+                subServiceDetailModels.add(subServiceDetailModel);
+        }
+        return subServiceDetailModels;
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -111,6 +120,19 @@ public class SelectSubCategoryFragment extends BaseFragment {
     @Override
     public void setListener() {
         Log.d(TAG, "setListener() called");
+        // TODO : new flow Remove this button
+        mFragmentSelectSubserviceBinding.btnNext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        mTaskCreationActivity.gotoStep(TaskCreationActivity.STAGE_2);
+                    }
+                }, 500);
+
+            }
+        });
     }
 
     public interface SubServiceListInteractionListener {
@@ -129,12 +151,13 @@ public class SelectSubCategoryFragment extends BaseFragment {
             //Alert The activity that step one is been verified.
             mTaskCreationActivity.setTaskState(TaskCreationActivity.STEP_ONE_VERIFIED);
 
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    mTaskCreationActivity.gotoStep(TaskCreationActivity.STAGE_2);
-                }
-            }, 500);
+            //TODO : commented for new flow
+//            new Handler().postDelayed(new Runnable() {
+//                @Override
+//                public void run() {
+//                    mTaskCreationActivity.gotoStep(TaskCreationActivity.STAGE_2);
+//                }
+//            }, 500);
 
         }
     };

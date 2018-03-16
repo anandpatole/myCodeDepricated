@@ -72,7 +72,7 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
     public PackageDetail mSelectedPackageModel;
     public AdminSettingModel settingModel;
     private ArrayList<PackageDetail> mPackageList = new ArrayList<>();
-    private int mPreviousState = 0;
+    //    private int mPreviousState = 0;
     int cartCount = 0;
     int nextStep = 0;
 
@@ -301,7 +301,7 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
     }
 
     public void gotoStep(int step) {
-        mPreviousState = mBinding.viewpager.getCurrentItem();
+//        mPreviousState = mBinding.viewpager.getCurrentItem();
         switch (step) {
             case STAGE_1:
                 mBinding.viewpager.setCurrentItem(0);
@@ -335,14 +335,14 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
     public void onBackPressed() {
 
 
-        if (mBinding.viewpager.getCurrentItem() == 0) {
+        if (mBinding.viewpager.getCurrentItem() == STAGE_1) {
             if (cartCount > 0) {
                 PreferenceUtility.getInstance(this).setCityCartDetail(mCityDetail.citySlug, GsonUtility.getJsonStringFromObject(mPackageList));
 //                showAlertDialog(false);
                 super.onBackPressed();
             } else
                 super.onBackPressed();
-        } else gotoStep(mPreviousState);
+        } else gotoStep(STAGE_1);
 
 
 /*

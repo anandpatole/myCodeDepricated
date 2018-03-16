@@ -454,8 +454,32 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
         }
     }
 
+    /**
+     * this is new method of instabook flow from here user wil navigated to booking confirmation screen
+     */
+    public void onInstaBookClickedNew() {
+        TaskDetailModel taskDetailModel = new TaskDetailModel();
+//                    taskDetailModel.categoryName = mJobCategoryModel.catName;
+        taskDetailModel.subCategoryName = mSelectedSubServiceDetailModel.name;
+        taskDetailModel.taskAddress = mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.address;
+        taskDetailModel.taskAddressId = mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.address_id;
+//                    taskDetailModel.categoryId = mJobCategoryModel.catId;
+        taskDetailModel.taskDesc = mTaskCreationPagerAdapter.mEnterTaskDetailFragment.getTaskDescription();
+//                    taskDetailModel.catImage = mJobCategoryModel.catImage;
+        taskDetailModel.categoryModel = mJobCategoryModel;
+        taskDetailModel.taskStartdate = String.valueOf(mTaskCreationPagerAdapter.mEnterTaskDetailFragment.superCalendar.getCalendar().getTimeInMillis());
+        taskDetailModel.subCategoryID = String.valueOf(mSelectedSubServiceDetailModel.sub_cat_id);
+//                    model.taskImage = mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mCurrentPhotoPath;
+        taskDetailModel.mMediaModelList = mTaskCreationPagerAdapter.mEnterTaskDetailFragment.getMediaList();
+        taskDetailModel.subCatList = mTaskCreationPagerAdapter.mSelectSubCategoryFragment.getSubCatList();
+        taskDetailModel.taskType = Utility.TASK_TYPE.INSTA_BOOK;
+        taskDetailModel.taskStatus = Utility.TASK_STATUS.PENDING;
+        BookingConfirmationInstaActivity.newInstance(TaskCreationActivity.this, taskDetailModel, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel);
+    }
 
     public void onInstaBookClicked() {
+
+
         if (!isValidationCompleted()) {
             return;
         }
@@ -602,11 +626,8 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
         mParams.put(NetworkUtility.TAGS.CAT_ID, mJobCategoryModel.catId);
         mParams.put(NetworkUtility.TAGS.TASK_TYPE, Utility.TASK_TYPE.NORMAL);
 
-        ArrayList<SubServiceDetailModel> subServiceDetailModels = new ArrayList<>();
-        mSelectedSubServiceDetailModel.selected_unit = 3;
-        subServiceDetailModels.add(mSelectedSubServiceDetailModel);
 
-        String selectedServices = new Gson().toJson(subServiceDetailModels);
+        String selectedServices = new Gson().toJson(mTaskCreationPagerAdapter.mSelectSubCategoryFragment.getSubCatList());
         mParams.put(NetworkUtility.TAGS.TASK_SUB_CATEGORIES, selectedServices);
         mParams.put(NetworkUtility.TAGS.START_DATETIME, String.valueOf(mTaskCreationPagerAdapter.mEnterTaskDetailFragment.superCalendar.getTimeInMillis()));
         mParams.put(NetworkUtility.TAGS.MEDIA_FILE, Utility.getSelectedMediaJsonString(mTaskCreationPagerAdapter.mEnterTaskDetailFragment.getMediaList()));
@@ -1049,9 +1070,10 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
         public void onReceive(Context context, Intent intent) {
             Utility.hideKeyboard(mContext);
             // check here for user guest has selected insta booked or get quots
-            if (isInstaBooking)
-                onInstaBookClicked();
-            else
+            if (isInstaBooking) {
+//                onInstaBookClicked();
+                onInstaBookClickedNew();
+            } else
                 onGetQuoteClicked();
 
             /**
