@@ -10,6 +10,7 @@ import android.databinding.ViewDataBinding;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
@@ -33,7 +34,6 @@ import com.cheep.databinding.RowBundledPackagetNoSelectedBinding;
 import com.cheep.model.AddressModel;
 import com.cheep.model.GuestUserDetails;
 import com.cheep.model.UserDetails;
-import com.cheep.utils.LoadMoreRecyclerAdapter;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.Utility;
 
@@ -46,7 +46,7 @@ import java.util.Map;
  * Created by pankaj on 12/22/17.
  */
 
-public class PackageBundlingAdapter extends LoadMoreRecyclerAdapter<PackageBundlingAdapter.PackageViewHolder> {
+public class PackageBundlingAdapter extends RecyclerView.Adapter<PackageBundlingAdapter.PackageViewHolder> {
 
     private static final String TAG = PackageBundlingAdapter.class.getSimpleName();
     private final PackageItemClickListener mListener;
@@ -71,8 +71,9 @@ public class PackageBundlingAdapter extends LoadMoreRecyclerAdapter<PackageBundl
         mListener = listener;
     }
 
+    @NonNull
     @Override
-    public PackageViewHolder onActualCreateViewHolder(ViewGroup parent, int viewType) {
+    public PackageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
 
         switch (viewType) {
@@ -92,61 +93,61 @@ public class PackageBundlingAdapter extends LoadMoreRecyclerAdapter<PackageBundl
     }
 
     @Override
-    public int getItemViewType(int position) {
-        return mList.get(position).rowType;
-    }
-
-    @Override
-    public void onActualBindViewHolder(final PackageViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull PackageViewHolder holder, int position) {
         int viewType = getItemViewType(holder.getAdapterPosition());
         Context context;
         final PackageDetail model = mList.get(position);
         switch (viewType) {
             case ROW_PACKAGE_NOT_SELECTED:
                 context = holder.mRowNotSelectedBinding.getRoot().getContext();
+
+                // image background of care package
                 Glide.with(holder.mRowNotSelectedBinding.getRoot().getContext())
                         .load(model.packageImage)
                         .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                         .into(holder.mRowNotSelectedBinding.ivItemBackground);
-                holder.mRowNotSelectedBinding.tvPrice.setText(Utility.getCheepCarePackageMonthlyPrice(context, R.string.rupee_symbol_x_package_price, model.price));
-                holder.mRowNotSelectedBinding.ivIsAddressSelected.setSelected(model.isSelected);
-                holder.mRowNotSelectedBinding.tvDescription.setText(model.subtitle);
+
+                // title
                 holder.mRowNotSelectedBinding.tvTitle.setText(model.title);
+                //description
+                holder.mRowNotSelectedBinding.tvDescription.setText(model.subtitle);
+                // price of package
+                holder.mRowNotSelectedBinding.tvPrice.setText(Utility.getCheepCarePackageMonthlyPrice(context, R.string.rupee_symbol_x_package_price, model.price));
+                // package selected icon
+                holder.mRowNotSelectedBinding.ivPackageSelected.setSelected(model.isSelected);
 
-
-                holder.mRowNotSelectedBinding.getRoot().setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        mListener.onPackageItemClick(holder.getAdapterPosition(), model);
-                    }
-                });
-
+                // live text animation
                 holder.bindLiveFeedForPackagedBundle(holder.mRowNotSelectedBinding);
+
+
                 break;
             case ROW_PACKAGE_SELECTED:
+
                 context = holder.mRowSelectedBinding.getRoot().getContext();
+                // image background of care package
                 Glide.with(holder.mRowSelectedBinding.getRoot().getContext())
                         .load(model.packageImage)
                         .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                         .into(holder.mRowSelectedBinding.ivItemBackground);
 
-                holder.mRowSelectedBinding.tvPrice.setText(Utility.getCheepCarePackageMonthlyPrice(context, R.string.rupee_symbol_x_package_price, model.price));
-                holder.mRowSelectedBinding.ivIsAddressSelected.setSelected(model.isSelected);
-                holder.mRowSelectedBinding.tvDescription.setText(model.subtitle);
+                // title
                 holder.mRowSelectedBinding.tvTitle.setText(model.title);
+                //description
+                holder.mRowSelectedBinding.tvDescription.setText(model.subtitle);
+                // price of package
+                holder.mRowSelectedBinding.tvPrice.setText(Utility.getCheepCarePackageMonthlyPrice(context, R.string.rupee_symbol_x_package_price, model.price));
+                // package selected icon
+                holder.mRowSelectedBinding.ivPackageSelected.setSelected(model.isSelected);
 
+                // address view for selected packages
                 if (model.mSelectedAddressList != null && !model.mSelectedAddressList.isEmpty()) {
                     holder.mRowSelectedBinding.tvAddressNickname.setText(model.mSelectedAddressList.get(0).getNicknameString(context));
                     holder.mRowSelectedBinding.ivAddressIcon.setImageResource(Utility.getAddressCategoryBlueIcon(model.mSelectedAddressList.get(0).category));
                     holder.mRowSelectedBinding.tvAddress.setText(model.mSelectedAddressList.get(0).getAddressWithInitials());
                 }
 
-                holder.mRowSelectedBinding.getRoot().setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                    }
-                });
                 holder.bindLiveFeedForPackagedBundle(holder.mRowSelectedBinding);
+
                 break;
             case ROW_PACKAGE_HEADER:
 //                holder.mBindingBundledPackageHeaderBinding.txtRibbon.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT));
@@ -160,10 +161,15 @@ public class PackageBundlingAdapter extends LoadMoreRecyclerAdapter<PackageBundl
     }
 
     @Override
-    public int onActualItemCount() {
-        return mList.size();
+    public int getItemViewType(int position) {
+        return mList.get(position).rowType;
     }
 
+
+    @Override
+    public int getItemCount() {
+        return mList == null ? 0 : mList.size();
+    }
 
     class PackageViewHolder extends RecyclerView.ViewHolder {
         RowBundledPackageSelectedBinding mRowSelectedBinding;
@@ -178,8 +184,24 @@ public class PackageBundlingAdapter extends LoadMoreRecyclerAdapter<PackageBundl
                 mRowHeaderBinding = (RowBundledPackageHeaderBinding) binding;
             else if (binding instanceof RowBundledPackagetNoSelectedBinding) {
                 mRowNotSelectedBinding = (RowBundledPackagetNoSelectedBinding) binding;
-            } else
+                mRowNotSelectedBinding.getRoot().setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mListener.onPackageItemClick(getAdapterPosition(), mList.get(getAdapterPosition()));
+                    }
+                });
+
+
+            } else {
                 mRowSelectedBinding = (RowBundledPackageSelectedBinding) binding;
+                mRowSelectedBinding.getRoot().setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                    }
+                });
+                // live text animation
+                bindLiveFeedForPackagedBundle(mRowSelectedBinding);
+            }
 
             if (mRowSelectedBinding != null)
                 mRowSelectedBinding.lnAddressRow.setOnClickListener(new View.OnClickListener() {
@@ -193,6 +215,8 @@ public class PackageBundlingAdapter extends LoadMoreRecyclerAdapter<PackageBundl
         }
 
         private void bindLiveFeedForPackagedBundle(final RowBundledPackagetNoSelectedBinding binding) {
+            if (getAdapterPosition() == RecyclerView.NO_POSITION)
+                return;
             final PackageDetail model = mList.get(getAdapterPosition());
             final int liveFeedCounter = model.live_lable_arr != null ? model.live_lable_arr.size() : 0;
             final Map<String, Integer> mOfferIndexMap = new HashMap<>();
@@ -237,6 +261,8 @@ public class PackageBundlingAdapter extends LoadMoreRecyclerAdapter<PackageBundl
         }
 
         private void bindLiveFeedForPackagedBundle(final RowBundledPackageSelectedBinding binding) {
+            if (getAdapterPosition() == RecyclerView.NO_POSITION)
+                return;
             final PackageDetail model = mList.get(getAdapterPosition());
             final int liveFeedCounter = model.live_lable_arr != null ? model.live_lable_arr.size() : 0;
             final Map<String, Integer> mOfferIndexMap = new HashMap<>();
@@ -320,6 +346,7 @@ public class PackageBundlingAdapter extends LoadMoreRecyclerAdapter<PackageBundl
     }
 
     public void addPakcageList(List<PackageDetail> list) {
+        mList.clear();
         mList.addAll(list);
         notifyDataSetChanged();
     }

@@ -43,7 +43,7 @@ public class PackageBundlingFragment extends BaseFragment {
     private PackageCustomizationActivity mPackageCustomizationActivity;
     private FragmentPackageBundlingBinding mBinding;
     private boolean isVerified = false;
-    private PackageBundlingAdapter mPackageAdapter;
+    private PackageBundlingAdapter packageBundlingAdapter;
 
     public static PackageBundlingFragment newInstance() {
         return new PackageBundlingFragment();
@@ -82,28 +82,17 @@ public class PackageBundlingFragment extends BaseFragment {
         } else {
             mPackageCustomizationActivity.setTaskState(PackageCustomizationActivity.STEP_TWO_UNVERIFIED);
         }
-        mPackageAdapter = new PackageBundlingAdapter(new PackageBundlingAdapter.PackageItemClickListener() {
-            @Override
-            public void onPackageItemClick(int position, PackageDetail packageModel) {
-                mPackageCustomizationActivity.mSelectedPackageModel = packageModel;
-                mPackageCustomizationActivity.gotoStep(PackageCustomizationActivity.STAGE_1);
-                mPackageCustomizationActivity.loadAnotherPackage();
-            }
 
-            @Override
-            public void onUpdateOfAddress(int position, AddressModel addressModel) {
-                verifyAddressForCity(position, addressModel);
-            }
-        });
-        mPackageAdapter.addPakcageList(getList());
         mBinding.rvBundlePackages.setLayoutManager(new LinearLayoutManager(
                 mContext
                 , LinearLayoutManager.VERTICAL
                 , false
         ));
-        mBinding.rvBundlePackages.setAdapter(mPackageAdapter);
+        mBinding.rvBundlePackages.setAdapter(packageBundlingAdapter);
 
-
+        if (packageBundlingAdapter !=null){
+            packageBundlingAdapter.addPakcageList(getList());
+        }
         // Hide the post task button
 //        mPackageCustomizationActivity.showPostTaskButton(false, false);
     }
@@ -120,6 +109,23 @@ public class PackageBundlingFragment extends BaseFragment {
     @Override
     public void initiateUI() {
         mBinding.rvBundlePackages.setNestedScrollingEnabled(false);
+
+
+        // set adapter
+        packageBundlingAdapter = new PackageBundlingAdapter(new PackageBundlingAdapter.PackageItemClickListener() {
+            @Override
+            public void onPackageItemClick(int position, PackageDetail packageModel) {
+                mPackageCustomizationActivity.mSelectedPackageModel = packageModel;
+                mPackageCustomizationActivity.gotoStep(PackageCustomizationActivity.STAGE_1);
+                mPackageCustomizationActivity.loadAnotherPackage();
+            }
+
+            @Override
+            public void onUpdateOfAddress(int position, AddressModel addressModel) {
+                verifyAddressForCity(position, addressModel);
+            }
+        });
+        packageBundlingAdapter.addPakcageList(getList());
     }
 
     private List<PackageDetail> getList() {
@@ -215,8 +221,8 @@ public class PackageBundlingFragment extends BaseFragment {
                                 if (isPurchased.equalsIgnoreCase(Utility.BOOLEAN.YES)) {
                                     Utility.showToast(mPackageCustomizationActivity, getString(R.string.validation_message_already_purchased_package_for_this_address));
                                 } else {
-                                    mPackageAdapter.getList().get(adapterPosition).mSelectedAddressList.add(model);
-                                    mPackageAdapter.notifyItemChanged(adapterPosition);
+                                    packageBundlingAdapter.getList().get(adapterPosition).mSelectedAddressList.add(model);
+                                    packageBundlingAdapter.notifyItemChanged(adapterPosition);
                                 }
                             } else {
                                 Utility.showToast(mPackageCustomizationActivity, getString(R.string.validation_message_cheep_care_address, mPackageCustomizationActivity.mCityDetail.cityName));

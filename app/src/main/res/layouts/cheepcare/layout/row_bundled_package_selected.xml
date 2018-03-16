@@ -33,7 +33,7 @@
                 android:paddingStart="@dimen/scale_16dp">
 
                 <ImageView
-                    android:id="@+id/iv_is_address_selected"
+                    android:id="@+id/iv_package_selected"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/scale_30dp"
@@ -46,7 +46,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/scale_16dp"
                     android:layout_marginTop="@dimen/scale_16dp"
-                    android:layout_toRightOf="@id/iv_is_address_selected"
+                    android:layout_toRightOf="@id/iv_package_selected"
                     android:orientation="vertical">
 
                     <LinearLayout
@@ -152,7 +152,7 @@
                     android:layout_below="@+id/lnTop"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="@dimen/scale_15dp"
-                    android:layout_toRightOf="@id/iv_is_address_selected"
+                    android:layout_toRightOf="@id/iv_package_selected"
                     >
 
                     <com.cheep.custom_view.CFTextViewRegular
