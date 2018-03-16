@@ -351,6 +351,11 @@ public class PackageBundlingAdapter extends RecyclerView.Adapter<PackageBundling
         notifyDataSetChanged();
     }
 
+    public void removeList() {
+        mList.clear();
+        notifyDataSetChanged();
+    }
+
     private void showDropDownMenu(final View view, final int adapterPosition) {
         Log.i(TAG, "showDropDownMenu: ");
         final View mFilterPopupWindow = View.inflate(view.getContext(), R.layout.layout_address_drop_down, null);
@@ -406,8 +411,6 @@ public class PackageBundlingAdapter extends RecyclerView.Adapter<PackageBundling
 
 
                 mPopupWindow.dismiss();
-
-
             }
 
             @Override
@@ -433,6 +436,5 @@ public class PackageBundlingAdapter extends RecyclerView.Adapter<PackageBundling
             mPopupWindow.showAsDropDown(view, 0, -view.getHeight());
         }
     }
-
 
 }

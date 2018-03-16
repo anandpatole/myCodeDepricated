@@ -73,7 +73,13 @@ public class PackageBundlingFragment extends BaseFragment {
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         Log.d(TAG, "setUserVisibleHint() called with: isVisibleToUser = [" + isVisibleToUser + "]");
+        if (packageBundlingAdapter != null)
+            Log.d(TAG, "setUserVisibleHint() called with: isVisibleToUser = [" + isVisibleToUser + packageBundlingAdapter.getList().size() + "]");
+
         if (!isVisibleToUser || mPackageCustomizationActivity == null) {
+            if (packageBundlingAdapter != null) {
+                packageBundlingAdapter.removeList();
+            }
             return;
         }
 
@@ -83,14 +89,7 @@ public class PackageBundlingFragment extends BaseFragment {
             mPackageCustomizationActivity.setTaskState(PackageCustomizationActivity.STEP_TWO_UNVERIFIED);
         }
 
-        mBinding.rvBundlePackages.setLayoutManager(new LinearLayoutManager(
-                mContext
-                , LinearLayoutManager.VERTICAL
-                , false
-        ));
-        mBinding.rvBundlePackages.setAdapter(packageBundlingAdapter);
-
-        if (packageBundlingAdapter !=null){
+        if (packageBundlingAdapter != null) {
             packageBundlingAdapter.addPakcageList(getList());
         }
         // Hide the post task button
@@ -108,8 +107,14 @@ public class PackageBundlingFragment extends BaseFragment {
 
     @Override
     public void initiateUI() {
+        Log.d(TAG, "initiateUI() called");
         mBinding.rvBundlePackages.setNestedScrollingEnabled(false);
 
+        mBinding.rvBundlePackages.setLayoutManager(new LinearLayoutManager(
+                mContext
+                , LinearLayoutManager.VERTICAL
+                , false
+        ));
 
         // set adapter
         packageBundlingAdapter = new PackageBundlingAdapter(new PackageBundlingAdapter.PackageItemClickListener() {
@@ -125,7 +130,8 @@ public class PackageBundlingFragment extends BaseFragment {
                 verifyAddressForCity(position, addressModel);
             }
         });
-        packageBundlingAdapter.addPakcageList(getList());
+        mBinding.rvBundlePackages.setAdapter(packageBundlingAdapter);
+//        packageBundlingAdapter.addPakcageList(getList());
     }
 
     private List<PackageDetail> getList() {

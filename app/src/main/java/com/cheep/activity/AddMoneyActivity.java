@@ -309,7 +309,7 @@ public class AddMoneyActivity extends BaseAppCompatActivity {
         mActivitySendOtpBinding.webView.getSettings().setJavaScriptEnabled(true);
         mActivitySendOtpBinding.webView.postUrl(NetworkUtility.PAYTM.WALLET_APIS.ADD_MONEY, postData.getBytes());
 
-        // Show the webview
+        // Show the webView
         mActivitySendOtpBinding.svMainLayout.setVisibility(View.GONE);
         mActivitySendOtpBinding.webView.setVisibility(View.VISIBLE);
     }
