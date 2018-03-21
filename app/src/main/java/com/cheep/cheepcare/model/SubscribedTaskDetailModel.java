@@ -3,7 +3,7 @@ package com.cheep.cheepcare.model;
 import com.cheep.model.AddressModel;
 import com.cheep.model.JobCategoryModel;
 import com.cheep.model.SubServiceDetailModel;
-import com.cheep.strategicpartner.model.MediaModel;
+import com.cheep.model.MediaModel;
 import com.cheep.utils.Utility;
 
 import java.util.ArrayList;

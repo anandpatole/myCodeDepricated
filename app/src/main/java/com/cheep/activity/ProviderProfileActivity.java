@@ -872,7 +872,7 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
                         mActivityProviderProfileBinding.imgReport.setImageResource(reportAbuse ? R.drawable.icon_flag_red : R.drawable.icon_flag);
 
                         Utility.showRating(providerModel.rating, mActivityProviderProfileBinding.ratingBar);
-                        if (getIntent().hasExtra(NetworkUtility.TAGS.TASK_ID) == true) {
+                        if (getIntent().hasExtra(NetworkUtility.TAGS.TASK_ID)) {
                             callTaskDetailWS(taskId, providerID);
                         } else {
                             setData();
@@ -897,7 +897,7 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
                         finish();
                         break;
                 }
-            } catch (JSONException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
                 mCallSPListWSErrorListener.onErrorResponse(new VolleyError(e.getMessage()));
             }

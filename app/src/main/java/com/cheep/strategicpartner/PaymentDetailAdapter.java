@@ -7,8 +7,8 @@ import android.view.ViewGroup;
 
 import com.cheep.R;
 import com.cheep.databinding.RowPaymentSummaryBinding;
-import com.cheep.strategicpartner.model.AllSubSubCat;
-import com.cheep.strategicpartner.model.StrategicPartnerServiceModel;
+import com.cheep.model.SubServiceDetailModel;
+import com.cheep.strategicpartner.model.SubSubCatModel;
 import com.cheep.utils.Utility;
 
 import java.util.ArrayList;
@@ -22,9 +22,9 @@ import java.util.List;
  */
 
 class PaymentDetailAdapter extends RecyclerView.Adapter<PaymentDetailAdapter.MyViewHolder> {
-    private ArrayList<StrategicPartnerServiceModel> mList;
+    private ArrayList<SubServiceDetailModel> mList;
 
-    PaymentDetailAdapter(ArrayList<StrategicPartnerServiceModel> mList) {
+    PaymentDetailAdapter(ArrayList<SubServiceDetailModel> mList) {
         this.mList = mList;
     }
 
@@ -43,15 +43,15 @@ class PaymentDetailAdapter extends RecyclerView.Adapter<PaymentDetailAdapter.MyV
         StringBuilder subscription = new StringBuilder("");
 
         // calculate selected sub services amount and set total
-        List<AllSubSubCat> allSubSubCats = mList.get(position).allSubSubCats;
-        for (int i = 0; i < allSubSubCats.size(); i++) {
-            AllSubSubCat allSubSubCat = allSubSubCats.get(i);
+        List<SubSubCatModel> subSubCatModels = mList.get(position).subSubCatModels;
+        for (int i = 0; i < subSubCatModels.size(); i++) {
+            SubSubCatModel subSubCatModel = subSubCatModels.get(i);
             if (subscription.length() == 0)
-                subscription.append(allSubSubCat.subSubCatName);
+                subscription.append(subSubCatModel.subSubCatName);
             else
-                subscription.append(",").append(allSubSubCat.subSubCatName);
+                subscription.append(",").append(subSubCatModel.subSubCatName);
             try {
-                total += Double.parseDouble(allSubSubCat.price);
+                total += Double.parseDouble(subSubCatModel.price);
             } catch (NumberFormatException e) {
                 total += 0;
             }

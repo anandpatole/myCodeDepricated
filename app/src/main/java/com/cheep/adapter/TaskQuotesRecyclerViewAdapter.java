@@ -165,13 +165,13 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
         }
 
         //low price-high rating
-        if (provider.low_price != null && provider.low_price.equals("1")) {
+        if (provider.low_price.equals("1")) {
             holder.tvBanner.setVisibility(View.VISIBLE);
             holder.itemView.setBackgroundResource(R.color.cheepest_bg_color);
             holder.tvBanner.setText(mContext.getString(R.string.label_cheepest_strip));
             holder.tvBanner.setCompoundDrawablesWithIntrinsicBounds(R.drawable.icon_cheapest_quote, 0, 0, 0);
             holder.tvBanner.setTextColor(ContextCompat.getColor(holder.tvBanner.getContext(), R.color.cheepest_highlighted_text_color));
-        } else if (provider.high_rating != null && provider.high_rating.equals("1")) {
+        } else if ("1".equals(provider.high_rating)) {
             holder.tvBanner.setVisibility(View.VISIBLE);
             holder.itemView.setBackgroundResource(R.color.highest_rated_bg_color);
             holder.tvBanner.setText(mContext.getString(R.string.label_highest_rated_strip));
@@ -562,26 +562,26 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
 
         private void initViews(View itemView) {
             mView = itemView;
-            tvBanner = (TextView) itemView.findViewById(R.id.tvBanner);
-            tvName = (TextView) itemView.findViewById(R.id.tvName);
-            tvLocation = (TextView) itemView.findViewById(R.id.tvLocation);
-            tvDistance = (TextView) itemView.findViewById(R.id.tvDistance);
-            tvDescription = (CFTextViewRegular) itemView.findViewById(R.id.tvDescription);
-            tvOffer = (TextView) itemView.findViewById(R.id.tvOffer);
-            tvHappyHomes = (TextView) itemView.findViewById(R.id.tvHappyHomes);
-            tvDiscount = (TextView) itemView.findViewById(R.id.tvDiscount);
-            tvPrice = (TextView) itemView.findViewById(R.id.tvPrice);
-            tvExperience = (TextView) itemView.findViewById(R.id.tvExperience);
-            ivBadge = (ImageView) itemView.findViewById(R.id.ivBadge);
-            ivAvatar = (ImageView) itemView.findViewById(R.id.ivAvatar);
+            tvBanner = itemView.findViewById(R.id.tvBanner);
+            tvName = itemView.findViewById(R.id.tvName);
+            tvLocation = itemView.findViewById(R.id.tvLocation);
+            tvDistance = itemView.findViewById(R.id.tvDistance);
+            tvDescription = itemView.findViewById(R.id.tvDescription);
+            tvOffer = itemView.findViewById(R.id.tvOffer);
+            tvHappyHomes = itemView.findViewById(R.id.tvHappyHomes);
+            tvDiscount = itemView.findViewById(R.id.tvDiscount);
+            tvPrice = itemView.findViewById(R.id.tvPrice);
+            tvExperience = itemView.findViewById(R.id.tvExperience);
+            ivBadge = itemView.findViewById(R.id.ivBadge);
+            ivAvatar = itemView.findViewById(R.id.ivAvatar);
 //            ivChat = (ImageView) itemView.findViewById(R.id.ivChat);
-            ivLiveAnimated = (ImageView) itemView.findViewById(R.id.ivLiveAnimated);
-            ivHomeAnimated = (ImageView) itemView.findViewById(R.id.ivHomeAnimated);
-            ivFavoriteQuote = (ImageView) itemView.findViewById(R.id.ivFavoriteQuote);
-            ratingBar = (RatingBar) itemView.findViewById(R.id.rating_bar);
+            ivLiveAnimated = itemView.findViewById(R.id.ivLiveAnimated);
+            ivHomeAnimated = itemView.findViewById(R.id.ivHomeAnimated);
+            ivFavoriteQuote = itemView.findViewById(R.id.ivFavoriteQuote);
+            ratingBar = itemView.findViewById(R.id.rating_bar);
 //            imgCall = (ImageView) itemView.findViewById(R.id.img_call);
-            imgChat = (ImageView) itemView.findViewById(R.id.img_chat);
-            mTvUnreadChatCount = (TextView) itemView.findViewById(R.id.tv_chat_unread_count);
+            imgChat = itemView.findViewById(R.id.img_chat);
+            mTvUnreadChatCount = itemView.findViewById(R.id.tv_chat_unread_count);
 
         }
     }

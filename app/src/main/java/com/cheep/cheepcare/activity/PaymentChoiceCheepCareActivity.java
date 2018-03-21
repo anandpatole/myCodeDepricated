@@ -316,17 +316,15 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
         subscribedTaskDetailModel.paymentLog = paymentLog;
         subscribedTaskDetailModel.paybleAmount = String.valueOf(payableAmount);
 
-        WebCallClass.createTask(mContext, subscribedTaskDetailModel, mCommonResponseListener, new WebCallClass.SuccessOfTaskCreationResponseListener() {
+        WebCallClass.createCheepCareTask(mContext, subscribedTaskDetailModel, mCommonResponseListener, new WebCallClass.SuccessOfTaskCreationResponseListener() {
             @Override
-            public void onSuccessOfTaskCreate() {
-                hideProgressDialog();
+            public void onSuccessOfTaskCreate(String startdateTimeTimeStamp) {
                 LogUtils.LOGE(TAG, "onSuccessOfTaskCreate: ");
-                final String message;
+                hideProgressDialog();
+                subscribedTaskDetailModel.startDateTime = startdateTimeTimeStamp;
+                String datetime = "";
                 if (!TextUtils.isEmpty(subscribedTaskDetailModel.startDateTime)) {
-                    String datetime = CalendarUtility.getDate(Long.parseLong(subscribedTaskDetailModel.startDateTime), Utility.DATE_FORMAT_DD_MMMM) + getString(R.string.label_between) + CalendarUtility.get2HourTimeSlots(subscribedTaskDetailModel.startDateTime);
-                    message = getString(R.string.msg_task_confirmed_cheep_care, datetime, "3");
-                } else {
-                    message = getString(R.string.msg_task_confirmed_cheep_care_no_time_specified);
+                    datetime = CalendarUtility.getDate(Long.parseLong(subscribedTaskDetailModel.startDateTime), Utility.DATE_FORMAT_DD_MMMM) + getString(R.string.label_between) + CalendarUtility.get2HourTimeSlots(subscribedTaskDetailModel.startDateTime);
                 }
 
 
@@ -343,7 +341,7 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
                     public void rescheduleTask() {
 
                     }
-                }, message);
+                }, false, datetime);
                 taskConfirmedCCInstaBookDialog.show(getSupportFragmentManager(), TaskConfirmedCCInstaBookDialog.TAG);
             }
         });

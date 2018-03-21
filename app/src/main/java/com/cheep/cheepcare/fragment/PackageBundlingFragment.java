@@ -83,12 +83,6 @@ public class PackageBundlingFragment extends BaseFragment {
             mPackageCustomizationActivity.setTaskState(PackageCustomizationActivity.STEP_TWO_UNVERIFIED);
         }
 
-        mBinding.rvBundlePackages.setLayoutManager(new LinearLayoutManager(
-                mContext
-                , LinearLayoutManager.VERTICAL
-                , false
-        ));
-        mBinding.rvBundlePackages.setAdapter(packageBundlingAdapter);
 
         if (packageBundlingAdapter !=null){
             packageBundlingAdapter.addPakcageList(getList());
@@ -109,6 +103,12 @@ public class PackageBundlingFragment extends BaseFragment {
     @Override
     public void initiateUI() {
         mBinding.rvBundlePackages.setNestedScrollingEnabled(false);
+        mBinding.rvBundlePackages.setLayoutManager(new LinearLayoutManager(
+                mContext
+                , LinearLayoutManager.VERTICAL
+                , false
+        ));
+        mBinding.rvBundlePackages.setAdapter(packageBundlingAdapter);
 
 
         // set adapter

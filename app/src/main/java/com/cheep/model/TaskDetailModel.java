@@ -2,10 +2,7 @@ package com.cheep.model;
 
 import android.support.annotation.Keep;
 
-import com.cheep.strategicpartner.model.MediaModel;
 import com.cheep.strategicpartner.model.QueAnsModel;
-import com.cheep.strategicpartner.model.ServiceTaskDetailModel;
-import com.cheep.strategicpartner.model.StrategicPartnerServiceModel;
 import com.cheep.utils.Utility;
 import com.google.gson.annotations.SerializedName;
 
@@ -112,12 +109,13 @@ public class TaskDetailModel {
     @SerializedName("quoted_sp_list")
     public ArrayList<ProviderModel> mQuotedSPList;
 
-    @SerializedName("task_sub_sub_category")
-    public ArrayList<ServiceTaskDetailModel> subSubCategoryList;
+//    @SerializedName("task_sub_sub_category")
+//    public ArrayList<ServiceTaskDetailModel> subSubCategoryList;
 
 
-    @SerializedName("task_selected_sub_category")
-    public ArrayList<StrategicPartnerServiceModel> taskSelectedSubCategoryList;
+//    @SerializedName("task_selected_sub_category")
+//    public ArrayList<StrategicPartnerServiceModel> taskSelectedSubCategoryList;
+
     @SerializedName("media_detail")
     public ArrayList<MediaModel> mMediaModelList;
     @SerializedName("question_detail")

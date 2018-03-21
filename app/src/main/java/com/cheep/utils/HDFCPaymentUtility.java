@@ -48,8 +48,8 @@ public class HDFCPaymentUtility {
 
     public static Map<String, String> getPaymentTransactionFieldsForNormalTask(String fcmToken,
                                                                                UserDetails userDetails,
-                                                                               TaskDetailModel taskDetailModel,
-                                                                               ProviderModel providerModel, boolean isPayNow) {
+                                                                               TaskDetailModel taskDetailModel, String payableAmount
+            , ProviderModel providerModel, boolean isPayNow) {
 
         Map<String, String> mParams = new HashMap<>();
 
@@ -61,7 +61,8 @@ public class HDFCPaymentUtility {
         mParams.put(EMAIL, userDetails.email);
         mParams.put(FIRSTNAME, userDetails.userName);
 
-        mParams.put(AMOUNT, isPayNow ? providerModel.quotePrice : taskDetailModel.taskTotalPendingAmount);
+//        mParams.put(AMOUNT, isPayNow ? providerModel.quotePrice : taskDetailModel.taskTotalPendingAmount);
+        mParams.put(AMOUNT, payableAmount);
 
 
         mParams.put(PRODUCTINFO, taskDetailModel.taskId);
@@ -73,7 +74,12 @@ public class HDFCPaymentUtility {
             mParams.put(TASK_ID, Utility.EMPTY_STRING);
             mParams.put(PRODUCTINFO, userDetails.userID);
         }
-        mParams.put(UDF2, providerModel.providerId);
+        if (providerModel != null) {
+            mParams.put(UDF2, providerModel.providerId);
+        }
+        else{
+            mParams.put(UDF2, Utility.EMPTY_STRING);
+        }
         mParams.put(UDF1, "Task Start Date : " + taskDetailModel.taskStartdate);
         mParams.put(UDF3, NetworkUtility.TAGS.PLATFORMTYPE.ANDROID);
         mParams.put(UDF4, Utility.EMPTY_STRING);

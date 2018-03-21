@@ -71,6 +71,7 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
     private boolean isInstaBooking = false;
     //    private String actualQuotePrice;
     private AddressModel mSelectedAddressModelForInsta;
+
     private double usedWalletBalance = 0;
 
     private String referralBalance;
@@ -540,7 +541,7 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
             setTaskState(STEP_THREE_VERIFIED);
             taskDetailModel.usedWalletAmount = String.valueOf(usedWalletBalance);
 
-            PaymentChoiceActivity.newInstance(mContext, taskDetailModel, providerModel, mSelectedAddressModelForInsta);
+            PaymentChoiceActivity.newInstance(mContext, taskDetailModel, providerModel, providerModel.spWithoutGstQuotePrice, providerModel.quotePrice, mSelectedAddressModelForInsta);
 
         }
     };
@@ -553,7 +554,8 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
 
             taskDetailModel.usedWalletAmount = String.valueOf(usedWalletBalance);
             if (isInstaBooking) {
-                callCreateInstaBookingTaskWS();
+                LogUtils.LOGE(TAG, "onClick: callCreateInstaBookingTaskWS");
+//                callCreateInstaBookingTaskWS();
             } else {
                 callBookProForNormalTaskWS();
             }
@@ -770,7 +772,7 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
                 addressId = 0;
             }
             if (addressId <= 0) {
-                NetworkUtility.addGuestAddressParams(mTaskCreationParams, mSelectedAddressModelForInsta);
+                NetworkUtility.addGuestAddressParams(mParams, mSelectedAddressModelForInsta);
 
             } else {
                 mParams.put(NetworkUtility.TAGS.ADDRESS_ID, addressId);
@@ -1149,6 +1151,22 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
             mParams.put(NetworkUtility.TAGS.CHEEPCODE, Utility.EMPTY_STRING);
             mParams.put(NetworkUtility.TAGS.PROMOCODE_PRICE, Utility.ZERO_STRING);
         }
+        mTaskCreationParams = new HashMap<>();
+        mTaskCreationParams.put(NetworkUtility.TAGS.SP_USER_ID, providerModel.providerId);
+        mTaskCreationParams.put(NetworkUtility.TAGS.TASK_ID, taskDetailModel.taskId);
+        mTaskCreationParams.put(NetworkUtility.TAGS.IS_REFER_CODE, taskDetailModel.isReferCode);
+        mTaskCreationParams.put(NetworkUtility.TAGS.PAYABLE_AMOUNT, providerModel.quotePrice);
+        mTaskCreationParams.put(NetworkUtility.TAGS.USED_WALLET_BALANCE, taskDetailModel.usedWalletAmount);
+        LogUtils.LOGE(TAG, "callBookProForNormalTaskWS: quote amount" + providerModel.spWithoutGstQuotePrice);
+        mTaskCreationParams.put(NetworkUtility.TAGS.QUOTE_AMOUNT, providerModel.spWithoutGstQuotePrice);
+
+        if (!TextUtils.isEmpty(taskDetailModel.cheepCode)) {
+            mTaskCreationParams.put(NetworkUtility.TAGS.CHEEPCODE, taskDetailModel.cheepCode);
+            mTaskCreationParams.put(NetworkUtility.TAGS.PROMOCODE_PRICE, taskDetailModel.taskDiscountAmount);
+        } else {
+            mTaskCreationParams.put(NetworkUtility.TAGS.CHEEPCODE, Utility.EMPTY_STRING);
+            mTaskCreationParams.put(NetworkUtility.TAGS.PROMOCODE_PRICE, Utility.ZERO_STRING);
+        }
 
         // Url is based on condition if address id is greater then 0 then it means we need to update the existing address
         VolleyNetworkRequest mVolleyNetworkRequestForSPList = new VolleyNetworkRequest(NetworkUtility.WS.BOOK_PRO_FOR_NORMAL_TASK
@@ -1161,6 +1179,7 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
     }
 
 
+    private Map<String, Object> mTaskCreationParams;
     Response.Listener mCallBookProForNormalTaskWSResponseListener = new Response.Listener() {
         @Override
         public void onResponse(Object response) {
@@ -1320,7 +1339,7 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
 
     //        TASK_CREATE_INSTA_BOOKING
 
-    private Map<String, Object> mTaskCreationParams;
+   /* private Map<String, Object> mTaskCreationParams;
 
     private void callCreateInstaBookingTaskWS() {
 
@@ -1441,7 +1460,7 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
                                 AppsFlyerLib.getInstance().trackEvent(mContext, NetworkUtility.TAGS.APPSFLYER_CUSTOM_TRACK_EVENTS.COUPON_DUNIA_TASK_DEBUG, mTaskCreationParams);
                             else
                                 AppsFlyerLib.getInstance().trackEvent(mContext, NetworkUtility.TAGS.APPSFLYER_CUSTOM_TRACK_EVENTS.COUPON_DUNIA_TASK_LIVE, mTaskCreationParams);
-                        Utility.onSuccessfulInstaBookingTaskCompletion(PaymentDetailsActivity.this, jsonObject, providerModel);
+                        Utility.onSuccessfulInstaBookingTaskCompletion(PaymentDetailsActivity.this, jsonObject);
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
                         // Show Toast
@@ -1465,7 +1484,7 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
             }
 
         }
-    };
+    };*/
 
 
     // check is task is from insta booking or not

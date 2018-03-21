@@ -7,6 +7,8 @@ import android.util.Log;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.appsflyer.AppsFlyerLib;
+import com.cheep.BuildConfig;
 import com.cheep.R;
 import com.cheep.cheepcare.model.AdminSettingModel;
 import com.cheep.cheepcare.model.CityDetail;
@@ -17,6 +19,7 @@ import com.cheep.model.AddressModel;
 import com.cheep.model.JobCategoryModel;
 import com.cheep.model.NotificationModel;
 import com.cheep.model.SubServiceDetailModel;
+import com.cheep.model.TaskDetailModel;
 import com.cheep.model.UserDetails;
 import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
@@ -37,6 +40,7 @@ import static com.cheep.network.NetworkUtility.TAGS.CARE_CITY_SLUG;
 import static com.cheep.network.NetworkUtility.TAGS.CARE_PACKAGE_ID;
 import static com.cheep.network.NetworkUtility.TAGS.DATA;
 import static com.cheep.network.NetworkUtility.TAGS.FINAL_EXTRA_CHARGE;
+import static com.cheep.network.NetworkUtility.TAGS.START_DATETIME;
 
 /**
  * Created by bhavesh on 24/1/18.
@@ -245,12 +249,12 @@ public class WebCallClass {
     //////////////////////////Create task Cheep care call start//////////////////////////
 
     public interface SuccessOfTaskCreationResponseListener {
-        void onSuccessOfTaskCreate();
+        void onSuccessOfTaskCreate(String startdateTimeTimeStamp);
     }
 
-    public static void createTask(final Context mContext, SubscribedTaskDetailModel subscribedTaskDetailModel,
-                                  final CommonResponseListener commonListener,
-                                  final SuccessOfTaskCreationResponseListener successListener) {
+    public static void createCheepCareTask(final Context mContext, SubscribedTaskDetailModel subscribedTaskDetailModel,
+                                           final CommonResponseListener commonListener,
+                                           final SuccessOfTaskCreationResponseListener successListener) {
 
         Map<String, String> mHeaderParams = new HashMap<>();
         mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
@@ -277,7 +281,8 @@ public class WebCallClass {
                     String error_message;
                     switch (statusCode) {
                         case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
-                            successListener.onSuccessOfTaskCreate();
+                            String startdateTimeTimeStamp = jsonObject.optJSONObject(DATA).optString(START_DATETIME);
+                            successListener.onSuccessOfTaskCreate(startdateTimeTimeStamp);
                             break;
                         case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
                             // Show Toast
@@ -773,6 +778,157 @@ public class WebCallClass {
 
         Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest, NetworkUtility.WS.GET_EXTRA_CHARGE_AFTER_EXCEED_LIMIT);
     }
+    ////////////////////////// getExtraChargeAfterExceedLimit call end     //////////////////////////]
+
+
+    ////////////////////////// GgetExtraChargeAfterExceedLimit call start     //////////////////////////
+    public interface InstaBookTaskCreationListener {
+
+        void successOfInstaBookTaskCreation();
+    }
+
+    public static void createInstaBookingTask(final Context mContext, final TaskDetailModel taskDetailModel, AddressModel mSelectedAddressModel, String quoteAmount, String payableAmount, String paymentMethod, String paymentLog, final CommonResponseListener commonListener
+            , final InstaBookTaskCreationListener successListener) {
+        Map<String, Object> mTaskCreationParams = new HashMap<>();
+
+        final Response.ErrorListener errorListener = new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
+                commonListener.volleyError(error);
+            }
+        };
+
+        final Map<String, Object> finalMTaskCreationParams = mTaskCreationParams;
+        final Response.Listener responseListener = new Response.Listener() {
+            @Override
+            public void onResponse(Object response) {
+                Log.d(TAG, "onResponse() called with: response = [" + response + "]");
+                try {
+                    JSONObject jsonObject = new JSONObject(response.toString());
+                    int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
+
+                    String error_message;
+                    switch (statusCode) {
+                        case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
+                            LogUtils.LOGE(TAG, "onResponse:finalMTaskCreationParams " + finalMTaskCreationParams);
+                            AppsFlyerLib.getInstance().trackEvent(mContext, NetworkUtility.TAGS.APPSFLYER_CUSTOM_TRACK_EVENTS.TASK_CREATE, finalMTaskCreationParams);
+                            if (!TextUtils.isEmpty(taskDetailModel.cheepCode) && taskDetailModel.cheepCode.startsWith(Utility.COUPON_DUNIA_CODE_PREFIX))
+                                if (!BuildConfig.BUILD_TYPE.equalsIgnoreCase("release"))
+                                    AppsFlyerLib.getInstance().trackEvent(mContext, NetworkUtility.TAGS.APPSFLYER_CUSTOM_TRACK_EVENTS.COUPON_DUNIA_TASK_DEBUG, finalMTaskCreationParams);
+                                else
+                                    AppsFlyerLib.getInstance().trackEvent(mContext, NetworkUtility.TAGS.APPSFLYER_CUSTOM_TRACK_EVENTS.COUPON_DUNIA_TASK_LIVE, finalMTaskCreationParams);
+                            Utility.onSuccessfulInstaBookingTaskCompletion(mContext, jsonObject);
+                            successListener.successOfInstaBookTaskCreation();
+                            break;
+                        case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
+                            // Show Toast
+                            commonListener.showSpecificMessage(mContext.getString(R.string.label_something_went_wrong));
+                            break;
+                        case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
+                            error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
+                            // Show message
+                            commonListener.showSpecificMessage(error_message);
+                            break;
+                        case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
+                        case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
+                            //Logout and finish the current activity
+                            Utility.logout(mContext, true, statusCode);
+                            commonListener.forceLogout();
+                            break;
+                    }
+                } catch (JSONException e) {
+                    commonListener.showSpecificMessage(mContext.getString(R.string.label_something_went_wrong));
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        //Add Header parameters
+        Map<String, String> mHeaderParams = new HashMap<>();
+        mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
+        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().userID);
+
+        UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
+
+        //Add Params
+        Map<String, Object> mParams = new HashMap<>();
+        mParams.put(NetworkUtility.TAGS.TASK_DESC, taskDetailModel.taskDesc);
+        if (Integer.parseInt(mSelectedAddressModel.address_id) > 0) {
+            mParams.put(NetworkUtility.TAGS.ADDRESS_ID, mSelectedAddressModel.address_id);
+        } else {
+            // In case its negative then provide other address information
+            mParams = NetworkUtility.addGuestAddressParams(mParams, mSelectedAddressModel);
+
+        }
+        mParams.put(NetworkUtility.TAGS.CITY_ID, userDetails.CityID);
+        mParams.put(NetworkUtility.TAGS.CAT_ID, taskDetailModel.categoryModel.catId);
+        mParams.put(NetworkUtility.TAGS.START_DATETIME, taskDetailModel.taskStartdate);
+        String selectedServices = new Gson().toJson(taskDetailModel.subCatList);
+        mParams.put(NetworkUtility.TAGS.TASK_SUB_CATEGORIES, selectedServices);
+        mParams.put(NetworkUtility.TAGS.PAYMENT_STATUS, Utility.PAYMENT_STATUS.COMPLETED);
+
+        if (!TextUtils.isEmpty(taskDetailModel.cheepCode)) {
+            mParams.put(NetworkUtility.TAGS.CHEEPCODE, taskDetailModel.cheepCode);
+            mParams.put(NetworkUtility.TAGS.PROMOCODE_PRICE, taskDetailModel.taskDiscountAmount);
+        } else {
+            mParams.put(NetworkUtility.TAGS.CHEEPCODE, Utility.EMPTY_STRING);
+            mParams.put(NetworkUtility.TAGS.PROMOCODE_PRICE, Utility.ZERO_STRING);
+        }
+
+        mParams.put(NetworkUtility.TAGS.QUOTE_AMOUNT, quoteAmount);// this is total of selected sub categories price which are with gst
+        mParams.put(NetworkUtility.TAGS.PAYABLE_AMOUNT, payableAmount);
+        mParams.put(NetworkUtility.TAGS.IS_REFER_CODE, taskDetailModel.isReferCode);
+        mParams.put(NetworkUtility.TAGS.USED_WALLET_BALANCE, taskDetailModel.usedWalletAmount);
+        String media_file = Utility.getSelectedMediaJsonString(taskDetailModel.mMediaModelList);
+        mParams.put(NetworkUtility.TAGS.MEDIA_FILE, media_file);
+        mParams.put(NetworkUtility.TAGS.TASK_TYPE, Utility.TASK_TYPE.INSTA_BOOK);
+
+        mParams.put(NetworkUtility.TAGS.PAYMENT_LOG, paymentLog);
+        mParams.put(NetworkUtility.TAGS.PAYMENT_METHOD, paymentMethod);
+        mParams.put(NetworkUtility.TAGS.PAYMENT_STATUS, Utility.PAYMENT_STATUS.COMPLETED);
+
+        //noinspection unchecked
+        VolleyNetworkRequest mVolleyNetworkRequest = new VolleyNetworkRequest(NetworkUtility.WS.CREATE_TASK
+                , errorListener
+                , responseListener
+                , mHeaderParams
+                , mParams
+                , null);
+
+        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest, NetworkUtility.WS.CREATE_TASK);
+
+        mTaskCreationParams.put(NetworkUtility.TAGS.TASK_DESC, taskDetailModel.taskDesc);
+        if (Integer.parseInt(mSelectedAddressModel.address_id) > 0) {
+            mTaskCreationParams.put(NetworkUtility.TAGS.ADDRESS_ID, mSelectedAddressModel.address_id);
+        } else {
+            // In case its negative then provide other address information
+            mTaskCreationParams = NetworkUtility.addGuestAddressParams(mParams, mSelectedAddressModel);
+
+        }
+        mTaskCreationParams.put(NetworkUtility.TAGS.CITY_ID, userDetails.CityID);
+        mTaskCreationParams.put(NetworkUtility.TAGS.CAT_ID, taskDetailModel.categoryModel.catId);
+        mTaskCreationParams.put(NetworkUtility.TAGS.START_DATETIME, taskDetailModel.taskStartdate);
+        mTaskCreationParams.put(NetworkUtility.TAGS.TASK_SUB_CATEGORIES, selectedServices);
+
+        if (!TextUtils.isEmpty(taskDetailModel.cheepCode)) {
+            mTaskCreationParams.put(NetworkUtility.TAGS.CHEEPCODE, taskDetailModel.cheepCode);
+            mTaskCreationParams.put(NetworkUtility.TAGS.PROMOCODE_PRICE, taskDetailModel.taskDiscountAmount);
+        } else {
+            mTaskCreationParams.put(NetworkUtility.TAGS.CHEEPCODE, Utility.EMPTY_STRING);
+            mTaskCreationParams.put(NetworkUtility.TAGS.PROMOCODE_PRICE, Utility.ZERO_STRING);
+        }
+        mTaskCreationParams.put(NetworkUtility.TAGS.IS_REFER_CODE, taskDetailModel.isReferCode);
+        mTaskCreationParams.put(NetworkUtility.TAGS.QUOTE_AMOUNT, quoteAmount);
+        mTaskCreationParams.put(NetworkUtility.TAGS.PAYABLE_AMOUNT, payableAmount);
+        mTaskCreationParams.put(NetworkUtility.TAGS.TASK_TYPE, Utility.TASK_TYPE.INSTA_BOOK);
+        mTaskCreationParams.put(NetworkUtility.TAGS.MEDIA_FILE, media_file);
+        mTaskCreationParams.put(NetworkUtility.TAGS.USED_WALLET_BALANCE, taskDetailModel.usedWalletAmount);
+        mTaskCreationParams.put(NetworkUtility.TAGS.PAYMENT_LOG, paymentLog);
+        mTaskCreationParams.put(NetworkUtility.TAGS.PAYMENT_METHOD, paymentMethod);
+        mTaskCreationParams.put(NetworkUtility.TAGS.PAYMENT_STATUS, Utility.PAYMENT_STATUS.COMPLETED);
+    }
     ////////////////////////// getExtraChargeAfterExceedLimit call end     //////////////////////////
+
 
 }

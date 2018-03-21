@@ -36,8 +36,8 @@ import com.cheep.interfaces.TaskRowDataInteractionListener;
 import com.cheep.model.BannerImageModel;
 import com.cheep.model.JobCategoryModel;
 import com.cheep.model.MessageEvent;
+import com.cheep.model.SubServiceDetailModel;
 import com.cheep.model.TaskDetailModel;
-import com.cheep.strategicpartner.model.ServiceTaskDetailModel;
 import com.cheep.utils.CalendarUtility;
 import com.cheep.utils.GlideUtility;
 import com.cheep.utils.LoadMoreSwipeRecyclerAdapter;
@@ -146,6 +146,7 @@ public class TaskRecyclerViewAdapterNew extends LoadMoreSwipeRecyclerAdapter<Tas
         int viewType = getItemViewType(holder.getAdapterPosition());
         switch (viewType) {
             case VIEW_TYPE_UPCOMING: {
+
                 if (!TextUtils.isEmpty(model.taskStartdate)) {
                     superStartDateTimeCalendar.setTimeZone(SuperCalendar.SuperTimeZone.GMT.GMT);
                     superStartDateTimeCalendar.setTimeInMillis(Long.parseLong(model.taskStartdate));
@@ -155,8 +156,6 @@ public class TaskRecyclerViewAdapterNew extends LoadMoreSwipeRecyclerAdapter<Tas
                     holder.mUpcomingTaskBinding.tvTaskBookedDateTime.setText(mBookingDate);
 
                     holder.mUpcomingTaskBinding.tvTaskStartedTime.setText(CalendarUtility.getDateDifference(holder.mView.getContext(), superStartDateTimeCalendar.format(Utility.DATE_FORMAT_FULL_DATE), model.taskType));
-
-
                 } else {
                     final String mBookingDate = holder.mView.getContext().getString(R.string.format_task_book_date
                             , " " + " " + " ");
@@ -165,7 +164,14 @@ public class TaskRecyclerViewAdapterNew extends LoadMoreSwipeRecyclerAdapter<Tas
                 }
 
 
+                if (model.taskType.equalsIgnoreCase(Utility.TASK_TYPE.STRATEGIC)) {
+                    holder.mUpcomingTaskBinding.tvSubCategoryName.setText(getAllUniqueCategories(model.subCatList));
+                } else {
+                    setSubcategoryTitle(model, holder.mUpcomingTaskBinding.tvSubCategoryName);
+                }
                 holder.mUpcomingTaskBinding.tvDesc.setText(model.taskDesc);
+
+
                 final int liveFeedCounter = model.live_lable_arr != null ? model.live_lable_arr.size() : 0;
                 final Map<String, Integer> mOfferIndexMap = new HashMap<>();
                 if (liveFeedCounter > 0) {
@@ -209,16 +215,11 @@ public class TaskRecyclerViewAdapterNew extends LoadMoreSwipeRecyclerAdapter<Tas
                 holder.mUpcomingTaskBinding.gridImageView.clear();
                 holder.mUpcomingTaskBinding.gridImageView.createWithUrls(getURIListFromStringList(model.profile_img_arr));
 
-                if (model.taskType.equalsIgnoreCase(Utility.TASK_TYPE.STRATEGIC)) {
-                    holder.mUpcomingTaskBinding.tvSubCategoryName.setText(getAllUniqueCategories(model.subSubCategoryList));
-                } else {
-                    setSubcategoryTitle(model, holder.mUpcomingTaskBinding.tvSubCategoryName);
-                }
 
                 if (model.selectedProvider != null && !TextUtils.isEmpty(model.selectedProvider.providerId)) {
                     holder.mUpcomingTaskBinding.layoutIndividualProfile.setVisibility(View.VISIBLE);
                     holder.mUpcomingTaskBinding.layoutGroupProfile.setVisibility(View.GONE);
-                    holder.mUpcomingTaskBinding.layoutCheepCareProNotFound.setVisibility(View.GONE);
+                    holder.mUpcomingTaskBinding.layoutProNotFound.setVisibility(View.GONE);
 
                     holder.mUpcomingTaskBinding.imgFav.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -332,7 +333,7 @@ public class TaskRecyclerViewAdapterNew extends LoadMoreSwipeRecyclerAdapter<Tas
                     if (model.taskType.equalsIgnoreCase(Utility.TASK_TYPE.SUBSCRIBED)) {
                         holder.mUpcomingTaskBinding.layoutIndividualProfile.setVisibility(View.GONE);
                         holder.mUpcomingTaskBinding.layoutGroupProfile.setVisibility(View.GONE);
-                        holder.mUpcomingTaskBinding.layoutCheepCareProNotFound.setVisibility(View.VISIBLE);
+                        holder.mUpcomingTaskBinding.layoutProNotFound.setVisibility(View.VISIBLE);
 
                         holder.mUpcomingTaskBinding.tvViewTask.setVisibility(View.VISIBLE);
                         holder.mUpcomingTaskBinding.tvViewQuotes.setVisibility(View.GONE);
@@ -343,11 +344,24 @@ public class TaskRecyclerViewAdapterNew extends LoadMoreSwipeRecyclerAdapter<Tas
                         holder.mUpcomingTaskBinding.tvSubscribed.setVisibility(View.VISIBLE);
                         holder.mUpcomingTaskBinding.tvDiscount.setVisibility(View.GONE);
 
+                    } else if (model.taskType.equalsIgnoreCase(Utility.TASK_TYPE.INSTA_BOOK)) {
+                        holder.mUpcomingTaskBinding.layoutIndividualProfile.setVisibility(View.GONE);
+                        holder.mUpcomingTaskBinding.layoutGroupProfile.setVisibility(View.GONE);
+                        holder.mUpcomingTaskBinding.layoutProNotFound.setVisibility(View.VISIBLE);
+
+                        holder.mUpcomingTaskBinding.tvViewTask.setVisibility(View.VISIBLE);
+                        holder.mUpcomingTaskBinding.tvViewQuotes.setVisibility(View.GONE);
+
+                        holder.mUpcomingTaskBinding.tvTaskResponseStatus.setText(R.string.label_pro_will_be_assigned_shortly);
+                        holder.mUpcomingTaskBinding.textPaidPrice.setText(Utility.EMPTY_STRING);
+                        holder.mUpcomingTaskBinding.textPaidLabel.setText(Utility.EMPTY_STRING);
+                        holder.mUpcomingTaskBinding.tvSubscribed.setVisibility(View.GONE);
+                        holder.mUpcomingTaskBinding.tvDiscount.setVisibility(View.GONE);
                     } else {
 
                         holder.mUpcomingTaskBinding.layoutIndividualProfile.setVisibility(View.GONE);
                         holder.mUpcomingTaskBinding.layoutGroupProfile.setVisibility(View.VISIBLE);
-                        holder.mUpcomingTaskBinding.layoutCheepCareProNotFound.setVisibility(View.GONE);
+                        holder.mUpcomingTaskBinding.layoutProNotFound.setVisibility(View.GONE);
 
                         holder.mUpcomingTaskBinding.tvViewTask.setVisibility(View.GONE);
                         holder.mUpcomingTaskBinding.tvViewQuotes.setVisibility(View.VISIBLE);
@@ -615,7 +629,7 @@ public class TaskRecyclerViewAdapterNew extends LoadMoreSwipeRecyclerAdapter<Tas
                         SpannableString sName = new SpannableString(Utility.checkNonNullAndSet(model.categoryModel.catName));
                         SpannableString sPartner = null;
                         sPartner = new SpannableString(" " + context.getString(R.string.label_partner_pro) + " ");
-                        holder.mRowTaskBinding.textSubCategoryName.setText(getAllUniqueCategories(model.subSubCategoryList));
+                        holder.mRowTaskBinding.textSubCategoryName.setText(getAllUniqueCategories(model.subCatList));
                         sPartner.setSpan(new RoundedBackgroundSpan(ContextCompat.getColor(context, R.color.splash_gradient_end), ContextCompat.getColor(context, R.color.white), context.getResources().getDimension(R.dimen.text_size_12sp)), 0, sPartner.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
                         holder.mRowTaskBinding.textProviderName.setText(TextUtils.concat(sName, " ", sPartner));
                         holder.mRowTaskBinding.imgBadge.setVisibility(View.VISIBLE);
@@ -663,7 +677,7 @@ public class TaskRecyclerViewAdapterNew extends LoadMoreSwipeRecyclerAdapter<Tas
 //                    holder.mRowTaskBinding.textVerified.setVisibility(View.GONE);
 
                     if (model.taskType.equalsIgnoreCase(Utility.TASK_TYPE.STRATEGIC)) {
-                        holder.mRowTaskBinding.textSubCategoryName.setText(getAllUniqueCategories(model.subSubCategoryList));
+                        holder.mRowTaskBinding.textSubCategoryName.setText(getAllUniqueCategories(model.subCatList));
 
                     } else {
                         setSubcategoryTitle(model, holder.mRowTaskBinding.textSubCategoryName);
@@ -1048,23 +1062,21 @@ public class TaskRecyclerViewAdapterNew extends LoadMoreSwipeRecyclerAdapter<Tas
             } else {
                 mRowTaskGroupBinding = (RowTaskGroupBinding) binding;
             }
-
         }
-
     }
 
-    private String getAllUniqueCategories(List<ServiceTaskDetailModel> list) {
+    private String getAllUniqueCategories(List<SubServiceDetailModel> list) {
         if (list == null)
             return "";
         List<String> enemyIds = new ArrayList<>();
         StringBuilder sb = new StringBuilder();
-        for (ServiceTaskDetailModel entry : list) {
-            if (!enemyIds.contains(entry.subCategoryName)) {
-                enemyIds.add(entry.subCategoryName);
+        for (SubServiceDetailModel entry : list) {
+            if (!enemyIds.contains(entry.name)) {
+                enemyIds.add(entry.name);
                 if (sb.toString().isEmpty())
-                    sb.append(entry.subCategoryName);
+                    sb.append(entry.name);
                 else
-                    sb.append(", ").append(entry.subCategoryName);
+                    sb.append(", ").append(entry.name);
             }
         }
         return sb.toString();

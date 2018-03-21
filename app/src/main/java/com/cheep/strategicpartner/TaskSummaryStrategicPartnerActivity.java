@@ -31,6 +31,7 @@ import com.android.volley.VolleyError;
 import com.cheep.R;
 import com.cheep.activity.BaseAppCompatActivity;
 import com.cheep.activity.ChatActivity;
+import com.cheep.activity.MediaViewFullScreenActivity;
 import com.cheep.activity.TaskQuotesActivity;
 import com.cheep.custom_view.BottomAlertDialog;
 import com.cheep.databinding.ActivityTaskSummaryStrategicPartnerBinding;
@@ -40,13 +41,13 @@ import com.cheep.firebase.FirebaseUtils;
 import com.cheep.firebase.model.TaskChatModel;
 import com.cheep.model.MessageEvent;
 import com.cheep.model.ProviderModel;
+import com.cheep.model.SubServiceDetailModel;
 import com.cheep.model.TaskDetailModel;
 import com.cheep.model.UserDetails;
 import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
-import com.cheep.strategicpartner.model.AllSubSubCat;
-import com.cheep.strategicpartner.model.StrategicPartnerServiceModel;
+import com.cheep.strategicpartner.model.SubSubCatModel;
 import com.cheep.utils.GlideUtility;
 import com.cheep.utils.GsonUtility;
 import com.cheep.utils.HotlineHelper;
@@ -166,7 +167,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
         mActivityTaskSummaryBinding.frameSelectPicture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                StrategicPartnerMediaViewActiivty.getInstance(TaskSummaryStrategicPartnerActivity.this, mTaskDetailModel.mMediaModelList, true);
+                MediaViewFullScreenActivity.getInstance(TaskSummaryStrategicPartnerActivity.this, mTaskDetailModel.mMediaModelList, true);
             }
         });
 
@@ -318,13 +319,13 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
     }
 
     private void setSelectedServicesDetails() {
-        if (mTaskDetailModel.taskSelectedSubCategoryList != null && !mTaskDetailModel.taskSelectedSubCategoryList.isEmpty()) {
-            ArrayList<StrategicPartnerServiceModel> subSubCategoryList = mTaskDetailModel.taskSelectedSubCategoryList;
+        if (mTaskDetailModel.subCatList != null && !mTaskDetailModel.subCatList.isEmpty()) {
+            ArrayList<SubServiceDetailModel> subSubCategoryList = mTaskDetailModel.subCatList;
 
-            StrategicPartnerServiceModel serviceTaskDetailModel2 = subSubCategoryList.get(0);
+            SubServiceDetailModel serviceTaskDetailModel2 = subSubCategoryList.get(0);
             mActivityTaskSummaryBinding.textSubCategoryName.setText(serviceTaskDetailModel2.name);
             SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder();
-            for (AllSubSubCat subSubCat : serviceTaskDetailModel2.allSubSubCats) {
+            for (SubSubCatModel subSubCat : serviceTaskDetailModel2.subSubCatModels) {
                 if (spannableStringBuilder.length() == 0) {
                     spannableStringBuilder.append(getSpannableString(subSubCat.subSubCatName, ContextCompat.getColor(this, R.color.grey_varient_2), false));
                 } else {
@@ -336,7 +337,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
 
 //            HashMap<String, String> stringStringHashMap = new HashMap<>();
 //            for (int i = 1; i < subSubCategoryList.size(); i++) {
-//                AllSubSubCat subSubCat = subSubCategoryList.get(i);
+//                SubSubCatModel subSubCat = subSubCategoryList.get(i);
 //                if (!stringStringHashMap.containsKey(subSubCat.subCategoryName)) {
 //                    stringStringHashMap.put(subSubCat.subCategoryName, subSubCat.subSubCatName);
 //                } else {
@@ -346,14 +347,14 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
 
             mActivityTaskSummaryBinding.lnTaskDetails.removeAllViews();
 
-            for (int i = 1; i < mTaskDetailModel.taskSelectedSubCategoryList.size(); i++) {
-                StrategicPartnerServiceModel serviceTaskDetailModel1 = subSubCategoryList.get(i);
+            for (int i = 1; i < mTaskDetailModel.subCatList.size(); i++) {
+                SubServiceDetailModel subServiceDetailModel = subSubCategoryList.get(i);
                 View view = LayoutInflater.from(this).inflate(R.layout.layout_selected_service_task_summary, null);
                 TextView textSubCategoryName = view.findViewById(R.id.text_sub_category_name);
                 TextView textSubSubCategoryName = view.findViewById(R.id.text_sub_sub_category_name);
-                textSubCategoryName.setText(serviceTaskDetailModel1.name);
+                textSubCategoryName.setText(subServiceDetailModel.name);
                 SpannableStringBuilder spannableStringBuilder1 = new SpannableStringBuilder();
-                for (AllSubSubCat subSubCat : serviceTaskDetailModel1.allSubSubCats) {
+                for (SubSubCatModel subSubCat : subServiceDetailModel.subSubCatModels) {
                     if (spannableStringBuilder1.length() == 0) {
                         spannableStringBuilder1.append(getSpannableString(subSubCat.subSubCatName, ContextCompat.getColor(this, R.color.grey_varient_2), false));
                     } else {

@@ -4,8 +4,15 @@ import android.support.annotation.Keep;
 
 import com.google.gson.annotations.SerializedName;
 
+
+/* this model class is sub sub service under vlcc/hi care sub services
+ Hi care / VLCC -> category
+ cockroch control / waxing -> sub category
+ 1 bhk/ 2bhk / tip to toe / montly waxing -> sub sub category
+*/
+
 @Keep
-public class AllSubSubCat {
+public class SubSubCatModel {
 
     @SerializedName("sub_sub_cat_name")
     public String subSubCatName;

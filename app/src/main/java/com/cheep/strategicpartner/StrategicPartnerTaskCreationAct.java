@@ -28,10 +28,11 @@ import com.cheep.databinding.ActivityTaskCreationForStrategicPartnerBinding;
 import com.cheep.model.AddressModel;
 import com.cheep.model.BannerImageModel;
 import com.cheep.model.MessageEvent;
-import com.cheep.strategicpartner.model.AllSubSubCat;
-import com.cheep.strategicpartner.model.MediaModel;
+import com.cheep.model.SubServiceDetailModel;
+import com.cheep.strategicpartner.model.SubSubCatModel;
+import com.cheep.model.MediaModel;
 import com.cheep.strategicpartner.model.QueAnsModel;
-import com.cheep.strategicpartner.model.StrategicPartnerServiceModel;
+import com.cheep.utils.AmazonUtils;
 import com.cheep.utils.GlideUtility;
 import com.cheep.utils.GsonUtility;
 import com.cheep.utils.LogUtils;
@@ -60,7 +61,7 @@ public class StrategicPartnerTaskCreationAct extends BaseAppCompatActivity {
     private ActivityTaskCreationForStrategicPartnerBinding mActivityTaskCreationForStrategicPartnerBinding;
     public BannerImageModel mBannerImageModel;
     private ArrayList<QueAnsModel> mQuestionsList;
-    private ArrayList<StrategicPartnerServiceModel> mSelectedServicesList;
+    private ArrayList<SubServiceDetailModel> mSelectedServicesList;
     public boolean isSingleSelection = false;
     public String spUserId = "";
     public boolean isPayNow = false;
@@ -451,13 +452,13 @@ public class StrategicPartnerTaskCreationAct extends BaseAppCompatActivity {
     }
 
 
-    public void setSelectedSubService(ArrayList<StrategicPartnerServiceModel> mSelectedServicesList) {
+    public void setSelectedSubService(ArrayList<SubServiceDetailModel> mSelectedServicesList) {
         this.mSelectedServicesList = mSelectedServicesList;
         LogUtils.LOGE(TAG, " on continue click");
-        for (StrategicPartnerServiceModel model : mSelectedServicesList) {
+        for (SubServiceDetailModel model : mSelectedServicesList) {
             LogUtils.LOGE(TAG, " Item Name " + model.name);
-            for (AllSubSubCat allSubSubCat : model.allSubSubCats) {
-                LogUtils.LOGE(TAG, " Item  sub name " + allSubSubCat.subSubCatName);
+            for (SubSubCatModel subSubCatModel : model.subSubCatModels) {
+                LogUtils.LOGE(TAG, " Item  sub name " + subSubCatModel.subSubCatName);
             }
         }
     }
@@ -528,7 +529,7 @@ public class StrategicPartnerTaskCreationAct extends BaseAppCompatActivity {
         }
     }
 
-    public ArrayList<StrategicPartnerServiceModel> getSelectedSubService() {
+    public ArrayList<SubServiceDetailModel> getSelectedSubService() {
         return mSelectedServicesList;
     }
 

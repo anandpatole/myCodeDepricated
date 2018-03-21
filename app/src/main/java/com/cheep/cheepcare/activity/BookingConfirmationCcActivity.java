@@ -71,25 +71,6 @@ public class BookingConfirmationCcActivity extends BaseAppCompatActivity {
     @Override
     protected void initiateUI() {
 
-        // get data of task specification screen
-//        if (getIntent().getExtras() != null && getIntent().hasExtra(Utility.Extra.SELECTED_PACKAGE_ID))
-//            mCarePackageId = getIntent().getExtras().getString(Utility.Extra.SELECTED_PACKAGE_ID);
-//        if (getIntent().getExtras() != null && getIntent().hasExtra(Utility.Extra.CATEGORY_DATA))
-//            jobCategoryModel = (JobCategoryModel) GsonUtility.getObjectFromJsonString(getIntent().getExtras().getString(Utility.Extra.CATEGORY_DATA), JobCategoryModel.class);
-//        if (getIntent().getExtras() != null && getIntent().hasExtra(Utility.Extra.DATA))
-//            freeList = (ArrayList<SubServiceDetailModel>) getIntent().getExtras().getSerializable(Utility.Extra.DATA);
-//        if (getIntent().getExtras() != null && getIntent().hasExtra(Utility.Extra.DATA_2))
-//            paidList = (ArrayList<SubServiceDetailModel>) getIntent().getExtras().getSerializable(Utility.Extra.DATA_2);
-//        if (getIntent().getExtras() != null && getIntent().hasExtra(Utility.Extra.SELECTED_ADDRESS_MODEL))
-//            mAddressModel = (AddressModel) getIntent().getSerializableExtra(Utility.Extra.SELECTED_ADDRESS_MODEL);
-//        if (getIntent().getExtras() != null && getIntent().hasExtra(Utility.Extra.START_DATETIME))
-//            startDateTime = getIntent().getExtras().getString(Utility.Extra.START_DATETIME);
-//        if (getIntent().getExtras() != null && getIntent().hasExtra(Utility.Extra.DATA_3))
-//            taskDes = getIntent().getExtras().getString(Utility.Extra.DATA_3);
-//        if (getIntent().getExtras() != null && getIntent().hasExtra(Utility.Extra.TASK_TYPE))
-//            taskType = getIntent().getExtras().getString(Utility.Extra.TASK_TYPE);
-//        if (getIntent().getExtras() != null && getIntent().hasExtra(Utility.Extra.ADMIN_SETTING))
-//            adminSettingModel = (AdminSettingModel) GsonUtility.getObjectFromJsonString(getIntent().getExtras().getString(Utility.Extra.ADMIN_SETTING), AdminSettingModel.class);
 
         if (getIntent().getExtras() != null && getIntent().hasExtra(Utility.Extra.DATA))
             subscribedTaskDetailModel = (SubscribedTaskDetailModel) GsonUtility.getObjectFromJsonString(getIntent().getExtras().getString(Utility.Extra.DATA), SubscribedTaskDetailModel.class);
@@ -226,6 +207,7 @@ public class BookingConfirmationCcActivity extends BaseAppCompatActivity {
                             + subscribedTaskDetailModel.nonWorkingHourFees
                             + subscribedTaskDetailModel.taskExcessLimitFees;
                     subscribedTaskDetailModel.total = subscribedTaskDetailModel.subtotal;
+                    subscribedTaskDetailModel.paybleAmount = String.valueOf(subscribedTaskDetailModel.total);
                     mBinding.tvSubTotal.setText(getString(R.string.rupee_symbol_x, String.valueOf(subscribedTaskDetailModel.subtotal)));
                     mBinding.tvTotal.setText(getString(R.string.rupee_symbol_x, String.valueOf(subscribedTaskDetailModel.total)));
                 }
@@ -269,7 +251,6 @@ public class BookingConfirmationCcActivity extends BaseAppCompatActivity {
             mBinding.tvBookAndPay.setVisibility(View.GONE);
             mBinding.lnPayLaterPayNowButtons.setVisibility(View.VISIBLE);
         }
-
     }
 
     @Override
@@ -329,18 +310,17 @@ public class BookingConfirmationCcActivity extends BaseAppCompatActivity {
         showProgressDialog();
         subscribedTaskDetailModel.paymentMethod = NetworkUtility.PAYMENT_METHOD_TYPE.FREE;
 
-        final String message;
-        if (!TextUtils.isEmpty(subscribedTaskDetailModel.startDateTime)) {
-            String datetime = CalendarUtility.getDate(Long.parseLong(subscribedTaskDetailModel.startDateTime), Utility.DATE_FORMAT_DD_MMMM) + getString(R.string.label_between) + CalendarUtility.get2HourTimeSlots(subscribedTaskDetailModel.startDateTime);
-            message = getString(R.string.msg_task_confirmed_cheep_care, datetime, "3");
-        } else {
-            message = getString(R.string.msg_task_confirmed_cheep_care_no_time_specified);
-        }
 
-        WebCallClass.createTask(mContext, subscribedTaskDetailModel, mCommonResponseListener, new WebCallClass.SuccessOfTaskCreationResponseListener() {
+        WebCallClass.createCheepCareTask(mContext, subscribedTaskDetailModel, mCommonResponseListener, new WebCallClass.SuccessOfTaskCreationResponseListener() {
             @Override
-            public void onSuccessOfTaskCreate() {
+            public void onSuccessOfTaskCreate(String startdateTimeTimeStamp) {
                 hideProgressDialog();
+                subscribedTaskDetailModel.startDateTime = startdateTimeTimeStamp;
+                String datetime = "";
+                if (!TextUtils.isEmpty(subscribedTaskDetailModel.startDateTime)) {
+                    datetime = CalendarUtility.getDate(Long.parseLong(subscribedTaskDetailModel.startDateTime), Utility.DATE_FORMAT_DD_MMMM) + getString(R.string.label_between) + CalendarUtility.get2HourTimeSlots(subscribedTaskDetailModel.startDateTime);
+                }
+
                 LogUtils.LOGE(TAG, "onSuccessOfTaskCreate: ");
                 TaskConfirmedCCInstaBookDialog taskConfirmedCCInstaBookDialog = TaskConfirmedCCInstaBookDialog.newInstance(
                         new TaskConfirmedCCInstaBookDialog.TaskConfirmActionListener() {
@@ -356,7 +336,7 @@ public class BookingConfirmationCcActivity extends BaseAppCompatActivity {
                             public void rescheduleTask() {
 
                             }
-                        }, message);
+                        }, false, datetime);
                 taskConfirmedCCInstaBookDialog.show(getSupportFragmentManager(), TaskConfirmedCCInstaBookDialog.TAG);
             }
         });

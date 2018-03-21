@@ -1,4 +1,4 @@
-package com.cheep.strategicpartner;
+package com.cheep.fragment;
 
 import android.content.Context;
 import android.content.Intent;
@@ -16,8 +16,7 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.cheep.R;
 import com.cheep.databinding.FragmentMediaViewBinding;
-import com.cheep.fragment.BaseFragment;
-import com.cheep.strategicpartner.model.MediaModel;
+import com.cheep.model.MediaModel;
 import com.cheep.utils.LogUtils;
 import com.cheep.utils.Utility;
 

@@ -55,10 +55,13 @@ public class NetworkUtility {
         public static final String SP_ADD_TO_FAV = BASE_URL + "customers/sp_profile/sp_favourite";
         public static final String ADD_REVIEW = BASE_URL + "customers/sp_profile/add_review";
         public static final String CANCEL_TASK = BASE_URL + "customers/tasks/cancel_task";
-        public static final String SP_LIST_TASK_WISE = BASE_URL + "customers/sp_list/listing_of_sp_relate_task";
+        // TODO : renamed web service listing_of_sp_relate_task -> getQuoteList
+        public static final String SP_LIST_TASK_WISE = BASE_URL + "customers/tasks/getQuoteList";
+//        public static final String SP_LIST_TASK_WISE = BASE_URL + "customers/sp_list/listing_of_sp_relate_task";
         public static final String RESCHEDULE_TASK = BASE_URL + "customers/tasks/rescheduleTask";
 
         public static final String REPORT_SP = BASE_URL + "customers/sp_profile/report_abuse";
+        // TODO : renamed web service task_details -> getTaskDetail
 //        public static final String TASK_DETAIL = BASE_URL + "customers/tasks/task_details";
         public static final String TASK_DETAIL = BASE_URL + "customers/care/getTaskDetail";
         //        public static final String TASK_DETAIL = BASE_URL + "customers/tasks/new_task_details";
@@ -81,7 +84,7 @@ public class NetworkUtility {
         public static final String GET_PAYMENT_HASH_FOR_STRATEGIC_PARTNER = BASE_URL + "customers/payment/generate_hash_for_stratagic_partner";
         public static final String PAYMENT = BASE_URL + "customers/payment/pay_money";
         public static final String PAYMENT_HISTORY = BASE_URL + "customers/payment/payment_history";
-        public static final String EMERGENCY_ALERT = BASE_URL + "customers//sp_profile/emergency_alert";
+        public static final String EMERGENCY_ALERT = BASE_URL + "customers/sp_profile/emergency_alert";
         public static final String CHECK_PROCESSING_TASK = BASE_URL + "customers/tasks/check_processing_task";
         public static final String BOOK_PRO_FOR_NORMAL_TASK = BASE_URL + "customers/tasks/bookProForNormalTask";
 

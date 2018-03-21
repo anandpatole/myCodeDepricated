@@ -364,39 +364,44 @@ public class TaskQuotesActivity extends BaseAppCompatActivity implements TaskQuo
     private Response.Listener mSPListResponseListener = new Response.Listener() {
         @Override
         public void onResponse(Object rawResponse) {
-            QuoteListResponse response = mGson.fromJson((String) rawResponse, QuoteListResponse.class);
-            switch (response.statusCode) {
-                case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
+            try {
+                QuoteListResponse response = mGson.fromJson((String) rawResponse, QuoteListResponse.class);
+                switch (response.statusCode) {
+                    case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
                     /*//clear the data as there is no pagination login
                     mQuotesList.clear();*/
 
-                    if (response.quoteList != null && response.quoteList.size() > 0) {
-                        //repopulate the data
+                        if (response.quoteList != null && !response.quoteList.isEmpty()) {
+                            //repopulate the data
 //                        mQuotesList.addAll(response.quoteList);
 //                        mAdapter.notifyDataSetChanged();
-                        mAdapter.addAll(response.quoteList);
-                        mErrorLoadingHelper.success();
-                    } else {
-                        mErrorLoadingHelper.failed(Utility.EMPTY_STRING, 0, null, null);
+                            mAdapter.addAll(response.quoteList);
+                            mErrorLoadingHelper.success();
+                        } else {
+                            mErrorLoadingHelper.failed(Utility.EMPTY_STRING, 0, null, null);
 //                        mErrorLoadingHelper.failed(getString(R.string.label_no_quotes_available), 0, null, null);
-                    }
-                    populateGridImageView();
-                    break;
-                case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
-                    mErrorLoadingHelper.failed(getString(R.string.label_something_went_wrong), 0, onRetryBtnClickListener);
-                    break;
-                case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
-                    mErrorLoadingHelper.failed(response.message, 0, onRetryBtnClickListener);
-                    break;
-                case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
-                case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
-                    //Logout and finish the current activity
-                    Utility.logout(mContext, true, response.statusCode);
-                    finish();
-                    break;
+                        }
+                        populateGridImageView();
+                        break;
+                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
+                        mErrorLoadingHelper.failed(getString(R.string.label_something_went_wrong), 0, onRetryBtnClickListener);
+                        break;
+                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
+                        mErrorLoadingHelper.failed(response.message, 0, onRetryBtnClickListener);
+                        break;
+                    case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
+                    case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
+                        //Logout and finish the current activity
+                        Utility.logout(mContext, true, response.statusCode);
+                        finish();
+                        break;
+                }
+                mSwipeRefreshLayout.setEnabled(true);
+                mSwipeRefreshLayout.setRefreshing(false);
+            } catch (Exception e) {
+                mErrorLoadingHelper.failed(getString(R.string.label_something_went_wrong), 0, null, null);
             }
-            mSwipeRefreshLayout.setEnabled(true);
-            mSwipeRefreshLayout.setRefreshing(false);
+
         }
     };
 
@@ -440,7 +445,7 @@ public class TaskQuotesActivity extends BaseAppCompatActivity implements TaskQuo
         if (Utility.SEND_TASK_DETAIL_REQUESTED_STATUS.ALREADY_REQUESTED.equalsIgnoreCase(providerModel.request_detail_status)) {
             showDetailRequestDialog(providerModel);
         } else {
-            if (providerModel != null && mTaskDetailModel != null) {
+            if (mTaskDetailModel != null) {
                 if (providerModel.request_detail_status.equalsIgnoreCase(Utility.SEND_TASK_DETAIL_REQUESTED_STATUS.ACCEPTED)) {
                     TaskChatModel taskChatModel = new TaskChatModel();
                     taskChatModel.categoryName = mTaskDetailModel.categoryModel.catName;
