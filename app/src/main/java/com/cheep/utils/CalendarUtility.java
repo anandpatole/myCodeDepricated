@@ -22,18 +22,14 @@ public class CalendarUtility {
 
     private static final String TAG = CalendarUtility.class.getSimpleName();
 
-    @SuppressLint("SimpleDateFormat")
     public static String getDate(long milliSeconds, String dateFormat) {
         String finalDate = "";
         try {
             // Create a DateFormatter object for displaying date in specified format.
-            SimpleDateFormat formatter = new SimpleDateFormat(dateFormat/*, Locale.US*/);
-
-            // Create a calendar object that will convert the date and time value in milliseconds to date.
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTimeInMillis(milliSeconds);
-
-            finalDate = formatter.format(calendar.getTime());
+            SuperCalendar superCalendar = SuperCalendar.getInstance();
+            superCalendar.setTimeInMillis(milliSeconds);
+            superCalendar.setTimeZone(SuperCalendar.SuperTimeZone.GMT.GMT);
+            finalDate = superCalendar.format(dateFormat);
         } catch (Exception e) {
             e.printStackTrace();
         }

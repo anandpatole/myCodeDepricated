@@ -1,5 +1,6 @@
 package com.cheep.strategicpartner.model;
 
+import com.cheep.model.MediaModel;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 

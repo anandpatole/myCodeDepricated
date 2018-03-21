@@ -51,7 +51,7 @@ public class SelectedSubServicePriceAdapter extends RecyclerView.Adapter<Selecte
             holder.mBinding.tvSubServicePrice.setText(context.getString(R.string.label_free));
         } else {
             holder.mBinding.tvSubServicePrice.setText(context.getString(R.string.rupee_symbol_x,
-                    String.valueOf(model.selected_unit * Double.parseDouble(model.unitPrice))));
+                    String.valueOf(model.selected_unit * Double.parseDouble(model.unitPriceWithGST))));
         }
     }
 

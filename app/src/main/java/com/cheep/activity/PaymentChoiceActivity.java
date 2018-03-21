@@ -38,6 +38,7 @@ import com.cheep.utils.PaytmUtility;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.SuperCalendar;
 import com.cheep.utils.Utility;
+import com.cheep.utils.WebCallClass;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -57,8 +58,8 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
 
     private static final String TAG = LogUtils.makeLogTag(PaymentChoiceActivity.class);
     private ActivityPaymentChoiceBinding mActivityPaymentChoiceBinding;
-    private TaskDetailModel taskDetailModel;
     private ProviderModel providerModel;
+    private TaskDetailModel taskDetailModel;
     private String paymentMethod;
     private Map<String, String> mTransactionParams;
     private String amount;
@@ -70,8 +71,17 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
     private int PAYTM_STEP = -1;
     private boolean isPayNow = false;
     private AddressModel mSelectedAddressModel;
+    private double quoteAmount;
+    double paytmWalletBalance;
+    private double payableAmountForPaytm = 0;
+    private double payableAmountForTask = 0;
 
-
+    /**
+     * this is for payment for pending amount or pay later task
+     *
+     * @param context         context of activity
+     * @param taskDetailModel task detail model class
+     */
     public static void newInstance(Context context, TaskDetailModel taskDetailModel) {
         Intent intent = new Intent(context, PaymentChoiceActivity.class);
         intent.putExtra(Utility.Extra.DATA, GsonUtility.getJsonStringFromObject(taskDetailModel));
@@ -79,15 +89,32 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
         context.startActivity(intent);
     }
 
-    public static void newInstance(Context context, TaskDetailModel taskDetailModel, ProviderModel providerModel, AddressModel mSelectedAddressModel) {
+    /**
+     * When user selects pay now for normal & insta task payment
+     *
+     * @param context               context of activity
+     * @param taskDetailModel       task detail model class
+     * @param providerModel         pro detail model class
+     * @param mSelectedAddressModel selected address by user for task booking
+     */
+    public static void newInstance(Context context, TaskDetailModel taskDetailModel, ProviderModel providerModel, String total, String payableAmount, AddressModel mSelectedAddressModel) {
         Intent intent = new Intent(context, PaymentChoiceActivity.class);
         intent.putExtra(Utility.Extra.DATA, GsonUtility.getJsonStringFromObject(taskDetailModel));
         intent.putExtra(Utility.Extra.DATA_2, GsonUtility.getJsonStringFromObject(providerModel));
+        intent.putExtra(Utility.Extra.PAYABLE_AMOUNT, payableAmount);
+        intent.putExtra(Utility.Extra.QUOTE_AMOUNT, total);
         intent.putExtra(Utility.Extra.SELECTED_ADDRESS_MODEL, GsonUtility.getJsonStringFromObject(mSelectedAddressModel));
         intent.putExtra(Utility.Extra.IS_PAY_NOW, true);
         context.startActivity(intent);
     }
 
+    /**
+     * hen user selects pay now for  strategic partner payment
+     *
+     * @param baseFragment          startegic partner third fragment
+     * @param taskDetailModel       task detail model class
+     * @param mSelectedAddressModel selected address by user for task booking
+     */
     public static void newInstance(BaseFragment baseFragment, TaskDetailModel taskDetailModel, AddressModel mSelectedAddressModel) {
         Intent intent = new Intent(baseFragment.getActivity(), PaymentChoiceActivity.class);
         intent.putExtra(Utility.Extra.DATA, GsonUtility.getJsonStringFromObject(taskDetailModel));
@@ -121,6 +148,11 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
             if (getIntent().hasExtra(Utility.Extra.SELECTED_ADDRESS_MODEL)) {
                 mSelectedAddressModel = (AddressModel) GsonUtility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.SELECTED_ADDRESS_MODEL), AddressModel.class);
             }
+
+            if (getIntent().hasExtra(Utility.Extra.QUOTE_AMOUNT)) {
+                payableAmountForTask = Double.parseDouble(getIntent().getStringExtra(Utility.Extra.PAYABLE_AMOUNT));
+                quoteAmount = Double.parseDouble(getIntent().getStringExtra(Utility.Extra.QUOTE_AMOUNT));
+            }
         }
         isPayNow = getIntent().getBooleanExtra(Utility.Extra.IS_PAY_NOW, false);
 
@@ -145,7 +177,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
             } /*else if (isAdditional != 0) {
                 amount = Utility.getQuotePriceFormatter(taskDetailModel.additionalQuoteAmount);
             } */ else {
-                amount = Utility.getQuotePriceFormatter(providerModel.quotePrice);
+                amount = String.valueOf(payableAmountForTask);
             }
         } else {
             amount = Utility.getQuotePriceFormatter(taskDetailModel.taskTotalPendingAmount);
@@ -191,11 +223,11 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
                         SendOtpActivity.newInstance(mContext, true, amount);
                         break;
                     case PAYTM_ADD_MONEY:
-                        AddMoneyActivity.newInstance(mContext, amount, payableAmount, paytmUserDetail.paytmAccessToken,
+                        AddMoneyActivity.newInstance(mContext, amount, payableAmountForPaytm, paytmUserDetail.paytmAccessToken,
                                 paytmUserDetail.paytmphoneNumber, paytmUserDetail.paytmCustId, paytmWalletBalance);
                         break;
                     case PAYTM_WITHDRAW:
-                        WithdrawMoneyActivity.newInstance(mContext, amount, payableAmount, paytmUserDetail.paytmAccessToken,
+                        WithdrawMoneyActivity.newInstance(mContext, amount, payableAmountForPaytm, paytmUserDetail.paytmAccessToken,
                                 paytmUserDetail.paytmphoneNumber, paytmUserDetail.paytmCustId, paytmWalletBalance, true);
                         break;
                 }
@@ -223,7 +255,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
             if (taskDetailModel.taskType.equalsIgnoreCase(Utility.TASK_TYPE.NORMAL))
                 callBookProAndPayForNormalTaskWS(paymentLog);
             else if (taskDetailModel.taskType.equalsIgnoreCase(Utility.TASK_TYPE.INSTA_BOOK)) {
-                callCreateInstaBookingTaskWS(paymentLog);
+                callCreateInstaTaskBooking(paymentLog);
             } else {
                 callCreateStrategicPartnerTaskWS(paymentLog);
             }
@@ -251,7 +283,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
         // = new HashMap<String, Object>();
 
         mTransactionParams = HDFCPaymentUtility.getPaymentTransactionFieldsForNormalTask(
-                PreferenceUtility.getInstance(this).getFCMRegID(), userDetails, taskDetailModel, providerModel, isPayNow);
+                PreferenceUtility.getInstance(this).getFCMRegID(), userDetails, taskDetailModel, String.valueOf(payableAmountForTask), providerModel, isPayNow);
 
         new HDFCPaymentUtility.AsyncFetchEncryptedString(new HDFCPaymentUtility.EncryptTransactionParamsListener() {
             @Override
@@ -657,8 +689,6 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
         PaytmUtility.checkBalance(mContext, mAccessToken, mCheckBalanceResponseListener);
     }
 
-    double paytmWalletBalance;
-    private double payableAmount = 0;
     private final PaytmUtility.CheckBalanceResponseListener mCheckBalanceResponseListener = new PaytmUtility.CheckBalanceResponseListener() {
         @Override
         public void paytmCheckBalanceSuccessResponse(JSONObject jsonObject) {
@@ -679,7 +709,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
                 amount = amount.replace(Utility.COMMA, Utility.EMPTY_STRING);
             }
             boolean isLowBalance = paytmWalletBalance < Double.parseDouble(amount);
-            payableAmount = Double.parseDouble(amount) - paytmWalletBalance;
+            payableAmountForPaytm = Double.parseDouble(amount) - paytmWalletBalance;
             mActivityPaymentChoiceBinding.tvPaytmBalance.setVisibility(View.VISIBLE);
 
             mActivityPaymentChoiceBinding.tvPaytmBalance.setText("(" + getString(R.string.rupee_symbol_x, String.valueOf(paytmWalletBalance)) + ")");
@@ -691,7 +721,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
                 //TODO: add amount
                 mActivityPaymentChoiceBinding.tvLowBalancePaytm.setVisibility(View.VISIBLE);
                 mActivityPaymentChoiceBinding.tvLowBalancePaytm.setText("Low balance. You need " +
-                        getString(R.string.rupee_symbol_x, Utility.getQuotePriceFormatter(String.valueOf(payableAmount))) /*+ "..."*/);
+                        getString(R.string.rupee_symbol_x, Utility.getQuotePriceFormatter(String.valueOf(payableAmountForPaytm))) /*+ "..."*/);
                 PAYTM_STEP = PAYTM_ADD_MONEY;
 
             } else {
@@ -765,10 +795,11 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
         mParams.put(NetworkUtility.TAGS.SP_USER_ID, providerModel.providerId);
         mParams.put(NetworkUtility.TAGS.TASK_ID, taskDetailModel.taskId);
         mParams.put(NetworkUtility.TAGS.IS_REFER_CODE, taskDetailModel.isReferCode);
-        mParams.put(NetworkUtility.TAGS.PAYABLE_AMOUNT, providerModel.quotePrice);
+        mParams.put(NetworkUtility.TAGS.PAYABLE_AMOUNT, payableAmountForTask);
         mParams.put(NetworkUtility.TAGS.USED_WALLET_BALANCE, taskDetailModel.usedWalletAmount);
-        LogUtils.LOGE(TAG, "callBookProForNormalTaskWS: quote amount" + providerModel.spWithoutGstQuotePrice);
-        mParams.put(NetworkUtility.TAGS.QUOTE_AMOUNT, providerModel.spWithoutGstQuotePrice);
+        LogUtils.LOGE(TAG, "callBookProForNormalTaskWS:payableAmount" + payableAmountForTask);
+        LogUtils.LOGE(TAG, "callBookProForNormalTaskWS: quote amount" + quoteAmount);
+        mParams.put(NetworkUtility.TAGS.QUOTE_AMOUNT, quoteAmount);
 
         if (!TextUtils.isEmpty(taskDetailModel.cheepCode)) {
             mParams.put(NetworkUtility.TAGS.CHEEPCODE, taskDetailModel.cheepCode);
@@ -984,8 +1015,44 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////              Create Insta task + payment        [start]                 /////////////////
+    ////////////////              commented code as this is changed as per new flow          /////////////////
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
-    private void callCreateInstaBookingTaskWS(String paymentLog) {
+
+    private void callCreateInstaTaskBooking(String paymentLog) {
+
+        // Check Internet connection
+        if (!Utility.isConnected(mContext)) {
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityPaymentChoiceBinding.getRoot());
+            return;
+        }
+
+        showProgressDialog();
+
+        WebCallClass.createInstaBookingTask(PaymentChoiceActivity.this,
+                taskDetailModel, mSelectedAddressModel, String.valueOf(quoteAmount), String.valueOf(payableAmountForTask), paymentMethod, paymentLog, new WebCallClass.CommonResponseListener() {
+                    @Override
+                    public void volleyError(VolleyError error) {
+
+                    }
+
+                    @Override
+                    public void showSpecificMessage(String message) {
+
+                    }
+
+                    @Override
+                    public void forceLogout() {
+
+                    }
+                }, new WebCallClass.InstaBookTaskCreationListener() {
+                    @Override
+                    public void successOfInstaBookTaskCreation() {
+
+                    }
+                });
+    }
+
+   /* private void callCreateInstaBookingTaskWS(String paymentLog) {
 
         if (!Utility.isConnected(mContext)) {
             Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityPaymentChoiceBinding.getRoot());
@@ -1027,11 +1094,9 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
             mParams.put(NetworkUtility.TAGS.CHEEPCODE, Utility.EMPTY_STRING);
             mParams.put(NetworkUtility.TAGS.PROMOCODE_PRICE, Utility.ZERO_STRING);
         }
-        mParams.put(NetworkUtility.TAGS.IS_REFER_CODE, taskDetailModel.isReferCode);
         mParams.put(NetworkUtility.TAGS.QUOTE_AMOUNT, providerModel.spWithoutGstQuotePrice);
         mParams.put(NetworkUtility.TAGS.PAYABLE_AMOUNT, providerModel.quotePrice);
-        mParams.put(NetworkUtility.TAGS.PAYMENT_LOG, Utility.EMPTY_STRING);
-        mParams.put(NetworkUtility.TAGS.PAYMENT_METHOD, NetworkUtility.PAYMENT_METHOD_TYPE.PAY_LATER);
+        mParams.put(NetworkUtility.TAGS.IS_REFER_CODE, taskDetailModel.isReferCode);
         mParams.put(NetworkUtility.TAGS.USED_WALLET_BALANCE, taskDetailModel.usedWalletAmount);
         String media_file = Utility.getSelectedMediaJsonString(taskDetailModel.mMediaModelList);
         mParams.put(NetworkUtility.TAGS.MEDIA_FILE, media_file);
@@ -1064,11 +1129,11 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
         mTaskCreationParams.put(NetworkUtility.TAGS.CITY_ID, userDetails.CityID);
         mTaskCreationParams.put(NetworkUtility.TAGS.CAT_ID, taskDetailModel.categoryModel.catId);
         mTaskCreationParams.put(NetworkUtility.TAGS.START_DATETIME, taskDetailModel.taskStartdate);
-        mTaskCreationParams.put(NetworkUtility.TAGS.PAYMENT_STATUS, Utility.PAYMENT_STATUS.COMPLETED);
         mTaskCreationParams.put(NetworkUtility.TAGS.SUBCATEGORY_ID, taskDetailModel.subCategoryID);
         mTaskCreationParams.put(NetworkUtility.TAGS.SP_USER_ID, providerModel.providerId);
-        mTaskCreationParams.put(NetworkUtility.TAGS.USED_WALLET_BALANCE, taskDetailModel.usedWalletAmount);
         mTaskCreationParams.put(NetworkUtility.TAGS.MEDIA_FILE, media_file);
+        mTaskCreationParams.put(NetworkUtility.TAGS.PAYMENT_STATUS, Utility.PAYMENT_STATUS.COMPLETED);
+        mTaskCreationParams.put(NetworkUtility.TAGS.USED_WALLET_BALANCE, taskDetailModel.usedWalletAmount);
         mTaskCreationParams.put(NetworkUtility.TAGS.TRANSACTION_ID, txnId);
         mTaskCreationParams.put(NetworkUtility.TAGS.TASK_TYPE, Utility.TASK_TYPE.INSTA_BOOK);
 
@@ -1084,7 +1149,6 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
         mTaskCreationParams.put(NetworkUtility.TAGS.QUOTE_AMOUNT, providerModel.spWithoutGstQuotePrice);
         mTaskCreationParams.put(NetworkUtility.TAGS.PAYABLE_AMOUNT, providerModel.quotePrice);
         mTaskCreationParams.put(NetworkUtility.TAGS.PAYMENT_LOG, Utility.EMPTY_STRING);
-        mTaskCreationParams.put(NetworkUtility.TAGS.PAYMENT_METHOD, NetworkUtility.PAYMENT_METHOD_TYPE.PAY_LATER);
         mTaskCreationParams.put(NetworkUtility.TAGS.PAYMENT_METHOD, NetworkUtility.PAYMENT_METHOD_TYPE.PAY_LATER);
 
         // Url is based on condition if address id is greater then 0 then it means we need to update the existing address
@@ -1118,7 +1182,9 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
                             else
                                 AppsFlyerLib.getInstance().trackEvent(mContext, NetworkUtility.TAGS.APPSFLYER_CUSTOM_TRACK_EVENTS.COUPON_DUNIA_TASK_LIVE, mTaskCreationParams);
                         }
-                        Utility.onSuccessfulInstaBookingTaskCompletion(PaymentChoiceActivity.this, jsonObject, providerModel);
+
+
+                        Utility.onSuccessfulInstaBookingTaskCompletion(PaymentChoiceActivity.this, jsonObject);
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
                         // Show Toast
@@ -1142,7 +1208,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
             }
 
         }
-    };
+    };*/
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////              Create Insta task + payment       [end]                    /////////////////
@@ -1172,7 +1238,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
 
         // Add Params
         ArrayList<QueAnsModel> mList = taskDetailModel.mQuesList;
-        String subCategoryDetail = Utility.getSelectedServicesJsonString(taskDetailModel.taskSelectedSubCategoryList);
+        String subCategoryDetail = Utility.getSelectedServicesJsonString(taskDetailModel.subCatList);
         String task_desc = taskDetailModel.taskDesc;
         String question_detail = Utility.getQuestionAnswerDetailsJsonString(mList);
         String media_file = "";
@@ -1246,7 +1312,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
              public String lat;
              public String lng;
              */
-           mTaskCreationParams =     NetworkUtility.addGuestAddressParams(mTaskCreationParams, mSelectedAddressModel);
+                mTaskCreationParams = NetworkUtility.addGuestAddressParams(mTaskCreationParams, mSelectedAddressModel);
             }
         mTaskCreationParams.put(NetworkUtility.TAGS.CAT_ID, taskDetailModel.categoryModel.catId);
         mTaskCreationParams.put(NetworkUtility.TAGS.START_DATETIME, taskDetailModel.taskStartdate);

@@ -13,8 +13,8 @@ import com.cheep.R;
 import com.cheep.custom_view.expandablerecycleview.ChildViewHolder;
 import com.cheep.custom_view.expandablerecycleview.ExpandableRecyclerAdapter;
 import com.cheep.custom_view.expandablerecycleview.ParentViewHolder;
-import com.cheep.strategicpartner.model.AllSubSubCat;
-import com.cheep.strategicpartner.model.StrategicPartnerServiceModel;
+import com.cheep.model.SubServiceDetailModel;
+import com.cheep.strategicpartner.model.SubSubCatModel;
 import com.cheep.utils.Utility;
 
 import java.util.List;
@@ -24,15 +24,15 @@ import java.util.List;
  * <p>
  * Expandable RecyclerView for service selection in Strategic partner Phase 1
  */
-class ExpandableServicesRecycleAdapter extends ExpandableRecyclerAdapter<StrategicPartnerServiceModel
-        , AllSubSubCat
+class ExpandableServicesRecycleAdapter extends ExpandableRecyclerAdapter<SubServiceDetailModel
+        , SubSubCatModel
         , ExpandableServicesRecycleAdapter.ParentSubCategoryViewHolder
         , ExpandableServicesRecycleAdapter.ChildSubCategoryViewHolder> {
 
-    private List<StrategicPartnerServiceModel> mSubCategoriesList;
+    private List<SubServiceDetailModel> mSubCategoriesList;
     private boolean isSingleSelection = false;
 
-    ExpandableServicesRecycleAdapter(@NonNull List<StrategicPartnerServiceModel> subCategoriesList, boolean isSingleSelection) {
+    ExpandableServicesRecycleAdapter(@NonNull List<SubServiceDetailModel> subCategoriesList, boolean isSingleSelection) {
         super(subCategoriesList);
         mSubCategoriesList = subCategoriesList;
         this.isSingleSelection = isSingleSelection;
@@ -69,7 +69,7 @@ class ExpandableServicesRecycleAdapter extends ExpandableRecyclerAdapter<Strateg
     @Override
     public void onBindParentViewHolder(@NonNull ParentSubCategoryViewHolder parentSubCategoryViewHolder,
                                        int parentPosition,
-                                       @NonNull final StrategicPartnerServiceModel recipe) {
+                                       @NonNull final SubServiceDetailModel recipe) {
         parentSubCategoryViewHolder.bind(recipe);
 
     }
@@ -79,7 +79,7 @@ class ExpandableServicesRecycleAdapter extends ExpandableRecyclerAdapter<Strateg
      */
     @UiThread
     @Override
-    public void onBindChildViewHolder(@NonNull final ChildSubCategoryViewHolder childSubCategoryViewHolder, int parentPosition, int childPosition, @NonNull final AllSubSubCat ingredient) {
+    public void onBindChildViewHolder(@NonNull final ChildSubCategoryViewHolder childSubCategoryViewHolder, int parentPosition, int childPosition, @NonNull final SubSubCatModel ingredient) {
         childSubCategoryViewHolder.bind(ingredient);
 
     }
@@ -116,7 +116,7 @@ class ExpandableServicesRecycleAdapter extends ExpandableRecyclerAdapter<Strateg
         }
 
         // bind data with view parent row
-        public void bind(@NonNull StrategicPartnerServiceModel subServiceDetailModel) {
+        public void bind(@NonNull SubServiceDetailModel subServiceDetailModel) {
             imgIconCorrect.setSelected(subServiceDetailModel.isSelected);
             textSubCategoryName.setText(subServiceDetailModel.name);
         }
@@ -126,8 +126,8 @@ class ExpandableServicesRecycleAdapter extends ExpandableRecyclerAdapter<Strateg
     /**
      * select/deselect all child row of parent if parent is select/deselect
      */
-    private void setAllChildSelected(StrategicPartnerServiceModel recipe) {
-        for (AllSubSubCat ingredient : recipe.allSubSubCats) {
+    private void setAllChildSelected(SubServiceDetailModel recipe) {
+        for (SubSubCatModel ingredient : recipe.subSubCatModels) {
             ingredient.isSelected = recipe.isSelected;
         }
         notifyDataSetChanged();
@@ -165,26 +165,26 @@ class ExpandableServicesRecycleAdapter extends ExpandableRecyclerAdapter<Strateg
                     // if all children are deselected then parent should be deselected
 
                     if (!isSingleSelection) {
-                        AllSubSubCat subSubCat = mSubCategoriesList.get(parentPos).allSubSubCats.get(childPos);
+                        SubSubCatModel subSubCat = mSubCategoriesList.get(parentPos).subSubCatModels.get(childPos);
                         subSubCat.isSelected = !subSubCat.isSelected;
                         if (subSubCat.isSelected)
                             mSubCategoriesList.get(parentPos).isSelected = true;
                         else {
                             int flag = 0;
-                            for (AllSubSubCat allSubSubCat : mSubCategoriesList.get(parentPos).allSubSubCats) {
-                                if (!allSubSubCat.isSelected)
+                            for (SubSubCatModel subSubCatModel : mSubCategoriesList.get(parentPos).subSubCatModels) {
+                                if (!subSubCatModel.isSelected)
                                     flag++;
                             }
-                            if (flag == mSubCategoriesList.get(parentPos).allSubSubCats.size())
+                            if (flag == mSubCategoriesList.get(parentPos).subSubCatModels.size())
                                 mSubCategoriesList.get(parentPos).isSelected = false;
                         }
                         notifyDataSetChanged();
                     } else {
                         for (int i = 0; i < mSubCategoriesList.size(); i++) {
 
-                            for (int j = 0; j < mSubCategoriesList.get(i).allSubSubCats.size(); j++) {
+                            for (int j = 0; j < mSubCategoriesList.get(i).subSubCatModels.size(); j++) {
 
-                                mSubCategoriesList.get(i).allSubSubCats.get(j).isSelected = (i == parentPos && j == childPos);
+                                mSubCategoriesList.get(i).subSubCatModels.get(j).isSelected = (i == parentPos && j == childPos);
                                 mSubCategoriesList.get(i).isSelected = i == parentPos;
                             }
                         }
@@ -197,7 +197,7 @@ class ExpandableServicesRecycleAdapter extends ExpandableRecyclerAdapter<Strateg
         }
 
         // bind data with view for child row
-        public void bind(@NonNull AllSubSubCat subSubCat) {
+        public void bind(@NonNull SubSubCatModel subSubCat) {
 
             textSubCategoryName.setText(subSubCat.subSubCatName);
             if (subSubCat.package_description != null && !subSubCat.package_description.isEmpty()) {

@@ -16,11 +16,11 @@ import com.cheep.R;
 import com.cheep.activity.BaseAppCompatActivity;
 import com.cheep.databinding.FragmentStrategicPartnerPhaseOneBinding;
 import com.cheep.fragment.BaseFragment;
+import com.cheep.model.SubServiceDetailModel;
 import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
-import com.cheep.strategicpartner.model.AllSubSubCat;
-import com.cheep.strategicpartner.model.StrategicPartnerServiceModel;
+import com.cheep.strategicpartner.model.SubSubCatModel;
 import com.cheep.utils.ErrorLoadingHelper;
 import com.cheep.utils.GsonUtility;
 import com.cheep.utils.LogUtils;
@@ -49,7 +49,7 @@ public class StrategicPartnerFragPhaseOne extends BaseFragment {
     private ErrorLoadingHelper errorLoadingHelper;
     private StrategicPartnerTaskCreationAct mStrategicPartnerTaskCreationAct;
     private boolean isVerified = false;
-    private ArrayList<StrategicPartnerServiceModel> list;
+    private ArrayList<SubServiceDetailModel> list;
 
 
     @SuppressWarnings("unused")
@@ -106,21 +106,21 @@ public class StrategicPartnerFragPhaseOne extends BaseFragment {
             public void onClick(View view) {
 
                 if (list != null && !list.isEmpty()) {
-                    ArrayList<StrategicPartnerServiceModel> selectedServiceList = new ArrayList<>();
-                    for (StrategicPartnerServiceModel model : list) {
+                    ArrayList<SubServiceDetailModel> selectedServiceList = new ArrayList<>();
+                    for (SubServiceDetailModel model : list) {
                         // get all sub selected services
                         if (model.isSelected) {
-                            StrategicPartnerServiceModel categoryModel = new StrategicPartnerServiceModel();
+                            SubServiceDetailModel categoryModel = new SubServiceDetailModel();
                             categoryModel.catId = model.catId;
                             categoryModel.name = model.name;
                             categoryModel.sub_cat_id = model.sub_cat_id;
-                            ArrayList<AllSubSubCat> allSubSubCats = new ArrayList<>();
-                            for (AllSubSubCat allSubSubCat : model.allSubSubCats) {
-                                if (allSubSubCat.isSelected) {
-                                    allSubSubCats.add(allSubSubCat);
+                            ArrayList<SubSubCatModel> subSubCatModels = new ArrayList<>();
+                            for (SubSubCatModel subSubCatModel : model.subSubCatModels) {
+                                if (subSubCatModel.isSelected) {
+                                    subSubCatModels.add(subSubCatModel);
                                 }
                             }
-                            categoryModel.allSubSubCats = allSubSubCats;
+                            categoryModel.subSubCatModels = subSubCatModels;
                             selectedServiceList.add(categoryModel);
                         }
                     }
@@ -200,7 +200,7 @@ public class StrategicPartnerFragPhaseOne extends BaseFragment {
                 String error_message;
                 switch (statusCode) {
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
-                        list = GsonUtility.getObjectListFromJsonString(jsonObject.optString(NetworkUtility.TAGS.DATA), StrategicPartnerServiceModel[].class);
+                        list = GsonUtility.getObjectListFromJsonString(jsonObject.optString(NetworkUtility.TAGS.DATA), SubServiceDetailModel[].class);
                         ExpandableServicesRecycleAdapter expandableRecyclerViewAdapter = new ExpandableServicesRecycleAdapter(list, mStrategicPartnerTaskCreationAct.isSingleSelection);
                         mFragmentStrategicPartnerPhaseOneBinding.recyclerView.setAdapter(expandableRecyclerViewAdapter);
                         errorLoadingHelper.success();

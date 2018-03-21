@@ -10,8 +10,8 @@ import android.view.ViewGroup;
 
 import com.cheep.R;
 import com.cheep.databinding.RowMediaFileCcBinding;
-import com.cheep.strategicpartner.AmazonUtils;
-import com.cheep.strategicpartner.model.MediaModel;
+import com.cheep.utils.AmazonUtils;
+import com.cheep.model.MediaModel;
 import com.cheep.utils.GlideUtility;
 
 import java.util.ArrayList;

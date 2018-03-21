@@ -1,4 +1,4 @@
-package com.cheep.strategicpartner;
+package com.cheep.activity;
 
 import android.content.Context;
 import android.content.Intent;
@@ -14,9 +14,9 @@ import android.support.v4.view.ViewPager;
 import android.view.View;
 
 import com.cheep.R;
-import com.cheep.activity.BaseAppCompatActivity;
-import com.cheep.databinding.ActivityMediaViewStrategicPartnerBinding;
-import com.cheep.strategicpartner.model.MediaModel;
+import com.cheep.databinding.ActivityMediaViewFullScreenBinding;
+import com.cheep.fragment.MediaViewFragment;
+import com.cheep.model.MediaModel;
 import com.cheep.utils.SharedElementTransitionHelper;
 import com.cheep.utils.Utility;
 
@@ -34,15 +34,15 @@ import java.util.List;
  * logic to update status of step number in header
  * location services for address
  */
-public class StrategicPartnerMediaViewActiivty extends BaseAppCompatActivity {
+public class MediaViewFullScreenActivity extends BaseAppCompatActivity {
 
 
     private MediaViewPagerAdapter mMediaViewPagerAdapter;
-    private ActivityMediaViewStrategicPartnerBinding mActivityMediaViewStrategicPartnerBinding;
+    private ActivityMediaViewFullScreenBinding mActivityMediaViewStrategicPartnerBinding;
     private boolean isStrategic = true;
 
     public static void getInstance(Context mContext, ArrayList<MediaModel> modelArrayList, boolean isStrategic) {
-        Intent intent = new Intent(mContext, StrategicPartnerMediaViewActiivty.class);
+        Intent intent = new Intent(mContext, MediaViewFullScreenActivity.class);
         intent.putExtra("list", modelArrayList);
         intent.putExtra("isStrategic", isStrategic);
         mContext.startActivity(intent);
@@ -52,7 +52,7 @@ public class StrategicPartnerMediaViewActiivty extends BaseAppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         SharedElementTransitionHelper.enableTransition(this);
-        mActivityMediaViewStrategicPartnerBinding = DataBindingUtil.setContentView(this, R.layout.activity_media_view_strategic_partner);
+        mActivityMediaViewStrategicPartnerBinding = DataBindingUtil.setContentView(this, R.layout.activity_media_view_full_screen);
         initiateUI();
     }
 

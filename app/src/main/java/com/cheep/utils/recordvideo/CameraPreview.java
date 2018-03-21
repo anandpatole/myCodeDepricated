@@ -1,4 +1,4 @@
-package com.cheep.strategicpartner.recordvideo;
+package com.cheep.utils.recordvideo;
 
 import android.content.Context;
 import android.hardware.Camera;

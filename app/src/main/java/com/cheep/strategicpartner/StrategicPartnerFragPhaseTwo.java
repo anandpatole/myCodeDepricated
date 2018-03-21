@@ -63,15 +63,16 @@ import com.cheep.databinding.LayoutTemplateAnswerMediaBinding;
 import com.cheep.fragment.BaseFragment;
 import com.cheep.model.AddressModel;
 import com.cheep.model.GuestUserDetails;
+import com.cheep.model.SubServiceDetailModel;
 import com.cheep.model.UserDetails;
 import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
-import com.cheep.strategicpartner.model.AllSubSubCat;
-import com.cheep.strategicpartner.model.MediaModel;
+import com.cheep.strategicpartner.model.SubSubCatModel;
+import com.cheep.model.MediaModel;
 import com.cheep.strategicpartner.model.QueAnsModel;
-import com.cheep.strategicpartner.model.StrategicPartnerServiceModel;
-import com.cheep.strategicpartner.recordvideo.RecordVideoNewActivity;
+import com.cheep.utils.AmazonUtils;
+import com.cheep.utils.recordvideo.RecordVideoNewActivity;
 import com.cheep.utils.GsonUtility;
 import com.cheep.utils.LogUtils;
 import com.cheep.utils.MediaUtility;
@@ -154,12 +155,12 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment implements Reques
         // calculation of total amount of selected services
         double total = 0;
         double totalOfBasePrice = 0;
-        for (StrategicPartnerServiceModel model : mStrategicPartnerTaskCreationAct.getSelectedSubService()) {
-            List<AllSubSubCat> allSubSubCats = model.allSubSubCats;
-            for (AllSubSubCat allSubSubCat : allSubSubCats) {
+        for (SubServiceDetailModel model : mStrategicPartnerTaskCreationAct.getSelectedSubService()) {
+            List<SubSubCatModel> subSubCatModels = model.subSubCatModels;
+            for (SubSubCatModel subSubCatModel : subSubCatModels) {
                 try {
-                    total += Double.parseDouble(allSubSubCat.price);
-                    totalOfBasePrice += Double.parseDouble(allSubSubCat.basePrice);
+                    total += Double.parseDouble(subSubCatModel.price);
+                    totalOfBasePrice += Double.parseDouble(subSubCatModel.basePrice);
                 } catch (NumberFormatException e) {
                     total += 0;
                     totalOfBasePrice += 0;

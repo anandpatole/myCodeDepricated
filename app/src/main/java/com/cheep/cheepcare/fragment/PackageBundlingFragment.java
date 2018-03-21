@@ -89,7 +89,8 @@ public class PackageBundlingFragment extends BaseFragment {
             mPackageCustomizationActivity.setTaskState(PackageCustomizationActivity.STEP_TWO_UNVERIFIED);
         }
 
-        if (packageBundlingAdapter != null) {
+
+        if (packageBundlingAdapter !=null){
             packageBundlingAdapter.addPakcageList(getList());
         }
         // Hide the post task button
@@ -109,6 +110,12 @@ public class PackageBundlingFragment extends BaseFragment {
     public void initiateUI() {
         Log.d(TAG, "initiateUI() called");
         mBinding.rvBundlePackages.setNestedScrollingEnabled(false);
+        mBinding.rvBundlePackages.setLayoutManager(new LinearLayoutManager(
+                mContext
+                , LinearLayoutManager.VERTICAL
+                , false
+        ));
+        mBinding.rvBundlePackages.setAdapter(packageBundlingAdapter);
 
         mBinding.rvBundlePackages.setLayoutManager(new LinearLayoutManager(
                 mContext

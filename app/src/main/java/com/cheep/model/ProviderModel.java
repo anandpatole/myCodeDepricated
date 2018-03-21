@@ -13,7 +13,7 @@ import java.util.List;
 @Keep
 public class ProviderModel {
 
-    @SerializedName("sp_id")
+    @SerializedName("sp_user_id")
     public String providerId;
 
     @SerializedName("sp_distance")

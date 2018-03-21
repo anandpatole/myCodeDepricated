@@ -74,12 +74,12 @@ public class ProviderRecyclerViewAdapter extends LoadMoreRecyclerAdapter<Provide
     public void onActualBindViewHolder(final ViewHolder holder, int position) {
         final ProviderModel model = mList.get(holder.getAdapterPosition());
 
-        if (model.low_price != null && model.low_price.equalsIgnoreCase("1")) {
+        if ("1".equalsIgnoreCase(model.low_price)) {
             holder.mView.setBackgroundColor(ContextCompat.getColor(context, R.color.blue_varient_5));
             holder.mRowProviderBinding.textCheapest.setVisibility(View.VISIBLE);
             holder.mRowProviderBinding.textCheapest.setText(holder.mView.getContext().getString(R.string.label_cheepest_strip));
             holder.mRowProviderBinding.textCheapest.setCompoundDrawablesWithIntrinsicBounds(context.getResources().getDrawable(R.drawable.icon_cheapest_quote), null, null, null);
-        } else if (model.high_rating != null && model.high_rating.equalsIgnoreCase("1")) {
+        } else if ("1".equalsIgnoreCase(model.high_rating)) {
             holder.mRowProviderBinding.textCheapest.setText(holder.mView.getContext().getString(R.string.label_highest_rated_strip));
             holder.mView.setBackgroundColor(ContextCompat.getColor(context, R.color.yellow_varient_1));
             holder.mRowProviderBinding.textCheapest.setVisibility(View.VISIBLE);

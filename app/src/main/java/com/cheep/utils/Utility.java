@@ -11,6 +11,7 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatEditText;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -25,20 +26,20 @@ import android.widget.Toast;
 import com.cheep.BuildConfig;
 import com.cheep.R;
 import com.cheep.activity.HomeActivity;
+import com.cheep.cheepcare.dialogs.TaskConfirmedCCInstaBookDialog;
 import com.cheep.firebase.FirebaseHelper;
 import com.cheep.firebase.FirebaseUtils;
 import com.cheep.firebase.model.ChatTaskModel;
 import com.cheep.firebase.model.TaskChatModel;
+import com.cheep.model.MediaModel;
 import com.cheep.model.MessageEvent;
 import com.cheep.model.ProviderModel;
+import com.cheep.model.SubServiceDetailModel;
 import com.cheep.model.TaskDetailModel;
 import com.cheep.model.UserDetails;
 import com.cheep.network.NetworkUtility;
-import com.cheep.strategicpartner.AmazonUtils;
-import com.cheep.strategicpartner.model.AllSubSubCat;
-import com.cheep.strategicpartner.model.MediaModel;
 import com.cheep.strategicpartner.model.QueAnsModel;
-import com.cheep.strategicpartner.model.StrategicPartnerServiceModel;
+import com.cheep.strategicpartner.model.SubSubCatModel;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -641,6 +642,7 @@ public class Utility {
         String ACTIVITY_TYPE = "activityType";
         String ADMIN_SETTING = "adminSetting";
         String START_DATETIME = "start_datetime";
+        String QUOTE_AMOUNT = "quoteAmount";
     }
 
 
@@ -1072,20 +1074,45 @@ public class Utility {
         });
     }
 
-    public static void onSuccessfulInstaBookingTaskCompletion(Context context, JSONObject jsonObject, ProviderModel providerModel) {
-        Utility.showToast(context, context.getString(R.string.label_task_created_successfully));
+    public static void onSuccessfulInstaBookingTaskCompletion(final Context context, JSONObject jsonObject) {
+//        Utility.showToast(context, context.getString(R.string.label_task_created_successfully));
         TaskDetailModel taskDetailModel = (TaskDetailModel) GsonUtility.getObjectFromJsonString(jsonObject.optString(NetworkUtility.TAGS.DATA), TaskDetailModel.class);
+        String dateTime = "";
+        try {
+            SuperCalendar superCalendar = SuperCalendar.getInstance();
+            superCalendar.setTimeInMillis(Long.parseLong(taskDetailModel.taskStartdate));
+            superCalendar.setLocaleTimeZone();
+            dateTime = superCalendar.format(Utility.DATE_FORMAT_DD_MMM) + context.getString(R.string.label_between) + CalendarUtility.get2HourTimeSlots(taskDetailModel.taskStartdate);
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+        }
+        TaskConfirmedCCInstaBookDialog taskConfirmedCCInstaBookDialog = TaskConfirmedCCInstaBookDialog.newInstance(new TaskConfirmedCCInstaBookDialog.TaskConfirmActionListener() {
+            @Override
+            public void onAcknowledgementAccepted() {
+                MessageEvent messageEvent = new MessageEvent();
+                messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.TASK_PAID_FOR_INSTA_BOOKING;
+                EventBus.getDefault().post(messageEvent);
+
+                ((Activity) context).finish();
+            }
+
+            @Override
+            public void rescheduleTask() {
+
+            }
+        }, true, dateTime);
+        taskConfirmedCCInstaBookDialog.show(((AppCompatActivity) context).getSupportFragmentManager(), TaskConfirmedCCInstaBookDialog.TAG);
+        // TODO : commented code for nor this chat module will be added when pro will accepts from market place
+        //-- by gieeka
+         /*TaskDetailModel taskDetailModel = (TaskDetailModel) GsonUtility.getObjectFromJsonString(jsonObject.optString(NetworkUtility.TAGS.DATA), TaskDetailModel.class);
 
         if (providerModel != null) {
             // add task and pro entry for firebase
             Utility.updateSelectedSpOnFirebase(context, taskDetailModel, providerModel, taskDetailModel.taskType.equalsIgnoreCase(TASK_TYPE.INSTA_BOOK));
         }
+        */
+        // ---- by gieeka
 
-        MessageEvent messageEvent = new MessageEvent();
-        messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.TASK_PAID_FOR_INSTA_BOOKING;
-        EventBus.getDefault().post(messageEvent);
-
-        ((Activity) context).finish();
     }
 
     public static String getQuestionAnswerDetailsJsonString(ArrayList<QueAnsModel> mList) {
@@ -1112,16 +1139,16 @@ public class Utility {
     //    media name will be with extension
 //    [{"media_name" : "5","media_type" : "288"},{"media_name" : "5","media_type" : "288"}]
 
-    public static String getSelectedServicesJsonString(ArrayList<StrategicPartnerServiceModel> mSelectedServicesList) {
+    public static String getSelectedServicesJsonString(ArrayList<SubServiceDetailModel> mSelectedServicesList) {
         JsonArray selectedServiceArray = new JsonArray();
         for (int i = 0; i < mSelectedServicesList.size(); i++) {
-            StrategicPartnerServiceModel model = mSelectedServicesList.get(i);
-            for (int j = 0; j < model.allSubSubCats.size(); j++) {
-                AllSubSubCat allSubSubCat = model.allSubSubCats.get(j);
+            SubServiceDetailModel model = mSelectedServicesList.get(i);
+            for (int j = 0; j < model.subSubCatModels.size(); j++) {
+                SubSubCatModel subSubCatModel = model.subSubCatModels.get(j);
                 JsonObject obj = new JsonObject();
                 obj.addProperty(NetworkUtility.TAGS.SUBCATEGORY_ID, model.sub_cat_id);
-                obj.addProperty(NetworkUtility.TAGS.SUB_SUB_CAT_ID, allSubSubCat.subSubCatId);
-                obj.addProperty(NetworkUtility.TAGS.UNIT_PRICE, allSubSubCat.price);
+                obj.addProperty(NetworkUtility.TAGS.SUB_SUB_CAT_ID, subSubCatModel.subSubCatId);
+                obj.addProperty(NetworkUtility.TAGS.UNIT_PRICE, subSubCatModel.price);
                 selectedServiceArray.add(obj);
             }
         }

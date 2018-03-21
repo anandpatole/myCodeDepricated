@@ -202,13 +202,16 @@
             android:theme="@style/Theme.AppCompat.Translucent"
             android:windowSoftInputMode="adjustPan"/>
         <activity
-            android:name=".strategicpartner.recordvideo.RecordVideoNewActivity"
+            android:name=".utils.recordvideo.RecordVideoNewActivity"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".strategicpartner.TaskSummaryStrategicPartnerActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".strategicpartner.StrategicPartnerMediaViewActiivty"
+            android:name=".activity.TaskSummaryForMultiCatActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.MediaViewFullScreenActivity"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".strategicpartner.PaymentsSummaryStrategicPartnerActivity"

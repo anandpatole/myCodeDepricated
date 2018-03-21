@@ -48,7 +48,6 @@ import com.cheep.model.UserDetails;
 import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
-import com.cheep.strategicpartner.StrategicPartnerMediaViewActiivty;
 import com.cheep.utils.CalendarUtility;
 import com.cheep.utils.GlideUtility;
 import com.cheep.utils.GsonUtility;
@@ -803,7 +802,7 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
         try {
             superCalendar.setTimeInMillis(Long.parseLong(mTaskDetailModel.taskStartdate));
             superCalendar.setLocaleTimeZone();
-            task_original_date = superCalendar.format(Utility.DATE_FORMAT_DD_MMM) + getString(R.string.label_between);
+            task_original_date = superCalendar.format(Utility.DATE_FORMAT_DD_MMM) + getString(R.string.label_between) ;
         } catch (NumberFormatException e) {
             e.printStackTrace();
         }
@@ -1183,7 +1182,7 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
                     SharedElementTransitionHelper sharedElementTransitionHelper = new SharedElementTransitionHelper(TaskSummaryActivity.this);
                     sharedElementTransitionHelper.put(mBinding.imgTaskPicture1, R.string.transition_image_view);
 //                    ZoomImageActivity.newInstance(mContext, sharedElementTransitionHelper.getBundle(), mTaskDetailModel.taskImage);
-                    StrategicPartnerMediaViewActiivty.getInstance(TaskSummaryActivity.this, mTaskDetailModel.mMediaModelList, false);
+                    MediaViewFullScreenActivity.getInstance(TaskSummaryActivity.this, mTaskDetailModel.mMediaModelList, false);
                 }
             }
         });

@@ -102,7 +102,7 @@
 
 
                 <FrameLayout
-                    android:id="@+id/layout_cheep_care_pro_not_found"
+                    android:id="@+id/layout_pro_not_found"
                     android:layout_width="@dimen/chat_profile_layout_width"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="4dp"

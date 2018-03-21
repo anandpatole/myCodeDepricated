@@ -48,7 +48,7 @@ import com.cheep.model.UserDetails;
 import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
-import com.cheep.strategicpartner.model.MediaModel;
+import com.cheep.model.MediaModel;
 import com.cheep.strategicpartner.model.QueAnsModel;
 import com.cheep.utils.LogUtils;
 import com.cheep.utils.PreferenceUtility;
@@ -232,7 +232,7 @@ public class StrategicPartnerFragPhaseThree extends BaseFragment {
                 TaskDetailModel taskDetailModel = new TaskDetailModel();
                 taskDetailModel.mQuesList = mStrategicPartnerTaskCreationAct.getQuestionsList();
                 taskDetailModel.taskDesc = getTaskDescription(mStrategicPartnerTaskCreationAct.getQuestionsList());
-                taskDetailModel.taskSelectedSubCategoryList = mStrategicPartnerTaskCreationAct.getSelectedSubService();
+                taskDetailModel.subCatList = mStrategicPartnerTaskCreationAct.getSelectedSubService();
                 for (QueAnsModel model : mStrategicPartnerTaskCreationAct.getQuestionsList())
                     if (model.answerType.equalsIgnoreCase(Utility.TEMPLATE_UPLOAD)) {
                         taskDetailModel.mMediaModelList = model.medialList;

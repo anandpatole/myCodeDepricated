@@ -1,4 +1,4 @@
-package com.cheep.strategicpartner;
+package com.cheep.utils;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -18,7 +18,6 @@ import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.cheep.BuildConfig;
-import com.cheep.utils.LogUtils;
 
 import java.io.File;
 import java.io.FileOutputStream;

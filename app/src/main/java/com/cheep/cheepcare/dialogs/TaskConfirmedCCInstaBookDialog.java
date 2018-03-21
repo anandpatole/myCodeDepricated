@@ -9,6 +9,10 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.TextUtils;
+import android.text.style.ImageSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,7 +30,8 @@ import com.cheep.utils.Utility;
 public class TaskConfirmedCCInstaBookDialog extends DialogFragment {
     public static final String TAG = TaskConfirmedCCInstaBookDialog.class.getSimpleName();
     private TaskConfirmActionListener mListener;
-    private String description;
+    private boolean isInstaBookingTask;
+    private String dateTime;
 
     public interface TaskConfirmActionListener {
 
@@ -42,11 +47,12 @@ public class TaskConfirmedCCInstaBookDialog extends DialogFragment {
 
     }
 
-    public static TaskConfirmedCCInstaBookDialog newInstance(TaskConfirmActionListener listener, String description) {
+    public static TaskConfirmedCCInstaBookDialog newInstance(TaskConfirmActionListener listener, boolean isInstaBookingTask, String dateTime) {
         TaskConfirmedCCInstaBookDialog f = new TaskConfirmedCCInstaBookDialog();
         f.setListener(listener);
         Bundle args = new Bundle();
-        args.putString(Utility.Extra.DATA, description);
+        args.putBoolean(Utility.Extra.IS_INSTA_BOOKING_TASK, isInstaBookingTask);
+        args.putString(Utility.Extra.DATA, dateTime);
         f.setArguments(args);
         return f;
     }
@@ -63,7 +69,8 @@ public class TaskConfirmedCCInstaBookDialog extends DialogFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        description = getArguments().getString(Utility.Extra.DATA);
+        isInstaBookingTask = getArguments().getBoolean(Utility.Extra.IS_INSTA_BOOKING_TASK, true);
+        dateTime = getArguments().getString(Utility.Extra.DATA);
 
     }
 
@@ -80,7 +87,25 @@ public class TaskConfirmedCCInstaBookDialog extends DialogFragment {
 
         DialogTaskConfirmedCheepCareInstabookBinding mBinding = DataBindingUtil.inflate(inflater, R.layout.dialog_task_confirmed_cheep_care_instabook, container, false);
 
-        mBinding.textTaskCreationAcknowledgment.setText(description);
+        if (isInstaBookingTask) {
+            String text1 = getString(R.string.msg_task_confirmed_instabook_1) + Utility.ONE_CHARACTER_SPACE;
+            String text2 = Utility.ONE_CHARACTER_SPACE + getString(R.string.msg_task_confirmed_instabook_2, dateTime);
+            SpannableStringBuilder spanDesc1 = new SpannableStringBuilder(text1 + text2);
+            ImageSpan span1 = new ImageSpan(getContext(), R.drawable.emoji_thumbs_up, ImageSpan.ALIGN_BASELINE);
+            spanDesc1.setSpan(span1, text1.length() - 1
+                    , text1.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+
+            mBinding.textTaskCreationAcknowledgment.setText(spanDesc1);
+        } else {
+
+            final String message;
+            if (!TextUtils.isEmpty(dateTime)) {
+                message = getString(R.string.msg_task_confirmed_cheep_care, dateTime, "3");
+            } else {
+                message = getString(R.string.msg_task_confirmed_cheep_care_no_time_specified);
+            }
+            mBinding.textTaskCreationAcknowledgment.setText(message);
+        }
         // Click event of Okay button
         mBinding.tvOkay.setOnClickListener(new View.OnClickListener() {
             @Override
