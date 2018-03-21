@@ -121,6 +121,7 @@
     <color name="task_canceled_red">#EB3727</color>
     <color name="task_elapses_red">#F06608</color>
     <color name="black_varient_1">#010101</color>
+    <color name="c_F2F2F2">#F2F2F2</color>
     <!--test-->
     <!--<color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>

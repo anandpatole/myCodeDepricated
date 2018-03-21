@@ -64,6 +64,7 @@ import com.cheep.utils.LogUtils;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.SharedElementTransitionHelper;
 import com.cheep.utils.Utility;
+import com.cheep.utils.WebCallClass;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -308,6 +309,17 @@ public class HomeTabFragment extends BaseFragment {
         } else {
             Log.i(TAG, "initiateUI: isReadyToLoad: " + ((HomeActivity) getActivity()).isReadyToLoad);
         }
+
+        callGetAdminSettings();
+    }
+
+    private void callGetAdminSettings() {
+        if (!Utility.isConnected(mContext)) {
+            Log.d(TAG, "callGetAdminSettings: unable to call and get admin settings" + Math.ceil(3.4));
+            return;
+        }
+
+        WebCallClass.getAdminSettings(mContext, mCommonResponseListenerAdminSetting);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -657,6 +669,7 @@ public class HomeTabFragment extends BaseFragment {
 
         if (!Utility.isConnected(mContext)) {
             errorLoadingHelper.failed(Utility.NO_INTERNET_CONNECTION, 0, onRetryBtnClickListener);
+            mFragmentTabHomeBinding.swipeRefreshLayout.setRefreshing(false);
             return;
         }
 
@@ -1728,4 +1741,18 @@ public class HomeTabFragment extends BaseFragment {
     ////////////////            Vertical view pager smooth scrooling           [end]         /////////////////
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    private final WebCallClass.CommonResponseListener mCommonResponseListenerAdminSetting =
+            new WebCallClass.CommonResponseListener() {
+                @Override
+                public void volleyError(VolleyError error) {
+                }
+
+                @Override
+                public void showSpecificMessage(String message) {
+                }
+
+                @Override
+                public void forceLogout() {
+                }
+            };
 }

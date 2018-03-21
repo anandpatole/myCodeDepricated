@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:id="@+id/fl_reviews_of_me_container"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground"
+            app:layout_constraintEnd_toStartOf="@+id/fl_reviews_by_me_container"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <com.cheep.custom_view.CFTextViewSemiBold
+                android:id="@+id/tv_reviews_of_me"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/selector_background_stroke_blue_transparent"
+                android:gravity="center"
+                android:paddingBottom="@dimen/scale_11dp"
+                android:paddingTop="@dimen/scale_11dp"
+                android:text="1st tab"
+                android:textColor="@color/selector_text_535353_blue" />
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/fl_reviews_by_me_container"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/fl_reviews_of_me_container">
+
+            <com.cheep.custom_view.CFTextViewSemiBold
+                android:id="@+id/tv_reviews_by_me"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/selector_background_stroke_blue_transparent"
+                android:gravity="center"
+                android:paddingBottom="@dimen/scale_11dp"
+                android:paddingTop="@dimen/scale_11dp"
+                android:text="2nd tab"
+                android:textColor="@color/selector_text_535353_blue" />
+        </FrameLayout>
+
+
+        <View
+            android:id="@+id/stroke"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/scale_1dp"
+            android:background="@color/light_grey_color"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/fl_details_container" />
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/view_pager"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginRight="@dimen/scale_14dp"
+            android:layout_marginTop="@dimen/scale_12dp"
+            android:layout_weight="1"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/stroke" />
+
+        <!--<ProgressBar
+            android:id="@+id/progress_load"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/stroke" />-->
+
+        <com.cheep.custom_view.CFTextViewRegular
+            android:id="@+id/text_error"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:padding="@dimen/scale_16dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/stroke"
+            tools:text="Work In Progress" />
+
+
+    </android.support.constraint.ConstraintLayout>
+</layout>

@@ -237,7 +237,7 @@
                                 android:paddingBottom="@dimen/scale_16dp"
                                 android:paddingLeft="@dimen/scale_16dp"
                                 android:paddingTop="@dimen/scale_16dp"
-                                android:visibility="gone">
+                                android:visibility="visible">
 
                                 <FrameLayout
                                     android:id="@+id/layout_individual_profile"

@@ -21,7 +21,6 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
@@ -50,6 +49,8 @@ import com.cheep.adapter.FavouriteRecyclerViewAdapter;
 import com.cheep.adapter.HistoryRecyclerViewAdapter;
 import com.cheep.adapter.SlideMenuAdapter;
 import com.cheep.cheepcare.activity.ManageSubscriptionActivity;
+import com.cheep.cheepcare.activity.NotificationCcActivity;
+import com.cheep.cheepcare.fragment.ProfileTabFragment;
 import com.cheep.custom_view.BottomAlertDialog;
 import com.cheep.databinding.ActivityHomeBinding;
 import com.cheep.databinding.NavHeaderHomeBinding;
@@ -63,7 +64,6 @@ import com.cheep.fragment.HistoryFragment;
 import com.cheep.fragment.HomeFragment;
 import com.cheep.fragment.HomeTabFragment;
 import com.cheep.fragment.InfoFragment;
-import com.cheep.fragment.ProfileTabFragment;
 import com.cheep.fragment.ReferAndEarnFragment;
 import com.cheep.interfaces.DrawerLayoutInteractionListener;
 import com.cheep.interfaces.NotificationClickInteractionListener;
@@ -293,7 +293,7 @@ public class HomeActivity extends BaseAppCompatActivity
         list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.label_home), R.drawable.icon_side_home_blue, true, false));
         list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.label_favourites), R.drawable.icon_fav_off, false, false));
         list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.tab_me), R.drawable.icon_logout, false, false));
-        list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.label_history), R.drawable.icon_history, false, false));
+        list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.label_payment_history), R.drawable.icon_history, false, false));
         // TODO: Icon change Refer And Earn
         if (PreferenceUtility.getInstance(mContext).getUserDetails() != null)
             list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.label_refer_and_earn), R.drawable.icon_help, false, false));
@@ -333,7 +333,7 @@ public class HomeActivity extends BaseAppCompatActivity
             } else {
                 Log.i(TAG, "onSlideMenuListItemClicked: " + slideMenuListModel.title + " is there");
             }
-        } else if (slideMenuListModel.title.equals(getString(R.string.label_history))) {
+        } else if (slideMenuListModel.title.equals(getString(R.string.label_payment_history))) {
             Fragment mFragment = getSupportFragmentManager().findFragmentByTag(HistoryFragment.TAG);
             if (mFragment == null) {
                 loadFragment(HistoryFragment.TAG, HistoryFragment.newInstance());
@@ -426,10 +426,9 @@ public class HomeActivity extends BaseAppCompatActivity
     @Override
     public void setUpDrawerLayoutWithToolBar(Toolbar toolbar) {
         //Setting up drawer
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
+                this, mActivityHomeBinding.drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        mActivityHomeBinding.drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
     }
 
@@ -867,7 +866,7 @@ public class HomeActivity extends BaseAppCompatActivity
      */
     @Override
     public void onNotificationIconClicked() {
-        NotificationActivity.newInstance(mContext);
+        NotificationCcActivity.newInstance(mContext);
     }
 
     /**
@@ -884,8 +883,6 @@ public class HomeActivity extends BaseAppCompatActivity
         if (mHomeFragment != null) {
             Fragment mHomeTabFragment = mHomeFragment.getChildFragmentManager().findFragmentByTag(HomeFragment.TAB_HOME);
             if (mHomeTabFragment != null) {
-                Log.i(TAG, "onCategoryFavouriteClicked: Called for HomeTab");
-                ((HomeTabFragment) mHomeTabFragment).onCategoryFavouriteClicked(model, position);
                 if (((HomeTabFragment) mHomeTabFragment).getmSelectedFilterType().equalsIgnoreCase(Utility.FILTER_TYPES.FILTER_TYPE_SUBSCRIBED)) {
                     ManageSubscriptionActivity.newInstance(mContext, model.careCityData.get(0), true, GsonUtility.getJsonStringFromObject(((HomeTabFragment) mHomeTabFragment).careBannerModelArrayList));
                 } else

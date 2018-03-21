@@ -129,6 +129,13 @@ public class Utility {
     public static final String DATE_FORMAT_TASK_HAS_BEEN_PAID_DATE = SuperFormatter.DATE + " " + SuperFormatter.MONTH_JAN;
     public static final String TIME_FORMAT_24HH_MM = SuperFormatter.HOUR_24_HOUR + ":" + SuperFormatter.MINUTE + "";
     public static final String DATE_TIME_FORMAT_SERVICE_YEAR = SuperFormatter.YEAR_4_DIGIT + "-" + SuperFormatter.MONTH_NUMBER + "-" + SuperFormatter.DATE + " " + SuperFormatter.HOUR_24_HOUR + ":" + SuperFormatter.MINUTE + ":" + SuperFormatter.SECONDS;
+    public static final String DATE_FORMAT_DD_MMM_YY =
+            SuperFormatter.DATE +
+                    Utility.ONE_CHARACTER_SPACE +
+                    SuperFormatter.MONTH_JAN +
+                    Utility.ONE_CHARACTER_SPACE +
+                    "'" +
+                    SuperFormatter.DATE;
     //    dd MMMM, HH:mm a
     public static final String DATE_TIME_DD_MMMM_HH_MM = SuperFormatter.DATE + " " + SuperFormatter.MONTH_JANUARY + " " + SuperFormatter.HOUR_24_HOUR + ":" + SuperFormatter.MINUTE + "";
     public static final String DATE_FORMAT_FULL_DATE = SuperFormatter.FULL_DATE;

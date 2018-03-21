@@ -29,7 +29,6 @@
     <!--SIDE MENU ITEM-->
     <string name="label_home">Home</string>
     <string name="label_favourites">Favourites</string>
-    <string name="label_history">Payment History</string>
     <string name="label_share_with_friend">Refer</string>
     <string name="label_help">Contact Us</string>
     <string name="label_faq">FAQ</string>
@@ -764,4 +763,9 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
         you. Please go ahead and book the PRO you like the most.</string>
     <string name="msg_notif_20min_confirm_availability">Hey Rahul! It seems that you haven\'t confirmed your availability yet.
         Your Cheep Care task will be cancelled if you don\'t confirm within 20 minutes of this notification sent to you. Please confirm your availability.</string>
+    <string name="label_details">Details</string>
+    <string name="label_my_profile">My Profile</string>
+    <string name="label_total_paid_colon">Total Paid:</string>
+    <string name="msg_payment_pending_desc">It seems that your payment is pending for this task.</string>
+    <string name="label_support">Support</string>
 </resources>

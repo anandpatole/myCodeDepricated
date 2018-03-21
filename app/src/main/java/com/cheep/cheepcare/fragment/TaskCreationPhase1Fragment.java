@@ -8,12 +8,12 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.cheep.R;
 import com.cheep.activity.BaseAppCompatActivity;
@@ -35,6 +35,8 @@ import java.util.List;
 public class TaskCreationPhase1Fragment extends BaseFragment {
 
     private static final String TAG = TaskCreationPhase1Fragment.class.getSimpleName();
+    private static final int FREE_WITH_CHEEP_CARE = 0;
+    private static final int PAID_CHEEP_SERVICES = 1;
     private FragmentTaskCreationPhase1Binding mBinding;
     private PagerAdapter mPagerAdapter;
     private TaskCreationCCActivity mTaskCreationCCActivity;
@@ -147,6 +149,29 @@ public class TaskCreationPhase1Fragment extends BaseFragment {
     public void setListener() {
         mBinding.flFreeCcContainer.setOnClickListener(mOnClickListener);
         mBinding.flPaidServicesContainer.setOnClickListener(mOnClickListener);
+
+        mBinding.viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                if (position == FREE_WITH_CHEEP_CARE) {
+                    mBinding.flFreeCcContainer.setSelected(true);
+                    mBinding.flPaidServicesContainer.setSelected(false);
+                } else if (position == PAID_CHEEP_SERVICES) {
+                    mBinding.flPaidServicesContainer.setSelected(true);
+                    mBinding.flFreeCcContainer.setSelected(false);
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
     }
 
     private final View.OnClickListener mOnClickListener =

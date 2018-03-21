@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.view.View;
 
 import com.cheep.R;
@@ -26,6 +27,8 @@ import java.util.List;
 public class NotificationCcActivity extends BaseAppCompatActivity {
 
     private static final String TAG = NotificationCcActivity.class.getSimpleName();
+    private static final int ALL_TAB = 0;
+    private static final int YOUR_TASKS_TAB = 1;
     private ActivityNotificationCcBinding mBinding;
     private PagerAdapter mPagerAdapter;
 
@@ -74,8 +77,7 @@ public class NotificationCcActivity extends BaseAppCompatActivity {
     private static class PagerAdapter extends FragmentPagerAdapter {
 
         private static final int COUNT = 2;
-        private static final int ALL = 0;
-        private static final int YOUR_TASKS = 1;
+
         private final List<String> mTitleList = new ArrayList<>();
         private final AllNotificationsFragment mAllNotificationsFragment;
         private final AllNotificationsFragment mYourTasksFragment;
@@ -89,9 +91,9 @@ public class NotificationCcActivity extends BaseAppCompatActivity {
         @Override
         public Fragment getItem(int position) {
             switch (position) {
-                case ALL:
+                case ALL_TAB:
                     return mAllNotificationsFragment;
-                case YOUR_TASKS:
+                case YOUR_TASKS_TAB:
                     return mYourTasksFragment;
                 default:
                     return mAllNotificationsFragment;
@@ -118,6 +120,30 @@ public class NotificationCcActivity extends BaseAppCompatActivity {
     protected void setListeners() {
         mBinding.flAllContainer.setOnClickListener(mOnClickListener);
         mBinding.flYourTasksContainer.setOnClickListener(mOnClickListener);
+
+        mBinding.viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                if (position == ALL_TAB) {
+                    mBinding.flAllContainer.setSelected(true);
+                    mBinding.flYourTasksContainer.setSelected(false);
+                } else if (position == YOUR_TASKS_TAB) {
+                    mBinding.flYourTasksContainer.setSelected(true);
+                    mBinding.flAllContainer.setSelected(false);
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
     }
 
     private final View.OnClickListener mOnClickListener =

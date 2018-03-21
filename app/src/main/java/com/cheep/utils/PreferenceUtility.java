@@ -7,6 +7,7 @@ import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.cheep.cheepcare.model.AdminSettingModel;
 import com.cheep.model.GuestUserDetails;
 import com.cheep.model.UserDetails;
 
@@ -29,6 +30,7 @@ public class PreferenceUtility {
     private static final String PREF_X_API_KEY = "com.cheep.xapikey";
     private static final String PREF_FCM_TOKEN = "com.cheep.fcm.tokem";
     private static final String PREF_USER_INFO = "com.cheep.fcm.userinfo";
+    private static final String PREF_ADMIN_SETTINGS = "com.cheep.adminSettings";
     private static final String PREF_NOTIFICATION_COUNTER = "com.cheep.notification_counter";
     private static final String PREF_INTRO_SCREEN_STATUS = "com.cheep.intro.screen.status";
     private static final String PREF_HOME_SCREEN_VISIBLE = "com.cheep.homescreen.available";
@@ -38,6 +40,7 @@ public class PreferenceUtility {
     private static final String PREF_GUEST_USER_INFO = "com.cheep.guest.userinfo";
     private static final String CITY_DATA = "com.cheep.guest.citydata";
     private SharedPreferences mGuestSharedPreferences;
+    private static AdminSettingModel mAdminSettings;
 
     private PreferenceUtility(Context mContext) {
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
@@ -103,6 +106,33 @@ public class PreferenceUtility {
                 JSONObject jsonObject = new JSONObject(mSharedPreferences.getString(PREF_USER_INFO, null));
                 mUserDetails = (UserDetails) GsonUtility.getObjectFromJsonString(jsonObject.toString(), UserDetails.class);
                 return mUserDetails;
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
+    /**
+     * It may be useful in future so it is remain as private
+     *
+     * @param model
+     */
+    public void setAdminSettings(AdminSettingModel model) {
+        Log.d(TAG, "setAdminSettings() called with: model = [" + model + "]");
+        mSharedPreferences.edit().putString(PREF_ADMIN_SETTINGS, GsonUtility.getJsonStringFromObject(model)).apply();
+        mAdminSettings = model;
+    }
+
+    public AdminSettingModel getAdminSettings() {
+        if (mAdminSettings != null) {
+            return mAdminSettings;
+        }
+        if (mSharedPreferences.contains(PREF_ADMIN_SETTINGS)) {
+            try {
+                JSONObject jsonObject = new JSONObject(mSharedPreferences.getString(PREF_ADMIN_SETTINGS, null));
+                mAdminSettings = (AdminSettingModel) GsonUtility.getObjectFromJsonString(jsonObject.toString(), AdminSettingModel.class);
+                return mAdminSettings;
             } catch (JSONException e) {
                 e.printStackTrace();
             }

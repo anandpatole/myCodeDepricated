@@ -59,7 +59,7 @@ public class NetworkUtility {
         public static final String RESCHEDULE_TASK = BASE_URL + "customers/tasks/rescheduleTask";
 
         public static final String REPORT_SP = BASE_URL + "customers/sp_profile/report_abuse";
-//        public static final String TASK_DETAIL = BASE_URL + "customers/tasks/task_details";
+        //        public static final String TASK_DETAIL = BASE_URL + "customers/tasks/task_details";
         public static final String TASK_DETAIL = BASE_URL + "customers/care/getTaskDetail";
         //        public static final String TASK_DETAIL = BASE_URL + "customers/tasks/new_task_details";
 //        http://35.154.147.32/admin/v10/customers/tasks/new_task_details
@@ -84,6 +84,9 @@ public class NetworkUtility {
         public static final String EMERGENCY_ALERT = BASE_URL + "customers//sp_profile/emergency_alert";
         public static final String CHECK_PROCESSING_TASK = BASE_URL + "customers/tasks/check_processing_task";
         public static final String BOOK_PRO_FOR_NORMAL_TASK = BASE_URL + "customers/tasks/bookProForNormalTask";
+
+        //admin setting web service
+        public static final String GET_ADMIN_SETTINGS = BASE_URL + "customers/category/getAdminSettings";
 
         // Chat Image upload
         public static final String IMAGE_UPLOAD_FOR_CHAT = BASE_URL + "customers/profile/imageUploadForChat";
@@ -148,7 +151,7 @@ public class NetworkUtility {
         public static final String GET_CARE_FREE_PAID_SERVICES_FOR_CATEGORY = BASE_URL + "customers/care/getCareFreePaidServicesForCategory";
         public static final String CARE_CREATE_TASK = BASE_URL + "customers/care/createTask";
         public static final String IS_CITY_AVAILABLE_FOR_CARE = BASE_URL + "customers/care/isCityAvailableForCare";
-        public static final String GET_EXTRA_CHARGE_AFTER_EXCEED_LIMIT= BASE_URL + "customers/care/getExtraChargeAfterExceedLimit";
+        public static final String GET_EXTRA_CHARGE_AFTER_EXCEED_LIMIT = BASE_URL + "customers/care/getExtraChargeAfterExceedLimit";
 
     }
 
@@ -307,7 +310,7 @@ public class NetworkUtility {
 
         String PROFILE_IMAGE = "profile_img";
         String PROFILE_BANNER = "profile_banner";
-//        String PRICE = "price";
+        //        String PRICE = "price";
         String DISTANCE = "distance";
         String IS_FAVOURITE = "is_favourite";
         String DATA = "data";
@@ -462,8 +465,8 @@ public class NetworkUtility {
         String PACKAGE_DETAILS = "package_details";
         String CHARGE_SPECIFIC_TIME = "charge_specific_time";
         String CHARGE_EXCEED_LIMIT = "charge_exceed_limit";
-        String FINAL_EXTRA_CHARGE= "finalExtraCharge";
-        String TASK_SUB_CATEGORIES= "task_subcategories";
+        String FINAL_EXTRA_CHARGE = "finalExtraCharge";
+        String TASK_SUB_CATEGORIES = "task_subcategories";
         String PRICE = "price";
 
         interface VERSION_CHANGE_TYPE {

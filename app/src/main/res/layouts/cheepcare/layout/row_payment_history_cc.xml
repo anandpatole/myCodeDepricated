@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/img_profile"
+            android:layout_width="@dimen/scale_53dp"
+            android:layout_height="@dimen/scale_53dp"
+            android:layout_marginBottom="@dimen/scale_17dp"
+            android:layout_marginLeft="@dimen/scale_16dp"
+            android:layout_marginRight="@dimen/scale_11dp"
+            android:layout_marginTop="@dimen/scale_17dp"
+            android:src="@drawable/ic_cheep_circular_icon"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="ContentDescription" />
+
+        <ImageView
+            android:id="@+id/imgFav"
+            android:layout_width="@dimen/scale_20dp"
+            android:layout_height="@dimen/scale_20dp"
+            android:background="@drawable/icon_favourite_selected"
+            app:layout_constraintBottom_toBottomOf="@id/img_profile"
+            app:layout_constraintEnd_toEndOf="@id/img_profile"
+            app:layout_constraintHorizontal_bias="1"
+            app:layout_constraintStart_toStartOf="@id/img_profile"
+            app:layout_constraintTop_toTopOf="@id/img_profile"
+            app:layout_constraintVertical_bias="1"
+            tools:ignore="ContentDescription" />
+
+        <com.cheep.custom_view.CFTextViewSemiBold
+            android:id="@+id/text_provider_name"
+            android:layout_width="@dimen/scale_0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/scale_14dp"
+            android:layout_marginTop="@dimen/scale_23dp"
+            android:includeFontPadding="false"
+            android:text="Lokesh Shah"
+            android:textColor="@color/splash_gradient_end"
+            android:textSize="@dimen/text_size_14sp"
+            app:layout_constraintStart_toEndOf="@id/img_profile"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.cheep.custom_view.CFTextViewRegular
+            android:id="@+id/tv_pro_category"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/scale_14dp"
+            android:layout_marginTop="@dimen/scale_3dp"
+            android:includeFontPadding="false"
+            android:maxWidth="@dimen/scale_96dp"
+            android:paddingBottom="@dimen/scale_3dp"
+            android:paddingTop="@dimen/scale_3dp"
+            android:text="Appliance Repair"
+            android:textColor="@color/splash_gradient_end"
+            android:textSize="@dimen/text_size_11sp"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintHorizontal_chainStyle="spread"
+            app:layout_constraintHorizontal_weight="0.5"
+            app:layout_constraintStart_toEndOf="@id/img_profile"
+            app:layout_constraintTop_toBottomOf="@id/text_provider_name" />
+
+        <com.cheep.custom_view.CFTextViewRegular
+            android:id="@+id/tv_date"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/scale_8dp"
+            android:layout_marginTop="@dimen/scale_6dp"
+            android:includeFontPadding="false"
+            android:text="23 Feb'18"
+            android:textColor="@color/grey_varient_8"
+            android:textSize="@dimen/text_size_11sp"
+            app:layout_constraintEnd_toStartOf="@id/tv_payment_via"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintHorizontal_chainStyle="spread_inside"
+            app:layout_constraintHorizontal_weight="0.25"
+            app:layout_constraintStart_toEndOf="@+id/tv_pro_category"
+            app:layout_constraintTop_toBottomOf="@id/text_provider_name" />
+
+        <com.cheep.custom_view.CFTextViewSemiBold
+            android:id="@+id/tv_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/scale_12dp"
+            android:includeFontPadding="false"
+            android:text="₹1772"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_size_13sp"
+            app:layout_constraintBottom_toBottomOf="@id/text_provider_name"
+            app:layout_constraintEnd_toStartOf="@+id/icon_right"
+            app:layout_constraintHorizontal_bias="1"
+            app:layout_constraintStart_toEndOf="@id/text_provider_name"
+            app:layout_constraintTop_toTopOf="@id/text_provider_name" />
+
+        <com.cheep.custom_view.CFTextViewRegular
+            android:id="@+id/tv_payment_via"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/scale_12dp"
+            android:layout_marginTop="@dimen/scale_6dp"
+            android:gravity="end"
+            android:includeFontPadding="false"
+            android:text="Payment pending"
+            android:textColor="@color/grey_varient_13"
+            android:textSize="@dimen/text_size_11sp"
+            app:layout_constraintEnd_toStartOf="@+id/icon_right"
+            app:layout_constraintHorizontal_bias="1"
+            app:layout_constraintHorizontal_weight="0.25"
+            app:layout_constraintStart_toEndOf="@id/tv_date"
+            app:layout_constraintTop_toBottomOf="@+id/tv_price" />
+
+        <ImageView
+            android:id="@+id/icon_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/scale_14dp"
+            android:src="@drawable/ic_right_arrow_blue"
+            app:layout_constraintBottom_toBottomOf="@id/tv_payment_via"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/tv_price"
+            tools:ignore="ContentDescription" />
+
+        <android.support.constraint.Group
+            android:id="@+id/group_payment_pending"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="visible"
+            app:constraint_referenced_ids="tv_payment_pending_desc
+            ,tvPayNow,tvSupport" />
+
+        <android.support.constraint.Barrier
+            android:id="@+id/barrier"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="bottom"
+            app:constraint_referenced_ids="tv_payment_via,tvSupport,img_profile" />
+
+        <com.cheep.custom_view.CFTextViewRegular
+            android:id="@+id/tv_payment_pending_desc"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/scale_14dp"
+            android:layout_marginRight="@dimen/scale_3dp"
+            android:layout_marginTop="@dimen/scale_8dp"
+            android:includeFontPadding="false"
+            android:text="@string/msg_payment_pending_desc"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_size_11sp"
+            app:layout_constraintEnd_toStartOf="@id/icon_right"
+            app:layout_constraintStart_toEndOf="@id/img_profile"
+            app:layout_constraintTop_toBottomOf="@id/tv_payment_via" />
+
+        <com.cheep.custom_view.CFTextViewSemiBold
+            android:id="@+id/tvPayNow"
+            android:layout_width="@dimen/home_screen_book_button_width"
+            android:layout_height="@dimen/home_screen_book_button_height"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="@dimen/scale_14dp"
+            android:layout_marginRight="@dimen/scale_14dp"
+            android:layout_marginTop="@dimen/scale_8dp"
+            android:background="@drawable/rounded_rect_blue"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:padding="@dimen/scale_6dp"
+            android:text="@string/label_book"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_11sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/tvSupport"
+            app:layout_constraintTop_toBottomOf="@id/tv_payment_pending_desc" />
+
+        <com.cheep.custom_view.CFTextViewSemiBold
+            android:id="@+id/tvSupport"
+            android:layout_width="@dimen/home_screen_book_button_width"
+            android:layout_height="@dimen/home_screen_book_button_height"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="@dimen/scale_14dp"
+            android:layout_marginRight="@dimen/scale_3dp"
+            android:layout_marginTop="@dimen/scale_8dp"
+            android:background="@drawable/btn_blue_rounded_border_all_5_dp"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:paddingBottom="@dimen/scale_5dp"
+            android:paddingLeft="@dimen/scale_15dp"
+            android:paddingRight="@dimen/scale_15dp"
+            android:paddingTop="@dimen/scale_5dp"
+            android:text="@string/label_support"
+            android:textColor="@color/splash_gradient_end"
+            android:textSize="@dimen/text_size_11sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/icon_right"
+            app:layout_constraintTop_toBottomOf="@id/tv_payment_pending_desc" />
+
+        <!--Divider(1)-->
+        <View
+            android:id="@+id/separator"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/scale_1dp"
+            android:layout_marginTop="@dimen/scale_14dp"
+            android:background="@color/grey_varient_11"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/barrier" />
+
+    </android.support.constraint.ConstraintLayout>
+</layout>

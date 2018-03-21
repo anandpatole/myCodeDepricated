@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <android.support.design.widget.AppBarLayout
+            android:id="@+id/app_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/AppTheme.AppBarWhite">
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/cl_month_selector"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/c_F2F2F2"
+                android:gravity="center">
+
+                <ImageView
+                    android:id="@+id/icon_left"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="@dimen/scale_15dp"
+                    android:paddingLeft="@dimen/scale_24dp"
+                    android:paddingRight="@dimen/scale_24dp"
+                    android:paddingTop="@dimen/scale_15dp"
+                    android:src="@drawable/icon_payment_arrow_left"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/text_month_year"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="ContentDescription" />
+
+                <com.cheep.custom_view.CFTextViewRegular
+                    android:id="@+id/text_month_year"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:letterSpacing="0.3"
+                    android:textAllCaps="false"
+                    android:textColor="@color/splash_gradient_end"
+                    android:textSize="@dimen/text_size_14sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/icon_left"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:letterSpacing="0.3"
+                    tools:ignore="UnusedAttribute"
+                    tools:text="May 2018" />
+
+                <ImageView
+                    android:id="@+id/icon_right"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="@dimen/scale_15dp"
+                    android:paddingLeft="@dimen/scale_24dp"
+                    android:paddingRight="@dimen/scale_24dp"
+                    android:paddingTop="@dimen/scale_15dp"
+                    android:src="@drawable/icon_payment_arrow_right"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/text_month_year"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="ContentDescription" />
+
+                <com.cheep.custom_view.CFTextViewRegular
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/scale_12dp"
+                    android:text="@string/label_total_paid_colon"
+                    android:textColor="@color/black_varient_1"
+                    android:textSize="@dimen/text_size_14sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/tv_total_paid"
+                    app:layout_constraintHorizontal_bias="1"
+                    app:layout_constraintStart_toEndOf="@id/icon_right"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <com.cheep.custom_view.CFTextViewSemiBold
+                    android:id="@+id/tv_total_paid"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/scale_16dp"
+                    android:text="₹10,772"
+                    android:textColor="@color/black_varient_1"
+                    android:textSize="@dimen/text_size_13sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </android.support.constraint.ConstraintLayout>
+        </android.support.design.widget.AppBarLayout>
+
+        <include
+            android:id="@+id/common_recycler_view"
+            layout="@layout/common_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/app_bar"
+            tools:itemCount="3"
+            tools:listitem="@layout/row_payment_history_cc" />
+
+    </android.support.constraint.ConstraintLayout>
+</layout>

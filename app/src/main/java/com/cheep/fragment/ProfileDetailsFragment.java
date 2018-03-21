@@ -19,7 +19,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -40,7 +39,7 @@ import com.cheep.cheepcare.dialogs.BottomAddAddressDialog;
 import com.cheep.custom_view.BottomAlertDialog;
 import com.cheep.custom_view.DividerItemDecoration;
 import com.cheep.databinding.DialogChangePhoneNumberBinding;
-import com.cheep.databinding.FragmentTabProfileBinding;
+import com.cheep.databinding.FragmentProfileDetailsBinding;
 import com.cheep.firebase.FirebaseHelper;
 import com.cheep.firebase.FirebaseUtils;
 import com.cheep.firebase.model.ChatUserModel;
@@ -84,42 +83,30 @@ import static com.cheep.utils.Utility.REQUEST_CODE_IMAGE_CAPTURE_ADD_PROFILE;
 /**
  * Created by pankaj on 9/27/16.
  */
-public class ProfileTabFragment extends BaseFragment {
-    public static final String TAG = "ProfileTabFragment";
+public class ProfileDetailsFragment extends BaseFragment {
+    public static final String TAG = "ProfileDetailsFragment";
 
     private String TEMP_PHONE_NUMBER;
-    private FragmentTabProfileBinding mFragmentTabProfileBinding;
+    private FragmentProfileDetailsBinding mBinding;
     private JSONArray jsonEmergencyContacts;
     private ArrayList<AddressModel> addressList;
     private DrawerLayoutInteractionListener mListener;
     //    private String mCurrentPhotoPath;
     private File photoFile;
 
-    public static ProfileTabFragment newInstance(DrawerLayoutInteractionListener mListener) {
+    public static ProfileDetailsFragment newInstance() {
         Bundle args = new Bundle();
-        ProfileTabFragment fragment = new ProfileTabFragment();
-        fragment.setArguments(args);
-        fragment.setmListener(mListener);
-        return fragment;
-    }
-
-    public static ProfileTabFragment newInstance() {
-        Bundle args = new Bundle();
-        ProfileTabFragment fragment = new ProfileTabFragment();
+        ProfileDetailsFragment fragment = new ProfileDetailsFragment();
         fragment.setArguments(args);
         return fragment;
-    }
-
-    public void setmListener(DrawerLayoutInteractionListener mListener) {
-        this.mListener = mListener;
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        mFragmentTabProfileBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_tab_profile, container, false);
-        return mFragmentTabProfileBinding.getRoot();
+        mBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_profile_details, container, false);
+        return mBinding.getRoot();
     }
 
     @Override
@@ -167,16 +154,7 @@ public class ProfileTabFragment extends BaseFragment {
         //Fetch User Details from Preference
         UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
 
-        if (((AppCompatActivity) mContext).getSupportActionBar() != null) {
-            //Setting up toolbar
-            ((AppCompatActivity) mContext).setSupportActionBar(mFragmentTabProfileBinding.toolbar);
-            ((AppCompatActivity) mContext).getSupportActionBar().setTitle(Utility.EMPTY_STRING);
-        }
-
-        //Provide callback to activity to link drawerlayout with toolbar
-        mListener.setUpDrawerLayoutWithToolBar(mFragmentTabProfileBinding.toolbar);
-
-        mFragmentTabProfileBinding.textVersion.setText(getString(R.string.label_version_x, Utility.getApplicationVersion(mContext)));
+        mBinding.textVersion.setText(getString(R.string.label_version_x, Utility.getApplicationVersion(mContext)));
 
         fillFields(userDetails);
 
@@ -186,7 +164,7 @@ public class ProfileTabFragment extends BaseFragment {
                 .load("http://stylekart.net/2016/roastkings/admin/images/post/original/1475588386_57f3b1224612d.png")
                 .error(R.mipmap.ic_launcher)
                 .crossFade()
-                .into(mFragmentTabProfileBinding.imgBanner);*/
+                .into(mBinding.imgBanner);*/
 
         showGuestProfile(PreferenceUtility.getInstance(mContext).getUserDetails() == null);
 
@@ -200,13 +178,13 @@ public class ProfileTabFragment extends BaseFragment {
             loadCoverImage(userDetails.profileBanner);
 
             //Update Name
-            mFragmentTabProfileBinding.userName.setText(userDetails.userName);
+            mBinding.userName.setText(userDetails.userName);
 
             //Update email
-            mFragmentTabProfileBinding.textEmail.setText(userDetails.email);
+            mBinding.textEmail.setText(userDetails.email);
         } else {
             // Static details for Guest Users
-            mFragmentTabProfileBinding.userName.setText(Utility.GUEST_STATIC_INFO.USERNAME);
+            mBinding.userName.setText(Utility.GUEST_STATIC_INFO.USERNAME);
         }
 
     }
@@ -214,14 +192,14 @@ public class ProfileTabFragment extends BaseFragment {
 
     @Override
     public void setListener() {
-//        mFragmentTabProfileBinding.textPhoneNumber.setOnClickListener(onClickListener);
-        mFragmentTabProfileBinding.textEmergencyContact.setOnClickListener(onClickListener);
-        mFragmentTabProfileBinding.textManageAddress.setOnClickListener(onClickListener);
-//        mFragmentTabProfileBinding.textChangePassword.setOnClickListener(onClickListener);
-        mFragmentTabProfileBinding.imgEditUsername.setOnClickListener(onClickListener);
-        mFragmentTabProfileBinding.imgEditEmail.setOnClickListener(onClickListener);
-        mFragmentTabProfileBinding.imgProfilePhotoEdit.setOnClickListener(onClickListener);
-        mFragmentTabProfileBinding.imgCoverPhotoEdit.setOnClickListener(onClickListener);
+//        mBinding.textPhoneNumber.setOnClickListener(onClickListener);
+        mBinding.textEmergencyContact.setOnClickListener(onClickListener);
+        mBinding.textManageAddress.setOnClickListener(onClickListener);
+//        mBinding.textChangePassword.setOnClickListener(onClickListener);
+        mBinding.imgEditUsername.setOnClickListener(onClickListener);
+        mBinding.imgEditEmail.setOnClickListener(onClickListener);
+        mBinding.imgProfilePhotoEdit.setOnClickListener(onClickListener);
+        mBinding.imgCoverPhotoEdit.setOnClickListener(onClickListener);
     }
 
     View.OnClickListener onClickListener = new View.OnClickListener() {
@@ -252,18 +230,18 @@ public class ProfileTabFragment extends BaseFragment {
                     if (Utility.isConnected(mContext)) {
 //                        CropImage.activity()
 //                                .setGuidelines(CropImageView.Guidelines.ON)
-//                                .start(getContext(), ProfileTabFragment.this);
+//                                .start(getContext(), ProfileDetailsFragment.this);
 //
                         showPictureChooserDialog(false);
                     } else {
-                        Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mFragmentTabProfileBinding.getRoot());
+                        Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mBinding.getRoot());
                     }
                     break;
                 case R.id.img_cover_photo_edit:
                     if (Utility.isConnected(mContext)) {
                         showPictureChooserDialog(true);
                     } else {
-                        Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mFragmentTabProfileBinding.getRoot());
+                        Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mBinding.getRoot());
                     }
                     break;
             }
@@ -771,7 +749,7 @@ public class ProfileTabFragment extends BaseFragment {
     };
 
     private void showBottomAddressDialog(AddressModel model) {
-        dialog = new BottomAddAddressDialog(ProfileTabFragment.this, new BottomAddAddressDialog.AddAddressListener() {
+        dialog = new BottomAddAddressDialog(ProfileDetailsFragment.this, new BottomAddAddressDialog.AddAddressListener() {
             @Override
             public void onAddAddress(AddressModel addressModel) {
 //                    mList.add(addressModel);
@@ -855,7 +833,7 @@ public class ProfileTabFragment extends BaseFragment {
 
     private void callUpdateProfileWS(Map<String, String> mParams, HashMap<String, File> mFileParams) {
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mFragmentTabProfileBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mBinding.getRoot());
             return;
         }
 
@@ -913,12 +891,12 @@ public class ProfileTabFragment extends BaseFragment {
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
                         // Show Toast
-                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mFragmentTabProfileBinding.getRoot());
+                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
                         error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
                         // Show message
-                        Utility.showSnackBar(error_message, mFragmentTabProfileBinding.getRoot());
+                        Utility.showSnackBar(error_message, mBinding.getRoot());
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
                     case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
@@ -945,7 +923,7 @@ public class ProfileTabFragment extends BaseFragment {
             hideProgressDialog();
 
             // Show Toast
-            Utility.showSnackBar(mContext.getString(R.string.label_something_went_wrong), mFragmentTabProfileBinding.getRoot());
+            Utility.showSnackBar(mContext.getString(R.string.label_something_went_wrong), mBinding.getRoot());
         }
     };
 
@@ -956,7 +934,7 @@ public class ProfileTabFragment extends BaseFragment {
      */
     private void callDeleteAddressWS(String addressId) {
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mFragmentTabProfileBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mBinding.getRoot());
             return;
         }
 
@@ -1005,12 +983,12 @@ public class ProfileTabFragment extends BaseFragment {
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
                         // Show Toast
-                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mFragmentTabProfileBinding.getRoot());
+                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
                         error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
                         // Show message
-                        Utility.showSnackBar(error_message, mFragmentTabProfileBinding.getRoot());
+                        Utility.showSnackBar(error_message, mBinding.getRoot());
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
                     case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
@@ -1038,7 +1016,7 @@ public class ProfileTabFragment extends BaseFragment {
             hideProgressDialog();
 
             // Show Toast
-            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mFragmentTabProfileBinding.getRoot());
+            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
         }
     };
 
@@ -1048,7 +1026,7 @@ public class ProfileTabFragment extends BaseFragment {
      */
     private void callGetProfileWS() {
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mFragmentTabProfileBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mBinding.getRoot());
             return;
         }
 
@@ -1103,12 +1081,12 @@ public class ProfileTabFragment extends BaseFragment {
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
                         // Show Toast
-                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mFragmentTabProfileBinding.getRoot());
+                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
                         error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
                         // Show message
-                        Utility.showSnackBar(error_message, mFragmentTabProfileBinding.getRoot());
+                        Utility.showSnackBar(error_message, mBinding.getRoot());
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
                     case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
@@ -1135,7 +1113,7 @@ public class ProfileTabFragment extends BaseFragment {
             hideProgressDialog();
 
             // Show Toast
-            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mFragmentTabProfileBinding.getRoot());
+            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
         }
     };
 
@@ -1146,7 +1124,7 @@ public class ProfileTabFragment extends BaseFragment {
      */
     private void updateEmergencyContact(JSONArray jsonArrayEmergencyContact) {
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mFragmentTabProfileBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mBinding.getRoot());
             return;
         }
 
@@ -1191,12 +1169,12 @@ public class ProfileTabFragment extends BaseFragment {
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
                         // Show Toast
-                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mFragmentTabProfileBinding.getRoot());
+                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
                         error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
                         // Show message
-                        Utility.showSnackBar(error_message, mFragmentTabProfileBinding.getRoot());
+                        Utility.showSnackBar(error_message, mBinding.getRoot());
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
                     case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
@@ -1224,7 +1202,7 @@ public class ProfileTabFragment extends BaseFragment {
             hideProgressDialog();
 
             // Show Toast
-            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mFragmentTabProfileBinding.getRoot());
+            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
         }
     };
 
@@ -1234,12 +1212,12 @@ public class ProfileTabFragment extends BaseFragment {
     private void changePhoneNumber(String phoneNumber) {
 
         if (TextUtils.isEmpty(phoneNumber)) {
-//            Utility.showSnackBar(getString(R.string.validate_phone_number), mFragmentTabProfileBinding.getRoot());
+//            Utility.showSnackBar(getString(R.string.validate_phone_number), mBinding.getRoot());
             Utility.showToast(mContext, getString(R.string.validate_phone_number));
             return;
         } //Length of phone number must bhi 10 in length
         else if (!Utility.isValidPhoneNumber(phoneNumber.trim())) {
-//            Utility.showSnackBar(getString(R.string.validate_phone_number), mFragmentTabProfileBinding.getRoot());
+//            Utility.showSnackBar(getString(R.string.validate_phone_number), mBinding.getRoot());
             Utility.showToast(mContext, getString(R.string.validate_phone_number));
             return;
         }
@@ -1330,7 +1308,7 @@ public class ProfileTabFragment extends BaseFragment {
             hideProgressDialog();
 
             // Show Toast
-            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mFragmentTabProfileBinding.getRoot());
+            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
         }
     };
 
@@ -1340,39 +1318,39 @@ public class ProfileTabFragment extends BaseFragment {
     private void changePassword(String oldPassword, String newPassword, String confirmPassword) {
 
         if (TextUtils.isEmpty(oldPassword)) {
-            Utility.showSnackBar(getString(R.string.validate_empty_password), mFragmentTabProfileBinding.getRoot());
+            Utility.showSnackBar(getString(R.string.validate_empty_password), mBinding.getRoot());
             Utility.showToast(mContext, getString(R.string.validate_empty_password));
             return;
         } else if (TextUtils.isEmpty(newPassword)) {
-            Utility.showSnackBar(getString(R.string.validate_empty_password), mFragmentTabProfileBinding.getRoot());
+            Utility.showSnackBar(getString(R.string.validate_empty_password), mBinding.getRoot());
             Utility.showToast(mContext, getString(R.string.validate_empty_password));
             return;
         } else if (TextUtils.isEmpty(confirmPassword)) {
-            Utility.showSnackBar(getString(R.string.validate_empty_password), mFragmentTabProfileBinding.getRoot());
+            Utility.showSnackBar(getString(R.string.validate_empty_password), mBinding.getRoot());
             Utility.showToast(mContext, getString(R.string.validate_empty_password));
             return;
         } else if (!newPassword.equalsIgnoreCase(confirmPassword)) {
-            Utility.showSnackBar(getString(R.string.validate_confirm_password), mFragmentTabProfileBinding.getRoot());
+            Utility.showSnackBar(getString(R.string.validate_confirm_password), mBinding.getRoot());
             Utility.showToast(mContext, getString(R.string.validate_confirm_password));
             return;
         }
         //Length validation
         else if (oldPassword.length() < Utility.PASSWORD_MIN_LENGTH) {
-//            Utility.showSnackBar(getString(R.string.validate_password_length), mFragmentTabProfileBinding.getRoot());
+//            Utility.showSnackBar(getString(R.string.validate_password_length), mBinding.getRoot());
             Utility.showToast(mContext, getString(R.string.validate_password_length));
             return;
         } else if (newPassword.length() < Utility.PASSWORD_MIN_LENGTH) {
-//            Utility.showSnackBar(getString(R.string.validate_password_length), mFragmentTabProfileBinding.getRoot());
+//            Utility.showSnackBar(getString(R.string.validate_password_length), mBinding.getRoot());
             Utility.showToast(mContext, getString(R.string.validate_password_length));
             return;
         } else if (confirmPassword.length() < Utility.PASSWORD_MIN_LENGTH) {
-//            Utility.showSnackBar(getString(R.string.validate_password_length), mFragmentTabProfileBinding.getRoot());
+//            Utility.showSnackBar(getString(R.string.validate_password_length), mBinding.getRoot());
             Utility.showToast(mContext, getString(R.string.validate_password_length));
             return;
         }
 
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mFragmentTabProfileBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mBinding.getRoot());
             Utility.showToast(mContext, Utility.NO_INTERNET_CONNECTION);
             return;
         }
@@ -1425,7 +1403,7 @@ public class ProfileTabFragment extends BaseFragment {
                         error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);*/
 
                         // Show message
-                        Utility.showSnackBar(getString(R.string.msg_password_change_success), mFragmentTabProfileBinding.getRoot());
+                        Utility.showSnackBar(getString(R.string.msg_password_change_success), mBinding.getRoot());
 
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
@@ -1463,7 +1441,7 @@ public class ProfileTabFragment extends BaseFragment {
             hideProgressDialog();
 
             // Show Toast
-            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mFragmentTabProfileBinding.getRoot());
+            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
         }
     };
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1514,7 +1492,7 @@ public class ProfileTabFragment extends BaseFragment {
                     startIntentFileChooser(Utility.REQUEST_CODE_GET_FILE_ADD_COVER);
                 } else if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_DENIED) {
                     Log.i(TAG, "onRequestPermissionsResult: Permission Denied");
-                    Utility.showSnackBar(getString(R.string.permission_denied_read), mFragmentTabProfileBinding.getRoot());
+                    Utility.showSnackBar(getString(R.string.permission_denied_read), mBinding.getRoot());
                 }
                 break;
             case Utility.REQUEST_CODE_READ_EXTERNAL_STORAGE_ADD_PROFILE_GALLERY:
@@ -1523,7 +1501,7 @@ public class ProfileTabFragment extends BaseFragment {
                     startIntentFileChooser(Utility.REQUEST_CODE_GET_FILE_ADD_PROFILE_GALLERY);
                 } else if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_DENIED) {
                     Log.i(TAG, "onRequestPermissionsResult: Permission Denied");
-                    Utility.showSnackBar(getString(R.string.permission_denied_read), mFragmentTabProfileBinding.getRoot());
+                    Utility.showSnackBar(getString(R.string.permission_denied_read), mBinding.getRoot());
                 }
                 break;
             case Utility.REQUEST_CODE_ADD_PROFILE_CAMERA:
@@ -1532,7 +1510,7 @@ public class ProfileTabFragment extends BaseFragment {
                     startCameraCaptureChooser(Utility.REQUEST_CODE_IMAGE_CAPTURE_ADD_PROFILE);
                 } else if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_DENIED) {
                     Log.i(TAG, "onRequestPermissionsResult: Permission Denied Camera");
-                    Utility.showSnackBar(getString(R.string.permission_denied_camera), mFragmentTabProfileBinding.getRoot());
+                    Utility.showSnackBar(getString(R.string.permission_denied_camera), mBinding.getRoot());
                 }
                 break;
         }
@@ -1764,7 +1742,7 @@ public class ProfileTabFragment extends BaseFragment {
     }
 
     private void loadImage(String selectedImagePath) {
-        GlideUtility.showCircularImageView(mContext, TAG, mFragmentTabProfileBinding.imgProfile, selectedImagePath, Utility.DEFAULT_PROFILE_SRC, true);
+        GlideUtility.showCircularImageView(mContext, TAG, mBinding.imgProfile, selectedImagePath, Utility.DEFAULT_PROFILE_SRC, true);
 
        /* if (!TextUtils.isEmpty(selectedImagePath))
         {
@@ -1784,39 +1762,39 @@ public class ProfileTabFragment extends BaseFragment {
                                 U8_4Bitmap = originalBitmap.copy(Bitmap.Config.ARGB_8888, true);
                             }
 
-                            mFragmentTabProfileBinding.imgBanner.setImageBitmap(originalBitmap);
+                            mBinding.imgBanner.setImageBitmap(originalBitmap);
                         }
                     });
         }*/
     }
 
     private void loadCoverImage(String selectedImagePath) {
-        GlideUtility.loadImageView(mContext, mFragmentTabProfileBinding.imgBanner, selectedImagePath, 0);
+        GlideUtility.loadImageView(mContext, mBinding.imgBanner, selectedImagePath, 0);
     }
 
     private void showGuestProfile(boolean flag) {
         if (flag) {
-            mFragmentTabProfileBinding.textEmergencyContact.setVisibility(View.GONE);
-            mFragmentTabProfileBinding.viewDividerOne.setVisibility(View.GONE);
-            mFragmentTabProfileBinding.textManageAddress.setVisibility(View.GONE);
-            mFragmentTabProfileBinding.viewDividerTwo.setVisibility(View.GONE);
+            mBinding.textEmergencyContact.setVisibility(View.GONE);
+            mBinding.viewDividerOne.setVisibility(View.GONE);
+            mBinding.textManageAddress.setVisibility(View.GONE);
+            mBinding.viewDividerTwo.setVisibility(View.GONE);
 
             // Hide Editable Buttons
-            mFragmentTabProfileBinding.imgProfilePhotoEdit.setVisibility(View.GONE);
-            mFragmentTabProfileBinding.imgCoverPhotoEdit.setVisibility(View.GONE);
-            mFragmentTabProfileBinding.imgEditUsername.setVisibility(View.GONE);
-            mFragmentTabProfileBinding.imgEditEmail.setVisibility(View.GONE);
+            mBinding.imgProfilePhotoEdit.setVisibility(View.GONE);
+            mBinding.imgCoverPhotoEdit.setVisibility(View.GONE);
+            mBinding.imgEditUsername.setVisibility(View.GONE);
+            mBinding.imgEditEmail.setVisibility(View.GONE);
         } else {
-            mFragmentTabProfileBinding.textEmergencyContact.setVisibility(View.VISIBLE);
-            mFragmentTabProfileBinding.viewDividerOne.setVisibility(View.VISIBLE);
-            mFragmentTabProfileBinding.textManageAddress.setVisibility(View.VISIBLE);
-            mFragmentTabProfileBinding.viewDividerTwo.setVisibility(View.VISIBLE);
+            mBinding.textEmergencyContact.setVisibility(View.VISIBLE);
+            mBinding.viewDividerOne.setVisibility(View.VISIBLE);
+            mBinding.textManageAddress.setVisibility(View.VISIBLE);
+            mBinding.viewDividerTwo.setVisibility(View.VISIBLE);
 
             // Show Editable Buttons
-            mFragmentTabProfileBinding.imgProfilePhotoEdit.setVisibility(View.VISIBLE);
-            mFragmentTabProfileBinding.imgCoverPhotoEdit.setVisibility(View.VISIBLE);
-            mFragmentTabProfileBinding.imgEditUsername.setVisibility(View.VISIBLE);
-            mFragmentTabProfileBinding.imgEditEmail.setVisibility(View.GONE);
+            mBinding.imgProfilePhotoEdit.setVisibility(View.VISIBLE);
+            mBinding.imgCoverPhotoEdit.setVisibility(View.VISIBLE);
+            mBinding.imgEditUsername.setVisibility(View.VISIBLE);
+            mBinding.imgEditEmail.setVisibility(View.GONE);
         }
     }
 

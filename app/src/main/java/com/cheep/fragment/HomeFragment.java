@@ -62,7 +62,7 @@ public class HomeFragment extends BaseFragment {
 
     public static final String TAB_HOME = HomeTabFragment.TAG;
     public static final String TAB_MY_TASK = MyTaskTabFragment.TAG;
-    public static final String TAB_ME = ProfileTabFragment.TAG;
+    public static final String TAB_ME = ProfileDetailsFragment.TAG;
     public static final String TAB_CHAT = ChatTabFragment.TAG;
     public static final String TAB_ALERT = "ALERT";
 
@@ -459,19 +459,19 @@ public class HomeFragment extends BaseFragment {
                 loadFragment(MyTaskTabFragment.TAG, fragmentToCommit);
                 break;
             /*case TAB_ME:
-                if (mFragmentsStackTags.contains(ProfileTabFragment.TAG) && mFragments.containsKey(ProfileTabFragment.TAG)) {
-                    fragmentToCommit = mFragments.get(ProfileTabFragment.TAG);
-                    mFragmentsStackTags.remove(ProfileTabFragment.TAG);
-                    mFragmentsStackTags.add(ProfileTabFragment.TAG);
+                if (mFragmentsStackTags.contains(ProfileDetailsFragment.TAG) && mFragments.containsKey(ProfileDetailsFragment.TAG)) {
+                    fragmentToCommit = mFragments.get(ProfileDetailsFragment.TAG);
+                    mFragmentsStackTags.remove(ProfileDetailsFragment.TAG);
+                    mFragmentsStackTags.add(ProfileDetailsFragment.TAG);
                 } else {
 
-                    fragmentToCommit = ProfileTabFragment.newInstance(mListener);
-                    if (!mFragmentsStackTags.contains(ProfileTabFragment.TAG)) {
-                        mFragmentsStackTags.add(ProfileTabFragment.TAG);
+                    fragmentToCommit = ProfileDetailsFragment.newInstance(mListener);
+                    if (!mFragmentsStackTags.contains(ProfileDetailsFragment.TAG)) {
+                        mFragmentsStackTags.add(ProfileDetailsFragment.TAG);
                     }
-                    mFragments.put(ProfileTabFragment.TAG, fragmentToCommit);
+                    mFragments.put(ProfileDetailsFragment.TAG, fragmentToCommit);
                 }
-                loadFragment(ProfileTabFragment.TAG, fragmentToCommit);
+                loadFragment(ProfileDetailsFragment.TAG, fragmentToCommit);
                 break;*/
             case TAB_CHAT:
                 if (mFragmentsStackTags.contains(ChatTabFragment.TAG) && mFragments.containsKey(ChatTabFragment.TAG)) {

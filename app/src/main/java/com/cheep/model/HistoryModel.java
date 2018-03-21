@@ -38,11 +38,23 @@ public class HistoryModel {
     @SerializedName("task_category")
     public String task_category;
 
+    @SerializedName("task_type")
+    public String taskType;
+
+    @SerializedName("pending_amount")
+    public int pendingAmount;
+
+    @SerializedName("sp_favourite")
+    public String spFavourite;
+
+    @SerializedName("payment_method")
+    public String paymentMethod;
+
     public String getPaymentDate() {
         Log.i(TAG, "getPaymentDate: Initial Date: " + payment_date);
-        SimpleDateFormat serverSDF = new SimpleDateFormat(Utility.DATE_TIME_FORMAT_SERVICE_YEAR/*, Locale.US*/);
+        SimpleDateFormat serverSDF = new SimpleDateFormat(Utility.DATE_FORMAT_DD_MMM_YY/*, Locale.US*/);
         serverSDF.setTimeZone(TimeZone.getTimeZone(Utility.UTC));
-        SimpleDateFormat outputSDF = new SimpleDateFormat(Utility.DATE_TIME_FORMAT_SERVICE_YEAR/*, Locale.US*/);
+        SimpleDateFormat outputSDF = new SimpleDateFormat(Utility.DATE_FORMAT_DD_MMM_YY/*, Locale.US*/);
         Date date = null;
         try {
             date = serverSDF.parse(payment_date);
