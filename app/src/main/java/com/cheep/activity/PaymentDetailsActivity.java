@@ -91,8 +91,11 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
      */
     private boolean payPendingAmount = false;
 
+
+    // DATA_# -- true -- means make this screen as payment summary screen and show pending payment
     /**
      * payment summary for task (Booking confirmation screen for booking get quotes)
+     * DATA_3 is to check payment of pending amount
      *
      * @param context
      * @param taskDetailModel
@@ -110,6 +113,7 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
     /**
      * payment summary on completion of task
      * if user has choose pay later option or additional payments are pending then this instance will be called
+     * DATA_3 is to check payment of pending amount
      *
      * @param mContext
      * @param taskDetailModel

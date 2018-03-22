@@ -887,6 +887,7 @@ public class WebCallClass {
         String media_file = Utility.getSelectedMediaJsonString(taskDetailModel.mMediaModelList);
         mParams.put(NetworkUtility.TAGS.MEDIA_FILE, media_file);
         mParams.put(NetworkUtility.TAGS.TASK_TYPE, Utility.TASK_TYPE.INSTA_BOOK);
+
         if (!TextUtils.isEmpty(txnId))
             mParams.put(NetworkUtility.TAGS.TRANSACTION_ID, txnId);
 
@@ -927,6 +928,7 @@ public class WebCallClass {
         mTaskCreationParams.put(NetworkUtility.TAGS.IS_REFER_CODE, taskDetailModel.isReferCode);
         mTaskCreationParams.put(NetworkUtility.TAGS.QUOTE_AMOUNT, quoteAmount);
         mTaskCreationParams.put(NetworkUtility.TAGS.PAYABLE_AMOUNT, payableAmount);
+        mTaskCreationParams.put(NetworkUtility.TAGS.TRANSACTION_ID, mParams.get(NetworkUtility.TAGS.TRANSACTION_ID));
         mTaskCreationParams.put(NetworkUtility.TAGS.TASK_TYPE, Utility.TASK_TYPE.INSTA_BOOK);
         mTaskCreationParams.put(NetworkUtility.TAGS.MEDIA_FILE, media_file);
         mTaskCreationParams.put(NetworkUtility.TAGS.USED_WALLET_BALANCE, taskDetailModel.usedWalletAmount);

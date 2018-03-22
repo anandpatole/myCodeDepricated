@@ -87,7 +87,6 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
     private TaskDetailModel mTaskDetailModel;
 
 
-
     private View.OnClickListener rateAndReviewClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -277,19 +276,17 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     // Redirect the user to Payment Summary screen.
-                    double pendingAmount;
-                    try {
-                        pendingAmount = Double.parseDouble(mTaskDetailModel.taskTotalPendingAmount);
-                    } catch (Exception e) {
-                        pendingAmount = 0;
-                    }
-                    LogUtils.LOGE(TAG, "showTaskCompletionDialog: pendingAmount :: " + pendingAmount);
+//                    double pendingAmount;
+//                    try {
+//                        pendingAmount = Double.parseDouble(mTaskDetailModel.taskTotalPendingAmount);
+//                    } catch (Exception e) {
+//                        pendingAmount = 0;
+//                    }
+//                    LogUtils.LOGE(TAG, "showTaskCompletionDialog: pendingAmount :: " + pendingAmount);
 
-                    if (pendingAmount > 0) {
-//                        PaymentChoiceActivity.newInstance(mContext, mTaskDetailModel);
+                    if (mTaskDetailModel.isAnyAmountPending.equalsIgnoreCase(Utility.BOOLEAN.YES)) {
                         PaymentDetailsActivity.newInstance(mContext, mTaskDetailModel);
                     } else {
-//                        mBinding.textTaskCompletionYes.setText(R.string.label_yes);
                         PaymentSummaryActivity.newInstance(TaskSummaryForMultiCatActivity.this, mTaskDetailModel);
                     }
                 }
@@ -1566,7 +1563,7 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
                 if (rateDialog != null)
                     rateDialog.dismiss();
                 mTaskDetailModel.ratingDone = Utility.BOOLEAN.YES;
-                mTaskDetailModel.taskRatings =  event.taskRating;
+                mTaskDetailModel.taskRatings = event.taskRating;
                 // Update the UI According to Updated Model.
                 setUpUI();
                 break;
