@@ -66,7 +66,15 @@
                     app:layout_constraintTop_toTopOf="parent"
                     tools:ignore="ContentDescription" />
 
+                <android.support.constraint.Group
+                    android:id="@+id/group_total_paid"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="visible"
+                    app:constraint_referenced_ids="tv_total_paid,tv_total_paid_price" />
+
                 <com.cheep.custom_view.CFTextViewRegular
+                    android:id="@+id/tv_total_paid"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="@dimen/scale_12dp"
@@ -74,13 +82,13 @@
                     android:textColor="@color/black_varient_1"
                     android:textSize="@dimen/text_size_14sp"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/tv_total_paid"
+                    app:layout_constraintEnd_toStartOf="@+id/tv_total_paid_price"
                     app:layout_constraintHorizontal_bias="1"
                     app:layout_constraintStart_toEndOf="@id/icon_right"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <com.cheep.custom_view.CFTextViewSemiBold
-                    android:id="@+id/tv_total_paid"
+                    android:id="@+id/tv_total_paid_price"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="@dimen/scale_16dp"
@@ -100,6 +108,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/app_bar"

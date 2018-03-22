@@ -109,7 +109,6 @@ public class HistoryFragment extends BaseFragment {
 
         errorLoadingHelper = new ErrorLoadingHelper(mFragmentHistoryBinding.commonRecyclerView.recyclerView);
 
-        mFragmentHistoryBinding.textTitle.setText(getString(R.string.label_favourites));
         //Provide callback to activity to link drawerlayout with toolbar
         mListener.setUpDrawerLayoutWithToolBar(mFragmentHistoryBinding.toolbar);
 
@@ -132,8 +131,6 @@ public class HistoryFragment extends BaseFragment {
         mFragmentHistoryBinding.textMonth.setText(superCalendar.format(SuperCalendar.SuperFormatter.MONTH_JAN));
         mFragmentHistoryBinding.textYear.setText(superCalendar.format(SuperCalendar.SuperFormatter.YEAR_4_DIGIT));
 
-
-//        mFragmentHistoryBinding.layoutMonthSelector.setVisibility(View.GONE);
         mFragmentHistoryBinding.layoutTitle.setVisibility(View.GONE);
         mFragmentHistoryBinding.layoutSummary.setVisibility(View.GONE);
 
@@ -248,12 +245,10 @@ public class HistoryFragment extends BaseFragment {
                         favouriteRecyclerViewAdapter.setItems(list);
 
                         if (list != null && list.size() > 0) {
-//                            mFragmentHistoryBinding.layoutMonthSelector.setVisibility(View.VISIBLE);
                             mFragmentHistoryBinding.layoutTitle.setVisibility(View.VISIBLE);
                             mFragmentHistoryBinding.layoutSummary.setVisibility(View.VISIBLE);
                             errorLoadingHelper.success();
                         } else {
-//                            mFragmentHistoryBinding.layoutMonthSelector.setVisibility(View.GONE);
                             mFragmentHistoryBinding.layoutTitle.setVisibility(View.GONE);
                             mFragmentHistoryBinding.layoutSummary.setVisibility(View.GONE);
                             errorLoadingHelper.failed(null, R.drawable.img_empty_history, null, null);

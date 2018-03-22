@@ -768,4 +768,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_total_paid_colon">Total Paid:</string>
     <string name="msg_payment_pending_desc">It seems that your payment is pending for this task.</string>
     <string name="label_support">Support</string>
+    <string name="label_payment_pending">Payment pending</string>
+    <string name="label_free_small">Free</string>
+    <string name="label_with_cheep_care">with Cheep Care</string>
 </resources>

@@ -13,7 +13,6 @@
             android:layout_height="@dimen/scale_53dp"
             android:layout_marginBottom="@dimen/scale_17dp"
             android:layout_marginLeft="@dimen/scale_16dp"
-            android:layout_marginRight="@dimen/scale_11dp"
             android:layout_marginTop="@dimen/scale_17dp"
             android:src="@drawable/ic_cheep_circular_icon"
             app:layout_constraintEnd_toEndOf="parent"
@@ -42,9 +41,12 @@
             android:layout_marginLeft="@dimen/scale_14dp"
             android:layout_marginTop="@dimen/scale_23dp"
             android:includeFontPadding="false"
-            android:text="Lokesh Shah"
+            android:text="@string/label_pro_will_be_assigned_shortly"
             android:textColor="@color/splash_gradient_end"
             android:textSize="@dimen/text_size_14sp"
+            app:layout_constraintEnd_toStartOf="@id/tv_price"
+            app:layout_constraintHorizontal_chainStyle="spread_inside"
+            app:layout_constraintHorizontal_weight="0.7"
             app:layout_constraintStart_toEndOf="@id/img_profile"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -86,9 +88,10 @@
 
         <com.cheep.custom_view.CFTextViewSemiBold
             android:id="@+id/tv_price"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginRight="@dimen/scale_12dp"
+            android:gravity="end"
             android:includeFontPadding="false"
             android:text="₹1772"
             android:textColor="@color/black"
@@ -96,6 +99,7 @@
             app:layout_constraintBottom_toBottomOf="@id/text_provider_name"
             app:layout_constraintEnd_toStartOf="@+id/icon_right"
             app:layout_constraintHorizontal_bias="1"
+            app:layout_constraintHorizontal_weight="0.3"
             app:layout_constraintStart_toEndOf="@id/text_provider_name"
             app:layout_constraintTop_toTopOf="@id/text_provider_name" />
 
@@ -114,7 +118,7 @@
             app:layout_constraintHorizontal_bias="1"
             app:layout_constraintHorizontal_weight="0.25"
             app:layout_constraintStart_toEndOf="@id/tv_date"
-            app:layout_constraintTop_toBottomOf="@+id/tv_price" />
+            app:layout_constraintTop_toBottomOf="@+id/text_provider_name" />
 
         <ImageView
             android:id="@+id/icon_right"
@@ -169,7 +173,7 @@
             android:gravity="center"
             android:includeFontPadding="false"
             android:padding="@dimen/scale_6dp"
-            android:text="@string/label_book"
+            android:text="@string/label_pay_now"
             android:textColor="@color/white"
             android:textSize="@dimen/text_size_11sp"
             app:layout_constraintBottom_toBottomOf="parent"

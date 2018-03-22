@@ -1,5 +1,6 @@
 package com.cheep.cheepcare.fragment;
 
+import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -48,6 +49,7 @@ public class ProfilePaymentHistoryFragment extends BaseFragment {
     private SuperCalendar superCalendar;
     private SuperCalendar calendarChanger;
     private PaymentHistoryCCAdapter mAdapter;
+    private PaymentHistoryCCAdapter.HistoryItemInteractionListener mHistoryListener;
 
     public static ProfilePaymentHistoryFragment newInstance() {
         Bundle args = new Bundle();
@@ -72,6 +74,7 @@ public class ProfilePaymentHistoryFragment extends BaseFragment {
 
     @Override
     public void initiateUI() {
+
         errorLoadingHelper = new ErrorLoadingHelper(mBinding.commonRecyclerView.recyclerView);
         superCalendar = SuperCalendar.getInstance();
 
@@ -80,9 +83,15 @@ public class ProfilePaymentHistoryFragment extends BaseFragment {
                 + Utility.ONE_CHARACTER_SPACE + SuperCalendar.SuperFormatter.YEAR_4_DIGIT));
 
         //Setting adapter on recycler view
-        mAdapter = new PaymentHistoryCCAdapter(/*mHistoryListener*/);
+        mAdapter = new PaymentHistoryCCAdapter(mHistoryListener);
         mBinding.commonRecyclerView.recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         mBinding.commonRecyclerView.recyclerView.setAdapter(mAdapter);
+
+        mBinding.commonRecyclerView.swipeRefreshLayout.setEnabled(false);
+
+        mBinding.tvTotalPaidPrice.setText(getString(R.string.rupee_symbol_x_space, Utility.EMPTY_STRING));
+
+        mBinding.groupTotalPaid.setVisibility(View.GONE);
 
         errorLoadingHelper.showLoading();
         callHistoryWS(superCalendar.getTimeInMillis());
@@ -112,6 +121,27 @@ public class ProfilePaymentHistoryFragment extends BaseFragment {
         });
     }
 
+    @Override
+    public void onAttach(Context context) {
+        Log.i(TAG, "onAttach: ");
+        super.onAttach(context);
+        if (context instanceof PaymentHistoryCCAdapter.HistoryItemInteractionListener) {
+            mHistoryListener = (PaymentHistoryCCAdapter.HistoryItemInteractionListener) context;
+        } else {
+            throw new RuntimeException(context.toString() + " must implement PaymentHistoryCCAdapter.HistoryItemInteractionListener");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        Log.i(TAG, "onDetach: ");
+        mHistoryListener = null;
+        super.onDetach();
+
+        // Cancel the asynctask so it won't crash in case fragment is getting destroyed
+        Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.WS.PAYMENT_HISTORY);
+    }
+
     /**
      * Call History WS
      *
@@ -125,15 +155,14 @@ public class ProfilePaymentHistoryFragment extends BaseFragment {
         }
 
         if (PreferenceUtility.getInstance(mContext).getUserDetails() == null) {
-//            mBinding.lnTotalMoneySpent.setVisibility(View.GONE);
+            mBinding.groupTotalPaid.setVisibility(View.GONE);
             mBinding.clMonthSelector.setVisibility(View.GONE);
-//            mBinding.layoutTitle.setVisibility(View.GONE);
-//            mBinding.layoutSummary.setVisibility(View.GONE);
+            mBinding.groupTotalPaid.setVisibility(View.GONE);
             errorLoadingHelper.failed(null, R.drawable.img_empty_history, null, null);
             return;
         } else {
-//            mBinding.lnTotalMoneySpent.setVisibility(View.VISIBLE);
-//            mBinding.rlMonthSelector.setVisibility(View.VISIBLE);
+            mBinding.groupTotalPaid.setVisibility(View.VISIBLE);
+            mBinding.clMonthSelector.setVisibility(View.VISIBLE);
         }
 
         if (calendarChanger == null)
@@ -176,7 +205,6 @@ public class ProfilePaymentHistoryFragment extends BaseFragment {
                 switch (statusCode) {
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
 
-//                        mFragmentHistoryBinding.textPrice.setText(getString(R.string.ruppe_symbol_x, jsonObject.optString(NetworkUtility.TAGS.TOTAL_EARNED)));
                         double price = Double.parseDouble(jsonObject.optString(NetworkUtility.TAGS.TOTAL_EARNED));
                         DecimalFormat decimalFormat = new DecimalFormat("0.00");
 //                        mBinding.textPrice.setText(getString(R.string.rupee_symbol_x, decimalFormat.format(price)));
@@ -188,27 +216,21 @@ public class ProfilePaymentHistoryFragment extends BaseFragment {
                         mAdapter.setItems(list);
 
                         if (list != null && list.size() > 0) {
-//                            mFragmentHistoryBinding.layoutMonthSelector.setVisibility(View.VISIBLE);
-//                            mBinding.layoutTitle.setVisibility(View.VISIBLE);
-//                            mBinding.layoutSummary.setVisibility(View.VISIBLE);
+                            mBinding.groupTotalPaid.setVisibility(View.VISIBLE);
                             errorLoadingHelper.success();
                         } else {
-//                            mFragmentHistoryBinding.layoutMonthSelector.setVisibility(View.GONE);
-//                            mBinding.layoutTitle.setVisibility(View.GONE);
-//                            mBinding.layoutSummary.setVisibility(View.GONE);
+                            mBinding.groupTotalPaid.setVisibility(View.GONE);
                             errorLoadingHelper.failed(null, R.drawable.img_empty_history, null, null);
                         }
 
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
                         // Show Toast
-//                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mFragmentHistoryBinding.getRoot());
                         errorLoadingHelper.failed(getString(R.string.label_something_went_wrong), 0, onRetryBtnClickListener);
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
                         error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
                         // Show message
-//                        Utility.showSnackBar(error_message, mFragmentHistoryBinding.getRoot());
                         errorLoadingHelper.failed(error_message, 0, onRetryBtnClickListener);
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
