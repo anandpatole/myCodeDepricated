@@ -887,8 +887,8 @@ public class WebCallClass {
         String media_file = Utility.getSelectedMediaJsonString(taskDetailModel.mMediaModelList);
         mParams.put(NetworkUtility.TAGS.MEDIA_FILE, media_file);
         mParams.put(NetworkUtility.TAGS.TASK_TYPE, Utility.TASK_TYPE.INSTA_BOOK);
-        if (TextUtils.isEmpty(txnId))
-            mParams.put(NetworkUtility.TAGS.TRANSACTION_ID, Utility.TASK_TYPE.INSTA_BOOK);
+        if (!TextUtils.isEmpty(txnId))
+            mParams.put(NetworkUtility.TAGS.TRANSACTION_ID, txnId);
 
         mParams.put(NetworkUtility.TAGS.PAYMENT_LOG, paymentLog);
         mParams.put(NetworkUtility.TAGS.PAYMENT_METHOD, paymentMethod);

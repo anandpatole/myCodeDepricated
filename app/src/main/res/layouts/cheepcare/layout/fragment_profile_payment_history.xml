@@ -92,12 +92,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="@dimen/scale_16dp"
-                    android:text="₹10,772"
                     android:textColor="@color/black_varient_1"
                     android:textSize="@dimen/text_size_13sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="₹10,772" />
 
             </android.support.constraint.ConstraintLayout>
         </android.support.design.widget.AppBarLayout>

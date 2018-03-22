@@ -207,7 +207,7 @@ public class ProfilePaymentHistoryFragment extends BaseFragment {
 
                         double price = Double.parseDouble(jsonObject.optString(NetworkUtility.TAGS.TOTAL_EARNED));
                         DecimalFormat decimalFormat = new DecimalFormat("0.00");
-//                        mBinding.textPrice.setText(getString(R.string.rupee_symbol_x, decimalFormat.format(price)));
+                        mBinding.tvTotalPaidPrice.setText(getString(R.string.rupee_symbol_x, decimalFormat.format(price)));
 
 //                        mBinding.monthlyEarned.setText(getString(R.string.rupee_symbol_x, Utility.getQuotePriceFormatter(jsonObject.optString(NetworkUtility.TAGS.MONTHLY_TOTAL))));
 //                        mBinding.monthlySaved.setText(getString(R.string.rupee_symbol_x, Utility.getQuotePriceFormatter(jsonObject.optString(NetworkUtility.TAGS.MONTHLY_SAVED_TOTAL))));
