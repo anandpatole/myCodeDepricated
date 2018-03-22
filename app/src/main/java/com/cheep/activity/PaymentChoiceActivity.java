@@ -57,7 +57,7 @@ import static com.cheep.network.NetworkUtility.PAYTM.PARAMETERS.response;
 public class PaymentChoiceActivity extends BaseAppCompatActivity implements View.OnClickListener {
 
     private static final String TAG = LogUtils.makeLogTag(PaymentChoiceActivity.class);
-    private ActivityPaymentChoiceBinding mActivityPaymentChoiceBinding;
+    private ActivityPaymentChoiceBinding mBinding;
     private ProviderModel providerModel;
     private TaskDetailModel taskDetailModel;
     private String paymentMethod;
@@ -126,7 +126,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mActivityPaymentChoiceBinding = DataBindingUtil.setContentView(this, R.layout.activity_payment_choice);
+        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_payment_choice);
         initiateUI();
         setListeners();
 
@@ -158,11 +158,11 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
 
 
         if (taskDetailModel != null && taskDetailModel.taskStatus.equalsIgnoreCase(Utility.TASK_STATUS.PENDING))
-            mActivityPaymentChoiceBinding.llCashPayment.setVisibility(View.GONE);
+            mBinding.llCashPayment.setVisibility(View.GONE);
         else
-            mActivityPaymentChoiceBinding.llCashPayment.setVisibility(View.VISIBLE);
+            mBinding.llCashPayment.setVisibility(View.VISIBLE);
 
-        mActivityPaymentChoiceBinding.tvPaytmLinkAccount.setText(getString(R.string.label_link_x, getString(R.string.label_account)));
+        mBinding.tvPaytmLinkAccount.setText(getString(R.string.label_link_x, getString(R.string.label_account)));
         setupActionbar();
 
     }
@@ -182,10 +182,10 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
         } else {
             amount = Utility.getQuotePriceFormatter(taskDetailModel.taskTotalPendingAmount);
         }
-        mActivityPaymentChoiceBinding.textTitle.setText(getString(R.string.label_please_pay_x, amount));
+        mBinding.textTitle.setText(getString(R.string.label_please_pay_x, amount));
 
 
-        setSupportActionBar(mActivityPaymentChoiceBinding.toolbar);
+        setSupportActionBar(mBinding.toolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle(Utility.EMPTY_STRING);
         actionBar.setDisplayHomeAsUpEnabled(true);
@@ -193,10 +193,10 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
 
     @Override
     protected void setListeners() {
-        mActivityPaymentChoiceBinding.rlCard.setOnClickListener(this);
-        mActivityPaymentChoiceBinding.rlNetbanking.setOnClickListener(this);
-        mActivityPaymentChoiceBinding.rlPaytm.setOnClickListener(this);
-        mActivityPaymentChoiceBinding.rlCashPayment.setOnClickListener(this);
+        mBinding.rlCard.setOnClickListener(this);
+        mBinding.rlNetbanking.setOnClickListener(this);
+        mBinding.rlPaytm.setOnClickListener(this);
+        mBinding.rlCashPayment.setOnClickListener(this);
     }
 
     @Override
@@ -271,7 +271,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
      */
     private void generateHashForNormalTask() {
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityPaymentChoiceBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mBinding.getRoot());
             return;
         }
 
@@ -363,12 +363,12 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
                         // Show Toast
-                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityPaymentChoiceBinding.getRoot());
+                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
                         error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
                         // Show message
-                        Utility.showSnackBar(error_message, mActivityPaymentChoiceBinding.getRoot());
+                        Utility.showSnackBar(error_message, mBinding.getRoot());
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
                     case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
@@ -389,7 +389,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
         public void onErrorResponse(final VolleyError error) {
             hideProgressDialog();
             LogUtils.LOGD(TAG, "onErrorResponse() called with: error = [" + error + "]");
-            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityPaymentChoiceBinding.getRoot());
+            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
 
         }
     };
@@ -412,7 +412,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
                     //failed
                     if (data != null) {
                         LogUtils.LOGE(TAG, "onActivityResult() called with failed: result= [" + data.getStringExtra(Utility.Extra.PAYU_RESPONSE) + "]");
-                        Utility.showSnackBar(getString(R.string.msg_payment_failed), mActivityPaymentChoiceBinding.getRoot());
+                        Utility.showSnackBar(getString(R.string.msg_payment_failed), mBinding.getRoot());
                     }
                 }
                 break;
@@ -421,7 +421,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
 
     private void callPayTaskPaymentWS(String paymentLog) {
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityPaymentChoiceBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mBinding.getRoot());
             return;
         }
         showProgressDialog();
@@ -473,7 +473,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
                 int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
                 switch (statusCode) {
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
-//                        Utility.showSnackBar(getString(R.string.msg_thanks_for_confirmation), mActivityPaymentChoiceBinding.getRoot());
+//                        Utility.showSnackBar(getString(R.string.msg_thanks_for_confirmation), mBinding.getRoot());
 
                                 /*
                                   Update the UI Accordingly.
@@ -494,12 +494,12 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
                         // Show Toast
-                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityPaymentChoiceBinding.getRoot());
+                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
                         String error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
                         // Show message
-                        Utility.showSnackBar(error_message, mActivityPaymentChoiceBinding.getRoot());
+                        Utility.showSnackBar(error_message, mBinding.getRoot());
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
                     case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
@@ -524,7 +524,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
             hideProgressDialog();
 
             // Show Toast
-            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityPaymentChoiceBinding.getRoot());
+            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
         }
     };
 //////////////////////////////////////////////////////////////////    NORMAL TASK PAYMENT METHOD [END] ///////////////////////////////////////////////////////
@@ -534,7 +534,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
      */
     private void generateHashForStrategicPartner() {
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityPaymentChoiceBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mBinding.getRoot());
             return;
         }
 
@@ -631,24 +631,24 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
                     // access token has been expired
                     userDetails.mPaytmUserDetail = null;
                     PreferenceUtility.getInstance(PaymentChoiceActivity.this).saveUserDetails(userDetails);
-                    mActivityPaymentChoiceBinding.tvPaytmLinkAccount.setText(getString(R.string.label_link_x, getString(R.string.label_account)));
-                    mActivityPaymentChoiceBinding.tvPaytmLinkAccount.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_link_blue, 0, 0, 0);
+                    mBinding.tvPaytmLinkAccount.setText(getString(R.string.label_link_x, getString(R.string.label_account)));
+                    mBinding.tvPaytmLinkAccount.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_link_blue, 0, 0, 0);
                     PAYTM_STEP = PAYTM_SEND_OTP;
 
                 } else {
                     // show linked account balace
-                    mActivityPaymentChoiceBinding.tvPaytmLinkAccount.setVisibility(View.GONE);
+                    mBinding.tvPaytmLinkAccount.setVisibility(View.GONE);
 
                     checkBalance(userDetails.mPaytmUserDetail.paytmAccessToken);
                 }
             } catch (NumberFormatException e) {
-                mActivityPaymentChoiceBinding.tvPaytmLinkAccount.setText(getString(R.string.label_link_x, getString(R.string.label_account)));
-                mActivityPaymentChoiceBinding.tvPaytmLinkAccount.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_link_blue, 0, 0, 0);
+                mBinding.tvPaytmLinkAccount.setText(getString(R.string.label_link_x, getString(R.string.label_account)));
+                mBinding.tvPaytmLinkAccount.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_link_blue, 0, 0, 0);
                 PAYTM_STEP = PAYTM_SEND_OTP;
             }
         } else {
-            mActivityPaymentChoiceBinding.tvPaytmLinkAccount.setText(getString(R.string.label_link_x, getString(R.string.label_account)));
-            mActivityPaymentChoiceBinding.tvPaytmLinkAccount.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_link_blue, 0, 0, 0);
+            mBinding.tvPaytmLinkAccount.setText(getString(R.string.label_link_x, getString(R.string.label_account)));
+            mBinding.tvPaytmLinkAccount.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_link_blue, 0, 0, 0);
             PAYTM_STEP = PAYTM_SEND_OTP;
         }
     }
@@ -680,12 +680,12 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
 
     private void checkBalance(String mAccessToken) {
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityPaymentChoiceBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mBinding.getRoot());
             return;
         }
 
         //Show Progress
-        mActivityPaymentChoiceBinding.progress.setVisibility(View.VISIBLE);
+        mBinding.progress.setVisibility(View.VISIBLE);
         PaytmUtility.checkBalance(mContext, mAccessToken, mCheckBalanceResponseListener);
     }
 
@@ -710,17 +710,17 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
             }
             boolean isLowBalance = paytmWalletBalance < Double.parseDouble(amount);
             payableAmountForPaytm = Double.parseDouble(amount) - paytmWalletBalance;
-            mActivityPaymentChoiceBinding.tvPaytmBalance.setVisibility(View.VISIBLE);
+            mBinding.tvPaytmBalance.setVisibility(View.VISIBLE);
 
-            mActivityPaymentChoiceBinding.tvPaytmBalance.setText("(" + getString(R.string.rupee_symbol_x, String.valueOf(paytmWalletBalance)) + ")");
-            mActivityPaymentChoiceBinding.tvPaytmLinkAccount.setVisibility(View.VISIBLE);
-            mActivityPaymentChoiceBinding.tvPaytmLinkAccount.setText(Utility.EMPTY_STRING);
-            mActivityPaymentChoiceBinding.tvPaytmLinkAccount.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_right_arrow_blue, 0, 0, 0);
+            mBinding.tvPaytmBalance.setText("(" + getString(R.string.rupee_symbol_x, String.valueOf(paytmWalletBalance)) + ")");
+            mBinding.tvPaytmLinkAccount.setVisibility(View.VISIBLE);
+            mBinding.tvPaytmLinkAccount.setText(Utility.EMPTY_STRING);
+            mBinding.tvPaytmLinkAccount.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_right_arrow_blue, 0, 0, 0);
             if (isLowBalance) {
 //            BTN_WHICH = BTN_IS_ADD_AMOUNT;
                 //TODO: add amount
-                mActivityPaymentChoiceBinding.tvLowBalancePaytm.setVisibility(View.VISIBLE);
-                mActivityPaymentChoiceBinding.tvLowBalancePaytm.setText("Low balance. You need " +
+                mBinding.tvLowBalancePaytm.setVisibility(View.VISIBLE);
+                mBinding.tvLowBalancePaytm.setText("Low balance. You need " +
                         getString(R.string.rupee_symbol_x, Utility.getQuotePriceFormatter(String.valueOf(payableAmountForPaytm))) /*+ "..."*/);
                 PAYTM_STEP = PAYTM_ADD_MONEY;
 
@@ -730,7 +730,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
                 PAYTM_STEP = PAYTM_WITHDRAW;
             }
 
-            mActivityPaymentChoiceBinding.progress.setVisibility(View.GONE);
+            mBinding.progress.setVisibility(View.GONE);
 
         }
 
@@ -739,35 +739,35 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
         @Override
         public void paytmInvalidAuthorization() {
             //TODO: implement that if accessToken is valid i.e. 1 month is not due directly call checkBalance API.
-            mActivityPaymentChoiceBinding.progress.setVisibility(View.GONE);
-            mActivityPaymentChoiceBinding.tvPaytmLinkAccount.setVisibility(View.VISIBLE);
-            mActivityPaymentChoiceBinding.tvPaytmLinkAccount.setText(getString(R.string.label_link_x, getString(R.string.label_account)));
-            mActivityPaymentChoiceBinding.tvPaytmLinkAccount.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_link_blue, 0, 0, 0);
+            mBinding.progress.setVisibility(View.GONE);
+            mBinding.tvPaytmLinkAccount.setVisibility(View.VISIBLE);
+            mBinding.tvPaytmLinkAccount.setText(getString(R.string.label_link_x, getString(R.string.label_account)));
+            mBinding.tvPaytmLinkAccount.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_link_blue, 0, 0, 0);
             PAYTM_STEP = PAYTM_SEND_OTP;
         }
 
         @Override
         public void showGeneralizedErrorMessage() {
-            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityPaymentChoiceBinding.getRoot());
-            mActivityPaymentChoiceBinding.progress.setVisibility(View.GONE);
+            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
+            mBinding.progress.setVisibility(View.GONE);
         }
 
         @Override
         public void paytmInvalidMobileNumber() {
-            mActivityPaymentChoiceBinding.progress.setVisibility(View.GONE);
-            Utility.showSnackBar(getString(R.string.validate_phone_number), mActivityPaymentChoiceBinding.getRoot());
+            mBinding.progress.setVisibility(View.GONE);
+            Utility.showSnackBar(getString(R.string.validate_phone_number), mBinding.getRoot());
         }
 
         @Override
         public void paytmAccountBlocked() {
-            mActivityPaymentChoiceBinding.progress.setVisibility(View.GONE);
-            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityPaymentChoiceBinding.getRoot());
+            mBinding.progress.setVisibility(View.GONE);
+            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
         }
 
         @Override
         public void volleyError() {
-            mActivityPaymentChoiceBinding.progress.setVisibility(View.GONE);
-            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityPaymentChoiceBinding.getRoot());
+            mBinding.progress.setVisibility(View.GONE);
+            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
         }
     };
 
@@ -778,7 +778,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
 
     private void callBookProAndPayForNormalTaskWS(String paymentLog) {
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityPaymentChoiceBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mBinding.getRoot());
             return;
         }
         showProgressDialog();
@@ -975,12 +975,12 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
                         // Show Toast
-                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityPaymentChoiceBinding.getRoot());
+                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
                         error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
                         // Show message
-                        Utility.showSnackBar(error_message, mActivityPaymentChoiceBinding.getRoot());
+                        Utility.showSnackBar(error_message, mBinding.getRoot());
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
                     case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
@@ -1003,7 +1003,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
             LogUtils.LOGE(TAG, "onErrorResponse() called with: error = [" + error + "]");
             // Close Progressbar
             hideProgressDialog();
-            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityPaymentChoiceBinding.getRoot());
+            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
         }
     };
 
@@ -1022,7 +1022,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
 
         // Check Internet connection
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityPaymentChoiceBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mBinding.getRoot());
             return;
         }
 
@@ -1035,33 +1035,38 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
             txnId = mTransactionParams.get(HDFCPaymentUtility.TXN_ID);
 
         WebCallClass.createInstaBookingTask(PaymentChoiceActivity.this,
-                taskDetailModel, mSelectedAddressModel, String.valueOf(quoteAmount), String.valueOf(payableAmountForTask), paymentMethod, paymentLog, txnId,new WebCallClass.CommonResponseListener() {
-                    @Override
-                    public void volleyError(VolleyError error) {
-
-                    }
-
-                    @Override
-                    public void showSpecificMessage(String message) {
-
-                    }
-
-                    @Override
-                    public void forceLogout() {
-
-                    }
-                }, new WebCallClass.InstaBookTaskCreationListener() {
+                taskDetailModel, mSelectedAddressModel, String.valueOf(quoteAmount), String.valueOf(payableAmountForTask), paymentMethod, paymentLog, txnId, errorListener, new WebCallClass.InstaBookTaskCreationListener() {
                     @Override
                     public void successOfInstaBookTaskCreation() {
-
+                        hideProgressDialog();
                     }
                 });
     }
 
+    private WebCallClass.CommonResponseListener errorListener = new WebCallClass.CommonResponseListener() {
+        @Override
+        public void volleyError(VolleyError error) {
+            hideProgressDialog();
+            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
+        }
+
+        @Override
+        public void showSpecificMessage(String message) {
+            hideProgressDialog();
+            Utility.showSnackBar(message, mBinding.getRoot());
+        }
+
+        @Override
+        public void forceLogout() {
+            hideProgressDialog();
+            finish();
+        }
+    };
+
    /* private void callCreateInstaBookingTaskWS(String paymentLog) {
 
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityPaymentChoiceBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mBinding.getRoot());
             return;
         }
         showProgressDialog();
@@ -1195,12 +1200,12 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
                         // Show Toast
-                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityPaymentChoiceBinding.getRoot());
+                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
                         error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
                         // Show message
-                        Utility.showSnackBar(error_message, mActivityPaymentChoiceBinding.getRoot());
+                        Utility.showSnackBar(error_message, mBinding.getRoot());
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
                     case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
@@ -1229,7 +1234,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
 
         // Check Internet connection
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityPaymentChoiceBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mBinding.getRoot());
             return;
         }
 
@@ -1413,12 +1418,12 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
                         // Show Toast
-                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityPaymentChoiceBinding.getRoot());
+                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
                         String error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
                         // Show message
-                        Utility.showSnackBar(error_message, mActivityPaymentChoiceBinding.getRoot());
+                        Utility.showSnackBar(error_message, mBinding.getRoot());
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
                     case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
@@ -1442,7 +1447,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
 
         //Validation
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityPaymentChoiceBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mBinding.getRoot());
             return;
         }
 
@@ -1491,7 +1496,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
                         String taskStatus = jsonObject.getString(NetworkUtility.TAGS.TASK_STATUS);
                         if (!TextUtils.isEmpty(taskStatus)) {
                             if (taskStatus.equalsIgnoreCase(Utility.TASK_STATUS.COMPLETION_CONFIRM)) {
-                                Utility.showSnackBar(getString(R.string.msg_thanks_for_confirmation), mActivityPaymentChoiceBinding.getRoot());
+                                Utility.showSnackBar(getString(R.string.msg_thanks_for_confirmation), mBinding.getRoot());
                                 MessageEvent messageEvent = new MessageEvent();
                                 messageEvent.taskStatus = taskStatus;
                                 messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.TASK_PAID_SUCCESSFULLY;
@@ -1503,12 +1508,12 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
                         // Show Toast
-                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityPaymentChoiceBinding.getRoot());
+                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
                         String error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
                         // Show message
-                        Utility.showSnackBar(error_message, mActivityPaymentChoiceBinding.getRoot());
+                        Utility.showSnackBar(error_message, mBinding.getRoot());
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
                     case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:

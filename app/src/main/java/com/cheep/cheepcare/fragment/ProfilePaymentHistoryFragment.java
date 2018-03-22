@@ -187,7 +187,7 @@ public class ProfilePaymentHistoryFragment extends BaseFragment {
                         ArrayList<HistoryModel> list = GsonUtility.getObjectListFromJsonString(jsonObject.optString(NetworkUtility.TAGS.DATA), HistoryModel[].class);
                         mAdapter.setItems(list);
 
-                        if (list != null && list.size() > 0) {
+                        if (!list.isEmpty()) {
 //                            mFragmentHistoryBinding.layoutMonthSelector.setVisibility(View.VISIBLE);
 //                            mBinding.layoutTitle.setVisibility(View.VISIBLE);
 //                            mBinding.layoutSummary.setVisibility(View.VISIBLE);

@@ -42,7 +42,7 @@ public class HistoryModel {
     public String taskType;
 
     @SerializedName("pending_amount")
-    public int pendingAmount;
+    public String pendingAmount;
 
     @SerializedName("sp_favourite")
     public String spFavourite;
