@@ -15,6 +15,7 @@ import com.cheep.cheepcare.model.AdminSettingModel;
 import com.cheep.cheepcare.model.CityDetail;
 import com.cheep.cheepcare.model.CityLandingPageModel;
 import com.cheep.cheepcare.model.PackageDetail;
+import com.cheep.cheepcare.model.RatingModel;
 import com.cheep.cheepcare.model.SubscribedTaskDetailModel;
 import com.cheep.model.AddressModel;
 import com.cheep.model.JobCategoryModel;
@@ -40,6 +41,7 @@ import static com.cheep.network.NetworkUtility.TAGS.ADDRESS_ID;
 import static com.cheep.network.NetworkUtility.TAGS.CARE_CITY_SLUG;
 import static com.cheep.network.NetworkUtility.TAGS.CARE_PACKAGE_ID;
 import static com.cheep.network.NetworkUtility.TAGS.DATA;
+import static com.cheep.network.NetworkUtility.TAGS.DETAIL;
 import static com.cheep.network.NetworkUtility.TAGS.FINAL_EXTRA_CHARGE;
 import static com.cheep.network.NetworkUtility.TAGS.START_DATETIME;
 
@@ -782,7 +784,7 @@ public class WebCallClass {
     ////////////////////////// getExtraChargeAfterExceedLimit call end     //////////////////////////]
 
 
-    ////////////////////////// GgetExtraChargeAfterExceedLimit call start     //////////////////////////
+    ////////////////////////// Create insta task booking call start     //////////////////////////
     public interface InstaBookTaskCreationListener {
 
         void successOfInstaBookTaskCreation();
@@ -929,7 +931,7 @@ public class WebCallClass {
         mTaskCreationParams.put(NetworkUtility.TAGS.PAYMENT_METHOD, paymentMethod);
         mTaskCreationParams.put(NetworkUtility.TAGS.PAYMENT_STATUS, Utility.PAYMENT_STATUS.COMPLETED);
     }
-    ////////////////////////// getExtraChargeAfterExceedLimit call end     //////////////////////////
+    ////////////////////////// Create insta task booking call end     //////////////////////////
 
     ////////////////////////// getAdminSettings call start    //////////////////////////
     public static void getAdminSettings(final Context mContext, final CommonResponseListener commonListener) {
@@ -1000,4 +1002,165 @@ public class WebCallClass {
     }
 
     ////////////////////////// getAdminSettings call end     //////////////////////////
+
+    ////////////////////////// get rating review types and data ws start    //////////////////////////
+
+    public interface RateAndReviewDataListener {
+
+        void getRatingTypeList(ArrayList<RatingModel> ratingList);
+
+        void getSubmittedRateAndReviewData();
+    }
+
+    public static void getRateAndReviewWS(final Context mContext, String taskId, final RateAndReviewDataListener rateAndReviewDataListener, final CommonResponseListener commonListener) {
+
+        final Response.ErrorListener errorListener = new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
+                commonListener.volleyError(error);
+            }
+        };
+
+        final Response.Listener responseListener = new Response.Listener() {
+            @Override
+            public void onResponse(Object response) {
+                Log.d(TAG, "onResponse() called with: response = [" + response + "]");
+                try {
+                    JSONObject jsonObject = new JSONObject(response.toString());
+                    int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
+
+                    String error_message;
+                    switch (statusCode) {
+                        case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
+                            JSONObject jsonData = jsonObject.optJSONObject(DATA);
+                            ArrayList<RatingModel> ratingModels = GsonUtility.getObjectListFromJsonString(jsonData.optString(DETAIL), RatingModel[].class);
+                            rateAndReviewDataListener.getRatingTypeList(ratingModels);
+
+                            break;
+                        case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
+                            // Show Toast
+                            commonListener.showSpecificMessage(mContext.getString(R.string.label_something_went_wrong));
+                            break;
+                        case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
+                            error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
+                            // Show message
+                            commonListener.showSpecificMessage(error_message);
+                            break;
+                        case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
+                        case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
+                            //Logout and finish the current activity
+                            Utility.logout(mContext, true, statusCode);
+                            commonListener.forceLogout();
+                            break;
+                    }
+                } catch (JSONException e) {
+                    commonListener.showSpecificMessage(mContext.getString(R.string.label_something_went_wrong));
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        //Add Header parameters
+        Map<String, String> mHeaderParams = new HashMap<>();
+        mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
+        if (PreferenceUtility.getInstance(mContext).getUserDetails() != null)
+            mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().userID);
+        Map<String, Object> mParams = new HashMap<>();
+        mParams.put(NetworkUtility.TAGS.TASK_ID, taskId);
+
+        //noinspection unchecked
+        VolleyNetworkRequest mVolleyNetworkRequest = new VolleyNetworkRequest(
+                Request.Method.GET
+                , NetworkUtility.WS.GET_TASK_REVIEW
+                , errorListener
+                , responseListener
+                , mHeaderParams
+                , mParams
+                , null);
+
+        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest, NetworkUtility.WS.GET_TASK_REVIEW);
+    }
+
+    ////////////////////////// get rating review types and data ws call end     //////////////////////////
+
+
+    ////////////////////////// submit rating review types ws call start         //////////////////////////
+    public interface SubmitRateAndReviewListener {
+        void onSuccessOfRateAndReviewSubmit();
+    }
+
+    public static void submitReviewWS(final Context mContext, String taskId, String providerId, String rating, String message, String ratingList, final SubmitRateAndReviewListener rateAndReviewDataListener, final CommonResponseListener commonListener) {
+
+        UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
+        final Response.ErrorListener errorListener = new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
+                commonListener.volleyError(error);
+            }
+        };
+        final Response.Listener responseListener = new Response.Listener() {
+            @Override
+            public void onResponse(Object response) {
+                Log.d(TAG, "onResponse() called with: response = [" + response + "]");
+                try {
+                    JSONObject jsonObject = new JSONObject(response.toString());
+                    int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
+
+                    String error_message;
+                    switch (statusCode) {
+                        case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
+                            rateAndReviewDataListener.onSuccessOfRateAndReviewSubmit();
+                            break;
+                        case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
+                            // Show Toast
+                            commonListener.showSpecificMessage(mContext.getString(R.string.label_something_went_wrong));
+                            break;
+                        case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
+                            error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
+                            // Show message
+                            commonListener.showSpecificMessage(error_message);
+                            break;
+                        case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
+                        case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
+                            //Logout and finish the current activity
+                            Utility.logout(mContext, true, statusCode);
+                            commonListener.forceLogout();
+                            break;
+                    }
+                } catch (JSONException e) {
+                    commonListener.showSpecificMessage(mContext.getString(R.string.label_something_went_wrong));
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        //Add Header parameters
+        Map<String, String> mHeaderParams = new HashMap<>();
+        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, userDetails.userID);
+        mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
+
+        //Add Params
+        Map<String, String> mParams = new HashMap<>();
+        mParams.put(NetworkUtility.TAGS.SP_USER_ID, providerId);
+        mParams.put(NetworkUtility.TAGS.TASK_ID, taskId);
+        mParams.put(NetworkUtility.TAGS.RATINGS, String.valueOf(rating));
+        if (!TextUtils.isEmpty(message)) {
+            mParams.put(NetworkUtility.TAGS.MESSAGE, message);
+        } else {
+            mParams.put(NetworkUtility.TAGS.MESSAGE, Utility.EMPTY_STRING);
+        }
+
+        VolleyNetworkRequest mVolleyNetworkRequest = new VolleyNetworkRequest(NetworkUtility.WS.ADD_REVIEW
+                , errorListener
+                , responseListener
+                , mHeaderParams
+                , mParams
+                , null);
+        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest);
+
+    }
+    ////////////////////////// submit rating review types ws call end            //////////////////////////
+
 }

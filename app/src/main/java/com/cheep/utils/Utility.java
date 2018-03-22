@@ -643,6 +643,7 @@ public class Utility {
         String ADMIN_SETTING = "adminSetting";
         String START_DATETIME = "start_datetime";
         String QUOTE_AMOUNT = "quoteAmount";
+        String SP_USER_ID = "sp_user_id ";
     }
 
 
