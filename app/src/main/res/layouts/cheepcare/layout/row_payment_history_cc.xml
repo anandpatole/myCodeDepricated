@@ -96,7 +96,6 @@
             android:text="₹1772"
             android:textColor="@color/black"
             android:textSize="@dimen/text_size_13sp"
-            app:layout_constraintBottom_toBottomOf="@id/text_provider_name"
             app:layout_constraintEnd_toStartOf="@+id/icon_right"
             app:layout_constraintHorizontal_bias="1"
             app:layout_constraintHorizontal_weight="0.3"

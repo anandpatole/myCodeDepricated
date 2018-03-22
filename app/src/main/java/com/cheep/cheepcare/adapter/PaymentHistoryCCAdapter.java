@@ -35,8 +35,8 @@ public class PaymentHistoryCCAdapter extends LoadMoreRecyclerAdapter<PaymentHist
         void onHistoryRowClicked(HistoryModel model);
     }
 
-    public PaymentHistoryCCAdapter(/*HistoryItemInteractionListener listener*/) {
-//        mListener = listener;
+    public PaymentHistoryCCAdapter(HistoryItemInteractionListener listener) {
+        mListener = listener;
     }
 
     @Override
@@ -61,6 +61,7 @@ public class PaymentHistoryCCAdapter extends LoadMoreRecyclerAdapter<PaymentHist
                 holder.mBinding.imgProfile.setImageResource(R.drawable.placeholder_cheep_pro_not_assigned);
                 holder.mBinding.textProviderName.setText(context.getString(R.string.label_pro_will_be_assigned_shortly));
                 holder.mBinding.textProviderName.setTextColor(ContextCompat.getColor(context, R.color.grey_varient_16));
+                holder.mBinding.tvProCategory.setBackground(ContextCompat.getDrawable(context, R.drawable.blue_rounded_border_3_9_3_9));
             } else {
                 Glide.with(context)
                         .load(R.drawable.ic_home_with_heart_text)
@@ -70,6 +71,7 @@ public class PaymentHistoryCCAdapter extends LoadMoreRecyclerAdapter<PaymentHist
                         .into(holder.mBinding.imgProfile);
                 holder.mBinding.textProviderName.setTextColor(ContextCompat.getColor(context, R.color.splash_gradient_end));
                 holder.mBinding.textProviderName.setText(model.sp_user_name);
+                holder.mBinding.tvProCategory.setBackground(null);
             }
 
         } else {
@@ -77,6 +79,7 @@ public class PaymentHistoryCCAdapter extends LoadMoreRecyclerAdapter<PaymentHist
                     , Utility.DEFAULT_CHEEP_LOGO, true);
             holder.mBinding.textProviderName.setTextColor(ContextCompat.getColor(context, R.color.splash_gradient_end));
             holder.mBinding.textProviderName.setText(model.sp_user_name);
+            holder.mBinding.tvProCategory.setBackground(ContextCompat.getDrawable(context, R.drawable.blue_rounded_border_3_9_3_9));
         }
 
         //whether or not to show favorite image
