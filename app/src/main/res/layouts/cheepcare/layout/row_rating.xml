@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.cheep.custom_view.CFTextViewRegular
+            android:id="@+id/tv_presentation"
+            android:layout_width="@dimen/scale_0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/scale_46dp"
+            android:paddingRight="@dimen/scale_4dp"
+            android:text="@string/label_presentation"
+            android:textColor="@color/splash_gradient_end"
+            android:textSize="@dimen/text_size_18sp"
+            app:layout_constraintBottom_toBottomOf="@+id/rating_presentation"
+            app:layout_constraintEnd_toStartOf="@+id/rating_presentation"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/rating_presentation"/>
+
+        <RatingBar
+            android:id="@+id/rating_presentation"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/scale_17dp"
+            android:layout_marginRight="@dimen/scale_34dp"
+            android:layout_marginTop="@dimen/scale_31dp"
+            android:numStars="5"
+            android:progressDrawable="@drawable/rating_bar_selector_rate_review"
+            android:rating="0"
+            android:stepSize="1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/tv_presentation"
+            app:layout_constraintTop_toTopOf="parent"/>
+    </android.support.constraint.ConstraintLayout>
+</layout>

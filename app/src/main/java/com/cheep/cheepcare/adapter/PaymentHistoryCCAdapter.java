@@ -24,15 +24,15 @@ import java.util.ArrayList;
 public class PaymentHistoryCCAdapter extends LoadMoreRecyclerAdapter<PaymentHistoryCCAdapter.PaymentHistoryViewHolder> {
 
     private static final String TAG = LogUtils.makeLogTag(PaymentHistoryCCAdapter.class);
-    private final HistoryItemInteractionListener mListener;
+    private HistoryItemInteractionListener mListener;
     private ArrayList<HistoryModel> mList = new ArrayList<>();
 
     public interface HistoryItemInteractionListener {
         void onHistoryRowClicked(HistoryModel model);
     }
 
-    public PaymentHistoryCCAdapter(HistoryItemInteractionListener listener) {
-        mListener = listener;
+    public PaymentHistoryCCAdapter(/*HistoryItemInteractionListener listener*/) {
+//        mListener = listener;
     }
 
     @Override

@@ -154,6 +154,13 @@ public class NetworkUtility {
         public static final String IS_CITY_AVAILABLE_FOR_CARE = BASE_URL + "customers/care/isCityAvailableForCare";
         public static final String GET_EXTRA_CHARGE_AFTER_EXCEED_LIMIT = BASE_URL + "customers/care/getExtraChargeAfterExceedLimit";
 
+
+        /**
+         * this is ws is used for fetching  types of rating to be submitted
+         * also when user has submitted values for rating this ws will be used to fetch those datas
+         */
+        public static final String GET_TASK_REVIEW = BASE_URL + "customers/tasks/getTaskReview";
+
     }
 
     public static class PAYTM {
@@ -469,6 +476,7 @@ public class NetworkUtility {
         String FINAL_EXTRA_CHARGE = "finalExtraCharge";
         String TASK_SUB_CATEGORIES = "task_subcategories";
         String PRICE = "price";
+        String DETAIL= "detail";
 
         interface VERSION_CHANGE_TYPE {
             int NORMAL = 0;

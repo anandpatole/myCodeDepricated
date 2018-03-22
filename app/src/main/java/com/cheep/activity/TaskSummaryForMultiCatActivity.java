@@ -86,6 +86,21 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
     private ActivityTaskSummaryForMultiCatBinding mBinding;
     private TaskDetailModel mTaskDetailModel;
 
+
+
+    private View.OnClickListener rateAndReviewClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            RateAndReviewActivity.newInstance(TaskSummaryForMultiCatActivity.this, mTaskDetailModel.taskId, mTaskDetailModel.selectedProvider.providerId);
+        }
+    };
+    private View.OnClickListener viewTaskQuoteClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            TaskQuotesActivity.newInstance(mContext, mTaskDetailModel, false);
+        }
+    };
+
     /*public static void getInstance(Context mContext, TaskDetailModel taskDetailModel) {
         Intent intent = new Intent(mContext, TaskSummaryActivity.class);
 //        intent.putExtra(Utility.Extra.TASK_DETAIL_MODEL, Utility.getJsonStringFromObject(taskDetailModel));
@@ -143,12 +158,7 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
         mBinding.lnTaskCompletionRequested.setVisibility(View.GONE);
         mBinding.frameSelectPicture.setVisibility(View.GONE);
 
-        mBinding.textBottomAction.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                RateAndReviewActivity.newInstance(mContext);
-            }
-        });
+        mBinding.textBottomAction.setOnClickListener(rateAndReviewClickListener);
 
     }
 
@@ -269,7 +279,7 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
                     double pendingAmount;
                     try {
                         pendingAmount = Double.parseDouble(mTaskDetailModel.taskTotalPendingAmount);
-                    } catch (NumberFormatException e) {
+                    } catch (Exception e) {
                         pendingAmount = 0;
                     }
                     LogUtils.LOGE(TAG, "showTaskCompletionDialog: pendingAmount :: " + pendingAmount);
@@ -293,6 +303,7 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
         } else {
             // Setup First section whether SP is final or not
             // Provider is not final yet, so need to show the nearby available.
+            updateUIBasedOnTaskStatus();
             if (mTaskDetailModel.taskType.equalsIgnoreCase(Utility.TASK_TYPE.NORMAL)) {
                 mBinding.lnResponseReceived.setVisibility(View.VISIBLE);
                 mBinding.lnProviderProfileSection.setVisibility(View.GONE);
@@ -307,7 +318,6 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
                 // Update Task Status
                 mBinding.textTaskStatusTop.setText(Utility.EMPTY_STRING);
             }
-            updateUIBasedOnTaskStatus();
 
             // Hide Payment Summary textview
             mBinding.textViewPaymentSummary.setVisibility(View.GONE);
@@ -360,8 +370,6 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
         mBinding.lnTaskRescheduleRequested.setVisibility(View.GONE);
         mBinding.lnTaskRescheduleRejected.setVisibility(View.GONE);
         mBinding.lnTaskAdditionalQuoteRequested.setVisibility(View.GONE);
-
-
 
 
     }
@@ -527,13 +535,8 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
                 mBinding.textBottomAction.setText(getString(R.string.label_rate_and_review));
                 mBinding.textBottomAction.setVisibility(View.VISIBLE);
                 mBinding.cardViewBirdRate.setVisibility(View.VISIBLE);
+                mBinding.textBottomAction.setOnClickListener(rateAndReviewClickListener);
                 mBinding.ivBirdRating.setVisibility(View.VISIBLE);
-                mBinding.textBottomAction.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        showRateDialog();
-                    }
-                });
                 updateHeightOfLinearLayout(true);
             }
         } else if (Utility.TASK_STATUS.COD.equalsIgnoreCase(mTaskDetailModel.taskStatus) || Utility.TASK_STATUS.PAID.equalsIgnoreCase(mTaskDetailModel.taskStatus)) {
@@ -663,7 +666,6 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
         mBinding.textBottomAction.setVisibility(View.GONE);
         mBinding.cardViewBirdRate.setVisibility(View.GONE);
         mBinding.ivBirdRating.setVisibility(View.GONE);
-
         mBinding.textBottomAction.setOnClickListener(null);
     }
 
@@ -985,12 +987,7 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
             mBinding.textBottomAction.setText(getString(R.string.label_view_quotes));
             mBinding.textBottomAction.setVisibility(View.VISIBLE);
             mBinding.textTaskStatusTop.setVisibility(View.VISIBLE);
-            mBinding.textBottomAction.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    TaskQuotesActivity.newInstance(mContext, mTaskDetailModel, false);
-                }
-            });
+            mBinding.textBottomAction.setOnClickListener(viewTaskQuoteClickListener);
             updateHeightOfLinearLayout(true);
 
             // Check if list size is more than 5
