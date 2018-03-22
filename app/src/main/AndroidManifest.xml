@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          xmlns:tools="http://schemas.android.com/tools"
-          package="com.cheep">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.cheep">
 
     <!-- camera permission -->
     <uses-feature
         android:name="android.hardware.camera"
-        android:required="true"/>
+        android:required="true" />
 
-    <uses-permission android:name="android.permission.CAMERA"/>
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES"/>
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
     <uses-permission
         android:name="android.permission.VIBRATE"
-        android:maxSdkVersion="18"/>
+        android:maxSdkVersion="18" />
 
     <!-- AppsFlyer SDK(Optional- But we provided) -->
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 
     <application
         android:name=".App"
@@ -39,217 +39,222 @@
             android:screenOrientation="portrait"
             android:theme="@style/SplashTheme">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
+                <action android:name="android.intent.action.VIEW" />
 
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
                     android:host="f7zdy.app.goo.gl"
-                    android:scheme="http"/>
+                    android:scheme="http" />
                 <data
                     android:host="f7zdy.app.goo.gl"
-                    android:scheme="https"/>
+                    android:scheme="https" />
             </intent-filter>
         </activity>
         <activity
             android:name=".activity.TaskCreationActivity"
+            android:launchMode="singleTop"
             android:parentActivityName=".activity.HomeActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Translucent">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activity.HomeActivity"/>
+                android:value=".activity.HomeActivity" />
         </activity>
         <activity
             android:name=".cheepcare.activity.TaskCreationCCActivity"
+            android:launchMode="singleTop"
             android:parentActivityName=".activity.HomeActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Translucent">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activity.HomeActivity"/>
+                android:value=".activity.HomeActivity" />
         </activity>
         <activity
             android:name=".activity.ZoomImageActivity"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.LoginActivity"
             android:screenOrientation="portrait"
             android:theme="@style/TransperntTheme"
-            android:windowSoftInputMode="stateHidden|adjustResize"/>
+            android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity
             android:name=".activity.SignupActivity"
             android:screenOrientation="portrait"
             android:theme="@style/TransperntTheme"
-            android:windowSoftInputMode="stateHidden|adjustResize"/>
+            android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity
             android:name=".activity.VerificationActivity"
             android:screenOrientation="portrait"
             android:theme="@style/TransperntTheme"
-            android:windowSoftInputMode="adjustResize"/>
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".activity.HomeActivity"
             android:configChanges="locale|orientation"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustNothing"/>
+            android:windowSoftInputMode="adjustNothing" />
         <activity
             android:name=".activity.InfoActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustNothing"/>
+            android:windowSoftInputMode="adjustNothing" />
         <activity
             android:name=".activity.NotificationActivity"
             android:parentActivityName=".activity.HomeActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustNothing"/>
+            android:windowSoftInputMode="adjustNothing" />
         <activity
             android:name=".cheepcare.activity.NotificationCcActivity"
+            android:launchMode="singleTop"
             android:parentActivityName=".activity.HomeActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustNothing"/>
+            android:windowSoftInputMode="adjustNothing" />
         <activity
             android:name=".activity.ProviderProfileActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustNothing"/>
+            android:windowSoftInputMode="adjustNothing" />
         <activity
             android:name=".activity.SearchActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/NoAnimTheme"/>
+            android:theme="@style/NoAnimTheme" />
         <activity
             android:name=".activity.HDFCPaymentGatewayActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.ChatActivity"
             android:parentActivityName=".activity.HomeActivity"
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activity.HomeActivity"/>
+                android:value=".activity.HomeActivity" />
         </activity>
         <activity
             android:name=".activity.ChatIndividualListActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.SelectLocationActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/NoAnimTheme"/>
+            android:theme="@style/NoAnimTheme" />
         <activity
             android:name=".activity.FAQDescActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustNothing"/>
+            android:windowSoftInputMode="adjustNothing" />
         <activity
             android:name=".activity.CommentsActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <!--  <activity
               android:name=".activity.JobSummaryActivity"
               android:screenOrientation="portrait" />-->
         <activity
             android:name=".activity.TaskSummaryActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.IntroScreenActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.PaymentDetailsActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".cheepcare.activity.BookingConfirmationCcActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".activity.PaymentSummaryActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".activity.TaskQuotesActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden"/>
+            android:windowSoftInputMode="stateAlwaysHidden" />
 
         <!-- For Cropping -->
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
-            android:theme="@style/AppTheme.CropActivity"/>
+            android:theme="@style/AppTheme.CropActivity" />
 
         <!-- Hotline theming -->
         <activity
             android:name="com.freshdesk.hotline.activity.ChannelListActivity"
             android:theme="@style/HotlineTheme"
-            tools:replace="android:theme"/>
+            tools:replace="android:theme" />
         <activity
             android:name="com.freshdesk.hotline.activity.ConversationDetailActivity"
             android:theme="@style/HotlineTheme"
-            tools:replace="android:theme"/>
+            tools:replace="android:theme" />
         <activity
             android:name=".activity.PaymentChoiceActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden"/>
+            android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
             android:name=".activity.SendOtpActivity"
             android:configChanges="locale|orientation"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden|adjustResize"/>
+            android:windowSoftInputMode="stateHidden|adjustResize" />
 
         <activity
             android:name=".strategicpartner.StrategicPartnerTaskCreationAct"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Translucent"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".utils.recordvideo.RecordVideoNewActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".strategicpartner.TaskSummaryStrategicPartnerActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.TaskSummaryForMultiCatActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.MediaViewFullScreenActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".strategicpartner.PaymentsSummaryStrategicPartnerActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".activity.VerifyOtpActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.WithdrawMoneyActivity"
-            android:screenOrientation="portrait"/>
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.AddMoneyActivity"
-            android:screenOrientation="portrait"/>
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".cheepcare.activity.RateAndReviewActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".cheepcare.activity.LandingScreenPickPackageActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize|stateAlwaysHidden"/>
+            android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
 
         <activity
             android:name=".cheepcare.activity.PackageCustomizationActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustResize"/>
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
 
 
         <activity
             android:name=".cheepcare.activity.ManageSubscriptionActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize|stateAlwaysHidden"/>
+            android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
         <activity
             android:name=".cheepcare.activity.PaymentChoiceCheepCareActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize|stateAlwaysHidden"/>
+            android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
         <!--  <activity
               android:name=".activity.TaskSummaryForMultiCatActivity"
               android:screenOrientation="portrait"
@@ -258,11 +263,11 @@
         <activity
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
-            android:label="@string/app_name"/>
+            android:label="@string/app_name" />
         <activity
             android:name=".activity.BookingConfirmationInstaActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize|stateAlwaysHidden"/>
+            android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
 
         <!-- Location Tracked Service -->
 
@@ -270,31 +275,31 @@
         <service
             android:name=".services.LocationTrackService"
             android:enabled="true"
-            android:exported="false"/>
+            android:exported="false" />
 
         <!-- [START gcm_listener for Push Notification] -->
         <service
             android:name=".fcm.MyFirebaseMessagingService"
             android:exported="false">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
         <!-- [END gcm_listener for Push Notification] -->
 
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
-            android:resource="@drawable/notification_app_icon"/>
+            android:resource="@drawable/notification_app_icon" />
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"
-            android:resource="@color/splash_gradient_end"/>
+            android:resource="@color/splash_gradient_end" />
 
         <!-- [START instanceId_listener] -->
         <service
             android:name=".fcm.MyInstanceIDListenerService"
             android:exported="false">
             <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
         <!-- [END instanceId_listener] -->
@@ -303,27 +308,27 @@
         <!-- This service is Being used for Push Notification Integration -->
         <service
             android:name=".fcm.RegistrationIntentService"
-            android:exported="false"/>
+            android:exported="false" />
 
         <!-- For Fabric API -->
         <meta-data
             android:name="io.fabric.ApiKey"
-            android:value="50533e46aadf44b1a02395ec21663bdaf1111763"/>
+            android:value="50533e46aadf44b1a02395ec21663bdaf1111763" />
 
         <!-- This service is being used for chat -->
-        <service android:name=".firebase.FierbaseChatService"/>
+        <service android:name=".firebase.FierbaseChatService" />
 
         <!-- Place Picker Dialog -->
         <meta-data
             android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version"/>
+            android:value="@integer/google_play_services_version" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyDtxYbkO21G_uHSXNXuZayLskeEjFQ6HvY"/>
+            android:value="AIzaSyDtxYbkO21G_uHSXNXuZayLskeEjFQ6HvY" />
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
-            android:value="@string/facebook_app_id"/>
+            android:value="@string/facebook_app_id" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"
@@ -332,7 +337,7 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths"/>
+                android:resource="@xml/file_paths" />
         </provider>
 
         <!--
@@ -343,13 +348,13 @@
             android:name="com.appsflyer.SingleInstallBroadcastReceiver"
             android:exported="true">
             <intent-filter>
-                <action android:name="com.android.vending.INSTALL_REFERRER"/>
+                <action android:name="com.android.vending.INSTALL_REFERRER" />
             </intent-filter>
         </receiver>
 
         <service
             android:name="com.amazonaws.mobileconnectors.s3.transferutility.TransferService"
-            android:enabled="true"/>
+            android:enabled="true" />
 
     </application>
 

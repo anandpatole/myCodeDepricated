@@ -135,8 +135,8 @@ public class Utility {
                     Utility.ONE_CHARACTER_SPACE +
                     SuperFormatter.MONTH_JAN +
                     Utility.ONE_CHARACTER_SPACE +
-                    "'" +
-                    SuperFormatter.DATE;
+                    "''" +
+                    SuperFormatter.YEAR_2_DIGIT;
     //    dd MMMM, HH:mm a
     public static final String DATE_TIME_DD_MMMM_HH_MM = SuperFormatter.DATE + " " + SuperFormatter.MONTH_JANUARY + " " + SuperFormatter.HOUR_24_HOUR + ":" + SuperFormatter.MINUTE + "";
     public static final String DATE_FORMAT_FULL_DATE = SuperFormatter.FULL_DATE;

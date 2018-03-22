@@ -52,7 +52,7 @@ public class HistoryModel {
 
     public String getPaymentDate() {
         Log.i(TAG, "getPaymentDate: Initial Date: " + payment_date);
-        SimpleDateFormat serverSDF = new SimpleDateFormat(Utility.DATE_FORMAT_DD_MMM_YY/*, Locale.US*/);
+        SimpleDateFormat serverSDF = new SimpleDateFormat(Utility.DATE_TIME_FORMAT_SERVICE_YEAR/*, Locale.US*/);
         serverSDF.setTimeZone(TimeZone.getTimeZone(Utility.UTC));
         SimpleDateFormat outputSDF = new SimpleDateFormat(Utility.DATE_FORMAT_DD_MMM_YY/*, Locale.US*/);
         Date date = null;
