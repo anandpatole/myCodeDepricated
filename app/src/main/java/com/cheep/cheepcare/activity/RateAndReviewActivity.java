@@ -18,9 +18,14 @@ import com.cheep.activity.BaseAppCompatActivity;
 import com.cheep.cheepcare.adapter.RatingAdapter;
 import com.cheep.cheepcare.model.RatingModel;
 import com.cheep.databinding.ActivityRateAndReviewBinding;
+import com.cheep.model.MessageEvent;
+import com.cheep.network.NetworkUtility;
+import com.cheep.network.Volley;
 import com.cheep.utils.GsonUtility;
 import com.cheep.utils.Utility;
 import com.cheep.utils.WebCallClass;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 
@@ -107,16 +112,19 @@ public class RateAndReviewActivity extends BaseAppCompatActivity {
         @Override
         public void volleyError(VolleyError error) {
             hideProgressDialog();
+            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
         }
 
         @Override
         public void showSpecificMessage(String message) {
             hideProgressDialog();
+            Utility.showSnackBar(message, mBinding.getRoot());
         }
 
         @Override
         public void forceLogout() {
             hideProgressDialog();
+            finish();
         }
     };
 
@@ -148,6 +156,11 @@ public class RateAndReviewActivity extends BaseAppCompatActivity {
                             e.printStackTrace();
                         }
                     }
+                    try {
+                        avgRating = avgRating / adapter.getItemCount();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
 
 
                     mBinding.groupRatingSubmitted.setVisibility(View.VISIBLE);
@@ -178,10 +191,23 @@ public class RateAndReviewActivity extends BaseAppCompatActivity {
         WebCallClass.submitReviewWS(this, taskId, providerId, String.valueOf(avgRating), message, GsonUtility.getJsonStringFromObject(adapter.getList()), new WebCallClass.SubmitRateAndReviewListener() {
             @Override
             public void onSuccessOfRateAndReviewSubmit() {
-
+                hideProgressDialog();
+                MessageEvent event = new MessageEvent();
+                event.taskRating = String.valueOf(avgRating);
+                event.BROADCAST_ACTION = Utility.BROADCAST_TYPE.TASK_RATED;
+                EventBus.getDefault().post(event);
+                finish();
             }
         }, errorListener);
 
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        hideProgressDialog();
+        Volley.getInstance(this).getRequestQueue().cancelAll(NetworkUtility.WS.ADD_REVIEW);
+        Volley.getInstance(this).getRequestQueue().cancelAll(NetworkUtility.WS.GET_TASK_REVIEW);
+        super.onDestroy();
     }
 }

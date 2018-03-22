@@ -167,11 +167,12 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
         //set appbar type section
         setAppBarSection();
 
+        //set task description
+        setUpTaskDetails();
+
         //set pro section
         setProSection();
 
-        //set task description
-        setUpTaskDetails();
 
         //set uploaded media
         setUpMediaUI();
@@ -524,8 +525,8 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
                 mBinding.lnRatingSection.setVisibility(View.VISIBLE);
                 Utility.showRating(mTaskDetailModel.taskRatings, mBinding.taskRatingbar);
 
-                // No need to Show bottom action button with rate and review
                 hideRateAndReviewView();
+                // No need to Show bottom action button with rate and review
                 updateHeightOfLinearLayout(false);
             } else {
                 // Rating Section
@@ -1559,6 +1560,15 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
             case Utility.BROADCAST_TYPE.PAYMENT_COMPLETED_NEED_TO_REDIRECT_TO_MY_TASK_SCREEN:
                 // Finish this activity
                 finish();
+                break;
+            case Utility.BROADCAST_TYPE.TASK_RATED:
+                Utility.showSnackBar(getString(R.string.msg_thanks_for_rating), mBinding.getRoot());
+                if (rateDialog != null)
+                    rateDialog.dismiss();
+                mTaskDetailModel.ratingDone = Utility.BOOLEAN.YES;
+                mTaskDetailModel.taskRatings =  event.taskRating;
+                // Update the UI According to Updated Model.
+                setUpUI();
                 break;
             case Utility.BROADCAST_TYPE.TASK_PAID_SUCCESSFULLY:
 

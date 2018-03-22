@@ -1028,8 +1028,14 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
 
         showProgressDialog();
 
+        String txnId;
+        if (mTransactionParams == null)
+            txnId = Utility.getUniqueTransactionId();
+        else
+            txnId = mTransactionParams.get(HDFCPaymentUtility.TXN_ID);
+
         WebCallClass.createInstaBookingTask(PaymentChoiceActivity.this,
-                taskDetailModel, mSelectedAddressModel, String.valueOf(quoteAmount), String.valueOf(payableAmountForTask), paymentMethod, paymentLog, new WebCallClass.CommonResponseListener() {
+                taskDetailModel, mSelectedAddressModel, String.valueOf(quoteAmount), String.valueOf(payableAmountForTask), paymentMethod, paymentLog, txnId,new WebCallClass.CommonResponseListener() {
                     @Override
                     public void volleyError(VolleyError error) {
 
@@ -1069,6 +1075,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
         //Add Params
         Map<String, Object> mParams = new HashMap<>();
         mParams.put(NetworkUtility.TAGS.TASK_DESC, taskDetailModel.taskDesc);
+
         String txnId = Utility.getUniqueTransactionId();
         if (Integer.parseInt(mSelectedAddressModel.address_id) > 0) {
             mParams.put(NetworkUtility.TAGS.ADDRESS_ID, mSelectedAddressModel.address_id);
