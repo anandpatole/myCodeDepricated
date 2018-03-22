@@ -56,6 +56,7 @@ import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.RoundedBackgroundSpan;
 import com.cheep.utils.SuperCalendar;
 import com.cheep.utils.Utility;
+import com.cheep.utils.WebCallClass;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
@@ -76,7 +77,7 @@ import java.util.Map;
 
 public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
     private static final String TAG = "TaskSummaryStrategicPar";
-    private ActivityTaskSummaryStrategicPartnerBinding mActivityTaskSummaryBinding;
+    private ActivityTaskSummaryStrategicPartnerBinding mBinding;
     private TaskDetailModel mTaskDetailModel;
 
     /*public static void getInstance(Context mContext, TaskDetailModel taskDetailModel) {
@@ -94,7 +95,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mActivityTaskSummaryBinding = DataBindingUtil.setContentView(this, R.layout.activity_task_summary_strategic_partner);
+        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_task_summary_strategic_partner);
         initiateUI();
         setListeners();
         EventBus.getDefault().register(this);
@@ -111,11 +112,11 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
 
 
         // Setting up Toolbar
-        setSupportActionBar(mActivityTaskSummaryBinding.toolbar);
+        setSupportActionBar(mBinding.toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setTitle(Utility.EMPTY_STRING);
-            mActivityTaskSummaryBinding.toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            mBinding.toolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Utility.hideKeyboard(mContext);
@@ -135,36 +136,36 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
     private void setUpTaskDetails(final TaskDetailModel mTaskDetailModel) {
 
         // Set category
-        mActivityTaskSummaryBinding.textCategoryName.setText(mTaskDetailModel.categoryModel.catName != null ? mTaskDetailModel.categoryModel.catName: Utility.EMPTY_STRING);
+        mBinding.textCategoryName.setText(mTaskDetailModel.categoryModel.catName != null ? mTaskDetailModel.categoryModel.catName : Utility.EMPTY_STRING);
 
         // Set up image
-//        GlideUtility.loadImageView(mContext, mActivityTaskSummaryBinding.imgService, mTaskDetailModel.bannerImage);
-//        GlideUtility.loadImageView(mContext, mActivityTaskSummaryBinding.imgService, mTaskDetailModel.catImageExtras.thumb);
+//        GlideUtility.loadImageView(mContext, mBinding.imgService, mTaskDetailModel.bannerImage);
+//        GlideUtility.loadImageView(mContext, mBinding.imgService, mTaskDetailModel.catImageExtras.thumb);
 
 
         // By Default makethe task completion dialog as gone
         showTaskCompletionDialog(false);
-        mActivityTaskSummaryBinding.lnTaskCancellation.setVisibility(View.GONE);
-        mActivityTaskSummaryBinding.lnRatingSection.setVisibility(View.GONE);
-        mActivityTaskSummaryBinding.lnTaskRescheduleRequested.setVisibility(View.GONE);
-        mActivityTaskSummaryBinding.lnTaskRescheduleRejected.setVisibility(View.GONE);
-        mActivityTaskSummaryBinding.lnTaskAdditionalQuoteRequested.setVisibility(View.GONE);
+        mBinding.lnTaskCancellation.setVisibility(View.GONE);
+        mBinding.lnRatingSection.setVisibility(View.GONE);
+        mBinding.lnTaskRescheduleRequested.setVisibility(View.GONE);
+        mBinding.lnTaskRescheduleRejected.setVisibility(View.GONE);
+        mBinding.lnTaskAdditionalQuoteRequested.setVisibility(View.GONE);
 
 
         if (mTaskDetailModel.mMediaModelList != null && !mTaskDetailModel.mMediaModelList.isEmpty()) {
             if (mTaskDetailModel.mMediaModelList.size() > 1)
-                mActivityTaskSummaryBinding.tvCounter.setText(getString(R.string.label_plus) + (mTaskDetailModel.mMediaModelList.size() - 1));
+                mBinding.tvCounter.setText(getString(R.string.label_plus) + (mTaskDetailModel.mMediaModelList.size() - 1));
             else
-                mActivityTaskSummaryBinding.tvCounter.setVisibility(View.GONE);
+                mBinding.tvCounter.setVisibility(View.GONE);
 
 
-            GlideUtility.loadImageView(this, mActivityTaskSummaryBinding.imgTaskPicture, mTaskDetailModel.mMediaModelList.get(0).mediaThumbName);
+            GlideUtility.loadImageView(this, mBinding.imgTaskPicture, mTaskDetailModel.mMediaModelList.get(0).mediaThumbName);
 
         } else
-            mActivityTaskSummaryBinding.frameSelectPicture.setVisibility(View.GONE);
+            mBinding.frameSelectPicture.setVisibility(View.GONE);
 
 
-        mActivityTaskSummaryBinding.frameSelectPicture.setOnClickListener(new View.OnClickListener() {
+        mBinding.frameSelectPicture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 MediaViewFullScreenActivity.getInstance(TaskSummaryStrategicPartnerActivity.this, mTaskDetailModel.mMediaModelList, true);
@@ -175,56 +176,56 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
         //Bydefault show the chat call icons
         showChatCallButton(true);
         // Hide Bottom Action Button
-        mActivityTaskSummaryBinding.textBottomAction.setVisibility(View.GONE);
+        mBinding.textBottomAction.setVisibility(View.GONE);
         updateHeightOfLinearLayout(false);
 
         // Setup First section whether SP is final or not
         if (mTaskDetailModel.selectedProvider == null) {
             // Provider is not final yet, so need to show the nearby available.
-            mActivityTaskSummaryBinding.lnResponseReceived.setVisibility(View.VISIBLE);
-            mActivityTaskSummaryBinding.lnProviderProfileSection.setVisibility(View.GONE);
+            mBinding.lnResponseReceived.setVisibility(View.VISIBLE);
+            mBinding.lnProviderProfileSection.setVisibility(View.GONE);
             // Update Task Status
-            mActivityTaskSummaryBinding.textTaskStatusTop.setText(getString(R.string.label_receiving_quotes));
+            mBinding.textTaskStatusTop.setText(getString(R.string.label_receiving_quotes));
 
             // Hide Payment Summary textview
-            mActivityTaskSummaryBinding.textViewPaymentSummary.setVisibility(View.GONE);
-            mActivityTaskSummaryBinding.textPaid.setVisibility(View.GONE);
+            mBinding.textViewPaymentSummary.setVisibility(View.GONE);
+            mBinding.textPaid.setVisibility(View.GONE);
             updateSPImageStacks(mTaskDetailModel.mQuotedSPList);
         } else {
             // Provider is final.
-            mActivityTaskSummaryBinding.lnResponseReceived.setVisibility(View.GONE);
-            mActivityTaskSummaryBinding.lnProviderProfileSection.setVisibility(View.VISIBLE);
+            mBinding.lnResponseReceived.setVisibility(View.GONE);
+            mBinding.lnProviderProfileSection.setVisibility(View.VISIBLE);
 
             // Show Payment Summary text view
-            mActivityTaskSummaryBinding.textViewPaymentSummary.setVisibility(View.VISIBLE);
+            mBinding.textViewPaymentSummary.setVisibility(View.VISIBLE);
 
-            mActivityTaskSummaryBinding.textViewPaymentSummary.setVisibility(View.VISIBLE);
+            mBinding.textViewPaymentSummary.setVisibility(View.VISIBLE);
             String s = "";
             if (!TextUtils.isEmpty(mTaskDetailModel.isAnyAmountPending))
                 s = mTaskDetailModel.isAnyAmountPending.equalsIgnoreCase(Utility.BOOLEAN.YES) ? getString(R.string.label_not_paid) : getString(R.string.label_paid);
 
-            mActivityTaskSummaryBinding.textPaid.setVisibility(View.VISIBLE);
-            mActivityTaskSummaryBinding.textPaid.setText("(" + s + ")");
+            mBinding.textPaid.setVisibility(View.VISIBLE);
+            mBinding.textPaid.setText("(" + s + ")");
 
             // Set rating
-            Utility.showRating(mTaskDetailModel.selectedProvider.rating, mActivityTaskSummaryBinding.providerRating);
+            Utility.showRating(mTaskDetailModel.selectedProvider.rating, mBinding.providerRating);
 
             // Name of Provider
-            mActivityTaskSummaryBinding.textProviderName.setText(mTaskDetailModel.categoryModel.catName);
+            mBinding.textProviderName.setText(mTaskDetailModel.categoryModel.catName);
             SpannableString sName = new SpannableString(mTaskDetailModel.categoryModel.catName);
 
             SpannableString sVerified = new SpannableString(" " + mContext.getString(R.string.label_partner_pro) + " ");
             sVerified.setSpan(new RelativeSizeSpan(0.9f), 0, sVerified.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             sVerified.setSpan(new RoundedBackgroundSpan(ContextCompat.getColor(this, R.color.splash_gradient_end), ContextCompat.getColor(this, R.color.white), 0), 0, sVerified.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-            mActivityTaskSummaryBinding.textProviderName.setText(TextUtils.concat(sName, " ", sVerified));
+            mBinding.textProviderName.setText(TextUtils.concat(sName, " ", sVerified));
             // Distance of Provider
-            mActivityTaskSummaryBinding.textAddressKmAway.setText(mTaskDetailModel.selectedProvider.distance + getString(R.string.label_away));
+            mBinding.textAddressKmAway.setText(mTaskDetailModel.selectedProvider.distance + getString(R.string.label_away));
 
             // Profile Pic
-            GlideUtility.showCircularImageViewWithColorBorder(this, TAG, mActivityTaskSummaryBinding.imgProfile, mTaskDetailModel.categoryModel.catImageExtras.original, Utility.DEFAULT_CHEEP_LOGO, R.color.grey_dark_color, true);
+            GlideUtility.showCircularImageViewWithColorBorder(this, TAG, mBinding.imgProfile, mTaskDetailModel.categoryModel.catImageExtras.original, Utility.DEFAULT_CHEEP_LOGO, R.color.grey_dark_color, true);
 
             // Manage Click events of Call & Chat
-            mActivityTaskSummaryBinding.lnCall.setOnClickListener(new View.OnClickListener() {
+            mBinding.lnCall.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     LogUtils.LOGI(TAG, "onClick: Call");
@@ -232,7 +233,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
 //                    Utility.openCustomerCareCallDialer(mContext, mTaskDetailModel.selectedProvider.sp_phone_number);
                 }
             });
-            mActivityTaskSummaryBinding.lnChat.setOnClickListener(new View.OnClickListener() {
+            mBinding.lnChat.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     LogUtils.LOGI(TAG, "onClick: Chat");
@@ -250,7 +251,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
 
 
             // On Click on Payment Summary
-            mActivityTaskSummaryBinding.textViewPaymentSummary.setOnClickListener(new View.OnClickListener() {
+            mBinding.textViewPaymentSummary.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     PaymentsSummaryStrategicPartnerActivity.newInstance(TaskSummaryStrategicPartnerActivity.this, mTaskDetailModel);
@@ -280,40 +281,40 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
         }
         superCalendar.setLocaleTimeZone();
         String task_original_date_time = superCalendar.format(Utility.DATE_FORMAT_DD_MMM_YYYY + " " + Utility.DATE_FORMAT_HH_MM_AM);
-        mActivityTaskSummaryBinding.textTaskWhen.setText(task_original_date_time);
+        mBinding.textTaskWhen.setText(task_original_date_time);
 
         // Setup WHERE section
-        mActivityTaskSummaryBinding.textTaskWhere.setText(mTaskDetailModel.taskAddress);
+        mBinding.textTaskWhere.setText(mTaskDetailModel.taskAddress);
 
 
         // Onclick of when and Where section
-//        mActivityTaskSummaryBinding.lnTaskDesc.setOnClickListener(new View.OnClickListener() {
+//        mBinding.lnTaskDesc.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View view) {
-//                showFullDesc(getString(R.string.label_desc), mActivityTaskSummaryBinding.textTaskDesc.getText().toString());
+//                showFullDesc(getString(R.string.label_desc), mBinding.textTaskDesc.getText().toString());
 //            }
 //        });
-        mActivityTaskSummaryBinding.lnTaskWhere.setOnClickListener(new View.OnClickListener() {
+        mBinding.lnTaskWhere.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showFullDesc(getString(R.string.label_address), mActivityTaskSummaryBinding.textTaskWhere.getText().toString());
+                showFullDesc(getString(R.string.label_address), mBinding.textTaskWhere.getText().toString());
             }
         });
 
         // Update the banner image
         // Calculat Pager Height and Width
-        ViewTreeObserver mViewTreeObserver = mActivityTaskSummaryBinding.frameBannerImage.getViewTreeObserver();
+        ViewTreeObserver mViewTreeObserver = mBinding.frameBannerImage.getViewTreeObserver();
         mViewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
-                mActivityTaskSummaryBinding.frameBannerImage.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                int width = mActivityTaskSummaryBinding.frameBannerImage.getMeasuredWidth();
-                ViewGroup.LayoutParams params = mActivityTaskSummaryBinding.frameBannerImage.getLayoutParams();
+                mBinding.frameBannerImage.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                int width = mBinding.frameBannerImage.getMeasuredWidth();
+                ViewGroup.LayoutParams params = mBinding.frameBannerImage.getLayoutParams();
                 params.height = Utility.getHeightFromWidthForTwoOneRatio(width);
-                mActivityTaskSummaryBinding.frameBannerImage.setLayoutParams(params);
+                mBinding.frameBannerImage.setLayoutParams(params);
 
                 // Load the image now.
-                GlideUtility.loadImageView(mContext, mActivityTaskSummaryBinding.imgService, mTaskDetailModel.bannerImage, R.drawable.gradient_black);
+                GlideUtility.loadImageView(mContext, mBinding.imgService, mTaskDetailModel.bannerImage, R.drawable.gradient_black);
             }
         });
     }
@@ -323,7 +324,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
             ArrayList<SubServiceDetailModel> subSubCategoryList = mTaskDetailModel.subCatList;
 
             SubServiceDetailModel serviceTaskDetailModel2 = subSubCategoryList.get(0);
-            mActivityTaskSummaryBinding.textSubCategoryName.setText(serviceTaskDetailModel2.name);
+            mBinding.textSubCategoryName.setText(serviceTaskDetailModel2.name);
             SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder();
             for (SubSubCatModel subSubCat : serviceTaskDetailModel2.subSubCatModels) {
                 if (spannableStringBuilder.length() == 0) {
@@ -333,7 +334,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
                     spannableStringBuilder.append(getSpannableString(subSubCat.subSubCatName, ContextCompat.getColor(this, R.color.grey_varient_2), false));
                 }
             }
-            mActivityTaskSummaryBinding.textSubSubCategoryName.setText(spannableStringBuilder);
+            mBinding.textSubSubCategoryName.setText(spannableStringBuilder);
 
 //            HashMap<String, String> stringStringHashMap = new HashMap<>();
 //            for (int i = 1; i < subSubCategoryList.size(); i++) {
@@ -345,7 +346,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
 //                }
 //            }
 
-            mActivityTaskSummaryBinding.lnTaskDetails.removeAllViews();
+            mBinding.lnTaskDetails.removeAllViews();
 
             for (int i = 1; i < mTaskDetailModel.subCatList.size(); i++) {
                 SubServiceDetailModel subServiceDetailModel = subSubCategoryList.get(i);
@@ -364,7 +365,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
 
                 }
                 textSubSubCategoryName.setText(spannableStringBuilder1);
-                mActivityTaskSummaryBinding.lnTaskDetails.addView(view);
+                mBinding.lnTaskDetails.addView(view);
             }
 
             if (mTaskDetailModel.categoryModel.catName.equalsIgnoreCase(Utility.STRATEGIC_PARTNER_BRAND.VLCC)) {
@@ -375,7 +376,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
 
                 if (mTaskDetailModel.mQuesList != null && !mTaskDetailModel.mQuesList.isEmpty())
                     textSubSubCategoryName.setText(mTaskDetailModel.mQuesList.get(0).answer);
-                mActivityTaskSummaryBinding.lnTaskDetails.addView(view);
+                mBinding.lnTaskDetails.addView(view);
             }
 
             View view = LayoutInflater.from(this).inflate(R.layout.layout_selected_service_task_summary, null);
@@ -383,7 +384,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
             TextView textSubSubCategoryName = view.findViewById(R.id.text_sub_sub_category_name);
             textSubCategoryName.setText(R.string.special_instructions);
             textSubSubCategoryName.setText(mTaskDetailModel.taskDesc);
-            mActivityTaskSummaryBinding.lnTaskDetails.addView(view);
+            mBinding.lnTaskDetails.addView(view);
 
         }
 
@@ -400,26 +401,26 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
 
     private void updateUIBasedOnTaskStatus() {
         if (Utility.TASK_STATUS.PENDING.equalsIgnoreCase(mTaskDetailModel.taskStatus)) {
-            mActivityTaskSummaryBinding.textTaskStatusTop.setText(getString(R.string.task_confirmed));
-            mActivityTaskSummaryBinding.textViewPaymentSummary.setVisibility(View.VISIBLE);
-            mActivityTaskSummaryBinding.textPaid.setVisibility(View.VISIBLE);
+            mBinding.textTaskStatusTop.setText(getString(R.string.task_confirmed));
+            mBinding.textViewPaymentSummary.setVisibility(View.VISIBLE);
+            mBinding.textPaid.setVisibility(View.VISIBLE);
 
         } else if (Utility.TASK_STATUS.PROCESSING.equalsIgnoreCase(mTaskDetailModel.taskStatus)) {
-            mActivityTaskSummaryBinding.textTaskStatusTop.setText(getString(R.string.task_status_processing));
-            mActivityTaskSummaryBinding.textViewPaymentSummary.setVisibility(View.VISIBLE);
-            mActivityTaskSummaryBinding.textPaid.setVisibility(View.VISIBLE);
+            mBinding.textTaskStatusTop.setText(getString(R.string.task_status_processing));
+            mBinding.textViewPaymentSummary.setVisibility(View.VISIBLE);
+            mBinding.textPaid.setVisibility(View.VISIBLE);
 
         } else if (Utility.TASK_STATUS.COMPLETION_REQUEST.equalsIgnoreCase(mTaskDetailModel.taskStatus)) {
-            mActivityTaskSummaryBinding.textTaskStatusTop.setText(getString(R.string.task_status_processing));
-            mActivityTaskSummaryBinding.textViewPaymentSummary.setVisibility(View.GONE);
-            mActivityTaskSummaryBinding.textPaid.setVisibility(View.GONE);
+            mBinding.textTaskStatusTop.setText(getString(R.string.task_status_processing));
+            mBinding.textViewPaymentSummary.setVisibility(View.GONE);
+            mBinding.textPaid.setVisibility(View.GONE);
 
             // Setup Task Completion Request Dialog
             showTaskCompletionDialog(true);
         } else if (Utility.TASK_STATUS.COMPLETION_CONFIRM.equalsIgnoreCase(mTaskDetailModel.taskStatus)) {
-            mActivityTaskSummaryBinding.textTaskStatusTop.setText(getString(R.string.label_task_complete));
-            mActivityTaskSummaryBinding.textViewPaymentSummary.setVisibility(View.VISIBLE);
-            mActivityTaskSummaryBinding.textPaid.setVisibility(View.VISIBLE);
+            mBinding.textTaskStatusTop.setText(getString(R.string.label_task_complete));
+            mBinding.textViewPaymentSummary.setVisibility(View.VISIBLE);
+            mBinding.textPaid.setVisibility(View.VISIBLE);
 
             // No need to hide ChatCall Button Now.
             showChatCallButton(false);
@@ -427,21 +428,21 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
             // Check if Rating is done or not
             if (Utility.BOOLEAN.YES.equalsIgnoreCase(mTaskDetailModel.ratingDone)) {
                 // Rating Section
-                mActivityTaskSummaryBinding.lnRatingSection.setVisibility(View.VISIBLE);
-                Utility.showRating(mTaskDetailModel.taskRatings, mActivityTaskSummaryBinding.taskRatingbar);
+                mBinding.lnRatingSection.setVisibility(View.VISIBLE);
+                Utility.showRating(mTaskDetailModel.taskRatings, mBinding.taskRatingbar);
 
                 // No need to Show bottom action button with rate and review
-                mActivityTaskSummaryBinding.textBottomAction.setVisibility(View.GONE);
-                mActivityTaskSummaryBinding.textBottomAction.setOnClickListener(null);
+                mBinding.textBottomAction.setVisibility(View.GONE);
+                mBinding.textBottomAction.setOnClickListener(null);
                 updateHeightOfLinearLayout(false);
             } else {
                 // Rating Section
-                mActivityTaskSummaryBinding.lnRatingSection.setVisibility(View.GONE);
+                mBinding.lnRatingSection.setVisibility(View.GONE);
 
                 // Show bottom action button with rate & review
-                mActivityTaskSummaryBinding.textBottomAction.setText(getString(R.string.label_rate_and_review));
-                mActivityTaskSummaryBinding.textBottomAction.setVisibility(View.VISIBLE);
-                mActivityTaskSummaryBinding.textBottomAction.setOnClickListener(new View.OnClickListener() {
+                mBinding.textBottomAction.setText(getString(R.string.label_rate_and_review));
+                mBinding.textBottomAction.setVisibility(View.VISIBLE);
+                mBinding.textBottomAction.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         showRateDialog();
@@ -450,32 +451,32 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
                 updateHeightOfLinearLayout(true);
             }
         } else if (Utility.TASK_STATUS.COD.equalsIgnoreCase(mTaskDetailModel.taskStatus) || Utility.TASK_STATUS.PAID.equalsIgnoreCase(mTaskDetailModel.taskStatus)) {
-            mActivityTaskSummaryBinding.textTaskStatusTop.setText(getString(R.string.task_confirmed));
-            mActivityTaskSummaryBinding.textViewPaymentSummary.setVisibility(View.VISIBLE);
-            mActivityTaskSummaryBinding.textPaid.setVisibility(View.VISIBLE);
+            mBinding.textTaskStatusTop.setText(getString(R.string.task_confirmed));
+            mBinding.textViewPaymentSummary.setVisibility(View.VISIBLE);
+            mBinding.textPaid.setVisibility(View.VISIBLE);
         } else if (Utility.TASK_STATUS.CANCELLED_CUSTOMER.equalsIgnoreCase(mTaskDetailModel.taskStatus)) {
-            mActivityTaskSummaryBinding.textTaskStatusTop.setText(getString(R.string.msg_task_cancelled_title));
-            mActivityTaskSummaryBinding.textViewPaymentSummary.setVisibility(View.VISIBLE);
-            mActivityTaskSummaryBinding.textPaid.setVisibility(View.VISIBLE);
+            mBinding.textTaskStatusTop.setText(getString(R.string.msg_task_cancelled_title));
+            mBinding.textViewPaymentSummary.setVisibility(View.VISIBLE);
+            mBinding.textPaid.setVisibility(View.VISIBLE);
 
             // Cancellation Reason
-            mActivityTaskSummaryBinding.lnTaskCancellation.setVisibility(View.VISIBLE);
+            mBinding.lnTaskCancellation.setVisibility(View.VISIBLE);
             if (!TextUtils.isEmpty(mTaskDetailModel.taskCancelReason)) {
-                mActivityTaskSummaryBinding.textTaskCancellationReason.setText(mTaskDetailModel.taskCancelReason);
+                mBinding.textTaskCancellationReason.setText(mTaskDetailModel.taskCancelReason);
             }
 
             // No need to hide ChatCall Button Now.
             showChatCallButton(false);
         } else if (Utility.TASK_STATUS.CANCELLED_SP.equalsIgnoreCase(mTaskDetailModel.taskStatus)) {
-//            mActivityTaskSummaryBinding.textTaskStatusTop.setText(getString(R.string.task_was_cancelled_by_x, mTaskDetailModel.selectedProvider.userName));
-            mActivityTaskSummaryBinding.textTaskStatusTop.setText(getString(R.string.msg_task_cancelled_title));
-            mActivityTaskSummaryBinding.textViewPaymentSummary.setVisibility(View.VISIBLE);
-            mActivityTaskSummaryBinding.textPaid.setVisibility(View.VISIBLE);
+//            mBinding.textTaskStatusTop.setText(getString(R.string.task_was_cancelled_by_x, mTaskDetailModel.selectedProvider.userName));
+            mBinding.textTaskStatusTop.setText(getString(R.string.msg_task_cancelled_title));
+            mBinding.textViewPaymentSummary.setVisibility(View.VISIBLE);
+            mBinding.textPaid.setVisibility(View.VISIBLE);
 
             // Cancellation Reason
-            mActivityTaskSummaryBinding.lnTaskCancellation.setVisibility(View.VISIBLE);
+            mBinding.lnTaskCancellation.setVisibility(View.VISIBLE);
             if (!TextUtils.isEmpty(mTaskDetailModel.taskCancelReason)) {
-                mActivityTaskSummaryBinding.textTaskCancellationReason.setText(mTaskDetailModel.taskCancelReason);
+                mBinding.textTaskCancellationReason.setText(mTaskDetailModel.taskCancelReason);
             }
 
             // No need to hide ChatCall Button Now.
@@ -483,12 +484,12 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
         }
         // reschedule task status
         else if (Utility.TASK_STATUS.RESCHEDULE_REQUESTED.equalsIgnoreCase(mTaskDetailModel.taskStatus)) {
-            mActivityTaskSummaryBinding.textTaskStatusTop.setText(getString(R.string.label_reschedule_requested));
-            mActivityTaskSummaryBinding.textViewPaymentSummary.setVisibility(View.GONE);
-            mActivityTaskSummaryBinding.textPaid.setVisibility(View.VISIBLE);
+            mBinding.textTaskStatusTop.setText(getString(R.string.label_reschedule_requested));
+            mBinding.textViewPaymentSummary.setVisibility(View.GONE);
+            mBinding.textPaid.setVisibility(View.VISIBLE);
 
             // Reschedule request desc
-            mActivityTaskSummaryBinding.lnTaskRescheduleRequested.setVisibility(View.VISIBLE);
+            mBinding.lnTaskRescheduleRequested.setVisibility(View.VISIBLE);
 
             //Calculate Reschedule Date & Time
             SuperCalendar superCalendar = SuperCalendar.getInstance();
@@ -504,18 +505,18 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
             String message = getString(R.string.label_reschedule_desc, task_reschedule_date + getString(R.string.label_at) + task_reschedule_time);
 
 
-            mActivityTaskSummaryBinding.textTaskRescheduleRequestDesc.setText(message);
+            mBinding.textTaskRescheduleRequestDesc.setText(message);
 
         }
         //Task's Reschedule request got cancelled
         else if (Utility.TASK_STATUS.RESCHEDULE_REQUEST_REJECTED.equalsIgnoreCase(mTaskDetailModel.taskStatus)) {
-            mActivityTaskSummaryBinding.textTaskStatusTop.setText(getString(R.string.label_reschedule_rejected));
-            mActivityTaskSummaryBinding.lnTaskRescheduleRejected.setVisibility(View.VISIBLE);
-            mActivityTaskSummaryBinding.textViewPaymentSummary.setVisibility(View.VISIBLE);
-            mActivityTaskSummaryBinding.textPaid.setVisibility(View.VISIBLE);
+            mBinding.textTaskStatusTop.setText(getString(R.string.label_reschedule_rejected));
+            mBinding.lnTaskRescheduleRejected.setVisibility(View.VISIBLE);
+            mBinding.textViewPaymentSummary.setVisibility(View.VISIBLE);
+            mBinding.textPaid.setVisibility(View.VISIBLE);
 
             // Chat & Call with @Cheep team click event of buttons
-            mActivityTaskSummaryBinding.textContactCheepViaCall.setOnClickListener(new View.OnClickListener() {
+            mBinding.textContactCheepViaCall.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     //callToCheepAdmin(mActivityHomeBinding.getRoot());
@@ -523,7 +524,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
                 }
             });
 
-            mActivityTaskSummaryBinding.textContactCheepViaChat.setOnClickListener(new View.OnClickListener() {
+            mBinding.textContactCheepViaChat.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     HotlineHelper.getInstance(mContext).showConversation(mContext);
@@ -535,16 +536,16 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
         }
         //Task's Additional Payment Request comes
         else if (Utility.TASK_STATUS.ADDITIONAL_PAYMENT_REQUESTED.equalsIgnoreCase(mTaskDetailModel.taskStatus)) {
-            mActivityTaskSummaryBinding.textTaskStatusTop.setText(getString(R.string.task_status_processing));
+            mBinding.textTaskStatusTop.setText(getString(R.string.task_status_processing));
 
-            mActivityTaskSummaryBinding.lnTaskAdditionalQuoteRequested.setVisibility(View.VISIBLE);
-            mActivityTaskSummaryBinding.textViewPaymentSummary.setVisibility(View.GONE);
-            mActivityTaskSummaryBinding.textPaid.setVisibility(View.GONE);
+            mBinding.lnTaskAdditionalQuoteRequested.setVisibility(View.VISIBLE);
+            mBinding.textViewPaymentSummary.setVisibility(View.GONE);
+            mBinding.textPaid.setVisibility(View.GONE);
 
             String additionalQuoteAmount = getString(R.string.rupee_symbol_x, mTaskDetailModel.additionalQuoteAmount);
-            mActivityTaskSummaryBinding.textAdditionalPaymentDesc.setText(getString(R.string.label_additional_payment_desc, additionalQuoteAmount));
+            mBinding.textAdditionalPaymentDesc.setText(getString(R.string.label_additional_payment_desc, additionalQuoteAmount));
 
-            mActivityTaskSummaryBinding.textAdditionalPaymentAccept.setOnClickListener(new View.OnClickListener() {
+            mBinding.textAdditionalPaymentAccept.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     LogUtils.LOGI(TAG, "onClick: Accept Additional Payment");
@@ -556,7 +557,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
                 }
             });
 
-            mActivityTaskSummaryBinding.textAdditionalPaymentDecline.setOnClickListener(new View.OnClickListener() {
+            mBinding.textAdditionalPaymentDecline.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     LogUtils.LOGI(TAG, "onClick: Decline Additional Payment");
@@ -574,16 +575,16 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
     private void showChatCallButton(boolean flag) {
         // TODO :: changed on sept 12
 //        if (flag) {
-//            mActivityTaskSummaryBinding.lnChatCall.setVisibility(View.VISIBLE);
+//            mBinding.lnChatCall.setVisibility(View.VISIBLE);
 //        } else {
-        mActivityTaskSummaryBinding.lnChatCall.setVisibility(View.GONE);
+        mBinding.lnChatCall.setVisibility(View.GONE);
 //        }
 
     }
 
     private void showTaskCompletionDialog(boolean flag) {
         if (flag) {
-            mActivityTaskSummaryBinding.lnTaskCompletionRequested.setVisibility(View.VISIBLE);
+            mBinding.lnTaskCompletionRequested.setVisibility(View.VISIBLE);
             String mainText = getString(R.string.label_complete_job_confirm, "PRO");
             String s = "";
             if (!TextUtils.isEmpty(mTaskDetailModel.isAnyAmountPending)) {
@@ -594,9 +595,9 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
                 String fullstring = mainText + s;
                 SpannableStringBuilder text = new SpannableStringBuilder(fullstring);
                 text.setSpan(new ForegroundColorSpan(ContextCompat.getColor(this, R.color.grey_varient_23)), fullstring.indexOf(s.charAt(0)), fullstring.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                mActivityTaskSummaryBinding.textConfirmText.setText(text);
+                mBinding.textConfirmText.setText(text);
             } else {
-                mActivityTaskSummaryBinding.textConfirmText.setText(mainText);
+                mBinding.textConfirmText.setText(mainText);
 
             }
 
@@ -610,12 +611,12 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
 //            }
 //            LogUtils.LOGE(TAG, "showTaskCompletionDialog: pendingAmount :: " + pendingAmount);
 //            if (pendingAmount > 0) {
-//                mActivityTaskSummaryBinding.textTaskCompletionYes.setText(R.string.label_yes_pay_now);
+//                mBinding.textTaskCompletionYes.setText(R.string.label_yes_pay_now);
 //            } else {
-//                mActivityTaskSummaryBinding.textTaskCompletionYes.setText(R.string.label_yes);
+//                mBinding.textTaskCompletionYes.setText(R.string.label_yes);
 //            }
 
-            mActivityTaskSummaryBinding.textTaskCompletionYes.setOnClickListener(new View.OnClickListener() {
+            mBinding.textTaskCompletionYes.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
 
@@ -637,17 +638,17 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
                         PaymentsSummaryStrategicPartnerActivity.newInstance(mContext, mTaskDetailModel);
                     } else {
                         callCompleteTaskWS(Utility.TASK_STATUS.COMPLETION_CONFIRM);
-//                        mActivityTaskSummaryBinding.textTaskCompletionYes.setText(R.string.label_yes);
+//                        mBinding.textTaskCompletionYes.setText(R.string.label_yes);
                     }
                 }
             });
-            mActivityTaskSummaryBinding.textTaskCompletionNo.setOnClickListener(new View.OnClickListener() {
+            mBinding.textTaskCompletionNo.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     callCompleteTaskWS(Utility.TASK_STATUS.PROCESSING);
                 }
             });
-            mActivityTaskSummaryBinding.textTaskSeekSupport.setOnClickListener(new View.OnClickListener() {
+            mBinding.textTaskSeekSupport.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Utility.initiateCallToCheepHelpLine(mContext);
@@ -655,7 +656,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
             });
 
         } else {
-            mActivityTaskSummaryBinding.lnTaskCompletionRequested.setVisibility(View.GONE);
+            mBinding.lnTaskCompletionRequested.setVisibility(View.GONE);
         }
     }
 
@@ -694,8 +695,8 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
             @Override
             public void run() {
                 int paddingBottomInPix = (int) Utility.convertDpToPixel(20, mContext);
-                paddingBottomInPix = paddingBottomInPix + mActivityTaskSummaryBinding.textBottomAction.getHeight();
-                mActivityTaskSummaryBinding.lnBottomSection.setPadding(0, 0, 0, flag ? paddingBottomInPix : 0);
+                paddingBottomInPix = paddingBottomInPix + mBinding.textBottomAction.getHeight();
+                mBinding.lnBottomSection.setPadding(0, 0, 0, flag ? paddingBottomInPix : 0);
             }
         }, 500);
 
@@ -716,42 +717,42 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
             switch (i) {
                 case 0:
                     if (list.size() > 0 && list.get(i) != null) {
-                        GlideUtility.showCircularImageView(mContext, TAG, mActivityTaskSummaryBinding.img1, list.get(i).profileUrl, R.drawable.ic_cheep_circular_icon, true);
-                        mActivityTaskSummaryBinding.img1.setVisibility(View.VISIBLE);
+                        GlideUtility.showCircularImageView(mContext, TAG, mBinding.img1, list.get(i).profileUrl, R.drawable.ic_cheep_circular_icon, true);
+                        mBinding.img1.setVisibility(View.VISIBLE);
                     } else {
-                        mActivityTaskSummaryBinding.img1.setVisibility(View.GONE);
+                        mBinding.img1.setVisibility(View.GONE);
                     }
                     break;
                 case 1:
                     if (list.size() > 1 && list.get(i) != null) {
-                        GlideUtility.showCircularImageView(mContext, TAG, mActivityTaskSummaryBinding.img2, list.get(i).profileUrl, R.drawable.ic_cheep_circular_icon, true);
-                        mActivityTaskSummaryBinding.img2.setVisibility(View.VISIBLE);
+                        GlideUtility.showCircularImageView(mContext, TAG, mBinding.img2, list.get(i).profileUrl, R.drawable.ic_cheep_circular_icon, true);
+                        mBinding.img2.setVisibility(View.VISIBLE);
                     } else {
-                        mActivityTaskSummaryBinding.img2.setVisibility(View.GONE);
+                        mBinding.img2.setVisibility(View.GONE);
                     }
                     break;
                 case 2:
                     if (list.size() > 2 && list.get(i) != null) {
-                        GlideUtility.showCircularImageView(mContext, TAG, mActivityTaskSummaryBinding.img3, list.get(i).profileUrl, R.drawable.ic_cheep_circular_icon, true);
-                        mActivityTaskSummaryBinding.img3.setVisibility(View.VISIBLE);
+                        GlideUtility.showCircularImageView(mContext, TAG, mBinding.img3, list.get(i).profileUrl, R.drawable.ic_cheep_circular_icon, true);
+                        mBinding.img3.setVisibility(View.VISIBLE);
                     } else {
-                        mActivityTaskSummaryBinding.img3.setVisibility(View.GONE);
+                        mBinding.img3.setVisibility(View.GONE);
                     }
                     break;
                 case 3:
                     if (list.size() > 3 && list.get(i) != null) {
-                        GlideUtility.showCircularImageView(mContext, TAG, mActivityTaskSummaryBinding.img4, list.get(i).profileUrl, R.drawable.ic_cheep_circular_icon, true);
-                        mActivityTaskSummaryBinding.img4.setVisibility(View.VISIBLE);
+                        GlideUtility.showCircularImageView(mContext, TAG, mBinding.img4, list.get(i).profileUrl, R.drawable.ic_cheep_circular_icon, true);
+                        mBinding.img4.setVisibility(View.VISIBLE);
                     } else {
-                        mActivityTaskSummaryBinding.img4.setVisibility(View.GONE);
+                        mBinding.img4.setVisibility(View.GONE);
                     }
                     break;
                 case 4:
                     if (list.size() > 4 && list.get(i) != null) {
-                        GlideUtility.showCircularImageView(mContext, TAG, mActivityTaskSummaryBinding.img5, list.get(i).profileUrl, R.drawable.ic_cheep_circular_icon, true);
-                        mActivityTaskSummaryBinding.img5.setVisibility(View.VISIBLE);
+                        GlideUtility.showCircularImageView(mContext, TAG, mBinding.img5, list.get(i).profileUrl, R.drawable.ic_cheep_circular_icon, true);
+                        mBinding.img5.setVisibility(View.VISIBLE);
                     } else {
-                        mActivityTaskSummaryBinding.img5.setVisibility(View.GONE);
+                        mBinding.img5.setVisibility(View.GONE);
                     }
                     break;
             }
@@ -760,24 +761,24 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
         // Check if list size is more than 5
         if (list.size() > 5) {
             int extra_count = list.size() - 5;
-            mActivityTaskSummaryBinding.extraProCount.setVisibility(View.VISIBLE);
-            mActivityTaskSummaryBinding.extraProCount.setText("+" + String.valueOf(extra_count));
+            mBinding.extraProCount.setVisibility(View.VISIBLE);
+            mBinding.extraProCount.setText("+" + String.valueOf(extra_count));
         } else {
-            mActivityTaskSummaryBinding.extraProCount.setVisibility(View.GONE);
+            mBinding.extraProCount.setVisibility(View.GONE);
         }
 
         // Awaiting Response
         if (list.size() == 0) {
-            mActivityTaskSummaryBinding.textTaskResponseStatus.setText(getResources().getString(R.string.label_pros_around_you_reviewing_desc));
-            mActivityTaskSummaryBinding.textBottomAction.setVisibility(View.GONE);
-            mActivityTaskSummaryBinding.textTaskStatusTop.setVisibility(View.GONE);
+            mBinding.textTaskResponseStatus.setText(getResources().getString(R.string.label_pros_around_you_reviewing_desc));
+            mBinding.textBottomAction.setVisibility(View.GONE);
+            mBinding.textTaskStatusTop.setVisibility(View.GONE);
             updateHeightOfLinearLayout(false);
         } else {
-            mActivityTaskSummaryBinding.textTaskResponseStatus.setText(getResources().getQuantityText(R.plurals.getResponseReceivedString, list.size()));
-            mActivityTaskSummaryBinding.textBottomAction.setText(getString(R.string.label_view_quotes));
-            mActivityTaskSummaryBinding.textBottomAction.setVisibility(View.VISIBLE);
-            mActivityTaskSummaryBinding.textTaskStatusTop.setVisibility(View.VISIBLE);
-            mActivityTaskSummaryBinding.textBottomAction.setOnClickListener(new View.OnClickListener() {
+            mBinding.textTaskResponseStatus.setText(getResources().getQuantityText(R.plurals.getResponseReceivedString, list.size()));
+            mBinding.textBottomAction.setText(getString(R.string.label_view_quotes));
+            mBinding.textBottomAction.setVisibility(View.VISIBLE);
+            mBinding.textTaskStatusTop.setVisibility(View.VISIBLE);
+            mBinding.textBottomAction.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     TaskQuotesActivity.newInstance(mContext, mTaskDetailModel, false);
@@ -802,7 +803,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
      */
     private void callTaskDetailWS(String taskId) {
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityTaskSummaryBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mBinding.getRoot());
             return;
         }
 
@@ -849,12 +850,12 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
                         // Show Toast
-                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityTaskSummaryBinding.getRoot());
+                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
                         error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
                         // Show message
-                        Utility.showSnackBar(error_message, mActivityTaskSummaryBinding.getRoot());
+                        Utility.showSnackBar(error_message, mBinding.getRoot());
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
                     case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
@@ -879,7 +880,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
             // Close Progressbar
             showProgressBar(false);
 
-            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityTaskSummaryBinding.getRoot());
+            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
 
         }
     };
@@ -895,8 +896,8 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
      * @param flag whether or not it would get visible
      */
     private void showProgressBar(boolean flag) {
-        mActivityTaskSummaryBinding.progress.setVisibility(flag ? View.VISIBLE : View.GONE);
-        mActivityTaskSummaryBinding.lnRoot.setVisibility(flag ? View.GONE : View.VISIBLE);
+        mBinding.progress.setVisibility(flag ? View.VISIBLE : View.GONE);
+        mBinding.lnRoot.setVisibility(flag ? View.GONE : View.VISIBLE);
     }
 
 
@@ -911,7 +912,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
 
         //Validation
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityTaskSummaryBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mBinding.getRoot());
             return;
         }
 
@@ -960,7 +961,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
                         String taskStatus = jsonObject.getString(NetworkUtility.TAGS.TASK_STATUS);
                         if (!TextUtils.isEmpty(taskStatus)) {
                             if (taskStatus.equalsIgnoreCase(Utility.TASK_STATUS.COMPLETION_CONFIRM)) {
-                                Utility.showSnackBar(getString(R.string.msg_thanks_for_confirmation), mActivityTaskSummaryBinding.getRoot());
+                                Utility.showSnackBar(getString(R.string.msg_thanks_for_confirmation), mBinding.getRoot());
 
                                 /*
                                   Update the UI Accordingly.
@@ -994,12 +995,12 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
                         // Show Toast
-                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityTaskSummaryBinding.getRoot());
+                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
                         String error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
                         // Show message
-                        Utility.showSnackBar(error_message, mActivityTaskSummaryBinding.getRoot());
+                        Utility.showSnackBar(error_message, mBinding.getRoot());
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
                     case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
@@ -1025,7 +1026,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
             hideProgressDialog();
 
             // Show Toast
-            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityTaskSummaryBinding.getRoot());
+            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
         }
     };
 
@@ -1091,18 +1092,35 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
     /**
      * Call Create Task webservice
      */
-    private void callAddReviewWS(int rating, String message) {
+    private void callAddReviewWS(final int rating, String message) {
 
         //Validation
+
+
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityTaskSummaryBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mBinding.getRoot());
             return;
         }
 
         //Show Progress
         showProgressDialog();
 
-        UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
+        WebCallClass.submitReviewWS(this, mTaskDetailModel.taskId, mTaskDetailModel.selectedProvider.providerId, String.valueOf(rating), message, Utility.EMPTY_STRING, new WebCallClass.SubmitRateAndReviewListener() {
+            @Override
+            public void onSuccessOfRateAndReviewSubmit() {
+                Utility.showSnackBar(getString(R.string.msg_thanks_for_rating), mBinding.getRoot());
+                if (rateDialog != null)
+                    rateDialog.dismiss();
+                mTaskDetailModel.ratingDone = Utility.BOOLEAN.YES;
+                mTaskDetailModel.taskRatings = String.valueOf(rating);
+                // Update the UI According to Updated Model.
+                setUpTaskDetails(mTaskDetailModel);
+
+            }
+        }, errorListener);
+
+
+    /*      UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
 
         //Add Header parameters
         Map<String, String> mHeaderParams = new HashMap<>();
@@ -1126,56 +1144,30 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
                 , mHeaderParams
                 , mParams
                 , null);
-        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest);
-
+        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest);*/
     }
 
-    Response.Listener mCallAddReviewWSResponseListener = new Response.Listener() {
+    private WebCallClass.CommonResponseListener errorListener = new WebCallClass.CommonResponseListener() {
         @Override
-        public void onResponse(Object response) {
-
-            String strResponse = (String) response;
-            try {
-                JSONObject jsonObject = new JSONObject(strResponse);
-                LogUtils.LOGI(TAG, "onResponse: " + jsonObject.toString());
-                int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
-                switch (statusCode) {
-                    case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
-                        Utility.showSnackBar(getString(R.string.msg_thanks_for_rating), mActivityTaskSummaryBinding.getRoot());
-                        if (rateDialog != null)
-                            rateDialog.dismiss();
-                        mTaskDetailModel.ratingDone = Utility.BOOLEAN.YES;
-                        mTaskDetailModel.taskRatings = jsonObject.optString(NetworkUtility.TAGS.TASK_RATINGS);
-                        // Update the UI According to Updated Model.
-                        setUpTaskDetails(mTaskDetailModel);
-                        break;
-                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
-                        // Show Toast
-//                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityJobSummaryBinding.getRoot());
-                        Utility.showToast(mContext, getString(R.string.label_something_went_wrong));
-                        break;
-                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
-                        String error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
-                        // Show message
-//                        Utility.showSnackBar(error_message, mActivityJobSummaryBinding.getRoot());
-                        Utility.showToast(mContext, error_message);
-                        break;
-                    case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
-                    case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
-                        //Logout and finish the current activity
-                        Utility.logout(mContext, true, statusCode);
-                        finish();
-                        break;
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-                mCallAddReviewWSErrorListener.onErrorResponse(new VolleyError(e.getMessage()));
-            }
+        public void volleyError(VolleyError error) {
             hideProgressDialog();
+            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
+        }
+
+        @Override
+        public void showSpecificMessage(String message) {
+            hideProgressDialog();
+            Utility.showSnackBar(message, mBinding.getRoot());
+        }
+
+        @Override
+        public void forceLogout() {
+            hideProgressDialog();
+            finish();
         }
     };
 
-    Response.ErrorListener mCallAddReviewWSErrorListener = new Response.ErrorListener() {
+   /* Response.ErrorListener mCallAddReviewWSErrorListener = new Response.ErrorListener() {
         @Override
         public void onErrorResponse(VolleyError error) {
             LogUtils.LOGD(TAG, "onErrorResponse() called with: error = [" + error + "]");
@@ -1187,7 +1179,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
 //            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityJobSummaryBinding.getRoot());
             Utility.showToast(mContext, getString(R.string.label_something_went_wrong));
         }
-    };
+    };*/
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////// Rate Dialog ////////////////////////////////////////////
@@ -1231,7 +1223,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
     private void callDeclineAdditionalPaymentRequest(String reason) {
         //Validation
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityTaskSummaryBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mBinding.getRoot());
             return;
         }
 
@@ -1273,7 +1265,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
                         JSONObject jData = jsonObject.getJSONObject(NetworkUtility.TAGS.DATA);
                         String taskID = jData.getString(NetworkUtility.TAGS.TASK_ID);
-                        Utility.showSnackBar(jsonObject.getString(NetworkUtility.TAGS.MESSAGE), mActivityTaskSummaryBinding.getRoot());
+                        Utility.showSnackBar(jsonObject.getString(NetworkUtility.TAGS.MESSAGE), mBinding.getRoot());
                        /* Utility.showSnackBar(getString(R.string.msg_thanks_for_confirmation), mActivityJobSummaryBinding.getRoot());
                         mActivityJobSummaryBinding.layoutStatusConfirmationRequired.setVisibility(View.GONE);
                         showRateDialog();*/
@@ -1283,12 +1275,12 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
                         // Show Toast
-                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityTaskSummaryBinding.getRoot());
+                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
                         String error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
                         // Show message
-                        Utility.showSnackBar(error_message, mActivityTaskSummaryBinding.getRoot());
+                        Utility.showSnackBar(error_message, mBinding.getRoot());
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
                     case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
@@ -1314,7 +1306,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
             hideProgressDialog();
 
             // Show Toast
-            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityTaskSummaryBinding.getRoot());
+            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
         }
     };
 
@@ -1394,7 +1386,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
      */
     private void callTaskDetailRequestAcceptWS(final String action, String taskID, final ProviderModel providerModel) {
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityTaskSummaryBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mBinding.getRoot());
             return;
         }
 
@@ -1422,7 +1414,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
                 hideProgressDialog();
 
                 // Show Toast
-                Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityTaskSummaryBinding.getRoot());
+                Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
             }
         }
                 , new Response.Listener() {
@@ -1448,18 +1440,18 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
 
                                 ChatActivity.newInstance(mContext, taskChatModel);
                             } else if (action.equalsIgnoreCase(Utility.ACTION_CALL)) {
-//                                callToOtherUser(mActivityTaskSummaryBinding.getRoot(), providerModel.providerId);
+//                                callToOtherUser(mBinding.getRoot(), providerModel.providerId);
                                 Utility.openCustomerCareCallDialer(mContext, providerModel.sp_phone_number);
                             }
                             break;
                         case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
                             // Show Toast
-                            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityTaskSummaryBinding.getRoot());
+                            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
                             break;
                         case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
                             error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
                             // Show message
-                            Utility.showSnackBar(error_message, mActivityTaskSummaryBinding.getRoot());
+                            Utility.showSnackBar(error_message, mBinding.getRoot());
                             break;
                         case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
                         case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
@@ -1488,7 +1480,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
     private void callCheckingTaskStatus() {
         //Validation
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityTaskSummaryBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mBinding.getRoot());
             return;
         }
 
@@ -1534,7 +1526,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
                             // payNow(true);
 //                            PaymentsStepActivity.newInstance(mContext, mTaskDetailModel, mTaskDetailModel.selectedProvider, 1);
                         } else if (taskStatus.equalsIgnoreCase(Utility.TASK_STATUS.COMPLETION_REQUEST)) {
-                            Utility.showSnackBar(getString(R.string.message_no_more_payment_task_completed), mActivityTaskSummaryBinding.getRoot());
+                            Utility.showSnackBar(getString(R.string.message_no_more_payment_task_completed), mBinding.getRoot());
                             mTaskDetailModel.taskStatus = Utility.TASK_STATUS.COMPLETION_REQUEST;
                             setUpTaskDetails(mTaskDetailModel);
 
@@ -1548,13 +1540,13 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
                         // Show Toast
-                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityTaskSummaryBinding.getRoot());
+                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
                         hideProgressDialog();
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
                         String error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
                         // Show message
-                        Utility.showSnackBar(error_message, mActivityTaskSummaryBinding.getRoot());
+                        Utility.showSnackBar(error_message, mBinding.getRoot());
                         hideProgressDialog();
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
@@ -1582,7 +1574,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
             hideProgressDialog();
 
             // Show Toast
-            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityTaskSummaryBinding.getRoot());
+            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
         }
     };
 
@@ -1598,13 +1590,13 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
                     Integer count = dataSnapshot.getValue(Integer.class);
                     LogUtils.LOGD(TAG, "onDataChange() called with: dataSnapshot = Unread Counter [" + count + "]");
                     if (count <= 0) {
-                        mActivityTaskSummaryBinding.tvChatUnreadCount.setVisibility(View.GONE);
+                        mBinding.tvChatUnreadCount.setVisibility(View.GONE);
                     } else {
-                        mActivityTaskSummaryBinding.tvChatUnreadCount.setVisibility(View.VISIBLE);
-                        mActivityTaskSummaryBinding.tvChatUnreadCount.setText(String.valueOf(count));
+                        mBinding.tvChatUnreadCount.setVisibility(View.VISIBLE);
+                        mBinding.tvChatUnreadCount.setText(String.valueOf(count));
                     }
                 } else {
-                    mActivityTaskSummaryBinding.tvChatUnreadCount.setVisibility(View.GONE);
+                    mBinding.tvChatUnreadCount.setVisibility(View.GONE);
                 }
             }
 

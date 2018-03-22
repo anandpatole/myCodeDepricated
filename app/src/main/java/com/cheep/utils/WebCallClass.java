@@ -790,7 +790,7 @@ public class WebCallClass {
         void successOfInstaBookTaskCreation();
     }
 
-    public static void createInstaBookingTask(final Context mContext, final TaskDetailModel taskDetailModel, AddressModel mSelectedAddressModel, String quoteAmount, String payableAmount, String paymentMethod, String paymentLog, final CommonResponseListener commonListener
+    public static void createInstaBookingTask(final Context mContext, final TaskDetailModel taskDetailModel, AddressModel mSelectedAddressModel, String quoteAmount, String payableAmount, String paymentMethod, String paymentLog, String txnId, final CommonResponseListener commonListener
             , final InstaBookTaskCreationListener successListener) {
         Map<String, Object> mTaskCreationParams = new HashMap<>();
 
@@ -815,6 +815,7 @@ public class WebCallClass {
                     switch (statusCode) {
                         case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
                             LogUtils.LOGE(TAG, "onResponse:finalMTaskCreationParams " + finalMTaskCreationParams);
+
                             AppsFlyerLib.getInstance().trackEvent(mContext, NetworkUtility.TAGS.APPSFLYER_CUSTOM_TRACK_EVENTS.TASK_CREATE, finalMTaskCreationParams);
                             if (!TextUtils.isEmpty(taskDetailModel.cheepCode) && taskDetailModel.cheepCode.startsWith(Utility.COUPON_DUNIA_CODE_PREFIX))
                                 if (!BuildConfig.BUILD_TYPE.equalsIgnoreCase("release"))
@@ -886,6 +887,8 @@ public class WebCallClass {
         String media_file = Utility.getSelectedMediaJsonString(taskDetailModel.mMediaModelList);
         mParams.put(NetworkUtility.TAGS.MEDIA_FILE, media_file);
         mParams.put(NetworkUtility.TAGS.TASK_TYPE, Utility.TASK_TYPE.INSTA_BOOK);
+        if (TextUtils.isEmpty(txnId))
+            mParams.put(NetworkUtility.TAGS.TRANSACTION_ID, Utility.TASK_TYPE.INSTA_BOOK);
 
         mParams.put(NetworkUtility.TAGS.PAYMENT_LOG, paymentLog);
         mParams.put(NetworkUtility.TAGS.PAYMENT_METHOD, paymentMethod);
@@ -1146,6 +1149,7 @@ public class WebCallClass {
         mParams.put(NetworkUtility.TAGS.SP_USER_ID, providerId);
         mParams.put(NetworkUtility.TAGS.TASK_ID, taskId);
         mParams.put(NetworkUtility.TAGS.RATINGS, String.valueOf(rating));
+        mParams.put(NetworkUtility.TAGS.DETAIL, ratingList);
         if (!TextUtils.isEmpty(message)) {
             mParams.put(NetworkUtility.TAGS.MESSAGE, message);
         } else {

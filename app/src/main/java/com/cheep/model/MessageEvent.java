@@ -44,6 +44,7 @@ public class MessageEvent {
 
     // class that would going to store the details we will get from Paytm Response
     public PaytmResponse paytmResponse;
+    public String taskRating;
 
     /**
      * Hold the data for Paytm Transaction response

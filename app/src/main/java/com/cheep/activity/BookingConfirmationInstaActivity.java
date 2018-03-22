@@ -631,7 +631,7 @@ public class BookingConfirmationInstaActivity extends BaseAppCompatActivity {
         showProgressDialog();
 
         WebCallClass.createInstaBookingTask(BookingConfirmationInstaActivity.this,
-                taskDetailModel, mSelectedAddressModel, String.valueOf(total), payableAmount, Utility.TASK_STATUS.PAY_LATER, Utility.EMPTY_STRING, new WebCallClass.CommonResponseListener() {
+                taskDetailModel, mSelectedAddressModel, String.valueOf(total), payableAmount, Utility.TASK_STATUS.PAY_LATER, Utility.EMPTY_STRING, Utility.EMPTY_STRING, new WebCallClass.CommonResponseListener() {
                     @Override
                     public void volleyError(VolleyError error) {
 
@@ -656,7 +656,7 @@ public class BookingConfirmationInstaActivity extends BaseAppCompatActivity {
 
 
     private void openPaymentChoiceActivity() {
-        PaymentChoiceActivity.newInstance(BookingConfirmationInstaActivity.this, taskDetailModel,null, String.valueOf(total),payableAmount,mSelectedAddressModel);
+        PaymentChoiceActivity.newInstance(BookingConfirmationInstaActivity.this, taskDetailModel, null, String.valueOf(total), payableAmount, mSelectedAddressModel);
     }
 
 
@@ -714,7 +714,7 @@ public class BookingConfirmationInstaActivity extends BaseAppCompatActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(MessageEvent event) {
         LogUtils.LOGE(TAG, "onMessageEvent: " + event.BROADCAST_ACTION);
-        if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.SUBSCRIBED_TASK_CREATE_SUCCESSFULLY) {
+        if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.TASK_PAID_FOR_INSTA_BOOKING) {
             finish();
         }
     }
