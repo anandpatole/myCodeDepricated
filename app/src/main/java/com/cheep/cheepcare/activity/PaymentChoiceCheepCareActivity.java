@@ -483,7 +483,6 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
     protected void onDestroy() {
         // Unregister the listerners you register in OnCreate method
         try {
-            Volley.getInstance(PaymentChoiceCheepCareActivity.this).getRequestQueue().cancelAll(NetworkUtility.WS.PAY_TASK_PAYMENT);
             Volley.getInstance(PaymentChoiceCheepCareActivity.this).getRequestQueue().cancelAll(NetworkUtility.WS.PURCHASE_CARE_PACKAGE);
             EventBus.getDefault().unregister(this);
         } catch (Exception e) {

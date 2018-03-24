@@ -314,7 +314,7 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
                 mBinding.lnProviderProfileSection.setVisibility(View.GONE);
                 mBinding.rlUnknownPro.setVisibility(View.VISIBLE);
                 // Update Task Status
-                mBinding.textTaskStatusTop.setText(Utility.EMPTY_STRING);
+//                mBinding.textTaskStatusTop.setText(Utility.EMPTY_STRING);
             }
 
             // Hide Payment Summary textview
@@ -502,7 +502,6 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
 
         } else if (Utility.TASK_STATUS.COMPLETION_REQUEST.equalsIgnoreCase(mTaskDetailModel.taskStatus)) {
             mBinding.textTaskStatusTop.setText(getString(R.string.task_status_processing));
-            mBinding.textViewPaymentSummary.setVisibility(View.GONE);
             mBinding.textPaid.setVisibility(View.GONE);
 
             hideRateAndReviewView();
@@ -1583,6 +1582,7 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
                 mTaskDetailModel.isAnyAmountPending = Utility.BOOLEAN.NO;
                 mTaskDetailModel.taskTotalPendingAmount = "0";
                 setUpUI();
+
 //                }
                 break;
         }
