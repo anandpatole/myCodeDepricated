@@ -25,7 +25,7 @@ import com.cheep.cheepcare.dialogs.TaskConfirmedCCInstaBookDialog;
 import com.cheep.cheepcare.model.CheepCarePaymentDataModel;
 import com.cheep.cheepcare.model.CityDetail;
 import com.cheep.cheepcare.model.SubscribedTaskDetailModel;
-import com.cheep.databinding.ActivityPaymentChoiceBinding;
+import com.cheep.databinding.ActivityPaymentChoiceCheepCareBinding;
 import com.cheep.dialogs.AcknowledgementInteractionListener;
 import com.cheep.model.AddressModel;
 import com.cheep.model.MessageEvent;
@@ -60,7 +60,7 @@ import static com.cheep.network.NetworkUtility.PAYTM.PARAMETERS.response;
 public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implements View.OnClickListener {
 
     private static final String TAG = LogUtils.makeLogTag(PaymentChoiceCheepCareActivity.class);
-    private ActivityPaymentChoiceBinding mBinding;
+    private ActivityPaymentChoiceCheepCareBinding mBinding;
     private Map<String, String> mTransactionParams;
     public static final int PAYTM_SEND_OTP = 0;
     public static final int PAYTM_ADD_MONEY = 1;
@@ -110,7 +110,7 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_payment_choice);
+        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_payment_choice_cheep_care);
 
         initiateUI();
         setListeners();
@@ -122,7 +122,6 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
     @Override
     protected void initiateUI() {
 
-        mBinding.llCashPayment.setVisibility(View.GONE);
         paymentFor = getIntent().getStringExtra(Utility.Extra.PAYMENT_VIEW);
         if (paymentFor.equalsIgnoreCase(PAYMENT_FOR_SUBSCRIPTION)) {
             cartDetail = getIntent().getStringExtra(Utility.Extra.DATA);
@@ -153,7 +152,6 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
         mBinding.rlCard.setOnClickListener(this);
         mBinding.rlNetbanking.setOnClickListener(this);
         mBinding.rlPaytm.setOnClickListener(this);
-        mBinding.rlCashPayment.setOnClickListener(this);
     }
 
     @Override

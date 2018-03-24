@@ -533,6 +533,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_choose_payment_option">Choose your preferred payment option below</string>
     <string name="label_wallet">Wallet</string>
     <string name="label_card_netbanking">Card / Netbanking</string>
+    <string name="label_card">Card</string>
     <string name="label_mobikwik">MobiKwik</string>
     <string name="label_credit_debit_card">Credit / Debit Card</string>
     <string name="label_paytm">Paytm</string>
@@ -771,4 +772,5 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_payment_pending">Payment pending</string>
     <string name="label_free_small">Free</string>
     <string name="label_with_cheep_care">with Cheep Care</string>
+    <string name="label_with_payment_desc_cheep_care">Your current subscription ends on the %1s. Your subscription will be auto renewed the same day, based on the subscription package chosen. </string>
 </resources>

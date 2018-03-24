@@ -51,18 +51,34 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <com.cheep.custom_view.CFTextViewRegular
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/scale_20dp"
-                    android:layout_marginEnd="@dimen/scale_45dp"
-                    android:layout_marginLeft="@dimen/scale_45dp"
-                    android:layout_marginRight="@dimen/scale_45dp"
-                    android:layout_marginStart="@dimen/scale_45dp"
-                    android:layout_marginTop="@dimen/scale_17dp"
-                    android:text="@string/label_choose_payment_option"
-                    android:textColor="@color/c_4B4B4B"
-                    android:textSize="@dimen/text_size_14sp"/>
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/scale_20dp"
+                        android:layout_marginLeft="@dimen/scale_23dp"
+                        android:layout_marginStart="@dimen/scale_23dp"
+                        android:layout_marginTop="@dimen/scale_17dp"
+                        android:src="@drawable/ic_info_blue"/>
+
+                    <com.cheep.custom_view.CFTextViewRegular
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/scale_20dp"
+                        android:layout_marginEnd="@dimen/scale_45dp"
+                        android:layout_marginLeft="@dimen/scale_12dp"
+                        android:layout_marginRight="@dimen/scale_45dp"
+                        android:layout_marginStart="@dimen/scale_12dp"
+                        android:layout_marginTop="@dimen/scale_17dp"
+                        android:includeFontPadding="false"
+                        android:text="@string/label_with_payment_desc_cheep_care"
+                        android:textColor="@color/c_4B4B4B"
+                        android:textSize="@dimen/text_size_13sp"/>
+                </LinearLayout>
 
                 <android.support.v7.widget.CardView
                     android:layout_width="match_parent"
@@ -140,7 +156,7 @@
                             android:id="@+id/rl_paytm"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="@dimen/scale_23dp">
+                            android:layout_marginBottom="@dimen/scale_10dp">
 
                             <FrameLayout
                                 android:id="@+id/fl_paytm_image_container"
@@ -219,12 +235,47 @@
 
                             <ProgressBar
                                 android:id="@+id/progress"
-                                android:layout_marginRight="@dimen/scale_5dp"
                                 android:layout_width="@dimen/scale_30dp"
                                 android:layout_height="@dimen/scale_30dp"
                                 android:layout_alignParentRight="true"
                                 android:layout_centerVertical="true"
+                                android:layout_marginRight="@dimen/scale_5dp"
                                 android:visibility="gone"/>
+
+
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@color/bg_auto_renew_text"
+                            android:orientation="horizontal">
+
+                            <com.cheep.custom_view.CFTextViewRegular
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
+                                android:gravity="center_vertical"
+                                android:paddingBottom="@dimen/scale_10dp"
+                                android:paddingEnd="@dimen/scale_5dp"
+                                android:paddingLeft="@dimen/scale_16dp"
+                                android:paddingRight="@dimen/scale_5dp"
+                                android:paddingStart="@dimen/scale_16dp"
+                                android:paddingTop="@dimen/scale_10dp"
+                                android:text="@string/label_auto_renew_activated"
+                                android:textColor="@color/black"
+                                android:textSize="@dimen/text_size_13sp"/>
+
+                            <android.support.v7.widget.SwitchCompat
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentEnd="true"
+                                android:layout_alignParentRight="true"
+                                android:layout_centerVertical="true"
+                                android:layout_marginEnd="@dimen/scale_15dp"
+                                android:layout_marginRight="@dimen/scale_15dp"
+                                android:textOff="Off"
+                                android:textOn="on"/>
                         </RelativeLayout>
 
                     </LinearLayout>
@@ -241,7 +292,7 @@
                     apps:cardCornerRadius="@dimen/scale_5dp">
 
                     <LinearLayout
-                        android:id="@+id/ll_card_netbanking"
+                        android:id="@+id/ll_card"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
@@ -253,38 +304,16 @@
                             android:layout_marginTop="@dimen/scale_12dp"
                             android:paddingLeft="@dimen/scale_16dp"
                             android:paddingStart="@dimen/scale_16dp"
-                            android:text="@string/label_card_netbanking"
+                            android:text="@string/label_card"
                             android:textColor="@color/splash_gradient_end"
                             android:textSize="@dimen/text_size_15sp"/>
 
-                        <RelativeLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="@dimen/scale_20dp"
-                            android:layout_marginLeft="@dimen/scale_27dp">
-
-                            <ImageView
-                                android:id="@+id/iv_info_icon"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_centerVertical="true"
-                                android:layout_marginRight="@dimen/scale_9dp"
-                                android:src="@drawable/ic_info_black"/>
-
-                            <com.cheep.custom_view.CFTextViewRegular
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_toRightOf="@id/iv_info_icon"
-                                android:paddingRight="@dimen/scale_34dp"
-                                android:text="@string/label_card_netbanking_info"
-                                android:textColor="@color/grey_varient_16"/>
-
-                        </RelativeLayout>
 
                         <RelativeLayout
                             android:id="@+id/rl_card"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/scale_10dp">
 
                             <FrameLayout
                                 android:id="@+id/fl_card_image_container"
@@ -326,11 +355,76 @@
                         </RelativeLayout>
 
                         <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@color/bg_auto_renew_text"
+                            android:orientation="horizontal">
+
+                            <com.cheep.custom_view.CFTextViewRegular
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
+                                android:gravity="center_vertical"
+                                android:paddingBottom="@dimen/scale_12dp"
+                                android:paddingEnd="@dimen/scale_5dp"
+                                android:paddingLeft="@dimen/scale_16dp"
+                                android:layout_toLeftOf="@+id/cartAutoRenewSwitch"
+                                android:paddingRight="@dimen/scale_5dp"
+                                android:paddingStart="@dimen/scale_16dp"
+                                android:paddingTop="@dimen/scale_12dp"
+                                android:text="@string/label_auto_renew_activated"
+                                android:textColor="@color/black"
+                                android:textSize="@dimen/text_size_13sp"/>
+
+                            <android.support.v7.widget.SwitchCompat
+                                android:id="@+id/cartAutoRenewSwitch"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentEnd="true"
+                                android:layout_alignParentRight="true"
+                                android:layout_centerVertical="true"
+                                android:layout_marginEnd="@dimen/scale_15dp"
+                                android:layout_marginRight="@dimen/scale_15dp"
+                                android:textOff="Off"
+                                android:textOn="on"/>
+                        </RelativeLayout>
+
+                    </LinearLayout>
+                </android.support.v7.widget.CardView>
+
+                <android.support.v7.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/scale_20dp"
+                    android:layout_marginLeft="@dimen/scale_11dp"
+                    android:layout_marginRight="@dimen/scale_11dp"
+                    android:orientation="vertical"
+                    apps:cardBackgroundColor="@color/white"
+                    apps:cardCornerRadius="@dimen/scale_5dp">
+
+                    <LinearLayout
+                        android:id="@+id/ll_netbanking"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <com.cheep.custom_view.CFTextViewSemiBold
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/scale_10dp"
+                            android:layout_marginTop="@dimen/scale_12dp"
+                            android:paddingLeft="@dimen/scale_16dp"
+                            android:paddingStart="@dimen/scale_16dp"
+                            android:text="@string/label_netbanking"
+                            android:textColor="@color/splash_gradient_end"
+                            android:textSize="@dimen/text_size_15sp"/>
+
+
+                        <RelativeLayout
                             android:id="@+id/rl_netbanking"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="@dimen/scale_24dp"
-                            android:layout_marginTop="@dimen/scale_17dp">
+                            android:layout_marginBottom="@dimen/scale_10dp">
 
                             <FrameLayout
                                 android:id="@+id/fl_netbanking_image_container"
@@ -374,83 +468,6 @@
                     </LinearLayout>
                 </android.support.v7.widget.CardView>
 
-                <android.support.v7.widget.CardView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/scale_20dp"
-                    android:layout_marginLeft="@dimen/scale_11dp"
-                    android:layout_marginRight="@dimen/scale_11dp"
-                    android:orientation="vertical"
-                    android:visibility="visible"
-                    apps:cardBackgroundColor="@color/white"
-                    apps:cardCornerRadius="@dimen/scale_5dp">
-
-                    <LinearLayout
-                        android:id="@+id/ll_cash_payment"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
-
-                        <com.cheep.custom_view.CFTextViewSemiBold
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="@dimen/scale_8dp"
-                            android:layout_marginTop="@dimen/scale_12dp"
-                            android:paddingLeft="@dimen/scale_17dp"
-                            android:paddingStart="@dimen/scale_17dp"
-                            android:text="@string/label_pay_at_loaction"
-                            android:textColor="@color/splash_gradient_end"
-                            android:textSize="@dimen/text_size_15sp"/>
-
-                        <RelativeLayout
-                            android:id="@+id/rl_cash_payment"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="@dimen/scale_23dp">
-
-                            <FrameLayout
-                                android:id="@+id/fl_pay_by_cash_image_container"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content">
-
-                                <ImageView
-                                    android:id="@+id/iv_cash_payment"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginLeft="@dimen/scale_16dp"
-                                    android:layout_marginRight="@dimen/scale_16dp"
-                                    android:src="@drawable/payment_screen_circle_shadow"/>
-
-                                <ImageView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_gravity="center"
-                                    android:layout_marginBottom="@dimen/scale_1dp"
-                                    android:src="@drawable/ic_cash"/>
-
-                            </FrameLayout>
-
-                            <com.cheep.custom_view.CFTextViewSemiBold
-                                android:id="@+id/tv_cash_payment"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentEnd="true"
-                                android:layout_alignParentRight="true"
-                                android:layout_toEndOf="@id/fl_pay_by_cash_image_container"
-                                android:layout_toRightOf="@id/fl_pay_by_cash_image_container"
-                                android:drawableEnd="@drawable/ic_right_arrow_blue"
-                                android:drawableRight="@drawable/ic_right_arrow_blue"
-                                android:paddingEnd="@dimen/scale_34dp"
-                                android:paddingRight="@dimen/scale_34dp"
-                                android:paddingTop="@dimen/scale_12dp"
-                                android:text="@string/label_pay_by_cash"
-                                android:textColor="@color/grey_varient_8"
-                                android:textSize="@dimen/text_size_14sp"/>
-
-                        </RelativeLayout>
-
-                    </LinearLayout>
-                </android.support.v7.widget.CardView>
             </LinearLayout>
         </ScrollView>
     </LinearLayout>

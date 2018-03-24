@@ -9,8 +9,7 @@
 
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_above="@+id/ln_pay_now">
+            android:layout_height="match_parent">
 
             <android.support.v4.widget.NestedScrollView
                 android:layout_width="match_parent"
@@ -926,7 +925,7 @@
                         android:visibility="visible">
 
                         <com.cheep.custom_view.CFTextViewRegular
-                            android:id="@+id/text_additional_payment_desc"
+                            android:id="@+id/tv_payment_pending_desc"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
