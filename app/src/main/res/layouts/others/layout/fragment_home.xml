@@ -1,16 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@android:color/transparent"
         android:orientation="vertical">
+
 
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1">
+            android:layout_height="match_parent"
+            android:layout_above="@+id/fl_bottom"
+            android:background="@color/transparent">
 
             <FrameLayout
                 android:id="@+id/inner_content"
@@ -22,147 +26,135 @@
                 android:layout_height="@dimen/scale_2dp"
                 android:layout_gravity="bottom"
                 android:background="@drawable/shadow_transparent_grey" />
+
         </FrameLayout>
 
-        <LinearLayout
+        <FrameLayout
+            android:id="@+id/fl_bottom"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/splash_gradient_end"
-            android:orientation="horizontal">
+            android:layout_alignParentBottom="true">
 
-            <!--android:background="@drawable/tab_background"-->
-            <FrameLayout
-                android:layout_width="0dp"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1">
+                android:layout_gravity="bottom"
+                android:background="@color/splash_gradient_end"
+                android:orientation="horizontal">
 
-                <com.cheep.custom_view.CFTextViewRegular
-                    android:id="@+id/text_tab_home"
-                    android:layout_width="match_parent"
+                <!--android:background="@drawable/tab_background"-->
+                <FrameLayout
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:drawablePadding="@dimen/scale_5dp"
-                    android:drawableTop="@drawable/tab_home"
-                    android:gravity="center"
-                    android:padding="@dimen/scale_5dp"
-                    android:text="@string/tab_home"
-                    android:textAllCaps="false"
-                    android:textColor="@drawable/tab_text_color"
-                    android:textSize="@dimen/text_size_11sp" />
-
-                <View
-                    android:id="@+id/strip_home"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/scale_3dp"
-                    android:layout_gravity="bottom"
-                    android:layout_marginLeft="@dimen/scale_10dp"
-                    android:layout_marginRight="@dimen/scale_10dp"
-                    android:background="@drawable/stripe_white" />
-            </FrameLayout>
-
-            <View
-                android:layout_width="@dimen/scale_1dp"
-                android:layout_height="match_parent"
-                android:background="@color/grey_color"
-                android:visibility="gone" />
-
-            <!--android:background="@drawable/tab_background"-->
-            <FrameLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1">
-
-                <com.cheep.custom_view.CFTextViewRegular
-                    android:id="@+id/text_tab_my_task"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:drawablePadding="@dimen/scale_5dp"
-                    android:drawableTop="@drawable/tab_task"
-                    android:gravity="center"
-                    android:padding="@dimen/scale_5dp"
-                    android:text="@string/tab_my_task"
-                    android:textAllCaps="false"
-                    android:textColor="@drawable/tab_text_color"
-                    android:textSize="@dimen/text_size_11sp" />
-
-                <View
-                    android:id="@+id/strip_my_task"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/scale_3dp"
-                    android:layout_gravity="bottom"
-                    android:layout_marginLeft="@dimen/scale_10dp"
-                    android:layout_marginRight="@dimen/scale_10dp"
-                    android:background="@drawable/stripe_white" />
-            </FrameLayout>
-
-            <!-- <View
-                 android:layout_width="@dimen/scale_1dp"
-                 android:layout_height="match_parent"
-                 android:background="@color/grey_color"
-                 android:visibility="gone" />
-
-             <FrameLayout
-                 android:layout_width="0dp"
-                 android:layout_height="wrap_content"
-                 android:layout_weight="1">
-
-                 <com.cheep.custom_view.CFTextViewRegular
-                     android:id="@+id/text_tab_me"
-                     android:layout_width="match_parent"
-                     android:layout_height="wrap_content"
-                     android:drawablePadding="@dimen/scale_5dp"
-                     android:drawableTop="@drawable/tab_profile"
-                     android:gravity="center"
-                     android:padding="@dimen/scale_5dp"
-                     android:text="@string/tab_me"
-                     android:textAllCaps="false"
-                     android:textColor="@drawable/tab_text_color"
-                     android:textSize="@dimen/text_size_11sp" />
-
-                 <View
-                     android:id="@+id/strip_my_me"
-                     android:layout_width="match_parent"
-                     android:layout_height="@dimen/scale_3dp"
-                     android:layout_gravity="bottom"
-                     android:layout_marginLeft="@dimen/scale_10dp"
-                     android:layout_marginRight="@dimen/scale_10dp"
-                     android:background="@drawable/stripe_white" />
-             </FrameLayout>-->
-
-            <View
-                android:layout_width="@dimen/scale_1dp"
-                android:layout_height="match_parent"
-                android:background="@color/grey_color"
-                android:visibility="gone" />
-
-            <FrameLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1">
-
-                <!--<com.cheep.custom_view.CFTextViewRegular
-                    android:id="@+id/text_tab_chat"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:drawablePadding="@dimen/scale_5dp"
-                    android:drawableTop="@drawable/tab_chat"
-                    android:gravity="center"
-                    android:padding="@dimen/scale_5dp"
-                    android:text="@string/tab_chat"
-                    android:textAllCaps="false"
-                    android:textColor="@drawable/tab_text_color"
-                    android:textSize="@dimen/text_size_11sp"
-                    android:visibility="visible" />-->
-                <RelativeLayout
-                    android:id="@+id/rl_notification_action"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:clickable="true"
-                    android:gravity="center">
+                    android:layout_weight="1">
 
                     <com.cheep.custom_view.CFTextViewRegular
-                        android:id="@+id/text_tab_chat"
-                        android:layout_width="wrap_content"
+                        android:id="@+id/text_tab_home"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:drawablePadding="@dimen/scale_5dp"
+                        android:drawableTop="@drawable/tab_home"
+                        android:gravity="center"
+                        android:padding="@dimen/scale_5dp"
+                        android:text="@string/tab_home"
+                        android:textAllCaps="false"
+                        android:textColor="@drawable/tab_text_color"
+                        android:textSize="@dimen/text_size_11sp" />
+
+                    <View
+                        android:id="@+id/strip_home"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/scale_3dp"
+                        android:layout_gravity="bottom"
+                        android:layout_marginLeft="@dimen/scale_10dp"
+                        android:layout_marginRight="@dimen/scale_10dp"
+                        android:background="@drawable/stripe_white" />
+                </FrameLayout>
+
+                <View
+                    android:layout_width="@dimen/scale_1dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/grey_color"
+                    android:visibility="gone" />
+
+                <!--android:background="@drawable/tab_background"-->
+                <FrameLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <com.cheep.custom_view.CFTextViewRegular
+                        android:id="@+id/text_tab_my_task"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:drawablePadding="@dimen/scale_5dp"
+                        android:drawableTop="@drawable/tab_task"
+                        android:gravity="center"
+                        android:padding="@dimen/scale_5dp"
+                        android:text="@string/tab_my_task"
+                        android:textAllCaps="false"
+                        android:textColor="@drawable/tab_text_color"
+                        android:textSize="@dimen/text_size_11sp" />
+
+                    <View
+                        android:id="@+id/strip_my_task"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/scale_3dp"
+                        android:layout_gravity="bottom"
+                        android:layout_marginLeft="@dimen/scale_10dp"
+                        android:layout_marginRight="@dimen/scale_10dp"
+                        android:background="@drawable/stripe_white" />
+                </FrameLayout>
+
+                <!-- <View
+                     android:layout_width="@dimen/scale_1dp"
+                     android:layout_height="match_parent"
+                     android:background="@color/grey_color"
+                     android:visibility="gone" />
+
+                 <FrameLayout
+                     android:layout_width="0dp"
+                     android:layout_height="wrap_content"
+                     android:layout_weight="1">
+
+                     <com.cheep.custom_view.CFTextViewRegular
+                         android:id="@+id/text_tab_me"
+                         android:layout_width="match_parent"
+                         android:layout_height="wrap_content"
+                         android:drawablePadding="@dimen/scale_5dp"
+                         android:drawableTop="@drawable/tab_profile"
+                         android:gravity="center"
+                         android:padding="@dimen/scale_5dp"
+                         android:text="@string/tab_me"
+                         android:textAllCaps="false"
+                         android:textColor="@drawable/tab_text_color"
+                         android:textSize="@dimen/text_size_11sp" />
+
+                     <View
+                         android:id="@+id/strip_my_me"
+                         android:layout_width="match_parent"
+                         android:layout_height="@dimen/scale_3dp"
+                         android:layout_gravity="bottom"
+                         android:layout_marginLeft="@dimen/scale_10dp"
+                         android:layout_marginRight="@dimen/scale_10dp"
+                         android:background="@drawable/stripe_white" />
+                 </FrameLayout>-->
+
+                <View
+                    android:layout_width="@dimen/scale_1dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/grey_color"
+                    android:visibility="gone" />
+
+                <FrameLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <!--<com.cheep.custom_view.CFTextViewRegular
+                        android:id="@+id/text_tab_chat"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
                         android:drawablePadding="@dimen/scale_5dp"
                         android:drawableTop="@drawable/tab_chat"
                         android:gravity="center"
@@ -171,59 +163,213 @@
                         android:textAllCaps="false"
                         android:textColor="@drawable/tab_text_color"
                         android:textSize="@dimen/text_size_11sp"
-                        android:visibility="visible" />
+                        android:visibility="visible" />-->
+                    <RelativeLayout
+                        android:id="@+id/rl_notification_action"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:clickable="true"
+                        android:gravity="center">
 
-                    <com.cheep.custom_view.CFTextViewSemiBold
-                        android:id="@+id/tv_chat_unread_count"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="-15dp"
-                        android:layout_marginStart="-15dp"
-                        android:layout_toEndOf="@+id/text_tab_chat"
-                        android:layout_toRightOf="@+id/text_tab_chat"
-                        android:background="@drawable/icon_red_dot"
-                        android:gravity="center"
-                        android:paddingBottom="@dimen/scale_1dp"
-                        android:paddingLeft="@dimen/scale_3dp"
-                        android:paddingRight="@dimen/scale_3dp"
-                        android:paddingTop="@dimen/scale_1dp"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/text_size_10sp"
-                        android:visibility="gone"
-                        tools:text="3213" />
-                </RelativeLayout>
+                        <com.cheep.custom_view.CFTextViewRegular
+                            android:id="@+id/text_tab_chat"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:drawablePadding="@dimen/scale_5dp"
+                            android:drawableTop="@drawable/tab_chat"
+                            android:gravity="center"
+                            android:padding="@dimen/scale_5dp"
+                            android:text="@string/tab_chat"
+                            android:textAllCaps="false"
+                            android:textColor="@drawable/tab_text_color"
+                            android:textSize="@dimen/text_size_11sp"
+                            android:visibility="visible" />
+
+                        <com.cheep.custom_view.CFTextViewSemiBold
+                            android:id="@+id/tv_chat_unread_count"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="-15dp"
+                            android:layout_marginStart="-15dp"
+                            android:layout_toEndOf="@+id/text_tab_chat"
+                            android:layout_toRightOf="@+id/text_tab_chat"
+                            android:background="@drawable/icon_red_dot"
+                            android:gravity="center"
+                            android:paddingBottom="@dimen/scale_1dp"
+                            android:paddingLeft="@dimen/scale_3dp"
+                            android:paddingRight="@dimen/scale_3dp"
+                            android:paddingTop="@dimen/scale_1dp"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/text_size_10sp"
+                            android:visibility="gone"
+                            tools:text="3213" />
+                    </RelativeLayout>
+
+                    <View
+                        android:id="@+id/strip_my_chat"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/scale_3dp"
+                        android:layout_gravity="bottom"
+                        android:layout_marginLeft="@dimen/scale_10dp"
+                        android:layout_marginRight="@dimen/scale_10dp"
+                        android:background="@drawable/stripe_white" />
+                </FrameLayout>
 
                 <View
-                    android:id="@+id/strip_my_chat"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/scale_3dp"
-                    android:layout_gravity="bottom"
-                    android:layout_marginLeft="@dimen/scale_10dp"
-                    android:layout_marginRight="@dimen/scale_10dp"
-                    android:background="@drawable/stripe_white" />
-            </FrameLayout>
+                    android:layout_width="@dimen/scale_1dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/grey_color"
+                    android:visibility="gone" />
 
-            <View
-                android:layout_width="@dimen/scale_1dp"
-                android:layout_height="match_parent"
-                android:background="@color/grey_color"
-                android:visibility="gone" />
+                <com.cheep.custom_view.CFTextViewRegular
+                    android:id="@+id/text_tab_alert"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:drawablePadding="@dimen/scale_5dp"
+                    android:drawableTop="@drawable/tab_alert"
+                    android:gravity="center"
+                    android:padding="@dimen/scale_5dp"
+                    android:text="@string/tab_alert"
+                    android:textAllCaps="false"
+                    android:textColor="@drawable/tab_alert_text_color"
+                    android:textSize="@dimen/text_size_11sp"
+                    android:visibility="visible" />
+            </LinearLayout>
 
-            <com.cheep.custom_view.CFTextViewRegular
-                android:id="@+id/text_tab_alert"
-                android:layout_width="0dp"
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/fl_rate_task"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_gravity="bottom"
+            android:background="@android:color/transparent"
+            android:visibility="gone">
+
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:drawablePadding="@dimen/scale_5dp"
-                android:drawableTop="@drawable/tab_alert"
-                android:gravity="center"
-                android:padding="@dimen/scale_5dp"
-                android:text="@string/tab_alert"
-                android:textAllCaps="false"
-                android:textColor="@drawable/tab_alert_text_color"
-                android:textSize="@dimen/text_size_11sp"
-                android:visibility="visible" />
-        </LinearLayout>
+                android:layout_marginTop="@dimen/scale_38dp"
+                android:background="@color/white_translucent_e6f7f7f7">
 
-    </LinearLayout>
+                <com.cheep.custom_view.CFTextViewRegular
+                    android:id="@+id/tv_rate_description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/scale_22dp"
+                    android:layout_marginRight="@dimen/scale_22dp"
+                    android:layout_marginTop="@dimen/scale_46dp"
+                    android:gravity="center"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_13sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="Lokesh Shah recently completed a Plumbing task for you. Please rate your service experience." />
+
+                <RatingBar
+                    android:id="@+id/rating_presentation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/scale_22dp"
+                    android:layout_marginBottom="@dimen/scale_15dp"
+                    android:layout_marginTop="@dimen/scale_15dp"
+                    android:isIndicator="true"
+                    android:numStars="5"
+                    android:progressDrawable="@drawable/ic_rate_task_summary_big_background"
+                    android:rating="0"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_rate_description" />
+
+            </android.support.constraint.ConstraintLayout>
+
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:background="@android:color/transparent">
+
+                <ImageView
+                    android:id="@+id/ivBackgroundShadow"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:background="@color/transparent"
+                    android:src="@drawable/model_background_shadow_circle"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+                <com.cheep.custom_view.CFTextViewRegular
+                    android:id="@+id/tv_pro_category"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/scale_8dp"
+                    android:layout_marginTop="@dimen/scale_44dp"
+                    android:background="@drawable/blue_rounded_border_sf1"
+                    android:paddingBottom="@dimen/scale_3dp"
+                    android:paddingLeft="@dimen/scale_6dp"
+                    android:paddingRight="@dimen/scale_6dp"
+                    android:paddingTop="@dimen/scale_3dp"
+                    android:textColor="@color/splash_gradient_end"
+                    android:textSize="@dimen/text_size_11sp"
+                    app:layout_constraintEnd_toStartOf="@id/imgProfilePic"
+                    app:layout_constraintHorizontal_bias="1"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="Plumber" />
+
+                <com.cheep.custom_view.CFTextViewRegular
+                    android:id="@+id/tv_pro_status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/scale_8dp"
+                    android:layout_marginTop="@dimen/scale_44dp"
+                    android:background="@drawable/img_blue_rounded_slighter"
+                    android:maxWidth="@dimen/scale_96dp"
+                    android:paddingBottom="@dimen/scale_3dp"
+                    android:paddingLeft="@dimen/scale_6dp"
+                    android:paddingRight="@dimen/scale_6dp"
+                    android:paddingTop="@dimen/scale_3dp"
+                    android:text="@string/label_verified_pro"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_size_11sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0"
+                    app:layout_constraintStart_toEndOf="@id/imgProfilePic"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:id="@+id/imgProfilePic"
+                    android:layout_width="58dp"
+                    android:layout_height="58dp"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="-6dp"
+                    android:visibility="visible"
+                    app:layout_constraintBottom_toBottomOf="@id/ivBackgroundShadow"
+                    app:layout_constraintEnd_toEndOf="@id/ivBackgroundShadow"
+                    app:layout_constraintStart_toStartOf="@id/ivBackgroundShadow"
+                    app:layout_constraintTop_toTopOf="@id/ivBackgroundShadow"
+                    tools:src="@drawable/ic_cheep_circular_icon" />
+
+                <ImageView
+                    android:id="@+id/imgFav"
+                    android:layout_width="@dimen/scale_20dp"
+                    android:layout_height="@dimen/scale_20dp"
+                    android:background="@drawable/ic_favorite_quote_selector"
+                    app:layout_constraintBottom_toBottomOf="@id/imgProfilePic"
+                    app:layout_constraintEnd_toEndOf="@id/imgProfilePic"
+                    app:layout_constraintHorizontal_bias="1"
+                    app:layout_constraintStart_toStartOf="@id/imgProfilePic"
+                    app:layout_constraintTop_toTopOf="@id/imgProfilePic"
+                    app:layout_constraintVertical_bias="1"
+                    tools:ignore="ContentDescription" />
+
+            </android.support.constraint.ConstraintLayout>
+
+        </FrameLayout>
+
+    </RelativeLayout>
 </layout>

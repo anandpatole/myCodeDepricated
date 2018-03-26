@@ -4,15 +4,11 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
-import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
-import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
-import android.text.style.ForegroundColorSpan;
-import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.View;
 
@@ -36,6 +32,8 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static com.cheep.utils.Utility.getSpannableString;
 
 
 public class PaymentSummaryActivity extends BaseAppCompatActivity {
@@ -153,16 +151,6 @@ public class PaymentSummaryActivity extends BaseAppCompatActivity {
     private String getRuppeAmount(String proPaymentAmount) {
         return getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(proPaymentAmount));
     }
-
-    public SpannableStringBuilder getSpannableString(String fullstring, int color, boolean isBold) {
-        SpannableStringBuilder text = new SpannableStringBuilder(fullstring);
-        text.setSpan(new ForegroundColorSpan(color), 0, fullstring.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        if (isBold) {
-            text.setSpan(new StyleSpan(Typeface.BOLD), 0, fullstring.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        }
-        return text;
-    }
-
 
     public Double getQuotePriceInInteger(String quotePrice) {
         if (quotePrice == null) {

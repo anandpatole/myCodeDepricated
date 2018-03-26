@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
@@ -18,7 +18,7 @@
             android:theme="@style/AppTheme.AppBarWhite.ColorControlNormalBlue"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/img_profile"
@@ -31,7 +31,7 @@
             app:layout_constraintHorizontal_bias="0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="ContentDescription"/>
+            tools:ignore="ContentDescription" />
 
         <ImageView
             android:id="@+id/imgFav"
@@ -40,7 +40,7 @@
             android:background="@drawable/icon_fav_selector"
             app:layout_constraintBottom_toBottomOf="@id/img_profile"
             app:layout_constraintRight_toRightOf="@id/img_profile"
-            tools:ignore="ContentDescription"/>
+            tools:ignore="ContentDescription" />
 
         <com.cheep.custom_view.CFTextViewSemiBold
             android:id="@+id/text_provider_name"
@@ -49,14 +49,15 @@
             android:layout_marginLeft="@dimen/scale_18dp"
             android:layout_marginTop="@dimen/scale_23dp"
             android:includeFontPadding="false"
-            android:text="Lokesh Shah"
             android:textColor="@color/splash_gradient_end"
             android:textSize="@dimen/text_size_14sp"
             app:layout_constraintEnd_toStartOf="@+id/iv_badge"
             app:layout_constraintStart_toEndOf="@id/img_profile"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Lokesh Shah" />
 
         <com.cheep.custom_view.CFTextViewRegular
+            android:id="@+id/tv_category"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/scale_18dp"
@@ -66,13 +67,13 @@
             android:paddingLeft="@dimen/scale_7dp"
             android:paddingRight="@dimen/scale_7dp"
             android:paddingTop="@dimen/scale_4dp"
-            android:text="Plumber"
             android:textColor="@color/splash_gradient_end"
             android:textSize="@dimen/text_size_10sp"
             app:layout_constraintEnd_toStartOf="@+id/iv_badge"
             app:layout_constraintHorizontal_bias="0"
             app:layout_constraintStart_toEndOf="@id/img_profile"
-            app:layout_constraintTop_toBottomOf="@id/text_provider_name"/>
+            app:layout_constraintTop_toBottomOf="@id/text_provider_name"
+            tools:text="Plumber" />
 
         <ImageView
             android:id="@+id/iv_badge"
@@ -80,9 +81,9 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="@dimen/scale_16dp"
             android:layout_marginTop="@dimen/scale_16dp"
-            android:src="@drawable/ic_badge_gold"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@drawable/ic_badge_gold" />
 
         <View
             android:id="@+id/separator"
@@ -92,7 +93,7 @@
             android:background="@color/light_grey_color"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/img_profile"/>
+            app:layout_constraintTop_toBottomOf="@id/img_profile" />
 
         <ScrollView
             android:id="@+id/scrollView"
@@ -120,7 +121,7 @@
                     android:textSize="@dimen/text_size_15sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"/>
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <com.cheep.custom_view.CFEditTextRegular
                     android:id="@+id/et_review"
@@ -141,7 +142,7 @@
                     android:textSize="@dimen/text_size_12sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tv_submit_review_description"/>
+                    app:layout_constraintTop_toBottomOf="@id/tv_submit_review_description" />
 
                 <com.cheep.custom_view.CFTextViewSemiBold
                     android:id="@+id/tv_how_rate"
@@ -155,7 +156,7 @@
                     android:textSize="@dimen/text_size_17sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/et_review"/>
+                    app:layout_constraintTop_toBottomOf="@id/et_review" />
 
                 <!--   <com.cheep.custom_view.CFTextViewRegular
                        android:id="@+id/tv_communication"
@@ -300,12 +301,12 @@
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/rvRating"
                     android:layout_width="match_parent"
-                    tools:itemCount="5"
-                    tools:listitem="@layout/row_rating"
                     android:layout_height="wrap_content"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tv_how_rate"/>
+                    app:layout_constraintTop_toBottomOf="@id/tv_how_rate"
+                    tools:itemCount="5"
+                    tools:listitem="@layout/row_rating" />
 
                 <com.cheep.custom_view.CFTextViewRegular
                     android:id="@+id/tv_your_rating"
@@ -319,17 +320,17 @@
                     android:textSize="@dimen/text_size_14sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/rvRating"/>
+                    app:layout_constraintTop_toBottomOf="@id/rvRating" />
 
                 <com.cheep.custom_view.CFTextViewSemiBold
                     android:id="@+id/tv_rating"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="4.0"
                     android:textColor="@color/splash_gradient_end"
                     android:textSize="@dimen/text_size_29sp"
                     app:layout_constraintStart_toStartOf="@id/tv_your_rating"
-                    app:layout_constraintTop_toBottomOf="@id/tv_your_rating"/>
+                    app:layout_constraintTop_toBottomOf="@id/tv_your_rating"
+                    tools:text="4.0" />
 
                 <ImageView
                     android:id="@+id/iv_star"
@@ -339,7 +340,7 @@
                     android:src="@drawable/ic_yellow_100x91"
                     app:layout_constraintBottom_toBottomOf="@id/tv_rating"
                     app:layout_constraintStart_toEndOf="@id/tv_rating"
-                    app:layout_constraintTop_toTopOf="@id/tv_rating"/>
+                    app:layout_constraintTop_toTopOf="@id/tv_rating" />
 
                 <com.cheep.custom_view.CFTextViewRegular
                     android:id="@+id/tv_recommend_rating"
@@ -355,7 +356,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_chainStyle="packed"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/iv_star"/>
+                    app:layout_constraintTop_toBottomOf="@id/iv_star" />
 
                 <com.cheep.custom_view.CFTextViewRegular
                     android:id="@+id/tv_yes"
@@ -375,7 +376,7 @@
                     app:layout_constraintEnd_toStartOf="@+id/tv_no"
                     app:layout_constraintHorizontal_chainStyle="packed"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tv_recommend_rating"/>
+                    app:layout_constraintTop_toBottomOf="@id/tv_recommend_rating" />
 
                 <com.cheep.custom_view.CFTextViewRegular
                     android:id="@+id/tv_no"
@@ -394,7 +395,7 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/tv_yes"
-                    app:layout_constraintTop_toBottomOf="@id/tv_recommend_rating"/>
+                    app:layout_constraintTop_toBottomOf="@id/tv_recommend_rating" />
 
                 <android.support.constraint.Group
                     android:id="@+id/group_rating_submitted"
@@ -402,7 +403,7 @@
                     android:layout_height="wrap_content"
                     android:visibility="visible"
                     app:constraint_referenced_ids="tv_your_rating,tv_rating
-                    ,iv_star,tv_recommend_rating,tv_yes,tv_no"/>
+                    ,iv_star,tv_recommend_rating,tv_yes,tv_no" />
 
             </android.support.constraint.ConstraintLayout>
         </ScrollView>
@@ -422,6 +423,6 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/scrollView"/>
+            app:layout_constraintTop_toBottomOf="@id/scrollView" />
     </android.support.constraint.ConstraintLayout>
 </layout>

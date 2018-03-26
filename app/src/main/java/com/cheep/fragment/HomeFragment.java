@@ -10,6 +10,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,6 +23,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.cheep.R;
 import com.cheep.activity.TaskQuotesActivity;
+import com.cheep.cheepcare.activity.RateAndReviewActivity;
 import com.cheep.custom_view.BottomAlertDialog;
 import com.cheep.databinding.FragmentHomeBinding;
 import com.cheep.firebase.FirebaseHelper;
@@ -28,11 +31,13 @@ import com.cheep.firebase.FirebaseUtils;
 import com.cheep.firebase.model.TaskChatModel;
 import com.cheep.interfaces.DrawerLayoutInteractionListener;
 import com.cheep.model.MessageEvent;
+import com.cheep.model.ProviderModel;
 import com.cheep.model.TaskDetailModel;
 import com.cheep.model.UserDetails;
 import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
+import com.cheep.utils.GlideUtility;
 import com.cheep.utils.GsonUtility;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.Utility;
@@ -54,6 +59,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.cheep.utils.Utility.getSpannableString;
+
 /**
  * Created by pankaj on 9/27/16.
  */
@@ -70,7 +77,7 @@ public class HomeFragment extends BaseFragment {
     private TextView textLastSelectedTab = null;
     private String lastSelectedTab;
 
-    private FragmentHomeBinding mFragmentHomeBinding;
+    private FragmentHomeBinding mBinding;
 
     private HashMap<String, BaseFragment> mFragments;
     private ArrayList<String> mFragmentsStackTags;
@@ -98,9 +105,9 @@ public class HomeFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        mFragmentHomeBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false);
+        mBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false);
         setHasOptionsMenu(true);
-        return mFragmentHomeBinding.getRoot();
+        return mBinding.getRoot();
     }
 
     @Override
@@ -138,6 +145,9 @@ public class HomeFragment extends BaseFragment {
 
         mListener = null;
         removeUnreadCountListener();
+
+        Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.WS.CHECK_PROCESSING_TASK);
+        Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.WS.EMERGENCY_ALERT);
         super.onDetach();
     }
 
@@ -159,6 +169,9 @@ public class HomeFragment extends BaseFragment {
             case Utility.BROADCAST_TYPE.SUBSCRIBED_TASK_CREATE_SUCCESSFULLY:
                 // Need to rediretct the user to MyTask Screen
                 setCurrentTab(TAB_MY_TASK);
+                break;
+            case Utility.BROADCAST_TYPE.TASK_RATED:
+                mBinding.flRateTask.setVisibility(View.GONE);
                 break;
 
         }
@@ -206,11 +219,11 @@ public class HomeFragment extends BaseFragment {
     public void setListener() {
 
         //Setting listener to tabs
-        mFragmentHomeBinding.textTabHome.setOnClickListener(tabClickListener);
-        mFragmentHomeBinding.textTabMyTask.setOnClickListener(tabClickListener);
-//        mFragmentHomeBinding.textTabMe.setOnClickListener(tabClickListener);
-        mFragmentHomeBinding.textTabChat.setOnClickListener(tabClickListener);
-        mFragmentHomeBinding.textTabAlert.setOnClickListener(tabClickListener);
+        mBinding.textTabHome.setOnClickListener(tabClickListener);
+        mBinding.textTabMyTask.setOnClickListener(tabClickListener);
+//        mBinding.textTabMe.setOnClickListener(tabClickListener);
+        mBinding.textTabChat.setOnClickListener(tabClickListener);
+        mBinding.textTabAlert.setOnClickListener(tabClickListener);
 
     }
 
@@ -287,20 +300,20 @@ public class HomeFragment extends BaseFragment {
                         if (taskChatModel.unreadCount == 0 || isDelete) {
                             unreadCountIds.remove(taskChatModel.chatId);
                             if (unreadCountIds.size() <= 0) {
-                                mFragmentHomeBinding.tvChatUnreadCount.setVisibility(View.GONE);
+                                mBinding.tvChatUnreadCount.setVisibility(View.GONE);
                             } else {
-                                mFragmentHomeBinding.tvChatUnreadCount.setVisibility(View.VISIBLE);
-                                mFragmentHomeBinding.tvChatUnreadCount.setText(String.valueOf(unreadCountIds.size()));
+                                mBinding.tvChatUnreadCount.setVisibility(View.VISIBLE);
+                                mBinding.tvChatUnreadCount.setText(String.valueOf(unreadCountIds.size()));
                             }
                             Log.e(TAG, "Updated Unread Count :" + unreadCountIds.size());
                         }
                     } else if (taskChatModel.unreadCount > 0) {
                         unreadCountIds.add(taskChatModel.chatId);
                         if (unreadCountIds.size() <= 0) {
-                            mFragmentHomeBinding.tvChatUnreadCount.setVisibility(View.GONE);
+                            mBinding.tvChatUnreadCount.setVisibility(View.GONE);
                         } else {
-                            mFragmentHomeBinding.tvChatUnreadCount.setVisibility(View.VISIBLE);
-                            mFragmentHomeBinding.tvChatUnreadCount.setText(String.valueOf(unreadCountIds.size()));
+                            mBinding.tvChatUnreadCount.setVisibility(View.VISIBLE);
+                            mBinding.tvChatUnreadCount.setText(String.valueOf(unreadCountIds.size()));
                         }
                         Log.e(TAG, "Updated Unread Count :" + unreadCountIds.size());
                     }
@@ -339,11 +352,11 @@ public class HomeFragment extends BaseFragment {
      */
     private void resetAllTabs() {
 
-        setSelected(mFragmentHomeBinding.textTabHome, false);
-        setSelected(mFragmentHomeBinding.textTabMyTask, false);
-//        setSelected(mFragmentHomeBinding.textTabMe, false);
-        setSelected(mFragmentHomeBinding.textTabChat, false);
-        setSelected(mFragmentHomeBinding.textTabAlert, false);
+        setSelected(mBinding.textTabHome, false);
+        setSelected(mBinding.textTabMyTask, false);
+//        setSelected(mBinding.textTabMe, false);
+        setSelected(mBinding.textTabChat, false);
+        setSelected(mBinding.textTabAlert, false);
 
     }
 
@@ -358,7 +371,7 @@ public class HomeFragment extends BaseFragment {
 
 
     //Loads the fragment in inner_content container
-    private void  loadFragment(String tab, BaseFragment fragmentToCommit) {
+    private void loadFragment(String tab, BaseFragment fragmentToCommit) {
         if (textLastSelectedTab != null) {
             //Checking if last selected tab is same which current pressed then no need to load again
             setSelected(textLastSelectedTab, false);
@@ -366,46 +379,46 @@ public class HomeFragment extends BaseFragment {
         lastSelectedTab = tab;
         switch (tab) {
             case TAB_HOME:
-                setSelected(mFragmentHomeBinding.textTabHome, true);
-                textLastSelectedTab = mFragmentHomeBinding.textTabHome;
+                setSelected(mBinding.textTabHome, true);
+                textLastSelectedTab = mBinding.textTabHome;
                 //enable Home stripe
-                mFragmentHomeBinding.stripHome.setVisibility(View.VISIBLE);
-                mFragmentHomeBinding.stripMyTask.setVisibility(View.GONE);
-//                mFragmentHomeBinding.stripMyMe.setVisibility(View.GONE);
-                mFragmentHomeBinding.stripMyChat.setVisibility(View.GONE);
+                mBinding.stripHome.setVisibility(View.VISIBLE);
+                mBinding.stripMyTask.setVisibility(View.GONE);
+//                mBinding.stripMyMe.setVisibility(View.GONE);
+                mBinding.stripMyChat.setVisibility(View.GONE);
 
                 break;
             case TAB_MY_TASK:
-                setSelected(mFragmentHomeBinding.textTabMyTask, true);
-                textLastSelectedTab = mFragmentHomeBinding.textTabMyTask;
+                setSelected(mBinding.textTabMyTask, true);
+                textLastSelectedTab = mBinding.textTabMyTask;
 
                 //enable My Task stripe
-                mFragmentHomeBinding.stripHome.setVisibility(View.GONE);
-                mFragmentHomeBinding.stripMyTask.setVisibility(View.VISIBLE);
-//                mFragmentHomeBinding.stripMyMe.setVisibility(View.GONE);
-                mFragmentHomeBinding.stripMyChat.setVisibility(View.GONE);
+                mBinding.stripHome.setVisibility(View.GONE);
+                mBinding.stripMyTask.setVisibility(View.VISIBLE);
+//                mBinding.stripMyMe.setVisibility(View.GONE);
+                mBinding.stripMyChat.setVisibility(View.GONE);
 
 
                 break;
             /*case TAB_ME:
-                setSelected(mFragmentHomeBinding.textTabMe, true);
-                textLastSelectedTab = mFragmentHomeBinding.textTabMe;
+                setSelected(mBinding.textTabMe, true);
+                textLastSelectedTab = mBinding.textTabMe;
 
                 //enable MEstripe
-                mFragmentHomeBinding.stripHome.setVisibility(View.GONE);
-                mFragmentHomeBinding.stripMyTask.setVisibility(View.GONE);
-                mFragmentHomeBinding.stripMyMe.setVisibility(View.VISIBLE);
-                mFragmentHomeBinding.stripMyChat.setVisibility(View.GONE);
+                mBinding.stripHome.setVisibility(View.GONE);
+                mBinding.stripMyTask.setVisibility(View.GONE);
+                mBinding.stripMyMe.setVisibility(View.VISIBLE);
+                mBinding.stripMyChat.setVisibility(View.GONE);
                 break;*/
             case TAB_CHAT:
-                setSelected(mFragmentHomeBinding.textTabChat, true);
-                textLastSelectedTab = mFragmentHomeBinding.textTabChat;
+                setSelected(mBinding.textTabChat, true);
+                textLastSelectedTab = mBinding.textTabChat;
 
                 //enable Chat stripe
-                mFragmentHomeBinding.stripHome.setVisibility(View.GONE);
-                mFragmentHomeBinding.stripMyTask.setVisibility(View.GONE);
-//                mFragmentHomeBinding.stripMyMe.setVisibility(View.GONE);
-                mFragmentHomeBinding.stripMyChat.setVisibility(View.VISIBLE);
+                mBinding.stripHome.setVisibility(View.GONE);
+                mBinding.stripMyTask.setVisibility(View.GONE);
+//                mBinding.stripMyMe.setVisibility(View.GONE);
+                mBinding.stripMyChat.setVisibility(View.VISIBLE);
 
 
                 break;
@@ -488,7 +501,7 @@ public class HomeFragment extends BaseFragment {
                 loadFragment(ChatTabFragment.TAG, fragmentToCommit);
                 break;
             case TAB_ALERT:
-                if (mFragmentHomeBinding.textTabAlert.isSelected()) {
+                if (mBinding.textTabAlert.isSelected()) {
                     // Alert is active so show the alert dialog
                     showAlertDialog();
                 } else {
@@ -562,7 +575,7 @@ public class HomeFragment extends BaseFragment {
     }
 
     public void openCreateNewTask() {
-        mFragmentHomeBinding.textTabHome.performClick();
+        mBinding.textTabHome.performClick();
     }
 
 
@@ -624,7 +637,7 @@ public class HomeFragment extends BaseFragment {
     private void callEmergencyAlert() {
 
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mFragmentHomeBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mBinding.getRoot());
             return;
         }
 
@@ -649,7 +662,7 @@ public class HomeFragment extends BaseFragment {
                 , mHeaderParams
                 , null
                 , null);
-        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequestForCategoryList);
+        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequestForCategoryList, NetworkUtility.WS.EMERGENCY_ALERT);
     }
 
     Response.Listener mCallEmergencyAlertWSResponseListener = new Response.Listener() {
@@ -665,11 +678,11 @@ public class HomeFragment extends BaseFragment {
                 hideProgressDialog();
                 switch (statusCode) {
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
-                        Utility.showSnackBar(jsonObject.getString(NetworkUtility.TAGS.MESSAGE), mFragmentHomeBinding.getRoot());
+                        Utility.showSnackBar(jsonObject.getString(NetworkUtility.TAGS.MESSAGE), mBinding.getRoot());
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
                         // Show Toast
-                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mFragmentHomeBinding.getRoot());
+                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
 //                        Utility.showSnackBar(error_message, mFragmentTabHomeBinding.getRoot());
@@ -697,7 +710,7 @@ public class HomeFragment extends BaseFragment {
         public void onErrorResponse(VolleyError error) {
             Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
             hideProgressDialog();
-            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mFragmentHomeBinding.getRoot());
+            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
         }
     };
 
@@ -716,8 +729,8 @@ public class HomeFragment extends BaseFragment {
         }
 
         if (!Utility.isConnected(mContext)) {
-            if (mFragmentHomeBinding != null)
-                Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mFragmentHomeBinding.getRoot());
+            if (mBinding != null)
+                Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mBinding.getRoot());
             return;
         }
 
@@ -739,7 +752,7 @@ public class HomeFragment extends BaseFragment {
                 , mHeaderParams
                 , null
                 , null);
-        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequestForCategoryList);
+        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequestForCategoryList, NetworkUtility.WS.CHECK_PROCESSING_TASK);
     }
 
     Response.Listener mCheckProcessingTaskWSResponseListener = new Response.Listener() {
@@ -761,11 +774,11 @@ public class HomeFragment extends BaseFragment {
                         } else {
                             enableAlert(false);
                         }
-//                        Utility.showSnackBar(jsonObject.getString(NetworkUtility.TAGS.MESSAGE), mFragmentHomeBinding.getRoot());
+//                        Utility.showSnackBar(jsonObject.getString(NetworkUtility.TAGS.MESSAGE), mBinding.getRoot());
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
                         // Show Toast
-//                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mFragmentHomeBinding.getRoot());
+//                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
 //                        Utility.showSnackBar(error_message, mFragmentTabHomeBinding.getRoot());
@@ -792,7 +805,7 @@ public class HomeFragment extends BaseFragment {
         public void onErrorResponse(VolleyError error) {
             Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
 //            hideProgressDialog();
-//            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mFragmentHomeBinding.getRoot());
+//            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
         }
     };
 
@@ -807,7 +820,7 @@ public class HomeFragment extends BaseFragment {
      */
     private void enableAlert(boolean flag) {
         Log.d(TAG, "enableAlert() called with: flag = [" + flag + "]");
-        mFragmentHomeBinding.textTabAlert.setSelected(flag);
+        mBinding.textTabAlert.setSelected(flag);
     }
 
     /**
@@ -834,5 +847,32 @@ public class HomeFragment extends BaseFragment {
         dialogDesc.showDialog();
     }
 
+    public void showRateSection(final String taskId, final String catName, final ProviderModel providerModel) {
+        mBinding.flRateTask.setVisibility(View.VISIBLE);
 
+        GlideUtility.showCircularImageViewWithColorBorder(mContext, TAG, mBinding.imgProfilePic, providerModel.profileUrl
+                , R.drawable.ic_cheep_circular_icon, R.color.white, true);
+
+        mBinding.imgFav.setSelected(providerModel.isFavourite.equalsIgnoreCase(getString(R.string.label_yes)));
+
+        mBinding.tvProCategory.setText(catName);
+
+        mBinding.tvProStatus.setVisibility(providerModel.isVerified.equalsIgnoreCase(getString(R.string.label_yes))
+                ? View.VISIBLE : View.GONE);
+
+        SpannableStringBuilder rateDesc = new SpannableStringBuilder();
+        rateDesc.append(getSpannableString(providerModel.userName, ContextCompat.getColor(mContext, R.color.black), true));
+        rateDesc.append(getSpannableString(getString(R.string.msg_rate_desc_home_1st_part), ContextCompat.getColor(mContext, R.color.black), false));
+        rateDesc.append(getSpannableString(catName, ContextCompat.getColor(mContext, R.color.black), true));
+        rateDesc.append(getSpannableString(getString(R.string.msg_rate_desc_home_2nd_part), ContextCompat.getColor(mContext, R.color.black), false));
+
+        mBinding.tvRateDescription.setText(rateDesc);
+
+        mBinding.flRateTask.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RateAndReviewActivity.newInstance(mContext, taskId, catName, providerModel);
+            }
+        });
+    }
 }

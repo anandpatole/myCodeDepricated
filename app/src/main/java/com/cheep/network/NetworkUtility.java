@@ -153,6 +153,7 @@ public class NetworkUtility {
         public static final String CARE_CREATE_TASK = BASE_URL + "customers/care/createTask";
         public static final String IS_CITY_AVAILABLE_FOR_CARE = BASE_URL + "customers/care/isCityAvailableForCare";
         public static final String GET_EXTRA_CHARGE_AFTER_EXCEED_LIMIT = BASE_URL + "customers/care/getExtraChargeAfterExceedLimit";
+        public static final String GET_TASK_FOR_PENDING_REVIEW = BASE_URL + "customers/Tasks/getTaskForPendingReview";
 
 
         /**
@@ -476,7 +477,8 @@ public class NetworkUtility {
         String FINAL_EXTRA_CHARGE = "finalExtraCharge";
         String TASK_SUB_CATEGORIES = "task_subcategories";
         String PRICE = "price";
-        String DETAIL= "detail";
+        String DETAIL = "detail";
+        String CAT_NAME = "cat_name";
 
         interface VERSION_CHANGE_TYPE {
             int NORMAL = 0;

@@ -151,12 +151,12 @@ public abstract class LoadMoreRecyclerAdapter<VH extends RecyclerView.ViewHolder
         if (getItemViewType(position) == VIEW_PROG) {
 
         } else {
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    clickListener.onItemClick(null, holder.itemView, holder.getAdapterPosition(), 0);
-                }
-            });
+//            holder.itemView.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    clickListener.onItemClick(null, holder.itemView, holder.getAdapterPosition(), 0);
+//                }
+//            });
             onActualBindViewHolder((VH) holder, position);
         }
     }

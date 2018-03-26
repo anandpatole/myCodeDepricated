@@ -35,8 +35,6 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.RatingBar;
-import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.android.volley.Response;
@@ -88,6 +86,7 @@ import com.cheep.utils.HotlineHelper;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.SuperCalendar;
 import com.cheep.utils.Utility;
+import com.cheep.utils.WebCallClass;
 import com.google.android.gms.common.api.Status;
 
 import org.greenrobot.eventbus.EventBus;
@@ -115,7 +114,7 @@ public class HomeActivity extends BaseAppCompatActivity
         ChatTabRecyclerViewAdapter.ChatItemInteractionListener {
 
     private static final String TAG = HomeActivity.class.getSimpleName();
-    private ActivityHomeBinding mActivityHomeBinding;
+    private ActivityHomeBinding mBinding;
     private NavHeaderHomeBinding navHeaderHomeBinding;
 
     /**
@@ -162,7 +161,7 @@ public class HomeActivity extends BaseAppCompatActivity
             finish();
         }*/
 
-        mActivityHomeBinding = DataBindingUtil.setContentView(this, R.layout.activity_home);
+        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_home);
 
         //For managing notification redirect to job summary
         if (!getIntent().hasExtra(Utility.Extra.DYNAMIC_LINK_URI))
@@ -268,17 +267,31 @@ public class HomeActivity extends BaseAppCompatActivity
         getSupportFragmentManager().beginTransaction().replace(R.id.content, mFragment, HomeFragment.TAG).commit();
 
         //Inflate header view
-        navHeaderHomeBinding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.nav_header_home, mActivityHomeBinding.slideListview, false);
+        navHeaderHomeBinding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.nav_header_home, mBinding.slideListview, false);
 
 
         /*// Setting width of listview
-        mActivityHomeBinding.slideListview.getLayoutParams().width = (int) (Utility.getDeviceWidthHeight(HomeActivity.this)[0] * 0.75);*/
+        mBinding.slideListview.getLayoutParams().width = (int) (Utility.getDeviceWidthHeight(HomeActivity.this)[0] * 0.75);*/
 
         // InitUI for SlideMenu
-        new setUpSlideMenuListAsync(mContext, mActivityHomeBinding.slideListview, navHeaderHomeBinding).execute();
+        new setUpSlideMenuListAsync(mContext, mBinding.slideListview, navHeaderHomeBinding).execute();
 
+        getTaskForPendingReview();
     }
 
+    private void getTaskForPendingReview() {
+
+        if (PreferenceUtility.getInstance(mContext).getUserDetails() == null) {
+            return;
+        }
+
+        if (!Utility.isConnected(mContext)) {
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mBinding.getRoot());
+            return;
+        }
+
+        WebCallClass.getTaskForPendingReview(mContext, mCommonResponseListener, mPendingReviewListener);
+    }
 
     @Override
     protected void setListeners() {
@@ -415,7 +428,7 @@ public class HomeActivity extends BaseAppCompatActivity
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                mActivityHomeBinding.drawerLayout.closeDrawer(GravityCompat.START, true);
+                mBinding.drawerLayout.closeDrawer(GravityCompat.START, true);
             }
         }, 300);
     }
@@ -429,8 +442,8 @@ public class HomeActivity extends BaseAppCompatActivity
     public void setUpDrawerLayoutWithToolBar(Toolbar toolbar) {
         //Setting up drawer
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, mActivityHomeBinding.drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        mActivityHomeBinding.drawerLayout.addDrawerListener(toggle);
+                this, mBinding.drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        mBinding.drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
     }
 
@@ -498,7 +511,7 @@ public class HomeActivity extends BaseAppCompatActivity
     @Override
     public void onCallClicked(TaskDetailModel providerModel) {
         if (providerModel != null && providerModel.selectedProvider != null) {
-//            callToOtherUser(mActivityHomeBinding.getRoot(), providerModel.selectedProvider.providerId);
+//            callToOtherUser(mBinding.getRoot(), providerModel.selectedProvider.providerId);
             Utility.openCustomerCareCallDialer(mContext, providerModel.selectedProvider.sp_phone_number);
         }
     }
@@ -575,7 +588,7 @@ public class HomeActivity extends BaseAppCompatActivity
         this.taskId = taskId;
         //Validation
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityHomeBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mBinding.getRoot());
             return;
         }
 
@@ -615,7 +628,7 @@ public class HomeActivity extends BaseAppCompatActivity
                 int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
                 switch (statusCode) {
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
-                        Utility.showSnackBar(getString(R.string.msg_task_cancelled), mActivityHomeBinding.getRoot());
+                        Utility.showSnackBar(getString(R.string.msg_task_cancelled), mBinding.getRoot());
                         MessageEvent messageEvent = new MessageEvent();
                         messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.TASK_CANCELED;
                         messageEvent.id = taskId;
@@ -627,12 +640,12 @@ public class HomeActivity extends BaseAppCompatActivity
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
                         // Show Toast
-                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityHomeBinding.getRoot());
+                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
                         String error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
                         // Show message
-                        Utility.showSnackBar(error_message, mActivityHomeBinding.getRoot());
+                        Utility.showSnackBar(error_message, mBinding.getRoot());
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
                     case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
@@ -659,7 +672,7 @@ public class HomeActivity extends BaseAppCompatActivity
             hideProgressDialog();
 
             // Show Toast
-            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityHomeBinding.getRoot());
+            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
         }
     };
 
@@ -688,12 +701,6 @@ public class HomeActivity extends BaseAppCompatActivity
 
     }
 
-
-    @Override
-    public void onRateClick(int which, TaskDetailModel exploreDataModel, RowUpcomingTaskBinding mRowUpcomingTaskBinding) {
-        showRateDialog(exploreDataModel.selectedProvider.userName, exploreDataModel.taskId, exploreDataModel.selectedProvider.providerId);
-    }
-
     @Override
     public void onViewQuotesClick(int which, TaskDetailModel exploreDataModel) {
         Log.d(TAG, "onViewQuotesClick() called with: which = [" + which + "], exploreDataModel = [" + exploreDataModel + "]");
@@ -701,136 +708,7 @@ public class HomeActivity extends BaseAppCompatActivity
         TaskQuotesActivity.newInstance(mContext, exploreDataModel, false);
     }
 
-    BottomAlertDialog rateDialog;
-
-    private void showRateDialog(String userName, final String taskId, final String providerId) {
-
-        View view = View.inflate(mContext, R.layout.dialog_rate, null);
-
-        final RatingBar ratingBar = (RatingBar) view.findViewById(R.id.rating_bar);
-        final EditText edtMessage = (EditText) view.findViewById(R.id.edit_message);
-        final TextView txtLabel = (TextView) view.findViewById(R.id.text_label);
-        txtLabel.setText(getString(R.string.label_write_a_review, userName));
-
-        rateDialog = new BottomAlertDialog(mContext);
-        view.findViewById(R.id.btn_submit).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                if (!TextUtils.isEmpty(edtMessage.getText().toString().trim())) {
-                    callAddReviewWS(ratingBar.getProgress(), edtMessage.getText().toString().trim(), taskId, providerId);
-                } else {
-                    Utility.showToast(mContext, getString(R.string.validate_review));
-                }
-            }
-        });
-        rateDialog.setTitle(getString(R.string.label_rate));
-        rateDialog.setCustomView(view);
-        rateDialog.showDialog();
-    }
-
     private String taskId;
-
-    /**
-     * Call Create Task webservice
-     */
-    private void callAddReviewWS(int rating, String message, String taskId, String providerId) {
-
-        this.taskId = taskId;
-        //Validation
-        if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityHomeBinding.getRoot());
-            return;
-        }
-
-        //Show Progress
-        showProgressDialog();
-
-        UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
-
-        //Add Header parameters
-        Map<String, String> mHeaderParams = new HashMap<>();
-        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, userDetails.userID);
-        mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
-
-        //Add Params
-        Map<String, String> mParams = new HashMap<>();
-        mParams.put(NetworkUtility.TAGS.SP_USER_ID, providerId);
-        mParams.put(TASK_ID, taskId);
-        mParams.put(NetworkUtility.TAGS.RATINGS, String.valueOf(rating));
-        mParams.put(NetworkUtility.TAGS.MESSAGE, message);
-
-        VolleyNetworkRequest mVolleyNetworkRequest = new VolleyNetworkRequest(NetworkUtility.WS.ADD_REVIEW
-                , mCallAddReviewWSErrorListener
-                , mCallAddReviewWSResponseListener
-                , mHeaderParams
-                , mParams
-                , null);
-        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest);
-
-    }
-
-    Response.Listener mCallAddReviewWSResponseListener = new Response.Listener() {
-        @Override
-        public void onResponse(Object response) {
-
-            String strResponse = (String) response;
-            try {
-                JSONObject jsonObject = new JSONObject(strResponse);
-                Log.i(TAG, "onResponse: " + jsonObject.toString());
-                int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
-                switch (statusCode) {
-                    case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
-                        Utility.showSnackBar(getString(R.string.msg_thanks_for_rating), mActivityHomeBinding.getRoot());
-                        MessageEvent messageEvent = new MessageEvent();
-                        messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.TASK_RATED;
-                        messageEvent.id = taskId;
-                        EventBus.getDefault().post(messageEvent);
-
-                        if (rateDialog != null)
-                            rateDialog.dismiss();
-                        break;
-                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
-                        // Show Toast
-//                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityHomeBinding.getRoot());
-                        Utility.showToast(mContext, getString(R.string.label_something_went_wrong));
-
-                        break;
-                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
-                        String error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
-                        // Show message
-//                        Utility.showSnackBar(error_message, mActivityHomeBinding.getRoot());
-                        Utility.showToast(mContext, error_message);
-                        break;
-                    case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
-                    case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
-                        //Logout and finish the current activity
-                        Utility.logout(mContext, true, statusCode);
-                        finish();
-                        break;
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-                mCallAddReviewWSErrorListener.onErrorResponse(new VolleyError(e.getMessage()));
-            }
-            taskId = null;
-            hideProgressDialog();
-        }
-    };
-
-    Response.ErrorListener mCallAddReviewWSErrorListener = new Response.ErrorListener() {
-        @Override
-        public void onErrorResponse(VolleyError error) {
-            Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
-
-            // Close Progressbar
-            hideProgressDialog();
-
-            // Show Toast
-//            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityHomeBinding.getRoot());
-            Utility.showToast(mContext, getString(R.string.label_something_went_wrong));
-        }
-    };
 
     /**
      * ShowAlertDialog for Last Tab
@@ -843,7 +721,7 @@ public class HomeActivity extends BaseAppCompatActivity
             @Override
             public void onClick(View view) {
                 dialog.dismiss();
-                //callToCheepAdmin(mActivityHomeBinding.getRoot());
+                //callToCheepAdmin(mBinding.getRoot());
                 Utility.initiateCallToCheepHelpLine(mContext);
             }
         });
@@ -935,8 +813,8 @@ public class HomeActivity extends BaseAppCompatActivity
 
     @Override
     public void onBackPressed() {
-        if (mActivityHomeBinding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
-            mActivityHomeBinding.drawerLayout.closeDrawer(GravityCompat.START, true);
+        if (mBinding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            mBinding.drawerLayout.closeDrawer(GravityCompat.START, true);
         } else {
             Fragment fragment = getSupportFragmentManager().findFragmentByTag(HomeFragment.TAG);
             if (fragment != null) {
@@ -966,7 +844,18 @@ public class HomeActivity extends BaseAppCompatActivity
     }
 
     @Override
-    public void onHistoryRowClicked(HistoryModel model) {
+    public void onPayNowClicked(int position, HistoryModel model) {
+        //Open Provider info but we need to pass ProviderModel so convert HistoryModel to ProviderModel
+//        ProviderProfileActivity.newInstance(mContext, providerModel);
+    }
+
+    @Override
+    public void onSupportClicked() {
+        Utility.initiateCallToCheepHelpLine(mContext);
+    }
+
+    @Override
+    public void onHistoryRowClicked(int position, HistoryModel model) {
         //Open Provider info but we need to pass ProviderModel so convert HistoryModel to ProviderModel
 //        ProviderProfileActivity.newInstance(mContext, providerModel);
     }
@@ -1086,6 +975,7 @@ public class HomeActivity extends BaseAppCompatActivity
         Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.WS.ADD_REVIEW);
         Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.WS.CANCEL_TASK);
         Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.WS.CHECK_APP_VERSION);
+        Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.WS.GET_TASK_FOR_PENDING_REVIEW);
         try {
             unregisterReceiver(mBR_OnLoginSuccess);
         } catch (Exception e) {
@@ -1102,7 +992,7 @@ public class HomeActivity extends BaseAppCompatActivity
      */
     private void callAddToFavWS(String providerId, boolean isAddToFav) {
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityHomeBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mBinding.getRoot());
             return;
         }
 
@@ -1143,12 +1033,12 @@ public class HomeActivity extends BaseAppCompatActivity
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
                         // Show Toast
-                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityHomeBinding.getRoot());
+                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
                         error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
                         // Show message
-                        Utility.showSnackBar(error_message, mActivityHomeBinding.getRoot());
+                        Utility.showSnackBar(error_message, mBinding.getRoot());
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
                     case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
@@ -1174,7 +1064,7 @@ public class HomeActivity extends BaseAppCompatActivity
 //            hideProgressDialog();
 
 
-            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityHomeBinding.getRoot());
+            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
 
         }
     };
@@ -1221,7 +1111,7 @@ public class HomeActivity extends BaseAppCompatActivity
     private void callLogoutWS() {
 
         if (!Utility.isConnected(mContext)) {
-//            Utility.showSnackBar(getString(R.string.no_internet), mActivityHomeBinding.getRoot());
+//            Utility.showSnackBar(getString(R.string.no_internet), mBinding.getRoot());
             // Clear the Users Preference Information
             PreferenceUtility.getInstance(mContext).onUserLogout();
 
@@ -1302,12 +1192,12 @@ public class HomeActivity extends BaseAppCompatActivity
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
                         // Show Toast
-                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityHomeBinding.getRoot());
+                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
                         String error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
                         // Show message
-                        Utility.showSnackBar(error_message, mActivityHomeBinding.getRoot());
+                        Utility.showSnackBar(error_message, mBinding.getRoot());
                         break;
                 }
             } catch (JSONException e) {
@@ -1334,7 +1224,7 @@ public class HomeActivity extends BaseAppCompatActivity
             HomeActivity.newInstance(mContext, null);
 
             // Show Toast
-//            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityHomeBinding.getRoot());
+//            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
         }
     };
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1406,7 +1296,7 @@ public class HomeActivity extends BaseAppCompatActivity
                                 calRescEnd.add(Calendar.MONTH, 1);
                                 Log.i(TAG, "onTimeSet: " + calRescEnd.getTimeInMillis());
                                 if (startDateTimeSuperCalendar.getTimeInMillis() > calRescEnd.getTimeInMillis()) {
-                                    Utility.showSnackBar(getString(R.string.reschedule_task_must_within_one_month), mActivityHomeBinding.getRoot());
+                                    Utility.showSnackBar(getString(R.string.reschedule_task_must_within_one_month), mBinding.getRoot());
                                     return;
                                 }
                                 // Call Webservice now
@@ -1419,7 +1309,7 @@ public class HomeActivity extends BaseAppCompatActivity
 //                                isDateSelected = false;
 //                                mActivityHireNewJobBinding.textDate.setVisibility(View.GONE);
 //                                mActivityHireNewJobBinding.textTime.setVisibility(View.GONE);
-                                Utility.showSnackBar(getString(R.string.validate_future_date), mActivityHomeBinding.getRoot());
+                                Utility.showSnackBar(getString(R.string.validate_future_date), mBinding.getRoot());
                             }
                         }
                     }
@@ -1434,7 +1324,7 @@ public class HomeActivity extends BaseAppCompatActivity
 
         //Validation
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityHomeBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mBinding.getRoot());
             return;
         }
 
@@ -1488,12 +1378,12 @@ public class HomeActivity extends BaseAppCompatActivity
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
                         // Show Toast
-                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityHomeBinding.getRoot());
+                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
                         String error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
                         // Show message
-                        Utility.showSnackBar(error_message, mActivityHomeBinding.getRoot());
+                        Utility.showSnackBar(error_message, mBinding.getRoot());
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
                     case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
@@ -1519,7 +1409,7 @@ public class HomeActivity extends BaseAppCompatActivity
             hideProgressDialog();
 
             // Show Toast
-            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityHomeBinding.getRoot());
+            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
         }
     };
 
@@ -1538,7 +1428,7 @@ public class HomeActivity extends BaseAppCompatActivity
     public void callUpdateLanguage(String language) {
 
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityHomeBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mBinding.getRoot());
             return;
         }
 
@@ -1595,11 +1485,11 @@ public class HomeActivity extends BaseAppCompatActivity
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
 //                        // Show Toast
-                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityHomeBinding.getRoot());
+                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
                         String error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
-                        Utility.showSnackBar(error_message, mActivityHomeBinding.getRoot());
+                        Utility.showSnackBar(error_message, mBinding.getRoot());
                         break;
                 }
             } catch (JSONException e) {
@@ -1630,7 +1520,7 @@ public class HomeActivity extends BaseAppCompatActivity
             hideProgressDialog();
 
             // Show Toast
-            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityHomeBinding.getRoot());
+            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
 
         }
     };
@@ -1663,7 +1553,7 @@ public class HomeActivity extends BaseAppCompatActivity
     private void checkVersionOfApp() {
 
         if (!Utility.isConnected(mContext)) {
-//            Utility.showSnackBar(getString(R.string.no_internet), mActivityHomeBinding.getRoot());
+//            Utility.showSnackBar(getString(R.string.no_internet), mBinding.getRoot());
             return;
         }
 
@@ -1711,7 +1601,7 @@ public class HomeActivity extends BaseAppCompatActivity
                                 break;
 
                         }
-//                        Utility.showSnackBar(jsonObject.getString(NetworkUtility.TAGS.MESSAGE), mActivityHomeBinding.getRoot());
+//                        Utility.showSnackBar(jsonObject.getString(NetworkUtility.TAGS.MESSAGE), mBinding.getRoot());
                         break;
                 }
 
@@ -1828,7 +1718,7 @@ public class HomeActivity extends BaseAppCompatActivity
                 showProgressDialog(getString(R.string.fetching_location));
             } else if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_DENIED) {
                 Log.i(TAG, "onRequestPermissionsResult: Permission Denied");
-//                Snackbar.make(mActivityHomeBinding.getRoot(), getString(R.string.permission_denied_location), 3000).show();
+//                Snackbar.make(mBinding.getRoot(), getString(R.string.permission_denied_location), 3000).show();
                 onLocationNotAvailable();
             }
         }
@@ -1924,4 +1814,36 @@ public class HomeActivity extends BaseAppCompatActivity
         }
     };
 
+    private final WebCallClass.CommonResponseListener mCommonResponseListener =
+            new WebCallClass.CommonResponseListener() {
+                @Override
+                public void volleyError(VolleyError error) {
+                    Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
+                    Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
+                }
+
+                @Override
+                public void showSpecificMessage(String message) {
+                    Utility.showSnackBar(message, mBinding.getRoot());
+                }
+
+                @Override
+                public void forceLogout() {
+                    //Logout and finish the current activity
+                    finish();
+                }
+            };
+
+    private final WebCallClass.GetTaskForPendingReviewListener mPendingReviewListener =
+            new WebCallClass.GetTaskForPendingReviewListener() {
+                @Override
+                public void getTaskForPendingReviewResponse(String taskId, String catName, ProviderModel providerModel) {
+                    Fragment fragment = getSupportFragmentManager().findFragmentByTag(HomeFragment.TAG);
+                    if (fragment == null) {
+                        return;
+                    }
+
+                    ((HomeFragment) fragment).showRateSection(taskId, catName, providerModel);
+                }
+            };
 }

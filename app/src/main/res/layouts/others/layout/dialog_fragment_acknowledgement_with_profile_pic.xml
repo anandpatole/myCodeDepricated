@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -24,7 +24,7 @@
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
                 android:src="@drawable/ic_acknowledgement_dialog_header_background"
-                tools:ignore="ContentDescription"/>
+                tools:ignore="ContentDescription" />
 
             <LinearLayout
                 android:id="@+id/ln_bottom_section"
@@ -43,7 +43,7 @@
                     android:gravity="center_horizontal"
                     android:text="@string/label_your_task_is_posted"
                     android:textColor="@color/grey_varient_8"
-                    android:textSize="@dimen/text_size_18sp"/>
+                    android:textSize="@dimen/text_size_18sp" />
 
                 <com.cheep.custom_view.CFTextViewRegular
                     android:id="@+id/text_task_creation_acknowledgment"
@@ -55,7 +55,7 @@
                     android:padding="@dimen/scale_8dp"
                     android:text="@string/desc_task_creation_acknowledgement"
                     android:textColor="@color/grey_dark_color_2"
-                    android:textSize="@dimen/text_size_11sp"/>
+                    android:textSize="@dimen/text_size_11sp" />
 
                 <View
                     android:layout_width="match_parent"
@@ -63,7 +63,7 @@
                     android:layout_marginLeft="@dimen/scale_8dp"
                     android:layout_marginRight="@dimen/scale_8dp"
                     android:layout_marginTop="@dimen/scale_15dp"
-                    android:background="@color/grey_dark_color_2"/>
+                    android:background="@color/grey_dark_color_2" />
 
                 <com.cheep.custom_view.CFTextViewSemiBold
                     android:id="@+id/text_okay"
@@ -72,7 +72,7 @@
                     android:gravity="center"
                     android:text="@string/label_Ok_small"
                     android:textColor="@color/splash_gradient_end"
-                    android:textSize="@dimen/text_size_16sp"/>
+                    android:textSize="@dimen/text_size_16sp" />
             </LinearLayout>
 
             <FrameLayout
@@ -86,7 +86,7 @@
                 <ImageView
                     android:layout_width="120dp"
                     android:layout_height="120dp"
-                    android:src="@drawable/model_background_shadow_circle"/>
+                    android:src="@drawable/model_background_shadow_circle" />
 
                 <ImageView
                     android:id="@+id/imgProfilePic"
@@ -95,7 +95,7 @@
                     android:layout_gravity="center"
                     android:layout_marginTop="-6dp"
                     android:visibility="visible"
-                    tools:src="@drawable/ic_cheep_circular_icon"/>
+                    tools:src="@drawable/ic_cheep_circular_icon" />
 
                 <ImageView
                     android:id="@+id/ivBadge"
@@ -107,7 +107,7 @@
                     android:layout_marginRight="@dimen/scale_5dp"
                     android:scaleType="centerCrop"
                     android:visibility="visible"
-                    tools:src="@drawable/ic_badge_gold"/>
+                    tools:src="@drawable/ic_badge_gold" />
 
             </FrameLayout>
         </RelativeLayout>

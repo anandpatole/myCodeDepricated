@@ -35,8 +35,8 @@ public class HistoryModel {
     @SerializedName("payment_date")
     public String payment_date;
 
-    @SerializedName("task_category")
-    public String task_category;
+    @SerializedName("cat_name")
+    public String catName;
 
     @SerializedName("task_type")
     public String taskType;

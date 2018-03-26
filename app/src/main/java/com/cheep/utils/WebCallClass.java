@@ -5,7 +5,6 @@ import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.appsflyer.AppsFlyerLib;
@@ -18,8 +17,10 @@ import com.cheep.cheepcare.model.PackageDetail;
 import com.cheep.cheepcare.model.RatingModel;
 import com.cheep.cheepcare.model.SubscribedTaskDetailModel;
 import com.cheep.model.AddressModel;
+import com.cheep.model.HistoryModel;
 import com.cheep.model.JobCategoryModel;
 import com.cheep.model.NotificationModel;
+import com.cheep.model.ProviderModel;
 import com.cheep.model.SubServiceDetailModel;
 import com.cheep.model.TaskDetailModel;
 import com.cheep.model.UserDetails;
@@ -995,8 +996,7 @@ public class WebCallClass {
 
         //noinspection unchecked
         VolleyNetworkRequest mVolleyNetworkRequest = new VolleyNetworkRequest(
-                Request.Method.GET
-                , NetworkUtility.WS.GET_ADMIN_SETTINGS
+                NetworkUtility.WS.GET_ADMIN_SETTINGS
                 , errorListener
                 , responseListener
                 , mHeaderParams
@@ -1076,8 +1076,7 @@ public class WebCallClass {
 
         //noinspection unchecked
         VolleyNetworkRequest mVolleyNetworkRequest = new VolleyNetworkRequest(
-                Request.Method.GET
-                , NetworkUtility.WS.GET_TASK_REVIEW
+                NetworkUtility.WS.GET_TASK_REVIEW
                 , errorListener
                 , responseListener
                 , mHeaderParams
@@ -1169,4 +1168,174 @@ public class WebCallClass {
     }
     ////////////////////////// submit rating review types ws call end            //////////////////////////
 
+    ////////////////////////// Get payment history list call start     //////////////////////////
+    public interface GetPaymentHistoryListListener {
+
+        void getPaymentHistoryList(ArrayList<HistoryModel> list, String pageNumber, String monthlyTotalPrice);
+    }
+
+    public static void getPaymentHistoryList(final Context mContext, final String nextPageId, String monthYear
+            , final CommonResponseListener commonListener
+            , final GetPaymentHistoryListListener successListener) {
+
+        Log.d(TAG, "getPaymentHistoryList() called with: mContext = [" + mContext + "], nextPageId = [" + nextPageId +
+                "], commonListener = [" + commonListener + "], successListener = [" + successListener + "]");
+
+        final Response.ErrorListener errorListener = new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
+                commonListener.volleyError(error);
+            }
+        };
+
+        final Response.Listener responseListener = new Response.Listener() {
+            @Override
+            public void onResponse(Object response) {
+                Log.d(TAG, "onResponse() called with: response = [" + response + "]");
+                try {
+                    JSONObject jsonObject = new JSONObject(response.toString());
+                    int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
+
+                    String error_message;
+                    switch (statusCode) {
+                        case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
+                            ArrayList<HistoryModel> list;
+                            try {
+                                list = GsonUtility.getObjectListFromJsonString(jsonObject.optString(NetworkUtility.TAGS.DATA), HistoryModel[].class);
+                            } catch (Exception e) {
+                                Log.i(TAG, "onResponse: Error" + e.toString());
+                                list = new ArrayList<>();
+                            }
+
+                            successListener.getPaymentHistoryList(list
+                                    , jsonObject.optString(NetworkUtility.TAGS.PAGE_NUM)
+                                    , jsonObject.optString(NetworkUtility.TAGS.MONTHLY_TOTAL));
+
+                            break;
+                        case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
+                            // Show Toast
+                            commonListener.showSpecificMessage(mContext.getString(R.string.label_something_went_wrong));
+                            break;
+                        case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
+                            error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
+                            // Show message
+                            commonListener.showSpecificMessage(error_message);
+                            break;
+                        case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
+                        case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
+                            //Logout and finish the current activity
+                            Utility.logout(mContext, true, statusCode);
+                            commonListener.forceLogout();
+                            break;
+                    }
+                } catch (JSONException e) {
+                    commonListener.showSpecificMessage(mContext.getString(R.string.label_something_went_wrong));
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        //Add Header parameters
+        Map<String, String> mHeaderParams = new HashMap<>();
+        mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
+        if (PreferenceUtility.getInstance(mContext).getUserDetails() != null) {
+            mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().userID);
+        }
+
+        //Add Params
+        Map<String, String> mParams = new HashMap<>();
+        mParams.put(NetworkUtility.TAGS.LAST_ID, nextPageId);
+        mParams.put(NetworkUtility.TAGS.MONTH_YEAR, monthYear);
+
+        //noinspection unchecked
+        VolleyNetworkRequest mVolleyNetworkRequest = new VolleyNetworkRequest(NetworkUtility.WS.PAYMENT_HISTORY
+                , errorListener
+                , responseListener
+                , mHeaderParams
+                , mParams
+                , null);
+        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest, NetworkUtility.WS.PAYMENT_HISTORY);
+    }
+    ////////////////////////// Get payment history list call end     //////////////////////////
+
+    ////////////////////////// getTaskForPendingReview call start    //////////////////////////
+    public interface GetTaskForPendingReviewListener {
+        void getTaskForPendingReviewResponse(String taskId, String catName, ProviderModel providerModel);
+    }
+
+    public static void getTaskForPendingReview(final Context mContext, final CommonResponseListener commonListener
+            , final GetTaskForPendingReviewListener successResponseListener) {
+
+        final Response.ErrorListener errorListener = new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
+                commonListener.volleyError(error);
+            }
+        };
+
+        final Response.Listener responseListener = new Response.Listener() {
+            @Override
+            public void onResponse(Object response) {
+                Log.d(TAG, "onResponse() called with: response = [" + response + "]");
+                try {
+                    JSONObject jsonObject = new JSONObject(response.toString());
+                    int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
+
+                    String error_message;
+                    switch (statusCode) {
+                        case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
+                            int nameValuePairs = jsonObject.getJSONObject(DATA).length();
+                            if (nameValuePairs > 0) {
+                                ProviderModel providerModel = (ProviderModel) GsonUtility.getObjectFromJsonString(jsonObject.getString(DATA)
+                                        , ProviderModel.class);
+                                successResponseListener.getTaskForPendingReviewResponse(
+                                        jsonObject.getJSONObject(DATA).getString(NetworkUtility.TAGS.TASK_ID)
+                                        , jsonObject.getJSONObject(DATA).getString(NetworkUtility.TAGS.CAT_NAME)
+                                        , providerModel);
+                            }
+                            break;
+                        case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
+                            // Show Toast
+                            commonListener.showSpecificMessage(mContext.getString(R.string.label_something_went_wrong));
+                            break;
+                        case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
+                            error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
+                            // Show message
+                            commonListener.showSpecificMessage(error_message);
+                            break;
+                        case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
+                        case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
+                            //Logout and finish the current activity
+                            Utility.logout(mContext, true, statusCode);
+                            commonListener.forceLogout();
+                            break;
+                    }
+                } catch (JSONException e) {
+                    commonListener.showSpecificMessage(mContext.getString(R.string.label_something_went_wrong));
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        //Add Header parameters
+        Map<String, String> mHeaderParams = new HashMap<>();
+        mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
+        if (PreferenceUtility.getInstance(mContext).getUserDetails() != null)
+            mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().userID);
+
+        //noinspection unchecked
+        VolleyNetworkRequest mVolleyNetworkRequest = new VolleyNetworkRequest(
+                NetworkUtility.WS.GET_TASK_FOR_PENDING_REVIEW
+                , errorListener
+                , responseListener
+                , mHeaderParams
+                , null
+                , null);
+
+        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest, NetworkUtility.WS.GET_TASK_FOR_PENDING_REVIEW);
+    }
+
+    ////////////////////////// getTaskForPendingReview call end     //////////////////////////
 }

@@ -104,7 +104,10 @@ public class InstaBookProDialog extends DialogFragment {
             mDialog.tvVerified.setVisibility(View.GONE);
         }
 
-        mDialog.ivBadge.setImageResource(Utility.getProLevelBadge(merchantDetail.proLevel));
+
+        int badgeResID = Utility.getProLevelBadge(merchantDetail.proLevel);
+        if (badgeResID != -1)
+            mDialog.ivBadge.setImageResource(badgeResID);
 
         mDialog.tvBody.setText(getString(R.string.merchant_detail_body, merchantDetail.userName, date));
         mDialog.tvBook.setText(getString(R.string.label_pay_X, Utility.getQuotePriceFormatter(merchantDetail.rateGST)));
