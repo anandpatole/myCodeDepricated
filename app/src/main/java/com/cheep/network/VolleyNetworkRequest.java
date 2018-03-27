@@ -58,26 +58,6 @@ public class VolleyNetworkRequest<T> extends Request<T> {
         buildMultipartEntity();
     }
 
-    public VolleyNetworkRequest(int method,
-                                String url,
-                                Response.ErrorListener errorListener,
-                                Response.Listener<T> listener,
-                                Map<String, String> headers,
-                                Map<String, Object> stringData,
-                                HashMap<String, File> fileParam) {
-        super(method, url, errorListener);
-        Log.d(TAG, "VolleyNetworkRequest() called with: method = [" + method + "], url = [" + url + "], errorListener = ["
-                + errorListener + "], listener = [" + listener + "], headers = [" + headers + "], stringData = [" + stringData
-                + "], fileParam = [" + fileParam + "]");
-        setRetryPolicy(new DefaultRetryPolicy(DEFAULT_TIMEOUT_MS,
-                DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-        mListener = listener;
-        this.stringData = stringData;
-        this.mFilePart = fileParam;
-        this.headers = headers;
-        buildMultipartEntity();
-    }
-
     @Override
     public Map<String, String> getHeaders() throws AuthFailureError {
         if (headers == null) {

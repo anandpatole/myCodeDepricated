@@ -56,7 +56,7 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecy
 //        GlideUtility.showCircularImageView(holder.mRowHistoryBinding.imgProfile.getContext(), TAG, holder.mRowHistoryBinding.imgProfile, model.sp_profile_image, 0);
         GlideUtility.showCircularImageView(holder.mRowHistoryBinding.imgProfile.getContext(), TAG, holder.mRowHistoryBinding.imgProfile, model.sp_profile_image, Utility.DEFAULT_CHEEP_LOGO, true);
         holder.mRowHistoryBinding.textName.setText(model.sp_user_name);
-        holder.mRowHistoryBinding.textCategoryName.setText(model.task_category);
+        holder.mRowHistoryBinding.textCategoryName.setText(model.catName);
 
         holder.mRowHistoryBinding.textDate.setText(model.getPaymentDate());
 

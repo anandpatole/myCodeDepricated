@@ -4,7 +4,6 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
-import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -13,9 +12,7 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
-import android.text.style.ForegroundColorSpan;
 import android.text.style.ImageSpan;
-import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -58,6 +55,8 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.cheep.utils.Utility.getSpannableString;
+
 
 public class PaymentDetailsActivity extends BaseAppCompatActivity {
 
@@ -93,6 +92,7 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
 
 
     // DATA_# -- true -- means make this screen as payment summary screen and show pending payment
+
     /**
      * payment summary for task (Booking confirmation screen for booking get quotes)
      * DATA_3 is to check payment of pending amount
@@ -304,7 +304,8 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
             mActivityPaymentDetailBinding.textCategory.setText(taskDetailModel.categoryModel.catName);
 
             // top header image
-            GlideUtility.loadImageView(mContext, mActivityPaymentDetailBinding.imgService, taskDetailModel.categoryModel.catImageExtras.original, R.drawable.gradient_black);
+            GlideUtility.loadImageView(mContext, mActivityPaymentDetailBinding.imgService, taskDetailModel.categoryModel.catImageExtras.original
+                    , R.drawable.gradient_black);
             GlideUtility.showCircularImageViewWithColorBorder(mContext, TAG, mActivityPaymentDetailBinding.imgProfile, providerModel.profileUrl, Utility.DEFAULT_CHEEP_LOGO, R.color.dark_blue_variant_1, true);
             String datetime = "";
 
@@ -332,18 +333,24 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
 
             //badge
             int badgeResID = Utility.getProLevelBadge(providerModel.pro_level);
-            GlideUtility.showCircularImageViewWithColorBorder(mContext, TAG, mActivityPaymentDetailBinding.ivBadge, badgeResID, R.color.splash_gradient_end, true);
+            if (badgeResID != -1)
+                GlideUtility.showCircularImageViewWithColorBorder(mContext, TAG, mActivityPaymentDetailBinding.ivBadge, badgeResID, R.color.splash_gradient_end, true);
 
             // pro verified text
             mActivityPaymentDetailBinding.textVerified.setVisibility(providerModel.isVerified.equalsIgnoreCase(Utility.BOOLEAN.YES) ? View.VISIBLE : View.GONE);
 
             // set task description date time and place
             SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder();
-            spannableStringBuilder.append(getSpannableString(taskDetailModel.subCategoryName, ContextCompat.getColor(this, R.color.splash_gradient_end), true));
-            spannableStringBuilder.append(getSpannableString(getString(R.string.label_on), ContextCompat.getColor(this, R.color.grey_varient_8), false));
-            spannableStringBuilder.append(getSpannableString(datetime, ContextCompat.getColor(this, R.color.splash_gradient_end), true));
-            spannableStringBuilder.append(getSpannableString(getString(R.string.label_at), ContextCompat.getColor(this, R.color.grey_varient_8), false));
-            spannableStringBuilder.append(getSpannableString(taskDetailModel.taskAddress, ContextCompat.getColor(this, R.color.splash_gradient_end), true));
+            spannableStringBuilder.append(
+                    getSpannableString(taskDetailModel.subCategoryName, ContextCompat.getColor(this, R.color.splash_gradient_end), true));
+            spannableStringBuilder.append(
+                    getSpannableString(getString(R.string.label_on), ContextCompat.getColor(this, R.color.grey_varient_8), false));
+            spannableStringBuilder.append(
+                    getSpannableString(datetime, ContextCompat.getColor(this, R.color.splash_gradient_end), true));
+            spannableStringBuilder.append(
+                    getSpannableString(getString(R.string.label_at), ContextCompat.getColor(this, R.color.grey_varient_8), false));
+            spannableStringBuilder.append(
+                    getSpannableString(taskDetailModel.taskAddress, ContextCompat.getColor(this, R.color.splash_gradient_end), true));
 
 
             mActivityPaymentDetailBinding.txtdesc.setText(spannableStringBuilder);
@@ -492,7 +499,8 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
 
             //badge
             int badgeResID = Utility.getProLevelBadge(providerModel.pro_level);
-            GlideUtility.showCircularImageViewWithColorBorder(mContext, TAG, mActivityPaymentDetailBinding.ivBadge, badgeResID, R.color.splash_gradient_end, true);
+            if (badgeResID != -1)
+                GlideUtility.showCircularImageViewWithColorBorder(mContext, TAG, mActivityPaymentDetailBinding.ivBadge, badgeResID, R.color.splash_gradient_end, true);
 
             // pro verified text
             mActivityPaymentDetailBinding.textVerified.setVisibility(providerModel.isVerified.equalsIgnoreCase(Utility.BOOLEAN.YES) ? View.VISIBLE : View.GONE);
@@ -681,17 +689,6 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
         mActivityPaymentDetailBinding.txttotal.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf(providerModel.quotePrice))));
         mActivityPaymentDetailBinding.txtpromocode.setText(getString(R.string.rupee_symbol_x, "" + Utility.getQuotePriceFormatter(String.valueOf(0))));
     }
-
-
-    public SpannableStringBuilder getSpannableString(String fullstring, int color, boolean isBold) {
-        SpannableStringBuilder text = new SpannableStringBuilder(fullstring);
-        text.setSpan(new ForegroundColorSpan(color), 0, fullstring.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        if (isBold) {
-            text.setSpan(new StyleSpan(Typeface.BOLD), 0, fullstring.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        }
-        return text;
-    }
-
 
     private void showCheepCodeDialog() {
         View view = View.inflate(mContext, R.layout.dialog_add_promocode, null);

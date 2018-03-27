@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
+import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -15,8 +16,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatEditText;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
+import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
+import android.text.style.StyleSpan;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -247,6 +251,15 @@ public class Utility {
             allGranted = grantResults[i] == PackageManager.PERMISSION_GRANTED;
         }
         return allGranted;
+    }
+
+    public static SpannableStringBuilder getSpannableString(String fullstring, int color, boolean isBold) {
+        SpannableStringBuilder text = new SpannableStringBuilder(fullstring);
+        text.setSpan(new ForegroundColorSpan(color), 0, fullstring.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        if (isBold) {
+            text.setSpan(new StyleSpan(Typeface.BOLD), 0, fullstring.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
+        return text;
     }
 
     public static int getAddressCategoryString(String category) {
@@ -997,7 +1010,7 @@ public class Utility {
 
     public static int getProLevelBadge(String pro_level) {
         if (TextUtils.isEmpty(pro_level))
-            return 0;
+            return -1;
         switch (pro_level) {
             case Utility.PRO_LEVEL.PLATINUM:
                 return R.drawable.ic_badge_platinum;
@@ -1008,7 +1021,7 @@ public class Utility {
             case Utility.PRO_LEVEL.BRONZE:
                 return R.drawable.ic_badge_bronze;
         }
-        return 0;
+        return -1;
     }
 
     public static String checkNonNullAndSet(String text) {

@@ -6,6 +6,7 @@ import com.cheep.strategicpartner.model.QueAnsModel;
 import com.cheep.utils.Utility;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +14,7 @@ import java.util.List;
  * Created by pankaj on 11/15/16.
  */
 @Keep
-public class TaskDetailModel {
+public class TaskDetailModel implements Serializable {
     @SerializedName("task_id")
     public String taskId;
 
@@ -164,7 +165,7 @@ public class TaskDetailModel {
         this.taskImage = taskImage;
         this.taskAddress = taskAddress;
         this.selectedProvider = selectedProvider;
-        this.categoryModel= categoryName;
+        this.categoryModel = categoryName;
         this.providerCount = providerCount;
     }
 

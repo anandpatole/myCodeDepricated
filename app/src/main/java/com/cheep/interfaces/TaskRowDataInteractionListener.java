@@ -10,8 +10,6 @@ public interface TaskRowDataInteractionListener {
 
     void onTaskReschedule(int which, TaskDetailModel exploreDataModel, RowUpcomingTaskBinding mRowUpcomingTaskBinding);
 
-    void onRateClick(int which, TaskDetailModel exploreDataModel, RowUpcomingTaskBinding mRowUpcomingTaskBinding);
-
     void onViewQuotesClick(int which, TaskDetailModel exploreDataModel);
 
     void onTaskRowFragListItemClicked(int which, TaskDetailModel exploreDataModel); //, RowTaskBinding mRawTaskBinding

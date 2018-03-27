@@ -357,7 +357,9 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
             holder.tvDistance.setVisibility(View.GONE);
         }
 
-        holder.ivBadge.setImageResource(Utility.getProLevelBadge(provider.pro_level));
+        int badgeResID = Utility.getProLevelBadge(mTaskDetailModel.selectedProvider.pro_level);
+        if (badgeResID != -1)
+            holder.ivBadge.setImageResource(badgeResID);
 
         //favorite
         holder.ivFavoriteQuote.setSelected(provider.isFavourite.equals(Utility.BOOLEAN.YES));

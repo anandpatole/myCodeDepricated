@@ -19,8 +19,10 @@ import com.cheep.cheepcare.adapter.RatingAdapter;
 import com.cheep.cheepcare.model.RatingModel;
 import com.cheep.databinding.ActivityRateAndReviewBinding;
 import com.cheep.model.MessageEvent;
+import com.cheep.model.ProviderModel;
 import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
+import com.cheep.utils.GlideUtility;
 import com.cheep.utils.GsonUtility;
 import com.cheep.utils.Utility;
 import com.cheep.utils.WebCallClass;
@@ -35,14 +37,18 @@ import java.util.ArrayList;
 
 public class RateAndReviewActivity extends BaseAppCompatActivity {
 
+    private static final String TAG = "RateAndReviewActivity";
     private ActivityRateAndReviewBinding mBinding;
     private RatingAdapter adapter;
-    private String taskId, providerId;
+    private String taskId;
+    private String catName;
+    private ProviderModel providerModel;
 
-    public static void newInstance(Context context, String taskId, String providerID) {
+    public static void newInstance(Context context, String taskId, String catName, ProviderModel providerModel) {
         Intent intent = new Intent(context, RateAndReviewActivity.class);
         intent.putExtra(Utility.Extra.TASK_ID, taskId);
-        intent.putExtra(Utility.Extra.SP_USER_ID, providerID);
+        intent.putExtra(Utility.Extra.CATEGORY, catName);
+        intent.putExtra(Utility.Extra.MODEL, providerModel);
         context.startActivity(intent);
     }
 
@@ -87,7 +93,14 @@ public class RateAndReviewActivity extends BaseAppCompatActivity {
             });
         }
         taskId = getIntent().getStringExtra(Utility.Extra.TASK_ID);
-        providerId = getIntent().getStringExtra(Utility.Extra.SP_USER_ID);
+        catName = getIntent().getStringExtra(Utility.Extra.CATEGORY);
+        providerModel = (ProviderModel) getIntent().getSerializableExtra(Utility.Extra.MODEL);
+
+        mBinding.textProviderName.setText(providerModel.userName);
+        mBinding.tvCategory.setText(catName);
+        GlideUtility.showCircularImageView(mContext, TAG, mBinding.imgProfile, providerModel.profileUrl, R.drawable.ic_cheep_circular_icon);
+        mBinding.imgFav.setSelected(providerModel.isFavourite.equalsIgnoreCase(getString(R.string.label_yes)));
+        mBinding.ivBadge.setImageResource(Utility.getProLevelBadge(providerModel.pro_level));
 
         adapter = new RatingAdapter();
         mBinding.rvRating.setNestedScrollingEnabled(false);
@@ -188,7 +201,7 @@ public class RateAndReviewActivity extends BaseAppCompatActivity {
         showProgressDialog();
 
         String message = mBinding.etReview.getText().toString();
-        WebCallClass.submitReviewWS(this, taskId, providerId, String.valueOf(avgRating), message, GsonUtility.getJsonStringFromObject(adapter.getList()), new WebCallClass.SubmitRateAndReviewListener() {
+        WebCallClass.submitReviewWS(this, taskId, providerModel.providerId, String.valueOf(avgRating), message, GsonUtility.getJsonStringFromObject(adapter.getList()), new WebCallClass.SubmitRateAndReviewListener() {
             @Override
             public void onSuccessOfRateAndReviewSubmit() {
                 hideProgressDialog();

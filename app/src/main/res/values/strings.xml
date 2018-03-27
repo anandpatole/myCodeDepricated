@@ -773,4 +773,6 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_free_small">Free</string>
     <string name="label_with_cheep_care">with Cheep Care</string>
     <string name="label_with_payment_desc_cheep_care">Your current subscription ends on the %1s. Your subscription will be auto renewed the same day, based on the subscription package chosen. </string>
+    <string name="msg_rate_desc_home_1st_part">&#160;recently completed a&#160;</string>
+    <string name="msg_rate_desc_home_2nd_part">&#160;task for you. Please rate your service experience.</string>
 </resources>

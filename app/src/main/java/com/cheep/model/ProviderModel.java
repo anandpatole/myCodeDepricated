@@ -5,13 +5,14 @@ import android.text.TextUtils;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by pankaj on 10/6/16.
  */
 @Keep
-public class ProviderModel {
+public class ProviderModel implements Serializable {
 
     @SerializedName("sp_user_id")
     public String providerId;
@@ -37,7 +38,7 @@ public class ProviderModel {
     @SerializedName("sp_profile_image")
     public String profileUrl;
 
-    @SerializedName("sp_verified")
+    @SerializedName(value = "sp_verified", alternate = "is_verified")
     public String isVerified; // yes or no
 
     @SerializedName("sp_favourite")
@@ -51,6 +52,15 @@ public class ProviderModel {
 
     @SerializedName("sp_reviews_count")
     public String reviews;
+
+//   1   "task_id": "6223",
+//              "sp_user_id": "398",
+//          2    "cat_name": "Cook",
+//              "sp_user_name": "Test1",
+//              "sp_profile_image": "https://s3.ap-south-1.amazonaws.com/cheepapp/service_provider/profile/thumb/1521713902_5ab382eec68af_image.jpg",
+//           3   "is_verified": "no",
+//              "sp_favourite": "no",
+//              "pro_level": "4"
 
     @SerializedName("sp_request_type")
     public String requestType; // quote
@@ -91,7 +101,7 @@ public class ProviderModel {
     /**
      * for pay now
      */
-    public String actualQuotePrice ="";
+    public String actualQuotePrice = "";
 
     @SerializedName("live_lable_arr")
     public List<String> offerList;

@@ -47,7 +47,6 @@ public class AcknowledgementDialogWithProfilePic extends DialogFragment {
         args.putString(NetworkUtility.TAGS.MESSAGE, message);
         args.putString(NetworkUtility.TAGS.PICTURE_URL, pictureurl);
         args.putInt(NetworkUtility.TAGS.RESOURCE_ID, imgResourceIdOfHeader);
-        args.putInt(NetworkUtility.TAGS.RESOURCE_ID, imgResourceIdOfHeader);
         args.putInt(NetworkUtility.TAGS.SHOW_BADGE, badgeResID);
 
         f.setArguments(args);

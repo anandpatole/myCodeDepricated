@@ -5,7 +5,9 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,10 +25,12 @@ import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
 import com.cheep.utils.ErrorLoadingHelper;
 import com.cheep.utils.GsonUtility;
+import com.cheep.utils.LoadMoreRecyclerAdapter;
 import com.cheep.utils.LogUtils;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.SuperCalendar;
 import com.cheep.utils.Utility;
+import com.cheep.utils.WebCallClass;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -50,6 +54,7 @@ public class ProfilePaymentHistoryFragment extends BaseFragment {
     private SuperCalendar calendarChanger;
     private PaymentHistoryCCAdapter mAdapter;
     private PaymentHistoryCCAdapter.HistoryItemInteractionListener mHistoryListener;
+    private String nextPageId = "0";
 
     public static ProfilePaymentHistoryFragment newInstance() {
         Bundle args = new Bundle();
@@ -87,7 +92,7 @@ public class ProfilePaymentHistoryFragment extends BaseFragment {
         mBinding.commonRecyclerView.recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         mBinding.commonRecyclerView.recyclerView.setAdapter(mAdapter);
 
-        mBinding.commonRecyclerView.swipeRefreshLayout.setEnabled(false);
+        mBinding.commonRecyclerView.swipeRefreshLayout.setEnabled(true);
 
         mBinding.tvTotalPaidPrice.setText(getString(R.string.rupee_symbol_x_space, Utility.EMPTY_STRING));
 
@@ -95,10 +100,38 @@ public class ProfilePaymentHistoryFragment extends BaseFragment {
 
         errorLoadingHelper.showLoading();
         callHistoryWS(superCalendar.getTimeInMillis());
+
+        initSwipeToRefreshLayout();
+    }
+
+    private void initSwipeToRefreshLayout() {
+        mBinding.commonRecyclerView.swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mAdapter.enableLoadMore();
+                nextPageId = "0";
+                reloadNotificationListFromServer();
+            }
+        });
+        Utility.setSwipeRefreshLayoutColors(mBinding.commonRecyclerView.swipeRefreshLayout);
+    }
+
+    private void reloadNotificationListFromServer() {
+        nextPageId = "0";
+
+        callHistoryWS(superCalendar.getTimeInMillis());
     }
 
     @Override
     public void setListener() {
+        mAdapter.setIsLoadMoreEnabled(true, R.layout.load_more_progress
+                , mBinding.commonRecyclerView.recyclerView, new LoadMoreRecyclerAdapter.OnLoadMoreListener() {
+                    @Override
+                    public void onLoadMore() {
+                        callHistoryWS(superCalendar.getTimeInMillis());
+                    }
+                });
+
         mBinding.iconLeft.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -147,21 +180,23 @@ public class ProfilePaymentHistoryFragment extends BaseFragment {
      *
      * @param timestamp
      */
-    private void callHistoryWS(long timestamp) {
+    private void callHistoryWS1(long timestamp) {
 
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mBinding.getRoot());
+//            Utility.showSnackBar(getString(R.string.no_internet), mBinding.getRoot());
+            mBinding.commonRecyclerView.swipeRefreshLayout.setRefreshing(false);
+            errorLoadingHelper.failed(Utility.NO_INTERNET_CONNECTION, 0, onRetryBtnClickListener);
             return;
         }
 
+        mBinding.groupTotalPaid.setVisibility(View.GONE);
         if (PreferenceUtility.getInstance(mContext).getUserDetails() == null) {
-            mBinding.groupTotalPaid.setVisibility(View.GONE);
             mBinding.clMonthSelector.setVisibility(View.GONE);
             mBinding.groupTotalPaid.setVisibility(View.GONE);
             errorLoadingHelper.failed(null, R.drawable.img_empty_history, null, null);
+            mBinding.commonRecyclerView.swipeRefreshLayout.setRefreshing(false);
             return;
         } else {
-            mBinding.groupTotalPaid.setVisibility(View.VISIBLE);
             mBinding.clMonthSelector.setVisibility(View.VISIBLE);
         }
 
@@ -191,6 +226,44 @@ public class ProfilePaymentHistoryFragment extends BaseFragment {
         Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequestForSPList, NetworkUtility.WS.PAYMENT_HISTORY);
     }
 
+    /**
+     * Call History WS
+     *
+     * @param timestamp
+     */
+    private void callHistoryWS(long timestamp) {
+
+        if (!Utility.isConnected(mContext)) {
+//            Utility.showSnackBar(getString(R.string.no_internet), mBinding.getRoot());
+            mBinding.commonRecyclerView.swipeRefreshLayout.setRefreshing(false);
+            errorLoadingHelper.failed(Utility.NO_INTERNET_CONNECTION, 0, onRetryBtnClickListener);
+            return;
+        }
+
+        mBinding.groupTotalPaid.setVisibility(View.GONE);
+        if (PreferenceUtility.getInstance(mContext).getUserDetails() == null) {
+            mBinding.clMonthSelector.setVisibility(View.GONE);
+            mBinding.groupTotalPaid.setVisibility(View.GONE);
+            errorLoadingHelper.failed(null, R.drawable.img_empty_history, null, null);
+            mBinding.commonRecyclerView.swipeRefreshLayout.setRefreshing(false);
+            return;
+        } else {
+            mBinding.clMonthSelector.setVisibility(View.VISIBLE);
+        }
+
+        if (calendarChanger == null)
+            calendarChanger = SuperCalendar.getInstance();
+
+        calendarChanger.setLocaleTimeZone();
+        calendarChanger.setTimeInMillis(timestamp);
+        calendarChanger.setTimeZone(SuperCalendar.SuperTimeZone.GMT.GMT);
+
+
+        WebCallClass.getPaymentHistoryList(mContext, nextPageId,
+                String.valueOf(calendarChanger.format(SuperCalendar.SuperFormatter.MONTH_NUMBER + "/" + SuperCalendar.SuperFormatter.YEAR_4_DIGIT))
+                , mCommonResponseListener, mGetPaymentHistoryListListener);
+    }
+
     Response.Listener mCallHistoryWSResponseListener = new Response.Listener() {
         @Override
         public void onResponse(Object response) {
@@ -201,13 +274,13 @@ public class ProfilePaymentHistoryFragment extends BaseFragment {
                 Log.i(TAG, "onResponse: " + jsonObject.toString());
                 int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
                 String error_message;
-
+                mBinding.commonRecyclerView.swipeRefreshLayout.setRefreshing(false);
                 switch (statusCode) {
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
 
-                        double price = Double.parseDouble(jsonObject.optString(NetworkUtility.TAGS.TOTAL_EARNED));
+                        double price = Double.parseDouble(jsonObject.optString(NetworkUtility.TAGS.MONTHLY_TOTAL));
                         DecimalFormat decimalFormat = new DecimalFormat("0.00");
-//                        mBinding.textPrice.setText(getString(R.string.rupee_symbol_x, decimalFormat.format(price)));
+                        mBinding.tvTotalPaidPrice.setText(getString(R.string.rupee_symbol_x, decimalFormat.format(price)));
 
 //                        mBinding.monthlyEarned.setText(getString(R.string.rupee_symbol_x, Utility.getQuotePriceFormatter(jsonObject.optString(NetworkUtility.TAGS.MONTHLY_TOTAL))));
 //                        mBinding.monthlySaved.setText(getString(R.string.rupee_symbol_x, Utility.getQuotePriceFormatter(jsonObject.optString(NetworkUtility.TAGS.MONTHLY_SAVED_TOTAL))));
@@ -256,6 +329,7 @@ public class ProfilePaymentHistoryFragment extends BaseFragment {
 
             // Close Progressbar
 //            hideProgressDialog();
+            mBinding.commonRecyclerView.swipeRefreshLayout.setRefreshing(false);
             Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
 
         }
@@ -267,4 +341,66 @@ public class ProfilePaymentHistoryFragment extends BaseFragment {
             callHistoryWS(superCalendar.getTimeInMillis());
         }
     };
+
+    private final WebCallClass.CommonResponseListener mCommonResponseListener =
+            new WebCallClass.CommonResponseListener() {
+                @Override
+                public void volleyError(VolleyError error) {
+                    Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
+                    mBinding.commonRecyclerView.swipeRefreshLayout.setRefreshing(false);
+                    errorLoadingHelper.failed(getString(R.string.label_something_went_wrong), 0, onRetryBtnClickListener);
+                }
+
+                @Override
+                public void showSpecificMessage(String message) {
+                    mBinding.commonRecyclerView.swipeRefreshLayout.setRefreshing(false);
+                    errorLoadingHelper.failed(message, 0, onRetryBtnClickListener);
+                }
+
+                @Override
+                public void forceLogout() {
+                    mBinding.commonRecyclerView.swipeRefreshLayout.setRefreshing(false);
+                    //Logout and finish the current activity
+                    if (getActivity() != null)
+                        getActivity().finish();
+                }
+            };
+
+    private final WebCallClass.GetPaymentHistoryListListener mGetPaymentHistoryListListener =
+            new WebCallClass.GetPaymentHistoryListListener() {
+                @Override
+                public void getPaymentHistoryList(ArrayList<HistoryModel> list, String pageNumber, String monthlyTotalPrice) {
+
+                    DecimalFormat decimalFormat = new DecimalFormat("0.00");
+                    mBinding.tvTotalPaidPrice.setText(getString(R.string.rupee_symbol_x
+                            , decimalFormat.format(Double.parseDouble(monthlyTotalPrice))));
+
+//                  mBinding.monthlyEarned.setText(getString(R.string.rupee_symbol_x, Utility.getQuotePriceFormatter(jsonObject.optString(NetworkUtility.TAGS.MONTHLY_TOTAL))));
+//                  mBinding.monthlySaved.setText(getString(R.string.rupee_symbol_x, Utility.getQuotePriceFormatter(jsonObject.optString(NetworkUtility.TAGS.MONTHLY_SAVED_TOTAL))));
+
+                    mBinding.commonRecyclerView.swipeRefreshLayout.setRefreshing(false);
+
+                    //Setting RecyclerView Adapter
+                    if (TextUtils.isEmpty(nextPageId) || nextPageId.equals("0")) {
+                        mAdapter.setItems(list);
+                    } else {
+                        mAdapter.addItems(list);
+                    }
+                    nextPageId = pageNumber;
+                    errorLoadingHelper.success();
+                    mAdapter.onLoadMoreComplete();
+                    if (list.size() == 0) {
+                        mAdapter.disableLoadMore();
+                    }
+
+                    if (mAdapter.getListSize() <= 0) {
+                        mBinding.groupTotalPaid.setVisibility(View.GONE);
+                        errorLoadingHelper.failed(null, R.drawable.img_empty_history, null, null);
+                    } else {
+                        mBinding.groupTotalPaid.setVisibility(View.VISIBLE);
+                        errorLoadingHelper.success();
+                    }
+
+                }
+            };
 }

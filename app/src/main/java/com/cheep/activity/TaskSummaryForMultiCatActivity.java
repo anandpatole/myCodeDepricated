@@ -90,7 +90,8 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
     private View.OnClickListener rateAndReviewClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            RateAndReviewActivity.newInstance(TaskSummaryForMultiCatActivity.this, mTaskDetailModel.taskId, mTaskDetailModel.selectedProvider.providerId);
+            RateAndReviewActivity.newInstance(TaskSummaryForMultiCatActivity.this, mTaskDetailModel.taskId
+                    , mTaskDetailModel.categoryModel.catName, mTaskDetailModel.selectedProvider);
         }
     };
     private View.OnClickListener viewTaskQuoteClickListener = new View.OnClickListener() {

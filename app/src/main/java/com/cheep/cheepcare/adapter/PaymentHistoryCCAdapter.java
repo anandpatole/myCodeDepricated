@@ -32,7 +32,11 @@ public class PaymentHistoryCCAdapter extends LoadMoreRecyclerAdapter<PaymentHist
     private ArrayList<HistoryModel> mList = new ArrayList<>();
 
     public interface HistoryItemInteractionListener {
-        void onHistoryRowClicked(HistoryModel model);
+        void onHistoryRowClicked(int position, HistoryModel model);
+
+        void onPayNowClicked(int position, HistoryModel model);
+
+        void onSupportClicked();
     }
 
     public PaymentHistoryCCAdapter(HistoryItemInteractionListener listener) {
@@ -135,7 +139,7 @@ public class PaymentHistoryCCAdapter extends LoadMoreRecyclerAdapter<PaymentHist
         }
         /////////////////////manage amount, payment via and pending group visibility/////////////////////////
 
-        holder.mBinding.tvProCategory.setText(model.task_category);
+        holder.mBinding.tvProCategory.setText(model.catName);
 
         holder.mBinding.tvDate.setText(model.getPaymentDate());
 
@@ -147,9 +151,20 @@ public class PaymentHistoryCCAdapter extends LoadMoreRecyclerAdapter<PaymentHist
     }
 
     public void setItems(ArrayList<HistoryModel> list) {
+        mList.clear();
         mList.addAll(list);
         notifyDataSetChanged();
     }
+
+    public void addItems(ArrayList<HistoryModel> list) {
+        mList.addAll(list);
+        notifyDataSetChanged();
+    }
+
+    public int getListSize() {
+        return mList.size();
+    }
+
 
     public class PaymentHistoryViewHolder extends RecyclerView.ViewHolder {
 
@@ -159,11 +174,29 @@ public class PaymentHistoryCCAdapter extends LoadMoreRecyclerAdapter<PaymentHist
             super(binding.getRoot());
             mBinding = binding;
 
+            binding.tvPayNow.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mListener != null) {
+                        mListener.onPayNowClicked(getAdapterPosition(), mList.get(getAdapterPosition()));
+                    }
+                }
+            });
+
+            binding.tvSupport.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mListener != null) {
+                        mListener.onSupportClicked();
+                    }
+                }
+            });
+
             binding.getRoot().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     if (mListener != null) {
-                        mListener.onHistoryRowClicked(mList.get(getAdapterPosition()));
+                        mListener.onHistoryRowClicked(getAdapterPosition(), mList.get(getAdapterPosition()));
                     }
                 }
             });
