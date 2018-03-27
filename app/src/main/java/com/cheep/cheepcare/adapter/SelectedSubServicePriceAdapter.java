@@ -50,8 +50,14 @@ public class SelectedSubServicePriceAdapter extends RecyclerView.Adapter<Selecte
         if (/*Double.parseDouble(model.unitPrice) == 0 ||*/ mServiceType.equalsIgnoreCase(Utility.SERVICE_TYPE.FREE)) {
             holder.mBinding.tvSubServicePrice.setText(context.getString(R.string.label_free));
         } else {
-            holder.mBinding.tvSubServicePrice.setText(context.getString(R.string.rupee_symbol_x,
-                    String.valueOf(model.selected_unit * Double.parseDouble(model.unitPriceWithGST))));
+            double price;
+            try {
+                price = model.selected_unit * Double.parseDouble(model.unitPriceWithGST);
+            } catch (Exception e) {
+                price = 0;
+            }
+            holder.mBinding.tvSubServicePrice.setText(context.getString(R.string.rupee_symbol_x, String.valueOf(price)));
+
         }
     }
 

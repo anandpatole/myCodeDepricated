@@ -66,6 +66,7 @@
                         android:src="@drawable/ic_info_blue"/>
 
                     <com.cheep.custom_view.CFTextViewRegular
+                        android:id="@+id/tv_auto_renewal_msg"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="@dimen/scale_20dp"
@@ -252,9 +253,11 @@
                             android:orientation="horizontal">
 
                             <com.cheep.custom_view.CFTextViewRegular
-                                android:layout_width="wrap_content"
+                                android:id="@+id/tv_paytm_auto_renewal"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_centerVertical="true"
+                                android:layout_toLeftOf="@+id/paytmAutoRenewSwitch"
                                 android:gravity="center_vertical"
                                 android:paddingBottom="@dimen/scale_10dp"
                                 android:paddingEnd="@dimen/scale_5dp"
@@ -266,7 +269,8 @@
                                 android:textColor="@color/black"
                                 android:textSize="@dimen/text_size_13sp"/>
 
-                            <android.support.v7.widget.SwitchCompat
+                            <ImageView
+                                android:id="@+id/paytmAutoRenewSwitch"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentEnd="true"
@@ -274,8 +278,7 @@
                                 android:layout_centerVertical="true"
                                 android:layout_marginEnd="@dimen/scale_15dp"
                                 android:layout_marginRight="@dimen/scale_15dp"
-                                android:textOff="Off"
-                                android:textOn="on"/>
+                                android:src="@drawable/selector_toggle_auto_renewal"/>
                         </RelativeLayout>
 
                     </LinearLayout>
@@ -361,14 +364,15 @@
                             android:orientation="horizontal">
 
                             <com.cheep.custom_view.CFTextViewRegular
+                                android:id="@+id/tv_card_auto_renewal"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_centerVertical="true"
+                                android:layout_toLeftOf="@+id/cardAutoRenewSwitch"
                                 android:gravity="center_vertical"
                                 android:paddingBottom="@dimen/scale_12dp"
                                 android:paddingEnd="@dimen/scale_5dp"
                                 android:paddingLeft="@dimen/scale_16dp"
-                                android:layout_toLeftOf="@+id/cartAutoRenewSwitch"
                                 android:paddingRight="@dimen/scale_5dp"
                                 android:paddingStart="@dimen/scale_16dp"
                                 android:paddingTop="@dimen/scale_12dp"
@@ -376,8 +380,8 @@
                                 android:textColor="@color/black"
                                 android:textSize="@dimen/text_size_13sp"/>
 
-                            <android.support.v7.widget.SwitchCompat
-                                android:id="@+id/cartAutoRenewSwitch"
+                            <ImageView
+                                android:id="@+id/cardAutoRenewSwitch"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentEnd="true"
@@ -385,8 +389,7 @@
                                 android:layout_centerVertical="true"
                                 android:layout_marginEnd="@dimen/scale_15dp"
                                 android:layout_marginRight="@dimen/scale_15dp"
-                                android:textOff="Off"
-                                android:textOn="on"/>
+                                android:src="@drawable/selector_toggle_auto_renewal"/>
                         </RelativeLayout>
 
                     </LinearLayout>

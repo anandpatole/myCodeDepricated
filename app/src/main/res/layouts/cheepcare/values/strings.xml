@@ -5,4 +5,5 @@
     <string name="cheep_care">Cheep Care\u0020</string>
     <string name="label_pay_pending_amount_msg">Hi %1s! Tap on Pay Now to pay the pending amount.</string>
     <string name="label_auto_renew_activated">Auto renewal activated</string>
+    <string name="label_auto_renew_deactivated">Auto renewal deactivated</string>
 </resources>

@@ -19,6 +19,7 @@ import android.view.View;
 import com.android.volley.VolleyError;
 import com.cheep.R;
 import com.cheep.activity.BaseAppCompatActivity;
+import com.cheep.activity.PaymentChoiceActivity;
 import com.cheep.cheepcare.adapter.SelectedSubServicePriceAdapter;
 import com.cheep.cheepcare.dialogs.TaskConfirmedCCInstaBookDialog;
 import com.cheep.cheepcare.model.SubscribedTaskDetailModel;
@@ -299,7 +300,7 @@ public class BookingConfirmationCcActivity extends BaseAppCompatActivity {
     };
 
     private void openPaymentChoiceActivity() {
-        PaymentChoiceCheepCareActivity.newInstance(BookingConfirmationCcActivity.this, subscribedTaskDetailModel);
+        PaymentChoiceActivity.newInstance(BookingConfirmationCcActivity.this, subscribedTaskDetailModel);
     }
 
     private void callCreateSubscribedTask() {

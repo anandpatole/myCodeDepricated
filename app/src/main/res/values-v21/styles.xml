@@ -3,7 +3,8 @@
 
     <style name="AppTheme" parent="BaseTheme">
         <item name="android:windowContentTransitions">true</item>
-    </style>
+        <item name="android:buttonStyle">@style/ButtonPaynimo</item>
+        <item name="android:editTextStyle">@style/EditTextPaynimo</item></style>
 
     <style name="NoAnimTheme" parent="BaseTheme">
         <!--For Shared Element Transition Blinking Occoures , so this will remove it-->

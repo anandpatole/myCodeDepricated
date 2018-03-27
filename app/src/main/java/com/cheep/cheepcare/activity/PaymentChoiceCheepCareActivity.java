@@ -5,10 +5,10 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -21,7 +21,6 @@ import com.cheep.activity.HDFCPaymentGatewayActivity;
 import com.cheep.activity.SendOtpActivity;
 import com.cheep.activity.WithdrawMoneyActivity;
 import com.cheep.cheepcare.dialogs.PaymentFailedDialog;
-import com.cheep.cheepcare.dialogs.TaskConfirmedCCInstaBookDialog;
 import com.cheep.cheepcare.model.CheepCarePaymentDataModel;
 import com.cheep.cheepcare.model.CityDetail;
 import com.cheep.cheepcare.model.SubscribedTaskDetailModel;
@@ -39,8 +38,13 @@ import com.cheep.utils.HDFCPaymentUtility;
 import com.cheep.utils.LogUtils;
 import com.cheep.utils.PaytmUtility;
 import com.cheep.utils.PreferenceUtility;
+import com.cheep.utils.SuperCalendar;
 import com.cheep.utils.Utility;
 import com.cheep.utils.WebCallClass;
+import com.google.gson.Gson;
+import com.paynimo.android.payment.PaymentActivity;
+import com.paynimo.android.payment.PaymentModesActivity;
+import com.paynimo.android.payment.model.Checkout;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -50,7 +54,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import static com.cheep.network.NetworkUtility.PAYTM.PARAMETERS.orderId;
@@ -122,6 +128,10 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
     @Override
     protected void initiateUI() {
 
+        mBinding.cardAutoRenewSwitch.setSelected(true);
+        mBinding.paytmAutoRenewSwitch.setSelected(true);
+        mBinding.tvCardAutoRenewal.setText(R.string.label_auto_renew_activated);
+        mBinding.tvPaytmAutoRenewal.setText(R.string.label_auto_renew_activated);
         paymentFor = getIntent().getStringExtra(Utility.Extra.PAYMENT_VIEW);
         if (paymentFor.equalsIgnoreCase(PAYMENT_FOR_SUBSCRIPTION)) {
             cartDetail = getIntent().getStringExtra(Utility.Extra.DATA);
@@ -130,10 +140,20 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
             cityDetail = (CityDetail) GsonUtility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA_3), CityDetail.class);
             payableAmount = paymentDataModel.payableAmount;
             LogUtils.LOGE(TAG, "initiateUI: paymentDataModel \n============\n" + paymentDataModel);
-        } else {
+
+            // get next year date
+            SuperCalendar superCalendar = SuperCalendar.getInstance();
+            superCalendar.getCalendar().add(Calendar.DAY_OF_YEAR, 365);
+            String day = CalendarUtility.getDateStringWithSuffic(superCalendar.getCalendar().get(Calendar.DATE));
+            String month = superCalendar.getCalendar().getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.ENGLISH);
+            String year = String.valueOf(superCalendar.getCalendar().get(Calendar.YEAR));
+            String date = day + " " + month + " " + year;
+
+            mBinding.tvAutoRenewalMsg.setText(getString(R.string.label_with_payment_desc_cheep_care, date));
+        } /*else {
             subscribedTaskDetailModel = (SubscribedTaskDetailModel) GsonUtility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA), SubscribedTaskDetailModel.class);
             payableAmount = subscribedTaskDetailModel.total;
-        }
+        }*/
         setupActionbar();
     }
 
@@ -152,24 +172,35 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
         mBinding.rlCard.setOnClickListener(this);
         mBinding.rlNetbanking.setOnClickListener(this);
         mBinding.rlPaytm.setOnClickListener(this);
+        mBinding.cardAutoRenewSwitch.setOnClickListener(this);
+        mBinding.paytmAutoRenewSwitch.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.rl_card:
+                initCheckout();
+                break;
             case R.id.rl_netbanking:
                 paymentMethod = NetworkUtility.PAYMENT_METHOD_TYPE.PAYU;
-                doPaymentOfNetBanking();
+//                doPaymentOfNetBanking();
                 break;
             case R.id.rl_paytm:
                 paymentMethod = NetworkUtility.PAYMENT_METHOD_TYPE.PAYTM;
-                doPaymentOfPaytm();
+//                doPaymentOfPaytm();
 
                 break;
 
             case R.id.rl_cash_payment:
-
+                break;
+            case R.id.cardAutoRenewSwitch:
+                view.setSelected(!view.isSelected());
+                mBinding.tvCardAutoRenewal.setText(view.isSelected() ? R.string.label_auto_renew_activated : R.string.label_auto_renew_deactivated);
+                break;
+            case R.id.paytmAutoRenewSwitch:
+                view.setSelected(!view.isSelected());
+                mBinding.tvPaytmAutoRenewal.setText(view.isSelected() ? R.string.label_auto_renew_activated : R.string.label_auto_renew_deactivated);
                 break;
         }
     }
@@ -304,46 +335,10 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
         if (paymentFor.equalsIgnoreCase(PAYMENT_FOR_SUBSCRIPTION)) {
             callCreateCheepCarePackageWS(paymentLog);
         } else {
-            callCreateSubscribedTaskWS(paymentLog);
+//            callCreateSubscribedTaskWS(paymentLog);
         }
     }
 
-    private void callCreateSubscribedTaskWS(String paymentLog) {
-
-        subscribedTaskDetailModel.paymentMethod = paymentMethod;
-        subscribedTaskDetailModel.paymentLog = paymentLog;
-        subscribedTaskDetailModel.paybleAmount = String.valueOf(payableAmount);
-
-        WebCallClass.createCheepCareTask(mContext, subscribedTaskDetailModel, mCommonResponseListener, new WebCallClass.SuccessOfTaskCreationResponseListener() {
-            @Override
-            public void onSuccessOfTaskCreate(String startdateTimeTimeStamp) {
-                LogUtils.LOGE(TAG, "onSuccessOfTaskCreate: ");
-                hideProgressDialog();
-                subscribedTaskDetailModel.startDateTime = startdateTimeTimeStamp;
-                String datetime = "";
-                if (!TextUtils.isEmpty(subscribedTaskDetailModel.startDateTime)) {
-                    datetime = CalendarUtility.getDate(Long.parseLong(subscribedTaskDetailModel.startDateTime), Utility.DATE_FORMAT_DD_MMMM) + getString(R.string.label_between) + CalendarUtility.get2HourTimeSlots(subscribedTaskDetailModel.startDateTime);
-                }
-
-
-                TaskConfirmedCCInstaBookDialog taskConfirmedCCInstaBookDialog = TaskConfirmedCCInstaBookDialog.newInstance(new TaskConfirmedCCInstaBookDialog.TaskConfirmActionListener() {
-                    @Override
-                    public void onAcknowledgementAccepted() {
-                        MessageEvent messageEvent = new MessageEvent();
-                        messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.SUBSCRIBED_TASK_CREATE_SUCCESSFULLY;
-                        EventBus.getDefault().post(messageEvent);
-                        finish();
-                    }
-
-                    @Override
-                    public void rescheduleTask() {
-
-                    }
-                }, false, datetime);
-                taskConfirmedCCInstaBookDialog.show(getSupportFragmentManager(), TaskConfirmedCCInstaBookDialog.TAG);
-            }
-        });
-    }
 
     private final WebCallClass.CommonResponseListener mCommonResponseListener =
             new WebCallClass.CommonResponseListener() {
@@ -427,14 +422,17 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
+            case PaymentActivity.REQUEST_CODE:
+                onResultOfPayNimo(resultCode, data);
+                break;
             case Utility.REQUEST_START_PAYMENT_CHEEP_CARE:
-//            Toast.makeText(mContext, "OnActivityResult called with resultCode:" + resultCode + ", requestCode:" + requestCode, Toast.LENGTH_SHORT).show();
+
                 if (resultCode == RESULT_OK) {
                     //success
+
                     if (data != null) {
                         LogUtils.LOGE(TAG, "onActivityResult() called with success: result= [" + data.getStringExtra(Utility.Extra.PAYU_RESPONSE) + "]");
                         onSuccessOfPayment(data.getStringExtra(Utility.Extra.PAYU_RESPONSE));
-
                     }
                 }
                 if (resultCode == RESULT_CANCELED) {
@@ -773,6 +771,169 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
     private void doPaymentOfNetBanking() {
         paymentMethod = NetworkUtility.PAYMENT_METHOD_TYPE.PAYU;
         generateHashForCheepCarePackagePurchase();
+    }
+
+    private void initCheckout() {
+        Checkout objCheckOut = new Checkout();
+
+        objCheckOut.setMerchantIdentifier("T144071");
+        objCheckOut.setTransactionIdentifier("T008");
+        objCheckOut.setTransactionReference("testReference");
+        objCheckOut.setTransactionType("SALE");
+        objCheckOut.setTransactionSubType("DEBIT");
+        objCheckOut.setTransactionCurrency("INR");
+        objCheckOut.setTransactionAmount("10.0");
+        objCheckOut.setTransactionDateTime("24-03-2018");
+        objCheckOut.setConsumerIdentifier("test");
+        objCheckOut.setConsumerEmailID("test@gmail.com");
+        objCheckOut.setConsumerMobileNumber("8238864762");
+        objCheckOut.setConsumerAccountNo("");
+
+        objCheckOut.addCartItem("TEST", "4.00", "0.00", "", "Pkg1", "", "", "0.0");
+        objCheckOut.addCartItem("TEST", "10.00", "0.00", "", "Pkg1", "", "", "0.0");
+
+
+        objCheckOut.setTransactionMerchantInitiated("N");
+        objCheckOut.setPaymentInstructionAction("Y");
+        objCheckOut.setPaymentInstructionType("F");
+        objCheckOut.setPaymentInstructionLimit("4.00");
+        objCheckOut.setPaymentInstructionFrequency("DAIL");
+        objCheckOut.setPaymentInstructionStartDateTime("24-03-2018");
+        objCheckOut.setPaymentInstructionEndDateTime("28-03-2018");
+
+        Log.d("Checkout Request Object", new Gson().toJson(objCheckOut.getMerchantRequestPayload())/*objCheckOut.getMerchantRequestPayload().toString()*/);
+
+        Intent authIntent = new Intent(this, PaymentModesActivity.class);
+        authIntent.putExtra(PaymentActivity.ARGUMENT_DATA_CHECKOUT, objCheckOut);
+        authIntent.putExtra(PaymentActivity.EXTRA_PUBLIC_KEY, "1234-6666-6789-56");
+        authIntent.putExtra(PaymentActivity.EXTRA_REQUESTED_PAYMENT_MODE, PaymentActivity.PAYMENT_METHOD_CARDS);
+        startActivityForResult(authIntent, PaymentActivity.REQUEST_CODE);
+    }
+
+    private void onResultOfPayNimo(int resultCode, Intent data) {
+        switch (resultCode) {
+            case PaymentActivity.RESULT_OK:
+                Log.d(TAG, "Result Code :" + RESULT_OK);
+                if (data != null) {
+                    try {
+                        Checkout checkoutObj = (Checkout) data.getSerializableExtra(PaymentActivity.ARGUMENT_DATA_CHECKOUT);
+                        Log.d("Checkout Response Obj", checkoutObj.getMerchantResponsePayload().toString());
+
+                        printResult(checkoutObj);
+                        // Transaction Completed and Got SUCCESS
+                        if (checkoutObj.getMerchantResponsePayload().getPaymentMethod().getPaymentTransaction().getStatusCode().equalsIgnoreCase(
+                                PaymentActivity.TRANSACTION_STATUS_SALES_DEBIT_SUCCESS)) {
+                            Toast.makeText(getApplicationContext(), "Transaction Status - Success", Toast.LENGTH_SHORT).show();
+                            Log.v("TRANSACTION STATUS=>", "SUCCESS");
+
+                            // TRANSACTION STATUS - SUCCESS (status code  0300 means success), NOW MERCHANT CAN PERFORM ANY OPERATION OVER SUCCESS RESULT
+
+                            if (checkoutObj.getMerchantResponsePayload()
+                                    .getPaymentMethod()
+                                    .getPaymentTransaction()
+                                    .getInstruction()
+                                    .getStatusCode().equalsIgnoreCase("")) {
+                                //  SI TRANSACTION STATUS - SUCCESS (status code 0300 means success)
+                                // failure
+
+                                Log.v("TRANSACTION SI STATUS=>", "SI Transaction Not Initiated");
+
+                            } else if (checkoutObj.getMerchantResponsePayload()
+                                    .getPaymentMethod()
+                                    .getPaymentTransaction()
+                                    .getInstruction()
+                                    .getStatusCode().equalsIgnoreCase(PaymentActivity.TRANSACTION_STATUS_SALES_DEBIT_SUCCESS)) {
+
+                                //SI TRANSACTION STATUS - SUCCESS (status code 0300 means success)
+                                Log.v("TRANSACTION SI STATUS=>", "SUCCESS");
+
+                                // todo :: >> this is our final success
+                                callCreateCheepCarePackageWS("success of cheep care subscription from android");
+                            } else {
+                                //SI TRANSACTION STATUS - Failure (status code OTHER THAN 0300 means failure)
+                                Log.v("TRANSACTION SI STATUS=>", "FAILURE");
+                                showPaymentFailedDialog();
+                            }
+                        } // Transaction Completed and Got FAILURE
+                        else {
+                            // some error from bank side
+                            LogUtils.LOGW("TRANSACTION STATUS=>", "FAILURE");
+                            Toast.makeText(getApplicationContext(), "Transaction Status - Failure", Toast.LENGTH_SHORT).show();
+                            showPaymentFailedDialog();
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                }
+                break;
+            case PaymentActivity.RESULT_ERROR:
+                Log.d(TAG, "got an error");
+                if (data.hasExtra(PaymentActivity.RETURN_ERROR_CODE) && data.hasExtra(PaymentActivity.RETURN_ERROR_DESCRIPTION)) {
+                    String error_code = data.getStringExtra(PaymentActivity.RETURN_ERROR_CODE);
+                    String error_desc = data.getStringExtra(PaymentActivity.RETURN_ERROR_DESCRIPTION);
+                    Toast.makeText(getApplicationContext(), " Got error :" + error_code + "--- " + error_desc, Toast.LENGTH_SHORT).show();
+                    LogUtils.LOGW(TAG + " Code=>", error_code);
+                    LogUtils.LOGW(TAG + " Desc=>", error_desc);
+                }
+                showPaymentFailedDialog();
+                break;
+            case PaymentActivity.RESULT_CANCELED:
+                //Toast.makeText(getApplicationContext(), "Transaction Aborted by User",Toast.LENGTH_SHORT).show();
+                LogUtils.LOGW(TAG, "User pressed back button");
+
+                break;
+        }
+    }
+
+    private void printResult(Checkout checkoutObj) {
+        String transactionType = checkoutObj.getMerchantRequestPayload().getTransaction().getType();
+        String transactionSubType = checkoutObj.getMerchantRequestPayload().getTransaction().getSubType();
+        String result = "StatusCode : " + checkoutObj
+                .getMerchantResponsePayload().getPaymentMethod()
+                .getPaymentTransaction().getStatusCode()
+                + "\nStatusMessage : " + checkoutObj
+                .getMerchantResponsePayload().getPaymentMethod()
+                .getPaymentTransaction().getStatusMessage()
+                + "\nErrorMessage : " + checkoutObj
+                .getMerchantResponsePayload().getPaymentMethod()
+                .getPaymentTransaction().getErrorMessage()
+                + "\nAmount : " + checkoutObj
+                .getMerchantResponsePayload().getPaymentMethod().getPaymentTransaction().getAmount()
+                + "\nDateTime : " + checkoutObj.
+                getMerchantResponsePayload().getPaymentMethod()
+                .getPaymentTransaction().getDateTime()
+                + "\nMerchantTransactionIdentifier : "
+                + checkoutObj.getMerchantResponsePayload()
+                .getMerchantTransactionIdentifier()
+                + "\nIdentifier : " + checkoutObj
+                .getMerchantResponsePayload().getPaymentMethod()
+                .getPaymentTransaction().getIdentifier()
+                + "\nBankSelectionCode : " + checkoutObj
+                .getMerchantResponsePayload().getPaymentMethod()
+                .getBankSelectionCode()
+                + "\nBankReferenceIdentifier : " + checkoutObj
+                .getMerchantResponsePayload().getPaymentMethod()
+                .getPaymentTransaction().getBankReferenceIdentifier()
+                + "\nRefundIdentifier : " + checkoutObj
+                .getMerchantResponsePayload().getPaymentMethod()
+                .getPaymentTransaction().getRefundIdentifier()
+                + "\nBalanceAmount : " + checkoutObj
+                .getMerchantResponsePayload().getPaymentMethod()
+                .getPaymentTransaction().getBalanceAmount()
+                + "\nInstrumentAliasName : " + checkoutObj
+                .getMerchantResponsePayload().getPaymentMethod()
+                .getInstrumentAliasName()
+                + "\nSI Mandate Id : " + checkoutObj
+                .getMerchantResponsePayload().getPaymentMethod()
+                .getPaymentTransaction().getInstruction().getId()
+                + "\nSI Mandate Status : " + checkoutObj
+                .getMerchantResponsePayload().getPaymentMethod()
+                .getPaymentTransaction().getInstruction().getStatusCode()
+                + "\nSI Mandate Error Code : " + checkoutObj
+                .getMerchantResponsePayload().getPaymentMethod()
+                .getPaymentTransaction().getInstruction().getErrorcode();
+        Log.e(TAG, "onActivityResult: " + result);
     }
 
 

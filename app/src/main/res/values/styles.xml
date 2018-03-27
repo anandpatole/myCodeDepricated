@@ -69,7 +69,8 @@
     <!--Activity Themes-->
     <style name="AppTheme" parent="BaseTheme">
         <!-- Customize your theme here. -->
-
+        <item name="android:buttonStyle">@style/ButtonPaynimo</item>
+        <item name="android:editTextStyle">@style/EditTextPaynimo</item>
     </style>
 
     <!--CropImageActivity Customized theme-->

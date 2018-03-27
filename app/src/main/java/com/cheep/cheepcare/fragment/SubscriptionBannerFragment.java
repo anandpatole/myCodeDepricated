@@ -13,6 +13,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.cheep.R;
 import com.cheep.cheepcare.activity.LandingScreenPickPackageActivity;
 import com.cheep.cheepcare.activity.ManageSubscriptionActivity;
+import com.cheep.cheepcare.activity.PaymentDemoActivity;
 import com.cheep.cheepcare.model.CityDetail;
 import com.cheep.databinding.FragmentSubscriptionBannerImageBinding;
 import com.cheep.fragment.BaseFragment;
@@ -144,6 +145,7 @@ public class SubscriptionBannerFragment extends BaseFragment {
                             ManageSubscriptionActivity.newInstance(mContext, bannerImageModel, true, cheepcareBannerListString);
                         } else {
                             LandingScreenPickPackageActivity.newInstance(mContext, bannerImageModel, cheepcareBannerListString);
+                            PaymentDemoActivity.newInstance(mContext);
                         }
                     }
                 }
