@@ -392,14 +392,14 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
         return mActivityTaskCreateBinding.textPostTask.getHeight();
     }
 
-    public void setSelectedSubService(SubServiceDetailModel subServiceDetailModel) {
+    /*public void setSelectedSubService(SubServiceDetailModel subServiceDetailModel) {
         this.mSelectedSubServiceDetailModel = subServiceDetailModel;
     }
 
     public SubServiceDetailModel getSelectedSubService() {
         return mSelectedSubServiceDetailModel;
     }
-
+*/
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -1147,4 +1147,8 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
         }
     };
 
+    public ArrayList<SubServiceDetailModel> getSubCatList() {
+        return mTaskCreationPagerAdapter.mSelectSubCategoryFragment.getSubCatList();
+
+    }
 }

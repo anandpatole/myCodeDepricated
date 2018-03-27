@@ -127,6 +127,11 @@ public class SelectSubCategoryFragment extends BaseFragment {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
+                        // Make the status Verified
+                        isVerified = true;
+
+                        //Alert The activity that step one is been verified.
+                        mTaskCreationActivity.setTaskState(TaskCreationActivity.STEP_ONE_VERIFIED);
                         mTaskCreationActivity.gotoStep(TaskCreationActivity.STAGE_2);
                     }
                 }, 500);
@@ -142,7 +147,7 @@ public class SelectSubCategoryFragment extends BaseFragment {
     private SubServiceListInteractionListener mSubServiceListInteractionListener = new SubServiceListInteractionListener() {
         @Override
         public void onSubCategoryRowItemClicked(SubServiceDetailModel subServiceDetailModel) {
-            mTaskCreationActivity.setSelectedSubService(subServiceDetailModel);
+//            mTaskCreationActivity.setSelectedSubService(subServiceDetailModel);
 
             Log.d(TAG, "onSubCategoryRowItemClicked() called with: subServiceDetailModel = [" + subServiceDetailModel.name + "]");
             // Make the status Verified

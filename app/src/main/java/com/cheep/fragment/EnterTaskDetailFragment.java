@@ -58,14 +58,13 @@ import com.cheep.custom_view.DividerItemDecoration;
 import com.cheep.databinding.FragmentEnterTaskDetailBinding;
 import com.cheep.model.AddressModel;
 import com.cheep.model.GuestUserDetails;
+import com.cheep.model.MediaModel;
 import com.cheep.model.ProviderModel;
 import com.cheep.model.UserDetails;
 import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
 import com.cheep.utils.AmazonUtils;
-import com.cheep.model.MediaModel;
-import com.cheep.utils.recordvideo.RecordVideoNewActivity;
 import com.cheep.utils.GlideUtility;
 import com.cheep.utils.GsonUtility;
 import com.cheep.utils.LogUtils;
@@ -74,6 +73,7 @@ import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.RequestPermission;
 import com.cheep.utils.SuperCalendar;
 import com.cheep.utils.Utility;
+import com.cheep.utils.recordvideo.RecordVideoNewActivity;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.ui.PlacePicker;
@@ -174,12 +174,12 @@ public class EnterTaskDetailFragment extends BaseFragment implements RequestPerm
             return;
         }
 
-        if (mTaskCreationActivity.getSelectedSubService() == null) {
+        if (mTaskCreationActivity.getSubCatList() == null || mTaskCreationActivity.getSubCatList().isEmpty()) {
             return;
         }
 
         // Task Description
-        isTaskDescriptionVerified = mTaskCreationActivity.getSelectedSubService().sub_cat_id.equalsIgnoreCase("-1") ||
+        isTaskDescriptionVerified = mTaskCreationActivity.getSubCatList().get(0).sub_cat_id.equalsIgnoreCase("-1") ||
                 !TextUtils.isEmpty(mFragmentEnterTaskDetailBinding.editTaskDesc.getText().toString().trim());
 
         // When Verification
@@ -208,8 +208,8 @@ public class EnterTaskDetailFragment extends BaseFragment implements RequestPerm
 
     private void updateTaskDetails() {
         //Update SubCategory
-        if (mTaskCreationActivity != null && mTaskCreationActivity.getSelectedSubService() != null)
-            mFragmentEnterTaskDetailBinding.textSubCategoryName.setText(mTaskCreationActivity.getSelectedSubService().name);
+        if (mTaskCreationActivity != null && !mTaskCreationActivity.getSubCatList().isEmpty())
+            mFragmentEnterTaskDetailBinding.textSubCategoryName.setText(mTaskCreationActivity.getSubCatList().get(0).name);
     }
 
     @Override
