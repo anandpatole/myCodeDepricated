@@ -55,7 +55,7 @@ import com.cheep.cheepcare.dialogs.BottomAddAddressDialog;
 import com.cheep.cheepcare.dialogs.CheepCareNotInYourCityDialog;
 import com.cheep.cheepcare.dialogs.NotSubscribedAddressDialog;
 import com.cheep.cheepcare.dialogs.SelectSpecificTimeDialog;
-import com.cheep.cheepcare.model.CityDetail;
+import com.cheep.cheepcare.model.CareCityDetail;
 import com.cheep.cheepcare.model.CityLandingPageModel;
 import com.cheep.cheepcare.model.PackageDetail;
 import com.cheep.databinding.FragmentTaskCreationPhase2Binding;
@@ -63,6 +63,7 @@ import com.cheep.dialogs.AcknowledgementInteractionListener;
 import com.cheep.fragment.BaseFragment;
 import com.cheep.model.AddressModel;
 import com.cheep.model.GuestUserDetails;
+import com.cheep.model.MediaModel;
 import com.cheep.model.MessageEvent;
 import com.cheep.model.ProviderModel;
 import com.cheep.model.UserDetails;
@@ -70,8 +71,6 @@ import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
 import com.cheep.utils.AmazonUtils;
-import com.cheep.model.MediaModel;
-import com.cheep.utils.recordvideo.RecordVideoNewActivity;
 import com.cheep.utils.GlideUtility;
 import com.cheep.utils.GsonUtility;
 import com.cheep.utils.LogUtils;
@@ -81,6 +80,7 @@ import com.cheep.utils.RequestPermission;
 import com.cheep.utils.SuperCalendar;
 import com.cheep.utils.Utility;
 import com.cheep.utils.WebCallClass;
+import com.cheep.utils.recordvideo.RecordVideoNewActivity;
 
 import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
@@ -414,17 +414,21 @@ public class TaskCreationPhase2Fragment extends BaseFragment implements
                     mTaskCreationCCActivity.showSubscribedBadge(true);
                     fillAddressView(mAddressList.get(position));
                     if (isClicked) {
-                        MessageEvent messageEvent = new MessageEvent();
-                        messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.OTHER_SUBSCRIBED_ADDRESS_SELECTED;
-                        messageEvent.jobCategoryModel = mTaskCreationCCActivity.mJobCategoryModel;
-                        messageEvent.addressModel = mAddressList.get(position);
-                        messageEvent.packageType = mTaskCreationCCActivity.mPackageType;
-                        messageEvent.packageId = mTaskCreationCCActivity.mCarePackageId;
-                        messageEvent.selectedAddressList = mTaskCreationCCActivity.mCareAddressList;
-                        messageEvent.adminSettingModel = mTaskCreationCCActivity.mAdminSettingModel;
-                        EventBus.getDefault().post(messageEvent);
-                        if (getActivity() != null)
-                            getActivity().finish();
+                        if (mAddressList.get(position).address_id.equalsIgnoreCase(mSelectedAddress.address_id)) {
+                            fillAddressView(mAddressList.get(position));
+                        } else {
+                            MessageEvent messageEvent = new MessageEvent();
+                            messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.OTHER_SUBSCRIBED_ADDRESS_SELECTED;
+                            messageEvent.jobCategoryModel = mTaskCreationCCActivity.mJobCategoryModel;
+                            messageEvent.addressModel = mAddressList.get(position);
+                            messageEvent.packageType = mTaskCreationCCActivity.mPackageType;
+                            messageEvent.packageId = mTaskCreationCCActivity.mCarePackageId;
+                            messageEvent.selectedAddressList = mTaskCreationCCActivity.mCareAddressList;
+                            messageEvent.adminSettingModel = mTaskCreationCCActivity.mAdminSettingModel;
+                            EventBus.getDefault().post(messageEvent);
+                            if (getActivity() != null)
+                                getActivity().finish();
+                        }
                     }
                 } else if (isClicked && mAddressList.get(position).is_subscribe.equals(Utility.BOOLEAN.NO)) {
                     if (!Utility.isConnected(mContext)) {
@@ -434,13 +438,23 @@ public class TaskCreationPhase2Fragment extends BaseFragment implements
                     showProgressDialog();
                     WebCallClass.isCityAvailableForCare(mTaskCreationCCActivity, mAddressList.get(position).address_id, commonErrorListener, new WebCallClass.CityAvailableCheepCareListener() {
                         @Override
-                        public void getCityDetails(final CityDetail cityDetail) {
+                        public void getCityDetails(final CareCityDetail careCityDetail) {
                             hideProgressDialog();
-                            if (TextUtils.isEmpty(cityDetail.citySlug)) {
+                            if (TextUtils.isEmpty(careCityDetail.citySlug)) {
                                 CheepCareNotInYourCityDialog.newInstance(mContext, new AcknowledgementInteractionListener() {
                                     @Override
                                     public void onAcknowledgementAccepted() {
-
+                                        MessageEvent messageEvent = new MessageEvent();
+                                        messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.OTHER_SUBSCRIBED_ADDRESS_SELECTED;
+                                        messageEvent.jobCategoryModel = mTaskCreationCCActivity.mJobCategoryModel;
+                                        messageEvent.addressModel = mAddressList.get(position);
+                                        messageEvent.packageType = mTaskCreationCCActivity.mPackageType;
+                                        messageEvent.packageId = mTaskCreationCCActivity.mCarePackageId;
+                                        messageEvent.selectedAddressList = mTaskCreationCCActivity.mCareAddressList;
+                                        messageEvent.adminSettingModel = mTaskCreationCCActivity.mAdminSettingModel;
+                                        EventBus.getDefault().post(messageEvent);
+                                        if (getActivity() != null)
+                                            getActivity().finish();
                                     }
                                 });
                             } else {
@@ -457,13 +471,13 @@ public class TaskCreationPhase2Fragment extends BaseFragment implements
 
                                         showProgressDialog();
 
-                                        WebCallClass.getCityCareDetail(mContext, cityDetail.citySlug, commonErrorListener, new WebCallClass.GetCityCareDataListener() {
+                                        WebCallClass.getCityCareDetail(mContext, careCityDetail.citySlug, commonErrorListener, new WebCallClass.GetCityCareDataListener() {
                                             @Override
                                             public void getCityCareData(CityLandingPageModel cityLandingPageModel) {
                                                 hideProgressDialog();
                                                 for (PackageDetail detail : cityLandingPageModel.packageDetailList)
                                                     if (detail.id.equalsIgnoreCase(mTaskCreationCCActivity.mCarePackageId)) {
-                                                        PackageCustomizationActivity.newInstance(mContext, cityLandingPageModel.cityDetail, detail, GsonUtility.getJsonStringFromObject(cityLandingPageModel.packageDetailList), cityLandingPageModel.adminSetting);
+                                                        PackageCustomizationActivity.newInstance(mContext, cityLandingPageModel.careCityDetail, detail, GsonUtility.getJsonStringFromObject(cityLandingPageModel.packageDetailList), cityLandingPageModel.adminSetting);
                                                         break;
                                                     }
                                             }

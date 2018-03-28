@@ -10,7 +10,7 @@ import java.io.Serializable;
 import java.util.List;
 
 @Keep
-public class CityDetail implements Serializable {
+public class CareCityDetail implements Serializable {
 
 
     @SerializedName("greeting_message")

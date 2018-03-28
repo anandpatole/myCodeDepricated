@@ -11,12 +11,13 @@ import com.appsflyer.AppsFlyerLib;
 import com.cheep.BuildConfig;
 import com.cheep.R;
 import com.cheep.cheepcare.model.AdminSettingModel;
-import com.cheep.cheepcare.model.CityDetail;
+import com.cheep.cheepcare.model.CareCityDetail;
 import com.cheep.cheepcare.model.CityLandingPageModel;
 import com.cheep.cheepcare.model.PackageDetail;
 import com.cheep.cheepcare.model.RatingModel;
 import com.cheep.cheepcare.model.SubscribedTaskDetailModel;
 import com.cheep.model.AddressModel;
+import com.cheep.model.CityModel;
 import com.cheep.model.HistoryModel;
 import com.cheep.model.JobCategoryModel;
 import com.cheep.model.NotificationModel;
@@ -66,7 +67,7 @@ public class WebCallClass {
     //////////////////////////Get Subscribed Care Package call start//////////////////////////
     public interface GetSubscribedCarePackageResponseListener {
 
-        void getSubscribedCarePackageSuccessResponse(CityDetail cityDetail
+        void getSubscribedCarePackageSuccessResponse(CareCityDetail careCityDetail
                 , List<PackageDetail> subscribedList
                 , List<PackageDetail> allPackageList, AdminSettingModel adminSettingModel);
     }
@@ -98,9 +99,9 @@ public class WebCallClass {
 
                                 JSONObject jsonData = jsonObject.getJSONObject(NetworkUtility.TAGS.DATA);
 
-                                CityDetail cityDetail = (CityDetail) GsonUtility.getObjectFromJsonString(
+                                CareCityDetail careCityDetail = (CareCityDetail) GsonUtility.getObjectFromJsonString(
                                         jsonData.getString(NetworkUtility.TAGS.CITY_DETAIL)
-                                        , CityDetail.class);
+                                        , CareCityDetail.class);
 
                                 List<PackageDetail> subscribedList = GsonUtility.getObjectListFromJsonString(
                                         jsonData.getString(NetworkUtility.TAGS.USER_PACKAGE_DETAIL)
@@ -115,7 +116,7 @@ public class WebCallClass {
                                         , AdminSettingModel.class);
 
                                 successListener.getSubscribedCarePackageSuccessResponse(
-                                        cityDetail
+                                        careCityDetail
                                         , subscribedList
                                         , allPackageList,
                                         adminSettingModel);
@@ -462,7 +463,7 @@ public class WebCallClass {
     ////////////////////////// Get city available for cheep care call start     //////////////////////////
     public interface CityAvailableCheepCareListener {
 
-        void getCityDetails(CityDetail cityDetail);
+        void getCityDetails(CareCityDetail careCityDetail);
     }
 
     public static void isCityAvailableForCare(final Context mContext, String addressId, final CommonResponseListener commonListener
@@ -489,11 +490,11 @@ public class WebCallClass {
                         case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
                             if (!TextUtils.isEmpty(jsonObject.getString(NetworkUtility.TAGS.DATA))) {
                                 JSONObject dataObj = jsonObject.optJSONObject(NetworkUtility.TAGS.DATA);
-                                CityDetail cityDetail = new CityDetail();
-                                cityDetail.cityName = dataObj.optString(NetworkUtility.TAGS.CARE_CITY_NAME);
-                                cityDetail.id = dataObj.optString(NetworkUtility.TAGS.CARE_CITY_ID);
-                                cityDetail.citySlug = dataObj.optString(NetworkUtility.TAGS.CARE_CITY_SLUG);
-                                successListener.getCityDetails(cityDetail);
+                                CareCityDetail careCityDetail = new CareCityDetail();
+                                careCityDetail.cityName = dataObj.optString(NetworkUtility.TAGS.CARE_CITY_NAME);
+                                careCityDetail.id = dataObj.optString(NetworkUtility.TAGS.CARE_CITY_ID);
+                                careCityDetail.citySlug = dataObj.optString(NetworkUtility.TAGS.CARE_CITY_SLUG);
+                                successListener.getCityDetails(careCityDetail);
                             }
                             break;
                         case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
@@ -1424,4 +1425,164 @@ public class WebCallClass {
     }
 
     ////////////////////////// getTaskForPendingReview call end //////////////////////////
+
+    ////////////////////////// get city list for vote call start //////////////////////////
+    public interface GetCityListListener {
+        void getCityNames(ArrayList<CityModel> list);
+    }
+
+    public static void getCity(final Context mContext, final CommonResponseListener commonListener
+            , final GetCityListListener successResponseListener) {
+
+        final Response.ErrorListener errorListener = new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
+                commonListener.volleyError(error);
+            }
+        };
+
+        final Response.Listener responseListener = new Response.Listener() {
+            @Override
+            public void onResponse(Object response) {
+                Log.d(TAG, "onResponse() called with: response = [" + response + "]");
+                try {
+                    JSONObject jsonObject = new JSONObject(response.toString());
+                    int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
+                    String error_message;
+
+                    switch (statusCode) {
+                        case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
+                            ArrayList<CityModel> cityModels = GsonUtility.getObjectListFromJsonString(jsonObject.getString(DATA), CityModel[].class);
+                            successResponseListener.getCityNames(cityModels);
+                            break;
+
+                        case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
+                            // Show Toast
+                            commonListener.showSpecificMessage(mContext.getString(R.string.label_something_went_wrong));
+                            break;
+
+                        case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
+                            error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
+                            // Show message
+                            commonListener.showSpecificMessage(error_message);
+                            break;
+
+                        case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
+                        case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
+                            //Logout and finish the current activity
+                            Utility.logout(mContext, true, statusCode);
+                            commonListener.forceLogout();
+                            break;
+                    }
+                } catch (JSONException e) {
+                    commonListener.showSpecificMessage(mContext.getString(R.string.label_something_went_wrong));
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        //Add Header parameters
+        Map<String, String> mHeaderParams = new HashMap<>();
+        mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
+        if (PreferenceUtility.getInstance(mContext).getUserDetails() != null) {
+            mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().userID);
+        }
+
+        Map<String, String> mParams = new HashMap<>();
+        mParams.put(NetworkUtility.TAGS.SEARCH_TEXT, Utility.EMPTY_STRING);
+
+        //noinspection unchecked
+        VolleyNetworkRequest mVolleyNetworkRequest = new VolleyNetworkRequest(
+                NetworkUtility.WS.SEARCH_CITY
+                , errorListener
+                , responseListener
+                , mHeaderParams
+                , mParams
+                , null);
+
+        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest, NetworkUtility.WS.SEARCH_CITY);
+    }
+
+    ////////////////////////// get city list for vote call end //////////////////////////
+
+    ////////////////////////// add vote of city call start     //////////////////////////
+    public interface AddVoteForCheepCareCityListListener {
+        void onSuccessOfVote();
+    }
+
+    public static void voteCityForCheepCare(final Context mContext, String phoneNumber, String cityId, final CommonResponseListener commonListener
+            , final AddVoteForCheepCareCityListListener successResponseListener) {
+
+        final Response.ErrorListener errorListener = new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
+                commonListener.volleyError(error);
+            }
+        };
+
+        final Response.Listener responseListener = new Response.Listener() {
+            @Override
+            public void onResponse(Object response) {
+                Log.d(TAG, "onResponse() called with: response = [" + response + "]");
+                try {
+                    JSONObject jsonObject = new JSONObject(response.toString());
+                    int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
+                    String error_message;
+
+                    switch (statusCode) {
+                        case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
+                            successResponseListener.onSuccessOfVote();
+                            break;
+
+                        case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
+                            // Show Toast
+                            commonListener.showSpecificMessage(mContext.getString(R.string.label_something_went_wrong));
+                            break;
+
+                        case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
+                            error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
+                            // Show message
+                            commonListener.showSpecificMessage(error_message);
+                            break;
+
+                        case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
+                        case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
+                            //Logout and finish the current activity
+                            Utility.logout(mContext, true, statusCode);
+                            commonListener.forceLogout();
+                            break;
+                    }
+                } catch (JSONException e) {
+                    commonListener.showSpecificMessage(mContext.getString(R.string.label_something_went_wrong));
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        //Add Header parameters
+        Map<String, String> mHeaderParams = new HashMap<>();
+        mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
+        if (PreferenceUtility.getInstance(mContext).getUserDetails() != null) {
+            mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().userID);
+        }
+
+        Map<String, String> mParams = new HashMap<>();
+        mParams.put(NetworkUtility.TAGS.CITY_ID, cityId);
+        mParams.put(NetworkUtility.TAGS.PHONE_NUMBER, phoneNumber);
+
+        //noinspection unchecked
+        VolleyNetworkRequest mVolleyNetworkRequest = new VolleyNetworkRequest(
+                NetworkUtility.WS.VOTE_CITY_FOR_CHEEP_CARE
+                , errorListener
+                , responseListener
+                , mHeaderParams
+                , mParams
+                , null);
+
+        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest, NetworkUtility.WS.VOTE_CITY_FOR_CHEEP_CARE);
+    }
+
+    ////////////////////////// add vote of city call end      //////////////////////////
 }

@@ -24,7 +24,7 @@ import com.cheep.activity.BaseAppCompatActivity;
 import com.cheep.cheepcare.adapter.ExpandableSubscribedPackagesRecyclerAdapter;
 import com.cheep.cheepcare.adapter.ManageSubscriptionAddPackageAdapter;
 import com.cheep.cheepcare.model.AdminSettingModel;
-import com.cheep.cheepcare.model.CityDetail;
+import com.cheep.cheepcare.model.CareCityDetail;
 import com.cheep.cheepcare.model.PackageDetail;
 import com.cheep.databinding.ActivityManageSubscriptionBinding;
 import com.cheep.model.AddressModel;
@@ -57,9 +57,9 @@ public class ManageSubscriptionActivity extends BaseAppCompatActivity {
     private boolean isManageSubscription;
     private List<PackageDetail> mSubscribedPackageList;
     private List<PackageDetail> mAllPackagesList;
-    private CityDetail mCityDetail;
+    private CareCityDetail mCareCityDetail;
     private AdminSettingModel mAdminSettingModel;
-    private ArrayList<CityDetail> bannerCityDetailsList;
+    private ArrayList<CareCityDetail> bannerCareCityDetailsList;
 
 
     private ExpandableSubscribedPackagesRecyclerAdapter.ParentViewsClickListener parentClickListener = new ExpandableSubscribedPackagesRecyclerAdapter.ParentViewsClickListener() {
@@ -82,7 +82,7 @@ public class ManageSubscriptionActivity extends BaseAppCompatActivity {
         }
     };
 
-    public static void newInstance(Context context, CityDetail city, boolean isManageSubscription, String cheepcareBannerListString) {
+    public static void newInstance(Context context, CareCityDetail city, boolean isManageSubscription, String cheepcareBannerListString) {
         Intent intent = new Intent(context, ManageSubscriptionActivity.class);
         intent.putExtra(Utility.Extra.CITY_DETAIL, GsonUtility.getJsonStringFromObject(city));
         intent.putExtra(Utility.Extra.ACTIVITY_TYPE, isManageSubscription);
@@ -102,16 +102,16 @@ public class ManageSubscriptionActivity extends BaseAppCompatActivity {
     @Override
     protected void initiateUI() {
         if (getIntent().hasExtra(Utility.Extra.CITY_DETAIL)) {
-            mCityDetail = (CityDetail) GsonUtility.getObjectFromJsonString(getIntent().getExtras().getString(Utility.Extra.CITY_DETAIL), CityDetail.class);
+            mCareCityDetail = (CareCityDetail) GsonUtility.getObjectFromJsonString(getIntent().getExtras().getString(Utility.Extra.CITY_DETAIL), CareCityDetail.class);
             isManageSubscription = getIntent().getExtras().getBoolean(Utility.Extra.ACTIVITY_TYPE);
             if (isManageSubscription) {
-                bannerCityDetailsList = GsonUtility.getObjectListFromJsonString(getIntent().getExtras().getString(Utility.Extra.DATA), CityDetail[].class);
+                bannerCareCityDetailsList = GsonUtility.getObjectListFromJsonString(getIntent().getExtras().getString(Utility.Extra.DATA), CareCityDetail[].class);
             } else {
                 mBinding.tvCityName.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
             }
 
         }
-        if (mCityDetail == null)
+        if (mCareCityDetail == null)
             return;
 
         // Setting up Toolbar
@@ -144,7 +144,7 @@ public class ManageSubscriptionActivity extends BaseAppCompatActivity {
                 mBinding.ivCityImage.setLayoutParams(params);
 
                 int resId = R.drawable.img_landing_screen_mumbai;
-                switch (mCityDetail.citySlug) {
+                switch (mCareCityDetail.citySlug) {
                     case NetworkUtility.CARE_CITY_SLUG.MUMBAI:
                         resId = R.drawable.img_landing_screen_mumbai;
                         break;
@@ -179,7 +179,7 @@ public class ManageSubscriptionActivity extends BaseAppCompatActivity {
         mBinding.ivCheepCareGif.setBackgroundResource(R.drawable.cheep_care_animation);
         ((AnimationDrawable) mBinding.ivCheepCareGif.getBackground()).start();*/
 
-        mBinding.tvCityName.setText(mCityDetail.cityName);
+        mBinding.tvCityName.setText(mCareCityDetail.cityName);
 
         String name = PreferenceUtility.getInstance(this).getUserDetails().userName;
         if (!isManageSubscription) {
@@ -211,10 +211,10 @@ public class ManageSubscriptionActivity extends BaseAppCompatActivity {
 
     private void openCitySelectionDialog() {
 
-        String[] cityArray = new String[bannerCityDetailsList.size()];
-        for (int i = 0; i < bannerCityDetailsList.size(); i++) {
-            CityDetail cityDetail = bannerCityDetailsList.get(i);
-            cityArray[i] = cityDetail.cityName;
+        String[] cityArray = new String[bannerCareCityDetailsList.size()];
+        for (int i = 0; i < bannerCareCityDetailsList.size(); i++) {
+            CareCityDetail careCityDetail = bannerCareCityDetailsList.get(i);
+            cityArray[i] = careCityDetail.cityName;
         }
         Log.d(TAG, "showPictureChooserDialog() called");
         final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
@@ -223,15 +223,15 @@ public class ManageSubscriptionActivity extends BaseAppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         // The 'which' argument contains the index position
                         // of the selected item
-                        LogUtils.LOGE(TAG, "onClick alert dialog : " + bannerCityDetailsList.get(which).cityName);
-                        if (!mCityDetail.cityName.equalsIgnoreCase(bannerCityDetailsList.get(which).cityName)) {
-                            if (bannerCityDetailsList.get(which).isSubscribed.equalsIgnoreCase(Utility.BOOLEAN.YES)) {
-                                mCityDetail = bannerCityDetailsList.get(which);
+                        LogUtils.LOGE(TAG, "onClick alert dialog : " + bannerCareCityDetailsList.get(which).cityName);
+                        if (!mCareCityDetail.cityName.equalsIgnoreCase(bannerCareCityDetailsList.get(which).cityName)) {
+                            if (bannerCareCityDetailsList.get(which).isSubscribed.equalsIgnoreCase(Utility.BOOLEAN.YES)) {
+                                mCareCityDetail = bannerCareCityDetailsList.get(which);
                                 setCityBannerData();
                             } else {
-                                String cheepcareBannerListString = GsonUtility.getJsonStringFromObject(bannerCityDetailsList);
+                                String cheepcareBannerListString = GsonUtility.getJsonStringFromObject(bannerCareCityDetailsList);
                                 LandingScreenPickPackageActivity.newInstance(ManageSubscriptionActivity.this,
-                                        bannerCityDetailsList.get(which), cheepcareBannerListString);
+                                        bannerCareCityDetailsList.get(which), cheepcareBannerListString);
                                 finish();
                             }
                         }
@@ -252,7 +252,7 @@ public class ManageSubscriptionActivity extends BaseAppCompatActivity {
 
         showProgressDialog();
 
-        WebCallClass.getSubscribedCarePackage(mContext, mCityDetail.citySlug
+        WebCallClass.getSubscribedCarePackage(mContext, mCareCityDetail.citySlug
                 , mCommonResponseListener, mGetSubscribedCarePackageResponseListener);
     }
 
@@ -300,7 +300,7 @@ public class ManageSubscriptionActivity extends BaseAppCompatActivity {
                 @Override
                 public void onPackageItemClick(PackageDetail model) {
                     String packageList = GsonUtility.getJsonStringFromObject(mAllPackagesList);
-                    PackageCustomizationActivity.newInstance(mContext, mCityDetail, model, packageList, mAdminSettingModel);
+                    PackageCustomizationActivity.newInstance(mContext, mCareCityDetail, model, packageList, mAdminSettingModel);
                 }
             };
 
@@ -329,8 +329,8 @@ public class ManageSubscriptionActivity extends BaseAppCompatActivity {
     private final WebCallClass.GetSubscribedCarePackageResponseListener mGetSubscribedCarePackageResponseListener =
             new WebCallClass.GetSubscribedCarePackageResponseListener() {
                 @Override
-                public void getSubscribedCarePackageSuccessResponse(CityDetail cityDetail, List<PackageDetail> subscribedList, List<PackageDetail> allPackageList, AdminSettingModel adminSettingModel) {
-                    mCityDetail = cityDetail;
+                public void getSubscribedCarePackageSuccessResponse(CareCityDetail careCityDetail, List<PackageDetail> subscribedList, List<PackageDetail> allPackageList, AdminSettingModel adminSettingModel) {
+                    mCareCityDetail = careCityDetail;
                     mSubscribedPackageList = subscribedList;
                     /*for (PackageDetail subscribedPackageDetail : mSubscribedPackageList) {
                         for (AddressModel selectedAddressModel : subscribedPackageDetail.mSelectedAddressList) {
@@ -357,7 +357,7 @@ public class ManageSubscriptionActivity extends BaseAppCompatActivity {
 
     private void getSavedData() {
         ArrayList<PackageDetail> savedPackageList = new ArrayList<>();
-        String cartDetail = PreferenceUtility.getInstance(this).getCityCartDetail(mCityDetail.citySlug);
+        String cartDetail = PreferenceUtility.getInstance(this).getCityCartDetail(mCareCityDetail.citySlug);
         if (!TextUtils.isEmpty(cartDetail)) {
             ArrayList<PackageDetail> list = GsonUtility.getObjectListFromJsonString(cartDetail, PackageDetail[].class);
             savedPackageList.clear();
@@ -393,7 +393,7 @@ public class ManageSubscriptionActivity extends BaseAppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (mCityDetail != null && mAllPackagesList != null) {
+        if (mCareCityDetail != null && mAllPackagesList != null) {
             LogUtils.LOGE(TAG, "onResume:cart detail found");
             getSavedData();
         } else {

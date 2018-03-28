@@ -13,7 +13,7 @@ public class CityLandingPageModel {
 
     @SerializedName("cityDetail")
     @Expose
-    public CityDetail cityDetail;
+    public CareCityDetail careCityDetail;
     @SerializedName("admin_setting")
     @Expose
     public AdminSettingModel adminSetting;

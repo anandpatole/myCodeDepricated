@@ -716,6 +716,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_book_task">Book Task</string>
     <string name="label_vote">Vote</string>
     <string name="hint_enter_your_mobile_number_to_vote">Enter your mobile number to vote</string>
+    <string name="hint_select_city">Select your city name</string>
     <string name="hint_enter_name_of_person">Enter the name of the person here</string>
 
     <string name="label_plus_1">+1</string>

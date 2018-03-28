@@ -154,6 +154,8 @@ public class NetworkUtility {
         public static final String IS_CITY_AVAILABLE_FOR_CARE = BASE_URL + "customers/care/isCityAvailableForCare";
         public static final String GET_EXTRA_CHARGE_AFTER_EXCEED_LIMIT = BASE_URL + "customers/care/getExtraChargeAfterExceedLimit";
         public static final String GET_TASK_FOR_PENDING_REVIEW = BASE_URL + "customers/Tasks/getTaskForPendingReview";
+        public static final String SEARCH_CITY= BASE_URL + "customers/profile/searchCity";
+        public static final String VOTE_CITY_FOR_CHEEP_CARE= BASE_URL + "customers/care/voteCityForCheepCare";
 
 
         /**
@@ -519,6 +521,7 @@ public class NetworkUtility {
         String PAYMENT_LOG = "payment_log";
         String IS_FOR_ADDITIONAL_QUOTE = "isForAdditionalQuote";
         String RESCHEDULE_DATETIME = "reschedule_datetime";
+        String SEARCH_TEXT= "search_text";
 
 
         interface STATUSCODETYPE {

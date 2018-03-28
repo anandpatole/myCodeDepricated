@@ -60,21 +60,59 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/scale_12dp"
+                    android:background="@null"
                     android:gravity="left"
                     android:hint="@string/hint_enter_your_mobile_number_to_vote"
-                    android:padding="@dimen/scale_12dp"
+                    android:inputType="number"
+                    android:maxLength="10"
+                    android:paddingBottom="@dimen/scale_12dp"
+                    android:paddingLeft="@dimen/scale_15dp"
+                    android:paddingRight="@dimen/scale_15dp"
+                    android:paddingTop="@dimen/scale_12dp"
                     android:singleLine="true"
                     android:textColor="@color/grey_varient_8"
                     android:textColorHint="@color/grey_varient_17"
                     android:textSize="@dimen/text_size_12sp"
-                    android:visibility="gone"/>
+                    android:visibility="visible"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/scale_1dp"
+                    android:layout_marginLeft="@dimen/scale_12dp"
+                    android:layout_marginRight="@dimen/scale_12dp"
+                    android:background="@color/splash_gradient_end"/>
+
+                <com.cheep.custom_view.CFTextViewRegular
+                    android:id="@+id/edt_city"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:drawableRight="@drawable/ic_drop_down_arrow"
+                    android:gravity="left"
+                    android:hint="@string/hint_select_city"
+                    android:paddingBottom="@dimen/scale_12dp"
+                    android:paddingLeft="@dimen/scale_15dp"
+                    android:paddingRight="@dimen/scale_15dp"
+                    android:paddingTop="@dimen/scale_12dp"
+                    android:singleLine="true"
+                    android:textColor="@color/grey_varient_8"
+                    android:textColorHint="@color/grey_varient_17"
+                    android:textSize="@dimen/text_size_12sp"
+                    android:visibility="visible"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/scale_1dp"
+                    android:layout_marginLeft="@dimen/scale_12dp"
+                    android:layout_marginRight="@dimen/scale_12dp"
+                    android:background="@color/splash_gradient_end"/>
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/scale_1dp"
                     android:layout_marginLeft="@dimen/scale_8dp"
                     android:layout_marginRight="@dimen/scale_8dp"
-                    android:layout_marginTop="@dimen/scale_12dp"
+                    android:layout_marginTop="@dimen/scale_15dp"
                     android:background="@color/grey_dark_color_8"/>
 
                 <LinearLayout

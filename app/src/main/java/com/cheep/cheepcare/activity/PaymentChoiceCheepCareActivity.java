@@ -22,8 +22,8 @@ import com.cheep.activity.SendOtpActivity;
 import com.cheep.activity.WithdrawMoneyActivity;
 import com.cheep.cheepcare.dialogs.PaymentFailedDialog;
 import com.cheep.cheepcare.dialogs.TaskConfirmedCCInstaBookDialog;
+import com.cheep.cheepcare.model.CareCityDetail;
 import com.cheep.cheepcare.model.CheepCarePaymentDataModel;
-import com.cheep.cheepcare.model.CityDetail;
 import com.cheep.cheepcare.model.SubscribedTaskDetailModel;
 import com.cheep.databinding.ActivityPaymentChoiceCheepCareBinding;
 import com.cheep.dialogs.AcknowledgementInteractionListener;
@@ -74,7 +74,7 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
     private String paymentMethod;
     private double paytmPayableAmount;
     private double payableAmount;
-    private CityDetail cityDetail;
+    private CareCityDetail careCityDetail;
     private String paymentFor;
 
     public static final String PAYMENT_FOR_SUBSCRIPTION = "payment_for_subscription";
@@ -86,11 +86,11 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
          payment data model - payment info
          city detail - selected city data for which user is purchasing subscription
      */
-    public static void newInstance(Context context, String cartDetails, CheepCarePaymentDataModel paymentDataModel, CityDetail mCityDetail) {
+    public static void newInstance(Context context, String cartDetails, CheepCarePaymentDataModel paymentDataModel, CareCityDetail mCareCityDetail) {
         Intent intent = new Intent(context, PaymentChoiceCheepCareActivity.class);
         intent.putExtra(Utility.Extra.DATA, cartDetails);
         intent.putExtra(Utility.Extra.DATA_2, GsonUtility.getJsonStringFromObject(paymentDataModel));
-        intent.putExtra(Utility.Extra.DATA_3, GsonUtility.getJsonStringFromObject(mCityDetail));
+        intent.putExtra(Utility.Extra.DATA_3, GsonUtility.getJsonStringFromObject(mCareCityDetail));
         intent.putExtra(Utility.Extra.PAYMENT_VIEW, PAYMENT_FOR_SUBSCRIPTION);
         context.startActivity(intent);
     }
@@ -127,7 +127,7 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
             cartDetail = getIntent().getStringExtra(Utility.Extra.DATA);
             paymentDataModel = (CheepCarePaymentDataModel) GsonUtility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA_2),
                     CheepCarePaymentDataModel.class);
-            cityDetail = (CityDetail) GsonUtility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA_3), CityDetail.class);
+            careCityDetail = (CareCityDetail) GsonUtility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA_3), CareCityDetail.class);
             payableAmount = paymentDataModel.payableAmount;
             LogUtils.LOGE(TAG, "initiateUI: paymentDataModel \n============\n" + paymentDataModel);
         } else {
@@ -393,7 +393,7 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
         mParams.put(NetworkUtility.TAGS.PAYABLE_AMOUNT, String.valueOf(paymentDataModel.payableAmount));
         mParams.put(NetworkUtility.TAGS.TAX_AMOUNT, String.valueOf(paymentDataModel.taxAmount));
         mParams.put(NetworkUtility.TAGS.IS_ANNUALLY, String.valueOf(paymentDataModel.isAnnually));
-        mParams.put(NetworkUtility.TAGS.CARE_CITY_ID, String.valueOf(cityDetail.id));
+        mParams.put(NetworkUtility.TAGS.CARE_CITY_ID, String.valueOf(careCityDetail.id));
         mParams.put(NetworkUtility.TAGS.PAYMENT_METHOD, paymentMethod);
         mParams.put(NetworkUtility.TAGS.PAYMENT_LOG, paymentLog);
         mParams.put(NetworkUtility.TAGS.DSA_CODE, paymentDataModel.dsaCode);
@@ -662,10 +662,10 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
                 hideProgressDialog();
                 switch (statusCode) {
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
-                        ManageSubscriptionActivity.newInstance(PaymentChoiceCheepCareActivity.this, cityDetail
+                        ManageSubscriptionActivity.newInstance(PaymentChoiceCheepCareActivity.this, careCityDetail
                                 , false, Utility.EMPTY_STRING);
                         MessageEvent messageEvent = new MessageEvent();
-                        messageEvent.id = cityDetail.id;
+                        messageEvent.id = careCityDetail.id;
                         messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.PACKAGE_SUBSCRIBED_SUCCESSFULLY;
 
                         EventBus.getDefault().post(messageEvent);
