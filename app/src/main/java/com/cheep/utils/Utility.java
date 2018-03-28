@@ -855,10 +855,10 @@ public class Utility {
     }
 
     public interface NOTIFICATION_TYPE {
-        String QUOTE_REQUEST = "QUOTE_REQUEST";
+        String QUOTE_REQUEST = "QUOTE_REQUEST";// task quote activity
         String TASK_STATUS_CHANGE = "TASK_STATUS_CHANGE";
         String ADDITIONAL_PAYMENT_REQUESTED = "additional_payment_requested";
-        String REQUEST_FOR_DETAIL = "REQUEST_FOR_DETAIL";
+        String REQUEST_FOR_DETAIL = "REQUEST_FOR_DETAIL"; // task detail
         String CHAT_MESSAGE = "FIREBASE";
         String TASK_CREATE = "TASK_CREATE";
         String TASK_START_ALERT = "TASK_START_ALERT";

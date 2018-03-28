@@ -118,7 +118,7 @@
                     android:paddingBottom="@dimen/scale_5dp"
                     android:paddingLeft="@dimen/scale_5dp"
                     android:paddingTop="@dimen/scale_5dp"
-                    android:text="@string/label_featured"
+                    android:text="@string/label_subscribed"
                     android:textColor="@color/selector_text_color_home_filter"
                     android:textSize="@dimen/text_size_14sp"/>
             </LinearLayout>

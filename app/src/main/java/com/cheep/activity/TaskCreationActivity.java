@@ -74,7 +74,7 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
     private ActivityTaskCreateBinding mActivityTaskCreateBinding;
     public JobCategoryModel mJobCategoryModel;
     TaskCreationPagerAdapter mTaskCreationPagerAdapter;
-    private SubServiceDetailModel mSelectedSubServiceDetailModel;
+//    private SubServiceDetailModel mSelectedSubServiceDetailModel;
     Map<String, Object> mTaskCreationParams;
     CustomLoadingDialog mDialog;
     private boolean isInstaBooking = false;
@@ -460,7 +460,7 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
     public void onInstaBookClickedNew() {
         TaskDetailModel taskDetailModel = new TaskDetailModel();
 //                    taskDetailModel.categoryName = mJobCategoryModel.catName;
-        taskDetailModel.subCategoryName = mSelectedSubServiceDetailModel.name;
+        taskDetailModel.subCategoryName = getSubCatList().get(0).name;
         taskDetailModel.taskAddress = mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.address;
         taskDetailModel.taskAddressId = mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.address_id;
 //                    taskDetailModel.categoryId = mJobCategoryModel.catId;
@@ -468,7 +468,7 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
 //                    taskDetailModel.catImage = mJobCategoryModel.catImage;
         taskDetailModel.categoryModel = mJobCategoryModel;
         taskDetailModel.taskStartdate = String.valueOf(mTaskCreationPagerAdapter.mEnterTaskDetailFragment.superCalendar.getCalendar().getTimeInMillis());
-        taskDetailModel.subCategoryID = String.valueOf(mSelectedSubServiceDetailModel.sub_cat_id);
+        taskDetailModel.subCategoryID = String.valueOf(getSubCatList().get(0).sub_cat_id);
 //                    model.taskImage = mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mCurrentPhotoPath;
         taskDetailModel.mMediaModelList = mTaskCreationPagerAdapter.mEnterTaskDetailFragment.getMediaList();
         taskDetailModel.subCatList = mTaskCreationPagerAdapter.mSelectSubCategoryFragment.getSubCatList();
@@ -477,6 +477,7 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
         BookingConfirmationInstaActivity.newInstance(TaskCreationActivity.this, taskDetailModel, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel);
     }
 
+/*
     public void onInstaBookClicked() {
 
 
@@ -519,13 +520,15 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
             mParams.put(NetworkUtility.TAGS.ADDRESS_ID, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.address_id);
         } else {
             // In case its nagative then provide other address information
-            /*
+            */
+/*
              public String address_initials;
              public String address;
              public String category; //comes from NetworkUtility.TAGS.ADDRESS_TYPE.
              public String lat;
              public String lng;
-             */
+             *//*
+
             mParams = NetworkUtility.addGuestAddressParams(mParams, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel);
 
         }
@@ -538,13 +541,15 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
             mParams.put(NetworkUtility.TAGS.ADDRESS_ID, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.address_id);
         } else {
             // In case its nagative then provide other address information
-            /*
+            */
+/*
              public String address_initials;
              public String address;
              public String category; //comes from NetworkUtility.TAGS.ADDRESS_TYPE.
              public String lat;
              public String lng;
-             */
+             *//*
+
             mTaskCreationParams = NetworkUtility.addGuestAddressParams(mTaskCreationParams, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel);
         }
         mTaskCreationParams.put(NetworkUtility.TAGS.SUBCATEGORY_ID, String.valueOf(mSelectedSubServiceDetailModel.sub_cat_id));
@@ -557,6 +562,7 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
                 , null);
         Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest);
     }
+*/
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////Post Task [Start] /////////////////////////////////////////
@@ -653,7 +659,8 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
         }
 //        mTaskCreationParams.put(NetworkUtility.TAGS.CITY_DETAIL, userDetails.CityID);
         mTaskCreationParams.put(NetworkUtility.TAGS.CAT_ID, mJobCategoryModel.catId);
-        mTaskCreationParams.put(NetworkUtility.TAGS.SUBCATEGORY_ID, String.valueOf(mSelectedSubServiceDetailModel.sub_cat_id));
+        mTaskCreationParams.put(NetworkUtility.TAGS.TASK_SUB_CATEGORIES, selectedServices);
+//        mTaskCreationParams.put(NetworkUtility.TAGS.SUBCATEGORY_ID, StringvalueOf(mSelectedSubServiceDetailModel.sub_cat_id));
         mTaskCreationParams.put(NetworkUtility.TAGS.START_DATETIME, String.valueOf(mTaskCreationPagerAdapter.mEnterTaskDetailFragment.superCalendar.getTimeInMillis()));
 
         // Add Params
@@ -730,69 +737,70 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
     };
 
 
-    Response.Listener mCallGetProInstaBookWSResponseListener = new Response.Listener() {
-        @Override
-        public void onResponse(Object response) {
-
-            if (!isFinishing() && mDialog != null) {
-                mDialog.dismiss();
-            }
-            String strResponse = (String) response;
-            try {
-                JSONObject jsonObject = new JSONObject(strResponse);
-                Log.i(TAG, "onResponse: " + jsonObject.toString());
-                int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
-                switch (statusCode) {
-                    case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
-
-                        /*
-                          Below was older approach when app needs to update the same task page.
-                         */
-//                        TaskDetailModel taskDetailModel = (TaskDetailModel) GsonUtility.getObjectFromJsonString(jsonObject.optString(NetworkUtility.TAGS.DATA), TaskDetailModel.class);
-//                        getIntent().putExtra(Utility.Extra.DATA, jsonObject.optString(NetworkUtility.TAGS.DATA));
-//                        getIntent().putExtra(Utility.Extra.IS_FIRST_TIME, true);
-//                        getIntent().setAction(Utility.ACTION_HIRE_PROVIDER);
-//                        initiateUI();
-//                        setListeners();
-
-                        /*
-                          Now according to the new flow, once task created
-                          app will be redirected to MyTask Detail screen.
-                         */
-                        final InstaBookingProDetail taskDetailModel = (InstaBookingProDetail) GsonUtility.getObjectFromJsonString(jsonObject.optString(NetworkUtility.TAGS.DATA), InstaBookingProDetail.class);
-                        if (taskDetailModel != null && taskDetailModel.spId != null)
-                            onSuccessOfGetProForInstaBooking(taskDetailModel);
-                        else
-                            Utility.showToast(TaskCreationActivity.this, getString(R.string.alert_no_pro_found));
-                        break;
-                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
-                        // Show Toast
-                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityTaskCreateBinding.getRoot());
-                        break;
-                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
-                        String error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
-                        // Show message
-                        Utility.showSnackBar(error_message, mActivityTaskCreateBinding.getRoot());
-                        break;
-                    case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
-                    case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
-                        //Logout and finish the current activity
-                        Utility.logout(mContext, true, statusCode);
-                        finish();
-                        break;
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-                mCallGetProInstaBookErrorListener.onErrorResponse(new VolleyError(e.getMessage()));
-            }
-
-        }
-    };
+//    Response.Listener mCallGetProInstaBookWSResponseListener = new Response.Listener() {
+//        @Override
+//        public void onResponse(Object response) {
+//
+//            if (!isFinishing() && mDialog != null) {
+//                mDialog.dismiss();
+//            }
+//            String strResponse = (String) response;
+//            try {
+//                JSONObject jsonObject = new JSONObject(strResponse);
+//                Log.i(TAG, "onResponse: " + jsonObject.toString());
+//                int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
+//                switch (statusCode) {
+//                    case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
+//
+//                        /*
+//                          Below was older approach when app needs to update the same task page.
+//                         */
+////                        TaskDetailModel taskDetailModel = (TaskDetailModel) GsonUtility.getObjectFromJsonString(jsonObject.optString(NetworkUtility.TAGS.DATA), TaskDetailModel.class);
+////                        getIntent().putExtra(Utility.Extra.DATA, jsonObject.optString(NetworkUtility.TAGS.DATA));
+////                        getIntent().putExtra(Utility.Extra.IS_FIRST_TIME, true);
+////                        getIntent().setAction(Utility.ACTION_HIRE_PROVIDER);
+////                        initiateUI();
+////                        setListeners();
+//
+//                        /*
+//                          Now according to the new flow, once task created
+//                          app will be redirected to MyTask Detail screen.
+//                         */
+//                        final InstaBookingProDetail taskDetailModel = (InstaBookingProDetail) GsonUtility.getObjectFromJsonString(jsonObject.optString(NetworkUtility.TAGS.DATA), InstaBookingProDetail.class);
+//                        if (taskDetailModel != null && taskDetailModel.spId != null)
+//                            onSuccessOfGetProForInstaBooking(taskDetailModel);
+//                        else
+//                            Utility.showToast(TaskCreationActivity.this, getString(R.string.alert_no_pro_found));
+//                        break;
+//                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
+//                        // Show Toast
+//                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityTaskCreateBinding.getRoot());
+//                        break;
+//                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
+//                        String error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
+//                        // Show message
+//                        Utility.showSnackBar(error_message, mActivityTaskCreateBinding.getRoot());
+//                        break;
+//                    case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
+//                    case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
+//                        //Logout and finish the current activity
+//                        Utility.logout(mContext, true, statusCode);
+//                        finish();
+//                        break;
+//                }
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//                mCallGetProInstaBookErrorListener.onErrorResponse(new VolleyError(e.getMessage()));
+//            }
+//
+//        }
+//    };
 
 
     /**
      * This method would going to call when task completed successfully
      */
+/*
     private void onSuccessOfGetProForInstaBooking(final InstaBookingProDetail instaBookingProDetail) {
         if (instaBookingProDetail != null) {
 
@@ -864,6 +872,7 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
         } else {
         }
     }
+*/
 
 
     /**

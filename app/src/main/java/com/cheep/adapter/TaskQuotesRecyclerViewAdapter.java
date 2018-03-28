@@ -357,7 +357,7 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
             holder.tvDistance.setVisibility(View.GONE);
         }
 
-        int badgeResID = Utility.getProLevelBadge(mTaskDetailModel.selectedProvider.pro_level);
+        int badgeResID = Utility.getProLevelBadge(provider.pro_level);
         if (badgeResID != -1)
             holder.ivBadge.setImageResource(badgeResID);
 
