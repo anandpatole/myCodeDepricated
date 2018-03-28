@@ -425,7 +425,7 @@ public class PackageSummaryFragment extends BaseFragment {
         Map<String, Object> mParams = new HashMap<>();
 
 
-        mParams.put(NetworkUtility.TAGS.CARE_CITY_ID, mPackageCustomizationActivity.mCityDetail.id);
+        mParams.put(NetworkUtility.TAGS.CARE_CITY_ID, mPackageCustomizationActivity.mCareCityDetail.id);
         mParams.put(NetworkUtility.TAGS.CHEEP_CARE_CODE, cheepCode);
         mParams.put(NetworkUtility.TAGS.CARE_PACKAGE_ID, mPackageAdapter.getList().get(0).id);
         //Url is bas
@@ -514,7 +514,7 @@ public class PackageSummaryFragment extends BaseFragment {
         CheepCarePaymentDataModel paymentDataModel = new CheepCarePaymentDataModel();
         paymentDataModel.bundlediscountPercent = bundledDiscountRate;
         paymentDataModel.bundlediscountPrice = bundledDiscountPrice;
-//        paymentDataModel.careCityId = mPackageCustomizationActivity.mCityDetail.id;
+//        paymentDataModel.careCityId = mPackageCustomizationActivity.mCareCityDetail.id;
         paymentDataModel.dsaCode = cheepMateCode;
         paymentDataModel.isAnnually = isYearly ? Utility.BOOLEAN.YES : Utility.BOOLEAN.NO;
         paymentDataModel.payableAmount = (double) Math.round(payableAmount * 100) / 100;

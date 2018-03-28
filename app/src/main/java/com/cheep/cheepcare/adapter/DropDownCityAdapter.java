@@ -7,9 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.cheep.R;
-import com.cheep.databinding.RowAddressDropDownBinding;
-import com.cheep.model.AddressModel;
-import com.cheep.utils.Utility;
+import com.cheep.databinding.RowCityNameBinding;
+import com.cheep.model.CityModel;
 
 import java.util.ArrayList;
 
@@ -18,7 +17,7 @@ import java.util.ArrayList;
  * This adapter is for custom drop down menu strategic partner phase 2
  */
 
-public class DropDownAddressAdapter extends RecyclerView.Adapter<DropDownAddressAdapter.MyViewHolder> {
+public class DropDownCityAdapter extends RecyclerView.Adapter<DropDownCityAdapter.MyViewHolder> {
 
     /**
      * Listener for click item of menu
@@ -29,34 +28,30 @@ public class DropDownAddressAdapter extends RecyclerView.Adapter<DropDownAddress
         void dismissDialog();
     }
 
-    private ArrayList<AddressModel> mList;
+    private ArrayList<CityModel> mList;
     private ClickItem mListener;
 
     public void setListener(ClickItem listener) {
         mListener = listener;
     }
 
-    DropDownAddressAdapter(ArrayList<AddressModel> list) {
+    public DropDownCityAdapter(ArrayList<CityModel> list) {
         mList = list;
     }
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-        RowAddressDropDownBinding binding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), R.layout.row_address_drop_down, parent, false);
+        RowCityNameBinding binding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), R.layout.row_city_name, parent, false);
         return new MyViewHolder(binding);
 
     }
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-        AddressModel model = mList.get(position);
-        holder.binding.tvAddressNickname.setText(model.getNicknameString(holder.binding.ivAddressIcon.getContext()));
-        holder.binding.ivAddressIcon.setImageResource(Utility.getAddressCategoryBlueIcon(model.category));
-        holder.binding.llAddressContainer.setVisibility(View.VISIBLE);
-        holder.binding.ivUpArrow.setVisibility(position == 0 ? View.VISIBLE : View.GONE);
+        CityModel model = mList.get(position);
 
-        holder.binding.tvAddress.setText(model.getAddressWithInitials());
+        holder.binding.tvCityName.setText(model.city);
 
     }
 
@@ -67,16 +62,16 @@ public class DropDownAddressAdapter extends RecyclerView.Adapter<DropDownAddress
 
 
     class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        RowAddressDropDownBinding binding;
+        RowCityNameBinding binding;
 
-        MyViewHolder(RowAddressDropDownBinding itemView) {
+        MyViewHolder(RowCityNameBinding itemView) {
             super(itemView.getRoot());
             binding = itemView;
             itemView.getRoot().setOnClickListener(this);
-            binding.ivUpArrow.setOnClickListener(new View.OnClickListener() {
+            binding.tvCityName.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mListener.dismissDialog();
+                    mListener.clickItem(getAdapterPosition());
 
                 }
             });
