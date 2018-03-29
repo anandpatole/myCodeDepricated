@@ -397,8 +397,8 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
 
     private void setTaskWhere() {
         // Setup WHERE section
-        mBinding.textTaskWhere.setText(mTaskDetailModel.taskAddress);
-        mBinding.textTaskWhere.setOnClickListener(mOnClickListener);
+        mBinding.textTaskWhereAddress.setText(mTaskDetailModel.taskAddress);
+        mBinding.textTaskWhereAddress.setOnClickListener(mOnClickListener);
     }
 
     private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
@@ -408,7 +408,7 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
                 // Onclick of when and Where section
                 case R.id.ln_where:
                 case R.id.text_task_where:
-                    showFullDesc(getString(R.string.label_address), mBinding.textTaskWhere.getText().toString());
+                    showFullDesc(getString(R.string.label_address), mBinding.textTaskWhereAddress.getText().toString());
                     break;
                 case R.id.ln_task_desc:
                     showFullDesc(getString(R.string.label_desc), mBinding.textTaskDesc.getText().toString());
@@ -856,9 +856,39 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
     @Override
     protected void setListeners() {
         mBinding.lnTaskDesc.setOnClickListener(mOnClickListener);
-        mBinding.textTaskWhere.setOnClickListener(mOnClickListener);
+        mBinding.textTaskWhereAddress.setOnClickListener(mOnClickListener);
         mBinding.lnWhere.setOnClickListener(mOnClickListener);
         mBinding.tvConfirmAvailability.setOnClickListener(mOnClickListener);
+
+        mBinding.imgMoreLessTask.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mBinding.lnTaskDesc.getVisibility() == View.VISIBLE){
+                    mBinding.lnTaskDesc.setVisibility(View.GONE);
+                    mBinding.textViewMoreLessTask.setText(getString(R.string.view_more));
+                    mBinding.imgMoreLessTask.setSelected(true);
+                } else {
+                    mBinding.lnTaskDesc.setVisibility(View.VISIBLE);
+                    mBinding.textViewMoreLessTask.setText(getString(R.string.view_less));
+                    mBinding.imgMoreLessTask.setSelected(false);
+                }
+            }
+        });
+
+        mBinding.imgMoreLessWhere.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mBinding.textTaskWhereAddress.getVisibility() == View.VISIBLE){
+                    mBinding.textTaskWhereAddress.setVisibility(View.GONE);
+                    mBinding.textViewMoreLessWhere.setText(getString(R.string.view_more));
+                    mBinding.imgMoreLessWhere.setSelected(true);
+                } else {
+                    mBinding.textTaskWhereAddress.setVisibility(View.VISIBLE);
+                    mBinding.textViewMoreLessWhere.setText(getString(R.string.view_less));
+                    mBinding.imgMoreLessWhere.setSelected(false);
+                }
+            }
+        });
 
         mBinding.frameSelectPicture.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -495,15 +495,69 @@
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
+                        <!--<LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/scale_16dp"
+                            android:layout_alignParentLeft="true"
+                            android:layout_alignParentStart="true"
+                            android:descendantFocusability="blocksDescendants">-->
+
+                            <com.cheep.custom_view.CFTextViewSemiBold
+                                android:id="@+id/text_task_details"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:paddingLeft="@dimen/scale_15dp"
+                                android:layout_marginTop="@dimen/scale_16dp"
+                                android:layout_alignParentLeft="true"
+                                android:layout_alignParentStart="true"
+                                android:text="@string/tasks_details"
+                                android:textColor="@color/splash_gradient_end"
+                                android:textSize="@dimen/text_size_18sp" />
+
+                        <!--</LinearLayout>-->
+
+                        <!--<LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/scale_16dp"
+                            android:layout_alignParentEnd="true"
+                            android:layout_alignParentRight="true"
+                            android:descendantFocusability="blocksDescendants">-->
+
+                            <ImageView
+                                android:id="@+id/img_more_less_task"
+                                android:layout_width="@dimen/scale_20dp"
+                                android:layout_height="@dimen/scale_20dp"
+                                android:layout_marginTop="@dimen/scale_20dp"
+                                android:layout_toLeftOf="@id/text_view_more_less_task"
+                                android:src="@drawable/selector_task_summary_view_more_less"/>
+
+                            <com.cheep.custom_view.CFTextViewRegular
+                                android:id="@+id/text_view_more_less_task"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:paddingRight="@dimen/scale_15dp"
+                                android:paddingLeft="@dimen/scale_8dp"
+                                android:gravity="center"
+                                android:layout_marginTop="@dimen/scale_20dp"
+                                android:layout_alignParentEnd="true"
+                                android:layout_alignParentRight="true"
+                                android:text="@string/view_more"
+                                android:textColor="@color/splash_gradient_end"
+                                android:textSize="@dimen/text_size_16sp" />
+
+                        <!--</LinearLayout>-->
 
                         <LinearLayout
                             android:id="@+id/ln_task_desc"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/scale_16dp"
+                            android:layout_marginTop="@dimen/scale_64dp"
                             android:layout_toLeftOf="@+id/frame_select_picture"
                             android:layout_toStartOf="@+id/frame_select_picture"
                             android:descendantFocusability="blocksDescendants"
+                            android:visibility="gone"
                             android:orientation="vertical">
 
                             <android.support.v7.widget.RecyclerView
@@ -535,7 +589,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentRight="true"
-                            android:layout_marginTop="@dimen/scale_10dp">
+                            android:visibility="gone"
+                            android:layout_marginTop="@dimen/scale_64dp">
 
 
                             <ImageView
@@ -709,9 +764,12 @@
                         android:background="@color/grey_varient_11" />
 
                     <!--Fourth Section(Where)-->
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
                     <LinearLayout
                         android:id="@+id/ln_where"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:orientation="horizontal"
@@ -737,21 +795,79 @@
                             android:textSize="@dimen/text_size_18sp" />
                     </LinearLayout>
 
+                    <ImageView
+                        android:id="@+id/img_more_less_where"
+                        android:layout_width="@dimen/scale_20dp"
+                        android:layout_height="@dimen/scale_20dp"
+                        android:layout_marginTop="@dimen/scale_20dp"
+                        android:layout_toLeftOf="@id/text_view_more_less_where"
+                        android:src="@drawable/selector_task_summary_view_more_less"/>
+
                     <com.cheep.custom_view.CFTextViewRegular
-                        android:id="@+id/text_task_where"
-                        android:layout_width="match_parent"
+                        android:id="@+id/text_view_more_less_where"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_below="@+id/ln_sub_category"
+                        android:paddingRight="@dimen/scale_15dp"
+                        android:paddingLeft="@dimen/scale_8dp"
+                        android:gravity="center"
+                        android:layout_marginTop="@dimen/scale_20dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentRight="true"
+                        android:text="@string/view_more"
+                        android:textColor="@color/splash_gradient_end"
+                        android:textSize="@dimen/text_size_16sp" />
+
+                    </RelativeLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                    <com.cheep.custom_view.CFTextViewSemiBold
+                        android:id="@+id/text_task_where_1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@color/transparent"
+                        android:gravity="start"
+                        android:paddingLeft="@dimen/scale_16dp"
+                        android:paddingRight="@dimen/scale_4dp"
+                        android:paddingTop="@dimen/scale_8dp"
+                        android:textColor="@color/splash_gradient_end"
+                        android:textColorHint="@color/grey_dark_color_2"
+                        android:textSize="@dimen/text_size_12sp"
+                        tools:text="Home 1"
+                        android:visibility="visible" />
+
+                        <com.cheep.custom_view.CFTextViewSemiBold
+                            android:id="@+id/text_task_where_2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@color/transparent"
+                            android:gravity="start"
+                            android:paddingTop="@dimen/scale_8dp"
+                            android:textColor="@color/grey_varient_23"
+                            android:textColorHint="@color/grey_dark_color_2"
+                            android:textSize="@dimen/text_size_12sp"
+                            tools:text="• Subscribed under Cheep Care"
+                            android:visibility="visible" />
+
+                    </LinearLayout>
+
+                    <com.cheep.custom_view.CFTextViewRegular
+                        android:id="@+id/text_task_where_address"
+                        android:layout_width="@dimen/scale_268dp"
+                        android:layout_height="wrap_content"
                         android:background="@color/transparent"
                         android:gravity="start"
                         android:paddingBottom="@dimen/scale_24dp"
                         android:paddingLeft="@dimen/scale_16dp"
                         android:paddingRight="@dimen/scale_16dp"
-                        android:paddingTop="@dimen/scale_8dp"
+                        android:paddingTop="@dimen/scale_2dp"
                         android:textColor="@color/black"
                         android:textColorHint="@color/grey_dark_color_2"
                         android:textSize="@dimen/text_size_12sp"
-                        android:visibility="visible" />
+                        android:visibility="gone"
+                        tools:text="1202/1204 UniWorls Towers, Next to Palladium Mall, Mahatma Gandhi Phule Road, Elphinstone Road (West) Bombay" />
 
                     <!--Divider(4)-->
                     <View
@@ -759,6 +875,7 @@
                         android:layout_height="@dimen/scale_0_5dp"
                         android:layout_marginLeft="@dimen/scale_10dp"
                         android:layout_marginRight="@dimen/scale_10dp"
+                        android:layout_marginTop="@dimen/scale_24dp"
                         android:background="@color/grey_varient_11" />
 
                     <!--View Payment Summary Textview-->
