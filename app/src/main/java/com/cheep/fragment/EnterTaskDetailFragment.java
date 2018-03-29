@@ -179,7 +179,7 @@ public class EnterTaskDetailFragment extends BaseFragment implements RequestPerm
         }
 
         // Task Description
-        isTaskDescriptionVerified = mTaskCreationActivity.getSubCatList().get(0).sub_cat_id.equalsIgnoreCase("-1") ||
+        isTaskDescriptionVerified = !mTaskCreationActivity.getSubCatList().get(0).sub_cat_id.equalsIgnoreCase("-1") ||
                 !TextUtils.isEmpty(mFragmentEnterTaskDetailBinding.editTaskDesc.getText().toString().trim());
 
         // When Verification
@@ -203,7 +203,7 @@ public class EnterTaskDetailFragment extends BaseFragment implements RequestPerm
         }
 
         // let activity know that post task button needs to be shown now.
-        mTaskCreationActivity.showPostTaskButton(true, isTotalVerified);
+        mTaskCreationActivity.showPostTaskButton(false, isTotalVerified);
     }
 
     private void updateTaskDetails() {

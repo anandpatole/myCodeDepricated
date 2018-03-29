@@ -28,27 +28,24 @@ import com.cheep.databinding.ActivityTaskCreateBinding;
 import com.cheep.dialogs.AcknowledgementDialogWithoutProfilePic;
 import com.cheep.dialogs.AcknowledgementInteractionListener;
 import com.cheep.dialogs.CustomLoadingDialog;
-import com.cheep.dialogs.InstaBookProDialog;
 import com.cheep.firebase.FirebaseHelper;
 import com.cheep.firebase.FirebaseUtils;
 import com.cheep.firebase.model.ChatTaskModel;
 import com.cheep.fragment.EnterTaskDetailFragment;
 import com.cheep.fragment.SelectSubCategoryFragment;
-import com.cheep.model.InstaBookingProDetail;
+import com.cheep.model.AddressModel;
 import com.cheep.model.JobCategoryModel;
+import com.cheep.model.MediaModel;
 import com.cheep.model.MessageEvent;
-import com.cheep.model.ProviderModel;
 import com.cheep.model.SubServiceDetailModel;
 import com.cheep.model.TaskDetailModel;
 import com.cheep.model.UserDetails;
 import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
-import com.cheep.model.MediaModel;
 import com.cheep.utils.GlideUtility;
 import com.cheep.utils.GsonUtility;
 import com.cheep.utils.PreferenceUtility;
-import com.cheep.utils.SuperCalendar;
 import com.cheep.utils.Utility;
 import com.google.android.gms.common.api.Status;
 import com.google.gson.Gson;
@@ -59,10 +56,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -372,7 +366,7 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
 
     public void showPostTaskButton(boolean needsToShow, boolean isEnabled) {
 
-        /*if (needsToShow) {
+       if (needsToShow) {
             mActivityTaskCreateBinding.textPostTask.setVisibility(View.GONE);
         } else {
             mActivityTaskCreateBinding.textPostTask.setVisibility(View.GONE);
@@ -385,7 +379,7 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
         } else {
             mActivityTaskCreateBinding.textPostTask.setSelected(false);
             mActivityTaskCreateBinding.textPostTask.setBackgroundColor(ContextCompat.getColor(mContext, R.color.grey_varient_12));
-        }*/
+        }
     }
 
     public int getPostButtonHeight() {
@@ -461,8 +455,11 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
         TaskDetailModel taskDetailModel = new TaskDetailModel();
 //                    taskDetailModel.categoryName = mJobCategoryModel.catName;
         taskDetailModel.subCategoryName = getSubCatList().get(0).name;
-        taskDetailModel.taskAddress = mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.address;
-        taskDetailModel.taskAddressId = mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.address_id;
+        if (taskDetailModel.taskAddress==null)
+            taskDetailModel.taskAddress = new AddressModel();
+        taskDetailModel.taskAddress.address = mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.address;
+        taskDetailModel.taskAddress.address_id = mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.address_id;
+//        taskDetailModel.taskAddressId = mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.address_id;
 //                    taskDetailModel.categoryId = mJobCategoryModel.catId;
         taskDetailModel.taskDesc = mTaskCreationPagerAdapter.mEnterTaskDetailFragment.getTaskDescription();
 //                    taskDetailModel.catImage = mJobCategoryModel.catImage;
@@ -930,7 +927,7 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
          * so, we will initate once webservice call BUT we will not track the response as
          * it would be asynchronously managed.
          */
-        callWSForPrefedQuotes(taskDetailModel.taskId, taskDetailModel.taskAddressId);
+        callWSForPrefedQuotes(taskDetailModel.taskId, taskDetailModel.taskAddress.address_id);
 
 
     }

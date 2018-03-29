@@ -397,7 +397,7 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
 
     private void setTaskWhere() {
         // Setup WHERE section
-        mBinding.textTaskWhere.setText(mTaskDetailModel.taskAddress);
+        mBinding.textTaskWhere.setText(mTaskDetailModel.taskAddress.address);
         mBinding.textTaskWhere.setOnClickListener(mOnClickListener);
     }
 
