@@ -866,11 +866,11 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
                 if(mBinding.lnTaskDesc.getVisibility() == View.VISIBLE){
                     mBinding.lnTaskDesc.setVisibility(View.GONE);
                     mBinding.textViewMoreLessTask.setText(getString(R.string.view_more));
-                    mBinding.imgMoreLessTask.setSelected(true);
+                    mBinding.imgMoreLessTask.setSelected(false);
                 } else {
                     mBinding.lnTaskDesc.setVisibility(View.VISIBLE);
                     mBinding.textViewMoreLessTask.setText(getString(R.string.view_less));
-                    mBinding.imgMoreLessTask.setSelected(false);
+                    mBinding.imgMoreLessTask.setSelected(true);
                 }
             }
         });
@@ -881,11 +881,11 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
                 if(mBinding.textTaskWhereAddress.getVisibility() == View.VISIBLE){
                     mBinding.textTaskWhereAddress.setVisibility(View.GONE);
                     mBinding.textViewMoreLessWhere.setText(getString(R.string.view_more));
-                    mBinding.imgMoreLessWhere.setSelected(true);
+                    mBinding.imgMoreLessWhere.setSelected(false);
                 } else {
                     mBinding.textTaskWhereAddress.setVisibility(View.VISIBLE);
                     mBinding.textViewMoreLessWhere.setText(getString(R.string.view_less));
-                    mBinding.imgMoreLessWhere.setSelected(false);
+                    mBinding.imgMoreLessWhere.setSelected(true);
                 }
             }
         });
