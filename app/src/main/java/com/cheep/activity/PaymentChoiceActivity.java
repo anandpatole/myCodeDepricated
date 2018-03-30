@@ -220,7 +220,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
 
                 switch (PAYTM_STEP) {
                     case PAYTM_SEND_OTP:
-                        SendOtpActivity.newInstance(mContext, true, amount);
+                        SendOtpActivity.newInstance(mContext, true, amount,false);
                         break;
                     case PAYTM_ADD_MONEY:
                         AddMoneyActivity.newInstance(mContext, amount, payableAmountForPaytm, paytmUserDetail.paytmAccessToken,

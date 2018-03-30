@@ -9,7 +9,7 @@
         android:layout_height="match_parent"
         tools:context="com.cheep.activity.SubscriptionActivity">
 
-        <Button
+      <!--  <Button
             android:id="@+id/btnPay"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -28,14 +28,14 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/btnPay"
-            app:layout_constraintVertical_bias="0"/>
+            app:layout_constraintVertical_bias="0"/>-->
 
         <WebView
             android:id="@+id/web_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="#ece7c8"
-            android:visibility="visible"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -47,7 +47,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:visibility="gone"
+            android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"

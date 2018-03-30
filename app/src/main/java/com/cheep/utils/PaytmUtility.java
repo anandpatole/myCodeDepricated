@@ -1031,8 +1031,8 @@ public class PaytmUtility {
         bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.SUBS_SERVICE_ID, "123");
         bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.SUBS_AMOUNT_TYPE, "FIX");
         bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.SUBS_FREQUENCY, 1);
-        bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.SUBS_FREQUENCY_UNIT, "YEAR");
-        bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.SUBS_EXPIRY_DATE, "2028-03-29");
+        bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.SUBS_FREQUENCY_UNIT, "DAY");
+        bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.SUBS_EXPIRY_DATE, "2028-03-30");
         bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.SUBS_ENABLE_RETRY, 1);
 
         @SuppressWarnings("unchecked")

@@ -490,6 +490,7 @@ public class NetworkUtility {
         String PRICE = "price";
         String DETAIL = "detail";
         String CAT_NAME = "cat_name";
+        String IS_RENEW= "is_renew";
 
         interface VERSION_CHANGE_TYPE {
             int NORMAL = 0;

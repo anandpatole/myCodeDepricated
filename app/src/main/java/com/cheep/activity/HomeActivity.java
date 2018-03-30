@@ -749,6 +749,7 @@ public class HomeActivity extends BaseAppCompatActivity
     @Override
     public void onNotificationIconClicked() {
         NotificationCcActivity.newInstance(mContext);
+//        SubscriptionActivity.newInstance(mContext);
     }
 
     /**

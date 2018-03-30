@@ -660,6 +660,7 @@ public class Utility {
         String START_DATETIME = "start_datetime";
         String QUOTE_AMOUNT = "quoteAmount";
         String SP_USER_ID = "sp_user_id ";
+        String IS_SUBSCRIPTION = "is_subscription";
     }
 
 

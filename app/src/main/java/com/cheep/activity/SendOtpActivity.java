@@ -80,6 +80,7 @@ public class SendOtpActivity extends BaseAppCompatActivity implements View.OnCli
     private long mExpires;
     private String mResourceOwnerCustomerId;
     private String amount;
+    private boolean isSubscription = false;
 
     //returned in response of check balance api
     private String requestGuid;
@@ -350,10 +351,11 @@ public class SendOtpActivity extends BaseAppCompatActivity implements View.OnCli
     };
 
 
-    public static void newInstance(Context context, boolean isPaytm, String amount) {
+    public static void newInstance(Context context, boolean isPaytm, String amount,boolean isSubscription) {
         Intent intent = new Intent(context, SendOtpActivity.class);
         intent.putExtra(Utility.Extra.DATA, isPaytm);
         intent.putExtra(Utility.Extra.AMOUNT, amount);
+        intent.putExtra(Utility.Extra.IS_SUBSCRIPTION, isSubscription);
         context.startActivity(intent);
     }
 
@@ -386,6 +388,9 @@ public class SendOtpActivity extends BaseAppCompatActivity implements View.OnCli
         }
         if (intent.hasExtra(Utility.Extra.AMOUNT)) {
             amount = intent.getExtras().getString(Utility.Extra.AMOUNT);
+        }
+        if (intent.hasExtra(Utility.Extra.IS_SUBSCRIPTION)) {
+            isSubscription= intent.getExtras().getBoolean(Utility.Extra.AMOUNT,false);
         }
         mobileNumberTextWatcher = new TextWatcher() {
             public EditText ET = mActivitySendOtpBinding.etMobileNumber;
@@ -726,7 +731,7 @@ public class SendOtpActivity extends BaseAppCompatActivity implements View.OnCli
             updateUI();
         else
             timer.start();*/
-        VerifyOtpActivity.newInstance(mContext, mMobileNumber, mState, isPaytm, amount);
+        VerifyOtpActivity.newInstance(mContext, mMobileNumber, mState, isPaytm, amount,isSubscription);
         hideProgressDialog();
     }
 

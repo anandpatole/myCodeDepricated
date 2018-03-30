@@ -1,5 +1,7 @@
 package com.cheep.activity;
 
+import android.content.Context;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
 import android.os.Build;
@@ -16,9 +18,7 @@ import com.cheep.BuildConfig;
 import com.cheep.R;
 import com.cheep.databinding.ActivitySubscriptionBinding;
 import com.cheep.model.MessageEvent;
-import com.cheep.model.UserDetails;
 import com.cheep.network.NetworkUtility;
-import com.cheep.utils.LogUtils;
 import com.cheep.utils.PaytmUtility;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.Utility;
@@ -34,7 +34,6 @@ import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.cheep.utils.LogUtils.LOGE;
 import static com.cheep.utils.LogUtils.makeLogTag;
 
 public class SubscriptionActivity extends BaseAppCompatActivity {
@@ -44,68 +43,40 @@ public class SubscriptionActivity extends BaseAppCompatActivity {
     private static final String TAG = makeLogTag(SubscriptionActivity.class);
 
 
-    private PaytmUtility.GetChecksumResponseListener mGetChecksumResponseListenerForAddMoney = new PaytmUtility.GetChecksumResponseListener() {
-        @Override
-        public void volleyGetChecksumSuccessResponse(String checksumhash) {
-            Log.d(TAG, "volleyGetChecksumSuccessResponse() called with: checksumHash = [" + checksumhash + "]");
-            // encode the checksum
-            try {
-                mChecksumHash = new String(Base64.decode(checksumhash));
-                subscription();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            hideProgressDialog();
-            Log.i(TAG, "volleyGetChecksumSuccessResponse: Output: " + mChecksumHash);
-        }
-
-        @Override
-        public void showSpecificErrorMessage(String errorMessage) {
-            Utility.showSnackBar(errorMessage, binding.getRoot());
-            hideProgressDialog();
-        }
-
-        @Override
-        public void showGeneralizedErrorMessage() {
-            Utility.showSnackBar(getString(R.string.label_something_went_wrong), binding.getRoot());
-            hideProgressDialog();
-        }
-
-        @Override
-        public void volleyError() {
-            Utility.showSnackBar(getString(R.string.label_something_went_wrong), binding.getRoot());
-            hideProgressDialog();
-        }
-    };
     private String generatedOrderId;
     private String accessToken;
     private String phoneNo;
     private String custId;
-    private String amount = "1000";
+    private String amount;
+//    private String amount = "1000";
 
     @Override
     protected void initiateUI() {
-        UserDetails.PaytmUserDetail paytmUserDetail = PreferenceUtility.getInstance(mContext).getUserDetails().mPaytmUserDetail;
-        accessToken = paytmUserDetail.paytmAccessToken;
-        phoneNo = paytmUserDetail.paytmphoneNumber;
-        custId = paytmUserDetail.paytmCustId;
+        if (getIntent().hasExtra(Utility.Extra.AMOUNT)) {
+            amount = getIntent().getExtras().getString(Utility.Extra.AMOUNT);
+            accessToken = getIntent().getExtras().getString(Utility.Extra.ACCESS_TOKEN);
+            phoneNo = getIntent().getExtras().getString(Utility.Extra.MOBILE_NUMBER);
+            custId = getIntent().getExtras().getString(Utility.Extra.CUST_ID);
+            callsubcrition();
+        }
+
     }
 
     @Override
     protected void setListeners() {
-        binding.btnPay.setOnClickListener(new View.OnClickListener() {
+     /*   binding.btnPay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 callsubcrition();
             }
-        });
+        });*/
 
-        binding.btnRenew.setOnClickListener(new View.OnClickListener() {
+      /*  binding.btnRenew.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 callRenew();
             }
-        });
+        });*/
     }
 
     private void callRenew() {
@@ -117,7 +88,7 @@ public class SubscriptionActivity extends BaseAppCompatActivity {
 
         showProgressDialog();
 
-        generatedOrderId = PaytmUtility.autoRenewal(mContext, amount, "304301", new PaytmUtility.GetChecksumResponseListener() {
+        generatedOrderId = PaytmUtility.autoRenewal(mContext, amount, "304359", new PaytmUtility.GetChecksumResponseListener() {
             @Override
             public void volleyGetChecksumSuccessResponse(String checksumhash) {
                 Log.d(TAG, "volleyGetChecksumSuccessResponse() called with: checksumHash = [" + checksumhash + "]");
@@ -178,6 +149,40 @@ public class SubscriptionActivity extends BaseAppCompatActivity {
                 mGetChecksumResponseListenerForAddMoney);
     }
 
+    private PaytmUtility.GetChecksumResponseListener mGetChecksumResponseListenerForAddMoney = new PaytmUtility.GetChecksumResponseListener() {
+        @Override
+        public void volleyGetChecksumSuccessResponse(String checksumhash) {
+            Log.d(TAG, "volleyGetChecksumSuccessResponse() called with: checksumHash = [" + checksumhash + "]");
+            // encode the checksum
+            try {
+                mChecksumHash = new String(Base64.decode(checksumhash));
+                subscription();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            hideProgressDialog();
+            Log.i(TAG, "volleyGetChecksumSuccessResponse: Output: " + mChecksumHash);
+        }
+
+        @Override
+        public void showSpecificErrorMessage(String errorMessage) {
+            Utility.showSnackBar(errorMessage, binding.getRoot());
+            hideProgressDialog();
+        }
+
+        @Override
+        public void showGeneralizedErrorMessage() {
+            Utility.showSnackBar(getString(R.string.label_something_went_wrong), binding.getRoot());
+            hideProgressDialog();
+        }
+
+        @Override
+        public void volleyError() {
+            Utility.showSnackBar(getString(R.string.label_something_went_wrong), binding.getRoot());
+            hideProgressDialog();
+        }
+    };
+
 
     ///////////////////////////////////////////////////////////Paytm Add Money API call starts///////////////////////////////////////////////////////////
     private void subscription() {
@@ -208,8 +213,8 @@ public class SubscriptionActivity extends BaseAppCompatActivity {
         bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.SUBS_SERVICE_ID, "123");
         bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.SUBS_AMOUNT_TYPE, "FIX");
         bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.SUBS_FREQUENCY, 1);
-        bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.SUBS_FREQUENCY_UNIT, "YEAR");
-        bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.SUBS_EXPIRY_DATE, "2028-03-29");
+        bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.SUBS_FREQUENCY_UNIT, "DAY");
+        bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.SUBS_EXPIRY_DATE, "2028-03-30");
         bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.SUBS_ENABLE_RETRY, 1);
         bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.CHECKSUMHASH, mChecksumHash);
 
@@ -222,8 +227,8 @@ public class SubscriptionActivity extends BaseAppCompatActivity {
         binding.webView.getSettings().setJavaScriptEnabled(true);
         binding.webView.postUrl(NetworkUtility.PAYTM.WALLET_APIS.ADD_MONEY, postData.getBytes());
 
-        // Show the webView
-        binding.btnPay.setVisibility(View.GONE);
+//         Show the webView
+//        binding.btnPay.setVisibility(View.GONE);
         binding.webView.setVisibility(View.VISIBLE);
     }
 
@@ -241,7 +246,7 @@ public class SubscriptionActivity extends BaseAppCompatActivity {
         Map<String, Object> bodyParams = new HashMap<>();
         bodyParams.put(NetworkUtility.TAGS.ORDER_ID, generatedOrderId);
         bodyParams.put(NetworkUtility.TAGS.TXN_AMOUNT, amount);
-        bodyParams.put(NetworkUtility.TAGS.SUBS_ID, "304301");
+        bodyParams.put(NetworkUtility.TAGS.SUBS_ID, "304359");
         bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.CHECKSUMHASH, mChecksumHash);
         bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.MID, BuildConfig.SANDBOX_MERCHANT_ID);
         bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.REQUEST_TYPE, Utility.RENEW_SUBSCRIPTION);
@@ -256,7 +261,7 @@ public class SubscriptionActivity extends BaseAppCompatActivity {
         binding.webView.postUrl(NetworkUtility.PAYTM.WALLET_APIS.ADD_MONEY, postData.getBytes());
 
         // Show the webView
-        binding.btnPay.setVisibility(View.GONE);
+//        binding.btnPay.setVisibility(View.GONE);
         binding.webView.setVisibility(View.VISIBLE);
     }
 
@@ -318,7 +323,7 @@ public class SubscriptionActivity extends BaseAppCompatActivity {
             if (url.equalsIgnoreCase(NetworkUtility.WS.VERIFY_CHECKSUM)) {
                 showProgressDialog();
                 ///Call Webservice from here
-                PaytmUtility.callVerifyOrderTransaction(mContext, generatedOrderId, mVerifyTransactionMoneyResponseListener);
+                PaytmUtility.callVerifyOrderTransaction(mContext, generatedOrderId, mVerifyTransactionSubscriptionResponseListener);
             }
             super.onPageFinished(view, url);
         }
@@ -346,7 +351,7 @@ public class SubscriptionActivity extends BaseAppCompatActivity {
     /**
      * Callbacks (Verify Transaction) for Add Money
      */
-    private final PaytmUtility.VerifyTransactionMoneyResponseListener mVerifyTransactionMoneyResponseListener = new PaytmUtility.VerifyTransactionMoneyResponseListener() {
+    private final PaytmUtility.VerifyTransactionMoneyResponseListener mVerifyTransactionSubscriptionResponseListener = new PaytmUtility.VerifyTransactionMoneyResponseListener() {
         @Override
         public void paytmVerifyTransactionMoneyResponse(String responseInJson) {
             Log.d(TAG, "paytmVerifyTransactionMoneyResponse() called with: responseInJson = [" + responseInJson + "]");
@@ -358,20 +363,18 @@ public class SubscriptionActivity extends BaseAppCompatActivity {
                 /**
                  * If its empty, we just need to redirect the user with failure message
                  */
-//
-//                if (TextUtils.isEmpty(responseInJson)) {
-//                    // Create the message event and sent the broadcast to @PaymentChoiceActivity
-//                    MessageEvent messageEvent = new MessageEvent();
-//                    messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.PAYTM_RESPONSE;
-//                    MessageEvent.PaytmResponse paytmResponse = new MessageEvent.PaytmResponse();
-//                    paytmResponse.isSuccess = false;
-//                    messageEvent.paytmResponse = paytmResponse;
-//
-//                    // Send the event
-//                    EventBus.getDefault().post(messageEvent);
-//
-//                }
-//
+                if (TextUtils.isEmpty(responseInJson)) {
+                    // Create the message event and sent the broadcast to @PaymentChoiceActivity
+                    MessageEvent messageEvent = new MessageEvent();
+                    messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.PAYTM_RESPONSE;
+                    MessageEvent.PaytmResponse paytmResponse = new MessageEvent.PaytmResponse();
+                    paytmResponse.isSuccess = false;
+                    messageEvent.paytmResponse = paytmResponse;
+
+                    // Send the event
+                    EventBus.getDefault().post(messageEvent);
+
+                }
 
                 final JSONObject mRoot = new JSONObject(responseInJson);
                 JSONObject mData = mRoot.getJSONObject(NetworkUtility.TAGS.DATA);
@@ -381,22 +384,16 @@ public class SubscriptionActivity extends BaseAppCompatActivity {
                 MessageEvent.PaytmResponse paytmResponse = new MessageEvent.PaytmResponse();
                 paytmResponse.ResponseCode = responseCode;
                 paytmResponse.ResponsePayLoad = mCallbackResponse.toString();
-                LogUtils.LOGE(TAG, "ResponseCode: " + " ------ " + paytmResponse.ResponseCode);
-                LogUtils.LOGE(TAG, "ResponsePayLoad: " + " ------ " + paytmResponse.ResponsePayLoad);
-                LogUtils.LOGE(TAG, "paytmVerifyTransactionMoneyResponse: ");
+                paytmResponse.subsId = mCallbackResponse.optString(NetworkUtility.TAGS.SUBS_ID);
+                paytmResponse.isSubscription= Utility.BOOLEAN.YES;
                 if (!TextUtils.isEmpty(responseCode) && responseCode.equalsIgnoreCase(NetworkUtility.PAYTM.RESPONSE_CODES.LOGIN)) {
                     // Close the screen and pass the success message to @com.cheep.activity.PaymentChoiceActivity
                     paytmResponse.isSuccess = true;
 
-                    //// Here we need to call withdraw api
-//                    callgetChecksumForWithdrawMoney();
-                    LogUtils.LOGE(TAG, "paytmVerifyTransactionMoneyResponse: ");
-                    LOGE(TAG,
-                            "--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------" +
-                                    "\nsuccess\n" +
-                                    "-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
+                    // TODO : Here we need to call subscribed api
 
-                   /* // Create the message event and sent the broadcast to @PaymentChoiceActivity
+//                    TODO : Once withdraw api called, need to remove below code
+                    // Create the message event and sent the broadcast to @PaymentChoiceActivity
                     MessageEvent messageEvent = new MessageEvent();
                     messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.PAYTM_RESPONSE;
                     messageEvent.paytmResponse = paytmResponse;
@@ -405,19 +402,19 @@ public class SubscriptionActivity extends BaseAppCompatActivity {
                     EventBus.getDefault().post(messageEvent);
 
                     // Finish the activity at the end
-                    finish();*/
+                    finish();
 
                 } else {
                     // Close the screen and pass the failure message to @com.cheep.activity.PaymentChoiceActivity
                     paytmResponse.isSuccess = false;
 
                     // Create the message event and sent the broadcast to @PaymentChoiceActivity
-//                    MessageEvent messageEvent = new MessageEvent();
-//                    messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.PAYTM_RESPONSE;
-//                    messageEvent.paytmResponse = paytmResponse;
+                    MessageEvent messageEvent = new MessageEvent();
+                    messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.PAYTM_RESPONSE;
+                    messageEvent.paytmResponse = paytmResponse;
 
                     // Send the event
-//                    EventBus.getDefault().post(messageEvent);
+                    EventBus.getDefault().post(messageEvent);
 
                     // Finish the activity at the end
                     finish();
@@ -427,17 +424,16 @@ public class SubscriptionActivity extends BaseAppCompatActivity {
                 e.printStackTrace();
 
                 // Create the message event and sent the broadcast to @PaymentChoiceActivity
-//                MessageEvent messageEvent = new MessageEvent();
-//                messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.PAYTM_RESPONSE;
-//                MessageEvent.PaytmResponse paytmResponse = new MessageEvent.PaytmResponse();
-//                paytmResponse.isSuccess = false;
-//                messageEvent.paytmResponse = paytmResponse;
-//
-//                // Send the event
-//                EventBus.getDefault().post(messageEvent);
+                MessageEvent messageEvent = new MessageEvent();
+                messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.PAYTM_RESPONSE;
+                MessageEvent.PaytmResponse paytmResponse = new MessageEvent.PaytmResponse();
+                paytmResponse.isSuccess = false;
+                messageEvent.paytmResponse = paytmResponse;
+
+                // Send the event
+                EventBus.getDefault().post(messageEvent);
 
                 // Finish the activity at the end
-                e.printStackTrace();
                 finish();
             }
 
@@ -463,6 +459,16 @@ public class SubscriptionActivity extends BaseAppCompatActivity {
             finish();
         }
     };
+
+    public static void newInstance(Context mContext, String amount, String accessToken, String mobileNumber, String resourceOwnerCustomerId) {
+        Intent intent = new Intent(mContext, SubscriptionActivity.class);
+        intent.putExtra(Utility.Extra.AMOUNT, amount);
+        intent.putExtra(Utility.Extra.ACCESS_TOKEN, accessToken);
+        intent.putExtra(Utility.Extra.MOBILE_NUMBER, mobileNumber);
+        intent.putExtra(Utility.Extra.CUST_ID, resourceOwnerCustomerId);
+        mContext.startActivity(intent);
+
+    }
     ///////////////////////////////////////////////////////////Paytm Add Money API call ends///////////////////////////////////////////////////////////
 
 

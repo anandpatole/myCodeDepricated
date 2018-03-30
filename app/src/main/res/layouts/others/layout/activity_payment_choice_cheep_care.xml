@@ -266,8 +266,10 @@
                                 android:textColor="@color/black"
                                 android:textSize="@dimen/text_size_13sp"/>
 
-                            <android.support.v7.widget.SwitchCompat
+                            <ImageView
+                                android:id="@+id/paytmAutoRenewSwitch"
                                 android:layout_width="wrap_content"
+                                android:src="@drawable/selector_switch_auto_renew"
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentEnd="true"
                                 android:layout_alignParentRight="true"
@@ -376,10 +378,11 @@
                                 android:textColor="@color/black"
                                 android:textSize="@dimen/text_size_13sp"/>
 
-                            <android.support.v7.widget.SwitchCompat
+                            <ImageView
                                 android:id="@+id/cartAutoRenewSwitch"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:src="@drawable/selector_switch_auto_renew"
                                 android:layout_alignParentEnd="true"
                                 android:layout_alignParentRight="true"
                                 android:layout_centerVertical="true"
