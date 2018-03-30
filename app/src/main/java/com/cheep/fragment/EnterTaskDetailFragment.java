@@ -140,6 +140,7 @@ public class EnterTaskDetailFragment extends BaseFragment implements RequestPerm
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         initiateUI();
+        setListener();
     }
 
     @Override
@@ -216,7 +217,6 @@ public class EnterTaskDetailFragment extends BaseFragment implements RequestPerm
     @Override
     public void initiateUI() {
 
-        setListener();
         Log.d(TAG, "initiateUI() called");
         mRequestPermission = new RequestPermission(EnterTaskDetailFragment.this, this);
         new Handler().postDelayed(new Runnable() {
@@ -351,7 +351,7 @@ public class EnterTaskDetailFragment extends BaseFragment implements RequestPerm
         mFragmentEnterTaskDetailBinding.lnTaskMoreLess.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(mFragmentEnterTaskDetailBinding.lnTaskDesc.getVisibility() == View.VISIBLE){
+                if(mFragmentEnterTaskDetailBinding.imgMoreLessTask.isSelected()) {
                     mFragmentEnterTaskDetailBinding.rlRootTaskToShowHide.setVisibility(View.GONE);
                     mFragmentEnterTaskDetailBinding.textViewMoreLessTask.setText(getString(R.string.view_more));
                     mFragmentEnterTaskDetailBinding.imgMoreLessTask.setSelected(false);

@@ -86,7 +86,7 @@
                 android:paddingLeft="@dimen/scale_30dp"
                 android:paddingRight="@dimen/scale_30dp"
                 android:paddingBottom="@dimen/scale_30dp"
-                android:visibility="visible">
+                android:visibility="gone">
 
                 <LinearLayout
                     android:id="@+id/ln_task_desc"
