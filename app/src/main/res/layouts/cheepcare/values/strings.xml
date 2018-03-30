@@ -9,5 +9,7 @@
     <string name="view_more">View more</string>
     <string name="view_less">View less</string>
     <string name="label_task_details">Task Details</string>
+    <string name="subscribed_under_cheep_care">• Subscribed under Cheep Care</string>
+    <string name="please_select_your_address">Please select your address</string>
 
 </resources>

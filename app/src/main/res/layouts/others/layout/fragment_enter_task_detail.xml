@@ -18,10 +18,10 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="@dimen/scale_30dp"
+                android:paddingBottom="@dimen/scale_30dp"
+                android:paddingEnd="@dimen/scale_30dp"
                 android:paddingRight="@dimen/scale_30dp"
-                android:paddingBottom="@dimen/scale_15dp"
-                android:paddingEnd="@dimen/scale_30dp">
+                android:paddingTop="@dimen/scale_30dp">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -53,10 +53,10 @@
                     android:id="@+id/ln_task_more_less"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
                     android:layout_alignParentBottom="true"
-                    android:gravity="center"
-                    android:layout_alignParentRight="true">
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:gravity="center">
 
                     <ImageView
                         android:id="@+id/img_more_less_task"
@@ -86,7 +86,7 @@
                 android:paddingLeft="@dimen/scale_30dp"
                 android:paddingRight="@dimen/scale_30dp"
                 android:paddingBottom="@dimen/scale_30dp"
-                android:visibility="gone">
+                android:visibility="visible">
 
                 <LinearLayout
                     android:id="@+id/ln_task_desc"
@@ -369,44 +369,140 @@
                 android:paddingRight="@dimen/scale_30dp"
                 android:paddingTop="@dimen/scale_30dp">
 
-                <LinearLayout
+                <RelativeLayout
                     android:id="@+id/ln_where"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
                     android:orientation="horizontal">
 
                     <ImageView
                         android:id="@+id/icon_task_where"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
                         android:src="@drawable/ic_icon_task_where_active"
+                        android:layout_centerVertical="true"
                         tools:ignore="ContentDescription" />
 
                     <com.cheep.custom_view.CFTextViewSemiBold
                         android:id="@+id/text_where"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:paddingLeft="@dimen/scale_15dp"
+                        android:layout_toRightOf="@id/icon_task_where"
+                        android:layout_centerVertical="true"
                         android:text="@string/label_where"
                         android:textColor="@color/splash_gradient_end"
-                        android:textSize="@dimen/text_size_18sp" />
-                </LinearLayout>
+                        android:textSize="@dimen/text_size_18sp"
+                        android:paddingStart="@dimen/scale_15dp"
+                        android:layout_toEndOf="@id/icon_task_where" />
+
+                    <LinearLayout
+                        android:id="@+id/ln_where_more_less"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentBottom="true"
+                        android:gravity="center"
+                        android:layout_alignParentRight="true">
+
+                        <ImageView
+                            android:id="@+id/img_more_less_where"
+                            android:layout_width="@dimen/scale_20dp"
+                            android:layout_height="@dimen/scale_20dp"
+                            android:src="@drawable/selector_task_summary_view_more_less" />
+
+                        <com.cheep.custom_view.CFTextViewRegular
+                            android:id="@+id/text_view_more_less_where"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:paddingLeft="@dimen/scale_8dp"
+                            android:paddingStart="@dimen/scale_8dp"
+                            android:text="@string/view_more"
+                            android:textColor="@color/splash_gradient_end"
+                            android:textSize="@dimen/text_size_16sp" />
+
+                    </LinearLayout>
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/ln_select_address_where"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginLeft="@dimen/scale_14dp"
+                    android:layout_marginRight="@dimen/scale_29dp"
+                    android:paddingLeft="@dimen/scale_15dp"
+                    android:paddingTop="@dimen/scale_10dp"
+                    android:paddingBottom="@dimen/scale_10dp"
+                    android:background="@drawable/background_circular_corner"
+                    android:layout_marginTop="@dimen/scale_16dp">
+
+                    <ImageView
+                        android:id="@+id/img_address_category"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:visibility="gone"
+                        android:src="@drawable/icon_address_home_active"/>
+
+                    <com.cheep.custom_view.CFTextViewSemiBold
+                        android:id="@+id/text_address_category"
+                        android:layout_toRightOf="@id/img_address_category"
+                        android:layout_centerVertical="true"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@color/transparent"
+                        android:paddingLeft="@dimen/scale_8dp"
+                        android:paddingRight="@dimen/scale_4dp"
+                        android:textColor="@color/splash_gradient_end"
+                        android:textColorHint="@color/grey_dark_color_2"
+                        android:textSize="@dimen/text_size_12sp"
+                        android:visibility="gone"
+                        tools:text="Home 1"
+                        android:paddingStart="@dimen/scale_8dp"
+                        android:paddingEnd="@dimen/scale_4dp" />
+
+                    <com.cheep.custom_view.CFTextViewSemiBold
+                        android:id="@+id/text_task_cheep_subscribed"
+                        android:layout_toRightOf="@id/text_address_category"
+                        android:layout_centerVertical="true"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@color/transparent"
+                        android:textColor="@color/grey_varient_23"
+                        android:textColorHint="@color/grey_dark_color_2"
+                        android:textSize="@dimen/text_size_12sp"
+                        android:visibility="visible"
+                        android:text="@string/subscribed_under_cheep_care" />
+
+                    <ImageView
+                        android:id="@+id/img_select_address_drop_down"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="@dimen/scale_8dp"
+                        android:layout_width="@dimen/scale_10dp"
+                        android:layout_height="@dimen/scale_10dp"
+                        android:src="@drawable/ic_drop_down_arrow"/>
+
+                </RelativeLayout>
+
 
                 <com.cheep.custom_view.CFTextViewRegular
                     android:id="@+id/text_task_where"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/ln_sub_category"
                     android:background="@color/transparent"
-                    android:gravity="start"
-                    android:paddingBottom="@dimen/scale_8dp"
+                    android:gravity="center_vertical"
+                    android:layout_marginRight="@dimen/scale_48dp"
                     android:paddingTop="@dimen/scale_8dp"
+                    android:layout_marginLeft="@dimen/scale_29dp"
                     android:textColor="@color/black"
                     android:textColorHint="@color/grey_dark_color_2"
                     android:textSize="@dimen/text_size_12sp"
-                    android:visibility="gone" />
+                    android:visibility="gone"
+                    tools:text="1202/1204 UniWorls Towers, Next to Palladium Mall, Mahatma Gandhi Phule Road, Elphinstone Road (West) Bombay"/>
             </LinearLayout>
 
             <View
