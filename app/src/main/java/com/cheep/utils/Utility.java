@@ -116,6 +116,9 @@ public class Utility {
     public static final String INR = "INR";
     public static final String PPI = "PPI";
     public static final String USRPWD = "USRPWD";
+    // new type for subscription
+    public static final String SUBSCRIBE= "SUBSCRIBE";
+    public static final String RENEW_SUBSCRIPTION= "RENEW_SUBSCRIPTION";
 
     //Date Formats
     public static final String DATE_FORMAT_DD_MM_YY = SuperFormatter.DATE + "/" + SuperFormatter.MONTH_NUMBER + "/" + SuperFormatter.YEAR_4_DIGIT;

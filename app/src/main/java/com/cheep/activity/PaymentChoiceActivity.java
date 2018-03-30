@@ -216,7 +216,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
             case R.id.rl_paytm:
                 paymentMethod = NetworkUtility.PAYMENT_METHOD_TYPE.PAYTM;
                 UserDetails userDetails = PreferenceUtility.getInstance(PaymentChoiceActivity.this).getUserDetails();
-                UserDetails.PaytmUserDetail paytmUserDetail = userDetails.mPaytmUserDetail;
+                UserDetails. PaytmUserDetail paytmUserDetail = userDetails.mPaytmUserDetail;
 
                 switch (PAYTM_STEP) {
                     case PAYTM_SEND_OTP:

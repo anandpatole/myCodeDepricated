@@ -154,8 +154,8 @@ public class NetworkUtility {
         public static final String IS_CITY_AVAILABLE_FOR_CARE = BASE_URL + "customers/care/isCityAvailableForCare";
         public static final String GET_EXTRA_CHARGE_AFTER_EXCEED_LIMIT = BASE_URL + "customers/care/getExtraChargeAfterExceedLimit";
         public static final String GET_TASK_FOR_PENDING_REVIEW = BASE_URL + "customers/Tasks/getTaskForPendingReview";
-        public static final String SEARCH_CITY= BASE_URL + "customers/profile/searchCity";
-        public static final String VOTE_CITY_FOR_CHEEP_CARE= BASE_URL + "customers/care/voteCityForCheepCare";
+        public static final String SEARCH_CITY = BASE_URL + "customers/profile/searchCity";
+        public static final String VOTE_CITY_FOR_CHEEP_CARE = BASE_URL + "customers/care/voteCityForCheepCare";
 
 
         /**
@@ -253,6 +253,14 @@ public class NetworkUtility {
             public static final String JsonData = "JsonData";
             public static final String THEME = "THEME";
             public static final String ResponseCode = "ResponseCode";
+
+            // new subscription params
+            public static final String SUBS_SERVICE_ID = "SUBS_SERVICE_ID";
+            public static final String SUBS_AMOUNT_TYPE = "SUBS_AMOUNT_TYPE";
+            public static final String SUBS_FREQUENCY = "SUBS_FREQUENCY";
+            public static final String SUBS_FREQUENCY_UNIT = "SUBS_FREQUENCY_UNIT";
+            public static final String SUBS_ENABLE_RETRY = "SUBS_ENABLE_RETRY";
+            public static final String SUBS_EXPIRY_DATE = "SUBS_EXPIRY_DATE";
         }
 
         public static final class RESPONSE_CODES {
@@ -415,6 +423,7 @@ public class NetworkUtility {
         String PAYTM_CUST_ID = "paytm_cust_id";
         String PAYTM_ACCESS_TOKEN = "paytm_access_token";
         String PAYTM_PHONE_NUMBER = "paytm_phone_number";
+        String SUBS_ID = "SUBS_ID";
 
         // refer and earn params
         String IS_REFER_CODE = "is_refer_code";
@@ -521,7 +530,7 @@ public class NetworkUtility {
         String PAYMENT_LOG = "payment_log";
         String IS_FOR_ADDITIONAL_QUOTE = "isForAdditionalQuote";
         String RESCHEDULE_DATETIME = "reschedule_datetime";
-        String SEARCH_TEXT= "search_text";
+        String SEARCH_TEXT = "search_text";
 
 
         interface STATUSCODETYPE {
