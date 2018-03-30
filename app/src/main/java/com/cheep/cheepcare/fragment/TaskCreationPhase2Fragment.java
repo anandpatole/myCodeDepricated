@@ -324,19 +324,12 @@ public class TaskCreationPhase2Fragment extends BaseFragment implements
             }
         });*/
 
-        if (PreferenceUtility.getInstance(mContext).getUserDetails() != null) {
             // Update the SP lists for Normal User
             callSPListWS(mTaskCreationCCActivity.mJobCategoryModel.catId,
                     false,
                     null,
                     null);
-        } else {
-            // Update the SP lists for Normal User
-            callSPListWS(mTaskCreationCCActivity.mJobCategoryModel.catId,
-                    false,
-                    null,
-                    null);
-        }
+
         /*mBinding.cvInstaBook.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

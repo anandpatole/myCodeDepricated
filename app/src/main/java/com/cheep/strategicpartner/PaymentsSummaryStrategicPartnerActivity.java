@@ -153,7 +153,7 @@ public class PaymentsSummaryStrategicPartnerActivity extends BaseAppCompatActivi
             spannableStringBuilder.append(getSpannableString(selectedDate + ", " + selectedTime
                     , ContextCompat.getColor(this, R.color.splash_gradient_end), true));
             spannableStringBuilder.append(getSpannableString(getString(R.string.label_at), ContextCompat.getColor(this, R.color.grey_varient_8), false));
-            spannableStringBuilder.append(getSpannableString(taskDetailModel.taskAddress, ContextCompat.getColor(this, R.color.splash_gradient_end), true));
+            spannableStringBuilder.append(getSpannableString(taskDetailModel.taskAddress.address, ContextCompat.getColor(this, R.color.splash_gradient_end), true));
             spannableStringBuilder.append(getSpannableString(".", ContextCompat.getColor(this, R.color.splash_gradient_end), true));
 
 

@@ -52,6 +52,7 @@ import com.cheep.R;
 import com.cheep.activity.BaseAppCompatActivity;
 import com.cheep.activity.TaskCreationActivity;
 import com.cheep.adapter.AddressRecyclerViewAdapter;
+import com.cheep.cheepcare.adapter.SelectedSubServiceAdapter;
 import com.cheep.cheepcare.dialogs.BottomAddAddressDialog;
 import com.cheep.custom_view.BottomAlertDialog;
 import com.cheep.custom_view.DividerItemDecoration;
@@ -139,7 +140,6 @@ public class EnterTaskDetailFragment extends BaseFragment implements RequestPerm
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         initiateUI();
-        setListener();
     }
 
     @Override
@@ -179,7 +179,7 @@ public class EnterTaskDetailFragment extends BaseFragment implements RequestPerm
         }
 
         // Task Description
-        isTaskDescriptionVerified = mTaskCreationActivity.getSubCatList().get(0).sub_cat_id.equalsIgnoreCase("-1") ||
+        isTaskDescriptionVerified = !mTaskCreationActivity.getSubCatList().get(0).sub_cat_id.equalsIgnoreCase("-1") ||
                 !TextUtils.isEmpty(mFragmentEnterTaskDetailBinding.editTaskDesc.getText().toString().trim());
 
         // When Verification
@@ -203,17 +203,20 @@ public class EnterTaskDetailFragment extends BaseFragment implements RequestPerm
         }
 
         // let activity know that post task button needs to be shown now.
-        mTaskCreationActivity.showPostTaskButton(true, isTotalVerified);
+        mTaskCreationActivity.showPostTaskButton(false, isTotalVerified);
     }
 
     private void updateTaskDetails() {
         //Update SubCategory
         if (mTaskCreationActivity != null && !mTaskCreationActivity.getSubCatList().isEmpty())
-            mFragmentEnterTaskDetailBinding.textSubCategoryName.setText(mTaskCreationActivity.getSubCatList().get(0).name);
+            mFragmentEnterTaskDetailBinding.recyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
+            mFragmentEnterTaskDetailBinding.recyclerView.setAdapter(new SelectedSubServiceAdapter(mTaskCreationActivity.getSubCatList()));
     }
 
     @Override
     public void initiateUI() {
+
+        setListener();
         Log.d(TAG, "initiateUI() called");
         mRequestPermission = new RequestPermission(EnterTaskDetailFragment.this, this);
         new Handler().postDelayed(new Runnable() {
@@ -280,19 +283,12 @@ public class EnterTaskDetailFragment extends BaseFragment implements RequestPerm
             }
         });
 
-        if (PreferenceUtility.getInstance(mContext).getUserDetails() != null) {
             // Update the SP lists for Normal User
             callSPListWS(mTaskCreationActivity.mJobCategoryModel.catId,
                     false,
                     null,
                     null);
-        } else {
-            // Update the SP lists for Normal User
-            callSPListWS(mTaskCreationActivity.mJobCategoryModel.catId,
-                    false,
-                    null,
-                    null);
-        }
+
         mFragmentEnterTaskDetailBinding.cvInstaBook.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -351,6 +347,21 @@ public class EnterTaskDetailFragment extends BaseFragment implements RequestPerm
     @Override
     public void setListener() {
         Log.d(TAG, "setListener() called");
+        // Task Details View More/Less Listener
+        mFragmentEnterTaskDetailBinding.lnTaskMoreLess.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mFragmentEnterTaskDetailBinding.lnTaskDesc.getVisibility() == View.VISIBLE){
+                    mFragmentEnterTaskDetailBinding.rlRootTaskToShowHide.setVisibility(View.GONE);
+                    mFragmentEnterTaskDetailBinding.textViewMoreLessTask.setText(getString(R.string.view_more));
+                    mFragmentEnterTaskDetailBinding.imgMoreLessTask.setSelected(false);
+                } else {
+                    mFragmentEnterTaskDetailBinding.rlRootTaskToShowHide.setVisibility(View.VISIBLE);
+                    mFragmentEnterTaskDetailBinding.textViewMoreLessTask.setText(getString(R.string.view_less));
+                    mFragmentEnterTaskDetailBinding.imgMoreLessTask.setSelected(true);
+                }
+            }
+        });
     }
 
     @Override

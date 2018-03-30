@@ -350,7 +350,7 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
             spannableStringBuilder.append(
                     getSpannableString(getString(R.string.label_at), ContextCompat.getColor(this, R.color.grey_varient_8), false));
             spannableStringBuilder.append(
-                    getSpannableString(taskDetailModel.taskAddress, ContextCompat.getColor(this, R.color.splash_gradient_end), true));
+                    getSpannableString(taskDetailModel.taskAddress.address, ContextCompat.getColor(this, R.color.splash_gradient_end), true));
 
 
             mActivityPaymentDetailBinding.txtdesc.setText(spannableStringBuilder);
@@ -511,7 +511,7 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
             spannableStringBuilder.append(getSpannableString(getString(R.string.label_on), ContextCompat.getColor(this, R.color.grey_varient_8), false));
             spannableStringBuilder.append(getSpannableString(datetime, ContextCompat.getColor(this, R.color.splash_gradient_end), true));
             spannableStringBuilder.append(getSpannableString(getString(R.string.label_at), ContextCompat.getColor(this, R.color.grey_varient_8), false));
-            spannableStringBuilder.append(getSpannableString(taskDetailModel.taskAddress, ContextCompat.getColor(this, R.color.splash_gradient_end), true));
+            spannableStringBuilder.append(getSpannableString(taskDetailModel.taskAddress.address, ContextCompat.getColor(this, R.color.splash_gradient_end), true));
             mActivityPaymentDetailBinding.txtdesc.setText(spannableStringBuilder);
         }
     }

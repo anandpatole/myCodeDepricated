@@ -284,7 +284,7 @@ public class TaskSummaryStrategicPartnerActivity extends BaseAppCompatActivity {
         mBinding.textTaskWhen.setText(task_original_date_time);
 
         // Setup WHERE section
-        mBinding.textTaskWhere.setText(mTaskDetailModel.taskAddress);
+        mBinding.textTaskWhere.setText(mTaskDetailModel.taskAddress.address);
 
 
         // Onclick of when and Where section

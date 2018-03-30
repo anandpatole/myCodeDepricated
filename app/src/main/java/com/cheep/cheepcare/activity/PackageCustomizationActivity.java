@@ -64,7 +64,7 @@ import java.util.Map;
 
 public class PackageCustomizationActivity extends BaseAppCompatActivity {
 
-    private static final String TAG = PackageCustomizationActivity.class.getSimpleName();
+    private static final String TAG = "PackageCustomizationAct";
     private ActivityPackageCustomizationBinding mBinding;
     public PackageCustomizationPagerAdapter mPackageCustomizationPagerAdapter;
     //    private PackageDetail mPackageModel;

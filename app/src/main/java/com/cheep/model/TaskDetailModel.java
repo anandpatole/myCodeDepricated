@@ -28,7 +28,7 @@ public class TaskDetailModel implements Serializable {
     public String taskImage;
 
     @SerializedName("task_address")
-    public String taskAddress;
+    public AddressModel taskAddress;
 
 //    @SerializedName("task_category")
 //    public String categoryName;
@@ -79,8 +79,8 @@ public class TaskDetailModel implements Serializable {
     public String additionalQuoteAmount;
 
     // Added for New UI
-    @SerializedName("task_address_id")
-    public String taskAddressId;
+//    @SerializedName("task_address_id")
+//    public String taskAddressId;
 
     @SerializedName("task_type")
     public String taskType;
@@ -158,7 +158,7 @@ public class TaskDetailModel implements Serializable {
 
     }
 
-    public TaskDetailModel(String taskId, String taskDesc, String taskStartdate, String taskImage, String taskAddress, ProviderModel selectedProvider, JobCategoryModel categoryName, String providerCount) {
+    public TaskDetailModel(String taskId, String taskDesc, String taskStartdate, String taskImage, AddressModel taskAddress, ProviderModel selectedProvider, JobCategoryModel categoryName, String providerCount) {
         this.taskId = taskId;
         this.taskDesc = taskDesc;
         this.taskStartdate = taskStartdate;

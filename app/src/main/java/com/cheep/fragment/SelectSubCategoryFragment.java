@@ -94,7 +94,7 @@ public class SelectSubCategoryFragment extends BaseFragment {
         }
 
         // Hide the post task button
-        mTaskCreationActivity.showPostTaskButton(false, false);
+        mTaskCreationActivity.showPostTaskButton(true, false);
     }
 
     @Override
