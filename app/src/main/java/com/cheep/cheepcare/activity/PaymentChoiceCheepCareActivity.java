@@ -412,7 +412,7 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
         mParams.put(NetworkUtility.TAGS.BUNDLE_DISCOUNT_PERCENT, String.valueOf(paymentDataModel.bundlediscountPercent));
         mParams.put(NetworkUtility.TAGS.BUNDLE_DISCOUNT_PRICE, String.valueOf(paymentDataModel.bundlediscountPrice));
         mParams.put(NetworkUtility.TAGS.CART_DETAIL, cartDetail);
-        mParams.put(NetworkUtility.TAGS.SUBS_ID, subsId);
+        mParams.put(NetworkUtility.TAGS.SUBS_ID.toLowerCase(), subsId);
         mParams.put(NetworkUtility.TAGS.IS_RENEW, isSubscription);
 
         LogUtils.LOGE(TAG, "callBookProAndPayForNormalTaskWS: mParams " + mParams);

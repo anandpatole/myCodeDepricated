@@ -82,7 +82,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
      * @param context         context of activity
      * @param taskDetailModel task detail model class
      */
-    public static void newInstance(Context context, TaskDetailModel taskDetailModel) {
+    public static void +newInstance(Context context, TaskDetailModel taskDetailModel) {
         Intent intent = new Intent(context, PaymentChoiceActivity.class);
         intent.putExtra(Utility.Extra.DATA, GsonUtility.getJsonStringFromObject(taskDetailModel));
         intent.putExtra(Utility.Extra.IS_PAY_NOW, false);
