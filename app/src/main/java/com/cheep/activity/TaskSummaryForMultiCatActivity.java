@@ -885,7 +885,7 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
         mBinding.lnTaskMoreLess.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(mBinding.lnTaskDesc.getVisibility() == View.VISIBLE){
+                if(mBinding.imgMoreLessTask.isSelected()){
                     mBinding.lnTaskDesc.setVisibility(View.GONE);
                     mBinding.textViewMoreLessTask.setText(getString(R.string.view_more));
                     mBinding.imgMoreLessTask.setSelected(false);
@@ -902,7 +902,7 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
         mBinding.lnWhereMoreLess.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(mBinding.textTaskWhereAddress.getVisibility() == View.VISIBLE){
+                if(mBinding.imgMoreLessWhere.isSelected()){
                     mBinding.textTaskWhereAddress.setVisibility(View.GONE);
                     mBinding.textViewMoreLessWhere.setText(getString(R.string.view_more));
                     mBinding.imgMoreLessWhere.setSelected(false);
