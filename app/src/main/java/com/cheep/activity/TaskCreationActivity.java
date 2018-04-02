@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
 import android.graphics.Point;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -68,7 +69,7 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
     private ActivityTaskCreateBinding mActivityTaskCreateBinding;
     public JobCategoryModel mJobCategoryModel;
     TaskCreationPagerAdapter mTaskCreationPagerAdapter;
-//    private SubServiceDetailModel mSelectedSubServiceDetailModel;
+    //    private SubServiceDetailModel mSelectedSubServiceDetailModel;
     Map<String, Object> mTaskCreationParams;
     CustomLoadingDialog mDialog;
     private boolean isInstaBooking = false;
@@ -216,6 +217,24 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
         mActivityTaskCreateBinding.addMedia.ivHideMediaUi.setOnClickListener(mOnClickListener);
         mActivityTaskCreateBinding.addMedia.ivPlus.setOnClickListener(mOnClickListener);
 
+        mActivityTaskCreateBinding.textPostTask.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        // Make the status Verified
+                        mTaskCreationPagerAdapter.mSelectSubCategoryFragment.isVerified = true;
+
+                        //Alert The activity that step one is been verified.
+                        setTaskState(TaskCreationActivity.STEP_ONE_VERIFIED);
+                        gotoStep(TaskCreationActivity.STAGE_2);
+                    }
+                }, 500);
+
+
+            }
+        });
     }
 
 
@@ -366,8 +385,8 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
 
     public void showPostTaskButton(boolean needsToShow, boolean isEnabled) {
 
-       if (needsToShow) {
-            mActivityTaskCreateBinding.textPostTask.setVisibility(View.GONE);
+        if (needsToShow) {
+            mActivityTaskCreateBinding.textPostTask.setVisibility(View.VISIBLE);
         } else {
             mActivityTaskCreateBinding.textPostTask.setVisibility(View.GONE);
         }
@@ -375,9 +394,11 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
 
         if (isEnabled) {
             mActivityTaskCreateBinding.textPostTask.setSelected(true);
+            mActivityTaskCreateBinding.textPostTask.setEnabled(true);
             mActivityTaskCreateBinding.textPostTask.setBackgroundColor(ContextCompat.getColor(mContext, R.color.splash_gradient_end));
         } else {
             mActivityTaskCreateBinding.textPostTask.setSelected(false);
+            mActivityTaskCreateBinding.textPostTask.setEnabled(false);
             mActivityTaskCreateBinding.textPostTask.setBackgroundColor(ContextCompat.getColor(mContext, R.color.grey_varient_12));
         }
     }
@@ -452,10 +473,16 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
      * this is new method of instabook flow from here user wil navigated to booking confirmation screen
      */
     public void onInstaBookClickedNew() {
+        if (PreferenceUtility.getInstance(mContext).getUserDetails() == null) {
+            isInstaBooking = true;
+            LoginActivity.newInstance(mContext);
+            return;
+        }
+
         TaskDetailModel taskDetailModel = new TaskDetailModel();
 //                    taskDetailModel.categoryName = mJobCategoryModel.catName;
         taskDetailModel.subCategoryName = getSubCatList().get(0).name;
-        if (taskDetailModel.taskAddress==null)
+        if (taskDetailModel.taskAddress == null)
             taskDetailModel.taskAddress = new AddressModel();
         taskDetailModel.taskAddress.address = mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.address;
         taskDetailModel.taskAddress.address_id = mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.address_id;

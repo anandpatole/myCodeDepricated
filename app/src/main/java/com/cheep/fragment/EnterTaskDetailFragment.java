@@ -149,6 +149,8 @@ public class EnterTaskDetailFragment extends BaseFragment implements RequestPerm
         if (!isVisibleToUser || mTaskCreationActivity == null) {
             return;
         }
+        if (isVisibleToUser)
+        mTaskCreationActivity.showPostTaskButton(false, isTotalVerified);
 
         // Update Task related details
         updateTaskDetails();
@@ -211,7 +213,7 @@ public class EnterTaskDetailFragment extends BaseFragment implements RequestPerm
         //Update SubCategory
         if (mTaskCreationActivity != null && !mTaskCreationActivity.getSubCatList().isEmpty())
             mFragmentEnterTaskDetailBinding.recyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
-            mFragmentEnterTaskDetailBinding.recyclerView.setAdapter(new SelectedSubServiceAdapter(mTaskCreationActivity.getSubCatList()));
+        mFragmentEnterTaskDetailBinding.recyclerView.setAdapter(new SelectedSubServiceAdapter(mTaskCreationActivity.getSubCatList()));
     }
 
     @Override
@@ -289,18 +291,20 @@ public class EnterTaskDetailFragment extends BaseFragment implements RequestPerm
             }
         });
 
-            // Update the SP lists for Normal User
-            callSPListWS(mTaskCreationActivity.mJobCategoryModel.catId,
-                    false,
-                    null,
-                    null);
+        // Update the SP lists for Normal User
+        callSPListWS(mTaskCreationActivity.mJobCategoryModel.catId,
+                false,
+                null,
+                null);
 
         mFragmentEnterTaskDetailBinding.cvInstaBook.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                updateFinalVerificationFlag();
                 Log.i("myLog", "" + isTotalVerified);
-//                mTaskCreationActivity.onInstaBookClicked();
-                mTaskCreationActivity.onInstaBookClickedNew();
+                if (isTotalVerified) {
+                    mTaskCreationActivity.onInstaBookClickedNew();
+                }
             }
         });
 
@@ -308,9 +312,9 @@ public class EnterTaskDetailFragment extends BaseFragment implements RequestPerm
             @Override
             public void onClick(View view) {
                 Log.i("myLog", "" + isTotalVerified);
-
-                mTaskCreationActivity.onGetQuoteClicked();
-
+                if (isTotalVerified) {
+                    mTaskCreationActivity.onGetQuoteClicked();
+                }
             }
         });
 
@@ -357,7 +361,7 @@ public class EnterTaskDetailFragment extends BaseFragment implements RequestPerm
         mFragmentEnterTaskDetailBinding.lnTaskMoreLess.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(mFragmentEnterTaskDetailBinding.imgMoreLessTask.isSelected()) {
+                if (mFragmentEnterTaskDetailBinding.imgMoreLessTask.isSelected()) {
                     mFragmentEnterTaskDetailBinding.rlRootTaskToShowHide.setVisibility(View.GONE);
                     mFragmentEnterTaskDetailBinding.textViewMoreLessTask.setText(getString(R.string.view_more));
                     mFragmentEnterTaskDetailBinding.imgMoreLessTask.setSelected(false);
@@ -373,7 +377,7 @@ public class EnterTaskDetailFragment extends BaseFragment implements RequestPerm
         mFragmentEnterTaskDetailBinding.lnWhereMoreLess.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(mFragmentEnterTaskDetailBinding.imgMoreLessWhere.isSelected()) {
+                if (mFragmentEnterTaskDetailBinding.imgMoreLessWhere.isSelected()) {
                     mFragmentEnterTaskDetailBinding.textTaskWhere.setVisibility(View.GONE);
                     mFragmentEnterTaskDetailBinding.textViewMoreLessWhere.setText(getString(R.string.view_more));
                     mFragmentEnterTaskDetailBinding.imgMoreLessWhere.setSelected(false);
@@ -401,7 +405,7 @@ public class EnterTaskDetailFragment extends BaseFragment implements RequestPerm
             mFragmentEnterTaskDetailBinding.textWhere.setTextColor(ContextCompat.getColor(mContext, R.color.grey_varient_11));
             mFragmentEnterTaskDetailBinding.textTaskWhere.setVisibility(View.GONE);
             mFragmentEnterTaskDetailBinding.textTaskWhere.setText(Utility.EMPTY_STRING);
-            Log.e(TAG, "updateWhereLabelWithIcon: not enabled" );
+            Log.e(TAG, "updateWhereLabelWithIcon: not enabled");
         } else {
             mFragmentEnterTaskDetailBinding.iconTaskWhere.setImageResource(R.drawable.ic_icon_task_where_active);
             mFragmentEnterTaskDetailBinding.textWhere.setTextColor(ContextCompat.getColor(mContext, R.color.splash_gradient_end));
@@ -410,7 +414,7 @@ public class EnterTaskDetailFragment extends BaseFragment implements RequestPerm
             mFragmentEnterTaskDetailBinding.imgMoreLessWhere.setSelected(true);
             mFragmentEnterTaskDetailBinding.textViewMoreLessWhere.setText(getString(R.string.view_less));
             setWhereCategoryAndSubscribeType();
-            Log.e(TAG, "updateWhereLabelWithIcon: enabled" );
+            Log.e(TAG, "updateWhereLabelWithIcon: enabled");
         }
     }
 
@@ -418,15 +422,15 @@ public class EnterTaskDetailFragment extends BaseFragment implements RequestPerm
 
         mFragmentEnterTaskDetailBinding.textAddressCategory.setVisibility(View.VISIBLE);
         mFragmentEnterTaskDetailBinding.imgAddressCategory.setVisibility(View.VISIBLE);
-        if(mSelectedAddressModel.nickname != null && !TextUtils.isEmpty(mSelectedAddressModel.nickname)) {
+        if (mSelectedAddressModel.nickname != null && !TextUtils.isEmpty(mSelectedAddressModel.nickname)) {
             mFragmentEnterTaskDetailBinding.textAddressCategory.setText(mSelectedAddressModel.nickname);
         } else {
-            mFragmentEnterTaskDetailBinding.textAddressCategory.setText(mSelectedAddressModel.category.substring(0,1).toUpperCase() + mSelectedAddressModel.category.substring(1));
-            Log.e(TAG, "setWhereCategoryAndSubscribeType: " +  mSelectedAddressModel.category);
+            mFragmentEnterTaskDetailBinding.textAddressCategory.setText(mSelectedAddressModel.category.substring(0, 1).toUpperCase() + mSelectedAddressModel.category.substring(1));
+            Log.e(TAG, "setWhereCategoryAndSubscribeType: " + mSelectedAddressModel.category);
         }
 
         //Set Subscribed yes/no
-        if(mSelectedAddressModel.is_subscribe.equalsIgnoreCase(Utility.BOOLEAN.YES)) {
+        if (mSelectedAddressModel.is_subscribe.equalsIgnoreCase(Utility.BOOLEAN.YES)) {
             mFragmentEnterTaskDetailBinding.textTaskCheepSubscribed.setVisibility(View.VISIBLE);
         } else {
             mFragmentEnterTaskDetailBinding.textTaskCheepSubscribed.setVisibility(View.GONE);
@@ -1403,7 +1407,7 @@ public class EnterTaskDetailFragment extends BaseFragment implements RequestPerm
                                         ? NetworkUtility.TAGS.ADDRESS_TYPE.HOME
                                         : radio_office.isChecked() ? NetworkUtility.TAGS.ADDRESS_TYPE.OFFICE : NetworkUtility.TAGS.ADDRESS_TYPE.OTHERS)
                                 */
-/*, edtName.getText().toString().trim()*//*
+    /*, edtName.getText().toString().trim()*//*
 
                                 , edtAddress.getText().toString().trim()
                                 , edtAddressInitials.getText().toString().trim()
@@ -1466,7 +1470,7 @@ public class EnterTaskDetailFragment extends BaseFragment implements RequestPerm
                 }
             }*//*
 
-            *//*String locationProviders = Settings.Secure.getString(getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
+         *//*String locationProviders = Settings.Secure.getString(getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
             if (locationProviders == null || locationProviders.equals("")) {
                 //show gps disabled and enable gps dialog here
                 showGPSEnableDialog();
