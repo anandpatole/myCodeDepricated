@@ -11,6 +11,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.PagerSnapHelper;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
@@ -31,10 +32,10 @@ import com.cheep.databinding.ActivityTaskCreateCcBinding;
 import com.cheep.dialogs.CustomLoadingDialog;
 import com.cheep.model.AddressModel;
 import com.cheep.model.JobCategoryModel;
+import com.cheep.model.MediaModel;
 import com.cheep.model.MessageEvent;
 import com.cheep.model.SubServiceDetailModel;
 import com.cheep.utils.AmazonUtils;
-import com.cheep.model.MediaModel;
 import com.cheep.utils.GlideUtility;
 import com.cheep.utils.GsonUtility;
 import com.cheep.utils.LogUtils;
@@ -73,6 +74,7 @@ public class TaskCreationCCActivity extends BaseAppCompatActivity {
     private float allPixels;
     private MediaFullScreenAdapter mediaFullScreenAdapter;
     private int expectedPosition;
+    private LinearLayoutManager layoutManager;
     //variables for add media//
 
     public static void getInstance(Context mContext, JobCategoryModel model, AddressModel addressModel, String packageType
@@ -176,40 +178,51 @@ public class TaskCreationCCActivity extends BaseAppCompatActivity {
 
         allPixels = 0;
 
-        LinearLayoutManager shopItemslayoutManager = new LinearLayoutManager(getApplicationContext());
-        shopItemslayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        mBinding.addMedia.itemList.setLayoutManager(shopItemslayoutManager);
+        layoutManager = new LinearLayoutManager(getApplicationContext());
+        layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        PagerSnapHelper pagerSnapHelper = new PagerSnapHelper();
+        pagerSnapHelper.attachToRecyclerView(mBinding.addMedia.itemList);
+        mBinding.addMedia.itemList.setLayoutManager(layoutManager);
 
         mBinding.addMedia.itemList.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
-                synchronized (this) {
-                    if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                        calculatePositionAndScroll(recyclerView);
-                    }
+                if (newState == RecyclerView.SCROLL_STATE_DRAGGING) {
+                    //Dragging
+                } else if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    int review_position = layoutManager.findFirstCompletelyVisibleItemPosition();
+                    mBinding.addMedia.tvNumberOfMedia.setText(getString(R.string.number_of_media, String.valueOf((review_position + 1))
+                            , String.valueOf(mediaFullScreenAdapter.getListSize())));
                 }
             }
 
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-                allPixels += dx;
+
+//                int firstVisibleItem = layoutManager.findFirstVisibleItemPosition();
+                /* Log.e ("VisibleItem", String.valueOf(firstVisibleItem));*/
+
             }
         });
 
         mediaFullScreenAdapter = new MediaFullScreenAdapter(mediaInteractionListener);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false);
-        mBinding.addMedia.itemList.setLayoutManager(layoutManager);
         mBinding.addMedia.itemList.setAdapter(mediaFullScreenAdapter);
     }
 
+/*
     private void calculatePositionAndScroll(RecyclerView recyclerView) {
-        expectedPosition = Math.round((allPixels/* + padding*/) / itemWidth);
+        expectedPosition = Math.round((allPixels*/
+    /* + padding*//*
+) / itemWidth);
         scrollListToPosition(recyclerView, expectedPosition);
-        mBinding.addMedia.tvNumberOfMedia.setText(getString(R.string.number_of_media, String.valueOf(expectedPosition + 1/* + 1*/)
+        mBinding.addMedia.tvNumberOfMedia.setText(getString(R.string.number_of_media, String.valueOf(expectedPosition + 1*/
+    /* + 1*//*
+)
                 , String.valueOf(mediaFullScreenAdapter.getListSize())));
     }
+*/
 
     private void scrollListToPosition(RecyclerView recyclerView, int expectedPosition) {
         float targetScrollPos = expectedPosition * itemWidth/* - padding*/;
@@ -626,7 +639,15 @@ public class TaskCreationCCActivity extends BaseAppCompatActivity {
                 mBinding.addMedia.ivHideMediaUi.performClick();
             }
             mediaFullScreenAdapter.removeItem(TaskCreationCCActivity.this, position, model);
-            calculatePositionAndScroll(mBinding.addMedia.itemList);
+//            calculatePositionAndScroll(mBinding.addMedia.itemList);
+            mBinding.addMedia.itemList.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    int review_position = layoutManager.findFirstCompletelyVisibleItemPosition();
+                    mBinding.addMedia.tvNumberOfMedia.setText(getString(R.string.number_of_media, String.valueOf((review_position + 1))
+                            , String.valueOf(mediaFullScreenAdapter.getListSize())));
+                }
+            }, 500);
             mTaskCreationPagerAdapter.mTaskCreationPhase2Fragment.removeMediaItem(position, model);
         }
     };

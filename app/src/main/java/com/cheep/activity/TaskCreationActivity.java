@@ -14,6 +14,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.PagerSnapHelper;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Display;
@@ -79,6 +80,7 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
     private float allPixels;
     private MediaFullScreenAdapter mediaFullScreenAdapter;
     private int expectedPosition;
+    private LinearLayoutManager layoutManager;
     //variables for add media//
 
     public static void getInstance(Context mContext, JobCategoryModel model) {
@@ -172,7 +174,7 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
         shopItemslayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         mActivityTaskCreateBinding.addMedia.itemList.setLayoutManager(shopItemslayoutManager);
 
-        mActivityTaskCreateBinding.addMedia.itemList.addOnScrollListener(new RecyclerView.OnScrollListener() {
+    /*    mActivityTaskCreateBinding.addMedia.itemList.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
@@ -188,12 +190,37 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
                 super.onScrolled(recyclerView, dx, dy);
                 allPixels += dx;
             }
-        });
+        });*/
 
         mediaFullScreenAdapter = new MediaFullScreenAdapter(mediaInteractionListener);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false);
+        layoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false);
+        PagerSnapHelper pagerSnapHelper = new PagerSnapHelper();
+        pagerSnapHelper.attachToRecyclerView(mActivityTaskCreateBinding.addMedia.itemList);
         mActivityTaskCreateBinding.addMedia.itemList.setLayoutManager(layoutManager);
         mActivityTaskCreateBinding.addMedia.itemList.setAdapter(mediaFullScreenAdapter);
+
+        mActivityTaskCreateBinding.addMedia.itemList.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (newState == RecyclerView.SCROLL_STATE_DRAGGING) {
+                    //Dragging
+                } else if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    int review_position = layoutManager.findFirstCompletelyVisibleItemPosition();
+                    mActivityTaskCreateBinding.addMedia.tvNumberOfMedia.setText(getString(R.string.number_of_media, String.valueOf((review_position + 1))
+                            , String.valueOf(mediaFullScreenAdapter.getListSize())));
+                }
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+//                int firstVisibleItem = layoutManager.findFirstVisibleItemPosition();
+                /* Log.e ("VisibleItem", String.valueOf(firstVisibleItem));*/
+
+            }
+        });
     }
 
     private void calculatePositionAndScroll(RecyclerView recyclerView) {
@@ -1142,7 +1169,15 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
                 mActivityTaskCreateBinding.addMedia.ivHideMediaUi.performClick();
             }
             mediaFullScreenAdapter.removeItem(TaskCreationActivity.this, position, model);
-            calculatePositionAndScroll(mActivityTaskCreateBinding.addMedia.itemList);
+//            calculatePositionAndScroll(mActivityTaskCreateBinding.addMedia.itemList);
+            mActivityTaskCreateBinding.addMedia.itemList.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    int review_position = layoutManager.findFirstCompletelyVisibleItemPosition();
+                    mActivityTaskCreateBinding.addMedia.tvNumberOfMedia.setText(getString(R.string.number_of_media, String.valueOf((review_position + 1))
+                            , String.valueOf(mediaFullScreenAdapter.getListSize())));
+                }
+            }, 500);
             mTaskCreationPagerAdapter.mEnterTaskDetailFragment.removeMediaItem(position, model);
         }
     };

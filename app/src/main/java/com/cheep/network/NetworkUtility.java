@@ -12,7 +12,9 @@ import java.util.Map;
 public class NetworkUtility {
 
     public static final class WS {
+
         private static final String BASE_URL = BuildConfig.BASE_URL;
+
         private static final String BASE_URL_API = BuildConfig.BASE_URL_API;
 
 
