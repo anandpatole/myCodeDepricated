@@ -9,8 +9,7 @@
 
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_above="@+id/ln_pay_now">
+            android:layout_height="match_parent">
 
             <android.support.v4.widget.NestedScrollView
                 android:layout_width="match_parent"
@@ -914,6 +913,67 @@
 
                     </LinearLayout>
 
+                    <LinearLayout
+                        android:id="@+id/ln_pay_now"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:paddingBottom="@dimen/scale_16dp"
+                        android:paddingLeft="@dimen/scale_16dp"
+                        android:paddingRight="@dimen/scale_16dp"
+                        android:paddingTop="@dimen/scale_16dp"
+                        android:visibility="visible">
+
+                        <com.cheep.custom_view.CFTextViewRegular
+                            android:id="@+id/tv_payment_pending_desc"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:gravity="center_horizontal"
+                            android:text="@string/label_pay_pending_amount_msg"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/text_size_14sp"/>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/scale_18dp"
+                            android:layout_marginRight="@dimen/scale_18dp"
+                            android:layout_marginTop="@dimen/scale_10dp"
+                            android:gravity="center"
+                            android:orientation="horizontal">
+
+                            <com.cheep.custom_view.CFTextViewSemiBold
+                                android:id="@+id/tv_pay_now"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="bottom"
+                                android:layout_marginRight="@dimen/scale_20dp"
+                                android:layout_weight="1"
+                                android:background="@drawable/img_blue_rounded"
+                                android:gravity="center"
+                                android:minWidth="150dp"
+                                android:padding="@dimen/scale_10dp"
+                                android:text="@string/label_pay_now"
+                                android:textAllCaps="false"
+                                android:textColor="@color/white"/>
+
+                            <com.cheep.custom_view.CFTextViewSemiBold
+                                android:id="@+id/tv_support"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="bottom"
+                                android:layout_weight="1"
+                                android:background="@drawable/img_blue_edges_rounded"
+                                android:gravity="center"
+                                android:minWidth="150dp"
+                                android:padding="@dimen/scale_10dp"
+                                android:text="@string/label_support"
+                                android:textAllCaps="false"
+                                android:textColor="@color/splash_gradient_end"/>
+                        </LinearLayout>
+                    </LinearLayout>
+
                 </LinearLayout>
             </android.support.v4.widget.NestedScrollView>
 
@@ -927,28 +987,30 @@
         -->
         <!--android:text="@string/label_pay_fee_v1"-->
 
-        <LinearLayout
-            android:id="@+id/ln_pay_now"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_gravity="bottom"
-            android:orientation="horizontal">
+        <!--
+                <LinearLayout
+                    android:id="@+id/ln_pay_now"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_gravity="bottom"
+                    android:orientation="horizontal">
 
-            <com.cheep.custom_view.CFTextViewSemiBold
-                android:id="@+id/text_pay_now"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@drawable/payment_detail_btn_blue_selector"
-                android:gravity="center"
-                android:padding="@dimen/scale_10dp"
-                android:text="@string/label_pay_now"
-                android:textColor="@color/white"
-                android:textSize="@dimen/text_size_17sp"
-                android:visibility="visible"/>
+                    <com.cheep.custom_view.CFTextViewSemiBold
+                        android:id="@+id/text_pay_now"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@drawable/payment_detail_btn_blue_selector"
+                        android:gravity="center"
+                        android:padding="@dimen/scale_10dp"
+                        android:text="@string/label_pay_now"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/text_size_17sp"
+                        android:visibility="visible"/>
 
-        </LinearLayout>
+                </LinearLayout>
+        -->
 
     </RelativeLayout>
 </layout>

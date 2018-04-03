@@ -151,12 +151,6 @@ public class BookingConfirmationInstaActivity extends BaseAppCompatActivity {
 
         setPayButtonSelection();
 
-        mBinding.llNonWorkingHourFree.setVisibility(View.GONE);
-        mBinding.tvAdditionalCharges.setVisibility(View.GONE);
-        mBinding.viewLine1.setVisibility(View.GONE);
-        mBinding.viewLine1.setVisibility(View.GONE);
-
-
         double subServiceTotal = 0;
         double subServiceTotalWithGST = 0;
         for (SubServiceDetailModel subServiceDetailModel : taskDetailModel.subCatList) {
@@ -178,7 +172,7 @@ public class BookingConfirmationInstaActivity extends BaseAppCompatActivity {
 
         mBinding.tvTotal.setText(getString(R.string.rupee_symbol_x, Utility.getQuotePriceFormatter(String.valueOf(totalWithGST))));
 
-        mBinding.tvBookAndPay.setVisibility(View.GONE);
+        mBinding.lnPayNow.setVisibility(View.GONE);
         mBinding.lnPayLaterPayNowButtons.setVisibility(View.VISIBLE);
 
         initUIForReferDiscountAndPromoCode();
@@ -594,8 +588,8 @@ public class BookingConfirmationInstaActivity extends BaseAppCompatActivity {
         mBinding.rlPayNow.setSelected(mBinding.ivTermsTick.isSelected());
         mBinding.rlPayLater.setEnabled(mBinding.ivTermsTick.isSelected());
         mBinding.rlPayNow.setEnabled(mBinding.ivTermsTick.isSelected());
-        mBinding.tvBookAndPay.setSelected(mBinding.ivTermsTick.isSelected());
-        mBinding.tvBookAndPay.setEnabled(mBinding.ivTermsTick.isSelected());
+        mBinding.tvPayNow.setSelected(mBinding.ivTermsTick.isSelected());
+        mBinding.tvPayNow.setEnabled(mBinding.ivTermsTick.isSelected());
     }
 
     View.OnClickListener onPayLaterClickListener = new View.OnClickListener() {
@@ -720,55 +714,6 @@ public class BookingConfirmationInstaActivity extends BaseAppCompatActivity {
         EventBus.getDefault().unregister(this);
         super.onDestroy();
     }
-
-
-    private final WebCallClass.CommonResponseListener mCommonResponseListener =
-            new WebCallClass.CommonResponseListener() {
-                @Override
-                public void volleyError(VolleyError error) {
-                    Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
-                    hideProgressDialog();
-                    Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
-                }
-
-                @Override
-                public void showSpecificMessage(String message) {
-                    hideProgressDialog();
-                    // Show message
-                    Utility.showSnackBar(message, mBinding.getRoot());
-                }
-
-                @Override
-                public void forceLogout() {
-                    hideProgressDialog();
-                    finish();
-                }
-            };
-
-    private final WebCallClass.CommonResponseListener mErrorListnerForExcessLimitFees =
-            new WebCallClass.CommonResponseListener() {
-                @Override
-                public void volleyError(VolleyError error) {
-                    Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
-                    hideProgressDialog();
-                    Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
-                    mBinding.tvBookAndPay.setEnabled(false);
-                }
-
-                @Override
-                public void showSpecificMessage(String message) {
-                    hideProgressDialog();
-                    // Show message
-                    Utility.showSnackBar(message, mBinding.getRoot());
-                    mBinding.tvBookAndPay.setEnabled(false);
-                }
-
-                @Override
-                public void forceLogout() {
-                    hideProgressDialog();
-                    finish();
-                }
-            };
 
     private void callGetReferBalance() {
         showProgressDialog();

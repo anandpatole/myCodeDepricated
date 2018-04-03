@@ -812,7 +812,7 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
     }
 
     private void setTaskWhere() {
-        mBinding.textTaskWhere.setText(mTaskDetailModel.taskAddress);
+        mBinding.textTaskWhere.setText(mTaskDetailModel.taskAddress.address);
         mBinding.lnTaskWhere.setOnClickListener(mOnClickListener);
     }
 

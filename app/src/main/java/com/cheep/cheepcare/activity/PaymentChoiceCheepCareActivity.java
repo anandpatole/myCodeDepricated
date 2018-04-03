@@ -19,13 +19,14 @@ import com.cheep.activity.AddMoneyActivity;
 import com.cheep.activity.BaseAppCompatActivity;
 import com.cheep.activity.HDFCPaymentGatewayActivity;
 import com.cheep.activity.SendOtpActivity;
+import com.cheep.activity.SubscriptionActivity;
 import com.cheep.activity.WithdrawMoneyActivity;
 import com.cheep.cheepcare.dialogs.PaymentFailedDialog;
 import com.cheep.cheepcare.dialogs.TaskConfirmedCCInstaBookDialog;
+import com.cheep.cheepcare.model.CareCityDetail;
 import com.cheep.cheepcare.model.CheepCarePaymentDataModel;
-import com.cheep.cheepcare.model.CityDetail;
 import com.cheep.cheepcare.model.SubscribedTaskDetailModel;
-import com.cheep.databinding.ActivityPaymentChoiceBinding;
+import com.cheep.databinding.ActivityPaymentChoiceCheepCareBinding;
 import com.cheep.dialogs.AcknowledgementInteractionListener;
 import com.cheep.model.AddressModel;
 import com.cheep.model.MessageEvent;
@@ -60,11 +61,12 @@ import static com.cheep.network.NetworkUtility.PAYTM.PARAMETERS.response;
 public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implements View.OnClickListener {
 
     private static final String TAG = LogUtils.makeLogTag(PaymentChoiceCheepCareActivity.class);
-    private ActivityPaymentChoiceBinding mBinding;
+    private ActivityPaymentChoiceCheepCareBinding mBinding;
     private Map<String, String> mTransactionParams;
     public static final int PAYTM_SEND_OTP = 0;
     public static final int PAYTM_ADD_MONEY = 1;
     public static final int PAYTM_WITHDRAW = 2;
+    public static final int PAYTM_SUBSCRIPTION = 3;
     private String cartDetail = "";
     private CheepCarePaymentDataModel paymentDataModel;
     private Map<String, Object> mTaskCreationParams;
@@ -74,7 +76,7 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
     private String paymentMethod;
     private double paytmPayableAmount;
     private double payableAmount;
-    private CityDetail cityDetail;
+    private CareCityDetail careCityDetail;
     private String paymentFor;
 
     public static final String PAYMENT_FOR_SUBSCRIPTION = "payment_for_subscription";
@@ -86,11 +88,11 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
          payment data model - payment info
          city detail - selected city data for which user is purchasing subscription
      */
-    public static void newInstance(Context context, String cartDetails, CheepCarePaymentDataModel paymentDataModel, CityDetail mCityDetail) {
+    public static void newInstance(Context context, String cartDetails, CheepCarePaymentDataModel paymentDataModel, CareCityDetail mCareCityDetail) {
         Intent intent = new Intent(context, PaymentChoiceCheepCareActivity.class);
         intent.putExtra(Utility.Extra.DATA, cartDetails);
         intent.putExtra(Utility.Extra.DATA_2, GsonUtility.getJsonStringFromObject(paymentDataModel));
-        intent.putExtra(Utility.Extra.DATA_3, GsonUtility.getJsonStringFromObject(mCityDetail));
+        intent.putExtra(Utility.Extra.DATA_3, GsonUtility.getJsonStringFromObject(mCareCityDetail));
         intent.putExtra(Utility.Extra.PAYMENT_VIEW, PAYMENT_FOR_SUBSCRIPTION);
         context.startActivity(intent);
     }
@@ -110,7 +112,7 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_payment_choice);
+        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_payment_choice_cheep_care);
 
         initiateUI();
         setListeners();
@@ -122,19 +124,20 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
     @Override
     protected void initiateUI() {
 
-        mBinding.llCashPayment.setVisibility(View.GONE);
         paymentFor = getIntent().getStringExtra(Utility.Extra.PAYMENT_VIEW);
         if (paymentFor.equalsIgnoreCase(PAYMENT_FOR_SUBSCRIPTION)) {
             cartDetail = getIntent().getStringExtra(Utility.Extra.DATA);
             paymentDataModel = (CheepCarePaymentDataModel) GsonUtility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA_2),
                     CheepCarePaymentDataModel.class);
-            cityDetail = (CityDetail) GsonUtility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA_3), CityDetail.class);
+            careCityDetail = (CareCityDetail) GsonUtility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA_3), CareCityDetail.class);
             payableAmount = paymentDataModel.payableAmount;
             LogUtils.LOGE(TAG, "initiateUI: paymentDataModel \n============\n" + paymentDataModel);
         } else {
             subscribedTaskDetailModel = (SubscribedTaskDetailModel) GsonUtility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA), SubscribedTaskDetailModel.class);
             payableAmount = subscribedTaskDetailModel.total;
         }
+        mBinding.paytmAutoRenewSwitch.setSelected(true);
+        mBinding.cartAutoRenewSwitch.setSelected(true);
         setupActionbar();
     }
 
@@ -153,7 +156,8 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
         mBinding.rlCard.setOnClickListener(this);
         mBinding.rlNetbanking.setOnClickListener(this);
         mBinding.rlPaytm.setOnClickListener(this);
-        mBinding.rlCashPayment.setOnClickListener(this);
+        mBinding.cartAutoRenewSwitch.setOnClickListener(this);
+        mBinding.paytmAutoRenewSwitch.setOnClickListener(this);
     }
 
     @Override
@@ -172,6 +176,12 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
 
             case R.id.rl_cash_payment:
 
+                break;
+            case R.id.cartAutoRenewSwitch:
+                mBinding.cartAutoRenewSwitch.setSelected(!view.isSelected());
+                break;
+            case R.id.paytmAutoRenewSwitch:
+                mBinding.paytmAutoRenewSwitch.setSelected(!view.isSelected());
                 break;
         }
     }
@@ -260,7 +270,7 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
                         if (BuildConfig.NEED_TO_BYPASS_PAYMENT) {
 //                            PLEASE NOTE: THIS IS JUST TO BYPPASS THE PAYMENT GATEWAY. THIS IS NOT
 //                            GOING TO RUN IN LIVE ENVIRONMENT BUILDS
-                            onSuccessOfPayment(getString(R.string.message_payment_bypassed));
+                            onSuccessOfPayment(getString(R.string.message_payment_bypassed), Utility.EMPTY_STRING, Utility.BOOLEAN.NO);
                         } else {
                             //TODO: Remove this when release and it is saving cc detail in clipboard only
                             if ("debug".equalsIgnoreCase(BuildConfig.BUILD_TYPE)) {
@@ -302,9 +312,9 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
         }
     };
 
-    private void onSuccessOfPayment(String paymentLog) {
+    private void onSuccessOfPayment(String paymentLog, String subsId, String isSubscription) {
         if (paymentFor.equalsIgnoreCase(PAYMENT_FOR_SUBSCRIPTION)) {
-            callCreateCheepCarePackageWS(paymentLog);
+            callCreateCheepCarePackageWS(paymentLog, subsId, isSubscription);
         } else {
             callCreateSubscribedTaskWS(paymentLog);
         }
@@ -370,7 +380,7 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
                 }
             };
 
-    private void callCreateCheepCarePackageWS(String paymentLog) {
+    private void callCreateCheepCarePackageWS(String paymentLog, String subsId, String isSubscription) {
         LogUtils.LOGE(TAG, "callCreateCheepCarePackageWS: paymentLog \n" + paymentLog);
 
 
@@ -395,13 +405,15 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
         mParams.put(NetworkUtility.TAGS.PAYABLE_AMOUNT, String.valueOf(paymentDataModel.payableAmount));
         mParams.put(NetworkUtility.TAGS.TAX_AMOUNT, String.valueOf(paymentDataModel.taxAmount));
         mParams.put(NetworkUtility.TAGS.IS_ANNUALLY, String.valueOf(paymentDataModel.isAnnually));
-        mParams.put(NetworkUtility.TAGS.CARE_CITY_ID, String.valueOf(cityDetail.id));
+        mParams.put(NetworkUtility.TAGS.CARE_CITY_ID, String.valueOf(careCityDetail.id));
         mParams.put(NetworkUtility.TAGS.PAYMENT_METHOD, paymentMethod);
         mParams.put(NetworkUtility.TAGS.PAYMENT_LOG, paymentLog);
         mParams.put(NetworkUtility.TAGS.DSA_CODE, paymentDataModel.dsaCode);
         mParams.put(NetworkUtility.TAGS.BUNDLE_DISCOUNT_PERCENT, String.valueOf(paymentDataModel.bundlediscountPercent));
         mParams.put(NetworkUtility.TAGS.BUNDLE_DISCOUNT_PRICE, String.valueOf(paymentDataModel.bundlediscountPrice));
         mParams.put(NetworkUtility.TAGS.CART_DETAIL, cartDetail);
+        mParams.put(NetworkUtility.TAGS.SUBS_ID.toLowerCase(), subsId);
+        mParams.put(NetworkUtility.TAGS.IS_RENEW, isSubscription);
 
         LogUtils.LOGE(TAG, "callBookProAndPayForNormalTaskWS: mParams " + mParams);
 
@@ -435,8 +447,7 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
                     //success
                     if (data != null) {
                         LogUtils.LOGE(TAG, "onActivityResult() called with success: result= [" + data.getStringExtra(Utility.Extra.PAYU_RESPONSE) + "]");
-                        onSuccessOfPayment(data.getStringExtra(Utility.Extra.PAYU_RESPONSE));
-
+                        onSuccessOfPayment(data.getStringExtra(Utility.Extra.PAYU_RESPONSE), Utility.EMPTY_STRING, Utility.BOOLEAN.NO);
                     }
                 }
                 if (resultCode == RESULT_CANCELED) {
@@ -483,7 +494,6 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
     protected void onDestroy() {
         // Unregister the listerners you register in OnCreate method
         try {
-            Volley.getInstance(PaymentChoiceCheepCareActivity.this).getRequestQueue().cancelAll(NetworkUtility.WS.PAY_TASK_PAYMENT);
             Volley.getInstance(PaymentChoiceCheepCareActivity.this).getRequestQueue().cancelAll(NetworkUtility.WS.PURCHASE_CARE_PACKAGE);
             EventBus.getDefault().unregister(this);
         } catch (Exception e) {
@@ -512,6 +522,8 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
                 } else {
                     // show linked account balace
                     mBinding.tvPaytmLinkAccount.setVisibility(View.GONE);
+                    if (mBinding.paytmAutoRenewSwitch.isSelected())
+                        PAYTM_STEP = PAYTM_SUBSCRIPTION;
 
                     checkBalance(userDetails.mPaytmUserDetail.paytmAccessToken);
                 }
@@ -539,7 +551,9 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
                 if (event.paytmResponse.isSuccess) {
                     // show dialog
 //                TODO: Need to start the task from here
-                    onSuccessOfPayment(event.paytmResponse.ResponsePayLoad);
+                    LogUtils.LOGE(TAG, "onMessageEvent:isSubscription " + event.paytmResponse.isSubscription);
+                    LogUtils.LOGE(TAG, "onMessageEvent:subsId " + event.paytmResponse.subsId);
+                    onSuccessOfPayment(event.paytmResponse.ResponsePayLoad, event.paytmResponse.subsId, event.paytmResponse.isSubscription);
                 } else {
 //                    Utility.showToast(mContext, getString(R.string.msg_payment_failed));
                     showPaymentFailedDialog();
@@ -665,10 +679,10 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
                 hideProgressDialog();
                 switch (statusCode) {
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
-                        ManageSubscriptionActivity.newInstance(PaymentChoiceCheepCareActivity.this, cityDetail
+                        ManageSubscriptionActivity.newInstance(PaymentChoiceCheepCareActivity.this, careCityDetail
                                 , false, Utility.EMPTY_STRING);
                         MessageEvent messageEvent = new MessageEvent();
-                        messageEvent.id = cityDetail.id;
+                        messageEvent.id = careCityDetail.id;
                         messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.PACKAGE_SUBSCRIBED_SUCCESSFULLY;
 
                         EventBus.getDefault().post(messageEvent);
@@ -758,18 +772,22 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
         UserDetails userDetails = PreferenceUtility.getInstance(PaymentChoiceCheepCareActivity.this).getUserDetails();
         UserDetails.PaytmUserDetail paytmUserDetail = userDetails.mPaytmUserDetail;
 
-        switch (PAYTM_STEP) {
-            case PAYTM_SEND_OTP:
-                SendOtpActivity.newInstance(mContext, true, String.valueOf(payableAmount));
-                break;
-            case PAYTM_ADD_MONEY:
-                AddMoneyActivity.newInstance(mContext, String.valueOf(payableAmount), paytmPayableAmount, paytmUserDetail.paytmAccessToken,
-                        paytmUserDetail.paytmphoneNumber, paytmUserDetail.paytmCustId, paytmWalletBalance);
-                break;
-            case PAYTM_WITHDRAW:
-                WithdrawMoneyActivity.newInstance(mContext, String.valueOf(payableAmount), paytmPayableAmount, paytmUserDetail.paytmAccessToken,
-                        paytmUserDetail.paytmphoneNumber, paytmUserDetail.paytmCustId, paytmWalletBalance, true);
-                break;
+        if (PAYTM_STEP == PAYTM_SEND_OTP) {
+            SendOtpActivity.newInstance(mContext, true, String.valueOf(payableAmount), mBinding.paytmAutoRenewSwitch.isSelected());
+        } else if (mBinding.paytmAutoRenewSwitch.isSelected()) {
+            SubscriptionActivity.newInstance(mContext, String.valueOf(payableAmount), paytmUserDetail.paytmAccessToken,
+                    paytmUserDetail.paytmphoneNumber, paytmUserDetail.paytmCustId);
+        } else {
+            switch (PAYTM_STEP) {
+                case PAYTM_ADD_MONEY:
+                    AddMoneyActivity.newInstance(mContext, String.valueOf(payableAmount), paytmPayableAmount, paytmUserDetail.paytmAccessToken,
+                            paytmUserDetail.paytmphoneNumber, paytmUserDetail.paytmCustId, paytmWalletBalance);
+                    break;
+                case PAYTM_WITHDRAW:
+                    WithdrawMoneyActivity.newInstance(mContext, String.valueOf(payableAmount), paytmPayableAmount, paytmUserDetail.paytmAccessToken,
+                            paytmUserDetail.paytmphoneNumber, paytmUserDetail.paytmCustId, paytmWalletBalance, true);
+                    break;
+            }
         }
     }
 

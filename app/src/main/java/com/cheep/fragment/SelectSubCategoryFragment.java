@@ -3,7 +3,6 @@ package com.cheep.fragment;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
@@ -46,7 +45,7 @@ public class SelectSubCategoryFragment extends BaseFragment {
     private SubServiceRecyclerViewAdapter mSubServiceRecyclerViewAdapter;
     ErrorLoadingHelper errorLoadingHelper;
     private TaskCreationActivity mTaskCreationActivity;
-    private boolean isVerified = false;
+    public boolean isVerified = false;
 
     @SuppressWarnings("unused")
     public static SelectSubCategoryFragment newInstance() {
@@ -94,7 +93,11 @@ public class SelectSubCategoryFragment extends BaseFragment {
         }
 
         // Hide the post task button
-        mTaskCreationActivity.showPostTaskButton(false, false);
+        if (getSubCatList().isEmpty()) {
+            mTaskCreationActivity.showPostTaskButton(true, false);
+        } else {
+            mTaskCreationActivity.showPostTaskButton(true, true);
+        }
     }
 
     @Override
@@ -106,6 +109,7 @@ public class SelectSubCategoryFragment extends BaseFragment {
     public void initiateUI() {
         Log.d(TAG, "initiateUI() called");
 
+        mTaskCreationActivity.showPostTaskButton(true, false);
         //Setting recycler view
         errorLoadingHelper = new ErrorLoadingHelper(mFragmentSelectSubserviceBinding.recyclerView);
 
@@ -115,24 +119,34 @@ public class SelectSubCategoryFragment extends BaseFragment {
         mFragmentSelectSubserviceBinding.recyclerView.setAdapter(mSubServiceRecyclerViewAdapter);
         errorLoadingHelper.showLoading();
         fetchListOfSubCategory(mTaskCreationActivity.mJobCategoryModel.catId);
+        if (getSubCatList().isEmpty()) {
+            mTaskCreationActivity.showPostTaskButton(true, false);
+        } else {
+            mTaskCreationActivity.showPostTaskButton(true, true);
+        }
     }
 
     @Override
     public void setListener() {
         Log.d(TAG, "setListener() called");
-        // TODO : new flow Remove this button
+       /* // TODO : new flow Remove this button
         mFragmentSelectSubserviceBinding.btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
+                        // Make the status Verified
+                        isVerified = true;
+
+                        //Alert The activity that step one is been verified.
+                        mTaskCreationActivity.setTaskState(TaskCreationActivity.STEP_ONE_VERIFIED);
                         mTaskCreationActivity.gotoStep(TaskCreationActivity.STAGE_2);
                     }
                 }, 500);
 
             }
-        });
+        });*/
     }
 
     public interface SubServiceListInteractionListener {
@@ -142,15 +156,19 @@ public class SelectSubCategoryFragment extends BaseFragment {
     private SubServiceListInteractionListener mSubServiceListInteractionListener = new SubServiceListInteractionListener() {
         @Override
         public void onSubCategoryRowItemClicked(SubServiceDetailModel subServiceDetailModel) {
-            mTaskCreationActivity.setSelectedSubService(subServiceDetailModel);
+//            mTaskCreationActivity.setSelectedSubService(subServiceDetailModel);
 
             Log.d(TAG, "onSubCategoryRowItemClicked() called with: subServiceDetailModel = [" + subServiceDetailModel.name + "]");
             // Make the status Verified
             isVerified = true;
-
             //Alert The activity that step one is been verified.
-            mTaskCreationActivity.setTaskState(TaskCreationActivity.STEP_ONE_VERIFIED);
-
+            if (getSubCatList().isEmpty()) {
+                mTaskCreationActivity.showPostTaskButton(true, false);
+                mTaskCreationActivity.setTaskState(TaskCreationActivity.STEP_ONE_UNVERIFIED);
+            } else {
+                mTaskCreationActivity.showPostTaskButton(true, true);
+                mTaskCreationActivity.setTaskState(TaskCreationActivity.STEP_ONE_VERIFIED);
+            }
             //TODO : commented for new flow
 //            new Handler().postDelayed(new Runnable() {
 //                @Override

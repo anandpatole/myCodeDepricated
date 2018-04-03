@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/scale_5dp"
+        android:paddingEnd="@dimen/scale_12dp"
+        android:paddingLeft="@dimen/scale_12dp"
+        android:paddingRight="@dimen/scale_12dp"
+        android:paddingStart="@dimen/scale_12dp"
+        android:paddingTop="@dimen/scale_5dp">
+
+        <com.cheep.custom_view.CFTextViewRegular
+            android:id="@+id/tv_city_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/splash_gradient_end"
+            android:textSize="@dimen/text_size_12sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:text="Home 1"/>
+
+    </android.support.constraint.ConstraintLayout>
+</layout>

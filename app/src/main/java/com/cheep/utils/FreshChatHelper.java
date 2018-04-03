@@ -40,7 +40,6 @@ public class FreshChatHelper {
         return freshChatHelper;
     }
 
-
     public void updateUserInfo(UserDetails userDetails, Context mContext) {
 
         if (PreferenceUtility.getInstance(mContext).getUserDetails() != null) {

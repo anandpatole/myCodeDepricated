@@ -3,6 +3,7 @@ package com.cheep.model;
 import android.support.annotation.Keep;
 
 import com.cheep.cheepcare.model.AdminSettingModel;
+import com.cheep.utils.Utility;
 
 import java.util.List;
 
@@ -58,6 +59,9 @@ public class MessageEvent {
 
         // This would be in JSON Formate
         public String ResponsePayLoad; // In JSON Format
+
+        public String subsId;
+        public String isSubscription = Utility.BOOLEAN.NO;
     }
 }
 

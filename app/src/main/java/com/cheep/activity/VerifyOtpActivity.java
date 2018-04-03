@@ -76,6 +76,7 @@ public class VerifyOtpActivity extends BaseAppCompatActivity {
     private String ssoId;
     private String generatedOrderId;
     private boolean isLowBalance;
+    private boolean isSubscription = false;
 
     private double payableAmount;
     private ActivityVerifyOtpBinding mActivityVerifyOtpBinding;
@@ -84,12 +85,13 @@ public class VerifyOtpActivity extends BaseAppCompatActivity {
     // set timer interval 1 sec
     private static final long RESEND_OTP_TIMER_INTERVAL = 1000;
 
-    public static void newInstance(Context context, String mobileNumber, String state, boolean isPaytm, String amount) {
+    public static void newInstance(Context context, String mobileNumber, String state, boolean isPaytm, String amount, boolean isSubscription) {
         Intent intent = new Intent(context, VerifyOtpActivity.class);
         intent.putExtra(Utility.Extra.MOBILE_NUMBER, mobileNumber);
         intent.putExtra(Utility.Extra.STATE, state);
         intent.putExtra(Utility.Extra.DATA, isPaytm);
         intent.putExtra(Utility.Extra.AMOUNT, amount);
+        intent.putExtra(Utility.Extra.IS_SUBSCRIPTION, isSubscription);
         context.startActivity(intent);
     }
 
@@ -123,6 +125,7 @@ public class VerifyOtpActivity extends BaseAppCompatActivity {
             mState = getIntent().getExtras().getString(Utility.Extra.STATE);
             isPaytm = getIntent().getExtras().getBoolean(Utility.Extra.DATA);
             amount = getIntent().getExtras().getString(Utility.Extra.AMOUNT);
+            isSubscription = getIntent().getExtras().getBoolean(Utility.Extra.IS_SUBSCRIPTION, false);
         }
 
 
@@ -318,7 +321,7 @@ public class VerifyOtpActivity extends BaseAppCompatActivity {
      * have not called getUserDetails API as whatever this API returns, we already get it in response of this API
      * do not hideProgressDialog as we need to call 3 (would be 4 in case we call getUserDetails API) APIs back to back
      *//*
-        *//*timer.cancel();*//*
+     *//*timer.cancel();*//*
 //        savePaytmUserDetails();
 //        checkBalance();
     }
@@ -350,9 +353,13 @@ public class VerifyOtpActivity extends BaseAppCompatActivity {
              * have not called getUserDetails API as whatever this API returns, we already get it in response of this API
              * do not hideProgressDialog as we need to call 3 (would be 4 in case we call getUserDetails API) APIs back to back
              */
-        /*timer.cancel();*/
+            /*timer.cancel();*/
             savePaytmUserDetails();
-            checkBalance();
+            if (isSubscription) {
+                SubscriptionActivity.newInstance(mContext, amount, accessToken, mMobileNumber, mResourceOwnerCustomerId);
+            } else {
+                checkBalance();
+            }
         }
 
         @Override
@@ -540,7 +547,7 @@ public class VerifyOtpActivity extends BaseAppCompatActivity {
             if (isValidated()) {
                 switch (v.getId()) {
                     case R.id.tv_send_otp:
-                    /*
+                        /*
                          * Hide the Keyboard if it opened
                          */
                         Utility.hideKeyboard(VerifyOtpActivity.this);

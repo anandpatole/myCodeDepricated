@@ -3,4 +3,13 @@
     <string name="label_response_received">Response Received</string>
     <string name="label_paid_with_cheep_care">With Cheep Care</string>
     <string name="cheep_care">Cheep Care\u0020</string>
+    <string name="label_pay_pending_amount_msg">Hi %1s! Tap on Pay Now to pay the pending amount.</string>
+    <string name="label_auto_renew_activated">Auto renewal activated</string>
+    <string name="label_vote_for_city_registered_successflly">Your vote for %1s has been successfully registered.</string>
+    <string name="view_more">View more</string>
+    <string name="view_less">View less</string>
+    <string name="label_task_details">Task Details</string>
+    <string name="subscribed_under_cheep_care">• Subscribed under Cheep Care</string>
+    <string name="please_select_your_address">Please select your address</string>
+
 </resources>

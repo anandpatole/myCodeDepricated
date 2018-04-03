@@ -92,6 +92,97 @@ public class TaskQuotesActivity extends BaseAppCompatActivity implements TaskQuo
     private Gson mGson;
     private Filter mFilter;
 
+
+    Response.Listener mCallTaskDetailWSResponseListener = new Response.Listener() {
+        @Override
+        public void onResponse(Object response) {
+            String strResponse = (String) response;
+            try {
+                JSONObject jsonObject = new JSONObject(strResponse);
+                Log.i(TAG, "onResponse: " + jsonObject.toString());
+                int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
+                String error_message;
+//                showProgressBar(false);
+                hideProgressDialog();
+
+                switch (statusCode) {
+                    case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
+
+//                        JSONObject jsonData = jsonObject.optJSONObject(NetworkUtility.TAGS.DATA);
+
+                        mTaskDetailModel = (TaskDetailModel) GsonUtility.getObjectFromJsonString(jsonObject.optString(NetworkUtility.TAGS.DATA), TaskDetailModel.class);
+                        Log.e(TAG, "mTaskDetailModel: " + mTaskDetailModel.isPrefedQuote);
+                        mAdapter = new TaskQuotesRecyclerViewAdapter(TaskQuotesActivity.this, mTaskDetailModel, /*mQuotesList,*/ TaskQuotesActivity.this);
+                        mRecyclerView.setAdapter(mAdapter);
+                        mRecyclerView.addItemDecoration(new DividerItemDecoration(mContext, R.drawable.divider_grey_normal));
+                        callSPListWS();
+
+                        break;
+                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
+                        // Show Toast
+                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mRoot);
+                        break;
+                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
+                        error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
+                        // Show message
+                        Utility.showSnackBar(error_message, mRoot);
+                        break;
+                    case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
+                    case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
+                        //Logout and finish the current activity
+                        Utility.logout(mContext, true, statusCode);
+                        finish();
+                        break;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                mCallTaskDetailWSErrorListener.onErrorResponse(new VolleyError(e.getMessage()));
+            }
+
+        }
+    };
+
+    Response.ErrorListener mCallTaskDetailWSErrorListener = new Response.ErrorListener() {
+        @Override
+        public void onErrorResponse(final VolleyError error) {
+            Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
+
+            // Close Progressbar
+//            showProgressBar(false);
+            hideProgressDialog();
+
+            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mRoot);
+
+        }
+    };
+
+    private void callTaskDetailWS(String taskId) {
+        if (!Utility.isConnected(mContext)) {
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mRoot);
+            return;
+        }
+
+        // Show Progressbar
+        showProgressDialog();
+        //Add Header parameters
+        Map<String, String> mHeaderParams = new HashMap<>();
+        mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
+        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().userID);
+
+        //Add Params
+        Map<String, Object> mParams = new HashMap<>();
+        mParams.put(NetworkUtility.TAGS.TASK_ID, taskId);
+
+        //Url is based on condition if address id is greater then 0 then it means we need to update the existing address
+        VolleyNetworkRequest mVolleyNetworkRequestForSPList = new VolleyNetworkRequest(NetworkUtility.WS.TASK_DETAIL
+                , mCallTaskDetailWSErrorListener
+                , mCallTaskDetailWSResponseListener
+                , mHeaderParams
+                , mParams
+                , null);
+        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequestForSPList, Utility.getUniqueTagForNetwork(this, NetworkUtility.WS.TASK_DETAIL));
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,7 +190,11 @@ public class TaskQuotesActivity extends BaseAppCompatActivity implements TaskQuo
 
         initiateUI();
 
-        callSPListWS();
+        if(mTaskDetailModel != null) {
+            callSPListWS();
+        } /*else {
+//            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mRoot);
+        }*/
 
         // Register EventBus
         EventBus.getDefault().register(this);
@@ -110,7 +205,14 @@ public class TaskQuotesActivity extends BaseAppCompatActivity implements TaskQuo
     protected void initiateUI() {
         //mIntentAction = getIntent().getAction();
         if (getIntent().getExtras() != null) {
-            mTaskDetailModel = (TaskDetailModel) GsonUtility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA), TaskDetailModel.class);
+            if(getIntent().hasExtra(Utility.Extra.DATA)) {
+                mTaskDetailModel = (TaskDetailModel) GsonUtility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA), TaskDetailModel.class);
+            } else if(getIntent().hasExtra(Utility.Extra.TASK_ID)) {
+                int taskId = getIntent().getIntExtra(Utility.Extra.TASK_ID, -1);
+                callTaskDetailWS(String.valueOf(taskId));
+            }
+        } else {
+            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mRoot);
         }
         mGson = new Gson();
 //        mQuotesList = new ArrayList<>();

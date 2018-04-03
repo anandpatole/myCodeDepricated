@@ -24,7 +24,7 @@ import com.cheep.R;
 import com.cheep.activity.BaseAppCompatActivity;
 import com.cheep.cheepcare.adapter.CheepCareFeatureAdapter;
 import com.cheep.cheepcare.adapter.CheepCarePackageAdapter;
-import com.cheep.cheepcare.model.CityDetail;
+import com.cheep.cheepcare.model.CareCityDetail;
 import com.cheep.cheepcare.model.CityLandingPageModel;
 import com.cheep.cheepcare.model.PackageDetail;
 import com.cheep.databinding.ActivityLandingScreenPickPackageBinding;
@@ -54,9 +54,9 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
     private CheepCareFeatureAdapter mFeatureAdapter;
     private CheepCarePackageAdapter mPackageAdapter;
     private CityLandingPageModel mCityLandingPageModel;
-    private CityDetail mCity;
+    private CareCityDetail mCity;
     private String mPackageListString = Utility.EMPTY_STRING;
-    private ArrayList<CityDetail> bannerCityDetailsList;
+    private ArrayList<CareCityDetail> bannerCareCityDetailsList;
     private static final String TAG = "LandingScreenPickPackag";
     private WebCallClass.CommonResponseListener commonErrorResponse = new WebCallClass.CommonResponseListener() {
         @Override
@@ -78,7 +78,7 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
         }
     };
 
-    public static void newInstance(Context context, CityDetail city, String cheepcareBannerListString) {
+    public static void newInstance(Context context, CareCityDetail city, String cheepcareBannerListString) {
         Intent intent = new Intent(context, LandingScreenPickPackageActivity.class);
         intent.putExtra(Utility.Extra.CITY_DETAIL, GsonUtility.getJsonStringFromObject(city));
         intent.putExtra(Utility.Extra.DATA, cheepcareBannerListString);
@@ -99,8 +99,8 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
 
         EventBus.getDefault().register(this);
         if (getIntent().hasExtra(Utility.Extra.CITY_DETAIL)) {
-            mCity = (CityDetail) GsonUtility.getObjectFromJsonString(getIntent().getExtras().getString(Utility.Extra.CITY_DETAIL), CityDetail.class);
-            bannerCityDetailsList = GsonUtility.getObjectListFromJsonString(getIntent().getExtras().getString(Utility.Extra.DATA), CityDetail[].class);
+            mCity = (CareCityDetail) GsonUtility.getObjectFromJsonString(getIntent().getExtras().getString(Utility.Extra.CITY_DETAIL), CareCityDetail.class);
+            bannerCareCityDetailsList = GsonUtility.getObjectListFromJsonString(getIntent().getExtras().getString(Utility.Extra.DATA), CareCityDetail[].class);
         }
 
         setCityBannerData();
@@ -178,13 +178,13 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
     }
 
     private void setData() {
-        if (mCityLandingPageModel.cityDetail.id.isEmpty())
+        if (mCityLandingPageModel.careCityDetail.id.isEmpty())
             return;
 
         mBinding.nestedScrollView.scrollTo(0, 0);
 
         SpannableStringBuilder spannableStringBuilder
-                = new SpannableStringBuilder(mCityLandingPageModel.cityDetail.greetingMessage);
+                = new SpannableStringBuilder(mCityLandingPageModel.careCityDetail.greetingMessage);
 
 
         int resId = R.drawable.emoji_mic;
@@ -218,7 +218,7 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
         mFeatureAdapter = new CheepCareFeatureAdapter();
 
         // cheep care feature list
-        mFeatureAdapter.addFeatureList(mCityLandingPageModel.cityDetail.cityTutorials);
+        mFeatureAdapter.addFeatureList(mCityLandingPageModel.careCityDetail.cityTutorials);
 
         mBinding.recyclerViewCheepCareFeature.setLayoutManager(new LinearLayoutManager(
                 mContext
@@ -266,10 +266,10 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
 
     private void openCitySelectionDialog() {
 
-        String[] cityArray = new String[bannerCityDetailsList.size()];
-        for (int i = 0; i < bannerCityDetailsList.size(); i++) {
-            CityDetail cityDetail = bannerCityDetailsList.get(i);
-            cityArray[i] = cityDetail.cityName;
+        String[] cityArray = new String[bannerCareCityDetailsList.size()];
+        for (int i = 0; i < bannerCareCityDetailsList.size(); i++) {
+            CareCityDetail careCityDetail = bannerCareCityDetailsList.get(i);
+            cityArray[i] = careCityDetail.cityName;
         }
         Log.d(TAG, "showPictureChooserDialog() called");
         final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
@@ -278,14 +278,14 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         // The 'which' argument contains the index position
                         // of the selected item
-                        LogUtils.LOGE(TAG, "onClick alert dialog : " + bannerCityDetailsList.get(which).cityName);
-                        if (!mCity.cityName.equalsIgnoreCase(bannerCityDetailsList.get(which).cityName)) {
-                            if (bannerCityDetailsList.get(which).isSubscribed.equalsIgnoreCase(Utility.BOOLEAN.YES)) {
-                                String cheepcareBannerListString = GsonUtility.getJsonStringFromObject(bannerCityDetailsList);
-                                ManageSubscriptionActivity.newInstance(LandingScreenPickPackageActivity.this, bannerCityDetailsList.get(which), true, cheepcareBannerListString);
+                        LogUtils.LOGE(TAG, "onClick alert dialog : " + bannerCareCityDetailsList.get(which).cityName);
+                        if (!mCity.cityName.equalsIgnoreCase(bannerCareCityDetailsList.get(which).cityName)) {
+                            if (bannerCareCityDetailsList.get(which).isSubscribed.equalsIgnoreCase(Utility.BOOLEAN.YES)) {
+                                String cheepcareBannerListString = GsonUtility.getJsonStringFromObject(bannerCareCityDetailsList);
+                                ManageSubscriptionActivity.newInstance(LandingScreenPickPackageActivity.this, bannerCareCityDetailsList.get(which), true, cheepcareBannerListString);
                                 finish();
                             } else {
-                                mCity = bannerCityDetailsList.get(which);
+                                mCity = bannerCareCityDetailsList.get(which);
                                 setCityBannerData();
                             }
                         }
@@ -304,7 +304,7 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
         public void onPackageItemClick(int position, PackageDetail packageModel) {
 //            String packageList = GsonUtility.getJsonStringFromObject(mCityLandingPageModel.packageDetailList);
             String packageList = GsonUtility.getJsonStringFromObject(mCityLandingPageModel.packageDetailList);
-            PackageCustomizationActivity.newInstance(mContext, mCityLandingPageModel.cityDetail, packageModel, packageList, mCityLandingPageModel.adminSetting);
+            PackageCustomizationActivity.newInstance(mContext, mCityLandingPageModel.careCityDetail, packageModel, packageList, mCityLandingPageModel.adminSetting);
         }
     };
 
@@ -412,7 +412,7 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
 
     private void getSavedData() {
         ArrayList<PackageDetail> savedPackageList = new ArrayList<>();
-        String cartDetail = PreferenceUtility.getInstance(this).getCityCartDetail(mCityLandingPageModel.cityDetail.citySlug);
+        String cartDetail = PreferenceUtility.getInstance(this).getCityCartDetail(mCityLandingPageModel.careCityDetail.citySlug);
         if (!TextUtils.isEmpty(cartDetail)) {
             ArrayList<PackageDetail> list = GsonUtility.getObjectListFromJsonString(cartDetail, PackageDetail[].class);
             savedPackageList.clear();

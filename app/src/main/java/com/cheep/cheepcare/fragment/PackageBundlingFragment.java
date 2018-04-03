@@ -202,7 +202,7 @@ public class PackageBundlingFragment extends BaseFragment {
             mParams.put(NetworkUtility.TAGS.CITY_NAME, model.cityName);
         } else {
             mParams.put(NetworkUtility.TAGS.ADDRESS_ID, model.address_id);
-            mParams.put(NetworkUtility.TAGS.CARE_CITY_ID, mPackageCustomizationActivity.mCityDetail.id);
+            mParams.put(NetworkUtility.TAGS.CARE_CITY_ID, mPackageCustomizationActivity.mCareCityDetail.id);
             mParams.put(NetworkUtility.TAGS.CITY_NAME, Utility.EMPTY_STRING);
             mParams.put(NetworkUtility.TAGS.CARE_PACKAGE_ID, mPackageCustomizationActivity.mSelectedPackageModel.id);
         }
@@ -230,7 +230,7 @@ public class PackageBundlingFragment extends BaseFragment {
                             // strategic partner pro id for given location
                             String city_id = jsonData.optString(NetworkUtility.TAGS.CITY_ID);
                             String isPurchased = jsonData.optString(NetworkUtility.TAGS.IS_PURCHASED);
-                            if (mPackageCustomizationActivity.mCityDetail.id.equalsIgnoreCase(city_id)) {
+                            if (mPackageCustomizationActivity.mCareCityDetail.id.equalsIgnoreCase(city_id)) {
                                 if (isPurchased.equalsIgnoreCase(Utility.BOOLEAN.YES)) {
                                     Utility.showToast(mPackageCustomizationActivity, getString(R.string.validation_message_already_purchased_package_for_this_address));
                                 } else {
@@ -238,7 +238,7 @@ public class PackageBundlingFragment extends BaseFragment {
                                     packageBundlingAdapter.notifyItemChanged(adapterPosition);
                                 }
                             } else {
-                                Utility.showToast(mPackageCustomizationActivity, getString(R.string.validation_message_cheep_care_address, mPackageCustomizationActivity.mCityDetail.cityName));
+                                Utility.showToast(mPackageCustomizationActivity, getString(R.string.validation_message_cheep_care_address, mPackageCustomizationActivity.mCareCityDetail.cityName));
                             }
 
                             break;

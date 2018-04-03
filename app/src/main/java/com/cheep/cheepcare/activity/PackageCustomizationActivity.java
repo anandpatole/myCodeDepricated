@@ -28,7 +28,7 @@ import com.cheep.cheepcare.fragment.PackageBundlingFragment;
 import com.cheep.cheepcare.fragment.PackageSummaryFragment;
 import com.cheep.cheepcare.fragment.SelectPackageSpecificationsFragment;
 import com.cheep.cheepcare.model.AdminSettingModel;
-import com.cheep.cheepcare.model.CityDetail;
+import com.cheep.cheepcare.model.CareCityDetail;
 import com.cheep.cheepcare.model.PackageDetail;
 import com.cheep.cheepcare.model.PackageOption;
 import com.cheep.cheepcare.model.PackageSubOption;
@@ -64,11 +64,11 @@ import java.util.Map;
 
 public class PackageCustomizationActivity extends BaseAppCompatActivity {
 
-    private static final String TAG = PackageCustomizationActivity.class.getSimpleName();
+    private static final String TAG = "PackageCustomizationAct";
     private ActivityPackageCustomizationBinding mBinding;
     public PackageCustomizationPagerAdapter mPackageCustomizationPagerAdapter;
     //    private PackageDetail mPackageModel;
-    public CityDetail mCityDetail;
+    public CareCityDetail mCareCityDetail;
     public PackageDetail mSelectedPackageModel;
     public AdminSettingModel settingModel;
     private ArrayList<PackageDetail> mPackageList = new ArrayList<>();
@@ -89,10 +89,10 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
         return mPackageList;
     }
 
-    public static void newInstance(Context context, CityDetail cityDetail, PackageDetail model, String packageList, AdminSettingModel adminSetting) {
+    public static void newInstance(Context context, CareCityDetail careCityDetail, PackageDetail model, String packageList, AdminSettingModel adminSetting) {
         Intent intent = new Intent(context, PackageCustomizationActivity.class);
         intent.putExtra(Utility.Extra.MODEL, GsonUtility.getJsonStringFromObject(model));
-        intent.putExtra(Utility.Extra.CITY_NAME, GsonUtility.getJsonStringFromObject(cityDetail));
+        intent.putExtra(Utility.Extra.CITY_NAME, GsonUtility.getJsonStringFromObject(careCityDetail));
         intent.putExtra(Utility.Extra.PACKAGE_LIST, packageList);
         intent.putExtra(Utility.Extra.ADMIN_SETTING, GsonUtility.getJsonStringFromObject(adminSetting));
         context.startActivity(intent);
@@ -115,7 +115,7 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
 
         if (getIntent().hasExtra(Utility.Extra.MODEL)) {
             mSelectedPackageModel = (PackageDetail) GsonUtility.getObjectFromJsonString(getIntent().getExtras().getString(Utility.Extra.MODEL), PackageDetail.class);
-            mCityDetail = (CityDetail) GsonUtility.getObjectFromJsonString(getIntent().getExtras().getString(Utility.Extra.CITY_NAME), CityDetail.class);
+            mCareCityDetail = (CareCityDetail) GsonUtility.getObjectFromJsonString(getIntent().getExtras().getString(Utility.Extra.CITY_NAME), CareCityDetail.class);
             settingModel = (AdminSettingModel) GsonUtility.getObjectFromJsonString(getIntent().getExtras().getString(Utility.Extra.ADMIN_SETTING), AdminSettingModel.class);
 //            mSelectedPackageModel = getIntent().getExtras().getString(Utility.Extra.SELECTED_PACKAGE_ID);
             mPackageList = GsonUtility.getObjectListFromJsonString(getIntent().getExtras().getString(Utility.Extra.PACKAGE_LIST), PackageDetail[].class);
@@ -142,7 +142,7 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
 
 
                 int resId = R.drawable.img_landing_screen_mumbai;
-                switch (mCityDetail.citySlug) {
+                switch (mCareCityDetail.citySlug) {
                     case NetworkUtility.CARE_CITY_SLUG.MUMBAI:
                         resId = R.drawable.img_landing_screen_mumbai;
                         break;
@@ -310,7 +310,7 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
                 setContinueButtonText();
                 break;
             case STAGE_2:
-                PreferenceUtility.getInstance(this).setCityCartDetail(mCityDetail.citySlug, GsonUtility.getJsonStringFromObject(mPackageList));
+                PreferenceUtility.getInstance(this).setCityCartDetail(mCareCityDetail.citySlug, GsonUtility.getJsonStringFromObject(mPackageList));
                 mBinding.viewpager.setCurrentItem(1);
                 // Change description
                 mBinding.textStepDesc.setText(getString(R.string.step_2_desc_cheep_care));
@@ -319,7 +319,7 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
                 mBinding.textPrice.setText(Utility.EMPTY_STRING);
                 break;
             case STAGE_3:
-                PreferenceUtility.getInstance(this).setCityCartDetail(mCityDetail.citySlug, GsonUtility.getJsonStringFromObject(mPackageList));
+                PreferenceUtility.getInstance(this).setCityCartDetail(mCareCityDetail.citySlug, GsonUtility.getJsonStringFromObject(mPackageList));
                 mBinding.viewpager.setCurrentItem(2);
                 // Change description
                 mBinding.textStepDesc.setText(getString(R.string.step_3_desc_cheep_care));
@@ -337,7 +337,7 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
 
         if (mBinding.viewpager.getCurrentItem() == STAGE_1) {
             if (cartCount > 0) {
-                PreferenceUtility.getInstance(this).setCityCartDetail(mCityDetail.citySlug, GsonUtility.getJsonStringFromObject(mPackageList));
+                PreferenceUtility.getInstance(this).setCityCartDetail(mCareCityDetail.citySlug, GsonUtility.getJsonStringFromObject(mPackageList));
 //                showAlertDialog(false);
                 super.onBackPressed();
             } else
@@ -367,7 +367,7 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
                 dialog.dismiss();
                 PackageCustomizationActivity.super.onBackPressed();
                 if (isAllPackageRemoved)
-                    PreferenceUtility.getInstance(PackageCustomizationActivity.this).removeCityCartDetail(mCityDetail.citySlug);
+                    PreferenceUtility.getInstance(PackageCustomizationActivity.this).removeCityCartDetail(mCareCityDetail.citySlug);
             }
         });
         alertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.label_cancel), new DialogInterface.OnClickListener() {
@@ -402,7 +402,7 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
                     } else {
                         PackageSummaryFragment summaryFragment = (PackageSummaryFragment) mPackageCustomizationPagerAdapter.getItem(STAGE_3);
                         if (summaryFragment != null)
-                            PaymentChoiceCheepCareActivity.newInstance(PackageCustomizationActivity.this, createSubscriptionPackageRequest(), summaryFragment.getPaymentData(), mCityDetail);
+                            PaymentChoiceCheepCareActivity.newInstance(PackageCustomizationActivity.this, createSubscriptionPackageRequest(), summaryFragment.getPaymentData(), mCareCityDetail);
                     }
                     break;
             }
@@ -608,7 +608,7 @@ public class PackageCustomizationActivity extends BaseAppCompatActivity {
         Log.d(TAG, "onMessageEvent() called with: event = [" + event.BROADCAST_ACTION + "]");
         switch (event.BROADCAST_ACTION) {
             case Utility.BROADCAST_TYPE.PACKAGE_SUBSCRIBED_SUCCESSFULLY:
-                PreferenceUtility.getInstance(this).removeCityCartDetail(mCityDetail.citySlug);
+                PreferenceUtility.getInstance(this).removeCityCartDetail(mCareCityDetail.citySlug);
                 finish();
                 break;
         }

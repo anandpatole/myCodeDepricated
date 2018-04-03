@@ -2,7 +2,7 @@ package com.cheep.model;
 
 import android.support.annotation.Keep;
 
-import com.cheep.cheepcare.model.CityDetail;
+import com.cheep.cheepcare.model.CareCityDetail;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -51,7 +51,7 @@ public class JobCategoryModel implements Serializable {
     public List<String> proImagesPerCategory;
 
     @SerializedName("care_city_arr")
-    public List<CityDetail> careCityData;
+    public List<CareCityDetail> careCityData;
 
     @SerializedName("cat_task_type")
     public String catTaskType;

@@ -13,7 +13,7 @@ android {
         minSdkVersion 16
         targetSdkVersion 26
         versionCode 33
-        versionName "1.1.26" // PLEASE FIRST MAKE SURE MIN-VERSION IS 16.
+        versionName "1.1.27" // PLEASE FIRST MAKE SURE MIN-VERSION IS 16.
         renderscriptTargetApi 18
         renderscriptSupportModeEnabled true
 
@@ -247,46 +247,46 @@ ext {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     implementation "com.android.support:support-v4:$supportLibVer"
     // V7 Compat library, it also included v4 libraries under the hood.
-    compile "com.android.support:appcompat-v7:$supportLibVer"
+    implementation "com.android.support:appcompat-v7:$supportLibVer"
 
-    compile "com.android.support:cardview-v7:$supportLibVer"
+    implementation "com.android.support:cardview-v7:$supportLibVer"
 
     // Design Support Library, it also included Multidex library support, So there is no need to provide
     // another library here.
-    compile "com.android.support:design:$supportLibVer"
+    implementation "com.android.support:design:$supportLibVer"
 
     // Gson Library
-    compile "com.google.code.gson:gson:$gsonLibVer"
+    implementation "com.google.code.gson:gson:$gsonLibVer"
 
     //For Getting Location
-    compile "com.google.android.gms:play-services-location:$playServiceVer"
+    implementation "com.google.android.gms:play-services-location:$playServiceVer"
 
     //For Google SignIn
-    compile "com.google.android.gms:play-services-auth:$playServiceVer"
+    implementation "com.google.android.gms:play-services-auth:$playServiceVer"
 
     // FCM (Push Notification)
-    compile "com.google.firebase:firebase-messaging:$playServiceVer"
-    compile "com.google.android.gms:play-services-places:$playServiceVer"
+    implementation "com.google.firebase:firebase-messaging:$playServiceVer"
+    implementation "com.google.android.gms:play-services-places:$playServiceVer"
 
     //Encryption
-    compile files('libs/jncryptor-1.2.0.jar')
+    implementation files('libs/jncryptor-1.2.0.jar')
 
     //firebase crash
-    compile "com.google.firebase:firebase-core:$playServiceVer"
-    compile "com.google.firebase:firebase-crash:$playServiceVer"
+    implementation "com.google.firebase:firebase-core:$playServiceVer"
+    implementation "com.google.firebase:firebase-crash:$playServiceVer"
 
     // firebase database sdk
-    compile "com.google.firebase:firebase-database:$playServiceVer"
+    implementation "com.google.firebase:firebase-database:$playServiceVer"
 
     //For dynamic links
-    compile "com.google.firebase:firebase-invites:$playServiceVer"
+    implementation "com.google.firebase:firebase-invites:$playServiceVer"
 
     //Twitter
-    compile('com.twitter.sdk.android:twitter:2.3.2@aar') {
+    implementation('com.twitter.sdk.android:twitter:2.3.2@aar') {
         transitive = true
     }
 
@@ -311,15 +311,16 @@ dependencies {
     // HotLine integration(For Chat to Cheep Admin)
 
     // for paytm html response reading form input tags
-    compile 'com.android.support:multidex:1.0.2'
-    compile 'com.github.bumptech.glide:glide:3.7.0'
-    compile 'com.daimajia.swipelayout:library:1.2.0@aar'
-    compile 'com.android.volley:volley:1.0.0'
-    compile 'org.apache.httpcomponents:httpmime:4.3.6'
-//    compile 'org.apache.httpcomponents:httpclient-android:4.3.5.1'
-    compile('com.facebook.android:facebook-android-sdk:4.16.1') {
+    implementation 'com.android.support:multidex:1.0.2'
+    implementation 'com.github.bumptech.glide:glide:3.7.0'
+    implementation 'com.daimajia.swipelayout:library:1.2.0@aar'
+    implementation 'com.android.volley:volley:1.0.0'
+    implementation 'org.apache.httpcomponents:httpmime:4.3.6'
+//    implementation 'org.apache.httpcomponents:httpclient-android:4.3.5.1'
+    implementation('com.facebook.android:facebook-android-sdk:4.16.1') {
         exclude group: 'com.android.support'
     }
+
     compile "com.android.support:cardview-v7:$supportLibVer"
     compile 'com.theartofdev.edmodo:android-image-cropper:2.3.1'
     compile 'me.relex:circleindicator:1.2.2@aar'
@@ -336,6 +337,8 @@ dependencies {
     compile 'com.amazonaws:aws-android-sdk-s3:2.6.+'
 //    compile 'org.jsoup:jsoup:1.10.3'
     compile 'com.android.support.constraint:constraint-layout:1.1.0-beta5'
+    implementation files('libs/paynimo_v3.2_uat.jar')
+
 }
 
 // Add to the bottom of the file

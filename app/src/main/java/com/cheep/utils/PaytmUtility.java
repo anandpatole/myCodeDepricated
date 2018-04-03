@@ -24,6 +24,7 @@ import java.util.Map;
 
 public class PaytmUtility {
     private static final String TAG = LogUtils.makeLogTag(PaytmUtility.class.getSimpleName());
+
     private PaytmUtility() {
 
     }
@@ -967,4 +968,151 @@ public class PaytmUtility {
         Volley.getInstance(mContext).addToRequestQueue(paytmNetworkRequest, NetworkUtility.WS.FETCH_CALLBACK_RESPONSE_FROM_PAYTM);
     }
 /////////////////////////////////////////////////////// On Paytm Transaction response(Call to Our Server) ///////////////////////////////////////
+
+
+    /////////////////////////////////////////////////////// Volley Checksum For SUBSCRIPTION ///////////////////////////////////////////////////////
+    // TODO: PAYTM SUBSCRIPTION
+    public static String getChecksumForSubscription(Context mContext, String txnAmount, String mAccessToken, String mMobileNumber, String mResourceOwnerCustomerId, final GetChecksumResponseListener listener) {
+        final Response.ErrorListener mGetChecksumErrorListener = new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
+                listener.volleyError();
+            }
+        };
+
+        final Response.Listener mGetChecksumResponseListener = new Response.Listener() {
+            @Override
+            public void onResponse(Object response) {
+                String strResponse = (String) response;
+                try {
+                    JSONObject jsonObject = new JSONObject(strResponse);
+                    LogUtils.LOGD(TAG, "onResponse: " + jsonObject.toString());
+                    int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
+                    switch (statusCode) {
+                        case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
+                            listener.volleyGetChecksumSuccessResponse(jsonObject.getJSONObject(NetworkUtility.TAGS.DATA).getString(NetworkUtility.TAGS.CHECKSUMHASH));
+                            break;
+                        case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
+                            listener.showGeneralizedErrorMessage();
+                            break;
+                        case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
+                            listener.showSpecificErrorMessage(jsonObject.getString(NetworkUtility.TAGS.MESSAGE));
+                            break;
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        String orderID = String.valueOf(System.currentTimeMillis());
+
+
+        Map<String, String> mHeaderParams = new HashMap<>();
+        mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
+        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().userID);
+
+
+        Map<String, Object> bodyParams = new HashMap<>();
+        bodyParams.put(NetworkUtility.TAGS.ORDER_ID, orderID);
+        bodyParams.put(NetworkUtility.TAGS.TXN_AMOUNT, txnAmount);
+        bodyParams.put(NetworkUtility.TAGS.CUST_ID, mResourceOwnerCustomerId);
+        bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.CHANNEL_ID, BuildConfig.CHANNEL_ID);
+        bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.WEBSITE, BuildConfig.WEBSITE);
+        bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.INDUSTRY_TYPE_ID, BuildConfig.INDUSTRY_TYPE_ID);
+        bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.CALLBACK_URL, NetworkUtility.WS.VERIFY_CHECKSUM);
+        bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.SSO_TOKEN, mAccessToken);
+        bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.REQUEST_TYPE, Utility.SUBSCRIBE);
+        bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.MID, BuildConfig.SANDBOX_MERCHANT_ID);
+        bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.MOBILE_NO, mMobileNumber);
+        bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.EMAIL, PreferenceUtility.getInstance(mContext).getUserDetails().email);
+        bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.THEME, Utility.MERCHANT);
+        bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.SUBS_SERVICE_ID, "123");
+        bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.SUBS_AMOUNT_TYPE, "FIX");
+        bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.SUBS_FREQUENCY, 1);
+        bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.SUBS_FREQUENCY_UNIT, "DAY");
+        bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.SUBS_EXPIRY_DATE, "2028-03-30");
+        bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.SUBS_ENABLE_RETRY, 1);
+
+        @SuppressWarnings("unchecked")
+        VolleyNetworkRequest volleyNetworkRequest = new VolleyNetworkRequest(
+                NetworkUtility.WS.GET_CHECKSUM_HASH,
+                mGetChecksumErrorListener,
+                mGetChecksumResponseListener,
+                mHeaderParams,
+                bodyParams,
+                null);
+        Volley.getInstance(mContext).addToRequestQueue(volleyNetworkRequest, NetworkUtility.WS.GET_CHECKSUM_HASH);
+        return orderID;
+    }
+    /////////////////////////////////////////////////////// Volley Checksum For SUBSCRIPTION ///////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////// Volley Checksum For Add Money ///////////////////////////////////////////////////////
+
+    // TODO: PAYTM SUBSCRIPTION
+
+
+    public static String autoRenewal(Context mContext, String txnAmount, String subsId, final GetChecksumResponseListener listener) {
+        final Response.ErrorListener mGetChecksumErrorListener = new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
+                listener.volleyError();
+            }
+        };
+
+        final Response.Listener mGetChecksumResponseListener = new Response.Listener() {
+            @Override
+            public void onResponse(Object response) {
+                String strResponse = (String) response;
+                try {
+                    JSONObject jsonObject = new JSONObject(strResponse);
+                    LogUtils.LOGD(TAG, "onResponse: " + jsonObject.toString());
+                    int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
+                    switch (statusCode) {
+                        case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
+                            listener.volleyGetChecksumSuccessResponse(jsonObject.getJSONObject(NetworkUtility.TAGS.DATA).getString(NetworkUtility.TAGS.CHECKSUMHASH));
+                            break;
+                        case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
+                            listener.showGeneralizedErrorMessage();
+                            break;
+                        case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
+                            listener.showSpecificErrorMessage(jsonObject.getString(NetworkUtility.TAGS.MESSAGE));
+                            break;
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        String orderID = String.valueOf(System.currentTimeMillis());
+
+
+        Map<String, String> mHeaderParams = new HashMap<>();
+        mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
+        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().userID);
+
+
+        Map<String, Object> bodyParams = new HashMap<>();
+        bodyParams.put(NetworkUtility.TAGS.ORDER_ID, orderID);
+        bodyParams.put(NetworkUtility.TAGS.TXN_AMOUNT, txnAmount);
+        bodyParams.put(NetworkUtility.TAGS.SUBS_ID, subsId);
+        bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.MID, BuildConfig.SANDBOX_MERCHANT_ID);
+        bodyParams.put(NetworkUtility.PAYTM.PARAMETERS.REQUEST_TYPE, Utility.RENEW_SUBSCRIPTION);
+
+        @SuppressWarnings("unchecked")
+        VolleyNetworkRequest volleyNetworkRequest = new VolleyNetworkRequest(
+                NetworkUtility.WS.GET_CHECKSUM_HASH,
+                mGetChecksumErrorListener,
+                mGetChecksumResponseListener,
+                mHeaderParams,
+                bodyParams,
+                null);
+        Volley.getInstance(mContext).addToRequestQueue(volleyNetworkRequest, NetworkUtility.WS.GET_CHECKSUM_HASH);
+        return orderID;
+    }
+    /////////////////////////////////////////////////////// Volley Checksum For Add Money ///////////////////////////////////////////////////////
+
+
 }

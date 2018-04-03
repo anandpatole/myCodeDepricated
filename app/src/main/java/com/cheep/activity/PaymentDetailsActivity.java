@@ -290,7 +290,10 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
         mActivityPaymentDetailBinding.llclaimreferral.setEnabled(false);
 
         mActivityPaymentDetailBinding.lnPayNow.setVisibility(View.VISIBLE);
-        mActivityPaymentDetailBinding.textPayNow.setSelected(true);
+        UserDetails userDetails = PreferenceUtility.getInstance(this).getUserDetails();
+        mActivityPaymentDetailBinding.tvPaymentPendingDesc.setText(getString(R.string.label_pay_pending_amount_msg,userDetails.userName));
+        mActivityPaymentDetailBinding.ivTermsTick.setVisibility(View.GONE);
+        mActivityPaymentDetailBinding.tvPayNow.setSelected(true);
 
         mActivityPaymentDetailBinding.lnDesclaimer.setVisibility(View.GONE);
 
@@ -347,7 +350,7 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
             spannableStringBuilder.append(
                     getSpannableString(getString(R.string.label_at), ContextCompat.getColor(this, R.color.grey_varient_8), false));
             spannableStringBuilder.append(
-                    getSpannableString(taskDetailModel.taskAddress, ContextCompat.getColor(this, R.color.splash_gradient_end), true));
+                    getSpannableString(taskDetailModel.taskAddress.address, ContextCompat.getColor(this, R.color.splash_gradient_end), true));
 
 
             mActivityPaymentDetailBinding.txtdesc.setText(spannableStringBuilder);
@@ -389,7 +392,7 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
                 mActivityPaymentDetailBinding.lnPromoCodeDisclaimer.setVisibility(View.GONE);
             }
 
-            mActivityPaymentDetailBinding.textPayNow.setOnClickListener(new View.OnClickListener() {
+            mActivityPaymentDetailBinding.tvPayNow.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     payPendingAmount = true;
@@ -508,7 +511,7 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
             spannableStringBuilder.append(getSpannableString(getString(R.string.label_on), ContextCompat.getColor(this, R.color.grey_varient_8), false));
             spannableStringBuilder.append(getSpannableString(datetime, ContextCompat.getColor(this, R.color.splash_gradient_end), true));
             spannableStringBuilder.append(getSpannableString(getString(R.string.label_at), ContextCompat.getColor(this, R.color.grey_varient_8), false));
-            spannableStringBuilder.append(getSpannableString(taskDetailModel.taskAddress, ContextCompat.getColor(this, R.color.splash_gradient_end), true));
+            spannableStringBuilder.append(getSpannableString(taskDetailModel.taskAddress.address, ContextCompat.getColor(this, R.color.splash_gradient_end), true));
             mActivityPaymentDetailBinding.txtdesc.setText(spannableStringBuilder);
         }
     }
@@ -538,8 +541,8 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
                 mActivityPaymentDetailBinding.rlPayNow.setSelected(mActivityPaymentDetailBinding.ivTermsTick.isSelected());
                 mActivityPaymentDetailBinding.rlPayLater.setEnabled(mActivityPaymentDetailBinding.ivTermsTick.isSelected());
                 mActivityPaymentDetailBinding.rlPayNow.setEnabled(mActivityPaymentDetailBinding.ivTermsTick.isSelected());
-                mActivityPaymentDetailBinding.textPayNow.setSelected(mActivityPaymentDetailBinding.ivTermsTick.isSelected());
-                mActivityPaymentDetailBinding.textPayNow.setEnabled(mActivityPaymentDetailBinding.ivTermsTick.isSelected());
+                mActivityPaymentDetailBinding.tvPayNow.setSelected(mActivityPaymentDetailBinding.ivTermsTick.isSelected());
+                mActivityPaymentDetailBinding.tvPayNow.setEnabled(mActivityPaymentDetailBinding.ivTermsTick.isSelected());
             }
         });
 

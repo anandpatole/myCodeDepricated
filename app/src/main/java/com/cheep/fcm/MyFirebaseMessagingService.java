@@ -41,6 +41,7 @@ import com.cheep.R;
 import com.cheep.activity.ChatActivity;
 import com.cheep.activity.HomeActivity;
 import com.cheep.activity.NotificationActivity;
+import com.cheep.activity.TaskQuotesActivity;
 import com.cheep.firebase.model.ChatNotification;
 import com.cheep.firebase.model.TaskChatModel;
 import com.cheep.model.MessageEvent;
@@ -260,6 +261,29 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
             notificationManager.notify(0/* Pass 0 to make the WebNotification ID Unique*/, notificationBuilder.build());
 
+        } else if(Utility.NOTIFICATION_TYPE.QUOTE_REQUEST.equalsIgnoreCase(bnd.getString(NetworkUtility.TAGS.TYPE))) {
+            Intent intent = new Intent(this, TaskQuotesActivity.class);
+            intent.putExtra(Utility.Extra.TASK_ID, notificationId);
+            Log.e(TAG, "notificationId: " + notificationId);
+            TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(this);
+            taskStackBuilder.addParentStack(TaskQuotesActivity.class);
+            taskStackBuilder.addNextIntent(intent);
+            PendingIntent pendingIntent = taskStackBuilder.getPendingIntent(0/* Pass 0 to make the WebNotification ID Unique*/, PendingIntent.FLAG_UPDATE_CURRENT);
+
+            Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+            NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this,ANDROID_CHANNEL_ID)
+                    .setSmallIcon(R.drawable.notification_app_icon)
+                    .setContentTitle(title)
+                    .setColor(ContextCompat.getColor(getApplicationContext(), R.color.splash_gradient_end))
+                    .setContentText(message)
+                    .setAutoCancel(true)
+                    .setSound(defaultSoundUri)
+                    .setContentIntent(pendingIntent)
+                    .setStyle(new NotificationCompat.BigTextStyle().bigText(message));
+
+            NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+            notificationManager.notify(0/* Pass 0 to make the WebNotification ID Unique*/, notificationBuilder.build());
         } else {
             //Start landing page screen
             Intent intent = new Intent(this, HomeActivity.class);

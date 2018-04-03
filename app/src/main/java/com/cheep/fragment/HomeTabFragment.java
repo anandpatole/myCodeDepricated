@@ -42,7 +42,7 @@ import com.cheep.activity.TaskCreationActivity;
 import com.cheep.adapter.HomeTabRecyclerViewAdapter;
 import com.cheep.cheepcare.activity.LandingScreenPickPackageActivity;
 import com.cheep.cheepcare.fragment.SubscriptionBannerFragment;
-import com.cheep.cheepcare.model.CityDetail;
+import com.cheep.cheepcare.model.CareCityDetail;
 import com.cheep.databinding.FragmentTabHomeBinding;
 import com.cheep.databinding.LayoutFilterHomePopupBinding;
 import com.cheep.interfaces.DrawerLayoutInteractionListener;
@@ -99,7 +99,7 @@ public class HomeTabFragment extends BaseFragment {
 
     // For storing category Cover image list
     private ArrayList<BannerImageModel> bannerImageModelArrayList;
-    public ArrayList<CityDetail> careBannerModelArrayList;
+    public ArrayList<CareCityDetail> careBannerModelArrayList;
     private String mSelectedFilterType = Utility.FILTER_TYPES.FILTER_TYPE_FEATURED;
 
     public String getmSelectedFilterType() {
@@ -329,9 +329,9 @@ public class HomeTabFragment extends BaseFragment {
             updateCounter();
         }
         if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.PACKAGE_SUBSCRIBED_SUCCESSFULLY) {
-            for (CityDetail cityDetail : cheepCareBannerViewPagerAdapter.getLists()) {
-                if (cityDetail.id.equalsIgnoreCase(event.id))
-                    cityDetail.isSubscribed = Utility.BOOLEAN.YES;
+            for (CareCityDetail careCityDetail : cheepCareBannerViewPagerAdapter.getLists()) {
+                if (careCityDetail.id.equalsIgnoreCase(event.id))
+                    careCityDetail.isSubscribed = Utility.BOOLEAN.YES;
             }
             cheepCareBannerViewPagerAdapter.notifyDataSetChanged();
         }
@@ -709,12 +709,12 @@ public class HomeTabFragment extends BaseFragment {
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
                         JSONObject dataObject = jsonObject.optJSONObject(NetworkUtility.TAGS.DATA);
                         bannerImageModelArrayList = GsonUtility.getObjectListFromJsonString(dataObject.getString(NetworkUtility.TAGS.NORMAL_BANNER), BannerImageModel[].class);
-                        careBannerModelArrayList = GsonUtility.getObjectListFromJsonString(dataObject.getString(NetworkUtility.TAGS.CARE_BANNER), CityDetail[].class);
+                        careBannerModelArrayList = GsonUtility.getObjectListFromJsonString(dataObject.getString(NetworkUtility.TAGS.CARE_BANNER), CareCityDetail[].class);
                         // Call Category listing webservice.
 
-                        for (CityDetail cityDetail : careBannerModelArrayList) {
-                            if (cityDetail.isSubscribed.equalsIgnoreCase(Utility.BOOLEAN.YES)) {
-                                LogUtils.LOGE(TAG, "cityDetail: " + cityDetail.cityName);
+                        for (CareCityDetail careCityDetail : careBannerModelArrayList) {
+                            if (careCityDetail.isSubscribed.equalsIgnoreCase(Utility.BOOLEAN.YES)) {
+                                LogUtils.LOGE(TAG, "careCityDetail: " + careCityDetail.cityName);
                                 mSelectedFilterType = Utility.FILTER_TYPES.FILTER_TYPE_SUBSCRIBED;
                                 updateFilterText();
                                 break;
@@ -1159,7 +1159,7 @@ public class HomeTabFragment extends BaseFragment {
     private Handler mHandler;
     private Handler mHandlerSubscriptionBanner;
 
-    private void setupCheepCareBannerViewPager(ArrayList<CityDetail> mBannerListModels) {
+    private void setupCheepCareBannerViewPager(ArrayList<CareCityDetail> mBannerListModels) {
 
         cheepCareBannerViewPagerAdapter = new CheepCareBannerViewPagerAdapter(getChildFragmentManager(), mBannerListModels);
         mFragmentTabHomeBinding.layoutBannerHeader.viewPagerSubscriptionBannerImages.setAdapter(cheepCareBannerViewPagerAdapter);
@@ -1296,7 +1296,7 @@ public class HomeTabFragment extends BaseFragment {
         }
     };
 
-    private void addCoverImageListing(ArrayList<BannerImageModel> mBannerListModels, ArrayList<CityDetail> careBannerModelArrayList) {
+    private void addCoverImageListing(ArrayList<BannerImageModel> mBannerListModels, ArrayList<CareCityDetail> careBannerModelArrayList) {
         bannerViewPagerAdapter.replaceData(mBannerListModels);
         cheepCareBannerViewPagerAdapter.replaceData(careBannerModelArrayList);
 
@@ -1362,12 +1362,12 @@ public class HomeTabFragment extends BaseFragment {
     }
 
     private static class CheepCareBannerViewPagerAdapter extends FragmentStatePagerAdapter {
-        private ArrayList<CityDetail> cheepCareSubscriptionBannerArrayList;
+        private ArrayList<CareCityDetail> cheepCareSubscriptionBannerArrayList;
 
-        CheepCareBannerViewPagerAdapter(FragmentManager fragmentManager, ArrayList<CityDetail> modelArrayList) {
+        CheepCareBannerViewPagerAdapter(FragmentManager fragmentManager, ArrayList<CareCityDetail> modelArrayList) {
             super(fragmentManager);
 //            Log.d(TAG, "BannerViewPagerAdapter() called with: fragmentManager = [" + fragmentManager + "], modelArrayList = [" + modelArrayList + "]");
-            this.cheepCareSubscriptionBannerArrayList = modelArrayList != null ? modelArrayList : new ArrayList<CityDetail>();
+            this.cheepCareSubscriptionBannerArrayList = modelArrayList != null ? modelArrayList : new ArrayList<CareCityDetail>();
         }
 
         @Override
@@ -1386,11 +1386,11 @@ public class HomeTabFragment extends BaseFragment {
             return cheepCareSubscriptionBannerArrayList == null ? 0 : cheepCareSubscriptionBannerArrayList.size();
         }
 
-        private ArrayList<CityDetail> getLists() {
+        private ArrayList<CareCityDetail> getLists() {
             return cheepCareSubscriptionBannerArrayList;
         }
 
-        private void replaceData(ArrayList<CityDetail> modelArrayList) {
+        private void replaceData(ArrayList<CareCityDetail> modelArrayList) {
 //            Log.d(TAG, "replaceData() called with: modelArrayList = [" + modelArrayList.size() + "]");
             cheepCareSubscriptionBannerArrayList = modelArrayList;
             notifyDataSetChanged();

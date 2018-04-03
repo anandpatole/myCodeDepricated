@@ -1,7 +1,7 @@
 <resources>
 
     <!--Home Screen Alignments for xxhdpi & xxxhdpi devices-->
-    <dimen name="home_screen_filter_text_width">89.50dp</dimen>
+    <dimen name="home_screen_filter_text_width">103dp</dimen>
 
 
     <!---new designs-->

@@ -11,6 +11,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.InputFilter;
+import android.text.InputType;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
@@ -174,7 +175,6 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
         //set pro section
         setProSection();
 
-
         //set uploaded media
         setUpMediaUI();
 
@@ -189,6 +189,13 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
     private void setAppBarSection() {
         // Set category
         mBinding.textCategoryName.setText(mTaskDetailModel.categoryModel.catName != null ? mTaskDetailModel.categoryModel.catName : Utility.EMPTY_STRING);
+
+        // Show/Hide Subscribed Image
+        if(mTaskDetailModel.taskType.equalsIgnoreCase(Utility.TASK_TYPE.SUBSCRIBED)) {
+            mBinding.imgSubscribed.setVisibility(View.VISIBLE);
+        } else {
+            mBinding.imgSubscribed.setVisibility(View.GONE);
+        }
 
         // Set up image
         GlideUtility.loadImageView(mContext, mBinding.imgService, mTaskDetailModel.categoryModel.catImageExtras.original, R.drawable.gradient_black);
@@ -316,7 +323,7 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
                 mBinding.lnProviderProfileSection.setVisibility(View.GONE);
                 mBinding.rlUnknownPro.setVisibility(View.VISIBLE);
                 // Update Task Status
-                mBinding.textTaskStatusTop.setText(Utility.EMPTY_STRING);
+//                mBinding.textTaskStatusTop.setText(Utility.EMPTY_STRING);
             }
 
             // Hide Payment Summary textview
@@ -330,7 +337,7 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
 
     private void setUpMediaUI() {
         if (mTaskDetailModel.mMediaModelList != null && !mTaskDetailModel.mMediaModelList.isEmpty()) {
-            mBinding.frameSelectPicture.setVisibility(View.VISIBLE);
+//            mBinding.frameSelectPicture.setVisibility(View.VISIBLE);
             Collections.reverse(mTaskDetailModel.mMediaModelList);
             GlideUtility.loadImageView(this, mBinding.imgTaskPicture1, mTaskDetailModel.mMediaModelList.get(0).mediaThumbName);
             if (mTaskDetailModel.mMediaModelList.size() == 3) {
@@ -348,8 +355,8 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
                 GlideUtility.loadImageView(this, mBinding.imgTaskPicture1, mTaskDetailModel.mMediaModelList.get(0).mediaThumbName);
             }
 
-        } else
-            mBinding.frameSelectPicture.setVisibility(View.GONE);
+        } /*else
+            mBinding.frameSelectPicture.setVisibility(View.GONE);*/
     }
 
     private void setUpTaskDetails() {
@@ -398,8 +405,23 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
 
     private void setTaskWhere() {
         // Setup WHERE section
-        mBinding.textTaskWhere.setText(mTaskDetailModel.taskAddress);
-        mBinding.textTaskWhere.setOnClickListener(mOnClickListener);
+
+        // Set Category/Nickname
+        if(mTaskDetailModel.taskAddress.nickname != null && !TextUtils.isEmpty(mTaskDetailModel.taskAddress.nickname)) {
+            mBinding.textTaskWhere1.setText(mTaskDetailModel.taskAddress.nickname);
+        } else {
+            mBinding.textTaskWhere1.setText(mTaskDetailModel.taskAddress.category.substring(0,1).toUpperCase() + mTaskDetailModel.taskAddress.category.substring(1));
+        }
+
+        //Set Subscribed yes/no
+        if(mTaskDetailModel.taskAddress.is_subscribe.equalsIgnoreCase(Utility.BOOLEAN.YES)) {
+            mBinding.textTaskWhere2.setVisibility(View.VISIBLE);
+        } else {
+            mBinding.textTaskWhere2.setVisibility(View.GONE);
+        }
+
+        mBinding.textTaskWhereAddress.setText(mTaskDetailModel.taskAddress.address);
+        mBinding.textTaskWhereAddress.setOnClickListener(mOnClickListener);
     }
 
     private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
@@ -409,7 +431,7 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
                 // Onclick of when and Where section
                 case R.id.ln_where:
                 case R.id.text_task_where:
-                    showFullDesc(getString(R.string.label_address), mBinding.textTaskWhere.getText().toString());
+                    showFullDesc(getString(R.string.label_address), mBinding.textTaskWhereAddress.getText().toString());
                     break;
                 case R.id.ln_task_desc:
                     showFullDesc(getString(R.string.label_desc), mBinding.textTaskDesc.getText().toString());
@@ -504,7 +526,6 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
 
         } else if (Utility.TASK_STATUS.COMPLETION_REQUEST.equalsIgnoreCase(mTaskDetailModel.taskStatus)) {
             mBinding.textTaskStatusTop.setText(getString(R.string.task_status_processing));
-            mBinding.textViewPaymentSummary.setVisibility(View.GONE);
             mBinding.textPaid.setVisibility(View.GONE);
 
             hideRateAndReviewView();
@@ -859,9 +880,41 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
     @Override
     protected void setListeners() {
         mBinding.lnTaskDesc.setOnClickListener(mOnClickListener);
-        mBinding.textTaskWhere.setOnClickListener(mOnClickListener);
+        mBinding.textTaskWhereAddress.setOnClickListener(mOnClickListener);
         mBinding.lnWhere.setOnClickListener(mOnClickListener);
         mBinding.tvConfirmAvailability.setOnClickListener(mOnClickListener);
+
+        mBinding.lnTaskMoreLess.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mBinding.imgMoreLessTask.isSelected()){
+                    mBinding.lnTaskDesc.setVisibility(View.GONE);
+                    mBinding.textViewMoreLessTask.setText(getString(R.string.view_more));
+                    mBinding.imgMoreLessTask.setSelected(false);
+                    mBinding.frameSelectPicture.setVisibility(View.GONE);
+                } else {
+                    mBinding.lnTaskDesc.setVisibility(View.VISIBLE);
+                    mBinding.textViewMoreLessTask.setText(getString(R.string.view_less));
+                    mBinding.imgMoreLessTask.setSelected(true);
+                    mBinding.frameSelectPicture.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
+        mBinding.lnWhereMoreLess.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mBinding.imgMoreLessWhere.isSelected()){
+                    mBinding.textTaskWhereAddress.setVisibility(View.GONE);
+                    mBinding.textViewMoreLessWhere.setText(getString(R.string.view_more));
+                    mBinding.imgMoreLessWhere.setSelected(false);
+                } else {
+                    mBinding.textTaskWhereAddress.setVisibility(View.VISIBLE);
+                    mBinding.textViewMoreLessWhere.setText(getString(R.string.view_less));
+                    mBinding.imgMoreLessWhere.setSelected(true);
+                }
+            }
+        });
 
         mBinding.frameSelectPicture.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -1587,6 +1640,7 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
                 mTaskDetailModel.isAnyAmountPending = Utility.BOOLEAN.NO;
                 mTaskDetailModel.taskTotalPendingAmount = "0";
                 setUpUI();
+
 //                }
                 break;
         }

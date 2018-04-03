@@ -116,6 +116,9 @@ public class Utility {
     public static final String INR = "INR";
     public static final String PPI = "PPI";
     public static final String USRPWD = "USRPWD";
+    // new type for subscription
+    public static final String SUBSCRIBE= "SUBSCRIBE";
+    public static final String RENEW_SUBSCRIPTION= "RENEW_SUBSCRIPTION";
 
     //Date Formats
     public static final String DATE_FORMAT_DD_MM_YY = SuperFormatter.DATE + "/" + SuperFormatter.MONTH_NUMBER + "/" + SuperFormatter.YEAR_4_DIGIT;
@@ -661,6 +664,7 @@ public class Utility {
         String START_DATETIME = "start_datetime";
         String QUOTE_AMOUNT = "quoteAmount";
         String SP_USER_ID = "sp_user_id ";
+        String IS_SUBSCRIPTION = "is_subscription";
     }
 
 
@@ -859,10 +863,10 @@ public class Utility {
     }
 
     public interface NOTIFICATION_TYPE {
-        String QUOTE_REQUEST = "QUOTE_REQUEST";
+        String QUOTE_REQUEST = "QUOTE_REQUEST";// task quote activity
         String TASK_STATUS_CHANGE = "TASK_STATUS_CHANGE";
         String ADDITIONAL_PAYMENT_REQUESTED = "additional_payment_requested";
-        String REQUEST_FOR_DETAIL = "REQUEST_FOR_DETAIL";
+        String REQUEST_FOR_DETAIL = "REQUEST_FOR_DETAIL"; // task detail
         String CHAT_MESSAGE = "FIREBASE";
         String TASK_CREATE = "TASK_CREATE";
         String TASK_START_ALERT = "TASK_START_ALERT";

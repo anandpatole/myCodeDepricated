@@ -126,7 +126,6 @@
             android:id="@+id/nestedScrollView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@id/ln_pay_now"
             android:layout_below="@+id/fl_app_bar"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
@@ -180,7 +179,7 @@
                         android:background="@color/grey_color"
                         android:visibility="visible"/>
 
-                    <com.cheep.custom_view.CFTextViewRegular
+               <!--     <com.cheep.custom_view.CFTextViewRegular
                         android:id="@+id/tv_additional_charges"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -192,16 +191,10 @@
                         android:paddingTop="@dimen/scale_5dp"
                         android:text="@string/label_additional_charges"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/text_size_15sp"/>
+                        android:textSize="@dimen/text_size_15sp"/>-->
 
-                    <!--<android.support.v7.widget.RecyclerView
-                        android:id="@+id/rv_additional_charges"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/scale_12dp"
-                        tools:itemCount="2"
-                        tools:listitem="@layout/row_additional_charges" />-->
 
+<!--
                     <LinearLayout
                         android:id="@+id/ll_non_working_hour_free"
                         android:layout_width="match_parent"
@@ -244,7 +237,48 @@
                             tools:text="₹100"/>
 
                     </LinearLayout>
+-->
 
+                    <RelativeLayout
+                        android:id="@+id/rlAdditionalCharges"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="@dimen/scale_24dp"
+                        android:paddingRight="@dimen/scale_24dp"
+                        android:paddingTop="@dimen/scale_5dp">
+
+                        <com.cheep.custom_view.CFTextViewRegular
+                            android:id="@+id/tv_label_additional_charge"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="left|center_vertical"
+                            android:drawablePadding="@dimen/scale_5dp"
+                            android:gravity="center_vertical"
+                            android:paddingTop="@dimen/scale_5dp"
+                            android:text="@string/label_additional_charges"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/text_size_14sp"/>
+
+                        <com.cheep.custom_view.CFTextViewSemiBold
+                            android:id="@+id/tv_additional_charge"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_toEndOf="@+id/tv_label_additional_charge"
+                            android:layout_toRightOf="@+id/tv_label_additional_charge"
+                            android:drawablePadding="@dimen/scale_5dp"
+                            android:ellipsize="marquee"
+                            android:gravity="right"
+                            android:marqueeRepeatLimit="marquee_forever"
+                            android:maxLines="1"
+                            android:paddingTop="@dimen/scale_5dp"
+                            android:singleLine="true"
+                            android:text="₹698"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/text_size_14sp"
+                            tools:ignore="EllipsizeMaxLines"/>
+
+                    </RelativeLayout>
 
                     <View
                         android:id="@+id/viewLine2"
@@ -718,10 +752,71 @@
 
                 </LinearLayout>
 
+                <LinearLayout
+                    android:id="@+id/ln_pay_now"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingBottom="@dimen/scale_16dp"
+                    android:paddingLeft="@dimen/scale_16dp"
+                    android:paddingRight="@dimen/scale_16dp"
+                    android:paddingTop="@dimen/scale_16dp"
+                    android:visibility="visible">
+
+                    <com.cheep.custom_view.CFTextViewRegular
+                        android:id="@+id/text_additional_payment_desc"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center_horizontal"
+                        android:text="@string/label_pay_pending_amount_msg"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_size_14sp"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/scale_18dp"
+                        android:layout_marginRight="@dimen/scale_18dp"
+                        android:layout_marginTop="@dimen/scale_10dp"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+
+                        <com.cheep.custom_view.CFTextViewSemiBold
+                            android:id="@+id/tv_pay_now"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom"
+                            android:layout_marginRight="@dimen/scale_20dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/img_blue_rounded"
+                            android:gravity="center"
+                            android:minWidth="150dp"
+                            android:padding="@dimen/scale_10dp"
+                            android:text="@string/label_pay_now"
+                            android:textAllCaps="false"
+                            android:textColor="@color/white"/>
+
+                        <com.cheep.custom_view.CFTextViewSemiBold
+                            android:id="@+id/tv_support"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom"
+                            android:layout_weight="1"
+                            android:background="@drawable/img_blue_edges_rounded"
+                            android:gravity="center"
+                            android:minWidth="150dp"
+                            android:padding="@dimen/scale_10dp"
+                            android:text="@string/label_support"
+                            android:textAllCaps="false"
+                            android:textColor="@color/splash_gradient_end"/>
+                    </LinearLayout>
+                </LinearLayout>
 
             </LinearLayout>
         </android.support.v4.widget.NestedScrollView>
 
+<!--
         <LinearLayout
             android:id="@+id/ln_pay_now"
             android:layout_width="match_parent"
@@ -744,6 +839,7 @@
                 android:visibility="visible"/>
 
         </LinearLayout>
+-->
 
     </RelativeLayout>
 </layout>
