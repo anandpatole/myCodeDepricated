@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <include layout="@layout/paynimo_application_header" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/paynimo_backgroundColor"
+        android:orientation="vertical"
+        android:padding="50dp" >
+
+        <com.paynimo.android.payment.CustomEditText
+            android:id="@+id/paynimo_otp_et_otp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:gravity="center_horizontal"
+            android:hint="@string/paynimo_otp_otp_hint"
+            android:inputType="number"
+            android:maxLength="7" />
+
+        <com.paynimo.android.payment.CustomButton
+            android:id="@+id/paynimo_otp_btn_authorize"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dp"
+            android:text="@string/paynimo_otp_authorize_btn_text" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+           >
+
+            <com.paynimo.android.payment.CustomTextView
+                style="@style/TextViewPaynimo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="@string/paynimo_otp_3dsecure_user_hint" />
+
+            <com.paynimo.android.payment.CustomButton
+                android:id="@+id/paynimo_otp_btn_3dsecure"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/paynimo_otp_3dsecure_btn_text" />
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

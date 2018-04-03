@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- Generated with http://android-holo-colors.com -->
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <style name="EditTextPaynimo" parent="android:Widget.EditText">
+        <item name="android:background">@drawable/paynimo_edittext_border_bottom_line</item>
+        <item name="android:textColor">@color/paynimo_defaultTextColor</item>
+        <item name="android:textSize">@dimen/paynimo_editText_textSize</item>
+        <item name="android:paddingLeft">@dimen/paynimo_editText_padding_left</item>
+        <item name="android:paddingRight">@dimen/paynimo_editText_padding_left</item>
+        <item name="android:paddingTop">@dimen/paynimo_editText_padding_top</item>
+        <item name="android:paddingBottom">@dimen/paynimo_editText_padding_top</item>
+        <item name="android:textColorHint">@color/paynimo_defaultHintTextColor</item>
+
+        <!-- this makes edit text cursor visible start -->
+        <item name="android:textCursorDrawable">@null</item>
+        <!-- this makes edit text cursor visible ends -->
+
+    </style>
+
+</resources>
