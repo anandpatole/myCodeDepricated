@@ -195,11 +195,15 @@
 
         <!-- Hotline theming -->
         <activity
-            android:name="com.freshdesk.hotline.activity.ChannelListActivity"
+            android:name="com.freshchat.consumer.sdk.activity.ChannelListActivity"
             android:theme="@style/HotlineTheme"
             tools:replace="android:theme"/>
         <activity
-            android:name="com.freshdesk.hotline.activity.ConversationDetailActivity"
+            android:name="com.freshchat.consumer.sdk.activity.ConversationDetailActivity"
+            android:theme="@style/HotlineTheme"
+            tools:replace="android:theme" />
+        <activity
+            android:name="com.freshchat.consumer.sdk.activity.PictureAttachmentActivity"
             android:theme="@style/HotlineTheme"
             tools:replace="android:theme"/>
         <activity
@@ -336,14 +340,27 @@
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id"/>
 
-        <provider
+        <!--<provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="com.cheep.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
+<<<<<<< HEAD
+                android:resource="@xml/file_paths" />
+        </provider>-->
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="@string/freshchat_file_provider_authority"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/freshchat_file_provider_paths" />
+=======
                 android:resource="@xml/file_paths"/>
+>>>>>>> b9c8c4cc537be7bd9de55469ca06e5c6aa77655c
         </provider>
 
         <!--

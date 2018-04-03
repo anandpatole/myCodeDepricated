@@ -66,7 +66,12 @@ public class RatingAdapter extends RecyclerView.Adapter<RatingAdapter.ViewHolder
         return mList;
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder {
+    public void addAll(List<RatingModel> list) {
+        mList.addAll(list);
+        notifyDataSetChanged();
+    }
+
+    public class ViewHolder extends RecyclerView.ViewHolder {
         RowRatingBinding mBinding;
 
         public ViewHolder(RowRatingBinding binding) {
@@ -80,11 +85,6 @@ public class RatingAdapter extends RecyclerView.Adapter<RatingAdapter.ViewHolder
             });
 
         }
-    }
-
-    public void addAll(List<RatingModel> list) {
-        mList.addAll(list);
-        notifyDataSetChanged();
     }
 
 }

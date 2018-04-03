@@ -597,6 +597,10 @@ public class Utility {
     }
 
     //Bundle Extra parameters
+    public interface ReviewByMe{
+        String YES = "1";
+        String NO = "0";
+    }
     public interface Extra {
         String WHICH_FRAG = "which_frag";
         String USER_DETAILS = "userdetails";

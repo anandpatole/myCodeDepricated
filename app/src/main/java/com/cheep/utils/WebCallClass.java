@@ -22,6 +22,7 @@ import com.cheep.model.HistoryModel;
 import com.cheep.model.JobCategoryModel;
 import com.cheep.model.NotificationModel;
 import com.cheep.model.ProviderModel;
+import com.cheep.model.RateAndReviewModel;
 import com.cheep.model.SubServiceDetailModel;
 import com.cheep.model.TaskDetailModel;
 import com.cheep.model.UserDetails;
@@ -1424,7 +1425,173 @@ public class WebCallClass {
         Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest, NetworkUtility.WS.GET_TASK_FOR_PENDING_REVIEW);
     }
 
-    ////////////////////////// getTaskForPendingReview call end //////////////////////////
+    ////////////////////////// getTaskForPendingReview call end     //////////////////////////
+
+
+    ////////////////////////// Get User Review list call start     //////////////////////////
+    public interface GetUserReviewListListener {
+
+        void getUserReviewList(RateAndReviewModel model, String pageNumber);
+    }
+
+    public static void getUserReviewList(final Context mContext, final String nextPageId, String userId, String reviewByMe
+            , final CommonResponseListener commonListener
+            , final GetUserReviewListListener successListener) {
+
+        Log.d(TAG, "getPaymentHistoryList() called with: mContext = [" + mContext + "], nextPageId = [" + nextPageId +
+                "], commonListener = [" + commonListener + "], successListener = [" + successListener + "]");
+
+        final Response.ErrorListener errorListener = new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
+                commonListener.volleyError(error);
+            }
+        };
+
+        final Response.Listener responseListener = new Response.Listener() {
+            @Override
+            public void onResponse(Object response) {
+                Log.d(TAG, "onResponse() called with: response = [" + response + "]");
+                try {
+                    JSONObject jsonObject = new JSONObject(response.toString());
+                    int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
+                    String error_message;
+                    switch (statusCode) {
+                        case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
+                            RateAndReviewModel model;
+                            try {
+                                model = (RateAndReviewModel) GsonUtility.getObjectFromJsonString(jsonObject.optString(NetworkUtility.TAGS.DATA), RateAndReviewModel.class);
+                            } catch (Exception e) {
+                                Log.i(TAG, "onResponse: Error" + e.toString());
+                                model = new RateAndReviewModel();
+                            }
+
+                            successListener.getUserReviewList(model
+                                    , model.lastId);
+                            Log.e(TAG, "onResponse: " + model.lastId);
+
+                            break;
+                        case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
+                            // Show Toast
+                            commonListener.showSpecificMessage(mContext.getString(R.string.label_something_went_wrong));
+                            break;
+                        case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
+                            error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
+                            // Show message
+                            commonListener.showSpecificMessage(error_message);
+                            break;
+                        case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
+                        case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
+                            //Logout and finish the current activity
+                            Utility.logout(mContext, true, statusCode);
+                            commonListener.forceLogout();
+                            break;
+                    }
+                } catch (JSONException e) {
+                    commonListener.showSpecificMessage(mContext.getString(R.string.label_something_went_wrong));
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        //Add Header parameters
+        Map<String, String> mHeaderParams = new HashMap<>();
+        mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
+        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().userID);
+
+
+        //Add Params
+        Map<String, String> mParams = new HashMap<>();
+        mParams.put(NetworkUtility.TAGS.LAST_ID, nextPageId);
+        mParams.put(NetworkUtility.TAGS.REVIEW_BY_ME, reviewByMe);
+
+        //noinspection unchecked
+        VolleyNetworkRequest mVolleyNetworkRequest = new VolleyNetworkRequest(NetworkUtility.WS.GET_USER_REVIEW_LIST
+                , errorListener
+                , responseListener
+                , mHeaderParams
+                , mParams
+                , null);
+        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest, NetworkUtility.WS.GET_USER_REVIEW_LIST);
+    }
+    ////////////////////////// Get User Review List call end     //////////////////////////
+
+
+    ////////////////////////// Set FreshChat Restore Id call start     //////////////////////////
+
+    public static void setFreshChatRestoreId(final Context mContext, final String restoreId
+            , final CommonResponseListener commonListener) {
+
+        Log.d(TAG, "getPaymentHistoryList() called with: mContext = [" + mContext + "]" +
+                ", commonListener = [" + commonListener + "],");
+
+        final Response.ErrorListener errorListener = new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
+                commonListener.volleyError(error);
+            }
+        };
+
+        final Response.Listener responseListener = new Response.Listener() {
+            @Override
+            public void onResponse(Object response) {
+                Log.d(TAG, "onResponse() called with: response = [" + response + "]");
+                try {
+                    JSONObject jsonObject = new JSONObject(response.toString());
+                    int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
+
+                    String error_message;
+                    switch (statusCode) {
+                        case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
+                            UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
+                            userDetails.restoreId = restoreId;
+                            PreferenceUtility.getInstance(mContext).saveUserDetails(userDetails);
+                            break;
+                        case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
+                            // Show Toast
+                            commonListener.showSpecificMessage(mContext.getString(R.string.label_something_went_wrong));
+                            break;
+                        case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
+                            error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
+                            // Show message
+                            commonListener.showSpecificMessage(error_message);
+                            break;
+                        case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
+                        case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
+                            //Logout and finish the current activity
+                            Utility.logout(mContext, true, statusCode);
+                            commonListener.forceLogout();
+                            break;
+                    }
+                } catch (JSONException e) {
+                    commonListener.showSpecificMessage(mContext.getString(R.string.label_something_went_wrong));
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        //Add Header parameters
+        Map<String, String> mHeaderParams = new HashMap<>();
+        mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
+        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().userID);
+
+
+        //Add Params
+        Map<String, String> mParams = new HashMap<>();
+        mParams.put(NetworkUtility.TAGS.RESTORE_ID, restoreId);
+
+        //noinspection unchecked
+        VolleyNetworkRequest mVolleyNetworkRequest = new VolleyNetworkRequest(NetworkUtility.WS.FRESHCHAT_RESTORE_ID
+                , errorListener
+                , responseListener
+                , mHeaderParams
+                , mParams
+                , null);
+        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest, NetworkUtility.WS.FRESHCHAT_RESTORE_ID);
+    }
+    ////////////////////////// Fresh Chat RestoreId call end     //////////////////////////
 
     ////////////////////////// get city list for vote call start //////////////////////////
     public interface GetCityListListener {
@@ -1506,7 +1673,7 @@ public class WebCallClass {
 
     ////////////////////////// get city list for vote call end //////////////////////////
 
-    ////////////////////////// add vote of city call start     //////////////////////////
+    ////////////////////////// add vote of city call start //////////////////////////
     public interface AddVoteForCheepCareCityListListener {
         void onSuccessOfVote();
     }
@@ -1584,5 +1751,6 @@ public class WebCallClass {
         Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest, NetworkUtility.WS.VOTE_CITY_FOR_CHEEP_CARE);
     }
 
-    ////////////////////////// add vote of city call end      //////////////////////////
+    ////////////////////////// add vote of city call end //////////////////////////
+
 }

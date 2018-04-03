@@ -21,6 +21,7 @@ public class NetworkUtility {
         // Endpoints
         public static final String LOGIN = BASE_URL + "customers/auth/cheep_login";
         public static final String LOGOUT = BASE_URL + "customers/profile/logout";
+        public static final String FRESHCHAT_RESTORE_ID = BASE_URL + "customers/profile/add_restoreId";
         public static final String SIGNUP = BASE_URL + "customers/auth/registration";
         public static final String SEND_OTP = BASE_URL + "customers/auth/send_otp_to_number";
         public static final String VERIFY_OTP = BASE_URL + "customers/auth/verify_otp_code";
@@ -51,6 +52,7 @@ public class NetworkUtility {
         public static final String ACTION_ON_DETAIL = BASE_URL + "customers/sp_list/actionOnDetail";
 
         public static final String UPDATE_LANGUAGE = BASE_URL + "customers/profile/updateLanguage";
+        public static final String GET_USER_REVIEW_LIST = BASE_URL + "customers/profile/getUserReviewList";
 
 
         public static final String SP_PROFILE_DETAILS = BASE_URL + "customers/sp_profile/details";
@@ -387,6 +389,7 @@ public class NetworkUtility {
         String CHEEPCODE = "cheepcode";
         String TRANSACTION_ID = "txnid";
 
+
         String REASON = "reason";
         String MONTHLY_SAVED_TOTAL = "monthly_saved_total";
         String TOTAL_EARNED = "total_earned";
@@ -492,6 +495,10 @@ public class NetworkUtility {
         String PRICE = "price";
         String DETAIL = "detail";
         String CAT_NAME = "cat_name";
+
+        String REVIEW_BY_ME="review_by_me";
+        String RESTORE_ID="restore_id";
+
         String IS_RENEW= "is_renew";
 
         interface VERSION_CHANGE_TYPE {

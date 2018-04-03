@@ -53,6 +53,7 @@ import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
 import com.cheep.utils.CalendarUtility;
+import com.cheep.utils.FreshChatHelper;
 import com.cheep.utils.GlideUtility;
 import com.cheep.utils.GsonUtility;
 import com.cheep.utils.HotlineHelper;
@@ -640,7 +641,8 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
             mBinding.textContactCheepViaChat.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    HotlineHelper.getInstance(mContext).showConversation(mContext);
+                 //   HotlineHelper.getInstance(mContext).showConversation(mContext);
+                    FreshChatHelper.getInstance(mContext).showConversation(mContext);
                 }
             });
             hideRateAndReviewView();
@@ -1312,7 +1314,8 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
         dialog.addNegativeButton(getString(R.string.label_chat), new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                HotlineHelper.getInstance(mContext).showConversation(mContext);
+               // HotlineHelper.getInstance(mContext).showConversation(mContext);
+                FreshChatHelper.getInstance(mContext).showConversation(mContext);
                 dialog.dismiss();
             }
         });

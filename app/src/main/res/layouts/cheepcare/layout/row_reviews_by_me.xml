@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/scale_10dp"
+        app:cardCornerRadius="@dimen/scale_0dp">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/scale_10dp"
+        android:paddingLeft="@dimen/scale_16dp"
+        android:paddingRight="@dimen/scale_16dp"
+        android:paddingTop="@dimen/scale_10dp">
+    <RelativeLayout
+        android:id="@+id/front_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+       >
+        <FrameLayout
+            android:id="@+id/fl_img_profile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/img_profile"
+            android:layout_width="@dimen/review_photo_width"
+            android:layout_height="@dimen/review_photo_width"
+            android:src="@drawable/icon_profile_img_solid"
+            tools:ignore="ContentDescription" />
+        <ImageView
+            android:id="@+id/imgFav"
+            android:layout_width="@dimen/scale_16dp"
+            android:layout_height="@dimen/scale_16dp"
+            android:layout_gravity="bottom|right"
+            android:background="@drawable/icon_fav_selector"
+            tools:ignore="ContentDescription" />
+        </FrameLayout>
+
+        <RelativeLayout
+            android:id="@+id/detail_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="@dimen/scale_16dp"
+            android:layout_toRightOf="@+id/fl_img_profile">
+
+            <com.cheep.custom_view.CFTextViewRegular
+                android:id="@+id/text_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:lines="1"
+                android:textColor="@color/splash_gradient_end"
+                android:textSize="@dimen/text_size_14sp"
+                tools:text="Sarita Kumari "
+                android:maxWidth="@dimen/scale_180dp"/>
+            <com.cheep.custom_view.CFTextViewRegular
+                android:id="@+id/text_verified"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/scale_5dp"
+                android:background="@drawable/background_steps_verified"
+                android:paddingBottom="@dimen/scale_2dp"
+                android:paddingLeft="@dimen/scale_5dp"
+                android:paddingRight="@dimen/scale_5dp"
+                android:paddingTop="@dimen/scale_2dp"
+                android:layout_toRightOf="@id/text_name"
+                android:text="@string/label_verified"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_10sp" />
+
+            <com.cheep.custom_view.CFTextViewRegular
+                android:id="@+id/text_reviewed_task_detail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/text_name"
+                android:layout_marginTop="@dimen/scale_5dp"
+                android:ellipsize="end"
+                android:gravity="center_vertical"
+                android:lines="2"
+                android:text="@string/label_rating_category_and_date"
+                android:textColor="@color/grey_varient_8"
+                android:textSize="@dimen/text_size_11sp" />
+
+
+        </RelativeLayout>
+        <com.cheep.custom_view.CFTextViewRegular
+            android:id="@+id/text_you_rated"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/fl_img_profile"
+            android:layout_marginTop="@dimen/scale_5dp"
+            android:gravity="left"
+            android:minWidth="@dimen/scale_80dp"
+            android:paddingBottom="@dimen/scale_5dp"
+            android:paddingTop="@dimen/scale_5dp"
+            android:textColor="@color/splash_gradient_end"
+            android:textSize="@dimen/text_size_11sp"
+            android:text="@string/label_you_rated_the_pro" />
+
+        <RatingBar
+            android:id="@+id/rating_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/scale_9dp"
+            android:layout_below="@id/text_you_rated"
+            android:layout_gravity="right"
+            android:isIndicator="true"
+            android:progressDrawable="@drawable/rating_bar_selector_s1"
+            android:rating="4"
+            android:stepSize="1"/>
+
+        <View
+            android:id="@+id/separator"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/scale_1dp"
+            android:layout_below="@id/rating_bar"
+            android:layout_marginTop="@dimen/scale_10dp"
+            android:background="@color/light_grey_color"
+            />
+
+    </RelativeLayout>
+        <FrameLayout
+            android:id="@+id/fl_review"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <com.cheep.custom_view.CFTextViewRegular
+                android:id="@+id/text_add_review"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/separator"
+                android:layout_marginTop="@dimen/scale_5dp"
+                android:gravity="left"
+                android:paddingBottom="@dimen/scale_5dp"
+                android:paddingTop="@dimen/scale_5dp"
+                android:textColor="@color/splash_gradient_end"
+                android:textSize="@dimen/text_size_11sp"
+                android:text="@string/label_add_review" />
+            <RelativeLayout
+                android:id="@+id/rl_review_message"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            <com.cheep.custom_view.CFTextViewRegular
+                android:id="@+id/text_you_reviewed"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/scale_5dp"
+                android:gravity="left"
+                android:paddingBottom="@dimen/scale_5dp"
+                android:paddingTop="@dimen/scale_5dp"
+                android:textColor="@color/splash_gradient_end"
+                android:textSize="@dimen/text_size_11sp"
+                android:text="@string/label_you_reviewed_the_pro" />
+
+
+            <com.cheep.custom_view.CFTextViewRegular
+                android:id="@+id/text_review_message"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/text_you_reviewed"
+                android:layout_marginTop="@dimen/scale_5dp"
+                android:gravity="center_vertical"
+                android:text="@string/dummy_chat"
+                android:textColor="@color/grey_varient_8"
+                android:textSize="@dimen/text_size_11sp" />
+            </RelativeLayout>
+
+        </FrameLayout>
+    </LinearLayout>
+    </android.support.v7.widget.CardView>
+</layout>

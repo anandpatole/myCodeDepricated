@@ -25,13 +25,14 @@
         <item name="android:textColorHint">@color/colorAccent</item>
     </style>
 
-    <style name="HotlineTheme" parent="@style/Theme.Hotline.Light">
+    <style name="HotlineTheme" parent="@style/Theme.Freshchat.Light">
         <!-- Customize your theme here. -->
         <item name="colorControlNormal">@color/splash_gradient_end</item>
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorPrimary">@color/splash_gradient_end</item>
+        <item name="colorPrimaryDark">@color/splash_gradient_end</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:textColorPrimary">@color/splash_gradient_end</item>
+        <item name="android:textColorPrimary">@color/colorPrimary</item>
+        <item name="android:textColorSecondary">@color/colorPrimary</item>
         <item name="android:windowBackground">@color/colorPrimary</item>
 
     </style>
@@ -255,4 +256,7 @@
         <!-- Used for the background -->
         <item name="android:background">@color/colorPrimary</item>
     </style>
+
+
+    <!--Progressbar review screen-->
 </resources>
