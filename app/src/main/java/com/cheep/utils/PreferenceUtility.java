@@ -81,7 +81,8 @@ public class PreferenceUtility {
         mSharedPreferences.edit().putString(PREF_USER_INFO, jsonData.toString()).apply();
 
         //updating hotline profile
-        HotlineHelper.getInstance(context).updateUserInfo(mUserDetails, context);
+       // HotlineHelper.getInstance(context).updateUserInfo(mUserDetails, context);
+        FreshChatHelper.getInstance(context).updateUserInfo(mUserDetails, context);
     }
 
     /**
@@ -94,7 +95,8 @@ public class PreferenceUtility {
         mSharedPreferences.edit().putString(PREF_USER_INFO, GsonUtility.getJsonStringFromObject(model)).apply();
         mUserDetails = model;
         //updating hotline profile
-        HotlineHelper.getInstance(context).updateUserInfo(mUserDetails, context);
+      //  HotlineHelper.getInstance(context).updateUserInfo(mUserDetails, context);
+        FreshChatHelper.getInstance(context).updateUserInfo(mUserDetails, context);
     }
 
     public UserDetails getUserDetails() {
@@ -153,7 +155,8 @@ public class PreferenceUtility {
      */
     public void onUserLogout() {
         //updating hotline profile
-        HotlineHelper.getInstance(context).clearUser(context);
+       // HotlineHelper.getInstance(context).clearUser(context);
+        FreshChatHelper.getInstance(context).resetUser(context);
 
         // Clear All notification if raised
         NotificationManager notificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);

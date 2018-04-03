@@ -56,7 +56,7 @@
                 android:gravity="center"
                 android:paddingBottom="@dimen/scale_11dp"
                 android:paddingTop="@dimen/scale_11dp"
-                android:text="@string/label_details"
+                android:text="@string/label_my_details"
                 android:textColor="@color/selector_text_535353_blue" />
 
         </FrameLayout>
@@ -80,7 +80,7 @@
                 android:gravity="center"
                 android:paddingBottom="@dimen/scale_11dp"
                 android:paddingTop="@dimen/scale_11dp"
-                android:text="@string/label_reviews"
+                android:text="@string/label_my_reviews"
                 android:textColor="@color/selector_text_535353_blue" />
         </FrameLayout>
 
@@ -103,7 +103,7 @@
                 android:gravity="center"
                 android:paddingBottom="@dimen/scale_11dp"
                 android:paddingTop="@dimen/scale_11dp"
-                android:text="@string/label_payment_history"
+                android:text="@string/label_my_payment_history"
                 android:textColor="@color/selector_text_535353_blue" />
         </FrameLayout>
 

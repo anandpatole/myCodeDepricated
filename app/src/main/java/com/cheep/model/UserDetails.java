@@ -34,6 +34,10 @@ public class UserDetails {
     @SerializedName("phone_number")
     public String phoneNumber;
 
+
+    @SerializedName("restore_id")
+    public String restoreId;
+
     public String getDisplayLocationName() {
         return TextUtils.isEmpty(mLocality) ? mCityName : mLocality;
     }

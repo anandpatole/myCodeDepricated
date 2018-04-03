@@ -22,6 +22,7 @@ import com.cheep.model.FAQModel;
 import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
+import com.cheep.utils.FreshChatHelper;
 import com.cheep.utils.GsonUtility;
 import com.cheep.utils.HotlineHelper;
 import com.cheep.utils.PreferenceUtility;
@@ -131,7 +132,8 @@ public class FAQFragment extends BaseFragment {
         mFragmentFaqBinding.btnChat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                HotlineHelper.getInstance(mContext).showConversation(mContext);
+               // HotlineHelper.getInstance(mContext).showConversation(mContext);
+                FreshChatHelper.getInstance(mContext).showConversation(mContext);
             }
         });
     }

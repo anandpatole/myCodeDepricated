@@ -8,6 +8,7 @@ import android.util.Log;
 import com.appsflyer.AppsFlyerConversionListener;
 import com.appsflyer.AppsFlyerLib;
 import com.cheep.activity.ApplicationLifeCycle;
+import com.cheep.utils.FreshChatHelper;
 import com.cheep.utils.HotlineHelper;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
@@ -36,7 +37,8 @@ public class App extends ApplicationLifeCycle {
         FacebookSdk.sdkInitialize(this);
         AppEventsLogger.activateApp(this);
 
-        HotlineHelper.getInstance(this);
+       // HotlineHelper.getInstance(this);
+        FreshChatHelper.getInstance(this);
         initiateAppsFlyerSDK();
 
         //Twitter Authentication for configuring Fabric account

@@ -139,6 +139,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_saved">Saved</string>
     <string name="label_spent">Spent</string>
     <string name="label_payment_history">Payment History</string>
+    <string name="label_my_payment_history">My Payment History</string>
     <string name="label_total">Total</string>
     <string name="label_cheepest">Cheepest</string>
     <string name="label_distance">Distance</string>
@@ -250,7 +251,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
 
     <!--Hotline-->
     <string name="hotline_file_provider_authority">com.cheep.fileprovider</string>
-
+    <string name="freshchat_file_provider_authority">com.cheep.provider</string>
     <!-- chat time ago strings -->
     <string name="just_now">just now</string>
     <string name="time_ago">%s ago</string>
@@ -313,6 +314,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_update_address">Update Address</string>
 
     <string name="label_reviews">Reviews</string>
+    <string name="label_my_reviews">My Reviews</string>
     <string name="label_past_work">Past Work</string>
     <string name="label_contact_requested">Contact Requested</string>
 
@@ -764,6 +766,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="msg_notif_20min_confirm_availability">Hey Rahul! It seems that you haven\'t confirmed your availability yet.
         Your Cheep Care task will be cancelled if you don\'t confirm within 20 minutes of this notification sent to you. Please confirm your availability.</string>
     <string name="label_details">Details</string>
+    <string name="label_my_details">My Details</string>
     <string name="label_my_profile">My Profile</string>
     <string name="label_total_paid_colon">Total Paid:</string>
     <string name="msg_payment_pending_desc">It seems that your payment is pending for this task.</string>
@@ -773,4 +776,18 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_with_cheep_care">with Cheep Care</string>
     <string name="msg_rate_desc_home_1st_part">&#160;recently completed a&#160;</string>
     <string name="msg_rate_desc_home_2nd_part">&#160;task for you. Please rate your service experience.</string>
+
+    <!--Review By Me-->
+    <string name="label_you_rated_the_pro">You rated the PRO</string>
+    <string name="label_pro_rated_you">The PRO rated you</string>
+    <string name="label_add_review"><u>Add review</u></string>
+    <string name="label_you_reviewed_the_pro">You reviewed the PRO</string>
+    <string name="label_pro_reviewed_you">The PRO reviewed you</string>
+    <string name="label_reviews_of_me">Reviews of me</string>
+    <string name="label_reviews_by_me">Reviews by me</string>
+    <string name="label_rating_number">%1s</string>
+    <string name="label_rating_category_and_date">The rating below is for the %1s task completed on %1$s</string>
+
+    <string name="label_rating_and_review_number">%1s ratings and %1s reviews</string>
+
 </resources>

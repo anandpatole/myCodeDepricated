@@ -80,6 +80,7 @@ import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
 import com.cheep.strategicpartner.StrategicPartnerTaskCreationAct;
 import com.cheep.strategicpartner.TaskSummaryStrategicPartnerActivity;
+import com.cheep.utils.FreshChatHelper;
 import com.cheep.utils.GlideUtility;
 import com.cheep.utils.GsonUtility;
 import com.cheep.utils.HotlineHelper;
@@ -728,7 +729,8 @@ public class HomeActivity extends BaseAppCompatActivity
         dialog.addNegativeButton(getString(R.string.label_chat), new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                HotlineHelper.getInstance(mContext).showConversation(mContext);
+             //   HotlineHelper.getInstance(mContext).showConversation(mContext);
+                FreshChatHelper.getInstance(mContext).showConversation(mContext);
                 dialog.dismiss();
             }
         });

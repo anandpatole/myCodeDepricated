@@ -26,7 +26,7 @@
                 android:gravity="center"
                 android:paddingBottom="@dimen/scale_11dp"
                 android:paddingTop="@dimen/scale_11dp"
-                android:text="1st tab"
+                android:text="@string/label_reviews_of_me"
                 android:textColor="@color/selector_text_535353_blue" />
 
         </FrameLayout>
@@ -48,7 +48,7 @@
                 android:gravity="center"
                 android:paddingBottom="@dimen/scale_11dp"
                 android:paddingTop="@dimen/scale_11dp"
-                android:text="2nd tab"
+                android:text="@string/label_reviews_by_me"
                 android:textColor="@color/selector_text_535353_blue" />
         </FrameLayout>
 
@@ -60,14 +60,12 @@
             android:background="@color/light_grey_color"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/fl_details_container" />
+            app:layout_constraintTop_toBottomOf="@id/fl_reviews_of_me_container" />
 
         <android.support.v4.view.ViewPager
             android:id="@+id/view_pager"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginRight="@dimen/scale_14dp"
-            android:layout_marginTop="@dimen/scale_12dp"
             android:layout_weight="1"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
