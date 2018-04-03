@@ -22,11 +22,7 @@ import com.cheep.activity.SendOtpActivity;
 import com.cheep.activity.SubscriptionActivity;
 import com.cheep.activity.WithdrawMoneyActivity;
 import com.cheep.cheepcare.dialogs.PaymentFailedDialog;
-<<<<<<< HEAD
-import com.cheep.cheepcare.dialogs.TaskConfirmedCCInstaBookDialog;
 import com.cheep.cheepcare.model.CareCityDetail;
-=======
->>>>>>> CCPayNimoCheepUserAndroid
 import com.cheep.cheepcare.model.CheepCarePaymentDataModel;
 import com.cheep.cheepcare.model.SubscribedTaskDetailModel;
 import com.cheep.databinding.ActivityPaymentChoiceCheepCareBinding;
@@ -134,7 +130,7 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
     @Override
     protected void initiateUI() {
 
-        mBinding.cardAutoRenewSwitch.setSelected(true);
+        mBinding.cartAutoRenewSwitch.setSelected(true);
         mBinding.paytmAutoRenewSwitch.setSelected(true);
         mBinding.tvCardAutoRenewal.setText(R.string.label_auto_renew_activated);
         mBinding.tvPaytmAutoRenewal.setText(R.string.label_auto_renew_activated);
@@ -165,7 +161,6 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
         mBinding.cartAutoRenewSwitch.setSelected(true);
 =======
         }*/
->>>>>>> CCPayNimoCheepUserAndroid
         setupActionbar();
     }
 
@@ -184,11 +179,7 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
         mBinding.rlCard.setOnClickListener(this);
         mBinding.rlNetbanking.setOnClickListener(this);
         mBinding.rlPaytm.setOnClickListener(this);
-<<<<<<< HEAD
         mBinding.cartAutoRenewSwitch.setOnClickListener(this);
-=======
-        mBinding.cardAutoRenewSwitch.setOnClickListener(this);
->>>>>>> CCPayNimoCheepUserAndroid
         mBinding.paytmAutoRenewSwitch.setOnClickListener(this);
     }
 
@@ -210,19 +201,13 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
 
             case R.id.rl_cash_payment:
                 break;
-            case R.id.cardAutoRenewSwitch:
+            case R.id.cartAutoRenewSwitch:
                 view.setSelected(!view.isSelected());
                 mBinding.tvCardAutoRenewal.setText(view.isSelected() ? R.string.label_auto_renew_activated : R.string.label_auto_renew_deactivated);
                 break;
             case R.id.paytmAutoRenewSwitch:
                 view.setSelected(!view.isSelected());
                 mBinding.tvPaytmAutoRenewal.setText(view.isSelected() ? R.string.label_auto_renew_activated : R.string.label_auto_renew_deactivated);
-                break;
-            case R.id.cartAutoRenewSwitch:
-                mBinding.cartAutoRenewSwitch.setSelected(!view.isSelected());
-                break;
-            case R.id.paytmAutoRenewSwitch:
-                mBinding.paytmAutoRenewSwitch.setSelected(!view.isSelected());
                 break;
         }
     }
@@ -456,11 +441,7 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
 
                     if (data != null) {
                         LogUtils.LOGE(TAG, "onActivityResult() called with success: result= [" + data.getStringExtra(Utility.Extra.PAYU_RESPONSE) + "]");
-<<<<<<< HEAD
                         onSuccessOfPayment(data.getStringExtra(Utility.Extra.PAYU_RESPONSE), Utility.EMPTY_STRING, Utility.BOOLEAN.NO);
-=======
-                        onSuccessOfPayment(data.getStringExtra(Utility.Extra.PAYU_RESPONSE));
->>>>>>> CCPayNimoCheepUserAndroid
                     }
                 }
                 if (resultCode == RESULT_CANCELED) {
@@ -884,7 +865,7 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
                                 Log.v("TRANSACTION SI STATUS=>", "SUCCESS");
 
                                 // todo :: >> this is our final success
-                                callCreateCheepCarePackageWS("success of cheep care subscription from android");
+                                callCreateCheepCarePackageWS("success of cheep care subscription from android", Utility.EMPTY_STRING, Utility.BOOLEAN.NO);
                             } else {
                                 //SI TRANSACTION STATUS - Failure (status code OTHER THAN 0300 means failure)
                                 Log.v("TRANSACTION SI STATUS=>", "FAILURE");

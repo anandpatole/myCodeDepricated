@@ -13,12 +13,8 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.cheep.R;
 import com.cheep.cheepcare.activity.LandingScreenPickPackageActivity;
 import com.cheep.cheepcare.activity.ManageSubscriptionActivity;
-<<<<<<< HEAD
 import com.cheep.cheepcare.model.CareCityDetail;
-=======
 import com.cheep.cheepcare.activity.PaymentDemoActivity;
-import com.cheep.cheepcare.model.CityDetail;
->>>>>>> CCPayNimoCheepUserAndroid
 import com.cheep.databinding.FragmentSubscriptionBannerImageBinding;
 import com.cheep.fragment.BaseFragment;
 import com.cheep.fragment.HomeFragment;

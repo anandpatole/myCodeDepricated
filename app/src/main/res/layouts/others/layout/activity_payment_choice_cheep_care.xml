@@ -272,7 +272,6 @@
                             <ImageView
                                 android:id="@+id/paytmAutoRenewSwitch"
                                 android:layout_width="wrap_content"
-                                android:src="@drawable/selector_switch_auto_renew"
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentEnd="true"
                                 android:layout_alignParentRight="true"
@@ -369,7 +368,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_centerVertical="true"
-                                android:layout_toLeftOf="@+id/cardAutoRenewSwitch"
+                                android:layout_toLeftOf="@+id/cartAutoRenewSwitch"
                                 android:gravity="center_vertical"
                                 android:paddingBottom="@dimen/scale_12dp"
                                 android:paddingEnd="@dimen/scale_5dp"
@@ -382,14 +381,9 @@
                                 android:textSize="@dimen/text_size_13sp"/>
 
                             <ImageView
-<<<<<<< HEAD
                                 android:id="@+id/cartAutoRenewSwitch"
-=======
-                                android:id="@+id/cardAutoRenewSwitch"
->>>>>>> CCPayNimoCheepUserAndroid
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:src="@drawable/selector_switch_auto_renew"
                                 android:layout_alignParentEnd="true"
                                 android:layout_alignParentRight="true"
                                 android:layout_centerVertical="true"

@@ -7,12 +7,9 @@
     <uses-feature
         android:name="android.hardware.camera"
         android:required="true"/>
-<<<<<<< HEAD
-=======
     <uses-feature
         android:name="android.hardware.telephony"
         android:required="false"/>
->>>>>>> CCPayNimoCheepUserAndroid
 
     <uses-permission android:name="android.permission.CAMERA"/>
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -28,16 +25,13 @@
 
     <!-- AppsFlyer SDK(Optional- But we provided) -->
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
-<<<<<<< HEAD
-=======
 
 
     <!-- Pay nimos permission permission for SMS Reading -->
-    <uses-permission android:name="android.permission.RECEIVE_SMS" />
-    <uses-permission android:name="android.permission.READ_SMS" />
-    <uses-permission android:name="android.permission.SEND_SMS" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
->>>>>>> CCPayNimoCheepUserAndroid
+    <uses-permission android:name="android.permission.RECEIVE_SMS"/>
+    <uses-permission android:name="android.permission.READ_SMS"/>
+    <uses-permission android:name="android.permission.SEND_SMS"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
 
     <application
         android:name=".App"
@@ -54,19 +48,11 @@
             android:name=".activity.SplashActivity"
             android:screenOrientation="portrait"
             android:theme="@style/SplashTheme">
-<<<<<<< HEAD
-             <intent-filter>
-                 <action android:name="android.intent.action.MAIN"/>
-
-                 <category android:name="android.intent.category.LAUNCHER"/>
-             </intent-filter>
-=======
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
->>>>>>> CCPayNimoCheepUserAndroid
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
 
@@ -79,20 +65,10 @@
                 <data
                     android:host="f7zdy.app.goo.gl"
                     android:scheme="https"/>
-<<<<<<< HEAD
             </intent-filter>
         </activity>
 
         <activity android:name=".activity.SubscriptionActivity">
-<!--
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-
-                <category android:name="android.intent.category.LAUNCHER"/>
-=======
->>>>>>> CCPayNimoCheepUserAndroid
-            </intent-filter>
--->
         </activity>
 
         <activity
@@ -187,12 +163,8 @@
         <activity
             android:name=".activity.CommentsActivity"
             android:screenOrientation="portrait"/>
-<<<<<<< HEAD
         <!--
               <activity
-=======
-        <!--  <activity
->>>>>>> CCPayNimoCheepUserAndroid
               android:name=".activity.JobSummaryActivity"
               android:screenOrientation="portrait" />
         -->
@@ -246,10 +218,6 @@
             android:configChanges="locale|orientation"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize"/>
-<<<<<<< HEAD
-=======
-
->>>>>>> CCPayNimoCheepUserAndroid
         <activity
             android:name=".strategicpartner.StrategicPartnerTaskCreationAct"
             android:screenOrientation="portrait"
@@ -270,10 +238,7 @@
         <activity
             android:name=".strategicpartner.PaymentsSummaryStrategicPartnerActivity"
             android:screenOrientation="portrait"/>
-<<<<<<< HEAD
-=======
 
->>>>>>> CCPayNimoCheepUserAndroid
         <activity
             android:name=".activity.VerifyOtpActivity"
             android:screenOrientation="portrait"/>
@@ -285,34 +250,21 @@
             android:name=".activity.AddMoneyActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
-<<<<<<< HEAD
-        <activity
-            android:name=".cheepcare.activity.RateAndReviewActivity"
-            android:screenOrientation="portrait"/>
-=======
+
 
         <activity
             android:name=".cheepcare.activity.RateAndReviewActivity"
             android:screenOrientation="portrait"/>
 
->>>>>>> CCPayNimoCheepUserAndroid
         <activity
             android:name=".cheepcare.activity.LandingScreenPickPackageActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden"/>
-<<<<<<< HEAD
-=======
 
->>>>>>> CCPayNimoCheepUserAndroid
         <activity
             android:name=".cheepcare.activity.PackageCustomizationActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize"/>
-<<<<<<< HEAD
-=======
-
-
->>>>>>> CCPayNimoCheepUserAndroid
         <activity
             android:name=".cheepcare.activity.ManageSubscriptionActivity"
             android:screenOrientation="portrait"
@@ -321,12 +273,7 @@
             android:name=".cheepcare.activity.PaymentChoiceCheepCareActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden"/>
-<<<<<<< HEAD
-        <!--
-              <activity
-=======
         <!--  <activity
->>>>>>> CCPayNimoCheepUserAndroid
               android:name=".activity.TaskSummaryForMultiCatActivity"
               android:screenOrientation="portrait"
               android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
@@ -338,15 +285,11 @@
             android:label="@string/app_name"/>
         <activity
             android:name=".activity.BookingConfirmationInstaActivity"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize|stateAlwaysHidden"/>
-<<<<<<< HEAD
-=======
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".cheepcare.activity.PaymentDemoActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden"/>
->>>>>>> CCPayNimoCheepUserAndroid
 
         <!-- Location Tracked Service -->
 
@@ -403,10 +346,6 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyDtxYbkO21G_uHSXNXuZayLskeEjFQ6HvY"/>
-<<<<<<< HEAD
-=======
-
->>>>>>> CCPayNimoCheepUserAndroid
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id"/>
@@ -418,8 +357,6 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-<<<<<<< HEAD
-<<<<<<< HEAD
                 android:resource="@xml/file_paths" />
         </provider>-->
         <provider
@@ -429,13 +366,7 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/freshchat_file_provider_paths" />
-=======
-                android:resource="@xml/file_paths"/>
->>>>>>> b9c8c4cc537be7bd9de55469ca06e5c6aa77655c
-=======
-                android:resource="@xml/file_paths"/>
->>>>>>> CCPayNimoCheepUserAndroid
+                android:resource="@xml/freshchat_file_provider_paths"/>
         </provider>
 
         <!--
@@ -453,10 +384,7 @@
         <service
             android:name="com.amazonaws.mobileconnectors.s3.transferutility.TransferService"
             android:enabled="true"/>
-<<<<<<< HEAD
-=======
         <!-- Pay nimos activity -->
->>>>>>> CCPayNimoCheepUserAndroid
 
         <activity
             android:name="com.paynimo.android.payment.OTPReadingActivity"
