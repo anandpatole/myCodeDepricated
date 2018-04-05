@@ -60,7 +60,7 @@ public class MessageEvent {
         // This would be in JSON Formate
         public String ResponsePayLoad; // In JSON Format
 
-        public String subsId;
+        public String subsId = Utility.EMPTY_STRING;
         public String isSubscription = Utility.BOOLEAN.NO;
     }
 }

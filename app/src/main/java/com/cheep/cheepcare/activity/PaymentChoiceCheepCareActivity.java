@@ -191,11 +191,12 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
                 break;
             case R.id.rl_netbanking:
                 paymentMethod = NetworkUtility.PAYMENT_METHOD_TYPE.PAYU;
+                doPaymentOfNetBanking();
 //                doPaymentOfNetBanking();
                 break;
             case R.id.rl_paytm:
                 paymentMethod = NetworkUtility.PAYMENT_METHOD_TYPE.PAYTM;
-//                doPaymentOfPaytm();
+                doPaymentOfPaytm();
 
                 break;
 
@@ -785,39 +786,75 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
         }
     }
 
-    private void doPaymentOfNetBanking() {
+   /* private void doPaymentOfNetBanking() {
         paymentMethod = NetworkUtility.PAYMENT_METHOD_TYPE.PAYU;
         generateHashForCheepCarePackagePurchase();
-    }
+    }*/
 
-    private void initCheckout() {
+    private void doPaymentOfNetBanking() {
+        paymentMethod = NetworkUtility.PAYMENT_METHOD_TYPE.PAYU;
         Checkout objCheckOut = new Checkout();
 
         objCheckOut.setMerchantIdentifier("T144071");
-        objCheckOut.setTransactionIdentifier("T008");
+        objCheckOut.setTransactionIdentifier("T007");
         objCheckOut.setTransactionReference("testReference");
         objCheckOut.setTransactionType("SALE");
         objCheckOut.setTransactionSubType("DEBIT");
         objCheckOut.setTransactionCurrency("INR");
-        objCheckOut.setTransactionAmount("10.0");
-        objCheckOut.setTransactionDateTime("24-03-2018");
+        objCheckOut.setTransactionAmount(String.valueOf(payableAmount));
+        objCheckOut.setTransactionAmount("4");
+        Calendar calendar = SuperCalendar.getInstance().getCalendar();
+        String date = CalendarUtility.getDate(calendar.getTimeInMillis(), Utility.DATE_FORMAT_DD_MM_YYYY);
+        objCheckOut.setTransactionDateTime(date);
+        objCheckOut.setConsumerIdentifier("test");
+        objCheckOut.setConsumerEmailID("test@gmail.com");
+        objCheckOut.setConsumerMobileNumber("8238864762");
+        objCheckOut.setConsumerAccountNo("");
+//        objCheckOut.addCartItem("TEST", String.valueOf(payableAmount), "0.00", "", "Pkg1", "", "", "0.0");
+        objCheckOut.addCartItem("TEST", "4", "0.00", "", "Pkg1", "", "", "0.0");
+
+        Log.d("Checkout Request Object", new Gson().toJson(objCheckOut.getMerchantRequestPayload())/*objCheckOut.getMerchantRequestPayload().toString()*/);
+
+        Intent authIntent = new Intent(this, PaymentModesActivity.class);
+        authIntent.putExtra(PaymentActivity.ARGUMENT_DATA_CHECKOUT, objCheckOut);
+        authIntent.putExtra(PaymentActivity.EXTRA_PUBLIC_KEY, "1234-6666-6789-56");
+        authIntent.putExtra(PaymentActivity.EXTRA_REQUESTED_PAYMENT_MODE, PaymentActivity.PAYMENT_METHOD_NETBANKING);
+        startActivityForResult(authIntent, PaymentActivity.REQUEST_CODE);
+    }
+
+    private void initCheckout() {
+        paymentMethod = NetworkUtility.PAYMENT_METHOD_TYPE.PAYU;
+        Checkout objCheckOut = new Checkout();
+        objCheckOut.setMerchantIdentifier("T144071");
+        objCheckOut.setTransactionIdentifier("T007");
+        objCheckOut.setTransactionReference("testReference");
+        objCheckOut.setTransactionType("SALE");
+        objCheckOut.setTransactionSubType("DEBIT");
+        objCheckOut.setTransactionCurrency("INR");
+        objCheckOut.setTransactionAmount("1");
+        Calendar calendar = SuperCalendar.getInstance().getCalendar();
+        String date = CalendarUtility.getDate(calendar.getTimeInMillis(), Utility.DATE_FORMAT_DD_MM_YYYY);
+        objCheckOut.setTransactionDateTime(date);
         objCheckOut.setConsumerIdentifier("test");
         objCheckOut.setConsumerEmailID("test@gmail.com");
         objCheckOut.setConsumerMobileNumber("8238864762");
         objCheckOut.setConsumerAccountNo("");
 
-        objCheckOut.addCartItem("TEST", "4.00", "0.00", "", "Pkg1", "", "", "0.0");
-        objCheckOut.addCartItem("TEST", "10.00", "0.00", "", "Pkg1", "", "", "0.0");
-
-
-        objCheckOut.setTransactionMerchantInitiated("N");
-        objCheckOut.setPaymentInstructionAction("Y");
-        objCheckOut.setPaymentInstructionType("F");
-        objCheckOut.setPaymentInstructionLimit("4.00");
-        objCheckOut.setPaymentInstructionFrequency("DAIL");
-        objCheckOut.setPaymentInstructionStartDateTime("24-03-2018");
-        objCheckOut.setPaymentInstructionEndDateTime("28-03-2018");
-
+//        objCheckOut.addCartItem("TEST", "4.00", "0.00", "", "Pkg1", "", "", "0.0");
+        objCheckOut.addCartItem("TEST", "1", "0.00", "", "Pkg1", "", "", "0.0");
+        if (mBinding.cartAutoRenewSwitch.isSelected()) {
+            objCheckOut.setTransactionMerchantInitiated("N");
+            objCheckOut.setPaymentInstructionAction("Y");
+            objCheckOut.setPaymentInstructionType("F");
+            objCheckOut.setPaymentInstructionAmount("1");
+            objCheckOut.setPaymentInstructionLimit("1");
+            objCheckOut.setPaymentInstructionFrequency("DAIL");
+            Calendar calendar1 = (Calendar) calendar.clone();
+            calendar1.add(Calendar.DATE, 60);
+            String endDate = CalendarUtility.getDate(calendar1.getTimeInMillis(), Utility.DATE_FORMAT_DD_MM_YYYY);
+            objCheckOut.setPaymentInstructionStartDateTime(date);
+            objCheckOut.setPaymentInstructionEndDateTime(endDate);
+        }
         Log.d("Checkout Request Object", new Gson().toJson(objCheckOut.getMerchantRequestPayload())/*objCheckOut.getMerchantRequestPayload().toString()*/);
 
         Intent authIntent = new Intent(this, PaymentModesActivity.class);
@@ -832,12 +869,12 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
             case PaymentActivity.RESULT_OK:
                 Log.d(TAG, "Result Code :" + RESULT_OK);
                 if (data != null) {
+                    LogUtils.LOGE(TAG, "data= [" + data + "]");
                     try {
                         Checkout checkoutObj = (Checkout) data.getSerializableExtra(PaymentActivity.ARGUMENT_DATA_CHECKOUT);
                         Log.d("Checkout Response Obj", checkoutObj.getMerchantResponsePayload().toString());
 
-                        printResult(checkoutObj);
-                        // Transaction Completed and Got SUCCESS
+                        String paymentlog = printResult(checkoutObj);
                         if (checkoutObj.getMerchantResponsePayload().getPaymentMethod().getPaymentTransaction().getStatusCode().equalsIgnoreCase(
                                 PaymentActivity.TRANSACTION_STATUS_SALES_DEBIT_SUCCESS)) {
                             Toast.makeText(getApplicationContext(), "Transaction Status - Success", Toast.LENGTH_SHORT).show();
@@ -852,8 +889,11 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
                                     .getStatusCode().equalsIgnoreCase("")) {
                                 //  SI TRANSACTION STATUS - SUCCESS (status code 0300 means success)
                                 // failure
-
-                                Log.v("TRANSACTION SI STATUS=>", "SI Transaction Not Initiated");
+                                // todo :: >> this is our final success
+                                String siMandateId = checkoutObj.getMerchantResponsePayload().getPaymentMethod().getPaymentTransaction().getInstruction().getId();
+                                LogUtils.LOGE(TAG, "onResultOfPayNimo:siMandateId " + siMandateId);
+                                callCreateCheepCarePackageWS(paymentlog, Utility.EMPTY_STRING, Utility.BOOLEAN.NO);
+                                Log.v("TRANSACTION SI STATUS=>", "SI Transaction not Initiated");
 
                             } else if (checkoutObj.getMerchantResponsePayload()
                                     .getPaymentMethod()
@@ -863,9 +903,10 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
 
                                 //SI TRANSACTION STATUS - SUCCESS (status code 0300 means success)
                                 Log.v("TRANSACTION SI STATUS=>", "SUCCESS");
-
+                                String siMandateId = checkoutObj.getMerchantResponsePayload().getPaymentMethod().getPaymentTransaction().getInstruction().getId();
+                                LogUtils.LOGE(TAG, "onResultOfPayNimo:siMandateId " + siMandateId);
                                 // todo :: >> this is our final success
-                                callCreateCheepCarePackageWS("success of cheep care subscription from android", Utility.EMPTY_STRING, Utility.BOOLEAN.NO);
+                                callCreateCheepCarePackageWS(paymentlog, siMandateId, Utility.BOOLEAN.YES);
                             } else {
                                 //SI TRANSACTION STATUS - Failure (status code OTHER THAN 0300 means failure)
                                 Log.v("TRANSACTION SI STATUS=>", "FAILURE");
@@ -903,7 +944,7 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
         }
     }
 
-    private void printResult(Checkout checkoutObj) {
+    private String printResult(Checkout checkoutObj) {
         String transactionType = checkoutObj.getMerchantRequestPayload().getTransaction().getType();
         String transactionSubType = checkoutObj.getMerchantRequestPayload().getTransaction().getSubType();
         String result = "StatusCode : " + checkoutObj
@@ -951,6 +992,7 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
                 .getMerchantResponsePayload().getPaymentMethod()
                 .getPaymentTransaction().getInstruction().getErrorcode();
         Log.e(TAG, "onActivityResult: " + result);
+        return result;
     }
 
 
