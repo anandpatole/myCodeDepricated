@@ -83,7 +83,7 @@ import com.cheep.strategicpartner.TaskSummaryStrategicPartnerActivity;
 import com.cheep.utils.FreshChatHelper;
 import com.cheep.utils.GlideUtility;
 import com.cheep.utils.GsonUtility;
-import com.cheep.utils.HotlineHelper;
+import com.cheep.utils.LogUtils;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.SuperCalendar;
 import com.cheep.utils.Utility;
@@ -208,9 +208,16 @@ public class HomeActivity extends BaseAppCompatActivity
                 TaskSummaryForMultiCatActivity.getInstance(mContext, bundle.getString(TASK_ID));
 //                TaskSummaryActivity.getInstance(mContext, bundle.getString(TASK_ID));
 //                HireNewJobActivity.newInstance(mContext, taskID, spUserId);
-            } else if (bundle.getString(NetworkUtility.TAGS.TYPE).equalsIgnoreCase(Utility.NOTIFICATION_TYPE.WEB_CUSTOM_NOTIFICATION)
-                    || bundle.getString(NetworkUtility.TAGS.TYPE).equalsIgnoreCase(Utility.NOTIFICATION_TYPE.TASK_CREATE)) {
+            } else if (bundle.getString(NetworkUtility.TAGS.TYPE).equalsIgnoreCase(Utility.NOTIFICATION_TYPE.WEB_CUSTOM_NOTIFICATION)) {
                 // Do Nothing as we just need to redirect the user to Home screen
+            } else if (bundle.getString(NetworkUtility.TAGS.TYPE).equalsIgnoreCase(Utility.NOTIFICATION_TYPE.TASK_CREATE)) {
+                Fragment mFragment = getSupportFragmentManager().findFragmentByTag(HomeFragment.TAG);
+                LogUtils.LOGE(TAG, "manageNotificationRedirection: out" + mFragment);
+                if (mFragment != null) {
+                    LogUtils.LOGE(TAG, "manageNotificationRedirection: out" + mFragment);
+                    ((HomeFragment) mFragment).setCurrentTab(HomeFragment.TAB_MY_TASK);
+                }
+
             } else {
                /* TaskDetailModel taskDetailModel = new TaskDetailModel();
                 taskDetailModel.taskId = bundle.getString(TASK_ID);
@@ -239,6 +246,7 @@ public class HomeActivity extends BaseAppCompatActivity
                     ProviderModel providerModel = new ProviderModel();
                     providerModel.providerId = bundle.getString(NetworkUtility.TAGS.SP_USER_ID);
 
+
                     JobSummaryActivity.newInstance(mContext, taskDetailModel, providerModel);
                     break;
             }*/
@@ -246,8 +254,8 @@ public class HomeActivity extends BaseAppCompatActivity
     }
 
     /*
-  * @Sanjay
-  * */
+     * @Sanjay
+     * */
     private void initDATA() {
         Bundle bundle = getIntent().getExtras();
         if (bundle != null && bundle.containsKey(Utility.Extra.CHAT_NOTIFICATION_DATA)) {
@@ -263,8 +271,11 @@ public class HomeActivity extends BaseAppCompatActivity
         Fragment mFragment;
         if (getIntent().hasExtra(Utility.Extra.DYNAMIC_LINK_URI))
             mFragment = HomeFragment.newInstance((Uri) getIntent().getExtras().getParcelable(Utility.Extra.DYNAMIC_LINK_URI));
-        else
-            mFragment = HomeFragment.newInstance(null);
+        else if (getIntent() != null && getIntent().hasExtra(NetworkUtility.TAGS.TYPE) &&
+                getIntent().getStringExtra(NetworkUtility.TAGS.TYPE).equalsIgnoreCase(Utility.NOTIFICATION_TYPE.TASK_CREATE)) {
+            mFragment = HomeFragment.newInstance(HomeFragment.TAB_MY_TASK);
+        } else
+            mFragment = HomeFragment.newInstance(Utility.EMPTY_STRING);
         getSupportFragmentManager().beginTransaction().replace(R.id.content, mFragment, HomeFragment.TAG).commit();
 
         //Inflate header view
@@ -335,7 +346,7 @@ public class HomeActivity extends BaseAppCompatActivity
         if (slideMenuListModel.title.equals(getString(R.string.label_home))) {
             Fragment mFragment = getSupportFragmentManager().findFragmentByTag(HomeFragment.TAG);
             if (mFragment == null) {
-                loadFragment(HomeFragment.TAG, HomeFragment.newInstance(null));
+                loadFragment(HomeFragment.TAG, HomeFragment.newInstance(Utility.EMPTY_STRING));
             } else {
                 Log.i(TAG, "onSlideMenuListItemClicked: " + slideMenuListModel.title + " is there");
                 //We need to enable enquiry fragment, in case its not there
@@ -407,7 +418,7 @@ public class HomeActivity extends BaseAppCompatActivity
                     //reset the current screen to Home screen
                     Fragment mFragment = getSupportFragmentManager().findFragmentByTag(HomeFragment.TAG);
                     if (mFragment == null) {
-                        loadFragment(HomeFragment.TAG, HomeFragment.newInstance(null));
+                        loadFragment(HomeFragment.TAG, HomeFragment.newInstance(Utility.EMPTY_STRING));
                     }
                 }
             }, 1000);
@@ -536,7 +547,7 @@ public class HomeActivity extends BaseAppCompatActivity
         //Checking if there is already a fragment then
         Fragment mFragment = getSupportFragmentManager().findFragmentByTag(HomeFragment.TAG);
         if (mFragment == null) {
-            loadFragment(HomeFragment.TAG, HomeFragment.newInstance(null));
+            loadFragment(HomeFragment.TAG, HomeFragment.newInstance(Utility.EMPTY_STRING));
         } else {
             ((HomeFragment) mFragment).openCreateNewTask();
         }
@@ -729,7 +740,7 @@ public class HomeActivity extends BaseAppCompatActivity
         dialog.addNegativeButton(getString(R.string.label_chat), new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-             //   HotlineHelper.getInstance(mContext).showConversation(mContext);
+                //   HotlineHelper.getInstance(mContext).showConversation(mContext);
                 FreshChatHelper.getInstance(mContext).showConversation(mContext);
                 dialog.dismiss();
             }
@@ -827,7 +838,7 @@ public class HomeActivity extends BaseAppCompatActivity
             } else {
                 Fragment mFragment = getSupportFragmentManager().findFragmentByTag(HomeFragment.TAG);
                 if (mFragment == null) {
-                    loadFragment(HomeFragment.TAG, HomeFragment.newInstance(null));
+                    loadFragment(HomeFragment.TAG, HomeFragment.newInstance(Utility.EMPTY_STRING));
                 } else {
                     super.onBackPressed();
                 }
@@ -1163,9 +1174,9 @@ public class HomeActivity extends BaseAppCompatActivity
             PreferenceUtility.getInstance(mContext).onUserLogout();
 
             /*
-            * Stop fierbase chat service
-            * @Sanjay 20 Feb 2016
-            * */
+             * Stop fierbase chat service
+             * @Sanjay 20 Feb 2016
+             * */
             stopService(new Intent(HomeActivity.this, FierbaseChatService.class));
 
             //Finish the current activity

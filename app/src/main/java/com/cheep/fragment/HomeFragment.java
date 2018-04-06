@@ -93,6 +93,14 @@ public class HomeFragment extends BaseFragment {
         return fragment;
     }
 
+    public static HomeFragment newInstance(String type) {
+        HomeFragment fragment = new HomeFragment();
+        Bundle args = new Bundle();
+        args.putString(Utility.Extra.DATA, type);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -202,6 +210,7 @@ public class HomeFragment extends BaseFragment {
         mFragments = new HashMap<>();
         mFragmentsStackTags = new ArrayList<>();
 
+
         //Setting image tint of all the tabs
         resetAllTabs();
 
@@ -209,6 +218,9 @@ public class HomeFragment extends BaseFragment {
             Utility.IS_FROM_NOTIFICATION = false;
             //Setting First Fragment ie. HomeTabFragment;
             setCurrentTab(TAB_CHAT);
+        } else if (getArguments() != null && !TextUtils.isEmpty(getArguments().getString(Utility.Extra.DATA))) {
+            setCurrentTab(TAB_HOME);
+            setCurrentTab(TAB_MY_TASK);
         } else {
             //Setting First Fragment ie. HomeTabFragment;
             setCurrentTab(TAB_HOME);
@@ -556,6 +568,11 @@ public class HomeFragment extends BaseFragment {
         Fragment fragment = getChildFragmentManager().findFragmentById(R.id.inner_content);
         if (fragment != null && fragment instanceof BaseFragment) {
             ((BaseFragment) fragment).onLocationNotAvailable();
+            if (!(fragment instanceof HomeTabFragment)) {
+                if (mFragments.get(TAB_HOME) != null) {
+                    mFragments.get(TAB_HOME).onLocationNotAvailable();
+                }
+            }
         }
     }
 
@@ -571,6 +588,11 @@ public class HomeFragment extends BaseFragment {
         Fragment fragment = getChildFragmentManager().findFragmentById(R.id.inner_content);
         if (fragment != null && fragment instanceof BaseFragment) {
             ((BaseFragment) fragment).onLocationFetched(mLocation);
+            if (!(fragment instanceof HomeTabFragment)) {
+                if (mFragments.get(TAB_HOME) != null) {
+                    mFragments.get(TAB_HOME).onLocationFetched(mLocation);
+                }
+            }
         }
     }
 

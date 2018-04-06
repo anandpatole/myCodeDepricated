@@ -414,7 +414,7 @@ public class HomeTabFragment extends BaseFragment {
     public void onLocationNotAvailable() {
         super.onLocationNotAvailable();
         Log.d(TAG, "onLocationNotAvailable() called");
-        ((HomeActivity) getActivity()).isReadyToLoad = true;
+        ((HomeActivity) mContext).isReadyToLoad = true;
         loadHomeScreenDetails();
     }
 
@@ -423,7 +423,7 @@ public class HomeTabFragment extends BaseFragment {
     public void onLocationFetched(Location mLocation) {
         super.onLocationFetched(mLocation);
         Log.d(TAG, "onLocationFetched() called with: mLocation = [" + mLocation + "]");
-        ((HomeActivity) getActivity()).isReadyToLoad = true;
+        ((HomeActivity) mContext).isReadyToLoad = true;
         updateLatLongOnServer(String.valueOf(mLocation.getLatitude()), String.valueOf(mLocation.getLongitude()));
     }
 
@@ -456,10 +456,8 @@ public class HomeTabFragment extends BaseFragment {
              */
             if (PreferenceUtility.getInstance(mContext).getGuestUserDetails() != null) {
                 GuestUserDetails mGuestUserDetails = PreferenceUtility.getInstance(mContext).getGuestUserDetails();
-                if (mGuestUserDetails.mLat != null
-                        && mGuestUserDetails.mLng != null) {
-                    updateLatLongSuccess(TextUtils.isEmpty(mGuestUserDetails.mLocality)
-                            ? mGuestUserDetails.mCityName
+                if (mGuestUserDetails.mLat != null && mGuestUserDetails.mLng != null) {
+                    updateLatLongSuccess(TextUtils.isEmpty(mGuestUserDetails.mLocality) ? mGuestUserDetails.mCityName
                             : mGuestUserDetails.mLocality);
                     return;
                 }

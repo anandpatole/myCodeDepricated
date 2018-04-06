@@ -116,6 +116,7 @@ public class TaskQuotesActivity extends BaseAppCompatActivity implements TaskQuo
                         mRecyclerView.setAdapter(mAdapter);
                         mRecyclerView.addItemDecoration(new DividerItemDecoration(mContext, R.drawable.divider_grey_normal));
                         callSPListWS();
+                        populateData();
 
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
