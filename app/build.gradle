@@ -13,7 +13,7 @@ android {
         minSdkVersion 16
         targetSdkVersion 26
         versionCode 33
-        versionName "1.1.27" // PLEASE FIRST MAKE SURE MIN-VERSION IS 16.
+        versionName "1.1.28" // PLEASE FIRST MAKE SURE MIN-VERSION IS 16.
         renderscriptTargetApi 18
         renderscriptSupportModeEnabled true
 
@@ -73,6 +73,13 @@ android {
         buildConfigField("String", "CLIENT_SECRET", getProperty("CLIENT_SECRET_STAGING"))
         buildConfigField("String", "WEBSITE", getProperty("WEBSITE_STAGING"))
         buildConfigField("String", "COUNTRY_CODE", getProperty("COUNTRY_CODE_INDIA"))
+
+
+        resValue("string", "com.twitter.sdk.android.CONSUMER_KEY",
+                (project.findProperty("TWITTER_KEY") ?: ""))
+
+        resValue("string", "com.twitter.sdk.android.CONSUMER_SECRET",
+                (project.findProperty("TWITTER_SECRET") ?: ""))
     }
 
     // Source Sets
@@ -287,9 +294,11 @@ dependencies {
     implementation "com.google.firebase:firebase-invites:$playServiceVer"
 
     //Twitter
-    implementation('com.twitter.sdk.android:twitter:2.3.2@aar') {
-        transitive = true
-    }
+//    implementation('com.twitter.sdk.android:twitter:2.3.2@aar') {
+//        transitive = true
+//    }
+
+    implementation 'com.twitter.sdk.android:twitter-core:3.1.1'
 
     // Glide Library
 
@@ -353,4 +362,4 @@ dependencies {
 
 // Add to the bottom of the file
 apply plugin: 'com.google.gms.google-services'
-apply plugin: 'io.fabric'
+//apply plugin: 'io.fabric'

@@ -9,18 +9,15 @@ import com.appsflyer.AppsFlyerConversionListener;
 import com.appsflyer.AppsFlyerLib;
 import com.cheep.activity.ApplicationLifeCycle;
 import com.cheep.utils.FreshChatHelper;
-import com.cheep.utils.HotlineHelper;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
-import com.twitter.sdk.android.Twitter;
-import com.twitter.sdk.android.core.TwitterAuthConfig;
+import com.twitter.sdk.android.core.Twitter;
 
 import java.util.Map;
 
-import io.fabric.sdk.android.Fabric;
+//import io.fabric.sdk.android.Fabric;
 
-import static com.cheep.BuildConfig.TWITTER_KEY;
-import static com.cheep.BuildConfig.TWITTER_SECRET;
+//import com.twitter.sdk.android.Twitter;
 
 /**
  * Created by Bhavesh Patadiya on 9/14/16.
@@ -42,9 +39,10 @@ public class App extends ApplicationLifeCycle {
         initiateAppsFlyerSDK();
 
         //Twitter Authentication for configuring Fabric account
-        TwitterAuthConfig authConfig = new TwitterAuthConfig(TWITTER_KEY, TWITTER_SECRET);
-        Fabric.with(this, new Twitter(authConfig));
+//        TwitterAuthConfig authConfig = new TwitterAuthConfig(TWITTER_KEY, TWITTER_SECRET);
+//        Fabric.with(this, new Twitter(authConfig));
 
+        Twitter.initialize(this);
         //Allowing Strict mode policy for Nougat support
 //        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
 //        StrictMode.setVmPolicy(builder.build());
