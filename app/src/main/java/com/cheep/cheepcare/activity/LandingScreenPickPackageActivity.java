@@ -454,7 +454,6 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
             getSavedData();
         } else {
             LogUtils.LOGE(TAG, "onResume: no city data found");
-
         }
     }
 }
