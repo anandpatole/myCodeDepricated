@@ -6,28 +6,34 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.content.ContextCompat;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.cheep.R;
-import com.cheep.databinding.DialogReferAndEarnInfoBinding;
+import com.cheep.custom_view.tooltips.ToolTip;
+import com.cheep.custom_view.tooltips.ToolTipView;
+import com.cheep.databinding.DialogAddressCategorySelectionBinding;
+import com.cheep.databinding.TooltipAddressSelectionBinding;
 
 /**
  * Created by meet on 20/9/17.
  */
 
 public class AddressCategorySelectionDialog extends DialogFragment {
-    public static final String TAG = AddressCategorySelectionDialog.class.getSimpleName();
-    private DialogReferAndEarnInfoBinding mDialogReferAndEarnInfoBinding;
-
-
+    public static final String TAG = "AddressCategorySelectio";
+    private DialogAddressCategorySelectionBinding mBinding;
 
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
     }
+
 
     @Nullable
     @Override
@@ -35,20 +41,87 @@ public class AddressCategorySelectionDialog extends DialogFragment {
         // Set Window Background as Transparent.
         if (getDialog() != null) {
             getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            getDialog().setCanceledOnTouchOutside(false);
             //getDialog().getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
             //getDialog().getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         }
 
-        mDialogReferAndEarnInfoBinding = DataBindingUtil.inflate(inflater, R.layout.dialog_refer_and_earn_info, container, false);
+        mBinding = DataBindingUtil.inflate(inflater, R.layout.dialog_address_category_selection, container, false);
+        init();
+        return mBinding.getRoot();
+    }
 
-        mDialogReferAndEarnInfoBinding.textOkayGotIt.setOnClickListener(new View.OnClickListener() {
+    private void init() {
+        setListener();
+        openTooltip();
+    }
+
+    private void openTooltip() {
+
+        TooltipAddressSelectionBinding binding = DataBindingUtil.inflate(LayoutInflater.from(getContext()), R.layout.tooltip_address_selection, null, false);
+
+        ToolTip toolTip = new ToolTip.Builder()
+                .withTextColor(Color.WHITE)
+                .withContentView(binding.getRoot())
+                .withBackgroundColor(ContextCompat.getColor(getContext(), R.color.splash_gradient_end))
+                .withCornerRadius(getResources().getDimension(R.dimen.scale_3dp))
+                .build();
+
+        final ToolTipView toolTipView = new ToolTipView.Builder(getContext())
+                .withAnchor(mBinding.cvAddress)
+                .withToolTip(toolTip)
+                .withGravity(Gravity.TOP)
+                .build();
+
+        binding.tvYes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Dissmiss the dialog.
+                toolTipView.remove();
+                Toast.makeText(getContext(), "YES", Toast.LENGTH_SHORT).show();
+            }
+        });
+        binding.tvNo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toolTipView.remove();
+                Toast.makeText(getContext(), "NO", Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
+        toolTipView.show();
+    }
+
+    private void setListener() {
+        mBinding.imgBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 dismiss();
             }
         });
-        return mDialogReferAndEarnInfoBinding.getRoot();
+        mBinding.cvOffice.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mBinding.cvOffice.setSelected(true);
+                mBinding.cvHome.setSelected(false);
+                openAddNewAddressDialog();
+
+            }
+        });
+        mBinding.cvHome.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mBinding.cvOffice.setSelected(false);
+                mBinding.cvHome.setSelected(true);
+                openAddNewAddressDialog();
+            }
+        });
     }
+
+    private void openAddNewAddressDialog() {
+        AddNewAddressDialog dialog = new AddNewAddressDialog();
+        dialog.show(getChildFragmentManager(), AddNewAddressDialog.TAG);
+    }
+
 
 }
