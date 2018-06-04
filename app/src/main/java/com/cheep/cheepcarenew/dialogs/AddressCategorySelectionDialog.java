@@ -1,4 +1,4 @@
-package com.cheep.dialogs;
+package com.cheep.cheepcarenew.dialogs;
 
 import android.databinding.DataBindingUtil;
 import android.graphics.Color;
@@ -17,8 +17,8 @@ import com.cheep.databinding.DialogReferAndEarnInfoBinding;
  * Created by meet on 20/9/17.
  */
 
-public class ReferAndEarnInfoDialog extends DialogFragment {
-    public static final String TAG = ReferAndEarnInfoDialog.class.getSimpleName();
+public class AddressCategorySelectionDialog extends DialogFragment {
+    public static final String TAG = AddressCategorySelectionDialog.class.getSimpleName();
     private DialogReferAndEarnInfoBinding mDialogReferAndEarnInfoBinding;
 
 
