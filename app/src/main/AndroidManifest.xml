@@ -26,7 +26,6 @@
     <!-- AppsFlyer SDK(Optional- But we provided) -->
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
 
-
     <!-- Pay nimos permission permission for SMS Reading -->
     <uses-permission android:name="android.permission.RECEIVE_SMS"/>
     <uses-permission android:name="android.permission.READ_SMS"/>
@@ -67,10 +66,8 @@
                     android:scheme="https"/>
             </intent-filter>
         </activity>
-
         <activity android:name=".activity.SubscriptionActivity">
         </activity>
-
         <activity
             android:name=".activity.TaskCreationActivity"
             android:launchMode="singleTop"
@@ -239,7 +236,6 @@
         <activity
             android:name=".strategicpartner.PaymentsSummaryStrategicPartnerActivity"
             android:screenOrientation="portrait"/>
-
         <activity
             android:name=".activity.VerifyOtpActivity"
             android:screenOrientation="portrait"/>
@@ -251,17 +247,13 @@
             android:name=".activity.AddMoneyActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
-
-
         <activity
             android:name=".cheepcare.activity.RateAndReviewActivity"
             android:screenOrientation="portrait"/>
-
         <activity
             android:name=".cheepcare.activity.LandingScreenPickPackageActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden"/>
-
         <activity
             android:name=".cheepcare.activity.PackageCustomizationActivity"
             android:screenOrientation="portrait"
@@ -274,7 +266,8 @@
             android:name=".cheepcare.activity.PaymentChoiceCheepCareActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden"/>
-        <!--  <activity
+        <!--
+              <activity
               android:name=".activity.TaskSummaryForMultiCatActivity"
               android:screenOrientation="portrait"
               android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
@@ -355,7 +348,8 @@
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id"/>
 
-        <!--<provider
+        <!--
+        <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="com.cheep.fileprovider"
             android:exported="false"
@@ -363,7 +357,8 @@
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
-        </provider>-->
+        </provider>
+        -->
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="@string/freshchat_file_provider_authority"
@@ -419,6 +414,14 @@
             </intent-filter>
         </receiver>
         <!-- Pay nimos activity -->
+
+
+        <activity
+            android:name=".cheepcarenew.AddAddressActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Translucent">
+        </activity>
     </application>
 
 </manifest>

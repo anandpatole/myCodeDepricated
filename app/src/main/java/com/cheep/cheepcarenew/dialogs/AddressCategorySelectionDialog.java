@@ -96,7 +96,7 @@ public class AddressCategorySelectionDialog extends DialogFragment {
             @Override
             public void onGlobalLayout() {
                 Log.e(TAG, "onGlobalLayout: *******************");
-                toolTipView.showAtLocation();
+//                toolTipView.showAtLocation();
             }
         });
     }

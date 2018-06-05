@@ -28,7 +28,7 @@ import com.cheep.cheepcare.adapter.CheepCarePackageAdapter;
 import com.cheep.cheepcare.model.CareCityDetail;
 import com.cheep.cheepcare.model.CityLandingPageModel;
 import com.cheep.cheepcare.model.PackageDetail;
-import com.cheep.cheepcarenew.dialogs.AddressCategorySelectionDialog;
+import com.cheep.cheepcarenew.AddAddressActivity;
 import com.cheep.databinding.ActivityLandingScreenPickPackageBinding;
 import com.cheep.model.MessageEvent;
 import com.cheep.network.NetworkUtility;
@@ -307,8 +307,10 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
 //            String packageList = GsonUtility.getJsonStringFromObject(mCityLandingPageModel.packageDetailList);
 //            String packageList = GsonUtility.getJsonStringFromObject(mCityLandingPageModel.packageDetailList);
 //            PackageCustomizationActivity.newInstance(mContext, mCityLandingPageModel.careCityDetail, packageModel, packageList, mCityLandingPageModel.adminSetting);
-            AddressCategorySelectionDialog dialog = new AddressCategorySelectionDialog();
-            dialog.show(getSupportFragmentManager(), AddressCategorySelectionDialog.TAG);
+//            AddressCategorySelectionDialog dialog = new AddressCategorySelectionDialog();
+//            dialog.show(getSupportFragmentManager(), AddressCategorySelectionDialog.TAG);
+
+            startActivity(new Intent(LandingScreenPickPackageActivity.this, AddAddressActivity.class));
 
         }
     };

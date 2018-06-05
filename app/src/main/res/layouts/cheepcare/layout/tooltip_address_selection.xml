@@ -8,7 +8,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="10dp"
+        android:padding="@dimen/scale_10dp"
+        android:layout_margin="@dimen/scale_20dp"
         tools:background="@color/splash_gradient_end">
 
         <com.cheep.custom_view.CFTextViewRegular
@@ -16,8 +17,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
 
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
+            android:layout_marginLeft="@dimen/scale_15dp"
+            android:layout_marginRight="@dimen/scale_15dp"
             android:text="@string/label_hey_is_this_your_home_address"
             android:textColor="@color/white"
             android:textSize="@dimen/text_size_16sp"/>
@@ -28,10 +29,10 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/tvTitle"
 
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
+            android:layout_marginLeft="@dimen/scale_15dp"
+            android:layout_marginRight="@dimen/scale_15dp"
             android:layout_marginTop="@dimen/scale_5dp"
-            android:text="Do you want the Cheep Care package for this address?Do you want the Cheep Care package for this address?Do you want the Cheep Care package for this address?Do you want the Cheep Care package for this address?"
+            android:text="Do you want the Cheep Care package for this address?"
             android:textColor="@color/white"
             android:textSize="@dimen/text_size_11sp"/>
 
@@ -41,9 +42,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/tvDescription"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:layout_marginTop="15dp"
+            android:layout_marginLeft="@dimen/scale_15dp"
+            android:layout_marginRight="@dimen/scale_15dp"
+            android:layout_marginTop="@dimen/scale_15dp"
             android:layout_toLeftOf="@+id/tvNo"
             android:text="YES"
             android:textColor="@color/white"
@@ -55,9 +56,9 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_below="@+id/tvDescription"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:layout_marginTop="15dp"
+            android:layout_marginLeft="@dimen/scale_15dp"
+            android:layout_marginRight="@dimen/scale_15dp"
+            android:layout_marginTop="@dimen/scale_15dp"
             android:text="NO"
             android:textColor="@color/white"
             android:textSize="@dimen/text_size_12sp"/>

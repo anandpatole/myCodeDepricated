@@ -42,13 +42,12 @@ import com.cheep.R;
 
 public class ToolTipView implements ViewTreeObserver.OnPreDrawListener, View.OnClickListener {
     public interface OnToolTipClickedListener {
-
         void onToolTipClicked(ToolTipView toolTipView);
     }
 
     private static final int GRAVITY_START = 0x00800003;
     private static final int GRAVITY_END = 0x00800005;
-
+    int[] coords = {0, 0};
     private static final long ANIMATION_DURATION = 300L;
 
     private final View anchorView;
@@ -57,14 +56,17 @@ public class ToolTipView implements ViewTreeObserver.OnPreDrawListener, View.OnC
     private final PopupWindow popupWindow;
     private final LinearLayout container;
     private final View contentView;
-    private final View parentView;
-//    private final Coordinates coordinates;
     //    private final TextView text;
     private final ImageView arrow;
 
     private float pivotX;
     private float pivotY;
-    int[] coords = {0,0};
+
+    private View parentView;
+
+    public void setParentView(View parentView) {
+        this.parentView = parentView;
+    }
 
     @Nullable
     private OnToolTipClickedListener listener;
@@ -77,9 +79,6 @@ public class ToolTipView implements ViewTreeObserver.OnPreDrawListener, View.OnC
         container = new LinearLayout(context);
         container.setOnClickListener(this);
         contentView = toolTip.getContentView();
-        parentView = toolTip.getParentView();
-
-//        coordinates = new Coordinates(anchorView);
 
 //        text = new TextView(context);
 //        text.setPadding(toolTip.getLeftPadding(), toolTip.getTopPadding(),
@@ -100,6 +99,7 @@ public class ToolTipView implements ViewTreeObserver.OnPreDrawListener, View.OnC
 //            txt = context.getString(toolTip.getTextResourceId());
 //        }
 //        text.setText(txt);
+        anchorView.getLocationOnScreen(coords);
 
         int backgroundColor = toolTip.getBackgroundColor();
         float radius = toolTip.getCornerRadius();
@@ -146,8 +146,8 @@ public class ToolTipView implements ViewTreeObserver.OnPreDrawListener, View.OnC
                 break;
         }
 
-        popupWindow = new PopupWindow(container, ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
+        popupWindow = new PopupWindow(container, ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT);
     }
 
     /**
@@ -160,19 +160,20 @@ public class ToolTipView implements ViewTreeObserver.OnPreDrawListener, View.OnC
     /**
      * Shows the tool tip.
      */
-    @UiThread
-    public void showAtLocation() {
-        if (parentView != null) {
-            anchorView.getLocationOnScreen(coords);
-            popupWindow.showAtLocation(parentView, Gravity.BOTTOM, coords[0] + anchorView.getWidth(), coords[1] - anchorView.getHeight());
-            container.getViewTreeObserver().addOnPreDrawListener(this);
-        }
-    }
 
     @UiThread
     public void show() {
         popupWindow.showAsDropDown(anchorView);
+//        popupWindow.setWidth(anchorView.getWidth());
+//        popupWindow.showAtLocation(parentView,);
+//    popupWindow.showAtLocation(parentView, Gravity.NO_GRAVITY, coords[0] + anchorView.getWidth(), coords[1]);
+
         container.getViewTreeObserver().addOnPreDrawListener(this);
+    }
+
+
+    public boolean isShowing() {
+        return popupWindow.isShowing();
     }
 
     /**
@@ -242,6 +243,7 @@ public class ToolTipView implements ViewTreeObserver.OnPreDrawListener, View.OnC
             if (gravity == Gravity.TOP) {
                 topPadding = anchorTop - height;
             } else {
+                // gravity == Gravity.BOTTOM
                 topPadding = anchorTop + anchorHeight;
             }
 
@@ -259,6 +261,8 @@ public class ToolTipView implements ViewTreeObserver.OnPreDrawListener, View.OnC
             pivotX = anchorHorizontalCenter;
             pivotY = gravity == Gravity.TOP ? anchorTop : topPadding;
         } else {
+            // gravity == Gravity.LEFT || gravity == Gravity.RIGHT
+
             int width = textWidth + arrowWidth;
             int height = Math.max(textHeight, arrowHeight);
 
@@ -269,7 +273,10 @@ public class ToolTipView implements ViewTreeObserver.OnPreDrawListener, View.OnC
             if (gravity == Gravity.LEFT) {
                 leftPadding = Math.max(0, anchorLeft - width);
                 rightPadding = displayWidth - anchorLeft;
+//                text.setMaxWidth(displayWidth - rightPadding - leftPadding - arrowWidth);
             } else {
+                // gravity == Gravity.RIGHT
+
                 leftPadding = anchorLeft + anchorWidth;
                 rightPadding = 0;
             }
