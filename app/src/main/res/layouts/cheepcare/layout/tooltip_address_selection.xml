@@ -5,16 +5,15 @@
     >
 
     <RelativeLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="@dimen/scale_10dp"
-        android:layout_margin="@dimen/scale_20dp"
         tools:background="@color/splash_gradient_end">
 
         <com.cheep.custom_view.CFTextViewRegular
             android:id="@+id/tvTitle"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
 
             android:layout_marginLeft="@dimen/scale_15dp"
@@ -25,10 +24,9 @@
 
         <com.cheep.custom_view.CFTextViewRegular
             android:id="@+id/tvDescription"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/tvTitle"
-
             android:layout_marginLeft="@dimen/scale_15dp"
             android:layout_marginRight="@dimen/scale_15dp"
             android:layout_marginTop="@dimen/scale_5dp"

@@ -30,6 +30,7 @@ import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,7 +56,7 @@ public class ToolTipView implements ViewTreeObserver.OnPreDrawListener, View.OnC
 
     private final PopupWindow popupWindow;
     private final LinearLayout container;
-    private final View contentView;
+    private View contentView;
     //    private final TextView text;
     private final ImageView arrow;
 
@@ -71,14 +72,15 @@ public class ToolTipView implements ViewTreeObserver.OnPreDrawListener, View.OnC
     @Nullable
     private OnToolTipClickedListener listener;
 
-    private ToolTipView(Context context, View anchorView, int gravity, ToolTip toolTip) {
+    private ToolTipView(Context context, View anchorView,  View contentView, int gravity, ToolTip toolTip) {
         this.anchorView = anchorView;
+        this.contentView= anchorView;
         this.gravity = gravity;
 
         // TODO container should NOT capture all events
         container = new LinearLayout(context);
         container.setOnClickListener(this);
-        contentView = toolTip.getContentView();
+        this.contentView = contentView;
 
 //        text = new TextView(context);
 //        text.setPadding(toolTip.getLeftPadding(), toolTip.getTopPadding(),
@@ -146,7 +148,8 @@ public class ToolTipView implements ViewTreeObserver.OnPreDrawListener, View.OnC
                 break;
         }
 
-        popupWindow = new PopupWindow(container, ViewGroup.LayoutParams.MATCH_PARENT,
+        Log.e("ToolTipView", "ToolTipView: "+ anchorView.getWidth());
+        popupWindow = new PopupWindow(container, anchorView.getWidth() ,
                 ViewGroup.LayoutParams.MATCH_PARENT);
     }
 
@@ -321,6 +324,7 @@ public class ToolTipView implements ViewTreeObserver.OnPreDrawListener, View.OnC
     public static class Builder {
         private final Context context;
         private View anchorView;
+        private View contentView;
         private ToolTip toolTip;
         private int gravity = Gravity.BOTTOM;
 
@@ -376,7 +380,12 @@ public class ToolTipView implements ViewTreeObserver.OnPreDrawListener, View.OnC
                 throw new IllegalArgumentException("Unsupported gravity - " + gravity);
             }
 
-            return new ToolTipView(context, anchorView, gravity, toolTip);
+            return new ToolTipView(context, anchorView,contentView, gravity, toolTip);
+        }
+
+        public Builder withContentView(View root) {
+            this.contentView = root;
+            return this;
         }
     }
 }

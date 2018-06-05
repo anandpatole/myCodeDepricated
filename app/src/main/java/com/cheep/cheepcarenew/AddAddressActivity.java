@@ -8,7 +8,6 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewTreeObserver;
 import android.widget.Toast;
 
 import com.cheep.R;
@@ -70,59 +69,62 @@ public class AddAddressActivity extends BaseAppCompatActivity {
         mBinding.cvAddress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (toolTipView != null && !toolTipView.isShowing()) {
-                    toolTipView.show();
-                }
+//                if (toolTipView != null && !toolTipView.isShowing()) {
+////                    toolTipView.show();
+//                    openTooltip();
+//                }
+//                else if(toolTipView!=null){
+//                }
+                openTooltip();
             }
         });
     }
 
 
     private void openTooltip() {
-        TooltipAddressSelectionBinding toolTipBinding = DataBindingUtil.inflate(
-                LayoutInflater.from(this),
-                R.layout.tooltip_address_selection,
-                null,
-                false);
-
-        ToolTip toolTip = new ToolTip.Builder()
-                .withTextColor(Color.WHITE)
-                .withContentView(toolTipBinding.getRoot())
-                .withBackgroundColor(ContextCompat.getColor(this, R.color.splash_gradient_end))
-                .withCornerRadius(getResources().getDimension(R.dimen.scale_3dp))
-                .withPadding(25, 25, 25, 25)
-                .build();
-
-        toolTipView = new ToolTipView.Builder(this)
-                .withAnchor(mBinding.cvAddress)
-                .withToolTip(toolTip)
-                .withGravity(Gravity.BOTTOM)
-                .build();
-
-        toolTipBinding.tvYes.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                toolTipView.remove();
-                Toast.makeText(AddAddressActivity.this, "YES", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        toolTipBinding.tvNo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                toolTipView.remove();
-                Toast.makeText(AddAddressActivity.this, "NO", Toast.LENGTH_SHORT).show();
-            }
-        });
 
 
-        mBinding.cvAddress.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
+//        mBinding.cvAddress.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+//            @Override
+//            public void onGlobalLayout() {
                 Log.e(TAG, "onGlobalLayout: *******************");
-                toolTipView.show();
-            }
-        });
+                TooltipAddressSelectionBinding toolTipBinding = DataBindingUtil.inflate(
+                        LayoutInflater.from(AddAddressActivity.this),
+                        R.layout.tooltip_address_selection,
+                        null,
+                        false);
+
+                ToolTip toolTip = new ToolTip.Builder()
+                        .withTextColor(Color.WHITE)
+                        .withBackgroundColor(ContextCompat.getColor(AddAddressActivity.this, R.color.splash_gradient_end))
+                        .withCornerRadius(getResources().getDimension(R.dimen.scale_3dp))
+                        .build();
+
+                toolTipView = new ToolTipView.Builder(AddAddressActivity.this)
+                        .withAnchor(mBinding.cvAddress)
+                        .withContentView(toolTipBinding.getRoot())
+                        .withToolTip(toolTip)
+                        .withGravity(Gravity.BOTTOM)
+                        .build();
+
+                toolTipBinding.tvYes.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        toolTipView.remove();
+                        Toast.makeText(AddAddressActivity.this, "YES", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+                toolTipBinding.tvNo.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        toolTipView.remove();
+                        Toast.makeText(AddAddressActivity.this, "NO", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                toolTipView.showDelayed(1000);
+//            }
+//        });
     }
 
     private void openAddNewAddressDialog() {
