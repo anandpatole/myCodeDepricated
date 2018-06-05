@@ -7,10 +7,12 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.Toast;
 
 import com.cheep.R;
@@ -26,6 +28,7 @@ import com.cheep.databinding.TooltipAddressSelectionBinding;
 public class AddressCategorySelectionDialog extends DialogFragment {
     public static final String TAG = "AddressCategorySelectio";
     private DialogAddressCategorySelectionBinding mBinding;
+    private ToolTipView toolTipView;
 
 
     @Override
@@ -58,44 +61,52 @@ public class AddressCategorySelectionDialog extends DialogFragment {
 
     private void openTooltip() {
 
-        TooltipAddressSelectionBinding binding = DataBindingUtil.inflate(LayoutInflater.from(getContext()), R.layout.tooltip_address_selection, null, false);
-
+        TooltipAddressSelectionBinding toolTipBinding = DataBindingUtil.inflate(LayoutInflater.from(getContext()), R.layout.tooltip_address_selection, null, false);
         ToolTip toolTip = new ToolTip.Builder()
                 .withTextColor(Color.WHITE)
-                .withContentView(binding.getRoot())
+                .withParentView(mBinding.getRoot())
+                .withContentView(toolTipBinding.getRoot())
                 .withBackgroundColor(ContextCompat.getColor(getContext(), R.color.splash_gradient_end))
                 .withCornerRadius(getResources().getDimension(R.dimen.scale_3dp))
                 .build();
 
-        final ToolTipView toolTipView = new ToolTipView.Builder(getContext())
+        toolTipView = new ToolTipView.Builder(getContext())
                 .withAnchor(mBinding.cvAddress)
                 .withToolTip(toolTip)
-                .withGravity(Gravity.TOP)
+                .withGravity(Gravity.BOTTOM)
                 .build();
 
-        binding.tvYes.setOnClickListener(new View.OnClickListener() {
+        toolTipBinding.tvYes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 toolTipView.remove();
                 Toast.makeText(getContext(), "YES", Toast.LENGTH_SHORT).show();
             }
         });
-        binding.tvNo.setOnClickListener(new View.OnClickListener() {
+
+        toolTipBinding.tvNo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 toolTipView.remove();
                 Toast.makeText(getContext(), "NO", Toast.LENGTH_SHORT).show();
-
             }
         });
 
-        toolTipView.show();
+        mBinding.cvAddress.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                Log.e(TAG, "onGlobalLayout: *******************");
+                toolTipView.showAtLocation();
+            }
+        });
     }
 
     private void setListener() {
         mBinding.imgBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (toolTipView != null)
+                    toolTipView.remove();
                 dismiss();
             }
         });

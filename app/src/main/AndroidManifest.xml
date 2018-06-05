@@ -291,6 +291,10 @@
             android:name=".cheepcare.activity.PaymentDemoActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden"/>
+        <activity
+            android:name=".cheepcarenew.activities.LandingScreenPickPackageActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize|stateAlwaysHidden"/>
 
         <!-- Location Tracked Service -->
 

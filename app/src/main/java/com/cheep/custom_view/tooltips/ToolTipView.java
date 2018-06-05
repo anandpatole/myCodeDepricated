@@ -34,10 +34,6 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
-import android.view.animation.AnimationSet;
-import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
@@ -46,6 +42,7 @@ import com.cheep.R;
 
 public class ToolTipView implements ViewTreeObserver.OnPreDrawListener, View.OnClickListener {
     public interface OnToolTipClickedListener {
+
         void onToolTipClicked(ToolTipView toolTipView);
     }
 
@@ -60,11 +57,14 @@ public class ToolTipView implements ViewTreeObserver.OnPreDrawListener, View.OnC
     private final PopupWindow popupWindow;
     private final LinearLayout container;
     private final View contentView;
-//    private final TextView text;
+    private final View parentView;
+//    private final Coordinates coordinates;
+    //    private final TextView text;
     private final ImageView arrow;
 
     private float pivotX;
     private float pivotY;
+    int[] coords = {0,0};
 
     @Nullable
     private OnToolTipClickedListener listener;
@@ -77,6 +77,9 @@ public class ToolTipView implements ViewTreeObserver.OnPreDrawListener, View.OnC
         container = new LinearLayout(context);
         container.setOnClickListener(this);
         contentView = toolTip.getContentView();
+        parentView = toolTip.getParentView();
+
+//        coordinates = new Coordinates(anchorView);
 
 //        text = new TextView(context);
 //        text.setPadding(toolTip.getLeftPadding(), toolTip.getTopPadding(),
@@ -143,8 +146,8 @@ public class ToolTipView implements ViewTreeObserver.OnPreDrawListener, View.OnC
                 break;
         }
 
-        popupWindow = new PopupWindow(container, ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT);
+        popupWindow = new PopupWindow(container, ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
     }
 
     /**
@@ -157,6 +160,15 @@ public class ToolTipView implements ViewTreeObserver.OnPreDrawListener, View.OnC
     /**
      * Shows the tool tip.
      */
+    @UiThread
+    public void showAtLocation() {
+        if (parentView != null) {
+            anchorView.getLocationOnScreen(coords);
+            popupWindow.showAtLocation(parentView, Gravity.BOTTOM, coords[0] + anchorView.getWidth(), coords[1] - anchorView.getHeight());
+            container.getViewTreeObserver().addOnPreDrawListener(this);
+        }
+    }
+
     @UiThread
     public void show() {
         popupWindow.showAsDropDown(anchorView);
@@ -180,39 +192,15 @@ public class ToolTipView implements ViewTreeObserver.OnPreDrawListener, View.OnC
      */
     @UiThread
     public void remove() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1) {
-            container.setPivotX(pivotX);
-            container.setPivotY(pivotY);
-            container.animate().setDuration(ANIMATION_DURATION).alpha(0.0F).scaleX(0.0F).scaleY(0.0F)
-                    .setListener(new AnimatorListenerAdapter() {
-                        @Override
-                        public void onAnimationEnd(Animator animation) {
-                            popupWindow.dismiss();
-                        }
-                    });
-        } else {
-            AnimationSet animationSet = new AnimationSet(true);
-            animationSet.setDuration(ANIMATION_DURATION);
-            animationSet.addAnimation(new AlphaAnimation(1.0F, 0.0F));
-            animationSet.addAnimation(new ScaleAnimation(1.0F, 0.0F, 1.0F, 0.0F, pivotX, pivotY));
-            animationSet.setAnimationListener(new Animation.AnimationListener() {
-                @Override
-                public void onAnimationStart(Animation animation) {
-                    // do nothing
-                }
-
-                @Override
-                public void onAnimationEnd(Animation animation) {
-                    popupWindow.dismiss();
-                }
-
-                @Override
-                public void onAnimationRepeat(Animation animation) {
-                    // do nothing
-                }
-            });
-            container.startAnimation(animationSet);
-        }
+        container.setPivotX(pivotX);
+        container.setPivotY(pivotY);
+        container.animate().setDuration(ANIMATION_DURATION).alpha(0.0F).scaleX(0.0F).scaleY(0.0F)
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        popupWindow.dismiss();
+                    }
+                });
     }
 
     @Override
@@ -254,7 +242,6 @@ public class ToolTipView implements ViewTreeObserver.OnPreDrawListener, View.OnC
             if (gravity == Gravity.TOP) {
                 topPadding = anchorTop - height;
             } else {
-                // gravity == Gravity.BOTTOM
                 topPadding = anchorTop + anchorHeight;
             }
 
@@ -272,8 +259,6 @@ public class ToolTipView implements ViewTreeObserver.OnPreDrawListener, View.OnC
             pivotX = anchorHorizontalCenter;
             pivotY = gravity == Gravity.TOP ? anchorTop : topPadding;
         } else {
-            // gravity == Gravity.LEFT || gravity == Gravity.RIGHT
-
             int width = textWidth + arrowWidth;
             int height = Math.max(textHeight, arrowHeight);
 
@@ -284,10 +269,7 @@ public class ToolTipView implements ViewTreeObserver.OnPreDrawListener, View.OnC
             if (gravity == Gravity.LEFT) {
                 leftPadding = Math.max(0, anchorLeft - width);
                 rightPadding = displayWidth - anchorLeft;
-//                text.setMaxWidth(displayWidth - rightPadding - leftPadding - arrowWidth);
             } else {
-                // gravity == Gravity.RIGHT
-
                 leftPadding = anchorLeft + anchorWidth;
                 rightPadding = 0;
             }
@@ -307,20 +289,12 @@ public class ToolTipView implements ViewTreeObserver.OnPreDrawListener, View.OnC
             pivotY = anchorVerticalCenter;
         }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1) {
-            container.setAlpha(0.0F);
-            container.setPivotX(pivotX);
-            container.setPivotY(pivotY);
-            container.setScaleX(0.0F);
-            container.setScaleY(0.0F);
-            container.animate().setDuration(ANIMATION_DURATION).alpha(1.0F).scaleX(1.0F).scaleY(1.0F);
-        } else {
-            AnimationSet animationSet = new AnimationSet(true);
-            animationSet.setDuration(ANIMATION_DURATION);
-            animationSet.addAnimation(new AlphaAnimation(0.0F, 1.0F));
-            animationSet.addAnimation(new ScaleAnimation(0.0F, 1.0F, 0.0F, 1.0F, pivotX, pivotY));
-            container.startAnimation(animationSet);
-        }
+        container.setAlpha(0.0F);
+        container.setPivotX(pivotX);
+        container.setPivotY(pivotY);
+        container.setScaleX(0.0F);
+        container.setScaleY(0.0F);
+        container.animate().setDuration(ANIMATION_DURATION).alpha(1.0F).scaleX(1.0F).scaleY(1.0F);
 
         return false;
     }

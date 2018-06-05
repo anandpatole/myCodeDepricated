@@ -11,11 +11,15 @@ import android.view.ViewGroup;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.cheep.R;
+import com.cheep.cheepcare.activity.ManageSubscriptionActivity;
 import com.cheep.cheepcare.model.CareCityDetail;
-import com.cheep.cheepcarenew.dialogs.AddressCategorySelectionDialog;
+import com.cheep.cheepcarenew.activities.LandingScreenPickPackageActivity;
 import com.cheep.databinding.FragmentSubscriptionBannerImageBinding;
 import com.cheep.fragment.BaseFragment;
+import com.cheep.fragment.HomeFragment;
+import com.cheep.fragment.HomeTabFragment;
 import com.cheep.network.NetworkUtility;
+import com.cheep.utils.GsonUtility;
 import com.cheep.utils.Utility;
 
 import java.util.ArrayList;
@@ -129,23 +133,21 @@ public class SubscriptionBannerFragment extends BaseFragment {
 
                     if (!processingClick) {
                         processingClick = true;
-//                        HomeFragment homeFragment = (HomeFragment) getActivity().getSupportFragmentManager().findFragmentByTag(HomeFragment.TAG);
-//                        if (homeFragment == null)
-//                            return;
-//                        HomeTabFragment fragmentByTag = (HomeTabFragment) homeFragment.getChildFragmentManager().findFragmentByTag(HomeTabFragment.TAG);
-//                        if (fragmentByTag == null)
-//                            return;
-//                        String cheepcareBannerListString = GsonUtility.getJsonStringFromObject(fragmentByTag.careBannerModelArrayList);
-//                        if (bannerImageModel.isSubscribed.equalsIgnoreCase(Utility.BOOLEAN.YES)) {
-//                            ManageSubscriptionActivity.newInstance(mContext, bannerImageModel, true, cheepcareBannerListString);
-//                        } else {
-//                            LandingScreenPickPackageActivity.newInstance(mContext, bannerImageModel, cheepcareBannerListString);
-////                            PaymentDemoActivity.newInstance(mContext);
-//                        }
+                        HomeFragment homeFragment = (HomeFragment) getActivity().getSupportFragmentManager().findFragmentByTag(HomeFragment.TAG);
+                        if (homeFragment == null)
+                            return;
+                        HomeTabFragment fragmentByTag = (HomeTabFragment) homeFragment.getChildFragmentManager().findFragmentByTag(HomeTabFragment.TAG);
+                        if (fragmentByTag == null)
+                            return;
+                        String cheepcareBannerListString = GsonUtility.getJsonStringFromObject(fragmentByTag.careBannerModelArrayList);
+                        if (bannerImageModel.isSubscribed.equalsIgnoreCase(Utility.BOOLEAN.YES)) {
+                            ManageSubscriptionActivity.newInstance(mContext, bannerImageModel, true, cheepcareBannerListString);
+                        } else {
+                            LandingScreenPickPackageActivity.newInstance(mContext, bannerImageModel, cheepcareBannerListString);
+//                            PaymentDemoActivity.newInstance(mContext);
+                        }
 
 
-                        AddressCategorySelectionDialog dialog = new AddressCategorySelectionDialog();
-                        dialog.show(getChildFragmentManager(), AddressCategorySelectionDialog.TAG);
 
                     }
                 }

@@ -45,11 +45,12 @@ public class ToolTip {
     private final int bottomPadding;
     private final View contentView;
     private final float radius;
+    private final View parentView;
 
     private ToolTip(@StringRes int textResourceId, @Nullable CharSequence text, int textGravity,
                     int textColor, float textSize, Typeface typeface, int typefaceStyle,
                     int lines, int backgroundColor, int leftPadding, int rightPadding,
-                    int topPadding, int bottomPadding, View contentView, float radius) {
+                    int topPadding, int bottomPadding, View contentView, float radius,View parentView) {
         this.textResourceId = textResourceId;
         this.text = text;
         this.textGravity = textGravity;
@@ -65,6 +66,7 @@ public class ToolTip {
         this.bottomPadding = bottomPadding;
         this.contentView = contentView;
         this.radius = radius;
+        this.parentView = parentView;
     }
 
     @StringRes
@@ -131,6 +133,10 @@ public class ToolTip {
         return radius;
     }
 
+    public View getParentView() {
+        return parentView;
+    }
+
     /**
      * Used to build a tool tip.
      */
@@ -151,6 +157,7 @@ public class ToolTip {
         private int bottomPadding = 0;
         private float radius = 0.0F;
         private View contentView = null;
+        private View parentView = null;
 
         /**
          * Creates a new builder.
@@ -219,6 +226,14 @@ public class ToolTip {
         }
 
         /**
+         * Sets parent view to show tool tip over dialogfragment
+         */
+        public Builder withParentView(View parentView) {
+            this.parentView= parentView;
+            return this;
+        }
+
+        /**
          * Sets the exact lines for the tool tip. The default value is unset.
          */
         public Builder withLines(int lines) {
@@ -263,7 +278,7 @@ public class ToolTip {
         public ToolTip build() {
             return new ToolTip(textResourceId, text, textGravity, textColor, textSize, typeface,
                     typefaceStyle, lines, backgroundColor, leftPadding, rightPadding, topPadding,
-                    bottomPadding, contentView, radius);
+                    bottomPadding, contentView, radius,parentView);
         }
     }
 }

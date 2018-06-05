@@ -31,7 +31,7 @@
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
             android:layout_marginTop="@dimen/scale_5dp"
-            android:text="@string/label_do_you_want_the_cheep_care_package_for_this_address"
+            android:text="Do you want the Cheep Care package for this address?Do you want the Cheep Care package for this address?Do you want the Cheep Care package for this address?Do you want the Cheep Care package for this address?"
             android:textColor="@color/white"
             android:textSize="@dimen/text_size_11sp"/>
 
