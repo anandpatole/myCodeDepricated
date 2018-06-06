@@ -72,9 +72,9 @@ public class ToolTipView implements ViewTreeObserver.OnPreDrawListener, View.OnC
     @Nullable
     private OnToolTipClickedListener listener;
 
-    private ToolTipView(Context context, View anchorView,  View contentView, int gravity, ToolTip toolTip) {
+    private ToolTipView(Context context, View anchorView, View contentView, int gravity, ToolTip toolTip) {
         this.anchorView = anchorView;
-        this.contentView= anchorView;
+        this.contentView = anchorView;
         this.gravity = gravity;
 
         // TODO container should NOT capture all events
@@ -148,8 +148,8 @@ public class ToolTipView implements ViewTreeObserver.OnPreDrawListener, View.OnC
                 break;
         }
 
-        Log.e("ToolTipView", "ToolTipView: "+ anchorView.getWidth());
-        popupWindow = new PopupWindow(container, anchorView.getWidth() ,
+        Log.e("ToolTipView", "ToolTipView: " + anchorView.getWidth());
+        popupWindow = new PopupWindow(container, ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT);
     }
 
@@ -380,7 +380,7 @@ public class ToolTipView implements ViewTreeObserver.OnPreDrawListener, View.OnC
                 throw new IllegalArgumentException("Unsupported gravity - " + gravity);
             }
 
-            return new ToolTipView(context, anchorView,contentView, gravity, toolTip);
+            return new ToolTipView(context, anchorView, contentView, gravity, toolTip);
         }
 
         public Builder withContentView(View root) {

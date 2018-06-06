@@ -43,6 +43,7 @@ import com.cheep.adapter.HomeTabRecyclerViewAdapter;
 import com.cheep.cheepcare.activity.LandingScreenPickPackageActivity;
 import com.cheep.cheepcare.fragment.SubscriptionBannerFragment;
 import com.cheep.cheepcare.model.CareCityDetail;
+import com.cheep.cheepcarenew.dialogs.ComparisionChartFragmentDialog;
 import com.cheep.databinding.FragmentTabHomeBinding;
 import com.cheep.databinding.LayoutFilterHomePopupBinding;
 import com.cheep.interfaces.DrawerLayoutInteractionListener;
@@ -101,6 +102,8 @@ public class HomeTabFragment extends BaseFragment {
     private ArrayList<BannerImageModel> bannerImageModelArrayList;
     public ArrayList<CareCityDetail> careBannerModelArrayList;
     private String mSelectedFilterType = Utility.FILTER_TYPES.FILTER_TYPE_FEATURED;
+
+    private ComparisionChartFragmentDialog comparisionChartFragmentDialog;
 
     public String getmSelectedFilterType() {
         return mSelectedFilterType;
@@ -393,13 +396,25 @@ public class HomeTabFragment extends BaseFragment {
                     ((AppCompatActivity) mContext).overridePendingTransition(0, 0);
                     break;
                 case R.id.rel_notification_action:
-                    if (mNotificationClickInteractionListener != null) {
+                    // commented by majid 399 to 402
+                   /* if (mNotificationClickInteractionListener != null) {
                         mNotificationClickInteractionListener.onNotificationIconClicked();
-                    }
+                    }*/
+                    showComparisionChartFragmentDialog();
                     break;
             }
         }
     };
+
+    // open show Comparision Chart Fragment Dialog
+    private void showComparisionChartFragmentDialog() {
+        if (comparisionChartFragmentDialog != null) {
+            comparisionChartFragmentDialog.dismissAllowingStateLoss();
+            comparisionChartFragmentDialog = null;
+        }
+        comparisionChartFragmentDialog = ComparisionChartFragmentDialog.newInstance("","");
+        comparisionChartFragmentDialog.show(getActivity().getSupportFragmentManager(), TAG);
+    }
 
 
     public interface CategoryRowInteractionListener {

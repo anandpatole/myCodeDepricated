@@ -211,11 +211,12 @@
 
                 <com.cheep.custom_view.CFTextViewSemiBold
                     android:id="@+id/tv_continue"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginLeft="@dimen/scale_10dp"
                     android:layout_marginRight="@dimen/scale_10dp"
+                    android:gravity="center"
                     android:layout_marginTop="@dimen/scale_10dp"
                     android:background="@color/transparent"
                     android:lines="1"

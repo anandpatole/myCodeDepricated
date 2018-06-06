@@ -407,6 +407,7 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden"/>
 
+
         <receiver android:name="com.paynimo.android.payment.network.NetworkStateReceiver">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
@@ -417,11 +418,22 @@
 
 
         <activity
-            android:name=".cheepcarenew.AddAddressActivity"
+            android:name=".cheepcarenew.activities.AddressCategorySelectionActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Translucent">
         </activity>
+        <activity
+            android:name=".cheepcarenew.activities.AddNewAddressActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Translucent"/>
+
+        <activity
+            android:name=".cheepcarenew.activities.AddressListActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Translucent"/>
     </application>
 
 </manifest>

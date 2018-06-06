@@ -28,7 +28,6 @@ import com.cheep.cheepcare.adapter.CheepCarePackageAdapter;
 import com.cheep.cheepcare.model.CareCityDetail;
 import com.cheep.cheepcare.model.CityLandingPageModel;
 import com.cheep.cheepcare.model.PackageDetail;
-import com.cheep.cheepcarenew.AddAddressActivity;
 import com.cheep.databinding.ActivityLandingScreenPickPackageBinding;
 import com.cheep.model.MessageEvent;
 import com.cheep.network.NetworkUtility;
@@ -60,6 +59,7 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
     private String mPackageListString = Utility.EMPTY_STRING;
     private ArrayList<CareCityDetail> bannerCareCityDetailsList;
     private static final String TAG = "LandingScreenPickPackag";
+
     private WebCallClass.CommonResponseListener commonErrorResponse = new WebCallClass.CommonResponseListener() {
         @Override
         public void volleyError(VolleyError error) {
@@ -90,8 +90,7 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mBinding
-                = DataBindingUtil.setContentView(this, R.layout.activity_landing_screen_pick_package);
+        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_landing_screen_pick_package);
         initiateUI();
         setListeners();
     }
@@ -307,11 +306,7 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
 //            String packageList = GsonUtility.getJsonStringFromObject(mCityLandingPageModel.packageDetailList);
 //            String packageList = GsonUtility.getJsonStringFromObject(mCityLandingPageModel.packageDetailList);
 //            PackageCustomizationActivity.newInstance(mContext, mCityLandingPageModel.careCityDetail, packageModel, packageList, mCityLandingPageModel.adminSetting);
-//            AddressCategorySelectionDialog dialog = new AddressCategorySelectionDialog();
-//            dialog.show(getSupportFragmentManager(), AddressCategorySelectionDialog.TAG);
-
-            startActivity(new Intent(LandingScreenPickPackageActivity.this, AddAddressActivity.class));
-
+            AddressCategorySelectionActivity.newInstance(LandingScreenPickPackageActivity.this);
         }
     };
 
