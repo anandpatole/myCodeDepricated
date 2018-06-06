@@ -152,7 +152,7 @@ android:paddingLeft="@dimen/scale_8dp"
                         android:layout_toRightOf="@+id/user_rating"
                         android:textColor="@color/black"
                         android:textSize="@dimen/text_size_13sp"
-                        tools:text="4.0" />
+                        android:text="4.0" />
 
                     <!--   <ImageView
                            android:id="@+id/img_edit_email"
@@ -174,7 +174,8 @@ android:paddingLeft="@dimen/scale_8dp"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/scale_1dp"
                     android:layout_above="@+id/action_layout"
-                    android:layout_marginTop="@dimen/scale_16dp"
+                    android:layout_marginTop="@dimen/scale_18dp"
+                    android:layout_marginBottom="@dimen/scale_15dp"
                     android:layout_toRightOf="@+id/profile_layout"
                     android:background="@color/grey_varient_3" />
 
@@ -199,14 +200,7 @@ android:paddingLeft="@dimen/scale_8dp"
                     android:layout_toRightOf="@+id/profile_layout"
                     android:background="@color/grey_varient_3" />-->
 
-                <View
-                    android:id="@+id/view_divider_one"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/scale_1dp"
-                    android:layout_above="@+id/action_layout"
-                    android:layout_marginLeft="@dimen/scale_50dp"
-                    android:layout_toRightOf="@+id/profile_layout"
-                    android:background="@color/grey_varient_3" />
+
 
                 <com.cheep.custom_view.CFTextViewRegular
                     android:id="@+id/text_phone_no_label"
@@ -235,7 +229,7 @@ android:paddingLeft="@dimen/scale_8dp"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/scale_1dp"
                     android:layout_above="@+id/action_layout"
-
+android:layout_marginBottom="@dimen/scale_15dp"
                     android:background="@color/grey_varient_3" />
 
                 <com.cheep.custom_view.CFTextViewRegular
@@ -264,6 +258,7 @@ android:paddingLeft="@dimen/scale_8dp"
 
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/scale_1dp"
+
                     android:background="@color/grey_varient_3" />
 
                 <com.cheep.custom_view.CFTextViewRegular
@@ -283,6 +278,7 @@ android:paddingLeft="@dimen/scale_8dp"
                     android:id="@+id/view_divider_two"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/scale_1dp"
+                    android:layout_marginBottom="@dimen/scale_15dp"
                     android:background="@color/grey_varient_3" />
 
                 <com.cheep.custom_view.CFTextViewRegular
@@ -302,6 +298,7 @@ android:paddingLeft="@dimen/scale_8dp"
                     android:layout_height="wrap_content"
                     android:drawableLeft="@drawable/add_contact_icon"
                     android:drawablePadding="@dimen/scale_10dp"
+                    android:layout_marginTop="@dimen/scale_4dp"
                     android:gravity="center_vertical"
                     android:paddingLeft="@dimen/scale_15dp"
 android:paddingBottom="@dimen/scale_8dp"
@@ -313,10 +310,11 @@ android:paddingBottom="@dimen/scale_8dp"
                     android:id="@+id/label_emergency_info"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:drawableLeft="@drawable/icon_emergency_profile_blue"
+                    android:drawableLeft="@drawable/info_icon"
                     android:drawablePadding="@dimen/scale_20dp"
                     android:gravity="center_vertical"
                     android:paddingLeft="@dimen/scale_15dp"
+                    android:layout_marginTop="@dimen/scale_5dp"
                     android:paddingBottom="@dimen/scale_8dp"
                     android:text="Please add upto 3 emergency contacts who we will reach out to when you press the alert button on our app"
                     android:textColor="@color/grey_dark_color_2"
@@ -379,7 +377,7 @@ android:paddingTop="@dimen/scale_5dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
-        android:paddingLeft="@dimen/scale_15dp"
+        android:paddingLeft="@dimen/scale_18dp"
         android:paddingTop="@dimen/scale_4dp"
         android:text="Delete"
         android:textColor="@color/dark_blue"
@@ -389,6 +387,9 @@ android:paddingTop="@dimen/scale_5dp"
 android:layout_marginTop="@dimen/scale_15dp"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/scale_1dp"
+                    android:layout_marginLeft="@dimen/scale_15dp"
+                    android:layout_marginRight="@dimen/scale_15dp"
+                    android:layout_marginBottom="@dimen/scale_8dp"
                     android:background="@color/grey_varient_3" />
 
 
@@ -402,6 +403,231 @@ android:layout_marginTop="@dimen/scale_15dp"
                     android:text="View More"
                     android:textColor="@color/dark_blue"
                     android:textSize="@dimen/text_size_13sp" />
+                <View
+
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/scale_1dp"
+                    android:elevation="@dimen/scale_1dp"
+                    android:shadowColor="@color/black"
+
+                    android:layout_marginTop="@dimen/scale_18dp"
+                    android:background="@color/grey_varient_3" />
+
+                <com.cheep.custom_view.CFTextViewRegular
+                    android:id="@+id/label_add_new_address"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|center_horizontal"
+                    android:drawableLeft="@drawable/add_contact_icon"
+                    android:gravity="center_horizontal"
+                    android:layout_margin="@dimen/scale_13dp"
+                    android:padding="@dimen/scale_5dp"
+                    android:text="Add New Address"
+                    android:textColor="@color/dark_blue"
+                    android:textSize="@dimen/text_size_13sp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:background="@color/splash_gradient_end"
+                    android:orientation="horizontal">
+
+                    <!--android:background="@drawable/tab_background"-->
+                    <FrameLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1">
+
+                        <com.cheep.custom_view.CFTextViewRegular
+                            android:id="@+id/text_tab_home"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:drawablePadding="@dimen/scale_5dp"
+                            android:drawableTop="@drawable/tab_home"
+                            android:gravity="center"
+                            android:padding="@dimen/scale_5dp"
+                            android:text="@string/tab_home"
+                            android:textAllCaps="false"
+                            android:textColor="@drawable/tab_text_color"
+                            android:textSize="@dimen/text_size_11sp" />
+
+                        <View
+                            android:id="@+id/strip_home"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/scale_3dp"
+                            android:layout_gravity="bottom"
+                            android:layout_marginLeft="@dimen/scale_10dp"
+                            android:layout_marginRight="@dimen/scale_10dp"
+                            android:background="@drawable/stripe_white" />
+                    </FrameLayout>
+
+                    <View
+                        android:layout_width="@dimen/scale_1dp"
+                        android:layout_height="match_parent"
+                        android:background="@color/grey_color"
+                        android:visibility="gone" />
+
+                    <!--android:background="@drawable/tab_background"-->
+                    <FrameLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1">
+
+                        <com.cheep.custom_view.CFTextViewRegular
+                            android:id="@+id/text_tab_my_task"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:drawablePadding="@dimen/scale_5dp"
+                            android:drawableTop="@drawable/tab_task"
+                            android:gravity="center"
+                            android:padding="@dimen/scale_5dp"
+                            android:text="@string/tab_my_task"
+                            android:textAllCaps="false"
+                            android:textColor="@drawable/tab_text_color"
+                            android:textSize="@dimen/text_size_11sp" />
+
+                        <View
+                            android:id="@+id/strip_my_task"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/scale_3dp"
+                            android:layout_gravity="bottom"
+                            android:layout_marginLeft="@dimen/scale_10dp"
+                            android:layout_marginRight="@dimen/scale_10dp"
+                            android:background="@drawable/stripe_white" />
+                    </FrameLayout>
+
+                    <!-- <View
+                         android:layout_width="@dimen/scale_1dp"
+                         android:layout_height="match_parent"
+                         android:background="@color/grey_color"
+                         android:visibility="gone" />
+
+                     <FrameLayout
+                         android:layout_width="0dp"
+                         android:layout_height="wrap_content"
+                         android:layout_weight="1">
+
+                         <com.cheep.custom_view.CFTextViewRegular
+                             android:id="@+id/text_tab_me"
+                             android:layout_width="match_parent"
+                             android:layout_height="wrap_content"
+                             android:drawablePadding="@dimen/scale_5dp"
+                             android:drawableTop="@drawable/tab_profile"
+                             android:gravity="center"
+                             android:padding="@dimen/scale_5dp"
+                             android:text="@string/tab_me"
+                             android:textAllCaps="false"
+                             android:textColor="@drawable/tab_text_color"
+                             android:textSize="@dimen/text_size_11sp" />
+
+                         <View
+                             android:id="@+id/strip_my_me"
+                             android:layout_width="match_parent"
+                             android:layout_height="@dimen/scale_3dp"
+                             android:layout_gravity="bottom"
+                             android:layout_marginLeft="@dimen/scale_10dp"
+                             android:layout_marginRight="@dimen/scale_10dp"
+                             android:background="@drawable/stripe_white" />
+                     </FrameLayout>-->
+
+                    <View
+                        android:layout_width="@dimen/scale_1dp"
+                        android:layout_height="match_parent"
+                        android:background="@color/grey_color"
+                        android:visibility="gone" />
+
+                    <FrameLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1">
+
+                        <!--<com.cheep.custom_view.CFTextViewRegular
+                            android:id="@+id/text_tab_chat"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:drawablePadding="@dimen/scale_5dp"
+                            android:drawableTop="@drawable/tab_chat"
+                            android:gravity="center"
+                            android:padding="@dimen/scale_5dp"
+                            android:text="@string/tab_chat"
+                            android:textAllCaps="false"
+                            android:textColor="@drawable/tab_text_color"
+                            android:textSize="@dimen/text_size_11sp"
+                            android:visibility="visible" />-->
+                        <RelativeLayout
+                            android:id="@+id/rl_notification_action"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:clickable="true"
+                            android:gravity="center">
+
+                            <com.cheep.custom_view.CFTextViewRegular
+                                android:id="@+id/text_tab_chat"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:drawablePadding="@dimen/scale_5dp"
+                                android:drawableTop="@drawable/tab_chat"
+                                android:gravity="center"
+                                android:padding="@dimen/scale_5dp"
+                                android:text="@string/tab_chat"
+                                android:textAllCaps="false"
+                                android:textColor="@drawable/tab_text_color"
+                                android:textSize="@dimen/text_size_11sp"
+                                android:visibility="visible" />
+
+                            <com.cheep.custom_view.CFTextViewSemiBold
+                                android:id="@+id/tv_chat_unread_count"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="-15dp"
+                                android:layout_marginStart="-15dp"
+                                android:layout_toEndOf="@+id/text_tab_chat"
+                                android:layout_toRightOf="@+id/text_tab_chat"
+                                android:background="@drawable/icon_red_dot"
+                                android:gravity="center"
+                                android:paddingBottom="@dimen/scale_1dp"
+                                android:paddingLeft="@dimen/scale_3dp"
+                                android:paddingRight="@dimen/scale_3dp"
+                                android:paddingTop="@dimen/scale_1dp"
+                                android:textColor="@color/white"
+                                android:textSize="@dimen/text_size_10sp"
+                                android:visibility="gone"
+                                tools:text="3213" />
+                        </RelativeLayout>
+
+                        <View
+                            android:id="@+id/strip_my_chat"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/scale_3dp"
+                            android:layout_gravity="bottom"
+                            android:layout_marginLeft="@dimen/scale_10dp"
+                            android:layout_marginRight="@dimen/scale_10dp"
+                            android:background="@drawable/stripe_white" />
+                    </FrameLayout>
+
+                    <View
+                        android:layout_width="@dimen/scale_1dp"
+                        android:layout_height="match_parent"
+                        android:background="@color/grey_color"
+                        android:visibility="gone" />
+
+                    <com.cheep.custom_view.CFTextViewRegular
+                        android:id="@+id/text_tab_alert"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:drawablePadding="@dimen/scale_5dp"
+                        android:drawableTop="@drawable/tab_alert"
+                        android:gravity="center"
+                        android:padding="@dimen/scale_5dp"
+                        android:text="@string/tab_alert"
+                        android:textAllCaps="false"
+                        android:textColor="@drawable/tab_alert_text_color"
+                        android:textSize="@dimen/text_size_11sp"
+                        android:visibility="visible" />
+                </LinearLayout>
+
                 <!-- <com.cheep.custom_view.CFTextViewRegular
                      android:id="@+id/text_change_password"
                      android:layout_width="match_parent"
@@ -426,17 +652,7 @@ android:layout_marginTop="@dimen/scale_15dp"
             </LinearLayout>
         </android.support.v4.widget.NestedScrollView>
 
-        <com.cheep.custom_view.CFTextViewRegular
-            android:id="@+id/label_add_new_address"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|center_horizontal"
-            android:drawableLeft="@drawable/add_contact_icon"
-            android:gravity="center_horizontal"
-            android:padding="@dimen/scale_5dp"
-            android:text="Add New Address"
-            android:textColor="@color/dark_blue"
-            android:textSize="@dimen/text_size_13sp" />
+
     </FrameLayout>
 
 </layout>
