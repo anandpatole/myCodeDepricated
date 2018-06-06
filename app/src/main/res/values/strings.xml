@@ -79,7 +79,8 @@
     <string name="rupee_symbol_x_space">₹ %1$s</string>
     <string name="rupee_symbol_x">₹%1$s</string>
     <string name="dummy_email">mohankumar@gmail.com</string>
-    <string name="label_emergency_contacts">Emergency Contacts</string>
+    <string name="label_phone_no">Phone Number</string>
+    <string name="label_emergency_contacts">Emergency contact</string>
     <!--<string name="label_manage_address">Manage Address</string>-->
     <string name="label_manage_address">Address</string>
     <string name="label_change_password">Change Password</string>
@@ -314,7 +315,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_update_address">Update Address</string>
 
     <string name="label_reviews">Reviews</string>
-    <string name="label_my_reviews">My Reviews</string>
+    <string name="label_my_reviews">Reviews</string>
     <string name="label_past_work">Past Work</string>
     <string name="label_contact_requested">Contact Requested</string>
 
@@ -483,7 +484,8 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_refer_and_earn_share_body">Check out this awesome new app, the best place for service professionals &amp; get Rs. 50 off! Just download it from %1$s, use the code %2$s</string>
     <string name="label_share_subject">Refer &amp; Earn</string>
     <string name="alert_strategic_partner_unavailable_in_location">This service is not available in your location</string>
-
+<string name="label_email">Email</string>
+    <string name="label_manage_cheep_care_subscription">Manage Cheep Care Subscription</string>
     <string name="read_more">Read More</string>
     <string name="less">less</string>
     <string name="category_more">More</string>
@@ -768,7 +770,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="msg_notif_20min_confirm_availability">Hey Rahul! It seems that you haven\'t confirmed your availability yet.
         Your Cheep Care task will be cancelled if you don\'t confirm within 20 minutes of this notification sent to you. Please confirm your availability.</string>
     <string name="label_details">Details</string>
-    <string name="label_my_details">My Details</string>
+    <string name="label_my_details">Details</string>
     <string name="label_my_profile">My Profile</string>
     <string name="label_total_paid_colon">Total Paid:</string>
     <string name="msg_payment_pending_desc">It seems that your payment is pending for this task.</string>

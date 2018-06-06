@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.cheep.R;
+import com.cheep.cheepcarenew.activities.ProfileDetailsFragmentnew;
 import com.cheep.databinding.FragmentProfileTabBinding;
 import com.cheep.fragment.BaseFragment;
 import com.cheep.fragment.ProfileDetailsFragment;
@@ -34,7 +35,7 @@ public class ProfileTabFragment extends BaseFragment {
     public static final String TAG = "ProfileTabFragment";
     private static final int DETAILS_TAB = 0;
     private static final int REVIEWS_TAB = 1;
-    private static final int PAYMENT_HISTORY_TAB = 2;
+   // private static final int PAYMENT_HISTORY_TAB = 2;
     private FragmentProfileTabBinding mBinding;
     private PagerAdapter mPagerAdapter;
     private DrawerLayoutInteractionListener mListener;
@@ -90,19 +91,19 @@ public class ProfileTabFragment extends BaseFragment {
         mPagerAdapter = new PagerAdapter(getChildFragmentManager());
         mPagerAdapter.addFragment(getString(R.string.label_details));
         mPagerAdapter.addFragment(getString(R.string.label_reviews));
-        mPagerAdapter.addFragment(getString(R.string.label_payment_history));
+       // mPagerAdapter.addFragment(getString(R.string.label_payment_history));
         mBinding.viewPager.setAdapter(mPagerAdapter);
 
         mBinding.flDetailsContainer.setSelected(true);
         mBinding.flReviewsContainer.setSelected(false);
-        mBinding.flPaymentHistoryContainer.setSelected(false);
+      //  mBinding.flPaymentHistoryContainer.setSelected(false);
     }
 
     @Override
     public void setListener() {
         mBinding.flDetailsContainer.setOnClickListener(mOnClickListener);
         mBinding.flReviewsContainer.setOnClickListener(mOnClickListener);
-        mBinding.flPaymentHistoryContainer.setOnClickListener(mOnClickListener);
+      //  mBinding.flPaymentHistoryContainer.setOnClickListener(mOnClickListener);
 
         mBinding.viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
@@ -116,15 +117,11 @@ public class ProfileTabFragment extends BaseFragment {
                 if (position == DETAILS_TAB) {
                     mBinding.flDetailsContainer.setSelected(true);
                     mBinding.flReviewsContainer.setSelected(false);
-                    mBinding.flPaymentHistoryContainer.setSelected(false);
+                   // mBinding.flPaymentHistoryContainer.setSelected(false);
                 } else if (position == REVIEWS_TAB) {
                     mBinding.flDetailsContainer.setSelected(false);
                     mBinding.flReviewsContainer.setSelected(true);
-                    mBinding.flPaymentHistoryContainer.setSelected(false);
-                } else if (position == PAYMENT_HISTORY_TAB) {
-                    mBinding.flDetailsContainer.setSelected(false);
-                    mBinding.flReviewsContainer.setSelected(false);
-                    mBinding.flPaymentHistoryContainer.setSelected(true);
+                  //  mBinding.flPaymentHistoryContainer.setSelected(false);
                 }
             }
 
@@ -137,17 +134,17 @@ public class ProfileTabFragment extends BaseFragment {
 
     private static class PagerAdapter extends FragmentPagerAdapter {
 
-        private static final int COUNT = 3;
+        private static final int COUNT = 2;
         private final List<String> mTitleList = new ArrayList<>();
-        private final ProfileDetailsFragment mProfileDetailsFragment;
+        private final ProfileDetailsFragmentnew mProfileDetailsFragment;
         private final ProfileReviewsFragment mProfileReviewsFragment;
-        private final ProfilePaymentHistoryFragment mProfilePaymentHistoryFragment;
+       // private final ProfilePaymentHistoryFragment mProfilePaymentHistoryFragment;
 
         public PagerAdapter(FragmentManager fm) {
             super(fm);
-            mProfileDetailsFragment = ProfileDetailsFragment.newInstance();
+            mProfileDetailsFragment = ProfileDetailsFragmentnew.newInstance();
             mProfileReviewsFragment = ProfileReviewsFragment.newInstance();
-            mProfilePaymentHistoryFragment = ProfilePaymentHistoryFragment.newInstance();
+            //mProfilePaymentHistoryFragment = ProfilePaymentHistoryFragment.newInstance();
         }
 
         @Override
@@ -157,8 +154,8 @@ public class ProfileTabFragment extends BaseFragment {
                     return mProfileDetailsFragment;
                 case REVIEWS_TAB:
                     return mProfileReviewsFragment;
-                case PAYMENT_HISTORY_TAB:
-                    return mProfilePaymentHistoryFragment;
+//                case PAYMENT_HISTORY_TAB:
+//                    return mProfilePaymentHistoryFragment;
                 default:
                     return mProfileDetailsFragment;
             }
@@ -188,21 +185,21 @@ public class ProfileTabFragment extends BaseFragment {
                         case R.id.fl_details_container:
                             mBinding.flDetailsContainer.setSelected(true);
                             mBinding.flReviewsContainer.setSelected(false);
-                            mBinding.flPaymentHistoryContainer.setSelected(false);
+                        //    mBinding.flPaymentHistoryContainer.setSelected(false);
                             mBinding.viewPager.setCurrentItem(0);
                             break;
                         case R.id.fl_reviews_container:
                             mBinding.flDetailsContainer.setSelected(false);
                             mBinding.flReviewsContainer.setSelected(true);
-                            mBinding.flPaymentHistoryContainer.setSelected(false);
+                           // mBinding.flPaymentHistoryContainer.setSelected(false);
                             mBinding.viewPager.setCurrentItem(1);
                             break;
-                        case R.id.fl_payment_history_container:
+                       /* case R.id.fl_payment_history_container:
                             mBinding.flDetailsContainer.setSelected(false);
                             mBinding.flReviewsContainer.setSelected(false);
                             mBinding.flPaymentHistoryContainer.setSelected(true);
-                            mBinding.viewPager.setCurrentItem(2);
-                            break;
+                            mBinding.viewPager.setCurrentItem(2);*/
+                            //break;
                     }
                 }
             };
