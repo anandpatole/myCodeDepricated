@@ -18,6 +18,7 @@ import com.cheep.databinding.DialogReferAndEarnInfoBinding;
  */
 
 public class AddressCategorySelectionDialog extends DialogFragment {
+
     public static final String TAG = AddressCategorySelectionDialog.class.getSimpleName();
     private DialogReferAndEarnInfoBinding mDialogReferAndEarnInfoBinding;
 
@@ -28,6 +29,7 @@ public class AddressCategorySelectionDialog extends DialogFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
+
 
     @Nullable
     @Override

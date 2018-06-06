@@ -125,6 +125,9 @@
     <color name="task_elapses_red">#F06608</color>
     <color name="black_varient_1">#010101</color>
     <color name="c_F2F2F2">#F2F2F2</color>
+
+    <color name="cheep_tips_color">#FF006DDA</color>
+    <color name="cheep_tips_black">#FF000000</color>
     <!--test-->
     <!--<color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>

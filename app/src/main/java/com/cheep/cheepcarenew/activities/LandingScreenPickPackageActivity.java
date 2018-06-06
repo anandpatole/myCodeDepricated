@@ -60,6 +60,7 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
     private String mPackageListString = Utility.EMPTY_STRING;
     private ArrayList<CareCityDetail> bannerCareCityDetailsList;
     private static final String TAG = "LandingScreenPickPackag";
+
     private WebCallClass.CommonResponseListener commonErrorResponse = new WebCallClass.CommonResponseListener() {
         @Override
         public void volleyError(VolleyError error) {
@@ -90,8 +91,7 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mBinding
-                = DataBindingUtil.setContentView(this, R.layout.activity_landing_screen_pick_package);
+        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_landing_screen_pick_package);
         initiateUI();
         setListeners();
     }
