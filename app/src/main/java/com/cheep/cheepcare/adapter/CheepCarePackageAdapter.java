@@ -53,7 +53,7 @@ public class CheepCarePackageAdapter extends LoadMoreRecyclerAdapter<CheepCarePa
                 .into(holder.mBinding.ivItemBackground);
 
         int resId = R.drawable.gif_ballon_home_price;
-        switch (model.packageSlug) {
+       /* switch (model.packageSlug) {
             case NetworkUtility.CARE_PACKAGE_SLUG.HOME_CARE:
                 resId = R.drawable.gif_ballon_home_price;
                 break;
@@ -69,7 +69,7 @@ public class CheepCarePackageAdapter extends LoadMoreRecyclerAdapter<CheepCarePa
             case NetworkUtility.CARE_PACKAGE_SLUG.SOCI_CARE:
                 resId = R.drawable.gif_ballon_soci_price;
                 break;
-        }
+        }*/
         Glide.with(holder.mBinding.getRoot().getContext())
                 .load(resId)
                 .asGif()

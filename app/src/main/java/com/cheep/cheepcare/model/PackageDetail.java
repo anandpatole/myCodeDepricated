@@ -39,7 +39,7 @@ public class PackageDetail implements Parent<JobCategoryModel>, Serializable {
     @SerializedName("package_slug")
     public String packageSlug;
 
-    @SerializedName("package_image")
+    @SerializedName("image")
     public String packageImage;
 
 
