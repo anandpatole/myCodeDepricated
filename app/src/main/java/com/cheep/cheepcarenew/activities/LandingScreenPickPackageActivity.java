@@ -213,6 +213,13 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
                 , spannableStringBuilder.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
         mBinding.tvGoodMorningText.setText(spannableStringBuilder);
 
+        // writing by majid khan 217 to 222
+        mBinding.tvLandingScreenTipTitle.setText(mCityLandingPageModel.careCityDetail.landingScreenTipTitle);
+        mBinding.tvLandingScreenTipSubtitle.setText(mCityLandingPageModel.careCityDetail.landingScreenTipSubtitle);
+        mBinding.tvLandingScreenTitle1.setText(mCityLandingPageModel.careCityDetail.landingScreenTitle1);
+        mBinding.tvLandingScreenTitle2.setText(mCityLandingPageModel.careCityDetail.landingScreenTitle2);
+        mBinding.imgCheepTips.setVisibility(View.VISIBLE);
+
         mBinding.tvInfoText.setText(getString(R.string.landing_page_info_text));
 
         mBinding.recyclerViewCheepCareFeature.setNestedScrollingEnabled(false);

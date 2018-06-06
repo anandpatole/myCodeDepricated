@@ -107,10 +107,11 @@
                             android:layout_height="wrap_content"
                             android:layout_alignParentBottom="true"
                             android:src="@drawable/cheep_bird"
+                            android:visibility="gone"
                             tools:ignore="ContentDescription" />
 
                         <com.cheep.custom_view.CFTextViewBold
-                            android:id="@+id/tv_cheep_tips"
+                            android:id="@+id/tv_landing_screen_tip_title"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="@dimen/scale_16dp"
@@ -120,15 +121,14 @@
                             android:layout_marginTop="@dimen/scale_4dp"
                             android:layout_toEndOf="@+id/img_cheep_tips"
                             android:layout_toRightOf="@+id/img_cheep_tips"
-                            android:text="@string/cheep_tips_text"
                             android:textColor="@color/cheep_tips_color"
                             android:textSize="@dimen/text_size_15sp" />
 
                         <com.cheep.custom_view.CFTextViewRegular
-                            android:id="@+id/tv_cheep_tips_try"
+                            android:id="@+id/tv_landing_screen_tip_subtitle"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_below="@+id/tv_cheep_tips"
+                            android:layout_below="@+id/tv_landing_screen_tip_title"
                             android:layout_marginBottom="@dimen/scale_8dp"
                             android:layout_marginTop="@dimen/scale_4dp"
                             android:layout_toEndOf="@+id/img_cheep_tips"
@@ -137,7 +137,6 @@
                             android:paddingLeft="@dimen/scale_8dp"
                             android:paddingRight="@dimen/scale_20dp"
                             android:paddingStart="@dimen/scale_8dp"
-                            android:text="@string/cheep_tips_text1"
                             android:textColor="@color/cheep_tips_black"
                             android:textSize="@dimen/text_size_13sp" />
 
@@ -165,6 +164,7 @@
                         tools:text="@string/dummy_good_morning_mumbai" />
 
                     <com.cheep.custom_view.CFTextViewSemiBold
+                        android:id="@+id/tv_landing_screen_title_1"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="@dimen/scale_24dp"
@@ -184,6 +184,7 @@
                         tools:listitem="@layout/row_cheep_care_package" />
 
                     <com.cheep.custom_view.CFTextViewSemiBold
+                        android:id="@+id/tv_landing_screen_title_2"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="@dimen/scale_24dp"
