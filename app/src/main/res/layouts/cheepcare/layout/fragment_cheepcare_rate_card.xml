@@ -56,7 +56,7 @@
             <RelativeLayout
                 android:layout_width="match_parent"
 
-                android:layout_height="@dimen/scale_100dp">
+                android:layout_height="wrap_content">
 
                 <ImageView
                     android:id="@+id/cheep_rate_img"
