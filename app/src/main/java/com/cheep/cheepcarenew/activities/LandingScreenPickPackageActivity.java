@@ -313,7 +313,7 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
 //            String packageList = GsonUtility.getJsonStringFromObject(mCityLandingPageModel.packageDetailList);
 //            String packageList = GsonUtility.getJsonStringFromObject(mCityLandingPageModel.packageDetailList);
 //            PackageCustomizationActivity.newInstance(mContext, mCityLandingPageModel.careCityDetail, packageModel, packageList, mCityLandingPageModel.adminSetting);
-            AddressCategorySelectionActivity.newInstance(LandingScreenPickPackageActivity.this);
+            AddressActivity.newInstance(LandingScreenPickPackageActivity.this);
         }
     };
 

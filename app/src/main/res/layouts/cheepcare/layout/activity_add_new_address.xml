@@ -7,16 +7,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center"
-        android:paddingLeft="@dimen/scale_10dp"
-        android:paddingRight="@dimen/scale_10dp"
+        android:background="@color/black_translucent"
+        android:padding="@dimen/scale_20dp"
         tools:background="@color/black">
 
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginLeft="@dimen/scale_10dp"
-            android:layout_marginRight="@dimen/scale_10dp"
             android:orientation="vertical">
 
             <RelativeLayout
@@ -61,6 +59,7 @@
                 android:paddingTop="@dimen/scale_16dp">
 
                 <android.support.v7.widget.CardView
+                    android:id="@+id/cvCurrentLocation"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_marginLeft="@dimen/scale_10dp"

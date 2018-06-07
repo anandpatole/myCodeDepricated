@@ -1,57 +1,71 @@
-package com.cheep.cheepcarenew.activities;
+package com.cheep.cheepcarenew.fragments;
 
-import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.cheep.R;
-import com.cheep.activity.BaseAppCompatActivity;
+import com.cheep.cheepcarenew.activities.AddressActivity;
 import com.cheep.custom_view.tooltips.ToolTip;
 import com.cheep.custom_view.tooltips.ToolTipView;
 import com.cheep.databinding.ActivityAddressCategorySelectionBinding;
 import com.cheep.databinding.TooltipAddressSelectionBinding;
+import com.cheep.fragment.BaseFragment;
 
-public class AddressCategorySelectionActivity extends BaseAppCompatActivity {
+public class AddressCategorySelectionFragment extends BaseFragment {
 
     ActivityAddressCategorySelectionBinding mBinding;
     private ToolTipView toolTipView;
-    private static final String TAG = "AddressCategorySelectionActivity";
+    public static final String TAG = "AddressCategorySelectionFragment";
 
-    public static void newInstance(Context context) {
-        context.startActivity(new Intent(context, AddressCategorySelectionActivity.class));
-        ((Activity) context).overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+    public static AddressCategorySelectionFragment newInstance() {
+        Bundle args = new Bundle();
+        AddressCategorySelectionFragment fragment = new AddressCategorySelectionFragment();
+        fragment.setArguments(args);
+        return fragment;
     }
 
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_address_category_selection);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        mBinding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.activity_address_category_selection, null, false);
+        return mBinding.getRoot();
+    }
+
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
         initiateUI();
     }
 
     @Override
-    protected void initiateUI() {
+    public void initiateUI() {
         setListeners();
         openTooltip(true);
     }
 
     @Override
+    public void setListener() {
+    }
+
     protected void setListeners() {
         mBinding.imgBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (toolTipView != null)
                     toolTipView.remove();
-                onBackPressed();
+                ((AddressActivity) mContext).onBackPressed();
+
             }
         });
         mBinding.cvOffice.setOnClickListener(new View.OnClickListener() {
@@ -80,23 +94,36 @@ public class AddressCategorySelectionActivity extends BaseAppCompatActivity {
         });
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (toolTipView != null)
+            toolTipView.remove();
+
+    }
+
+    private void openAddNewAddressDialog() {
+        ((AddressActivity) mContext).loadFragment(AddNewAddressFragment.TAG, AddNewAddressFragment.newInstance());
+
+    }
+
 
     private void openTooltip(boolean b) {
 
         Log.e(TAG, "onGlobalLayout: *******************");
         TooltipAddressSelectionBinding toolTipBinding = DataBindingUtil.inflate(
-                LayoutInflater.from(AddressCategorySelectionActivity.this),
+                LayoutInflater.from(mContext),
                 R.layout.tooltip_address_selection,
                 null,
                 false);
 
         ToolTip toolTip = new ToolTip.Builder()
                 .withTextColor(Color.WHITE)
-                .withBackgroundColor(ContextCompat.getColor(AddressCategorySelectionActivity.this, R.color.splash_gradient_end))
+                .withBackgroundColor(ContextCompat.getColor(mContext, R.color.splash_gradient_end))
                 .withCornerRadius(getResources().getDimension(R.dimen.scale_3dp))
                 .build();
 
-        toolTipView = new ToolTipView.Builder(AddressCategorySelectionActivity.this)
+        toolTipView = new ToolTipView.Builder(mContext)
                 .withAnchor(mBinding.cvAddress)
                 .withContentView(toolTipBinding.getRoot())
                 .withToolTip(toolTip)
@@ -107,7 +134,7 @@ public class AddressCategorySelectionActivity extends BaseAppCompatActivity {
             @Override
             public void onClick(View v) {
                 toolTipView.remove();
-                Toast.makeText(AddressCategorySelectionActivity.this, "YES", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, "YES", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -115,7 +142,7 @@ public class AddressCategorySelectionActivity extends BaseAppCompatActivity {
             @Override
             public void onClick(View v) {
                 toolTipView.remove();
-                Toast.makeText(AddressCategorySelectionActivity.this, "NO", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, "NO", Toast.LENGTH_SHORT).show();
             }
         });
         if (b)
@@ -124,14 +151,4 @@ public class AddressCategorySelectionActivity extends BaseAppCompatActivity {
     }
 
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-    }
-
-    private void openAddNewAddressDialog() {
-        AddNewAddressActivity.newInstance(this);
-
-    }
 }

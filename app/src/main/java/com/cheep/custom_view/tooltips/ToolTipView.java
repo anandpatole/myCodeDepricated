@@ -42,6 +42,8 @@ import android.widget.PopupWindow;
 import com.cheep.R;
 
 public class ToolTipView implements ViewTreeObserver.OnPreDrawListener, View.OnClickListener {
+    private final Context context;
+
     public interface OnToolTipClickedListener {
         void onToolTipClicked(ToolTipView toolTipView);
     }
@@ -74,6 +76,7 @@ public class ToolTipView implements ViewTreeObserver.OnPreDrawListener, View.OnC
 
     private ToolTipView(Context context, View anchorView, View contentView, int gravity, ToolTip toolTip) {
         this.anchorView = anchorView;
+        this.context = context;
         this.contentView = anchorView;
         this.gravity = gravity;
 
@@ -166,12 +169,22 @@ public class ToolTipView implements ViewTreeObserver.OnPreDrawListener, View.OnC
 
     @UiThread
     public void show() {
-        popupWindow.showAsDropDown(anchorView);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            if (context != null && !((Activity) context).isDestroyed()) {
+                popupWindow.showAsDropDown(anchorView);
+                container.getViewTreeObserver().addOnPreDrawListener(this);
+            }
+        } else {
+            if (context != null) {
+                popupWindow.showAsDropDown(anchorView);
+                container.getViewTreeObserver().addOnPreDrawListener(this);
+            }
+        }
 //        popupWindow.setWidth(anchorView.getWidth());
 //        popupWindow.showAtLocation(parentView,);
 //    popupWindow.showAtLocation(parentView, Gravity.NO_GRAVITY, coords[0] + anchorView.getWidth(), coords[1]);
 
-        container.getViewTreeObserver().addOnPreDrawListener(this);
     }
 
 
