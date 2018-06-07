@@ -46,9 +46,10 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/toolbar">
             <android.support.v4.widget.NestedScrollView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:layout_behavior="@string/appbar_scrolling_view_behavior">
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
             <LinearLayout
                 android:layout_width="match_parent"
                 android:orientation="vertical"
@@ -61,32 +62,30 @@
                 <ImageView
                     android:id="@+id/cheep_rate_img"
 
-                    android:layout_width="@dimen/scale_65dp"
+                    android:layout_width="@dimen/scale_60dp"
 
-                    android:layout_height="@dimen/scale_65dp"
+                    android:layout_height="@dimen/scale_50dp"
                     android:layout_alignParentBottom="true"
 android:scaleType="fitEnd"
                     android:src="@drawable/cheep_bird_rate" />
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:orientation="vertical"
                     android:layout_toRightOf="@+id/cheep_rate_img"
                     android:layout_height="wrap_content">
-                <com.cheep.custom_view.CFTextViewSemiBold
-                    android:id="@+id/title"
+                    <com.cheep.custom_view.CFTextViewRegular
+                        android:id="@+id/title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="left"
+                        android:gravity="center_horizontal"
+                        android:layout_marginTop="@dimen/scale_8dp"
+                        android:text="Wondering how much a service can cost you?"
+                        android:textColor="@color/dark_blue"
+                        android:textSize="@dimen/text_size_14sp" />
 
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="left"
-                    android:gravity="center_horizontal"
-
-
-                    android:layout_marginTop="@dimen/scale_8dp"
-                    android:text="Wondering how much a service can cost you?"
-                    android:textColor="@color/dark_blue"
-                    android:textSize="@dimen/text_size_16sp" />
-
-                    <com.cheep.custom_view.CFTextViewSemiBold
+                    <com.cheep.custom_view.CFTextViewRegular
                         android:id="@+id/title1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -94,7 +93,7 @@ android:scaleType="fitEnd"
                         android:layout_marginTop="@dimen/scale_9dp"
                         android:layout_toRightOf="@+id/cheep_rate_img"
                         android:gravity="bottom"
-                        android:text="Our aim is to provide the best services at the most nominal rates.\nDepending on the services at hand,we might have some\nadditional charges.You can easily aceess the rate card by\ntapping  on the services listed below"
+                        android:text="Our aim is to provide the best services at the most nominal rates.Depending on the services at hand,we might have some additional charges.You can easily aceess the rate card by tapping  on the services listed below"
                         android:textColor="@color/black_translucent_1"
                         android:textSize="@dimen/text_size_11sp" />
                 </LinearLayout>
@@ -113,7 +112,7 @@ android:scaleType="fitEnd"
                     android:layout_height="wrap_content"
                     android:layout_gravity="left"
 android:paddingTop="@dimen/scale_8dp"
-                    android:paddingLeft="@dimen/scale_18dp"
+                    android:paddingLeft="@dimen/scale_10dp"
 
                     android:text="Rate Card for Service Categories"
                     android:textColor="@color/black"
@@ -140,8 +139,8 @@ android:paddingTop="@dimen/scale_8dp"
                     <RelativeLayout
                         android:layout_width="0dp"
                         android:layout_weight="1"
-                        android:layout_marginLeft="@dimen/scale_18dp"
-                        android:layout_height="@dimen/scale_100dp">
+                        android:layout_marginLeft="@dimen/scale_10dp"
+                        android:layout_height="@dimen/scale_80dp">
                     <ImageView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -176,9 +175,9 @@ android:paddingTop="@dimen/scale_8dp"
                         <RelativeLayout
                             android:layout_width="0dp"
                             android:layout_weight="1"
-                            android:layout_marginLeft="@dimen/scale_18dp"
-                            android:layout_marginRight="@dimen/scale_18dp"
-                            android:layout_height="@dimen/scale_100dp">
+                            android:layout_marginLeft="@dimen/scale_10dp"
+                            android:layout_marginRight="@dimen/scale_10dp"
+                            android:layout_height="@dimen/scale_80dp">
                             <ImageView
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
@@ -202,7 +201,7 @@ android:paddingTop="@dimen/scale_8dp"
                 </LinearLayout>
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_marginTop="@dimen/scale_18dp"
+                    android:layout_marginTop="@dimen/scale_10dp"
                     android:orientation="horizontal"
                     android:layout_height="wrap_content">
                     <!--<android.support.v7.widget.CardView
@@ -219,8 +218,8 @@ android:paddingTop="@dimen/scale_8dp"
                         <RelativeLayout
                             android:layout_width="0dp"
                             android:layout_weight="1"
-                            android:layout_marginLeft="@dimen/scale_18dp"
-                            android:layout_height="@dimen/scale_100dp">
+                            android:layout_marginLeft="@dimen/scale_10dp"
+                            android:layout_height="@dimen/scale_80dp">
                             <ImageView
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
@@ -254,9 +253,9 @@ android:paddingTop="@dimen/scale_8dp"
                         <RelativeLayout
                             android:layout_width="0dp"
                             android:layout_weight="1"
-                            android:layout_marginLeft="@dimen/scale_18dp"
-                            android:layout_marginRight="@dimen/scale_18dp"
-                            android:layout_height="@dimen/scale_100dp">
+                            android:layout_marginLeft="@dimen/scale_10dp"
+                            android:layout_marginRight="@dimen/scale_10dp"
+                            android:layout_height="@dimen/scale_80dp">
                             <ImageView
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
@@ -280,7 +279,7 @@ android:paddingTop="@dimen/scale_8dp"
                 </LinearLayout>
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_marginTop="@dimen/scale_18dp"
+                    android:layout_marginTop="@dimen/scale_10dp"
                     android:orientation="horizontal"
                     android:layout_height="wrap_content">
                    <!-- <android.support.v7.widget.CardView
@@ -297,8 +296,8 @@ android:paddingTop="@dimen/scale_8dp"
                         <RelativeLayout
                             android:layout_width="0dp"
                             android:layout_weight="1"
-                            android:layout_height="@dimen/scale_100dp"
-                            android:layout_marginLeft="@dimen/scale_18dp">
+                            android:layout_height="@dimen/scale_80dp"
+                            android:layout_marginLeft="@dimen/scale_10dp">
                             <ImageView
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
@@ -333,9 +332,9 @@ android:paddingTop="@dimen/scale_8dp"
                         <RelativeLayout
                             android:layout_width="0dp"
                             android:layout_weight="1"
-                            android:layout_marginLeft="@dimen/scale_18dp"
-                            android:layout_marginRight="@dimen/scale_18dp"
-                            android:layout_height="@dimen/scale_100dp">
+                            android:layout_marginLeft="@dimen/scale_10dp"
+                            android:layout_marginRight="@dimen/scale_10dp"
+                            android:layout_height="@dimen/scale_80dp">
                             <ImageView
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
@@ -376,8 +375,8 @@ android:paddingTop="@dimen/scale_8dp"
                         <RelativeLayout
                             android:layout_width="0dp"
                             android:layout_weight="1"
-                            android:layout_marginLeft="@dimen/scale_18dp"
-                            android:layout_height="@dimen/scale_100dp">
+                            android:layout_marginLeft="@dimen/scale_10dp"
+                            android:layout_height="@dimen/scale_80dp">
                             <ImageView
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
@@ -401,8 +400,8 @@ android:paddingTop="@dimen/scale_8dp"
                     <View
                         android:layout_width="0dp"
                         android:layout_weight="1"
-                        android:layout_marginLeft="@dimen/scale_18dp"
-                        android:layout_marginRight="@dimen/scale_18dp"
+                        android:layout_marginLeft="@dimen/scale_10dp"
+                        android:layout_marginRight="@dimen/scale_10dp"
                         android:layout_height="@dimen/scale_90dp"
                         />
                     <!--<android.support.v7.widget.CardView-->

@@ -88,7 +88,8 @@
                         android:layout_width="@dimen/scale_25dp"
                         android:layout_height="@dimen/scale_25dp"
                         android:layout_gravity="right|top"
-                        android:layout_margin="@dimen/scale_4dp"
+                        android:layout_marginTop="@dimen/scale_30dp"
+                        android:layout_marginRight="@dimen/scale_27dp"
                         android:scaleType="fitXY"
                         android:src="@drawable/icon_profile_photo_edit"
                         tools:ignore="ContentDescription" />
@@ -108,7 +109,7 @@
                         android:gravity="center"
                         android:text="@string/dummy_name"
                         android:textAllCaps="false"
-                        android:textColor="@color/splash_gradient_end"
+                        android:textColor="@color/black"
                         android:textSize="@dimen/text_size_16sp" />
 
                     <!--  <ImageView
@@ -207,7 +208,7 @@ android:paddingLeft="@dimen/scale_8dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
-                    android:paddingLeft="@dimen/scale_15dp"
+                    android:paddingLeft="@dimen/scale_40dp"
                     android:paddingBottom="@dimen/scale_5dp"
                     android:text="@string/label_phone_no"
                     android:textColor="@color/grey_dark_color_2"
@@ -218,7 +219,7 @@ android:paddingLeft="@dimen/scale_8dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
-                    android:paddingLeft="@dimen/scale_18dp"
+                    android:paddingLeft="@dimen/scale_40dp"
                     android:paddingBottom="@dimen/scale_10dp"
                     android:text="7207002829"
                     android:textColor="@color/black"
@@ -237,7 +238,7 @@ android:layout_marginBottom="@dimen/scale_15dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
-                    android:paddingLeft="@dimen/scale_15dp"
+                    android:paddingLeft="@dimen/scale_40dp"
                     android:paddingBottom="@dimen/scale_5dp"
                     android:text="@string/label_email"
                     android:textColor="@color/grey_dark_color_2"
@@ -248,7 +249,7 @@ android:layout_marginBottom="@dimen/scale_15dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
-                    android:paddingLeft="@dimen/scale_15dp"
+                    android:paddingLeft="@dimen/scale_40dp"
                     android:paddingBottom="@dimen/scale_10dp"
                     android:text="@string/dummy_email"
                     android:textColor="@color/black"
@@ -267,9 +268,12 @@ android:layout_marginBottom="@dimen/scale_15dp"
                     android:layout_height="wrap_content"
 
                     android:drawablePadding="@dimen/scale_20dp"
-                    android:drawableRight="@drawable/icon_profile_arrow_right_grey"
+                    android:drawableRight="@drawable/side_arrow"
                     android:gravity="center_vertical"
-                    android:padding="@dimen/scale_16dp"
+                    android:paddingLeft="@dimen/scale_40dp"
+                    android:paddingRight="@dimen/scale_40dp"
+                    android:paddingTop="@dimen/scale_20dp"
+                    android:paddingBottom="@dimen/scale_20dp"
                     android:text="@string/label_manage_cheep_care_subscription"
                     android:textColor="@color/grey_dark_color_2"
                     android:textSize="@dimen/text_size_13sp" />
@@ -278,7 +282,7 @@ android:layout_marginBottom="@dimen/scale_15dp"
                     android:id="@+id/view_divider_two"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/scale_1dp"
-                    android:layout_marginBottom="@dimen/scale_15dp"
+                    android:layout_marginBottom="@dimen/scale_18dp"
                     android:background="@color/grey_varient_3" />
 
                 <com.cheep.custom_view.CFTextViewRegular
@@ -286,7 +290,7 @@ android:layout_marginBottom="@dimen/scale_15dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
-                    android:paddingLeft="@dimen/scale_15dp"
+                    android:paddingLeft="@dimen/scale_40dp"
                     android:paddingBottom="@dimen/scale_8dp"
                     android:text="@string/label_emergency_contacts"
                     android:textColor="@color/grey_dark_color_2"
@@ -300,10 +304,10 @@ android:layout_marginBottom="@dimen/scale_15dp"
                     android:drawablePadding="@dimen/scale_10dp"
                     android:layout_marginTop="@dimen/scale_4dp"
                     android:gravity="center_vertical"
-                    android:paddingLeft="@dimen/scale_15dp"
+                    android:paddingLeft="@dimen/scale_40dp"
 android:paddingBottom="@dimen/scale_8dp"
                     android:text="Add contact"
-                    android:textColor="@color/dark_blue"
+                    android:textColor="@color/blue_variant_4"
                     android:textSize="@dimen/text_size_13sp" />
 
                 <com.cheep.custom_view.CFTextViewRegular
@@ -311,9 +315,10 @@ android:paddingBottom="@dimen/scale_8dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:drawableLeft="@drawable/info_icon"
-                    android:drawablePadding="@dimen/scale_20dp"
+                    android:drawablePadding="@dimen/scale_10dp"
+                    android:paddingRight="@dimen/scale_18dp"
                     android:gravity="center_vertical"
-                    android:paddingLeft="@dimen/scale_15dp"
+                    android:paddingLeft="@dimen/scale_40dp"
                     android:layout_marginTop="@dimen/scale_5dp"
                     android:paddingBottom="@dimen/scale_8dp"
                     android:text="Please add upto 3 emergency contacts who we will reach out to when you press the alert button on our app"
@@ -331,7 +336,7 @@ android:paddingBottom="@dimen/scale_8dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
-                    android:paddingLeft="@dimen/scale_15dp"
+                    android:paddingLeft="@dimen/scale_40dp"
                     android:paddingTop="@dimen/scale_15dp"
                     android:text="Manage address"
                     android:textColor="@color/grey_dark_color_2"
@@ -343,10 +348,10 @@ android:paddingBottom="@dimen/scale_8dp"
                 android:drawableLeft="@drawable/home_icon"
                 android:drawablePadding="@dimen/scale_10dp"
                 android:gravity="center_vertical"
-                android:paddingLeft="@dimen/scale_15dp"
+                android:paddingLeft="@dimen/scale_40dp"
                     android:paddingTop="@dimen/scale_10dp"
                 android:text="Home"
-                android:textColor="@color/dark_blue"
+                android:textColor="@color/blue_variant_4"
                 android:textSize="@dimen/text_size_13sp" />
                 <com.cheep.custom_view.CFTextViewRegular
                     android:id="@+id/text_home_address"
@@ -354,7 +359,7 @@ android:paddingBottom="@dimen/scale_8dp"
                 android:layout_height="wrap_content"
 android:paddingTop="@dimen/scale_5dp"
                 android:gravity="center_vertical"
-                android:paddingLeft="@dimen/scale_15dp"
+                android:paddingLeft="@dimen/scale_40dp"
                 android:text="1401/02 Ghanshyam Enclave,New Link \nRoad,Khandivali West,Mumbai 400067"
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_size_13sp" />
@@ -367,20 +372,20 @@ android:paddingTop="@dimen/scale_5dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
-        android:paddingLeft="@dimen/scale_15dp"
+        android:paddingLeft="@dimen/scale_40dp"
         android:paddingTop="@dimen/scale_4dp"
         android:text="Edit"
-        android:textColor="@color/dark_blue"
+        android:textColor="@color/blue_variant_4"
         android:textSize="@dimen/text_size_13sp" />
     <com.cheep.custom_view.CFTextViewRegular
         android:id="@+id/text_address_delete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
-        android:paddingLeft="@dimen/scale_18dp"
+        android:paddingLeft="@dimen/scale_40dp"
         android:paddingTop="@dimen/scale_4dp"
         android:text="Delete"
-        android:textColor="@color/dark_blue"
+        android:textColor="@color/blue_variant_4"
         android:textSize="@dimen/text_size_13sp" />
 </LinearLayout>
                 <View
@@ -398,10 +403,10 @@ android:layout_marginTop="@dimen/scale_15dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
-                    android:paddingLeft="@dimen/scale_15dp"
+                    android:paddingLeft="@dimen/scale_40dp"
                     android:paddingTop="@dimen/scale_4dp"
                     android:text="View More"
-                    android:textColor="@color/dark_blue"
+                    android:textColor="@color/blue_variant_4"
                     android:textSize="@dimen/text_size_13sp" />
                 <View
 
@@ -423,17 +428,17 @@ android:layout_marginTop="@dimen/scale_15dp"
                     android:layout_margin="@dimen/scale_13dp"
                     android:padding="@dimen/scale_5dp"
                     android:text="Add New Address"
-                    android:textColor="@color/dark_blue"
+                    android:textColor="@color/blue_variant_4"
                     android:textSize="@dimen/text_size_13sp" />
 
-                <LinearLayout
+              <!--  <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
                     android:background="@color/splash_gradient_end"
                     android:orientation="horizontal">
 
-                    <!--android:background="@drawable/tab_background"-->
+                    &lt;!&ndash;android:background="@drawable/tab_background"&ndash;&gt;
                     <FrameLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -469,7 +474,7 @@ android:layout_marginTop="@dimen/scale_15dp"
                         android:background="@color/grey_color"
                         android:visibility="gone" />
 
-                    <!--android:background="@drawable/tab_background"-->
+                    &lt;!&ndash;android:background="@drawable/tab_background"&ndash;&gt;
                     <FrameLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -499,7 +504,7 @@ android:layout_marginTop="@dimen/scale_15dp"
                             android:background="@drawable/stripe_white" />
                     </FrameLayout>
 
-                    <!-- <View
+                    &lt;!&ndash; <View
                          android:layout_width="@dimen/scale_1dp"
                          android:layout_height="match_parent"
                          android:background="@color/grey_color"
@@ -531,7 +536,7 @@ android:layout_marginTop="@dimen/scale_15dp"
                              android:layout_marginLeft="@dimen/scale_10dp"
                              android:layout_marginRight="@dimen/scale_10dp"
                              android:background="@drawable/stripe_white" />
-                     </FrameLayout>-->
+                     </FrameLayout>&ndash;&gt;
 
                     <View
                         android:layout_width="@dimen/scale_1dp"
@@ -544,7 +549,7 @@ android:layout_marginTop="@dimen/scale_15dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1">
 
-                        <!--<com.cheep.custom_view.CFTextViewRegular
+                        &lt;!&ndash;<com.cheep.custom_view.CFTextViewRegular
                             android:id="@+id/text_tab_chat"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
@@ -556,7 +561,7 @@ android:layout_marginTop="@dimen/scale_15dp"
                             android:textAllCaps="false"
                             android:textColor="@drawable/tab_text_color"
                             android:textSize="@dimen/text_size_11sp"
-                            android:visibility="visible" />-->
+                            android:visibility="visible" />&ndash;&gt;
                         <RelativeLayout
                             android:id="@+id/rl_notification_action"
                             android:layout_width="match_parent"
@@ -629,7 +634,7 @@ android:layout_marginTop="@dimen/scale_15dp"
                         android:textColor="@drawable/tab_alert_text_color"
                         android:textSize="@dimen/text_size_11sp"
                         android:visibility="visible" />
-                </LinearLayout>
+                </LinearLayout>-->
 
                 <!-- <com.cheep.custom_view.CFTextViewRegular
                      android:id="@+id/text_change_password"

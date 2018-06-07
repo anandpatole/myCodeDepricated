@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center">
+<LinearLayout
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_gravity="center"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+
+        android:layout_marginLeft="@dimen/scale_18dp"
+        android:layout_marginRight="@dimen/scale_18dp">
+
+
+        <View
+            android:id="@+id/img_header"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/scale_70dp"
+
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:background="@drawable/bg_drop_down_item_top"
+            android:layout_alignParentLeft="true" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginEnd="@dimen/scale_11dp"
+            android:src="@drawable/freshchat_ic_cancel"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="@dimen/scale_10dp"
+            android:layout_marginRight="@dimen/scale_11dp" />
+
+        <com.cheep.custom_view.CFTextViewBold
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center"
+            android:gravity="center_horizontal"
+            android:text="Rate Card"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_20sp" />
+    </RelativeLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_height="wrap_content">
+
+
+    </LinearLayout>
+           <android.support.v7.widget.RecyclerView
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:layout_marginLeft="@dimen/scale_18dp"
+               android:layout_marginRight="@dimen/scale_18dp"
+               ></android.support.v7.widget.RecyclerView>
+</LinearLayout>
+    </FrameLayout>
+
+</layout>

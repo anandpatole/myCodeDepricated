@@ -57,7 +57,7 @@ public class CheepCareRateCardFragment  extends BaseFragment {
 
     @Override
     public void initiateUI() {
-        if (((AppCompatActivity) mContext).getSupportActionBar() != null) {
+               if (((AppCompatActivity) mContext).getSupportActionBar() != null) {
             //Setting up toolbar
             ((AppCompatActivity) mContext).setSupportActionBar(mBinding.toolbar);
             ((AppCompatActivity) mContext).getSupportActionBar().setTitle(Utility.EMPTY_STRING);
