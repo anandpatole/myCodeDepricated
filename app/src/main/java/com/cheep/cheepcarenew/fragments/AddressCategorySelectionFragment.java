@@ -20,12 +20,21 @@ import com.cheep.custom_view.tooltips.ToolTipView;
 import com.cheep.databinding.ActivityAddressCategorySelectionBinding;
 import com.cheep.databinding.TooltipAddressSelectionBinding;
 import com.cheep.fragment.BaseFragment;
+import com.cheep.model.AddressModel;
+import com.cheep.model.GuestUserDetails;
+import com.cheep.model.UserDetails;
+import com.cheep.utils.PreferenceUtility;
 
 public class AddressCategorySelectionFragment extends BaseFragment {
 
     ActivityAddressCategorySelectionBinding mBinding;
     private ToolTipView toolTipView;
     public static final String TAG = "AddressCategorySelectionFragment";
+    private AddressModel addressModel;
+
+    public void setAddressModel(AddressModel addressModel) {
+        this.addressModel = addressModel;
+    }
 
     public static AddressCategorySelectionFragment newInstance() {
         Bundle args = new Bundle();
@@ -51,6 +60,43 @@ public class AddressCategorySelectionFragment extends BaseFragment {
     @Override
     public void initiateUI() {
         setListeners();
+
+
+        UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
+        if (userDetails != null && !userDetails.addressList.isEmpty()) {
+            if (userDetails.addressList.get(0) != null) {
+                addressModel = userDetails.addressList.get(0);
+                setAddress();
+                mBinding.tvAddressTitle.setVisibility(View.VISIBLE);
+                mBinding.cvAddress.setVisibility(View.VISIBLE);
+            } else {
+                mBinding.tvAddressTitle.setVisibility(View.GONE);
+                mBinding.cvAddress.setVisibility(View.GONE);
+            }
+
+        } else {
+            GuestUserDetails guestUserDetails = PreferenceUtility.getInstance(mContext).getGuestUserDetails();
+            if (guestUserDetails != null && !guestUserDetails.addressList.isEmpty()) {
+                if (guestUserDetails.addressList.get(0) != null) {
+                    setAddress();
+                    addressModel = guestUserDetails.addressList.get(0);
+                    mBinding.tvAddressTitle.setVisibility(View.VISIBLE);
+                    mBinding.cvAddress.setVisibility(View.VISIBLE);
+                } else {
+                    mBinding.tvAddressTitle.setVisibility(View.GONE);
+                    mBinding.cvAddress.setVisibility(View.GONE);
+                }
+            } else {
+                mBinding.tvAddressTitle.setVisibility(View.GONE);
+                mBinding.cvAddress.setVisibility(View.GONE);
+            }
+        }
+
+
+    }
+
+    private void setAddress() {
+        mBinding.tvAddress.setText(addressModel.getAddressWithInitials());
         openTooltip(true);
     }
 
