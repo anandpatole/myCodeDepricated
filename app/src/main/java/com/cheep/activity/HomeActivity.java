@@ -49,6 +49,7 @@ import com.cheep.cheepcare.activity.ManageSubscriptionActivity;
 import com.cheep.cheepcare.activity.NotificationCcActivity;
 import com.cheep.cheepcare.adapter.PaymentHistoryCCAdapter;
 import com.cheep.cheepcare.fragment.ProfileTabFragment;
+import com.cheep.cheepcarenew.fragments.CheepCareRateCardFragment;
 import com.cheep.custom_view.BottomAlertDialog;
 import com.cheep.databinding.ActivityHomeBinding;
 import com.cheep.databinding.NavHeaderHomeBinding;
@@ -321,6 +322,7 @@ public class HomeActivity extends BaseAppCompatActivity
         list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.label_favourites), R.drawable.icon_fav_off, false, false));
         list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.tab_me), R.drawable.icon_logout, false, false));
         list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.label_payment_history), R.drawable.icon_history, false, false));
+        list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.Label_cheep_care_rate_card),R.drawable.icon_history,false,false));
         // TODO: Icon change Refer And Earn
         if (PreferenceUtility.getInstance(mContext).getUserDetails() != null)
             list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.label_refer_and_earn), R.drawable.icon_help, false, false));
@@ -436,7 +438,15 @@ public class HomeActivity extends BaseAppCompatActivity
                 Log.i(TAG, "onSlideMenuListItemClicked: " + slideMenuListModel.title + " is there");
             }
         }
-
+else if(slideMenuListModel.title.equals(getString(R.string.Label_cheep_care_rate_card)))
+        {
+            Fragment mFragment = getSupportFragmentManager().findFragmentByTag(ProfileTabFragment.TAG);
+            if (mFragment == null) {
+                loadFragment(CheepCareRateCardFragment.TAG, CheepCareRateCardFragment.newInstance());
+            } else {
+                Log.i(TAG, "onSlideMenuListItemClicked: " + slideMenuListModel.title + " is there");
+            }
+        }
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {

@@ -1,7 +1,6 @@
-package com.cheep.cheepcarenew.activities;
+package com.cheep.cheepcarenew.fragments;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.content.ClipData;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -40,7 +39,6 @@ import com.cheep.cheepcare.dialogs.BottomAddAddressDialog;
 import com.cheep.custom_view.BottomAlertDialog;
 import com.cheep.custom_view.DividerItemDecoration;
 import com.cheep.databinding.DialogChangePhoneNumberBinding;
-import com.cheep.databinding.FragmentProfileDetailsBinding;
 import com.cheep.databinding.FragmentProfileDetailsNewBinding;
 import com.cheep.firebase.FirebaseHelper;
 import com.cheep.firebase.FirebaseUtils;
@@ -53,7 +51,6 @@ import com.cheep.model.UserDetails;
 import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
-import com.cheep.utils.GlideUtility;
 import com.cheep.utils.GsonUtility;
 import com.cheep.utils.MediaUtility;
 import com.cheep.utils.PreferenceUtility;

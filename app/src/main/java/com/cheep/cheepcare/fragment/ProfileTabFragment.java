@@ -16,10 +16,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.cheep.R;
-import com.cheep.cheepcarenew.activities.ProfileDetailsFragmentnew;
+import com.cheep.cheepcarenew.fragments.ProfileDetailsFragmentnew;
 import com.cheep.databinding.FragmentProfileTabBinding;
 import com.cheep.fragment.BaseFragment;
-import com.cheep.fragment.ProfileDetailsFragment;
 import com.cheep.interfaces.DrawerLayoutInteractionListener;
 import com.cheep.utils.Utility;
 

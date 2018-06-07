@@ -141,6 +141,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_spent">Spent</string>
     <string name="label_payment_history">Payment History</string>
     <string name="label_my_payment_history">My Payment History</string>
+    <string name="Label_cheep_care_rate_card">Cheep Care Rate Card</string>
     <string name="label_total">Total</string>
     <string name="label_cheepest">Cheepest</string>
     <string name="label_distance">Distance</string>
