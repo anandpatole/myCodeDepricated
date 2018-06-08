@@ -402,8 +402,8 @@ public class HomeTabFragment extends BaseFragment {
                    /* if (mNotificationClickInteractionListener != null) {
                         mNotificationClickInteractionListener.onNotificationIconClicked();
                     }*/
-                    //showComparisionChartFragmentDialog();
-                    showPackageDetailModelFragmentDialog();
+                    showComparisionChartFragmentDialog();
+//                    showPackageDetailModelFragmentDialog();
                     break;
             }
         }

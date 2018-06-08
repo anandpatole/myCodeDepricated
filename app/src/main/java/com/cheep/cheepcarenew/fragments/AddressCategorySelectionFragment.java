@@ -93,7 +93,7 @@ public class AddressCategorySelectionFragment extends BaseFragment {
 
         } else {
             GuestUserDetails guestUserDetails = PreferenceUtility.getInstance(mContext).getGuestUserDetails();
-            if (guestUserDetails != null && !guestUserDetails.addressList.isEmpty()) {
+            if (guestUserDetails != null && guestUserDetails.addressList!=null && !guestUserDetails.addressList.isEmpty()) {
                 if (guestUserDetails.addressList.get(0) != null) {
                     addressModelArrayList = guestUserDetails.addressList;
                     setAddress();
