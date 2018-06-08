@@ -5,10 +5,11 @@
     <string name="hint_address_locality">Locality</string>
     <string name="hint_address_city">City</string>
     <string name="label_star">\u0020*</string>
-    <string name="label_hey_is_this_your_home_address">Hey, Is this your home address?</string>
-    <string name="label_do_you_want_the_cheep_care_package_for_this_address">Do you want the Cheep Care package for this address?</string>
+    <string name="label_hey_is_this_your_home_address">Hey, Is this your %1s address?</string>
     <string name="label_please_share_the_details_of_your_location">Please share the details of your location</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="message_coundnot_find_current_location">oops! could noy find your current location! Please try again.</string>
+    <string name="label_do_you_want_the_cheep_care_package_for_this_address">Do you want the Cheep Care package for this address?</string>
+    <string name="label_auto_detect_location_message">Our smart App has picked up this location automatically via GPS?</string>
 
 </resources>

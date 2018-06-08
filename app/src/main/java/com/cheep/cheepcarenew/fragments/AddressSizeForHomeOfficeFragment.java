@@ -13,24 +13,26 @@ import com.cheep.R;
 import com.cheep.cheepcarenew.activities.AddressActivity;
 import com.cheep.cheepcarenew.adapters.AddressOptionsRecyclerViewAdapter;
 import com.cheep.custom_view.GridSpacingItemDecoration;
-import com.cheep.custom_view.tooltips.ToolTipView;
 import com.cheep.databinding.ActivityAddressOptionForHomeOfficeBinding;
 import com.cheep.fragment.BaseFragment;
 import com.cheep.model.AddressModel;
+import com.cheep.utils.GsonUtility;
+import com.cheep.utils.Utility;
 
 import java.util.ArrayList;
 
-public class AddressOptionForHomeOfficeFragment extends BaseFragment {
+public class AddressSizeForHomeOfficeFragment extends BaseFragment {
 
     ActivityAddressOptionForHomeOfficeBinding mBinding;
-    private ToolTipView toolTipView;
     public static final String TAG = "AddressCategorySelectionFragment";
     private AddressOptionsRecyclerViewAdapter adapter;
     private ArrayList<AddressModel> list;
+    AddressModel addressModel;
 
-    public static AddressOptionForHomeOfficeFragment newInstance() {
+    public static AddressSizeForHomeOfficeFragment newInstance(AddressModel addressModel) {
         Bundle args = new Bundle();
-        AddressOptionForHomeOfficeFragment fragment = new AddressOptionForHomeOfficeFragment();
+        AddressSizeForHomeOfficeFragment fragment = new AddressSizeForHomeOfficeFragment();
+        args.putString(Utility.Extra.DATA, GsonUtility.getJsonStringFromObject(addressModel));
         fragment.setArguments(args);
         return fragment;
     }
@@ -51,6 +53,11 @@ public class AddressOptionForHomeOfficeFragment extends BaseFragment {
     @Override
     public void initiateUI() {
         setListeners();
+        if (getArguments() != null)
+            addressModel = (AddressModel) GsonUtility.getObjectFromJsonString(getArguments().getString(Utility.Extra.DATA), AddressModel.class);
+        if (addressModel == null)
+            return;
+
         mBinding.rvAddress.setLayoutManager(new GridLayoutManager(mContext, 2));
         adapter = new AddressOptionsRecyclerViewAdapter(getlist());
         mBinding.rvAddress.setAdapter(adapter);
@@ -67,8 +74,6 @@ public class AddressOptionForHomeOfficeFragment extends BaseFragment {
         mBinding.imgBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (toolTipView != null)
-                    toolTipView.remove();
                 ((AddressActivity) mContext).onBackPressed();
 
             }

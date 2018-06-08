@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
@@ -30,7 +31,11 @@ public class AddressActivity extends AppCompatActivity {
                 android.R.anim.fade_in,
                 android.R.anim.fade_out,
                 android.R.anim.fade_in,
-                android.R.anim.fade_out).replace(R.id.content, baseFragment, tag).addToBackStack(null).commitAllowingStateLoss();
+                android.R.anim.fade_out)
+                .replace(R.id.content, baseFragment, tag)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                .addToBackStack(null)
+                .commitAllowingStateLoss();
     }
 
     private static final String TAG = "AddressActivity";
@@ -38,7 +43,7 @@ public class AddressActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Log.e(TAG, "onBackPressed:  " + getSupportFragmentManager().getBackStackEntryCount());
+            Log.e(TAG, "onBackPressed:  " + getSupportFragmentManager().getBackStackEntryCount());
         if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
             finish();
         }

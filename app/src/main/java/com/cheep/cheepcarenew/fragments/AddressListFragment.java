@@ -1,5 +1,6 @@
 package com.cheep.cheepcarenew.fragments;
 
+import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -15,24 +16,31 @@ import com.cheep.cheepcarenew.adapters.AddressListRecyclerViewAdapter;
 import com.cheep.databinding.ActivityAddressListBinding;
 import com.cheep.fragment.BaseFragment;
 import com.cheep.model.AddressModel;
-import com.cheep.model.UserDetails;
-import com.cheep.utils.PreferenceUtility;
+import com.cheep.model.MessageEvent;
+import com.cheep.utils.GsonUtility;
+import com.cheep.utils.Utility;
 
 import java.util.ArrayList;
+
+import de.greenrobot.event.EventBus;
 
 public class AddressListFragment extends BaseFragment {
 
     ActivityAddressListBinding mBinding;
     public static final String TAG = "AddressListFragment";
     AddressListRecyclerViewAdapter adapter;
-    private ArrayList<AddressModel> list;
+    private ArrayList<AddressModel> list = new ArrayList<>();
+    private String category;
 
-    public static AddressListFragment newInstance() {
+    public static AddressListFragment newInstance(String category, String list) {
 
         Bundle args = new Bundle();
 
         AddressListFragment fragment = new AddressListFragment();
+        args.putString(Utility.Extra.DATA, category);
+        args.putString(Utility.Extra.DATA_2, list);
         fragment.setArguments(args);
+
         return fragment;
     }
 
@@ -43,6 +51,10 @@ public class AddressListFragment extends BaseFragment {
         return mBinding.getRoot();
     }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+    }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -53,11 +65,27 @@ public class AddressListFragment extends BaseFragment {
     @Override
     public void initiateUI() {
         setListeners();
+        list.clear();
+        if (getArguments() == null)
+            return;
+        category = getArguments().getString(Utility.Extra.DATA);
+        list.clear();
+        list.addAll(GsonUtility.<AddressModel>getObjectListFromJsonString(getArguments().getString(Utility.Extra.DATA_2), AddressModel[].class));
         mBinding.rvAddress.setNestedScrollingEnabled(false);
         mBinding.rvAddress.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
-        UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
-        adapter = new AddressListRecyclerViewAdapter(userDetails != null ? userDetails.addressList : getlist());
+        adapter = new AddressListRecyclerViewAdapter(list, new AddressListRecyclerViewAdapter.AddressItemClickListener() {
+            @Override
+            public void onClickItem(AddressModel addressModel) {
+                MessageEvent messageEvent = new MessageEvent();
+                messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.ADDRESS_SELECTED_POP_UP;
+                messageEvent.addressModel = addressModel;
+                EventBus.getDefault().postSticky(messageEvent);
+                ((AddressActivity) mContext).onBackPressed();
+
+            }
+        });
         mBinding.rvAddress.setAdapter(adapter);
+
     }
 
     @Override
@@ -65,48 +93,23 @@ public class AddressListFragment extends BaseFragment {
 
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
+
     protected void setListeners() {
         mBinding.imgBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ((AddressActivity) mContext).onBackPressed();
-
             }
         });
         mBinding.rlBottom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((AddressActivity) mContext).loadFragment(AddressOptionForHomeOfficeFragment.TAG, AddressOptionForHomeOfficeFragment.newInstance());
+                ((AddressActivity) mContext).loadFragment(AddNewAddressFragment.TAG, AddNewAddressFragment.newInstance(category));
             }
         });
-    }
-
-
-    public ArrayList<AddressModel> getlist() {
-        list = new ArrayList<>();
-        AddressModel addressModel = new AddressModel();
-        list.add(addressModel);
-        list.add(addressModel);
-        list.add(addressModel);
-        list.add(addressModel);
-        list.add(addressModel);
-        list.add(addressModel);
-        list.add(addressModel);
-        list.add(addressModel);
-        list.add(addressModel);
-        list.add(addressModel);
-        list.add(addressModel);
-        list.add(addressModel);
-        list.add(addressModel);
-        list.add(addressModel);
-        list.add(addressModel);
-        list.add(addressModel);
-        list.add(addressModel);
-        list.add(addressModel);
-        list.add(addressModel);
-        list.add(addressModel);
-        list.add(addressModel);
-        list.add(addressModel);
-        return list;
     }
 }

@@ -57,5 +57,7 @@ public class AddressModel implements Serializable {
     public String getNicknameString(Context context) {
         return !TextUtils.isEmpty(nickname) ? nickname : context.getString(Utility.getAddressCategoryString(category));
     }
+
 }
+
 

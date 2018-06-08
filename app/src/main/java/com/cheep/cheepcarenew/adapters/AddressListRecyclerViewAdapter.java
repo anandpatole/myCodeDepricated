@@ -2,7 +2,6 @@ package com.cheep.cheepcarenew.adapters;
 
 import android.databinding.DataBindingUtil;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +10,7 @@ import android.widget.RadioButton;
 import com.cheep.R;
 import com.cheep.databinding.RowAddressItemBinding;
 import com.cheep.model.AddressModel;
+import com.cheep.utils.Utility;
 
 import java.util.ArrayList;
 
@@ -23,12 +23,18 @@ public class AddressListRecyclerViewAdapter extends RecyclerView.Adapter<Address
     private ArrayList<AddressModel> mList;
     private String selected = "";
     private RadioButton selectedRadioBtn;
+    AddressItemClickListener addressItemClickListener;
 
-    public AddressListRecyclerViewAdapter(ArrayList<AddressModel> mList) {
+    public interface AddressItemClickListener {
+        void onClickItem(AddressModel addressModel);
+    }
+
+    public AddressListRecyclerViewAdapter(ArrayList<AddressModel> mList, AddressItemClickListener addressItemInteractionListener) {
         if (mList != null)
             this.mList = mList;
         else
             this.mList = new ArrayList<>();
+        this.addressItemClickListener = addressItemInteractionListener;
     }
 
     @Override
@@ -41,7 +47,10 @@ public class AddressListRecyclerViewAdapter extends RecyclerView.Adapter<Address
     public void onBindViewHolder(final AddressListRecyclerViewAdapter.ViewHolder holder, int position) {
 
         final AddressModel model = mList.get(holder.getAdapterPosition());
-
+        holder.mRowAddressBinding.tvAddressNickname.setText(holder.mView.getContext().getString(Utility.getAddressCategoryString(model.category))
+                + (position > 0 ? (Utility.ONE_CHARACTER_SPACE + position) : ""));
+        holder.mRowAddressBinding.ivHome.setImageResource(Utility.getAddressCategoryIcon(model.category));
+        holder.mRowAddressBinding.tvAddress.setText(model.getAddressWithInitials());
     }
 
     @Override
@@ -49,36 +58,6 @@ public class AddressListRecyclerViewAdapter extends RecyclerView.Adapter<Address
         return mList.size();
     }
 
-    public void delete(String address_id) {
-        if (mList.size() > 0 && !TextUtils.isEmpty(address_id)) {
-            for (int i = 0; i < mList.size(); i++) {
-                if (mList.get(i).address_id.equalsIgnoreCase(address_id)) {
-                    mList.remove(i);
-                    notifyItemRemoved(i);
-                    break;
-                }
-            }
-        }
-    }
-
-    public void delete(AddressModel addressModel) {
-        if (mList.size() > 0 && mList.contains(addressModel)) {
-            mList.remove(addressModel);
-            notifyDataSetChanged();
-        }
-    }
-
-    public void updateItem(AddressModel addressModel) {
-        if (mList.size() > 0 && addressModel != null && !TextUtils.isEmpty(addressModel.address_id)) {
-            for (int i = 0; i < mList.size(); i++) {
-                if (mList.get(i).address_id.equalsIgnoreCase(addressModel.address_id)) {
-                    mList.set(i, addressModel);
-                    notifyItemChanged(i);
-                    break;
-                }
-            }
-        }
-    }
 
     public ArrayList<AddressModel> getmList() {
         return mList;
@@ -92,17 +71,6 @@ public class AddressListRecyclerViewAdapter extends RecyclerView.Adapter<Address
         notifyDataSetChanged();
     }
 
-    /**
-     * Used to select current row based on address id, we are checking the position where address is stored.
-     *
-     * @param selectedAddressId
-     */
-    public void setSelectedAddressId(String selectedAddressId) {
-        if (!TextUtils.isEmpty(selectedAddressId)) {
-            selected = selectedAddressId;
-        }
-    }
-
     class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
         public final RowAddressItemBinding mRowAddressBinding;
@@ -111,6 +79,12 @@ public class AddressListRecyclerViewAdapter extends RecyclerView.Adapter<Address
             super(binding.getRoot());
             mView = binding.getRoot();
             mRowAddressBinding = binding;
+            mRowAddressBinding.getRoot().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    addressItemClickListener.onClickItem(getmList().get(getAdapterPosition()));
+                }
+            });
         }
     }
 
