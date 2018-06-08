@@ -320,11 +320,12 @@ public class HomeActivity extends BaseAppCompatActivity
         ArrayList<SlideMenuListModel> list = new ArrayList<>();
         list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.label_home), R.drawable.icon_side_home_blue, true, false));
         list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.label_favourites), R.drawable.icon_fav_off, false, false));
-        list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.tab_me), R.drawable.icon_logout, false, false));
+
         list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.label_payment_history), R.drawable.icon_history, false, false));
         list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.Label_cheep_care_rate_card),R.drawable.icon_history,false,false));
         // TODO: Icon change Refer And Earn
         if (PreferenceUtility.getInstance(mContext).getUserDetails() != null)
+            list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.tab_me), R.drawable.icon_logout, false, false));
             list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.label_refer_and_earn), R.drawable.icon_help, false, false));
         list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.label_help), R.drawable.icon_help, false, true));
         list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.label_faq), R.drawable.icon_faq, false, false));

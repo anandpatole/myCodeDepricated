@@ -9,6 +9,7 @@ import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.databinding.DataBindingUtil;
+import android.graphics.Bitmap;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
@@ -30,6 +31,9 @@ import android.widget.EditText;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.cheep.BuildConfig;
 import com.cheep.R;
 import com.cheep.activity.HomeActivity;
@@ -51,6 +55,7 @@ import com.cheep.model.UserDetails;
 import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
+import com.cheep.utils.GlideUtility;
 import com.cheep.utils.GsonUtility;
 import com.cheep.utils.MediaUtility;
 import com.cheep.utils.PreferenceUtility;
@@ -77,8 +82,10 @@ import java.util.Map;
 
 import static android.app.Activity.RESULT_OK;
 import static com.cheep.R.id.edit_username;
+import static com.cheep.R.id.on;
 import static com.cheep.utils.Utility.REQUEST_CODE_CROP_GET_FILE_ADD_PROFILE;
 import static com.cheep.utils.Utility.REQUEST_CODE_IMAGE_CAPTURE_ADD_PROFILE;
+import static com.cheep.utils.Utility.getApplicationVersion;
 
 /**
  * Created by pankaj on 9/27/16.
@@ -92,6 +99,7 @@ public class ProfileDetailsFragmentnew extends BaseFragment {
     private JSONArray jsonEmergencyContacts;
     private ArrayList<AddressModel> addressList;
     private DrawerLayoutInteractionListener mListener;
+
     //    private String mCurrentPhotoPath;
     private File photoFile;
 
@@ -113,8 +121,8 @@ public class ProfileDetailsFragmentnew extends BaseFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-       // initiateUI();
-       // setListener();
+        initiateUI();
+       setListener();
     }
 
     @Override
@@ -155,8 +163,7 @@ public class ProfileDetailsFragmentnew extends BaseFragment {
         //Fetch User Details from Preference
         UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
 
-        //mBinding.textVersion.setText(getString(R.string.label_version_x, Utility.getApplicationVersion(mContext)));
-
+        //mBinding.textVersion.setText(getString(R.string.label_version_x, Utility.getApplicationVersion(mContext)
         fillFields(userDetails);
 
         /*//loading banner image
@@ -176,13 +183,24 @@ public class ProfileDetailsFragmentnew extends BaseFragment {
         if (PreferenceUtility.getInstance(mContext).getUserDetails() != null) {
             //loading rounded image on profile
             loadImage(userDetails.profileImg);
-            loadCoverImage(userDetails.profileBanner);
+          //  loadCoverImage(userDetails.profileBanner);
 
             //Update Name
-           // mBinding.userName.setText(userDetails.userName);
+            mBinding.textRating.setText("3");
+            mBinding.userRating.setRating(3);
+            mBinding.userName.setText(userDetails.userName);
+mBinding.textPhoneNo.setText(userDetails.phoneNumber);
+            mBinding.textEmail.setText(userDetails.email);
+            if(addressList!=null)
+            {
+                for (AddressModel s : addressList) {
+                    if (s.category.equalsIgnoreCase("home")) {
+                        mBinding.textHomeAddress.setText(s.address);
+                    }
+                }
+            }
 
-            //Update email
-            //mBinding.textEmail.setText(userDetails.email);
+
         } else {
             // Static details for Guest Users
           //  mBinding.userName.setText(Utility.GUEST_STATIC_INFO.USERNAME);
@@ -198,9 +216,12 @@ public class ProfileDetailsFragmentnew extends BaseFragment {
         mBinding.textManageAddress.setOnClickListener(onClickListener);
 //        mBinding.textChangePassword.setOnClickListener(onClickListener);
         mBinding.imgEditUsername.setOnClickListener(onClickListener);
-        mBinding.imgEditEmail.setOnClickListener(onClickListener);
+        mBinding.imgEditEmail.setOnClickListener(onClickListener);*/
         mBinding.imgProfilePhotoEdit.setOnClickListener(onClickListener);
-        mBinding.imgCoverPhotoEdit.setOnClickListener(onClickListener);*/
+      //  mBinding.imgCoverPhotoEdit.setOnClickListener(onClickListener);
+        mBinding.textAddContact.setOnClickListener(onClickListener);
+        mBinding.textViewMore.setOnClickListener(onClickListener);
+        mBinding.labelAddNewAddress.setOnClickListener(onClickListener);
     }
 
     View.OnClickListener onClickListener = new View.OnClickListener() {
@@ -211,6 +232,15 @@ public class ProfileDetailsFragmentnew extends BaseFragment {
               /*  case R.id.text_phone_number:
                     showChangePhoneNumberDialog();
                     break;*/
+                case R.id.text_add_contact:
+                    showChangeEmergencyContactDialog();
+                    break;
+                case R.id.text_view_more:
+                  showAddressDialog();
+                  break;
+                case R.id.label_add_new_address:
+                    showAddressDialog();
+                    break;
                 case R.id.text_emergency_contact:
                     showChangeEmergencyContactDialog();
                     break;
@@ -258,21 +288,21 @@ public class ProfileDetailsFragmentnew extends BaseFragment {
                         // The 'which' argument contains the index position
                         // of the selected item
                         if (which == 0) {
-                            if (!isForBanner) {
+                           /* if (!isForBanner) {*/
                                 dispatchTakePictureIntent(REQUEST_CODE_IMAGE_CAPTURE_ADD_PROFILE, Utility.REQUEST_CODE_WRITE_EXTERNAL_STORAGE_ADD_PROFILE_CAMERA);
-                            } else {
+                         /*   } else {
                                 dispatchTakePictureIntent(Utility.REQUEST_CODE_IMAGE_CAPTURE_ADD_COVER, Utility.REQUEST_CODE_WRITE_EXTERNAL_STORAGE_ADD_PROFILE_CAMERA);
 
-                            }
+                            }*/
                         } else {
-                            if (!isForBanner) {
+                           /* if (!isForBanner) {*/
                                 //Select Gallery
                                 // In case Choose File from Gallery
                                 choosePictureFromGallery(Utility.REQUEST_CODE_GET_FILE_ADD_PROFILE_GALLERY, Utility.REQUEST_CODE_READ_EXTERNAL_STORAGE_ADD_PROFILE_GALLERY);
-                            } else {
+                           /* } else {
                                 //Cover
                                 choosePictureFromGallery(Utility.REQUEST_CODE_GET_FILE_ADD_COVER_GALLERY, Utility.REQUEST_CODE_READ_EXTERNAL_STORAGE_ADD_COVER);
-                            }
+                            }*/
                         }
                     }
                 });
@@ -471,6 +501,8 @@ public class ProfileDetailsFragmentnew extends BaseFragment {
         final EditText edtContactNumber1 = (EditText) view.findViewById(R.id.edit_contact_number_1);
         final EditText edtContactName2 = (EditText) view.findViewById(R.id.edit_contact_name_2);
         final EditText edtContactNumber2 = (EditText) view.findViewById(R.id.edit_contact_number_2);
+        final EditText edtContactName3 = (EditText) view.findViewById(R.id.edit_contact_name_3);
+        final EditText edtContactNumber3 = (EditText) view.findViewById(R.id.edit_contact_number_3);
 
         if (jsonEmergencyContacts != null) {
             if (jsonEmergencyContacts.length() > 0) {
@@ -481,6 +513,10 @@ public class ProfileDetailsFragmentnew extends BaseFragment {
                 edtContactName2.setText(jsonEmergencyContacts.optJSONObject(1).optString(NetworkUtility.TAGS.NAME));
                 edtContactNumber2.setText(jsonEmergencyContacts.optJSONObject(1).optString(NetworkUtility.TAGS.NUMBER));
             }
+            if (jsonEmergencyContacts.length() > 2) {
+                edtContactName3.setText(jsonEmergencyContacts.optJSONObject(2).optString(NetworkUtility.TAGS.NAME));
+                edtContactNumber3.setText(jsonEmergencyContacts.optJSONObject(2).optString(NetworkUtility.TAGS.NUMBER));
+            }
         }
 
         final BottomAlertDialog dialog = new BottomAlertDialog(mContext);
@@ -490,10 +526,13 @@ public class ProfileDetailsFragmentnew extends BaseFragment {
 
                 String number1 = edtContactNumber1.getText().toString().trim();
                 String number2 = edtContactNumber2.getText().toString().trim();
+                String number3 = edtContactNumber3.getText().toString().trim();
                 if (TextUtils.isEmpty(edtContactName1.getText().toString().trim()) &&
                         TextUtils.isEmpty(edtContactNumber1.getText().toString().trim()) &&
                         TextUtils.isEmpty(edtContactName2.getText().toString().trim()) &&
-                        TextUtils.isEmpty(edtContactNumber2.getText().toString().trim())
+                        TextUtils.isEmpty(edtContactNumber2.getText().toString().trim()) &&
+                                TextUtils.isEmpty(edtContactName3.getText().toString().trim()) &&
+                                TextUtils.isEmpty(edtContactNumber3.getText().toString().trim())
                         ) {
                     Utility.showToast(mContext, getString(R.string.validate_phone_number));
                 } else if (TextUtils.isEmpty(edtContactName1.getText().toString().trim()) && !TextUtils.isEmpty(edtContactNumber1.getText().toString().trim())
@@ -506,7 +545,14 @@ public class ProfileDetailsFragmentnew extends BaseFragment {
                         !TextUtils.isEmpty(edtContactName2.getText().toString().trim()) && TextUtils.isEmpty(edtContactNumber2.getText().toString().trim())
                         ) {
                     Utility.showToast(mContext, getString(R.string.validate_phone_number));
-                } else if (number1.equals(number2)) {
+                }
+                else if (TextUtils.isEmpty(edtContactName3.getText().toString().trim()) && !TextUtils.isEmpty(edtContactNumber3.getText().toString().trim())
+                        ||
+                        !TextUtils.isEmpty(edtContactName3.getText().toString().trim()) && TextUtils.isEmpty(edtContactNumber3.getText().toString().trim())
+                        ) {
+                    Utility.showToast(mContext, getString(R.string.validate_phone_number));
+                }
+                else if (number1.equals(number2) || number2.equals(number3) || number3.equals(number1)) {
                     Utility.showToast(mContext, getString(R.string.validate_phone_number_different));
                 } else {
 
@@ -523,6 +569,12 @@ public class ProfileDetailsFragmentnew extends BaseFragment {
                             jsonObject = new JSONObject();
                             jsonObject.put(NetworkUtility.TAGS.NAME, edtContactName2.getText().toString().trim());
                             jsonObject.put(NetworkUtility.TAGS.NUMBER, edtContactNumber2.getText().toString().trim());
+                            jsonArray.put(jsonObject);
+                        }
+                        if (!TextUtils.isEmpty(edtContactName3.getText().toString().trim())) {
+                            jsonObject = new JSONObject();
+                            jsonObject.put(NetworkUtility.TAGS.NAME, edtContactName3.getText().toString().trim());
+                            jsonObject.put(NetworkUtility.TAGS.NUMBER, edtContactNumber3.getText().toString().trim());
                             jsonArray.put(jsonObject);
                         }
                     } catch (JSONException e) {
@@ -1034,8 +1086,8 @@ public class ProfileDetailsFragmentnew extends BaseFragment {
         if (PreferenceUtility.getInstance(mContext).getUserDetails() == null) {
             return;
         }
-        //Show Progress
-//        showProgressDialog();
+        //        //Show Progress
+        //showProgressDialog();
 
         //Add Header parameters
         Map<String, String> mHeaderParams = new HashMap<>();
@@ -1071,13 +1123,13 @@ public class ProfileDetailsFragmentnew extends BaseFragment {
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
 
                         JSONObject jsonData = jsonObject.getJSONObject(NetworkUtility.TAGS.DATA);
-
                         UserDetails userDetails = (UserDetails) GsonUtility.getObjectFromJsonString(jsonData.toString(), UserDetails.class);
                         PreferenceUtility.getInstance(mContext).saveUserDetails(jsonData);
-                        fillFields(userDetails);
-
                         jsonEmergencyContacts = jsonData.optJSONArray(NetworkUtility.TAGS.EMERGENCY_DATA);
                         addressList = GsonUtility.getObjectListFromJsonString(jsonData.optJSONArray(NetworkUtility.TAGS.ADDRESS).toString(), AddressModel[].class);
+                        fillFields(userDetails);
+
+
 
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
@@ -1521,7 +1573,7 @@ public class ProfileDetailsFragmentnew extends BaseFragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        /*if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             if (resultCode == RESULT_OK) {
                 Uri resultUri = result.getUri();
@@ -1532,7 +1584,7 @@ public class ProfileDetailsFragmentnew extends BaseFragment {
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 Exception error = result.getError();
             }
-        }*/
+        }
 
 
 //        Log.i(TAG, "onActivityResult: " + data.getData().toString());
@@ -1743,34 +1795,34 @@ public class ProfileDetailsFragmentnew extends BaseFragment {
     }
 
     private void loadImage(String selectedImagePath) {
-       // GlideUtility.showCircularImageView(mContext, TAG, mBinding.imgProfile, selectedImagePath, Utility.DEFAULT_PROFILE_SRC, true);
+        GlideUtility.showCircularImageView(mContext, TAG, mBinding.imgProfileNew, selectedImagePath, Utility.DEFAULT_PROFILE_SRC, true);
 
-       /* if (!TextUtils.isEmpty(selectedImagePath))
-        {
-            Glide
-                    .with(mContext)
-                    .load(selectedImagePath)
-                    .asBitmap()
-                    .into(new SimpleTarget<Bitmap>() {
-                        @Override
-                        public void onResourceReady(Bitmap originalBitmap, GlideAnimation<? super Bitmap> glideAnimation) {
-                            // you can do something with loaded bitmap here
-
-                            Bitmap U8_4Bitmap;
-                            if (originalBitmap.getConfig() == Bitmap.Config.ARGB_8888) {
-                                U8_4Bitmap = originalBitmap;
-                            } else {
-                                U8_4Bitmap = originalBitmap.copy(Bitmap.Config.ARGB_8888, true);
-                            }
-
-                            mBinding.imgBanner.setImageBitmap(originalBitmap);
-                        }
-                    });
-        }*/
+//        if (!TextUtils.isEmpty(selectedImagePath))
+//        {
+//            Glide
+//                    .with(mContext)
+//                    .load(selectedImagePath)
+//                    .asBitmap()
+//                    .into(new SimpleTarget<Bitmap>() {
+//                        @Override
+//                        public void onResourceReady(Bitmap originalBitmap, GlideAnimation<? super Bitmap> glideAnimation) {
+//                            // you can do something with loaded bitmap here
+//
+//                            Bitmap U8_4Bitmap;
+//                            if (originalBitmap.getConfig() == Bitmap.Config.ARGB_8888) {
+//                                U8_4Bitmap = originalBitmap;
+//                            } else {
+//                                U8_4Bitmap = originalBitmap.copy(Bitmap.Config.ARGB_8888, true);
+//                            }
+//
+//                            mBinding.imgBanner.setImageBitmap(originalBitmap);
+//                        }
+//                    });
+//        }
     }
 
     private void loadCoverImage(String selectedImagePath) {
-      //  GlideUtility.loadImageView(mContext, mBinding.imgBanner, selectedImagePath, 0);
+      GlideUtility.loadImageView(mContext, mBinding.imgProfileNew, selectedImagePath, R.drawable.icon_profile_img_solid);
     }
 
 //    private void showGuestProfile(boolean flag) {

@@ -142,13 +142,13 @@ public class ReviewsOfMeFragment extends BaseFragment {
 
     private void setHeaderData(RateAndReviewModel.ReviewSummaryData reviewSummary) {
         if(reviewSummary!=null){
-            mBinding.reviewOfMeHeader.ratingAndReview.setText(getString(R.string.label_rating_and_review_number,reviewSummary.ratingCount,reviewSummary.reviewCommentCount));
+           /* mBinding.reviewOfMeHeader.ratingAndReview.setText(getString(R.string.label_rating_and_review_number,reviewSummary.ratingCount,reviewSummary.reviewCommentCount));
             mBinding.reviewOfMeHeader.averageRating.setText(getString(R.string.label_rating_number,String.format("%.1f",Float.parseFloat(reviewSummary.avgRatings))));
             mBinding.reviewOfMeHeader.progress1Star.setProgress((Integer.parseInt(reviewSummary.star1))/(Integer.parseInt(reviewSummary.ratingCount))*100);
             mBinding.reviewOfMeHeader.progress2Star.setProgress((Integer.parseInt(reviewSummary.star2))/(Integer.parseInt(reviewSummary.ratingCount))*100);
             mBinding.reviewOfMeHeader.progress3Star.setProgress((Integer.parseInt(reviewSummary.star3))/(Integer.parseInt(reviewSummary.ratingCount))*100);
             mBinding.reviewOfMeHeader.progress4Star.setProgress((Integer.parseInt(reviewSummary.star4))/(Integer.parseInt(reviewSummary.ratingCount))*100);
-            mBinding.reviewOfMeHeader.progress5Star.setProgress((Integer.parseInt(reviewSummary.star5))/(Integer.parseInt(reviewSummary.ratingCount))*100);
+            mBinding.reviewOfMeHeader.progress5Star.setProgress((Integer.parseInt(reviewSummary.star5))/(Integer.parseInt(reviewSummary.ratingCount))*100);*/
 
         }
         else {

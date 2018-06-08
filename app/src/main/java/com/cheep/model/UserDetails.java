@@ -13,6 +13,7 @@ import java.util.ArrayList;
 @Keep
 public class UserDetails {
 
+
     @SerializedName("user_id")
     public String userID;
 
