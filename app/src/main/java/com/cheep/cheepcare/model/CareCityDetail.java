@@ -12,12 +12,13 @@ import java.util.List;
 @Keep
 public class CareCityDetail implements Serializable {
 
-    @SerializedName("landing_screen_tip_title")
+   /* @SerializedName("landing_screen_tip_title")
     @Expose
     public String landingScreenTipTitle;
     @SerializedName("landing_screen_tip_subtitle")
     @Expose
-    public String landingScreenTipSubtitle;
+    public String landingScreenTipSubtitle;*/
+
     @SerializedName("landing_screen_title_1")
     @Expose
     public String landingScreenTitle1;

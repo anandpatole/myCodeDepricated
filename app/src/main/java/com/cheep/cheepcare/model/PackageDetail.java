@@ -42,6 +42,9 @@ public class PackageDetail implements Parent<JobCategoryModel>, Serializable {
     @SerializedName("image")
     public String packageImage;
 
+    @SerializedName("type")
+    public String type;
+
 
     @SerializedName("live_lable_arr")
     public List<String> live_lable_arr;

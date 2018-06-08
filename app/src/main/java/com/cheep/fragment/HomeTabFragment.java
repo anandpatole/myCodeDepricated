@@ -44,6 +44,7 @@ import com.cheep.cheepcare.fragment.SubscriptionBannerFragment;
 import com.cheep.cheepcare.model.CareCityDetail;
 import com.cheep.cheepcarenew.activities.LandingScreenPickPackageActivity;
 import com.cheep.cheepcarenew.dialogs.ComparisionChartFragmentDialog;
+import com.cheep.cheepcarenew.dialogs.PackageDetailModelDialog;
 import com.cheep.databinding.FragmentTabHomeBinding;
 import com.cheep.databinding.LayoutFilterHomePopupBinding;
 import com.cheep.interfaces.DrawerLayoutInteractionListener;
@@ -102,8 +103,9 @@ public class HomeTabFragment extends BaseFragment {
     private ArrayList<BannerImageModel> bannerImageModelArrayList;
     public ArrayList<CareCityDetail> careBannerModelArrayList;
     private String mSelectedFilterType = Utility.FILTER_TYPES.FILTER_TYPE_FEATURED;
-
+   // written by majid 106 to 108
     private ComparisionChartFragmentDialog comparisionChartFragmentDialog;
+    private PackageDetailModelDialog packageDetailModelDialog;
 
     public String getmSelectedFilterType() {
         return mSelectedFilterType;
@@ -400,7 +402,8 @@ public class HomeTabFragment extends BaseFragment {
                    /* if (mNotificationClickInteractionListener != null) {
                         mNotificationClickInteractionListener.onNotificationIconClicked();
                     }*/
-                    showComparisionChartFragmentDialog();
+                    //showComparisionChartFragmentDialog();
+                    showPackageDetailModelFragmentDialog();
                     break;
             }
         }
@@ -414,6 +417,15 @@ public class HomeTabFragment extends BaseFragment {
         }
         comparisionChartFragmentDialog = ComparisionChartFragmentDialog.newInstance("","");
         comparisionChartFragmentDialog.show(getActivity().getSupportFragmentManager(), TAG);
+    }
+    // open show Package Detail Model Fragment Dialog
+    private void showPackageDetailModelFragmentDialog() {
+        if (packageDetailModelDialog != null) {
+            packageDetailModelDialog.dismissAllowingStateLoss();
+            packageDetailModelDialog = null;
+        }
+        packageDetailModelDialog = PackageDetailModelDialog.newInstance("","");
+        packageDetailModelDialog.show(getActivity().getSupportFragmentManager(), TAG);
     }
 
 

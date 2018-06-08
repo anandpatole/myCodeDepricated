@@ -53,7 +53,7 @@ public class CheepCarePackageAdapter extends LoadMoreRecyclerAdapter<CheepCarePa
                 .into(holder.mBinding.ivItemBackground);
 
         int resId = R.drawable.gif_ballon_home_price;
-       /* switch (model.packageSlug) {
+        /*switch (model.packageSlug) {
             case NetworkUtility.CARE_PACKAGE_SLUG.HOME_CARE:
                 resId = R.drawable.gif_ballon_home_price;
                 break;
@@ -70,6 +70,16 @@ public class CheepCarePackageAdapter extends LoadMoreRecyclerAdapter<CheepCarePa
                 resId = R.drawable.gif_ballon_soci_price;
                 break;
         }*/
+        switch (model.type){
+            case NetworkUtility.PACKAGE_DETAIL_TYPE.premium:
+                holder.mBinding.tvPremiumAndNormal.setText("Early bird Offer");
+                holder.mBinding.tvVip.setVisibility(View.VISIBLE);
+                break;
+            case NetworkUtility.PACKAGE_DETAIL_TYPE.normal:
+                holder.mBinding.tvPremiumAndNormal.setText("Valid for 3 month");
+                holder.mBinding.tvVip.setVisibility(View.GONE);
+                break;
+        }
         Glide.with(holder.mBinding.getRoot().getContext())
                 .load(resId)
                 .asGif()

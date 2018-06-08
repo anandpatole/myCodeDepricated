@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" 
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    
-    
+    android:layout_height="@dimen/scale_70dp"
+    android:orientation="vertical">
+
+
     <LinearLayout
+        android:id="@+id/linear"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/scale_100dp"
+        android:layout_height="match_parent"
+        android:background="@color/gray_chart_lower"
         android:weightSum="3">
 
         <LinearLayout
@@ -14,22 +18,82 @@
             android:layout_height="match_parent"
             android:layout_weight="1.2">
 
+            <com.cheep.custom_view.CFTextViewRegular
+                android:id="@+id/tv_benefits_features"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="@dimen/scale_4dp"
+                android:layout_marginLeft="@dimen/scale_4dp"
+                android:layout_marginRight="@dimen/scale_4dp"
+                android:layout_marginStart="@dimen/scale_4dp"
+                android:gravity="center"
+                android:text="@string/hotline_message_image_Saved"
+                android:textColor="@color/cheep_tips_black"
+                android:textSize="@dimen/text_size_13sp" />
+
         </LinearLayout>
+
+        <com.cheep.custom_view.CFTextViewBold
+            android:id="@+id/tv_line3"
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@color/c_60p_opacity_3A3A3A" />
+
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="0.9">
+            android:layout_weight="1"
+            android:background="@color/light_center"
+            android:gravity="center">
+
+            <ImageView
+                android:id="@+id/imagePremium"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:src="@drawable/verified_icon"
+                tools:ignore="ContentDescription"
+                android:visibility="gone" />
+            <com.cheep.custom_view.CFTextViewRegular
+                android:id="@+id/tvPremium"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="@dimen/scale_4dp"
+                android:layout_marginLeft="@dimen/scale_4dp"
+                android:layout_marginRight="@dimen/scale_4dp"
+                android:layout_marginStart="@dimen/scale_4dp"
+                android:gravity="center"
+                android:textColor="@color/cheep_tips_black"
+                android:textSize="@dimen/text_size_13sp" />
 
         </LinearLayout>
+        <com.cheep.custom_view.CFTextViewBold
+            android:id="@+id/tv_line4"
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@color/c_60p_opacity_3A3A3A" />
+
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="0.9">
+            android:layout_weight="0.8">
+
+            <com.cheep.custom_view.CFTextViewRegular
+                android:id="@+id/tv_cheep_care_package"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="@dimen/scale_4dp"
+                android:layout_marginLeft="@dimen/scale_4dp"
+                android:layout_marginRight="@dimen/scale_4dp"
+                android:layout_marginStart="@dimen/scale_4dp"
+                android:gravity="center"
+                android:text="@string/hotline_message_image_Saved"
+                android:textColor="@color/cheep_tips_black"
+                android:textSize="@dimen/text_size_14sp" />
 
         </LinearLayout>
-
 
 
     </LinearLayout>
 
-</RelativeLayout>
+
+   </LinearLayout>

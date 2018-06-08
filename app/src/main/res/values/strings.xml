@@ -799,4 +799,35 @@ maintenance problems to our skilled PRO's !</string>
 without any hidden charges. Try it now!</string>
     <string name="cheep_care_landing">Here\'s why lakhs of families use Cheep Care</string>
 
+    <string name="comparision_message">Get MUCH MORE by paying little extra. Check the HUGE benefits of becoming a Premium Member for as little as ₹300 only!</string>
+
+
+
+    <string-array name="benefits_features_dummy">
+        <item>Extended Service Warranty of 14 days</item>
+        <item>Enhanced Insurance Cover of ₹25,000 per job</item>
+        <item>Dedicated 24x7 Relationship Manager</item>
+        <item>Same Day Service</item>
+        <item>Zero Extra Fees for Emergency Services </item>
+        <item>Quarterly Pest Control Services </item>
+        <item>10% discount on Labour Charges for all Major Jobs </item>
+    </string-array>
+    <string-array name="cheep_care_package_dummy">
+        <item>7 days</item>
+        <item>Only ₹10,000</item>
+        <item>NA</item>
+        <item>Within 24 hours</item>
+        <item>₹500 Extra </item>
+        <item>NA</item>
+        <item>No discount</item>
+    </string-array>
+    <string name="benefits_features">Benefits/ Features</string>
+    <string name="cheep_care_package">Cheep Care Package</string>
+    <string name="cheep_premium_care_package">Cheep Premium Care Package</string>
+    <string name="price">₹499/MTH</string>
+    <string name="book_now">Book now</string>
+    <string name="sounds_good">Sounds Good </string>
+    <string name="heading1">The Badge says it all.</string>
+    <string name="heading2">Your satisfaction is \n everything. Period! </string>
+
 </resources>

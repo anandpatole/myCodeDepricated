@@ -162,6 +162,11 @@ public class NetworkUtility {
         public static final String VOTE_CITY_FOR_CHEEP_CARE = BASE_URL + "customers/care/voteCityForCheepCare";
 
 
+        // majid khan
+        public static final String GET_PACKAGE_FEATURE_LIST = BASE_URL + "customers/care/getPackageFeatureList";
+        public static final String GET_BADGE_MESSAGE = BASE_URL + "customers/care/getBadgeMessage";
+
+
         /**
          * this is ws is used for fetching  types of rating to be submitted
          * also when user has submitted values for rating this ws will be used to fetch those datas
@@ -617,6 +622,10 @@ public class NetworkUtility {
         String SOCI_CARE = "socicare";
         String TECH_CARE = "techcare";
         String APPLIANCE_CARE = "appliancecare";
+    }
+    public interface PACKAGE_DETAIL_TYPE{
+        String premium = "premium";
+        String normal = "normal";
     }
 
 

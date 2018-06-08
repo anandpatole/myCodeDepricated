@@ -215,8 +215,8 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
         mBinding.tvGoodMorningText.setText(spannableStringBuilder);
 
         // writing by majid khan 217 to 222
-        mBinding.tvLandingScreenTipTitle.setText(mCityLandingPageModel.careCityDetail.landingScreenTipTitle);
-        mBinding.tvLandingScreenTipSubtitle.setText(mCityLandingPageModel.careCityDetail.landingScreenTipSubtitle);
+        mBinding.tvLandingScreenTipTitle.setText(mCityLandingPageModel.packageTip.title);
+        mBinding.tvLandingScreenTipSubtitle.setText(mCityLandingPageModel.packageTip.subtitle);
         mBinding.tvLandingScreenTitle1.setText(mCityLandingPageModel.careCityDetail.landingScreenTitle1);
         mBinding.tvLandingScreenTitle2.setText(mCityLandingPageModel.careCityDetail.landingScreenTitle2);
         mBinding.imgCheepTips.setVisibility(View.VISIBLE);
