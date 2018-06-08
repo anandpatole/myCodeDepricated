@@ -1,5 +1,6 @@
 package com.cheep.cheepcare.model;
 
+import com.cheep.model.PackageTip;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -22,6 +23,10 @@ public class CityLandingPageModel {
     @SerializedName("packageDetail")
     @Expose
     public List<PackageDetail> packageDetailList = null;
+
+    @SerializedName("packageTip")
+    @Expose
+    public PackageTip packageTip = null;
 
 
     public class CityTutorials {

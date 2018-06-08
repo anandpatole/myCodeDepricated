@@ -7,6 +7,7 @@
     <color name="colorAccent">#000000</color>
     <!--#60007BD8-->
     <color name="transparent">#00000000</color>
+    <color name="transparent_color">#80000000</color>
 
     <color name="blue_varient_5">#e0effe</color>
     <color name="blue_varient_4">#9ABAD7</color>
@@ -132,6 +133,12 @@
 
     <color name="cheep_tips_color">#FF006DDA</color>
     <color name="cheep_tips_black">#FF000000</color>
+    <color name="gray_chart_upper">#06FFCC01</color>
+    <color name="gray_chart_lower">#20646460</color>
+    <color name="light_center">#66FFCC01</color>
+    <color name="header_yellow">#FFFFCC01</color>
+    <color name="premium">#E54C4C</color>
+    <color name="heading_color">#FFED2431</color>
     <!--test-->
     <!--<color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>

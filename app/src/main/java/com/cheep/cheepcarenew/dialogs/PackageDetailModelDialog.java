@@ -2,20 +2,14 @@ package com.cheep.cheepcarenew.dialogs;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.Context;
-import android.graphics.Color;
-import android.media.Image;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
-import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -32,25 +26,24 @@ import com.cheep.utils.Utility;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-
-public class ComparisionChartFragmentDialog extends DialogFragment {
-
-    public static final String TAG = ComparisionChartFragmentDialog.class.getSimpleName();
-    private ArrayList<ComparisionChartModel> comparisionChartsList;
-    private ComparisionChatAdapter adapter;
-    private RecyclerView recyclerView;
+public class PackageDetailModelDialog extends DialogFragment {
+    public static final String TAG = PackageDetailModelDialog.class.getSimpleName();
     private RelativeLayout rootLayout;
     private ProgressDialog mProgressDialog;
 
-    public static ComparisionChartFragmentDialog newInstance(String param1, String param2) {
-        ComparisionChartFragmentDialog fragment = new ComparisionChartFragmentDialog();
+    private TextView tvData;
+
+    public PackageDetailModelDialog() {
+        // Required empty public constructor
+    }
+
+    public static PackageDetailModelDialog newInstance(String param1, String param2) {
+        PackageDetailModelDialog fragment = new PackageDetailModelDialog();
         Bundle args = new Bundle();
-       /* args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);*/
+
         fragment.setArguments(args);
         return fragment;
     }
@@ -75,30 +68,11 @@ public class ComparisionChartFragmentDialog extends DialogFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_comparsion_chart_fragment_dialog, container, false);
-        rootLayout = view.findViewById(R.id.rootLayout);
-        recyclerView = view.findViewById(R.id.recycler_view);
-
-        callGetPackageFeatureListDetailWS();
-
-        if (comparisionChartsList == null) {
-            comparisionChartsList = new ArrayList<>();
-        }
+        View view = inflater.inflate(R.layout.fragment_package_detail_model_dialog, container, false);
+        initView(view);
+        callGetPackageDetailModelDataWS();
 
         return view;
-    }
-
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-
     }
 
     @Override
@@ -116,76 +90,11 @@ public class ComparisionChartFragmentDialog extends DialogFragment {
 
     }
 
-    private void loadData() {
-        recyclerView.setHasFixedSize(true);
-        adapter = new ComparisionChatAdapter();
-        recyclerView.setAdapter(adapter);
+    private void initView(View view) {
+        tvData = view.findViewById(R.id.tv_data);
+        rootLayout = view.findViewById(R.id.rootLayout);
     }
 
-    public class ComparisionChatAdapter extends RecyclerView.Adapter<ComparisionChatAdapter.ComparisionChatViewHolder> {
-
-        @NonNull
-        @Override
-        public ComparisionChatViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(getContext()).inflate(R.layout.cell_comparision_chart_dialog, parent, false);
-            return new ComparisionChatViewHolder(view);
-        }
-
-        @Override
-        public void onBindViewHolder(@NonNull ComparisionChatViewHolder holder, int position) {
-            final ComparisionChartModel model = comparisionChartsList.get(position);
-            holder.tvBenefitsFeatures.setText(model.feature);
-            holder.tvCheepCarePackage.setText(model.normal);
-            if (position % 2 == 1) {
-                holder.linear.setBackgroundColor(Color.parseColor("#06FFCC01"));
-            } else {
-                holder.linear.setBackgroundColor(Color.parseColor("#20646460"));
-            }
-
-            if (model.premium.equalsIgnoreCase("yes")) {
-                holder.imagePremium.setVisibility(View.VISIBLE);
-                holder.tvPremium.setVisibility(View.GONE);
-                holder.imagePremium.setBackgroundResource(R.drawable.verified_icon);
-            } else if (model.premium.equalsIgnoreCase("no")) {
-                holder.imagePremium.setVisibility(View.VISIBLE);
-                holder.tvPremium.setVisibility(View.GONE);
-                holder.imagePremium.setBackgroundResource(R.drawable.cancelled);
-            } else {
-                holder.tvPremium.setVisibility(View.VISIBLE);
-                holder.imagePremium.setVisibility(View.GONE);
-                holder.tvPremium.setText(model.premium);
-
-            }
-        }
-
-        @Override
-        public int getItemCount() {
-
-            return comparisionChartsList.size();
-
-        }
-
-        class ComparisionChatViewHolder extends RecyclerView.ViewHolder {
-
-
-            private TextView tvBenefitsFeatures;
-            private TextView tvCheepCarePackage;
-            private LinearLayout linear;
-            private ImageView imagePremium;
-            private TextView tvPremium;
-
-
-            ComparisionChatViewHolder(View itemView) {
-                super(itemView);
-                tvBenefitsFeatures = itemView.findViewById(R.id.tv_benefits_features);
-                tvCheepCarePackage = itemView.findViewById(R.id.tv_cheep_care_package);
-                linear = itemView.findViewById(R.id.linear);
-                imagePremium = itemView.findViewById(R.id.imagePremium);
-                tvPremium = itemView.findViewById(R.id.tvPremium);
-
-            }
-        }
-    }
 
     /************************************************************************************************
      **********************************Calling Webservice ********************************************
@@ -220,7 +129,7 @@ public class ComparisionChartFragmentDialog extends DialogFragment {
         mProgressDialog = null;
     }
 
-    private void callGetPackageFeatureListDetailWS() {
+    private void callGetPackageDetailModelDataWS() {
         if (!Utility.isConnected(getContext())) {
             Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, rootLayout);
             return;
@@ -233,14 +142,14 @@ public class ComparisionChartFragmentDialog extends DialogFragment {
         mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(getContext()).getXAPIKey());
 
         //noinspection unchecked
-        VolleyNetworkRequest mVolleyNetworkRequestForCategoryList = new VolleyNetworkRequest(NetworkUtility.WS.GET_PACKAGE_FEATURE_LIST
+        VolleyNetworkRequest mVolleyNetworkRequestForCategoryList = new VolleyNetworkRequest(NetworkUtility.WS.GET_BADGE_MESSAGE
                 , mCallGetCityCareDetailsWSErrorListener
                 , mCallGetCityCareDetailsWSResponseListener
                 , mHeaderParams
                 , null
                 , null);
 
-        Volley.getInstance(getContext()).addToRequestQueue(mVolleyNetworkRequestForCategoryList, NetworkUtility.WS.GET_PACKAGE_FEATURE_LIST);
+        Volley.getInstance(getContext()).addToRequestQueue(mVolleyNetworkRequestForCategoryList, NetworkUtility.WS.GET_BADGE_MESSAGE);
     }
 
 
@@ -260,11 +169,8 @@ public class ComparisionChartFragmentDialog extends DialogFragment {
                         JSONArray data = jsonObject.getJSONArray("data");
                         for (int i = 0; i < data.length(); i++) {
                             JSONObject obj = data.getJSONObject(i);
-                            ComparisionChartModel cityModel = new ComparisionChartModel(obj);
-                            comparisionChartsList.add(cityModel);
+                            tvData.setText(Html.fromHtml(obj.getString("text")));
                         }
-                        loadData();
-
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
                         // Show Toast
@@ -297,6 +203,5 @@ public class ComparisionChartFragmentDialog extends DialogFragment {
             Utility.showSnackBar(getString(R.string.label_something_went_wrong), rootLayout);
         }
     };
-
 
 }
