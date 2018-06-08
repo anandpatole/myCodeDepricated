@@ -308,7 +308,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="format_task_start_time">Task starts %s</string>
     <string name="format_task_start_soon">Task starts soon</string>
 
-    <string name="hint_address_initials">Please enter house number / building name</string>
+    <string name="hint_address_initials">Flat number, Building name</string>
     <string name="label_task_summary">Task Summary</string>
     <string name="label_pick_your_location">Pick your Location</string>
     <string name="label_update_address">Update Address</string>

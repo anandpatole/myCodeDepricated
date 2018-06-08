@@ -11,7 +11,7 @@
 
             <stroke
                 android:width="@dimen/scale_1dp"
-                android:color="@color/light_grey_color"/>
+                android:color="@color/grey_varient_30"/>
         </shape>
     </item>
 </layer-list>

@@ -146,6 +146,9 @@ public class SubscriptionBannerFragment extends BaseFragment {
                             LandingScreenPickPackageActivity.newInstance(mContext, bannerImageModel, cheepcareBannerListString);
 //                            PaymentDemoActivity.newInstance(mContext);
                         }
+
+
+
                     }
                 }
             });

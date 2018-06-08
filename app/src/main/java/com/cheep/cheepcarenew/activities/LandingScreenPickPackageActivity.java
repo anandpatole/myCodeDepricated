@@ -23,7 +23,6 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.cheep.R;
 import com.cheep.activity.BaseAppCompatActivity;
 import com.cheep.cheepcare.activity.ManageSubscriptionActivity;
-import com.cheep.cheepcare.activity.PackageCustomizationActivity;
 import com.cheep.cheepcare.adapter.CheepCareFeatureAdapter;
 import com.cheep.cheepcare.adapter.CheepCarePackageAdapter;
 import com.cheep.cheepcare.model.CareCityDetail;
@@ -312,8 +311,9 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
         @Override
         public void onPackageItemClick(int position, PackageDetail packageModel) {
 //            String packageList = GsonUtility.getJsonStringFromObject(mCityLandingPageModel.packageDetailList);
-            String packageList = GsonUtility.getJsonStringFromObject(mCityLandingPageModel.packageDetailList);
-            PackageCustomizationActivity.newInstance(mContext, mCityLandingPageModel.careCityDetail, packageModel, packageList, mCityLandingPageModel.adminSetting);
+//            String packageList = GsonUtility.getJsonStringFromObject(mCityLandingPageModel.packageDetailList);
+//            PackageCustomizationActivity.newInstance(mContext, mCityLandingPageModel.careCityDetail, packageModel, packageList, mCityLandingPageModel.adminSetting);
+            AddressCategorySelectionActivity.newInstance(LandingScreenPickPackageActivity.this);
         }
     };
 
