@@ -10,7 +10,7 @@ import android.widget.RadioButton;
 
 import com.cheep.R;
 
-import com.cheep.databinding.RowAddressBinding;
+import com.cheep.databinding.RowAddressABinding;
 import com.cheep.model.AddressModel;
 import com.cheep.utils.Utility;
 
@@ -20,29 +20,30 @@ import java.util.ArrayList;
  * Created by pankaj on 9/29/16.
  */
 
-public class AddressRecyclerViewAdapter extends RecyclerView.Adapter<AddressRecyclerViewAdapter.ViewHolder> {
+public class AddressRecyclerViewAdapterProfile extends RecyclerView.Adapter<AddressRecyclerViewAdapterProfile.ViewHolder> {
 
     private ArrayList<AddressModel> mList;
     private String selected = "";
-   private RadioButton selectedRadioBtn;
+int flag;
     private AddressItemInteractionListener listener;
 
-    public AddressRecyclerViewAdapter(ArrayList<AddressModel> mList, AddressItemInteractionListener listener) {
+    public AddressRecyclerViewAdapterProfile(ArrayList<AddressModel> mList, AddressItemInteractionListener listener,int flag) {
         if (mList != null)
             this.mList = mList;
         else
             this.mList = new ArrayList<>();
         this.listener = listener;
+        this.flag=flag;
     }
 
     @Override
-    public AddressRecyclerViewAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        RowAddressBinding mRowAddressBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), R.layout.row_address, parent, false);
-        return new AddressRecyclerViewAdapter.ViewHolder(mRowAddressBinding);
+    public AddressRecyclerViewAdapterProfile.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        RowAddressABinding mRowAddressBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), R.layout.row_address_a, parent, false);
+        return new AddressRecyclerViewAdapterProfile.ViewHolder(mRowAddressBinding);
     }
 
     @Override
-    public void onBindViewHolder(final AddressRecyclerViewAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(final AddressRecyclerViewAdapterProfile.ViewHolder holder, int position) {
 
         final AddressModel model = mList.get(holder.getAdapterPosition());
 
@@ -50,33 +51,33 @@ public class AddressRecyclerViewAdapter extends RecyclerView.Adapter<AddressRecy
 
             holder.mRowAddressBinding.textFullAddress.setText(model.getAddressWithInitials());
 
-        if (TextUtils.isEmpty(selected) && position == 0) {
-            selected = model.address_id;
-            holder.mRowAddressBinding.radioButton.setChecked(true);
-           // selectedRadioBtn = holder.mRowAddressBinding.radioButton;
-        } else if (selected.equalsIgnoreCase(model.address_id)) {
-            holder.mRowAddressBinding.radioButton.setChecked(true);
-            selectedRadioBtn = holder.mRowAddressBinding.radioButton;
-        } else {
-            holder.mRowAddressBinding.radioButton.setChecked(false);
-        }
+//        if (TextUtils.isEmpty(selected) && position == 0) {
+//            selected = model.address_id;
+//            holder.mRowAddressBinding.radioButton.setChecked(true);
+//           // selectedRadioBtn = holder.mRowAddressBinding.radioButton;
+//        } else if (selected.equalsIgnoreCase(model.address_id)) {
+//            holder.mRowAddressBinding.radioButton.setChecked(true);
+//            selectedRadioBtn = holder.mRowAddressBinding.radioButton;
+//        } else {
+//            holder.mRowAddressBinding.radioButton.setChecked(false);
+//        }
 
         holder.mRowAddressBinding.textAddressCategory.setText(Utility.getAddressCategoryString(model.category));
         holder.mRowAddressBinding.textAddressCategory.setCompoundDrawablesWithIntrinsicBounds(Utility.getAddressCategoryBlueIcon(model.category), 0, 0, 0);
 
-       holder.mRowAddressBinding.radioButton.setOnClickListener(new View.OnClickListener() {
-           @Override
-           public void onClick(View view) {
-               RadioButton radioButton = (RadioButton) view;
-               if (radioButton.isChecked()) {
-                    if (selectedRadioBtn != null && !selected.equalsIgnoreCase(model.address_id)) {
-                       selectedRadioBtn.setChecked(false);
-                   }
-                    selectedRadioBtn = radioButton;
-                    selected = model.address_id;
-                }
-            }
-        });
+//       holder.mRowAddressBinding.radioButton.setOnClickListener(new View.OnClickListener() {
+//           @Override
+//           public void onClick(View view) {
+//               RadioButton radioButton = (RadioButton) view;
+//               if (radioButton.isChecked()) {
+//                    if (selectedRadioBtn != null && !selected.equalsIgnoreCase(model.address_id)) {
+//                       selectedRadioBtn.setChecked(false);
+//                   }
+//                    selectedRadioBtn = radioButton;
+//                    selected = model.address_id;
+//                }
+//            }
+//        });
         holder.mRowAddressBinding.imgEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -113,15 +114,15 @@ public class AddressRecyclerViewAdapter extends RecyclerView.Adapter<AddressRecy
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                RadioButton radioButton = holder.mRowAddressBinding.radioButton;
-                radioButton.setChecked(true);
-                if (radioButton.isChecked()) {
-                    if (selectedRadioBtn != null && !selected.equalsIgnoreCase(model.address_id)) {
-                        selectedRadioBtn.setChecked(false);
-                    }
-                    selectedRadioBtn = radioButton;
-
-                }
+              //  RadioButton radioButton = holder.mRowAddressBinding.radioButton;
+              //  radioButton.setChecked(true);
+//                if (radioButton.isChecked()) {
+//                    if (selectedRadioBtn != null && !selected.equalsIgnoreCase(model.address_id)) {
+//                        selectedRadioBtn.setChecked(false);
+//                    }
+//                    selectedRadioBtn = radioButton;
+//
+//                }
                 selected = model.address_id;
                 if (listener != null) {
                     listener.onRowClicked(model, holder.getAdapterPosition());
@@ -132,7 +133,19 @@ public class AddressRecyclerViewAdapter extends RecyclerView.Adapter<AddressRecy
 
     @Override
     public int getItemCount() {
-        return mList.size();
+        if(flag==0)
+        {
+            if(mList.size()>0) {
+                return 1;
+            }
+            else
+            {
+                return mList.size();
+            }
+        }
+        else {
+            return mList.size();
+        }
     }
 
     public void delete(String address_id) {
@@ -191,9 +204,9 @@ public class AddressRecyclerViewAdapter extends RecyclerView.Adapter<AddressRecy
 
     class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
-        public final RowAddressBinding mRowAddressBinding;
+        public final RowAddressABinding mRowAddressBinding;
 
-        public ViewHolder(RowAddressBinding binding) {
+        public ViewHolder(RowAddressABinding binding) {
             super(binding.getRoot());
             mView = binding.getRoot();
             mRowAddressBinding = binding;

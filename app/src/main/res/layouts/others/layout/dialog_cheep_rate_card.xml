@@ -1,22 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="center">
+        android:background="@color/transparent"
+        android:layout_marginTop="@dimen/scale_50dp"
+        >
 <LinearLayout
     android:layout_width="match_parent"
     android:orientation="vertical"
-    android:layout_gravity="center"
     android:layout_height="wrap_content">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-
         android:layout_marginLeft="@dimen/scale_18dp"
         android:layout_marginRight="@dimen/scale_18dp">
 
@@ -61,7 +59,38 @@
 
 
     </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_marginLeft="@dimen/scale_18dp"
+        android:layout_marginRight="@dimen/scale_18dp"
+        android:orientation="horizontal"
+        android:layout_height="wrap_content">
+        <com.cheep.custom_view.CFTextViewBold
+            android:layout_width="@dimen/scale_0dp"
+            android:text="Product"
+            android:background="@color/white"
+            android:layout_weight="1"
+            android:textSize="@dimen/scale_18dp"
+            android:textColor="@color/black"
+            android:gravity="center_horizontal|center_vertical"
+            android:layout_height="@dimen/scale_30dp" />
+        <View
+            android:layout_width="@dimen/scale_1dp"
+            android:layout_height="match_parent"
+            android:background="@color/black_translucent"></View>
+        <com.cheep.custom_view.CFTextViewBold
+            android:layout_width="@dimen/scale_0dp"
+            android:text="Price"
+            android:layout_weight="1"
+            android:background="@color/white"
+            android:textSize="@dimen/scale_18dp"
+            android:textColor="@color/black"
+            android:gravity="center_horizontal|center_vertical"
+            android:layout_height="@dimen/scale_30dp"
+             />
+    </LinearLayout>
            <android.support.v7.widget.RecyclerView
+               android:id="@+id/rate_card_recycler_view"
                android:layout_width="match_parent"
                android:layout_height="wrap_content"
                android:layout_marginLeft="@dimen/scale_18dp"

@@ -58,7 +58,7 @@
                     android:layout_width="match_parent"
                     android:orientation="vertical"
                     android:layout_height="wrap_content">
-                    <com.cheep.custom_view.CFTextViewRegular
+                    <com.cheep.custom_view.CFTextViewSemiBold
                         android:id="@+id/title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -110,7 +110,7 @@ android:scaleType="fitXY"
 
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/scale_1dp"
-android:elevation="@dimen/scale_4dp"
+android:elevation="@dimen/scale_2dp"
                 android:background="@color/grey_varient_3" />
 
                 <com.cheep.custom_view.CFTextViewSemiBold

@@ -322,7 +322,7 @@ public class HomeActivity extends BaseAppCompatActivity
         list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.label_favourites), R.drawable.icon_fav_off, false, false));
 
         list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.label_payment_history), R.drawable.icon_history, false, false));
-        list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.Label_cheep_care_rate_card),R.drawable.icon_history,false,false));
+        list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.Label_cheep_care_rate_card),R.drawable.icon_rate,false,false));
         // TODO: Icon change Refer And Earn
         if (PreferenceUtility.getInstance(mContext).getUserDetails() != null)
             list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.tab_me), R.drawable.icon_logout, false, false));
@@ -425,13 +425,7 @@ public class HomeActivity extends BaseAppCompatActivity
                     }
                 }
             }, 1000);
-        }/*else if (slideMenuListModel.title.equals(getString(R.string.tab_alert))) {
-            showAlertDialog();
-//            LoginActivity.newInstance(mContext);
-//            finish();
-            // We are returning here so side menu will not close at end of this method
-//            return;
-        }*/ else if (slideMenuListModel.title.equals(getString(R.string.tab_me))) {
+        }else if (slideMenuListModel.title.equals(getString(R.string.tab_me))) {
             Fragment mFragment = getSupportFragmentManager().findFragmentByTag(ProfileTabFragment.TAG);
             if (mFragment == null) {
                 loadFragment(ProfileTabFragment.TAG, ProfileTabFragment.newInstance());
@@ -441,7 +435,7 @@ public class HomeActivity extends BaseAppCompatActivity
         }
 else if(slideMenuListModel.title.equals(getString(R.string.Label_cheep_care_rate_card)))
         {
-            Fragment mFragment = getSupportFragmentManager().findFragmentByTag(ProfileTabFragment.TAG);
+            Fragment mFragment = getSupportFragmentManager().findFragmentByTag(CheepCareRateCardFragment.TAG);
             if (mFragment == null) {
                 loadFragment(CheepCareRateCardFragment.TAG, CheepCareRateCardFragment.newInstance());
             } else {

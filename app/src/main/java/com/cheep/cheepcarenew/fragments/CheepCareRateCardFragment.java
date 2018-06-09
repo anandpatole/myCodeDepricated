@@ -89,7 +89,12 @@ mBinding.textTechRepair.setOnClickListener(onClickListener);
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
-
+                case  R.id.text_painter:
+                    RateCardDialog.newInstance((AppCompatActivity) mContext);
+                    break;
+                 default:
+                     RateCardDialog.newInstance((AppCompatActivity) mContext);
+                     break;
 
 
             }

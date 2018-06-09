@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+   >
+    <LinearLayout
+        android:layout_width="match_parent"
+
+        android:background="@color/white"
+        android:orientation="horizontal"
+        android:layout_height="wrap_content">
+        <com.cheep.custom_view.CFTextViewRegular
+            android:id="@+id/rate_card_product"
+            android:layout_width="@dimen/scale_0dp"
+            android:text="Product"
+
+            android:layout_weight="1"
+            android:textSize="@dimen/scale_14dp"
+            android:textColor="@color/black"
+            android:gravity="center_horizontal|center_vertical"
+            android:layout_height="@dimen/scale_25dp" />
+        <View
+            android:layout_width="@dimen/scale_1dp"
+            android:layout_height="match_parent"
+            android:background="@color/black_translucent"></View>
+        <com.cheep.custom_view.CFTextViewRegular
+
+            android:id="@+id/rate_card_price"
+            android:layout_width="@dimen/scale_0dp"
+            android:text="Price"
+            android:layout_weight="1"
+
+            android:textSize="@dimen/scale_14dp"
+            android:textColor="@color/black"
+            android:gravity="center_horizontal|center_vertical"
+            android:layout_height="@dimen/scale_25dp"
+            />
+    </LinearLayout>
+</layout>

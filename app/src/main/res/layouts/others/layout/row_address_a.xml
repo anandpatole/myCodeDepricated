@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/front_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/scale_8dp"
+        android:paddingRight="@dimen/scale_16dp"
+        android:paddingTop="@dimen/scale_8dp">
+
+
+
+        <LinearLayout
+            android:id="@+id/profile_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:layout_marginLeft="@dimen/scale_10dp"
+            android:orientation="vertical">
+
+            <com.cheep.custom_view.CFTextViewBold
+                android:id="@+id/text_address_category"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/icon_home_address"
+                android:drawablePadding="@dimen/scale_5dp"
+                android:paddingLeft="@dimen/scale_40dp"
+                android:gravity="center"
+                tools:text="My sweet home"
+                android:textColor="@color/splash_gradient_end"
+                android:textSize="@dimen/text_size_12sp" />
+
+            <com.cheep.custom_view.CFTextViewRegular
+                android:id="@+id/text_full_address"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/scale_3dp"
+                android:paddingLeft="@dimen/scale_40dp"
+                tools:text="Adinath Chowk, London"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_12sp" />
+
+        </LinearLayout>
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:orientation="horizontal"
+    android:paddingLeft="@dimen/scale_40dp"
+    android:layout_height="wrap_content">
+        <com.cheep.custom_view.CFTextViewBold
+            android:id="@+id/img_edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:padding="@dimen/scale_10dp"
+            android:text="Edit"
+            android:textColor="@color/blue_variant_4"
+            tools:ignore="ContentDescription" />
+
+        <com.cheep.custom_view.CFTextViewBold
+            android:id="@+id/img_delete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:padding="@dimen/scale_10dp"
+            android:text="Delete"
+            android:textColor="@color/blue_variant_4"
+            tools:ignore="ContentDescription" />
+
+</LinearLayout>
+    </LinearLayout>
+</layout>
