@@ -398,12 +398,11 @@ public class HomeTabFragment extends BaseFragment {
                     ((AppCompatActivity) mContext).overridePendingTransition(0, 0);
                     break;
                 case R.id.rel_notification_action:
-                    // commented by majid 399 to 402
-                   /* if (mNotificationClickInteractionListener != null) {
+
+                    if (mNotificationClickInteractionListener != null) {
                         mNotificationClickInteractionListener.onNotificationIconClicked();
-                    }*/
-                    //showComparisionChartFragmentDialog();
-                    showPackageDetailModelFragmentDialog();
+                    }
+
                     break;
             }
         }

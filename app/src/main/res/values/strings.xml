@@ -829,5 +829,31 @@ without any hidden charges. Try it now!</string>
     <string name="sounds_good">Sounds Good </string>
     <string name="heading1">The Badge says it all.</string>
     <string name="heading2">Your satisfaction is \n everything. Period! </string>
+    <string name="pay">Pay Now</string>
+
+
+    <string name="complete_visit_time">Complete 24x7 Home Maintenance</string>
+    <string name="cheep_package_address">Home  1101, Tulip Enclave, Bandra West</string>
+    <string name="cheep_package_duration">Tell us the duration of your subscription</string>
+
+    <string name="months_3">3 Months</string>
+    <string name="months_6">6 Months</string>
+    <string name="months_12">12 Months</string>
+
+    <string name="save_money_3">Save ₹200 </string>
+    <string name="save_money_6">Save ₹400 </string>
+    <string name="save_money_12">Save ₹600 </string>
+
+    <string name="best_value">Best Value </string>
+
+    <string name="total_amount">₹3,600</string>
+
+    <string name="inclusive_taxes">Inclusive \n of taxes</string>
+
+    <string name="cheep_promo_code">Apply Cheep Promo Code?</string>
+    <string name="cheep_mate_code">Apply Cheep Mate Code?</string>
+
+    <string name="cheep_package_info">Under Cheep Care, basic repairs &amp; maintenance will be provided by our PRO\'s. All
+        material will be charged extra as per actuals. For complex jobs, additional payments may be charged by the PRO.</string>
 
 </resources>

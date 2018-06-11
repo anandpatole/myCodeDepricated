@@ -16,7 +16,7 @@ import android.widget.TextView;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.cheep.R;
-import com.cheep.model.ComparisionChartModel;
+import com.cheep.cheepcarenew.activities.PaymentSummaryActivityNew;
 import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
@@ -29,12 +29,13 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-public class PackageDetailModelDialog extends DialogFragment {
+public class PackageDetailModelDialog extends DialogFragment implements View.OnClickListener {
+
     public static final String TAG = PackageDetailModelDialog.class.getSimpleName();
     private RelativeLayout rootLayout;
     private ProgressDialog mProgressDialog;
 
-    private TextView tvData;
+    private TextView tvData,tvSoundsGood;
 
     public PackageDetailModelDialog() {
         // Required empty public constructor
@@ -93,6 +94,19 @@ public class PackageDetailModelDialog extends DialogFragment {
     private void initView(View view) {
         tvData = view.findViewById(R.id.tv_data);
         rootLayout = view.findViewById(R.id.rootLayout);
+        tvSoundsGood = view.findViewById(R.id.tv_sounds_good);
+        tvSoundsGood.setOnClickListener(this);
+    }
+
+    //View.OnClickListener
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.tv_sounds_good:
+                PaymentSummaryActivityNew.newInstance(getContext());
+                break;
+        }
+
     }
 
 

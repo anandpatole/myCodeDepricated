@@ -38,7 +38,7 @@ import static com.cheep.utils.Utility.getSpannableString;
 
 public class PaymentSummaryActivity extends BaseAppCompatActivity {
 
-    private static final String TAG = "PaymentSummaryActivity";
+    private static final String TAG = "PaymentSummaryActivityNew";
     private ActivityPaymentSummaryBinding mActivityPaymentDetailBinding;
     private TaskDetailModel taskDetailModel;
     private PaymentSummaryModel paymentSummaryModel;

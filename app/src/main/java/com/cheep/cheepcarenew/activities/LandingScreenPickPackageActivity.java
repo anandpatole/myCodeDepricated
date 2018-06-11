@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
@@ -28,6 +29,8 @@ import com.cheep.cheepcare.adapter.CheepCarePackageAdapter;
 import com.cheep.cheepcare.model.CareCityDetail;
 import com.cheep.cheepcare.model.CityLandingPageModel;
 import com.cheep.cheepcare.model.PackageDetail;
+import com.cheep.cheepcarenew.dialogs.ComparisionChartFragmentDialog;
+import com.cheep.cheepcarenew.dialogs.PackageDetailModelDialog;
 import com.cheep.databinding.ActivityLandingScreenPickPackageBinding;
 import com.cheep.model.MessageEvent;
 import com.cheep.network.NetworkUtility;
@@ -59,6 +62,9 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
     private String mPackageListString = Utility.EMPTY_STRING;
     private ArrayList<CareCityDetail> bannerCareCityDetailsList;
     private static final String TAG = "LandingScreenPickPackag";
+    // written by majid 106 to 108
+    private ComparisionChartFragmentDialog comparisionChartFragmentDialog;
+    private PackageDetailModelDialog packageDetailModelDialog;
 
     private WebCallClass.CommonResponseListener commonErrorResponse = new WebCallClass.CommonResponseListener() {
         @Override
@@ -306,14 +312,44 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
         builder.show();
     }
 
+    // open show Comparision Chart Fragment Dialog
+    private void showComparisionChartFragmentDialog() {
+        if (comparisionChartFragmentDialog != null) {
+            comparisionChartFragmentDialog.dismissAllowingStateLoss();
+            comparisionChartFragmentDialog = null;
+        }
+        comparisionChartFragmentDialog = ComparisionChartFragmentDialog.newInstance("","");
+        comparisionChartFragmentDialog.show(getSupportFragmentManager(), TAG);
+    }
+    // open show Package Detail Model Fragment Dialog
+    private void showPackageDetailModelFragmentDialog() {
+        if (packageDetailModelDialog != null) {
+            packageDetailModelDialog.dismissAllowingStateLoss();
+            packageDetailModelDialog = null;
+        }
+        packageDetailModelDialog = PackageDetailModelDialog.newInstance("","");
+        packageDetailModelDialog.show(getSupportFragmentManager(), TAG);
+    }
+
     private final CheepCarePackageAdapter.PackageItemClickListener mPackageItemClickListener
             = new CheepCarePackageAdapter.PackageItemClickListener() {
         @Override
         public void onPackageItemClick(int position, PackageDetail packageModel) {
+           // Toast.makeText(getApplicationContext(),"majid : "+ packageModel.type,Toast.LENGTH_LONG).show();
 //            String packageList = GsonUtility.getJsonStringFromObject(mCityLandingPageModel.packageDetailList);
 //            String packageList = GsonUtility.getJsonStringFromObject(mCityLandingPageModel.packageDetailList);
 //            PackageCustomizationActivity.newInstance(mContext, mCityLandingPageModel.careCityDetail, packageModel, packageList, mCityLandingPageModel.adminSetting);
-            AddressCategorySelectionActivity.newInstance(LandingScreenPickPackageActivity.this);
+
+           // AddressCategorySelectionActivity.newInstance(LandingScreenPickPackageActivity.this);
+
+            if(packageModel.type.equalsIgnoreCase("premium")){
+
+                showPackageDetailModelFragmentDialog();
+
+            } else if (packageModel.type.equalsIgnoreCase("normal")) {
+
+                showComparisionChartFragmentDialog();
+            }
         }
     };
 
