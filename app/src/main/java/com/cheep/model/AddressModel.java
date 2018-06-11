@@ -35,6 +35,7 @@ public class AddressModel implements Serializable {
     public String countryName;
     public String stateName;
 
+    public AddressSizeModel addressSizeModel;
     public boolean isSelected = false;
 
     public LatLng getLatLng() {
@@ -57,5 +58,7 @@ public class AddressModel implements Serializable {
     public String getNicknameString(Context context) {
         return !TextUtils.isEmpty(nickname) ? nickname : context.getString(Utility.getAddressCategoryString(category));
     }
+
 }
+
 

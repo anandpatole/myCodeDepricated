@@ -103,7 +103,7 @@ public class HomeTabFragment extends BaseFragment {
     private ArrayList<BannerImageModel> bannerImageModelArrayList;
     public ArrayList<CareCityDetail> careBannerModelArrayList;
     private String mSelectedFilterType = Utility.FILTER_TYPES.FILTER_TYPE_FEATURED;
-   // written by majid 106 to 108
+    // written by majid 106 to 108
     private ComparisionChartFragmentDialog comparisionChartFragmentDialog;
     private PackageDetailModelDialog packageDetailModelDialog;
 
@@ -209,6 +209,12 @@ public class HomeTabFragment extends BaseFragment {
         } else {
             throw new RuntimeException(context.toString() + " must implement OnFragmentInteractionListener");
         }
+
+        callAddressSizeListWS();
+    }
+
+    private void callAddressSizeListWS() {
+        WebCallClass.getAddressAssetSizeWS(mContext, mCommonResponseListenerAdminSetting);
     }
 
     @Override
@@ -401,8 +407,14 @@ public class HomeTabFragment extends BaseFragment {
 
                     if (mNotificationClickInteractionListener != null) {
                         mNotificationClickInteractionListener.onNotificationIconClicked();
+<<<<<<< HEAD
                     }
 
+=======
+                    }*/
+                    showComparisionChartFragmentDialog();
+//                    showPackageDetailModelFragmentDialog();
+>>>>>>> 685b8593fcf632904abc0c6628ed784785dfe84e
                     break;
             }
         }
@@ -414,16 +426,17 @@ public class HomeTabFragment extends BaseFragment {
             comparisionChartFragmentDialog.dismissAllowingStateLoss();
             comparisionChartFragmentDialog = null;
         }
-        comparisionChartFragmentDialog = ComparisionChartFragmentDialog.newInstance("","");
+        comparisionChartFragmentDialog = ComparisionChartFragmentDialog.newInstance("", "");
         comparisionChartFragmentDialog.show(getActivity().getSupportFragmentManager(), TAG);
     }
+
     // open show Package Detail Model Fragment Dialog
     private void showPackageDetailModelFragmentDialog() {
         if (packageDetailModelDialog != null) {
             packageDetailModelDialog.dismissAllowingStateLoss();
             packageDetailModelDialog = null;
         }
-        packageDetailModelDialog = PackageDetailModelDialog.newInstance("","");
+        packageDetailModelDialog = PackageDetailModelDialog.newInstance("", "");
         packageDetailModelDialog.show(getActivity().getSupportFragmentManager(), TAG);
     }
 
@@ -1777,6 +1790,9 @@ public class HomeTabFragment extends BaseFragment {
 
                 @Override
                 public void forceLogout() {
+                    Utility.logout(mContext, true, NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED);
+                    if (getActivity() != null)
+                        getActivity().finish();
                 }
             };
 }

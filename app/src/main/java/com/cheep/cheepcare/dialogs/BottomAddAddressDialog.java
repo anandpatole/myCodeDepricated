@@ -55,10 +55,12 @@ public class BottomAddAddressDialog {
     public View view;
     BottomSheetDialog dialog;
     DialogAddAddressCheepCareBinding binding;
+
     private boolean isAddressNameVerified = false;
     private boolean isAddressPickYouLocationVerified = false;
     private boolean isAddressFlatNoVerified = false;
     private boolean isAddressPinCodeVerified = false;
+
     private Context mContext;
     private Fragment fragment;
     private AddAddressListener addAddressListener;

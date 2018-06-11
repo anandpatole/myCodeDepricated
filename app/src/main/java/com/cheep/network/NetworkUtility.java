@@ -160,6 +160,7 @@ public class NetworkUtility {
         public static final String GET_TASK_FOR_PENDING_REVIEW = BASE_URL + "customers/Tasks/getTaskForPendingReview";
         public static final String SEARCH_CITY = BASE_URL + "customers/profile/searchCity";
         public static final String VOTE_CITY_FOR_CHEEP_CARE = BASE_URL + "customers/care/voteCityForCheepCare";
+        public static final String GET_ASSET_AREA = BASE_URL + "customers/profile/getAssetArea";
 
 
         // majid khan
@@ -500,6 +501,8 @@ public class NetworkUtility {
         String PRICE = "price";
         String DETAIL = "detail";
         String CAT_NAME = "cat_name";
+        String HOME = "home";
+        String OFFICE= "office";
 
         String REVIEW_BY_ME="review_by_me";
         String RESTORE_ID="restore_id";

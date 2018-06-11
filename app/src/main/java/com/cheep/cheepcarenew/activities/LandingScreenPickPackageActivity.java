@@ -339,6 +339,7 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
 //            String packageList = GsonUtility.getJsonStringFromObject(mCityLandingPageModel.packageDetailList);
 //            String packageList = GsonUtility.getJsonStringFromObject(mCityLandingPageModel.packageDetailList);
 //            PackageCustomizationActivity.newInstance(mContext, mCityLandingPageModel.careCityDetail, packageModel, packageList, mCityLandingPageModel.adminSetting);
+<<<<<<< HEAD
 
            // AddressCategorySelectionActivity.newInstance(LandingScreenPickPackageActivity.this);
 
@@ -350,6 +351,9 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
 
                 showComparisionChartFragmentDialog();
             }
+=======
+            AddressActivity.newInstance(LandingScreenPickPackageActivity.this);
+>>>>>>> 685b8593fcf632904abc0c6628ed784785dfe84e
         }
     };
 

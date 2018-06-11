@@ -829,6 +829,7 @@ without any hidden charges. Try it now!</string>
     <string name="sounds_good">Sounds Good </string>
     <string name="heading1">The Badge says it all.</string>
     <string name="heading2">Your satisfaction is \n everything. Period! </string>
+<<<<<<< HEAD
     <string name="pay">Pay Now</string>
 
 
@@ -855,5 +856,9 @@ without any hidden charges. Try it now!</string>
 
     <string name="cheep_package_info">Under Cheep Care, basic repairs &amp; maintenance will be provided by our PRO\'s. All
         material will be charged extra as per actuals. For complex jobs, additional payments may be charged by the PRO.</string>
+=======
+    <string name="label_how_big_is_your_home">How big is your home?</string>
+    <string name="label_how_big_is_your_office">How big is your office (in square feet)?</string>
+>>>>>>> 685b8593fcf632904abc0c6628ed784785dfe84e
 
 </resources>

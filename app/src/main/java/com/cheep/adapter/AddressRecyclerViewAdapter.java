@@ -36,7 +36,7 @@ public class AddressRecyclerViewAdapter extends RecyclerView.Adapter<AddressRecy
 
     @Override
     public AddressRecyclerViewAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        RowAddressBinding mRowAddressBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), R.layout.row_address_item, parent, false);
+        RowAddressBinding mRowAddressBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), R.layout.row_address, parent, false);
         return new AddressRecyclerViewAdapter.ViewHolder(mRowAddressBinding);
     }
 

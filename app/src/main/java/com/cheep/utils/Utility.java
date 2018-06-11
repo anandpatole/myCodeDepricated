@@ -280,6 +280,13 @@ public class Utility {
         else
             return R.string.label_other;
     }
+    public static int getAddressCategoryIcon(String category) {
+        if (TextUtils.isEmpty(category))
+            return R.drawable.ic_address_home;
+        else
+            return R.drawable.icon_address_office_active;
+
+    }
 
     public static int getAddressCategoryBlueIcon(String category) {
         if (TextUtils.isEmpty(category))
@@ -745,6 +752,7 @@ public class Utility {
         //when user selects other subscribed address we need to re-open TaskCreationCcActivity as different addresses will hav
         // different limits
         int OTHER_SUBSCRIBED_ADDRESS_SELECTED = 24;
+        int ADDRESS_SELECTED_POP_UP = 25;
     }
 
     public interface REQUEST_TYPE {
