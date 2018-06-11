@@ -16,10 +16,12 @@ import android.widget.TextView;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.cheep.R;
-import com.cheep.cheepcarenew.activities.PaymentSummaryActivityNew;
+import com.cheep.cheepcare.model.PackageDetail;
+import com.cheep.cheepcarenew.activities.AddressActivity;
 import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
+import com.cheep.utils.GsonUtility;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.Utility;
 
@@ -41,10 +43,11 @@ public class PackageDetailModelDialog extends DialogFragment implements View.OnC
         // Required empty public constructor
     }
 
-    public static PackageDetailModelDialog newInstance(String param1, String param2) {
+    public static PackageDetailModelDialog newInstance(PackageDetail packageDetail) {
         PackageDetailModelDialog fragment = new PackageDetailModelDialog();
-        Bundle args = new Bundle();
 
+        Bundle args = new Bundle();
+        args.putString(Utility.Extra.DATA, GsonUtility.getJsonStringFromObject(packageDetail));
         fragment.setArguments(args);
         return fragment;
     }
@@ -103,7 +106,14 @@ public class PackageDetailModelDialog extends DialogFragment implements View.OnC
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.tv_sounds_good:
-                PaymentSummaryActivityNew.newInstance(getContext());
+//                PaymentSummaryActivityCheepCare.newInstance(getContext());
+                if (getArguments()!=null)
+                {
+                    PackageDetail packageDetail = (PackageDetail) GsonUtility.getObjectFromJsonString(getArguments().getString(Utility.Extra.DATA),PackageDetail.class);
+                    if (packageDetail!=null){
+                        AddressActivity.newInstance(getContext(),packageDetail);
+                    }
+                }
                 break;
         }
 
