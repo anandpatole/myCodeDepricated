@@ -89,6 +89,7 @@
     <dimen name="scale_100dp">100dp</dimen>
     <dimen name="scale_108dp">108dp</dimen>
     <dimen name="scale_113dp">113dp</dimen>
+    <dimen name="scale_110dp">110dp</dimen>
     <dimen name="scale_120dp">120dp</dimen>
     <dimen name="scale_129dp">129dp</dimen>
     <dimen name="scale_140dp">140dp</dimen>
