@@ -2,11 +2,7 @@ package com.cheep.cheepcarenew.fragments;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
-import android.location.Address;
-import android.location.Geocoder;
-import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -19,55 +15,57 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.cheep.R;
+import com.cheep.activity.BaseAppCompatActivity;
 import com.cheep.cheepcarenew.activities.AddressActivity;
 import com.cheep.custom_view.tooltips.ViewTooltip;
-import com.cheep.databinding.ActivityAddNewAddressBinding;
+import com.cheep.databinding.FragmentAddNewAddressBinding;
 import com.cheep.databinding.TooltipAddressSelectionBinding;
 import com.cheep.fragment.BaseFragment;
+import com.cheep.model.AddressModel;
+import com.cheep.model.GuestUserDetails;
+import com.cheep.model.LocationInfo;
+import com.cheep.model.MessageEvent;
+import com.cheep.model.UserDetails;
 import com.cheep.network.NetworkUtility;
-import com.cheep.utils.LogUtils;
+import com.cheep.network.Volley;
+import com.cheep.network.VolleyNetworkRequest;
+import com.cheep.utils.FetchLocationInfoUtility;
+import com.cheep.utils.GsonUtility;
+import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.Utility;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.places.GeoDataClient;
 import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.PlaceDetectionClient;
-import com.google.android.gms.location.places.Places;
 import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 
-import java.io.IOException;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
+
+import de.greenrobot.event.EventBus;
 
 import static android.app.Activity.RESULT_OK;
 
 public class AddNewAddressFragment extends BaseFragment {
 
 
-    private GeoDataClient mGeoDataClient;
-    private PlaceDetectionClient mPlaceDetectionClient;
-    private FusedLocationProviderClient mFusedLocationProviderClient;
-    private boolean mLocationPermissionGranted = false;
     private String category;
     private ViewTooltip.TooltipView tooltipView;
-    private boolean isAddressNameVerified = false;
-    private boolean isAddressPickYouLocationVerified = false;
-    private boolean isAddressFlatNoVerified = false;
-    private boolean isAddressPinCodeVerified = false;
+    private AddressModel mAddressModel;
 
     public AddNewAddressFragment() {
 
     }
 
-    ActivityAddNewAddressBinding mBinding;
+    FragmentAddNewAddressBinding mBinding;
     //    private ToolTipView toolTipView;
     public static final String TAG = "AddressCategorySelectionFragment";
 
@@ -84,7 +82,7 @@ public class AddNewAddressFragment extends BaseFragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        mBinding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.activity_add_new_address, null, false);
+        mBinding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.fragment_add_new_address, null, false);
         return mBinding.getRoot();
     }
 
@@ -114,7 +112,8 @@ public class AddNewAddressFragment extends BaseFragment {
         mBinding.editAddressPincode.setHint(getSpannableStringForHint(getString(R.string.hint_pincode)));
         mBinding.editAddressInitials.setHint(getSpannableStringForHint(getString(R.string.hint_address_initials)));
         mBinding.editAddressLocality.setHint(getSpannableStringForHint(getString(R.string.hint_address_locality)));
-        mBinding.llAddressFields.setVisibility(View.GONE);
+        mBinding.llAddressFields.setVisibility(View.INVISIBLE);
+        mBinding.cvCurrentLocation.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -131,126 +130,37 @@ public class AddNewAddressFragment extends BaseFragment {
         mBinding.cvCurrentLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                getLocationPermission();
                 showPlacePickerDialog();
             }
         });
         mBinding.tvContinue.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((AddressActivity) mContext).onBackPressed();
+                Utility.hideKeyboard(mContext);
+                addAddress();
             }
         });
+
     }
 
-
-    private void getLocationPermission() {
-        /*
-         * Request location permission, so that we can get the location of the
-         * device. The result of the permission request is handled by a callback,
-         * onRequestPermissionsResult.
-         */
-        if (ContextCompat.checkSelfPermission(mContext, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            mLocationPermissionGranted = true;
-            getDeviceLocation();
+    private void addAddress() {
+        if (TextUtils.isEmpty(mBinding.tvAddress.getText().toString().trim())) {
+            Utility.showToast(mContext, mContext.getString(R.string.validate_address));
+        } else if (TextUtils.isEmpty(mBinding.editAddressInitials.getText().toString().trim())) {
+            Utility.showToast(mContext, mContext.getString(R.string.validate_address_initials));
+        } else if (TextUtils.isEmpty(mBinding.editAddressPincode.getText().toString().trim())
+                || mBinding.editAddressPincode.getText().toString().trim().length() < 6) {
+            Utility.showToast(mContext, mContext.getString(R.string.validate_pincode));
         } else {
-            requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
-                    Utility.REQUEST_CODE_PERMISSION_LOCATION);
-        }
-    }
 
+            AddressModel model = new AddressModel();
+            model.category = category;
+            model.address = mBinding.tvAddress.getText().toString().trim();
+            model.address_initials = mBinding.editAddressInitials.getText().toString().trim();
+            model.landmark = mBinding.editAddressLandmark.getText().toString().trim();
+            model.pincode = mBinding.editAddressPincode.getText().toString().trim();
 
-    private void getDeviceLocation() {
-        /*
-         * Get the best and most recent location of the device, which may be null in rare
-         * cases when a location is not available.
-         */
-        // Construct a GeoDataClient.
-        mGeoDataClient = Places.getGeoDataClient(mContext, null);
-
-        // Construct a PlaceDetectionClient.
-        mPlaceDetectionClient = Places.getPlaceDetectionClient(mContext, null);
-
-        // Construct a FusedLocationProviderClient.
-        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(mContext);
-        showProgressDialog();
-        try {
-            if (mLocationPermissionGranted) {
-                Task locationResult = mFusedLocationProviderClient.getLastLocation();
-                locationResult.addOnCompleteListener((Activity) mContext, new OnCompleteListener() {
-
-                    @Override
-                    public void onComplete(@NonNull Task task) {
-                        if (task.isSuccessful()) {
-                            // Set the map's camera position to the current location of the device.
-                            Location mLastKnownLocation = (Location) task.getResult();
-                            if (mLastKnownLocation != null) {
-                                getAddressFromLocation(mLastKnownLocation);
-                            } else {
-                                hideProgressDialog();
-                                Utility.showSnackBar(getString(R.string.message_coundnot_find_current_location), mBinding.getRoot());
-                            }
-                        } else {
-                            hideProgressDialog();
-                            Utility.showSnackBar(getString(R.string.message_coundnot_find_current_location), mBinding.getRoot());
-                            Log.d(TAG, "Current location is null. Using defaults.");
-                            Log.e(TAG, "Exception: %s", task.getException());
-                        }
-                    }
-                });
-
-            }
-        } catch (SecurityException e) {
-            Log.e("Exception: %s", e.getMessage());
-            Utility.showSnackBar(getString(R.string.message_coundnot_find_current_location), mBinding.getRoot());
-        }
-
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == Utility.REQUEST_CODE_PERMISSION_LOCATION && grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            getDeviceLocation();
-        }
-    }
-
-
-    private void getAddressFromLocation(Location location) {
-        double lat = location.getLatitude();
-        double lng = location.getLongitude();
-        Geocoder geocoder = new Geocoder(mContext);
-        List<Address> addresses = new ArrayList<>();
-        try {
-            addresses = geocoder.getFromLocation(lat, lng, 2);
-        } catch (IOException e) {
-            Utility.showSnackBar(getString(R.string.message_coundnot_find_current_location), mBinding.getRoot());
-            e.printStackTrace();
-        }
-        StringBuilder addressString = new StringBuilder(Utility.EMPTY_STRING);
-
-        if (addresses.size() >= 1) {
-            int i = 0;
-            while (addresses.get(0).getAddressLine(i) != null) {
-                addressString.append(addresses.get(0).getAddressLine(i));
-                i++;
-            }
-            mBinding.tvAddress.setText(addressString);
-            mBinding.tvAddress.setVisibility(View.VISIBLE);
-            mBinding.viewAddress.setVisibility(View.VISIBLE);
-            mBinding.editAddressInitials.setVisibility(View.VISIBLE);
-            mBinding.viewAddressInitials.setVisibility(View.VISIBLE);
-            mBinding.editAddressCity.setVisibility(View.GONE);
-            mBinding.viewCity.setVisibility(View.GONE);
-            mBinding.editAddressLocality.setVisibility(View.GONE);
-            mBinding.viewLocality.setVisibility(View.GONE);
-            mBinding.cvCurrentLocation.setVisibility(View.GONE);
-            hideProgressDialog();
-            openTooltip(false);
-        } else {
-            Utility.showSnackBar(getString(R.string.message_coundnot_find_current_location), mBinding.getRoot());
-            LogUtils.LOGE(TAG, "error no address");
-            hideProgressDialog();
+            callAddAddressWS(model, (LatLng) mBinding.tvAddress.getTag());
         }
     }
 
@@ -272,7 +182,6 @@ public class AddNewAddressFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 hideToolTip(false);
-                Toast.makeText(mContext, "YES", Toast.LENGTH_SHORT).show();
             }
         });
         toolTipBinding.tvNo.setOnClickListener(new View.OnClickListener() {
@@ -280,7 +189,10 @@ public class AddNewAddressFragment extends BaseFragment {
             public void onClick(View v) {
                 hideToolTip(false);
 
+                mBinding.llAddressFields.setVisibility(View.INVISIBLE);
+
                 mBinding.tvAddress.setText("");
+
 
                 mBinding.editAddressInitials.setVisibility(View.GONE);
                 mBinding.viewAddressInitials.setVisibility(View.GONE);
@@ -298,7 +210,11 @@ public class AddNewAddressFragment extends BaseFragment {
                 .clickToHide(true)
                 .animation(new ViewTooltip.FadeTooltipAnimation(500))
                 .autoHide(false, 0);
+
+        if(tooltipView!=null)
+            hideToolTip(true);
         tooltipView = viewTooltip.getTooltip_view();
+
         viewTooltip.show();
 
 
@@ -322,16 +238,16 @@ public class AddNewAddressFragment extends BaseFragment {
         } catch (GooglePlayServicesRepairableException | GooglePlayServicesNotAvailableException e) {
 
             //TODO: Adding dummy place when playservice is not there
-            if (mBinding.editAddressInitials != null) {
+            if (mBinding.tvAddress != null) {
 //                edtAddress.setText("Dummy Address with " + Utility.STATIC_LAT + "," + Utility.STATIC_LNG);
-                mBinding.editAddressInitials.setText(mContext.getString(R.string.label_dummy_address, Utility.STATIC_LAT, Utility.STATIC_LNG));
-                mBinding.editAddressInitials.setFocusable(true);
-                mBinding.editAddressInitials.setFocusableInTouchMode(true);
+                mBinding.tvAddress.setText(mContext.getString(R.string.label_dummy_address, Utility.STATIC_LAT, Utility.STATIC_LNG));
+                mBinding.tvAddress.setFocusable(true);
+                mBinding.tvAddress.setFocusableInTouchMode(true);
                 try {
-                    mBinding.editAddressInitials.setTag(new LatLng(Double.parseDouble(Utility.STATIC_LAT), Double.parseDouble(Utility.STATIC_LNG)));
+                    mBinding.tvAddress.setTag(new LatLng(Double.parseDouble(Utility.STATIC_LAT), Double.parseDouble(Utility.STATIC_LNG)));
                 } catch (Exception exe) {
                     exe.printStackTrace();
-                    mBinding.editAddressInitials.setTag(new LatLng(0, 0));
+                    mBinding.tvAddress.setTag(new LatLng(0, 0));
                 }
             }
 
@@ -347,35 +263,40 @@ public class AddNewAddressFragment extends BaseFragment {
         if (requestCode == Utility.PLACE_PICKER_REQUEST) {
             if (resultCode == RESULT_OK) {
                 mBinding.llAddressFields.setVisibility(View.VISIBLE);
-
-                isAddressPickYouLocationVerified = true;
-                isAddressNameVerified = true;
-
                 final Place place = PlacePicker.getPlace(mContext, data);
                 final CharSequence address = place.getAddress();
 
                 mBinding.tvAddress.setText(address);
-                mBinding.tvAddress.setVisibility(View.VISIBLE);
-                mBinding.viewAddress.setVisibility(View.VISIBLE);
+                mBinding.tvAddress.setTag(place.getLatLng());
+
                 mBinding.editAddressInitials.setVisibility(View.VISIBLE);
                 mBinding.viewAddressInitials.setVisibility(View.VISIBLE);
+
+
                 mBinding.editAddressCity.setVisibility(View.GONE);
                 mBinding.viewCity.setVisibility(View.GONE);
                 mBinding.editAddressLocality.setVisibility(View.GONE);
                 mBinding.viewLocality.setVisibility(View.GONE);
                 mBinding.cvCurrentLocation.setVisibility(View.GONE);
 
-                openTooltip(true);
+                mBinding.tvAddress.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                openTooltip(false);
 
-            } else {
-                if (TextUtils.isEmpty(mBinding.editAddressInitials.getText().toString().trim())) {
-                    isAddressPickYouLocationVerified = false;
-                } else {
-                    isAddressPickYouLocationVerified = true;
-                    isAddressNameVerified = true;
-                }
+                    }
+                },200);
+
             }
         }
+    }
+
+    private void postEvent(AddressModel addressModel) {
+        ((AddressActivity) mContext).onBackPressed();
+        MessageEvent messageEvent = new MessageEvent();
+        messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.ADDRESS_SELECTED_POP_UP;
+        messageEvent.addressModel = addressModel;
+        EventBus.getDefault().postSticky(messageEvent);
     }
 
     @Override
@@ -384,14 +305,202 @@ public class AddNewAddressFragment extends BaseFragment {
         super.onDestroy();
     }
 
-    private void hideToolTip(boolean removenow) {
+
+    /**
+     * @param removeNow true if hide tool tip without animation and immediately
+     *                  false - remove with animation
+     */
+    private void hideToolTip(boolean removeNow) {
         if (tooltipView != null) {
-            if (removenow)
+            if (removeNow)
                 tooltipView.removeNow();
             else
                 tooltipView.remove();
         }
     }
+
+    public void onEventMainThread(MessageEvent event) {
+        Log.e("onEventMainThread", "" + event.BROADCAST_ACTION);
+        switch (event.BROADCAST_ACTION) {
+            case Utility.BROADCAST_TYPE.ADDRESS_SELECTED_POP_UP:
+                ((AddressActivity) mContext).onBackPressed();
+                break;
+        }
+    }
+
+    /**
+     * Calling Add Address WS
+     *
+     * @param addressModel added new address
+     * @param latLng latlong of selected address
+     */
+    private void callAddAddressWS(final AddressModel addressModel, final LatLng latLng) {
+        if (!Utility.isConnected(mContext)) {
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mBinding.getRoot());
+            return;
+        }
+
+        if (PreferenceUtility.getInstance(mContext).getUserDetails() == null) {
+            ((BaseAppCompatActivity) mContext).showProgressDialog();
+            FetchLocationInfoUtility mFetchLocationInfoUtility = new FetchLocationInfoUtility(
+                    mContext,
+                    new FetchLocationInfoUtility.FetchLocationInfoCallBack() {
+                        @Override
+                        public void onLocationInfoAvailable(LocationInfo mLocationIno) {
+                            ((BaseAppCompatActivity) mContext).hideProgressDialog();
+
+                            GuestUserDetails guestUserDetails = PreferenceUtility.getInstance(mContext).getGuestUserDetails();
+
+                            addressModel.address_id = "-" + (guestUserDetails.addressList == null ? "1" : String.valueOf(guestUserDetails.addressList.size() + 1));
+                            addressModel.cityName = mLocationIno.City;
+                            addressModel.countryName = mLocationIno.Country;
+                            addressModel.stateName = mLocationIno.State;
+                            addressModel.lat = String.valueOf(latLng.latitude);
+                            addressModel.lng = String.valueOf(latLng.longitude);
+
+                            if (guestUserDetails.addressList == null)
+                                guestUserDetails.addressList = new ArrayList<>();
+                            guestUserDetails.addressList.add(addressModel);
+                            PreferenceUtility.getInstance(mContext).saveGuestUserDetails(guestUserDetails);
+
+                            // TODO : REdirect from here
+                            postEvent(addressModel);
+
+                        }
+
+                        @Override
+                        public void internetConnectionNotFound() {
+//                            hideProgressDialog();
+                            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mBinding.getRoot());
+                        }
+                    },
+                    false
+            );
+            mFetchLocationInfoUtility.getLocationInfo(String.valueOf(latLng.latitude), String.valueOf(latLng.longitude));
+        } else {
+            /**
+             * Logged In User so first need to fetch other location info and then call add address
+             * Webservice.
+             */
+            ((BaseAppCompatActivity) mContext).showProgressDialog();
+            FetchLocationInfoUtility mFetchLocationInfoUtility = new FetchLocationInfoUtility(
+                    mContext,
+                    new FetchLocationInfoUtility.FetchLocationInfoCallBack() {
+                        @Override
+                        public void onLocationInfoAvailable(LocationInfo mLocationIno) {
+
+                            //Add Header parameters
+                            Map<String, String> mHeaderParams = new HashMap<>();
+                            mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
+                            mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().userID);
+
+                            //Add Params
+                            Map<String, Object> mParams = new HashMap<>();
+
+
+                            addressModel.cityName = mLocationIno.City;
+                            addressModel.countryName = mLocationIno.Country;
+                            addressModel.stateName = mLocationIno.State;
+                            addressModel.lat = String.valueOf(mLocationIno.lat);
+                            addressModel.lng = String.valueOf(mLocationIno.lng);
+
+
+                            mParams = NetworkUtility.addGuestAddressParams(mParams, addressModel);
+
+                            Utility.hideKeyboard(mContext);
+                            //Url is based on condition if address id is greater then 0 then it means we need to update the existing address
+                            VolleyNetworkRequest mVolleyNetworkRequest = new VolleyNetworkRequest(NetworkUtility.WS.ADD_ADDRESS
+                                    , mCallAddAddressWSErrorListener
+                                    , mCallAddAddressResponseListener
+                                    , mHeaderParams
+                                    , mParams
+                                    , null);
+                            Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest, NetworkUtility.WS.ADD_ADDRESS);
+                        }
+
+                        @Override
+                        public void internetConnectionNotFound() {
+                            ((BaseAppCompatActivity) mContext).hideProgressDialog();
+                            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mBinding.getRoot());
+                        }
+                    },
+                    false
+            );
+            mFetchLocationInfoUtility.getLocationInfo(String.valueOf(latLng.latitude), String.valueOf(latLng.longitude));
+        }
+    }
+
+    Response.Listener mCallAddAddressResponseListener = new Response.Listener() {
+        @Override
+        public void onResponse(Object response) {
+
+            String strResponse = (String) response;
+            try {
+                JSONObject jsonObject = new JSONObject(strResponse);
+                Log.i(TAG, "onResponse: " + jsonObject.toString());
+                int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
+                String error_message;
+
+                switch (statusCode) {
+                    case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
+                        UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
+                        AddressModel addressModel = (AddressModel) GsonUtility.getObjectFromJsonString(jsonObject.getJSONObject(NetworkUtility.TAGS.DATA).toString(), AddressModel.class);
+                        if (userDetails != null) {
+                            if (userDetails.addressList == null)
+                                userDetails.addressList = new ArrayList<>();
+                            userDetails.addressList.add(addressModel);
+                            PreferenceUtility.getInstance(mContext).saveUserDetails(userDetails);
+                        } else {
+                            GuestUserDetails guestUserDetails = PreferenceUtility.getInstance(mContext).getGuestUserDetails();
+                            if (guestUserDetails.addressList == null)
+                                guestUserDetails.addressList = new ArrayList<>();
+                            guestUserDetails.addressList.add(addressModel);
+                            PreferenceUtility.getInstance(mContext).saveGuestUserDetails(guestUserDetails);
+                        }
+
+                        // TODO : REdirect from here
+                        postEvent(addressModel);
+                        break;
+                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
+                        // Show Toast
+//                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityHireNewJobBinding.getRoot());
+                        Utility.showToast(mContext, mContext.getString(R.string.label_something_went_wrong));
+
+                        break;
+                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
+                        error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
+                        // Show message
+//                        Utility.showSnackBar(error_message, mActivityHireNewJobBinding.getRoot());
+                        Utility.showToast(mContext, error_message);
+                        break;
+                    case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
+                    case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
+                        //Logout and finish the current activity
+                        Utility.logout(mContext, true, statusCode);
+                        ((Activity) mContext).finish();
+                        break;
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+                mCallAddAddressWSErrorListener.onErrorResponse(new VolleyError(e.getMessage()));
+            }
+            ((BaseAppCompatActivity) mContext).hideProgressDialog();
+        }
+    };
+
+    Response.ErrorListener mCallAddAddressWSErrorListener = new Response.ErrorListener() {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
+
+            // Close Progressbar
+            ((BaseAppCompatActivity) mContext).hideProgressDialog();
+
+            // Show Toast
+//            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityHireNewJobBinding.getRoot());
+            Utility.showToast(mContext, mContext.getString(R.string.label_something_went_wrong));
+        }
+    };
 
 
 }

@@ -35,6 +35,7 @@
                     android:src="@drawable/ic_back_arrow_black"/>
 
                 <com.cheep.custom_view.CFTextViewSemiBold
+                    android:id="@+id/tv_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
@@ -59,7 +60,7 @@
                     android:id="@+id/rv_address"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    tools:listitem="@layout/row_address_option_item"/>
+                    tools:listitem="@layout/row_address_size_item"/>
 
 
             </LinearLayout>

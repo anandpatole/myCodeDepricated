@@ -11,5 +11,6 @@
     <string name="message_coundnot_find_current_location">oops! could noy find your current location! Please try again.</string>
     <string name="label_do_you_want_the_cheep_care_package_for_this_address">Do you want the Cheep Care package for this address?</string>
     <string name="label_auto_detect_location_message">Our smart App has picked up this location automatically via GPS?</string>
+    <string name="label_please_tell_us_where_do_you_need_the_amc_for">Please tell us where do you need the AMC for?</string>
 
 </resources>

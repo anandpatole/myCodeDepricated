@@ -5,14 +5,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.cheep.R;
+import com.cheep.activity.BaseAppCompatActivity;
 import com.cheep.cheepcarenew.fragments.AddressCategorySelectionFragment;
 import com.cheep.fragment.BaseFragment;
 
-public class AddressActivity extends AppCompatActivity {
+public class AddressActivity extends BaseAppCompatActivity {
 
     public static void newInstance(Context context) {
         context.startActivity(new Intent(context, AddressActivity.class));
@@ -20,10 +20,21 @@ public class AddressActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void initiateUI() {
+        loadFragment(AddressCategorySelectionFragment.TAG, AddressCategorySelectionFragment.newInstance());
+
+    }
+
+    @Override
+    protected void setListeners() {
+
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_address);
-        loadFragment(AddressCategorySelectionFragment.TAG, AddressCategorySelectionFragment.newInstance());
+        initiateUI();
     }
 
     public void loadFragment(String tag, BaseFragment baseFragment) {

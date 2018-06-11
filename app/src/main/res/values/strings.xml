@@ -829,5 +829,7 @@ without any hidden charges. Try it now!</string>
     <string name="sounds_good">Sounds Good </string>
     <string name="heading1">The Badge says it all.</string>
     <string name="heading2">Your satisfaction is \n everything. Period! </string>
+    <string name="label_how_big_is_your_home">How big is your home?</string>
+    <string name="label_how_big_is_your_office">How big is your office (in square feet)?</string>
 
 </resources>

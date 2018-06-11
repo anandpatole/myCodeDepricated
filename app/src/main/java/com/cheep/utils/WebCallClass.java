@@ -46,6 +46,8 @@ import static com.cheep.network.NetworkUtility.TAGS.CARE_PACKAGE_ID;
 import static com.cheep.network.NetworkUtility.TAGS.DATA;
 import static com.cheep.network.NetworkUtility.TAGS.DETAIL;
 import static com.cheep.network.NetworkUtility.TAGS.FINAL_EXTRA_CHARGE;
+import static com.cheep.network.NetworkUtility.TAGS.HOME;
+import static com.cheep.network.NetworkUtility.TAGS.OFFICE;
 import static com.cheep.network.NetworkUtility.TAGS.START_DATETIME;
 
 /**
@@ -1753,4 +1755,81 @@ public class WebCallClass {
 
     ////////////////////////// add vote of city call end //////////////////////////
 
+
+    ////////////////////////// get address size list call start //////////////////////////
+
+    public static void getAddressAssetSizeWS(final Context mContext, final CommonResponseListener commonListener) {
+
+        final Response.ErrorListener errorListener = new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
+                commonListener.volleyError(error);
+            }
+        };
+
+        final Response.Listener responseListener = new Response.Listener() {
+            @Override
+            public void onResponse(Object response) {
+                Log.d(TAG, "onResponse() called with: response = [" + response + "]");
+                try {
+                    JSONObject jsonObject = new JSONObject(response.toString());
+                    int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
+                    String error_message;
+
+                    switch (statusCode) {
+                        case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
+                            JSONObject jsonData = jsonObject.getJSONObject(DATA);
+                            JSONArray homeArray = jsonData.getJSONArray(HOME);
+                            JSONArray officeArray = jsonData.getJSONArray(OFFICE);
+                            PreferenceUtility.getInstance(mContext).setHomeAddressSize(homeArray.toString());
+                            PreferenceUtility.getInstance(mContext).setOfficeAddressSize(officeArray.toString());
+                            break;
+
+                        case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
+                            // Show Toast
+                            commonListener.showSpecificMessage(mContext.getString(R.string.label_something_went_wrong));
+                            break;
+
+                        case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
+                            error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
+                            // Show message
+                            commonListener.showSpecificMessage(error_message);
+                            break;
+
+                        case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
+                        case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
+                            //Logout and finish the current activity
+                            Utility.logout(mContext, true, statusCode);
+                            commonListener.forceLogout();
+                            break;
+                    }
+                } catch (JSONException e) {
+                    commonListener.showSpecificMessage(mContext.getString(R.string.label_something_went_wrong));
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        //Add Header parameters
+        Map<String, String> mHeaderParams = new HashMap<>();
+        mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
+        if (PreferenceUtility.getInstance(mContext).getUserDetails() != null) {
+            mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().userID);
+        }
+
+
+        //noinspection unchecked
+        VolleyNetworkRequest mVolleyNetworkRequest = new VolleyNetworkRequest(
+                NetworkUtility.WS.GET_ASSET_AREA
+                , errorListener
+                , responseListener
+                , mHeaderParams
+                , null
+                , null);
+
+        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest, NetworkUtility.WS.GET_ASSET_AREA);
+    }
+
+    ////////////////////////// get address size call end //////////////////////////
 }

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +14,7 @@ import android.view.ViewGroup;
 import com.cheep.R;
 import com.cheep.cheepcarenew.activities.AddressActivity;
 import com.cheep.cheepcarenew.adapters.AddressListRecyclerViewAdapter;
-import com.cheep.databinding.ActivityAddressListBinding;
+import com.cheep.databinding.FragmentAddressListBinding;
 import com.cheep.fragment.BaseFragment;
 import com.cheep.model.AddressModel;
 import com.cheep.model.MessageEvent;
@@ -26,7 +27,7 @@ import de.greenrobot.event.EventBus;
 
 public class AddressListFragment extends BaseFragment {
 
-    ActivityAddressListBinding mBinding;
+    FragmentAddressListBinding mBinding;
     public static final String TAG = "AddressListFragment";
     AddressListRecyclerViewAdapter adapter;
     private ArrayList<AddressModel> list = new ArrayList<>();
@@ -44,16 +45,18 @@ public class AddressListFragment extends BaseFragment {
         return fragment;
     }
 
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        mBinding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.activity_address_list, null, false);
+        mBinding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.fragment_address_list, null, false);
         return mBinding.getRoot();
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -80,7 +83,6 @@ public class AddressListFragment extends BaseFragment {
                 messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.ADDRESS_SELECTED_POP_UP;
                 messageEvent.addressModel = addressModel;
                 EventBus.getDefault().postSticky(messageEvent);
-                ((AddressActivity) mContext).onBackPressed();
 
             }
         });
@@ -93,9 +95,19 @@ public class AddressListFragment extends BaseFragment {
 
     }
 
+    public void onEventMainThread(MessageEvent event) {
+        Log.e("onEventMainThread", "" + event.BROADCAST_ACTION);
+        switch (event.BROADCAST_ACTION) {
+            case Utility.BROADCAST_TYPE.ADDRESS_SELECTED_POP_UP:
+                ((AddressActivity) mContext).onBackPressed();
+                break;
+        }
+    }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 
     protected void setListeners() {

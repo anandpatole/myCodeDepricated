@@ -39,6 +39,8 @@ public class PreferenceUtility {
     private static final String PREF_FILE_GUEST = "com.cheep.guest";
     private static final String PREF_GUEST_USER_INFO = "com.cheep.guest.userinfo";
     private static final String CITY_DATA = "com.cheep.guest.citydata";
+    private static final String HOME_ADDRESS_SIZE = "com.cheep.homeaddresssize";
+    private static final String OFFICE_ADDRESS_SIZE = "com.cheep.officeaddresssize";
     private SharedPreferences mGuestSharedPreferences;
     private static AdminSettingModel mAdminSettings;
 
@@ -67,6 +69,27 @@ public class PreferenceUtility {
         mSharedPreferences.edit().putString(PREF_FCM_TOKEN, token).apply();
     }
 
+    public void setHomeAddressSize(String homeArrayList) {
+        mSharedPreferences.edit().putString(HOME_ADDRESS_SIZE, homeArrayList).apply();
+    }
+
+    public void setOfficeAddressSize(String officeArrayList) {
+        mSharedPreferences.edit().putString(OFFICE_ADDRESS_SIZE, officeArrayList).apply();
+    }
+
+    public String getHomeAddressSize() {
+        if (mSharedPreferences.contains(HOME_ADDRESS_SIZE)) {
+            return mSharedPreferences.getString(HOME_ADDRESS_SIZE, "");
+        }
+        return "";
+    }
+
+    public String getOfficeAddressSize() {
+        if (mSharedPreferences.contains(OFFICE_ADDRESS_SIZE)) {
+            return mSharedPreferences.getString(OFFICE_ADDRESS_SIZE, "");
+        }
+        return "";
+    }
 
     public String getFCMRegID() {
         if (mSharedPreferences.contains(PREF_FCM_TOKEN)) {
@@ -81,7 +104,7 @@ public class PreferenceUtility {
         mSharedPreferences.edit().putString(PREF_USER_INFO, jsonData.toString()).apply();
 
         //updating hotline profile
-       // HotlineHelper.getInstance(context).updateUserInfo(mUserDetails, context);
+        // HotlineHelper.getInstance(context).updateUserInfo(mUserDetails, context);
         FreshChatHelper.getInstance(context).updateUserInfo(mUserDetails, context);
     }
 
@@ -95,7 +118,7 @@ public class PreferenceUtility {
         mSharedPreferences.edit().putString(PREF_USER_INFO, GsonUtility.getJsonStringFromObject(model)).apply();
         mUserDetails = model;
         //updating hotline profile
-      //  HotlineHelper.getInstance(context).updateUserInfo(mUserDetails, context);
+        //  HotlineHelper.getInstance(context).updateUserInfo(mUserDetails, context);
         FreshChatHelper.getInstance(context).updateUserInfo(mUserDetails, context);
     }
 
@@ -155,7 +178,7 @@ public class PreferenceUtility {
      */
     public void onUserLogout() {
         //updating hotline profile
-       // HotlineHelper.getInstance(context).clearUser(context);
+        // HotlineHelper.getInstance(context).clearUser(context);
         FreshChatHelper.getInstance(context).resetUser(context);
 
         // Clear All notification if raised

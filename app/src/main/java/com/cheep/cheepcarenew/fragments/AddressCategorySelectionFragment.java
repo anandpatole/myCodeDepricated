@@ -9,12 +9,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.cheep.R;
 import com.cheep.cheepcarenew.activities.AddressActivity;
 import com.cheep.custom_view.tooltips.ViewTooltip;
-import com.cheep.databinding.ActivityAddressCategorySelectionBinding;
+import com.cheep.databinding.FragmentAddressCategorySelectionBinding;
 import com.cheep.databinding.TooltipAddressSelectionBinding;
 import com.cheep.fragment.BaseFragment;
 import com.cheep.model.AddressModel;
@@ -32,15 +31,11 @@ import de.greenrobot.event.EventBus;
 
 public class AddressCategorySelectionFragment extends BaseFragment {
 
-    ActivityAddressCategorySelectionBinding mBinding;
+    FragmentAddressCategorySelectionBinding mBinding;
     public static final String TAG = "AddressCategorySelectionFragment";
     private AddressModel addressModel;
     private ArrayList<AddressModel> addressModelArrayList;
     private ViewTooltip.TooltipView tooltipView;
-
-    public void setAddressModel(AddressModel addressModel) {
-        this.addressModel = addressModel;
-    }
 
     public static AddressCategorySelectionFragment newInstance() {
         Bundle args = new Bundle();
@@ -49,10 +44,14 @@ public class AddressCategorySelectionFragment extends BaseFragment {
         return fragment;
     }
 
+    public void setAddressModel(AddressModel addressModel) {
+        this.addressModel = addressModel;
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        mBinding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.activity_address_category_selection, null, false);
+        mBinding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.fragment_address_category_selection, null, false);
         return mBinding.getRoot();
     }
 
@@ -93,13 +92,13 @@ public class AddressCategorySelectionFragment extends BaseFragment {
 
         } else {
             GuestUserDetails guestUserDetails = PreferenceUtility.getInstance(mContext).getGuestUserDetails();
-            if (guestUserDetails != null && guestUserDetails.addressList!=null && !guestUserDetails.addressList.isEmpty()) {
+            if (guestUserDetails != null && guestUserDetails.addressList != null && !guestUserDetails.addressList.isEmpty()) {
                 if (guestUserDetails.addressList.get(0) != null) {
                     addressModelArrayList = guestUserDetails.addressList;
-                    setAddress();
                     addressModel = guestUserDetails.addressList.get(0);
                     mBinding.tvAddressTitle.setVisibility(View.VISIBLE);
                     mBinding.cvAddress.setVisibility(View.VISIBLE);
+                    setAddress();
                 } else {
                     mBinding.tvAddressTitle.setVisibility(View.GONE);
                     mBinding.cvAddress.setVisibility(View.GONE);
@@ -135,10 +134,8 @@ public class AddressCategorySelectionFragment extends BaseFragment {
         mBinding.imgBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 hideToolTip();
                 ((AddressActivity) mContext).onBackPressed();
-
             }
         });
         mBinding.cvOffice.setOnClickListener(new View.OnClickListener() {
@@ -173,11 +170,25 @@ public class AddressCategorySelectionFragment extends BaseFragment {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
         hideToolTip();
-
-
     }
 
     private void openAddNewAddressDialog(String category) {
+        hideToolTip();
+        UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
+        if (userDetails != null && !userDetails.addressList.isEmpty()) {
+            if (userDetails.addressList.get(0) != null) {
+                addressModelArrayList = userDetails.addressList;
+            }
+
+        } else {
+            GuestUserDetails guestUserDetails = PreferenceUtility.getInstance(mContext).getGuestUserDetails();
+            if (guestUserDetails != null && guestUserDetails.addressList != null && !guestUserDetails.addressList.isEmpty()) {
+                if (guestUserDetails.addressList.get(0) != null) {
+                    addressModelArrayList = guestUserDetails.addressList;
+                }
+            }
+        }
+
         if (addressModelArrayList != null && !addressModelArrayList.isEmpty()) {
             ArrayList<AddressModel> arrayList = new ArrayList<>();
             for (AddressModel addressModel : addressModelArrayList) {
@@ -209,7 +220,6 @@ public class AddressCategorySelectionFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 hideToolTip();
-                Toast.makeText(mContext, "YES", Toast.LENGTH_SHORT).show();
                 ((AddressActivity) mContext).loadFragment(AddressSizeForHomeOfficeFragment.TAG, AddressSizeForHomeOfficeFragment.newInstance(addressModel));
             }
         });
@@ -219,15 +229,13 @@ public class AddressCategorySelectionFragment extends BaseFragment {
             public void onClick(View v) {
                 hideToolTip();
                 openAddNewAddressDialog(addressModel.category);
-                Toast.makeText(mContext, "NO", Toast.LENGTH_SHORT).show();
             }
         });
 
 
         final ViewTooltip viewTooltip =
-                ViewTooltip
-                        .on(this, mBinding.cvAddress)
-                        .customView(toolTipBinding.getRoot(),delay)
+                ViewTooltip.on(this, mBinding.cvAddress)
+                        .customView(toolTipBinding.getRoot(), delay)
                         .position(ViewTooltip.Position.BOTTOM)
                         .clickToHide(false)
                         .animation(new ViewTooltip.FadeTooltipAnimation(500))
@@ -248,10 +256,11 @@ public class AddressCategorySelectionFragment extends BaseFragment {
     }
 
     public void onEventMainThread(MessageEvent event) {
-        Log.e("onEventMainThread", "" + event.BROADCAST_ACTION);
+        Log.e("onEventMainThread  *******************", "" + event.BROADCAST_ACTION);
         switch (event.BROADCAST_ACTION) {
             case Utility.BROADCAST_TYPE.ADDRESS_SELECTED_POP_UP:
                 setAddressModel(event.addressModel);
+                initiateUI();
                 break;
         }
     }
