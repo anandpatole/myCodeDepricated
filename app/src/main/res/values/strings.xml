@@ -73,16 +73,30 @@
 
     <string name="label_upcoming_tasks">Upcoming</string>
     <string name="label_past_tasks">Past</string>
-
+    <string name="rate_card_repair">Repairs</string>
+    <string name="rate_card_electrician">Electrician</string>
+    <string name="rate_card_painter">Painter</string>
+    <string name="rate_card_application_repair">Application Repair</string>
+    <string name="rate_card_tech_repair">Tech Repair</string>
     <string name="label_reschedule">Reschedule</string>
-
+   <string name="text_cheep_rate_card_categories"> Rate Card for Service Categories</string>
+    <string name="rate_card_plumber">Plumber</string>
+   <string name="cheep_rate_card_info"></string>
+    <string name="rate_card_pest_control">Pest Control</string>
+    <string name="cheep_rate_card_info1">Our aim is to provide the best services at the most nominal rates.Depending on the services at hand,we might have some additional charges.You can easily aceess the rate card by tapping  on the services listed below</string>
     <string name="rupee_symbol_x_space">₹ %1$s</string>
     <string name="rupee_symbol_x">₹%1$s</string>
     <string name="dummy_email">mohankumar@gmail.com</string>
     <string name="label_phone_no">Phone Number</string>
+    <string name="label_phone_no_value">7207002829</string>
+    <string name="label_add_contact">Add contact</string>
+    <string name="label_emergency_info">Please add upto 3 emergency contacts who we will reach out to when you press the alert button on our app</string>
     <string name="label_emergency_contacts">Emergency contact</string>
     <!--<string name="label_manage_address">Manage Address</string>-->
     <string name="label_manage_address">Address</string>
+    <string name="label_manages_address">Manage Address</string>
+    <string name="label_view_more">View more</string>
+    <string name="label_view_less">View less</string>
     <string name="label_change_password">Change Password</string>
     <string name="label_notification">Notifications</string>
     <string name="label_update">Update</string>
@@ -96,6 +110,7 @@
     <string-array name="choose_image_options1">
         <item>Photo</item>
         <item>Name</item>
+        <item>Email Id</item>
     </string-array>
     <string name="label_submit">Submit</string>
     <string name="dummy_long_desc">"Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of "de Finibus Bonorum et Malorum" (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. The first line of Lorem Ipsum, "Lorem ipsum dolor sit amet..", comes from a line in section 1.10.32.
@@ -150,6 +165,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_cheepest">Cheepest</string>
     <string name="label_distance">Distance</string>
     <string name="label_rating">Rating</string>
+    <string name="label_rating_value">4.0</string>
     <string name="label_show_results">Show Results</string>
     <string name="label_reset">Reset</string>
     <string name="label_filter">Filter</string>

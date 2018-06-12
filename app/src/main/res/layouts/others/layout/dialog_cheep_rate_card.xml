@@ -32,14 +32,14 @@
 
         <ImageView
             android:id="@+id/cancel_rate_card"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/scale_30dp"
+            android:layout_height="@dimen/scale_30dp"
             android:layout_alignParentEnd="true"
             android:layout_alignParentTop="true"
             android:layout_marginEnd="@dimen/scale_11dp"
-            android:src="@drawable/freshchat_ic_cancel"
+            android:src="@drawable/ic_cancel_blue"
             android:layout_alignParentRight="true"
-            android:layout_marginTop="@dimen/scale_10dp"
+            android:layout_marginTop="@dimen/scale_8dp"
             android:layout_marginRight="@dimen/scale_11dp" />
 
         <com.cheep.custom_view.CFTextViewBold
@@ -49,7 +49,7 @@
             android:layout_centerInParent="true"
             android:layout_gravity="center"
             android:gravity="center_horizontal"
-            android:text="Rate Card"
+            android:text="@string/label_rate_card_modal"
             android:textColor="@color/white"
             android:textSize="@dimen/text_size_20sp" />
     </RelativeLayout>
@@ -68,7 +68,7 @@
         android:layout_height="wrap_content">
         <com.cheep.custom_view.CFTextViewBold
             android:layout_width="@dimen/scale_0dp"
-            android:text="Product"
+            android:text="@string/rate_card_modal_product"
             android:background="@color/white"
             android:layout_weight="1"
             android:textSize="@dimen/scale_18dp"
@@ -81,7 +81,7 @@
             android:background="@color/black_translucent"></View>
         <com.cheep.custom_view.CFTextViewBold
             android:layout_width="@dimen/scale_0dp"
-            android:text="Price"
+            android:text="@string/rate_card_modal_price"
             android:layout_weight="1"
             android:background="@color/white"
             android:textSize="@dimen/scale_18dp"

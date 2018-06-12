@@ -45,7 +45,8 @@ public class CheepCareRateCardFragment  extends BaseFragment {
     }
 
     @Override
-    public void onAttach(Context context) {
+    public void onAttach(Context context)
+    {
         Log.i(TAG, "onAttach: ");
         super.onAttach(context);
         if (context instanceof DrawerLayoutInteractionListener) {

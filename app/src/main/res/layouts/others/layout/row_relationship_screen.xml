@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout  xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout
+        android:id="@+id/front_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <com.cheep.custom_view.CFTextViewSemiBold
+            android:id="@+id/text_relation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/scale_22dp"
+            android:paddingLeft="@dimen/scale_34dp"
+            android:paddingBottom="@dimen/scale_5dp"
+            android:textSize="@dimen/text_size_15sp"
+            tools:text="sasa"/>
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/scale_1dp"
+            android:background="@color/grey_varient_3"
+            android:layout_marginLeft="@dimen/scale_15dp"
+            android:layout_marginRight="@dimen/scale_15dp"
+            />
+    </LinearLayout>
+</layout>

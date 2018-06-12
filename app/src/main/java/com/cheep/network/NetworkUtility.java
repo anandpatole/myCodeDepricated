@@ -19,6 +19,8 @@ public class NetworkUtility {
 
 
         // Endpoints
+
+        public static final String GET_RELATIONSHIP_LIST=BASE_URL+"customers/profile/getRelationshipList";
         public static final String LOGIN = BASE_URL + "customers/auth/cheep_login";
         public static final String LOGOUT = BASE_URL + "customers/profile/logout";
         public static final String FRESHCHAT_RESTORE_ID = BASE_URL + "customers/profile/add_restoreId";

@@ -8,4 +8,11 @@
     <string name="label_hey_is_this_your_home_address">Hey, Is this your home address?</string>
     <string name="label_do_you_want_the_cheep_care_package_for_this_address">Do you want the Cheep Care package for this address?</string>
     <string name="label_please_share_the_details_of_your_location">Please share the details of your location</string>
+    <string name="label_rate_card_modal">Rate Card</string>
+    <string name="rate_card_modal_product">Product</string>
+    <string name="rate_card_modal_price">Price</string>
+    <string name="label_relationship">Relationship</string>
+    <string name="label_select_your_relation_with_your_contact">Select your relation with your contact</string>
+
+
 </resources>
