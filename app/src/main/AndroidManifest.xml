@@ -417,6 +417,7 @@
         <activity
             android:name=".cheepcarenew.activities.AddressActivity"
             android:launchMode="singleTop"
+            android:theme="@style/Theme.AppCompat.Translucent"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".cheepcarenew.activities.PaymentSummaryActivityCheepCare"

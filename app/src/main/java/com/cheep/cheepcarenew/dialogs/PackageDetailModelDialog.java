@@ -112,6 +112,7 @@ public class PackageDetailModelDialog extends DialogFragment implements View.OnC
                     PackageDetail packageDetail = (PackageDetail) GsonUtility.getObjectFromJsonString(getArguments().getString(Utility.Extra.DATA),PackageDetail.class);
                     if (packageDetail!=null){
                         AddressActivity.newInstance(getContext(),packageDetail);
+                        dismiss();
                     }
                 }
                 break;
