@@ -26,6 +26,7 @@ import com.cheep.utils.GsonUtility;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.Utility;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -232,7 +233,10 @@ public class SelectSubCategoryFragment extends BaseFragment {
                 String error_message;
                 switch (statusCode) {
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
-                        ArrayList<SubServiceDetailModel> list = GsonUtility.getObjectListFromJsonString(jsonObject.optString(NetworkUtility.TAGS.DATA), SubServiceDetailModel[].class);
+                        JSONObject jsonObject1 = jsonObject.optJSONObject(NetworkUtility.TAGS.DATA);
+                        JSONArray jsonArray= jsonObject1.optJSONArray("sub_cats");
+
+                        ArrayList<SubServiceDetailModel> list = GsonUtility.getObjectListFromJsonString(jsonArray.toString(), SubServiceDetailModel[].class);
                         mSubServiceRecyclerViewAdapter.addList(list, getString(R.string.label_other_sub_service));
                         errorLoadingHelper.success();
                         break;

@@ -16,7 +16,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
@@ -322,12 +321,12 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
         comparisionChartFragmentDialog.show(getSupportFragmentManager(), TAG);
     }
     // open show Package Detail Model Fragment Dialog
-    private void showPackageDetailModelFragmentDialog() {
+    private void showPackageDetailModelFragmentDialog(PackageDetail packageDetail) {
         if (packageDetailModelDialog != null) {
             packageDetailModelDialog.dismissAllowingStateLoss();
             packageDetailModelDialog = null;
         }
-        packageDetailModelDialog = PackageDetailModelDialog.newInstance("","");
+        packageDetailModelDialog = PackageDetailModelDialog.newInstance(packageDetail);
         packageDetailModelDialog.show(getSupportFragmentManager(), TAG);
     }
 
@@ -339,21 +338,14 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
 //            String packageList = GsonUtility.getJsonStringFromObject(mCityLandingPageModel.packageDetailList);
 //            String packageList = GsonUtility.getJsonStringFromObject(mCityLandingPageModel.packageDetailList);
 //            PackageCustomizationActivity.newInstance(mContext, mCityLandingPageModel.careCityDetail, packageModel, packageList, mCityLandingPageModel.adminSetting);
-<<<<<<< HEAD
-
            // AddressCategorySelectionActivity.newInstance(LandingScreenPickPackageActivity.this);
 
             if(packageModel.type.equalsIgnoreCase("premium")){
-
-                showPackageDetailModelFragmentDialog();
-
+                showPackageDetailModelFragmentDialog(packageModel);
             } else if (packageModel.type.equalsIgnoreCase("normal")) {
 
                 showComparisionChartFragmentDialog();
             }
-=======
-            AddressActivity.newInstance(LandingScreenPickPackageActivity.this);
->>>>>>> 685b8593fcf632904abc0c6628ed784785dfe84e
         }
     };
 

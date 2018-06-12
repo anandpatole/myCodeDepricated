@@ -407,38 +407,12 @@ public class HomeTabFragment extends BaseFragment {
 
                     if (mNotificationClickInteractionListener != null) {
                         mNotificationClickInteractionListener.onNotificationIconClicked();
-<<<<<<< HEAD
                     }
 
-=======
-                    }*/
-                    showComparisionChartFragmentDialog();
-//                    showPackageDetailModelFragmentDialog();
->>>>>>> 685b8593fcf632904abc0c6628ed784785dfe84e
                     break;
             }
         }
     };
-
-    // open show Comparision Chart Fragment Dialog
-    private void showComparisionChartFragmentDialog() {
-        if (comparisionChartFragmentDialog != null) {
-            comparisionChartFragmentDialog.dismissAllowingStateLoss();
-            comparisionChartFragmentDialog = null;
-        }
-        comparisionChartFragmentDialog = ComparisionChartFragmentDialog.newInstance("", "");
-        comparisionChartFragmentDialog.show(getActivity().getSupportFragmentManager(), TAG);
-    }
-
-    // open show Package Detail Model Fragment Dialog
-    private void showPackageDetailModelFragmentDialog() {
-        if (packageDetailModelDialog != null) {
-            packageDetailModelDialog.dismissAllowingStateLoss();
-            packageDetailModelDialog = null;
-        }
-        packageDetailModelDialog = PackageDetailModelDialog.newInstance("", "");
-        packageDetailModelDialog.show(getActivity().getSupportFragmentManager(), TAG);
-    }
 
 
     public interface CategoryRowInteractionListener {

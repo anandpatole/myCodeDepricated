@@ -9,20 +9,32 @@ import android.util.Log;
 
 import com.cheep.R;
 import com.cheep.activity.BaseAppCompatActivity;
+import com.cheep.cheepcare.model.PackageDetail;
 import com.cheep.cheepcarenew.fragments.AddressCategorySelectionFragment;
 import com.cheep.fragment.BaseFragment;
+import com.cheep.utils.GsonUtility;
+import com.cheep.utils.Utility;
 
 public class AddressActivity extends BaseAppCompatActivity {
 
-    public static void newInstance(Context context) {
-        context.startActivity(new Intent(context, AddressActivity.class));
+    PackageDetail packageDetail;
+    public static void newInstance(Context context, PackageDetail packageDetail) {
+        Intent intent = new Intent(context, AddressActivity.class);
+        intent.putExtra(Utility.Extra.DATA, GsonUtility.getJsonStringFromObject(packageDetail));
+        context.startActivity(intent);
         ((Activity) context).overridePendingTransition(0, 0);
+    }
+
+    public PackageDetail getPackageDetail() {
+        return packageDetail;
     }
 
     @Override
     protected void initiateUI() {
+        if (getIntent()!=null && getIntent().hasExtra(Utility.Extra.DATA)){
+            packageDetail = (PackageDetail) GsonUtility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA),PackageDetail.class);
+        }
         loadFragment(AddressCategorySelectionFragment.TAG, AddressCategorySelectionFragment.newInstance());
-
     }
 
     @Override

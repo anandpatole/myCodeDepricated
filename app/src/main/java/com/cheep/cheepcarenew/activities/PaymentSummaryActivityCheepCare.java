@@ -5,14 +5,20 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
 import com.cheep.R;
 import com.cheep.activity.BaseAppCompatActivity;
+import com.cheep.cheepcare.model.PackageDetail;
+import com.cheep.model.AddressModel;
+import com.cheep.utils.GsonUtility;
+import com.cheep.utils.Utility;
 
-public class PaymentSummaryActivityNew extends BaseAppCompatActivity implements View.OnClickListener {
+public class PaymentSummaryActivityCheepCare extends BaseAppCompatActivity implements View.OnClickListener {
 
+    private static final String TAG = "PaymentSummaryActivityC";
 
     private CardView card3Months, card6Months, card12Months;
     private TextView tv3Month, tv6Month, tv12Month;
@@ -22,9 +28,14 @@ public class PaymentSummaryActivityNew extends BaseAppCompatActivity implements 
     double price = 400;
     double profit = 0;
 
+    private PackageDetail packageDetail;
+    private AddressModel addressModel;
 
-    public static void newInstance(Context context) {
-        Intent intent = new Intent(context, PaymentSummaryActivityNew.class);
+
+    public static void newInstance(Context context, PackageDetail packageDetail, AddressModel addressModel) {
+        Intent intent = new Intent(context, PaymentSummaryActivityCheepCare.class);
+        intent.putExtra(Utility.Extra.DATA, GsonUtility.getJsonStringFromObject(packageDetail));
+        intent.putExtra(Utility.Extra.DATA_2, GsonUtility.getJsonStringFromObject(addressModel));
         context.startActivity(intent);
     }
 
@@ -44,9 +55,21 @@ public class PaymentSummaryActivityNew extends BaseAppCompatActivity implements 
 
     @Override
     protected void initiateUI() {
+
+        if (getIntent() != null && getIntent().hasExtra(Utility.Extra.DATA) && getIntent().hasExtra(Utility.Extra.DATA_2)) {
+            packageDetail = (PackageDetail) GsonUtility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA), PackageDetail.class);
+            addressModel = (AddressModel) GsonUtility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA_2), AddressModel.class);
+            Log.e(TAG, "initiateUI: -------------"+addressModel.address);
+            Log.e(TAG, "initiateUI: ------------"+packageDetail.title);
+
+        } else {
+            return;
+        }
+
         card3Months = findViewById(R.id.card_3_months);
         card6Months = findViewById(R.id.card_6_months);
         card12Months = findViewById(R.id.card_12_months);
+
 
         tv3Month = findViewById(R.id.tv_3_month);
         tv6Month = findViewById(R.id.tv_6_month);
@@ -74,7 +97,7 @@ public class PaymentSummaryActivityNew extends BaseAppCompatActivity implements 
 
     private void updatePrice(int howManyMonth) {
         profit = cutPrice - price;
-        tvMeanPackageAmount.setText("₹"+String.valueOf(price * howManyMonth));
+        tvMeanPackageAmount.setText("₹" + String.valueOf(price * howManyMonth));
     }
 
     private void updateSaveAmountForMonth() {
@@ -93,6 +116,7 @@ public class PaymentSummaryActivityNew extends BaseAppCompatActivity implements 
                 card3Months.setCardBackgroundColor(Color.parseColor("#006DDA"));
                 card6Months.setCardBackgroundColor(Color.parseColor("#FFFFFF"));
                 card12Months.setCardBackgroundColor(Color.parseColor("#FFFFFF"));
+                card3Months.setSelected(false);
 
                 tv3Month.setTextColor(Color.parseColor("#FFFFFF"));
                 tv6Month.setTextColor(Color.parseColor("#006DDA"));

@@ -404,11 +404,7 @@
             android:name="com.paynimo.android.payment.WebViewActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"
-<<<<<<< HEAD
             android:windowSoftInputMode="stateHidden" />
-=======
-            android:windowSoftInputMode="stateHidden"/>
->>>>>>> 685b8593fcf632904abc0c6628ed784785dfe84e
 
         <receiver android:name="com.paynimo.android.payment.network.NetworkStateReceiver">
             <intent-filter>
@@ -422,8 +418,7 @@
             android:name=".cheepcarenew.activities.AddressActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-<<<<<<< HEAD
-            android:theme="@style/Theme.AppCompat.Translucent"></activity>
+            android:theme="@style/Theme.AppCompat.Translucent"/>
         <activity
             android:name=".cheepcarenew.activities.AddNewAddressActivity"
             android:launchMode="singleTop"
@@ -434,11 +429,8 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Translucent" />
-        <activity android:name=".cheepcarenew.activities.PaymentSummaryActivityNew"></activity>
-=======
-            android:theme="@style/Theme.AppCompat.Translucent">
-        </activity>
->>>>>>> 685b8593fcf632904abc0c6628ed784785dfe84e
+        <activity android:name=".cheepcarenew.activities.PaymentSummaryActivityNew"
+            android:theme="@style/Theme.AppCompat.Translucent"/>
     </application>
 
 </manifest>
