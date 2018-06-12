@@ -18,13 +18,11 @@ import android.widget.TextView;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.cheep.R;
-import com.cheep.cheepcare.adapter.SelectedSubServicePriceAdapter;
 import com.cheep.custom_view.BottomAlertDialog;
 import com.cheep.custom_view.CFEditTextRegular;
 import com.cheep.databinding.ActivityBookingConfirmationInstaBinding;
 import com.cheep.model.AddressModel;
 import com.cheep.model.MessageEvent;
-import com.cheep.model.SubServiceDetailModel;
 import com.cheep.model.TaskDetailModel;
 import com.cheep.model.UserDetails;
 import com.cheep.network.NetworkUtility;
@@ -140,11 +138,11 @@ public class BookingConfirmationInstaActivity extends BaseAppCompatActivity {
         // banner image of cat
         GlideUtility.loadImageView(mContext, mBinding.imgService, taskDetailModel.categoryModel.catImageExtras.original, R.drawable.gradient_black);
 
-        if (!taskDetailModel.subCatList.isEmpty()) {
-            mBinding.recyclerViewPaid.setAdapter(new SelectedSubServicePriceAdapter(taskDetailModel.subCatList, Utility.SERVICE_TYPE.PAID));
-        } else {
-            mBinding.recyclerViewPaid.setVisibility(View.GONE);
-        }
+//        if (!taskDetailModel.subCatList.isEmpty()) {
+//            mBinding.recyclerViewPaid.setAdapter(new SelectedSubServicePriceAdapter(taskDetailModel.subCatList, Utility.SERVICE_TYPE.PAID));
+//        } else {
+//            mBinding.recyclerViewPaid.setVisibility(View.GONE);
+//        }
 
         //
         mBinding.ivTermsTick.setSelected(true);
@@ -153,12 +151,12 @@ public class BookingConfirmationInstaActivity extends BaseAppCompatActivity {
 
         double subServiceTotal = 0;
         double subServiceTotalWithGST = 0;
-        for (SubServiceDetailModel subServiceDetailModel : taskDetailModel.subCatList) {
-            subServiceTotal += subServiceDetailModel.selected_unit * Double.parseDouble(subServiceDetailModel.unitPrice);
-            LogUtils.LOGE(TAG, "initiateUI:unitPrice " + subServiceDetailModel.unitPrice);
-            subServiceTotalWithGST += subServiceDetailModel.selected_unit * Double.parseDouble(subServiceDetailModel.unitPriceWithGST);
-            LogUtils.LOGE(TAG, "initiateUI:unitPriceWithGST " + subServiceDetailModel.unitPriceWithGST);
-        }
+//        for (SubServiceDetailModel subServiceDetailModel : taskDetailModel.subCatList) {
+//            subServiceTotal += subServiceDetailModel.selected_unit * Double.parseDouble(subServiceDetailModel.unitPrice);
+//            LogUtils.LOGE(TAG, "initiateUI:unitPrice " + subServiceDetailModel.unitPrice);
+//            subServiceTotalWithGST += subServiceDetailModel.selected_unit * Double.parseDouble(subServiceDetailModel.unitPriceWithGST);
+//            LogUtils.LOGE(TAG, "initiateUI:unitPriceWithGST " + subServiceDetailModel.unitPriceWithGST);
+//        }
 
         total = new BigDecimal(subServiceTotal).doubleValue();
         LogUtils.LOGE(TAG, "initiateUI:total " + total);

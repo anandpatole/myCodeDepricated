@@ -17,8 +17,8 @@
     <!--Theme.AppCompat.NoActionBar For White Background-->
     <style name="AppTheme.AppBarWhite" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
         <!--Changing navigation icons color-->
-        <item name="colorControlNormal">@color/white</item>
 
+        <item name="colorControlNormal">@color/white</item>
         <!--<item name="searchViewStyle">@style/AppTheme.SearchViewStyle</item>-->
         <item name="editTextColor">@color/colorAccent</item>
         <item name="android:editTextColor">@color/colorAccent</item>
@@ -68,11 +68,11 @@
     </style>
 
     <!--Activity Themes-->
-    <style name="AppTheme" parent="BaseTheme">
-        <!-- Customize your theme here. -->
+  <!--  <style name="AppTheme" parent="BaseTheme">
+        &lt;!&ndash; Customize your theme here. &ndash;&gt;
         <item name="android:buttonStyle">@style/ButtonPaynimo</item>
         <item name="android:editTextStyle">@style/EditTextPaynimo</item>
-    </style>
+    </style>-->
 
     <!--CropImageActivity Customized theme-->
     <style name="AppTheme.CropActivity" parent="@style/Theme.AppCompat">

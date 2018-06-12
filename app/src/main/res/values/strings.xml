@@ -444,6 +444,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_insta_book">InstaBook</string>
     <string name="lable_insta_get_pro">and get a PRO instantly</string>
     <string name="info_insta_book">Recommended if you want to get your task done quickly. Be rest assured, CHEEP will instantly assign a verified PRO with min 10 years of experience to get the job done.</string>
+    <string name="info_insta_book_new">At times, due to heavy demand, our PRO\'s may be unavailable at the time-slot requested by you. In that situation, we will contact you well in advance and offer you other available slots for you to choose. Please be rest assured, we will send our PRO\'s within 24 hours as promised. Thank you.</string>
     <string name="info_get_quote">Recommended if your task is not urgent. You can compare multiple quotes, read independent reviews and then book the PRO you like.</string>
     <string name="label_get_quotes">Get Quotes</string>
     <string name="lable_book_pro">and book the PRO you want</string>

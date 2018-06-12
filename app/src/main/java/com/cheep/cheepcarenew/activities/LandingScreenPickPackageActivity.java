@@ -22,7 +22,6 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.cheep.R;
 import com.cheep.activity.BaseAppCompatActivity;
-import com.cheep.cheepcare.activity.ManageSubscriptionActivity;
 import com.cheep.cheepcare.adapter.CheepCareFeatureAdapter;
 import com.cheep.cheepcare.adapter.CheepCarePackageAdapter;
 import com.cheep.cheepcare.model.CareCityDetail;
@@ -292,16 +291,8 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
                         // The 'which' argument contains the index position
                         // of the selected item
                         LogUtils.LOGE(TAG, "onClick alert dialog : " + bannerCareCityDetailsList.get(which).cityName);
-                        if (!mCity.cityName.equalsIgnoreCase(bannerCareCityDetailsList.get(which).cityName)) {
-                            if (bannerCareCityDetailsList.get(which).isSubscribed.equalsIgnoreCase(Utility.BOOLEAN.YES)) {
-                                String cheepcareBannerListString = GsonUtility.getJsonStringFromObject(bannerCareCityDetailsList);
-                                ManageSubscriptionActivity.newInstance(LandingScreenPickPackageActivity.this, bannerCareCityDetailsList.get(which), true, cheepcareBannerListString);
-                                finish();
-                            } else {
-                                mCity = bannerCareCityDetailsList.get(which);
-                                setCityBannerData();
-                            }
-                        }
+                        mCity = bannerCareCityDetailsList.get(which);
+                        setCityBannerData();
                         dialog.dismiss();
                     }
                 });
@@ -317,9 +308,10 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
             comparisionChartFragmentDialog.dismissAllowingStateLoss();
             comparisionChartFragmentDialog = null;
         }
-        comparisionChartFragmentDialog = ComparisionChartFragmentDialog.newInstance("","");
+        comparisionChartFragmentDialog = ComparisionChartFragmentDialog.newInstance("", "");
         comparisionChartFragmentDialog.show(getSupportFragmentManager(), TAG);
     }
+
     // open show Package Detail Model Fragment Dialog
     private void showPackageDetailModelFragmentDialog(PackageDetail packageDetail) {
         if (packageDetailModelDialog != null) {
@@ -334,13 +326,13 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
             = new CheepCarePackageAdapter.PackageItemClickListener() {
         @Override
         public void onPackageItemClick(int position, PackageDetail packageModel) {
-           // Toast.makeText(getApplicationContext(),"majid : "+ packageModel.type,Toast.LENGTH_LONG).show();
+            // Toast.makeText(getApplicationContext(),"majid : "+ packageModel.type,Toast.LENGTH_LONG).show();
 //            String packageList = GsonUtility.getJsonStringFromObject(mCityLandingPageModel.packageDetailList);
 //            String packageList = GsonUtility.getJsonStringFromObject(mCityLandingPageModel.packageDetailList);
 //            PackageCustomizationActivity.newInstance(mContext, mCityLandingPageModel.careCityDetail, packageModel, packageList, mCityLandingPageModel.adminSetting);
-           // AddressCategorySelectionActivity.newInstance(LandingScreenPickPackageActivity.this);
+            // AddressCategorySelectionActivity.newInstance(LandingScreenPickPackageActivity.this);
 
-            if(packageModel.type.equalsIgnoreCase("premium")){
+            if (packageModel.type.equalsIgnoreCase("premium")) {
                 showPackageDetailModelFragmentDialog(packageModel);
             } else if (packageModel.type.equalsIgnoreCase("normal")) {
 

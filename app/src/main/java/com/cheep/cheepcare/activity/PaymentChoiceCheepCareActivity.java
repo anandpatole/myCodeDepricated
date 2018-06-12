@@ -674,8 +674,7 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
                 hideProgressDialog();
                 switch (statusCode) {
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
-                        ManageSubscriptionActivity.newInstance(PaymentChoiceCheepCareActivity.this, careCityDetail
-                                , false, Utility.EMPTY_STRING);
+                        finish();
                         MessageEvent messageEvent = new MessageEvent();
                         messageEvent.id = careCityDetail.id;
                         messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.PACKAGE_SUBSCRIBED_SUCCESSFULLY;

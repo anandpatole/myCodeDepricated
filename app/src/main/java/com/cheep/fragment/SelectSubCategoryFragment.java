@@ -87,11 +87,7 @@ public class SelectSubCategoryFragment extends BaseFragment {
             return;
         }
 
-        if (isVerified) {
-            mTaskCreationActivity.setTaskState(TaskCreationActivity.STEP_ONE_VERIFIED);
-        } else {
             mTaskCreationActivity.setTaskState(TaskCreationActivity.STEP_ONE_NORMAL);
-        }
 
         // Hide the post task button
         if (getSubCatList().isEmpty()) {
@@ -165,19 +161,9 @@ public class SelectSubCategoryFragment extends BaseFragment {
             //Alert The activity that step one is been verified.
             if (getSubCatList().isEmpty()) {
                 mTaskCreationActivity.showPostTaskButton(true, false);
-                mTaskCreationActivity.setTaskState(TaskCreationActivity.STEP_ONE_UNVERIFIED);
             } else {
                 mTaskCreationActivity.showPostTaskButton(true, true);
-                mTaskCreationActivity.setTaskState(TaskCreationActivity.STEP_ONE_VERIFIED);
             }
-            //TODO : commented for new flow
-//            new Handler().postDelayed(new Runnable() {
-//                @Override
-//                public void run() {
-//                    mTaskCreationActivity.gotoStep(TaskCreationActivity.STAGE_2);
-//                }
-//            }, 500);
-
         }
     };
 
@@ -234,7 +220,7 @@ public class SelectSubCategoryFragment extends BaseFragment {
                 switch (statusCode) {
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
                         JSONObject jsonObject1 = jsonObject.optJSONObject(NetworkUtility.TAGS.DATA);
-                        JSONArray jsonArray= jsonObject1.optJSONArray("sub_cats");
+                        JSONArray jsonArray = jsonObject1.optJSONArray("sub_cats");
 
                         ArrayList<SubServiceDetailModel> list = GsonUtility.getObjectListFromJsonString(jsonArray.toString(), SubServiceDetailModel[].class);
                         mSubServiceRecyclerViewAdapter.addList(list, getString(R.string.label_other_sub_service));

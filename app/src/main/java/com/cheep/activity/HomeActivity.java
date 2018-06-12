@@ -45,7 +45,6 @@ import com.cheep.adapter.ChatTabRecyclerViewAdapter;
 import com.cheep.adapter.FAQRecyclerViewAdapter;
 import com.cheep.adapter.FavouriteRecyclerViewAdapter;
 import com.cheep.adapter.SlideMenuAdapter;
-import com.cheep.cheepcare.activity.ManageSubscriptionActivity;
 import com.cheep.cheepcare.activity.NotificationCcActivity;
 import com.cheep.cheepcare.adapter.PaymentHistoryCCAdapter;
 import com.cheep.cheepcare.fragment.ProfileTabFragment;
@@ -775,19 +774,7 @@ public class HomeActivity extends BaseAppCompatActivity
     public void onCategoryRowClicked(JobCategoryModel model, int position) {
         // Changes on 27thApril,2017
 //        HireNewJobActivity.newInstance(mContext, model);
-        Fragment mHomeFragment = getSupportFragmentManager().findFragmentByTag(HomeFragment.TAG);
-        if (mHomeFragment != null) {
-            Fragment mHomeTabFragment = mHomeFragment.getChildFragmentManager().findFragmentByTag(HomeFragment.TAB_HOME);
-            if (mHomeTabFragment != null) {
-                if (((HomeTabFragment) mHomeTabFragment).getmSelectedFilterType().equalsIgnoreCase(Utility.FILTER_TYPES.FILTER_TYPE_SUBSCRIBED)) {
-                    ManageSubscriptionActivity.newInstance(mContext, model.careCityData.get(0), true, GsonUtility.getJsonStringFromObject(((HomeTabFragment) mHomeTabFragment).careBannerModelArrayList));
-                } else
-                    TaskCreationActivity.getInstance(mContext, model);
-            } else
-                TaskCreationActivity.getInstance(mContext, model);
-        } else {
             TaskCreationActivity.getInstance(mContext, model);
-        }
     }
 
     @Override
