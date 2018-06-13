@@ -19,6 +19,7 @@ import com.cheep.R;
 import com.cheep.cheepcare.model.CareCityDetail;
 import com.cheep.cheepcare.model.PackageDetail;
 import com.cheep.cheepcarenew.activities.AddressActivity;
+import com.cheep.cheepcarenew.activities.PaymentSummaryActivityCheepCare;
 import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
@@ -39,6 +40,7 @@ public class PackageDetailModelDialog extends DialogFragment implements View.OnC
     private ProgressDialog mProgressDialog;
 
     private TextView tvData,tvSoundsGood;
+
 
     public PackageDetailModelDialog() {
         // Required empty public constructor
@@ -108,7 +110,7 @@ public class PackageDetailModelDialog extends DialogFragment implements View.OnC
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.tv_sounds_good:
-//                PaymentSummaryActivityCheepCare.newInstance(getContext());
+             //  PaymentSummaryActivityCheepCare.newInstance(getContext());
                 if (getArguments()!=null)
                 {
                     PackageDetail packageDetail = (PackageDetail) GsonUtility.getObjectFromJsonString(getArguments().getString(Utility.Extra.DATA),PackageDetail.class);
@@ -194,10 +196,10 @@ public class PackageDetailModelDialog extends DialogFragment implements View.OnC
                 String error_message;
                 switch (statusCode) {
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
-                        JSONArray data = jsonObject.getJSONArray("data");
+                        JSONArray data = jsonObject.getJSONArray(NetworkUtility.TAGS.DATA);
                         for (int i = 0; i < data.length(); i++) {
                             JSONObject obj = data.getJSONObject(i);
-                            tvData.setText(Html.fromHtml(obj.getString("text")));
+                            tvData.setText(Html.fromHtml(obj.getString(NetworkUtility.TAGS.TEXT)));
                         }
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:

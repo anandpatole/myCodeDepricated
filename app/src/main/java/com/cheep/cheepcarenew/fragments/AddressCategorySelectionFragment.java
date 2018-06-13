@@ -220,6 +220,8 @@ public class AddressCategorySelectionFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 hideToolTip();
+                // TODO: UN-COMMENT THIS CODE AND VERIFY ADDRESSCITY
+//                ((AddressActivity) mContext).verifyAddressForCity(addressModel);
                 ((AddressActivity) mContext).verifyAddressForCity(addressModel);
             }
         });

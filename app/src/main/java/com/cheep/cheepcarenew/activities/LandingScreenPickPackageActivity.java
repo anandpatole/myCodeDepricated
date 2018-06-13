@@ -318,7 +318,7 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
             packageDetailModelDialog.dismissAllowingStateLoss();
             packageDetailModelDialog = null;
         }
-        packageDetailModelDialog = PackageDetailModelDialog.newInstance(packageDetail,mCity);
+        packageDetailModelDialog = PackageDetailModelDialog.newInstance(packageDetail, mCity);
         packageDetailModelDialog.show(getSupportFragmentManager(), TAG);
     }
 
@@ -332,10 +332,9 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
 //            PackageCustomizationActivity.newInstance(mContext, mCityLandingPageModel.careCityDetail, packageModel, packageList, mCityLandingPageModel.adminSetting);
             // AddressCategorySelectionActivity.newInstance(LandingScreenPickPackageActivity.this);
 
-            if (packageModel.type.equalsIgnoreCase("premium")) {
+            if (packageModel.type.equalsIgnoreCase(Utility.CAR_PACKAGE_TYPE.PREMIUM)) {
                 showPackageDetailModelFragmentDialog(packageModel);
-            } else if (packageModel.type.equalsIgnoreCase("normal")) {
-
+            } else if (packageModel.type.equalsIgnoreCase(Utility.CAR_PACKAGE_TYPE.NORMAL)) {
                 showComparisionChartFragmentDialog();
             }
         }

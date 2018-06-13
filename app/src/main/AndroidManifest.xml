@@ -381,7 +381,8 @@
             android:name="com.paynimo.android.payment.WebViewActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden"/>
+            android:windowSoftInputMode="stateHidden" />
+
 
         <receiver android:name="com.paynimo.android.payment.network.NetworkStateReceiver">
             <intent-filter>
@@ -394,13 +395,13 @@
         <activity
             android:name=".cheepcarenew.activities.AddressActivity"
             android:launchMode="singleTop"
-            android:theme="@style/Theme.AppCompat.Translucent"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Translucent"/>
         <activity
             android:name=".cheepcarenew.activities.PaymentSummaryActivityCheepCare"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden"/>
+            android:theme="@style/Theme.AppCompat.Translucent"/>
     </application>
 
 </manifest>

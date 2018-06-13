@@ -2,7 +2,7 @@
 
 <!-- Generated with http://android-holo-colors.com -->
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
-    <style name="paynimoUXTheme" parent="@style/_Paynimo"/>
+    <!--<style name="paynimoUXTheme" parent="@style/_Paynimo"/>-->
   
     <style name="NoActionBar" parent="@style/Theme.AppCompat.Light">
         <item name="android:windowNoTitle">true</item>
