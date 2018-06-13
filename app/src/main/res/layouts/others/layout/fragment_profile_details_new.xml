@@ -37,11 +37,20 @@
                             android:src="@drawable/icon_profile_img_solid"
                             tools:ignore="ContentDescription" />
 
+                        <ImageView
+                            android:id="@+id/img_profile_photo_edit"
+                            android:layout_width="@dimen/scale_25dp"
+                            android:layout_height="@dimen/scale_25dp"
+                            android:layout_gravity="right|top"
+android:visibility="gone"
+                            android:scaleType="fitXY"
+                            android:src="@drawable/icon_profile_photo_edit"
+                            tools:ignore="ContentDescription" />
 
                     </FrameLayout>
 
                     <ImageView
-                        android:id="@+id/img_profile_photo_edit"
+android:id="@+id/main_profile_edit"
                         android:layout_width="@dimen/scale_25dp"
                         android:layout_height="@dimen/scale_25dp"
                         android:layout_gravity="right|top"
@@ -54,7 +63,6 @@
 
                 <FrameLayout
                     android:layout_width="match_parent"
-
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/scale_10dp">
 
@@ -67,6 +75,16 @@
                         android:textColor="@color/black"
                         android:textSize="@dimen/text_size_16sp" />
 
+                    <ImageView
+                        android:id="@+id/username_profile_edit"
+                        android:layout_width="@dimen/scale_25dp"
+                        android:layout_height="@dimen/scale_25dp"
+                        android:layout_marginRight="@dimen/scale_10dp"
+                        android:scaleType="fitXY"
+                        android:visibility="gone"
+                        android:layout_gravity="right"
+                        android:src="@drawable/icon_profile_photo_edit"
+                        tools:ignore="ContentDescription" />
 
                 </FrameLayout>
 
@@ -156,7 +174,9 @@ android:layout_marginBottom="@dimen/scale_15dp"
                     android:text="@string/label_email"
                     android:textColor="@color/grey_dark_color_2"
                     android:textSize="@dimen/text_size_13sp" />
-
+<FrameLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
                 <com.cheep.custom_view.CFTextViewRegular
                     android:id="@+id/text_email"
                     android:layout_width="match_parent"
@@ -167,7 +187,17 @@ android:layout_marginBottom="@dimen/scale_15dp"
                     android:text="@string/dummy_email"
                     android:textColor="@color/black"
                     android:textSize="@dimen/text_size_14sp" />
-
+    <ImageView
+android:id="@+id/email_profile_edit"
+        android:layout_width="@dimen/scale_25dp"
+        android:layout_height="@dimen/scale_25dp"
+        android:layout_gravity="right|top"
+        android:visibility="gone"
+android:layout_marginRight="@dimen/scale_10dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/icon_profile_photo_edit"
+        tools:ignore="ContentDescription" />
+</FrameLayout>
                 <View
 
                     android:layout_width="match_parent"
