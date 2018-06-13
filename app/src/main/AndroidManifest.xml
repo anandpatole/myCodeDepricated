@@ -398,7 +398,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Translucent"/>
         <activity
-            android:name=".cheepcarenew.activities.PaymentSummaryActivityCheepCare"
+            android:name=".cheepcarenew.activities.PaymentSummaryCheepCareActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Translucent"/>

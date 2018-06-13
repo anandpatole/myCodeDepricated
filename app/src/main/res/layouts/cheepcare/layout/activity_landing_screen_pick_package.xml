@@ -121,7 +121,7 @@
                             android:layout_marginTop="@dimen/scale_4dp"
                             android:layout_toEndOf="@+id/img_cheep_tips"
                             android:layout_toRightOf="@+id/img_cheep_tips"
-                            android:textColor="@color/cheep_tips_color"
+                            android:textColor="@color/black"
                             android:textSize="@dimen/text_size_15sp" />
 
                         <com.cheep.custom_view.CFTextViewRegular
@@ -137,7 +137,7 @@
                             android:paddingLeft="@dimen/scale_8dp"
                             android:paddingRight="@dimen/scale_20dp"
                             android:paddingStart="@dimen/scale_8dp"
-                            android:textColor="@color/cheep_tips_black"
+                            android:textColor="@color/black"
                             android:textSize="@dimen/text_size_13sp" />
 
                         <TextView

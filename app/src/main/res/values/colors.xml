@@ -131,8 +131,6 @@
     <color name="black_varient_1">#010101</color>
     <color name="c_F2F2F2">#F2F2F2</color>
 
-    <color name="cheep_tips_color">#FF006DDA</color>
-    <color name="cheep_tips_black">#FF000000</color>
     <color name="gray_chart_upper">#06FFCC01</color>
     <color name="gray_chart_lower">#20646460</color>
     <color name="light_center">#66FFCC01</color>
@@ -140,12 +138,6 @@
     <color name="premium">#E54C4C</color>
     <color name="heading_color">#FFED2431</color>
 
-    <!--test-->
-    <!--<color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#007BD8</color>
-    <color name="colorAccentLight">#60007BD8</color>
-    <color name="transparent">#00000000</color>-->
 
 </resources>
 

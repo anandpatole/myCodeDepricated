@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 
 import com.cheep.R;
 import com.cheep.cheepcarenew.activities.AddressActivity;
-import com.cheep.cheepcarenew.activities.PaymentSummaryActivityCheepCare;
+import com.cheep.cheepcarenew.activities.PaymentSummaryCheepCareActivity;
 import com.cheep.cheepcarenew.adapters.AddressSizeRecyclerViewAdapter;
 import com.cheep.custom_view.GridSpacingItemDecoration;
 import com.cheep.databinding.FragmentAddressSizeForHomeOfficeBinding;
@@ -75,7 +75,7 @@ public class AddressSizeForHomeOfficeFragment extends BaseFragment {
             @Override
             public void onClickAddressSize(AddressSizeModel model) {
                 addressModel.addressSizeModel = model;
-                PaymentSummaryActivityCheepCare.newInstance(mContext, ((AddressActivity) mContext).getPackageDetail(), addressModel);
+                PaymentSummaryCheepCareActivity.newInstance(mContext, ((AddressActivity) mContext).getPackageDetail(), addressModel);
 
             }
         });

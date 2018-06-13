@@ -19,7 +19,6 @@ import com.cheep.R;
 import com.cheep.cheepcare.model.CareCityDetail;
 import com.cheep.cheepcare.model.PackageDetail;
 import com.cheep.cheepcarenew.activities.AddressActivity;
-import com.cheep.cheepcarenew.activities.PaymentSummaryActivityCheepCare;
 import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
@@ -110,7 +109,7 @@ public class PackageDetailModelDialog extends DialogFragment implements View.OnC
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.tv_sounds_good:
-             //  PaymentSummaryActivityCheepCare.newInstance(getContext());
+             //  PaymentSummaryCheepCareActivity.newInstance(getContext());
                 if (getArguments()!=null)
                 {
                     PackageDetail packageDetail = (PackageDetail) GsonUtility.getObjectFromJsonString(getArguments().getString(Utility.Extra.DATA),PackageDetail.class);

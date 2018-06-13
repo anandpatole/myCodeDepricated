@@ -117,7 +117,7 @@
                 android:layout_marginBottom="@dimen/scale_10dp"
                 android:gravity="center"
                 android:text="@string/sounds_good"
-                android:textColor="@color/cheep_tips_color"
+                android:textColor="@color/black"
                 android:textSize="@dimen/text_size_18sp" />
 
         </LinearLayout>

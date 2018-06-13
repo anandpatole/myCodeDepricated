@@ -21,7 +21,7 @@
             android:gravity="center"
             android:padding="@dimen/scale_10dp"
             android:text="@string/comparision_message"
-            android:textColor="@color/cheep_tips_black"
+            android:textColor="@color/black"
             android:textSize="@dimen/text_size_18sp" />
 
         <LinearLayout
@@ -93,7 +93,7 @@
                     android:layout_marginStart="@dimen/scale_3dp"
                     android:gravity="center"
                     android:text="@string/benefits_features"
-                    android:textColor="@color/cheep_tips_black"
+                    android:textColor="@color/black"
                     android:textSize="@dimen/text_size_13sp" />
 
             </LinearLayout>
@@ -193,7 +193,7 @@
                     android:layout_marginTop="@dimen/scale_3dp"
                     android:gravity="center"
                     android:text="@string/cheep_care_package"
-                    android:textColor="@color/cheep_tips_black"
+                    android:textColor="@color/black"
                     android:textSize="@dimen/text_size_13sp" />
 
                 <LinearLayout
@@ -244,7 +244,7 @@
             android:layout_height="match_parent"
             android:layout_above="@+id/relative_bottom"
             android:layout_below="@+id/linearHeader"
-            app:layoutManager="LinearLayoutManager" />
+            app:layoutManager="android.support.v7.widget.LinearLayoutManager" />
 
 
         <RelativeLayout

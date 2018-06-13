@@ -28,7 +28,7 @@
                 android:layout_marginStart="@dimen/scale_4dp"
                 android:gravity="center"
                 android:text="@string/hotline_message_image_Saved"
-                android:textColor="@color/cheep_tips_black"
+                android:textColor="@color/black"
                 android:textSize="@dimen/text_size_13sp" />
 
         </LinearLayout>
@@ -62,7 +62,7 @@
                 android:layout_marginRight="@dimen/scale_4dp"
                 android:layout_marginStart="@dimen/scale_4dp"
                 android:gravity="center"
-                android:textColor="@color/cheep_tips_black"
+                android:textColor="@color/black"
                 android:textSize="@dimen/text_size_13sp" />
 
         </LinearLayout>
@@ -87,7 +87,7 @@
                 android:layout_marginStart="@dimen/scale_4dp"
                 android:gravity="center"
                 android:text="@string/hotline_message_image_Saved"
-                android:textColor="@color/cheep_tips_black"
+                android:textColor="@color/black"
                 android:textSize="@dimen/text_size_14sp" />
 
         </LinearLayout>

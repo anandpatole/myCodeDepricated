@@ -21,7 +21,7 @@ import android.widget.TextView;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.cheep.R;
-import com.cheep.cheepcarenew.activities.PaymentSummaryActivityCheepCare;
+import com.cheep.cheepcarenew.activities.PaymentSummaryCheepCareActivity;
 import com.cheep.model.ComparisionChartModel;
 import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
@@ -140,10 +140,10 @@ public class ComparisionChartFragmentDialog extends DialogFragment implements Vi
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.tv_book_know_premimu:
-                PaymentSummaryActivityCheepCare.newInstance(getContext());
+                PaymentSummaryCheepCareActivity.newInstance(getContext());
                 break;
             case R.id.tv_book_know_care:
-                PaymentSummaryActivityCheepCare.newInstance(getContext());
+                PaymentSummaryCheepCareActivity.newInstance(getContext());
                 break;
         }
     }

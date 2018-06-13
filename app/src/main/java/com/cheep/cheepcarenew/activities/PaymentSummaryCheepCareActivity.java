@@ -3,7 +3,6 @@ package com.cheep.cheepcarenew.activities;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -17,9 +16,9 @@ import com.cheep.model.AddressModel;
 import com.cheep.utils.GsonUtility;
 import com.cheep.utils.Utility;
 
-public class PaymentSummaryActivityCheepCare extends BaseAppCompatActivity implements View.OnClickListener {
+public class PaymentSummaryCheepCareActivity extends BaseAppCompatActivity implements View.OnClickListener {
 
-    private static final String TAG = "PaymentSummaryActivityCheepCare";
+    private static final String TAG = "PaymentSummaryCheepCareActivity";
 
     private android.support.v7.widget.CardView card3Months, card6Months, card12Months;
     private TextView tv3Month, tv6Month, tv12Month;
@@ -35,13 +34,14 @@ public class PaymentSummaryActivityCheepCare extends BaseAppCompatActivity imple
 
 
     public static void newInstance(Context context, PackageDetail packageDetail, AddressModel addressModel) {
-        Intent intent = new Intent(context, PaymentSummaryActivityCheepCare.class);
+        Intent intent = new Intent(context, PaymentSummaryCheepCareActivity.class);
         intent.putExtra(Utility.Extra.DATA, GsonUtility.getJsonStringFromObject(packageDetail));
         intent.putExtra(Utility.Extra.DATA_2, GsonUtility.getJsonStringFromObject(addressModel));
         context.startActivity(intent);
     }
+
     public static void newInstance(Context context) {
-        Intent intent = new Intent(context, PaymentSummaryActivityCheepCare.class);
+        Intent intent = new Intent(context, PaymentSummaryCheepCareActivity.class);
         context.startActivity(intent);
     }
 
@@ -65,8 +65,8 @@ public class PaymentSummaryActivityCheepCare extends BaseAppCompatActivity imple
         if (getIntent() != null && getIntent().hasExtra(Utility.Extra.DATA) && getIntent().hasExtra(Utility.Extra.DATA_2)) {
             packageDetail = (PackageDetail) GsonUtility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA), PackageDetail.class);
             addressModel = (AddressModel) GsonUtility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA_2), AddressModel.class);
-            Log.e(TAG, "initiateUI: -------------"+addressModel.address);
-            Log.e(TAG, "initiateUI: ------------"+packageDetail.title);
+            Log.e(TAG, "initiateUI: -------------" + addressModel.address);
+            Log.e(TAG, "initiateUI: ------------" + packageDetail.title);
 
         } else {
             return;
@@ -81,7 +81,7 @@ public class PaymentSummaryActivityCheepCare extends BaseAppCompatActivity imple
         card12Months.setOnClickListener(this);
     }
 
-    private void initView(){
+    private void initView() {
 
         toolbar = findViewById(R.id.toolbar);
 
@@ -119,9 +119,18 @@ public class PaymentSummaryActivityCheepCare extends BaseAppCompatActivity imple
 
     @SuppressLint("ResourceType")
     private void setInitialColorOfCardView() {
-        card12Months.setCardBackgroundColor(Color.parseColor(getResources().getString(R.color.cheep_tips_color)));
-        tv12Month.setTextColor(Color.parseColor(getResources().getString(R.color.colorPrimary)));
-        tv12SaveMonth.setTextColor(Color.parseColor(getResources().getString(R.color.colorPrimary)));
+        card3Months.setSelected(false);
+        tv3Month.setSelected(false);
+        tv3SaveMonth.setSelected(false);
+
+
+        card6Months.setSelected(false);
+        tv6Month.setSelected(false);
+        tv6SaveMonth.setSelected(false);
+
+        card12Months.setSelected(true);
+        tv12Month.setSelected(true);
+        tv12SaveMonth.setSelected(true);
     }
 
     private void updatePrice(int howManyMonth) {
@@ -143,46 +152,49 @@ public class PaymentSummaryActivityCheepCare extends BaseAppCompatActivity imple
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.card_3_months:
-                card3Months.setCardBackgroundColor(Color.parseColor(getResources().getString(R.color.cheep_tips_color)));
-                card6Months.setCardBackgroundColor(Color.parseColor(getResources().getString(R.color.colorPrimary)));
-                card12Months.setCardBackgroundColor(Color.parseColor(getResources().getString(R.color.colorPrimary)));
+                card3Months.setSelected(true);
+                tv3Month.setSelected(true);
+                tv3SaveMonth.setSelected(true);
 
-                tv3Month.setTextColor(Color.parseColor(getResources().getString(R.color.colorPrimary)));
-                tv6Month.setTextColor(Color.parseColor(getResources().getString(R.color.cheep_tips_color)));
-                tv12Month.setTextColor(Color.parseColor(getResources().getString(R.color.cheep_tips_color)));
+                card6Months.setSelected(false);
+                tv6Month.setSelected(false);
+                tv6SaveMonth.setSelected(false);
 
-                tv3SaveMonth.setTextColor(Color.parseColor(getResources().getString(R.color.colorPrimary)));
-                tv6SaveMonth.setTextColor(Color.parseColor(getResources().getString(R.color.colorGray)));
-                tv12SaveMonth.setTextColor(Color.parseColor(getResources().getString(R.color.colorGray)));
+                card12Months.setSelected(false);
+                tv12Month.setSelected(false);
+                tv12SaveMonth.setSelected(false);
+
                 updatePrice(3);
+
 
                 break;
             case R.id.card_6_months:
-                card3Months.setCardBackgroundColor(Color.parseColor(getResources().getString(R.color.colorPrimary)));
-                card6Months.setCardBackgroundColor(Color.parseColor(getResources().getString(R.color.cheep_tips_color)));
-                card12Months.setCardBackgroundColor(Color.parseColor(getResources().getString(R.color.colorPrimary)));
+                card3Months.setSelected(false);
+                tv3Month.setSelected(false);
+                tv3SaveMonth.setSelected(false);
 
-                tv3Month.setTextColor(Color.parseColor(getResources().getString(R.color.cheep_tips_color)));
-                tv6Month.setTextColor(Color.parseColor(getResources().getString(R.color.colorPrimary)));
-                tv12Month.setTextColor(Color.parseColor(getResources().getString(R.color.cheep_tips_color)));
+                card6Months.setSelected(true);
+                tv6Month.setSelected(true);
+                tv6SaveMonth.setSelected(true);
 
-                tv3SaveMonth.setTextColor(Color.parseColor(getResources().getString(R.color.colorGray)));
-                tv6SaveMonth.setTextColor(Color.parseColor(getResources().getString(R.color.colorPrimary)));
-                tv12SaveMonth.setTextColor(Color.parseColor(getResources().getString(R.color.colorGray)));
+                card12Months.setSelected(false);
+                tv12Month.setSelected(false);
+                tv12SaveMonth.setSelected(false);
                 updatePrice(6);
                 break;
             case R.id.card_12_months:
-                card3Months.setCardBackgroundColor(Color.parseColor(getResources().getString(R.color.colorPrimary)));
-                card6Months.setCardBackgroundColor(Color.parseColor(getResources().getString(R.color.colorPrimary)));
-                card12Months.setCardBackgroundColor(Color.parseColor(getResources().getString(R.color.cheep_tips_color)));
+                card3Months.setSelected(false);
+                tv3Month.setSelected(false);
+                tv3SaveMonth.setSelected(false);
 
-                tv3Month.setTextColor(Color.parseColor(getResources().getString(R.color.cheep_tips_color)));
-                tv6Month.setTextColor(Color.parseColor(getResources().getString(R.color.cheep_tips_color)));
-                tv12Month.setTextColor(Color.parseColor(getResources().getString(R.color.colorPrimary)));
 
-                tv3SaveMonth.setTextColor(Color.parseColor(getResources().getString(R.color.colorGray)));
-                tv6SaveMonth.setTextColor(Color.parseColor(getResources().getString(R.color.colorGray)));
-                tv12SaveMonth.setTextColor(Color.parseColor(getResources().getString(R.color.colorPrimary)));
+                card6Months.setSelected(false);
+                tv6Month.setSelected(false);
+                tv6SaveMonth.setSelected(false);
+
+                card12Months.setSelected(true);
+                tv12Month.setSelected(true);
+                tv12SaveMonth.setSelected(true);
                 updatePrice(12);
                 break;
 
