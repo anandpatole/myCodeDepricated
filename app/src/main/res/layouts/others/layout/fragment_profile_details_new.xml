@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -27,7 +28,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal|top"
-                        android:layout_marginTop="@dimen/scale_10dp">
+                        android:layout_marginTop="@dimen/scale_30dp">
 
                         <ImageView
                             android:id="@+id/img_profile_new"
@@ -45,7 +46,7 @@
                         android:layout_height="@dimen/scale_25dp"
                         android:layout_gravity="right|top"
                         android:layout_marginTop="@dimen/scale_30dp"
-                        android:layout_marginRight="@dimen/scale_27dp"
+                        android:layout_marginRight="@dimen/scale_10dp"
                         android:scaleType="fitXY"
                         android:src="@drawable/icon_profile_photo_edit"
                         tools:ignore="ContentDescription" />
@@ -53,18 +54,16 @@
 
                 <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/scale_10dp">
 
                     <com.cheep.custom_view.CFTextViewBold
                         android:id="@+id/user_name"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginLeft="@dimen/scale_55dp"
-                        android:layout_marginRight="@dimen/scale_55dp"
-                        android:gravity="center"
                         android:text="@string/dummy_name"
-                        android:textAllCaps="false"
                         android:textColor="@color/black"
                         android:textSize="@dimen/text_size_16sp" />
 
@@ -75,17 +74,17 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/scale_10dp">
+                    android:layout_marginRight="@dimen/scale_12dp"
+                    android:layout_marginTop="@dimen/scale_5dp">
 
 
                     <RatingBar
                         android:id="@+id/user_rating"
-                        style="@style/Widget.AppCompat.RatingBar.Small"
+
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-
+                        style="@style/Widget.AppCompat.RatingBar.Small"
                         android:layout_centerInParent="true"
-
                         android:numStars="5"
                         android:rating="4" />
 
@@ -93,13 +92,11 @@
                         android:id="@+id/text_rating"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-android:paddingLeft="@dimen/scale_8dp"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:layout_toRightOf="@+id/user_rating"
+                        android:text="@string/label_rating_value"
+                        android:paddingLeft="@dimen/scale_5dp"
                         android:textColor="@color/black"
                         android:textSize="@dimen/text_size_13sp"
-                        android:text="@string/label_rating_value" />
+                        android:layout_toRightOf="@+id/user_rating" />
 
 
                 </RelativeLayout>

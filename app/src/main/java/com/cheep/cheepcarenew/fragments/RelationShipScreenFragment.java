@@ -143,13 +143,15 @@ mBinding.relationBack.setOnClickListener(new View.OnClickListener() {
     @Override
     public void volleyError(VolleyError error) {
         hideProgressDialog();
-        Utility.showSnackBar(error.toString(), mBinding.getRoot());
+        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
+//        Utility.showSnackBar(error.toString(), mBinding.getRoot());
     }
 
     @Override
     public void showSpecificMessage(String message) {
         hideProgressDialog();
-        Utility.showSnackBar(message, mBinding.getRoot());
+        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
+       // Utility.showSnackBar(message, mBinding.getRoot());
     }
 
     @Override

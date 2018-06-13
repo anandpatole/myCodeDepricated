@@ -13,6 +13,8 @@
     <string name="rate_card_modal_price">Price</string>
     <string name="label_relationship">Relationship</string>
     <string name="label_select_your_relation_with_your_contact">Select your relation with your contact</string>
+    <string name="rate_card_header_services">Services</string>
+    <string name="rate_card_header_labour_rates">Labour rates</string>
 
 
 </resources>

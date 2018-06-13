@@ -437,9 +437,11 @@ mBinding.textPhoneNo.setText(userDetails.phoneNumber);
             }
             // Continue only if the File was successfully created
             if (photoFile != null) {
-                Uri photoURI = FileProvider.getUriForFile(getActivity(),
+
+               Uri photoURI = FileProvider.getUriForFile(getActivity(),
                         BuildConfig.FILE_PROVIDER_URL,
                         photoFile);
+          /*   Uri  photoURI= Uri.parse(photoFile.toString());*/
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
 
                 // Grant URI permission START
@@ -1282,7 +1284,7 @@ mBinding.textPhoneNo.setText(userDetails.phoneNumber);
             hideProgressDialog();
 
             // Show Toast
-            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
+             Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
         }
     };
 

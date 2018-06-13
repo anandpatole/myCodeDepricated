@@ -71,7 +71,7 @@ getDialog().setCanceledOnTouchOutside(false);
         {
             mlist.add(model);
         }
-        RateRecyclerViewAdapter adapter=new RateRecyclerViewAdapter(((AppCompatActivity) contexts),mlist);
+        RateRecyclerViewAdapter adapter=new RateRecyclerViewAdapter(mlist);
         mDialogBusyNoWorriesBinding.rateCardRecyclerView.setLayoutManager(new LinearLayoutManager(contexts));
         mDialogBusyNoWorriesBinding.rateCardRecyclerView.setAdapter(adapter);
         mDialogBusyNoWorriesBinding.cancelRateCard.setOnClickListener(new View.OnClickListener() {

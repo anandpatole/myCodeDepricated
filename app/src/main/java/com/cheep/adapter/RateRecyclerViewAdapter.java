@@ -1,5 +1,5 @@
 package com.cheep.adapter;
-import android.app.Activity;
+
 import android.content.Context;
 
 import android.databinding.DataBindingUtil;
@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import com.cheep.R;
 import com.cheep.databinding.RowRateCardBinding;
 import com.cheep.model.RateCardModel;
@@ -19,14 +20,14 @@ public class RateRecyclerViewAdapter extends RecyclerView.Adapter<RateRecyclerVi
 
     ArrayList<RateCardModel> mList1;
     Context mContext;
-    Activity activity;
 
 
-    public RateRecyclerViewAdapter(Activity activity,ArrayList<RateCardModel> mList)
+
+    public RateRecyclerViewAdapter(ArrayList<RateCardModel> mList)
     {
 
         mList1 = mList;
-        this.activity = activity;
+
     }
 
 
@@ -62,7 +63,8 @@ public class RateRecyclerViewAdapter extends RecyclerView.Adapter<RateRecyclerVi
         }
         RateCardModel model = mList1.get(holder.getAdapterPosition());
 holder.rowPastTaskBinding.rateCardProduct.setText(model.getProduct());
-holder.rowPastTaskBinding.rateCardPrice.setText(model.getRate());
+
+
 
 
     }

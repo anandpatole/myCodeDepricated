@@ -50,31 +50,32 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/toolbar">
-<LinearLayout
-    android:layout_width="match_parent"
-    android:orientation="vertical"
-    android:layout_height="match_parent">
-            <com.cheep.custom_view.CFTextViewSemiBold
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_marginLeft="@dimen/scale_25dp"
-                android:padding="@dimen/scale_10dp"
-                android:layout_height="wrap_content"
-                android:text="@string/label_select_your_relation_with_your_contact"/>
+                android:orientation="vertical"
+                android:layout_height="match_parent">
+                <com.cheep.custom_view.CFTextViewBold
+                    android:id="@+id/label_rate_card_selection"
+                    android:layout_width="match_parent"
+                    android:layout_margin="@dimen/scale_25dp"
+                    android:padding="@dimen/scale_3dp"
+                    android:layout_height="@dimen/scale_25dp"
+                    android:textSize="@dimen/text_size_16sp"
+                    android:text="@string/label_select_your_relation_with_your_contact"/>
 
-            <View
-                android:layout_width="match_parent"
+                <View
+                    android:layout_width="match_parent"
 
-                android:elevation="@dimen/scale_2dp"
-                android:background="@color/grey_varient_3"
-                android:layout_height="@dimen/scale_3dp"></View>
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_relationship_list"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/scale_23dp">
+                    android:background="@color/grey_varient_3"
+                    android:layout_height="@dimen/scale_2dp"/>
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recycler_rate_card_selection_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/scale_23dp">
 
-    </android.support.v7.widget.RecyclerView>
-</LinearLayout>
+                </android.support.v7.widget.RecyclerView>
+            </LinearLayout>
         </FrameLayout>
     </android.support.constraint.ConstraintLayout>
 </layout>
