@@ -318,7 +318,7 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
             packageDetailModelDialog.dismissAllowingStateLoss();
             packageDetailModelDialog = null;
         }
-        packageDetailModelDialog = PackageDetailModelDialog.newInstance(packageDetail);
+        packageDetailModelDialog = PackageDetailModelDialog.newInstance(packageDetail,mCity);
         packageDetailModelDialog.show(getSupportFragmentManager(), TAG);
     }
 

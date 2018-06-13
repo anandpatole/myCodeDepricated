@@ -3,24 +3,46 @@ package com.cheep.cheepcarenew.activities;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.cheep.R;
 import com.cheep.activity.BaseAppCompatActivity;
+import com.cheep.cheepcare.model.CareCityDetail;
 import com.cheep.cheepcare.model.PackageDetail;
 import com.cheep.cheepcarenew.fragments.AddressCategorySelectionFragment;
+import com.cheep.cheepcarenew.fragments.AddressSizeForHomeOfficeFragment;
+import com.cheep.databinding.ActivityAddressBinding;
 import com.cheep.fragment.BaseFragment;
+import com.cheep.model.AddressModel;
+import com.cheep.network.NetworkUtility;
+import com.cheep.network.Volley;
+import com.cheep.network.VolleyNetworkRequest;
 import com.cheep.utils.GsonUtility;
+import com.cheep.utils.LogUtils;
+import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.Utility;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class AddressActivity extends BaseAppCompatActivity {
 
     PackageDetail packageDetail;
-    public static void newInstance(Context context, PackageDetail packageDetail) {
+    private CareCityDetail careCityDetail;
+    private ActivityAddressBinding mBinding;
+
+    public static void newInstance(Context context, PackageDetail packageDetail, CareCityDetail careCityDetail) {
         Intent intent = new Intent(context, AddressActivity.class);
         intent.putExtra(Utility.Extra.DATA, GsonUtility.getJsonStringFromObject(packageDetail));
+        intent.putExtra(Utility.Extra.DATA_2, GsonUtility.getJsonStringFromObject(careCityDetail));
         context.startActivity(intent);
         ((Activity) context).overridePendingTransition(0, 0);
     }
@@ -31,8 +53,11 @@ public class AddressActivity extends BaseAppCompatActivity {
 
     @Override
     protected void initiateUI() {
-        if (getIntent()!=null && getIntent().hasExtra(Utility.Extra.DATA)){
-            packageDetail = (PackageDetail) GsonUtility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA),PackageDetail.class);
+        if (getIntent() != null && getIntent().hasExtra(Utility.Extra.DATA)) {
+            packageDetail = (PackageDetail) GsonUtility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA), PackageDetail.class);
+        }
+        if (getIntent() != null && getIntent().hasExtra(Utility.Extra.DATA_2)) {
+            careCityDetail = (CareCityDetail) GsonUtility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA_2), CareCityDetail.class);
         }
         loadFragment(AddressCategorySelectionFragment.TAG, AddressCategorySelectionFragment.newInstance());
     }
@@ -45,7 +70,7 @@ public class AddressActivity extends BaseAppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_address);
+        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_address);
         initiateUI();
     }
 
@@ -66,11 +91,142 @@ public class AddressActivity extends BaseAppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-            Log.e(TAG, "onBackPressed:  " + getSupportFragmentManager().getBackStackEntryCount());
+        Log.e(TAG, "onBackPressed:  " + getSupportFragmentManager().getBackStackEntryCount());
         if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
             finish();
         }
     }
 
+    /**
+     * verfiy selected address is correct for selected city, and also if user has already purchased subscription
+     *
+     * @param model address model
+     */
+    public void verifyAddressForCity(final AddressModel model) {
 
+        //Add Header parameters
+
+        showProgressDialog();
+
+        Map<String, String> mHeaderParams = new HashMap<>();
+        mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).
+
+                getXAPIKey());
+        if (PreferenceUtility.getInstance(mContext).
+
+                getUserDetails() != null)
+            mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).
+
+                    getUserDetails().userID);
+
+        //Add Params
+        Map<String, Object> mParams = new HashMap<>();
+        int addressId;
+        try {
+            addressId = Integer.parseInt(model.address_id);
+        } catch (Exception e) {
+            addressId = 0;
+        }
+        if (addressId <= 0) {
+            // In case its nagative then provide other address information
+            mParams.put(NetworkUtility.TAGS.ADDRESS_ID, Utility.ZERO_STRING);
+            mParams.put(NetworkUtility.TAGS.CITY_NAME, model.cityName);
+        } else {
+            mParams.put(NetworkUtility.TAGS.ADDRESS_ID, model.address_id);
+            mParams.put(NetworkUtility.TAGS.CARE_CITY_ID, careCityDetail.id);
+            mParams.put(NetworkUtility.TAGS.CITY_NAME, Utility.EMPTY_STRING);
+            mParams.put(NetworkUtility.TAGS.CARE_PACKAGE_ID, packageDetail.id);
+            mParams.put(NetworkUtility.TAGS.PACKAGE_TYPE, packageDetail.type);
+        }
+
+        Utility.hideKeyboard(mContext);
+        @SuppressWarnings("unchecked")
+        VolleyNetworkRequest mVolleyNetworkRequest = new VolleyNetworkRequest(NetworkUtility.WS.VERIFY_ADDRESS_CHEEP_CARE
+                , new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                LogUtils.LOGD(TAG, "onErrorResponse() called with: error = [" + error + "]");
+                // Close Progressbar
+                hideProgressDialog();
+                // Show Toast
+                Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
+            }
+        }
+                , new Response.Listener() {
+            @Override
+            public void onResponse(Object response) {
+                hideProgressDialog();
+                Log.i(TAG, "onResponse: " + response);
+
+                String strResponse = (String) response;
+                try {
+                    JSONObject jsonObject = new JSONObject(strResponse);
+                    Log.i(TAG, "onResponse: " + jsonObject.toString());
+                    int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
+                    String error_message;
+
+                    switch (statusCode) {
+                        case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
+                            JSONObject jsonData = jsonObject.getJSONObject(NetworkUtility.TAGS.DATA);
+                            // strategic partner pro id for given location
+                            String city_id = jsonData.optString(NetworkUtility.TAGS.CITY_ID);
+                            String isPurchased = jsonData.optString(NetworkUtility.TAGS.IS_PURCHASED);
+                            if (careCityDetail.id.equalsIgnoreCase(city_id)) {
+                                if (isPurchased.equalsIgnoreCase(Utility.BOOLEAN.YES)) {
+                                    Utility.showToast(AddressActivity.this, getString(R.string.validation_message_already_purchased_package_for_this_address));
+                                } else {
+                                    String isSamePackageType = jsonData.optString(NetworkUtility.TAGS.IS_SAME_PACKAGE_TYPE);
+                                    if (isSamePackageType.equalsIgnoreCase(Utility.BOOLEAN.YES)) {
+                                        Utility.showToast(AddressActivity.this, getString(R.string.validation_message_same_address_for_same_group_of_care));
+                                    } else {
+                                        // correct address
+                                        loadFragment(AddressSizeForHomeOfficeFragment.TAG, AddressSizeForHomeOfficeFragment.newInstance(model));
+                                    }
+                                }
+                            } else {
+                                Utility.showToast(AddressActivity.this, getString(R.string.validation_message_cheep_care_address, careCityDetail.cityName));
+                            }
+
+
+                            break;
+                        case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
+                            // Show Toast
+                            Utility.showToast(AddressActivity.this, getString(R.string.label_something_went_wrong));
+                            break;
+                        case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
+                            error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
+                            // Show message
+                            Utility.showToast(AddressActivity.this, error_message);
+                            break;
+                        case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
+                        case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
+                            //Logout and finish the current activity
+                            Utility.logout(mContext, true, statusCode);
+                            AddressActivity.this.finish();
+                            break;
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    mCallGetCarePackageDetailsSingWSErrorListener.onErrorResponse(new VolleyError(e.getMessage()));
+                }
+                hideProgressDialog();
+            }
+        }
+                , mHeaderParams
+                , mParams
+                , null);
+        Volley.getInstance(mContext).
+
+                addToRequestQueue(mVolleyNetworkRequest, NetworkUtility.WS.VERIFY_ADDRESS_CHEEP_CARE);
+
+    }
+
+    private Response.ErrorListener mCallGetCarePackageDetailsSingWSErrorListener = new Response.ErrorListener() {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            hideProgressDialog();
+            LogUtils.LOGD(TAG, "onErrorResponse() called with: error = [" + error + "]");
+            Utility.showSnackBar(getString(R.string.label_something_went_wrong),mBinding.getRoot());
+        }
+    };
 }

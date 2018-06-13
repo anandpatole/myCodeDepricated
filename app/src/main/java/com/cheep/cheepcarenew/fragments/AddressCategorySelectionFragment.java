@@ -220,7 +220,7 @@ public class AddressCategorySelectionFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 hideToolTip();
-                ((AddressActivity) mContext).loadFragment(AddressSizeForHomeOfficeFragment.TAG, AddressSizeForHomeOfficeFragment.newInstance(addressModel));
+                ((AddressActivity) mContext).verifyAddressForCity(addressModel);
             }
         });
 

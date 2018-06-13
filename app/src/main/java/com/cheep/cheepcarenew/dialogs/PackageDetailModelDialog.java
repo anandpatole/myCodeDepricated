@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.cheep.R;
+import com.cheep.cheepcare.model.CareCityDetail;
 import com.cheep.cheepcare.model.PackageDetail;
 import com.cheep.cheepcarenew.activities.AddressActivity;
 import com.cheep.network.NetworkUtility;
@@ -43,11 +44,12 @@ public class PackageDetailModelDialog extends DialogFragment implements View.OnC
         // Required empty public constructor
     }
 
-    public static PackageDetailModelDialog newInstance(PackageDetail packageDetail) {
+    public static PackageDetailModelDialog newInstance(PackageDetail packageDetail, CareCityDetail cityDetail) {
         PackageDetailModelDialog fragment = new PackageDetailModelDialog();
 
         Bundle args = new Bundle();
         args.putString(Utility.Extra.DATA, GsonUtility.getJsonStringFromObject(packageDetail));
+        args.putString(Utility.Extra.DATA_2, GsonUtility.getJsonStringFromObject(cityDetail));
         fragment.setArguments(args);
         return fragment;
     }
@@ -110,8 +112,9 @@ public class PackageDetailModelDialog extends DialogFragment implements View.OnC
                 if (getArguments()!=null)
                 {
                     PackageDetail packageDetail = (PackageDetail) GsonUtility.getObjectFromJsonString(getArguments().getString(Utility.Extra.DATA),PackageDetail.class);
+                    CareCityDetail careCityDetail= (CareCityDetail) GsonUtility.getObjectFromJsonString(getArguments().getString(Utility.Extra.DATA_2),CareCityDetail.class);
                     if (packageDetail!=null){
-                        AddressActivity.newInstance(getContext(),packageDetail);
+                        AddressActivity.newInstance(getContext(),packageDetail,careCityDetail);
                         dismiss();
                     }
                 }
