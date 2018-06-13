@@ -18,6 +18,7 @@
     <dimen name="pro_level_width">40dp</dimen>
 
     <dimen name="history_profile_width">25dp</dimen>
+    <dimen name="height_recycler_view_task_phase_2">130dp</dimen>
 
     <!--Dimensions-->
     <dimen name="scale_0dp">0dp</dimen>

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/blue_variant_4"
+            android:theme="@style/AppTheme.AppBarBlack"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/relation_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_arrow_white" />
+
+            <com.cheep.custom_view.CFTextViewSemiBold
+                android:id="@+id/text_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@android:color/transparent"
+                android:gravity="center"
+                android:lines="1"
+                android:maxLines="1"
+                android:padding="@dimen/scale_10dp"
+                android:singleLine="true"
+                android:text="@string/label_relationship"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="@dimen/toolbar_title_text_size" />
+
+        </android.support.v7.widget.Toolbar>
+
+        <FrameLayout
+            android:id="@+id/fl_details_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground"
+            app:layout_constraintEnd_toStartOf="@+id/fl_reviews_container"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/toolbar">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+
+
+                <com.cheep.custom_view.CFTextViewSemiBold
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/scale_25dp"
+                    android:padding="@dimen/scale_10dp"
+                    android:text="@string/label_select_your_relation_with_your_contact" />
+
+                <View
+                    android:layout_width="match_parent"
+
+                    android:layout_height="@dimen/scale_3dp"
+                    android:background="@color/grey_varient_3"
+                    android:elevation="@dimen/scale_2dp"></View>
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recycler_relationship_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+
+                </android.support.v7.widget.RecyclerView>
+            </LinearLayout>
+        </FrameLayout>
+    </android.support.constraint.ConstraintLayout>
+</layout>

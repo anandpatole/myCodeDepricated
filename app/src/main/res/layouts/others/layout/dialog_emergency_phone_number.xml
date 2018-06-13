@@ -40,7 +40,7 @@
             android:padding="@dimen/scale_10dp"
             android:maxLength="10"
             android:textColor="@color/black"
-            android:textSize="@dimen/text_size_16sp"
+            android:textSize="@dimen/text_size_13sp"
             android:theme="@style/EditTextWhiteBG" />
     </LinearLayout>
 
@@ -87,10 +87,54 @@
             android:maxLength="10"
             android:padding="@dimen/scale_10dp"
             android:textColor="@color/black"
-            android:textSize="@dimen/text_size_16sp"
+            android:textSize="@dimen/text_size_13sp"
             android:theme="@style/EditTextWhiteBG" />
     </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/scale_1dp"
+        android:layout_above="@+id/action_layout"
+        android:layout_marginLeft="@dimen/scale_22dp"
+        android:layout_marginRight="@dimen/scale_22dp"
+        android:layout_toRightOf="@+id/profile_layout"
+        android:background="@color/grey_varient_3" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/scale_22dp"
+        android:layout_marginRight="@dimen/scale_22dp"
+        android:layout_marginTop="@dimen/scale_16dp"
+        android:orientation="horizontal">
 
+        <com.cheep.custom_view.CFEditTextRegular
+            android:id="@+id/edit_contact_name_3"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left|center_vertical"
+            android:layout_weight="1"
+            android:background="@color/transparent"
+            android:hint="@string/label_name"
+            android:singleLine="true"
+            android:maxLines="1"
+            android:textColor="@color/splash_gradient_end"
+            android:textSize="@dimen/text_size_15sp" />
+
+        <com.cheep.custom_view.CFEditTextRegular
+            android:id="@+id/edit_contact_number_3"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_weight="1"
+            android:background="@color/transparent"
+            android:gravity="right"
+            android:hint="@string/hint_mobile_number"
+            android:inputType="number"
+            android:maxLength="10"
+            android:padding="@dimen/scale_10dp"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_size_13sp"
+            android:theme="@style/EditTextWhiteBG" />
+    </LinearLayout>
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/scale_1dp"
@@ -113,4 +157,6 @@
         android:textColor="@color/white"
         app:letterSpacing="0.3"
         tools:ignore="UnusedAttribute" />
+
+
 </LinearLayout>
