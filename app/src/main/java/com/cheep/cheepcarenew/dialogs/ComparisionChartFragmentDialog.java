@@ -22,6 +22,7 @@ import android.widget.TextView;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.cheep.R;
+import com.cheep.cheepcarenew.activities.PaymentSummaryActivityCheepCare;
 import com.cheep.model.ComparisionChartModel;
 import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
@@ -37,7 +38,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-public class ComparisionChartFragmentDialog extends DialogFragment {
+public class ComparisionChartFragmentDialog extends DialogFragment implements View.OnClickListener {
 
     public static final String TAG = ComparisionChartFragmentDialog.class.getSimpleName();
     private ArrayList<ComparisionChartModel> comparisionChartsList;
@@ -45,6 +46,7 @@ public class ComparisionChartFragmentDialog extends DialogFragment {
     private RecyclerView recyclerView;
     private RelativeLayout rootLayout;
     private ProgressDialog mProgressDialog;
+    private TextView tvBookKnowPremium,tvBookKnowCare;
 
     public static ComparisionChartFragmentDialog newInstance(String param1, String param2) {
         ComparisionChartFragmentDialog fragment = new ComparisionChartFragmentDialog();
@@ -76,8 +78,8 @@ public class ComparisionChartFragmentDialog extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_comparsion_chart_fragment_dialog, container, false);
-        rootLayout = view.findViewById(R.id.rootLayout);
-        recyclerView = view.findViewById(R.id.recycler_view);
+        initView(view);
+        setListener();
 
         callGetPackageFeatureListDetailWS();
 
@@ -115,11 +117,36 @@ public class ComparisionChartFragmentDialog extends DialogFragment {
         return dialog;
 
     }
+    private void initView(View view){
+        rootLayout = view.findViewById(R.id.rootLayout);
+        recyclerView = view.findViewById(R.id.recycler_view);
+
+        tvBookKnowPremium = view.findViewById(R.id.tv_book_know_premimu);
+        tvBookKnowCare = view.findViewById(R.id.tv_book_know_care);
+
+    }
+    private void setListener(){
+        tvBookKnowPremium.setOnClickListener(this);
+        tvBookKnowCare.setOnClickListener(this);
+    }
 
     private void loadData() {
         recyclerView.setHasFixedSize(true);
         adapter = new ComparisionChatAdapter();
         recyclerView.setAdapter(adapter);
+    }
+
+    //View.OnClickListener
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.tv_book_know_premimu:
+                PaymentSummaryActivityCheepCare.newInstance(getContext());
+                break;
+            case R.id.tv_book_know_care:
+                PaymentSummaryActivityCheepCare.newInstance(getContext());
+                break;
+        }
     }
 
     public class ComparisionChatAdapter extends RecyclerView.Adapter<ComparisionChatAdapter.ComparisionChatViewHolder> {
@@ -257,7 +284,7 @@ public class ComparisionChartFragmentDialog extends DialogFragment {
                 String error_message;
                 switch (statusCode) {
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
-                        JSONArray data = jsonObject.getJSONArray("data");
+                        JSONArray data = jsonObject.getJSONArray(NetworkUtility.TAGS.DATA);
                         for (int i = 0; i < data.length(); i++) {
                             JSONObject obj = data.getJSONObject(i);
                             ComparisionChartModel cityModel = new ComparisionChartModel(obj);

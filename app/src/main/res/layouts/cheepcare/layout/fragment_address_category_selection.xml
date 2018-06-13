@@ -62,8 +62,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/bg_address_dialog_body"
-                    android:orientation="horizontal"
-                    >
+                    android:orientation="horizontal">
 
                     <android.support.v7.widget.CardView
                         android:id="@+id/cvHome"

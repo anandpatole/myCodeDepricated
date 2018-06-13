@@ -509,6 +509,8 @@ public class NetworkUtility {
 
         String IS_RENEW= "is_renew";
 
+        String TEXT= "text";
+
         interface VERSION_CHANGE_TYPE {
             int NORMAL = 0;
             int RECOMMENDED_TO_UPGRADE = 1;

@@ -604,6 +604,11 @@ public class Utility {
         }
     }
 
+    public interface CHEEP_CARE{
+        String SAVE="Save ₹";
+        String RS="₹";
+    }
+
     //Bundle Extra parameters
     public interface ReviewByMe{
         String YES = "1";
@@ -884,6 +889,11 @@ public class Utility {
 
     public interface GUEST_STATIC_INFO {
         String USERNAME = "Guest";
+    }
+
+    public interface TYPE{
+        String PREMIUM="premium";
+        String NORMAL="normal";
     }
 
     private static String urlEncodeUTF8(String s) {
