@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    >
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
@@ -22,7 +21,8 @@
                 android:id="@+id/relation_back"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_arrow_white"/>
+                android:src="@drawable/ic_arrow_white" />
+
             <com.cheep.custom_view.CFTextViewSemiBold
                 android:id="@+id/text_title"
                 android:layout_width="wrap_content"
@@ -50,31 +50,36 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/toolbar">
-<LinearLayout
-    android:layout_width="match_parent"
-    android:orientation="vertical"
-    android:layout_height="match_parent">
-            <com.cheep.custom_view.CFTextViewSemiBold
+
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_marginLeft="@dimen/scale_25dp"
-                android:padding="@dimen/scale_10dp"
-                android:layout_height="wrap_content"
-                android:text="@string/label_select_your_relation_with_your_contact"/>
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
-            <View
-                android:layout_width="match_parent"
 
-                android:elevation="@dimen/scale_2dp"
-                android:background="@color/grey_varient_3"
-                android:layout_height="@dimen/scale_3dp"></View>
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_relationship_list"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/scale_23dp">
 
-    </android.support.v7.widget.RecyclerView>
-</LinearLayout>
+                <com.cheep.custom_view.CFTextViewSemiBold
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/scale_25dp"
+                    android:padding="@dimen/scale_10dp"
+                    android:text="@string/label_select_your_relation_with_your_contact" />
+
+                <View
+                    android:layout_width="match_parent"
+
+                    android:layout_height="@dimen/scale_3dp"
+                    android:background="@color/grey_varient_3"
+                    android:elevation="@dimen/scale_2dp"></View>
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recycler_relationship_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+
+                </android.support.v7.widget.RecyclerView>
+            </LinearLayout>
         </FrameLayout>
     </android.support.constraint.ConstraintLayout>
 </layout>

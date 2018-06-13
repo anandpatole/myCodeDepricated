@@ -12,7 +12,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,18 +19,13 @@ import android.view.ViewGroup;
 
 import com.android.volley.VolleyError;
 import com.cheep.R;
-
 import com.cheep.adapter.RelationShipRecyclerViewAdapter;
 import com.cheep.cheepcare.fragment.ProfileTabFragment;
 import com.cheep.databinding.FragmnetRelationshipScreenBinding;
 import com.cheep.fragment.BaseFragment;
-import com.cheep.fragment.MyTaskTabFragment;
-import com.cheep.interfaces.DrawerLayoutInteractionListener;
 import com.cheep.network.NetworkUtility;
-import com.cheep.network.Volley;
 import com.cheep.utils.Utility;
 import com.cheep.utils.WebCallClass;
-import com.google.gson.JsonObject;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -126,7 +120,7 @@ mBinding.relationBack.setOnClickListener(new View.OnClickListener() {
                 for (int i = 0; i < relationshipList.length(); i++)
                 {
                    JSONObject temp=relationshipList.getJSONObject(i);
-                    listdata.add( temp.getString("type"));
+                    listdata.add(temp.optString(NetworkUtility.TAGS.TYPE));
                 }
             }
 
