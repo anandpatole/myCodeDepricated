@@ -229,18 +229,18 @@ public class ProfileDetailsFragmentnew extends BaseFragment implements WebCallCl
 
     @Override
     public void setListener() {
-//        mBinding.textPhoneNumber.setOnClickListener(onClickListener);
-        /*mBinding.textEmergencyContact.setOnClickListener(onClickListener);
-        mBinding.textManageAddress.setOnClickListener(onClickListener);
-//        mBinding.textChangePassword.setOnClickListener(onClickListener);
-        mBinding.imgEditUsername.setOnClickListener(onClickListener);
-        mBinding.imgEditEmail.setOnClickListener(onClickListener);*/
+
         mBinding.imgProfilePhotoEdit.setOnClickListener(onClickListener);
-        //  mBinding.imgCoverPhotoEdit.setOnClickListener(onClickListener);
+
         mBinding.textAddContact.setOnClickListener(onClickListener);
         mBinding.textViewMore.setOnClickListener(onClickListener);
         mBinding.labelAddNewAddress.setOnClickListener(onClickListener);
         mBinding.textViewLess.setOnClickListener(onClickListener);
+        mBinding.usernameProfileEdit.setOnClickListener(onClickListener);
+        mBinding.emailProfileEdit.setOnClickListener(onClickListener);
+        mBinding.mainProfileEdit.setOnClickListener(onClickListener);
+
+
     }
 
     View.OnClickListener onClickListener = new View.OnClickListener() {
@@ -251,6 +251,23 @@ public class ProfileDetailsFragmentnew extends BaseFragment implements WebCallCl
               /*  case R.id.text_phone_number:
                     showChangePhoneNumberDialog();
                     break;*/
+                case R.id.main_profile_edit:
+                    mBinding.usernameProfileEdit.setVisibility(View.VISIBLE);
+                    mBinding.imgProfilePhotoEdit.setVisibility(View.VISIBLE);
+                    mBinding.emailProfileEdit.setVisibility(View.VISIBLE);
+                    break;
+                case R.id.username_profile_edit:
+                    if (PreferenceUtility.getInstance(mContext).getUserDetails() != null) {
+                        UserDetails details = PreferenceUtility.getInstance(mContext).getUserDetails();
+                        showChangeUsernameDialog(details.userName);
+                    }
+                    break;
+                case R.id.email_profile_edit:
+                    if (PreferenceUtility.getInstance(mContext).getUserDetails() != null) {
+                        UserDetails details = PreferenceUtility.getInstance(mContext).getUserDetails();
+                        showChangeEmailDialog(details.email);
+                    }
+                    break;
                 case R.id.text_add_contact:
                     relationShipScreenFragment = RelationShipScreenFragment.newInstance();
                     getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.content, relationShipScreenFragment, RelationShipScreenFragment.TAG).commitAllowingStateLoss();
@@ -298,7 +315,8 @@ public class ProfileDetailsFragmentnew extends BaseFragment implements WebCallCl
 //                                .start(getContext(), ProfileDetailsFragment.this);
 //
                         // showPictureChooserDialog(false);
-                        showChooserDialog();
+                        showPictureChooserDialog(false);
+                       // showChooserDialog();
                     } else {
                         Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mBinding.getRoot());
                     }
