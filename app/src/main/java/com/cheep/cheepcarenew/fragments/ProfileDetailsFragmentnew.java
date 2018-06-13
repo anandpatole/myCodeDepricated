@@ -9,7 +9,6 @@ import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.databinding.DataBindingUtil;
-import android.graphics.Bitmap;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
@@ -28,18 +27,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.SimpleTarget;
 import com.cheep.BuildConfig;
 import com.cheep.R;
 import com.cheep.activity.HomeActivity;
 import com.cheep.activity.VerificationActivity;
-import com.cheep.adapter.AddressRecyclerViewAdapter;
 import com.cheep.adapter.AddressRecyclerViewAdapterProfile;
 import com.cheep.adapter.EmergencyContactRecyclerViewAdapter;
 import com.cheep.cheepcare.dialogs.BottomAddAddressDialog;
@@ -86,16 +80,14 @@ import java.util.Map;
 
 import static android.app.Activity.RESULT_OK;
 import static com.cheep.R.id.edit_username;
-import static com.cheep.R.id.on;
 import static com.cheep.utils.Utility.REQUEST_CODE_CROP_GET_FILE_ADD_PROFILE;
 import static com.cheep.utils.Utility.REQUEST_CODE_IMAGE_CAPTURE_ADD_PROFILE;
-import static com.cheep.utils.Utility.getApplicationVersion;
 
 /**
  * Created by pankaj on 9/27/16.
  */
 
-public class ProfileDetailsFragmentnew extends BaseFragment  implements WebCallClass.CommonResponseListener,EmergencyContactRecyclerViewAdapter.EmergencyInteractionListener,WebCallClass.UpdateEmergencyContactResponseListener{
+public class ProfileDetailsFragmentnew extends BaseFragment implements WebCallClass.CommonResponseListener, EmergencyContactRecyclerViewAdapter.EmergencyInteractionListener, WebCallClass.UpdateEmergencyContactResponseListener {
     public static final String TAG = "ProfileDetailsFragmentnew";
 
 
@@ -105,7 +97,7 @@ public class ProfileDetailsFragmentnew extends BaseFragment  implements WebCallC
     private ArrayList<AddressModel> addressList;
     private DrawerLayoutInteractionListener mListener;
     String rating;
-RelationShipScreenFragment relationShipScreenFragment;
+    RelationShipScreenFragment relationShipScreenFragment;
 
     //    private String mCurrentPhotoPath;
     private File photoFile;
@@ -129,7 +121,7 @@ RelationShipScreenFragment relationShipScreenFragment;
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         initiateUI();
-       setListener();
+        setListener();
     }
 
     @Override
@@ -169,7 +161,7 @@ RelationShipScreenFragment relationShipScreenFragment;
     public void initiateUI() {
         //Fetch User Details from Preference
         UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
-
+        mBinding.recyclerEmergencyContact.setNestedScrollingEnabled(false);
         //mBinding.textVersion.setText(getString(R.string.label_version_x, Utility.getApplicationVersion(mContext)
         fillFields(userDetails);
 
@@ -181,7 +173,7 @@ RelationShipScreenFragment relationShipScreenFragment;
                 .crossFade()
                 .into(mBinding.imgBanner);*/
 
-       //// showGuestProfile(PreferenceUtility.getInstance(mContext).getUserDetails() == null);
+        //// showGuestProfile(PreferenceUtility.getInstance(mContext).getUserDetails() == null);
 
         callGetProfileWS();
     }
@@ -190,33 +182,29 @@ RelationShipScreenFragment relationShipScreenFragment;
         if (PreferenceUtility.getInstance(mContext).getUserDetails() != null) {
             //loading rounded image on profile
             loadImage(userDetails.profileImg);
-          //  loadCoverImage(userDetails.profileBanner);
+            //  loadCoverImage(userDetails.profileBanner);
 
             //Update Name
-            if(rating!=null) {
+            if (rating != null) {
                 mBinding.textRating.setText(rating);
                 mBinding.userRating.setRating(Integer.parseInt(rating.toString().trim()));
             }
             mBinding.userName.setText(userDetails.userName);
-            if(addressList!=null)
-            {
+            if (addressList != null) {
                 //fillAddressRecyclerView(mBinding.textAddressRecyclerNew);
                 fillAddressRecyclerView1(mBinding.textAddressRecyclerNew);
             }
-if(jsonEmergencyContacts!=null)
-{
-    if(jsonEmergencyContacts.length()>=3)
-    {
-        mBinding.textAddContact.setVisibility(View.GONE);
-    }
-    else {
-        mBinding.textAddContact.setVisibility(View.VISIBLE);
-    }
-    EmergencyContactRecyclerViewAdapter adapter =new EmergencyContactRecyclerViewAdapter(ProfileDetailsFragmentnew.this,jsonEmergencyContacts);
-mBinding.recyclerEmergencyContact.setLayoutManager(new LinearLayoutManager(mContext));
-    mBinding.recyclerEmergencyContact.setAdapter(adapter);
-}
-mBinding.textPhoneNo.setText(userDetails.phoneNumber);
+            if (jsonEmergencyContacts != null) {
+                if (jsonEmergencyContacts.length() >= 3) {
+                    mBinding.textAddContact.setVisibility(View.GONE);
+                } else {
+                    mBinding.textAddContact.setVisibility(View.VISIBLE);
+                }
+                EmergencyContactRecyclerViewAdapter adapter = new EmergencyContactRecyclerViewAdapter(ProfileDetailsFragmentnew.this, jsonEmergencyContacts);
+                mBinding.recyclerEmergencyContact.setLayoutManager(new LinearLayoutManager(mContext));
+                mBinding.recyclerEmergencyContact.setAdapter(adapter);
+            }
+            mBinding.textPhoneNo.setText(userDetails.phoneNumber);
             mBinding.textEmail.setText(userDetails.email);
 
 //            if(addressList!=null)
@@ -233,7 +221,7 @@ mBinding.textPhoneNo.setText(userDetails.phoneNumber);
 
         } else {
             // Static details for Guest Users
-          //  mBinding.userName.setText(Utility.GUEST_STATIC_INFO.USERNAME);
+            //  mBinding.userName.setText(Utility.GUEST_STATIC_INFO.USERNAME);
         }
 
     }
@@ -248,7 +236,7 @@ mBinding.textPhoneNo.setText(userDetails.phoneNumber);
         mBinding.imgEditUsername.setOnClickListener(onClickListener);
         mBinding.imgEditEmail.setOnClickListener(onClickListener);*/
         mBinding.imgProfilePhotoEdit.setOnClickListener(onClickListener);
-      //  mBinding.imgCoverPhotoEdit.setOnClickListener(onClickListener);
+        //  mBinding.imgCoverPhotoEdit.setOnClickListener(onClickListener);
         mBinding.textAddContact.setOnClickListener(onClickListener);
         mBinding.textViewMore.setOnClickListener(onClickListener);
         mBinding.labelAddNewAddress.setOnClickListener(onClickListener);
@@ -267,7 +255,7 @@ mBinding.textPhoneNo.setText(userDetails.phoneNumber);
                     relationShipScreenFragment = RelationShipScreenFragment.newInstance();
                     getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.content, relationShipScreenFragment, RelationShipScreenFragment.TAG).commitAllowingStateLoss();
                     //showProgressDialog();
-                   // WebCallClass.getRelationShipListDetail(mContext,ProfileDetailsFragmentnew.this,ProfileDetailsFragmentnew.this);
+                    // WebCallClass.getRelationShipListDetail(mContext,ProfileDetailsFragmentnew.this,ProfileDetailsFragmentnew.this);
                     //showChangeEmergencyContactDialog();
                     break;
                 case R.id.text_view_less:
@@ -282,8 +270,8 @@ mBinding.textPhoneNo.setText(userDetails.phoneNumber);
                     fillAddressRecyclerView(mBinding.textAddressRecyclerNew);
                     mBinding.textViewMore.setVisibility(View.GONE);
                     mBinding.textViewLess.setVisibility(View.VISIBLE);
-                  //showAddressDialog();
-                  break;
+                    //showAddressDialog();
+                    break;
                 case R.id.label_add_new_address:
                     showBottomAddressDialog(null);
                     break;
@@ -309,7 +297,7 @@ mBinding.textPhoneNo.setText(userDetails.phoneNumber);
 //                                .setGuidelines(CropImageView.Guidelines.ON)
 //                                .start(getContext(), ProfileDetailsFragment.this);
 //
-                       // showPictureChooserDialog(false);
+                        // showPictureChooserDialog(false);
                         showChooserDialog();
                     } else {
                         Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mBinding.getRoot());
@@ -325,6 +313,7 @@ mBinding.textPhoneNo.setText(userDetails.phoneNumber);
             }
         }
     };
+
     private void showChooserDialog() {
         Log.d(TAG, "showChooserDialog() called");
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
@@ -340,8 +329,8 @@ mBinding.textPhoneNo.setText(userDetails.phoneNumber);
                                 dispatchTakePictureIntent(Utility.REQUEST_CODE_IMAGE_CAPTURE_ADD_COVER, Utility.REQUEST_CODE_WRITE_EXTERNAL_STORAGE_ADD_PROFILE_CAMERA);
 
                             }*/
-                         showPictureChooserDialog(false);
-                        } else if(which==1) {
+                            showPictureChooserDialog(false);
+                        } else if (which == 1) {
                             /* if (!isForBanner) {*/
                             //Select Gallery
                             // In case Choose File from Gallery
@@ -351,15 +340,13 @@ mBinding.textPhoneNo.setText(userDetails.phoneNumber);
                                 choosePictureFromGallery(Utility.REQUEST_CODE_GET_FILE_ADD_COVER_GALLERY, Utility.REQUEST_CODE_READ_EXTERNAL_STORAGE_ADD_COVER);
                             }*/
                             if (PreferenceUtility.getInstance(mContext).getUserDetails() != null) {
-                               UserDetails details= PreferenceUtility.getInstance(mContext).getUserDetails();
+                                UserDetails details = PreferenceUtility.getInstance(mContext).getUserDetails();
                                 showChangeUsernameDialog(details.userName);
                             }
 
-                        }
-                        else if(which==2)
-                        {
+                        } else if (which == 2) {
                             if (PreferenceUtility.getInstance(mContext).getUserDetails() != null) {
-                                UserDetails details= PreferenceUtility.getInstance(mContext).getUserDetails();
+                                UserDetails details = PreferenceUtility.getInstance(mContext).getUserDetails();
                                 showChangeEmailDialog(details.email);
                             }
                         }
@@ -370,6 +357,7 @@ mBinding.textPhoneNo.setText(userDetails.phoneNumber);
         //Show the dialog
         builder.show();
     }
+
     private void showPictureChooserDialog(final boolean isForBanner) {
         Log.d(TAG, "showPictureChooserDialog() called");
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
@@ -379,17 +367,17 @@ mBinding.textPhoneNo.setText(userDetails.phoneNumber);
                         // The 'which' argument contains the index position
                         // of the selected item
                         if (which == 0) {
-                           /* if (!isForBanner) {*/
-                                dispatchTakePictureIntent(REQUEST_CODE_IMAGE_CAPTURE_ADD_PROFILE, Utility.REQUEST_CODE_WRITE_EXTERNAL_STORAGE_ADD_PROFILE_CAMERA);
+                            /* if (!isForBanner) {*/
+                            dispatchTakePictureIntent(REQUEST_CODE_IMAGE_CAPTURE_ADD_PROFILE, Utility.REQUEST_CODE_WRITE_EXTERNAL_STORAGE_ADD_PROFILE_CAMERA);
                          /*   } else {
                                 dispatchTakePictureIntent(Utility.REQUEST_CODE_IMAGE_CAPTURE_ADD_COVER, Utility.REQUEST_CODE_WRITE_EXTERNAL_STORAGE_ADD_PROFILE_CAMERA);
 
                             }*/
                         } else {
-                           /* if (!isForBanner) {*/
-                                //Select Gallery
-                                // In case Choose File from Gallery
-                                choosePictureFromGallery(Utility.REQUEST_CODE_GET_FILE_ADD_PROFILE_GALLERY, Utility.REQUEST_CODE_READ_EXTERNAL_STORAGE_ADD_PROFILE_GALLERY);
+                            /* if (!isForBanner) {*/
+                            //Select Gallery
+                            // In case Choose File from Gallery
+                            choosePictureFromGallery(Utility.REQUEST_CODE_GET_FILE_ADD_PROFILE_GALLERY, Utility.REQUEST_CODE_READ_EXTERNAL_STORAGE_ADD_PROFILE_GALLERY);
                            /* } else {
                                 //Cover
                                 choosePictureFromGallery(Utility.REQUEST_CODE_GET_FILE_ADD_COVER_GALLERY, Utility.REQUEST_CODE_READ_EXTERNAL_STORAGE_ADD_COVER);
@@ -622,8 +610,8 @@ mBinding.textPhoneNo.setText(userDetails.phoneNumber);
                         TextUtils.isEmpty(edtContactNumber1.getText().toString().trim()) &&
                         TextUtils.isEmpty(edtContactName2.getText().toString().trim()) &&
                         TextUtils.isEmpty(edtContactNumber2.getText().toString().trim()) &&
-                                TextUtils.isEmpty(edtContactName3.getText().toString().trim()) &&
-                                TextUtils.isEmpty(edtContactNumber3.getText().toString().trim())
+                        TextUtils.isEmpty(edtContactName3.getText().toString().trim()) &&
+                        TextUtils.isEmpty(edtContactNumber3.getText().toString().trim())
                         ) {
                     Utility.showToast(mContext, getString(R.string.validate_phone_number));
                 } else if (TextUtils.isEmpty(edtContactName1.getText().toString().trim()) && !TextUtils.isEmpty(edtContactNumber1.getText().toString().trim())
@@ -636,14 +624,12 @@ mBinding.textPhoneNo.setText(userDetails.phoneNumber);
                         !TextUtils.isEmpty(edtContactName2.getText().toString().trim()) && TextUtils.isEmpty(edtContactNumber2.getText().toString().trim())
                         ) {
                     Utility.showToast(mContext, getString(R.string.validate_phone_number));
-                }
-                else if (TextUtils.isEmpty(edtContactName3.getText().toString().trim()) && !TextUtils.isEmpty(edtContactNumber3.getText().toString().trim())
+                } else if (TextUtils.isEmpty(edtContactName3.getText().toString().trim()) && !TextUtils.isEmpty(edtContactNumber3.getText().toString().trim())
                         ||
                         !TextUtils.isEmpty(edtContactName3.getText().toString().trim()) && TextUtils.isEmpty(edtContactNumber3.getText().toString().trim())
                         ) {
                     Utility.showToast(mContext, getString(R.string.validate_phone_number));
-                }
-                else if (number1.equals(number2) || number2.equals(number3) || number3.equals(number1)) {
+                } else if (number1.equals(number2) || number2.equals(number3) || number3.equals(number1)) {
                     Utility.showToast(mContext, getString(R.string.validate_phone_number_different));
                 } else {
 
@@ -738,7 +724,7 @@ mBinding.textPhoneNo.setText(userDetails.phoneNumber);
         //Setting RecyclerView Adapter
 
 
-        adapterAddressRecyclerView = new AddressRecyclerViewAdapterProfile(addressList, listener,0);
+        adapterAddressRecyclerView = new AddressRecyclerViewAdapterProfile(addressList, listener, 0);
         recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         recyclerView.setAdapter(adapterAddressRecyclerView);
         recyclerView.addItemDecoration(new DividerItemDecoration(mContext, R.drawable.divider_grey_normal, (int) getResources().getDimension(R.dimen.scale_16dp)));
@@ -746,9 +732,10 @@ mBinding.textPhoneNo.setText(userDetails.phoneNumber);
         //Here we are checking if address is not there then open add address dialog immediatly
         return addressList == null || addressList.isEmpty();
     }
+
     private boolean fillAddressRecyclerView(RecyclerView recyclerView) {
         //Setting RecyclerView Adapter
-        adapterAddressRecyclerView = new AddressRecyclerViewAdapterProfile(addressList, listener,1);
+        adapterAddressRecyclerView = new AddressRecyclerViewAdapterProfile(addressList, listener, 1);
         recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         recyclerView.setAdapter(adapterAddressRecyclerView);
         recyclerView.addItemDecoration(new DividerItemDecoration(mContext, R.drawable.divider_grey_normal, (int) getResources().getDimension(R.dimen.scale_16dp)));
@@ -1036,11 +1023,10 @@ mBinding.textPhoneNo.setText(userDetails.phoneNumber);
                         PreferenceUtility.getInstance(mContext).saveUserDetails(jsonData);
                         fillFields(userDetails);
                         mListener.profileUpdated();
-                        if (userDetails != null)
-                        {
+                        if (userDetails != null) {
                             /*
-                            * Update user detail in fierbase
-                            * */
+                             * Update user detail in fierbase
+                             * */
                             ChatUserModel chatUserModel = new ChatUserModel();
                             chatUserModel.setUserId(FirebaseUtils.getPrefixUserId(userDetails.userID));
                             chatUserModel.setUserName(userDetails.userName);
@@ -1138,8 +1124,7 @@ mBinding.textPhoneNo.setText(userDetails.phoneNumber);
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
                         if (adapterAddressRecyclerView != null) {
                             adapterAddressRecyclerView.delete(TEMP_ADDRESS_ID);
-                            if(mBinding.textViewMore.getVisibility()==View.VISIBLE)
-                            {
+                            if (mBinding.textViewMore.getVisibility() == View.VISIBLE) {
                                 //fillAddressRecyclerView(mBinding.textAddressRecyclerNew);
                                 fillAddressRecyclerView1(mBinding.textAddressRecyclerNew);
 
@@ -1236,13 +1221,12 @@ mBinding.textPhoneNo.setText(userDetails.phoneNumber);
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
 
                         JSONObject jsonData = jsonObject.getJSONObject(NetworkUtility.TAGS.DATA);
-                        rating= jsonData.getString("average_rating");
+                        rating = jsonData.getString("average_rating");
                         UserDetails userDetails = (UserDetails) GsonUtility.getObjectFromJsonString(jsonData.toString(), UserDetails.class);
                         PreferenceUtility.getInstance(mContext).saveUserDetails(jsonData);
                         jsonEmergencyContacts = jsonData.optJSONArray(NetworkUtility.TAGS.EMERGENCY_DATA);
                         addressList = GsonUtility.getObjectListFromJsonString(jsonData.optJSONArray(NetworkUtility.TAGS.ADDRESS).toString(), AddressModel[].class);
                         fillFields(userDetails);
-
 
 
                         break;
@@ -1911,7 +1895,6 @@ mBinding.textPhoneNo.setText(userDetails.phoneNumber);
     }
 
 
-
     private void loadImage(String selectedImagePath) {
         GlideUtility.showCircularImageView(mContext, TAG, mBinding.imgProfileNew, selectedImagePath, Utility.DEFAULT_PROFILE_SRC, true);
 
@@ -1940,7 +1923,7 @@ mBinding.textPhoneNo.setText(userDetails.phoneNumber);
     }
 
     private void loadCoverImage(String selectedImagePath) {
-      GlideUtility.loadImageView(mContext, mBinding.imgProfileNew, selectedImagePath, R.drawable.icon_profile_img_solid);
+        GlideUtility.loadImageView(mContext, mBinding.imgProfileNew, selectedImagePath, R.drawable.icon_profile_img_solid);
     }
 
    /* @Override
@@ -1970,22 +1953,18 @@ hideProgressDialog();
     }
 
     @Override
-    public void onClicked(JSONArray s)
-    {
-        if(s.length()>=3)
-        {
+    public void onClicked(JSONArray s) {
+        if (s.length() >= 3) {
             mBinding.textAddContact.setVisibility(View.GONE);
-        }
-        else {
+        } else {
             mBinding.textAddContact.setVisibility(View.VISIBLE);
         }
-        WebCallClass.updateEmergencyContactDetail(mContext,ProfileDetailsFragmentnew.this,ProfileDetailsFragmentnew.this,s);
+        WebCallClass.updateEmergencyContactDetail(mContext, ProfileDetailsFragmentnew.this, ProfileDetailsFragmentnew.this, s);
     }
 
     @Override
-    public void getUpdateEmergencyContactResponse(JSONArray emergency_contact)
-    {
-        jsonEmergencyContacts=emergency_contact;
+    public void getUpdateEmergencyContactResponse(JSONArray emergency_contact) {
+        jsonEmergencyContacts = emergency_contact;
     }
 
 
@@ -2016,8 +1995,8 @@ hideProgressDialog();
 //    }
 
 
-/*
-    *//*
+    /*
+     *//*
       Show setting dialog
      *//*
     public void settingsrequest() {
