@@ -317,11 +317,7 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
             comparisionChartFragmentDialog.dismissAllowingStateLoss();
             comparisionChartFragmentDialog = null;
         }
-<<<<<<< HEAD
         comparisionChartFragmentDialog = ComparisionChartFragmentDialog.newInstance(comparisionChartModel);
-=======
-        comparisionChartFragmentDialog = ComparisionChartFragmentDialog.newInstance("", "");
->>>>>>> 1fb3d424cc477adc5b97a5ab4fe4a6ea1a631cf8
         comparisionChartFragmentDialog.show(getSupportFragmentManager(), TAG);
     }
 
@@ -339,23 +335,17 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
             = new CheepCarePackageAdapter.PackageItemClickListener() {
         @Override
         public void onPackageItemClick(int position, PackageDetail packageModel) {
-<<<<<<< HEAD
             packageDetailData = packageModel;
             callGetPackageFeatureListDetailWS();
-
-=======
->>>>>>> 1fb3d424cc477adc5b97a5ab4fe4a6ea1a631cf8
             // Toast.makeText(getApplicationContext(),"majid : "+ packageModel.type,Toast.LENGTH_LONG).show();
 //            String packageList = GsonUtility.getJsonStringFromObject(mCityLandingPageModel.packageDetailList);
 //            String packageList = GsonUtility.getJsonStringFromObject(mCityLandingPageModel.packageDetailList);
 //            PackageCustomizationActivity.newInstance(mContext, mCityLandingPageModel.careCityDetail, packageModel, packageList, mCityLandingPageModel.adminSetting);
             // AddressCategorySelectionActivity.newInstance(LandingScreenPickPackageActivity.this);
 
-<<<<<<< HEAD
            /* if(packageModel.type.equalsIgnoreCase(Utility.TYPE.PREMIUM)){
 =======
             if (packageModel.type.equalsIgnoreCase(Utility.CAR_PACKAGE_TYPE.PREMIUM)) {
->>>>>>> 1fb3d424cc477adc5b97a5ab4fe4a6ea1a631cf8
                 showPackageDetailModelFragmentDialog(packageModel);
             } else if (packageModel.type.equalsIgnoreCase(Utility.CAR_PACKAGE_TYPE.NORMAL)) {
                 showComparisionChartFragmentDialog();

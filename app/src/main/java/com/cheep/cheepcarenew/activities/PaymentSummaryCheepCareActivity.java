@@ -3,6 +3,7 @@ package com.cheep.cheepcarenew.activities;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 import com.cheep.R;
 import com.cheep.activity.BaseAppCompatActivity;
 import com.cheep.cheepcare.model.PackageDetail;
+import com.cheep.databinding.ActivityPaymentSummaryNewBinding;
 import com.cheep.model.AddressModel;
 import com.cheep.model.ComparisionChart.ComparisionChartModel;
 import com.cheep.network.NetworkUtility;
@@ -34,6 +36,8 @@ public class PaymentSummaryCheepCareActivity extends BaseAppCompatActivity imple
     private PackageDetail packageDetail;
     private AddressModel addressModel;
     private ComparisionChartModel comparisionChartModel;
+    private ActivityPaymentSummaryNewBinding mBinding;
+    private String typeOfPackage;
 
 
     public static void newInstance(Context context, PackageDetail packageDetail, AddressModel addressModel) {
@@ -42,16 +46,10 @@ public class PaymentSummaryCheepCareActivity extends BaseAppCompatActivity imple
         intent.putExtra(Utility.Extra.DATA_2, GsonUtility.getJsonStringFromObject(addressModel));
         context.startActivity(intent);
     }
-<<<<<<< HEAD:app/src/main/java/com/cheep/cheepcarenew/activities/PaymentSummaryActivityCheepCare.java
     public static void newInstance(Context context, ComparisionChartModel comparisionChartModel,String typeOfCheepCarePackage) {
-        Intent intent = new Intent(context, PaymentSummaryActivityCheepCare.class);
-        intent.putExtra(Utility.Extra.DATA_4, GsonUtility.getJsonStringFromObject(comparisionChartModel));
-        intent.putExtra(Utility.TYPE_OF_PACKAGE,typeOfCheepCarePackage);
-=======
-
-    public static void newInstance(Context context) {
         Intent intent = new Intent(context, PaymentSummaryCheepCareActivity.class);
->>>>>>> 1fb3d424cc477adc5b97a5ab4fe4a6ea1a631cf8:app/src/main/java/com/cheep/cheepcarenew/activities/PaymentSummaryCheepCareActivity.java
+        intent.putExtra(Utility.Extra.DATA_4, GsonUtility.getJsonStringFromObject(comparisionChartModel));
+        intent.putExtra(Utility.TYPE_OF_PACKAGE, typeOfCheepCarePackage);
         context.startActivity(intent);
     }
 
@@ -59,7 +57,7 @@ public class PaymentSummaryCheepCareActivity extends BaseAppCompatActivity imple
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_payment_summary_new);
+        mBinding = DataBindingUtil.setContentView(this,R.layout.activity_payment_summary_new);
         initView();
         initiateUI();
         setListeners();
@@ -80,7 +78,9 @@ public class PaymentSummaryCheepCareActivity extends BaseAppCompatActivity imple
 
         } else if(getIntent() != null && getIntent().hasExtra(Utility.Extra.DATA_4)){
             comparisionChartModel = (ComparisionChartModel) GsonUtility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA_4), ComparisionChartModel.class);
+             typeOfPackage = getIntent().getStringExtra(Utility.TYPE_OF_PACKAGE);
             Log.e(TAG, "initiateUI: -------------"+ comparisionChartModel.priceLists.toString());
+            setPrice();
         }
 
     }
@@ -132,10 +132,10 @@ public class PaymentSummaryCheepCareActivity extends BaseAppCompatActivity imple
 
             String TYPE = comparisionChartModel.priceLists.get(i).type;
 
-            if (TYPE.equalsIgnoreCase(NetworkUtility.PACKAGE_DETAIL_TYPE.premium)) {
+            if (TYPE.equalsIgnoreCase(typeOfPackage)) {
                // mBinding.tvPremiumNewPrice.setText(comparisionChartModel.priceLists.get(i).newPrice);
                // mBinding.tvPremiumOldPrice.setText(comparisionChartModel.priceLists.get(i).oldPrice);
-            } else if (TYPE.equalsIgnoreCase(NetworkUtility.PACKAGE_DETAIL_TYPE.normal)) {
+            } else if (TYPE.equalsIgnoreCase(typeOfPackage)) {
               //  mBinding.tvNormalNewPrice.setText(comparisionChartModel.priceLists.get(i).newPrice);
               //  mBinding.tvNormalOldPrice.setText(comparisionChartModel.priceLists.get(i).oldPrice);
             }

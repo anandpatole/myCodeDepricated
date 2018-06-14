@@ -707,6 +707,11 @@ public class Utility {
         String NA = "NA";
     }
 
+    public interface TYPE{
+        String PREMIUM = "premium";
+        String NORMAL = "normal";
+    }
+
     public interface BROADCAST_TYPE {
         int UPDATE_FAVOURITE = 1;
         int UPDATE_COMMENT_COUNT = 2;

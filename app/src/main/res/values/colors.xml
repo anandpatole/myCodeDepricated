@@ -138,12 +138,9 @@
     <color name="header_yellow">#FFFFCC01</color>
     <color name="premium">#E54C4C</color>
     <color name="heading_color">#FFED2431</color>
-<<<<<<< HEAD
     <color name="ack_color">#FF3A3A3A</color>
     <color name="ack_details_color">#FF6A6A6A</color>
-=======
     <color name="bg_auto_renew_text">#99c8c8c8</color>
->>>>>>> 1fb3d424cc477adc5b97a5ab4fe4a6ea1a631cf8
 
 
 </resources>

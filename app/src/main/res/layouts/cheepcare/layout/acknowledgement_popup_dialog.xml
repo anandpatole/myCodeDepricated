@@ -69,7 +69,7 @@
             android:layout_marginTop="@dimen/scale_8dp"
             android:text="@string/thanks"
             android:textSize="@dimen/text_size_20sp"
-            android:textColor="@color/cheep_tips_color"/>
+            android:textColor="@color/dark_blue"/>
 
     </LinearLayout>
 
