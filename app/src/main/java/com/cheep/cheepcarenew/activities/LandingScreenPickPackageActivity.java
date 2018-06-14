@@ -184,6 +184,7 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
             public void getCityCareData(CityLandingPageModel cityLandingPageModel) {
                 hideProgressDialog();
                 mCityLandingPageModel = cityLandingPageModel;
+                PreferenceUtility.getInstance(mContext).saveCityLandingPageModel(cityLandingPageModel);
                 mPackageListString = GsonUtility.getJsonStringFromObject(mCityLandingPageModel.packageDetailList);
                 getSavedData();
                 setData();
@@ -312,12 +313,12 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
     }
 
     // open show Comparision Chart Fragment Dialog
-    private void showComparisionChartFragmentDialog() {
+    private void showComparisionChartFragmentDialog(PackageDetail packageDetail) {
         if (comparisionChartFragmentDialog != null) {
             comparisionChartFragmentDialog.dismissAllowingStateLoss();
             comparisionChartFragmentDialog = null;
         }
-        comparisionChartFragmentDialog = ComparisionChartFragmentDialog.newInstance(comparisionChartModel);
+        comparisionChartFragmentDialog = ComparisionChartFragmentDialog.newInstance(comparisionChartModel,packageDetail,mCity);
         comparisionChartFragmentDialog.show(getSupportFragmentManager(), TAG);
     }
 
@@ -327,7 +328,7 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
             packageDetailModelDialog.dismissAllowingStateLoss();
             packageDetailModelDialog = null;
         }
-        packageDetailModelDialog = PackageDetailModelDialog.newInstance(packageDetail, mCity);
+        packageDetailModelDialog = PackageDetailModelDialog.newInstance(packageDetail, mCity,comparisionChartModel);
         packageDetailModelDialog.show(getSupportFragmentManager(), TAG);
     }
 
@@ -343,22 +344,17 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
 //            PackageCustomizationActivity.newInstance(mContext, mCityLandingPageModel.careCityDetail, packageModel, packageList, mCityLandingPageModel.adminSetting);
             // AddressCategorySelectionActivity.newInstance(LandingScreenPickPackageActivity.this);
 
-           /* if(packageModel.type.equalsIgnoreCase(Utility.TYPE.PREMIUM)){
-=======
-            if (packageModel.type.equalsIgnoreCase(Utility.CAR_PACKAGE_TYPE.PREMIUM)) {
-                showPackageDetailModelFragmentDialog(packageModel);
-            } else if (packageModel.type.equalsIgnoreCase(Utility.CAR_PACKAGE_TYPE.NORMAL)) {
-                showComparisionChartFragmentDialog();
-            }*/
+
         }
     };
-    private void navigateToFragment(){
-        if(packageDetailData.type.equalsIgnoreCase(Utility.TYPE.PREMIUM)){
-                showPackageDetailModelFragmentDialog(packageDetailData);
-            } else if (packageDetailData.type.equalsIgnoreCase(Utility.TYPE.NORMAL)) {
 
-                showComparisionChartFragmentDialog();
-            }
+    private void navigateToFragment() {
+        if (packageDetailData.type.equalsIgnoreCase(Utility.TYPE.PREMIUM)) {
+            PreferenceUtility.getInstance(getApplicationContext()).saveTypeOfPackage(Utility.TYPE.PREMIUM);
+            showPackageDetailModelFragmentDialog(packageDetailData);
+        } else if (packageDetailData.type.equalsIgnoreCase(Utility.TYPE.NORMAL)) {
+            showComparisionChartFragmentDialog(packageDetailData);
+        }
     }
 
 
@@ -555,7 +551,7 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
 
                         comparisionChartModel = (ComparisionChartModel) GsonUtility.getObjectFromJsonString(jsonObject.optString(NetworkUtility.TAGS.DATA), ComparisionChartModel.class);
-
+                        PreferenceUtility.getInstance(mContext).saveComparisonChatDetails(comparisionChartModel);
                         navigateToFragment();
 
                         break;

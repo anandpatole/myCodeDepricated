@@ -18,7 +18,8 @@ import com.android.volley.VolleyError;
 import com.cheep.R;
 import com.cheep.cheepcare.model.CareCityDetail;
 import com.cheep.cheepcare.model.PackageDetail;
-import com.cheep.cheepcarenew.activities.AddressActivity;
+import com.cheep.cheepcarenew.activities.PaymentSummaryCheepCareActivity;
+import com.cheep.model.ComparisionChart.ComparisionChartModel;
 import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
@@ -45,11 +46,12 @@ public class PackageDetailModelDialog extends DialogFragment implements View.OnC
         // Required empty public constructor
     }
 
-    public static PackageDetailModelDialog newInstance(PackageDetail packageDetail, CareCityDetail cityDetail) {
+    public static PackageDetailModelDialog newInstance(PackageDetail packageDetail, CareCityDetail cityDetail,ComparisionChartModel comparisionChartModel) {
         PackageDetailModelDialog fragment = new PackageDetailModelDialog();
         Bundle args = new Bundle();
         args.putString(Utility.Extra.DATA, GsonUtility.getJsonStringFromObject(packageDetail));
         args.putString(Utility.Extra.DATA_2, GsonUtility.getJsonStringFromObject(cityDetail));
+        args.putString(Utility.Extra.DATA_3, GsonUtility.getJsonStringFromObject(comparisionChartModel));
         fragment.setArguments(args);
         return fragment;
     }
@@ -108,16 +110,17 @@ public class PackageDetailModelDialog extends DialogFragment implements View.OnC
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.tv_sounds_good:
-             //  PaymentSummaryCheepCareActivity.newInstance(getContext());
-                if (getArguments()!=null)
+               PaymentSummaryCheepCareActivity.newInstance(getContext());
+               /* if (getArguments()!=null)
                 {
                     PackageDetail packageDetail = (PackageDetail) GsonUtility.getObjectFromJsonString(getArguments().getString(Utility.Extra.DATA),PackageDetail.class);
                     CareCityDetail careCityDetail= (CareCityDetail) GsonUtility.getObjectFromJsonString(getArguments().getString(Utility.Extra.DATA_2),CareCityDetail.class);
+                    ComparisionChartModel comparisionChartModel = (ComparisionChartModel) GsonUtility.getObjectFromJsonString(getArguments().getString(Utility.Extra.DATA_3),ComparisionChartModel.class);
                     if (packageDetail!=null){
-                        AddressActivity.newInstance(getContext(),packageDetail,careCityDetail);
+                        AddressActivity.newInstance(getContext(),packageDetail,careCityDetail,comparisionChartModel);
                         dismiss();
                     }
-                }
+                }*/
                 break;
         }
 

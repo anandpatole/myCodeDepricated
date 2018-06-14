@@ -17,12 +17,15 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.cheep.R;
+import com.cheep.cheepcare.model.CareCityDetail;
+import com.cheep.cheepcare.model.PackageDetail;
+import com.cheep.cheepcarenew.activities.AddressActivity;
 import com.cheep.databinding.FragmentComparsionChartFragmentDialogBinding;
 import com.cheep.model.ComparisionChart.ComparisionChartModel;
 import com.cheep.model.ComparisionChart.FeatureList;
-import com.cheep.cheepcarenew.activities.PaymentSummaryCheepCareActivity;
 import com.cheep.network.NetworkUtility;
 import com.cheep.utils.GsonUtility;
+import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.Utility;
 
 
@@ -31,14 +34,20 @@ public class ComparisionChartFragmentDialog extends DialogFragment implements Vi
 
     public static final String TAG = ComparisionChartFragmentDialog.class.getSimpleName();
 
+    private ComparisionChartModel comparisionChartModel;
+    private PackageDetail packageDetail;
+    private CareCityDetail careCityDetail;
+
     private AcknowledgementPopupDialog acknowledgementPopupDialog;
     private FragmentComparsionChartFragmentDialogBinding mBinding;
-    private ComparisionChartModel comparisionChartModel;
+    private PackageDetailModelDialog packageDetailModelDialog;
 
-    public static ComparisionChartFragmentDialog newInstance(ComparisionChartModel comparisionChartModel) {
+    public static ComparisionChartFragmentDialog newInstance(ComparisionChartModel comparisionChartModel, PackageDetail packageDetail ,CareCityDetail careCityDetail) {
         ComparisionChartFragmentDialog fragment = new ComparisionChartFragmentDialog();
         Bundle args = new Bundle();
         args.putString(Utility.Extra.DATA, GsonUtility.getJsonStringFromObject(comparisionChartModel));
+        args.putString(Utility.Extra.DATA_2, GsonUtility.getJsonStringFromObject(packageDetail));
+        args.putString(Utility.Extra.DATA_3, GsonUtility.getJsonStringFromObject(careCityDetail));
         fragment.setArguments(args);
         return fragment;
     }
@@ -68,6 +77,8 @@ public class ComparisionChartFragmentDialog extends DialogFragment implements Vi
         if (getArguments() != null) {
 
             comparisionChartModel = (ComparisionChartModel) GsonUtility.getObjectFromJsonString(getArguments().getString(Utility.Extra.DATA), ComparisionChartModel.class);
+            packageDetail = (PackageDetail) GsonUtility.getObjectFromJsonString(getArguments().getString(Utility.Extra.DATA_2), PackageDetail.class);
+            careCityDetail = (CareCityDetail) GsonUtility.getObjectFromJsonString(getArguments().getString(Utility.Extra.DATA_3), CareCityDetail.class);
 
         }
         loadData();
@@ -141,17 +152,29 @@ public class ComparisionChartFragmentDialog extends DialogFragment implements Vi
         acknowledgementPopupDialog = AcknowledgementPopupDialog.newInstance("", "");
         acknowledgementPopupDialog.show(getActivity().getSupportFragmentManager(), TAG);
     }
+    // open show Package Detail Model Fragment Dialog
+    private void showPackageDetailModelFragmentDialog() {
+        if (packageDetailModelDialog != null) {
+            packageDetailModelDialog.dismissAllowingStateLoss();
+            packageDetailModelDialog = null;
+        }
+        packageDetailModelDialog = PackageDetailModelDialog.newInstance(packageDetail, careCityDetail,comparisionChartModel);
+        packageDetailModelDialog.show(getActivity().getSupportFragmentManager(), TAG);
+    }
 
     //View.OnClickListener
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_book_know_premimu:
-                PaymentSummaryCheepCareActivity.newInstance(getContext(),comparisionChartModel,Utility.TYPE.PREMIUM);
+                PreferenceUtility.getInstance(getContext()).saveTypeOfPackage(Utility.TYPE.PREMIUM);
+                showPackageDetailModelFragmentDialog();
+                //AddressActivity.newInstance(getContext(), packageDetail, careCityDetail,comparisionChartModel);
                 break;
             case R.id.tv_book_know_care:
-                PaymentSummaryCheepCareActivity.newInstance(getContext(),comparisionChartModel,Utility.TYPE.NORMAL);
-
+                PreferenceUtility.getInstance(getContext()).saveTypeOfPackage(Utility.TYPE.NORMAL);
+                showPackageDetailModelFragmentDialog();
+                //AddressActivity.newInstance(getContext(), packageDetail, careCityDetail,comparisionChartModel);
                 break;
         }
     }

@@ -15,6 +15,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.NestedScrollView;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -728,11 +729,19 @@ public class ViewTooltip {
             remove();
         }
 
+        private static final String TAG = "TooltipView";
+
         public void removeNow() {
-            if (getParent() != null) {
-                final ViewGroup parent = ((ViewGroup) getParent());
-                parent.removeView(TooltipView.this);
+//            if (getParent() != null) {
+//                final ViewGroup parent = ((ViewGroup) getParent());
+//                parent.removeView(TooltipView.this);
+//            }
+            final ViewGroup decorView = (ViewGroup) ((Activity) getContext()).getWindow().getDecorView();
+            if (decorView != null) {
+                Log.e(TAG, "removeNow: *******************");
+                decorView.removeView(TooltipView.this);
             }
+
         }
 
         public void closeNow() {

@@ -17,6 +17,7 @@ import com.cheep.databinding.FragmentAddressCategorySelectionBinding;
 import com.cheep.databinding.TooltipAddressSelectionBinding;
 import com.cheep.fragment.BaseFragment;
 import com.cheep.model.AddressModel;
+import com.cheep.model.ComparisionChart.ComparisionChartModel;
 import com.cheep.model.GuestUserDetails;
 import com.cheep.model.MessageEvent;
 import com.cheep.model.UserDetails;
@@ -38,6 +39,12 @@ public class AddressCategorySelectionFragment extends BaseFragment {
     private ViewTooltip.TooltipView tooltipView;
 
     public static AddressCategorySelectionFragment newInstance() {
+        Bundle args = new Bundle();
+        AddressCategorySelectionFragment fragment = new AddressCategorySelectionFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+    public static AddressCategorySelectionFragment newInstance(ComparisionChartModel comparisionChartModel) {
         Bundle args = new Bundle();
         AddressCategorySelectionFragment fragment = new AddressCategorySelectionFragment();
         fragment.setArguments(args);
@@ -78,7 +85,7 @@ public class AddressCategorySelectionFragment extends BaseFragment {
         }
         Log.e(TAG, "initiateUI: ********************");
         UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
-        if (userDetails != null && !userDetails.addressList.isEmpty()) {
+        if (userDetails != null && userDetails.addressList !=null && !userDetails.addressList.isEmpty()) {
             if (userDetails.addressList.get(0) != null) {
                 addressModelArrayList = userDetails.addressList;
                 addressModel = userDetails.addressList.get(0);
@@ -175,7 +182,7 @@ public class AddressCategorySelectionFragment extends BaseFragment {
     private void openAddNewAddressDialog(String category) {
         hideToolTip();
         UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
-        if (userDetails != null && !userDetails.addressList.isEmpty()) {
+        if (userDetails != null && userDetails.addressList!=null && !userDetails.addressList.isEmpty()) {
             if (userDetails.addressList.get(0) != null) {
                 addressModelArrayList = userDetails.addressList;
             }
@@ -206,6 +213,8 @@ public class AddressCategorySelectionFragment extends BaseFragment {
 
     private void openTooltip(boolean delay) {
         Log.e(TAG, "openTooltip: ********************");
+
+
         TooltipAddressSelectionBinding toolTipBinding = DataBindingUtil.inflate(
                 LayoutInflater.from(mContext),
                 R.layout.tooltip_address_selection,
@@ -234,6 +243,8 @@ public class AddressCategorySelectionFragment extends BaseFragment {
             }
         });
 
+        if (tooltipView != null)
+            tooltipView.removeNow();
 
         final ViewTooltip viewTooltip =
                 ViewTooltip.on(this, mBinding.cvAddress)
@@ -258,7 +269,7 @@ public class AddressCategorySelectionFragment extends BaseFragment {
     }
 
     public void onEventMainThread(MessageEvent event) {
-        Log.e("onEventMainThread  *******************", "" + event.BROADCAST_ACTION);
+        Log.e("onEvntMainThread  *******************", "" + event.BROADCAST_ACTION);
         switch (event.BROADCAST_ACTION) {
             case Utility.BROADCAST_TYPE.ADDRESS_SELECTED_POP_UP:
                 setAddressModel(event.addressModel);
@@ -267,4 +278,9 @@ public class AddressCategorySelectionFragment extends BaseFragment {
         }
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        hideToolTip();
+    }
 }
