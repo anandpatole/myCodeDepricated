@@ -63,7 +63,8 @@ public class RateRecyclerViewAdapter extends RecyclerView.Adapter<RateRecyclerVi
         }
         RateCardModel model = mList1.get(holder.getAdapterPosition());
 holder.rowPastTaskBinding.rateCardProduct.setText(model.getProduct());
-
+holder.rowPastTaskBinding.rateCardRates.setText(model.getRate());
+holder.rowPastTaskBinding.rateCardRatesPerUnit.setText(model.getRate_unit());
 
 
 

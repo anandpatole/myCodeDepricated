@@ -5,6 +5,8 @@ public class RateCardModel
 {
     private String product;
     private String rate;
+    private String rate_unit;
+
 
     public String getRate_unit() {
         return rate_unit;
@@ -14,7 +16,7 @@ public class RateCardModel
         this.rate_unit = rate_unit;
     }
 
-    private String rate_unit;
+
     public String getProduct() {
         return product;
     }
