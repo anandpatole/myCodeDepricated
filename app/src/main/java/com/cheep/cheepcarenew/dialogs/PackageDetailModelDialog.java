@@ -18,7 +18,6 @@ import com.android.volley.VolleyError;
 import com.cheep.R;
 import com.cheep.cheepcare.model.PackageDetail;
 import com.cheep.cheepcarenew.activities.AddressActivity;
-import com.cheep.cheepcarenew.activities.PaymentSummaryActivityCheepCare;
 import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
@@ -47,7 +46,6 @@ public class PackageDetailModelDialog extends DialogFragment implements View.OnC
 
     public static PackageDetailModelDialog newInstance(PackageDetail packageDetail) {
         PackageDetailModelDialog fragment = new PackageDetailModelDialog();
-
         Bundle args = new Bundle();
         args.putString(Utility.Extra.DATA, GsonUtility.getJsonStringFromObject(packageDetail));
         fragment.setArguments(args);

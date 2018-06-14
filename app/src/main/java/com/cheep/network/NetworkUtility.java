@@ -511,6 +511,9 @@ public class NetworkUtility {
 
         String TEXT= "text";
 
+        String FEATURE_LIST = "feature_list";
+        String PRICE_LIST = "price_list";
+
         interface VERSION_CHANGE_TYPE {
             int NORMAL = 0;
             int RECOMMENDED_TO_UPGRADE = 1;

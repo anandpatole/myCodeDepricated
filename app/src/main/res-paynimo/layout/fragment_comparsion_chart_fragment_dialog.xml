@@ -1,8 +1,8 @@
-<layout>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <RelativeLayout
         android:id="@+id/rootLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -141,7 +141,7 @@
                     android:layout_alignParentBottom="true">
 
                     <com.cheep.custom_view.CFTextViewRegular
-                        android:id="@+id/tv_heading_benefits"
+                        android:id="@+id/tv_premium_new_price"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
@@ -151,7 +151,7 @@
 
 
                     <com.cheep.custom_view.CFTextViewRegular
-                        android:id="@+id/tv_heading_benefit"
+                        android:id="@+id/tv_premium_old_price"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="@drawable/strike"
@@ -209,7 +209,7 @@
                     android:layout_alignParentBottom="true">
 
                     <com.cheep.custom_view.CFTextViewRegular
-                        android:id="@+id/tv_heading_benefi"
+                        android:id="@+id/tv_normal_new_price"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
@@ -219,7 +219,7 @@
 
 
                     <com.cheep.custom_view.CFTextViewRegular
-                        android:id="@+id/tv_heading_benet"
+                        android:id="@+id/tv_normal_old_price"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="@drawable/strike"

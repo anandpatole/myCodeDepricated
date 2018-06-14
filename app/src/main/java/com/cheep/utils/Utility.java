@@ -119,6 +119,7 @@ public class Utility {
     // new type for subscription
     public static final String SUBSCRIBE= "SUBSCRIBE";
     public static final String RENEW_SUBSCRIPTION= "RENEW_SUBSCRIPTION";
+    public static final String TYPE_OF_PACKAGE= "packageType";
 
     //Date Formats
     public static final String DATE_FORMAT_DD_MM_YY = SuperFormatter.DATE + "/" + SuperFormatter.MONTH_NUMBER + "/" + SuperFormatter.YEAR_4_DIGIT;
@@ -622,6 +623,7 @@ public class Utility {
         String IS_FIRST_TIME = "isFirstTime";
         String DATA_2 = "DATA_2";
         String DATA_3 = "DATA_3";
+        String DATA_4 = "DATA_4";
         String PASSWORD = "password";
         String SELECTED_IMAGE_PATH = "selectedImagePath";
         String CORRECT_OTP = "correctOTP";
@@ -702,6 +704,7 @@ public class Utility {
     public interface BOOLEAN {
         String YES = "yes";
         String NO = "no";
+        String NA = "NA";
     }
 
     public interface BROADCAST_TYPE {

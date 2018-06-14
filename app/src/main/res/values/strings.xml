@@ -854,5 +854,7 @@ without any hidden charges. Try it now!</string>
         material will be charged extra as per actuals. For complex jobs, additional payments may be charged by the PRO.</string>
     <string name="label_how_big_is_your_home">How big is your home?</string>
     <string name="label_how_big_is_your_office">How big is your office (in square feet)?</string>
-
+    <string name="wowieee_all_done">Wowieee. All done!</string>
+    <string name="acknowledgement_details">Congrats on taking the first step towards making your home healthy &amp; happy. Your Cheep Care AMC package is now activated and we are available 24x7 to help you maintain your home. Thank you </string>
+    <string name="thanks">Thanks</string>
 </resources>

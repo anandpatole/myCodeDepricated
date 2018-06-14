@@ -15,6 +15,8 @@ import com.cheep.R;
 import com.cheep.activity.BaseAppCompatActivity;
 import com.cheep.cheepcare.model.PackageDetail;
 import com.cheep.model.AddressModel;
+import com.cheep.model.ComparisionChart.ComparisionChartModel;
+import com.cheep.network.NetworkUtility;
 import com.cheep.utils.GsonUtility;
 import com.cheep.utils.Utility;
 
@@ -33,6 +35,7 @@ public class PaymentSummaryActivityCheepCare extends BaseAppCompatActivity imple
 
     private PackageDetail packageDetail;
     private AddressModel addressModel;
+    private ComparisionChartModel comparisionChartModel;
 
 
     public static void newInstance(Context context, PackageDetail packageDetail, AddressModel addressModel) {
@@ -41,8 +44,10 @@ public class PaymentSummaryActivityCheepCare extends BaseAppCompatActivity imple
         intent.putExtra(Utility.Extra.DATA_2, GsonUtility.getJsonStringFromObject(addressModel));
         context.startActivity(intent);
     }
-    public static void newInstance(Context context) {
+    public static void newInstance(Context context, ComparisionChartModel comparisionChartModel,String typeOfCheepCarePackage) {
         Intent intent = new Intent(context, PaymentSummaryActivityCheepCare.class);
+        intent.putExtra(Utility.Extra.DATA_4, GsonUtility.getJsonStringFromObject(comparisionChartModel));
+        intent.putExtra(Utility.TYPE_OF_PACKAGE,typeOfCheepCarePackage);
         context.startActivity(intent);
     }
 
@@ -69,8 +74,9 @@ public class PaymentSummaryActivityCheepCare extends BaseAppCompatActivity imple
             Log.e(TAG, "initiateUI: -------------"+addressModel.address);
             Log.e(TAG, "initiateUI: ------------"+packageDetail.title);
 
-        } else {
-            return;
+        } else if(getIntent() != null && getIntent().hasExtra(Utility.Extra.DATA_4)){
+            comparisionChartModel = (ComparisionChartModel) GsonUtility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA_4), ComparisionChartModel.class);
+            Log.e(TAG, "initiateUI: -------------"+ comparisionChartModel.priceLists.toString());
         }
 
     }
@@ -116,6 +122,21 @@ public class PaymentSummaryActivityCheepCare extends BaseAppCompatActivity imple
             });
         }
 
+    }
+    private void setPrice() {
+        for (int i = 0; comparisionChartModel.priceLists.size() > i; i++) {
+
+            String TYPE = comparisionChartModel.priceLists.get(i).type;
+
+            if (TYPE.equalsIgnoreCase(NetworkUtility.PACKAGE_DETAIL_TYPE.premium)) {
+               // mBinding.tvPremiumNewPrice.setText(comparisionChartModel.priceLists.get(i).newPrice);
+               // mBinding.tvPremiumOldPrice.setText(comparisionChartModel.priceLists.get(i).oldPrice);
+            } else if (TYPE.equalsIgnoreCase(NetworkUtility.PACKAGE_DETAIL_TYPE.normal)) {
+              //  mBinding.tvNormalNewPrice.setText(comparisionChartModel.priceLists.get(i).newPrice);
+              //  mBinding.tvNormalOldPrice.setText(comparisionChartModel.priceLists.get(i).oldPrice);
+            }
+
+        }
     }
 
     @SuppressLint("ResourceType")

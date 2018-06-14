@@ -1,13 +1,80 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/acknowledgment_dialog_bg"
     tools:context="com.cheep.cheepcarenew.dialogs.AcknowledgementPopupDialog">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/scale_120dp"
+        android:src="@drawable/background_blue_refer_and_earn_bottom"
+        tools:ignore="ContentDescription" />
+
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_marginTop="@dimen/scale_40dp"
+        android:orientation="vertical">
 
-</FrameLayout>
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/scale_120dp"
+            android:src="@drawable/bird_pro_clock"
+            tools:ignore="ContentDescription" />
+
+        <com.cheep.custom_view.CFTextViewBold
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/wowieee_all_done"
+            android:textSize="@dimen/text_size_20sp"
+            android:gravity="center"
+            android:padding="@dimen/scale_8dp"
+            android:textColor="@color/ack_color"/>
+
+
+        <com.cheep.custom_view.CFTextViewRegular
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/acknowledgement_details"
+            android:textColor="@color/ack_color"
+            android:layout_marginTop="@dimen/scale_8dp"
+            android:layout_marginRight="@dimen/scale_20dp"
+            android:layout_marginStart="@dimen/scale_20dp"
+            android:layout_marginLeft="@dimen/scale_20dp"
+            android:layout_marginEnd="@dimen/scale_20dp"
+            android:lineSpacingExtra="@dimen/scale_2dp"
+            android:textSize="@dimen/text_size_16sp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginEnd="@dimen/scale_20dp"
+            android:layout_marginLeft="@dimen/scale_20dp"
+            android:layout_marginRight="@dimen/scale_20dp"
+            android:layout_marginStart="@dimen/scale_20dp"
+            android:background="@color/c_60p_opacity_3A3A3A"
+            android:layout_marginTop="@dimen/scale_20dp"/>
+
+
+
+        <com.cheep.custom_view.CFTextViewBold
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="@dimen/scale_8dp"
+            android:layout_marginTop="@dimen/scale_8dp"
+            android:text="@string/thanks"
+            android:textSize="@dimen/text_size_20sp"
+            android:textColor="@color/cheep_tips_color"/>
+
+    </LinearLayout>
+
+
+
+</RelativeLayout>
+
+</layout>
