@@ -4,13 +4,11 @@ import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
 import com.cheep.R;
 import com.cheep.databinding.RowSelectedSubServiceBinding;
 import com.cheep.model.SubServiceDetailModel;
-import com.cheep.utils.Utility;
 
 import java.util.List;
 
@@ -41,12 +39,7 @@ public class SelectedSubServiceAdapter extends RecyclerView.Adapter<SelectedSubS
         SubServiceDetailModel model = mList.get(holder.getAdapterPosition());
         Context context = holder.mBinding.getRoot().getContext();
 
-        if (holder.getAdapterPosition() == (mList.size() - 1)) {
-            holder.mBinding.txtVerticalLine.setVisibility(View.GONE);
-        }
-        String subServiceText = model.name + Utility.ONE_CHARACTER_SPACE +
-                context.getString(R.string.number_of_services, String.valueOf(model.selected_unit));
-        holder.mBinding.tvSubService.setText(subServiceText);
+        holder.mBinding.tvSubService.setText(model.name);
     }
 
     @Override

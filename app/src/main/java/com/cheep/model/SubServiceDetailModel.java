@@ -20,28 +20,11 @@ public class SubServiceDetailModel implements Parent<SubSubCatModel>, Serializab
     @SerializedName("sub_cat_id")
     public String sub_cat_id;
 
-    @SerializedName("sub_cat_name")
+    @SerializedName("name")
     public String name;
 
-    @SerializedName("min_unit")
-    public String minUnit;
-
-    @SerializedName("max_unit")
-    public String maxUnit;
-
-    @SerializedName("unit_price")
-    public String unitPrice;
-
-    @SerializedName("unit_price_with_gst")
-    public String unitPriceWithGST;
-
-    @SerializedName("charge_type")
-    public String chargeType;
 
     public boolean isSelected = false;
-
-    public int selected_unit = 1;
-
     @SerializedName("all_sub_sub_cats")
     public List<SubSubCatModel> subSubCatModels = null;
 

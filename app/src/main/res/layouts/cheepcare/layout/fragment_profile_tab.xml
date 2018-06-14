@@ -89,6 +89,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:background="?attr/selectableItemBackground"
+            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_weight="0.4"
             app:layout_constraintStart_toEndOf="@id/fl_reviews_container"

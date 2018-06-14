@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools">
 
     <FrameLayout
@@ -13,25 +14,9 @@
 
             <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/scale_170dp">
+                android:layout_height="wrap_content"
+                android:background="@color/splash_gradient_end">
 
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@color/white">
-
-                    <ImageView
-                        android:id="@+id/img_service"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:scaleType="centerCrop"
-                        tools:ignore="ContentDescription"/>
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="@drawable/task_creation_gradient"/>
-                </FrameLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -63,19 +48,19 @@
 
                     <LinearLayout
                         android:layout_width="wrap_content"
-                        android:layout_height="@dimen/scale_32dp"
+                        android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:orientation="horizontal">
 
                         <com.cheep.custom_view.CFTextViewRegular
                             android:id="@+id/text_step_1"
-                            android:layout_width="@dimen/scale_32dp"
-                            android:layout_height="@dimen/scale_32dp"
+                            android:layout_width="@dimen/scale_25dp"
+                            android:layout_height="@dimen/scale_25dp"
                             android:background="@drawable/background_steps_normal"
                             android:gravity="center"
                             android:text="@string/number_one"
                             android:textColor="@color/selector_text_name_steps"
-                            android:textSize="@dimen/text_size_18sp"/>
+                            android:textSize="@dimen/text_size_16sp"/>
 
                         <View
                             android:layout_width="@dimen/scale_50dp"
@@ -85,13 +70,13 @@
 
                         <com.cheep.custom_view.CFTextViewRegular
                             android:id="@+id/text_step_2"
-                            android:layout_width="@dimen/scale_32dp"
-                            android:layout_height="@dimen/scale_32dp"
+                            android:layout_width="@dimen/scale_25dp"
+                            android:layout_height="@dimen/scale_25dp"
                             android:background="@drawable/background_steps_normal"
                             android:gravity="center"
                             android:text="@string/number_two"
                             android:textColor="@color/selector_text_name_steps"
-                            android:textSize="@dimen/text_size_18sp"/>
+                            android:textSize="@dimen/text_size_16sp"/>
 
                         <View
                             android:layout_width="@dimen/scale_50dp"
@@ -101,38 +86,31 @@
 
                         <com.cheep.custom_view.CFTextViewRegular
                             android:id="@+id/text_step_3"
-                            android:layout_width="@dimen/scale_32dp"
-                            android:layout_height="@dimen/scale_32dp"
+                            android:layout_width="@dimen/scale_25dp"
+                            android:layout_height="@dimen/scale_25dp"
                             android:background="@drawable/background_steps_normal"
                             android:gravity="center"
                             android:text="@string/number_three"
                             android:textColor="@color/selector_text_name_steps"
-                            android:textSize="@dimen/text_size_18sp"/>
+                            android:textSize="@dimen/text_size_16sp"/>
                     </LinearLayout>
 
                     <com.cheep.custom_view.CFTextViewSemiBold
                         android:id="@+id/text_step_desc"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/scale_25dp"
+                        android:layout_marginBottom="@dimen/scale_15dp"
+                        android:layout_marginTop="@dimen/scale_10dp"
                         android:gravity="center"
                         android:paddingLeft="@dimen/scale_15dp"
                         android:paddingRight="@dimen/scale_15dp"
                         android:textColor="@color/white"
-                        android:textSize="@dimen/text_size_18sp"
-                        tools:text="asdadasdasdasdadasdasd
-asdadasdasdasdadasdasd
-asdadasdasdasdadasdasd
-asdadasdasdasdadasdasd
-asdadasdasdasdadasdasd
-asdadasdasdasdadasdasd"/>
+                        android:textSize="@dimen/text_size_15sp"
+                        tools:text="asdadasdasdasdadasdasd"/>
                 </LinearLayout>
             </FrameLayout>
 
-            <!--<FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-    -->
+
             <com.cheep.custom_view.NonSwipeableViewPager
                 android:id="@+id/viewpager"
                 android:layout_width="match_parent"
@@ -154,12 +132,7 @@ asdadasdasdasdadasdasd"/>
             <!--  </FrameLayout>-->
         </LinearLayout>
 
-        <include
-            android:id="@+id/add_media"
-            layout="@layout/layout_add_media"
-            android:clickable="true"
-            android:focusable="true"
-            android:visibility="gone"/>
+
     </FrameLayout>
 
 </layout>

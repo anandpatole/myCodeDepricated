@@ -71,18 +71,7 @@
             android:name=".activity.TaskCreationActivity"
             android:launchMode="singleTop"
             android:parentActivityName=".activity.HomeActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Translucent">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activity.HomeActivity"/>
-        </activity>
-        <activity
-            android:name=".cheepcare.activity.TaskCreationCCActivity"
-            android:launchMode="singleTop"
-            android:parentActivityName=".activity.HomeActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Translucent">
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activity.HomeActivity"/>
@@ -175,10 +164,6 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan"/>
         <activity
-            android:name=".cheepcare.activity.BookingConfirmationCcActivity"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan"/>
-        <activity
             android:name=".activity.PaymentSummaryActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan"/>
@@ -250,17 +235,9 @@
             android:name=".cheepcare.activity.RateAndReviewActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".cheepcare.activity.LandingScreenPickPackageActivity"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize|stateAlwaysHidden"/>
-        <activity
             android:name=".cheepcare.activity.PackageCustomizationActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize"/>
-        <activity
-            android:name=".cheepcare.activity.ManageSubscriptionActivity"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize|stateAlwaysHidden"/>
         <activity
             android:name=".cheepcare.activity.PaymentChoiceCheepCareActivity"
             android:screenOrientation="portrait"
@@ -347,18 +324,19 @@
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id"/>
 
-        <!--
-        <provider
+
+       <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="com.cheep.fileprovider"
             android:exported="false"
-            android:grantUriPermissions="true">
+            android:grantUriPermissions="true"
+            >
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
-        -->
-        <provider
+
+  <!-- <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="@string/freshchat_file_provider_authority"
             android:exported="false"
@@ -366,7 +344,7 @@
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/freshchat_file_provider_paths"/>
-        </provider>
+        </provider>-->
 
         <!--
          (APPSFLYER) add the following receiver as the FIRST receiver for INSTALL_REFERRER or after another
@@ -421,7 +399,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Translucent"/>
         <activity
-            android:name=".cheepcarenew.activities.PaymentSummaryActivityCheepCare"
+            android:name=".cheepcarenew.activities.PaymentSummaryCheepCareActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Translucent"/>

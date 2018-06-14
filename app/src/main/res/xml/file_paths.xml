@@ -3,7 +3,7 @@
     <files-path
         name="cheep"
         path="CheepImages/" />
-    <!--<external-path
+  <!-- <external-path
         name="cheep"
         path="Android/data/com.cheep/files/Pictures" />-->
 </paths>

@@ -73,15 +73,30 @@
 
     <string name="label_upcoming_tasks">Upcoming</string>
     <string name="label_past_tasks">Past</string>
-
+    <string name="rate_card_repair">Repairs</string>
+    <string name="rate_card_electrician">Electrician</string>
+    <string name="rate_card_painter">Painter</string>
+    <string name="rate_card_application_repair">Application Repair</string>
+    <string name="rate_card_tech_repair">Tech Repair</string>
     <string name="label_reschedule">Reschedule</string>
-
+    <string name="text_cheep_rate_card_categories"> Rate Card for Service Categories</string>
+    <string name="rate_card_plumber">Plumber</string>
+    <string name="cheep_rate_card_info">Wondering how much a service can cost you</string>
+    <string name="rate_card_pest_control">Pest Control</string>
+    <string name="cheep_rate_card_info1">Our aim is to provide the best services at the most nominal rates.Depending on the services at hand,we might have some additional charges.You can easily aceess the rate card by tapping  on the services listed below</string>
     <string name="rupee_symbol_x_space">₹ %1$s</string>
     <string name="rupee_symbol_x">₹%1$s</string>
     <string name="dummy_email">mohankumar@gmail.com</string>
-    <string name="label_emergency_contacts">Emergency Contacts</string>
+    <string name="label_phone_no">Phone Number</string>
+    <string name="label_phone_no_value">7207002829</string>
+    <string name="label_add_contact">Add contact</string>
+    <string name="label_emergency_info">Please add upto 3 emergency contacts who we will reach out to when you press the alert button on our app</string>
+    <string name="label_emergency_contacts">Emergency contact</string>
     <!--<string name="label_manage_address">Manage Address</string>-->
     <string name="label_manage_address">Address</string>
+    <string name="label_manages_address">Manage Address</string>
+    <string name="label_view_more">View more</string>
+    <string name="label_view_less">View less</string>
     <string name="label_change_password">Change Password</string>
     <string name="label_notification">Notifications</string>
     <string name="label_update">Update</string>
@@ -91,6 +106,11 @@
     <string-array name="choose_image_options">
         <item>Camera</item>
         <item>Gallery</item>
+    </string-array>
+    <string-array name="choose_image_options1">
+        <item>Photo</item>
+        <item>Name</item>
+        <item>Email Id</item>
     </string-array>
     <string name="label_submit">Submit</string>
     <string name="dummy_long_desc">"Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of "de Finibus Bonorum et Malorum" (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. The first line of Lorem Ipsum, "Lorem ipsum dolor sit amet..", comes from a line in section 1.10.32.
@@ -140,10 +160,12 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_spent">Spent</string>
     <string name="label_payment_history">Payment History</string>
     <string name="label_my_payment_history">My Payment History</string>
+    <string name="Label_cheep_care_rate_card">Cheep Care Rate Card</string>
     <string name="label_total">Total</string>
     <string name="label_cheepest">Cheepest</string>
     <string name="label_distance">Distance</string>
     <string name="label_rating">Rating</string>
+    <string name="label_rating_value">4.0</string>
     <string name="label_show_results">Show Results</string>
     <string name="label_reset">Reset</string>
     <string name="label_filter">Filter</string>
@@ -314,7 +336,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_update_address">Update Address</string>
 
     <string name="label_reviews">Reviews</string>
-    <string name="label_my_reviews">My Reviews</string>
+    <string name="label_my_reviews">Reviews</string>
     <string name="label_past_work">Past Work</string>
     <string name="label_contact_requested">Contact Requested</string>
 
@@ -444,6 +466,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_insta_book">InstaBook</string>
     <string name="lable_insta_get_pro">and get a PRO instantly</string>
     <string name="info_insta_book">Recommended if you want to get your task done quickly. Be rest assured, CHEEP will instantly assign a verified PRO with min 10 years of experience to get the job done.</string>
+    <string name="info_insta_book_new">At times, due to heavy demand, our PRO\'s may be unavailable at the time-slot requested by you. In that situation, we will contact you well in advance and offer you other available slots for you to choose. Please be rest assured, we will send our PRO\'s within 24 hours as promised. Thank you.</string>
     <string name="info_get_quote">Recommended if your task is not urgent. You can compare multiple quotes, read independent reviews and then book the PRO you like.</string>
     <string name="label_get_quotes">Get Quotes</string>
     <string name="lable_book_pro">and book the PRO you want</string>
@@ -483,7 +506,8 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_refer_and_earn_share_body">Check out this awesome new app, the best place for service professionals &amp; get Rs. 50 off! Just download it from %1$s, use the code %2$s</string>
     <string name="label_share_subject">Refer &amp; Earn</string>
     <string name="alert_strategic_partner_unavailable_in_location">This service is not available in your location</string>
-
+    <string name="label_email">Email</string>
+    <string name="label_manage_cheep_care_subscription">Manage Cheep Care Subscription</string>
     <string name="read_more">Read More</string>
     <string name="less">less</string>
     <string name="category_more">More</string>
@@ -563,7 +587,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_enter_amount">Enter Amount</string>
     <string name="label_amount_payable">Amount Payable</string>
     <string name="label_notify_paying_by_wallet">You are about to pay using your %1s wallet</string>
-    <string name="no_pro_available_title" />
+    <string name="no_pro_available_title"/>
     <string name="no_pro_available_description">No PROs is available for this address</string>
     <string name="validate_comment">Please provide valid comment.</string>
     <string name="title_booking_confimation">Booking Confirmation</string>
@@ -649,7 +673,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
 
     <string name="hint_apply_cheep_promo_code">Apply CHEEP Promo code?</string>
     <string name="hint_apply_cheep_mate_code">Have a CHEEP Mate Code?</string>
-    <string name="label_empty_string" />
+    <string name="label_empty_string"/>
     <string name="label_proceed_to_checkout">Proceed to Checkout</string>
     <string name="add_package_to_cart">Add Package to Cart</string>
     <string name="label_appliance">%1d Appliances</string>
@@ -768,7 +792,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="msg_notif_20min_confirm_availability">Hey Rahul! It seems that you haven\'t confirmed your availability yet.
         Your Cheep Care task will be cancelled if you don\'t confirm within 20 minutes of this notification sent to you. Please confirm your availability.</string>
     <string name="label_details">Details</string>
-    <string name="label_my_details">My Details</string>
+    <string name="label_my_details">Details</string>
     <string name="label_my_profile">My Profile</string>
     <string name="label_total_paid_colon">Total Paid:</string>
     <string name="msg_payment_pending_desc">It seems that your payment is pending for this task.</string>
@@ -800,7 +824,6 @@ without any hidden charges. Try it now!</string>
     <string name="cheep_care_landing">Here\'s why lakhs of families use Cheep Care</string>
 
     <string name="comparision_message">Get MUCH MORE by paying little extra. Check the HUGE benefits of becoming a Premium Member for as little as ₹300 only!</string>
-
 
 
     <string-array name="benefits_features_dummy">
@@ -854,7 +877,42 @@ without any hidden charges. Try it now!</string>
         material will be charged extra as per actuals. For complex jobs, additional payments may be charged by the PRO.</string>
     <string name="label_how_big_is_your_home">How big is your home?</string>
     <string name="label_how_big_is_your_office">How big is your office (in square feet)?</string>
+<<<<<<< HEAD
     <string name="wowieee_all_done">Wowieee. All done!</string>
     <string name="acknowledgement_details">Congrats on taking the first step towards making your home healthy &amp; happy. Your Cheep Care AMC package is now activated and we are available 24x7 to help you maintain your home. Thank you </string>
     <string name="thanks">Thanks</string>
+=======
+    <string name="label_add_new_address">Add new address</string>
+    <string name="label_get_current_location">Get current location</string>
+    <string name="hint_address_locality">Locality</string>
+    <string name="hint_address_city">City</string>
+    <string name="label_star">\u0020*</string>
+    <string name="label_hey_is_this_your_home_address">Hey, Is this your home address?</string>
+    <string name="label_do_you_want_the_cheep_care_package_for_this_address">Do you want the Cheep Care package for this address?</string>
+    <string name="label_please_share_the_details_of_your_location">Please share the details of your location</string>
+    <string name="label_rate_card_modal">Rate Card</string>
+    <string name="rate_card_modal_product">Product</string>
+    <string name="rate_card_modal_price">Price</string>
+    <string name="label_relationship">Relationship</string>
+    <string name="label_select_your_relation_with_your_contact">Select your relation with your contact</string>
+    <string name="rate_card_header_services">Services</string>
+    <string name="rate_card_header_labour_rates">Labour rates</string>
+    <string name="label_response_received">Response Received</string>
+    <string name="label_paid_with_cheep_care">With Cheep Care</string>
+    <string name="cheep_care">Cheep Care\u0020</string>
+    <string name="label_pay_pending_amount_msg">Hi %1s! Tap on Pay Now to pay the pending amount.</string>
+    <string name="label_auto_renew_activated">Auto renewal activated</string>
+    <string name="label_vote_for_city_registered_successflly">Your vote for %1s has been successfully registered.</string>
+    <string name="view_more">View more</string>
+    <string name="view_less">View less</string>
+    <string name="label_task_details">Task Details</string>
+    <string name="subscribed_under_cheep_care">• Subscribed under Cheep Care</string>
+    <string name="please_select_your_address">Please select your address</string>
+    <string name="label_auto_renew_deactivated">Auto renewal deactivated</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="message_coundnot_find_current_location">oops! could noy find your current location! Please try again.</string>
+    <string name="label_auto_detect_location_message">Our smart App has picked up this location automatically via GPS?</string>
+    <string name="label_please_tell_us_where_do_you_need_the_amc_for">Please tell us where do you need the AMC for?</string>
+
+>>>>>>> 1fb3d424cc477adc5b97a5ab4fe4a6ea1a631cf8
 </resources>

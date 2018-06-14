@@ -24,7 +24,6 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.cheep.R;
 import com.cheep.activity.BaseAppCompatActivity;
-import com.cheep.cheepcare.activity.ManageSubscriptionActivity;
 import com.cheep.cheepcare.adapter.CheepCareFeatureAdapter;
 import com.cheep.cheepcare.adapter.CheepCarePackageAdapter;
 import com.cheep.cheepcare.model.CareCityDetail;
@@ -301,16 +300,8 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
                         // The 'which' argument contains the index position
                         // of the selected item
                         LogUtils.LOGE(TAG, "onClick alert dialog : " + bannerCareCityDetailsList.get(which).cityName);
-                        if (!mCity.cityName.equalsIgnoreCase(bannerCareCityDetailsList.get(which).cityName)) {
-                            if (bannerCareCityDetailsList.get(which).isSubscribed.equalsIgnoreCase(Utility.BOOLEAN.YES)) {
-                                String cheepcareBannerListString = GsonUtility.getJsonStringFromObject(bannerCareCityDetailsList);
-                                ManageSubscriptionActivity.newInstance(LandingScreenPickPackageActivity.this, bannerCareCityDetailsList.get(which), true, cheepcareBannerListString);
-                                finish();
-                            } else {
-                                mCity = bannerCareCityDetailsList.get(which);
-                                setCityBannerData();
-                            }
-                        }
+                        mCity = bannerCareCityDetailsList.get(which);
+                        setCityBannerData();
                         dialog.dismiss();
                     }
                 });
@@ -326,7 +317,11 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
             comparisionChartFragmentDialog.dismissAllowingStateLoss();
             comparisionChartFragmentDialog = null;
         }
+<<<<<<< HEAD
         comparisionChartFragmentDialog = ComparisionChartFragmentDialog.newInstance(comparisionChartModel);
+=======
+        comparisionChartFragmentDialog = ComparisionChartFragmentDialog.newInstance("", "");
+>>>>>>> 1fb3d424cc477adc5b97a5ab4fe4a6ea1a631cf8
         comparisionChartFragmentDialog.show(getSupportFragmentManager(), TAG);
     }
 
@@ -336,7 +331,7 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
             packageDetailModelDialog.dismissAllowingStateLoss();
             packageDetailModelDialog = null;
         }
-        packageDetailModelDialog = PackageDetailModelDialog.newInstance(packageDetail);
+        packageDetailModelDialog = PackageDetailModelDialog.newInstance(packageDetail, mCity);
         packageDetailModelDialog.show(getSupportFragmentManager(), TAG);
     }
 
@@ -344,19 +339,25 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
             = new CheepCarePackageAdapter.PackageItemClickListener() {
         @Override
         public void onPackageItemClick(int position, PackageDetail packageModel) {
+<<<<<<< HEAD
             packageDetailData = packageModel;
             callGetPackageFeatureListDetailWS();
 
+=======
+>>>>>>> 1fb3d424cc477adc5b97a5ab4fe4a6ea1a631cf8
             // Toast.makeText(getApplicationContext(),"majid : "+ packageModel.type,Toast.LENGTH_LONG).show();
 //            String packageList = GsonUtility.getJsonStringFromObject(mCityLandingPageModel.packageDetailList);
 //            String packageList = GsonUtility.getJsonStringFromObject(mCityLandingPageModel.packageDetailList);
 //            PackageCustomizationActivity.newInstance(mContext, mCityLandingPageModel.careCityDetail, packageModel, packageList, mCityLandingPageModel.adminSetting);
             // AddressCategorySelectionActivity.newInstance(LandingScreenPickPackageActivity.this);
 
+<<<<<<< HEAD
            /* if(packageModel.type.equalsIgnoreCase(Utility.TYPE.PREMIUM)){
+=======
+            if (packageModel.type.equalsIgnoreCase(Utility.CAR_PACKAGE_TYPE.PREMIUM)) {
+>>>>>>> 1fb3d424cc477adc5b97a5ab4fe4a6ea1a631cf8
                 showPackageDetailModelFragmentDialog(packageModel);
-            } else if (packageModel.type.equalsIgnoreCase(Utility.TYPE.NORMAL)) {
-
+            } else if (packageModel.type.equalsIgnoreCase(Utility.CAR_PACKAGE_TYPE.NORMAL)) {
                 showComparisionChartFragmentDialog();
             }*/
         }

@@ -53,8 +53,8 @@ public class JobCategoryModel implements Serializable {
     @SerializedName("care_city_arr")
     public List<CareCityDetail> careCityData;
 
-    @SerializedName("cat_task_type")
-    public String catTaskType;
+//    @SerializedName("cat_task_type")
+//    public String catTaskType;
 
 
     /*public String categoryName;

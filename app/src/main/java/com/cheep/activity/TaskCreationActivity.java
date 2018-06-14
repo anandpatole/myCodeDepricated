@@ -14,7 +14,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.PagerSnapHelper;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Display;
@@ -25,7 +24,6 @@ import com.android.volley.VolleyError;
 import com.appsflyer.AppsFlyerLib;
 import com.cheep.R;
 import com.cheep.adapter.TaskCreationPagerAdapter;
-import com.cheep.cheepcare.adapter.MediaFullScreenAdapter;
 import com.cheep.databinding.ActivityTaskCreateBinding;
 import com.cheep.dialogs.AcknowledgementDialogWithoutProfilePic;
 import com.cheep.dialogs.AcknowledgementInteractionListener;
@@ -37,7 +35,6 @@ import com.cheep.fragment.EnterTaskDetailFragment;
 import com.cheep.fragment.SelectSubCategoryFragment;
 import com.cheep.model.AddressModel;
 import com.cheep.model.JobCategoryModel;
-import com.cheep.model.MediaModel;
 import com.cheep.model.MessageEvent;
 import com.cheep.model.SubServiceDetailModel;
 import com.cheep.model.TaskDetailModel;
@@ -45,7 +42,6 @@ import com.cheep.model.UserDetails;
 import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
-import com.cheep.utils.GlideUtility;
 import com.cheep.utils.GsonUtility;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.Utility;
@@ -78,7 +74,6 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
     private float itemWidth;
     //    private float padding;
     private float allPixels;
-    private MediaFullScreenAdapter mediaFullScreenAdapter;
     private int expectedPosition;
     private LinearLayoutManager layoutManager;
     //variables for add media//
@@ -122,10 +117,6 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
 
         // Set category
         mActivityTaskCreateBinding.textTitle.setText(mJobCategoryModel.catName != null ? mJobCategoryModel.catName : Utility.EMPTY_STRING);
-
-        // Set up image
-        GlideUtility.loadImageView(mContext, mActivityTaskCreateBinding.imgService, mJobCategoryModel.catImageExtras.original, R.drawable.gradient_black);
-        GlideUtility.loadImageView(mContext, mActivityTaskCreateBinding.imgService, mJobCategoryModel.catImageExtras.thumb, R.drawable.gradient_black);
 
         // Setting viewpager
         setupViewPager(mActivityTaskCreateBinding.viewpager);
@@ -172,63 +163,10 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
 
         LinearLayoutManager shopItemslayoutManager = new LinearLayoutManager(getApplicationContext());
         shopItemslayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        mActivityTaskCreateBinding.addMedia.itemList.setLayoutManager(shopItemslayoutManager);
 
-    /*    mActivityTaskCreateBinding.addMedia.itemList.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-                synchronized (this) {
-                    if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                        calculatePositionAndScroll(recyclerView);
-                    }
-                }
-            }
 
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                allPixels += dx;
-            }
-        });*/
-
-        mediaFullScreenAdapter = new MediaFullScreenAdapter(mediaInteractionListener);
-        layoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false);
-        PagerSnapHelper pagerSnapHelper = new PagerSnapHelper();
-        pagerSnapHelper.attachToRecyclerView(mActivityTaskCreateBinding.addMedia.itemList);
-        mActivityTaskCreateBinding.addMedia.itemList.setLayoutManager(layoutManager);
-        mActivityTaskCreateBinding.addMedia.itemList.setAdapter(mediaFullScreenAdapter);
-
-        mActivityTaskCreateBinding.addMedia.itemList.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-                if (newState == RecyclerView.SCROLL_STATE_DRAGGING) {
-                    //Dragging
-                } else if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                    int review_position = layoutManager.findFirstCompletelyVisibleItemPosition();
-                    mActivityTaskCreateBinding.addMedia.tvNumberOfMedia.setText(getString(R.string.number_of_media, String.valueOf((review_position + 1))
-                            , String.valueOf(mediaFullScreenAdapter.getListSize())));
-                }
-            }
-
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-
-//                int firstVisibleItem = layoutManager.findFirstVisibleItemPosition();
-                /* Log.e ("VisibleItem", String.valueOf(firstVisibleItem));*/
-
-            }
-        });
     }
 
-    private void calculatePositionAndScroll(RecyclerView recyclerView) {
-        expectedPosition = Math.round((allPixels/* + padding*/) / itemWidth);
-        scrollListToPosition(recyclerView, expectedPosition);
-        mActivityTaskCreateBinding.addMedia.tvNumberOfMedia.setText(getString(R.string.number_of_media, String.valueOf(expectedPosition + 1/* + 1*/)
-                , String.valueOf(mediaFullScreenAdapter.getListSize())));
-    }
 
     private void scrollListToPosition(RecyclerView recyclerView, int expectedPosition) {
         float targetScrollPos = expectedPosition * itemWidth/* - padding*/;
@@ -241,8 +179,6 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
     @Override
     protected void setListeners() {
 
-        mActivityTaskCreateBinding.addMedia.ivHideMediaUi.setOnClickListener(mOnClickListener);
-        mActivityTaskCreateBinding.addMedia.ivPlus.setOnClickListener(mOnClickListener);
 
         mActivityTaskCreateBinding.textPostTask.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -254,7 +190,7 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
                         mTaskCreationPagerAdapter.mSelectSubCategoryFragment.isVerified = true;
 
                         //Alert The activity that step one is been verified.
-                        setTaskState(TaskCreationActivity.STEP_ONE_VERIFIED);
+                        setTaskState(TaskCreationActivity.STEP_ONE_NORMAL);
                         gotoStep(TaskCreationActivity.STAGE_2);
                     }
                 }, 500);
@@ -281,32 +217,13 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
      * Below would manage the state of Step while creating task creation
      */
     public static final int STEP_ONE_NORMAL = 1;
-    public static final int STEP_ONE_UNVERIFIED = 2;
-    public static final int STEP_ONE_VERIFIED = 3;
     public static final int STEP_TWO_NORMAL = 4;
-    public static final int STEP_TWO_UNVERIFIED = 5;
-    public static final int STEP_TWO_VERIFIED = 6;
-    public static final int STEP_THREE_NORMAL = 7;
-    public static final int STEP_THREE_UNVERIFIED = 8;
-    public static final int STEP_THREE_VERIFIED = 9;
     public int mCurrentStep = -1;
 
     public void setTaskState(int step_state) {
         mCurrentStep = step_state;
         switch (step_state) {
             case STEP_ONE_NORMAL:
-                mActivityTaskCreateBinding.textStep1.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_steps_normal));
-                mActivityTaskCreateBinding.textStep1.setTextColor(ContextCompat.getColor(mContext, R.color.white));
-
-                mActivityTaskCreateBinding.textStep2.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_steps_normal));
-                mActivityTaskCreateBinding.textStep2.setTextColor(ContextCompat.getColor(mContext, R.color.white));
-
-                mActivityTaskCreateBinding.textStep3.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_steps_normal));
-                mActivityTaskCreateBinding.textStep3.setTextColor(ContextCompat.getColor(mContext, R.color.white));
-
-
-                break;
-            case STEP_ONE_UNVERIFIED:
                 mActivityTaskCreateBinding.textStep1.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_steps_unverified));
                 mActivityTaskCreateBinding.textStep1.setTextColor(ContextCompat.getColor(mContext, R.color.splash_gradient_end));
 
@@ -316,61 +233,16 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
                 mActivityTaskCreateBinding.textStep3.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_steps_normal));
                 mActivityTaskCreateBinding.textStep3.setTextColor(ContextCompat.getColor(mContext, R.color.white));
 
+
                 break;
-            case STEP_ONE_VERIFIED:
             case STEP_TWO_NORMAL:
-                mActivityTaskCreateBinding.textStep1.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_steps_verified));
-                mActivityTaskCreateBinding.textStep1.setTextColor(ContextCompat.getColor(mContext, R.color.white));
-
-                mActivityTaskCreateBinding.textStep2.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_steps_normal));
-                mActivityTaskCreateBinding.textStep2.setTextColor(ContextCompat.getColor(mContext, R.color.white));
-
-                mActivityTaskCreateBinding.textStep3.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_steps_normal));
-                mActivityTaskCreateBinding.textStep3.setTextColor(ContextCompat.getColor(mContext, R.color.white));
-
-                break;
-            case STEP_TWO_UNVERIFIED:
-                mActivityTaskCreateBinding.textStep1.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_steps_verified));
+                mActivityTaskCreateBinding.textStep1.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_steps_normal));
                 mActivityTaskCreateBinding.textStep1.setTextColor(ContextCompat.getColor(mContext, R.color.white));
 
                 mActivityTaskCreateBinding.textStep2.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_steps_unverified));
                 mActivityTaskCreateBinding.textStep2.setTextColor(ContextCompat.getColor(mContext, R.color.splash_gradient_end));
 
                 mActivityTaskCreateBinding.textStep3.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_steps_normal));
-                mActivityTaskCreateBinding.textStep3.setTextColor(ContextCompat.getColor(mContext, R.color.white));
-
-                break;
-            case STEP_TWO_VERIFIED:
-            case STEP_THREE_NORMAL:
-                mActivityTaskCreateBinding.textStep1.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_steps_verified));
-                mActivityTaskCreateBinding.textStep1.setTextColor(ContextCompat.getColor(mContext, R.color.white));
-
-                mActivityTaskCreateBinding.textStep2.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_steps_verified));
-                mActivityTaskCreateBinding.textStep2.setTextColor(ContextCompat.getColor(mContext, R.color.white));
-
-                mActivityTaskCreateBinding.textStep3.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_steps_normal));
-                mActivityTaskCreateBinding.textStep3.setTextColor(ContextCompat.getColor(mContext, R.color.white));
-
-                break;
-            case STEP_THREE_UNVERIFIED:
-                mActivityTaskCreateBinding.textStep1.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_steps_verified));
-                mActivityTaskCreateBinding.textStep1.setTextColor(ContextCompat.getColor(mContext, R.color.white));
-
-                mActivityTaskCreateBinding.textStep2.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_steps_verified));
-                mActivityTaskCreateBinding.textStep2.setTextColor(ContextCompat.getColor(mContext, R.color.white));
-
-                mActivityTaskCreateBinding.textStep3.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_steps_unverified));
-                mActivityTaskCreateBinding.textStep3.setTextColor(ContextCompat.getColor(mContext, R.color.splash_gradient_end));
-
-                break;
-            case STEP_THREE_VERIFIED:
-                mActivityTaskCreateBinding.textStep1.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_steps_verified));
-                mActivityTaskCreateBinding.textStep1.setTextColor(ContextCompat.getColor(mContext, R.color.white));
-
-                mActivityTaskCreateBinding.textStep2.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_steps_verified));
-                mActivityTaskCreateBinding.textStep2.setTextColor(ContextCompat.getColor(mContext, R.color.white));
-
-                mActivityTaskCreateBinding.textStep3.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_steps_verified));
                 mActivityTaskCreateBinding.textStep3.setTextColor(ContextCompat.getColor(mContext, R.color.white));
 
                 break;
@@ -398,10 +270,6 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (mActivityTaskCreateBinding.addMedia.getRoot().getVisibility() == View.VISIBLE) {
-            mActivityTaskCreateBinding.addMedia.ivHideMediaUi.performClick();
-            return;
-        }
 
         if (mActivityTaskCreateBinding.viewpager.getCurrentItem() == 1) {
             gotoStep(STAGE_1);
@@ -515,7 +383,7 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
         taskDetailModel.taskAddress.address_id = mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.address_id;
 //        taskDetailModel.taskAddressId = mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.address_id;
 //                    taskDetailModel.categoryId = mJobCategoryModel.catId;
-        taskDetailModel.taskDesc = mTaskCreationPagerAdapter.mEnterTaskDetailFragment.getTaskDescription();
+//        taskDetailModel.taskDesc = mTaskCreationPagerAdapter.mEnterTaskDetailFragment.getTaskDescription();
 //                    taskDetailModel.catImage = mJobCategoryModel.catImage;
         taskDetailModel.categoryModel = mJobCategoryModel;
         taskDetailModel.taskStartdate = String.valueOf(mTaskCreationPagerAdapter.mEnterTaskDetailFragment.superCalendar.getCalendar().getTimeInMillis());
@@ -665,7 +533,7 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
 
         // Add Params
         Map<String, Object> mParams = new HashMap<>();
-        mParams.put(NetworkUtility.TAGS.TASK_DESC, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.getTaskDescription());
+//        mParams.put(NetworkUtility.TAGS.TASK_DESC, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.getTaskDescription());
         if (Integer.parseInt(mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.address_id) > 0) {
             mParams.put(NetworkUtility.TAGS.ADDRESS_ID, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.address_id);
         } else {
@@ -691,7 +559,7 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
 
         // Create Params for AppsFlyer event track
         mTaskCreationParams = new HashMap<>();
-        mTaskCreationParams.put(NetworkUtility.TAGS.TASK_DESC, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.getTaskDescription());
+//        mTaskCreationParams.put(NetworkUtility.TAGS.TASK_DESC, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.getTaskDescription());
         if (Integer.parseInt(mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.address_id) > 0) {
             mTaskCreationParams.put(NetworkUtility.TAGS.ADDRESS_ID, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.address_id);
         } else {
@@ -1060,12 +928,6 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
     };
 
     public boolean isValidationCompleted() {
-        // Task Description
-        if (!mTaskCreationPagerAdapter.mEnterTaskDetailFragment.isTaskDescriptionVerified) {
-            Utility.showSnackBar(getString(R.string.validate_task_desc), mActivityTaskCreateBinding.getRoot());
-            return false;
-        }
-
         // Date-Time of Task
         if (!mTaskCreationPagerAdapter.mEnterTaskDetailFragment.isTaskWhenVerified) {
             Utility.showSnackBar(getString(R.string.validate_date), mActivityTaskCreateBinding.getRoot());
@@ -1119,10 +981,6 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
 
 
     /**
-     * Location [END]
-     */
-
-    /**
      * BroadCast that would restart the screen once login has been done.
      */
     private BroadcastReceiver mBR_OnLoginSuccess = new BroadcastReceiver() {
@@ -1150,67 +1008,6 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
 
                 // Save the user now.
                 PreferenceUtility.getInstance(mContext).saveUserDetails(mUserDetails);
-            }
-        }
-    };
-
-    private final MediaFullScreenAdapter.MediaInteractionListener mediaInteractionListener = new MediaFullScreenAdapter.MediaInteractionListener() {
-        @Override
-        public void onItemClick(int position, MediaModel model) {
-            ZoomImageActivity.newInstance(mContext, null, model.localFilePath);
-        }
-
-        @Override
-        public void onRemoveClick(int position, MediaModel model) {
-            if (mediaFullScreenAdapter.getListSize() == 3) {
-                shouldAddMediaClickListener(true);
-            }
-            if (mediaFullScreenAdapter.getListSize() == 1) {
-                mActivityTaskCreateBinding.addMedia.ivHideMediaUi.performClick();
-            }
-            mediaFullScreenAdapter.removeItem(TaskCreationActivity.this, position, model);
-//            calculatePositionAndScroll(mActivityTaskCreateBinding.addMedia.itemList);
-            mActivityTaskCreateBinding.addMedia.itemList.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    int review_position = layoutManager.findFirstCompletelyVisibleItemPosition();
-                    mActivityTaskCreateBinding.addMedia.tvNumberOfMedia.setText(getString(R.string.number_of_media, String.valueOf((review_position + 1))
-                            , String.valueOf(mediaFullScreenAdapter.getListSize())));
-                }
-            }, 500);
-            mTaskCreationPagerAdapter.mEnterTaskDetailFragment.removeMediaItem(position, model);
-        }
-    };
-
-    public void showMediaUI(ArrayList<MediaModel> mediaList) {
-        Log.d(TAG, "showMediaUI() called with: mediaList = [" + mediaList + "]");
-        mActivityTaskCreateBinding.addMedia.getRoot().setVisibility(View.VISIBLE);
-        mediaFullScreenAdapter.addAll(mediaList);
-        mActivityTaskCreateBinding.addMedia.tvNumberOfMedia.setText(getString(R.string.number_of_media, String.valueOf(1)
-                , String.valueOf(mediaList.size())));
-    }
-
-    public void addMedia(MediaModel media) {
-        Log.d(TAG, "addMedia() called with: media = [" + media + "]");
-        mediaFullScreenAdapter.add(media);
-        mActivityTaskCreateBinding.addMedia.tvNumberOfMedia.setText(getString(R.string.number_of_media, String.valueOf(expectedPosition + 1/* + 1*/)
-                , String.valueOf(mediaFullScreenAdapter.getListSize())));
-    }
-
-    public void shouldAddMediaClickListener(boolean addMediaClickListener) {
-        mActivityTaskCreateBinding.addMedia.ivPlus.setOnClickListener(addMediaClickListener ? mOnClickListener : null);
-    }
-
-    private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            switch (v.getId()) {
-                case R.id.iv_hide_media_ui:
-                    mActivityTaskCreateBinding.addMedia.getRoot().setVisibility(View.GONE);
-                    break;
-                case R.id.iv_plus:
-                    mTaskCreationPagerAdapter.mEnterTaskDetailFragment.showMediaChooserDialog();
-                    break;
             }
         }
     };

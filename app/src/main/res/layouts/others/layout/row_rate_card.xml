@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android" >
+    <LinearLayout
+        android:id="@+id/rate_card_pricing_ll"
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_height="wrap_content">
+        <com.cheep.custom_view.CFTextViewRegular
+            android:id="@+id/rate_card_product"
+            android:layout_width="@dimen/scale_0dp"
+            android:text="I need a tap to be installed"
+            android:layout_weight="3"
+            android:textSize="@dimen/text_size_13sp"
+            android:paddingTop="@dimen/scale_23dp"
+            android:paddingBottom="@dimen/scale_23dp"
+            android:textColor="@color/grey_variant_1"
+            android:gravity="center_horizontal|center_vertical"
+            android:layout_height="wrap_content" />
+        <View
+            android:layout_width="@dimen/scale_1dp"
+            android:layout_height="match_parent"
+            android:background="@color/black_translucent"></View>
+        <com.cheep.custom_view.CFTextViewRegular
+            android:id="@+id/rate_card_rates"
+            android:layout_width="@dimen/scale_0dp"
+            android:text="200"
+            android:layout_weight="1"
+            android:textSize="@dimen/text_size_13sp"
+            android:textColor="@color/grey_variant_1"
+            android:paddingTop="@dimen/scale_23dp"
+            android:paddingBottom="@dimen/scale_23dp"
+            android:gravity="center_horizontal|center_vertical"
+            android:layout_height="wrap_content" />
+        <View
+            android:layout_width="@dimen/scale_1dp"
+            android:layout_height="match_parent"
+            android:background="@color/black_translucent"></View>
+        <com.cheep.custom_view.CFTextViewRegular
+            android:id="@+id/rate_card_rates_per_unit"
+            android:layout_width="@dimen/scale_0dp"
+            android:text="100"
+            android:layout_weight="1"
+            android:paddingTop="@dimen/scale_23dp"
+            android:paddingBottom="@dimen/scale_23dp"
+            android:textSize="@dimen/text_size_13sp"
+            android:textColor="@color/grey_variant_1"
+            android:gravity="center_horizontal|center_vertical"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+</layout>

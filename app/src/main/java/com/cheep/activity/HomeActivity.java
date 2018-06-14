@@ -45,10 +45,10 @@ import com.cheep.adapter.ChatTabRecyclerViewAdapter;
 import com.cheep.adapter.FAQRecyclerViewAdapter;
 import com.cheep.adapter.FavouriteRecyclerViewAdapter;
 import com.cheep.adapter.SlideMenuAdapter;
-import com.cheep.cheepcare.activity.ManageSubscriptionActivity;
 import com.cheep.cheepcare.activity.NotificationCcActivity;
 import com.cheep.cheepcare.adapter.PaymentHistoryCCAdapter;
 import com.cheep.cheepcare.fragment.ProfileTabFragment;
+import com.cheep.cheepcarenew.fragments.CheepCareRateCardFragment;
 import com.cheep.custom_view.BottomAlertDialog;
 import com.cheep.databinding.ActivityHomeBinding;
 import com.cheep.databinding.NavHeaderHomeBinding;
@@ -319,10 +319,12 @@ public class HomeActivity extends BaseAppCompatActivity
         ArrayList<SlideMenuListModel> list = new ArrayList<>();
         list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.label_home), R.drawable.icon_side_home_blue, true, false));
         list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.label_favourites), R.drawable.icon_fav_off, false, false));
-        list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.tab_me), R.drawable.icon_logout, false, false));
+
         list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.label_payment_history), R.drawable.icon_history, false, false));
+        list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.Label_cheep_care_rate_card),R.drawable.icon_rate,false,false));
         // TODO: Icon change Refer And Earn
         if (PreferenceUtility.getInstance(mContext).getUserDetails() != null)
+            list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.tab_me), R.drawable.icon_logout, false, false));
             list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.label_refer_and_earn), R.drawable.icon_help, false, false));
         list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.label_help), R.drawable.icon_help, false, true));
         list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.label_faq), R.drawable.icon_faq, false, false));
@@ -422,13 +424,7 @@ public class HomeActivity extends BaseAppCompatActivity
                     }
                 }
             }, 1000);
-        }/*else if (slideMenuListModel.title.equals(getString(R.string.tab_alert))) {
-            showAlertDialog();
-//            LoginActivity.newInstance(mContext);
-//            finish();
-            // We are returning here so side menu will not close at end of this method
-//            return;
-        }*/ else if (slideMenuListModel.title.equals(getString(R.string.tab_me))) {
+        }else if (slideMenuListModel.title.equals(getString(R.string.tab_me))) {
             Fragment mFragment = getSupportFragmentManager().findFragmentByTag(ProfileTabFragment.TAG);
             if (mFragment == null) {
                 loadFragment(ProfileTabFragment.TAG, ProfileTabFragment.newInstance());
@@ -436,7 +432,15 @@ public class HomeActivity extends BaseAppCompatActivity
                 Log.i(TAG, "onSlideMenuListItemClicked: " + slideMenuListModel.title + " is there");
             }
         }
-
+else if(slideMenuListModel.title.equals(getString(R.string.Label_cheep_care_rate_card)))
+        {
+            Fragment mFragment = getSupportFragmentManager().findFragmentByTag(CheepCareRateCardFragment.TAG);
+            if (mFragment == null) {
+                loadFragment(CheepCareRateCardFragment.TAG, CheepCareRateCardFragment.newInstance());
+            } else {
+                Log.i(TAG, "onSlideMenuListItemClicked: " + slideMenuListModel.title + " is there");
+            }
+        }
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -775,19 +779,7 @@ public class HomeActivity extends BaseAppCompatActivity
     public void onCategoryRowClicked(JobCategoryModel model, int position) {
         // Changes on 27thApril,2017
 //        HireNewJobActivity.newInstance(mContext, model);
-        Fragment mHomeFragment = getSupportFragmentManager().findFragmentByTag(HomeFragment.TAG);
-        if (mHomeFragment != null) {
-            Fragment mHomeTabFragment = mHomeFragment.getChildFragmentManager().findFragmentByTag(HomeFragment.TAB_HOME);
-            if (mHomeTabFragment != null) {
-                if (((HomeTabFragment) mHomeTabFragment).getmSelectedFilterType().equalsIgnoreCase(Utility.FILTER_TYPES.FILTER_TYPE_SUBSCRIBED)) {
-                    ManageSubscriptionActivity.newInstance(mContext, model.careCityData.get(0), true, GsonUtility.getJsonStringFromObject(((HomeTabFragment) mHomeTabFragment).careBannerModelArrayList));
-                } else
-                    TaskCreationActivity.getInstance(mContext, model);
-            } else
-                TaskCreationActivity.getInstance(mContext, model);
-        } else {
             TaskCreationActivity.getInstance(mContext, model);
-        }
     }
 
     @Override

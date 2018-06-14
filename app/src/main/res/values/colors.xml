@@ -79,10 +79,11 @@
     <color name="grey_dark_color_7">#707172</color>
     <color name="grey_dark_color_8">#AAAAAA</color>
     <color name="grey_dark_color_9">#666D74</color>
-
+    <color name="grey_variant_1">#FF3A3A3A</color>
+<color name="grey_variant">#FF6A6A6A</color>
     <color name="grey_color">#E8E8E8</color>
-    <color name="light_grey_color">#DCDEE3</color>
     <color name="light_grey_color_1">#D0D0D0</color>
+    <color name="light_grey_color">#DCDEE3</color>
 
     <color name="white_translucent_line">#33FFFFFF</color>
     <color name="white_translucent">#77FFFFFF</color>
@@ -100,7 +101,7 @@
     <color name="dark_blue_variant_3">#4797E7</color>
     <color name="black">#000000</color>
     <color name="white">#FFFFFF</color>
-
+<color name="blue_variant_4">#FF006DDA</color>
     <color name="colorGray">#5f5f5f</color>
     <color name="colorSemiGray">#ACACAC</color>
 
@@ -131,23 +132,19 @@
     <color name="black_varient_1">#010101</color>
     <color name="c_F2F2F2">#F2F2F2</color>
 
-    <color name="cheep_tips_color">#FF006DDA</color>
-    <color name="cheep_tips_black">#FF000000</color>
     <color name="gray_chart_upper">#06FFCC01</color>
     <color name="gray_chart_lower">#20646460</color>
     <color name="light_center">#66FFCC01</color>
     <color name="header_yellow">#FFFFCC01</color>
     <color name="premium">#E54C4C</color>
     <color name="heading_color">#FFED2431</color>
+<<<<<<< HEAD
     <color name="ack_color">#FF3A3A3A</color>
     <color name="ack_details_color">#FF6A6A6A</color>
+=======
+    <color name="bg_auto_renew_text">#99c8c8c8</color>
+>>>>>>> 1fb3d424cc477adc5b97a5ab4fe4a6ea1a631cf8
 
-    <!--test-->
-    <!--<color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#007BD8</color>
-    <color name="colorAccentLight">#60007BD8</color>
-    <color name="transparent">#00000000</color>-->
 
 </resources>
 

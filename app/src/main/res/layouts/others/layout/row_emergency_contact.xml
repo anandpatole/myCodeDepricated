@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/front_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/scale_8dp"
+        android:paddingRight="@dimen/scale_16dp"
+        android:paddingTop="@dimen/scale_8dp">
+
+
+
+        <LinearLayout
+            android:id="@+id/profile_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <com.cheep.custom_view.CFTextViewRegular
+                android:id="@+id/text_emergency_contact_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/remove_contact_icon"
+                android:drawablePadding="@dimen/scale_5dp"
+                android:paddingLeft="@dimen/scale_40dp"
+                android:gravity="center"
+                android:textColor="@color/black"
+                tools:text="My sweet home"
+                android:textSize="@dimen/text_size_12sp" />
+
+            <com.cheep.custom_view.CFTextViewRegular
+                android:id="@+id/text_emergency_contact_phone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/scale_3dp"
+                android:paddingLeft="@dimen/scale_62dp"
+                tools:text="7207002829"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_12sp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+</layout>

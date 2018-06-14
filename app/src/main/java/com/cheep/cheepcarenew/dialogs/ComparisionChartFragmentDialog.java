@@ -18,10 +18,15 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.cheep.R;
+<<<<<<< HEAD
 import com.cheep.cheepcarenew.activities.PaymentSummaryActivityCheepCare;
 import com.cheep.databinding.FragmentComparsionChartFragmentDialogBinding;
 import com.cheep.model.ComparisionChart.ComparisionChartModel;
 import com.cheep.model.ComparisionChart.FeatureList;
+=======
+import com.cheep.cheepcarenew.activities.PaymentSummaryCheepCareActivity;
+import com.cheep.model.ComparisionChartModel;
+>>>>>>> 1fb3d424cc477adc5b97a5ab4fe4a6ea1a631cf8
 import com.cheep.network.NetworkUtility;
 import com.cheep.utils.GsonUtility;
 import com.cheep.utils.Utility;
@@ -148,10 +153,17 @@ public class ComparisionChartFragmentDialog extends DialogFragment implements Vi
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_book_know_premimu:
+<<<<<<< HEAD
                 PaymentSummaryActivityCheepCare.newInstance(getContext(),comparisionChartModel,Utility.TYPE.PREMIUM);
                 break;
             case R.id.tv_book_know_care:
                 PaymentSummaryActivityCheepCare.newInstance(getContext(),comparisionChartModel,Utility.TYPE.NORMAL);
+=======
+                PaymentSummaryCheepCareActivity.newInstance(getContext());
+                break;
+            case R.id.tv_book_know_care:
+                PaymentSummaryCheepCareActivity.newInstance(getContext());
+>>>>>>> 1fb3d424cc477adc5b97a5ab4fe4a6ea1a631cf8
                 break;
         }
     }
@@ -179,11 +191,19 @@ public class ComparisionChartFragmentDialog extends DialogFragment implements Vi
                 holder.linear.setBackgroundColor(Color.parseColor("#20646460"));
             }
 
+<<<<<<< HEAD
             if (featureList.premium.equalsIgnoreCase(Utility.BOOLEAN.YES)) {
                 holder.imagePremium.setVisibility(View.VISIBLE);
                 holder.tvPremium.setVisibility(View.GONE);
                 holder.imagePremium.setBackgroundResource(R.drawable.verified_icon);
             } else if (featureList.premium.equalsIgnoreCase(Utility.BOOLEAN.NO)) {
+=======
+            if (model.premium.equalsIgnoreCase(Utility.BOOLEAN.YES)) {
+                holder.imagePremium.setVisibility(View.VISIBLE);
+                holder.tvPremium.setVisibility(View.GONE);
+                holder.imagePremium.setBackgroundResource(R.drawable.verified_icon);
+            } else if (model.premium.equalsIgnoreCase(Utility.BOOLEAN.NO)) {
+>>>>>>> 1fb3d424cc477adc5b97a5ab4fe4a6ea1a631cf8
                 holder.imagePremium.setVisibility(View.VISIBLE);
                 holder.tvPremium.setVisibility(View.GONE);
                 holder.imagePremium.setBackgroundResource(R.drawable.cancelled);

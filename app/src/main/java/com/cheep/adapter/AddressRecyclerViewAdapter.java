@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.RadioButton;
 
 import com.cheep.R;
+
 import com.cheep.databinding.RowAddressBinding;
 import com.cheep.model.AddressModel;
 import com.cheep.utils.Utility;
@@ -23,7 +24,7 @@ public class AddressRecyclerViewAdapter extends RecyclerView.Adapter<AddressRecy
 
     private ArrayList<AddressModel> mList;
     private String selected = "";
-    private RadioButton selectedRadioBtn;
+   private RadioButton selectedRadioBtn;
     private AddressItemInteractionListener listener;
 
     public AddressRecyclerViewAdapter(ArrayList<AddressModel> mList, AddressItemInteractionListener listener) {
@@ -45,14 +46,14 @@ public class AddressRecyclerViewAdapter extends RecyclerView.Adapter<AddressRecy
 
         final AddressModel model = mList.get(holder.getAdapterPosition());
 
-//        holder.mRowAddressBinding.textAddressNickname.setText(model.name);
+      // holder.mRowAddressBinding.textAddressNickname.setText(model.name);
 
             holder.mRowAddressBinding.textFullAddress.setText(model.getAddressWithInitials());
 
         if (TextUtils.isEmpty(selected) && position == 0) {
             selected = model.address_id;
             holder.mRowAddressBinding.radioButton.setChecked(true);
-            selectedRadioBtn = holder.mRowAddressBinding.radioButton;
+           // selectedRadioBtn = holder.mRowAddressBinding.radioButton;
         } else if (selected.equalsIgnoreCase(model.address_id)) {
             holder.mRowAddressBinding.radioButton.setChecked(true);
             selectedRadioBtn = holder.mRowAddressBinding.radioButton;
@@ -63,14 +64,14 @@ public class AddressRecyclerViewAdapter extends RecyclerView.Adapter<AddressRecy
         holder.mRowAddressBinding.textAddressCategory.setText(Utility.getAddressCategoryString(model.category));
         holder.mRowAddressBinding.textAddressCategory.setCompoundDrawablesWithIntrinsicBounds(Utility.getAddressCategoryBlueIcon(model.category), 0, 0, 0);
 
-        holder.mRowAddressBinding.radioButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                RadioButton radioButton = (RadioButton) view;
-                if (radioButton.isChecked()) {
+       holder.mRowAddressBinding.radioButton.setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View view) {
+               RadioButton radioButton = (RadioButton) view;
+               if (radioButton.isChecked()) {
                     if (selectedRadioBtn != null && !selected.equalsIgnoreCase(model.address_id)) {
-                        selectedRadioBtn.setChecked(false);
-                    }
+                       selectedRadioBtn.setChecked(false);
+                   }
                     selectedRadioBtn = radioButton;
                     selected = model.address_id;
                 }
@@ -93,7 +94,7 @@ public class AddressRecyclerViewAdapter extends RecyclerView.Adapter<AddressRecy
             }
         });
 
-        /*holder.mView.setOnClickListener(new View.OnClickListener() {
+       /* holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 RadioButton radioButton = (RadioButton) holder.mRowAddressBinding.radioButton;
@@ -119,8 +120,9 @@ public class AddressRecyclerViewAdapter extends RecyclerView.Adapter<AddressRecy
                         selectedRadioBtn.setChecked(false);
                     }
                     selectedRadioBtn = radioButton;
-                    selected = model.address_id;
+
                 }
+                selected = model.address_id;
                 if (listener != null) {
                     listener.onRowClicked(model, holder.getAdapterPosition());
                 }

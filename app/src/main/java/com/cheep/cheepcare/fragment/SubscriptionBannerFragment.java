@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.cheep.R;
-import com.cheep.cheepcare.activity.ManageSubscriptionActivity;
 import com.cheep.cheepcare.model.CareCityDetail;
 import com.cheep.cheepcarenew.activities.LandingScreenPickPackageActivity;
 import com.cheep.databinding.FragmentSubscriptionBannerImageBinding;
@@ -140,13 +139,7 @@ public class SubscriptionBannerFragment extends BaseFragment {
                         if (fragmentByTag == null)
                             return;
                         String cheepcareBannerListString = GsonUtility.getJsonStringFromObject(fragmentByTag.careBannerModelArrayList);
-                        if (bannerImageModel.isSubscribed.equalsIgnoreCase(Utility.BOOLEAN.YES)) {
-                            ManageSubscriptionActivity.newInstance(mContext, bannerImageModel, true, cheepcareBannerListString);
-                        } else {
-                            LandingScreenPickPackageActivity.newInstance(mContext, bannerImageModel, cheepcareBannerListString);
-//                            PaymentDemoActivity.newInstance(mContext);
-                        }
-
+                        LandingScreenPickPackageActivity.newInstance(mContext, bannerImageModel, cheepcareBannerListString);
 
 
                     }

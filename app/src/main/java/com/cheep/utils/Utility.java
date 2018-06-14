@@ -894,7 +894,7 @@ public class Utility {
         String USERNAME = "Guest";
     }
 
-    public interface TYPE{
+    public interface CAR_PACKAGE_TYPE{
         String PREMIUM="premium";
         String NORMAL="normal";
     }
