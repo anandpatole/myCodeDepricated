@@ -303,12 +303,12 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
     }
 
     // open show Comparision Chart Fragment Dialog
-    private void showComparisionChartFragmentDialog() {
+    private void showComparisionChartFragmentDialog(PackageDetail premiumPackage, PackageDetail normalPackage, CareCityDetail mCity) {
         if (comparisionChartFragmentDialog != null) {
             comparisionChartFragmentDialog.dismissAllowingStateLoss();
             comparisionChartFragmentDialog = null;
         }
-        comparisionChartFragmentDialog = ComparisionChartFragmentDialog.newInstance("", "");
+        comparisionChartFragmentDialog = ComparisionChartFragmentDialog.newInstance(premiumPackage, normalPackage, this.mCity);
         comparisionChartFragmentDialog.show(getSupportFragmentManager(), TAG);
     }
 
@@ -326,16 +326,20 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
             = new CheepCarePackageAdapter.PackageItemClickListener() {
         @Override
         public void onPackageItemClick(int position, PackageDetail packageModel) {
-            // Toast.makeText(getApplicationContext(),"majid : "+ packageModel.type,Toast.LENGTH_LONG).show();
-//            String packageList = GsonUtility.getJsonStringFromObject(mCityLandingPageModel.packageDetailList);
-//            String packageList = GsonUtility.getJsonStringFromObject(mCityLandingPageModel.packageDetailList);
-//            PackageCustomizationActivity.newInstance(mContext, mCityLandingPageModel.careCityDetail, packageModel, packageList, mCityLandingPageModel.adminSetting);
-            // AddressCategorySelectionActivity.newInstance(LandingScreenPickPackageActivity.this);
 
             if (packageModel.type.equalsIgnoreCase(Utility.CAR_PACKAGE_TYPE.PREMIUM)) {
                 showPackageDetailModelFragmentDialog(packageModel);
             } else if (packageModel.type.equalsIgnoreCase(Utility.CAR_PACKAGE_TYPE.NORMAL)) {
-                showComparisionChartFragmentDialog();
+
+                PackageDetail premiumPackage = null, normalPackage = null;
+                for (PackageDetail packageDetail : mCityLandingPageModel.packageDetailList) {
+                    if (packageModel.type.equalsIgnoreCase(Utility.CAR_PACKAGE_TYPE.PREMIUM)) {
+                        premiumPackage = packageDetail;
+                    } else {
+                        normalPackage = packageDetail;
+                    }
+                }
+                showComparisionChartFragmentDialog(premiumPackage, normalPackage, mCity);
             }
         }
     };

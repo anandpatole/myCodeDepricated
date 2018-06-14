@@ -21,11 +21,14 @@ import android.widget.TextView;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.cheep.R;
-import com.cheep.cheepcarenew.activities.PaymentSummaryCheepCareActivity;
+import com.cheep.cheepcare.model.CareCityDetail;
+import com.cheep.cheepcare.model.PackageDetail;
+import com.cheep.cheepcarenew.activities.AddressActivity;
 import com.cheep.model.ComparisionChartModel;
 import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
+import com.cheep.utils.GsonUtility;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.Utility;
 
@@ -45,12 +48,18 @@ public class ComparisionChartFragmentDialog extends DialogFragment implements Vi
     private RecyclerView recyclerView;
     private RelativeLayout rootLayout;
     private ProgressDialog mProgressDialog;
-    private TextView tvBookKnowPremium,tvBookKnowCare;
+    private TextView tvBookKnowPremium, tvBookKnowCare;
+    private PackageDetail premiumPackage;
+    private PackageDetail normalPackage;
+    private CareCityDetail careCityDetail;
 
-    public static ComparisionChartFragmentDialog newInstance(String param1, String param2) {
+    public static ComparisionChartFragmentDialog newInstance(PackageDetail premiumPackage, PackageDetail normalPackage, CareCityDetail careCityDetail) {
         ComparisionChartFragmentDialog fragment = new ComparisionChartFragmentDialog();
         Bundle args = new Bundle();
-       /* args.putString(ARG_PARAM1, param1);
+        args.putString(Utility.Extra.DATA, GsonUtility.getJsonStringFromObject(premiumPackage));
+        args.putString(Utility.Extra.DATA_2, GsonUtility.getJsonStringFromObject(normalPackage));
+        args.putString(Utility.Extra.DATA_3, GsonUtility.getJsonStringFromObject(careCityDetail));
+  /* args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);*/
         fragment.setArguments(args);
         return fragment;
@@ -116,15 +125,22 @@ public class ComparisionChartFragmentDialog extends DialogFragment implements Vi
         return dialog;
 
     }
-    private void initView(View view){
+
+    private void initView(View view) {
         rootLayout = view.findViewById(R.id.rootLayout);
         recyclerView = view.findViewById(R.id.recycler_view);
 
         tvBookKnowPremium = view.findViewById(R.id.tv_book_know_premimu);
         tvBookKnowCare = view.findViewById(R.id.tv_book_know_care);
 
+        if (getArguments() != null) {
+            premiumPackage = (PackageDetail) GsonUtility.getObjectFromJsonString(getArguments().getString(Utility.Extra.DATA), PackageDetail.class);
+            normalPackage = (PackageDetail) GsonUtility.getObjectFromJsonString(getArguments().getString(Utility.Extra.DATA_2), PackageDetail.class);
+            careCityDetail = (CareCityDetail) GsonUtility.getObjectFromJsonString(getArguments().getString(Utility.Extra.DATA_3), CareCityDetail.class);
+        }
     }
-    private void setListener(){
+
+    private void setListener() {
         tvBookKnowPremium.setOnClickListener(this);
         tvBookKnowCare.setOnClickListener(this);
     }
@@ -138,12 +154,12 @@ public class ComparisionChartFragmentDialog extends DialogFragment implements Vi
     //View.OnClickListener
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.tv_book_know_premimu:
-                PaymentSummaryCheepCareActivity.newInstance(getContext());
+                AddressActivity.newInstance(getContext(), premiumPackage, careCityDetail);
                 break;
             case R.id.tv_book_know_care:
-                PaymentSummaryCheepCareActivity.newInstance(getContext());
+                AddressActivity.newInstance(getContext(), normalPackage, careCityDetail);
                 break;
         }
     }
