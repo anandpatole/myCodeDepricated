@@ -2,8 +2,18 @@
 <paths>
     <files-path
         name="cheep"
-        path="CheepImages/" />
-  <!-- <external-path
-        name="cheep"
-        path="Android/data/com.cheep/files/Pictures" />-->
+        path="CheepImages/"/>
+
+    <external-files-path
+        name="ext_files"
+        path="."/>
+    <cache-path
+        name="int_cache"
+        path="."/>
+    <external-cache-path
+        name="ext_cache"
+        path="."/>
+    <!-- <external-path
+          name="cheep"
+          path="Android/data/com.cheep/files/Pictures" />-->
 </paths>

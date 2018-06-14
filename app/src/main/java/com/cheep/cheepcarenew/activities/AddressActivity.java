@@ -226,7 +226,7 @@ public class AddressActivity extends BaseAppCompatActivity {
         public void onErrorResponse(VolleyError error) {
             hideProgressDialog();
             LogUtils.LOGD(TAG, "onErrorResponse() called with: error = [" + error + "]");
-            Utility.showSnackBar(getString(R.string.label_something_went_wrong),mBinding.getRoot());
+            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
         }
     };
 }
