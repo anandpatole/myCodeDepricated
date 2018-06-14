@@ -8,6 +8,8 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.cheep.cheepcare.model.AdminSettingModel;
+import com.cheep.cheepcare.model.CityLandingPageModel;
+import com.cheep.model.ComparisionChart.ComparisionChartModel;
 import com.cheep.model.GuestUserDetails;
 import com.cheep.model.UserDetails;
 
@@ -25,6 +27,8 @@ public class PreferenceUtility {
     private Context context;
     //    private static PreferenceUtility mPreferenceUtility;
     private static UserDetails mUserDetails;
+    private ComparisionChartModel comparisionChartModel;
+    private CityLandingPageModel cityLandingPageModel;
     private static GuestUserDetails mGuestUserDetails;
 
     private static final String PREF_X_API_KEY = "com.cheep.xapikey";
@@ -43,6 +47,11 @@ public class PreferenceUtility {
     private static final String OFFICE_ADDRESS_SIZE = "com.cheep.officeaddresssize";
     private SharedPreferences mGuestSharedPreferences;
     private static AdminSettingModel mAdminSettings;
+
+
+    private static final String PREF_SAVE_COMPARISON_CHART = "ComparisionChartFragmentDialog";
+    private static final String PREF_SAVE_CITY_LANDING_MODEl = "CityLandingPageModel";
+    private static final String PREF_TYPE_OF_PACKAGE = "Type";
 
     private PreferenceUtility(Context mContext) {
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
@@ -134,6 +143,53 @@ public class PreferenceUtility {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+        }
+        return null;
+    }
+
+    public void saveComparisonChatDetails(ComparisionChartModel model) {
+        Log.d(TAG, "saveComparisonChatDetails() called with: model = [" + model + "]");
+        mSharedPreferences.edit().putString(PREF_SAVE_COMPARISON_CHART, GsonUtility.getJsonStringFromObject(model)).apply();
+
+    }
+    public ComparisionChartModel getComparisonChatDetails() {
+        if (mSharedPreferences.contains(PREF_SAVE_COMPARISON_CHART)) {
+            try {
+                JSONObject jsonObject = new JSONObject(mSharedPreferences.getString(PREF_SAVE_COMPARISON_CHART, null));
+                comparisionChartModel = (ComparisionChartModel) GsonUtility.getObjectFromJsonString(jsonObject.toString(), ComparisionChartModel.class);
+                return comparisionChartModel;
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
+    public void saveCityLandingPageModel(CityLandingPageModel model) {
+        Log.d(TAG, "saveCityLandingPageModel() called with: model = [" + model + "]");
+        mSharedPreferences.edit().putString(PREF_SAVE_CITY_LANDING_MODEl, GsonUtility.getJsonStringFromObject(model)).apply();
+
+    }
+    public CityLandingPageModel getCityLandingPageModel() {
+        if (mSharedPreferences.contains(PREF_SAVE_CITY_LANDING_MODEl)) {
+            try {
+                JSONObject jsonObject = new JSONObject(mSharedPreferences.getString(PREF_SAVE_CITY_LANDING_MODEl, null));
+                cityLandingPageModel = (CityLandingPageModel) GsonUtility.getObjectFromJsonString(jsonObject.toString(), CityLandingPageModel.class);
+                return cityLandingPageModel;
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
+    public void saveTypeOfPackage(String value) {
+        mSharedPreferences.edit().putString(PREF_TYPE_OF_PACKAGE, value).apply();
+    }
+
+    public String getTypeOfPackage() {
+        if (mSharedPreferences.contains(PREF_TYPE_OF_PACKAGE)) {
+            return mSharedPreferences.getString(PREF_TYPE_OF_PACKAGE, null);
         }
         return null;
     }

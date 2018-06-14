@@ -1,66 +1,53 @@
 package com.cheep.cheepcarenew.dialogs;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Context;
+import android.databinding.DataBindingUtil;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.cheep.R;
 import com.cheep.cheepcare.model.CareCityDetail;
 import com.cheep.cheepcare.model.PackageDetail;
 import com.cheep.cheepcarenew.activities.AddressActivity;
-import com.cheep.model.ComparisionChartModel;
+import com.cheep.databinding.FragmentComparsionChartFragmentDialogBinding;
+import com.cheep.model.ComparisionChart.ComparisionChartModel;
+import com.cheep.model.ComparisionChart.FeatureList;
 import com.cheep.network.NetworkUtility;
-import com.cheep.network.Volley;
-import com.cheep.network.VolleyNetworkRequest;
 import com.cheep.utils.GsonUtility;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.Utility;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 
 public class ComparisionChartFragmentDialog extends DialogFragment implements View.OnClickListener {
 
     public static final String TAG = ComparisionChartFragmentDialog.class.getSimpleName();
-    private ArrayList<ComparisionChartModel> comparisionChartsList;
-    private ComparisionChatAdapter adapter;
-    private RecyclerView recyclerView;
-    private RelativeLayout rootLayout;
-    private ProgressDialog mProgressDialog;
-    private TextView tvBookKnowPremium, tvBookKnowCare;
-    private PackageDetail premiumPackage;
-    private PackageDetail normalPackage;
+
+    private ComparisionChartModel comparisionChartModel;
+    private PackageDetail packageDetail;
     private CareCityDetail careCityDetail;
 
-    public static ComparisionChartFragmentDialog newInstance(PackageDetail premiumPackage, PackageDetail normalPackage, CareCityDetail careCityDetail) {
+    private AcknowledgementPopupDialog acknowledgementPopupDialog;
+    private FragmentComparsionChartFragmentDialogBinding mBinding;
+    private PackageDetailModelDialog packageDetailModelDialog;
+
+    public static ComparisionChartFragmentDialog newInstance(ComparisionChartModel comparisionChartModel, PackageDetail packageDetail ,CareCityDetail careCityDetail) {
         ComparisionChartFragmentDialog fragment = new ComparisionChartFragmentDialog();
         Bundle args = new Bundle();
-        args.putString(Utility.Extra.DATA, GsonUtility.getJsonStringFromObject(premiumPackage));
-        args.putString(Utility.Extra.DATA_2, GsonUtility.getJsonStringFromObject(normalPackage));
+        args.putString(Utility.Extra.DATA, GsonUtility.getJsonStringFromObject(comparisionChartModel));
+        args.putString(Utility.Extra.DATA_2, GsonUtility.getJsonStringFromObject(packageDetail));
         args.putString(Utility.Extra.DATA_3, GsonUtility.getJsonStringFromObject(careCityDetail));
-  /* args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);*/
         fragment.setArguments(args);
         return fragment;
     }
@@ -85,17 +72,19 @@ public class ComparisionChartFragmentDialog extends DialogFragment implements Vi
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_comparsion_chart_fragment_dialog, container, false);
-        initView(view);
+        mBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_comparsion_chart_fragment_dialog, container, false);
+
+        if (getArguments() != null) {
+
+            comparisionChartModel = (ComparisionChartModel) GsonUtility.getObjectFromJsonString(getArguments().getString(Utility.Extra.DATA), ComparisionChartModel.class);
+            packageDetail = (PackageDetail) GsonUtility.getObjectFromJsonString(getArguments().getString(Utility.Extra.DATA_2), PackageDetail.class);
+            careCityDetail = (CareCityDetail) GsonUtility.getObjectFromJsonString(getArguments().getString(Utility.Extra.DATA_3), CareCityDetail.class);
+
+        }
+        loadData();
         setListener();
 
-        callGetPackageFeatureListDetailWS();
-
-        if (comparisionChartsList == null) {
-            comparisionChartsList = new ArrayList<>();
-        }
-
-        return view;
+        return mBinding.getRoot();
     }
 
 
@@ -126,29 +115,51 @@ public class ComparisionChartFragmentDialog extends DialogFragment implements Vi
 
     }
 
-    private void initView(View view) {
-        rootLayout = view.findViewById(R.id.rootLayout);
-        recyclerView = view.findViewById(R.id.recycler_view);
-
-        tvBookKnowPremium = view.findViewById(R.id.tv_book_know_premimu);
-        tvBookKnowCare = view.findViewById(R.id.tv_book_know_care);
-
-        if (getArguments() != null) {
-            premiumPackage = (PackageDetail) GsonUtility.getObjectFromJsonString(getArguments().getString(Utility.Extra.DATA), PackageDetail.class);
-            normalPackage = (PackageDetail) GsonUtility.getObjectFromJsonString(getArguments().getString(Utility.Extra.DATA_2), PackageDetail.class);
-            careCityDetail = (CareCityDetail) GsonUtility.getObjectFromJsonString(getArguments().getString(Utility.Extra.DATA_3), CareCityDetail.class);
-        }
-    }
-
     private void setListener() {
-        tvBookKnowPremium.setOnClickListener(this);
-        tvBookKnowCare.setOnClickListener(this);
+        mBinding.tvBookKnowPremimu.setOnClickListener(this);
+        mBinding.tvBookKnowCare.setOnClickListener(this);
     }
 
     private void loadData() {
-        recyclerView.setHasFixedSize(true);
-        adapter = new ComparisionChatAdapter();
-        recyclerView.setAdapter(adapter);
+        mBinding.recyclerView.setHasFixedSize(true);
+        final ComparisionChatAdapter adapter = new ComparisionChatAdapter();
+        mBinding.recyclerView.setAdapter(adapter);
+        setPrice();
+    }
+
+    private void setPrice() {
+        for (int i = 0; comparisionChartModel.priceLists.size() > i; i++) {
+
+            String TYPE = comparisionChartModel.priceLists.get(i).type;
+
+            if (TYPE.equalsIgnoreCase(NetworkUtility.PACKAGE_DETAIL_TYPE.premium)) {
+                mBinding.tvPremiumNewPrice.setText(comparisionChartModel.priceLists.get(i).newPrice);
+                mBinding.tvPremiumOldPrice.setText(comparisionChartModel.priceLists.get(i).oldPrice);
+            } else if (TYPE.equalsIgnoreCase(NetworkUtility.PACKAGE_DETAIL_TYPE.normal)) {
+                mBinding.tvNormalNewPrice.setText(comparisionChartModel.priceLists.get(i).newPrice);
+                mBinding.tvNormalOldPrice.setText(comparisionChartModel.priceLists.get(i).oldPrice);
+            }
+
+        }
+    }
+
+    // open show Comparision Chart Fragment Dialog
+    private void showAcknowledgementPopupDialog() {
+        if (acknowledgementPopupDialog != null) {
+            acknowledgementPopupDialog.dismissAllowingStateLoss();
+            acknowledgementPopupDialog = null;
+        }
+        acknowledgementPopupDialog = AcknowledgementPopupDialog.newInstance("", "");
+        acknowledgementPopupDialog.show(getActivity().getSupportFragmentManager(), TAG);
+    }
+    // open show Package Detail Model Fragment Dialog
+    private void showPackageDetailModelFragmentDialog() {
+        if (packageDetailModelDialog != null) {
+            packageDetailModelDialog.dismissAllowingStateLoss();
+            packageDetailModelDialog = null;
+        }
+        packageDetailModelDialog = PackageDetailModelDialog.newInstance(packageDetail, careCityDetail,comparisionChartModel);
+        packageDetailModelDialog.show(getActivity().getSupportFragmentManager(), TAG);
     }
 
     //View.OnClickListener
@@ -156,10 +167,14 @@ public class ComparisionChartFragmentDialog extends DialogFragment implements Vi
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_book_know_premimu:
-                AddressActivity.newInstance(getContext(), premiumPackage, careCityDetail);
+                PreferenceUtility.getInstance(getContext()).saveTypeOfPackage(Utility.TYPE.PREMIUM);
+                showPackageDetailModelFragmentDialog();
+                //AddressActivity.newInstance(getContext(), packageDetail, careCityDetail,comparisionChartModel);
                 break;
             case R.id.tv_book_know_care:
-                AddressActivity.newInstance(getContext(), normalPackage, careCityDetail);
+                PreferenceUtility.getInstance(getContext()).saveTypeOfPackage(Utility.TYPE.NORMAL);
+                showPackageDetailModelFragmentDialog();
+                //AddressActivity.newInstance(getContext(), packageDetail, careCityDetail,comparisionChartModel);
                 break;
         }
     }
@@ -173,29 +188,44 @@ public class ComparisionChartFragmentDialog extends DialogFragment implements Vi
             return new ComparisionChatViewHolder(view);
         }
 
+        @SuppressLint("ResourceType")
         @Override
         public void onBindViewHolder(@NonNull ComparisionChatViewHolder holder, int position) {
-            final ComparisionChartModel model = comparisionChartsList.get(position);
-            holder.tvBenefitsFeatures.setText(model.feature);
-            holder.tvCheepCarePackage.setText(model.normal);
+
+            FeatureList featureList = comparisionChartModel.featureLists.get(position);
+
+            holder.tvBenefitsFeatures.setText(featureList.feature);
+            holder.tvCheepCarePackage.setText(featureList.normal);
             if (position % 2 == 1) {
                 holder.linear.setBackgroundColor(Color.parseColor("#06FFCC01"));
             } else {
                 holder.linear.setBackgroundColor(Color.parseColor("#20646460"));
             }
 
-            if (model.premium.equalsIgnoreCase(Utility.BOOLEAN.YES)) {
+            if (featureList.premium.equalsIgnoreCase(Utility.BOOLEAN.YES)) {
                 holder.imagePremium.setVisibility(View.VISIBLE);
                 holder.tvPremium.setVisibility(View.GONE);
                 holder.imagePremium.setBackgroundResource(R.drawable.verified_icon);
-            } else if (model.premium.equalsIgnoreCase(Utility.BOOLEAN.NO)) {
-                holder.imagePremium.setVisibility(View.VISIBLE);
-                holder.tvPremium.setVisibility(View.GONE);
-                holder.imagePremium.setBackgroundResource(R.drawable.cancelled);
-            } else {
-                holder.tvPremium.setVisibility(View.VISIBLE);
-                holder.imagePremium.setVisibility(View.GONE);
-                holder.tvPremium.setText(model.premium);
+            } else if (featureList.premium.equalsIgnoreCase(Utility.BOOLEAN.NO)) {
+                if (featureList.premium.equalsIgnoreCase(Utility.BOOLEAN.YES)) {
+                    holder.imagePremium.setVisibility(View.VISIBLE);
+                    holder.tvPremium.setVisibility(View.GONE);
+                    holder.imagePremium.setBackgroundResource(R.drawable.verified_icon);
+                } else if (featureList.premium.equalsIgnoreCase(Utility.BOOLEAN.NO)) {
+                    holder.imagePremium.setVisibility(View.VISIBLE);
+                    holder.tvPremium.setVisibility(View.GONE);
+                    holder.imagePremium.setBackgroundResource(R.drawable.cancelled);
+                } else {
+                    holder.tvPremium.setVisibility(View.VISIBLE);
+                    holder.imagePremium.setVisibility(View.GONE);
+                    holder.tvPremium.setText(featureList.premium);
+
+                }
+                if (featureList.normal.equalsIgnoreCase(Utility.BOOLEAN.NA)) {
+                    holder.tvCheepCarePackage.setTextColor(Color.RED);
+                } else {
+                    holder.tvCheepCarePackage.setTextColor(Color.parseColor(getResources().getString(R.color.black)));
+                }
 
             }
         }
@@ -203,7 +233,7 @@ public class ComparisionChartFragmentDialog extends DialogFragment implements Vi
         @Override
         public int getItemCount() {
 
-            return comparisionChartsList.size();
+            return comparisionChartModel.featureLists.size();
 
         }
 
@@ -228,117 +258,4 @@ public class ComparisionChartFragmentDialog extends DialogFragment implements Vi
             }
         }
     }
-
-    /************************************************************************************************
-     **********************************Calling Webservice ********************************************
-     ************************************************************************************************/
-
-    protected void showProgressDialog(String message) {
-        if (mProgressDialog == null) {
-            mProgressDialog = new ProgressDialog(getContext());
-            mProgressDialog.setMessage(message);
-            mProgressDialog.setIndeterminate(true);
-            mProgressDialog.setCancelable(false);
-            mProgressDialog.setCanceledOnTouchOutside(false);
-            mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        }
-        mProgressDialog.show();
-    }
-
-    /**
-     * Show Progress Dialog
-     */
-    public void showProgressDialog() {
-        showProgressDialog(getString(R.string.label_please_wait));
-    }
-
-    /**
-     * Close Progress Dialog
-     */
-    public void hideProgressDialog() {
-        if (mProgressDialog != null && mProgressDialog.isShowing()) {
-            mProgressDialog.dismiss();
-        }
-        mProgressDialog = null;
-    }
-
-    private void callGetPackageFeatureListDetailWS() {
-        if (!Utility.isConnected(getContext())) {
-            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, rootLayout);
-            return;
-        }
-
-        showProgressDialog();
-
-        //Add Header parameters
-        Map<String, String> mHeaderParams = new HashMap<>();
-        mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(getContext()).getXAPIKey());
-
-        //noinspection unchecked
-        VolleyNetworkRequest mVolleyNetworkRequestForCategoryList = new VolleyNetworkRequest(NetworkUtility.WS.GET_PACKAGE_FEATURE_LIST
-                , mCallGetCityCareDetailsWSErrorListener
-                , mCallGetCityCareDetailsWSResponseListener
-                , mHeaderParams
-                , null
-                , null);
-
-        Volley.getInstance(getContext()).addToRequestQueue(mVolleyNetworkRequestForCategoryList, NetworkUtility.WS.GET_PACKAGE_FEATURE_LIST);
-    }
-
-
-    private Response.Listener mCallGetCityCareDetailsWSResponseListener = new Response.Listener() {
-        @Override
-        public void onResponse(Object response) {
-            hideProgressDialog();
-            Log.e(TAG, "onResponse() called with: response = [" + response + "]");
-            String strResponse = (String) response;
-            try {
-                JSONObject jsonObject = new JSONObject(strResponse);
-                Log.e(TAG, "onResponse: " + jsonObject.toString());
-                int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
-                String error_message;
-                switch (statusCode) {
-                    case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
-                        JSONArray data = jsonObject.getJSONArray(NetworkUtility.TAGS.DATA);
-                        for (int i = 0; i < data.length(); i++) {
-                            JSONObject obj = data.getJSONObject(i);
-                            ComparisionChartModel cityModel = new ComparisionChartModel(obj);
-                            comparisionChartsList.add(cityModel);
-                        }
-                        loadData();
-
-                        break;
-                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
-                        // Show Toast
-                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), rootLayout);
-                        break;
-                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
-                        error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
-                        // Show message
-                        Utility.showSnackBar(error_message, rootLayout);
-                        break;
-                    case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
-                    case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
-                        //Logout and finish the current activity
-                        Utility.logout(getContext(), true, statusCode);
-
-                        break;
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                mCallGetCityCareDetailsWSErrorListener.onErrorResponse(new VolleyError(e.getMessage()));
-            }
-
-        }
-    };
-    private Response.ErrorListener mCallGetCityCareDetailsWSErrorListener = new Response.ErrorListener() {
-        @Override
-        public void onErrorResponse(VolleyError error) {
-            hideProgressDialog();
-            Log.e(TAG, "onErrorResponse() called with: error = [" + error + "]");
-            Utility.showSnackBar(getString(R.string.label_something_went_wrong), rootLayout);
-        }
-    };
-
-
 }

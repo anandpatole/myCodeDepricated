@@ -3,17 +3,28 @@ package com.cheep.cheepcarenew.activities;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.cheep.R;
 import com.cheep.activity.BaseAppCompatActivity;
+import com.cheep.cheepcare.model.CityLandingPageModel;
 import com.cheep.cheepcare.model.PackageDetail;
+import com.cheep.databinding.ActivityPaymentSummaryNewBinding;
 import com.cheep.model.AddressModel;
+import com.cheep.model.ComparisionChart.ComparisionChartModel;
+import com.cheep.network.NetworkUtility;
+import com.cheep.utils.GlideUtility;
 import com.cheep.utils.GsonUtility;
+import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.Utility;
 
 public class PaymentSummaryCheepCareActivity extends BaseAppCompatActivity implements View.OnClickListener {
@@ -25,12 +36,21 @@ public class PaymentSummaryCheepCareActivity extends BaseAppCompatActivity imple
     private TextView tv3SaveMonth, tv6SaveMonth, tv12SaveMonth;
     private TextView tvMeanPackageAmount;
     private Toolbar toolbar;
-    double cutPrice = 600;
-    double price = 400;
+    double oldPrice = 0;
+    double newPrice = 0;
     double profit = 0;
 
     private PackageDetail packageDetail;
     private AddressModel addressModel;
+    private ComparisionChartModel comparisionChartModel;
+    private CityLandingPageModel cityLandingPageModel;
+    private ActivityPaymentSummaryNewBinding mBinding;
+
+
+    public static void newInstance(Context context) {
+        Intent intent = new Intent(context, PaymentSummaryCheepCareActivity.class);
+        context.startActivity(intent);
+    }
 
 
     public static void newInstance(Context context, PackageDetail packageDetail, AddressModel addressModel) {
@@ -40,16 +60,10 @@ public class PaymentSummaryCheepCareActivity extends BaseAppCompatActivity imple
         context.startActivity(intent);
     }
 
-    public static void newInstance(Context context) {
-        Intent intent = new Intent(context, PaymentSummaryCheepCareActivity.class);
-        context.startActivity(intent);
-    }
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_payment_summary_new);
+        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_payment_summary_new);
         initView();
         initiateUI();
         setListeners();
@@ -68,9 +82,12 @@ public class PaymentSummaryCheepCareActivity extends BaseAppCompatActivity imple
             Log.e(TAG, "initiateUI: -------------" + addressModel.address);
             Log.e(TAG, "initiateUI: ------------" + packageDetail.title);
 
-        } else {
-            return;
         }
+        comparisionChartModel = PreferenceUtility.getInstance(mContext).getComparisonChatDetails();
+        cityLandingPageModel = PreferenceUtility.getInstance(mContext).getCityLandingPageModel();
+
+        setPrice();
+        setCityBannerData();
 
     }
 
@@ -117,6 +134,82 @@ public class PaymentSummaryCheepCareActivity extends BaseAppCompatActivity imple
 
     }
 
+    private void setPrice() {
+        for (int i = 0; comparisionChartModel.priceLists.size() > i; i++) {
+
+            String TYPE = comparisionChartModel.priceLists.get(i).type;
+
+            if (TYPE.equalsIgnoreCase(PreferenceUtility.getInstance(mContext).getTypeOfPackage())) {
+                mBinding.tvNewPrice.setText(comparisionChartModel.priceLists.get(i).newPrice);
+                mBinding.tvOldPrice.setText(comparisionChartModel.priceLists.get(i).oldPrice);
+
+                newPrice =  Double.parseDouble(comparisionChartModel.priceLists.get(i).newPrice);
+                oldPrice =  Double.parseDouble(comparisionChartModel.priceLists.get(i).oldPrice);
+
+            } else if (TYPE.equalsIgnoreCase(PreferenceUtility.getInstance(mContext).getTypeOfPackage())) {
+                mBinding.tvNewPrice.setText(comparisionChartModel.priceLists.get(i).newPrice);
+                mBinding.tvOldPrice.setText(comparisionChartModel.priceLists.get(i).oldPrice);
+
+                newPrice =  Double.parseDouble(comparisionChartModel.priceLists.get(i).newPrice);
+                oldPrice =  Double.parseDouble(comparisionChartModel.priceLists.get(i).oldPrice);
+            }
+
+        }
+    }
+
+
+    private void setCityBannerData() {
+        ViewTreeObserver mViewTreeObserver = mBinding.ivCityImage.getViewTreeObserver();
+        mViewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                mBinding.ivCityImage.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                int width = mBinding.ivCityImage.getMeasuredWidth();
+                ViewGroup.LayoutParams params = mBinding.ivCityImage.getLayoutParams();
+                params.height = Utility.getHeightFromWidthForOneHalfIsToOneRatio(width);
+                mBinding.ivCityImage.setLayoutParams(params);
+
+                int resId = R.drawable.img_landing_screen_mumbai;
+                switch (cityLandingPageModel.careCityDetail.citySlug) {
+                    case NetworkUtility.CARE_CITY_SLUG.MUMBAI:
+                        resId = R.drawable.img_landing_screen_mumbai;
+                        break;
+                    case NetworkUtility.CARE_CITY_SLUG.HYDRABAD:
+                        resId = R.drawable.img_landing_screen_hydrabad;
+                        break;
+                    case NetworkUtility.CARE_CITY_SLUG.BENGALURU:
+                        resId = R.drawable.img_landing_screen_bengaluru;
+                        break;
+                    case NetworkUtility.CARE_CITY_SLUG.DELHI:
+                        resId = R.drawable.img_landing_screen_delhi;
+                        break;
+                    case NetworkUtility.CARE_CITY_SLUG.CHENNAI:
+                        resId = R.drawable.img_landing_screen_chennai;
+                        break;
+                }
+
+                // Load the image now.
+                GlideUtility.loadImageView(mContext, mBinding.ivCityImage
+                        , resId
+                        , R.drawable.hotline_ic_image_loading_placeholder);
+            }
+        });
+
+        Glide.with(mContext)
+                .load(R.drawable.ic_home_with_heart_text)
+                .asGif()
+                .dontAnimate()
+                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                .into(mBinding.ivCheepCareGif);
+        /*// Start cheep care animations
+        mBinding.ivCheepCareGif.setBackgroundResource(R.drawable.cheep_care_animation);
+        ((AnimationDrawable) mBinding.ivCheepCareGif.getBackground()).start();*/
+
+        mBinding.tvCityName.setText(cityLandingPageModel.careCityDetail.cityName);
+
+
+    }
+
     @SuppressLint("ResourceType")
     private void setInitialColorOfCardView() {
         card3Months.setSelected(false);
@@ -134,12 +227,12 @@ public class PaymentSummaryCheepCareActivity extends BaseAppCompatActivity imple
     }
 
     private void updatePrice(int howManyMonth) {
-        profit = cutPrice - price;
-        tvMeanPackageAmount.setText(Utility.CHEEP_CARE.RS + String.valueOf(price * howManyMonth));
+        profit = oldPrice - newPrice;
+        tvMeanPackageAmount.setText(Utility.CHEEP_CARE.RS + String.valueOf(newPrice * howManyMonth));
     }
 
     private void updateSaveAmountForMonth() {
-        profit = cutPrice - price;
+        profit = oldPrice - newPrice;
         tv3SaveMonth.setText(Utility.CHEEP_CARE.SAVE + String.valueOf(profit * 3));
         tv6SaveMonth.setText(Utility.CHEEP_CARE.SAVE + String.valueOf(profit * 6));
         tv12SaveMonth.setText(Utility.CHEEP_CARE.SAVE + String.valueOf(profit * 12));
