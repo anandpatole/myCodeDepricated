@@ -68,7 +68,7 @@
 
     <color name="splash_gradient_start">#20BBEC</color>
     <color name="splash_gradient_end">#006DDA</color>
-
+<color name="blue_btn">#FF006DDA</color>
     <color name="extra_grey_dark_color">#FF67676E</color>
     <color name="grey_dark_color">#b9b9b9</color>
     <color name="grey_dark_color_2">#6A6A6A</color>
@@ -84,7 +84,7 @@
     <color name="grey_color">#E8E8E8</color>
     <color name="light_grey_color_1">#D0D0D0</color>
     <color name="light_grey_color">#DCDEE3</color>
-
+    <color name="light_grey_color_2">#FFB0B0B0</color>
     <color name="white_translucent_line">#33FFFFFF</color>
     <color name="white_translucent">#77FFFFFF</color>
     <color name="white_translucent_ninety">#E6FFFFFF</color>

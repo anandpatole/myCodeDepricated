@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:paddingLeft="@dimen/scale_10dp"
+        android:paddingRight="@dimen/scale_10dp"
+        tools:background="@color/white">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="@dimen/scale_16dp"
+            android:layout_marginRight="@dimen/scale_16dp"
+           >
+
+            <ImageView
+                android:id="@+id/img_header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:src="@drawable/bg_add_money_model_background"
+                tools:ignore="ContentDescription"/>
+
+            <LinearLayout
+                android:id="@+id/ln_bottom_section"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/img_header"
+                android:background="@drawable/rounded_bottom_part_only_fill_white_5x5"
+                android:orientation="vertical"
+                android:paddingTop="50dp">
+
+                <com.cheep.custom_view.CFTextViewSemiBold
+                    android:id="@+id/title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:gravity="center_horizontal"
+                    android:text="@string/label_takleef_bata_ke_nahin_aati"
+                    android:textColor="@color/grey_variant_1"
+                    android:textSize="@dimen/text_size_18sp"/>
+
+                <com.cheep.custom_view.CFTextViewRegular
+                    android:id="@+id/text_out_of_office_hours_info"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/scale_8dp"
+                    android:gravity="left"
+                    android:paddingBottom="@dimen/scale_8dp"
+                    android:paddingLeft="@dimen/scale_6dp"
+                    android:paddingRight="@dimen/scale_6dp"
+                    android:paddingTop="@dimen/scale_8dp"
+                    android:text="@string/label_out_of_office_hours_info"
+                    android:textColor="@color/grey_dark_color_2"
+                    android:textSize="@dimen/text_size_12sp"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/scale_1dp"
+                    android:layout_marginLeft="@dimen/scale_8dp"
+                    android:layout_marginRight="@dimen/scale_8dp"
+                    android:layout_marginTop="@dimen/scale_15dp"
+                    android:background="@color/light_grey_color_2"/>
+<LinearLayout
+    android:layout_width="match_parent"
+    android:orientation="horizontal"
+    android:layout_height="wrap_content">
+                <com.cheep.custom_view.CFTextViewSemiBold
+                    android:id="@+id/text_out_of_office_hours_pay_now"
+                    android:layout_width="0dp"
+                    android:layout_height="56dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@string/label_pay_now"
+                    android:textColor="@color/splash_gradient_end"
+                    android:textSize="@dimen/text_size_16sp"/>
+    <View
+        android:layout_width="@dimen/scale_2dp"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/scale_14dp"
+        android:layout_marginBottom="@dimen/scale_14dp"
+        android:background="@color/light_grey_color_2"/>
+    <com.cheep.custom_view.CFTextViewSemiBold
+        android:id="@+id/text_out_of_office_hours_can_wait"
+        android:layout_width="0dp"
+        android:layout_height="56dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="@string/label_can_wait"
+        android:textColor="@color/splash_gradient_end"
+        android:textSize="@dimen/text_size_16sp"/>
+</LinearLayout>
+            </LinearLayout>
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/img_header"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="-48dp">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/emoji_add_money"/>
+
+            </FrameLayout>
+        </RelativeLayout>
+    </LinearLayout>
+
+</layout>
