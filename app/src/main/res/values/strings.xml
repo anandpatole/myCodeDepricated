@@ -69,8 +69,10 @@
     <string name="label_enter_code_here">Enter Code Here</string>
     <string name="label_send_otp_again">"Not received the code? Click here!"</string>
     <string name="label_chat">Chat</string>
+    <string name="label_can_wait">Can Wait</string>
     <string name="label_my_task">My Tasks</string>
-
+    <string name="label_takleef_bata_ke_nahin_aati">Takleef bata ke nahin aati!</string>
+    <string name="label_out_of_office_hours_info">We understand that emergencies can happen anytime and that is why we offer an \'Emergency Service\' during late hours. This will cost you only ₹%3s. Thank you</string>
     <string name="label_upcoming_tasks">Upcoming</string>
     <string name="label_past_tasks">Past</string>
     <string name="rate_card_repair">Repairs</string>
@@ -207,7 +209,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="permission_denied_camera">Please allow &cheep; to access your photos</string>
     <string name="social_email_not_found">Hey we can\'t seem to identify this social account! Are you sure you are using the correct email address for your social media account? Why dont you try again?</string>
     <string name="confirmation_logout">Are you sure you want to Logout?</string>
-    <string name="label_pay_now">Pay Now</string>
+
     <string name="label_pay_X">Book the PRO for ₹%1$s</string>
     <string name="label_pay_X_X_X">Pay ₹ %1$s - ₹ %2$s = ₹ %3$s</string>
     <string name="label_thanks_for_choosing_x_summary">Thanks for choosing %1$s\nPlease confirm the summary below</string>
@@ -216,6 +218,9 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="custom_care_phone_number">18002660777</string>
     <string name="label_verify">Verify</string>
     <string name="label_name">Name</string>
+    <string name="label_pay_now">Pay Now</string>
+    <string name="label_urgent_booking_info">We understand how difficult urgencies can be and that\'s why we provide our services 24x7. Our PRO can reach you within 3 hours and sort your problem. There will be a small charge of ₹%3s. Thank you</string>
+    <string name="label_urgency_we_got_it_covered">Urgency? We got it covered!</string>
     <string name="validate_confirm_password">Oh no, the passwords you entered are not matching.</string>
     <string name="msg_password_change_success">Password changed successfully.</string>
     <string name="hint_start_typing_location">Start typing a location&#8230;</string>

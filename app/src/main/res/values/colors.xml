@@ -84,7 +84,7 @@
     <color name="grey_color">#E8E8E8</color>
     <color name="light_grey_color_1">#D0D0D0</color>
     <color name="light_grey_color">#DCDEE3</color>
-
+    <color name="light_grey_color_2">#FFB0B0B0</color>
     <color name="white_translucent_line">#33FFFFFF</color>
     <color name="white_translucent">#77FFFFFF</color>
     <color name="white_translucent_ninety">#E6FFFFFF</color>
