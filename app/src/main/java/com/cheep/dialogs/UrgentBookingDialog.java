@@ -11,7 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.cheep.R;
-import com.cheep.databinding.DialogOutOfOfficeHoursBinding;
+
 import com.cheep.databinding.DialogUrgentBookingBinding;
 import com.cheep.network.NetworkUtility;
 import com.cheep.utils.Utility;
@@ -54,7 +54,7 @@ public class UrgentBookingDialog extends DialogFragment {
 
         mBinding = DataBindingUtil.inflate(inflater, R.layout.dialog_urgent_booking, container, false);
 
-        String text = getString(R.string.label_out_of_office_hours_info, urgent_booking_msg);
+        String text = getString(R.string.label_urgent_booking_info, urgent_booking_msg);
 
 
         mBinding.textUrgentBookingInfo.setText(text);

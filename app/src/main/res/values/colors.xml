@@ -68,7 +68,7 @@
 
     <color name="splash_gradient_start">#20BBEC</color>
     <color name="splash_gradient_end">#006DDA</color>
-
+<color name="blue_btn">#FF006DDA</color>
     <color name="extra_grey_dark_color">#FF67676E</color>
     <color name="grey_dark_color">#b9b9b9</color>
     <color name="grey_dark_color_2">#6A6A6A</color>
