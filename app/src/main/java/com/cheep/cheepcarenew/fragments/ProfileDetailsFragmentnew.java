@@ -252,6 +252,7 @@ public class ProfileDetailsFragmentnew extends BaseFragment implements WebCallCl
                     showChangePhoneNumberDialog();
                     break;*/
                 case R.id.main_profile_edit:
+                    mBinding.mainProfileEdit.setVisibility(View.GONE);
                     mBinding.usernameProfileEdit.setVisibility(View.VISIBLE);
                     mBinding.imgProfilePhotoEdit.setVisibility(View.VISIBLE);
                     mBinding.emailProfileEdit.setVisibility(View.VISIBLE);
