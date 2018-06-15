@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
-import android.graphics.Point;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -14,9 +13,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.Display;
 import android.view.View;
 
 import com.android.volley.Response;
@@ -51,12 +48,15 @@ import com.google.gson.Gson;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
+import static com.cheep.network.NetworkUtility.TAGS.CAT_ID;
 
 /**
  * Created by bhavesh on 26/4/17.
@@ -76,7 +76,7 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
     private float allPixels;
     private int expectedPosition;
     private LinearLayoutManager layoutManager;
-    //variables for add media//
+    public ArrayList<SubServiceDetailModel> allSubCategoryList;
 
     public static void getInstance(Context mContext, JobCategoryModel model) {
         Intent intent = new Intent(mContext, TaskCreationActivity.class);
@@ -96,6 +96,8 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
 
     @Override
     protected void initiateUI() {
+
+        mActivityTaskCreateBinding.progressBar.setVisibility(View.GONE);
         if (getIntent().getExtras() != null) {
             // Fetch JobCategory Model
             mJobCategoryModel = (JobCategoryModel) GsonUtility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA), JobCategoryModel.class);
@@ -118,14 +120,15 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
         // Set category
         mActivityTaskCreateBinding.textTitle.setText(mJobCategoryModel.catName != null ? mJobCategoryModel.catName : Utility.EMPTY_STRING);
 
-        // Setting viewpager
-        setupViewPager(mActivityTaskCreateBinding.viewpager);
-
         // Change description
         mActivityTaskCreateBinding.textStepDesc.setText(getString(R.string.step_1_desc));
 
-        // Set the default step
-        setTaskState(STEP_ONE_NORMAL);
+        fetchListOfSubCategory(mJobCategoryModel.catId);
+
+    }
+
+    @Override
+    protected void setListeners() {
 
         // Manage Click events of TaskCreation steps
         mActivityTaskCreateBinding.textStep1.setOnClickListener(new View.OnClickListener() {
@@ -148,37 +151,6 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
 
             }
         });
-
-        initMediaRecyclerView();
-    }
-
-    private void initMediaRecyclerView() {
-        Display display = getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        itemWidth = getResources().getDimension(R.dimen.item_width);
-//        padding = (size.x - itemWidth) / 2;
-
-        allPixels = 0;
-
-        LinearLayoutManager shopItemslayoutManager = new LinearLayoutManager(getApplicationContext());
-        shopItemslayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-
-
-    }
-
-
-    private void scrollListToPosition(RecyclerView recyclerView, int expectedPosition) {
-        float targetScrollPos = expectedPosition * itemWidth/* - padding*/;
-        float missingPx = targetScrollPos - allPixels;
-        if (missingPx != 0) {
-            recyclerView.smoothScrollBy((int) missingPx, 0);
-        }
-    }
-
-    @Override
-    protected void setListeners() {
-
 
         mActivityTaskCreateBinding.textPostTask.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -205,12 +177,26 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
      * This will setup the viewpager and tabs as well
      *
      * @param pager
+     * @param title
+     * @param subTitle
      */
-    private void setupViewPager(ViewPager pager) {
+    private void setupViewPager(ViewPager pager, String title, String subTitle) {
         mTaskCreationPagerAdapter = new TaskCreationPagerAdapter(getSupportFragmentManager());
         mTaskCreationPagerAdapter.addFragment(SelectSubCategoryFragment.TAG);
         mTaskCreationPagerAdapter.addFragment(EnterTaskDetailFragment.TAG);
         pager.setAdapter(mTaskCreationPagerAdapter);
+
+        // set layout cheep tip
+        mTaskCreationPagerAdapter.mSelectSubCategoryFragment.setCheepTipUI(title, subTitle);
+
+        // Set the default step
+        if (allSubCategoryList.isEmpty()) {
+            setTaskState(STEP_TWO_NORMAL);
+            gotoStep(STAGE_2);
+            mActivityTaskCreateBinding.textStep1.setEnabled(false);
+        } else {
+            setTaskState(STEP_ONE_NORMAL);
+        }
     }
 
     /**
@@ -270,8 +256,7 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
 
     @Override
     public void onBackPressed() {
-
-        if (mActivityTaskCreateBinding.viewpager.getCurrentItem() == 1) {
+        if (mActivityTaskCreateBinding.viewpager.getCurrentItem() == 1 && (allSubCategoryList != null && allSubCategoryList.size() > 0)) {
             gotoStep(STAGE_1);
             return;
         }
@@ -379,8 +364,8 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
         taskDetailModel.subCategoryName = getSubCatList().get(0).name;
         if (taskDetailModel.taskAddress == null)
             taskDetailModel.taskAddress = new AddressModel();
-        taskDetailModel.taskAddress.address = mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.address;
-        taskDetailModel.taskAddress.address_id = mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.address_id;
+        taskDetailModel.taskAddress.address = mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddress.address;
+        taskDetailModel.taskAddress.address_id = mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddress.address_id;
 //        taskDetailModel.taskAddressId = mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.address_id;
 //                    taskDetailModel.categoryId = mJobCategoryModel.catId;
 //        taskDetailModel.taskDesc = mTaskCreationPagerAdapter.mEnterTaskDetailFragment.getTaskDescription();
@@ -389,11 +374,11 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
         taskDetailModel.taskStartdate = String.valueOf(mTaskCreationPagerAdapter.mEnterTaskDetailFragment.superCalendar.getCalendar().getTimeInMillis());
         taskDetailModel.subCategoryID = String.valueOf(getSubCatList().get(0).sub_cat_id);
 //                    model.taskImage = mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mCurrentPhotoPath;
-        taskDetailModel.mMediaModelList = mTaskCreationPagerAdapter.mEnterTaskDetailFragment.getMediaList();
+//        taskDetailModel.mMediaModelList = mTaskCreationPagerAdapter.mEnterTaskDetailFragment.getMediaList();
         taskDetailModel.subCatList = mTaskCreationPagerAdapter.mSelectSubCategoryFragment.getSubCatList();
         taskDetailModel.taskType = Utility.TASK_TYPE.INSTA_BOOK;
         taskDetailModel.taskStatus = Utility.TASK_STATUS.PENDING;
-        BookingConfirmationInstaActivity.newInstance(TaskCreationActivity.this, taskDetailModel, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel);
+        BookingConfirmationInstaActivity.newInstance(TaskCreationActivity.this, taskDetailModel, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddress);
     }
 
 /*
@@ -534,8 +519,8 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
         // Add Params
         Map<String, Object> mParams = new HashMap<>();
 //        mParams.put(NetworkUtility.TAGS.TASK_DESC, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.getTaskDescription());
-        if (Integer.parseInt(mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.address_id) > 0) {
-            mParams.put(NetworkUtility.TAGS.ADDRESS_ID, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.address_id);
+        if (Integer.parseInt(mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddress.address_id) > 0) {
+            mParams.put(NetworkUtility.TAGS.ADDRESS_ID, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddress.address_id);
         } else {
             // In case its nagative then provide other address information
             /*
@@ -545,7 +530,7 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
              public String lat;
              public String lng;
              */
-            mParams = NetworkUtility.addGuestAddressParams(mParams, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel);
+            mParams = NetworkUtility.addGuestAddressParams(mParams, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddress);
         }
         mParams.put(NetworkUtility.TAGS.CITY_ID, userDetails.CityID);
         mParams.put(NetworkUtility.TAGS.CAT_ID, mJobCategoryModel.catId);
@@ -555,13 +540,13 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
         String selectedServices = new Gson().toJson(mTaskCreationPagerAdapter.mSelectSubCategoryFragment.getSubCatList());
         mParams.put(NetworkUtility.TAGS.TASK_SUB_CATEGORIES, selectedServices);
         mParams.put(NetworkUtility.TAGS.START_DATETIME, String.valueOf(mTaskCreationPagerAdapter.mEnterTaskDetailFragment.superCalendar.getTimeInMillis()));
-        mParams.put(NetworkUtility.TAGS.MEDIA_FILE, Utility.getSelectedMediaJsonString(mTaskCreationPagerAdapter.mEnterTaskDetailFragment.getMediaList()));
+//        mParams.put(NetworkUtility.TAGS.MEDIA_FILE, Utility.getSelectedMediaJsonString(mTaskCreationPagerAdapter.mEnterTaskDetailFragment.getMediaList()));
 
         // Create Params for AppsFlyer event track
         mTaskCreationParams = new HashMap<>();
 //        mTaskCreationParams.put(NetworkUtility.TAGS.TASK_DESC, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.getTaskDescription());
-        if (Integer.parseInt(mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.address_id) > 0) {
-            mTaskCreationParams.put(NetworkUtility.TAGS.ADDRESS_ID, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.address_id);
+        if (Integer.parseInt(mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddress.address_id) > 0) {
+            mTaskCreationParams.put(NetworkUtility.TAGS.ADDRESS_ID, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddress.address_id);
         } else {
             // In case its nagative then provide other address information
             /**
@@ -574,7 +559,7 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
              public String countryName;
              public String stateName;
              */
-            mTaskCreationParams = NetworkUtility.addGuestAddressParams(mTaskCreationParams, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel);
+            mTaskCreationParams = NetworkUtility.addGuestAddressParams(mTaskCreationParams, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddress);
         }
 //        mTaskCreationParams.put(NetworkUtility.TAGS.CITY_DETAIL, userDetails.CityID);
         mTaskCreationParams.put(NetworkUtility.TAGS.CAT_ID, mJobCategoryModel.catId);
@@ -1004,7 +989,7 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
                 }
 
                 // Add additional selected addressmodel here.
-                mUserDetails.addressList.add(mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel);
+                mUserDetails.addressList.add(mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddress);
 
                 // Save the user now.
                 PreferenceUtility.getInstance(mContext).saveUserDetails(mUserDetails);
@@ -1016,4 +1001,103 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
         return mTaskCreationPagerAdapter.mSelectSubCategoryFragment.getSubCatList();
 
     }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////// Fetch SubService Listing[START] ////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    private void fetchListOfSubCategory(String catId) {
+        Log.d(TAG, "fetchListOfSubCategory() called with: catId = [" + catId + "]");
+        if (!Utility.isConnected(mContext)) {
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityTaskCreateBinding.getRoot());
+            return;
+        }
+
+        //Add Header parameters
+        mActivityTaskCreateBinding.progressBar.setVisibility(View.VISIBLE);
+
+        Map<String, String> mHeaderParams = new HashMap<>();
+        mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
+        if (PreferenceUtility.getInstance(mContext).getUserDetails() != null) {
+            mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().userID);
+        }
+
+        //Add Params
+        Map<String, String> mParams = new HashMap<>();
+        mParams.put(CAT_ID, catId);
+
+        VolleyNetworkRequest mVolleyNetworkRequestForCategoryList = new VolleyNetworkRequest(NetworkUtility.WS.FETCH_SUB_SERVICE_LIST
+                , mCallFetchSubServiceListingWSErrorListener
+                , mCallFetchSubServiceListingWSResponseListener
+                , mHeaderParams
+                , mParams
+                , null);
+
+        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequestForCategoryList, NetworkUtility.WS.FETCH_SUB_SERVICE_LIST);
+    }
+
+
+    Response.Listener mCallFetchSubServiceListingWSResponseListener = new Response.Listener() {
+        @Override
+        public void onResponse(Object response) {
+            mActivityTaskCreateBinding.progressBar.setVisibility(View.GONE);
+            Log.d(TAG, "onResponse() called with: response = [" + response + "]");
+            String strResponse = (String) response;
+            try {
+                JSONObject jsonObject = new JSONObject(strResponse);
+                Log.i(TAG, "onResponse: " + jsonObject.toString());
+                int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
+                String error_message;
+                switch (statusCode) {
+                    case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
+                        JSONObject jsonObject1 = jsonObject.optJSONObject(NetworkUtility.TAGS.DATA);
+                        JSONArray jsonArray = jsonObject1.optJSONArray(NetworkUtility.TAGS.SUB_CATS);
+                        JSONObject cheepTip = jsonObject1.optJSONObject(NetworkUtility.TAGS.CATEGORY_TIP);
+
+                        String title = cheepTip.optString(NetworkUtility.TAGS.TITLE);
+                        String subTitle = cheepTip.optString(NetworkUtility.TAGS.SUBTITLE);
+
+                        allSubCategoryList = GsonUtility.getObjectListFromJsonString(jsonArray.toString(), SubServiceDetailModel[].class);
+
+                        // Setting viewpager
+                        setupViewPager(mActivityTaskCreateBinding.viewpager, title, subTitle);
+
+                        break;
+                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
+                        // Show Toast
+                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityTaskCreateBinding.getRoot());
+                        break;
+                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
+                        error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
+
+                        // Show message
+                        Utility.showSnackBar(error_message, mActivityTaskCreateBinding.getRoot());
+                        break;
+                    case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
+                    case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
+                        //Logout and finish the current activity
+                        Utility.logout(mContext, true, statusCode);
+                        finish();
+                        break;
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+                mCallFetchSubServiceListingWSErrorListener.onErrorResponse(new VolleyError(e.getMessage()));
+            }
+
+        }
+    };
+
+
+    Response.ErrorListener mCallFetchSubServiceListingWSErrorListener = new Response.ErrorListener() {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
+            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityTaskCreateBinding.getRoot());
+        }
+    };
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////// Fetch SubService Listing[END] ////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
 }

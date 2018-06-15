@@ -3,17 +3,18 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools">
 
-    <ScrollView
+    <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+
         android:background="@color/white">
 
         <LinearLayout
             android:id="@+id/ln_root"
+            android:layout_marginBottom="@dimen/scale_20dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingBottom="@dimen/scale_20dp">
+            android:orientation="vertical">
 
 
             <RelativeLayout
@@ -30,7 +31,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:paddingBottom="@dimen/scale_30dp">
+                    android:paddingBottom="@dimen/scale_22dp">
 
                     <LinearLayout
                         android:id="@+id/ln_sub_category"
@@ -84,7 +85,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:paddingBottom="@dimen/scale_30dp"
+                android:paddingBottom="@dimen/scale_22dp"
                 android:paddingLeft="@dimen/scale_30dp"
                 android:paddingRight="@dimen/scale_30dp"
                 android:paddingTop="@dimen/scale_30dp">
@@ -104,16 +105,16 @@
                     android:id="@+id/text_task_when"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingLeft="@dimen/scale_30dp"
                     android:background="@color/transparent"
                     android:gravity="start"
                     android:paddingBottom="@dimen/scale_8dp"
-                    tools:text="dasdasdasdasd"
+                    android:paddingLeft="@dimen/scale_30dp"
                     android:paddingTop="@dimen/scale_4dp"
                     android:textColor="@color/black"
                     android:textColorHint="@color/grey_dark_color_2"
                     android:textSize="@dimen/text_size_12sp"
-                    android:visibility="visible"/>
+                    android:visibility="visible"
+                    tools:text="dasdasdasdasd"/>
             </LinearLayout>
 
             <View
@@ -129,6 +130,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:paddingLeft="@dimen/scale_30dp"
+                android:paddingBottom="@dimen/scale_22dp"
                 android:paddingRight="@dimen/scale_30dp"
                 android:paddingTop="@dimen/scale_30dp">
 
@@ -146,13 +148,14 @@
 
                 <android.support.v7.widget.CardView
                     android:id="@+id/cv_address"
-                    app:cardCornerRadius="@dimen/scale_8dp"
+                    android:visibility="visible"
                     android:layout_width="match_parent"
-                    android:layout_marginRight="@dimen/scale_10dp"
-                    android:layout_marginLeft="@dimen/scale_20dp"
-                    android:layout_marginTop="@dimen/scale_10dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/scale_20dp"
-                    android:layout_height="wrap_content">
+                    android:layout_marginLeft="@dimen/scale_20dp"
+                    android:layout_marginRight="@dimen/scale_10dp"
+                    android:layout_marginTop="@dimen/scale_10dp"
+                    app:cardCornerRadius="@dimen/scale_8dp">
 
                     <LinearLayout
                         android:id="@+id/ll_address_container"
@@ -160,14 +163,14 @@
                         android:layout_height="wrap_content"
                         android:background="@color/white"
                         android:orientation="vertical"
+                        android:paddingBottom="@dimen/scale_12dp"
                         android:paddingLeft="@dimen/scale_12dp"
                         android:paddingRight="@dimen/scale_12dp"
-                        android:paddingTop="@dimen/scale_12dp"
-                        android:paddingBottom="@dimen/scale_12dp">
+                        android:paddingTop="@dimen/scale_12dp">
 
                         <LinearLayout
                             android:id="@+id/ll_address_meta_data"
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center"
                             android:orientation="horizontal">
@@ -213,14 +216,27 @@
                                 android:paddingRight="@dimen/scale_12dp"
                                 android:text="Subscribed under CHEEP care"
                                 android:textColor="@color/grey_varient_17"
-                                android:textSize="@dimen/text_size_12sp"
+                                android:textSize="@dimen/text_size_11sp"
                                 app:layout_constraintEnd_toEndOf="parent"
                                 app:layout_constraintStart_toEndOf="@id/view_dot"/>
+
+                            <com.cheep.custom_view.CFTextViewSemiBold
+                                android:id="@+id/tv_change"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:includeFontPadding="false"
+                                android:textSize="@dimen/text_size_12sp"
+                                android:text="@string/label_change"
+                                android:textColor="@color/splash_gradient_end"
+                                app:layout_constraintBottom_toBottomOf="@+id/view_dot"
+                                app:layout_constraintStart_toEndOf="@id/iv_home"
+                                app:layout_constraintTop_toTopOf="@+id/view_dot"/>
 
                         </LinearLayout>
 
                         <com.cheep.custom_view.CFTextViewRegular
                             android:id="@+id/tv_address"
+                            android:layout_marginLeft="@dimen/scale_22dp"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/scale_8dp"
@@ -233,7 +249,17 @@
 
 
                     </LinearLayout>
+
+                    <com.cheep.custom_view.CustomSpinner
+                        android:id="@+id/spinner_address_selection"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_spinner"
+                        android:paddingTop="6dp"
+                        android:textSize="@dimen/text_size_14sp"
+                        android:visibility="invisible"/>
                 </android.support.v7.widget.CardView>
+
 
             </LinearLayout>
 
@@ -371,5 +397,5 @@
 
 
         </LinearLayout>
-    </ScrollView>
+    </android.support.v4.widget.NestedScrollView>
 </layout>

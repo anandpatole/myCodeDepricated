@@ -693,10 +693,12 @@ public class Utility {
     }
 
     public interface FILTER_TYPES {
-        String FILTER_TYPE_FEATURED = "Featured";
+        // for backend team featured and all service are same
+//        String FILTER_TYPE_FEATURED = "Featured";
         String FILTER_TYPE_POPULAR = "Popular";
         String FILTER_TYPE_FAVOURITES = "Favourites";
         String FILTER_TYPE_SUBSCRIBED = "Subscribed";
+        String FILTER_TYPE_ALL_SERVICES = "AllServices";
     }
 
     public interface BOOLEAN {

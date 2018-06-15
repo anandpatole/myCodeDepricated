@@ -6,9 +6,8 @@
         android:id="@+id/ll_address_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
         android:orientation="vertical"
-        android:paddingLeft="@dimen/scale_32dp"
+        android:paddingLeft="@dimen/scale_12dp"
         android:paddingRight="@dimen/scale_12dp"
         android:paddingTop="@dimen/scale_12dp">
 
@@ -72,6 +71,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/scale_8dp"
             android:includeFontPadding="false"
+            android:layout_marginLeft="@dimen/scale_22dp"
             android:text="1202/1204 UniWorld Towers, Next to Palladium Mall, Opp Jijabai Kantabai Library, Mahatma Gandhi Phule Road, Elphinstone Road (West) Mumbai"
             android:textColor="@color/black_varient_1"
             app:layout_constraintEnd_toEndOf="parent"

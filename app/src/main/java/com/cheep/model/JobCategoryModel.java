@@ -40,7 +40,6 @@ public class JobCategoryModel implements Serializable {
     @SerializedName("cat_image")
     public AttachmentModel catImageExtras;
 
-    // Newly added
     @SerializedName("is_favourite")
     @Expose
     public String isFavourite;
@@ -52,6 +51,10 @@ public class JobCategoryModel implements Serializable {
 
     @SerializedName("care_city_arr")
     public List<CareCityDetail> careCityData;
+    // Newly added
+    @SerializedName("is_subscribed")
+    @Expose
+    public String isSubscribed;
 
 //    @SerializedName("cat_task_type")
 //    public String catTaskType;
