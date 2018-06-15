@@ -533,7 +533,7 @@
                                 android:layout_alignParentRight="true"
                                 android:layout_centerVertical="true"
                                 android:src="@drawable/selector_apply_code"
-                                android:visibility="visible" />
+                                android:visibility="gone" />
 
                         </RelativeLayout>
 
@@ -556,7 +556,8 @@
                                 android:layout_height="10dp"
                                 android:layout_gravity="center_vertical"
                                 android:layout_marginRight="@dimen/scale_3dp"
-                                android:src="@drawable/ic_info_grey" />
+                                android:src="@drawable/ic_info_grey"
+                                android:visibility="gone"/>
 
                             <com.cheep.custom_view.CFTextViewRegular
                                 android:id="@+id/txt_mate_code_message"
@@ -565,7 +566,8 @@
                                 android:gravity="center"
                                 android:text="@string/label_invalid_code"
                                 android:textColor="@color/grey_varient_27"
-                                android:textSize="@dimen/text_size_12sp" />
+                                android:textSize="@dimen/text_size_12sp"
+                                android:visibility="gone"/>
 
                         </LinearLayout>
                     </LinearLayout>

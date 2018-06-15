@@ -58,6 +58,8 @@ public class PaymentSummaryCheepCareActivity extends BaseAppCompatActivity imple
     private AppCompatEditText edtCheepPromoCode;
     private BottomAlertDialog cheepCodeDialog;
     private String cheepCode;
+    private String cheepMateCode = "";
+    private AppCompatEditText edtCheepMateCode;
     private double discountRate;
     double oldPrice = 0;
     double newPrice = 0;
@@ -302,6 +304,61 @@ public class PaymentSummaryCheepCareActivity extends BaseAppCompatActivity imple
         cheepCodeDialog.showDialog();
     }
 
+    private void showCheepMateCodeDialog() {
+        View view = View.inflate(mContext, R.layout.dialog_add_promocode, null);
+        edtCheepMateCode = view.findViewById(R.id.edit_cheepcode);
+        edtCheepMateCode.setHint(R.string.hint_apply_cheep_mate_code);
+        cheepCodeDialog = new BottomAlertDialog(mContext);
+        edtCheepMateCode.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
+                switch (actionId) {
+                    case EditorInfo.IME_ACTION_DONE:
+                        if (TextUtils.isEmpty(edtCheepMateCode.getText().toString())) {
+                            Utility.showToast(mContext, getString(R.string.validate_cheep_mate_code));
+                            break;
+                        }
+                        validateCheepMateCode();
+                        cheepCodeDialog.dismiss();
+                        break;
+                    default:
+                        break;
+                }
+                return false;
+            }
+        });
+        view.findViewById(R.id.btn_apply).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (TextUtils.isEmpty(edtCheepMateCode.getText().toString())) {
+                    Utility.showToast(mContext, getString(R.string.validate_cheepcode));
+
+                    return;
+
+                }
+                validateCheepMateCode();
+                cheepCodeDialog.dismiss();
+
+//                validateCheepCode(edtCheepcode.getText().toString());
+                Utility.hideKeyboard(mContext, edtCheepMateCode);
+
+
+            }
+        });
+        cheepCodeDialog.setTitle(getString(R.string.label_cheep_mate_code));
+        cheepCodeDialog.setCustomView(view);
+        cheepCodeDialog.showDialog();
+    }
+
+    private void validateCheepMateCode() {
+        cheepMateCode = edtCheepMateCode.getText().toString().trim();
+        mBinding.ivTickMateCode.setSelected(true);
+        mBinding.ivTickMateCode.setVisibility(View.VISIBLE);
+        mBinding.ivInfoMateCode.setVisibility(View.INVISIBLE);
+        mBinding.txtMateCodeMessage.setVisibility(View.INVISIBLE);
+        mBinding.txtApplyMateCode.setText(cheepMateCode);
+    }
+
     private void storeAllDataForPayment(){
         paymentDataModel = new CheepCarePaymentDataModel();
         paymentDataModel.totalAmount = Double.parseDouble(Utility.removeFirstChar(mBinding.tvMeanPackageAmount.getText().toString()));
@@ -363,6 +420,7 @@ public class PaymentSummaryCheepCareActivity extends BaseAppCompatActivity imple
                 showCheepCodeDialog();
                 break;
             case R.id.rl_mate_code:
+                showCheepMateCodeDialog();
                 break;
             case R.id.tv_pay_now:
                 storeAllDataForPayment();
