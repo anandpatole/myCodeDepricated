@@ -20,7 +20,7 @@
             android:layout_weight="1"
             android:orientation="vertical">
 
-            <com.cheep.custom_view.CFTextViewRegular
+            <com.cheep.custom_view.CFTextViewSemiBold
                 android:id="@+id/text_emergency_contact_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -29,16 +29,16 @@
                 android:paddingLeft="@dimen/scale_40dp"
                 android:gravity="center"
                 android:textColor="@color/black"
-                tools:text="My sweet home"
+                tools:text=""
                 android:textSize="@dimen/text_size_12sp" />
 
-            <com.cheep.custom_view.CFTextViewRegular
+            <com.cheep.custom_view.CFTextViewSemiBold
                 android:id="@+id/text_emergency_contact_phone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/scale_3dp"
                 android:paddingLeft="@dimen/scale_62dp"
-                tools:text="7207002829"
+                tools:text=""
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_size_12sp" />
 

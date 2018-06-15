@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -15,8 +15,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginLeft="@dimen/scale_16dp"
-            android:layout_marginRight="@dimen/scale_16dp"
-           >
+            android:layout_marginRight="@dimen/scale_16dp">
 
             <ImageView
                 android:id="@+id/img_header"
@@ -24,7 +23,7 @@
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
                 android:src="@drawable/bg_add_money_model_background"
-                tools:ignore="ContentDescription"/>
+                tools:ignore="ContentDescription" />
 
             <LinearLayout
                 android:id="@+id/ln_bottom_section"
@@ -43,7 +42,7 @@
                     android:gravity="center_horizontal"
                     android:text="@string/label_not_sure_about_the_issue"
                     android:textColor="@color/grey_variant_1"
-                    android:textSize="@dimen/text_size_18sp"/>
+                    android:textSize="@dimen/text_size_18sp" />
 
                 <com.cheep.custom_view.CFTextViewRegular
                     android:id="@+id/text_pest_control_help_info"
@@ -58,7 +57,7 @@
                     android:paddingTop="@dimen/scale_8dp"
                     android:text="@string/pest_control_help_info"
                     android:textColor="@color/grey_dark_color_2"
-                    android:textSize="@dimen/text_size_12sp"/>
+                    android:textSize="@dimen/text_size_12sp" />
 
                 <View
                     android:layout_width="match_parent"
@@ -66,7 +65,7 @@
                     android:layout_marginLeft="@dimen/scale_8dp"
                     android:layout_marginRight="@dimen/scale_8dp"
                     android:layout_marginTop="@dimen/scale_15dp"
-                    android:background="@color/light_grey_color_2"/>
+                    android:background="@color/light_grey_color_2" />
 
                 <com.cheep.custom_view.CFTextViewSemiBold
                     android:id="@+id/text_pest_control_btn"
@@ -76,7 +75,7 @@
                     android:gravity="center"
                     android:text="@string/ok_brilliant"
                     android:textColor="@color/blue_btn"
-                    android:textSize="@dimen/text_size_16sp"/>
+                    android:textSize="@dimen/text_size_16sp" />
 
 
             </LinearLayout>
@@ -92,7 +91,7 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/emoji_add_money"/>
+                    android:src="@drawable/emoji_add_money" />
 
             </FrameLayout>
         </RelativeLayout>
