@@ -1,5 +1,6 @@
 package com.cheep.cheepcarenew.activities;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -17,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 
+import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -30,9 +32,11 @@ import com.cheep.cheepcare.model.PackageDetail;
 import com.cheep.cheepcarenew.dialogs.ComparisionChartFragmentDialog;
 import com.cheep.cheepcarenew.dialogs.PackageDetailModelDialog;
 import com.cheep.databinding.ActivityLandingScreenPickPackageBinding;
+import com.cheep.model.ComparisionChart.ComparisionChartModel;
 import com.cheep.model.MessageEvent;
 import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
+import com.cheep.network.VolleyNetworkRequest;
 import com.cheep.utils.GlideUtility;
 import com.cheep.utils.GsonUtility;
 import com.cheep.utils.LogUtils;
@@ -43,8 +47,11 @@ import com.cheep.utils.WebCallClass;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by pankaj on 12/21/17.
@@ -63,6 +70,8 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
     // written by majid 106 to 108
     private ComparisionChartFragmentDialog comparisionChartFragmentDialog;
     private PackageDetailModelDialog packageDetailModelDialog;
+    private PackageDetail packageDetailData;
+    private ComparisionChartModel comparisionChartModel;
 
     private WebCallClass.CommonResponseListener commonErrorResponse = new WebCallClass.CommonResponseListener() {
         @Override
@@ -175,6 +184,7 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
             public void getCityCareData(CityLandingPageModel cityLandingPageModel) {
                 hideProgressDialog();
                 mCityLandingPageModel = cityLandingPageModel;
+                PreferenceUtility.getInstance(mContext).saveCityLandingPageModel(cityLandingPageModel);
                 mPackageListString = GsonUtility.getJsonStringFromObject(mCityLandingPageModel.packageDetailList);
                 getSavedData();
                 setData();
@@ -303,12 +313,12 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
     }
 
     // open show Comparision Chart Fragment Dialog
-    private void showComparisionChartFragmentDialog(PackageDetail premiumPackage, PackageDetail normalPackage, CareCityDetail mCity) {
+    private void showComparisionChartFragmentDialog(PackageDetail packageDetail) {
         if (comparisionChartFragmentDialog != null) {
             comparisionChartFragmentDialog.dismissAllowingStateLoss();
             comparisionChartFragmentDialog = null;
         }
-        comparisionChartFragmentDialog = ComparisionChartFragmentDialog.newInstance(premiumPackage, normalPackage, this.mCity);
+        comparisionChartFragmentDialog = ComparisionChartFragmentDialog.newInstance(comparisionChartModel,packageDetail,mCity);
         comparisionChartFragmentDialog.show(getSupportFragmentManager(), TAG);
     }
 
@@ -318,7 +328,7 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
             packageDetailModelDialog.dismissAllowingStateLoss();
             packageDetailModelDialog = null;
         }
-        packageDetailModelDialog = PackageDetailModelDialog.newInstance(packageDetail, mCity);
+        packageDetailModelDialog = PackageDetailModelDialog.newInstance(packageDetail, mCity,comparisionChartModel);
         packageDetailModelDialog.show(getSupportFragmentManager(), TAG);
     }
 
@@ -326,23 +336,26 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
             = new CheepCarePackageAdapter.PackageItemClickListener() {
         @Override
         public void onPackageItemClick(int position, PackageDetail packageModel) {
+            packageDetailData = packageModel;
+            callGetPackageFeatureListDetailWS();
+            // Toast.makeText(getApplicationContext(),"majid : "+ packageModel.type,Toast.LENGTH_LONG).show();
+//            String packageList = GsonUtility.getJsonStringFromObject(mCityLandingPageModel.packageDetailList);
+//            String packageList = GsonUtility.getJsonStringFromObject(mCityLandingPageModel.packageDetailList);
+//            PackageCustomizationActivity.newInstance(mContext, mCityLandingPageModel.careCityDetail, packageModel, packageList, mCityLandingPageModel.adminSetting);
+            // AddressCategorySelectionActivity.newInstance(LandingScreenPickPackageActivity.this);
 
-            if (packageModel.type.equalsIgnoreCase(Utility.CAR_PACKAGE_TYPE.PREMIUM)) {
-                showPackageDetailModelFragmentDialog(packageModel);
-            } else if (packageModel.type.equalsIgnoreCase(Utility.CAR_PACKAGE_TYPE.NORMAL)) {
 
-                PackageDetail premiumPackage = null, normalPackage = null;
-                for (PackageDetail packageDetail : mCityLandingPageModel.packageDetailList) {
-                    if (packageModel.type.equalsIgnoreCase(Utility.CAR_PACKAGE_TYPE.PREMIUM)) {
-                        premiumPackage = packageDetail;
-                    } else {
-                        normalPackage = packageDetail;
-                    }
-                }
-                showComparisionChartFragmentDialog(premiumPackage, normalPackage, mCity);
-            }
         }
     };
+
+    private void navigateToFragment() {
+        if (packageDetailData.type.equalsIgnoreCase(Utility.TYPE.PREMIUM)) {
+            PreferenceUtility.getInstance(getApplicationContext()).saveTypeOfPackage(Utility.TYPE.PREMIUM);
+            showPackageDetailModelFragmentDialog(packageDetailData);
+        } else if (packageDetailData.type.equalsIgnoreCase(Utility.TYPE.NORMAL)) {
+            showComparisionChartFragmentDialog(packageDetailData);
+        }
+    }
 
 
   /*  private void callGetCityLandingCareDetailWS() {
@@ -492,4 +505,86 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
             LogUtils.LOGE(TAG, "onResume: no city data found");
         }
     }
+
+
+    /************************************************************************************************
+     **********************************Calling Webservice for old and new price *********************
+     *************************************** of premium and normal ********************************
+     ************************************************************************************************/
+
+    private void callGetPackageFeatureListDetailWS() {
+        if (!Utility.isConnected(mContext)) {
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mBinding.getRoot());
+            return;
+        }
+
+        showProgressDialog();
+
+        //Add Header parameters
+        Map<String, String> mHeaderParams = new HashMap<>();
+        mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
+
+        //noinspection unchecked
+        VolleyNetworkRequest mVolleyNetworkRequestForCategoryList = new VolleyNetworkRequest(NetworkUtility.WS.GET_PACKAGE_FEATURE_LIST
+                , mCallGetCityCareDetailsWSErrorListener
+                , mCallGetCityCareDetailsWSResponseListener
+                , mHeaderParams
+                , null
+                , null);
+
+        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequestForCategoryList, NetworkUtility.WS.GET_PACKAGE_FEATURE_LIST);
+    }
+
+
+    private Response.Listener mCallGetCityCareDetailsWSResponseListener = new Response.Listener() {
+        @Override
+        public void onResponse(Object response) {
+            hideProgressDialog();
+            Log.e(TAG, "onResponse() called with: response = [" + response + "]");
+            String strResponse = (String) response;
+            try {
+                JSONObject jsonObject = new JSONObject(strResponse);
+                Log.e(TAG, "onResponse: " + jsonObject.toString());
+                int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
+                String error_message;
+                switch (statusCode) {
+                    case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
+
+                        comparisionChartModel = (ComparisionChartModel) GsonUtility.getObjectFromJsonString(jsonObject.optString(NetworkUtility.TAGS.DATA), ComparisionChartModel.class);
+                        PreferenceUtility.getInstance(mContext).saveComparisonChatDetails(comparisionChartModel);
+                        navigateToFragment();
+
+                        break;
+                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
+                        // Show Toast
+                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
+                        break;
+                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
+                        error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
+                        // Show message
+                        Utility.showSnackBar(error_message, mBinding.getRoot());
+                        break;
+                    case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
+                    case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
+                        //Logout and finish the current activity
+                        Utility.logout(mContext, true, statusCode);
+
+                        break;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                mCallGetCityCareDetailsWSErrorListener.onErrorResponse(new VolleyError(e.getMessage()));
+            }
+
+        }
+    };
+    private Response.ErrorListener mCallGetCityCareDetailsWSErrorListener = new Response.ErrorListener() {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            hideProgressDialog();
+            Log.e(TAG, "onErrorResponse() called with: error = [" + error + "]");
+            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
+        }
+    };
+
 }

@@ -23,18 +23,23 @@ import com.cheep.utils.Utility;
 
 import java.util.ArrayList;
 
-public class AddressListDialog extends DialogFragment {
+public class AddressListDialog extends DialogFragment implements AddressSelectionListener {
 
     public static final String TAG = "AddressListDialog";
     DialogAddressListBinding mBinding;
     AddressListRecyclerViewAdapter adapter;
     private ArrayList<AddressModel> list = new ArrayList<>();
     private String category;
+    private AddressSelectionListener addressSelectionListener;
 
-    public static AddressListDialog newInstance() {
+    public void setAddressSelectionListener(AddressSelectionListener addressSelectionListener) {
+        this.addressSelectionListener = addressSelectionListener;
+    }
 
+    public static AddressListDialog newInstance(AddressSelectionListener addressSelectionListener) {
         Bundle args = new Bundle();
         AddressListDialog dialog = new AddressListDialog();
+        dialog.setAddressSelectionListener(addressSelectionListener);
         dialog.setArguments(args);
         return dialog;
     }
@@ -82,7 +87,8 @@ public class AddressListDialog extends DialogFragment {
         adapter = new AddressListRecyclerViewAdapter(list, new AddressListRecyclerViewAdapter.AddressItemClickListener() {
             @Override
             public void onClickItem(AddressModel addressModel) {
-
+                addressSelectionListener.onAddressSelection(addressModel);
+                dismiss();
             }
         });
         mBinding.rvAddress.setAdapter(adapter);
@@ -93,7 +99,7 @@ public class AddressListDialog extends DialogFragment {
     }
 
     private void openAddAddressDialog() {
-        AddressCategorySelectionDialog addressCategorySelectionDialog = AddressCategorySelectionDialog.newInstance();
+        AddressCategorySelectionDialog addressCategorySelectionDialog = AddressCategorySelectionDialog.newInstance(this);
         addressCategorySelectionDialog.show(((BaseAppCompatActivity) getContext()).getSupportFragmentManager(), AddressCategorySelectionDialog.TAG);
     }
 
@@ -110,5 +116,11 @@ public class AddressListDialog extends DialogFragment {
                 openAddAddressDialog();
             }
         });
+    }
+
+    @Override
+    public void onAddressSelection(AddressModel addressModel) {
+        adapter.add(addressModel);
+        adapter.notifyDataSetChanged();
     }
 }

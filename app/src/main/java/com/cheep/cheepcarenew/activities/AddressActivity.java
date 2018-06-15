@@ -19,6 +19,7 @@ import com.cheep.cheepcarenew.fragments.AddressSizeForHomeOfficeFragment;
 import com.cheep.databinding.ActivityAddressBinding;
 import com.cheep.fragment.BaseFragment;
 import com.cheep.model.AddressModel;
+import com.cheep.model.ComparisionChart.ComparisionChartModel;
 import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
@@ -35,14 +36,16 @@ import java.util.Map;
 
 public class AddressActivity extends BaseAppCompatActivity {
 
-    PackageDetail packageDetail;
+    private PackageDetail packageDetail;
     private CareCityDetail careCityDetail;
+    private ComparisionChartModel comparisionChartModel;
     private ActivityAddressBinding mBinding;
 
-    public static void newInstance(Context context, PackageDetail packageDetail, CareCityDetail careCityDetail) {
+    public static void newInstance(Context context, PackageDetail packageDetail, CareCityDetail careCityDetail, ComparisionChartModel comparisionChartModel) {
         Intent intent = new Intent(context, AddressActivity.class);
         intent.putExtra(Utility.Extra.DATA, GsonUtility.getJsonStringFromObject(packageDetail));
         intent.putExtra(Utility.Extra.DATA_2, GsonUtility.getJsonStringFromObject(careCityDetail));
+        intent.putExtra(Utility.Extra.DATA_3, GsonUtility.getJsonStringFromObject(comparisionChartModel));
         context.startActivity(intent);
         ((Activity) context).overridePendingTransition(0, 0);
     }
@@ -59,7 +62,10 @@ public class AddressActivity extends BaseAppCompatActivity {
         if (getIntent() != null && getIntent().hasExtra(Utility.Extra.DATA_2)) {
             careCityDetail = (CareCityDetail) GsonUtility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA_2), CareCityDetail.class);
         }
-        loadFragment(AddressCategorySelectionFragment.TAG, AddressCategorySelectionFragment.newInstance());
+        if (getIntent() != null && getIntent().hasExtra(Utility.Extra.DATA_3)) {
+            comparisionChartModel = (ComparisionChartModel) GsonUtility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA_3), ComparisionChartModel.class);
+        }
+        loadFragment(AddressCategorySelectionFragment.TAG, AddressCategorySelectionFragment.newInstance(comparisionChartModel));
     }
 
     @Override

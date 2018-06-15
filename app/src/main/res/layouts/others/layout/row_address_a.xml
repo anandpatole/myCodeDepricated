@@ -6,7 +6,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingBottom="@dimen/scale_8dp"
+        android:paddingBottom="@dimen/scale_4dp"
         android:paddingRight="@dimen/scale_16dp"
         android:paddingTop="@dimen/scale_8dp">
 
@@ -33,7 +33,7 @@
                 android:textColor="@color/splash_gradient_end"
                 android:textSize="@dimen/text_size_12sp" />
 
-            <com.cheep.custom_view.CFTextViewRegular
+            <com.cheep.custom_view.CFTextViewSemiBold
                 android:id="@+id/text_full_address"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -41,7 +41,7 @@
                 android:paddingLeft="@dimen/scale_40dp"
                 tools:text="Adinath Chowk, London"
                 android:textColor="@color/black"
-                android:textSize="@dimen/text_size_12sp" />
+                android:textSize="@dimen/text_size_14sp" />
 
         </LinearLayout>
 

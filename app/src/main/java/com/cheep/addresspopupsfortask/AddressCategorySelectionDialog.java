@@ -26,11 +26,17 @@ public class AddressCategorySelectionDialog extends DialogFragment {
     private AddressModel addressModel;
     private ArrayList<AddressModel> addressModelArrayList;
     private ViewTooltip.TooltipView tooltipView;
+    private AddressSelectionListener listener;
 
-    public static AddressCategorySelectionDialog newInstance() {
+    public void setListener(AddressSelectionListener listener) {
+        this.listener = listener;
+    }
+
+    public static AddressCategorySelectionDialog newInstance(AddressSelectionListener listener) {
         Bundle args = new Bundle();
         AddressCategorySelectionDialog fragment = new AddressCategorySelectionDialog();
         fragment.setArguments(args);
+        fragment.setListener(listener);
         return fragment;
     }
 
@@ -88,8 +94,10 @@ public class AddressCategorySelectionDialog extends DialogFragment {
     }
 
     private void openAddNewAddressDialog(String category) {
-        AddNewAddressDialog addNewAddressDialog = AddNewAddressDialog.newInstance(category);
+
+        AddNewAddressDialog addNewAddressDialog = AddNewAddressDialog.newInstance(category,listener);
         addNewAddressDialog.show(((BaseAppCompatActivity) getContext()).getSupportFragmentManager(), AddNewAddressDialog.TAG);
+        dismiss();
     }
 
 }

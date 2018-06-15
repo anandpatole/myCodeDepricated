@@ -23,6 +23,7 @@ import com.cheep.R;
 import com.cheep.activity.BaseAppCompatActivity;
 import com.cheep.activity.TaskCreationActivity;
 import com.cheep.addresspopupsfortask.AddressListDialog;
+import com.cheep.addresspopupsfortask.AddressSelectionListener;
 import com.cheep.cheepcare.adapter.AddressTaskCreateAdapter;
 import com.cheep.cheepcare.adapter.SelectedSubServiceAdapter;
 import com.cheep.cheepcare.dialogs.BottomAddAddressDialog;
@@ -228,7 +229,12 @@ public class EnterTaskDetailFragment extends BaseFragment {
 
     private void showAddressDialog() {
 
-        AddressListDialog addressListDialog = AddressListDialog.newInstance();
+        AddressListDialog addressListDialog = AddressListDialog.newInstance(new AddressSelectionListener() {
+            @Override
+            public void onAddressSelection(AddressModel addressModel) {
+                fillAddressView(addressModel);
+            }
+        });
         addressListDialog.show(mTaskCreationActivity.getSupportFragmentManager(), AddressListDialog.TAG);
     }
 

@@ -320,7 +320,8 @@ public class NetworkUtility {
         String ADDRESS_INITIALS = "address_initials";
         String ADDRESS = "address";
         String CATEGORY = "category";
-
+        String  OUT_OF_OFFICE_HOURS_MSG="msg";
+        String  URGENT_BOOKING_MSG="msg";
         String PASSWORD = "password";
         String LAT = "lat";
         String LNG = "lng";
@@ -514,6 +515,9 @@ public class NetworkUtility {
 
         String TEXT= "text";
         String CATEGORY_TIP= "category_tip";
+
+        String FEATURE_LIST = "feature_list";
+        String PRICE_LIST = "price_list";
 
         interface VERSION_CHANGE_TYPE {
             int NORMAL = 0;

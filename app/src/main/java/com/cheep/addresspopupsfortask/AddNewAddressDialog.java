@@ -50,8 +50,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import de.greenrobot.event.EventBus;
-
 import static android.app.Activity.RESULT_OK;
 
 public class AddNewAddressDialog extends DialogFragment {
@@ -60,18 +58,20 @@ public class AddNewAddressDialog extends DialogFragment {
     private String category;
     private ViewTooltip.TooltipView tooltipView;
     private AddressModel mAddressModel;
+    private AddressSelectionListener listener;
 
-    public AddNewAddressDialog() {
-
+    public void setListener(AddressSelectionListener listener) {
+        this.listener = listener;
     }
 
     DialogAddNewAddressBinding mBinding;
     //    private ToolTipView toolTipView;
     public static final String TAG = "AddNewAddressDialog";
 
-    public static AddNewAddressDialog newInstance(String category) {
+    public static AddNewAddressDialog newInstance(String category, AddressSelectionListener listener) {
         Bundle args = new Bundle();
         AddNewAddressDialog fragment = new AddNewAddressDialog();
+        fragment.setListener(listener);
         args.putString(Utility.Extra.DATA, category);
         fragment.setArguments(args);
         return fragment;
@@ -270,13 +270,6 @@ public class AddNewAddressDialog extends DialogFragment {
         }
     }
 
-    private void postEvent(AddressModel addressModel) {
-        ((AddressActivity) getContext()).onBackPressed();
-        MessageEvent messageEvent = new MessageEvent();
-        messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.ADDRESS_SELECTED_POP_UP;
-        messageEvent.addressModel = addressModel;
-        EventBus.getDefault().postSticky(messageEvent);
-    }
 
     @Override
     public void onDestroy() {
@@ -343,7 +336,6 @@ public class AddNewAddressDialog extends DialogFragment {
                             PreferenceUtility.getInstance(getContext()).saveGuestUserDetails(guestUserDetails);
 
                             // TODO : Redirect from here
-                            postEvent(addressModel);
 
                         }
 
@@ -438,7 +430,8 @@ public class AddNewAddressDialog extends DialogFragment {
                         }
 
                         // TODO : REdirect from here
-                        postEvent(addressModel);
+                        listener.onAddressSelection(addressModel);
+                        dismiss();
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
                         // Show Toast

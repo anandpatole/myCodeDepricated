@@ -69,8 +69,10 @@
     <string name="label_enter_code_here">Enter Code Here</string>
     <string name="label_send_otp_again">"Not received the code? Click here!"</string>
     <string name="label_chat">Chat</string>
+    <string name="label_can_wait">Can Wait</string>
     <string name="label_my_task">My Tasks</string>
-
+    <string name="label_takleef_bata_ke_nahin_aati">Takleef bata ke nahin aati!</string>
+    <string name="label_out_of_office_hours_info">We understand that emergencies can happen anytime and that is why we offer an \'Emergency Service\' during late hours. This will cost you only ₹%3s. Thank you</string>
     <string name="label_upcoming_tasks">Upcoming</string>
     <string name="label_past_tasks">Past</string>
     <string name="rate_card_repair">Repairs</string>
@@ -207,15 +209,20 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="permission_denied_camera">Please allow &cheep; to access your photos</string>
     <string name="social_email_not_found">Hey we can\'t seem to identify this social account! Are you sure you are using the correct email address for your social media account? Why dont you try again?</string>
     <string name="confirmation_logout">Are you sure you want to Logout?</string>
-    <string name="label_pay_now">Pay Now</string>
+    <string name="label_not_sure_about_the_issue">Not sure about the issue?</string>
     <string name="label_pay_X">Book the PRO for ₹%1$s</string>
     <string name="label_pay_X_X_X">Pay ₹ %1$s - ₹ %2$s = ₹ %3$s</string>
+    <string name="ok_brilliant">Ok, brilliant!</string>
     <string name="label_thanks_for_choosing_x_summary">Thanks for choosing %1$s\nPlease confirm the summary below</string>
     <string name="label_thanks_feedback_no">Thank you %1$s for your feedback. We would like to know more. Please call with our &cheep;
         team so that we can help to complete the task to your satisfaction.</string><!--or chat-->
     <string name="custom_care_phone_number">18002660777</string>
+    <string name="pest_control_help_info">No worries! Cheep Team will call you to identify the problem and recommend the best solution.</string>
     <string name="label_verify">Verify</string>
     <string name="label_name">Name</string>
+    <string name="label_pay_now">Pay Now</string>
+    <string name="label_urgent_booking_info">We understand how difficult urgencies can be and that\'s why we provide our services 24x7. Our PRO can reach you within 3 hours and sort your problem. There will be a small charge of ₹%3s. Thank you</string>
+    <string name="label_urgency_we_got_it_covered">Urgency? We got it covered!</string>
     <string name="validate_confirm_password">Oh no, the passwords you entered are not matching.</string>
     <string name="msg_password_change_success">Password changed successfully.</string>
     <string name="hint_start_typing_location">Start typing a location&#8230;</string>
@@ -875,11 +882,16 @@ without any hidden charges. Try it now!</string>
 
     <string name="cheep_promo_code">Apply Cheep Promo Code?</string>
     <string name="cheep_mate_code">Apply Cheep Mate Code?</string>
+    <string name="cheep_code_invalid">invalid code </string>
+    <string name="cheep_code_percentage"> you save 10 </string>
 
     <string name="cheep_package_info">Under Cheep Care, basic repairs &amp; maintenance will be provided by our PRO\'s. All
         material will be charged extra as per actuals. For complex jobs, additional payments may be charged by the PRO.</string>
     <string name="label_how_big_is_your_home">How big is your home?</string>
     <string name="label_how_big_is_your_office">How big is your office (in square feet)?</string>
+    <string name="wowieee_all_done">Wowieee. All done!</string>
+    <string name="acknowledgement_details">Congrats on taking the first step towards making your home healthy &amp; happy. Your Cheep Care AMC package is now activated and we are available 24x7 to help you maintain your home. Thank you </string>
+    <string name="thanks">Thanks</string>
     <string name="label_add_new_address">Add new address</string>
     <string name="label_get_current_location">Get current location</string>
     <string name="hint_address_locality">Locality</string>
@@ -912,4 +924,6 @@ without any hidden charges. Try it now!</string>
     <string name="label_auto_detect_location_message">Our smart App has picked up this location automatically via GPS?</string>
     <string name="label_please_tell_us_where_do_you_need_the_amc_for">Please tell us where do you need the AMC for?</string>
     <string name="label_change">Change</string>
+    <string name="select_category">Select Category</string>
+
 </resources>
