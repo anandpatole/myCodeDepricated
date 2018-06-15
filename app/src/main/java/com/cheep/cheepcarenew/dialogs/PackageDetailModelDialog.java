@@ -83,9 +83,14 @@ public class PackageDetailModelDialog extends DialogFragment implements View.OnC
         View view = inflater.inflate(R.layout.fragment_package_detail_model_dialog, container, false);
         initView(view);
         callGetPackageDetailModelDataWS();
-        userDetails = PreferenceUtility.getInstance(getContext()).getUserDetails();
 
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        userDetails = PreferenceUtility.getInstance(getContext()).getUserDetails();
     }
 
     @Override
