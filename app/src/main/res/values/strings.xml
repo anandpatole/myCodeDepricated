@@ -879,6 +879,8 @@ without any hidden charges. Try it now!</string>
 
     <string name="cheep_promo_code">Apply Cheep Promo Code?</string>
     <string name="cheep_mate_code">Apply Cheep Mate Code?</string>
+    <string name="cheep_code_invalid">invalid code </string>
+    <string name="cheep_code_percentage"> you save 10 </string>
 
     <string name="cheep_package_info">Under Cheep Care, basic repairs &amp; maintenance will be provided by our PRO\'s. All
         material will be charged extra as per actuals. For complex jobs, additional payments may be charged by the PRO.</string>

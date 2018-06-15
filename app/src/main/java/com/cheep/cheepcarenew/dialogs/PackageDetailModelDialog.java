@@ -18,6 +18,7 @@ import com.android.volley.VolleyError;
 import com.cheep.R;
 import com.cheep.cheepcare.model.CareCityDetail;
 import com.cheep.cheepcare.model.PackageDetail;
+import com.cheep.cheepcarenew.activities.AddressActivity;
 import com.cheep.cheepcarenew.activities.PaymentSummaryCheepCareActivity;
 import com.cheep.model.ComparisionChart.ComparisionChartModel;
 import com.cheep.network.NetworkUtility;
@@ -110,8 +111,8 @@ public class PackageDetailModelDialog extends DialogFragment implements View.OnC
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.tv_sounds_good:
-               PaymentSummaryCheepCareActivity.newInstance(getContext());
-               /* if (getArguments()!=null)
+               //PaymentSummaryCheepCareActivity.newInstance(getContext());
+                if (getArguments()!=null)
                 {
                     PackageDetail packageDetail = (PackageDetail) GsonUtility.getObjectFromJsonString(getArguments().getString(Utility.Extra.DATA),PackageDetail.class);
                     CareCityDetail careCityDetail= (CareCityDetail) GsonUtility.getObjectFromJsonString(getArguments().getString(Utility.Extra.DATA_2),CareCityDetail.class);
@@ -120,7 +121,7 @@ public class PackageDetailModelDialog extends DialogFragment implements View.OnC
                         AddressActivity.newInstance(getContext(),packageDetail,careCityDetail,comparisionChartModel);
                         dismiss();
                     }
-                }*/
+                }
                 break;
         }
 

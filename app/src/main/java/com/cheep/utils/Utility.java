@@ -704,7 +704,7 @@ public class Utility {
     public interface BOOLEAN {
         String YES = "yes";
         String NO = "no";
-        String NA = "NA";
+        String NA = "na";
     }
 
     public interface TYPE{
@@ -862,6 +862,9 @@ public class Utility {
         String NORMAL = "normal";
         String INSTA_BOOK = "instabook";
         String SUBSCRIBED = "subscribed";
+    }
+    public  static String removeFirstChar(String s){
+        return s.substring(1);
     }
 
     /**
