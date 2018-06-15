@@ -121,7 +121,7 @@
 
                             <com.cheep.custom_view.CFTextViewBold
                                 android:id="@+id/tv_package_name"
-                                android:layout_width="270dp"
+                                android:layout_width="250dp"
                                 android:layout_height="wrap_content"
                                 android:text="@string/cheep_care_package"
                                 android:textColor="@color/splash_gradient_end"
@@ -462,7 +462,7 @@
                                 android:layout_alignParentRight="true"
                                 android:layout_centerVertical="true"
                                 android:src="@drawable/selector_apply_code"
-                                android:visibility="visible" />
+                                android:visibility="gone" />
 
                         </RelativeLayout>
 
@@ -485,7 +485,8 @@
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_vertical"
                                 android:layout_marginRight="@dimen/scale_3dp"
-                                android:src="@drawable/ic_info_grey" />
+                                android:src="@drawable/ic_info_grey"
+                                android:visibility="gone"/>
 
                             <com.cheep.custom_view.CFTextViewRegular
                                 android:id="@+id/txt_promo_code_message"
@@ -494,7 +495,8 @@
                                 android:gravity="center"
                                 android:text="@string/label_applied_promo_code_message_cheep_care"
                                 android:textColor="@color/grey_varient_27"
-                                android:textSize="@dimen/text_size_12sp" />
+                                android:textSize="@dimen/text_size_12sp"
+                                android:visibility="gone"/>
                         </LinearLayout>
 
                     </LinearLayout>

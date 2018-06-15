@@ -62,6 +62,7 @@ public class PaymentSummaryCheepCareActivity extends BaseAppCompatActivity imple
     double oldPrice = 0;
     double newPrice = 0;
     double profit = 0;
+    private String packageId;
 
 
     public static void newInstance(Context context) {
@@ -162,11 +163,12 @@ public class PaymentSummaryCheepCareActivity extends BaseAppCompatActivity imple
             if (TYPE.equalsIgnoreCase(PreferenceUtility.getInstance(mContext).getTypeOfPackage())) {
                 mBinding.tvPackageName.setText(cityLandingPageModel.packageDetailList.get(i).title);
                 mBinding.tvPackageDescription.setText(cityLandingPageModel.packageDetailList.get(i).subtitle);
+                packageId = cityLandingPageModel.packageDetailList.get(i).id;
 
             } else if (TYPE.equalsIgnoreCase(PreferenceUtility.getInstance(mContext).getTypeOfPackage())) {
                 mBinding.tvPackageName.setText(cityLandingPageModel.packageDetailList.get(i).title);
                 mBinding.tvPackageDescription.setText(cityLandingPageModel.packageDetailList.get(i).subtitle);
-
+                packageId = cityLandingPageModel.packageDetailList.get(i).id;
             }
 
         }
@@ -396,7 +398,7 @@ public class PaymentSummaryCheepCareActivity extends BaseAppCompatActivity imple
 
        mParams.put(NetworkUtility.TAGS.CARE_CITY_ID, cityLandingPageModel.careCityDetail.id);
        mParams.put(NetworkUtility.TAGS.CHEEP_CARE_CODE, cheepCode);
-       mParams.put(NetworkUtility.TAGS.CARE_PACKAGE_ID, cityLandingPageModel.packageDetailList.get(0).id);
+       mParams.put(NetworkUtility.TAGS.CARE_PACKAGE_ID, packageId);
       // mParams.put(NetworkUtility.TAGS.CARE_PACKAGE_ID, mPackageAdapter.getList().get(0).id);
         //Url is bas
         // ed on condition if address id is greater then 0 then it means we need to update the existing address
