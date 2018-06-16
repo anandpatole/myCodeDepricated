@@ -874,12 +874,33 @@ without any hidden charges. Try it now!</string>
     <string name="best_value">Best Value </string>
 
     <string name="total_amount">₹3,600</string>
+    <string name="your_subscription_expires_on">Your Subscription Expires on</string>
+    <string name="auto_renewal">Auto Renewal</string>
+    <string name="your_subscription_package_will_renew_automatically_on_expiry_datebvia_same_payment_method">Your subscription package will renew automatically on expiry date via same payment method</string>
+    <string name="upgrade_your_subscription">Upgrade Your Subscription</string>
+    <string name="subscription_duration">Subscription Duration</string>
+    <string name="amount_paid">Amount Paid</string>
+    <string name="payment_method">Payment Method</string>
+    <string name="subscribed_on">Subscribed on</string>
+    <string name="by_selecting_renew_your_package_will_automatically_be_charged_from_your_saved_card_details_and_it_will_be_updated_for_the_same_duration_by_selecting_upgrade_your_current_subscription_can_either_increase_in_duration_or_you_can_switch_to_cheep_premium_care_package">By selecting Renew, your package will automatically be charged from your saved card details and it will be updated for the same duration. By selecting Upgrade, your current subscription can either increase in duration or you can switch to Cheep Premium Care package.</string>
+    <string name="upgrade">Upgrade</string>
+    <string name="renew">Renew</string>
 
+
+    <string name="upgrade_subscription_duration_of_your_current_package">Upgrade Subscription Duration of your Current Package</string>
+    <string name="_6_months">6 Months</string>
+    <string name="_3400">₹3400</string>
+    <string name="_12_months">12 Months</string>
+    <string name="upgrade_to_a_premium_package_and_enjoy_added_perks">Upgrade to a Premium Package and enjoy added perks!</string>
+
+    <string name="to_compare_packages"> to compare packages</string>
+    <string name="anything_and_everything_taken_care_no_questions_asked_get_complete_peace_of_mind_with_this_all_inclusive_amc">Anything and everything taken care. No questions asked! Get complete peace of mind with this ‘all-inclusive’ AMC.</string>
+    <string name="tap_here">Tap here</string>
     <string name="inclusive_taxes">Inclusive \n of taxes</string>
 
     <string name="cheep_promo_code">Apply Cheep Promo Code?</string>
     <string name="cheep_mate_code">Apply Cheep Mate Code?</string>
-
+    <string name="text_manage_subscription">Manage Subscription</string>
     <string name="cheep_package_info">Under Cheep Care, basic repairs &amp; maintenance will be provided by our PRO\'s. All
         material will be charged extra as per actuals. For complex jobs, additional payments may be charged by the PRO.</string>
     <string name="label_how_big_is_your_home">How big is your home?</string>
