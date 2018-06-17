@@ -13,14 +13,18 @@ import android.view.ViewGroup;
 import com.cheep.R;
 import com.cheep.databinding.FragmentUpgradeSubscriptionBinding;
 import com.cheep.fragment.BaseFragment;
+import com.cheep.model.AddressModel;
+
+import java.util.ArrayList;
 
 public class UpgradeSubscriptionFragment extends BaseFragment
 {
     public static final String TAG = "UpgradeSubscriptionFragment";
+    AddressModel addressModel;
     FragmentUpgradeSubscriptionBinding mBinding;
-    public static UpgradeSubscriptionFragment newInstance() {
+    public static UpgradeSubscriptionFragment newInstance(AddressModel address) {
         Bundle args = new Bundle();
-       // args.putSerializable("list", list);
+        args.putSerializable("address", address);
         UpgradeSubscriptionFragment fragment = new UpgradeSubscriptionFragment();
         fragment.setArguments(args);
         return fragment;
@@ -53,13 +57,14 @@ public class UpgradeSubscriptionFragment extends BaseFragment
     @Override
     public void initiateUI() {
 
-
+        Bundle bundle = getArguments();
+        addressModel= (AddressModel) bundle.getSerializable("address");
 
     }
 
     @Override
-    public void setListener() {
-
+    public void setListener()
+    {
 
     }
     View.OnClickListener onClickListener = new View.OnClickListener() {

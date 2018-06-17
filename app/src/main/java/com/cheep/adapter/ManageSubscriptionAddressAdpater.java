@@ -21,9 +21,12 @@ public class ManageSubscriptionAddressAdpater extends RecyclerView.Adapter<Manag
     private ArrayList<AddressModel> mList;
     private String selected = "";
     int flag;
+    AddressItemClickListener addressItemClickListener;
+    public interface AddressItemClickListener {
+        void onClickItem(ArrayList<AddressModel> mList);
+    }
 
-
-    public ManageSubscriptionAddressAdpater( ArrayList<AddressModel> mList,int flag)
+    public ManageSubscriptionAddressAdpater( ArrayList<AddressModel> mList,int flag,AddressItemClickListener listener)
     {
         if (mList != null)
             this.mList = mList;
@@ -31,6 +34,7 @@ public class ManageSubscriptionAddressAdpater extends RecyclerView.Adapter<Manag
             this.mList = new ArrayList<>();
 
         this.flag=flag;
+        this.addressItemClickListener = listener;
     }
 
     @Override
@@ -49,7 +53,14 @@ public class ManageSubscriptionAddressAdpater extends RecyclerView.Adapter<Manag
         holder.mRowAddressBinding.textFullAddress.setText(model.getAddressWithInitials());
         holder.mRowAddressBinding.textAddressCategory.setText(Utility.getAddressCategoryString(model.category));
         holder.mRowAddressBinding.textAddressCategory.setCompoundDrawablesWithIntrinsicBounds(Utility.getAddressCategoryBlueIcon(model.category), 0, 0, 0);
+holder.mRowAddressBinding.frontLayout.setOnClickListener(new View.OnClickListener() {
+    @Override
+    public void onClick(View v)
+    {
 
+        addressItemClickListener.onClickItem(mList);
+    }
+});
     }
 
 
@@ -80,6 +91,7 @@ public class ManageSubscriptionAddressAdpater extends RecyclerView.Adapter<Manag
             super(binding.getRoot());
             mView = binding.getRoot();
             mRowAddressBinding = binding;
+
         }
     }
 

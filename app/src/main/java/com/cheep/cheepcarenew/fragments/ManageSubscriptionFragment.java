@@ -25,7 +25,7 @@ import com.freshchat.consumer.sdk.beans.User;
 
 import java.util.ArrayList;
 
-public class ManageSubscriptionFragment extends BaseFragment
+public class ManageSubscriptionFragment extends BaseFragment implements ManageSubscriptionAddressAdpater.AddressItemClickListener
 {
     private ArrayList<AddressModel> addressList;
     ManageSubscriptionAddressAdpater adapter;
@@ -76,6 +76,14 @@ FragmentManageSubscriptionBinding mBinding;
        mBinding.textPaymentMethod.setText("HDFC Credit Card");
        mBinding.textSubscribedOn.setText("23rd May 2018");
        mBinding.textSubscriptionEndDate.setText("23rd May 2018");
+       if(mBinding.autoRenewalToggle.isChecked())
+       {
+
+       }
+       else
+       {
+           //mBinding.autoRenewalRl.setVisibility(View.GONE);
+       }
         Bundle bundle = getArguments();
        addressList= (ArrayList<AddressModel>) bundle.getSerializable("list");
       fillRecyclerViewSingleItem();
@@ -89,6 +97,7 @@ FragmentManageSubscriptionBinding mBinding;
       mBinding.addressDropDowns.setOnClickListener(onClickListener);
       mBinding.addressDropUp.setOnClickListener(onClickListener);
       mBinding.upgradeSubscriptionBtn.setOnClickListener(onClickListener);
+      mBinding.autoRenewalToggle.setOnClickListener(onClickListener);
 
     }
     View.OnClickListener onClickListener = new View.OnClickListener() {
@@ -98,6 +107,8 @@ FragmentManageSubscriptionBinding mBinding;
 
             switch (v.getId())
             {
+                case R.id.auto_renewal_toggle:
+                    break;
                 case R.id.address_drop_downs:
                    fillRecyclerView();
                     break;
@@ -108,7 +119,7 @@ FragmentManageSubscriptionBinding mBinding;
                     getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.content, ProfileTabFragment.newInstance(), ProfileTabFragment.TAG).commitAllowingStateLoss();
                     break;
                 case R.id.upgrade_subscription_btn:
-                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.content, UpgradeSubscriptionFragment.newInstance(), UpgradeSubscriptionFragment.TAG).commitAllowingStateLoss();
+                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.content, UpgradeSubscriptionFragment.newInstance(addressList.get(0)), UpgradeSubscriptionFragment.TAG).commitAllowingStateLoss();
                     break;
             }
         }
@@ -118,7 +129,7 @@ FragmentManageSubscriptionBinding mBinding;
     {
         mBinding.addressDropDowns.setVisibility(View.GONE);
         mBinding.addressDropUp.setVisibility(View.VISIBLE);
-        adapter=new ManageSubscriptionAddressAdpater(addressList,1);
+        adapter=new ManageSubscriptionAddressAdpater(addressList,1,ManageSubscriptionFragment.this);
         mBinding.subscriptionRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         mBinding.subscriptionRecyclerView.setNestedScrollingEnabled(false);
         mBinding.subscriptionRecyclerView.setAdapter(adapter);
@@ -128,9 +139,17 @@ FragmentManageSubscriptionBinding mBinding;
     {
         mBinding.addressDropDowns.setVisibility(View.VISIBLE);
         mBinding.addressDropUp.setVisibility(View.GONE);
-        adapter=new ManageSubscriptionAddressAdpater(addressList,0);
+        adapter=new ManageSubscriptionAddressAdpater(addressList,0,ManageSubscriptionFragment.this);
         mBinding.subscriptionRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         mBinding.subscriptionRecyclerView.setNestedScrollingEnabled(false);
         mBinding.subscriptionRecyclerView.setAdapter(adapter);
+    }
+
+    @Override
+    public void onClickItem(ArrayList<AddressModel> mList)
+
+    {
+        this.addressList=mList;
+
     }
 }
