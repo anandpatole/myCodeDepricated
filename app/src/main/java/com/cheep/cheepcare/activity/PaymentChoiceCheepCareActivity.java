@@ -141,7 +141,7 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
             paymentDataModel = (CheepCarePaymentDataModel) GsonUtility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA_2),
                     CheepCarePaymentDataModel.class);
             careCityDetail = (CareCityDetail) GsonUtility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA_3), CareCityDetail.class);
-            payableAmount = paymentDataModel.payableAmount;
+            payableAmount = paymentDataModel.paidAmount;
             LogUtils.LOGE(TAG, "initiateUI: paymentDataModel \n============\n" + paymentDataModel);
 
             // get next year date
@@ -168,7 +168,7 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
     private void setupActionbar() {
 
 
-        mBinding.textTitle.setText(getString(R.string.label_please_pay_x, Utility.getQuotePriceFormatter(String.valueOf(payableAmount))));
+        mBinding.textTitle.setText(getString(R.string.label_please_pay_x, Utility.getQuotePriceFormatter(String.valueOf(paymentDataModel.paidAmount))));
         setSupportActionBar(mBinding.toolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle(Utility.EMPTY_STRING);
@@ -408,8 +408,8 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
 
         mParams.put(NetworkUtility.TAGS.PAYMENT_METHOD, paymentMethod);
         mParams.put(NetworkUtility.TAGS.PAYMENT_LOG, paymentLog);
-        mParams.put(NetworkUtility.TAGS.CART_DETAIL, cartDetail);
-        mParams.put(NetworkUtility.TAGS.SUBS_ID.toLowerCase(), subsId);
+       // mParams.put(NetworkUtility.TAGS.CART_DETAIL, cartDetail);
+        //mParams.put(NetworkUtility.TAGS.SUBS_ID.toLowerCase(), subsId);
         mParams.put(NetworkUtility.TAGS.IS_RENEW, isSubscription);
 
         LogUtils.LOGE(TAG, "callBookProAndPayForNormalTaskWS: mParams " + mParams);

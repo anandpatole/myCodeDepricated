@@ -387,7 +387,7 @@ public class PaymentSummaryCheepCareActivity extends BaseAppCompatActivity imple
         paymentDataModel.taxAmount = String.valueOf(taxtAmount);
         paymentDataModel.packageDuration = selectedMonth;
         paymentDataModel.dsaCode = cheepMateCode;
-        paymentDataModel.paidAmount = amountAfterDiscount;
+        paymentDataModel.paidAmount = Double.parseDouble(Utility.removeFirstChar(mBinding.tvMeanPackageAmount.getText().toString()));
         paymentDataModel.packageId = packageId;
         paymentDataModel.addressId = addressModel.address_id;
 
