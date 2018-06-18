@@ -20,7 +20,6 @@ import com.cheep.activity.LoginActivity;
 import com.cheep.cheepcare.model.CareCityDetail;
 import com.cheep.cheepcare.model.PackageDetail;
 import com.cheep.cheepcarenew.activities.AddressActivity;
-import com.cheep.cheepcarenew.activities.PaymentSummaryCheepCareActivity;
 import com.cheep.model.ComparisionChart.ComparisionChartModel;
 import com.cheep.model.UserDetails;
 import com.cheep.network.NetworkUtility;

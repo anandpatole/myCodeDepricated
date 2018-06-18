@@ -19,12 +19,16 @@ public class CheepCarePaymentDataModel {
     public double totalAmount;
 
     @SerializedName("promocode")
+
     @Expose
     public String promocode;
+    @SerializedName("discount_amount")
+    @Expose
+    public double discountAmount;
+
     @SerializedName("promocode_price")
     @Expose
     public double promocodePrice;
-    // this payable amount is with tax and applied discount amount
     @SerializedName("payable_amount")
     @Expose
     public double payableAmount;
@@ -52,6 +56,21 @@ public class CheepCarePaymentDataModel {
     @SerializedName("bundlediscount_price")
     @Expose
     public double bundlediscountPrice;
+    @SerializedName("package_duration")
+    @Expose
+    public String packageDuration;
+    @SerializedName("paid_amount")
+    @Expose
+    public double paidAmount;
+    @SerializedName("package_type")
+    @Expose
+    public String packageType;
+    @SerializedName("package_id")
+    @Expose
+    public String packageId;
+    @SerializedName("address_id")
+    @Expose
+    public String addressId;
 
     @Override
     public String toString() {
