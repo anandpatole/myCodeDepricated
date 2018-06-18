@@ -100,6 +100,7 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
         intent.putExtra(Utility.Extra.DATA_2, GsonUtility.getJsonStringFromObject(paymentDataModel));
         intent.putExtra(Utility.Extra.DATA_3, GsonUtility.getJsonStringFromObject(mCareCityDetail));
         intent.putExtra(Utility.Extra.PAYMENT_VIEW, PAYMENT_FOR_SUBSCRIPTION);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
     }
 
@@ -140,7 +141,7 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
             paymentDataModel = (CheepCarePaymentDataModel) GsonUtility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA_2),
                     CheepCarePaymentDataModel.class);
             careCityDetail = (CareCityDetail) GsonUtility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA_3), CareCityDetail.class);
-            payableAmount = paymentDataModel.payableAmount;
+            payableAmount = paymentDataModel.paidAmount;
             LogUtils.LOGE(TAG, "initiateUI: paymentDataModel \n============\n" + paymentDataModel);
 
             // get next year date
@@ -167,7 +168,7 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
     private void setupActionbar() {
 
 
-        mBinding.textTitle.setText(getString(R.string.label_please_pay_x, Utility.getQuotePriceFormatter(String.valueOf(payableAmount))));
+        mBinding.textTitle.setText(getString(R.string.label_please_pay_x, Utility.getQuotePriceFormatter(String.valueOf(paymentDataModel.paidAmount))));
         setSupportActionBar(mBinding.toolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle(Utility.EMPTY_STRING);
@@ -392,18 +393,23 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
         Map<String, String> mParams = new HashMap<>();
         mParams.put(NetworkUtility.TAGS.TOTAL_AMOUNT, String.valueOf(paymentDataModel.totalAmount));
         mParams.put(NetworkUtility.TAGS.PROMOCODE, paymentDataModel.promocode);
-        mParams.put(NetworkUtility.TAGS.PROMOCODE_PRICE, String.valueOf(paymentDataModel.promocodePrice));
-        mParams.put(NetworkUtility.TAGS.PAYABLE_AMOUNT, String.valueOf(paymentDataModel.payableAmount));
+        mParams.put(NetworkUtility.TAGS.DISCOUNT_AMOUNT, String.valueOf(paymentDataModel.discountAmount));
+        mParams.put(NetworkUtility.TAGS.PAID_AMOUNT, String.valueOf(paymentDataModel.paidAmount));
         mParams.put(NetworkUtility.TAGS.TAX_AMOUNT, String.valueOf(paymentDataModel.taxAmount));
-        mParams.put(NetworkUtility.TAGS.IS_ANNUALLY, String.valueOf(paymentDataModel.isAnnually));
+        mParams.put(NetworkUtility.TAGS.PACKAGE_TYPE, String.valueOf(paymentDataModel.packageType));
+        mParams.put(NetworkUtility.TAGS.DSA_CODE, paymentDataModel.dsaCode);
         mParams.put(NetworkUtility.TAGS.CARE_CITY_ID, String.valueOf(careCityDetail.id));
+        mParams.put(NetworkUtility.TAGS.PACKAGE_ID, String.valueOf(paymentDataModel.packageId));
+        mParams.put(NetworkUtility.TAGS.ADDRESS_ID, String.valueOf(paymentDataModel.addressId));
+        //mParams.put(NetworkUtility.TAGS.PAYABLE_AMOUNT, String.valueOf(paymentDataModel.payableAmount));
+        //mParams.put(NetworkUtility.TAGS.IS_ANNUALLY, String.valueOf(paymentDataModel.isAnnually));
+        // mParams.put(NetworkUtility.TAGS.BUNDLE_DISCOUNT_PRICE, String.valueOf(paymentDataModel.bundlediscountPrice));
+        //mParams.put(NetworkUtility.TAGS.BUNDLE_DISCOUNT_PERCENT, String.valueOf(paymentDataModel.bundlediscountPercent));
+
         mParams.put(NetworkUtility.TAGS.PAYMENT_METHOD, paymentMethod);
         mParams.put(NetworkUtility.TAGS.PAYMENT_LOG, paymentLog);
-        mParams.put(NetworkUtility.TAGS.DSA_CODE, paymentDataModel.dsaCode);
-        mParams.put(NetworkUtility.TAGS.BUNDLE_DISCOUNT_PERCENT, String.valueOf(paymentDataModel.bundlediscountPercent));
-        mParams.put(NetworkUtility.TAGS.BUNDLE_DISCOUNT_PRICE, String.valueOf(paymentDataModel.bundlediscountPrice));
-        mParams.put(NetworkUtility.TAGS.CART_DETAIL, cartDetail);
-        mParams.put(NetworkUtility.TAGS.SUBS_ID.toLowerCase(), subsId);
+       // mParams.put(NetworkUtility.TAGS.CART_DETAIL, cartDetail);
+        //mParams.put(NetworkUtility.TAGS.SUBS_ID.toLowerCase(), subsId);
         mParams.put(NetworkUtility.TAGS.IS_RENEW, isSubscription);
 
         LogUtils.LOGE(TAG, "callBookProAndPayForNormalTaskWS: mParams " + mParams);

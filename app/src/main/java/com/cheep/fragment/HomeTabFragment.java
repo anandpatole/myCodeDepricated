@@ -102,7 +102,7 @@ public class HomeTabFragment extends BaseFragment {
     // For storing category Cover image list
     private ArrayList<BannerImageModel> bannerImageModelArrayList;
     public ArrayList<CareCityDetail> careBannerModelArrayList;
-    private String mSelectedFilterType = Utility.FILTER_TYPES.FILTER_TYPE_FEATURED;
+    private String mSelectedFilterType = Utility.FILTER_TYPES.FILTER_TYPE_ALL_SERVICES;
     // written by majid 106 to 108
     private ComparisionChartFragmentDialog comparisionChartFragmentDialog;
     private PackageDetailModelDialog packageDetailModelDialog;
@@ -1429,7 +1429,7 @@ public class HomeTabFragment extends BaseFragment {
 
     private void updateFilterText() {
         mFragmentTabHomeBinding.layoutBannerHeader.textFilter.setSelected(true);
-        if (mSelectedFilterType.equalsIgnoreCase(Utility.FILTER_TYPES.FILTER_TYPE_FEATURED)) {
+        if (mSelectedFilterType.equalsIgnoreCase(Utility.FILTER_TYPES.FILTER_TYPE_ALL_SERVICES)) {
             mFragmentTabHomeBinding.layoutBannerHeader.textFilter.setText(getResources().getString(R.string.label_featured));
             mFragmentTabHomeBinding.layoutBannerHeader.textFilter.setCompoundDrawablesWithIntrinsicBounds(R.drawable.selector_drawable_left_filter_home_featured, 0, 0, 0);
         } else if (mSelectedFilterType.equalsIgnoreCase(Utility.FILTER_TYPES.FILTER_TYPE_POPULAR)) {
@@ -1483,11 +1483,11 @@ public class HomeTabFragment extends BaseFragment {
         mLayoutFilterHomePopupBinding.textFeatured.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mSelectedFilterType.equalsIgnoreCase(Utility.FILTER_TYPES.FILTER_TYPE_FEATURED)) {
+                if (mSelectedFilterType.equalsIgnoreCase(Utility.FILTER_TYPES.FILTER_TYPE_ALL_SERVICES)) {
                     mPopupWindow.dismiss();
                     return;
                 }
-                mSelectedFilterType = Utility.FILTER_TYPES.FILTER_TYPE_FEATURED;
+                mSelectedFilterType = Utility.FILTER_TYPES.FILTER_TYPE_ALL_SERVICES;
                 updateFilterSelectionInPopup(mLayoutFilterHomePopupBinding);
                 updateFilterText();
                 getCategoryListFromServer(true);
@@ -1543,7 +1543,7 @@ public class HomeTabFragment extends BaseFragment {
 
     private void updateFilterSelectionInPopup(LayoutFilterHomePopupBinding mLayoutFilterHomePopupBinding) {
         // Click events logic
-        if (mSelectedFilterType.equalsIgnoreCase(Utility.FILTER_TYPES.FILTER_TYPE_FEATURED)) {
+        if (mSelectedFilterType.equalsIgnoreCase(Utility.FILTER_TYPES.FILTER_TYPE_ALL_SERVICES)) {
             mLayoutFilterHomePopupBinding.textFeatured.setSelected(true);
             mLayoutFilterHomePopupBinding.textPopular.setSelected(false);
             mLayoutFilterHomePopupBinding.textFavourites.setSelected(false);

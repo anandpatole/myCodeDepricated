@@ -16,6 +16,7 @@ import android.view.Window;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import com.cheep.R;
 import com.cheep.cheepcare.model.CareCityDetail;
 import com.cheep.cheepcare.model.PackageDetail;
@@ -27,7 +28,6 @@ import com.cheep.network.NetworkUtility;
 import com.cheep.utils.GsonUtility;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.Utility;
-
 
 
 public class ComparisionChartFragmentDialog extends DialogFragment implements View.OnClickListener {
@@ -42,7 +42,7 @@ public class ComparisionChartFragmentDialog extends DialogFragment implements Vi
     private FragmentComparsionChartFragmentDialogBinding mBinding;
     private PackageDetailModelDialog packageDetailModelDialog;
 
-    public static ComparisionChartFragmentDialog newInstance(ComparisionChartModel comparisionChartModel, PackageDetail packageDetail ,CareCityDetail careCityDetail) {
+    public static ComparisionChartFragmentDialog newInstance(ComparisionChartModel comparisionChartModel, PackageDetail packageDetail, CareCityDetail careCityDetail) {
         ComparisionChartFragmentDialog fragment = new ComparisionChartFragmentDialog();
         Bundle args = new Bundle();
         args.putString(Utility.Extra.DATA, GsonUtility.getJsonStringFromObject(comparisionChartModel));
@@ -152,13 +152,14 @@ public class ComparisionChartFragmentDialog extends DialogFragment implements Vi
         acknowledgementPopupDialog = AcknowledgementPopupDialog.newInstance("", "");
         acknowledgementPopupDialog.show(getActivity().getSupportFragmentManager(), TAG);
     }
+
     // open show Package Detail Model Fragment Dialog
     private void showPackageDetailModelFragmentDialog() {
         if (packageDetailModelDialog != null) {
             packageDetailModelDialog.dismissAllowingStateLoss();
             packageDetailModelDialog = null;
         }
-        packageDetailModelDialog = PackageDetailModelDialog.newInstance(packageDetail, careCityDetail,comparisionChartModel);
+        packageDetailModelDialog = PackageDetailModelDialog.newInstance(packageDetail, careCityDetail, comparisionChartModel);
         packageDetailModelDialog.show(getActivity().getSupportFragmentManager(), TAG);
     }
 
@@ -205,28 +206,22 @@ public class ComparisionChartFragmentDialog extends DialogFragment implements Vi
             if (featureList.premium.equalsIgnoreCase(Utility.BOOLEAN.YES)) {
                 holder.imagePremium.setVisibility(View.VISIBLE);
                 holder.tvPremium.setVisibility(View.GONE);
-                holder.imagePremium.setBackgroundResource(R.drawable.verified_icon);
+                holder.imagePremium.setBackgroundResource(R.drawable.ic_tick_icon);
             } else if (featureList.premium.equalsIgnoreCase(Utility.BOOLEAN.NO)) {
-                if (featureList.premium.equalsIgnoreCase(Utility.BOOLEAN.YES)) {
-                    holder.imagePremium.setVisibility(View.VISIBLE);
-                    holder.tvPremium.setVisibility(View.GONE);
-                    holder.imagePremium.setBackgroundResource(R.drawable.verified_icon);
-                } else if (featureList.premium.equalsIgnoreCase(Utility.BOOLEAN.NO)) {
-                    holder.imagePremium.setVisibility(View.VISIBLE);
-                    holder.tvPremium.setVisibility(View.GONE);
-                    holder.imagePremium.setBackgroundResource(R.drawable.cancelled);
-                } else {
-                    holder.tvPremium.setVisibility(View.VISIBLE);
-                    holder.imagePremium.setVisibility(View.GONE);
-                    holder.tvPremium.setText(featureList.premium);
+                holder.imagePremium.setVisibility(View.VISIBLE);
+                holder.tvPremium.setVisibility(View.GONE);
+                holder.imagePremium.setBackgroundResource(R.drawable.cancelled);
+            } else {
+                holder.tvPremium.setVisibility(View.VISIBLE);
+                holder.imagePremium.setVisibility(View.GONE);
+                holder.tvPremium.setText(featureList.premium);
 
-                }
-                if (featureList.normal.equalsIgnoreCase(Utility.BOOLEAN.NA)) {
-                    holder.tvCheepCarePackage.setTextColor(Color.RED);
-                } else {
-                    holder.tvCheepCarePackage.setTextColor(Color.parseColor(getResources().getString(R.color.black)));
-                }
+            }
 
+            if (featureList.normal.equalsIgnoreCase(Utility.BOOLEAN.NA)) {
+                holder.tvCheepCarePackage.setTextColor(Color.RED);
+            } else {
+                holder.tvCheepCarePackage.setTextColor(Color.parseColor(getResources().getString(R.color.black)));
             }
         }
 

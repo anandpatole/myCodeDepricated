@@ -308,6 +308,7 @@ public class NetworkUtility {
     }
 
     public interface TAGS {
+        String DATA = "data";
         String CallbackResponse = "callbackresponse";
         String vVERSION = "vVersion";
         String ePLATFORM = "ePlatform";
@@ -345,7 +346,7 @@ public class NetworkUtility {
         //        String PRICE = "price";
         String DISTANCE = "distance";
         String IS_FAVOURITE = "is_favourite";
-        String DATA = "data";
+        String SUB_CATS = "sub_cats";
         String TASK_DETAIL = "task_detail";
         //        for closest area
         String CLOSEST_AREA = "closest_address";
@@ -357,7 +358,6 @@ public class NetworkUtility {
         String NUMBER = "number";
         String NAME = "name";
         String EMERGENCY_DATA = "emergency_data";
-        String ADDRESS_ID = "address_id";
         String CITY_NAME = "city_name";
         String COUNTRY = "country";
         String STATE = "state";
@@ -368,7 +368,7 @@ public class NetworkUtility {
 
         String QUOTE_AMOUNT = "quote_amount";
         String PAYABLE_AMOUNT = "payable_amount";
-        String DISCOUNT_AMOUNT = "discount_amount";
+        //String DISCOUNT_AMOUNT = "discount_amount";
 //        public static final String PAYABLE_AMOUNT_WITH_GST = "payable_amount_with_gst";
 
         String TASK_DESC = "task_desc";
@@ -479,6 +479,10 @@ public class NetworkUtility {
         String DSA_CODE = "dsaCode";
         String BUNDLE_DISCOUNT_PERCENT = "bundlediscount_percent";
         String BUNDLE_DISCOUNT_PRICE = "bundlediscount_price";
+        String DISCOUNT_AMOUNT = "discount_amount";
+        String PAID_AMOUNT = "   paid_amount";
+        String PACKAGE_DURATION = "   paid_amount";
+
         String CART_DETAIL = "cart_detail";
         String CITY_DETAIL = "cityDetail";
         String USER_PACKAGE_DETAIL = "userPackageDetail";
@@ -489,6 +493,7 @@ public class NetworkUtility {
         String IS_SAME_PACKAGE_TYPE = "is_same_package_type";
         String PACKAGE_ID = "package_id";
         String PACKAGE_TYPE = "package_type";
+        String ADDRESS_ID = "address_id";
         String PACKAGE_OPTION_ID = "package_option_id";
         String PACKAGE_SUBOPTION_ID = "package_suboption_id";
         String SELECTED_UNIT = "selected_unit";
@@ -513,6 +518,7 @@ public class NetworkUtility {
         String IS_RENEW= "is_renew";
 
         String TEXT= "text";
+        String CATEGORY_TIP= "category_tip";
 
         String FEATURE_LIST = "feature_list";
         String PRICE_LIST = "price_list";
@@ -654,5 +660,6 @@ public class NetworkUtility {
         mParams.put(NetworkUtility.TAGS.PINCODE, mSelectedAddressModelForInsta.pincode);
         return mParams;
     }
+
 }
 

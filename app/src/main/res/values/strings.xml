@@ -424,7 +424,10 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_book">Book</string>
     <string name="label_pros_available">PROs\nAvailable</string>
     <string name="label_popular">Popular</string>
+<!--
     <string name="label_featured">Featured</string>
+-->
+    <string name="label_featured">All Services</string>
     <string name="empty_favourited_list_1">Haven\'t favourited a service\ncategory yet?</string>
     <string name="empty_favourited_list_2">If you like a service which you often use,\njust tap the heart on it.</string>
     <string name="empty_subscribed_list">Now with CHEEP Care, enjoy unbelievable
@@ -862,7 +865,9 @@ without any hidden charges. Try it now!</string>
     <string name="complete_visit_time">Complete 24x7 Home Maintenance</string>
     <string name="cheep_package_address">Home  1101, Tulip Enclave, Bandra West</string>
     <string name="cheep_package_duration">Tell us the duration of your subscription</string>
-
+    <string name="pay_now">Pay Now</string>
+    <string name="upgrade_save_more"><![CDATA[Upgrade & Save More!]]></string>
+    <string name="upgrade_your_subscription_save_money_and_enjoy_hassle_free_12_months_while_our_cheep_pros_will_take_care_of_your_home">Upgrade your subscription, save money and enjoy hassle free 12 months while our Cheep PROs will take care of your home.</string>
     <string name="months_3">3 Months</string>
     <string name="months_6">6 Months</string>
     <string name="months_12">12 Months</string>
@@ -900,7 +905,13 @@ without any hidden charges. Try it now!</string>
 
     <string name="cheep_promo_code">Apply Cheep Promo Code?</string>
     <string name="cheep_mate_code">Apply Cheep Mate Code?</string>
+
     <string name="text_manage_subscription">Manage Subscription</string>
+
+    <string name="cheep_code_invalid">invalid code </string>
+    <string name="cheep_code_percentage"> you save 10 </string>
+
+
     <string name="cheep_package_info">Under Cheep Care, basic repairs &amp; maintenance will be provided by our PRO\'s. All
         material will be charged extra as per actuals. For complex jobs, additional payments may be charged by the PRO.</string>
     <string name="label_how_big_is_your_home">How big is your home?</string>
@@ -939,5 +950,7 @@ without any hidden charges. Try it now!</string>
     <string name="message_coundnot_find_current_location">oops! could noy find your current location! Please try again.</string>
     <string name="label_auto_detect_location_message">Our smart App has picked up this location automatically via GPS?</string>
     <string name="label_please_tell_us_where_do_you_need_the_amc_for">Please tell us where do you need the AMC for?</string>
+    <string name="label_change">Change</string>
+    <string name="select_category">Select Category</string>
 
 </resources>

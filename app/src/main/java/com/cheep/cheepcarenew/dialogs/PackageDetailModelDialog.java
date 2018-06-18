@@ -18,8 +18,9 @@ import com.android.volley.VolleyError;
 import com.cheep.R;
 import com.cheep.cheepcare.model.CareCityDetail;
 import com.cheep.cheepcare.model.PackageDetail;
-import com.cheep.cheepcarenew.activities.PaymentSummaryCheepCareActivity;
+import com.cheep.cheepcarenew.activities.AddressActivity;
 import com.cheep.model.ComparisionChart.ComparisionChartModel;
+import com.cheep.model.UserDetails;
 import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
@@ -39,14 +40,15 @@ public class PackageDetailModelDialog extends DialogFragment implements View.OnC
     private RelativeLayout rootLayout;
     private ProgressDialog mProgressDialog;
 
-    private TextView tvData,tvSoundsGood;
+    private TextView tvData, tvSoundsGood;
+    UserDetails userDetails;
 
 
     public PackageDetailModelDialog() {
         // Required empty public constructor
     }
 
-    public static PackageDetailModelDialog newInstance(PackageDetail packageDetail, CareCityDetail cityDetail,ComparisionChartModel comparisionChartModel) {
+    public static PackageDetailModelDialog newInstance(PackageDetail packageDetail, CareCityDetail cityDetail, ComparisionChartModel comparisionChartModel) {
         PackageDetailModelDialog fragment = new PackageDetailModelDialog();
         Bundle args = new Bundle();
         args.putString(Utility.Extra.DATA, GsonUtility.getJsonStringFromObject(packageDetail));
@@ -84,6 +86,12 @@ public class PackageDetailModelDialog extends DialogFragment implements View.OnC
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        userDetails = PreferenceUtility.getInstance(getContext()).getUserDetails();
+    }
+
+    @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Dialog dialog = super.onCreateDialog(savedInstanceState);
 
@@ -108,19 +116,19 @@ public class PackageDetailModelDialog extends DialogFragment implements View.OnC
     //View.OnClickListener
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.tv_sounds_good:
-               PaymentSummaryCheepCareActivity.newInstance(getContext());
-               /* if (getArguments()!=null)
-                {
-                    PackageDetail packageDetail = (PackageDetail) GsonUtility.getObjectFromJsonString(getArguments().getString(Utility.Extra.DATA),PackageDetail.class);
-                    CareCityDetail careCityDetail= (CareCityDetail) GsonUtility.getObjectFromJsonString(getArguments().getString(Utility.Extra.DATA_2),CareCityDetail.class);
-                    ComparisionChartModel comparisionChartModel = (ComparisionChartModel) GsonUtility.getObjectFromJsonString(getArguments().getString(Utility.Extra.DATA_3),ComparisionChartModel.class);
-                    if (packageDetail!=null){
-                        AddressActivity.newInstance(getContext(),packageDetail,careCityDetail,comparisionChartModel);
+                //PaymentSummaryCheepCareActivity.newInstance(getContext());
+                if (getArguments() != null) {
+                    PackageDetail packageDetail = (PackageDetail) GsonUtility.getObjectFromJsonString(getArguments().getString(Utility.Extra.DATA), PackageDetail.class);
+                    CareCityDetail careCityDetail = (CareCityDetail) GsonUtility.getObjectFromJsonString(getArguments().getString(Utility.Extra.DATA_2), CareCityDetail.class);
+                    ComparisionChartModel comparisionChartModel = (ComparisionChartModel) GsonUtility.getObjectFromJsonString(getArguments().getString(Utility.Extra.DATA_3), ComparisionChartModel.class);
+                    if (packageDetail != null) {
+                        AddressActivity.newInstance(getContext(), packageDetail, careCityDetail, comparisionChartModel);
                         dismiss();
                     }
-                }*/
+                }
+
                 break;
         }
 

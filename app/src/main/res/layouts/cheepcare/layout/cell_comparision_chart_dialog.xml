@@ -50,7 +50,7 @@
                 android:id="@+id/imagePremium"
                 android:layout_width="25dp"
                 android:layout_height="25dp"
-                android:src="@drawable/verified_icon"
+                android:src="@drawable/ic_tick_icon"
                 tools:ignore="ContentDescription"
                 android:visibility="gone" />
             <com.cheep.custom_view.CFTextViewRegular

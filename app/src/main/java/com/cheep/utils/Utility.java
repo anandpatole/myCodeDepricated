@@ -695,16 +695,18 @@ public class Utility {
     }
 
     public interface FILTER_TYPES {
-        String FILTER_TYPE_FEATURED = "Featured";
+        // for backend team featured and all service are same
+//        String FILTER_TYPE_FEATURED = "Featured";
         String FILTER_TYPE_POPULAR = "Popular";
         String FILTER_TYPE_FAVOURITES = "Favourites";
         String FILTER_TYPE_SUBSCRIBED = "Subscribed";
+        String FILTER_TYPE_ALL_SERVICES = "AllServices";
     }
 
     public interface BOOLEAN {
         String YES = "yes";
         String NO = "no";
-        String NA = "NA";
+        String NA = "na";
     }
 
     public interface TYPE{
@@ -862,6 +864,9 @@ public class Utility {
         String NORMAL = "normal";
         String INSTA_BOOK = "instabook";
         String SUBSCRIBED = "subscribed";
+    }
+    public  static String removeFirstChar(String s){
+        return s.substring(1);
     }
 
     /**
