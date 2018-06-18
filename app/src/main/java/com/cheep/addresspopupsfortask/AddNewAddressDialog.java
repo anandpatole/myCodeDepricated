@@ -22,9 +22,7 @@ import com.android.volley.VolleyError;
 import com.cheep.R;
 import com.cheep.activity.BaseAppCompatActivity;
 import com.cheep.cheepcarenew.activities.AddressActivity;
-import com.cheep.custom_view.tooltips.ViewTooltip;
 import com.cheep.databinding.DialogAddNewAddressBinding;
-import com.cheep.databinding.TooltipAddressSelectionBinding;
 import com.cheep.model.AddressModel;
 import com.cheep.model.GuestUserDetails;
 import com.cheep.model.LocationInfo;
@@ -56,7 +54,6 @@ public class AddNewAddressDialog extends DialogFragment {
 
 
     private String category;
-    private ViewTooltip.TooltipView tooltipView;
     private AddressModel mAddressModel;
     private AddressSelectionListener listener;
 
@@ -103,7 +100,6 @@ public class AddNewAddressDialog extends DialogFragment {
         mBinding.imgBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                hideToolTip(true);
                 dismiss();
             }
         });
@@ -145,61 +141,6 @@ public class AddNewAddressDialog extends DialogFragment {
         }
     }
 
-
-    private void openTooltip() {
-        Log.e(TAG, "openTooltip: **********************");
-        TooltipAddressSelectionBinding toolTipBinding = DataBindingUtil.inflate(
-                LayoutInflater.from(getContext()),
-                R.layout.tooltip_address_selection,
-                null,
-                false);
-        // set tooltip text
-        if (category.equalsIgnoreCase(NetworkUtility.TAGS.ADDRESS_TYPE.HOME))
-            toolTipBinding.tvTitle.setText(getString(R.string.label_hey_is_this_your_home_address, getString(R.string.label_home)));
-        else
-            toolTipBinding.tvTitle.setText(getString(R.string.label_hey_is_this_your_home_address, getString(R.string.label_office)));
-        toolTipBinding.tvDescription.setText(getString(R.string.label_auto_detect_location_message));
-        toolTipBinding.tvYes.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                hideToolTip(false);
-            }
-        });
-        toolTipBinding.tvNo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                hideToolTip(false);
-
-                mBinding.llAddressFields.setVisibility(View.INVISIBLE);
-
-                mBinding.tvAddress.setText("");
-
-
-                mBinding.editAddressInitials.setVisibility(View.GONE);
-                mBinding.viewAddressInitials.setVisibility(View.GONE);
-
-                mBinding.editAddressCity.setVisibility(View.VISIBLE);
-                mBinding.viewCity.setVisibility(View.VISIBLE);
-                mBinding.editAddressLocality.setVisibility(View.VISIBLE);
-                mBinding.viewLocality.setVisibility(View.VISIBLE);
-                mBinding.cvCurrentLocation.setVisibility(View.VISIBLE);
-            }
-        });
-
-        ViewTooltip viewTooltip = ViewTooltip.on(this, mBinding.tvAddress).customView(toolTipBinding.getRoot(), false)
-                .position(ViewTooltip.Position.TOP)
-                .clickToHide(true)
-                .animation(new ViewTooltip.FadeTooltipAnimation(500))
-                .autoHide(false, 0);
-
-        if (tooltipView != null)
-            hideToolTip(true);
-        tooltipView = viewTooltip.getTooltip_view();
-
-        viewTooltip.show();
-
-
-    }
 
     public SpannableStringBuilder getSpannableStringForHint(String fullString) {
         String newString = fullString + getString(R.string.label_star);
@@ -258,38 +199,11 @@ public class AddNewAddressDialog extends DialogFragment {
                 mBinding.viewLocality.setVisibility(View.GONE);
                 mBinding.cvCurrentLocation.setVisibility(View.GONE);
 
-                mBinding.tvAddress.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        openTooltip();
-
-                    }
-                }, 200);
 
             }
         }
     }
 
-
-    @Override
-    public void onDestroy() {
-        hideToolTip(true);
-        super.onDestroy();
-    }
-
-
-    /**
-     * @param removeNow true if hide tool tip without animation and immediately
-     *                  false - remove with animation
-     */
-    private void hideToolTip(boolean removeNow) {
-        if (tooltipView != null) {
-            if (removeNow)
-                tooltipView.removeNow();
-            else
-                tooltipView.remove();
-        }
-    }
 
     public void onEventMainThread(MessageEvent event) {
         Log.e("onEventMainThread", "" + event.BROADCAST_ACTION);
@@ -320,23 +234,19 @@ public class AddNewAddressDialog extends DialogFragment {
                         @Override
                         public void onLocationInfoAvailable(LocationInfo mLocationIno) {
                             ((BaseAppCompatActivity) getContext()).hideProgressDialog();
-
                             GuestUserDetails guestUserDetails = PreferenceUtility.getInstance(getContext()).getGuestUserDetails();
-
                             addressModel.address_id = "-" + (guestUserDetails.addressList == null ? "1" : String.valueOf(guestUserDetails.addressList.size() + 1));
                             addressModel.cityName = mLocationIno.City;
                             addressModel.countryName = mLocationIno.Country;
                             addressModel.stateName = mLocationIno.State;
                             addressModel.lat = String.valueOf(latLng.latitude);
                             addressModel.lng = String.valueOf(latLng.longitude);
-
                             if (guestUserDetails.addressList == null)
                                 guestUserDetails.addressList = new ArrayList<>();
                             guestUserDetails.addressList.add(addressModel);
                             PreferenceUtility.getInstance(getContext()).saveGuestUserDetails(guestUserDetails);
-
-                            // TODO : Redirect from here
-
+                            listener.onAddressSelection(addressModel);
+                            dismiss();
                         }
 
                         @Override
@@ -429,7 +339,6 @@ public class AddNewAddressDialog extends DialogFragment {
                             PreferenceUtility.getInstance(getContext()).saveGuestUserDetails(guestUserDetails);
                         }
 
-                        // TODO : REdirect from here
                         listener.onAddressSelection(addressModel);
                         dismiss();
                         break;
