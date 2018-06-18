@@ -70,16 +70,15 @@ public class AddressTaskCreateAdapter<T> extends ArrayAdapter<T> {
 
         if (position == mList.size() - 1) {
             LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) mHolder.mBinding.llAddressMetaData.getLayoutParams();
-            layoutParams.gravity = Gravity.CENTER_HORIZONTAL;
+            layoutParams.gravity = Gravity.START;
             mHolder.mBinding.llAddressContainer.setPadding(
                     (int) Utility.convertDpToPixel(12, context)
                     , (int) Utility.convertDpToPixel(12, context)
                     , (int) Utility.convertDpToPixel(12, context)
                     , 0
             );
-
             mHolder.mBinding.ivHome.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_white_plus_background_blue));
-            mHolder.mBinding.tvAddressNickname.setText(context.getString(R.string.label_add_new));
+            mHolder.mBinding.tvAddressNickname.setText(context.getString(R.string.label_add_new_address));
             mHolder.mBinding.viewDot.setVisibility(View.GONE);
             mHolder.mBinding.tvLabelAddressSubscribed.setVisibility(View.GONE);
             mHolder.mBinding.tvAddress.setVisibility(View.GONE);
@@ -87,7 +86,7 @@ public class AddressTaskCreateAdapter<T> extends ArrayAdapter<T> {
             LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) mHolder.mBinding.llAddressMetaData.getLayoutParams();
             layoutParams.gravity = Gravity.START;
             mHolder.mBinding.llAddressContainer.setPadding(
-                    (int) Utility.convertDpToPixel(32, context)
+                    (int) Utility.convertDpToPixel(12, context)
                     , (int) Utility.convertDpToPixel(12, context)
                     , (int) Utility.convertDpToPixel(12, context)
                     , 0

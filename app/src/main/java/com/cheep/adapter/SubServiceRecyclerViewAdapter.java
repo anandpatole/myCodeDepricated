@@ -80,18 +80,9 @@ public class SubServiceRecyclerViewAdapter extends RecyclerView.Adapter<SubServi
         }
     }
 
-    public void addList(ArrayList<SubServiceDetailModel> list, String otherSubService) {
+    public void addList(ArrayList<SubServiceDetailModel> list) {
         Log.d(TAG, "addList() called with: list = [" + list.size() + "]");
-        if (list == null) {
-            list = new ArrayList<>();
-        }
         this.mList = list;
-        //Add other as Subservice
-        SubServiceDetailModel subServiceDetailModel = new SubServiceDetailModel();
-        subServiceDetailModel.sub_cat_id = "-1";
-        subServiceDetailModel.catId = "-1";
-        subServiceDetailModel.name = otherSubService;
-        this.mList.add(subServiceDetailModel);
         notifyDataSetChanged();
     }
 }

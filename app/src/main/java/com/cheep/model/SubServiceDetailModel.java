@@ -20,7 +20,7 @@ public class SubServiceDetailModel implements Parent<SubSubCatModel>, Serializab
     @SerializedName("sub_cat_id")
     public String sub_cat_id;
 
-    @SerializedName("name")
+    @SerializedName("sub_cat_name")
     public String name;
 
 

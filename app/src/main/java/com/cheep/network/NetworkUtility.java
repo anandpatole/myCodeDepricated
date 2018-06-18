@@ -308,6 +308,7 @@ public class NetworkUtility {
     }
 
     public interface TAGS {
+        String DATA = "data";
         String CallbackResponse = "callbackresponse";
         String vVERSION = "vVersion";
         String ePLATFORM = "ePlatform";
@@ -345,7 +346,7 @@ public class NetworkUtility {
         //        String PRICE = "price";
         String DISTANCE = "distance";
         String IS_FAVOURITE = "is_favourite";
-        String DATA = "data";
+        String SUB_CATS = "sub_cats";
         String TASK_DETAIL = "task_detail";
         //        for closest area
         String CLOSEST_AREA = "closest_address";
@@ -517,6 +518,7 @@ public class NetworkUtility {
         String IS_RENEW= "is_renew";
 
         String TEXT= "text";
+        String CATEGORY_TIP= "category_tip";
 
         String FEATURE_LIST = "feature_list";
         String PRICE_LIST = "price_list";
