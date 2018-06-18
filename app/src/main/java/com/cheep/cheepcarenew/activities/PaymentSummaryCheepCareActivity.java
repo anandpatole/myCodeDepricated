@@ -57,7 +57,7 @@ public class PaymentSummaryCheepCareActivity extends BaseAppCompatActivity imple
     private ActivityPaymentSummaryNewBinding mBinding;
     private AppCompatEditText edtCheepPromoCode;
     private BottomAlertDialog cheepCodeDialog;
-    private String cheepCode;
+    private String cheepCode= "";
     private String cheepMateCode = "";
     private AppCompatEditText edtCheepMateCode;
     private double discountRate;
@@ -65,6 +65,12 @@ public class PaymentSummaryCheepCareActivity extends BaseAppCompatActivity imple
     double newPrice = 0;
     double profit = 0;
     private String packageId;
+    private double totalPackageAmount;
+    double discountAmount = 0.0;
+    double taxtAmount= 0.0;
+    private String selectedMonth;
+    private double amountAfterDiscount;
+   // private String packageId;
 
 
     public static void newInstance(Context context) {
@@ -89,6 +95,7 @@ public class PaymentSummaryCheepCareActivity extends BaseAppCompatActivity imple
         setInitialColorOfCardView();
         updateSaveAmountForMonth();
         updatePrice(12);
+        selectedMonth = "12";
 
     }
 
@@ -109,7 +116,7 @@ public class PaymentSummaryCheepCareActivity extends BaseAppCompatActivity imple
         }
 
         if (getIntent() != null && getIntent().hasExtra(Utility.Extra.DATA) && getIntent().hasExtra(Utility.Extra.DATA_2)) {
-           // packageDetail = (PackageDetail) GsonUtility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA), PackageDetail.class);
+            // packageDetail = (PackageDetail) GsonUtility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA), PackageDetail.class);
             addressModel = (AddressModel) GsonUtility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA_2), AddressModel.class);
             Log.e(TAG, "initiateUI: -------------" + addressModel.address);
 
@@ -140,24 +147,33 @@ public class PaymentSummaryCheepCareActivity extends BaseAppCompatActivity imple
             String TYPE = comparisionChartModel.priceLists.get(i).type;
 
             if (TYPE.equalsIgnoreCase(PreferenceUtility.getInstance(mContext).getTypeOfPackage())) {
-                mBinding.tvNewPrice.setText(comparisionChartModel.priceLists.get(i).newPrice);
-                mBinding.tvOldPrice.setText(comparisionChartModel.priceLists.get(i).oldPrice);
 
-                newPrice =  Double.parseDouble(comparisionChartModel.priceLists.get(i).newPrice);
-                oldPrice =  Double.parseDouble(comparisionChartModel.priceLists.get(i).oldPrice);
+                mBinding.tvNewPrice.setText(Utility.getCheepCarePackageMonthlyPrice( mBinding.tvNewPrice.getContext()
+                        , R.string.rupee_symbol_x_package_price, comparisionChartModel.priceLists.get(i).newPrice));
+
+                mBinding.tvOldPrice.setText(Utility.getCheepCarePackageMonthlyPrice( mBinding.tvOldPrice.getContext()
+                        , R.string.rupee_symbol_x_package_price, comparisionChartModel.priceLists.get(i).oldPrice));
+
+
+                newPrice = Double.parseDouble(comparisionChartModel.priceLists.get(i).newPrice);
+                oldPrice = Double.parseDouble(comparisionChartModel.priceLists.get(i).oldPrice);
 
             } else if (TYPE.equalsIgnoreCase(PreferenceUtility.getInstance(mContext).getTypeOfPackage())) {
-                mBinding.tvNewPrice.setText(comparisionChartModel.priceLists.get(i).newPrice);
-                mBinding.tvOldPrice.setText(comparisionChartModel.priceLists.get(i).oldPrice);
 
-                newPrice =  Double.parseDouble(comparisionChartModel.priceLists.get(i).newPrice);
-                oldPrice =  Double.parseDouble(comparisionChartModel.priceLists.get(i).oldPrice);
+                mBinding.tvNewPrice.setText(Utility.getCheepCarePackageMonthlyPrice( mBinding.tvNewPrice.getContext()
+                        , R.string.rupee_symbol_x_package_price, comparisionChartModel.priceLists.get(i).newPrice));
+
+                mBinding.tvOldPrice.setText(Utility.getCheepCarePackageMonthlyPrice( mBinding.tvOldPrice.getContext()
+                        , R.string.rupee_symbol_x_package_price, comparisionChartModel.priceLists.get(i).oldPrice));
+
+                newPrice = Double.parseDouble(comparisionChartModel.priceLists.get(i).newPrice);
+                oldPrice = Double.parseDouble(comparisionChartModel.priceLists.get(i).oldPrice);
             }
 
         }
     }
 
-    private void setAddress(){
+    private void setAddress() {
         for (int i = 0; cityLandingPageModel.packageDetailList.size() > i; i++) {
 
             String TYPE = cityLandingPageModel.packageDetailList.get(i).type;
@@ -251,6 +267,8 @@ public class PaymentSummaryCheepCareActivity extends BaseAppCompatActivity imple
     private void updatePrice(int howManyMonth) {
         profit = oldPrice - newPrice;
         mBinding.tvMeanPackageAmount.setText(Utility.CHEEP_CARE.RS + String.valueOf(newPrice * howManyMonth));
+        totalPackageAmount = Double.parseDouble(Utility.removeFirstChar(mBinding.tvMeanPackageAmount.getText().toString()));
+        Log.e(TAG, "TOTAL_AMOUNT " + totalPackageAmount);
     }
 
     private void updateSaveAmountForMonth() {
@@ -260,6 +278,7 @@ public class PaymentSummaryCheepCareActivity extends BaseAppCompatActivity imple
         mBinding.tv12SaveMonth.setText(Utility.CHEEP_CARE.SAVE + String.valueOf(profit * 12));
 
     }
+
     private void showCheepCodeDialog() {
         View view = View.inflate(mContext, R.layout.dialog_add_promocode, null);
         edtCheepPromoCode = view.findViewById(R.id.edit_cheepcode);
@@ -359,10 +378,39 @@ public class PaymentSummaryCheepCareActivity extends BaseAppCompatActivity imple
         mBinding.txtApplyMateCode.setText(cheepMateCode);
     }
 
-    private void storeAllDataForPayment(){
+    //Double.parseDouble(Utility.removeFirstChar(mBinding.tvMeanPackageAmount.getText().toString()));
+    private void storeAllDataForPayment() {
         paymentDataModel = new CheepCarePaymentDataModel();
-        paymentDataModel.totalAmount = Double.parseDouble(Utility.removeFirstChar(mBinding.tvMeanPackageAmount.getText().toString()));
+        paymentDataModel.totalAmount = totalPackageAmount;
+        paymentDataModel.promocode = cheepCode;
+        paymentDataModel.discountAmount = discountAmount;
+        paymentDataModel.taxAmount = String.valueOf(taxtAmount);
+        paymentDataModel.packageDuration = selectedMonth;
+        paymentDataModel.dsaCode = cheepMateCode;
+        paymentDataModel.paidAmount = amountAfterDiscount;
+        paymentDataModel.packageId = packageId;
+        paymentDataModel.addressId = addressModel.address_id;
 
+    }
+    private void checkValidation() {
+        String errorMessage = "";
+        Boolean isErrorOccurred = false;
+
+        if (cheepCode.trim().isEmpty()) {
+            errorMessage = "";
+            isErrorOccurred = true;
+        } else if (cheepMateCode.trim().isEmpty()) {
+            errorMessage = "";
+            isErrorOccurred = true;
+        }
+    }
+
+    private void calculateDiscountPrice() {
+        discountAmount = totalPackageAmount * discountRate / 100;
+
+    }
+    private void calculatePaidAmountPrice(){
+        amountAfterDiscount = totalPackageAmount - discountAmount;
     }
 
     // View.OnClickListener
@@ -384,6 +432,7 @@ public class PaymentSummaryCheepCareActivity extends BaseAppCompatActivity imple
                 mBinding.tv12SaveMonth.setSelected(false);
 
                 updatePrice(3);
+                selectedMonth = "3";
 
 
                 break;
@@ -400,6 +449,7 @@ public class PaymentSummaryCheepCareActivity extends BaseAppCompatActivity imple
                 mBinding.tv12Month.setSelected(false);
                 mBinding.tv12SaveMonth.setSelected(false);
                 updatePrice(6);
+                selectedMonth ="6";
                 break;
             case R.id.card_12_months:
                 mBinding.card3Months.setSelected(false);
@@ -414,6 +464,7 @@ public class PaymentSummaryCheepCareActivity extends BaseAppCompatActivity imple
                 mBinding.tv12Month.setSelected(true);
                 mBinding.tv12SaveMonth.setSelected(true);
                 updatePrice(12);
+                selectedMonth ="12";
                 break;
 
             case R.id.rl_promo_code:
@@ -424,7 +475,7 @@ public class PaymentSummaryCheepCareActivity extends BaseAppCompatActivity imple
                 break;
             case R.id.tv_pay_now:
                 storeAllDataForPayment();
-                PaymentChoiceCheepCareActivity.newInstance(getApplicationContext(),"",paymentDataModel,null);
+                PaymentChoiceCheepCareActivity.newInstance(getApplicationContext(), "", paymentDataModel, cityLandingPageModel.careCityDetail);
                 break;
 
         }
@@ -454,10 +505,10 @@ public class PaymentSummaryCheepCareActivity extends BaseAppCompatActivity imple
         Map<String, Object> mParams = new HashMap<>();
 
 
-       mParams.put(NetworkUtility.TAGS.CARE_CITY_ID, cityLandingPageModel.careCityDetail.id);
-       mParams.put(NetworkUtility.TAGS.CHEEP_CARE_CODE, cheepCode);
-       mParams.put(NetworkUtility.TAGS.CARE_PACKAGE_ID, packageId);
-      // mParams.put(NetworkUtility.TAGS.CARE_PACKAGE_ID, mPackageAdapter.getList().get(0).id);
+        mParams.put(NetworkUtility.TAGS.CARE_CITY_ID, cityLandingPageModel.careCityDetail.id);
+        mParams.put(NetworkUtility.TAGS.CHEEP_CARE_CODE, cheepCode);
+        mParams.put(NetworkUtility.TAGS.CARE_PACKAGE_ID, packageId);
+        // mParams.put(NetworkUtility.TAGS.CARE_PACKAGE_ID, mPackageAdapter.getList().get(0).id);
         //Url is bas
         // ed on condition if address id is greater then 0 then it means we need to update the existing address
         String url = NetworkUtility.WS.CHECK_CHEEP_CARE_CODE;
@@ -502,13 +553,15 @@ public class PaymentSummaryCheepCareActivity extends BaseAppCompatActivity imple
                         JSONObject jsonData = jsonObject.optJSONObject(NetworkUtility.TAGS.DATA);
                         String rate = jsonData.optString(NetworkUtility.TAGS.DISCOUNT);
                         discountRate = Double.parseDouble(rate);
-                       // calculateTotalPrice();
+                        calculateDiscountPrice();
                         mBinding.ivTickPromoCode.setVisibility(View.VISIBLE);
                         mBinding.ivTickPromoCode.setSelected(true);
                         mBinding.ivInfoPromoCode.setVisibility(View.GONE);
                         mBinding.txtPromoCodeMessage.setVisibility(View.VISIBLE);
                         mBinding.txtPromoCodeMessage.setText(getString(R.string.label_applied_promo_code_message_cheep_care, rate, "%"));
                         mBinding.txtApplyPromoCode.setText(cheepCode);
+                        calculatePaidAmountPrice();
+                        mBinding.tvMeanPackageAmount.setText(Utility.CHEEP_CARE.RS + amountAfterDiscount);
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
                         // Show Toast
@@ -517,7 +570,7 @@ public class PaymentSummaryCheepCareActivity extends BaseAppCompatActivity imple
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
                         discountRate = 0;
                         //discountPrice = 0;
-                       // calculateTotalPrice();
+                        // calculateTotalPrice();
                         mBinding.ivTickPromoCode.setVisibility(View.VISIBLE);
                         mBinding.ivTickPromoCode.setSelected(false);
                         mBinding.ivInfoPromoCode.setVisibility(View.VISIBLE);
