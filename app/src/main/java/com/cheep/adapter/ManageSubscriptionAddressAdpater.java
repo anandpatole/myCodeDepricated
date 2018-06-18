@@ -15,6 +15,7 @@ import com.cheep.model.AddressModel;
 import com.cheep.utils.Utility;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class ManageSubscriptionAddressAdpater extends RecyclerView.Adapter<ManageSubscriptionAddressAdpater.ViewHolder>
 {
@@ -44,7 +45,7 @@ public class ManageSubscriptionAddressAdpater extends RecyclerView.Adapter<Manag
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
         if(position==(getItemCount()-1)){
             holder.mRowAddressBinding.dividers.setVisibility(View.GONE);
         }
@@ -58,6 +59,7 @@ holder.mRowAddressBinding.frontLayout.setOnClickListener(new View.OnClickListene
     public void onClick(View v)
     {
 
+        Collections.swap(mList,0,position);
         addressItemClickListener.onClickItem(mList);
     }
 });

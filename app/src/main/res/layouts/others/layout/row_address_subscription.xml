@@ -7,7 +7,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:paddingBottom="@dimen/scale_4dp"
-        android:paddingRight="@dimen/scale_16dp"
+        android:paddingRight="@dimen/scale_24dp"
         android:paddingTop="@dimen/scale_8dp">
 
 

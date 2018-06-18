@@ -15,7 +15,10 @@ import android.view.ViewGroup;
 import com.cheep.R;
 import com.cheep.adapter.ManageSubscriptionAddressAdpater;
 import com.cheep.cheepcare.fragment.ProfileTabFragment;
+import com.cheep.custom_view.tooltips.ViewTooltip;
 import com.cheep.databinding.FragmentManageSubscriptionBinding;
+import com.cheep.databinding.TooltipAddressSelectionBinding;
+import com.cheep.databinding.TooltipManageSubscriptionBinding;
 import com.cheep.fragment.BaseFragment;
 import com.cheep.model.AddressModel;
 import com.cheep.model.UserDetails;
@@ -30,7 +33,9 @@ public class ManageSubscriptionFragment extends BaseFragment implements ManageSu
     private ArrayList<AddressModel> addressList;
     ManageSubscriptionAddressAdpater adapter;
     public static final String TAG = "ManageSubscriptionFragment";
-FragmentManageSubscriptionBinding mBinding;
+    FragmentManageSubscriptionBinding mBinding;
+    private ViewTooltip.TooltipView tooltipView;
+
     public static ManageSubscriptionFragment newInstance(ArrayList<AddressModel> list) {
         Bundle args = new Bundle();
         args.putSerializable("list", list);
@@ -63,30 +68,31 @@ FragmentManageSubscriptionBinding mBinding;
 
 
 
-       // Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.WS.CHANGE_PASSWORD);*/
+        // Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.WS.CHANGE_PASSWORD);*/
 
         super.onDetach();
     }
     @Override
     public void initiateUI() {
 
+        openTooltip(true);
         mBinding.textTitle.setText("Manage Subscription");
-       mBinding.textSubscriptionDuration.setText("3 months");
-       mBinding.textAmountPaid.setText("233");
-       mBinding.textPaymentMethod.setText("HDFC Credit Card");
-       mBinding.textSubscribedOn.setText("23rd May 2018");
-       mBinding.textSubscriptionEndDate.setText("23rd May 2018");
-       if(mBinding.autoRenewalToggle.isChecked())
-       {
+        mBinding.textSubscriptionDuration.setText("3 months");
+        mBinding.textAmountPaid.setText("233");
+        mBinding.textPaymentMethod.setText("HDFC Credit Card");
+        mBinding.textSubscribedOn.setText("23rd May 2018");
+        mBinding.textSubscriptionEndDate.setText("23rd May 2018");
+        if(mBinding.autoRenewalToggle.isChecked())
+        {
 
-       }
-       else
-       {
-           //mBinding.autoRenewalRl.setVisibility(View.GONE);
-       }
+        }
+        else
+        {
+            //mBinding.autoRenewalRl.setVisibility(View.GONE);
+        }
         Bundle bundle = getArguments();
-       addressList= (ArrayList<AddressModel>) bundle.getSerializable("list");
-      fillRecyclerViewSingleItem();
+        addressList= (ArrayList<AddressModel>) bundle.getSerializable("list");
+        fillRecyclerViewSingleItem();
 
     }
 
@@ -94,10 +100,10 @@ FragmentManageSubscriptionBinding mBinding;
     public void setListener() {
         mBinding.back.setOnClickListener(onClickListener);
         mBinding.notification.setOnClickListener(onClickListener);
-      mBinding.addressDropDowns.setOnClickListener(onClickListener);
-      mBinding.addressDropUp.setOnClickListener(onClickListener);
-      mBinding.upgradeSubscriptionBtn.setOnClickListener(onClickListener);
-      mBinding.autoRenewalToggle.setOnClickListener(onClickListener);
+        mBinding.addressDropDowns.setOnClickListener(onClickListener);
+        mBinding.addressDropUp.setOnClickListener(onClickListener);
+        mBinding.upgradeSubscriptionBtn.setOnClickListener(onClickListener);
+        mBinding.autoRenewalToggle.setOnClickListener(onClickListener);
 
     }
     View.OnClickListener onClickListener = new View.OnClickListener() {
@@ -110,7 +116,7 @@ FragmentManageSubscriptionBinding mBinding;
                 case R.id.auto_renewal_toggle:
                     break;
                 case R.id.address_drop_downs:
-                   fillRecyclerView();
+                    fillRecyclerView();
                     break;
                 case R.id.address_drop_up:
                     fillRecyclerViewSingleItem();
@@ -150,6 +156,48 @@ FragmentManageSubscriptionBinding mBinding;
 
     {
         this.addressList=mList;
+        fillRecyclerViewSingleItem();
 
+    }
+    private void openTooltip(boolean delay) {
+        Log.e(TAG, "openTooltip: **********************");
+        TooltipManageSubscriptionBinding toolTipBinding = DataBindingUtil.inflate(
+                LayoutInflater.from(mContext),
+                R.layout.tooltip_manage_subscription,
+                null,
+                false);
+        // set tooltip text
+
+
+toolTipBinding.tooltipClose.setOnClickListener(new View.OnClickListener() {
+    @Override
+    public void onClick(View v) {
+        hideToolTip(false);
+    }
+});
+
+        ViewTooltip viewTooltip = ViewTooltip.on( mBinding.upgradeSubscriptionBtn).customView(toolTipBinding.getRoot(), delay)
+                .position(ViewTooltip.Position.TOP)
+                .clickToHide(true)
+                .animation(new ViewTooltip.FadeTooltipAnimation(500))
+                .padding(40,100,40,10)
+                .align(ViewTooltip.ALIGN.START)
+                .autoHide(false, 0);
+
+        if(tooltipView!=null)
+            hideToolTip(true);
+        tooltipView = viewTooltip.getTooltip_view();
+
+        viewTooltip.show();
+
+
+    }
+    private void hideToolTip(boolean removeNow) {
+        if (tooltipView != null) {
+            if (removeNow)
+                tooltipView.removeNow();
+            else
+                tooltipView.remove();
+        }
     }
 }

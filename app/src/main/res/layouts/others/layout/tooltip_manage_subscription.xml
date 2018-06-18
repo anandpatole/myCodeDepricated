@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"    >
+    <RelativeLayout
+        android:layout_width="match_parent"
+        tools:background="@color/blue_variant_4"
+        android:layout_height="wrap_content">
+<LinearLayout
+    android:layout_width="match_parent"
+
+    android:orientation="vertical"
+    android:layout_marginTop="@dimen/scale_17dp"
+    android:layout_height="wrap_content">
+
+    <com.cheep.custom_view.CFTextViewRegular
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/scale_13dp"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_size_12sp"
+        android:text="@string/upgrade_save_more"
+        />
+    <com.cheep.custom_view.CFTextViewRegular
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/scale_13dp"
+        android:textColor="@color/white"
+        android:layout_marginTop="@dimen/scale_6dp"
+        android:textSize="@dimen/text_size_10sp"
+        android:text="@string/upgrade_your_subscription_save_money_and_enjoy_hassle_free_12_months_while_our_cheep_pros_will_take_care_of_your_home"
+        />
+
+</LinearLayout>
+
+        <ImageView
+            android:id="@+id/tooltip_close"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:padding="@dimen/scale_8dp"
+            android:layout_alignParentTop="true"
+            android:src="@drawable/ic_cancel_blue"
+            android:layout_alignParentRight="true" />
+    </RelativeLayout>
+</layout>

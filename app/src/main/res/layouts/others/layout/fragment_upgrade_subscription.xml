@@ -114,11 +114,13 @@ Road (West) Mumbai 400026"
                             android:layout_width="match_parent"
                             android:orientation="horizontal"
                             android:layout_marginLeft="@dimen/scale_15dp"
+                            android:layout_margin="@dimen/scale_15dp"
                             android:layout_marginTop="@dimen/scale_17dp"
                             android:layout_marginBottom="@dimen/scale_5dp"
                             android:layout_height="wrap_content">
 
                             <LinearLayout
+                                android:id="@+id/cardview_ll1"
                                 android:layout_width="0dp"
                                 android:layout_marginRight="@dimen/scale_22dp"
                                 android:layout_weight="1"
@@ -131,7 +133,7 @@ Road (West) Mumbai 400026"
                                         android:id="@+id/cheep_care_package_cardview1"
                                         android:layout_width="match_parent"
                                         android:layout_height="@dimen/scale_79dp"
-                                        app:cardBackgroundColor="@color/white"
+                                        app:cardBackgroundColor="@color/selector_bg_cardview"
                                         app:cardCornerRadius="@dimen/scale_4dp"
                                         app:cardElevation="@dimen/scale_4dp"
                                         android:checked="false"
@@ -148,8 +150,8 @@ Road (West) Mumbai 400026"
                                                 android:layout_width="wrap_content"
                                                 android:layout_height="wrap_content"
                                                 android:padding="@dimen/scale_2dp"
-                                                android:text="@string/_6_months"
-                                                android:textColor="@color/blue_variant_4"
+                                                android:text="@string/months_3"
+                                                android:textColor="@color/selector_bg_cardview_price"
                                                 android:textSize="@dimen/text_size_11sp"/>
                                             <LinearLayout
                                                 android:layout_width="match_parent"
@@ -163,7 +165,7 @@ Road (West) Mumbai 400026"
                                                     android:padding="@dimen/scale_2dp"
                                                     android:text="3000"
                                                     android:layout_gravity="center"
-                                                    android:textColor="@color/grey_varient_33"
+                                                    android:textColor="@color/selector_bg_cardview_subprice"
                                                     android:textSize="@dimen/text_size_11sp"/>
                                                 <com.cheep.custom_view.CFTextViewRegular
                                                     android:id="@+id/cheep_care_package_newprice1"
@@ -172,7 +174,7 @@ Road (West) Mumbai 400026"
                                                     android:layout_height="wrap_content"
                                                     android:padding="@dimen/scale_2dp"
                                                     android:text="3400"
-                                                    android:textColor="@color/black"
+                                                    android:textColor="@color/selector_bg_cardview_price"
                                                     android:textSize="@dimen/text_size_11sp"/>
                                             </LinearLayout>
 
@@ -182,7 +184,7 @@ Road (West) Mumbai 400026"
                                                 android:layout_height="wrap_content"
                                                 android:padding="@dimen/scale_2dp"
                                                 android:text=""
-                                                android:textColor="@color/selector_text_price_package_care_sub_title"
+                                                android:textColor="@color/selector_bg_cardview_price"
                                                 android:textSize="@dimen/text_size_11sp"/>
 
                                         </LinearLayout>
@@ -193,7 +195,9 @@ Road (West) Mumbai 400026"
                             </LinearLayout>
 
                             <LinearLayout
+                                android:id="@+id/cardview_ll2"
                                 android:layout_width="0dp"
+
                                 android:layout_weight="1"
                                 android:layout_marginRight="@dimen/scale_22dp"
                                 android:layout_height="@dimen/scale_80dp">
@@ -208,7 +212,7 @@ Road (West) Mumbai 400026"
                                             android:id="@+id/cheep_care_package_cardview2"
                                             android:layout_width="match_parent"
                                             android:layout_height="@dimen/scale_79dp"
-                                            app:cardBackgroundColor="@color/blue_variant_4"
+                                            app:cardBackgroundColor="@color/selector_bg_cardview"
                                             app:cardCornerRadius="@dimen/scale_4dp"
                                             app:cardElevation="@dimen/scale_4dp"
                                             app:cardUseCompatPadding="true">
@@ -224,8 +228,8 @@ Road (West) Mumbai 400026"
                                                     android:layout_width="wrap_content"
                                                     android:layout_height="wrap_content"
                                                     android:padding="@dimen/scale_2dp"
-                                                    android:text="@string/_12_months"
-                                                    android:textColor="@color/white"
+                                                    android:text="@string/_6_months"
+                                                    android:textColor="@color/selector_bg_cardview_price"
                                                     android:textSize="@dimen/text_size_11sp"/>
                                                 <LinearLayout
                                                     android:layout_width="match_parent"
@@ -239,7 +243,7 @@ Road (West) Mumbai 400026"
                                                         android:padding="@dimen/scale_2dp"
                                                         android:text="3000"
                                                         android:layout_gravity="center"
-                                                        android:textColor="@color/white"
+                                                        android:textColor="@color/selector_bg_cardview_subprice"
                                                         android:textSize="@dimen/text_size_11sp"/>
                                                     <com.cheep.custom_view.CFTextViewRegular
                                                         android:id="@+id/cheep_care_package_newprice2"
@@ -247,9 +251,9 @@ Road (West) Mumbai 400026"
                                                         android:layout_gravity="center"
                                                         android:layout_height="wrap_content"
                                                         android:padding="@dimen/scale_2dp"
-                                                        android:text="3400"
-                                                        android:textColor="@color/white"
-                                                        android:textSize="@dimen/text_size_9sp"/>
+                                                        android:text=""
+                                                        android:textColor="@color/selector_bg_cardview_price"
+                                                        android:textSize="@dimen/text_size_11sp"/>
                                                 </LinearLayout>
 
                                                 <com.cheep.custom_view.CFTextViewRegular
@@ -258,7 +262,7 @@ Road (West) Mumbai 400026"
                                                     android:layout_height="wrap_content"
                                                     android:padding="@dimen/scale_2dp"
                                                     android:text=""
-                                                    android:textColor="@color/selector_text_price_package_care_sub_title"
+                                                    android:textColor="@color/selector_bg_cardview_price"
                                                     android:textSize="@dimen/text_size_11sp"/>
 
                                             </LinearLayout>
@@ -266,6 +270,7 @@ Road (West) Mumbai 400026"
 
                                     </FrameLayout>
                                     <ImageView
+                                        android:visibility="visible"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:layout_alignParentBottom="true"
@@ -274,9 +279,88 @@ Road (West) Mumbai 400026"
                                 </RelativeLayout>
                             </LinearLayout>
                             <LinearLayout
+                                android:id="@+id/cardview_ll3"
                                 android:layout_width="0dp"
                                 android:layout_weight="1"
+                                android:visibility="invisible"
                                 android:layout_height="@dimen/scale_90dp">
+                                <RelativeLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent">
+                                    <FrameLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content">
+
+                                        <android.support.v7.widget.CardView
+                                            android:id="@+id/cheep_care_package_cardview3"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="@dimen/scale_79dp"
+                                            app:cardBackgroundColor="@color/selector_bg_cardview"
+                                            app:cardCornerRadius="@dimen/scale_4dp"
+                                            app:cardElevation="@dimen/scale_4dp"
+                                            app:cardUseCompatPadding="true">
+
+                                            <LinearLayout
+                                                android:layout_width="match_parent"
+                                                android:layout_height="match_parent"
+                                                android:gravity="center"
+                                                android:orientation="vertical">
+
+                                                <com.cheep.custom_view.CFTextViewBold
+                                                    android:id="@+id/cheep_care_package_month3"
+                                                    android:layout_width="wrap_content"
+                                                    android:layout_height="wrap_content"
+                                                    android:padding="@dimen/scale_2dp"
+                                                    android:text="@string/_12_months"
+                                                    android:textColor="@color/selector_bg_cardview_price"
+                                                    android:textSize="@dimen/text_size_11sp"/>
+                                                <LinearLayout
+                                                    android:layout_width="match_parent"
+                                                    android:orientation="horizontal"
+                                                    android:gravity="center"
+                                                    android:layout_height="wrap_content">
+                                                    <com.cheep.custom_view.CFTextViewRegular
+                                                        android:id="@+id/cheep_care_package_oldprice3"
+                                                        android:layout_width="wrap_content"
+                                                        android:layout_height="wrap_content"
+                                                        android:padding="@dimen/scale_2dp"
+                                                        android:text="3000"
+                                                        android:layout_gravity="center"
+                                                        android:textColor="@color/selector_bg_cardview_subprice"
+                                                        android:textSize="@dimen/text_size_11sp"/>
+                                                    <com.cheep.custom_view.CFTextViewRegular
+                                                        android:id="@+id/cheep_care_package_newprice3"
+                                                        android:layout_width="wrap_content"
+                                                        android:layout_gravity="center"
+                                                        android:layout_height="wrap_content"
+                                                        android:padding="@dimen/scale_2dp"
+                                                        android:text="3400"
+                                                        android:textColor="@color/selector_bg_cardview_price"
+                                                        android:textSize="@dimen/text_size_9sp"/>
+                                                </LinearLayout>
+
+                                                <com.cheep.custom_view.CFTextViewRegular
+                                                    android:id="@+id/cheep_care_package_save3"
+                                                    android:layout_width="wrap_content"
+                                                    android:layout_height="wrap_content"
+                                                    android:padding="@dimen/scale_2dp"
+                                                    android:text=""
+                                                    android:textColor="@color/selector_bg_cardview_price"
+                                                    android:textSize="@dimen/text_size_11sp"/>
+
+                                            </LinearLayout>
+                                        </android.support.v7.widget.CardView>
+
+                                    </FrameLayout>
+
+                                    <ImageView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_alignParentBottom="true"
+                                        android:layout_centerHorizontal="true"
+                                        android:layout_marginBottom="@dimen/scale_10dp"
+                                        android:src="@drawable/best_value" />
+                                </RelativeLayout>
                             </LinearLayout>
 
                         </LinearLayout>
@@ -357,7 +441,9 @@ Road (West) Mumbai 400026"
                             android:layout_height="wrap_content">
 
                             <LinearLayout
+                                android:id="@+id/premium_cardview_ll1"
                                 android:layout_width="0dp"
+
                                 android:layout_weight="1"
                                 android:layout_marginRight="@dimen/scale_22dp"
                                 android:layout_height="@dimen/scale_80dp">
@@ -369,7 +455,7 @@ Road (West) Mumbai 400026"
                                         android:id="@+id/cheep_care_premium_package_cardview1"
                                         android:layout_width="match_parent"
                                         android:layout_height="@dimen/scale_79dp"
-                                        app:cardBackgroundColor="@color/white"
+                                        app:cardBackgroundColor="@color/selector_bg_cardview"
                                         app:cardCornerRadius="@dimen/scale_4dp"
                                         app:cardElevation="@dimen/scale_4dp"
                                         app:cardUseCompatPadding="true">
@@ -386,7 +472,7 @@ Road (West) Mumbai 400026"
                                                 android:layout_height="wrap_content"
                                                 android:padding="@dimen/scale_2dp"
                                                 android:text="@string/months_3"
-                                                android:textColor="@color/blue_variant_4"
+                                                android:textColor="@color/selector_bg_cardview_price"
                                                 android:textSize="@dimen/text_size_11sp"/>
                                             <LinearLayout
                                                 android:layout_width="match_parent"
@@ -400,7 +486,7 @@ Road (West) Mumbai 400026"
                                                     android:padding="@dimen/scale_2dp"
                                                     android:text="3000"
                                                     android:layout_gravity="center"
-                                                    android:textColor="@color/grey_varient_33"
+                                                    android:textColor="@color/selector_bg_cardview_subprice"
                                                     android:textSize="@dimen/text_size_11sp"/>
                                                 <com.cheep.custom_view.CFTextViewRegular
                                                     android:id="@+id/cheep_care_premium_package_newprice1"
@@ -409,7 +495,7 @@ Road (West) Mumbai 400026"
                                                     android:layout_height="wrap_content"
                                                     android:padding="@dimen/scale_2dp"
                                                     android:text="3400"
-                                                    android:textColor="@color/black"
+                                                    android:textColor="@color/selector_bg_cardview_price"
                                                     android:textSize="@dimen/text_size_11sp"/>
                                             </LinearLayout>
 
@@ -419,7 +505,7 @@ Road (West) Mumbai 400026"
                                                 android:layout_height="wrap_content"
                                                 android:padding="@dimen/scale_2dp"
                                                 android:text=""
-                                                android:textColor="@color/selector_text_price_package_care_sub_title"
+                                                android:textColor="@color/selector_bg_cardview_price"
                                                 android:textSize="@dimen/text_size_11sp"/>
 
                                         </LinearLayout>
@@ -430,6 +516,7 @@ Road (West) Mumbai 400026"
                             </LinearLayout>
 
                             <LinearLayout
+                                android:id="@+id/premium_cardview_ll2"
                                 android:layout_width="0dp"
                                 android:layout_weight="1"
                                 android:layout_marginRight="@dimen/scale_22dp"
@@ -445,7 +532,7 @@ Road (West) Mumbai 400026"
                                             android:id="@+id/cheep_care_premium_package_cardview2"
                                             android:layout_width="match_parent"
                                             android:layout_height="@dimen/scale_79dp"
-                                            app:cardBackgroundColor="@color/white"
+                                            app:cardBackgroundColor="@color/selector_bg_cardview"
                                             app:cardCornerRadius="@dimen/scale_4dp"
                                             app:cardElevation="@dimen/scale_4dp"
                                             app:cardUseCompatPadding="true">
@@ -462,7 +549,7 @@ Road (West) Mumbai 400026"
                                                     android:layout_height="wrap_content"
                                                     android:padding="@dimen/scale_2dp"
                                                     android:text="@string/_6_months"
-                                                    android:textColor="@color/blue_variant_4"
+                                                    android:textColor="@color/selector_bg_cardview_price"
                                                     android:textSize="@dimen/text_size_11sp"/>
                                                 <LinearLayout
                                                     android:layout_width="match_parent"
@@ -476,7 +563,7 @@ Road (West) Mumbai 400026"
                                                         android:padding="@dimen/scale_2dp"
                                                         android:text="3000"
                                                         android:layout_gravity="center"
-                                                        android:textColor="@color/grey_varient_33"
+                                                        android:textColor="@color/selector_bg_cardview_subprice"
                                                         android:textSize="@dimen/text_size_11sp"/>
                                                     <com.cheep.custom_view.CFTextViewRegular
                                                         android:id="@+id/cheep_care_premium_package_newprice2"
@@ -485,7 +572,7 @@ Road (West) Mumbai 400026"
                                                         android:layout_height="wrap_content"
                                                         android:padding="@dimen/scale_2dp"
                                                         android:text="3400"
-                                                        android:textColor="@color/black"
+                                                        android:textColor="@color/selector_bg_cardview_price"
                                                         android:textSize="@dimen/text_size_11sp"/>
                                                 </LinearLayout>
 
@@ -495,7 +582,7 @@ Road (West) Mumbai 400026"
                                                     android:layout_height="wrap_content"
                                                     android:padding="@dimen/scale_2dp"
                                                     android:text=""
-                                                    android:textColor="@color/selector_text_price_package_care_sub_title"
+                                                    android:textColor="@color/selector_bg_cardview_price"
                                                     android:textSize="@dimen/text_size_11sp"/>
 
                                             </LinearLayout>
@@ -511,9 +598,10 @@ Road (West) Mumbai 400026"
                                 </RelativeLayout>
                             </LinearLayout>
                             <LinearLayout
+                                android:id="@+id/premium_cardview_ll3"
                                 android:layout_width="0dp"
                                 android:layout_weight="1"
-                                android:layout_marginRight="@dimen/scale_38dp"
+                                android:layout_marginRight="@dimen/scale_15dp"
                                 android:layout_height="@dimen/scale_90dp">
                                 <RelativeLayout
                                     android:layout_width="match_parent"
@@ -526,7 +614,7 @@ Road (West) Mumbai 400026"
                                             android:id="@+id/cheep_care_premium_package_cardview3"
                                             android:layout_width="match_parent"
                                             android:layout_height="@dimen/scale_79dp"
-                                            app:cardBackgroundColor="@color/white"
+                                            app:cardBackgroundColor="@color/selector_bg_cardview"
                                             app:cardCornerRadius="@dimen/scale_4dp"
                                             app:cardElevation="@dimen/scale_4dp"
                                             app:cardUseCompatPadding="true">
@@ -543,7 +631,7 @@ Road (West) Mumbai 400026"
                                                     android:layout_height="wrap_content"
                                                     android:padding="@dimen/scale_2dp"
                                                     android:text="@string/_12_months"
-                                                    android:textColor="@color/blue_variant_4"
+                                                    android:textColor="@color/selector_bg_cardview_price"
                                                     android:textSize="@dimen/text_size_11sp"/>
                                                 <LinearLayout
                                                     android:layout_width="match_parent"
@@ -557,7 +645,7 @@ Road (West) Mumbai 400026"
                                                         android:padding="@dimen/scale_2dp"
                                                         android:text="3000"
                                                         android:layout_gravity="center"
-                                                        android:textColor="@color/grey_varient_33"
+                                                        android:textColor="@color/selector_bg_cardview_subprice"
                                                         android:textSize="@dimen/text_size_11sp"/>
                                                     <com.cheep.custom_view.CFTextViewRegular
                                                         android:id="@+id/cheep_care_premium_package_newprice3"
@@ -566,7 +654,7 @@ Road (West) Mumbai 400026"
                                                         android:layout_height="wrap_content"
                                                         android:padding="@dimen/scale_2dp"
                                                         android:text="3400"
-                                                        android:textColor="@color/black"
+                                                        android:textColor="@color/selector_bg_cardview_price"
                                                         android:textSize="@dimen/text_size_11sp"/>
                                                 </LinearLayout>
 
@@ -576,7 +664,7 @@ Road (West) Mumbai 400026"
                                                     android:layout_height="wrap_content"
                                                     android:padding="@dimen/scale_2dp"
                                                     android:text=""
-                                                    android:textColor="@color/selector_text_price_package_care_sub_title"
+                                                    android:textColor="@color/selector_bg_cardview_price"
                                                     android:textSize="@dimen/text_size_11sp"/>
 
                                             </LinearLayout>
