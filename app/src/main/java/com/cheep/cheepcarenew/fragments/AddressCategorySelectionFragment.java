@@ -278,6 +278,8 @@ public class AddressCategorySelectionFragment extends BaseFragment {
         }
     }
 
+
+
     @Override
     public void onPause() {
         super.onPause();

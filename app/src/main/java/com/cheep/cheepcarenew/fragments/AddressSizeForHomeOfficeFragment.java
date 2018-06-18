@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.cheep.R;
+import com.cheep.activity.LoginActivity;
 import com.cheep.cheepcarenew.activities.AddressActivity;
 import com.cheep.cheepcarenew.activities.PaymentSummaryCheepCareActivity;
 import com.cheep.cheepcarenew.adapters.AddressSizeRecyclerViewAdapter;
@@ -18,6 +19,7 @@ import com.cheep.databinding.FragmentAddressSizeForHomeOfficeBinding;
 import com.cheep.fragment.BaseFragment;
 import com.cheep.model.AddressModel;
 import com.cheep.model.AddressSizeModel;
+import com.cheep.model.UserDetails;
 import com.cheep.network.NetworkUtility;
 import com.cheep.utils.GsonUtility;
 import com.cheep.utils.PreferenceUtility;
@@ -31,7 +33,7 @@ public class AddressSizeForHomeOfficeFragment extends BaseFragment {
     public static final String TAG = "AddressCategorySelectionFragment";
     private AddressSizeRecyclerViewAdapter adapter;
     private ArrayList<AddressSizeModel> list;
-    AddressModel addressModel;
+    public AddressModel addressModel;
 
     public static AddressSizeForHomeOfficeFragment newInstance(AddressModel addressModel) {
         Bundle args = new Bundle();
@@ -75,7 +77,13 @@ public class AddressSizeForHomeOfficeFragment extends BaseFragment {
             @Override
             public void onClickAddressSize(AddressSizeModel model) {
                 addressModel.addressSizeModel = model;
-                PaymentSummaryCheepCareActivity.newInstance(mContext, ((AddressActivity) mContext).getPackageDetail(), addressModel);
+
+                UserDetails userDetails = PreferenceUtility.getInstance(getContext()).getUserDetails();
+                if (userDetails == null) {
+                    LoginActivity.newInstance(getContext());
+                } else {
+                    PaymentSummaryCheepCareActivity.newInstance(mContext, ((AddressActivity) mContext).getPackageDetail(), addressModel);
+                }
 
             }
         });

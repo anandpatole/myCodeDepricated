@@ -16,7 +16,6 @@ import android.widget.TextView;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.cheep.R;
-import com.cheep.activity.LoginActivity;
 import com.cheep.cheepcare.model.CareCityDetail;
 import com.cheep.cheepcare.model.PackageDetail;
 import com.cheep.cheepcarenew.activities.AddressActivity;
@@ -41,7 +40,7 @@ public class PackageDetailModelDialog extends DialogFragment implements View.OnC
     private RelativeLayout rootLayout;
     private ProgressDialog mProgressDialog;
 
-    private TextView tvData,tvSoundsGood;
+    private TextView tvData, tvSoundsGood;
     UserDetails userDetails;
 
 
@@ -49,7 +48,7 @@ public class PackageDetailModelDialog extends DialogFragment implements View.OnC
         // Required empty public constructor
     }
 
-    public static PackageDetailModelDialog newInstance(PackageDetail packageDetail, CareCityDetail cityDetail,ComparisionChartModel comparisionChartModel) {
+    public static PackageDetailModelDialog newInstance(PackageDetail packageDetail, CareCityDetail cityDetail, ComparisionChartModel comparisionChartModel) {
         PackageDetailModelDialog fragment = new PackageDetailModelDialog();
         Bundle args = new Bundle();
         args.putString(Utility.Extra.DATA, GsonUtility.getJsonStringFromObject(packageDetail));
@@ -117,21 +116,16 @@ public class PackageDetailModelDialog extends DialogFragment implements View.OnC
     //View.OnClickListener
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.tv_sounds_good:
-               //PaymentSummaryCheepCareActivity.newInstance(getContext());
-                if(userDetails == null){
-                    LoginActivity.newInstance(getContext());
-                }else {
-                    if (getArguments()!=null)
-                    {
-                        PackageDetail packageDetail = (PackageDetail) GsonUtility.getObjectFromJsonString(getArguments().getString(Utility.Extra.DATA),PackageDetail.class);
-                        CareCityDetail careCityDetail= (CareCityDetail) GsonUtility.getObjectFromJsonString(getArguments().getString(Utility.Extra.DATA_2),CareCityDetail.class);
-                        ComparisionChartModel comparisionChartModel = (ComparisionChartModel) GsonUtility.getObjectFromJsonString(getArguments().getString(Utility.Extra.DATA_3),ComparisionChartModel.class);
-                        if (packageDetail!=null){
-                            AddressActivity.newInstance(getContext(),packageDetail,careCityDetail,comparisionChartModel);
-                            dismiss();
-                        }
+                //PaymentSummaryCheepCareActivity.newInstance(getContext());
+                if (getArguments() != null) {
+                    PackageDetail packageDetail = (PackageDetail) GsonUtility.getObjectFromJsonString(getArguments().getString(Utility.Extra.DATA), PackageDetail.class);
+                    CareCityDetail careCityDetail = (CareCityDetail) GsonUtility.getObjectFromJsonString(getArguments().getString(Utility.Extra.DATA_2), CareCityDetail.class);
+                    ComparisionChartModel comparisionChartModel = (ComparisionChartModel) GsonUtility.getObjectFromJsonString(getArguments().getString(Utility.Extra.DATA_3), ComparisionChartModel.class);
+                    if (packageDetail != null) {
+                        AddressActivity.newInstance(getContext(), packageDetail, careCityDetail, comparisionChartModel);
+                        dismiss();
                     }
                 }
 

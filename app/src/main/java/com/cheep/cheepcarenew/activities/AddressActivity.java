@@ -1,8 +1,10 @@
 package com.cheep.cheepcarenew.activities;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
@@ -20,6 +22,7 @@ import com.cheep.databinding.ActivityAddressBinding;
 import com.cheep.fragment.BaseFragment;
 import com.cheep.model.AddressModel;
 import com.cheep.model.ComparisionChart.ComparisionChartModel;
+import com.cheep.model.UserDetails;
 import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
@@ -31,6 +34,7 @@ import com.cheep.utils.Utility;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -66,6 +70,14 @@ public class AddressActivity extends BaseAppCompatActivity {
             comparisionChartModel = (ComparisionChartModel) GsonUtility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA_3), ComparisionChartModel.class);
         }
         loadFragment(AddressCategorySelectionFragment.TAG, AddressCategorySelectionFragment.newInstance(comparisionChartModel));
+        registerReceiver(mBR_OnLoginSuccess, new IntentFilter(Utility.BR_ON_LOGIN_SUCCESS));
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(mBR_OnLoginSuccess);
     }
 
     @Override
@@ -233,6 +245,35 @@ public class AddressActivity extends BaseAppCompatActivity {
             hideProgressDialog();
             LogUtils.LOGD(TAG, "onErrorResponse() called with: error = [" + error + "]");
             Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
+        }
+    };
+
+    /**
+     * BroadCast that would restart the screen once login has been done.
+     */
+    private BroadcastReceiver mBR_OnLoginSuccess = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Utility.hideKeyboard(mContext);
+            UserDetails mUserDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
+            if (mUserDetails != null) {
+                if (mUserDetails.addressList.isEmpty()) {
+                    mUserDetails.addressList = new ArrayList<>();
+                }
+
+
+                // Add additional selected address model here.
+                AddressSizeForHomeOfficeFragment addressSizeForHomeOfficeFragment = (AddressSizeForHomeOfficeFragment) getSupportFragmentManager().findFragmentByTag(AddressSizeForHomeOfficeFragment.TAG);
+                if (addressSizeForHomeOfficeFragment != null) {
+                    mUserDetails.addressList.add(addressSizeForHomeOfficeFragment.addressModel);
+                    PaymentSummaryCheepCareActivity.newInstance(mContext, ((AddressActivity) mContext).getPackageDetail(), addressSizeForHomeOfficeFragment.addressModel);
+                }
+
+                // Save the user now.
+                PreferenceUtility.getInstance(mContext).saveUserDetails(mUserDetails);
+
+
+            }
         }
     };
 }
