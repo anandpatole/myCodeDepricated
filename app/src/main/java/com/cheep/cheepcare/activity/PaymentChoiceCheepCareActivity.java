@@ -398,6 +398,7 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
         mParams.put(NetworkUtility.TAGS.PAID_AMOUNT, String.valueOf(paymentDataModel.paidAmount));
         mParams.put(NetworkUtility.TAGS.TAX_AMOUNT, String.valueOf(paymentDataModel.taxAmount));
         mParams.put(NetworkUtility.TAGS.PACKAGE_TYPE, String.valueOf(paymentDataModel.packageType));
+        mParams.put(NetworkUtility.TAGS.PACKAGE_DURATION, String.valueOf(paymentDataModel.packageDuration));
         mParams.put(NetworkUtility.TAGS.DSA_CODE, paymentDataModel.dsaCode);
         mParams.put(NetworkUtility.TAGS.CARE_CITY_ID, String.valueOf(careCityDetail.id));
         mParams.put(NetworkUtility.TAGS.PACKAGE_ID, String.valueOf(paymentDataModel.packageId));
@@ -908,7 +909,7 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
                                     .getStatusCode().equalsIgnoreCase(PaymentActivity.TRANSACTION_STATUS_SALES_DEBIT_SUCCESS)) {
 
                                 //SI TRANSACTION STATUS - SUCCESS (status code 0300 means success)
-                                Log.v("TRANSACTION SI STATUS=>", "SUCCESS");
+                                Log.e("TRANSACTION SI STATUS=>", "SUCCESS");
                                 String siMandateId = checkoutObj.getMerchantResponsePayload().getPaymentMethod().getPaymentTransaction().getInstruction().getId();
                                 LogUtils.LOGE(TAG, "onResultOfPayNimo:siMandateId " + siMandateId);
                                 // todo :: >> this is our final success
