@@ -44,6 +44,7 @@ public class AddressCategorySelectionFragment extends BaseFragment {
         fragment.setArguments(args);
         return fragment;
     }
+
     public static AddressCategorySelectionFragment newInstance(ComparisionChartModel comparisionChartModel) {
         Bundle args = new Bundle();
         AddressCategorySelectionFragment fragment = new AddressCategorySelectionFragment();
@@ -85,7 +86,7 @@ public class AddressCategorySelectionFragment extends BaseFragment {
         }
         Log.e(TAG, "initiateUI: ********************");
         UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
-        if (userDetails != null && userDetails.addressList !=null && !userDetails.addressList.isEmpty()) {
+        if (userDetails != null && userDetails.addressList != null && !userDetails.addressList.isEmpty()) {
             if (userDetails.addressList.get(0) != null) {
                 addressModelArrayList = userDetails.addressList;
                 addressModel = userDetails.addressList.get(0);
@@ -181,17 +182,26 @@ public class AddressCategorySelectionFragment extends BaseFragment {
 
     private void openAddNewAddressDialog(String category) {
         hideToolTip();
+        addressModelArrayList = new ArrayList<>();
         UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
-        if (userDetails != null && userDetails.addressList!=null && !userDetails.addressList.isEmpty()) {
-            if (userDetails.addressList.get(0) != null) {
-                addressModelArrayList = userDetails.addressList;
+        if (userDetails != null && userDetails.addressList != null && !userDetails.addressList.isEmpty()) {
+            for (AddressModel addressModel : userDetails.addressList) {
+                if (addressModel.is_subscribe.equalsIgnoreCase(Utility.BOOLEAN.NO))
+                    addressModelArrayList.add(addressModel);
             }
+            //            if (userDetails.addressList.get(0) != null) {
+//                addressModelArrayList = userDetails.addressList;
+//            }
 
         } else {
             GuestUserDetails guestUserDetails = PreferenceUtility.getInstance(mContext).getGuestUserDetails();
             if (guestUserDetails != null && guestUserDetails.addressList != null && !guestUserDetails.addressList.isEmpty()) {
-                if (guestUserDetails.addressList.get(0) != null) {
-                    addressModelArrayList = guestUserDetails.addressList;
+//                if (guestUserDetails.addressList.get(0) != null) {
+//                    addressModelArrayList = guestUserDetails.addressList;
+//                }
+                for (AddressModel addressModel : guestUserDetails.addressList) {
+                    if (addressModel.is_subscribe.equalsIgnoreCase(Utility.BOOLEAN.NO))
+                        addressModelArrayList.add(addressModel);
                 }
             }
         }
@@ -214,12 +224,15 @@ public class AddressCategorySelectionFragment extends BaseFragment {
     private void openTooltip(boolean delay) {
         Log.e(TAG, "openTooltip: ********************");
 
+        if (tooltipView != null)
+            return;
 
         TooltipAddressSelectionBinding toolTipBinding = DataBindingUtil.inflate(
                 LayoutInflater.from(mContext),
                 R.layout.tooltip_address_selection,
                 null,
                 false);
+
         if (addressModel.category.equalsIgnoreCase(NetworkUtility.TAGS.ADDRESS_TYPE.HOME))
             toolTipBinding.tvTitle.setText(getString(R.string.label_hey_is_this_your_home_address, getString(R.string.label_home)));
         else
@@ -243,8 +256,7 @@ public class AddressCategorySelectionFragment extends BaseFragment {
             }
         });
 
-        if (tooltipView != null)
-            tooltipView.removeNow();
+
 
         final ViewTooltip viewTooltip =
                 ViewTooltip.on(this, mBinding.cvAddress)
@@ -277,7 +289,6 @@ public class AddressCategorySelectionFragment extends BaseFragment {
                 break;
         }
     }
-
 
 
     @Override

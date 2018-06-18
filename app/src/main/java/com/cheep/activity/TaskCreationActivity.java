@@ -12,7 +12,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.View;
 
@@ -43,7 +42,6 @@ import com.cheep.utils.GsonUtility;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.Utility;
 import com.google.android.gms.common.api.Status;
-import com.google.gson.Gson;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -66,16 +64,8 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
     private ActivityTaskCreateBinding mActivityTaskCreateBinding;
     public JobCategoryModel mJobCategoryModel;
     TaskCreationPagerAdapter mTaskCreationPagerAdapter;
-    //    private SubServiceDetailModel mSelectedSubServiceDetailModel;
     Map<String, Object> mTaskCreationParams;
     CustomLoadingDialog mDialog;
-    private boolean isInstaBooking = false;
-    //variables for add media//
-    private float itemWidth;
-    //    private float padding;
-    private float allPixels;
-    private int expectedPosition;
-    private LinearLayoutManager layoutManager;
     public ArrayList<SubServiceDetailModel> allSubCategoryList;
 
     public static void getInstance(Context mContext, JobCategoryModel model) {
@@ -354,7 +344,6 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
      */
     public void onInstaBookClickedNew() {
         if (PreferenceUtility.getInstance(mContext).getUserDetails() == null) {
-            isInstaBooking = true;
             LoginActivity.newInstance(mContext);
             return;
         }
@@ -468,122 +457,6 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
     }
 */
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    /////////////////////////////////////Post Task [Start] /////////////////////////////////////////
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    public void onGetQuoteClicked() {
-        Log.d(TAG, "onPostTaskClicked() called");
-        if (!isValidationCompleted()) {
-            return;
-        }
-
-        // Check Internet connection
-        if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityTaskCreateBinding.getRoot());
-            return;
-        }
-
-        if (mTaskCreationPagerAdapter.mEnterTaskDetailFragment.superCalendar == null) {
-            Utility.showSnackBar(getString(R.string.can_only_start_task_after_3_hours, "3"), mActivityTaskCreateBinding.getRoot());
-            return;
-        }
-
-        if (PreferenceUtility.getInstance(mContext).getUserDetails() == null) {
-            isInstaBooking = false;
-            LoginActivity.newInstance(mContext);
-            return;
-        }
-
-       /* SuperCalendar superCalendar = SuperCalendar.getInstance();
-        superCalendar.setTimeInMillis(mTaskCreationPagerAdapter.mEnterTaskDetailFragment.startDateTimeSuperCalendar.getTimeInMillis());
-        superCalendar.setTimeZone(SuperCalendar.SuperTimeZone.GMT.GMT);
-
-        // Get date-time for next 3 hours
-        SuperCalendar calAfter3Hours = SuperCalendar.getInstance().getNext3HoursTime();
-
-        if (superCalendar.getTimeInMillis() < calAfter3Hours.getTimeInMillis()) {
-            Utility.showSnackBar(getString(R.string.can_only_start_task_after_3_hours), mActivityTaskCreateBinding.getRoot());
-            return;
-        }*/
-
-        // Show Progress
-        showProgressDialog();
-
-        UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
-
-        // Add Header parameters
-        Map<String, String> mHeaderParams = new HashMap<>();
-        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, userDetails.userID);
-        mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
-
-        // Add Params
-        Map<String, Object> mParams = new HashMap<>();
-//        mParams.put(NetworkUtility.TAGS.TASK_DESC, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.getTaskDescription());
-        if (Integer.parseInt(mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddress.address_id) > 0) {
-            mParams.put(NetworkUtility.TAGS.ADDRESS_ID, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddress.address_id);
-        } else {
-            // In case its nagative then provide other address information
-            /*
-             public String address_initials;
-             public String address;
-             public String category; //comes from NetworkUtility.TAGS.ADDRESS_TYPE.
-             public String lat;
-             public String lng;
-             */
-            mParams = NetworkUtility.addGuestAddressParams(mParams, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddress);
-        }
-        mParams.put(NetworkUtility.TAGS.CITY_ID, userDetails.CityID);
-        mParams.put(NetworkUtility.TAGS.CAT_ID, mJobCategoryModel.catId);
-        mParams.put(NetworkUtility.TAGS.TASK_TYPE, Utility.TASK_TYPE.NORMAL);
-
-
-        String selectedServices = new Gson().toJson(mTaskCreationPagerAdapter.mSelectSubCategoryFragment.getSubCatList());
-        mParams.put(NetworkUtility.TAGS.TASK_SUB_CATEGORIES, selectedServices);
-        mParams.put(NetworkUtility.TAGS.START_DATETIME, String.valueOf(mTaskCreationPagerAdapter.mEnterTaskDetailFragment.superCalendar.getTimeInMillis()));
-//        mParams.put(NetworkUtility.TAGS.MEDIA_FILE, Utility.getSelectedMediaJsonString(mTaskCreationPagerAdapter.mEnterTaskDetailFragment.getMediaList()));
-
-        // Create Params for AppsFlyer event track
-        mTaskCreationParams = new HashMap<>();
-//        mTaskCreationParams.put(NetworkUtility.TAGS.TASK_DESC, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.getTaskDescription());
-        if (Integer.parseInt(mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddress.address_id) > 0) {
-            mTaskCreationParams.put(NetworkUtility.TAGS.ADDRESS_ID, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddress.address_id);
-        } else {
-            // In case its nagative then provide other address information
-            /**
-             * public String address_initials;
-             public String address;
-             public String category; //comes from NetworkUtility.TAGS.ADDRESS_TYPE.
-             public String lat;
-             public String lng;
-             public String cityName;
-             public String countryName;
-             public String stateName;
-             */
-            mTaskCreationParams = NetworkUtility.addGuestAddressParams(mTaskCreationParams, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddress);
-        }
-//        mTaskCreationParams.put(NetworkUtility.TAGS.CITY_DETAIL, userDetails.CityID);
-        mTaskCreationParams.put(NetworkUtility.TAGS.CAT_ID, mJobCategoryModel.catId);
-        mTaskCreationParams.put(NetworkUtility.TAGS.TASK_SUB_CATEGORIES, selectedServices);
-//        mTaskCreationParams.put(NetworkUtility.TAGS.SUBCATEGORY_ID, StringvalueOf(mSelectedSubServiceDetailModel.sub_cat_id));
-        mTaskCreationParams.put(NetworkUtility.TAGS.START_DATETIME, String.valueOf(mTaskCreationPagerAdapter.mEnterTaskDetailFragment.superCalendar.getTimeInMillis()));
-
-        // Add Params
-        // upload
-       /* HashMap<String, File> mFileParams = new HashMap<>();
-        if (!TextUtils.isEmpty(mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mCurrentPhotoPath)
-                && new File(mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mCurrentPhotoPath).exists()) {
-            mFileParams.put(NetworkUtility.TAGS.TASK_IMAGE, new File(mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mCurrentPhotoPath));
-        }*/
-
-        VolleyNetworkRequest mVolleyNetworkRequest = new VolleyNetworkRequest(NetworkUtility.WS.CREATE_TASK
-                , mCallCreateTaskWSErrorListener
-                , mCallCreateTaskWSResponseListener
-                , mHeaderParams
-                , mParams
-                , null);
-        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest);
-    }
-
     Response.Listener mCallCreateTaskWSResponseListener = new Response.Listener() {
         @Override
         public void onResponse(Object response) {
@@ -639,144 +512,6 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
             hideProgressDialog();
         }
     };
-
-
-//    Response.Listener mCallGetProInstaBookWSResponseListener = new Response.Listener() {
-//        @Override
-//        public void onResponse(Object response) {
-//
-//            if (!isFinishing() && mDialog != null) {
-//                mDialog.dismiss();
-//            }
-//            String strResponse = (String) response;
-//            try {
-//                JSONObject jsonObject = new JSONObject(strResponse);
-//                Log.i(TAG, "onResponse: " + jsonObject.toString());
-//                int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
-//                switch (statusCode) {
-//                    case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
-//
-//                        /*
-//                          Below was older approach when app needs to update the same task page.
-//                         */
-////                        TaskDetailModel taskDetailModel = (TaskDetailModel) GsonUtility.getObjectFromJsonString(jsonObject.optString(NetworkUtility.TAGS.DATA), TaskDetailModel.class);
-////                        getIntent().putExtra(Utility.Extra.DATA, jsonObject.optString(NetworkUtility.TAGS.DATA));
-////                        getIntent().putExtra(Utility.Extra.IS_FIRST_TIME, true);
-////                        getIntent().setAction(Utility.ACTION_HIRE_PROVIDER);
-////                        initiateUI();
-////                        setListeners();
-//
-//                        /*
-//                          Now according to the new flow, once task created
-//                          app will be redirected to MyTask Detail screen.
-//                         */
-//                        final InstaBookingProDetail taskDetailModel = (InstaBookingProDetail) GsonUtility.getObjectFromJsonString(jsonObject.optString(NetworkUtility.TAGS.DATA), InstaBookingProDetail.class);
-//                        if (taskDetailModel != null && taskDetailModel.spId != null)
-//                            onSuccessOfGetProForInstaBooking(taskDetailModel);
-//                        else
-//                            Utility.showToast(TaskCreationActivity.this, getString(R.string.alert_no_pro_found));
-//                        break;
-//                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
-//                        // Show Toast
-//                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityTaskCreateBinding.getRoot());
-//                        break;
-//                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
-//                        String error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
-//                        // Show message
-//                        Utility.showSnackBar(error_message, mActivityTaskCreateBinding.getRoot());
-//                        break;
-//                    case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
-//                    case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
-//                        //Logout and finish the current activity
-//                        Utility.logout(mContext, true, statusCode);
-//                        finish();
-//                        break;
-//                }
-//            } catch (JSONException e) {
-//                e.printStackTrace();
-//                mCallGetProInstaBookErrorListener.onErrorResponse(new VolleyError(e.getMessage()));
-//            }
-//
-//        }
-//    };
-
-
-    /**
-     * This method would going to call when task completed successfully
-     */
-/*
-    private void onSuccessOfGetProForInstaBooking(final InstaBookingProDetail instaBookingProDetail) {
-        if (instaBookingProDetail != null) {
-
-            // create calendar for time and date for dialog text
-            SuperCalendar superCalendar = SuperCalendar.getInstance();
-            superCalendar.setTimeInMillis(mTaskCreationPagerAdapter.mEnterTaskDetailFragment.superCalendar.getCalendar().getTimeInMillis());
-
-            Date d = superCalendar.getCalendar().getTime();
-
-
-            // set date format
-            final String dateFormat = SuperCalendar.SuperFormatter.DATE + " " + SuperCalendar.SuperFormatter.MONTH_JAN;
-
-            // formatter for date and time
-            SimpleDateFormat dateFormatter = new SimpleDateFormat(dateFormat);
-            SimpleDateFormat timeFormatter = new SimpleDateFormat(Utility.TIME_FORMAT_24HH_MM);
-
-            String date = dateFormatter.format(d);
-
-            //time will from selected hour + 1 hour added like 12.11 - 13.11 hrs
-            String fromHour = timeFormatter.format(d);
-
-            // add two hour slot (changed on 13 sept 2017)
-            superCalendar.getCalendar().add(Calendar.HOUR_OF_DAY, 2);
-
-            Date toDate = superCalendar.getCalendar().getTime();
-
-            // +1 hour
-            String toHour = timeFormatter.format(toDate);
-
-            InstaBookProDialog dialog = InstaBookProDialog.newInstance(this, instaBookingProDetail, date + getString(R.string.label_between) + fromHour + " - " + toHour + getString(R.string.label_hrs), new AcknowledgementInteractionListener() {
-                @Override
-                public void onAcknowledgementAccepted() {
-
-                    TaskDetailModel taskDetailModel = new TaskDetailModel();
-//                    taskDetailModel.categoryName = mJobCategoryModel.catName;
-                    taskDetailModel.subCategoryName = mSelectedSubServiceDetailModel.name;
-                    taskDetailModel.taskAddress = mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.address;
-                    taskDetailModel.taskAddressId = mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.address_id;
-                    taskDetailModel.taskPaidAmount = instaBookingProDetail.rate;
-//                    taskDetailModel.categoryId = mJobCategoryModel.catId;
-                    taskDetailModel.taskDesc = mTaskCreationPagerAdapter.mEnterTaskDetailFragment.getTaskDescription();
-//                    taskDetailModel.catImage = mJobCategoryModel.catImage;
-                    taskDetailModel.categoryModel = mJobCategoryModel;
-                    taskDetailModel.taskStartdate = String.valueOf(mTaskCreationPagerAdapter.mEnterTaskDetailFragment.superCalendar.getCalendar().getTimeInMillis());
-                    taskDetailModel.subCategoryID = String.valueOf(mSelectedSubServiceDetailModel.sub_cat_id);
-//                    model.taskImage = mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mCurrentPhotoPath;
-                    taskDetailModel.mMediaModelList = mTaskCreationPagerAdapter.mEnterTaskDetailFragment.getMediaList();
-                    taskDetailModel.taskType = Utility.TASK_TYPE.INSTA_BOOK;
-                    ProviderModel providerModel = new ProviderModel();
-                    providerModel.userName = instaBookingProDetail.userName;
-                    providerModel.profileUrl = instaBookingProDetail.profileImg;
-                    providerModel.providerId = instaBookingProDetail.spId;
-                    providerModel.pro_level = instaBookingProDetail.proLevel;
-                    providerModel.quotePrice = instaBookingProDetail.rateGST;
-                    providerModel.isVerified = instaBookingProDetail.verified;
-                    providerModel.experience = instaBookingProDetail.experience;
-                    providerModel.spWithoutGstQuotePrice = instaBookingProDetail.rate;
-                    providerModel.rating = instaBookingProDetail.rating;
-                    taskDetailModel.taskStatus = Utility.TASK_STATUS.PENDING;
-                    PaymentDetailsActivity.newInstance(TaskCreationActivity.this, taskDetailModel, providerModel, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel);
-
-                    //Log.i("myLog", "tasks:"+mJobCategoryModel.catName+"::"+mSelectedSubServiceDetailModel.name+"::"+mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mAddress);
-
-                }
-            });
-            dialog.setCancelable(true);
-            dialog.show(getSupportFragmentManager(), "loading");
-        } else {
-        }
-    }
-*/
 
 
     /**
@@ -973,11 +708,8 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
         public void onReceive(Context context, Intent intent) {
             Utility.hideKeyboard(mContext);
             // check here for user guest has selected insta booked or get quots
-            if (isInstaBooking) {
 //                onInstaBookClicked();
-                onInstaBookClickedNew();
-            } else
-                onGetQuoteClicked();
+            onInstaBookClickedNew();
 
             /**
              * As User is currently logged in, we need to add FullAddressModel to existing addresslist.
