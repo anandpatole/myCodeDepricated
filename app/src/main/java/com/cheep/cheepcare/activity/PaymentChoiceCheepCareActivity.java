@@ -24,7 +24,11 @@ import com.cheep.activity.WithdrawMoneyActivity;
 import com.cheep.cheepcare.dialogs.PaymentFailedDialog;
 import com.cheep.cheepcare.model.CareCityDetail;
 import com.cheep.cheepcare.model.CheepCarePaymentDataModel;
+import com.cheep.cheepcare.model.PackageDetail;
 import com.cheep.cheepcare.model.SubscribedTaskDetailModel;
+import com.cheep.cheepcarenew.dialogs.AcknowledgementPopupDialog;
+import com.cheep.cheepcarenew.dialogs.PackageDetailModelDialog;
+import com.cheep.databinding.AcknowledgementPopupDialogBinding;
 import com.cheep.databinding.ActivityPaymentChoiceCheepCareBinding;
 import com.cheep.dialogs.AcknowledgementInteractionListener;
 import com.cheep.model.AddressModel;
@@ -87,6 +91,7 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
 
     public static final String PAYMENT_FOR_SUBSCRIPTION = "payment_for_subscription";
     public static final String PAYMENT_FOR_TASK_CREATION = "payment_for_task_creation";
+    private AcknowledgementPopupDialog acknowledgementPopupDialog;
 
 
     /*
@@ -182,6 +187,16 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
         mBinding.rlPaytm.setOnClickListener(this);
         mBinding.cartAutoRenewSwitch.setOnClickListener(this);
         mBinding.paytmAutoRenewSwitch.setOnClickListener(this);
+    }
+
+    // open show Acknowledgement Popup Dialog
+    private void showAcknowledgementPopupDialog() {
+        if (acknowledgementPopupDialog != null) {
+            acknowledgementPopupDialog.dismissAllowingStateLoss();
+            acknowledgementPopupDialog = null;
+        }
+        acknowledgementPopupDialog = AcknowledgementPopupDialog.newInstance("","");
+        acknowledgementPopupDialog.show(getSupportFragmentManager(), TAG);
     }
 
     @Override
@@ -542,6 +557,9 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
         }
     }
 
+
+
+
     /**
      * Event Bus Callbacks
      */
@@ -563,6 +581,13 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
                 }
                 break;
             case Utility.BROADCAST_TYPE.PAYMENT_COMPLETED_NEED_TO_REDIRECT_TO_MY_TASK_SCREEN:
+
+                break;
+            case Utility.BROADCAST_TYPE.PACKAGE_SUBSCRIBED_SUCCESSFULLY:
+                    // show dialog
+//                TODO: Need to start the task from here
+                    LogUtils.LOGE(TAG, "onMessageEvent:subsId " + event.id);
+                    onSuccessOfPayment("", event.id, "true");
 
                 break;
         }
@@ -682,15 +707,16 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
                 hideProgressDialog();
                 switch (statusCode) {
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
-                        finish();
-                        MessageEvent messageEvent = new MessageEvent();
+
+                        /*MessageEvent messageEvent = new MessageEvent();
                         messageEvent.id = careCityDetail.id;
                         messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.PACKAGE_SUBSCRIBED_SUCCESSFULLY;
 
                         EventBus.getDefault().post(messageEvent);
-                        callProfileWsforUpdatedAddressList();
 
-                        finish();
+                        callProfileWsforUpdatedAddressList();*/
+
+                        /*finish();*/
 
 
                         break;
@@ -884,6 +910,7 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
                         String paymentlog = printResult(checkoutObj);
                         if (checkoutObj.getMerchantResponsePayload().getPaymentMethod().getPaymentTransaction().getStatusCode().equalsIgnoreCase(
                                 PaymentActivity.TRANSACTION_STATUS_SALES_DEBIT_SUCCESS)) {
+                            showAcknowledgementPopupDialog();
                             Toast.makeText(getApplicationContext(), "Transaction Status - Success", Toast.LENGTH_SHORT).show();
                             Log.v("TRANSACTION STATUS=>", "SUCCESS");
 
@@ -914,6 +941,7 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
                                 LogUtils.LOGE(TAG, "onResultOfPayNimo:siMandateId " + siMandateId);
                                 // todo :: >> this is our final success
                                 callCreateCheepCarePackageWS(paymentlog, siMandateId, Utility.BOOLEAN.YES);
+
                             } else {
                                 //SI TRANSACTION STATUS - Failure (status code OTHER THAN 0300 means failure)
                                 Log.v("TRANSACTION SI STATUS=>", "FAILURE");
