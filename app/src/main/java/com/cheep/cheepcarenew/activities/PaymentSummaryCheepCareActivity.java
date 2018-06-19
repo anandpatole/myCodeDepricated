@@ -70,7 +70,7 @@ public class PaymentSummaryCheepCareActivity extends BaseAppCompatActivity imple
     double taxtAmount= 0.0;
     private String selectedMonth;
     private double amountAfterDiscount;
-   // private String packageId;
+    private String packageType;
 
 
     public static void newInstance(Context context) {
@@ -147,7 +147,7 @@ public class PaymentSummaryCheepCareActivity extends BaseAppCompatActivity imple
             String TYPE = comparisionChartModel.priceLists.get(i).type;
 
             if (TYPE.equalsIgnoreCase(PreferenceUtility.getInstance(mContext).getTypeOfPackage())) {
-
+                packageType = TYPE;
                 mBinding.tvNewPrice.setText(Utility.getCheepCarePackageMonthlyPrice( mBinding.tvNewPrice.getContext()
                         , R.string.rupee_symbol_x_package_price, comparisionChartModel.priceLists.get(i).newPrice));
 
@@ -159,7 +159,7 @@ public class PaymentSummaryCheepCareActivity extends BaseAppCompatActivity imple
                 oldPrice = Double.parseDouble(comparisionChartModel.priceLists.get(i).oldPrice);
 
             } else if (TYPE.equalsIgnoreCase(PreferenceUtility.getInstance(mContext).getTypeOfPackage())) {
-
+                packageType = TYPE;
                 mBinding.tvNewPrice.setText(Utility.getCheepCarePackageMonthlyPrice( mBinding.tvNewPrice.getContext()
                         , R.string.rupee_symbol_x_package_price, comparisionChartModel.priceLists.get(i).newPrice));
 
@@ -384,10 +384,11 @@ public class PaymentSummaryCheepCareActivity extends BaseAppCompatActivity imple
         paymentDataModel.totalAmount = totalPackageAmount;
         paymentDataModel.promocode = cheepCode;
         paymentDataModel.discountAmount = discountAmount;
+        paymentDataModel.packageType = packageType;
         paymentDataModel.taxAmount = String.valueOf(taxtAmount);
         paymentDataModel.packageDuration = selectedMonth;
         paymentDataModel.dsaCode = cheepMateCode;
-        paymentDataModel.paidAmount = amountAfterDiscount;
+        paymentDataModel.paidAmount = Double.parseDouble(Utility.removeFirstChar(mBinding.tvMeanPackageAmount.getText().toString()));
         paymentDataModel.packageId = packageId;
         paymentDataModel.addressId = addressModel.address_id;
 

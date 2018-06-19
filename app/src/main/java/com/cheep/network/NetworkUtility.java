@@ -481,7 +481,7 @@ public class NetworkUtility {
         String BUNDLE_DISCOUNT_PRICE = "bundlediscount_price";
         String DISCOUNT_AMOUNT = "discount_amount";
         String PAID_AMOUNT = "   paid_amount";
-        String PACKAGE_DURATION = "   paid_amount";
+        //String PACKAGE_DURATION = "paid_amount";
 
         String CART_DETAIL = "cart_detail";
         String CITY_DETAIL = "cityDetail";
@@ -494,6 +494,7 @@ public class NetworkUtility {
         String PACKAGE_ID = "package_id";
         String PACKAGE_TYPE = "package_type";
         String ADDRESS_ID = "address_id";
+        String PACKAGE_DURATION = "package_duration";
         String PACKAGE_OPTION_ID = "package_option_id";
         String PACKAGE_SUBOPTION_ID = "package_suboption_id";
         String SELECTED_UNIT = "selected_unit";
