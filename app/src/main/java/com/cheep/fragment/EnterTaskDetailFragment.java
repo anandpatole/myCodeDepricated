@@ -136,17 +136,12 @@ public class EnterTaskDetailFragment extends BaseFragment {
             return;
         }
 
-        if (mTaskCreationActivity.getSubCatList() == null || mTaskCreationActivity.getSubCatList().isEmpty()) {
-            return;
-        }
-
-        // Task Description
 
         // When Verification
         isTaskWhenVerified = !TextUtils.isEmpty(mFragmentEnterTaskDetailBinding.textTaskWhen.getText().toString().trim());
 
         // Where Verification
-//        isTaskWhereVerified = !TextUtils.isEmpty(mFragmentEnterTaskDetailBinding.textTaskWhere.getText().toString().trim());
+        isTaskWhereVerified = mSelectedAddress != null;
 
         updateFinalVerificationFlag();
 

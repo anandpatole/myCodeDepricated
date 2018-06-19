@@ -302,7 +302,7 @@ public class HomeActivity extends BaseAppCompatActivity
             return;
         }
 
-        WebCallClass.getTaskForPendingReview(mContext, mCommonResponseListener, mPendingReviewListener);
+//        WebCallClass.getTaskForPendingReview(mContext, mCommonResponseListener, mPendingReviewListener);
     }
 
     @Override

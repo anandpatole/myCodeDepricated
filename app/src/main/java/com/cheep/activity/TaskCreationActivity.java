@@ -349,8 +349,12 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
         }
 
         TaskDetailModel taskDetailModel = new TaskDetailModel();
-//                    taskDetailModel.categoryName = mJobCategoryModel.catName;
-        taskDetailModel.subCategoryName = getSubCatList().get(0).name;
+//                    taskDetailModel.categoryName = mJobCategoryModel.cat
+        if (!getSubCatList().isEmpty()) {
+            taskDetailModel.subCategoryName = getSubCatList().get(0).name;
+            taskDetailModel.subCategoryID = String.valueOf(getSubCatList().get(0).sub_cat_id);
+            taskDetailModel.subCatList = mTaskCreationPagerAdapter.mSelectSubCategoryFragment.getSubCatList();
+        }
         if (taskDetailModel.taskAddress == null)
             taskDetailModel.taskAddress = new AddressModel();
         taskDetailModel.taskAddress.address = mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddress.address;
@@ -361,10 +365,8 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
 //                    taskDetailModel.catImage = mJobCategoryModel.catImage;
         taskDetailModel.categoryModel = mJobCategoryModel;
         taskDetailModel.taskStartdate = String.valueOf(mTaskCreationPagerAdapter.mEnterTaskDetailFragment.superCalendar.getCalendar().getTimeInMillis());
-        taskDetailModel.subCategoryID = String.valueOf(getSubCatList().get(0).sub_cat_id);
 //                    model.taskImage = mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mCurrentPhotoPath;
 //        taskDetailModel.mMediaModelList = mTaskCreationPagerAdapter.mEnterTaskDetailFragment.getMediaList();
-        taskDetailModel.subCatList = mTaskCreationPagerAdapter.mSelectSubCategoryFragment.getSubCatList();
         taskDetailModel.taskType = Utility.TASK_TYPE.INSTA_BOOK;
         taskDetailModel.taskStatus = Utility.TASK_STATUS.PENDING;
         BookingConfirmationInstaActivity.newInstance(TaskCreationActivity.this, taskDetailModel, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddress);

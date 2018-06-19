@@ -94,6 +94,7 @@ public class AddressCategorySelectionFragment extends BaseFragment {
             } else {
                 mBinding.tvAddressTitle.setVisibility(View.GONE);
                 mBinding.cvAddress.setVisibility(View.GONE);
+                mBinding.rlToolTip.setVisibility(View.GONE);
             }
 
         } else {
@@ -108,10 +109,12 @@ public class AddressCategorySelectionFragment extends BaseFragment {
                 } else {
                     mBinding.tvAddressTitle.setVisibility(View.GONE);
                     mBinding.cvAddress.setVisibility(View.GONE);
+                    mBinding.rlToolTip.setVisibility(View.GONE);
                 }
             } else {
                 mBinding.tvAddressTitle.setVisibility(View.GONE);
                 mBinding.cvAddress.setVisibility(View.GONE);
+                mBinding.rlToolTip.setVisibility(View.GONE);
             }
         }
 

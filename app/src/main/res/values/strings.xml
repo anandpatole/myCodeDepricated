@@ -278,7 +278,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
 
     <!--Hotline-->
     <string name="hotline_file_provider_authority">com.cheep.fileprovider</string>
-    <string name="freshchat_file_provider_authority">com.cheep.provider</string>
+    <string name="freshchat_file_provider_authority">com.cheep.fileprovider</string>
     <!-- chat time ago strings -->
     <string name="just_now">just now</string>
     <string name="time_ago">%s ago</string>
@@ -923,5 +923,4 @@ without any hidden charges. Try it now!</string>
     <string name="label_please_tell_us_where_do_you_need_the_amc_for">Please tell us where do you need the AMC for?</string>
     <string name="label_change">Change</string>
     <string name="select_category">Select Category</string>
-
 </resources>

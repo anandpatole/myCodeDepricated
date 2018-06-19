@@ -4,7 +4,7 @@
         name="cheep"
         path="CheepImages/"/>
 
-    <external-files-path
+    <!--<external-files-path
         name="ext_files"
         path="."/>
     <cache-path
@@ -12,7 +12,7 @@
         path="."/>
     <external-cache-path
         name="ext_cache"
-        path="."/>
+        path="."/>-->
     <!-- <external-path
           name="cheep"
           path="Android/data/com.cheep/files/Pictures" />-->
