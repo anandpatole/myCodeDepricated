@@ -29,6 +29,7 @@ import com.cheep.custom_view.BottomAlertDialog;
 import com.cheep.databinding.ActivityPaymentSummaryNewBinding;
 import com.cheep.model.AddressModel;
 import com.cheep.model.ComparisionChart.ComparisionChartModel;
+import com.cheep.model.MessageEvent;
 import com.cheep.model.UserDetails;
 import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
@@ -38,6 +39,9 @@ import com.cheep.utils.GsonUtility;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.Utility;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -56,7 +60,7 @@ public class PaymentSummaryCheepCareActivity extends BaseAppCompatActivity imple
     private ActivityPaymentSummaryNewBinding mBinding;
     private AppCompatEditText edtCheepPromoCode;
     private BottomAlertDialog cheepCodeDialog;
-    private String cheepCode= "";
+    private String cheepCode = "";
     private String cheepMateCode = "";
     private AppCompatEditText edtCheepMateCode;
     private double discountRate;
@@ -66,7 +70,7 @@ public class PaymentSummaryCheepCareActivity extends BaseAppCompatActivity imple
     private String packageId;
     private double totalPackageAmount;
     double discountAmount = 0.0;
-    double taxtAmount= 0.0;
+    double taxtAmount = 0.0;
     private String selectedMonth;
     private double amountAfterDiscount;
     private String packageType;
@@ -95,6 +99,7 @@ public class PaymentSummaryCheepCareActivity extends BaseAppCompatActivity imple
         updateSaveAmountForMonth();
         updatePrice(12);
         selectedMonth = "12";
+        EventBus.getDefault().register(this);
 
     }
 
@@ -147,10 +152,10 @@ public class PaymentSummaryCheepCareActivity extends BaseAppCompatActivity imple
 
             if (TYPE.equalsIgnoreCase(PreferenceUtility.getInstance(mContext).getTypeOfPackage())) {
                 packageType = TYPE;
-                mBinding.tvNewPrice.setText(Utility.getCheepCarePackageMonthlyPrice( mBinding.tvNewPrice.getContext()
+                mBinding.tvNewPrice.setText(Utility.getCheepCarePackageMonthlyPrice(mBinding.tvNewPrice.getContext()
                         , R.string.rupee_symbol_x_package_price, comparisionChartModel.priceLists.get(i).newPrice));
 
-                mBinding.tvOldPrice.setText(Utility.getCheepCarePackageMonthlyPrice( mBinding.tvOldPrice.getContext()
+                mBinding.tvOldPrice.setText(Utility.getCheepCarePackageMonthlyPrice(mBinding.tvOldPrice.getContext()
                         , R.string.rupee_symbol_x_package_price, comparisionChartModel.priceLists.get(i).oldPrice));
 
 
@@ -159,10 +164,10 @@ public class PaymentSummaryCheepCareActivity extends BaseAppCompatActivity imple
 
             } else if (TYPE.equalsIgnoreCase(PreferenceUtility.getInstance(mContext).getTypeOfPackage())) {
                 packageType = TYPE;
-                mBinding.tvNewPrice.setText(Utility.getCheepCarePackageMonthlyPrice( mBinding.tvNewPrice.getContext()
+                mBinding.tvNewPrice.setText(Utility.getCheepCarePackageMonthlyPrice(mBinding.tvNewPrice.getContext()
                         , R.string.rupee_symbol_x_package_price, comparisionChartModel.priceLists.get(i).newPrice));
 
-                mBinding.tvOldPrice.setText(Utility.getCheepCarePackageMonthlyPrice( mBinding.tvOldPrice.getContext()
+                mBinding.tvOldPrice.setText(Utility.getCheepCarePackageMonthlyPrice(mBinding.tvOldPrice.getContext()
                         , R.string.rupee_symbol_x_package_price, comparisionChartModel.priceLists.get(i).oldPrice));
 
                 newPrice = Double.parseDouble(comparisionChartModel.priceLists.get(i).newPrice);
@@ -392,6 +397,7 @@ public class PaymentSummaryCheepCareActivity extends BaseAppCompatActivity imple
         paymentDataModel.addressId = addressModel.address_id;
 
     }
+
     private void checkValidation() {
         String errorMessage = "";
         Boolean isErrorOccurred = false;
@@ -409,7 +415,8 @@ public class PaymentSummaryCheepCareActivity extends BaseAppCompatActivity imple
         discountAmount = totalPackageAmount * discountRate / 100;
 
     }
-    private void calculatePaidAmountPrice(){
+
+    private void calculatePaidAmountPrice() {
         amountAfterDiscount = totalPackageAmount - discountAmount;
     }
 
@@ -449,7 +456,7 @@ public class PaymentSummaryCheepCareActivity extends BaseAppCompatActivity imple
                 mBinding.tv12Month.setSelected(false);
                 mBinding.tv12SaveMonth.setSelected(false);
                 updatePrice(6);
-                selectedMonth ="6";
+                selectedMonth = "6";
                 break;
             case R.id.card_12_months:
                 mBinding.card3Months.setSelected(false);
@@ -464,7 +471,7 @@ public class PaymentSummaryCheepCareActivity extends BaseAppCompatActivity imple
                 mBinding.tv12Month.setSelected(true);
                 mBinding.tv12SaveMonth.setSelected(true);
                 updatePrice(12);
-                selectedMonth ="12";
+                selectedMonth = "12";
                 break;
 
             case R.id.rl_promo_code:
@@ -592,4 +599,24 @@ public class PaymentSummaryCheepCareActivity extends BaseAppCompatActivity imple
             }
         }
     };
+
+    /**
+     * Event Bus Callbacks
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(MessageEvent event) {
+        Log.d(TAG, "onMessageEvent() called with: event = [" + event.BROADCAST_ACTION + "]");
+        switch (event.BROADCAST_ACTION) {
+            case Utility.BROADCAST_TYPE.PACKAGE_SUBSCRIBED_SUCCESSFULLY:
+                finish();
+                break;
+        }
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
 }
