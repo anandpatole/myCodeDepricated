@@ -1,6 +1,7 @@
 package com.cheep.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -10,14 +11,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.android.volley.VolleyError;
 import com.cheep.R;
 import com.cheep.activity.BaseAppCompatActivity;
 import com.cheep.activity.TaskCreationActivity;
 import com.cheep.adapter.SubServiceRecyclerViewAdapter;
 import com.cheep.databinding.FragmentSelectSubserviceBinding;
+import com.cheep.dialogs.PestControlHelpDialog;
+import com.cheep.model.JobCategoryModel;
 import com.cheep.model.SubServiceDetailModel;
 import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
+import com.cheep.utils.GsonUtility;
+import com.cheep.utils.Utility;
+import com.cheep.utils.WebCallClass;
+import com.payu.magicretry.MainActivity;
 
 import java.util.ArrayList;
 
@@ -25,16 +33,18 @@ import java.util.ArrayList;
  * Created by bhavesh on 28/4/17.
  */
 
-public class SelectSubCategoryFragment extends BaseFragment {
+public class SelectSubCategoryFragment extends BaseFragment implements  WebCallClass.GetNeedHelpResponseListener,WebCallClass.CommonResponseListener,PestControlHelpDialog.PestControlHelpListener{
     public static final String TAG = SelectSubCategoryFragment.class.getSimpleName();
     private FragmentSelectSubserviceBinding mFragmentSelectSubserviceBinding;
     private SubServiceRecyclerViewAdapter mSubServiceRecyclerViewAdapter;
     private TaskCreationActivity mTaskCreationActivity;
     public boolean isVerified = false;
-
+    public JobCategoryModel mJobCategoryModel;
+    PestControlHelpDialog dialog;
     @SuppressWarnings("unused")
     public static SelectSubCategoryFragment newInstance() {
         SelectSubCategoryFragment fragment = new SelectSubCategoryFragment();
+
         return fragment;
     }
 
@@ -60,6 +70,10 @@ public class SelectSubCategoryFragment extends BaseFragment {
         super.onActivityCreated(savedInstanceState);
         initiateUI();
         setListener();
+        if (getActivity().getIntent().getExtras() != null) {
+            // Fetch JobCategory Model
+            mJobCategoryModel = (JobCategoryModel) GsonUtility.getObjectFromJsonString(getActivity().getIntent().getStringExtra(Utility.Extra.DATA), JobCategoryModel.class);
+        }
     }
 
 
@@ -110,6 +124,34 @@ public class SelectSubCategoryFragment extends BaseFragment {
     public void setListener() {
     }
 
+
+    @Override
+    public void volleyError(VolleyError error) {
+        hideProgressDialog();
+    }
+
+    @Override
+    public void showSpecificMessage(String message) {
+        hideProgressDialog();
+    }
+
+    @Override
+    public void forceLogout() {
+        hideProgressDialog();
+
+    }
+
+    @Override
+    public void getNeedHelp() {
+        hideProgressDialog();
+dialog.dismiss();
+
+    }
+
+    @Override
+    public void onHelpClick() {
+        WebCallClass.getNeedHelp(mContext,SelectSubCategoryFragment.this,SelectSubCategoryFragment.this,mJobCategoryModel.catId);
+    }
     public interface SubServiceListInteractionListener {
         void onSubCategoryRowItemClicked(SubServiceDetailModel subServiceDetailModel);
     }
@@ -118,6 +160,28 @@ public class SelectSubCategoryFragment extends BaseFragment {
         @Override
         public void onSubCategoryRowItemClicked(SubServiceDetailModel subServiceDetailModel) {
 //            mTaskCreationActivity.setSelectedSubService(subServiceDetailModel);
+//            if(TaskCreationActivity.mJobCategoryModel.catSlug.equalsIgnoreCase(Utility.cat.PESTCONTROL))
+//            {
+//                for (SubServiceDetailModel model: subServiceDetailModel)
+//                {
+                    //SubServiceDetailModel model= allSubCategoryList.get(0);
+//                    if(subServiceDetailModel.isSelected)
+//                    {
+                        String s = subServiceDetailModel.name;
+                        if(subServiceDetailModel.name.equalsIgnoreCase(Utility.NEED_HELP))
+                        {
+                            subServiceDetailModel.isSelected=false;
+                            mSubServiceRecyclerViewAdapter.notifyDataSetChanged();
+                            dialog= PestControlHelpDialog.newInstance(SelectSubCategoryFragment.this);
+                            dialog.show(getFragmentManager(),"PestControlHelp");
+                         // return;
+                           // showProgressDialog();
+                           // WebCallClass.getNeedHelp(mContext,TaskCreationActivity.this,TaskCreationActivity.this,mJobCategoryModel.catId);
+                           // return;
+                        }
+               //     }
+               // }
+         //   }
 
             Log.d(TAG, "onSubCategoryRowItemClicked() called with: subServiceDetailModel = [" + subServiceDetailModel.name + "]");
             // Make the status Verified

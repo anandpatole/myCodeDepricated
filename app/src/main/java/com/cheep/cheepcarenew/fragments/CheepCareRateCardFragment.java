@@ -114,7 +114,7 @@ public class CheepCareRateCardFragment extends BaseFragment {
                     break;
                 default:
 
-                    // RateCardDialog.newInstance((AppCompatActivity) mContext);
+                     //RateCardDialog.newInstance((AppCompatActivity) mContext);
                     break;
 
 

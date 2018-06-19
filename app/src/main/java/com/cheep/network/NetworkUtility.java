@@ -28,6 +28,7 @@ public class NetworkUtility {
         public static final String SEND_OTP = BASE_URL + "customers/auth/send_otp_to_number";
         public static final String VERIFY_OTP = BASE_URL + "customers/auth/verify_otp_code";
         public static final String PROFILE = BASE_URL + "customers/profile/details";
+        public static final String NEED_HELP=BASE_URL+"customers/category/needHelpForCategory";
         public static final String FORG0T_PASSWORD = BASE_URL + "customers/auth/forgot_password";
         public static final String FAQS = BASE_URL + "customers/page_content/faqs";
         public static final String PAGE_CONTENT = BASE_URL + "customers/page_content";

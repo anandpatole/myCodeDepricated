@@ -122,6 +122,10 @@ public class ManageSubscriptionFragment extends BaseFragment implements ManageSu
                     fillRecyclerViewSingleItem();
                     break;
                 case R.id.back:
+                    if(tooltipView!=null)
+                    {
+                      hideToolTip(true);
+                    }
                     getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.content, ProfileTabFragment.newInstance(), ProfileTabFragment.TAG).commitAllowingStateLoss();
                     break;
                 case R.id.upgrade_subscription_btn:
@@ -169,18 +173,18 @@ public class ManageSubscriptionFragment extends BaseFragment implements ManageSu
         // set tooltip text
 
 
-toolTipBinding.tooltipClose.setOnClickListener(new View.OnClickListener() {
-    @Override
-    public void onClick(View v) {
-        hideToolTip(false);
-    }
-});
+        toolTipBinding.tooltipClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                hideToolTip(false);
+            }
+        });
 
-        ViewTooltip viewTooltip = ViewTooltip.on( mBinding.upgradeSubscriptionBtn).customView(toolTipBinding.getRoot(), delay)
+        ViewTooltip viewTooltip = ViewTooltip.on( this ,mBinding.upgradeSubscriptionBtn).customView(toolTipBinding.getRoot(), delay)
                 .position(ViewTooltip.Position.TOP)
                 .clickToHide(true)
                 .animation(new ViewTooltip.FadeTooltipAnimation(500))
-                .padding(40,100,40,10)
+                .padding(500,0,500,500)
                 .align(ViewTooltip.ALIGN.START)
                 .autoHide(false, 0);
 

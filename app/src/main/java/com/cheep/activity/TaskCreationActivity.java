@@ -25,6 +25,7 @@ import com.cheep.databinding.ActivityTaskCreateBinding;
 import com.cheep.dialogs.AcknowledgementDialogWithoutProfilePic;
 import com.cheep.dialogs.AcknowledgementInteractionListener;
 import com.cheep.dialogs.CustomLoadingDialog;
+import com.cheep.dialogs.PestControlHelpDialog;
 import com.cheep.firebase.FirebaseHelper;
 import com.cheep.firebase.FirebaseUtils;
 import com.cheep.firebase.model.ChatTaskModel;
@@ -42,8 +43,10 @@ import com.cheep.network.VolleyNetworkRequest;
 import com.cheep.utils.GsonUtility;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.Utility;
+import com.cheep.utils.WebCallClass;
 import com.google.android.gms.common.api.Status;
 import com.google.gson.Gson;
+import com.payu.magicretry.MainActivity;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -61,7 +64,7 @@ import static com.cheep.network.NetworkUtility.TAGS.CAT_ID;
 /**
  * Created by bhavesh on 26/4/17.
  */
-public class TaskCreationActivity extends BaseAppCompatActivity {
+public class TaskCreationActivity extends BaseAppCompatActivity  {
     private static final String TAG = TaskCreationActivity.class.getSimpleName();
     private ActivityTaskCreateBinding mActivityTaskCreateBinding;
     public JobCategoryModel mJobCategoryModel;
@@ -246,6 +249,7 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
                 mActivityTaskCreateBinding.textStepDesc.setText(getString(R.string.step_1_desc));
                 break;
             case STAGE_2:
+
                 mActivityTaskCreateBinding.viewpager.setCurrentItem(1);
                 // Change description
                 mActivityTaskCreateBinding.textStepDesc.setText(getString(R.string.step_2_desc));
@@ -361,7 +365,17 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
 
         TaskDetailModel taskDetailModel = new TaskDetailModel();
 //                    taskDetailModel.categoryName = mJobCategoryModel.catName;
-        taskDetailModel.subCategoryName = getSubCatList().get(0).name;
+        if(getSubCatList()!=null && getSubCatList().size()>0) {
+            taskDetailModel.subCategoryName = getSubCatList().get(0).name;
+            taskDetailModel.subCategoryID = String.valueOf(getSubCatList().get(0).sub_cat_id);
+            taskDetailModel.subCatList = mTaskCreationPagerAdapter.mSelectSubCategoryFragment.getSubCatList();
+        }
+        else
+        {
+            taskDetailModel.subCategoryName = "";
+            taskDetailModel.subCategoryID = "";
+            taskDetailModel.subCatList = null;
+        }
         if (taskDetailModel.taskAddress == null)
             taskDetailModel.taskAddress = new AddressModel();
         taskDetailModel.taskAddress.address = mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddress.address;
@@ -372,9 +386,10 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
 //                    taskDetailModel.catImage = mJobCategoryModel.catImage;
         taskDetailModel.categoryModel = mJobCategoryModel;
         taskDetailModel.taskStartdate = String.valueOf(mTaskCreationPagerAdapter.mEnterTaskDetailFragment.superCalendar.getCalendar().getTimeInMillis());
-        taskDetailModel.subCategoryID = String.valueOf(getSubCatList().get(0).sub_cat_id);
+
 //                    model.taskImage = mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mCurrentPhotoPath;
 //        taskDetailModel.mMediaModelList = mTaskCreationPagerAdapter.mEnterTaskDetailFragment.getMediaList();
+
         taskDetailModel.subCatList = mTaskCreationPagerAdapter.mSelectSubCategoryFragment.getSubCatList();
         taskDetailModel.taskType = Utility.TASK_TYPE.INSTA_BOOK;
         taskDetailModel.taskStatus = Utility.TASK_STATUS.PENDING;
@@ -1057,7 +1072,15 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
                         String subTitle = cheepTip.optString(NetworkUtility.TAGS.SUBTITLE);
 
                         allSubCategoryList = GsonUtility.getObjectListFromJsonString(jsonArray.toString(), SubServiceDetailModel[].class);
-
+                        if(mJobCategoryModel.catSlug.equalsIgnoreCase(Utility.cat.PESTCONTROL))
+                        {
+                            SubServiceDetailModel additional=new SubServiceDetailModel();
+                            additional.catId="-1";
+                            additional.isSelected=false;
+                            additional.name=Utility.NEED_HELP;
+                            additional.subSubCatModels=null;
+                            allSubCategoryList.add(additional);
+                        }
                         // Setting viewpager
                         setupViewPager(mActivityTaskCreateBinding.viewpager, title, subTitle);
 
@@ -1095,6 +1118,7 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
             Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityTaskCreateBinding.getRoot());
         }
     };
+
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////// Fetch SubService Listing[END] ////////////////////////////////////////
