@@ -17,9 +17,20 @@ public class AcknowledgementPopupDialog extends DialogFragment implements View.O
 
     public static final String TAG = AcknowledgementPopupDialog.class.getSimpleName();
 
+
+    AcknowledgementListener acknowledgementListener;
+
+    public void setAcknowledgementListener(AcknowledgementListener acknowledgementListener) {
+        this.acknowledgementListener = acknowledgementListener;
+    }
+
     private AcknowledgementPopupDialogBinding mBinding;
     Dialog dialog;
 
+
+    public interface AcknowledgementListener{
+        public void  onClickOfThanks();
+    }
 
 
     public AcknowledgementPopupDialog() {
@@ -27,10 +38,10 @@ public class AcknowledgementPopupDialog extends DialogFragment implements View.O
     }
 
 
-    public static AcknowledgementPopupDialog newInstance(String param1, String param2) {
+    public static AcknowledgementPopupDialog newInstance(AcknowledgementListener listener) {
         AcknowledgementPopupDialog fragment = new AcknowledgementPopupDialog();
         Bundle args = new Bundle();
-
+        fragment.setAcknowledgementListener(listener);
         fragment.setArguments(args);
         return fragment;
     }
@@ -84,7 +95,9 @@ public class AcknowledgementPopupDialog extends DialogFragment implements View.O
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.tv_thanks:
-               dismissAllowingStateLoss();
+                acknowledgementListener.onClickOfThanks();
+                dismissAllowingStateLoss();
+
                 break;
         }
     }

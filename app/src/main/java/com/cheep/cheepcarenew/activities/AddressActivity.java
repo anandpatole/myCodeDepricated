@@ -22,6 +22,7 @@ import com.cheep.databinding.ActivityAddressBinding;
 import com.cheep.fragment.BaseFragment;
 import com.cheep.model.AddressModel;
 import com.cheep.model.ComparisionChart.ComparisionChartModel;
+import com.cheep.model.MessageEvent;
 import com.cheep.model.UserDetails;
 import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
@@ -31,12 +32,16 @@ import com.cheep.utils.LogUtils;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.Utility;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
 
 public class AddressActivity extends BaseAppCompatActivity {
 
@@ -78,6 +83,21 @@ public class AddressActivity extends BaseAppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         unregisterReceiver(mBR_OnLoginSuccess);
+        EventBus.getDefault().unregister(this);
+    }
+
+    /**
+     * Event Bus Callbacks
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(MessageEvent event) {
+        Log.d(TAG, "onMessageEvent() called with: event = [" + event.BROADCAST_ACTION + "]");
+        switch (event.BROADCAST_ACTION) {
+            case Utility.BROADCAST_TYPE.PACKAGE_SUBSCRIBED_SUCCESSFULLY:
+                finish();
+                break;
+        }
+
     }
 
     @Override
@@ -90,6 +110,7 @@ public class AddressActivity extends BaseAppCompatActivity {
         super.onCreate(savedInstanceState);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_address);
         initiateUI();
+        EventBus.getDefault().register(this);
     }
 
     public void loadFragment(String tag, BaseFragment baseFragment) {
@@ -260,19 +281,14 @@ public class AddressActivity extends BaseAppCompatActivity {
                 if (mUserDetails.addressList.isEmpty()) {
                     mUserDetails.addressList = new ArrayList<>();
                 }
-
-
                 // Add additional selected address model here.
                 AddressSizeForHomeOfficeFragment addressSizeForHomeOfficeFragment = (AddressSizeForHomeOfficeFragment) getSupportFragmentManager().findFragmentByTag(AddressSizeForHomeOfficeFragment.TAG);
                 if (addressSizeForHomeOfficeFragment != null) {
                     mUserDetails.addressList.add(addressSizeForHomeOfficeFragment.addressModel);
                     PaymentSummaryCheepCareActivity.newInstance(mContext, ((AddressActivity) mContext).getPackageDetail(), addressSizeForHomeOfficeFragment.addressModel);
                 }
-
                 // Save the user now.
                 PreferenceUtility.getInstance(mContext).saveUserDetails(mUserDetails);
-
-
             }
         }
     };

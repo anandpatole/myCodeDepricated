@@ -1,6 +1,5 @@
 package com.cheep.cheepcarenew.activities;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -124,15 +123,6 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
         }
 
         setCityBannerData();
-    }
-    // open show Comparision Chart Fragment Dialog
-    private void showAcknowledgementPopupDialog() {
-        if (acknowledgementPopupDialog != null) {
-            acknowledgementPopupDialog.dismissAllowingStateLoss();
-            acknowledgementPopupDialog = null;
-        }
-        acknowledgementPopupDialog = AcknowledgementPopupDialog.newInstance("", "");
-        acknowledgementPopupDialog.show(getSupportFragmentManager(), TAG);
     }
 
     private void setCityBannerData() {
