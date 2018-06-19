@@ -2,9 +2,6 @@ package com.cheep.cheepcarenew.fragments;
 
 import android.content.Context;
 import android.databinding.DataBindingUtil;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -225,15 +222,6 @@ public class AddressCategorySelectionFragment extends BaseFragment {
     private void openTooltip1(boolean delay) {
         Log.e(TAG, "openTooltip: ********************");
 
-//        if (tooltipView != null)
-//            tooltipView.removeNow();
-
-//        TooltipAddressSelectionBinding mBinding = DataBindingUtil.inflate(
-//                LayoutInflater.from(mContext),
-//                R.layout.tooltip_address_selection,
-//                null,
-//                false);
-
         if (addressModel.category.equalsIgnoreCase(NetworkUtility.TAGS.ADDRESS_TYPE.HOME))
             mBinding.tvTitle.setText(getString(R.string.label_hey_is_this_your_home_address, getString(R.string.label_home)));
         else
@@ -257,21 +245,11 @@ public class AddressCategorySelectionFragment extends BaseFragment {
             }
         });
 
-        setTipBackground(mBinding.rlToolTip,R.drawable.tooltip_arrow_up_right,getResources().getColor(R.color.splash_gradient_end));
         mBinding.rlToolTip.setVisibility(View.VISIBLE);
     }
 
     private void hideToolTip() {
-        Log.e(TAG, "hideToolTip: *******************");
-//        if (tooltipView != null)
         mBinding.rlToolTip.setVisibility(View.GONE);
-//            tooltipView.removeNow();
-    }
-
-    private void showToolTip1() {
-        Log.e(TAG, "hideToolTip: *******************");
-//        if (tooltipView != null)
-//            tooltipView.removeNow();
     }
 
     public void onEventMainThread(MessageEvent event) {
@@ -282,30 +260,6 @@ public class AddressCategorySelectionFragment extends BaseFragment {
                 initiateUI();
                 break;
         }
-    }
-
-    private void setTipBackground(View tipView, int drawableRes, int color){
-        Drawable paintedDrawable = getTintedDrawable(tipView.getContext(),
-                drawableRes, color);
-        tipView.setBackground(paintedDrawable);
-    }
-
-
-    private static Drawable getTintedDrawable(Context context, int drawableRes, int color){
-        Drawable drawable;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            drawable = context.getResources().getDrawable(drawableRes, null);
-            if (drawable != null) {
-                drawable.setTint(color);
-            }
-        } else {
-            drawable = context.getResources().getDrawable(drawableRes);
-            if (drawable != null) {
-                drawable.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
-            }
-        }
-
-        return drawable;
     }
 
     @Override
