@@ -29,6 +29,7 @@ import com.cheep.cheepcare.adapter.CheepCarePackageAdapter;
 import com.cheep.cheepcare.model.CareCityDetail;
 import com.cheep.cheepcare.model.CityLandingPageModel;
 import com.cheep.cheepcare.model.PackageDetail;
+import com.cheep.cheepcarenew.dialogs.AcknowledgementPopupDialog;
 import com.cheep.cheepcarenew.dialogs.ComparisionChartFragmentDialog;
 import com.cheep.cheepcarenew.dialogs.PackageDetailModelDialog;
 import com.cheep.databinding.ActivityLandingScreenPickPackageBinding;
@@ -72,6 +73,7 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
     private PackageDetailModelDialog packageDetailModelDialog;
     private PackageDetail packageDetailData;
     private ComparisionChartModel comparisionChartModel;
+    private AcknowledgementPopupDialog acknowledgementPopupDialog;
 
     private WebCallClass.CommonResponseListener commonErrorResponse = new WebCallClass.CommonResponseListener() {
         @Override
@@ -99,6 +101,10 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
         intent.putExtra(Utility.Extra.DATA, cheepcareBannerListString);
         context.startActivity(intent);
     }
+    public static void newInstance(Context context) {
+        Intent intent = new Intent(context, LandingScreenPickPackageActivity.class);
+        context.startActivity(intent);
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -118,6 +124,15 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
         }
 
         setCityBannerData();
+    }
+    // open show Comparision Chart Fragment Dialog
+    private void showAcknowledgementPopupDialog() {
+        if (acknowledgementPopupDialog != null) {
+            acknowledgementPopupDialog.dismissAllowingStateLoss();
+            acknowledgementPopupDialog = null;
+        }
+        acknowledgementPopupDialog = AcknowledgementPopupDialog.newInstance("", "");
+        acknowledgementPopupDialog.show(getSupportFragmentManager(), TAG);
     }
 
     private void setCityBannerData() {

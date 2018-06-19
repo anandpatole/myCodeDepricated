@@ -1,6 +1,7 @@
 package com.cheep.cheepcarenew.dialogs;
 
 import android.app.Dialog;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
@@ -9,10 +10,15 @@ import android.view.ViewGroup;
 import android.view.Window;
 
 import com.cheep.R;
+import com.cheep.cheepcarenew.activities.LandingScreenPickPackageActivity;
+import com.cheep.databinding.AcknowledgementPopupDialogBinding;
 
-public class AcknowledgementPopupDialog extends DialogFragment {
+public class AcknowledgementPopupDialog extends DialogFragment implements View.OnClickListener {
 
     public static final String TAG = AcknowledgementPopupDialog.class.getSimpleName();
+
+    private AcknowledgementPopupDialogBinding mBinding;
+    Dialog dialog;
 
 
 
@@ -49,14 +55,14 @@ public class AcknowledgementPopupDialog extends DialogFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.acknowledgement_popup_dialog, container, false);
-
-        return view;
+        mBinding = DataBindingUtil.inflate(inflater, R.layout.acknowledgement_popup_dialog, container, false);
+        seListener();
+        return mBinding.getRoot();
     }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        Dialog dialog = super.onCreateDialog(savedInstanceState);
+        dialog = super.onCreateDialog(savedInstanceState);
 
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
@@ -69,5 +75,17 @@ public class AcknowledgementPopupDialog extends DialogFragment {
 
     }
 
+    private void seListener(){
+        mBinding.tvThanks.setOnClickListener(this);
+    }
 
+   //View.OnClickListener
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.tv_thanks:
+               dismissAllowingStateLoss();
+                break;
+        }
+    }
 }
