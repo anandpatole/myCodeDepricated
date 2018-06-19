@@ -2,6 +2,9 @@ package com.cheep.cheepcarenew.fragments;
 
 import android.content.Context;
 import android.databinding.DataBindingUtil;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -12,9 +15,7 @@ import android.view.ViewGroup;
 
 import com.cheep.R;
 import com.cheep.cheepcarenew.activities.AddressActivity;
-import com.cheep.custom_view.tooltips.ViewTooltip;
 import com.cheep.databinding.FragmentAddressCategorySelectionBinding;
-import com.cheep.databinding.TooltipAddressSelectionBinding;
 import com.cheep.fragment.BaseFragment;
 import com.cheep.model.AddressModel;
 import com.cheep.model.ComparisionChart.ComparisionChartModel;
@@ -36,7 +37,7 @@ public class AddressCategorySelectionFragment extends BaseFragment {
     public static final String TAG = "AddressCategorySelectionFragment";
     private AddressModel addressModel;
     private ArrayList<AddressModel> addressModelArrayList;
-    private ViewTooltip.TooltipView tooltipView;
+//    private ViewTooltip.TooltipView tooltipView;
 
     public static AddressCategorySelectionFragment newInstance() {
         Bundle args = new Bundle();
@@ -117,7 +118,6 @@ public class AddressCategorySelectionFragment extends BaseFragment {
             }
         }
 
-
     }
 
     private void setAddress() {
@@ -131,7 +131,8 @@ public class AddressCategorySelectionFragment extends BaseFragment {
             mBinding.cvHome.setSelected(false);
             mBinding.cvOffice.setSelected(true);
         }
-        openTooltip(true);
+        openTooltip1(true);
+//        openTooltip(true);
     }
 
     @Override
@@ -221,24 +222,24 @@ public class AddressCategorySelectionFragment extends BaseFragment {
     }
 
 
-    private void openTooltip(boolean delay) {
+    private void openTooltip1(boolean delay) {
         Log.e(TAG, "openTooltip: ********************");
 
-        if (tooltipView != null)
-            return;
+//        if (tooltipView != null)
+//            tooltipView.removeNow();
 
-        TooltipAddressSelectionBinding toolTipBinding = DataBindingUtil.inflate(
-                LayoutInflater.from(mContext),
-                R.layout.tooltip_address_selection,
-                null,
-                false);
+//        TooltipAddressSelectionBinding mBinding = DataBindingUtil.inflate(
+//                LayoutInflater.from(mContext),
+//                R.layout.tooltip_address_selection,
+//                null,
+//                false);
 
         if (addressModel.category.equalsIgnoreCase(NetworkUtility.TAGS.ADDRESS_TYPE.HOME))
-            toolTipBinding.tvTitle.setText(getString(R.string.label_hey_is_this_your_home_address, getString(R.string.label_home)));
+            mBinding.tvTitle.setText(getString(R.string.label_hey_is_this_your_home_address, getString(R.string.label_home)));
         else
-            toolTipBinding.tvTitle.setText(getString(R.string.label_hey_is_this_your_home_address, getString(R.string.label_office)));
+            mBinding.tvTitle.setText(getString(R.string.label_hey_is_this_your_home_address, getString(R.string.label_office)));
 
-        toolTipBinding.tvYes.setOnClickListener(new View.OnClickListener() {
+        mBinding.tvYes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 hideToolTip();
@@ -248,7 +249,7 @@ public class AddressCategorySelectionFragment extends BaseFragment {
             }
         });
 
-        toolTipBinding.tvNo.setOnClickListener(new View.OnClickListener() {
+        mBinding.tvNo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 hideToolTip();
@@ -256,28 +257,21 @@ public class AddressCategorySelectionFragment extends BaseFragment {
             }
         });
 
-
-
-        final ViewTooltip viewTooltip =
-                ViewTooltip.on(this, mBinding.cvAddress)
-                        .customView(toolTipBinding.getRoot(), delay)
-                        .position(ViewTooltip.Position.BOTTOM)
-                        .clickToHide(false)
-                        .animation(new ViewTooltip.FadeTooltipAnimation(500))
-                        .autoHide(false, 0);
-        tooltipView = viewTooltip.getTooltip_view();
-        mBinding.cvAddress.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                viewTooltip.show();
-            }
-        }, 500);
+        setTipBackground(mBinding.rlToolTip,R.drawable.tooltip_arrow_up_right,getResources().getColor(R.color.splash_gradient_end));
+        mBinding.rlToolTip.setVisibility(View.VISIBLE);
     }
 
     private void hideToolTip() {
         Log.e(TAG, "hideToolTip: *******************");
-        if (tooltipView != null)
-            tooltipView.removeNow();
+//        if (tooltipView != null)
+        mBinding.rlToolTip.setVisibility(View.GONE);
+//            tooltipView.removeNow();
+    }
+
+    private void showToolTip1() {
+        Log.e(TAG, "hideToolTip: *******************");
+//        if (tooltipView != null)
+//            tooltipView.removeNow();
     }
 
     public void onEventMainThread(MessageEvent event) {
@@ -290,6 +284,29 @@ public class AddressCategorySelectionFragment extends BaseFragment {
         }
     }
 
+    private void setTipBackground(View tipView, int drawableRes, int color){
+        Drawable paintedDrawable = getTintedDrawable(tipView.getContext(),
+                drawableRes, color);
+        tipView.setBackground(paintedDrawable);
+    }
+
+
+    private static Drawable getTintedDrawable(Context context, int drawableRes, int color){
+        Drawable drawable;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            drawable = context.getResources().getDrawable(drawableRes, null);
+            if (drawable != null) {
+                drawable.setTint(color);
+            }
+        } else {
+            drawable = context.getResources().getDrawable(drawableRes);
+            if (drawable != null) {
+                drawable.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
+            }
+        }
+
+        return drawable;
+    }
 
     @Override
     public void onPause() {

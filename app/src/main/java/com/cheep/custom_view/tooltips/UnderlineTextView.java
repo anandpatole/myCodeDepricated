@@ -1,18 +1,18 @@
 package com.cheep.custom_view.tooltips;
 
 import android.content.Context;
+import android.support.v7.widget.AppCompatTextView;
 import android.text.Editable;
 import android.text.SpannableString;
 import android.text.TextWatcher;
 import android.text.style.UnderlineSpan;
 import android.util.AttributeSet;
-import android.widget.TextView;
 
 /**
  * Created by majid on 12-06-2018.
  */
 
-public class UnderlineTextView extends TextView
+public class UnderlineTextView extends AppCompatTextView
 {
     private boolean m_modifyingText = false;
 
