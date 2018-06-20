@@ -11,7 +11,7 @@
         <RelativeLayout
             android:id="@+id/rl_tick_container"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -23,13 +23,13 @@
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_tick" />
 
-            <View
+         <!--   <View
                 android:id="@+id/txtVerticalLine"
                 android:layout_width="2dp"
                 android:layout_height="match_parent"
                 android:layout_below="@id/iv_tick"
                 android:layout_centerHorizontal="true"
-                android:background="@drawable/blue_vertical_dashes" />
+                android:background="@drawable/blue_vertical_dashes" />-->
         </RelativeLayout>
 
         <com.cheep.custom_view.CFTextViewRegular
