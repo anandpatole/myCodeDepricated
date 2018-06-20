@@ -149,14 +149,14 @@ public class CheepCareNotInYourCityDialog extends DialogFragment {
             }
         });
         // Click event of Okay button
-        mDialogCheepCareNotInCityBinding.tvBookTask.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //Callback to activity
-                dismiss();
-                mListener.onAcknowledgementAccepted();
-            }
-        });
+//        mDialogCheepCareNotInCityBinding.tvBookTask.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                //Callback to activity
+//                dismiss();
+//                mListener.onAcknowledgementAccepted();
+//            }
+//        });
 
         mDialogCheepCareNotInCityBinding.edtCity.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -37,6 +37,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/home_screen_category_image_inner_margin"
                 android:layout_marginTop="@dimen/home_screen_category_image_inner_margin"
+
                 android:src="@drawable/ic_subscribed_text_big"/>
 
             <LinearLayout

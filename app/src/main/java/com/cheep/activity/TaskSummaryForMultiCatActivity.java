@@ -11,7 +11,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.InputFilter;
-import android.text.InputType;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
@@ -56,7 +55,6 @@ import com.cheep.utils.CalendarUtility;
 import com.cheep.utils.FreshChatHelper;
 import com.cheep.utils.GlideUtility;
 import com.cheep.utils.GsonUtility;
-import com.cheep.utils.HotlineHelper;
 import com.cheep.utils.LogUtils;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.RoundedBackgroundSpan;
@@ -414,7 +412,7 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
         }
 
         //Set Subscribed yes/no
-        if(mTaskDetailModel.taskAddress.is_subscribe.equalsIgnoreCase(Utility.BOOLEAN.YES)) {
+        if(!mTaskDetailModel.taskAddress.is_subscribe.equalsIgnoreCase(Utility.ADDRESS_SUBSCRIPTION_TYPE.NONE)) {
             mBinding.textTaskWhere2.setVisibility(View.VISIBLE);
         } else {
             mBinding.textTaskWhere2.setVisibility(View.GONE);
