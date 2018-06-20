@@ -28,18 +28,20 @@ public class AddressListDialog extends DialogFragment implements AddressSelectio
     public static final String TAG = "AddressListDialog";
     DialogAddressListBinding mBinding;
     AddressListRecyclerViewAdapter adapter;
-    private ArrayList<AddressModel> list = new ArrayList<>();
-    private String category;
+    private ArrayList<AddressModel> addressList = new ArrayList<>();
+    private String subscriptionType;
     private AddressSelectionListener addressSelectionListener;
 
     public void setAddressSelectionListener(AddressSelectionListener addressSelectionListener) {
         this.addressSelectionListener = addressSelectionListener;
     }
 
-    public static AddressListDialog newInstance(AddressSelectionListener addressSelectionListener) {
+    public static AddressListDialog newInstance(String subscriptionType, AddressSelectionListener addressSelectionListener) {
         Bundle args = new Bundle();
+        args.putString(Utility.Extra.DATA, subscriptionType);
         AddressListDialog dialog = new AddressListDialog();
         dialog.setAddressSelectionListener(addressSelectionListener);
+
         dialog.setArguments(args);
         return dialog;
     }
@@ -61,30 +63,48 @@ public class AddressListDialog extends DialogFragment implements AddressSelectio
 
     public void initiateUI() {
         setListeners();
-        list.clear();
+        addressList.clear();
         if (getArguments() == null)
             return;
-        category = getArguments().getString(Utility.Extra.DATA);
+        subscriptionType = getArguments().getString(Utility.Extra.DATA);
 
         UserDetails userDetails = PreferenceUtility.getInstance(getContext()).getUserDetails();
+        ArrayList<AddressModel> arrayList = new ArrayList<>();
         if (userDetails != null && userDetails.addressList != null && !userDetails.addressList.isEmpty()) {
-            if (userDetails.addressList.get(0) != null) {
-                list.addAll(userDetails.addressList);
-            }
-
+            arrayList = userDetails.addressList;
         } else {
             GuestUserDetails guestUserDetails = PreferenceUtility.getInstance(getContext()).getGuestUserDetails();
             if (guestUserDetails != null && guestUserDetails.addressList != null && !guestUserDetails.addressList.isEmpty()) {
-                if (guestUserDetails.addressList.get(0) != null) {
-                    list.addAll(guestUserDetails.addressList);
-                }
+                arrayList = guestUserDetails.addressList;
             }
         }
 
 
+        // if is_subscribe is yes than
+        if (subscriptionType.equalsIgnoreCase(Utility.ADDRESS_SUBSCRIPTION_TYPE.PREMIUM)) {
+            for (AddressModel addressModel : arrayList) {
+                if (addressModel.is_subscribe.equalsIgnoreCase(subscriptionType)) {
+                    addressList.add(addressModel);
+                }
+            }
+
+        } else if (subscriptionType.equalsIgnoreCase(Utility.ADDRESS_SUBSCRIPTION_TYPE.NORMAL)) {
+            for (AddressModel addressModel : arrayList) {
+                if (!addressModel.is_subscribe.equalsIgnoreCase(Utility.ADDRESS_SUBSCRIPTION_TYPE.NONE)) {
+                    addressList.add(addressModel);
+                }
+            }
+        } else {
+            for (AddressModel addressModel : arrayList) {
+                if (addressModel.is_subscribe.equalsIgnoreCase(subscriptionType)) {
+                    addressList.add(addressModel);
+                }
+            }
+        }
+
         mBinding.rvAddress.setNestedScrollingEnabled(false);
         mBinding.rvAddress.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-        adapter = new AddressListRecyclerViewAdapter(list, new AddressListRecyclerViewAdapter.AddressItemClickListener() {
+        adapter = new AddressListRecyclerViewAdapter(addressList, new AddressListRecyclerViewAdapter.AddressItemClickListener() {
             @Override
             public void onClickItem(AddressModel addressModel) {
                 addressSelectionListener.onAddressSelection(addressModel);
@@ -93,10 +113,11 @@ public class AddressListDialog extends DialogFragment implements AddressSelectio
         });
         mBinding.rvAddress.setAdapter(adapter);
 
-        if (list.isEmpty()) {
+        if (addressList.isEmpty()) {
             openAddAddressDialog();
         }
     }
+
 
     private void openAddAddressDialog() {
         AddressCategorySelectionDialog addressCategorySelectionDialog = AddressCategorySelectionDialog.newInstance(this);

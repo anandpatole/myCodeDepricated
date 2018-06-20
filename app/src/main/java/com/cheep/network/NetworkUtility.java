@@ -164,6 +164,7 @@ public class NetworkUtility {
         public static final String SEARCH_CITY = BASE_URL + "customers/profile/searchCity";
         public static final String VOTE_CITY_FOR_CHEEP_CARE = BASE_URL + "customers/care/voteCityForCheepCare";
         public static final String GET_ASSET_AREA = BASE_URL + "customers/profile/getAssetArea";
+        public static final String IDENTIFY_ADDRESS_IF_SUBSCRIBED = BASE_URL + "customers/care/identifyAddressIfSubscribed";
 
 
         // majid khan

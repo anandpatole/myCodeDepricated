@@ -250,14 +250,7 @@
 
                     </LinearLayout>
 
-                    <com.cheep.custom_view.CustomSpinner
-                        android:id="@+id/spinner_address_selection"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/bg_spinner"
-                        android:paddingTop="6dp"
-                        android:textSize="@dimen/text_size_14sp"
-                        android:visibility="invisible"/>
+
                 </android.support.v7.widget.CardView>
 
 

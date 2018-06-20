@@ -3,7 +3,14 @@
     <files-path
         name="cheep"
         path="CheepImages/"/>
+    <!--<external-path
+        name="cheep"
+        path="Android/data/com.cheep/files/Pictures" />-->
 
+    <!--Freshchat file paths-->
+    <files-path
+        name="int_files"
+        path="."/>
     <external-files-path
         name="ext_files"
         path="."/>
@@ -13,7 +20,6 @@
     <external-cache-path
         name="ext_cache"
         path="."/>
-    <!-- <external-path
-          name="cheep"
-          path="Android/data/com.cheep/files/Pictures" />-->
+    <!--Freshchat file paths-->
+
 </paths>

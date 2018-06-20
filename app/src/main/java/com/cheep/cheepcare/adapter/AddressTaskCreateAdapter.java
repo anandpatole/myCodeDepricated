@@ -95,11 +95,11 @@ public class AddressTaskCreateAdapter<T> extends ArrayAdapter<T> {
 
             mHolder.mBinding.tvAddressNickname.setText(addressModel.getNicknameString(context));
 
-            mHolder.mBinding.viewDot.setVisibility(mList.get(position).is_subscribe.equals(Utility.BOOLEAN.YES)
+            mHolder.mBinding.viewDot.setVisibility(!mList.get(position).is_subscribe.equals(Utility.ADDRESS_SUBSCRIPTION_TYPE.NONE)
                     ? View.VISIBLE
                     : View.GONE
             );
-            mHolder.mBinding.tvLabelAddressSubscribed.setVisibility(mList.get(position).is_subscribe.equalsIgnoreCase(Utility.BOOLEAN.YES)
+            mHolder.mBinding.tvLabelAddressSubscribed.setVisibility(!mList.get(position).is_subscribe.equalsIgnoreCase(Utility.ADDRESS_SUBSCRIPTION_TYPE.NONE)
                     ? View.VISIBLE
                     : View.GONE
             );

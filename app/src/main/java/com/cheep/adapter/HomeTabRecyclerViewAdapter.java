@@ -126,7 +126,7 @@ public class HomeTabRecyclerViewAdapter extends RecyclerView.Adapter<HomeTabRecy
             }
         });
 
-        if (mSelectedFilterType.equalsIgnoreCase(Utility.FILTER_TYPES.FILTER_TYPE_SUBSCRIBED)) {
+        if (model.isSubscribed.equalsIgnoreCase(Utility.BOOLEAN.YES)) {
             holder.mRowTabHomeBinding.imgCategorySubscribe.setVisibility(View.VISIBLE);
             holder.mRowTabHomeBinding.imgCategoryFavourite.setVisibility(View.GONE);
         } else {

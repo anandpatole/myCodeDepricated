@@ -25,7 +25,7 @@ public class AddressModel implements Serializable {
     public String pincode;
     public String nickname;
     public String end_date;
-    public String is_subscribe = Utility.BOOLEAN.NO;
+    public String is_subscribe = Utility.ADDRESS_SUBSCRIPTION_TYPE.NONE;
     public String limit_cnt;
 
     /**

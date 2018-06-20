@@ -713,11 +713,12 @@ public interface  cat
         String NO = "no";
         String NA = "na";
     }
-
-    public interface TYPE{
-        String PREMIUM = "premium";
-        String NORMAL = "normal";
+    public interface ADDRESS_SUBSCRIPTION_TYPE{
+        String PREMIUM= "premium";
+        String NONE= "none";
+        String NORMAL= "normal";
     }
+
 
     public interface BROADCAST_TYPE {
         int UPDATE_FAVOURITE = 1;
@@ -912,6 +913,9 @@ public interface  cat
     public interface CAR_PACKAGE_TYPE{
         String PREMIUM="premium";
         String NORMAL="normal";
+    }
+    public interface CAT_SLUG_TYPES{
+        String PEST_CONTROL="pest-control";
     }
 
     private static String urlEncodeUTF8(String s) {

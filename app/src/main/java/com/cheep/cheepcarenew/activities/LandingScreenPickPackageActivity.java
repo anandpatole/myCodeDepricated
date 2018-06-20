@@ -100,6 +100,7 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
         intent.putExtra(Utility.Extra.DATA, cheepcareBannerListString);
         context.startActivity(intent);
     }
+
     public static void newInstance(Context context) {
         Intent intent = new Intent(context, LandingScreenPickPackageActivity.class);
         context.startActivity(intent);
@@ -323,7 +324,7 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
             comparisionChartFragmentDialog.dismissAllowingStateLoss();
             comparisionChartFragmentDialog = null;
         }
-        comparisionChartFragmentDialog = ComparisionChartFragmentDialog.newInstance(comparisionChartModel,packageDetail,mCity);
+        comparisionChartFragmentDialog = ComparisionChartFragmentDialog.newInstance(comparisionChartModel, packageDetail, mCity);
         comparisionChartFragmentDialog.show(getSupportFragmentManager(), TAG);
     }
 
@@ -333,7 +334,7 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
             packageDetailModelDialog.dismissAllowingStateLoss();
             packageDetailModelDialog = null;
         }
-        packageDetailModelDialog = PackageDetailModelDialog.newInstance(packageDetail, mCity,comparisionChartModel);
+        packageDetailModelDialog = PackageDetailModelDialog.newInstance(packageDetail, mCity, comparisionChartModel);
         packageDetailModelDialog.show(getSupportFragmentManager(), TAG);
     }
 
@@ -354,10 +355,10 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
     };
 
     private void navigateToFragment() {
-        if (packageDetailData.type.equalsIgnoreCase(Utility.TYPE.PREMIUM)) {
-            PreferenceUtility.getInstance(getApplicationContext()).saveTypeOfPackage(Utility.TYPE.PREMIUM);
+        if (packageDetailData.type.equalsIgnoreCase(Utility.CAR_PACKAGE_TYPE.PREMIUM)) {
+            PreferenceUtility.getInstance(getApplicationContext()).saveTypeOfPackage(Utility.CAR_PACKAGE_TYPE.PREMIUM);
             showPackageDetailModelFragmentDialog(packageDetailData);
-        } else if (packageDetailData.type.equalsIgnoreCase(Utility.TYPE.NORMAL)) {
+        } else if (packageDetailData.type.equalsIgnoreCase(Utility.CAR_PACKAGE_TYPE.NORMAL)) {
             showComparisionChartFragmentDialog(packageDetailData);
         }
     }
