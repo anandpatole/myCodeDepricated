@@ -833,6 +833,11 @@ ServiceDetailModalDialog.newInstance(mContext,model).show(this.getSupportFragmen
         if (mBinding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
             mBinding.drawerLayout.closeDrawer(GravityCompat.START, true);
         } else {
+
+
+
+
+
             Fragment fragment = getSupportFragmentManager().findFragmentByTag(HomeFragment.TAG);
             if (fragment != null) {
                 if (!((BaseFragment) fragment).onBackPressed()) {
@@ -847,6 +852,7 @@ ServiceDetailModalDialog.newInstance(mContext,model).show(this.getSupportFragmen
                 }
             }
         }
+
     }
 
 

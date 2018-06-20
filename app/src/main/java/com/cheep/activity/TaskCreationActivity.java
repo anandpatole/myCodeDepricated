@@ -364,6 +364,7 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
             if (!getSubCatList().isEmpty()) {
 
                 taskDetailModel.subCategoryName = getSubCatList().get(0).name;
+
                 taskDetailModel.subCategoryID = String.valueOf(getSubCatList().get(0).sub_cat_id);
                 taskDetailModel.subCatList = mTaskCreationPagerAdapter.mSelectSubCategoryFragment.getSubCatList();
             } else {
@@ -396,7 +397,7 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
             taskDetailModel.taskStatus = Utility.TASK_STATUS.PENDING;
             BookingConfirmationInstaActivity.newInstance(TaskCreationActivity.this, taskDetailModel, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddress);
         }
-
+    }
 /*
     public void onInstaBookClicked() {
 
@@ -764,7 +765,6 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
         ////////////////////////////////////////////////////////////////////////////////////////////////
         ////////////////////////////// Fetch SubService Listing[START] ////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////////////////////////
-
         private void fetchListOfSubCategory (String catId){
             Log.d(TAG, "fetchListOfSubCategory() called with: catId = [" + catId + "]");
             if (!Utility.isConnected(mContext)) {
@@ -869,4 +869,3 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
         ////////////////////////////////////////////////////////////////////////////////////////////////
 
     }
-}

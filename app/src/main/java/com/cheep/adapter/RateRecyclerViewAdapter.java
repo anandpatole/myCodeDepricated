@@ -4,7 +4,6 @@ import android.content.Context;
 
 import android.databinding.DataBindingUtil;
 
-import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,15 +21,10 @@ public class RateRecyclerViewAdapter extends RecyclerView.Adapter<RateRecyclerVi
     Context mContext;
 
 
-
-    public RateRecyclerViewAdapter(ArrayList<RateCardModel> mList)
-    {
-
+    public RateRecyclerViewAdapter(ArrayList<RateCardModel> mList) {
         mList1 = mList;
 
     }
-
-
 
     @Override
     public int getItemCount() {
@@ -51,28 +45,24 @@ public class RateRecyclerViewAdapter extends RecyclerView.Adapter<RateRecyclerVi
 
     @Override
     public void onBindViewHolder(final RateRecyclerViewAdapter.ViewHolder holder, int position) {
-        if(position %2 == 0)
-        {
+        if (position % 2 == 0) {
             holder.itemView.setBackgroundColor(mContext.getResources().getColor(R.color.grey_color));
             //  holder.imageView.setBackgroundColor(Color.parseColor("#FFFFFF"));
-        }
-        else
-        {
+        } else {
             holder.itemView.setBackgroundColor(mContext.getResources().getColor(R.color.white));
             //  holder.imageView.setBackgroundColor(Color.parseColor("#FFFAF8FD"));
         }
         RateCardModel model = mList1.get(holder.getAdapterPosition());
-holder.rowPastTaskBinding.rateCardProduct.setText(model.getProduct());
-holder.rowPastTaskBinding.rateCardRates.setText(model.getRate());
-holder.rowPastTaskBinding.rateCardRatesPerUnit.setText(model.getRate_unit());
-
+        holder.rowPastTaskBinding.rateCardProduct.setText(model.description);
+        holder.rowPastTaskBinding.rateCardRates.setText(model.labourRate);
+        holder.rowPastTaskBinding.rateCardRatesPerUnit.setText(model.addUnit);
 
 
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
-        public  RowRateCardBinding rowPastTaskBinding;
+        public RowRateCardBinding rowPastTaskBinding;
 
         public ViewHolder(RowRateCardBinding binding) {
             super(binding.getRoot());

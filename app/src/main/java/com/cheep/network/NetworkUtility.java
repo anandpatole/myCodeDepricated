@@ -41,6 +41,7 @@ public class NetworkUtility {
         public static final String DELETE_ADDRESS = BASE_URL + "customers/profile/delete_address";
         public static final String UPDATE_PROFILE = BASE_URL + "customers/profile/edit";
         public static final String CATEGORY_LIST = BASE_URL + "customers/category/all_cats";
+        public static final String CATEGORY_RATE_CARD = BASE_URL + "customers/care/getCategoryRateCard";
         public static final String ALL_BANNER = BASE_URL + "customers/category/all_banner";
         public static final String GET_CATEGORY_ID_BASED_ON_SLUG = BASE_URL + "customers/category/getCategoryIdBasedOnSlug";
         public static final String FAVOURITE_CATEGORY = BASE_URL + "customers/category/category_favourite";

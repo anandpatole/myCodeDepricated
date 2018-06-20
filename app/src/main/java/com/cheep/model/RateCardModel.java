@@ -1,35 +1,16 @@
 package com.cheep.model;
 
-public class RateCardModel
+import com.google.gson.annotations.SerializedName;
 
-{
-    private String product;
-    private String rate;
-    private String rate_unit;
+import java.io.Serializable;
 
+public class RateCardModel implements Serializable {
 
-    public String getRate_unit() {
-        return rate_unit;
-    }
+    @SerializedName("description")
+    public String description;
+    @SerializedName("labour_rate")
+    public String labourRate;
+    @SerializedName("add_unit")
+    public String addUnit;
 
-    public void setRate_unit(String rate_unit) {
-        this.rate_unit = rate_unit;
-    }
-
-
-    public String getProduct() {
-        return product;
-    }
-
-    public void setProduct(String product) {
-        this.product = product;
-    }
-
-    public String getRate() {
-        return rate;
-    }
-
-    public void setRate(String rate) {
-        this.rate = rate;
-    }
 }
