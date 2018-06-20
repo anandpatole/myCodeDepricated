@@ -65,8 +65,8 @@ getDialog().setCanceledOnTouchOutside(false);
         //RecyclerView a=(RecyclerView) ((AppCompatActivity) contexts).findViewById(R.id.rate_card_recycler_view);
         ArrayList<RateCardModel> mlist=new ArrayList<>();
         RateCardModel model=new RateCardModel();
-        model.setProduct("test");
-        model.setRate("100");
+      /*  model.description("test");
+        model.setRate("100");*/
         for (int i=0;i<15;i++)
         {
             mlist.add(model);

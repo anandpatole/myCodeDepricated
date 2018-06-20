@@ -11,6 +11,7 @@ import java.util.ArrayList;
  */
 
 public class GuestUserDetails {
+
     public String mLat;
     public String mLng;
     public String mCityID;

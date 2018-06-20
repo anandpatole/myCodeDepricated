@@ -110,6 +110,6 @@ public class CheepCareRateCardSelectionFragment extends BaseFragment implements 
     public void onClicked(String s) {
 
         subCategory = s;
-        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.content, CheepCareRateCardPricingFragment.newInstance(category, subCategory), CheepCareRateCardFragment.TAG).commitAllowingStateLoss();
+        //getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.content, CheepCareRateCardPricingFragment.newInstance(category, subCategory), CheepCareRateCardFragment.TAG).commitAllowingStateLoss();
     }
 }

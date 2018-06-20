@@ -822,6 +822,11 @@ else if(slideMenuListModel.title.equals(getString(R.string.Label_cheep_care_rate
         if (mBinding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
             mBinding.drawerLayout.closeDrawer(GravityCompat.START, true);
         } else {
+
+
+
+
+
             Fragment fragment = getSupportFragmentManager().findFragmentByTag(HomeFragment.TAG);
             if (fragment != null) {
                 if (!((BaseFragment) fragment).onBackPressed()) {
@@ -836,6 +841,7 @@ else if(slideMenuListModel.title.equals(getString(R.string.Label_cheep_care_rate
                 }
             }
         }
+
     }
 
 
