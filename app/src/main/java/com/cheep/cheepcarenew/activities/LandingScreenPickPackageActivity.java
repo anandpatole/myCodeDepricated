@@ -1,6 +1,5 @@
 package com.cheep.cheepcarenew.activities;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -29,6 +28,7 @@ import com.cheep.cheepcare.adapter.CheepCarePackageAdapter;
 import com.cheep.cheepcare.model.CareCityDetail;
 import com.cheep.cheepcare.model.CityLandingPageModel;
 import com.cheep.cheepcare.model.PackageDetail;
+import com.cheep.cheepcarenew.dialogs.AcknowledgementPopupDialog;
 import com.cheep.cheepcarenew.dialogs.ComparisionChartFragmentDialog;
 import com.cheep.cheepcarenew.dialogs.PackageDetailModelDialog;
 import com.cheep.databinding.ActivityLandingScreenPickPackageBinding;
@@ -72,6 +72,7 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
     private PackageDetailModelDialog packageDetailModelDialog;
     private PackageDetail packageDetailData;
     private ComparisionChartModel comparisionChartModel;
+    private AcknowledgementPopupDialog acknowledgementPopupDialog;
 
     private WebCallClass.CommonResponseListener commonErrorResponse = new WebCallClass.CommonResponseListener() {
         @Override
@@ -97,6 +98,10 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
         Intent intent = new Intent(context, LandingScreenPickPackageActivity.class);
         intent.putExtra(Utility.Extra.CITY_DETAIL, GsonUtility.getJsonStringFromObject(city));
         intent.putExtra(Utility.Extra.DATA, cheepcareBannerListString);
+        context.startActivity(intent);
+    }
+    public static void newInstance(Context context) {
+        Intent intent = new Intent(context, LandingScreenPickPackageActivity.class);
         context.startActivity(intent);
     }
 

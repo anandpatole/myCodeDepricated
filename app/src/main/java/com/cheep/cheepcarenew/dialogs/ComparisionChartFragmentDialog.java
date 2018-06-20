@@ -20,7 +20,6 @@ import android.widget.TextView;
 import com.cheep.R;
 import com.cheep.cheepcare.model.CareCityDetail;
 import com.cheep.cheepcare.model.PackageDetail;
-import com.cheep.cheepcarenew.activities.AddressActivity;
 import com.cheep.databinding.FragmentComparsionChartFragmentDialogBinding;
 import com.cheep.model.ComparisionChart.ComparisionChartModel;
 import com.cheep.model.ComparisionChart.FeatureList;
@@ -143,15 +142,6 @@ public class ComparisionChartFragmentDialog extends DialogFragment implements Vi
         }
     }
 
-    // open show Comparision Chart Fragment Dialog
-    private void showAcknowledgementPopupDialog() {
-        if (acknowledgementPopupDialog != null) {
-            acknowledgementPopupDialog.dismissAllowingStateLoss();
-            acknowledgementPopupDialog = null;
-        }
-        acknowledgementPopupDialog = AcknowledgementPopupDialog.newInstance("", "");
-        acknowledgementPopupDialog.show(getActivity().getSupportFragmentManager(), TAG);
-    }
 
     // open show Package Detail Model Fragment Dialog
     private void showPackageDetailModelFragmentDialog() {

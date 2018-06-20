@@ -173,7 +173,7 @@ public class BookingConfirmationInstaActivity extends BaseAppCompatActivity {
         mBinding.lnPayNow.setVisibility(View.GONE);
         mBinding.lnPayLaterPayNowButtons.setVisibility(View.VISIBLE);
 
-        initUIForReferDiscountAndPromoCode();
+        //initUIForReferDiscountAndPromoCode();
 
     }
 

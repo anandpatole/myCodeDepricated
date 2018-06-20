@@ -225,7 +225,7 @@ public class SubscriptionActivity extends BaseAppCompatActivity {
         }
         binding.webView.setWebViewClient(mWebViewClient);
         binding.webView.getSettings().setJavaScriptEnabled(true);
-        binding.webView.postUrl(NetworkUtility.PAYTM.WALLET_APIS.ADD_MONEY, postData.getBytes());
+        binding.webView.postUrl(NetworkUtility.PAYTM.WALLET_APIS.ADD_MONEY + "?orderid=" + generatedOrderId, postData.getBytes());
 
 //         Show the webView
 //        binding.btnPay.setVisibility(View.GONE);
@@ -385,7 +385,7 @@ public class SubscriptionActivity extends BaseAppCompatActivity {
                 paytmResponse.ResponseCode = responseCode;
                 paytmResponse.ResponsePayLoad = mCallbackResponse.toString();
                 paytmResponse.subsId = mCallbackResponse.optString(NetworkUtility.TAGS.SUBS_ID);
-                paytmResponse.isSubscription= Utility.BOOLEAN.YES;
+                paytmResponse.isSubscription = Utility.BOOLEAN.YES;
                 if (!TextUtils.isEmpty(responseCode) && responseCode.equalsIgnoreCase(NetworkUtility.PAYTM.RESPONSE_CODES.LOGIN)) {
                     // Close the screen and pass the success message to @com.cheep.activity.PaymentChoiceActivity
                     paytmResponse.isSuccess = true;
