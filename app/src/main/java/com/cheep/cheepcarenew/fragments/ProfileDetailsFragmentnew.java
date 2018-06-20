@@ -98,6 +98,7 @@ public class ProfileDetailsFragmentnew extends BaseFragment implements WebCallCl
     private DrawerLayoutInteractionListener mListener;
     String rating;
     RelationShipScreenFragment relationShipScreenFragment;
+ManageSubscriptionFragment manageSubscriptionFragment;
 
     //    private String mCurrentPhotoPath;
     private File photoFile;
@@ -231,7 +232,7 @@ public class ProfileDetailsFragmentnew extends BaseFragment implements WebCallCl
     public void setListener() {
 
         mBinding.imgProfilePhotoEdit.setOnClickListener(onClickListener);
-
+mBinding.textManageCheepCareSubscription.setOnClickListener(onClickListener);
         mBinding.textAddContact.setOnClickListener(onClickListener);
         mBinding.textViewMore.setOnClickListener(onClickListener);
         mBinding.labelAddNewAddress.setOnClickListener(onClickListener);
@@ -251,6 +252,10 @@ public class ProfileDetailsFragmentnew extends BaseFragment implements WebCallCl
               /*  case R.id.text_phone_number:
                     showChangePhoneNumberDialog();
                     break;*/
+              case R.id.text_manage_cheep_care_subscription:
+                  manageSubscriptionFragment = ManageSubscriptionFragment.newInstance(addressList);
+                  getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.content, manageSubscriptionFragment, ManageSubscriptionFragment.TAG).commitAllowingStateLoss();
+                  break;
                 case R.id.main_profile_edit:
                     mBinding.mainProfileEdit.setVisibility(View.GONE);
                     mBinding.usernameProfileEdit.setVisibility(View.VISIBLE);
