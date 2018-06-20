@@ -30,7 +30,6 @@ import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -49,6 +48,7 @@ import static com.cheep.network.NetworkUtility.TAGS.DETAIL;
 import static com.cheep.network.NetworkUtility.TAGS.FINAL_EXTRA_CHARGE;
 import static com.cheep.network.NetworkUtility.TAGS.HOME;
 import static com.cheep.network.NetworkUtility.TAGS.OFFICE;
+import static com.cheep.network.NetworkUtility.TAGS.PACKAGE_TYPE;
 import static com.cheep.network.NetworkUtility.TAGS.START_DATETIME;
 
 /**
@@ -464,15 +464,18 @@ public class WebCallClass {
 
         Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest, NetworkUtility.WS.PROFILE);
     }
+
     ////////////////////////// Get Profile call end     //////////////////////////
 ////////////////////////////////GetRelationShipList/////////////////////
     public interface GetRelationShipResponseListener {
 
-        void getRelationShipList( JSONArray relationshipList);
+        void getRelationShipList(JSONArray relationshipList);
     }
-public interface  UpdateEmergencyContactResponseListener{
+
+    public interface UpdateEmergencyContactResponseListener {
         void getUpdateEmergencyContactResponse(JSONArray emergency_contact);
-}
+    }
+
     public static void getRelationShipListDetail(final Context mContext, final CommonResponseListener commonListener
             , final GetRelationShipResponseListener successListener) {
 
@@ -497,8 +500,7 @@ public interface  UpdateEmergencyContactResponseListener{
                         case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
                             if (!TextUtils.isEmpty(jsonObject.getString(NetworkUtility.TAGS.DATA))) {
 
-                               // JSONObject jsonData = jsonObject.getJSONObject(NetworkUtility.TAGS.DATA);
-
+                                // JSONObject jsonData = jsonObject.getJSONObject(NetworkUtility.TAGS.DATA);
 
 
                                 JSONArray relationshipList = jsonObject.optJSONArray(NetworkUtility.TAGS.DATA);
@@ -550,84 +552,86 @@ public interface  UpdateEmergencyContactResponseListener{
 
         Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest, NetworkUtility.WS.GET_RELATIONSHIP_LIST);
     }
-///
-public static void updateEmergencyContactDetail(final Context mContext, final CommonResponseListener commonListener
-        , final UpdateEmergencyContactResponseListener successListener,JSONArray emergencycontact) {
 
-    final Response.ErrorListener errorListener = new Response.ErrorListener() {
-        @Override
-        public void onErrorResponse(VolleyError error) {
-            Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
-            commonListener.volleyError(error);
-        }
-    };
+    ///
+    public static void updateEmergencyContactDetail(final Context mContext, final CommonResponseListener commonListener
+            , final UpdateEmergencyContactResponseListener successListener, JSONArray emergencycontact) {
 
-    final Response.Listener responseListener = new Response.Listener() {
-        @Override
-        public void onResponse(Object response) {
-            Log.d(TAG, "onResponse() called with: response = [" + response + "]");
-            try {
-                JSONObject jsonObject = new JSONObject(response.toString());
-                int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
-
-                String error_message;
-                switch (statusCode) {
-                    case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
-                        if (!TextUtils.isEmpty(jsonObject.getString(NetworkUtility.TAGS.DATA))) {
-
-                            // JSONObject jsonData = jsonObject.getJSONObject(NetworkUtility.TAGS.DATA);
-
-
-                            JSONArray jsonEmergencyContacts = jsonObject.getJSONArray(NetworkUtility.TAGS.DATA);
-
-
-                            //ArrayList<AddressModel> addressList = GsonUtility.getObjectListFromJsonString(jsonData.optJSONArray(NetworkUtility.TAGS.ADDRESS).toString(), AddressModel[].class);
-
-                            successListener.getUpdateEmergencyContactResponse(jsonEmergencyContacts);
-
-                        }
-                        break;
-                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
-                        // Show Toast
-                        commonListener.showSpecificMessage(mContext.getString(R.string.label_something_went_wrong));
-                        break;
-                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
-                        error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
-                        // Show message
-                        commonListener.showSpecificMessage(error_message);
-                        break;
-                    case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
-                    case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
-                        //Logout and finish the current activity
-                        Utility.logout(mContext, true, statusCode);
-                        commonListener.forceLogout();
-                        break;
-                }
-            } catch (JSONException e) {
-                commonListener.showSpecificMessage(mContext.getString(R.string.label_something_went_wrong));
-                e.printStackTrace();
+        final Response.ErrorListener errorListener = new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
+                commonListener.volleyError(error);
             }
-        }
-    };
+        };
 
-    //Add Header parameters
-    Map<String, String> mHeaderParams = new HashMap<>();
-    mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
-    mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().userID);
+        final Response.Listener responseListener = new Response.Listener() {
+            @Override
+            public void onResponse(Object response) {
+                Log.d(TAG, "onResponse() called with: response = [" + response + "]");
+                try {
+                    JSONObject jsonObject = new JSONObject(response.toString());
+                    int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
 
-    //Add Params
-    Map<String, Object> mParams = new HashMap<>();
-    mParams.put(NetworkUtility.TAGS.EMERGENCY_DATA, emergencycontact);
-    //noinspection unchecked
-    VolleyNetworkRequest mVolleyNetworkRequest = new VolleyNetworkRequest(NetworkUtility.WS.UPDATE_EMERGENCY_CONTACTS
-            , errorListener
-            , responseListener
-            , mHeaderParams
-            , mParams
-            , null);
+                    String error_message;
+                    switch (statusCode) {
+                        case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
+                            if (!TextUtils.isEmpty(jsonObject.getString(NetworkUtility.TAGS.DATA))) {
 
-    Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest, NetworkUtility.WS.UPDATE_EMERGENCY_CONTACTS);
-}
+                                // JSONObject jsonData = jsonObject.getJSONObject(NetworkUtility.TAGS.DATA);
+
+
+                                JSONArray jsonEmergencyContacts = jsonObject.getJSONArray(NetworkUtility.TAGS.DATA);
+
+
+                                //ArrayList<AddressModel> addressList = GsonUtility.getObjectListFromJsonString(jsonData.optJSONArray(NetworkUtility.TAGS.ADDRESS).toString(), AddressModel[].class);
+
+                                successListener.getUpdateEmergencyContactResponse(jsonEmergencyContacts);
+
+                            }
+                            break;
+                        case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
+                            // Show Toast
+                            commonListener.showSpecificMessage(mContext.getString(R.string.label_something_went_wrong));
+                            break;
+                        case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
+                            error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
+                            // Show message
+                            commonListener.showSpecificMessage(error_message);
+                            break;
+                        case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
+                        case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
+                            //Logout and finish the current activity
+                            Utility.logout(mContext, true, statusCode);
+                            commonListener.forceLogout();
+                            break;
+                    }
+                } catch (JSONException e) {
+                    commonListener.showSpecificMessage(mContext.getString(R.string.label_something_went_wrong));
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        //Add Header parameters
+        Map<String, String> mHeaderParams = new HashMap<>();
+        mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
+        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().userID);
+
+        //Add Params
+        Map<String, Object> mParams = new HashMap<>();
+        mParams.put(NetworkUtility.TAGS.EMERGENCY_DATA, emergencycontact);
+        //noinspection unchecked
+        VolleyNetworkRequest mVolleyNetworkRequest = new VolleyNetworkRequest(NetworkUtility.WS.UPDATE_EMERGENCY_CONTACTS
+                , errorListener
+                , responseListener
+                , mHeaderParams
+                , mParams
+                , null);
+
+        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest, NetworkUtility.WS.UPDATE_EMERGENCY_CONTACTS);
+    }
+
     ////////////////////////// Get city available for cheep care call start     //////////////////////////
     public interface CityAvailableCheepCareListener {
 
@@ -1997,4 +2001,86 @@ public static void updateEmergencyContactDetail(final Context mContext, final Co
     }
 
     ////////////////////////// get address size call end //////////////////////////
+
+    ////////////////////////// identifyAddressIfSubscribed call start //////////////////////////
+
+    public interface GetAddressPackageTypeListener {
+        void getPackageTypeOfAddress(String packageType);
+    }
+
+    public static void identifyAddressIfSubscribedWS(final Context mContext, String addressId, final GetAddressPackageTypeListener getAddressPackageTypeListener, final CommonResponseListener commonListener) {
+
+        final Response.ErrorListener errorListener = new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
+                commonListener.volleyError(error);
+            }
+        };
+
+        final Response.Listener responseListener = new Response.Listener() {
+            @Override
+            public void onResponse(Object response) {
+                Log.d(TAG, "onResponse() called with: response = [" + response + "]");
+                try {
+                    JSONObject jsonObject = new JSONObject(response.toString());
+                    int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
+                    String error_message;
+
+                    switch (statusCode) {
+                        case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
+                            JSONObject jsonData = jsonObject.getJSONObject(DATA);
+                            String packageType = jsonData.optString(PACKAGE_TYPE);
+                            getAddressPackageTypeListener.getPackageTypeOfAddress(packageType);
+                            break;
+
+                        case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
+                            // Show Toast
+                            commonListener.showSpecificMessage(mContext.getString(R.string.label_something_went_wrong));
+                            break;
+
+                        case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
+                            error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
+                            // Show message
+                            commonListener.showSpecificMessage(error_message);
+                            break;
+
+                        case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
+                        case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
+                            //Logout and finish the current activity
+                            Utility.logout(mContext, true, statusCode);
+                            commonListener.forceLogout();
+                            break;
+                    }
+                } catch (JSONException e) {
+                    commonListener.showSpecificMessage(mContext.getString(R.string.label_something_went_wrong));
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        //Add Header parameters
+        Map<String, String> mHeaderParams = new HashMap<>();
+        mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
+        if (PreferenceUtility.getInstance(mContext).getUserDetails() != null) {
+            mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().userID);
+        }
+
+        Map<String, String> bodyParams = new HashMap<>();
+        bodyParams.put(ADDRESS_ID, addressId);
+
+
+        //noinspection unchecked
+        VolleyNetworkRequest mVolleyNetworkRequest = new VolleyNetworkRequest(
+                NetworkUtility.WS.IDENTIFY_ADDRESS_IF_SUBSCRIBED
+                , errorListener
+                , responseListener
+                , mHeaderParams
+                , bodyParams
+                , null);
+
+        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest, NetworkUtility.WS.IDENTIFY_ADDRESS_IF_SUBSCRIBED);
+    }
+
+    ////////////////////////// identifyAddressIfSubscribed call end //////////////////////////
 }

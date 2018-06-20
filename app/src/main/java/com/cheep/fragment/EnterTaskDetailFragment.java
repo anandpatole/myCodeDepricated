@@ -14,7 +14,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.DatePicker;
 import android.widget.TimePicker;
 
@@ -24,17 +23,17 @@ import com.cheep.activity.BaseAppCompatActivity;
 import com.cheep.activity.TaskCreationActivity;
 import com.cheep.addresspopupsfortask.AddressListDialog;
 import com.cheep.addresspopupsfortask.AddressSelectionListener;
-import com.cheep.cheepcare.adapter.AddressTaskCreateAdapter;
 import com.cheep.cheepcare.adapter.SelectedSubServiceAdapter;
 import com.cheep.cheepcare.dialogs.BottomAddAddressDialog;
 import com.cheep.cheepcare.dialogs.CheepCareNotInYourCityDialog;
 import com.cheep.cheepcare.dialogs.NotSubscribedAddressDialog;
 import com.cheep.cheepcare.model.CareCityDetail;
 import com.cheep.cheepcare.model.CityLandingPageModel;
-import com.cheep.cheepcare.model.PackageDetail;
+import com.cheep.cheepcarenew.activities.LandingScreenPickPackageActivity;
 import com.cheep.databinding.FragmentEnterTaskDetailBinding;
 import com.cheep.dialogs.AcknowledgementInteractionListener;
 import com.cheep.model.AddressModel;
+import com.cheep.utils.GsonUtility;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.SuperCalendar;
 import com.cheep.utils.Utility;
@@ -57,7 +56,6 @@ public class EnterTaskDetailFragment extends BaseFragment {
     public SuperCalendar startDateTimeSuperCalendar = SuperCalendar.getInstance();
     private BottomAddAddressDialog dialog;
     private ArrayList<AddressModel> mAddressList;
-    private AddressTaskCreateAdapter<AddressModel> mAddressAdapter;
     private boolean isClicked = false;
     public AddressModel mSelectedAddress;
 
@@ -84,6 +82,7 @@ public class EnterTaskDetailFragment extends BaseFragment {
             mTaskCreationActivity.finish();
         }
     };
+    private String subscriptionType;
 
     @SuppressWarnings("unused")
     public static EnterTaskDetailFragment newInstance() {
@@ -224,14 +223,64 @@ public class EnterTaskDetailFragment extends BaseFragment {
 
     private void showAddressDialog() {
 
-        AddressListDialog addressListDialog = AddressListDialog.newInstance(new AddressSelectionListener() {
+        AddressListDialog addressListDialog = AddressListDialog.newInstance(subscriptionType, new AddressSelectionListener() {
             @Override
             public void onAddressSelection(AddressModel addressModel) {
-                fillAddressView(addressModel);
+//                fillAddressView(addressModel);
+
+                if (!addressModel.is_subscribe.equalsIgnoreCase(Utility.ADDRESS_SUBSCRIPTION_TYPE.NONE)) {
+                    Log.d(TAG, "onItemSelected: ");
+//                    callWS(addressModel);
+                    fillAddressView(addressModel);
+                } else if (addressModel.is_subscribe.equals(Utility.ADDRESS_SUBSCRIPTION_TYPE.NONE)) {
+                    if (!Utility.isConnected(mContext)) {
+                        Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mFragmentEnterTaskDetailBinding.getRoot());
+                        return;
+                    }
+                    showProgressDialog();
+                    WebCallClass.isCityAvailableForCare(mTaskCreationActivity, addressModel.address_id, commonErrorListener, new WebCallClass.CityAvailableCheepCareListener() {
+                        @Override
+                        public void getCityDetails(final CareCityDetail careCityDetail) {
+                            hideProgressDialog();
+                            if (TextUtils.isEmpty(careCityDetail.citySlug)) {
+                                CheepCareNotInYourCityDialog.newInstance(mContext, new AcknowledgementInteractionListener() {
+                                    @Override
+                                    public void onAcknowledgementAccepted() {
+                                    }
+                                });
+                            } else {
+                                NotSubscribedAddressDialog.newInstance(mContext, new NotSubscribedAddressDialog.DialogInteractionListener() {
+                                    @Override
+                                    public void onSubscribeClicked() {
+                                        if (!Utility.isConnected(mContext)) {
+                                            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mFragmentEnterTaskDetailBinding.getRoot());
+                                            return;
+                                        }
+                                        showProgressDialog();
+                                        WebCallClass.getCityCareDetail(mContext, careCityDetail.citySlug, commonErrorListener, new WebCallClass.GetCityCareDataListener() {
+                                            @Override
+                                            public void getCityCareData(CityLandingPageModel cityLandingPageModel) {
+                                                hideProgressDialog();
+                                                LandingScreenPickPackageActivity.newInstance(mContext, cityLandingPageModel.careCityDetail, GsonUtility.getJsonStringFromObject(cityLandingPageModel.packageDetailList));
+                                            }
+                                        });
+                                    }
+
+                                    @Override
+                                    public void onNotNowClicked() {
+                                    }
+                                });
+                            }
+                        }
+                    });
+
+                }
             }
+
         });
         addressListDialog.show(mTaskCreationActivity.getSupportFragmentManager(), AddressListDialog.TAG);
     }
+
 
     @Override
     public void onAttach(Context context) {
@@ -268,7 +317,7 @@ public class EnterTaskDetailFragment extends BaseFragment {
 
 
     private void showDateTimePickerDialog() {
-        // Get Current Date
+// Get Current Date
         final Calendar c = Calendar.getInstance();
 
         DatePickerDialog datePickerDialog = new DatePickerDialog(mContext, new DatePickerDialog.OnDateSetListener() {
@@ -291,7 +340,7 @@ public class EnterTaskDetailFragment extends BaseFragment {
     public SuperCalendar superCalendar;
 
     private void showTimePickerDialog() {
-        // Get Current Time
+// Get Current Time
         final Calendar c = Calendar.getInstance();
         // Launch Time Picker Dialog
         TimePickerDialog timePickerDialog = new TimePickerDialog(mContext,
@@ -344,9 +393,9 @@ public class EnterTaskDetailFragment extends BaseFragment {
         timePickerDialog.show();
 
     }
-    ///////////////////////////////////////////////////////////////////////////////////////////////
-    /////////////////////////////////////WHEN Feature [END]//////////////////////
-    ///////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////WHEN Feature [END]//////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
 
 
     @Override
@@ -359,13 +408,35 @@ public class EnterTaskDetailFragment extends BaseFragment {
         mAddressList = new ArrayList<>();
         if (PreferenceUtility.getInstance(mContext).getUserDetails() != null) {
             ArrayList<AddressModel> subscibedAddressList = new ArrayList<>();
-            ArrayList<AddressModel> userAddressList = PreferenceUtility.getInstance(mContext).getUserDetails().addressList;
-//            for (AddressModel addressModel : userAddressList) {
-//                if (addressModel.is_subscribe.equalsIgnoreCase(Utility.BOOLEAN.YES)) {
-//                    subscibedAddressList.add(addressModel);
-//                }
-//            }
-            mAddressList.addAll(userAddressList);
+            if (mTaskCreationActivity.mJobCategoryModel.catSlug.equalsIgnoreCase(Utility.CAT_SLUG_TYPES.PEST_CONTROL)) {
+                subscriptionType = Utility.ADDRESS_SUBSCRIPTION_TYPE.PREMIUM;
+                ArrayList<AddressModel> userAddressList = PreferenceUtility.getInstance(mContext).getUserDetails().addressList;
+                for (AddressModel addressModel : userAddressList) {
+                    if (addressModel.is_subscribe.equalsIgnoreCase(subscriptionType)) {
+                        subscibedAddressList.add(addressModel);
+                    }
+                }
+
+            } else if (mTaskCreationActivity.mJobCategoryModel.isSubscribed.equalsIgnoreCase(Utility.BOOLEAN.YES)) {
+                subscriptionType = Utility.ADDRESS_SUBSCRIPTION_TYPE.NORMAL;
+                ArrayList<AddressModel> userAddressList = PreferenceUtility.getInstance(mContext).getUserDetails().addressList;
+                for (AddressModel addressModel : userAddressList) {
+                    if (!addressModel.is_subscribe.equalsIgnoreCase(Utility.ADDRESS_SUBSCRIPTION_TYPE.NONE)) {
+                        subscibedAddressList.add(addressModel);
+                    }
+                }
+
+            } else {
+                subscriptionType = Utility.ADDRESS_SUBSCRIPTION_TYPE.NONE;
+                ArrayList<AddressModel> userAddressList = PreferenceUtility.getInstance(mContext).getUserDetails().addressList;
+                for (AddressModel addressModel : userAddressList) {
+                    if (addressModel.is_subscribe.equalsIgnoreCase(subscriptionType)) {
+                        subscibedAddressList.add(addressModel);
+                    }
+                }
+            }
+
+            mAddressList.addAll(subscibedAddressList);
         }
 
         if (!mAddressList.isEmpty())
@@ -377,99 +448,8 @@ public class EnterTaskDetailFragment extends BaseFragment {
             address_id = "";
         }});
 
-        mAddressAdapter = new AddressTaskCreateAdapter<>(mContext
-                , android.R.layout.simple_spinner_item
-                , mAddressList);
-        mFragmentEnterTaskDetailBinding.spinnerAddressSelection.setAdapter(mAddressAdapter);
-        mFragmentEnterTaskDetailBinding.spinnerAddressSelection.setFocusable(false);
-        mFragmentEnterTaskDetailBinding.spinnerAddressSelection.setPrompt("Prompt");
-        mFragmentEnterTaskDetailBinding.spinnerAddressSelection.setSelected(false);
-        mFragmentEnterTaskDetailBinding.spinnerAddressSelection.setFocusableInTouchMode(false);
-        mFragmentEnterTaskDetailBinding.spinnerAddressSelection.setPopupBackgroundDrawable(getResources().getDrawable(R.drawable.bg_white_shadow));
-
-
-        mFragmentEnterTaskDetailBinding.spinnerAddressSelection.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, final int position, long id) {
-                if (position == mAddressList.size() - 1) {
-                    showBottomAddressDialog();
-                } else if (mAddressList.get(position).is_subscribe.equalsIgnoreCase(Utility.BOOLEAN.YES)) {
-                    Log.d(TAG, "onItemSelected: ");
-                    fillAddressView(mAddressList.get(position));
-                    if (isClicked) {
-                        if (mAddressList.get(position).address_id.equalsIgnoreCase(mSelectedAddress.address_id)) {
-                            fillAddressView(mAddressList.get(position));
-                        } else {
-                            if (getActivity() != null)
-                                getActivity().finish();
-                        }
-                    }
-                } else if (isClicked && mAddressList.get(position).is_subscribe.equals(Utility.BOOLEAN.NO)) {
-                    if (!Utility.isConnected(mContext)) {
-                        Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mFragmentEnterTaskDetailBinding.getRoot());
-                        return;
-                    }
-                    showProgressDialog();
-                    WebCallClass.isCityAvailableForCare(mTaskCreationActivity, mAddressList.get(position).address_id, commonErrorListener, new WebCallClass.CityAvailableCheepCareListener() {
-                        @Override
-                        public void getCityDetails(final CareCityDetail careCityDetail) {
-                            hideProgressDialog();
-                            if (TextUtils.isEmpty(careCityDetail.citySlug)) {
-                                CheepCareNotInYourCityDialog.newInstance(mContext, new AcknowledgementInteractionListener() {
-                                    @Override
-                                    public void onAcknowledgementAccepted() {
-                                    }
-                                });
-                            } else {
-                                NotSubscribedAddressDialog.newInstance(mContext, new NotSubscribedAddressDialog.DialogInteractionListener() {
-                                    @Override
-                                    public void onSubscribeClicked() {
-//                                        mTaskCreationActivity.setResult(Utility.REQUEST_CODE_TASK_CREATION_CHEEP_CARE,
-//                                                new Intent().putExtra(Utility.Extra.DATA, careCitySlug));
-//                                        mTaskCreationActivity.finish();
-                                        if (!Utility.isConnected(mContext)) {
-                                            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mFragmentEnterTaskDetailBinding.getRoot());
-                                            return;
-                                        }
-
-                                        showProgressDialog();
-
-                                        WebCallClass.getCityCareDetail(mContext, careCityDetail.citySlug, commonErrorListener, new WebCallClass.GetCityCareDataListener() {
-                                            @Override
-                                            public void getCityCareData(CityLandingPageModel cityLandingPageModel) {
-                                                hideProgressDialog();
-                                                for (PackageDetail detail : cityLandingPageModel.packageDetailList) {
-                                                    Log.e(TAG, "getCityCareData:detail : " + detail);
-                                                }
-                                            }
-                                        });
-                                    }
-
-
-                                    @Override
-                                    public void onNotNowClicked() {
-                                        fillAddressView(mAddressList.get(position));
-                                    }
-                                });
-                            }
-                        }
-                    });
-
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                Log.d(TAG, "onNothingSelected() called with: parent = [" + parent + "]");
-            }
-        });
-
     }
 
-    private void showBottomAddressDialog() {
-
-
-    }
 
     private void fillAddressView(AddressModel model) {
         updateWhereLabelWithIcon(true);
@@ -480,7 +460,7 @@ public class EnterTaskDetailFragment extends BaseFragment {
         // show address's nick name or nick name is null then show category
 
         mFragmentEnterTaskDetailBinding.tvAddressNickname.setText(model.getNicknameString(mTaskCreationActivity));
-        mFragmentEnterTaskDetailBinding.tvLabelAddressSubscribed.setText(model.is_subscribe.equalsIgnoreCase(Utility.BOOLEAN.YES)
+        mFragmentEnterTaskDetailBinding.tvLabelAddressSubscribed.setText(!model.is_subscribe.equalsIgnoreCase(Utility.ADDRESS_SUBSCRIPTION_TYPE.NONE)
                 ? getString(R.string.label_address_subscribed)
                 : Utility.EMPTY_STRING);
 

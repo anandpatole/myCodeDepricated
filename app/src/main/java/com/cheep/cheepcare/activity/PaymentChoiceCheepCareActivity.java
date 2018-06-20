@@ -594,13 +594,6 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
             case Utility.BROADCAST_TYPE.PAYMENT_COMPLETED_NEED_TO_REDIRECT_TO_MY_TASK_SCREEN:
 
                 break;
-            case Utility.BROADCAST_TYPE.PACKAGE_SUBSCRIBED_SUCCESSFULLY:
-                    // show dialog
-//                TODO: Need to start the task from here
-                    LogUtils.LOGE(TAG, "onMessageEvent:subsId " + event.id);
-                    onSuccessOfPayment("", event.id, "true");
-
-                break;
         }
 
     }

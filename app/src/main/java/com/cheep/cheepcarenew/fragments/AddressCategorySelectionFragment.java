@@ -83,39 +83,38 @@ public class AddressCategorySelectionFragment extends BaseFragment {
             return;
         }
         Log.e(TAG, "initiateUI: ********************");
-        UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
-        if (userDetails != null && userDetails.addressList != null && !userDetails.addressList.isEmpty()) {
-            if (userDetails.addressList.get(0) != null) {
-                addressModelArrayList = userDetails.addressList;
-                addressModel = userDetails.addressList.get(0);
-                setAddress();
-                mBinding.tvAddressTitle.setVisibility(View.VISIBLE);
-                mBinding.cvAddress.setVisibility(View.VISIBLE);
-            } else {
-                mBinding.tvAddressTitle.setVisibility(View.GONE);
-                mBinding.cvAddress.setVisibility(View.GONE);
-                mBinding.rlToolTip.setVisibility(View.GONE);
-            }
 
+        UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
+        ArrayList<AddressModel> arrayList = new ArrayList<>();
+        if (userDetails != null && userDetails.addressList != null && !userDetails.addressList.isEmpty()) {
+            arrayList = userDetails.addressList;
         } else {
             GuestUserDetails guestUserDetails = PreferenceUtility.getInstance(mContext).getGuestUserDetails();
             if (guestUserDetails != null && guestUserDetails.addressList != null && !guestUserDetails.addressList.isEmpty()) {
-                if (guestUserDetails.addressList.get(0) != null) {
-                    addressModelArrayList = guestUserDetails.addressList;
-                    addressModel = guestUserDetails.addressList.get(0);
-                    mBinding.tvAddressTitle.setVisibility(View.VISIBLE);
-                    mBinding.cvAddress.setVisibility(View.VISIBLE);
-                    setAddress();
-                } else {
-                    mBinding.tvAddressTitle.setVisibility(View.GONE);
-                    mBinding.cvAddress.setVisibility(View.GONE);
-                    mBinding.rlToolTip.setVisibility(View.GONE);
-                }
-            } else {
-                mBinding.tvAddressTitle.setVisibility(View.GONE);
-                mBinding.cvAddress.setVisibility(View.GONE);
-                mBinding.rlToolTip.setVisibility(View.GONE);
+                arrayList = guestUserDetails.addressList;
             }
+        }
+
+
+        if (!arrayList.isEmpty()) {
+            addressModelArrayList = new ArrayList<>();
+            for (AddressModel addressModel : arrayList) {
+                if (addressModel.is_subscribe.equalsIgnoreCase(Utility.ADDRESS_SUBSCRIPTION_TYPE.NONE)) {
+                    addressModelArrayList.add(addressModel);
+                }
+            }
+        }
+
+
+        if (!addressModelArrayList.isEmpty()) {
+            addressModel = addressModelArrayList.get(0);
+            setAddress();
+            mBinding.tvAddressTitle.setVisibility(View.VISIBLE);
+            mBinding.cvAddress.setVisibility(View.VISIBLE);
+        } else {
+            mBinding.tvAddressTitle.setVisibility(View.GONE);
+            mBinding.cvAddress.setVisibility(View.GONE);
+            mBinding.rlToolTip.setVisibility(View.GONE);
         }
 
     }
@@ -187,7 +186,7 @@ public class AddressCategorySelectionFragment extends BaseFragment {
         UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
         if (userDetails != null && userDetails.addressList != null && !userDetails.addressList.isEmpty()) {
             for (AddressModel addressModel : userDetails.addressList) {
-                if (addressModel.is_subscribe.equalsIgnoreCase(Utility.BOOLEAN.NO))
+                if (addressModel.is_subscribe.equalsIgnoreCase(Utility.ADDRESS_SUBSCRIPTION_TYPE.NONE))
                     addressModelArrayList.add(addressModel);
             }
             //            if (userDetails.addressList.get(0) != null) {
@@ -201,7 +200,7 @@ public class AddressCategorySelectionFragment extends BaseFragment {
 //                    addressModelArrayList = guestUserDetails.addressList;
 //                }
                 for (AddressModel addressModel : guestUserDetails.addressList) {
-                    if (addressModel.is_subscribe.equalsIgnoreCase(Utility.BOOLEAN.NO))
+                    if (addressModel.is_subscribe.equalsIgnoreCase(Utility.ADDRESS_SUBSCRIPTION_TYPE.NONE))
                         addressModelArrayList.add(addressModel);
                 }
             }

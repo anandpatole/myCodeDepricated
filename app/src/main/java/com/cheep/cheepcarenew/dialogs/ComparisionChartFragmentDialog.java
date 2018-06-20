@@ -158,12 +158,12 @@ public class ComparisionChartFragmentDialog extends DialogFragment implements Vi
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_book_know_premimu:
-                PreferenceUtility.getInstance(getContext()).saveTypeOfPackage(Utility.TYPE.PREMIUM);
+                PreferenceUtility.getInstance(getContext()).saveTypeOfPackage(Utility.CAR_PACKAGE_TYPE.PREMIUM);
                 showPackageDetailModelFragmentDialog();
                 //AddressActivity.newInstance(getContext(), packageDetail, careCityDetail,comparisionChartModel);
                 break;
             case R.id.tv_book_know_care:
-                PreferenceUtility.getInstance(getContext()).saveTypeOfPackage(Utility.TYPE.NORMAL);
+                PreferenceUtility.getInstance(getContext()).saveTypeOfPackage(Utility.CAR_PACKAGE_TYPE.NORMAL);
                 showPackageDetailModelFragmentDialog();
                 //AddressActivity.newInstance(getContext(), packageDetail, careCityDetail,comparisionChartModel);
                 break;
