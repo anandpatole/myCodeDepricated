@@ -780,7 +780,7 @@ else if(slideMenuListModel.title.equals(getString(R.string.Label_cheep_care_rate
     public void onCategoryRowClicked(JobCategoryModel model, int position) {
         // Changes on 27thApril,2017
 //        HireNewJobActivity.newInstance(mContext, model);
-        if(model.isSubscribed.equalsIgnoreCase("no"))
+        if(model.isSubscribed.equalsIgnoreCase(Utility.BOOLEAN.NO))
         {
 ServiceDetailModalDialog.newInstance(mContext,model).show(this.getSupportFragmentManager(),"ServiceDetais");
             //new ServiceDetailModalDialog().show();

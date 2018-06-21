@@ -15,6 +15,10 @@ import java.util.List;
  */
 @Keep
 public class TaskDetailModel implements Serializable {
+
+    @SerializedName("addtional_charge_reason")
+    public String additionalChargeReason;
+
     @SerializedName("task_id")
     public String taskId;
 
@@ -35,6 +39,9 @@ public class TaskDetailModel implements Serializable {
 
     @SerializedName("task_category")
     public JobCategoryModel categoryModel;
+
+    @SerializedName("cat_price")
+    public String catPrice;
 
 
     @SerializedName("task_subcategory")

@@ -719,6 +719,12 @@ public interface  cat
         String NORMAL= "normal";
     }
 
+public interface DIALOG_TYPE
+{
+    String OUT_OF_OFFICE_HOURS="Out-of-Office Hours";
+    String URGENT_BOOKING="Urgent Booking";
+    String NONE="none";
+}
 
     public interface BROADCAST_TYPE {
         int UPDATE_FAVOURITE = 1;

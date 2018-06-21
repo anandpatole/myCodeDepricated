@@ -73,6 +73,7 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
     Map<String, Object> mTaskCreationParams;
     CustomLoadingDialog mDialog;
     public ArrayList<SubServiceDetailModel> allSubCategoryList;
+    String additionalChargeReason;
 
     public static void getInstance(Context mContext, JobCategoryModel model) {
         Intent intent = new Intent(mContext, TaskCreationActivity.class);
@@ -358,7 +359,9 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
         TaskDetailModel taskDetailModel = new TaskDetailModel();
 
 //                    taskDetailModel.categoryName = mJobCategoryModel.catName;
-        if (getSubCatList() != null && getSubCatList().size() > 0) {
+
+taskDetailModel.additionalChargeReason=mTaskCreationPagerAdapter.mEnterTaskDetailFragment.additionalChargeReason;
+taskDetailModel.catPrice=mJobCategoryModel.catPrice;
 
 //                    taskDetailModel.categoryName = mJobCategoryModel.cat
             if (!getSubCatList().isEmpty()) {
@@ -395,9 +398,10 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
 
             taskDetailModel.taskType = Utility.TASK_TYPE.INSTA_BOOK;
             taskDetailModel.taskStatus = Utility.TASK_STATUS.PENDING;
+
             BookingConfirmationInstaActivity.newInstance(TaskCreationActivity.this, taskDetailModel, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddress);
         }
-    }
+
 /*
     public void onInstaBookClicked() {
 

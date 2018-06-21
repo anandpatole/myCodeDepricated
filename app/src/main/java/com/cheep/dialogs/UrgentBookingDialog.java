@@ -22,7 +22,7 @@ public class UrgentBookingDialog extends DialogFragment {
     private String urgent_booking_msg= Utility.EMPTY_STRING;
     public interface UrgentBookingListener {
         void onUrgentPayNow();
-        //void onCanWait();
+        void onUrgentCanWait();
     }
 
     UrgentBookingListener urgentBookingListener;
@@ -70,7 +70,7 @@ public class UrgentBookingDialog extends DialogFragment {
         mBinding.textUrgentBookingCanWait.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               // urgentBookingListener.onCanWait();
+                urgentBookingListener.onUrgentCanWait();;
                 dismiss();
             }
         });
