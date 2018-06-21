@@ -918,6 +918,7 @@ without any hidden charges. Try it now!</string>
     <string name="acknowledgement_details">Congrats on taking the first step towards making your home healthy &amp; happy. Your Cheep Care AMC package is now activated and we are available 24x7 to help you maintain your home. Thank you </string>
     <string name="thanks">Thanks</string>
     <string name="label_add_new_address">Add new address</string>
+    <string name="select_address">Select Address</string>
     <string name="label_get_current_location">Get current location</string>
     <string name="hint_address_locality">Locality</string>
     <string name="hint_address_city">City</string>
@@ -944,7 +945,6 @@ without any hidden charges. Try it now!</string>
     <string name="subscribed_under_cheep_care">• Subscribed under Cheep Care</string>
     <string name="please_select_your_address">Please select your address</string>
     <string name="label_auto_renew_deactivated">Auto renewal deactivated</string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="message_coundnot_find_current_location">oops! could noy find your current location! Please try again.</string>
     <string name="label_auto_detect_location_message">Our smart App has picked up this location automatically via GPS?</string>
     <string name="label_please_tell_us_where_do_you_need_the_amc_for">Please tell us where do you need the AMC for?</string>

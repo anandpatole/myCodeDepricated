@@ -32,11 +32,15 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.cheep.BuildConfig;
 import com.cheep.R;
+import com.cheep.activity.BaseAppCompatActivity;
 import com.cheep.activity.HomeActivity;
 import com.cheep.activity.VerificationActivity;
 import com.cheep.adapter.AddressRecyclerViewAdapterProfile;
 import com.cheep.adapter.EmergencyContactRecyclerViewAdapter;
+import com.cheep.addresspopupsfortask.AddressCategorySelectionDialog;
 import com.cheep.cheepcare.dialogs.BottomAddAddressDialog;
+import com.cheep.cheepcarenew.dialogs.AddressListDialog;
+import com.cheep.cheepcarenew.dialogs.EditAddressDialog;
 import com.cheep.custom_view.BottomAlertDialog;
 import com.cheep.custom_view.DividerItemDecoration;
 import com.cheep.databinding.DialogChangePhoneNumberBinding;
@@ -87,18 +91,28 @@ import static com.cheep.utils.Utility.REQUEST_CODE_IMAGE_CAPTURE_ADD_PROFILE;
  * Created by pankaj on 9/27/16.
  */
 
-public class ProfileDetailsFragmentnew extends BaseFragment implements WebCallClass.CommonResponseListener, EmergencyContactRecyclerViewAdapter.EmergencyInteractionListener, WebCallClass.UpdateEmergencyContactResponseListener {
+public class ProfileDetailsFragmentnew extends BaseFragment implements
+        EmergencyContactRecyclerViewAdapter.EmergencyInteractionListener,
+        WebCallClass.UpdateEmergencyContactResponseListener,
+
+        WebCallClass.CommonResponseListener,
+        View.OnClickListener {
+
+
     public static final String TAG = "ProfileDetailsFragmentnew";
-
-
     private String TEMP_PHONE_NUMBER;
     private FragmentProfileDetailsNewBinding mBinding;
     public static JSONArray jsonEmergencyContacts;
     private ArrayList<AddressModel> addressList;
     private DrawerLayoutInteractionListener mListener;
     String rating;
-    RelationShipScreenFragment relationShipScreenFragment;
-ManageSubscriptionFragment manageSubscriptionFragment;
+    private RelationShipScreenFragment relationShipScreenFragment;
+    private ManageSubscriptionFragment manageSubscriptionFragment;
+
+    // dialog
+    private AddressCategorySelectionDialog addressCategorySelectionDialog;
+    private AddressListDialog addressListDialog;
+    private UserDetails userDetails;
 
     //    private String mCurrentPhotoPath;
     private File photoFile;
@@ -115,6 +129,9 @@ ManageSubscriptionFragment manageSubscriptionFragment;
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         mBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_profile_details_new, container, false);
+
+        callGetProfileWS();
+
         return mBinding.getRoot();
     }
 
@@ -123,6 +140,7 @@ ManageSubscriptionFragment manageSubscriptionFragment;
         super.onActivityCreated(savedInstanceState);
         initiateUI();
         setListener();
+
     }
 
     @Override
@@ -140,7 +158,6 @@ ManageSubscriptionFragment manageSubscriptionFragment;
     public void onDetach() {
         Log.i(TAG, "onDetach: ");
         mListener = null;
-
         /*
           Cancel the request as it no longer available
          */
@@ -160,23 +177,14 @@ ManageSubscriptionFragment manageSubscriptionFragment;
 
     @Override
     public void initiateUI() {
+
+
         //Fetch User Details from Preference
-        UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
+        userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
+
         mBinding.recyclerEmergencyContact.setNestedScrollingEnabled(false);
-        //mBinding.textVersion.setText(getString(R.string.label_version_x, Utility.getApplicationVersion(mContext)
+
         fillFields(userDetails);
-
-        /*//loading banner image
-        Glide
-                .with(mContext)
-                .load("http://stylekart.net/2016/roastkings/admin/images/post/original/1475588386_57f3b1224612d.png")
-                .error(R.mipmap.ic_launcher)
-                .crossFade()
-                .into(mBinding.imgBanner);*/
-
-        //// showGuestProfile(PreferenceUtility.getInstance(mContext).getUserDetails() == null);
-
-        callGetProfileWS();
     }
 
     private void fillFields(UserDetails userDetails) {
@@ -193,7 +201,7 @@ ManageSubscriptionFragment manageSubscriptionFragment;
             mBinding.userName.setText(userDetails.userName);
             if (addressList != null) {
                 //fillAddressRecyclerView(mBinding.textAddressRecyclerNew);
-                fillAddressRecyclerView1(mBinding.textAddressRecyclerNew);
+                // fillAddressRecyclerView1(mBinding.textAddressRecyclerNew);
             }
             if (jsonEmergencyContacts != null) {
                 if (jsonEmergencyContacts.length() >= 3) {
@@ -208,18 +216,6 @@ ManageSubscriptionFragment manageSubscriptionFragment;
             mBinding.textPhoneNo.setText(userDetails.phoneNumber);
             mBinding.textEmail.setText(userDetails.email);
 
-//            if(addressList!=null)
-////            {
-////                for (AddressModel s : addressList) {
-////                    if (s.category.equalsIgnoreCase("home"))
-////                    {
-////                        fillAddressRecyclerView(mBinding.textAddressRecyclerNew);
-////                        //mBinding.textHomeAddress.setText(s.address);
-////                    }
-////                }
-////            }
-
-
         } else {
             // Static details for Guest Users
             //  mBinding.userName.setText(Utility.GUEST_STATIC_INFO.USERNAME);
@@ -232,7 +228,7 @@ ManageSubscriptionFragment manageSubscriptionFragment;
     public void setListener() {
 
         mBinding.imgProfilePhotoEdit.setOnClickListener(onClickListener);
-mBinding.textManageCheepCareSubscription.setOnClickListener(onClickListener);
+        mBinding.textManageCheepCareSubscription.setOnClickListener(onClickListener);
         mBinding.textAddContact.setOnClickListener(onClickListener);
         mBinding.textViewMore.setOnClickListener(onClickListener);
         mBinding.labelAddNewAddress.setOnClickListener(onClickListener);
@@ -240,6 +236,7 @@ mBinding.textManageCheepCareSubscription.setOnClickListener(onClickListener);
         mBinding.usernameProfileEdit.setOnClickListener(onClickListener);
         mBinding.emailProfileEdit.setOnClickListener(onClickListener);
         mBinding.mainProfileEdit.setOnClickListener(onClickListener);
+        mBinding.tvEdit.setOnClickListener(this);
 
 
     }
@@ -252,10 +249,10 @@ mBinding.textManageCheepCareSubscription.setOnClickListener(onClickListener);
               /*  case R.id.text_phone_number:
                     showChangePhoneNumberDialog();
                     break;*/
-              case R.id.text_manage_cheep_care_subscription:
-                  manageSubscriptionFragment = ManageSubscriptionFragment.newInstance(addressList);
-                  getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.content, manageSubscriptionFragment, ManageSubscriptionFragment.TAG).commitAllowingStateLoss();
-                  break;
+                case R.id.text_manage_cheep_care_subscription:
+                    manageSubscriptionFragment = ManageSubscriptionFragment.newInstance(addressList);
+                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.content, manageSubscriptionFragment, ManageSubscriptionFragment.TAG).commitAllowingStateLoss();
+                    break;
                 case R.id.main_profile_edit:
                     mBinding.mainProfileEdit.setVisibility(View.GONE);
                     mBinding.usernameProfileEdit.setVisibility(View.VISIBLE);
@@ -284,19 +281,21 @@ mBinding.textManageCheepCareSubscription.setOnClickListener(onClickListener);
                 case R.id.text_view_less:
                     //fillAddressRecyclerView(mBinding.textAddressRecyclerNew);
 
-                    fillAddressRecyclerView1(mBinding.textAddressRecyclerNew);
+                   /* fillAddressRecyclerView1(mBinding.textAddressRecyclerNew);
                     mBinding.textViewLess.setVisibility(View.GONE);
-                    mBinding.textViewMore.setVisibility(View.VISIBLE);
+                    mBinding.textViewMore.setVisibility(View.VISIBLE);*/
                     break;
                 case R.id.text_view_more:
+                    showAddressListDialog();
 
-                    fillAddressRecyclerView(mBinding.textAddressRecyclerNew);
+                   /* fillAddressRecyclerView(mBinding.textAddressRecyclerNew);
                     mBinding.textViewMore.setVisibility(View.GONE);
-                    mBinding.textViewLess.setVisibility(View.VISIBLE);
+                    mBinding.textViewLess.setVisibility(View.VISIBLE);*/
                     //showAddressDialog();
                     break;
                 case R.id.label_add_new_address:
                     showBottomAddressDialog(null);
+
                     break;
                 case R.id.text_emergency_contact:
                     showChangeEmergencyContactDialog();
@@ -322,7 +321,7 @@ mBinding.textManageCheepCareSubscription.setOnClickListener(onClickListener);
 //
                         // showPictureChooserDialog(false);
                         showPictureChooserDialog(false);
-                       // showChooserDialog();
+                        // showChooserDialog();
                     } else {
                         Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mBinding.getRoot());
                     }
@@ -450,7 +449,7 @@ mBinding.textManageCheepCareSubscription.setOnClickListener(onClickListener);
             // Continue only if the File was successfully created
             if (photoFile != null) {
 
-               Uri photoURI = FileProvider.getUriForFile(getActivity(),
+                Uri photoURI = FileProvider.getUriForFile(getActivity(),
                         BuildConfig.FILE_PROVIDER_URL,
                         photoFile);
           /*   Uri  photoURI= Uri.parse(photoFile.toString());*/
@@ -902,7 +901,8 @@ mBinding.textManageCheepCareSubscription.setOnClickListener(onClickListener);
             TEMP_ADDRESS_ID = model.address_id;
 //            showAddAddressDialog(model);
 
-            showBottomAddressDialog(model);
+            // showBottomAddressDialog(model); commented by majid khan 21 june 2018
+            //showEditAddressDialog();
         }
 
 
@@ -971,6 +971,45 @@ mBinding.textManageCheepCareSubscription.setOnClickListener(onClickListener);
         }, new ArrayList<String>(), model);
 
         dialog.showDialog();
+    }
+
+    // set  first address form list on view
+    private void setAddress() {
+        if (addressList != null) {
+            for (int i = 0; i < addressList.size(); i++) {
+                mBinding.imgAddress.setImageResource(Utility.getAddressCategoryBlueIcon(addressList.get(0).category));
+                mBinding.tvAddressCategory.setText(addressList.get(0).category);
+                mBinding.tvFullAddress.setText(addressList.get(0).address);
+                break;
+            }
+        }
+    }
+
+    // open show address list Dialog
+    private void showAddressListDialog() {
+        if (addressListDialog != null) {
+            addressListDialog.dismissAllowingStateLoss();
+            addressListDialog = null;
+        }
+        addressListDialog = AddressListDialog.newInstance(addressList);
+        addressListDialog.show(getActivity().getSupportFragmentManager(), TAG);
+    }
+
+    // show dialog for select home and office address
+    private void showAddressCategorySelectionDialog() {
+        addressCategorySelectionDialog = AddressCategorySelectionDialog.newInstance(Utility.EDIT_PROFILE_ACTIVITY ,addressList);
+        addressCategorySelectionDialog.show(((BaseAppCompatActivity) getContext()).getSupportFragmentManager(),
+                AddressCategorySelectionDialog.TAG);
+    }
+
+    //View.OnClickListener
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.tv_edit:
+                showAddressCategorySelectionDialog();
+                break;
+        }
     }
 
 ///////////////////////////// DELETE CONFIRMATION DIALOG//////////////////////////////////////
@@ -1152,7 +1191,7 @@ mBinding.textManageCheepCareSubscription.setOnClickListener(onClickListener);
                             adapterAddressRecyclerView.delete(TEMP_ADDRESS_ID);
                             if (mBinding.textViewMore.getVisibility() == View.VISIBLE) {
                                 //fillAddressRecyclerView(mBinding.textAddressRecyclerNew);
-                                fillAddressRecyclerView1(mBinding.textAddressRecyclerNew);
+                                //fillAddressRecyclerView1(mBinding.textAddressRecyclerNew);
 
                             }
 
@@ -1247,12 +1286,14 @@ mBinding.textManageCheepCareSubscription.setOnClickListener(onClickListener);
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
 
                         JSONObject jsonData = jsonObject.getJSONObject(NetworkUtility.TAGS.DATA);
-                        rating = jsonData.getString("average_rating");
+                        rating = jsonData.getString(NetworkUtility.TAGS.AVERAGE_RATING);
                         UserDetails userDetails = (UserDetails) GsonUtility.getObjectFromJsonString(jsonData.toString(), UserDetails.class);
                         PreferenceUtility.getInstance(mContext).saveUserDetails(jsonData);
                         jsonEmergencyContacts = jsonData.optJSONArray(NetworkUtility.TAGS.EMERGENCY_DATA);
                         addressList = GsonUtility.getObjectListFromJsonString(jsonData.optJSONArray(NetworkUtility.TAGS.ADDRESS).toString(), AddressModel[].class);
                         fillFields(userDetails);
+                        // set address on view
+                        setAddress();
 
 
                         break;
@@ -1292,7 +1333,7 @@ mBinding.textManageCheepCareSubscription.setOnClickListener(onClickListener);
             hideProgressDialog();
 
             // Show Toast
-             Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
+            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
         }
     };
 
@@ -1988,100 +2029,11 @@ hideProgressDialog();
         WebCallClass.updateEmergencyContactDetail(mContext, ProfileDetailsFragmentnew.this, ProfileDetailsFragmentnew.this, s);
     }
 
+
     @Override
     public void getUpdateEmergencyContactResponse(JSONArray emergency_contact) {
         jsonEmergencyContacts = emergency_contact;
     }
-
-
-//    private void showGuestProfile(boolean flag) {
-//        if (flag) {
-//            mBinding.textEmergencyContact.setVisibility(View.GONE);
-//            mBinding.viewDividerOne.setVisibility(View.GONE);
-//            mBinding.textManageAddress.setVisibility(View.GONE);
-//            mBinding.viewDividerTwo.setVisibility(View.GONE);
-//
-//            // Hide Editable Buttons
-//            mBinding.imgProfilePhotoEdit.setVisibility(View.GONE);
-//            mBinding.imgCoverPhotoEdit.setVisibility(View.GONE);
-//            mBinding.imgEditUsername.setVisibility(View.GONE);
-//            mBinding.imgEditEmail.setVisibility(View.GONE);
-//        } else {
-//            mBinding.textEmergencyContact.setVisibility(View.VISIBLE);
-//            mBinding.viewDividerOne.setVisibility(View.VISIBLE);
-//            mBinding.textManageAddress.setVisibility(View.VISIBLE);
-//            mBinding.viewDividerTwo.setVisibility(View.VISIBLE);
-//
-//            // Show Editable Buttons
-//            mBinding.imgProfilePhotoEdit.setVisibility(View.VISIBLE);
-//            mBinding.imgCoverPhotoEdit.setVisibility(View.VISIBLE);
-//            mBinding.imgEditUsername.setVisibility(View.VISIBLE);
-//            mBinding.imgEditEmail.setVisibility(View.GONE);
-//        }
-//    }
-
-
-    /*
-     *//*
-      Show setting dialog
-     *//*
-    public void settingsrequest() {
-
-        LocationRequest locationRequest = LocationRequest.create();
-        locationRequest.setInterval(LOCATION_REQUEST_INTERVAL);
-        locationRequest.setFastestInterval(LOCATION_REQUEST_FASTEST_INTERVAL);
-        locationRequest.setPriority(LocationRequest.PRIORITY_LOW_POWER);
-
-        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder().addLocationRequest(locationRequest);
-        builder.setAlwaysShow(true); //this is the key ingredient
-
-        PendingResult<LocationSettingsResult> result = LocationServices.SettingsApi.checkLocationSettings(mGoogleApiClient, builder.build());
-        result.setResultCallback(new ResultCallback<LocationSettingsResult>() {
-            @Override
-            public void onResult(LocationSettingsResult result) {
-                final Status status = result.getStatus();
-                final LocationSettingsStates state = result.getLocationSettingsStates();
-                switch (status.getStatusCode()) {
-                    case LocationSettingsStatusCodes.SUCCESS:
-                        // All location settings are satisfied. The client can initialize location
-                        // requests here.
-                        break;
-                    case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
-                        // Location settings are not satisfied. But could be fixed by showing the user
-                        // a dialog.
-                        try {
-                            // Show the dialog by calling startResolutionForResult(),
-                            // and check the result in onActivityResult().
-                            status.startResolutionForResult(MainActivity.this, REQUEST_CHECK_SETTINGS);
-                        } catch (IntentSender.SendIntentException e) {
-                            // Ignore the error.
-                        }
-                        break;
-                    case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
-                        // Location settings are not satisfied. However, we have no way to fix the
-                        // settings so we won't show the dialog.
-                        break;
-                }
-            }
-        });
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode) {
-// Check for the integer request code originally supplied to startResolutionForResult().
-            case REQUEST_CHECK_SETTINGS:
-                switch (resultCode) {
-                    case Activity.RESULT_OK:
-                        startLocationUpdates();
-                        break;
-                    case Activity.RESULT_CANCELED
-                        settingsrequest();//keep asking if imp or do whatever
-                        break;
-                }
-                break;
-        }
-    }*/
 
 
 }

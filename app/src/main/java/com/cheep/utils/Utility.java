@@ -97,7 +97,9 @@ public class Utility {
     public static final String STATIC_LAT = "19.1363246";
     public static final String STATIC_LNG = "72.82766";
 
-    private static final String TAG = "Utility";
+    public static final String EDIT_PROFILE_ACTIVITY = "EditProfile";
+
+    public static final String TAG = "Utility";
     public static final String EMPTY_STRING = "";
     public static final String ZERO_STRING = "0";
     public static final String ONE_CHARACTER_SPACE = " ";
@@ -171,6 +173,7 @@ public class Utility {
     public static final String CHAT_TYPE_MESSAGE = "message";
     public static final String CHAT_TYPE_MEDIA = "media";
     public static final String CHAT_TYPE_MONEY = "money";
+    public static final String MESSAGE_FOR_ADDRESS = "Please tell us where do you need the AMC for?";
 
     public static final int REQUEST_CODE_PERMISSION_LOCATION = 101;
 
