@@ -15,7 +15,7 @@ import com.cheep.R;
 import com.cheep.cheepcarenew.activities.AddressActivity;
 import com.cheep.cheepcarenew.adapters.AddressSizeRecyclerViewAdapter;
 import com.cheep.custom_view.GridSpacingItemDecoration;
-import com.cheep.databinding.FragmentAddressSizeForHomeOfficeBinding;
+import com.cheep.databinding.DialogAddressSizeForHomeOfficeBinding;
 import com.cheep.model.AddressModel;
 import com.cheep.model.AddressSizeModel;
 import com.cheep.network.NetworkUtility;
@@ -27,7 +27,7 @@ import java.util.ArrayList;
 
 public class AddressSizeForHomeOfficeDialog extends DialogFragment {
 
-    FragmentAddressSizeForHomeOfficeBinding mBinding;
+    DialogAddressSizeForHomeOfficeBinding mBinding;
     public static final String TAG = "AddressSizeForHomeOfficeDialog";
     private AddressSizeRecyclerViewAdapter adapter;
     private ArrayList<AddressSizeModel> list;

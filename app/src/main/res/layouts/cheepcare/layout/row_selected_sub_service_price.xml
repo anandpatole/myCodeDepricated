@@ -19,8 +19,10 @@
 
             <ImageView
                 android:id="@+id/iv_tick"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/scale_13dp"
+                android:layout_height="@dimen/scale_13dp"
+
+               android:layout_centerVertical="true"
                 android:src="@drawable/ic_tick" />
 
          <!--   <View
@@ -36,30 +38,18 @@
             android:id="@+id/tv_sub_service"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/scale_15dp"
+            android:layout_marginBottom="@dimen/scale_12dp"
             android:layout_marginEnd="@dimen/scale_15dp"
             android:layout_marginRight="@dimen/scale_15dp"
             android:layout_weight="1"
             android:paddingLeft="@dimen/scale_12dp"
             android:paddingStart="@dimen/scale_12dp"
             android:textColor="@color/black"
-            android:textSize="@dimen/text_size_14sp"
+            android:textSize="@dimen/text_size_12sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/tv_sub_service_price"
             app:layout_constraintStart_toEndOf="@id/rl_tick_container"
-            tools:text="asdasd" />
-
-        <com.cheep.custom_view.CFTextViewSemiBold
-            android:id="@+id/tv_sub_service_price"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/scale_15dp"
-            android:textColor="@color/black"
-            android:textSize="@dimen/text_size_15sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/tv_sub_service"
-            tools:text="FREE" />
+            tools:text="@string/test" />
 
     </LinearLayout>
 </layout>

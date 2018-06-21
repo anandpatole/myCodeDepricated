@@ -22,7 +22,7 @@ public class OutOfOfficeHoursDialog extends DialogFragment {
 
     public interface OutOfOfficeHoursListener {
         void onOutofOfficePayNow();
-        // void onCanWait();
+        void onOutofOfficeCanWait();
     }
 
     OutOfOfficeHoursListener outOfOfficeHoursListener;
@@ -73,7 +73,7 @@ public class OutOfOfficeHoursDialog extends DialogFragment {
         mBinding.textOutOfOfficeHoursCanWait.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //outOfOfficeHoursListener.onCanWait();
+                outOfOfficeHoursListener.onOutofOfficeCanWait();
                 dismiss();
             }
         });

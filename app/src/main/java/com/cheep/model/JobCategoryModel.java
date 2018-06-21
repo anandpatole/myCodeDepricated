@@ -28,6 +28,8 @@ public class JobCategoryModel implements Serializable {
     @SerializedName("cat_icon")
     public String catIcon;
 
+    @SerializedName("cat_new_price")
+    public String catPrice;
 //    @SerializedName("cat_image")
 //    public String catImage;
 

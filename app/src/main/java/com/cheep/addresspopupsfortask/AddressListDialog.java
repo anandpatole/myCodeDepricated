@@ -43,7 +43,6 @@ public class AddressListDialog extends DialogFragment implements AddressSelectio
         args.putBoolean(Utility.Extra.DATA_2, needsAskForAddressSize);
         AddressListDialog dialog = new AddressListDialog();
         dialog.setAddressSelectionListener(addressSelectionListener);
-
         dialog.setArguments(args);
         return dialog;
     }
@@ -82,7 +81,6 @@ public class AddressListDialog extends DialogFragment implements AddressSelectio
             }
         }
 
-
         // if is_subscribe is yes than
         if (subscriptionType.equalsIgnoreCase(Utility.ADDRESS_SUBSCRIPTION_TYPE.PREMIUM)) {
             for (AddressModel addressModel : arrayList) {
@@ -112,7 +110,13 @@ public class AddressListDialog extends DialogFragment implements AddressSelectio
             public void onClickItem(AddressModel addressModel) {
 
                 if (needsAskForAddressSize) {
-                    AddressSizeForHomeOfficeDialog addressSizeForHomeOfficeDialog = AddressSizeForHomeOfficeDialog.newInstance(addressModel, AddressListDialog.this);
+                    AddressSizeForHomeOfficeDialog addressSizeForHomeOfficeDialog = AddressSizeForHomeOfficeDialog.newInstance(addressModel, new AddressSelectionListener() {
+                        @Override
+                        public void onAddressSelection(AddressModel addressModel) {
+                            addressSelectionListener.onAddressSelection(addressModel);
+                            dismiss();
+                        }
+                    });
                     addressSizeForHomeOfficeDialog.show(((BaseAppCompatActivity) getContext()).getSupportFragmentManager(), AddressSizeForHomeOfficeDialog.TAG);
                 } else {
                     addressSelectionListener.onAddressSelection(addressModel);
