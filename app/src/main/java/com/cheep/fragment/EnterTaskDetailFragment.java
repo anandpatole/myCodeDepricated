@@ -249,7 +249,7 @@ public class EnterTaskDetailFragment extends BaseFragment implements  UrgentBook
 
     private void showAddressDialog() {
 
-        AddressListDialog addressListDialog = AddressListDialog.newInstance(subscriptionType, new AddressSelectionListener() {
+        AddressListDialog addressListDialog = AddressListDialog.newInstance(subscriptionType,true, new AddressSelectionListener() {
             @Override
             public void onAddressSelection(AddressModel addressModel) {
 //                fillAddressView(addressModel);

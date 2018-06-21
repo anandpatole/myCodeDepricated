@@ -153,7 +153,6 @@
                         android:id="@+id/tv_label_category_prices"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-
                         android:gravity="right"
                         android:drawablePadding="@dimen/scale_5dp"
                         android:ellipsize="marquee"
@@ -162,12 +161,11 @@
                         android:maxLines="1"
                         android:paddingTop="@dimen/scale_5dp"
                         android:singleLine="true"
-                        android:text="₹698"
+                        tools:text="₹698"
                         android:textColor="@color/black"
                         android:textSize="@dimen/text_size_14sp"
                         tools:ignore="EllipsizeMaxLines"
-
-                        />
+                        android:paddingEnd="@dimen/scale_24dp"/>
                 </LinearLayout>
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -350,7 +348,7 @@
                             android:id="@+id/CFTextViewSemiBold"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="left|center_vertical"
+                            android:layout_gravity="start|center_vertical"
                             android:drawablePadding="@dimen/scale_5dp"
                             android:gravity="center_vertical"
                             android:paddingBottom="@dimen/scale_5dp"
@@ -866,6 +864,7 @@
             </LinearLayout>
         </android.support.v4.widget.NestedScrollView>
 
+
         <!--
                 <LinearLayout
                     android:id="@+id/ln_pay_now"
@@ -901,6 +900,32 @@
     android:layout_alignParentBottom="true"
     android:background="@color/blue_variant_4"
     android:text="@string/gotcha"/>
+
+<!--
+        <LinearLayout
+            android:id="@+id/ln_pay_now"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_gravity="bottom"
+            android:orientation="horizontal">
+
+            <com.cheep.custom_view.CFTextViewSemiBold
+                android:id="@+id/tv_book_and_pay"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/payment_detail_btn_blue_selector"
+                android:gravity="center"
+                android:padding="@dimen/scale_10dp"
+                android:text="@string/label_book_and_pay"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_17sp"
+                android:visibility="visible"/>
+
+        </LinearLayout>
+-->
+>>>>>>> f2e6dbddfb63a1fbe5a8ead9f6fa5e353c286169
 
     </RelativeLayout>
 </layout>

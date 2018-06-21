@@ -3,11 +3,9 @@ package com.cheep.dialogs;
 import android.databinding.DataBindingUtil;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,26 +18,30 @@ import com.cheep.utils.Utility;
 public class OutOfOfficeHoursDialog extends DialogFragment {
     public static final String TAG = "OutOfOfficeHoursDialog";
     private DialogOutOfOfficeHoursBinding mBinding;
-    private String out_of_office_hours_msg= Utility.EMPTY_STRING;
+    private String out_of_office_hours_msg = Utility.EMPTY_STRING;
+
     public interface OutOfOfficeHoursListener {
         void onOutofOfficePayNow();
         void onOutofOfficeCanWait();
     }
 
     OutOfOfficeHoursListener outOfOfficeHoursListener;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
-    public static OutOfOfficeHoursDialog newInstance(String msg,  OutOfOfficeHoursListener outOfOfficeHoursListener) {
+
+    public static OutOfOfficeHoursDialog newInstance(String msg, OutOfOfficeHoursListener outOfOfficeHoursListener) {
         OutOfOfficeHoursDialog f = new OutOfOfficeHoursDialog();
         f.outOfOfficeHoursListener = outOfOfficeHoursListener;
         // Supply num input as an argument.
         Bundle args = new Bundle();
-        args.putString(NetworkUtility.TAGS.OUT_OF_OFFICE_HOURS_MSG,msg);
+        args.putString(NetworkUtility.TAGS.OUT_OF_OFFICE_HOURS_MSG, msg);
         f.setArguments(args);
         return f;
     }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

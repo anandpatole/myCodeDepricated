@@ -24,7 +24,6 @@ import com.cheep.databinding.ActivityTaskCreateBinding;
 import com.cheep.dialogs.AcknowledgementDialogWithoutProfilePic;
 import com.cheep.dialogs.AcknowledgementInteractionListener;
 import com.cheep.dialogs.CustomLoadingDialog;
-import com.cheep.dialogs.PestControlHelpDialog;
 import com.cheep.firebase.FirebaseHelper;
 import com.cheep.firebase.FirebaseUtils;
 import com.cheep.firebase.model.ChatTaskModel;
@@ -42,12 +41,7 @@ import com.cheep.network.VolleyNetworkRequest;
 import com.cheep.utils.GsonUtility;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.Utility;
-import com.cheep.utils.WebCallClass;
 import com.google.android.gms.common.api.Status;
-
-import com.google.gson.Gson;
-import com.payu.magicretry.MainActivity;
-
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;

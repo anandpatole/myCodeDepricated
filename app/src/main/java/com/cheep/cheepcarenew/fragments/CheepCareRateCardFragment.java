@@ -31,7 +31,9 @@ import com.cheep.network.VolleyNetworkRequest;
 import com.cheep.utils.GlideUtility;
 import com.cheep.utils.GsonUtility;
 import com.cheep.utils.Utility;
+
 import org.json.JSONObject;
+
 import java.util.ArrayList;
 
 
@@ -138,10 +140,11 @@ public class CheepCareRateCardFragment extends BaseFragment {
             }
         }
     };
-    private void setAdapter(){
+
+    private void setAdapter() {
         mBinding.recyclerView.setHasFixedSize(true);
         mBinding.recyclerView.setNestedScrollingEnabled(false);
-        linearLayoutManager = new GridLayoutManager(getContext(),2);
+        linearLayoutManager = new GridLayoutManager(getContext(), 2);
         mBinding.recyclerView.setLayoutManager(linearLayoutManager);
         adapter = new CheepCareRateCardAdapter();
         mBinding.recyclerView.setAdapter(adapter);
@@ -172,7 +175,7 @@ public class CheepCareRateCardFragment extends BaseFragment {
             holder.relativeLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    CheepCareRateCardPricingFragment fragment4 = CheepCareRateCardPricingFragment.newInstance(model.catId,model.catName);
+                    CheepCareRateCardPricingFragment fragment4 = CheepCareRateCardPricingFragment.newInstance(model.catId, model.catName);
                     getActivity().getSupportFragmentManager().beginTransaction()
                             .add(R.id.content, fragment4, CheepCareRateCardPricingFragment.TAG)
                             .addToBackStack(CheepCareRateCardPricingFragment.TAG)
@@ -200,6 +203,7 @@ public class CheepCareRateCardFragment extends BaseFragment {
             }
         }
     }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////// Category AllCats [END]/////////////////////////////////

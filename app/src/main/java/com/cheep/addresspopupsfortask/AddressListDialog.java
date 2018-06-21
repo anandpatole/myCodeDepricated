@@ -29,19 +29,20 @@ public class AddressListDialog extends DialogFragment implements AddressSelectio
     DialogAddressListBinding mBinding;
     AddressListRecyclerViewAdapter adapter;
     private ArrayList<AddressModel> addressList = new ArrayList<>();
-    private String subscriptionType;
+    private String subscriptionType = Utility.ADDRESS_SUBSCRIPTION_TYPE.NONE;
+    private boolean needsAskForAddressSize;
     private AddressSelectionListener addressSelectionListener;
 
     public void setAddressSelectionListener(AddressSelectionListener addressSelectionListener) {
         this.addressSelectionListener = addressSelectionListener;
     }
 
-    public static AddressListDialog newInstance(String subscriptionType, AddressSelectionListener addressSelectionListener) {
+    public static AddressListDialog newInstance(String subscriptionType, boolean needsAskForAddressSize, AddressSelectionListener addressSelectionListener) {
         Bundle args = new Bundle();
         args.putString(Utility.Extra.DATA, subscriptionType);
+        args.putBoolean(Utility.Extra.DATA_2, needsAskForAddressSize);
         AddressListDialog dialog = new AddressListDialog();
         dialog.setAddressSelectionListener(addressSelectionListener);
-
         dialog.setArguments(args);
         return dialog;
     }
@@ -67,6 +68,7 @@ public class AddressListDialog extends DialogFragment implements AddressSelectio
         if (getArguments() == null)
             return;
         subscriptionType = getArguments().getString(Utility.Extra.DATA);
+        needsAskForAddressSize = getArguments().getBoolean(Utility.Extra.DATA_2);
 
         UserDetails userDetails = PreferenceUtility.getInstance(getContext()).getUserDetails();
         ArrayList<AddressModel> arrayList = new ArrayList<>();
@@ -78,7 +80,6 @@ public class AddressListDialog extends DialogFragment implements AddressSelectio
                 arrayList = guestUserDetails.addressList;
             }
         }
-
 
         // if is_subscribe is yes than
         if (subscriptionType.equalsIgnoreCase(Utility.ADDRESS_SUBSCRIPTION_TYPE.PREMIUM)) {
@@ -107,8 +108,20 @@ public class AddressListDialog extends DialogFragment implements AddressSelectio
         adapter = new AddressListRecyclerViewAdapter(addressList, new AddressListRecyclerViewAdapter.AddressItemClickListener() {
             @Override
             public void onClickItem(AddressModel addressModel) {
-                addressSelectionListener.onAddressSelection(addressModel);
-                dismiss();
+
+                if (needsAskForAddressSize) {
+                    AddressSizeForHomeOfficeDialog addressSizeForHomeOfficeDialog = AddressSizeForHomeOfficeDialog.newInstance(addressModel, new AddressSelectionListener() {
+                        @Override
+                        public void onAddressSelection(AddressModel addressModel) {
+                            addressSelectionListener.onAddressSelection(addressModel);
+                            dismiss();
+                        }
+                    });
+                    addressSizeForHomeOfficeDialog.show(((BaseAppCompatActivity) getContext()).getSupportFragmentManager(), AddressSizeForHomeOfficeDialog.TAG);
+                } else {
+                    addressSelectionListener.onAddressSelection(addressModel);
+                    dismiss();
+                }
             }
         });
         mBinding.rvAddress.setAdapter(adapter);

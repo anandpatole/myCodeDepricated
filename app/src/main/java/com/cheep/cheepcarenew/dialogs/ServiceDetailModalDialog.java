@@ -18,16 +18,11 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.cheep.R;
 import com.cheep.activity.TaskCreationActivity;
-import com.cheep.cheepcare.model.CareCityDetail;
-import com.cheep.cheepcare.model.PackageDetail;
-import com.cheep.cheepcarenew.activities.AddressActivity;
-import com.cheep.model.ComparisionChart.ComparisionChartModel;
 import com.cheep.model.JobCategoryModel;
 import com.cheep.model.UserDetails;
 import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
-import com.cheep.utils.GsonUtility;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.Utility;
 
@@ -42,21 +37,22 @@ public class ServiceDetailModalDialog extends DialogFragment implements View.OnC
     public static final String TAG = ServiceDetailModalDialog.class.getSimpleName();
     private RelativeLayout rootLayout;
     private ProgressDialog mProgressDialog;
-static Context mContexts;
+    static Context mContexts;
     private TextView tvData, tvSoundsGood;
     UserDetails userDetails;
 
-static JobCategoryModel models;
+    static JobCategoryModel models;
+
     public ServiceDetailModalDialog() {
         // Required empty public constructor
     }
 
-    public static ServiceDetailModalDialog newInstance(Context mContext,JobCategoryModel model) {
+    public static ServiceDetailModalDialog newInstance(Context mContext, JobCategoryModel model) {
         ServiceDetailModalDialog fragment = new ServiceDetailModalDialog();
 
         Bundle args = new Bundle();
-        mContexts=mContext;
-        models=model;
+        mContexts = mContext;
+        models = model;
 //        args.putString(Utility.Extra.DATA, GsonUtility.getJsonStringFromObject(packageDetail));
 //        args.putString(Utility.Extra.DATA_2, GsonUtility.getJsonStringFromObject(cityDetail));
 //        args.putString(Utility.Extra.DATA_3, GsonUtility.getJsonStringFromObject(comparisionChartModel));

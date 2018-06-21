@@ -20,7 +20,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.cheep.R;
 import com.cheep.adapter.SelectedSubServiceAdapter;
-import com.cheep.cheepcare.model.AdminSettingModel;
 import com.cheep.custom_view.BottomAlertDialog;
 import com.cheep.custom_view.CFEditTextRegular;
 import com.cheep.databinding.ActivityBookingConfirmationInstaBinding;
