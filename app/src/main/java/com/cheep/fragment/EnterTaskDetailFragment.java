@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -92,7 +93,7 @@ public class EnterTaskDetailFragment extends BaseFragment implements  UrgentBook
             mTaskCreationActivity.finish();
         }
     };
-    private String subscriptionType;
+    private String subscriptionType=Utility.ADDRESS_SUBSCRIPTION_TYPE.NONE;;
 
     @SuppressWarnings("unused")
     public static EnterTaskDetailFragment newInstance() {
@@ -249,7 +250,7 @@ public class EnterTaskDetailFragment extends BaseFragment implements  UrgentBook
 
     private void showAddressDialog() {
 
-        AddressListDialog addressListDialog = AddressListDialog.newInstance(subscriptionType,true, new AddressSelectionListener() {
+        AddressListDialog addressListDialog = AddressListDialog.newInstance(subscriptionType,false, new AddressSelectionListener() {
             @Override
             public void onAddressSelection(AddressModel addressModel) {
 //                fillAddressView(addressModel);
@@ -570,6 +571,7 @@ public class EnterTaskDetailFragment extends BaseFragment implements  UrgentBook
                     }
                 }, c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE), false);
         timePickerDialog.show();
+
 
     }
 ///////////////////////////////////////////////////////////////////////////////////////////////

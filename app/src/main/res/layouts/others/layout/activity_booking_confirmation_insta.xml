@@ -137,14 +137,21 @@
                     android:orientation="horizontal"
                     android:layout_marginTop="@dimen/scale_21dp"
                     android:layout_marginBottom="@dimen/scale_16dp"
+                    android:paddingLeft="@dimen/scale_24dp"
                     android:layout_height="wrap_content">
+                    <ImageView
+                        android:id="@+id/category_tick"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginRight="@dimen/scale_8dp"
+                        android:src="@drawable/ic_tick"
+                       />
                     <com.cheep.custom_view.CFTextViewSemiBold
                         android:id="@+id/tv_label_category"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:gravity="start"
-                        android:paddingLeft="@dimen/scale_24dp"
-
                         android:paddingRight="@dimen/scale_24dp"
                         android:textColor="@color/black"
                         android:textSize="@dimen/text_size_14sp"
@@ -159,7 +166,7 @@
                         android:paddingRight="@dimen/scale_24dp"
                         android:marqueeRepeatLimit="marquee_forever"
                         android:maxLines="1"
-                        android:paddingTop="@dimen/scale_5dp"
+
                         android:singleLine="true"
                         tools:text="₹698"
                         android:textColor="@color/black"
@@ -895,7 +902,7 @@
     android:layout_height="@dimen/scale_37dp"
     android:textColor="@color/white"
     android:textStyle="bold"
-    android:textSize="@dimen/text_size_15sp"
+    android:textSize="@dimen/text_size_17sp"
     android:gravity="center_horizontal|center_vertical"
     android:layout_alignParentBottom="true"
     android:background="@color/blue_variant_4"
@@ -925,7 +932,7 @@
 
         </LinearLayout>
 -->
->>>>>>> f2e6dbddfb63a1fbe5a8ead9f6fa5e353c286169
+
 
     </RelativeLayout>
 </layout>

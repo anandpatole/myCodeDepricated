@@ -144,8 +144,8 @@ mBinding.textStepDesc.setText("Please check details below and book");
         {
             if(taskDetailModel.additionalChargeReason.equalsIgnoreCase(Utility.DIALOG_TYPE.NONE))
             {
-                mBinding.lnPayLaterPayNowButtons.setVisibility(View.GONE);
 
+                mBinding.lnPayLaterPayNowButtons.setVisibility(View.GONE);
                mBinding.tvGotcha.setVisibility(View.VISIBLE);
 
             }
@@ -159,7 +159,9 @@ mBinding.textStepDesc.setText("Please check details below and book");
         }
         else
         {
-            mBinding.tvLabelCategoryPrices.setText(taskDetailModel.catPrice);
+            mBinding.lnPayLaterPayNowButtons.setVisibility(View.VISIBLE);
+            mBinding.tvGotcha.setVisibility(View.GONE);
+            mBinding.tvLabelCategoryPrices.setText(getString(R.string.rupee_symbol_x, Utility.getQuotePriceFormatter(taskDetailModel.catPrice)));
             subServiceTotal=Double.valueOf(taskDetailModel.catPrice);
         }
         if(taskDetailModel.additionalChargeReason.equalsIgnoreCase(Utility.DIALOG_TYPE.NONE))
@@ -172,7 +174,7 @@ mBinding.textStepDesc.setText("Please check details below and book");
         {
             mBinding.viewLine2.setVisibility(View.VISIBLE);
             mBinding.rlAdditionalCharges.setVisibility(View.VISIBLE);
-            mBinding.tvLabelAdditionalCharge.setText(taskDetailModel.additionalChargeReason);
+           // mBinding.tvLabelAdditionalCharge.setText(taskDetailModel.additionalChargeReason);
             mBinding.tvAdditionalChargeReason.setText(taskDetailModel.additionalChargeReason);
             if(taskDetailModel.additionalChargeReason.equalsIgnoreCase(Utility.DIALOG_TYPE.OUT_OF_OFFICE_HOURS))
             {
@@ -182,7 +184,8 @@ mBinding.textStepDesc.setText("Please check details below and book");
             {
                 mBinding.tvAdditionalChargeSubreason.setText(getString(R.string.urgent_booking_info));
             }
-            mBinding.tvAdditionalCharge.setText(PreferenceUtility.getInstance(mContext).getAdminSettings().additionalChargeForSelectingSpecificTime);
+
+            mBinding.tvAdditionalCharge.setText(getString(R.string.rupee_symbol_x, Utility.getQuotePriceFormatter(PreferenceUtility.getInstance(mContext).getAdminSettings().additionalChargeForSelectingSpecificTime)));
             additionalCharge=Double.valueOf(PreferenceUtility.getInstance(mContext).getAdminSettings().additionalChargeForSelectingSpecificTime);
         }
         // banner image of cat
@@ -193,7 +196,9 @@ mBinding.textStepDesc.setText("Please check details below and book");
             mBinding.recyclerViewPaid.setLayoutManager(new LinearLayoutManager(this));
             mBinding.recyclerViewPaid.setAdapter(new SelectedSubServiceAdapter(taskDetailModel.subCatList));
             mBinding.viewLine1.setVisibility(View.VISIBLE);
+            mBinding.categoryTick.setVisibility(View.GONE);
         } else {
+            mBinding.categoryTick.setVisibility(View.VISIBLE);
             mBinding.recyclerViewPaid.setVisibility(View.GONE);
             mBinding.viewLine1.setVisibility(View.GONE);
         }
