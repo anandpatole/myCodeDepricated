@@ -4,8 +4,10 @@
 
     <string name="start_time">19:00:00</string>
     <string name="end_time">10:00:00</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-
+    <string name="out_of_office">Out-of-Office Hours</string>
+    <string name="out_of_off_info">Service booked outside 1000 hrs - 1900 hrs</string>
+    <string name="test">TV Repair</string>
+    <string name="free">FREE</string>
+    <string name="urgent_booking_info">Service Booked within 3 hrs</string>
+    <string name="select_address">Please Select Address First</string>
 </resources>

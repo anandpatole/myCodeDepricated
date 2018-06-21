@@ -34,6 +34,10 @@ public class CheepCareRateCardModel implements Serializable {
     @SerializedName("cat_image")
     public CatImage catImage;
 
+
+
+
+
 }
 
 

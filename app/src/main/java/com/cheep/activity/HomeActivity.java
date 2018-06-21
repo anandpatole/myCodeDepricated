@@ -322,11 +322,11 @@ public class HomeActivity extends BaseAppCompatActivity
         list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.label_favourites), R.drawable.icon_fav_off, false, false));
 
         list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.label_payment_history), R.drawable.icon_history, false, false));
-        list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.Label_cheep_care_rate_card),R.drawable.icon_rate,false,false));
+        list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.Label_cheep_care_rate_card), R.drawable.icon_rate, false, false));
         // TODO: Icon change Refer And Earn
         if (PreferenceUtility.getInstance(mContext).getUserDetails() != null)
             list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.tab_me), R.drawable.icon_logout, false, false));
-            list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.label_refer_and_earn), R.drawable.icon_help, false, false));
+        list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.label_refer_and_earn), R.drawable.icon_help, false, false));
         list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.label_help), R.drawable.icon_help, false, true));
         list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.label_faq), R.drawable.icon_faq, false, false));
         list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.label_rate_this_app), R.drawable.icon_rate, false, false));
@@ -425,16 +425,14 @@ public class HomeActivity extends BaseAppCompatActivity
                     }
                 }
             }, 1000);
-        }else if (slideMenuListModel.title.equals(getString(R.string.tab_me))) {
+        } else if (slideMenuListModel.title.equals(getString(R.string.tab_me))) {
             Fragment mFragment = getSupportFragmentManager().findFragmentByTag(ProfileTabFragment.TAG);
             if (mFragment == null) {
                 loadFragment(ProfileTabFragment.TAG, ProfileTabFragment.newInstance());
             } else {
                 Log.i(TAG, "onSlideMenuListItemClicked: " + slideMenuListModel.title + " is there");
             }
-        }
-else if(slideMenuListModel.title.equals(getString(R.string.Label_cheep_care_rate_card)))
-        {
+        } else if (slideMenuListModel.title.equals(getString(R.string.Label_cheep_care_rate_card))) {
             Fragment mFragment = getSupportFragmentManager().findFragmentByTag(CheepCareRateCardFragment.TAG);
             if (mFragment == null) {
                 loadFragment(CheepCareRateCardFragment.TAG, CheepCareRateCardFragment.newInstance());
@@ -780,14 +778,10 @@ else if(slideMenuListModel.title.equals(getString(R.string.Label_cheep_care_rate
     public void onCategoryRowClicked(JobCategoryModel model, int position) {
         // Changes on 27thApril,2017
 //        HireNewJobActivity.newInstance(mContext, model);
-        if(model.isSubscribed.equalsIgnoreCase("no"))
-        {
-ServiceDetailModalDialog.newInstance(mContext,model).show(this.getSupportFragmentManager(),"ServiceDetais");
+        if (model.isSubscribed.equalsIgnoreCase(Utility.BOOLEAN.NO)) {
+            ServiceDetailModalDialog.newInstance(mContext, model).show(this.getSupportFragmentManager(), ServiceDetailModalDialog.TAG);
             //new ServiceDetailModalDialog().show();
-
-        }
-        else
-        {
+        } else {
             TaskCreationActivity.getInstance(mContext, model);
         }
 
@@ -833,8 +827,18 @@ ServiceDetailModalDialog.newInstance(mContext,model).show(this.getSupportFragmen
         if (mBinding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
             mBinding.drawerLayout.closeDrawer(GravityCompat.START, true);
         } else {
+//<<<<<<< HEAD
+//
+//
+//            Fragment fragment = getSupportFragmentManager().findFragmentByTag(HomeFragment.TAG);
+//            if (fragment != null) {
+//                if (!((BaseFragment) fragment).onBackPressed()) {
+//                    super.onBackPressed();
+//                }
+//=======
             if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
                 getSupportFragmentManager().popBackStack();
+//>>>>>>> 03b05bb80fabf64ef2bdde8716c46c6977993068
             } else {
                 Fragment fragment = getSupportFragmentManager().findFragmentByTag(HomeFragment.TAG);
                 if (fragment != null) {

@@ -24,7 +24,6 @@ import com.cheep.databinding.ActivityTaskCreateBinding;
 import com.cheep.dialogs.AcknowledgementDialogWithoutProfilePic;
 import com.cheep.dialogs.AcknowledgementInteractionListener;
 import com.cheep.dialogs.CustomLoadingDialog;
-import com.cheep.dialogs.PestControlHelpDialog;
 import com.cheep.firebase.FirebaseHelper;
 import com.cheep.firebase.FirebaseUtils;
 import com.cheep.firebase.model.ChatTaskModel;
@@ -42,12 +41,7 @@ import com.cheep.network.VolleyNetworkRequest;
 import com.cheep.utils.GsonUtility;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.Utility;
-import com.cheep.utils.WebCallClass;
 import com.google.android.gms.common.api.Status;
-
-import com.google.gson.Gson;
-import com.payu.magicretry.MainActivity;
-
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -73,6 +67,7 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
     Map<String, Object> mTaskCreationParams;
     CustomLoadingDialog mDialog;
     public ArrayList<SubServiceDetailModel> allSubCategoryList;
+    String additionalChargeReason;
 
     public static void getInstance(Context mContext, JobCategoryModel model) {
         Intent intent = new Intent(mContext, TaskCreationActivity.class);
@@ -358,7 +353,9 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
         TaskDetailModel taskDetailModel = new TaskDetailModel();
 
 //                    taskDetailModel.categoryName = mJobCategoryModel.catName;
-        if (getSubCatList() != null && getSubCatList().size() > 0) {
+
+taskDetailModel.additionalChargeReason=mTaskCreationPagerAdapter.mEnterTaskDetailFragment.additionalChargeReason;
+taskDetailModel.catPrice=mJobCategoryModel.catPrice;
 
 //                    taskDetailModel.categoryName = mJobCategoryModel.cat
             if (!getSubCatList().isEmpty()) {
@@ -395,9 +392,10 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
 
             taskDetailModel.taskType = Utility.TASK_TYPE.INSTA_BOOK;
             taskDetailModel.taskStatus = Utility.TASK_STATUS.PENDING;
+
             BookingConfirmationInstaActivity.newInstance(TaskCreationActivity.this, taskDetailModel, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddress);
         }
-    }
+
 /*
     public void onInstaBookClicked() {
 

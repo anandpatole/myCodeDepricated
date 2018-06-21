@@ -869,7 +869,7 @@ without any hidden charges. Try it now!</string>
     <string name="months_3">3 Months</string>
     <string name="months_6">6 Months</string>
     <string name="months_12">12 Months</string>
-
+<string name="test_money">₹200</string>
     <string name="save_money_3">Save ₹200</string>
     <string name="save_money_6">Save ₹400</string>
     <string name="save_money_12">Save ₹600</string>

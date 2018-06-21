@@ -7,6 +7,7 @@ import android.databinding.DataBindingUtil;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.LinearLayoutManager;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.util.Log;
@@ -18,6 +19,7 @@ import android.widget.TextView;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.cheep.R;
+import com.cheep.adapter.SelectedSubServiceAdapter;
 import com.cheep.custom_view.BottomAlertDialog;
 import com.cheep.custom_view.CFEditTextRegular;
 import com.cheep.databinding.ActivityBookingConfirmationInstaBinding;
@@ -121,6 +123,10 @@ public class BookingConfirmationInstaActivity extends BaseAppCompatActivity {
         // Enable Step Three Unverified state
         setTaskState(STEP_THREE_UNVERIFIED);
 
+        double subTotal=0;
+        double subServiceTotal = 0;
+        double subServiceTotalWithGST = 0;
+        double additionalCharge=0;
         // address and time UI
         SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder();
         spannableStringBuilder.append(getSpannableString(getString(R.string.msg_task_description), ContextCompat.getColor(this, R.color.splash_gradient_end), true));
@@ -133,41 +139,74 @@ public class BookingConfirmationInstaActivity extends BaseAppCompatActivity {
         spannableStringBuilder.append(getSpannableString(mSelectedAddressModel.getAddressWithInitials(), ContextCompat.getColor(this, R.color.splash_gradient_end), true));
 
         mBinding.tvTaskDescription.setText(spannableStringBuilder);
-
+        mBinding.tvLabelCategory.setText(taskDetailModel.categoryModel.catName);
+        if(mSelectedAddressModel.is_subscribe.equalsIgnoreCase(Utility.ADDRESS_SUBSCRIPTION_TYPE.PREMIUM)|| mSelectedAddressModel.is_subscribe.equalsIgnoreCase(Utility.ADDRESS_SUBSCRIPTION_TYPE.NORMAL))
+        {
+            mBinding.tvLabelCategoryPrices.setText(getString(R.string.free));
+            subServiceTotal=0;
+        }
+        else
+        {
+            mBinding.tvLabelCategoryPrices.setText(taskDetailModel.catPrice);
+            subServiceTotal=Double.valueOf(taskDetailModel.catPrice);
+        }
+        if(taskDetailModel.additionalChargeReason.equalsIgnoreCase(Utility.DIALOG_TYPE.NONE))
+        {
+            mBinding.rlAdditionalCharges.setVisibility(View.GONE);
+            additionalCharge=0;
+        }
+        else
+        {
+            mBinding.rlAdditionalCharges.setVisibility(View.VISIBLE);
+            mBinding.tvLabelAdditionalCharge.setText(taskDetailModel.additionalChargeReason);
+            mBinding.tvAdditionalChargeReason.setText(taskDetailModel.additionalChargeReason);
+            if(taskDetailModel.additionalChargeReason.equalsIgnoreCase(Utility.DIALOG_TYPE.OUT_OF_OFFICE_HOURS))
+            {
+                mBinding.tvAdditionalChargeSubreason.setText(getString(R.string.out_of_off_info));
+            }
+            else
+            {
+                mBinding.tvAdditionalChargeSubreason.setText(getString(R.string.urgent_booking_info));
+            }
+            mBinding.tvAdditionalCharge.setText(PreferenceUtility.getInstance(mContext).getAdminSettings().additionalChargeForSelectingSpecificTime);
+            additionalCharge=Double.valueOf(PreferenceUtility.getInstance(mContext).getAdminSettings().additionalChargeForSelectingSpecificTime);
+        }
         // banner image of cat
         GlideUtility.loadImageView(mContext, mBinding.imgService, taskDetailModel.categoryModel.catImageExtras.original, R.drawable.gradient_black);
 
-//        if (!taskDetailModel.subCatList.isEmpty()) {
-//            mBinding.recyclerViewPaid.setAdapter(new SelectedSubServicePriceAdapter(taskDetailModel.subCatList, Utility.SERVICE_TYPE.PAID));
-//        } else {
-//            mBinding.recyclerViewPaid.setVisibility(View.GONE);
-//        }
+        if (!taskDetailModel.subCatList.isEmpty()) {
+            mBinding.recyclerViewPaid.setVisibility(View.VISIBLE);
+            mBinding.recyclerViewPaid.setLayoutManager(new LinearLayoutManager(this));
+            mBinding.recyclerViewPaid.setAdapter(new SelectedSubServiceAdapter(taskDetailModel.subCatList));
+            mBinding.viewLine1.setVisibility(View.VISIBLE);
+        } else {
+            mBinding.recyclerViewPaid.setVisibility(View.GONE);
+            mBinding.viewLine1.setVisibility(View.GONE);
+        }
 
         //
         mBinding.ivTermsTick.setSelected(true);
 
         setPayButtonSelection();
 
-        double subServiceTotal = 0;
-        double subServiceTotalWithGST = 0;
 //        for (SubServiceDetailModel subServiceDetailModel : taskDetailModel.subCatList) {
 //            subServiceTotal += subServiceDetailModel.selected_unit * Double.parseDouble(subServiceDetailModel.unitPrice);
 //            LogUtils.LOGE(TAG, "initiateUI:unitPrice " + subServiceDetailModel.unitPrice);
 //            subServiceTotalWithGST += subServiceDetailModel.selected_unit * Double.parseDouble(subServiceDetailModel.unitPriceWithGST);
 //            LogUtils.LOGE(TAG, "initiateUI:unitPriceWithGST " + subServiceDetailModel.unitPriceWithGST);
 //        }
-
+        subTotal=subServiceTotal+additionalCharge;
         total = new BigDecimal(subServiceTotal).doubleValue();
         LogUtils.LOGE(TAG, "initiateUI:total " + total);
-        subTotal = new BigDecimal(subServiceTotalWithGST).doubleValue();
+        subTotal = new BigDecimal(subTotal).doubleValue();
         LogUtils.LOGE(TAG, "initiateUI:subTotal " + subTotal);
-        totalWithGST = new BigDecimal(subServiceTotalWithGST).doubleValue();
+        totalWithGST = new BigDecimal(subTotal).doubleValue();
         payableAmount = String.valueOf(totalWithGST);
         LogUtils.LOGE(TAG, "initiateUI:totalWithGST " + totalWithGST);
 
         mBinding.tvSubTotal.setText(getString(R.string.rupee_symbol_x, Utility.getQuotePriceFormatter(String.valueOf(subTotal))));
 
-        mBinding.tvTotal.setText(getString(R.string.rupee_symbol_x, Utility.getQuotePriceFormatter(String.valueOf(totalWithGST))));
+        mBinding.tvTotal.setText(getString(R.string.rupee_symbol_x, Utility.getQuotePriceFormatter(String.valueOf(subTotal))));
 
         mBinding.lnPayNow.setVisibility(View.GONE);
         mBinding.lnPayLaterPayNowButtons.setVisibility(View.VISIBLE);
