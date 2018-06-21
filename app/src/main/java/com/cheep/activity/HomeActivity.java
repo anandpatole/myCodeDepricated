@@ -833,22 +833,21 @@ ServiceDetailModalDialog.newInstance(mContext,model).show(this.getSupportFragmen
         if (mBinding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
             mBinding.drawerLayout.closeDrawer(GravityCompat.START, true);
         } else {
-
-
-
-
-
-            Fragment fragment = getSupportFragmentManager().findFragmentByTag(HomeFragment.TAG);
-            if (fragment != null) {
-                if (!((BaseFragment) fragment).onBackPressed()) {
-                    super.onBackPressed();
-                }
+            if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+                getSupportFragmentManager().popBackStack();
             } else {
-                Fragment mFragment = getSupportFragmentManager().findFragmentByTag(HomeFragment.TAG);
-                if (mFragment == null) {
-                    loadFragment(HomeFragment.TAG, HomeFragment.newInstance(Utility.EMPTY_STRING));
+                Fragment fragment = getSupportFragmentManager().findFragmentByTag(HomeFragment.TAG);
+                if (fragment != null) {
+                    if (!((BaseFragment) fragment).onBackPressed()) {
+                        super.onBackPressed();
+                    }
                 } else {
-                    super.onBackPressed();
+                    Fragment mFragment = getSupportFragmentManager().findFragmentByTag(HomeFragment.TAG);
+                    if (mFragment == null) {
+                        loadFragment(HomeFragment.TAG, HomeFragment.newInstance(Utility.EMPTY_STRING));
+                    } else {
+                        super.onBackPressed();
+                    }
                 }
             }
         }
