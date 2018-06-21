@@ -18,7 +18,7 @@ public class PestControlHelpDialog extends DialogFragment {
    private DialogPestControlHelpBinding mBinding;
 
     public interface PestControlHelpListener {
-        void onClick();
+        void onHelpClick();
 
     }
 
@@ -32,8 +32,6 @@ public class PestControlHelpDialog extends DialogFragment {
         f.pestControlHelpListener = pestControlHelpListener;
         // Supply num input as an argument.
         Bundle args = new Bundle();
-
-
         return f;
     }
     @Nullable
@@ -56,8 +54,8 @@ public class PestControlHelpDialog extends DialogFragment {
 mBinding.textPestControlBtn.setOnClickListener(new View.OnClickListener() {
     @Override
     public void onClick(View v) {
-        pestControlHelpListener.onClick();
-        dismiss();
+        pestControlHelpListener.onHelpClick();
+       // dismiss();
     }
 });
 

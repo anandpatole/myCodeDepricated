@@ -43,7 +43,7 @@
                     android:layout_toEndOf="@+id/img_cheep_tips"
                     android:layout_toRightOf="@+id/img_cheep_tips"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/text_size_15sp"
+                    android:textSize="@dimen/text_size_13sp"
                     app:layout_constraintStart_toEndOf="@id/img_cheep_tips"
                     app:layout_constraintTop_toTopOf="parent"
                     tools:text="dsasd"/>
@@ -62,7 +62,7 @@
                     android:paddingRight="@dimen/scale_20dp"
                     android:paddingStart="@dimen/scale_8dp"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/text_size_13sp"
+                    android:textSize="@dimen/text_size_12sp"
                     app:layout_constraintStart_toEndOf="@id/img_cheep_tips"
                     app:layout_constraintTop_toBottomOf="@+id/tv_landing_screen_tip_title"
                         tools:text="dasdsadasdasd dasdsadasdasd dasdsadasdasd dasdsadasdasd dasdsadasdasd dasdsadasdasd dasdsadasdasd "/>

@@ -325,18 +325,44 @@
             android:value="@string/facebook_app_id"/>
 
 
+
+   <!-- <provider
+            android:name="com.cheep.activity.CameraFileProvider"
+            android:authorities="com.cheep.fileprovider1"
+
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="com.cheep.fileprovider"
+
             android:exported="false"
-            android:grantUriPermissions="true"
-            >
+            android:grantUriPermissions="true" >
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths"/>
+
+
+        </provider>-->
+
+
+
+
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="@string/freshchat_file_provider_authority"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/freshchat_file_provider_paths"/>
         </provider>
 
-        <!--<provider-->
+
+
+      <!--   (APPSFLYER) add the following receiver as the FIRST receiver for INSTALL_REFERRER or after another
+
+        </provider>
+
+       <provider-->
             <!--android:name="android.support.v4.content.FileProvider"-->
             <!--android:authorities="@string/freshchat_file_provider_authority"-->
             <!--android:exported="false"-->
@@ -347,6 +373,7 @@
         <!--</provider>-->
         <!--
          (APPSFLYER) add the following receiver as the FIRST receiver for INSTALL_REFERRER or after another
+
          multiple broadcast receiver, and ensure the receiver tag is within the application tag:
         -->
         <receiver

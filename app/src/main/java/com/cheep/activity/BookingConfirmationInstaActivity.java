@@ -84,7 +84,6 @@ public class BookingConfirmationInstaActivity extends BaseAppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_booking_confirmation_insta);
 
         // add event bus listener
@@ -173,7 +172,7 @@ public class BookingConfirmationInstaActivity extends BaseAppCompatActivity {
         mBinding.lnPayNow.setVisibility(View.GONE);
         mBinding.lnPayLaterPayNowButtons.setVisibility(View.VISIBLE);
 
-        initUIForReferDiscountAndPromoCode();
+        //initUIForReferDiscountAndPromoCode();
 
     }
 

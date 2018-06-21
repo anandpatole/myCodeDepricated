@@ -22,7 +22,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
-                android:src="@drawable/bg_add_money_model_background"
+                android:src="@drawable/stary_bg"
                 tools:ignore="ContentDescription" />
 
             <LinearLayout
@@ -86,12 +86,12 @@
                 android:layout_below="@+id/img_header"
                 android:layout_centerHorizontal="true"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="-48dp">
+                android:layout_marginTop="-55dp">
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/emoji_add_money" />
+                    android:src="@drawable/cheep_bird_pest" />
 
             </FrameLayout>
         </RelativeLayout>

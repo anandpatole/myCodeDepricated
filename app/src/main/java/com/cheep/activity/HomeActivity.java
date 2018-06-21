@@ -48,6 +48,7 @@ import com.cheep.adapter.SlideMenuAdapter;
 import com.cheep.cheepcare.activity.NotificationCcActivity;
 import com.cheep.cheepcare.adapter.PaymentHistoryCCAdapter;
 import com.cheep.cheepcare.fragment.ProfileTabFragment;
+import com.cheep.cheepcarenew.dialogs.ServiceDetailModalDialog;
 import com.cheep.cheepcarenew.fragments.CheepCareRateCardFragment;
 import com.cheep.custom_view.BottomAlertDialog;
 import com.cheep.databinding.ActivityHomeBinding;
@@ -777,7 +778,13 @@ public class HomeActivity extends BaseAppCompatActivity
     public void onCategoryRowClicked(JobCategoryModel model, int position) {
         // Changes on 27thApril,2017
 //        HireNewJobActivity.newInstance(mContext, model);
-        TaskCreationActivity.getInstance(mContext, model);
+        if (model.isSubscribed.equalsIgnoreCase(Utility.BOOLEAN.NO)) {
+            ServiceDetailModalDialog.newInstance(mContext, model).show(this.getSupportFragmentManager(), ServiceDetailModalDialog.TAG);
+            //new ServiceDetailModalDialog().show();
+        } else {
+            TaskCreationActivity.getInstance(mContext, model);
+        }
+
     }
 
     @Override

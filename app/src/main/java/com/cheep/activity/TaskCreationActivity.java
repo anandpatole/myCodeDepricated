@@ -236,6 +236,7 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
                 mActivityTaskCreateBinding.textStepDesc.setText(getString(R.string.step_1_desc));
                 break;
             case STAGE_2:
+
                 mActivityTaskCreateBinding.viewpager.setCurrentItem(1);
                 // Change description
                 mActivityTaskCreateBinding.textStepDesc.setText(getString(R.string.step_2_desc));
@@ -349,29 +350,48 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
         }
 
         TaskDetailModel taskDetailModel = new TaskDetailModel();
+
+//                    taskDetailModel.categoryName = mJobCategoryModel.catName;
+        if (getSubCatList() != null && getSubCatList().size() > 0) {
+
 //                    taskDetailModel.categoryName = mJobCategoryModel.cat
-        if (!getSubCatList().isEmpty()) {
-            taskDetailModel.subCategoryName = getSubCatList().get(0).name;
-            taskDetailModel.subCategoryID = String.valueOf(getSubCatList().get(0).sub_cat_id);
-            taskDetailModel.subCatList = mTaskCreationPagerAdapter.mSelectSubCategoryFragment.getSubCatList();
-        }
-        if (taskDetailModel.taskAddress == null)
-            taskDetailModel.taskAddress = new AddressModel();
-        taskDetailModel.taskAddress.address = mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddress.address;
-        taskDetailModel.taskAddress.address_id = mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddress.address_id;
+            if (!getSubCatList().isEmpty()) {
+
+                taskDetailModel.subCategoryName = getSubCatList().get(0).name;
+
+                taskDetailModel.subCategoryID = String.valueOf(getSubCatList().get(0).sub_cat_id);
+                taskDetailModel.subCatList = mTaskCreationPagerAdapter.mSelectSubCategoryFragment.getSubCatList();
+            } else {
+                taskDetailModel.subCategoryName = "";
+                taskDetailModel.subCategoryID = "";
+                taskDetailModel.subCatList = null;
+            }
+
+            if (taskDetailModel.taskAddress == null)
+                taskDetailModel.taskAddress = new AddressModel();
+            taskDetailModel.taskAddress.address = mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddress.address;
+            taskDetailModel.taskAddress.address_id = mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddress.address_id;
 //        taskDetailModel.taskAddressId = mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddressModel.address_id;
 //                    taskDetailModel.categoryId = mJobCategoryModel.catId;
 //        taskDetailModel.taskDesc = mTaskCreationPagerAdapter.mEnterTaskDetailFragment.getTaskDescription();
 //                    taskDetailModel.catImage = mJobCategoryModel.catImage;
-        taskDetailModel.categoryModel = mJobCategoryModel;
-        taskDetailModel.taskStartdate = String.valueOf(mTaskCreationPagerAdapter.mEnterTaskDetailFragment.superCalendar.getCalendar().getTimeInMillis());
+            taskDetailModel.categoryModel = mJobCategoryModel;
+            taskDetailModel.taskStartdate = String.valueOf(mTaskCreationPagerAdapter.mEnterTaskDetailFragment.superCalendar.getCalendar().getTimeInMillis());
+
+
 //                    model.taskImage = mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mCurrentPhotoPath;
 //        taskDetailModel.mMediaModelList = mTaskCreationPagerAdapter.mEnterTaskDetailFragment.getMediaList();
-        taskDetailModel.taskType = Utility.TASK_TYPE.INSTA_BOOK;
-        taskDetailModel.taskStatus = Utility.TASK_STATUS.PENDING;
-        BookingConfirmationInstaActivity.newInstance(TaskCreationActivity.this, taskDetailModel, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddress);
-    }
 
+            taskDetailModel.subCatList = mTaskCreationPagerAdapter.mSelectSubCategoryFragment.getSubCatList();
+
+//                    model.taskImage = mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mCurrentPhotoPath;
+//        taskDetailModel.mMediaModelList = mTaskCreationPagerAdapter.mEnterTaskDetailFragment.getMediaList();
+
+            taskDetailModel.taskType = Utility.TASK_TYPE.INSTA_BOOK;
+            taskDetailModel.taskStatus = Utility.TASK_STATUS.PENDING;
+            BookingConfirmationInstaActivity.newInstance(TaskCreationActivity.this, taskDetailModel, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddress);
+        }
+    }
 /*
     public void onInstaBookClicked() {
 
@@ -459,17 +479,17 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
     }
 */
 
-    Response.Listener mCallCreateTaskWSResponseListener = new Response.Listener() {
-        @Override
-        public void onResponse(Object response) {
+        Response.Listener mCallCreateTaskWSResponseListener = new Response.Listener() {
+            @Override
+            public void onResponse(Object response) {
 
-            String strResponse = (String) response;
-            try {
-                JSONObject jsonObject = new JSONObject(strResponse);
-                Log.i(TAG, "onResponse: " + jsonObject.toString());
-                int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
-                switch (statusCode) {
-                    case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
+                String strResponse = (String) response;
+                try {
+                    JSONObject jsonObject = new JSONObject(strResponse);
+                    Log.i(TAG, "onResponse: " + jsonObject.toString());
+                    int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
+                    switch (statusCode) {
+                        case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
 
                         /*
                           Below was older approach when app needs to update the same task page.
@@ -481,357 +501,365 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
 //                        initiateUI();
 //                        setListeners();
 
-                        // Send Event tracking for AppsFlyer
-                        AppsFlyerLib.getInstance().trackEvent(mContext, NetworkUtility.TAGS.APPSFLYER_CUSTOM_TRACK_EVENTS.TASK_CREATE, mTaskCreationParams);
+                            // Send Event tracking for AppsFlyer
+                            AppsFlyerLib.getInstance().trackEvent(mContext, NetworkUtility.TAGS.APPSFLYER_CUSTOM_TRACK_EVENTS.TASK_CREATE, mTaskCreationParams);
 
                         /*
                           Now according to the new flow, once task created
                           app will be redirected to MyTask Detail screen.
                          */
-                        onSuccessfullTaskCompletion(jsonObject);
+                            onSuccessfullTaskCompletion(jsonObject);
 
-                        break;
-                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
-                        // Show Toast
-                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityTaskCreateBinding.getRoot());
-                        break;
-                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
-                        String error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
-                        // Show message
-                        Utility.showSnackBar(error_message, mActivityTaskCreateBinding.getRoot());
-                        break;
-                    case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
-                    case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
-                        // Logout and finish the current activity
-                        Utility.logout(mContext, true, statusCode);
-                        finish();
-                        break;
+                            break;
+                        case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
+                            // Show Toast
+                            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityTaskCreateBinding.getRoot());
+                            break;
+                        case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
+                            String error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
+                            // Show message
+                            Utility.showSnackBar(error_message, mActivityTaskCreateBinding.getRoot());
+                            break;
+                        case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
+                        case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
+                            // Logout and finish the current activity
+                            Utility.logout(mContext, true, statusCode);
+                            finish();
+                            break;
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    mCallCreateTaskWSErrorListener.onErrorResponse(new VolleyError(e.getMessage()));
                 }
-            } catch (JSONException e) {
-                e.printStackTrace();
-                mCallCreateTaskWSErrorListener.onErrorResponse(new VolleyError(e.getMessage()));
+                hideProgressDialog();
             }
-            hideProgressDialog();
-        }
-    };
+        };
 
-
-    /**
-     * This method would going to call when task completed successfully
-     */
-    private void onSuccessfullTaskCompletion(JSONObject jsonObject) {
-        final TaskDetailModel taskDetailModel = (TaskDetailModel) GsonUtility.getObjectFromJsonString(jsonObject.optString(NetworkUtility.TAGS.DATA), TaskDetailModel.class);
-        if (taskDetailModel != null) {
-            /* * Add new task detail on firebase
-             * @Sanjay 20 Feb 2016
-             */
-            ChatTaskModel chatTaskModel = new ChatTaskModel();
-            chatTaskModel.taskId = FirebaseUtils.getPrefixTaskId(taskDetailModel.taskId);
-            chatTaskModel.taskDesc = taskDetailModel.taskDesc;
-            chatTaskModel.categoryId = taskDetailModel.categoryModel.catId;
-            chatTaskModel.categoryName = taskDetailModel.categoryModel.catName;
-            chatTaskModel.selectedSPId = "";
-            UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
-            chatTaskModel.userId = FirebaseUtils.getPrefixUserId(userDetails.userID);
-            FirebaseHelper.getTaskRef(chatTaskModel.taskId).setValue(chatTaskModel);
-        }
-
-        String message = mContext.getString(R.string.desc_task_creation_acknowledgement
-                , PreferenceUtility.getInstance(mContext).getUserDetails().userName);
-        String title = mContext.getString(R.string.label_your_task_is_posted);
-        AcknowledgementDialogWithoutProfilePic mAcknowledgementDialogWithoutProfilePic = AcknowledgementDialogWithoutProfilePic.newInstance(R.drawable.dialog_top_bird_heart, title, message, new AcknowledgementInteractionListener() {
-
-            @Override
-            public void onAcknowledgementAccepted() {
-                // Finish the current activity
-                finish();
-
-                /**
-                 * If HomeScreen is not available, create new instance and redirect
-                 * to Mytask screen, if yes, we just need to broadcast the same.
-                 */
-                if (PreferenceUtility.getInstance(mContext).isHomeScreenVisible()) {
-                    //Sending Broadcast to the HomeScreen Screen.
-                    Intent intent = new Intent(Utility.BR_ON_TASK_CREATED);
-                    intent.putExtra(Utility.Extra.DATA, GsonUtility.getJsonStringFromObject(taskDetailModel));
-                    Log.d(TAG, "onAcknowledgementAccepted: prefed >>>>> " + taskDetailModel.isPrefedQuote);
-                    intent.putExtra(Utility.Extra.IS_INSTA_BOOKING_TASK, Utility.BOOLEAN.NO.equalsIgnoreCase(taskDetailModel.isPrefedQuote));
-                    sendBroadcast(intent);
-                } else {
-                    HomeActivity.newInstance(mContext, null);
-                }
-            }
-        });
-        mAcknowledgementDialogWithoutProfilePic.setCancelable(false);
-        mAcknowledgementDialogWithoutProfilePic.show(getSupportFragmentManager(), AcknowledgementDialogWithoutProfilePic.TAG);
 
         /**
-         * @Changes: 2ndAug2017 by Bhavesh
-         * Once any task is created, App is having feature of sending Prefed quotes
-         * so, we will initate once webservice call BUT we will not track the response as
-         * it would be asynchronously managed.
+         * This method would going to call when task completed successfully
          */
-        callWSForPrefedQuotes(taskDetailModel.taskId, taskDetailModel.taskAddress.address_id);
-
-
-    }
-
-    /**
-     * Initiating Prefed Quotes related Webservice
-     *
-     * @param taskId        Task Id of Method
-     * @param taskAddressId AddressID from which Task is Initiated
-     */
-    @SuppressWarnings("unchecked")
-    private void callWSForPrefedQuotes(String taskId, String taskAddressId) {
-        Log.d(TAG, "callWSForPrefedQuotes() called with: taskId = [" + taskId + "], taskAddressId = [" + taskAddressId + "]");
-
-        UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
-
-        // Add Header parameters
-        Map<String, String> mHeaderParams = new HashMap<>();
-        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, userDetails.userID);
-        mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
-
-        // Add Params
-        Map<String, String> mParams = new HashMap<>();
-        mParams.put(NetworkUtility.TAGS.TASK_ID, taskId);
-        mParams.put(NetworkUtility.TAGS.ADDRESS_ID, taskAddressId);
-
-        VolleyNetworkRequest mVolleyNetworkRequest = new VolleyNetworkRequest(NetworkUtility.WS.CURL_NOTIFICATION_TO_SP
-                , new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {
-                Log.d(TAG, "onErrorResponse() called with: volleyError = [" + volleyError + "]");
-            }
-        }
-                , new Response.Listener() {
-            @Override
-            public void onResponse(Object o) {
-                Log.d(TAG, "onResponse() called with: o = [" + o + "]");
-            }
-        }
-                , mHeaderParams
-                , mParams
-                , null);
-
-        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest, NetworkUtility.WS.CURL_NOTIFICATION_TO_SP);
-    }
-
-    /**
-     * Create Dialog which would going to show on successful completion
-     */
-    Response.ErrorListener mCallCreateTaskWSErrorListener = new Response.ErrorListener() {
-        @Override
-        public void onErrorResponse(VolleyError error) {
-            Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
-
-            // Close Progressbar
-            hideProgressDialog();
-
-            // Show Toast
-            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityTaskCreateBinding.getRoot());
-        }
-    };
-
-
-    Response.ErrorListener mCallGetProInstaBookErrorListener = new Response.ErrorListener() {
-        @Override
-        public void onErrorResponse(VolleyError error) {
-            Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
-
-            if (mDialog != null) {
-                mDialog.dismiss();
+        private void onSuccessfullTaskCompletion (JSONObject jsonObject){
+            final TaskDetailModel taskDetailModel = (TaskDetailModel) GsonUtility.getObjectFromJsonString(jsonObject.optString(NetworkUtility.TAGS.DATA), TaskDetailModel.class);
+            if (taskDetailModel != null) {
+                /* * Add new task detail on firebase
+                 * @Sanjay 20 Feb 2016
+                 */
+                ChatTaskModel chatTaskModel = new ChatTaskModel();
+                chatTaskModel.taskId = FirebaseUtils.getPrefixTaskId(taskDetailModel.taskId);
+                chatTaskModel.taskDesc = taskDetailModel.taskDesc;
+                chatTaskModel.categoryId = taskDetailModel.categoryModel.catId;
+                chatTaskModel.categoryName = taskDetailModel.categoryModel.catName;
+                chatTaskModel.selectedSPId = "";
+                UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
+                chatTaskModel.userId = FirebaseUtils.getPrefixUserId(userDetails.userID);
+                FirebaseHelper.getTaskRef(chatTaskModel.taskId).setValue(chatTaskModel);
             }
 
-            // Show Toast
-            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityTaskCreateBinding.getRoot());
-        }
-    };
+            String message = mContext.getString(R.string.desc_task_creation_acknowledgement
+                    , PreferenceUtility.getInstance(mContext).getUserDetails().userName);
+            String title = mContext.getString(R.string.label_your_task_is_posted);
+            AcknowledgementDialogWithoutProfilePic mAcknowledgementDialogWithoutProfilePic = AcknowledgementDialogWithoutProfilePic.newInstance(R.drawable.dialog_top_bird_heart, title, message, new AcknowledgementInteractionListener() {
 
-    public boolean isValidationCompleted() {
-        // Date-Time of Task
-        if (!mTaskCreationPagerAdapter.mEnterTaskDetailFragment.isTaskWhenVerified) {
-            Utility.showSnackBar(getString(R.string.validate_date), mActivityTaskCreateBinding.getRoot());
-            return false;
-        }
+                @Override
+                public void onAcknowledgementAccepted() {
+                    // Finish the current activity
+                    finish();
 
-        // place of Task
-        if (!mTaskCreationPagerAdapter.mEnterTaskDetailFragment.isTaskWhereVerified) {
-            Utility.showSnackBar(getString(R.string.validate_address_new_task), mActivityTaskCreateBinding.getRoot());
-            return false;
-        }
-
-        return true;
-    }
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    /////////////////////////////////////Post Task [End] /////////////////////////////////////////
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == Utility.REQUEST_CODE_CHECK_LOCATION_SETTINGS) {
-            if (resultCode == RESULT_OK) {
-                mLocationTrackService.requestLocationUpdate();
-            }
-        }
-    }
-
-    @Override
-    protected void onDestroy() {
-        Log.d(TAG, "onDestroy() called");
-        try {
-            unregisterReceiver(mBR_OnLoginSuccess);
-            EventBus.getDefault().unregister(this);
-
-        } catch (Exception e) {
-            Log.i(TAG, "onDestroy: ");
-        }
-
-        super.onDestroy();
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(MessageEvent event) {
-        if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.TASK_PAID_FOR_INSTA_BOOKING) {
-            // br for finished task creation activity
-            finish();
-        }
-
-    }
-
-
-    /**
-     * BroadCast that would restart the screen once login has been done.
-     */
-    private BroadcastReceiver mBR_OnLoginSuccess = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            Utility.hideKeyboard(mContext);
-            // check here for user guest has selected insta booked or get quots
-//                onInstaBookClicked();
-            onInstaBookClickedNew();
+                    /**
+                     * If HomeScreen is not available, create new instance and redirect
+                     * to Mytask screen, if yes, we just need to broadcast the same.
+                     */
+                    if (PreferenceUtility.getInstance(mContext).isHomeScreenVisible()) {
+                        //Sending Broadcast to the HomeScreen Screen.
+                        Intent intent = new Intent(Utility.BR_ON_TASK_CREATED);
+                        intent.putExtra(Utility.Extra.DATA, GsonUtility.getJsonStringFromObject(taskDetailModel));
+                        Log.d(TAG, "onAcknowledgementAccepted: prefed >>>>> " + taskDetailModel.isPrefedQuote);
+                        intent.putExtra(Utility.Extra.IS_INSTA_BOOKING_TASK, Utility.BOOLEAN.NO.equalsIgnoreCase(taskDetailModel.isPrefedQuote));
+                        sendBroadcast(intent);
+                    } else {
+                        HomeActivity.newInstance(mContext, null);
+                    }
+                }
+            });
+            mAcknowledgementDialogWithoutProfilePic.setCancelable(false);
+            mAcknowledgementDialogWithoutProfilePic.show(getSupportFragmentManager(), AcknowledgementDialogWithoutProfilePic.TAG);
 
             /**
-             * As User is currently logged in, we need to add FullAddressModel to existing addresslist.
+             * @Changes: 2ndAug2017 by Bhavesh
+             * Once any task is created, App is having feature of sending Prefed quotes
+             * so, we will initate once webservice call BUT we will not track the response as
+             * it would be asynchronously managed.
              */
-            UserDetails mUserDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
-            if (mUserDetails != null) {
-                if (mUserDetails.addressList.isEmpty()) {
-                    mUserDetails.addressList = new ArrayList<>();
+            callWSForPrefedQuotes(taskDetailModel.taskId, taskDetailModel.taskAddress.address_id);
+
+
+        }
+
+        /**
+         * Initiating Prefed Quotes related Webservice
+         *
+         * @param taskId        Task Id of Method
+         * @param taskAddressId AddressID from which Task is Initiated
+         */
+        @SuppressWarnings("unchecked")
+        private void callWSForPrefedQuotes (String taskId, String taskAddressId){
+            Log.d(TAG, "callWSForPrefedQuotes() called with: taskId = [" + taskId + "], taskAddressId = [" + taskAddressId + "]");
+
+            UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
+
+            // Add Header parameters
+            Map<String, String> mHeaderParams = new HashMap<>();
+            mHeaderParams.put(NetworkUtility.TAGS.USER_ID, userDetails.userID);
+            mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
+
+            // Add Params
+            Map<String, String> mParams = new HashMap<>();
+            mParams.put(NetworkUtility.TAGS.TASK_ID, taskId);
+            mParams.put(NetworkUtility.TAGS.ADDRESS_ID, taskAddressId);
+
+            VolleyNetworkRequest mVolleyNetworkRequest = new VolleyNetworkRequest(NetworkUtility.WS.CURL_NOTIFICATION_TO_SP
+                    , new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError volleyError) {
+                    Log.d(TAG, "onErrorResponse() called with: volleyError = [" + volleyError + "]");
+                }
+            }
+                    , new Response.Listener() {
+                @Override
+                public void onResponse(Object o) {
+                    Log.d(TAG, "onResponse() called with: o = [" + o + "]");
+                }
+            }
+                    , mHeaderParams
+                    , mParams
+                    , null);
+
+            Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest, NetworkUtility.WS.CURL_NOTIFICATION_TO_SP);
+        }
+
+        /**
+         * Create Dialog which would going to show on successful completion
+         */
+        Response.ErrorListener mCallCreateTaskWSErrorListener = new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
+
+                // Close Progressbar
+                hideProgressDialog();
+
+                // Show Toast
+                Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityTaskCreateBinding.getRoot());
+            }
+        };
+
+
+        Response.ErrorListener mCallGetProInstaBookErrorListener = new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
+
+                if (mDialog != null) {
+                    mDialog.dismiss();
                 }
 
-                // Add additional selected addressmodel here.
-                mUserDetails.addressList.add(mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddress);
+                // Show Toast
+                Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityTaskCreateBinding.getRoot());
+            }
+        };
 
-                // Save the user now.
-                PreferenceUtility.getInstance(mContext).saveUserDetails(mUserDetails);
+        public boolean isValidationCompleted () {
+            // Date-Time of Task
+            if (!mTaskCreationPagerAdapter.mEnterTaskDetailFragment.isTaskWhenVerified) {
+                Utility.showSnackBar(getString(R.string.validate_date), mActivityTaskCreateBinding.getRoot());
+                return false;
+            }
+
+            // place of Task
+            if (!mTaskCreationPagerAdapter.mEnterTaskDetailFragment.isTaskWhereVerified) {
+                Utility.showSnackBar(getString(R.string.validate_address_new_task), mActivityTaskCreateBinding.getRoot());
+                return false;
+            }
+
+            return true;
+        }
+        ////////////////////////////////////////////////////////////////////////////////////////////////
+        /////////////////////////////////////Post Task [End] /////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////////////////////////
+
+        @Override
+        protected void onActivityResult ( int requestCode, int resultCode, Intent data){
+            super.onActivityResult(requestCode, resultCode, data);
+            if (requestCode == Utility.REQUEST_CODE_CHECK_LOCATION_SETTINGS) {
+                if (resultCode == RESULT_OK) {
+                    mLocationTrackService.requestLocationUpdate();
+                }
             }
         }
-    };
 
-    public ArrayList<SubServiceDetailModel> getSubCatList() {
-        return mTaskCreationPagerAdapter.mSelectSubCategoryFragment.getSubCatList();
-
-    }
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    ////////////////////////////// Fetch SubService Listing[START] ////////////////////////////////////////
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    private void fetchListOfSubCategory(String catId) {
-        Log.d(TAG, "fetchListOfSubCategory() called with: catId = [" + catId + "]");
-        if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityTaskCreateBinding.getRoot());
-            return;
-        }
-
-        //Add Header parameters
-        mActivityTaskCreateBinding.progressBar.setVisibility(View.VISIBLE);
-
-        Map<String, String> mHeaderParams = new HashMap<>();
-        mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
-        if (PreferenceUtility.getInstance(mContext).getUserDetails() != null) {
-            mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().userID);
-        }
-
-        //Add Params
-        Map<String, String> mParams = new HashMap<>();
-        mParams.put(CAT_ID, catId);
-
-        VolleyNetworkRequest mVolleyNetworkRequestForCategoryList = new VolleyNetworkRequest(NetworkUtility.WS.FETCH_SUB_SERVICE_LIST
-                , mCallFetchSubServiceListingWSErrorListener
-                , mCallFetchSubServiceListingWSResponseListener
-                , mHeaderParams
-                , mParams
-                , null);
-
-        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequestForCategoryList, NetworkUtility.WS.FETCH_SUB_SERVICE_LIST);
-    }
-
-
-    Response.Listener mCallFetchSubServiceListingWSResponseListener = new Response.Listener() {
         @Override
-        public void onResponse(Object response) {
-            mActivityTaskCreateBinding.progressBar.setVisibility(View.GONE);
-            Log.d(TAG, "onResponse() called with: response = [" + response + "]");
-            String strResponse = (String) response;
+        protected void onDestroy () {
+            Log.d(TAG, "onDestroy() called");
             try {
-                JSONObject jsonObject = new JSONObject(strResponse);
-                Log.i(TAG, "onResponse: " + jsonObject.toString());
-                int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
-                String error_message;
-                switch (statusCode) {
-                    case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
-                        JSONObject jsonObject1 = jsonObject.optJSONObject(NetworkUtility.TAGS.DATA);
-                        JSONArray jsonArray = jsonObject1.optJSONArray(NetworkUtility.TAGS.SUB_CATS);
-                        JSONObject cheepTip = jsonObject1.optJSONObject(NetworkUtility.TAGS.CATEGORY_TIP);
+                unregisterReceiver(mBR_OnLoginSuccess);
+                EventBus.getDefault().unregister(this);
 
-                        String title = cheepTip.optString(NetworkUtility.TAGS.TITLE);
-                        String subTitle = cheepTip.optString(NetworkUtility.TAGS.SUBTITLE);
+            } catch (Exception e) {
+                Log.i(TAG, "onDestroy: ");
+            }
 
-                        allSubCategoryList = GsonUtility.getObjectListFromJsonString(jsonArray.toString(), SubServiceDetailModel[].class);
+            super.onDestroy();
+        }
 
-                        // Setting viewpager
-                        setupViewPager(mActivityTaskCreateBinding.viewpager, title, subTitle);
-
-                        break;
-                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
-                        // Show Toast
-                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityTaskCreateBinding.getRoot());
-                        break;
-                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
-                        error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
-
-                        // Show message
-                        Utility.showSnackBar(error_message, mActivityTaskCreateBinding.getRoot());
-                        break;
-                    case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
-                    case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
-                        //Logout and finish the current activity
-                        Utility.logout(mContext, true, statusCode);
-                        finish();
-                        break;
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-                mCallFetchSubServiceListingWSErrorListener.onErrorResponse(new VolleyError(e.getMessage()));
+        @Subscribe(threadMode = ThreadMode.MAIN)
+        public void onMessageEvent (MessageEvent event){
+            if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.TASK_PAID_FOR_INSTA_BOOKING) {
+                // br for finished task creation activity
+                finish();
             }
 
         }
-    };
 
 
-    Response.ErrorListener mCallFetchSubServiceListingWSErrorListener = new Response.ErrorListener() {
-        @Override
-        public void onErrorResponse(VolleyError error) {
-            Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
-            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityTaskCreateBinding.getRoot());
+        /**
+         * BroadCast that would restart the screen once login has been done.
+         */
+        private BroadcastReceiver mBR_OnLoginSuccess = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                Utility.hideKeyboard(mContext);
+                // check here for user guest has selected insta booked or get quots
+//                onInstaBookClicked();
+                onInstaBookClickedNew();
+
+                /**
+                 * As User is currently logged in, we need to add FullAddressModel to existing addresslist.
+                 */
+                UserDetails mUserDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
+                if (mUserDetails != null) {
+                    if (mUserDetails.addressList.isEmpty()) {
+                        mUserDetails.addressList = new ArrayList<>();
+                    }
+
+                    // Add additional selected addressmodel here.
+                    mUserDetails.addressList.add(mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddress);
+
+                    // Save the user now.
+                    PreferenceUtility.getInstance(mContext).saveUserDetails(mUserDetails);
+                }
+            }
+        };
+
+        public ArrayList<SubServiceDetailModel> getSubCatList () {
+            return mTaskCreationPagerAdapter.mSelectSubCategoryFragment.getSubCatList();
+
         }
-    };
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    ////////////////////////////// Fetch SubService Listing[END] ////////////////////////////////////////
-    ////////////////////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////// Fetch SubService Listing[START] ////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////////////////////////
+        private void fetchListOfSubCategory (String catId){
+            Log.d(TAG, "fetchListOfSubCategory() called with: catId = [" + catId + "]");
+            if (!Utility.isConnected(mContext)) {
+                Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityTaskCreateBinding.getRoot());
+                return;
+            }
 
-}
+            //Add Header parameters
+            mActivityTaskCreateBinding.progressBar.setVisibility(View.VISIBLE);
+
+            Map<String, String> mHeaderParams = new HashMap<>();
+            mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
+            if (PreferenceUtility.getInstance(mContext).getUserDetails() != null) {
+                mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().userID);
+            }
+
+            //Add Params
+            Map<String, String> mParams = new HashMap<>();
+            mParams.put(CAT_ID, catId);
+
+            VolleyNetworkRequest mVolleyNetworkRequestForCategoryList = new VolleyNetworkRequest(NetworkUtility.WS.FETCH_SUB_SERVICE_LIST
+                    , mCallFetchSubServiceListingWSErrorListener
+                    , mCallFetchSubServiceListingWSResponseListener
+                    , mHeaderParams
+                    , mParams
+                    , null);
+
+            Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequestForCategoryList, NetworkUtility.WS.FETCH_SUB_SERVICE_LIST);
+        }
+
+
+        Response.Listener mCallFetchSubServiceListingWSResponseListener = new Response.Listener() {
+            @Override
+            public void onResponse(Object response) {
+                mActivityTaskCreateBinding.progressBar.setVisibility(View.GONE);
+                Log.d(TAG, "onResponse() called with: response = [" + response + "]");
+                String strResponse = (String) response;
+                try {
+                    JSONObject jsonObject = new JSONObject(strResponse);
+                    Log.i(TAG, "onResponse: " + jsonObject.toString());
+                    int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
+                    String error_message;
+                    switch (statusCode) {
+                        case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
+                            JSONObject jsonObject1 = jsonObject.optJSONObject(NetworkUtility.TAGS.DATA);
+                            JSONArray jsonArray = jsonObject1.optJSONArray(NetworkUtility.TAGS.SUB_CATS);
+                            JSONObject cheepTip = jsonObject1.optJSONObject(NetworkUtility.TAGS.CATEGORY_TIP);
+
+                            String title = cheepTip.optString(NetworkUtility.TAGS.TITLE);
+                            String subTitle = cheepTip.optString(NetworkUtility.TAGS.SUBTITLE);
+
+                            allSubCategoryList = GsonUtility.getObjectListFromJsonString(jsonArray.toString(), SubServiceDetailModel[].class);
+                            if (mJobCategoryModel.catSlug.equalsIgnoreCase(Utility.cat.PESTCONTROL)) {
+                                SubServiceDetailModel additional = new SubServiceDetailModel();
+                                additional.catId = "-1";
+                                additional.isSelected = false;
+                                additional.name = Utility.NEED_HELP;
+                                additional.subSubCatModels = null;
+                                allSubCategoryList.add(additional);
+                            }
+                            // Setting viewpager
+                            setupViewPager(mActivityTaskCreateBinding.viewpager, title, subTitle);
+
+                            break;
+                        case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
+                            // Show Toast
+                            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityTaskCreateBinding.getRoot());
+                            break;
+                        case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
+                            error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
+
+                            // Show message
+                            Utility.showSnackBar(error_message, mActivityTaskCreateBinding.getRoot());
+                            break;
+                        case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
+                        case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
+                            //Logout and finish the current activity
+                            Utility.logout(mContext, true, statusCode);
+                            finish();
+                            break;
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    mCallFetchSubServiceListingWSErrorListener.onErrorResponse(new VolleyError(e.getMessage()));
+                }
+
+            }
+        };
+
+
+        Response.ErrorListener mCallFetchSubServiceListingWSErrorListener = new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
+                Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityTaskCreateBinding.getRoot());
+            }
+        };
+
+
+        ////////////////////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////// Fetch SubService Listing[END] ////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    }

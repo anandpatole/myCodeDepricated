@@ -221,7 +221,7 @@ public class HomeTabFragment extends BaseFragment {
     public void onDetach() {
         Log.i(TAG, "onDetach: ");
 
-        if (EventBus.getDefault().isRegistered(this) == true)
+        if (EventBus.getDefault().isRegistered(this))
             EventBus.getDefault().unregister(this);
 
         mListener = null;

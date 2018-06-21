@@ -78,6 +78,7 @@ import static com.cheep.utils.SuperCalendar.SuperFormatter;
 
 public class Utility {
 
+    public static final String NEED_HELP="need help";
     public static final String MERCHANT = "merchant";
     public static final String EMAIL = "email";
     public static final String PUBLIC_PROFILE = "public_profile";
@@ -122,6 +123,7 @@ public class Utility {
     public static final String TYPE_OF_PACKAGE= "packageType";
 
     //Date Formats
+
     public static final String DATE_FORMAT_DD_MM_YY = SuperFormatter.DATE + "/" + SuperFormatter.MONTH_NUMBER + "/" + SuperFormatter.YEAR_4_DIGIT;
     public static final String DATE_FORMAT_DD_MM_YYYY = SuperFormatter.DATE + "-" + SuperFormatter.MONTH_NUMBER + "-" + SuperFormatter.YEAR_4_DIGIT;
     public static final String DATE_FORMAT_YYYY_MM_DD = SuperFormatter.YEAR_4_DIGIT + "-" + SuperFormatter.MONTH_NUMBER + "-" + SuperFormatter.DATE;
@@ -682,7 +684,10 @@ public class Utility {
         String IS_SUBSCRIPTION = "is_subscription";
     }
 
-
+public interface  cat
+{
+    String PESTCONTROL="pest-control";
+}
     /*1 for platinum
     2 for Gold
     3 for Silver
