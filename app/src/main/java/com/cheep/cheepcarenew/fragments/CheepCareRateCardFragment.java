@@ -177,8 +177,9 @@ public class CheepCareRateCardFragment extends BaseFragment {
                 public void onClick(View view) {
                     CheepCareRateCardPricingFragment fragment4 = CheepCareRateCardPricingFragment.newInstance(model.catId, model.catName);
                     getActivity().getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.content, fragment4, CheepCareRateCardPricingFragment.TAG).
-                            commitAllowingStateLoss();
+                            .add(R.id.content, fragment4, CheepCareRateCardPricingFragment.TAG)
+                            .addToBackStack(CheepCareRateCardPricingFragment.TAG)
+                            .commit();
                 }
             });
         }

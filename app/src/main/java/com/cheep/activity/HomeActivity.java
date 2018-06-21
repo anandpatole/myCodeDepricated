@@ -827,19 +827,31 @@ public class HomeActivity extends BaseAppCompatActivity
         if (mBinding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
             mBinding.drawerLayout.closeDrawer(GravityCompat.START, true);
         } else {
-
-
-            Fragment fragment = getSupportFragmentManager().findFragmentByTag(HomeFragment.TAG);
-            if (fragment != null) {
-                if (!((BaseFragment) fragment).onBackPressed()) {
-                    super.onBackPressed();
-                }
+//<<<<<<< HEAD
+//
+//
+//            Fragment fragment = getSupportFragmentManager().findFragmentByTag(HomeFragment.TAG);
+//            if (fragment != null) {
+//                if (!((BaseFragment) fragment).onBackPressed()) {
+//                    super.onBackPressed();
+//                }
+//=======
+            if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+                getSupportFragmentManager().popBackStack();
+//>>>>>>> 03b05bb80fabf64ef2bdde8716c46c6977993068
             } else {
-                Fragment mFragment = getSupportFragmentManager().findFragmentByTag(HomeFragment.TAG);
-                if (mFragment == null) {
-                    loadFragment(HomeFragment.TAG, HomeFragment.newInstance(Utility.EMPTY_STRING));
+                Fragment fragment = getSupportFragmentManager().findFragmentByTag(HomeFragment.TAG);
+                if (fragment != null) {
+                    if (!((BaseFragment) fragment).onBackPressed()) {
+                        super.onBackPressed();
+                    }
                 } else {
-                    super.onBackPressed();
+                    Fragment mFragment = getSupportFragmentManager().findFragmentByTag(HomeFragment.TAG);
+                    if (mFragment == null) {
+                        loadFragment(HomeFragment.TAG, HomeFragment.newInstance(Utility.EMPTY_STRING));
+                    } else {
+                        super.onBackPressed();
+                    }
                 }
             }
         }
