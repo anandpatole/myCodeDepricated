@@ -252,7 +252,8 @@ public class EnterTaskDetailFragment extends BaseFragment implements  UrgentBook
 
         AddressListDialog addressListDialog = AddressListDialog.newInstance(subscriptionType,false, new AddressSelectionListener() {
             @Override
-            public void onAddressSelection(AddressModel addressModel) {
+            public void onAddressSelection(AddressModel addressModel)
+            {
 //                fillAddressView(addressModel);
 
                 if (!addressModel.is_subscribe.equalsIgnoreCase(Utility.ADDRESS_SUBSCRIPTION_TYPE.NONE)) {

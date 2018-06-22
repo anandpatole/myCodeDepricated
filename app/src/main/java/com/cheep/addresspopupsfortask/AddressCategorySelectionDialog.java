@@ -65,9 +65,13 @@ public class AddressCategorySelectionDialog extends DialogFragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             COMING_FORM = getArguments().getString(Utility.TAG);
-            listOfAddress = GsonUtility.getObjectListFromJsonString(getArguments().getString(Utility.Extra.DATA), AddressModel[].class);
+            if (getArguments().getString(Utility.Extra.DATA) != null)
+                listOfAddress = GsonUtility.getObjectListFromJsonString(getArguments().getString(Utility.Extra.DATA), AddressModel[].class);
         }
     }
+
+
+
 
     @Nullable
     @Override
