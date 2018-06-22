@@ -35,11 +35,14 @@ import java.util.ArrayList;
 
 import static android.app.Activity.RESULT_OK;
 
-public class RelationShipScreenFragment extends BaseFragment implements WebCallClass.GetRelationShipResponseListener,WebCallClass.CommonResponseListener,RelationShipRecyclerViewAdapter.InteractionListener,WebCallClass.UpdateEmergencyContactResponseListener{
+public class RelationShipScreenFragment extends BaseFragment implements WebCallClass.GetRelationShipResponseListener, WebCallClass.CommonResponseListener,
+        RelationShipRecyclerViewAdapter.InteractionListener,
+        WebCallClass.UpdateEmergencyContactResponseListener {
     public static final String TAG = "RelationShipScreenFragment";
     FragmnetRelationshipScreenBinding mBinding;
     private static final int RESULT_PICK_CONTACT = 85;
     String type;
+
     public static RelationShipScreenFragment newInstance() {
         Bundle args = new Bundle();
         RelationShipScreenFragment fragment = new RelationShipScreenFragment();
@@ -53,18 +56,21 @@ public class RelationShipScreenFragment extends BaseFragment implements WebCallC
         mBinding = DataBindingUtil.inflate(inflater, R.layout.fragmnet_relationship_screen, container, false);
         return mBinding.getRoot();
     }
+
     @Override
     public void onAttach(Context context) {
         Log.i(TAG, "onAttach: ");
         super.onAttach(context);
 
     }
+
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         initiateUI();
         setListener();
     }
+
     @Override
     public void onDetach() {
         Log.i(TAG, "onDetach: ");
@@ -85,50 +91,46 @@ public class RelationShipScreenFragment extends BaseFragment implements WebCallC
 
         super.onDetach();
     }
+
     @Override
     public void initiateUI() {
-        if (((AppCompatActivity) mContext).getSupportActionBar() != null)
-        {
+        if (((AppCompatActivity) mContext).getSupportActionBar() != null) {
             //Setting up toolbar
             ((AppCompatActivity) mContext).setSupportActionBar(mBinding.toolbar);
             ((AppCompatActivity) mContext).getSupportActionBar().setTitle(Utility.EMPTY_STRING);
         }
         showProgressDialog();
-        WebCallClass.getRelationShipListDetail(mContext,RelationShipScreenFragment.this,RelationShipScreenFragment.this);
+        WebCallClass.getRelationShipListDetail(mContext, RelationShipScreenFragment.this, RelationShipScreenFragment.this);
     }
 
     @Override
-    public void setListener()
-    {
-mBinding.relationBack.setOnClickListener(new View.OnClickListener() {
-    @Override
-    public void onClick(View v) {
-        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.content, ProfileTabFragment.newInstance(), ProfileTabFragment.TAG).commitAllowingStateLoss();
-    }
-});
+    public void setListener() {
+        mBinding.relationBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.content, ProfileTabFragment.newInstance(), ProfileTabFragment.TAG).commitAllowingStateLoss();
+            }
+        });
     }
 
     @Override
-    public void getRelationShipList(JSONArray relationshipList)
-    {
+    public void getRelationShipList(JSONArray relationshipList) {
         try {
             hideProgressDialog();
 
             ArrayList<String> listdata = new ArrayList<String>();
 
             if (relationshipList != null) {
-                for (int i = 0; i < relationshipList.length(); i++)
-                {
-                   JSONObject temp=relationshipList.getJSONObject(i);
+                for (int i = 0; i < relationshipList.length(); i++) {
+                    JSONObject temp = relationshipList.getJSONObject(i);
                     listdata.add(temp.optString(NetworkUtility.TAGS.TYPE));
                 }
             }
 
-            RelationShipRecyclerViewAdapter adapter=new RelationShipRecyclerViewAdapter(listdata,RelationShipScreenFragment.this);
+            RelationShipRecyclerViewAdapter adapter = new RelationShipRecyclerViewAdapter(listdata, RelationShipScreenFragment.this);
             mBinding.recyclerRelationshipList.setAdapter(adapter);
             mBinding.recyclerRelationshipList.setLayoutManager(new LinearLayoutManager(getActivity()));
-        } catch (JSONException e)
-        {
+        } catch (JSONException e) {
             e.printStackTrace();
         }
 
@@ -145,7 +147,7 @@ mBinding.relationBack.setOnClickListener(new View.OnClickListener() {
     public void showSpecificMessage(String message) {
         hideProgressDialog();
         Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
-       // Utility.showSnackBar(message, mBinding.getRoot());
+        // Utility.showSnackBar(message, mBinding.getRoot());
     }
 
     @Override
@@ -155,11 +157,12 @@ mBinding.relationBack.setOnClickListener(new View.OnClickListener() {
 
     @Override
     public void onClicked(String s) {
-        type=s;
+        type = s;
         Intent contactPickerIntent = new Intent(Intent.ACTION_PICK,
                 ContactsContract.CommonDataKinds.Phone.CONTENT_URI);
         startActivityForResult(contactPickerIntent, RESULT_PICK_CONTACT);
     }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         // check whether the result is ok
@@ -174,10 +177,11 @@ mBinding.relationBack.setOnClickListener(new View.OnClickListener() {
             Log.e("MainActivity", "Failed to pick contact");
         }
     }
+
     private void contactPicked(Intent data) {
         Cursor cursor = null;
         try {
-            String phoneNo = null ;
+            String phoneNo = null;
             String name = null;
             // getData() method will have the Content Uri of the selected contact
             Uri uri = data.getData();
@@ -185,9 +189,9 @@ mBinding.relationBack.setOnClickListener(new View.OnClickListener() {
             cursor = mContext.getContentResolver().query(uri, null, null, null, null);
             cursor.moveToFirst();
             // column index of the phone number
-            int  phoneIndex =cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
+            int phoneIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
             // column index of the contact name
-            int  nameIndex =cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME);
+            int nameIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME);
             phoneNo = cursor.getString(phoneIndex);
             name = cursor.getString(nameIndex);
 
@@ -195,13 +199,13 @@ mBinding.relationBack.setOnClickListener(new View.OnClickListener() {
             JSONObject jsonObject;
 
 
-                    jsonObject = new JSONObject();
-                    jsonObject.put(NetworkUtility.TAGS.NAME, name);
-                    jsonObject.put(NetworkUtility.TAGS.NUMBER, phoneNo);
-                    jsonObject.put(NetworkUtility.TAGS.TYPE,type);
-                    jsonArray.put(jsonObject);
+            jsonObject = new JSONObject();
+            jsonObject.put(NetworkUtility.TAGS.NAME, name);
+            jsonObject.put(NetworkUtility.TAGS.NUMBER, phoneNo);
+            jsonObject.put(NetworkUtility.TAGS.TYPE, type);
+            jsonArray.put(jsonObject);
 
-            WebCallClass.updateEmergencyContactDetail(mContext,RelationShipScreenFragment.this,RelationShipScreenFragment.this,jsonArray);
+            WebCallClass.updateEmergencyContactDetail(mContext, RelationShipScreenFragment.this, RelationShipScreenFragment.this, jsonArray);
             //getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.content, ProfileTabFragment.newInstance(), ProfileTabFragment.TAG).commitAllowingStateLoss();
 
         } catch (Exception e) {
@@ -210,8 +214,7 @@ mBinding.relationBack.setOnClickListener(new View.OnClickListener() {
     }
 
     @Override
-    public void getUpdateEmergencyContactResponse(JSONArray emergency_contact)
-    {
+    public void getUpdateEmergencyContactResponse(JSONArray emergency_contact) {
         getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.content, ProfileTabFragment.newInstance(), ProfileTabFragment.TAG).commitAllowingStateLoss();
     }
 }

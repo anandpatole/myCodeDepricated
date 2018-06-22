@@ -120,7 +120,6 @@
     <string name="test">TV Repair</string>
     <string name="free">FREE</string>
     <string name="urgent_booking_info">Service booked within 3 hrs</string>
-    <string name="select_address">Please Select Address First</string>
     <string name="gotcha">Gotcha!</string>
     <string name="dummy_long_desc">"Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of "de Finibus Bonorum et Malorum" (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. The first line of Lorem Ipsum, "Lorem ipsum dolor sit amet..", comes from a line in section 1.10.32.
 
@@ -927,7 +926,6 @@ without any hidden charges. Try it now!</string>
     <string name="acknowledgement_details">Congrats on taking the first step towards making your home healthy &amp; happy. Your Cheep Care AMC package is now activated and we are available 24x7 to help you maintain your home. Thank you </string>
     <string name="thanks">Thanks</string>
     <string name="label_add_new_address">Add new address</string>
-    <string name="select_address">Select Address</string>
     <string name="label_get_current_location">Get current location</string>
     <string name="hint_address_locality">Locality</string>
     <string name="hint_address_city">City</string>
