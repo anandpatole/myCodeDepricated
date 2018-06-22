@@ -12,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.cheep.R;
-import com.cheep.cheepcarenew.activities.AddressActivity;
 import com.cheep.cheepcarenew.adapters.AddressSizeRecyclerViewAdapter;
 import com.cheep.custom_view.GridSpacingItemDecoration;
 import com.cheep.databinding.DialogAddressSizeForHomeOfficeBinding;
@@ -95,7 +94,7 @@ public class AddressSizeForHomeOfficeDialog extends DialogFragment {
         mBinding.imgBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((AddressActivity) mContext).onBackPressed();
+            dismiss();
             }
         });
     }
