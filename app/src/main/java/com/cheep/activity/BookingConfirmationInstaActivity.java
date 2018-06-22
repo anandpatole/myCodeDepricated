@@ -252,7 +252,7 @@ mBinding.textStepDesc.setText("Please check details below and book");
     protected void setListeners() {
         mBinding.rlPayNow.setOnClickListener(onPayNowClickListener);
         mBinding.rlPayLater.setOnClickListener(onPayLaterClickListener);
-
+mBinding.tvGotcha.setOnClickListener(onGotchaClickListener);
         mBinding.ivTermsTick.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -271,6 +271,7 @@ mBinding.textStepDesc.setText("Please check details below and book");
                 onClickOfClosePromoCode();
             }
         });
+
     }
 
     View.OnClickListener onPromoCodeClickListener = new View.OnClickListener() {
@@ -661,7 +662,13 @@ mBinding.textStepDesc.setText("Please check details below and book");
             openPaymentChoiceActivity();
         }
     };
+    View.OnClickListener onGotchaClickListener = new View.OnClickListener() {
 
+        @Override
+        public void onClick(View view) {
+            openPaymentChoiceActivity();
+        }
+    };
 
     /**
      * TODO: Add apps flyer events for task creation and also add event for coupan dunia code
@@ -695,7 +702,8 @@ mBinding.textStepDesc.setText("Please check details below and book");
                     }
                 }, new WebCallClass.InstaBookTaskCreationListener() {
                     @Override
-                    public void successOfInstaBookTaskCreation() {
+                    public void successOfInstaBookTaskCreation()
+                    {
 
                     }
                 });
