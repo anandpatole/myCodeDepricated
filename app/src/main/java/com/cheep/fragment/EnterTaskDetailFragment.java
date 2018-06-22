@@ -32,6 +32,7 @@ import com.cheep.cheepcarenew.activities.LandingScreenPickPackageActivity;
 import com.cheep.databinding.FragmentEnterTaskDetailBinding;
 import com.cheep.dialogs.AcknowledgementInteractionListener;
 import com.cheep.dialogs.OutOfOfficeHoursDialog;
+import com.cheep.dialogs.PestControlHelpDialog;
 import com.cheep.dialogs.UrgentBookingDialog;
 import com.cheep.model.AddressModel;
 import com.cheep.utils.CalendarUtility;
@@ -50,7 +51,7 @@ import java.util.Calendar;
  * Created by bhavesh on 28/4/17.
  */
 
-public class EnterTaskDetailFragment extends BaseFragment implements UrgentBookingDialog.UrgentBookingListener, OutOfOfficeHoursDialog.OutOfOfficeHoursListener {
+public class EnterTaskDetailFragment extends BaseFragment implements  UrgentBookingDialog.UrgentBookingListener,OutOfOfficeHoursDialog.OutOfOfficeHoursListener{
     public static final String TAG = EnterTaskDetailFragment.class.getSimpleName();
     private FragmentEnterTaskDetailBinding mFragmentEnterTaskDetailBinding;
     private TaskCreationActivity mTaskCreationActivity;
@@ -186,7 +187,7 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
     public void initiateUI() {
 
         Log.d(TAG, "initiateUI() called");
-        model = PreferenceUtility.getInstance(mContext).getAdminSettings();
+        model=PreferenceUtility.getInstance(mContext).getAdminSettings();
 
         //Update Where lable with icon
         updateWhereLabelWithIcon(false);
@@ -215,13 +216,13 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
             @Override
             public void onClick(View view) {
 
-                updateFinalVerificationFlag();
-                Log.i("myLog", "" + isTotalVerified);
-                if (!mTaskCreationActivity.isValidationCompleted()) {
-                    return;
-                }
-                additionalChargeReason = Utility.DIALOG_TYPE.NONE;
-                mTaskCreationActivity.onInstaBookClickedNew();
+                    updateFinalVerificationFlag();
+                    Log.i("myLog", "" + isTotalVerified);
+                    if (!mTaskCreationActivity.isValidationCompleted()) {
+                        return;
+                    }
+                    additionalChargeReason=Utility.DIALOG_TYPE.NONE;
+                    mTaskCreationActivity.onInstaBookClickedNew();
 
             }
         });
@@ -248,7 +249,8 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
     private void showAddressDialog() {
         boolean needToTaskAddressSize = mTaskCreationActivity.mJobCategoryModel.isSubscribed.equalsIgnoreCase(Utility.BOOLEAN.NO) && mTaskCreationActivity.mJobCategoryModel.catSlug.equalsIgnoreCase(Utility.CAT_SLUG_TYPES.PEST_CONTROL);
         Log.e(TAG, "showAddressDialog:needToTaskAddressSize  :   " + needToTaskAddressSize);
-        AddressListDialog addressListDialog = AddressListDialog.newInstance(subscriptionType, needToTaskAddressSize, new AddressSelectionListener() {
+
+        AddressListDialog addressListDialog = AddressListDialog.newInstance(subscriptionType,needToTaskAddressSize, new AddressSelectionListener() {
             @Override
             public void onAddressSelection(AddressModel addressModel) {
 //                fillAddressView(addressModel);
@@ -258,99 +260,55 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
 //                    callWS(addressModel);
                     fillAddressView(addressModel);
                 } else if (addressModel.is_subscribe.equals(Utility.ADDRESS_SUBSCRIPTION_TYPE.NONE)) {
-                    if (mTaskCreationActivity.mJobCategoryModel.isSubscribed.equalsIgnoreCase(Utility.BOOLEAN.YES)) {
-                        // this is scribed task
-                        checkAddressForCheepCareCity(addressModel);
-                    } else {
-                        // this is Ad hoc t
-                        fillAddressView(addressModel);
+                    if (!Utility.isConnected(mContext)) {
+                        Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mFragmentEnterTaskDetailBinding.getRoot());
+                        return;
                     }
+                    showProgressDialog();
+                    WebCallClass.isCityAvailableForCare(mTaskCreationActivity, addressModel.address_id, commonErrorListener, new WebCallClass.CityAvailableCheepCareListener() {
+                        @Override
+                        public void getCityDetails(final CareCityDetail careCityDetail) {
+                            hideProgressDialog();
+                            if (TextUtils.isEmpty(careCityDetail.citySlug)) {
+                                CheepCareNotInYourCityDialog.newInstance(mContext, new AcknowledgementInteractionListener() {
+                                    @Override
+                                    public void onAcknowledgementAccepted() {
+                                    }
+                                });
+                            } else
+                                {
+                                NotSubscribedAddressDialog.newInstance(mContext, new NotSubscribedAddressDialog.DialogInteractionListener() {
+                                    @Override
+                                    public void onSubscribeClicked() {
+                                        if (!Utility.isConnected(mContext)) {
+                                            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mFragmentEnterTaskDetailBinding.getRoot());
+                                            return;
+                                        }
+                                        showProgressDialog();
+                                        WebCallClass.getCityCareDetail(mContext, careCityDetail.citySlug, commonErrorListener, new WebCallClass.GetCityCareDataListener() {
+                                            @Override
+                                            public void getCityCareData(CityLandingPageModel cityLandingPageModel) {
+                                                hideProgressDialog();
+                                                LandingScreenPickPackageActivity.newInstance(mContext, cityLandingPageModel.careCityDetail, GsonUtility.getJsonStringFromObject(cityLandingPageModel.packageDetailList));
+                                            }
+                                        });
+                                    }
+
+                                    @Override
+                                    public void onNotNowClicked()
+                                    {
+
+                                    }
+                                });
+                            }
+                        }
+                    });
+
                 }
             }
 
         });
         addressListDialog.show(mTaskCreationActivity.getSupportFragmentManager(), AddressListDialog.TAG);
-    }
-
-    private void checkAddressForCheepCareCity(final AddressModel addressModel) {
-        if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mFragmentEnterTaskDetailBinding.getRoot());
-            return;
-        }
-        showProgressDialog();
-        WebCallClass.isCityAvailableForCare(mTaskCreationActivity, addressModel.address_id, commonErrorListener, new WebCallClass.CityAvailableCheepCareListener() {
-            @Override
-            public void getCityDetails(final CareCityDetail careCityDetail) {
-                hideProgressDialog();
-                if (TextUtils.isEmpty(careCityDetail.citySlug)) {
-                    CheepCareNotInYourCityDialog.newInstance(mContext, new AcknowledgementInteractionListener() {
-                        @Override
-                        public void onAcknowledgementAccepted() {
-                            showProgressDialog();
-                            WebCallClass.isCityAvailableForCare(mTaskCreationActivity, addressModel.address_id, commonErrorListener, new WebCallClass.CityAvailableCheepCareListener() {
-                                @Override
-                                public void getCityDetails(final CareCityDetail careCityDetail) {
-                                    hideProgressDialog();
-                                    if (TextUtils.isEmpty(careCityDetail.citySlug)) {
-                                        CheepCareNotInYourCityDialog.newInstance(mContext, new AcknowledgementInteractionListener() {
-                                            @Override
-                                            public void onAcknowledgementAccepted() {
-                                            }
-                                        });
-                                    } else {
-                                        NotSubscribedAddressDialog.newInstance(mContext, new NotSubscribedAddressDialog.DialogInteractionListener() {
-                                            @Override
-                                            public void onSubscribeClicked() {
-                                                if (!Utility.isConnected(mContext)) {
-                                                    Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mFragmentEnterTaskDetailBinding.getRoot());
-                                                    return;
-                                                }
-                                                showProgressDialog();
-                                                WebCallClass.getCityCareDetail(mContext, careCityDetail.citySlug, commonErrorListener, new WebCallClass.GetCityCareDataListener() {
-                                                    @Override
-                                                    public void getCityCareData(CityLandingPageModel cityLandingPageModel) {
-                                                        hideProgressDialog();
-                                                        LandingScreenPickPackageActivity.newInstance(mContext, cityLandingPageModel.careCityDetail, GsonUtility.getJsonStringFromObject(cityLandingPageModel.packageDetailList));
-                                                    }
-                                                });
-                                            }
-
-                                            @Override
-                                            public void onNotNowClicked() {
-
-                                            }
-                                        });
-                                    }
-                                }
-                            });
-                        }
-                    });
-                } else {
-                    NotSubscribedAddressDialog.newInstance(mContext, new NotSubscribedAddressDialog.DialogInteractionListener() {
-                        @Override
-                        public void onSubscribeClicked() {
-                            if (!Utility.isConnected(mContext)) {
-                                Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mFragmentEnterTaskDetailBinding.getRoot());
-                                return;
-                            }
-                            showProgressDialog();
-                            WebCallClass.getCityCareDetail(mContext, careCityDetail.citySlug, commonErrorListener, new WebCallClass.GetCityCareDataListener() {
-                                @Override
-                                public void getCityCareData(CityLandingPageModel cityLandingPageModel) {
-                                    hideProgressDialog();
-                                    LandingScreenPickPackageActivity.newInstance(mContext, cityLandingPageModel.careCityDetail, GsonUtility.getJsonStringFromObject(cityLandingPageModel.packageDetailList));
-                                }
-                            });
-                        }
-
-                        @Override
-                        public void onNotNowClicked() {
-                        }
-                    });
-                }
-            }
-        });
-
     }
 
 
@@ -396,7 +354,7 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
         }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH));
 
         datePickerDialog.show();
-        superCalendar = SuperCalendar.getInstance();
+        superCalendar=SuperCalendar.getInstance();
         datePickerDialog.getDatePicker().setMinDate(superCalendar.getTimeInMillis());
     }
 
@@ -427,28 +385,53 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
 
 //                            TODO: This needs to Be UNCOMMENTED DO NOT FORGET
 //                            if (!BuildConfig.BUILD_TYPE.equalsIgnoreCase(Utility.DEBUG)) {
-                            if (mSelectedAddress != null) {
-                                if (!(mSelectedAddress.is_subscribe.equalsIgnoreCase(Utility.ADDRESS_SUBSCRIPTION_TYPE.PREMIUM))) {
+                            if (mTaskCreationActivity.mJobCategoryModel.isSubscribed.equalsIgnoreCase(Utility.BOOLEAN.YES))
+                            {
+
+                            if (!(mSelectedAddress.is_subscribe.equalsIgnoreCase(Utility.ADDRESS_SUBSCRIPTION_TYPE.PREMIUM)))
+                            {
+                                if (System.currentTimeMillis() < startDateTimeSuperCalendar.getTimeInMillis()) {
+                                    if (superCalendar.getTimeInMillis() < calAfter3Hours.getTimeInMillis()) {
+
+
+                                        //    Utility.showSnackBar(getString(R.string.can_only_start_task_after_3_hours, "3"), mFragmentEnterTaskDetailBinding.getRoot());
+                                        // mFragmentEnterTaskDetailBinding.textTaskWhen.setText(Utility.EMPTY_STRING);
+                                        // mFragmentEnterTaskDetailBinding.textTaskWhen.setVisibility(View.GONE);
+                                        String selectedDateTime = startDateTimeSuperCalendar.format(Utility.DATE_FORMAT_DD_MMM)
+                                                + getString(R.string.label_between)
+                                                + CalendarUtility.get2HourTimeSlots(Long.toString(startDateTimeSuperCalendar.getTimeInMillis()));
+
+
+                                        mFragmentEnterTaskDetailBinding.textTaskWhen.setText(selectedDateTime);
+                                        mFragmentEnterTaskDetailBinding.textTaskWhen.setVisibility(View.VISIBLE);
+                                        updateTaskVerificationFlags();
+
+                                        ugent_dialog = UrgentBookingDialog.newInstance(model.additionalChargeForSelectingSpecificTime, EnterTaskDetailFragment.this);
+                                        ugent_dialog.show(getFragmentManager(), Utility.DIALOG_TYPE.URGENT_BOOKING);
+                                        ugent_dialog.setCancelable(false);
+                                        return;
+                                    }
+                                } else {
+                                    mFragmentEnterTaskDetailBinding.textTaskWhen.setText(Utility.EMPTY_STRING);
+                                    mFragmentEnterTaskDetailBinding.textTaskWhen.setVisibility(View.GONE);
+                                    Utility.showSnackBar(getString(R.string.validate_future_date), mFragmentEnterTaskDetailBinding.getRoot());
+                                    updateTaskVerificationFlags();
+                                    return;
+
+                                }
+//                            }
+                                try {
                                     if (System.currentTimeMillis() < startDateTimeSuperCalendar.getTimeInMillis()) {
-                                        if (superCalendar.getTimeInMillis() < calAfter3Hours.getTimeInMillis()) {
-
-
-                                            //    Utility.showSnackBar(getString(R.string.can_only_start_task_after_3_hours, "3"), mFragmentEnterTaskDetailBinding.getRoot());
-                                            // mFragmentEnterTaskDetailBinding.textTaskWhen.setText(Utility.EMPTY_STRING);
-                                            // mFragmentEnterTaskDetailBinding.textTaskWhen.setVisibility(View.GONE);
+                                        if (isTimeBetweenTwoTime(startDateTimeSuperCalendar.format(Utility.DATE_FORMAT_HH_MM_SS))) {
                                             String selectedDateTime = startDateTimeSuperCalendar.format(Utility.DATE_FORMAT_DD_MMM)
                                                     + getString(R.string.label_between)
-                                                    + "-"
                                                     + CalendarUtility.get2HourTimeSlots(Long.toString(startDateTimeSuperCalendar.getTimeInMillis()));
-
-
                                             mFragmentEnterTaskDetailBinding.textTaskWhen.setText(selectedDateTime);
                                             mFragmentEnterTaskDetailBinding.textTaskWhen.setVisibility(View.VISIBLE);
                                             updateTaskVerificationFlags();
-
-                                            ugent_dialog = UrgentBookingDialog.newInstance(model.additionalChargeForSelectingSpecificTime, EnterTaskDetailFragment.this);
-                                            ugent_dialog.show(getFragmentManager(), Utility.DIALOG_TYPE.URGENT_BOOKING);
-                                            ugent_dialog.setCancelable(false);
+                                            out_of_office_dialog = OutOfOfficeHoursDialog.newInstance(model.additionalChargeForSelectingSpecificTime, EnterTaskDetailFragment.this);
+                                            out_of_office_dialog.show(getFragmentManager(), Utility.DIALOG_TYPE.OUT_OF_OFFICE_HOURS);
+                                            out_of_office_dialog.setCancelable(false);
                                             return;
                                         }
                                     } else {
@@ -457,76 +440,126 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
                                         Utility.showSnackBar(getString(R.string.validate_future_date), mFragmentEnterTaskDetailBinding.getRoot());
                                         updateTaskVerificationFlags();
                                         return;
-
                                     }
-//                            }
-                                    try {
-                                        if (System.currentTimeMillis() < startDateTimeSuperCalendar.getTimeInMillis()) {
-                                            if (isTimeBetweenTwoTime(startDateTimeSuperCalendar.format(Utility.DATE_FORMAT_HH_MM_SS))) {
-                                                String selectedDateTime = startDateTimeSuperCalendar.format(Utility.DATE_FORMAT_DD_MMM)
-                                                        + getString(R.string.label_between)
-                                                        + "-"
-                                                        + CalendarUtility.get2HourTimeSlots(Long.toString(startDateTimeSuperCalendar.getTimeInMillis()));
-                                                mFragmentEnterTaskDetailBinding.textTaskWhen.setText(selectedDateTime);
-                                                mFragmentEnterTaskDetailBinding.textTaskWhen.setVisibility(View.VISIBLE);
-                                                updateTaskVerificationFlags();
-                                                out_of_office_dialog = OutOfOfficeHoursDialog.newInstance(model.additionalChargeForSelectingSpecificTime, EnterTaskDetailFragment.this);
-                                                out_of_office_dialog.show(getFragmentManager(), Utility.DIALOG_TYPE.OUT_OF_OFFICE_HOURS);
-                                                out_of_office_dialog.setCancelable(false);
-                                                return;
-                                            }
-                                        } else {
-                                            mFragmentEnterTaskDetailBinding.textTaskWhen.setText(Utility.EMPTY_STRING);
-                                            mFragmentEnterTaskDetailBinding.textTaskWhen.setVisibility(View.GONE);
-                                            Utility.showSnackBar(getString(R.string.validate_future_date), mFragmentEnterTaskDetailBinding.getRoot());
-                                            updateTaskVerificationFlags();
-                                            return;
-                                        }
-                                    } catch (ParseException e) {
-                                        e.printStackTrace();
-                                    }
-                                    if (System.currentTimeMillis() < startDateTimeSuperCalendar.getTimeInMillis()) {
+                                } catch (ParseException e) {
+                                    e.printStackTrace();
+                                }
+                                if (System.currentTimeMillis() < startDateTimeSuperCalendar.getTimeInMillis()) {
 //                                       String selectedDateTime = startDateTimeSuperCalendar.format(Utility.DATE_FORMAT_DD_MMM)
 //                                               + getString(R.string.label_at)
 //                                               + startDateTimeSuperCalendar.format(Utility.DATE_FORMAT_HH_MM_AM);
 
-                                        String selectedDateTime = startDateTimeSuperCalendar.format(Utility.DATE_FORMAT_DD_MMM)
-                                                + getString(R.string.label_between)
-                                                + "-"
-                                                + CalendarUtility.get2HourTimeSlots(Long.toString(startDateTimeSuperCalendar.getTimeInMillis()));
+                                    String selectedDateTime = startDateTimeSuperCalendar.format(Utility.DATE_FORMAT_DD_MMM)
+                                            + getString(R.string.label_between)
+                                            + CalendarUtility.get2HourTimeSlots(Long.toString(startDateTimeSuperCalendar.getTimeInMillis()));
 
-                                        mFragmentEnterTaskDetailBinding.textTaskWhen.setText(selectedDateTime);
-                                        mFragmentEnterTaskDetailBinding.textTaskWhen.setVisibility(View.VISIBLE);
-                                        updateTaskVerificationFlags();
-                                    } else {
-                                        mFragmentEnterTaskDetailBinding.textTaskWhen.setText(Utility.EMPTY_STRING);
-                                        mFragmentEnterTaskDetailBinding.textTaskWhen.setVisibility(View.GONE);
-                                        Utility.showSnackBar(getString(R.string.validate_future_date), mFragmentEnterTaskDetailBinding.getRoot());
-                                        updateTaskVerificationFlags();
-                                    }
+                                    mFragmentEnterTaskDetailBinding.textTaskWhen.setText(selectedDateTime);
+                                    mFragmentEnterTaskDetailBinding.textTaskWhen.setVisibility(View.VISIBLE);
+                                    updateTaskVerificationFlags();
                                 } else {
-                                    if (System.currentTimeMillis() < startDateTimeSuperCalendar.getTimeInMillis()) {
-                                        String selectedDateTime = startDateTimeSuperCalendar.format(Utility.DATE_FORMAT_DD_MMM)
-                                                + getString(R.string.label_between)
-                                                + "-"
-                                                + CalendarUtility.get2HourTimeSlots(Long.toString(startDateTimeSuperCalendar.getTimeInMillis()));
-
-                                        mFragmentEnterTaskDetailBinding.textTaskWhen.setText(selectedDateTime);
-                                        mFragmentEnterTaskDetailBinding.textTaskWhen.setVisibility(View.VISIBLE);
-                                        updateTaskVerificationFlags();
-                                    } else {
-                                        mFragmentEnterTaskDetailBinding.textTaskWhen.setText(Utility.EMPTY_STRING);
-                                        mFragmentEnterTaskDetailBinding.textTaskWhen.setVisibility(View.GONE);
-                                        Utility.showSnackBar(getString(R.string.validate_future_date), mFragmentEnterTaskDetailBinding.getRoot());
-                                        updateTaskVerificationFlags();
-                                    }
+                                    mFragmentEnterTaskDetailBinding.textTaskWhen.setText(Utility.EMPTY_STRING);
+                                    mFragmentEnterTaskDetailBinding.textTaskWhen.setVisibility(View.GONE);
+                                    Utility.showSnackBar(getString(R.string.validate_future_date), mFragmentEnterTaskDetailBinding.getRoot());
+                                    updateTaskVerificationFlags();
                                 }
                             }
+                            else
+                            {
+                                if (System.currentTimeMillis() < startDateTimeSuperCalendar.getTimeInMillis()) {
+                                    String selectedDateTime = startDateTimeSuperCalendar.format(Utility.DATE_FORMAT_DD_MMM)
+                                            + getString(R.string.label_between)
+                                            + CalendarUtility.get2HourTimeSlots(Long.toString(startDateTimeSuperCalendar.getTimeInMillis()));
 
+                                    mFragmentEnterTaskDetailBinding.textTaskWhen.setText(selectedDateTime);
+                                    mFragmentEnterTaskDetailBinding.textTaskWhen.setVisibility(View.VISIBLE);
+                                    updateTaskVerificationFlags();
+                                } else {
+                                    mFragmentEnterTaskDetailBinding.textTaskWhen.setText(Utility.EMPTY_STRING);
+                                    mFragmentEnterTaskDetailBinding.textTaskWhen.setVisibility(View.GONE);
+                                    Utility.showSnackBar(getString(R.string.validate_future_date), mFragmentEnterTaskDetailBinding.getRoot());
+                                    updateTaskVerificationFlags();
+                                }
+                            }
                         }
+                               else
+                               {
+
+                                   if (System.currentTimeMillis() < startDateTimeSuperCalendar.getTimeInMillis()) {
+                                       if (superCalendar.getTimeInMillis() < calAfter3Hours.getTimeInMillis()) {
+
+
+                                           //    Utility.showSnackBar(getString(R.string.can_only_start_task_after_3_hours, "3"), mFragmentEnterTaskDetailBinding.getRoot());
+                                           // mFragmentEnterTaskDetailBinding.textTaskWhen.setText(Utility.EMPTY_STRING);
+                                           // mFragmentEnterTaskDetailBinding.textTaskWhen.setVisibility(View.GONE);
+                                           String selectedDateTime = startDateTimeSuperCalendar.format(Utility.DATE_FORMAT_DD_MMM)
+                                                   + getString(R.string.label_between)
+                                                   + CalendarUtility.get2HourTimeSlots(Long.toString(startDateTimeSuperCalendar.getTimeInMillis()));
+
+
+                                           mFragmentEnterTaskDetailBinding.textTaskWhen.setText(selectedDateTime);
+                                           mFragmentEnterTaskDetailBinding.textTaskWhen.setVisibility(View.VISIBLE);
+                                           updateTaskVerificationFlags();
+
+                                           ugent_dialog = UrgentBookingDialog.newInstance(model.additionalChargeForSelectingSpecificTime, EnterTaskDetailFragment.this);
+                                           ugent_dialog.show(getFragmentManager(), Utility.DIALOG_TYPE.URGENT_BOOKING);
+                                           ugent_dialog.setCancelable(false);
+                                           return;
+                                       }
+                                   } else {
+                                       mFragmentEnterTaskDetailBinding.textTaskWhen.setText(Utility.EMPTY_STRING);
+                                       mFragmentEnterTaskDetailBinding.textTaskWhen.setVisibility(View.GONE);
+                                       Utility.showSnackBar(getString(R.string.validate_future_date), mFragmentEnterTaskDetailBinding.getRoot());
+                                       updateTaskVerificationFlags();
+                                       return;
+
+                                   }
+//                            }
+                                   try {
+                                       if (System.currentTimeMillis() < startDateTimeSuperCalendar.getTimeInMillis()) {
+                                           if (isTimeBetweenTwoTime(startDateTimeSuperCalendar.format(Utility.DATE_FORMAT_HH_MM_SS))) {
+                                               String selectedDateTime = startDateTimeSuperCalendar.format(Utility.DATE_FORMAT_DD_MMM)
+                                                       + getString(R.string.label_between)
+                                                       + CalendarUtility.get2HourTimeSlots(Long.toString(startDateTimeSuperCalendar.getTimeInMillis()));
+                                               mFragmentEnterTaskDetailBinding.textTaskWhen.setText(selectedDateTime);
+                                               mFragmentEnterTaskDetailBinding.textTaskWhen.setVisibility(View.VISIBLE);
+                                               updateTaskVerificationFlags();
+                                               out_of_office_dialog = OutOfOfficeHoursDialog.newInstance(model.additionalChargeForSelectingSpecificTime, EnterTaskDetailFragment.this);
+                                               out_of_office_dialog.show(getFragmentManager(), Utility.DIALOG_TYPE.OUT_OF_OFFICE_HOURS);
+                                               out_of_office_dialog.setCancelable(false);
+                                               return;
+                                           }
+                                       } else {
+                                           mFragmentEnterTaskDetailBinding.textTaskWhen.setText(Utility.EMPTY_STRING);
+                                           mFragmentEnterTaskDetailBinding.textTaskWhen.setVisibility(View.GONE);
+                                           Utility.showSnackBar(getString(R.string.validate_future_date), mFragmentEnterTaskDetailBinding.getRoot());
+                                           updateTaskVerificationFlags();
+                                           return;
+                                       }
+                                   } catch (ParseException e) {
+                                       e.printStackTrace();
+                                   }
+                                   if (System.currentTimeMillis() < startDateTimeSuperCalendar.getTimeInMillis()) {
+                                      String selectedDateTime = startDateTimeSuperCalendar.format(Utility.DATE_FORMAT_DD_MMM)
+                                               + getString(R.string.label_between)
+                                              + CalendarUtility.get2HourTimeSlots(Long.toString(startDateTimeSuperCalendar.getTimeInMillis()));
+
+                                       mFragmentEnterTaskDetailBinding.textTaskWhen.setText(selectedDateTime);
+                                       mFragmentEnterTaskDetailBinding.textTaskWhen.setVisibility(View.VISIBLE);
+                                       updateTaskVerificationFlags();
+                                   } else {
+                                       mFragmentEnterTaskDetailBinding.textTaskWhen.setText(Utility.EMPTY_STRING);
+                                       mFragmentEnterTaskDetailBinding.textTaskWhen.setVisibility(View.GONE);
+                                       Utility.showSnackBar(getString(R.string.validate_future_date), mFragmentEnterTaskDetailBinding.getRoot());
+                                       updateTaskVerificationFlags();
+                                   }
+                               }
+                            }
+
+
                     }
                 }, c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE), false);
         timePickerDialog.show();
+
 
     }
 
@@ -609,27 +642,30 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
     }
 
     @Override
-    public void onUrgentPayNow() {
+    public void onUrgentPayNow()
+    {
         updateFinalVerificationFlag();
         Log.i("myLog", "" + isTotalVerified);
         if (!mTaskCreationActivity.isValidationCompleted()) {
             return;
         }
-        additionalChargeReason = Utility.DIALOG_TYPE.URGENT_BOOKING;
+        additionalChargeReason=Utility.DIALOG_TYPE.URGENT_BOOKING;
         mTaskCreationActivity.onInstaBookClickedNew();
     }
 
     @Override
-    public void onUrgentCanWait() {
-
+    public void onUrgentCanWait()
+    {
+        mFragmentEnterTaskDetailBinding.textTaskWhen.setText(Utility.EMPTY_STRING);
+        mFragmentEnterTaskDetailBinding.textTaskWhen.setVisibility(View.GONE);
+        updateTaskVerificationFlags();
     }
 
-
-    public boolean isTimeBetweenTwoTime(String argCurrentTime) throws ParseException {
+    public  boolean isTimeBetweenTwoTime(String argCurrentTime) throws ParseException {
         String reg = "^([0-1][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])$";
         //
-        String argStartTime = mContext.getResources().getString(R.string.start_time);
-        String argEndTime = getString(R.string.end_time);
+        String argStartTime= mContext.getResources().getString(R.string.start_time);
+        String argEndTime=getString(R.string.end_time);
         if (argStartTime.matches(reg) && argEndTime.matches(reg)
                 && argCurrentTime.matches(reg)) {
             boolean valid = false;
@@ -703,13 +739,14 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
     }
 
     @Override
-    public void onOutofOfficePayNow() {
+    public void onOutofOfficePayNow()
+    {
         updateFinalVerificationFlag();
         Log.i("myLog", "" + isTotalVerified);
         if (!mTaskCreationActivity.isValidationCompleted()) {
             return;
         }
-        additionalChargeReason = Utility.DIALOG_TYPE.OUT_OF_OFFICE_HOURS;
+        additionalChargeReason=Utility.DIALOG_TYPE.OUT_OF_OFFICE_HOURS;
         mTaskCreationActivity.onInstaBookClickedNew();
     }
 
@@ -720,7 +757,8 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
         updateTaskVerificationFlags();
     }
 
-    public boolean checkwhen() {
+    public boolean checkwhen()
+    {
 
 
         superCalendar = SuperCalendar.getInstance();
@@ -732,8 +770,10 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
 
 //                            TODO: This needs to Be UNCOMMENTED DO NOT FORGET
 
-        if (System.currentTimeMillis() < startDateTimeSuperCalendar.getTimeInMillis()) {
+        if (System.currentTimeMillis() < startDateTimeSuperCalendar.getTimeInMillis())
+        {
             if (superCalendar.getTimeInMillis() < calAfter3Hours.getTimeInMillis()) {
+
 
 
                 String selectedDateTime = startDateTimeSuperCalendar.format(Utility.DATE_FORMAT_DD_MMM)
@@ -747,7 +787,8 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
                 ugent_dialog.setCancelable(false);
                 return false;
             }
-        } else {
+        }else
+        {
             mFragmentEnterTaskDetailBinding.textTaskWhen.setText(Utility.EMPTY_STRING);
             mFragmentEnterTaskDetailBinding.textTaskWhen.setVisibility(View.GONE);
             Utility.showSnackBar(getString(R.string.validate_future_date), mFragmentEnterTaskDetailBinding.getRoot());
@@ -757,7 +798,8 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
         }
 
         try {
-            if (System.currentTimeMillis() < startDateTimeSuperCalendar.getTimeInMillis()) {
+            if (System.currentTimeMillis() < startDateTimeSuperCalendar.getTimeInMillis())
+            {
                 if (isTimeBetweenTwoTime(startDateTimeSuperCalendar.format(Utility.DATE_FORMAT_HH_MM_SS))) {
                     String selectedDateTime = startDateTimeSuperCalendar.format(Utility.DATE_FORMAT_DD_MMM)
                             + getString(R.string.label_at)
@@ -770,7 +812,9 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
                     out_of_office_dialog.setCancelable(false);
                     return false;
                 }
-            } else {
+            }
+            else
+            {
                 mFragmentEnterTaskDetailBinding.textTaskWhen.setText(Utility.EMPTY_STRING);
                 mFragmentEnterTaskDetailBinding.textTaskWhen.setVisibility(View.GONE);
                 Utility.showSnackBar(getString(R.string.validate_future_date), mFragmentEnterTaskDetailBinding.getRoot());

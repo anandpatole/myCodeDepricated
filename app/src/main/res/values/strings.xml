@@ -113,6 +113,15 @@
         <item>Email Id</item>
     </string-array>
     <string name="label_submit">Submit</string>
+    <string name="start_time">19:00:00</string>
+    <string name="end_time">10:00:00</string>
+    <string name="out_of_office">Out-of-Office Hours Fee</string>
+    <string name="out_of_off_info">Service booked outside 1000 hrs - 1900 hrs</string>
+    <string name="test">TV Repair</string>
+    <string name="free">FREE</string>
+    <string name="urgent_booking_info">Service booked within 3 hrs</string>
+    <string name="select_address">Please Select Address First</string>
+    <string name="gotcha">Gotcha!</string>
     <string name="dummy_long_desc">"Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of "de Finibus Bonorum et Malorum" (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. The first line of Lorem Ipsum, "Lorem ipsum dolor sit amet..", comes from a line in section 1.10.32.
 
 The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from "de Finibus Bonorum et Malorum" by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham."</string>
@@ -869,7 +878,7 @@ without any hidden charges. Try it now!</string>
     <string name="months_3">3 Months</string>
     <string name="months_6">6 Months</string>
     <string name="months_12">12 Months</string>
-<string name="test_money">₹200</string>
+
     <string name="save_money_3">Save ₹200</string>
     <string name="save_money_6">Save ₹400</string>
     <string name="save_money_12">Save ₹600</string>
@@ -918,6 +927,7 @@ without any hidden charges. Try it now!</string>
     <string name="acknowledgement_details">Congrats on taking the first step towards making your home healthy &amp; happy. Your Cheep Care AMC package is now activated and we are available 24x7 to help you maintain your home. Thank you </string>
     <string name="thanks">Thanks</string>
     <string name="label_add_new_address">Add new address</string>
+    <string name="select_address">Select Address</string>
     <string name="label_get_current_location">Get current location</string>
     <string name="hint_address_locality">Locality</string>
     <string name="hint_address_city">City</string>
@@ -944,7 +954,6 @@ without any hidden charges. Try it now!</string>
     <string name="subscribed_under_cheep_care">• Subscribed under Cheep Care</string>
     <string name="please_select_your_address">Please select your address</string>
     <string name="label_auto_renew_deactivated">Auto renewal deactivated</string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="message_coundnot_find_current_location">oops! could noy find your current location! Please try again.</string>
     <string name="label_auto_detect_location_message">Our smart App has picked up this location automatically via GPS?</string>
     <string name="label_please_tell_us_where_do_you_need_the_amc_for">Please tell us where do you need the AMC for?</string>

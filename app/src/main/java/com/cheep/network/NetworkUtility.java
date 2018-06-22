@@ -367,6 +367,7 @@ public class NetworkUtility {
         String LOCALITY = "locality";
         String REQUEST_DETAIL_STATUS = "request_detail_status";
         String vVERSION_TYPE = "vVersionType";
+        String AVERAGE_RATING = "average_rating";
 
 
         String QUOTE_AMOUNT = "quote_amount";
