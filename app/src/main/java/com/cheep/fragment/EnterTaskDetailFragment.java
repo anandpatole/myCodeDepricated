@@ -3,7 +3,6 @@ package com.cheep.fragment;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -24,7 +23,6 @@ import com.cheep.activity.TaskCreationActivity;
 import com.cheep.addresspopupsfortask.AddressListDialog;
 import com.cheep.addresspopupsfortask.AddressSelectionListener;
 import com.cheep.cheepcare.adapter.SelectedSubServiceAdapter;
-import com.cheep.cheepcare.dialogs.BottomAddAddressDialog;
 import com.cheep.cheepcare.dialogs.CheepCareNotInYourCityDialog;
 import com.cheep.cheepcare.dialogs.NotSubscribedAddressDialog;
 import com.cheep.cheepcare.model.AdminSettingModel;
@@ -60,15 +58,14 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
     public boolean isTaskWhenVerified = false;
     public boolean isTaskWhereVerified = false;
     public SuperCalendar startDateTimeSuperCalendar = SuperCalendar.getInstance();
-    private BottomAddAddressDialog dialog;
     private ArrayList<AddressModel> mAddressList;
-    private boolean isClicked = false;
+    public SuperCalendar superCalendar;
     public AddressModel mSelectedAddress;
-    UrgentBookingDialog ugent_dialog;
-    OutOfOfficeHoursDialog out_of_office_dialog;
+    private UrgentBookingDialog ugent_dialog;
+    private OutOfOfficeHoursDialog out_of_office_dialog;
     private String subscriptionType = Utility.ADDRESS_SUBSCRIPTION_TYPE.NONE;
     public String additionalChargeReason = Utility.DIALOG_TYPE.NONE;
-    AdminSettingModel model;
+    private AdminSettingModel model;
     private WebCallClass.CommonResponseListener commonErrorListener = new WebCallClass.CommonResponseListener() {
         @Override
         public void volleyError(VolleyError error) {
@@ -92,6 +89,9 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
             mTaskCreationActivity.finish();
         }
     };
+
+    public EnterTaskDetailFragment() {
+    }
 
     @SuppressWarnings("unused")
     public static EnterTaskDetailFragment newInstance() {
@@ -127,8 +127,7 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
         if (!isVisibleToUser || mTaskCreationActivity == null) {
             return;
         }
-        if (isVisibleToUser)
-            mTaskCreationActivity.showPostTaskButton(false, isTotalVerified);
+        mTaskCreationActivity.showPostTaskButton(false, isTotalVerified);
 
         // Update Task related details
         updateTaskDetails();
@@ -247,7 +246,7 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
     }
 
     private void showAddressDialog() {
-        boolean needToTaskAddressSize = mTaskCreationActivity.mJobCategoryModel.isSubscribed.equalsIgnoreCase(Utility.BOOLEAN.YES) && mTaskCreationActivity.mJobCategoryModel.catSlug.equalsIgnoreCase(Utility.CAT_SLUG_TYPES.PEST_CONTROL);
+        boolean needToTaskAddressSize = mTaskCreationActivity.mJobCategoryModel.isSubscribed.equalsIgnoreCase(Utility.BOOLEAN.NO) && mTaskCreationActivity.mJobCategoryModel.catSlug.equalsIgnoreCase(Utility.CAT_SLUG_TYPES.PEST_CONTROL);
         Log.e(TAG, "showAddressDialog:needToTaskAddressSize  :   " + needToTaskAddressSize);
         AddressListDialog addressListDialog = AddressListDialog.newInstance(subscriptionType, needToTaskAddressSize, new AddressSelectionListener() {
             @Override
@@ -378,17 +377,6 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
     }
 
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == Utility.PLACE_PICKER_REQUEST) {
-            dialog.onActivityResult(resultCode, data);
-            hideProgressDialog();
-        }
-
-    }
-
-
     private void showDateTimePickerDialog() {
 // Get Current Date
         final Calendar c = Calendar.getInstance();
@@ -412,7 +400,6 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
         datePickerDialog.getDatePicker().setMinDate(superCalendar.getTimeInMillis());
     }
 
-    public SuperCalendar superCalendar;
 
     private void showTimePickerDialog() {
 // Get Current Time
@@ -542,9 +529,11 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
         timePickerDialog.show();
 
     }
-///////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////WHEN Feature [END]//////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////
+
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////WHEN Feature [END]                  //////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////////////
 
 
     @Override
@@ -557,9 +546,11 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
         mAddressList = new ArrayList<>();
         if (PreferenceUtility.getInstance(mContext).getUserDetails() != null) {
             ArrayList<AddressModel> subscibedAddressList = new ArrayList<>();
-            if (mTaskCreationActivity.mJobCategoryModel.catSlug.equalsIgnoreCase(Utility.CAT_SLUG_TYPES.PEST_CONTROL)) {
+            if (mTaskCreationActivity.mJobCategoryModel.isSubscribed.equalsIgnoreCase(Utility.BOOLEAN.YES) && mTaskCreationActivity.mJobCategoryModel.catSlug.equalsIgnoreCase(Utility.CAT_SLUG_TYPES.PEST_CONTROL)) {
                 subscriptionType = Utility.ADDRESS_SUBSCRIPTION_TYPE.PREMIUM;
+
                 ArrayList<AddressModel> userAddressList = PreferenceUtility.getInstance(mContext).getUserDetails().addressList;
+
                 for (AddressModel addressModel : userAddressList) {
                     if (addressModel.is_subscribe.equalsIgnoreCase(subscriptionType)) {
                         subscibedAddressList.add(addressModel);
