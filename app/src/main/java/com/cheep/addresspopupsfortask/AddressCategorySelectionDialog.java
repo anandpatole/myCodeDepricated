@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,25 +35,29 @@ public class AddressCategorySelectionDialog extends DialogFragment {
     private ArrayList<AddressModel> listOfAddress;
     private EditAddressDialog editAddressDialog;
     int addressPosition = 0;
+    private boolean isWhiteTheme;
 
     public void setListener(AddressSelectionListener listener) {
         this.listener = listener;
     }
 
-    public static AddressCategorySelectionDialog newInstance(AddressSelectionListener listener) {
+    public static AddressCategorySelectionDialog newInstance(boolean isWhiteTheme, AddressSelectionListener listener) {
         Bundle args = new Bundle();
         AddressCategorySelectionDialog fragment = new AddressCategorySelectionDialog();
+        args.putBoolean(Utility.Extra.DATA_3, isWhiteTheme);
         fragment.setArguments(args);
         fragment.setListener(listener);
         return fragment;
     }
 
-    public static AddressCategorySelectionDialog newInstance(String comingFrom, ArrayList<AddressModel> addressList, int addressPosition) {
+    public static AddressCategorySelectionDialog newInstance(String comingFrom, boolean isWhiteTheme, ArrayList<AddressModel> addressList, int addressPosition) {
         Bundle args = new Bundle();
         AddressCategorySelectionDialog fragment = new AddressCategorySelectionDialog();
         args.putString(Utility.TAG, comingFrom);
         args.putString(Utility.Extra.DATA, GsonUtility.getJsonStringFromObject(addressList));
         args.putInt(Utility.Extra.POSITION, addressPosition);
+        args.putString(Utility.Extra.DATA_2, comingFrom);
+        args.putBoolean(Utility.Extra.DATA_3, isWhiteTheme);
         fragment.setArguments(args);
         return fragment;
     }
@@ -68,6 +73,7 @@ public class AddressCategorySelectionDialog extends DialogFragment {
             COMING_FORM = getArguments().getString(Utility.TAG);
             listOfAddress = GsonUtility.getObjectListFromJsonString(getArguments().getString(Utility.Extra.DATA), AddressModel[].class);
             addressPosition = getArguments().getInt(Utility.Extra.POSITION);
+            isWhiteTheme = getArguments().getBoolean(Utility.Extra.DATA_3);
         }
     }
 
@@ -96,19 +102,21 @@ public class AddressCategorySelectionDialog extends DialogFragment {
                             mBinding.cvOffice.setSelected(false);
                             mBinding.cvHome.setSelected(true);
                         }
+                        if (isWhiteTheme) {
+                            mBinding.imgBack.setImageResource(R.drawable.icon_arrow_back_blue);
+                            mBinding.rlTop.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.white));
+                            mBinding.tvTitle.setTextColor(ContextCompat.getColor(getContext(), R.color.splash_gradient_end));
+                        }
+                        mBinding.tvTitle.setText(R.string.label_please_tell_us_where_do_you_need_the_amc_for);
+
                     }
-                    position++;
                 }
             }
-        }else {
+        } else {
             mBinding.tvTitle.setText(R.string.select_category);
         }
 
-        setListeners();
-
-
     }
-
 
     protected void setListeners() {
         mBinding.imgBack.setOnClickListener(new View.OnClickListener() {
@@ -154,8 +162,7 @@ public class AddressCategorySelectionDialog extends DialogFragment {
     }
 
     private void openAddNewAddressDialog(String category) {
-
-        AddNewAddressDialog addNewAddressDialog = AddNewAddressDialog.newInstance(category, listener);
+        AddNewAddressDialog addNewAddressDialog = AddNewAddressDialog.newInstance(category, isWhiteTheme, listener);
         addNewAddressDialog.show(((BaseAppCompatActivity) getContext()).getSupportFragmentManager(), AddNewAddressDialog.TAG);
         dismiss();
     }

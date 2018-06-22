@@ -19,6 +19,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -39,9 +40,9 @@ import com.cheep.activity.VerificationActivity;
 import com.cheep.adapter.AddressRecyclerViewAdapterProfile;
 import com.cheep.adapter.EmergencyContactRecyclerViewAdapter;
 import com.cheep.addresspopupsfortask.AddressCategorySelectionDialog;
+import com.cheep.addresspopupsfortask.AddressSelectionListener;
 import com.cheep.cheepcare.dialogs.BottomAddAddressDialog;
-import com.cheep.cheepcarenew.dialogs.AddressListDialog;
-import com.cheep.cheepcarenew.dialogs.EditAddressDialog;
+import com.cheep.cheepcarenew.dialogs.AddressListProfileDialog;
 import com.cheep.custom_view.BottomAlertDialog;
 import com.cheep.custom_view.DividerItemDecoration;
 import com.cheep.databinding.DialogChangePhoneNumberBinding;
@@ -111,7 +112,7 @@ public class ProfileDetailsFragmentnew extends BaseFragment implements
 
     // dialog
     private AddressCategorySelectionDialog addressCategorySelectionDialog;
-    private AddressListDialog addressListDialog;
+    private AddressListProfileDialog addressListDialog;
     private UserDetails userDetails;
 
     //    private String mCurrentPhotoPath;
@@ -294,8 +295,14 @@ public class ProfileDetailsFragmentnew extends BaseFragment implements
                     //showAddressDialog();
                     break;
                 case R.id.label_add_new_address:
-                    showBottomAddressDialog(null);
-
+//                    showBottomAddressDialog(null);
+                    AddressCategorySelectionDialog addressCategorySelectionDialog = AddressCategorySelectionDialog.newInstance(true, new AddressSelectionListener() {
+                        @Override
+                        public void onAddressSelection(AddressModel addressModel) {
+                            addressList.add(addressModel);
+                        }
+                    });
+                    addressCategorySelectionDialog.show(((AppCompatActivity) mContext).getSupportFragmentManager(), AddressCategorySelectionDialog.TAG);
                     break;
                 case R.id.text_emergency_contact:
                     showChangeEmergencyContactDialog();
@@ -452,7 +459,7 @@ public class ProfileDetailsFragmentnew extends BaseFragment implements
                 Uri photoURI = FileProvider.getUriForFile(getActivity(),
                         BuildConfig.FILE_PROVIDER_URL,
                         photoFile);
-          /*   Uri  photoURI= Uri.parse(photoFile.toString());*/
+                /*   Uri  photoURI= Uri.parse(photoFile.toString());*/
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
 
                 // Grant URI permission START
@@ -991,13 +998,14 @@ public class ProfileDetailsFragmentnew extends BaseFragment implements
             addressListDialog.dismissAllowingStateLoss();
             addressListDialog = null;
         }
-        addressListDialog = AddressListDialog.newInstance(addressList);
-        addressListDialog.show(getActivity().getSupportFragmentManager(), TAG);
+        addressListDialog = AddressListProfileDialog.newInstance(addressList);
+        addressListDialog.show(((AppCompatActivity) mContext).getSupportFragmentManager(), AddressListProfileDialog.TAG);
     }
 
     // show dialog for select home and office address
     private void showAddressCategorySelectionDialog() {
-        addressCategorySelectionDialog = AddressCategorySelectionDialog.newInstance(Utility.EDIT_PROFILE_ACTIVITY ,addressList,Utility.EDIT_ADDRESD_POSITION);
+        addressCategorySelectionDialog = AddressCategorySelectionDialog.newInstance(Utility.EDIT_PROFILE_ACTIVITY,true ,addressList,Utility.EDIT_ADDRESD_POSITION);
+
         addressCategorySelectionDialog.show(((BaseAppCompatActivity) getContext()).getSupportFragmentManager(),
                 AddressCategorySelectionDialog.TAG);
     }

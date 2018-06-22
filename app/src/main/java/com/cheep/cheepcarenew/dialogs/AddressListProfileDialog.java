@@ -23,6 +23,7 @@ import com.android.volley.VolleyError;
 import com.cheep.R;
 import com.cheep.activity.BaseAppCompatActivity;
 import com.cheep.addresspopupsfortask.AddressCategorySelectionDialog;
+import com.cheep.addresspopupsfortask.AddressListDialog;
 import com.cheep.custom_view.DividerItemDecoration;
 import com.cheep.databinding.DialogAddressListProfileBinding;
 import com.cheep.model.AddressModel;
@@ -40,7 +41,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class AddressListDialog extends DialogFragment {
+public class AddressListProfileDialog extends DialogFragment {
 
     public static final String TAG = AddressListDialog.class.getSimpleName();
     private DialogAddressListProfileBinding mBinding;
@@ -49,12 +50,12 @@ public class AddressListDialog extends DialogFragment {
     private ProgressDialog mProgressDialog;
     int position;
 
-    public AddressListDialog() {
+    public AddressListProfileDialog() {
         // Required empty public constructor
     }
 
-    public static AddressListDialog newInstance(ArrayList<AddressModel> addressList) {
-        AddressListDialog fragment = new AddressListDialog();
+    public static AddressListProfileDialog newInstance(ArrayList<AddressModel> addressList) {
+        AddressListProfileDialog fragment = new AddressListProfileDialog();
         Bundle args = new Bundle();
         args.putString(Utility.Extra.DATA, GsonUtility.getJsonStringFromObject(addressList));
         fragment.setArguments(args);
@@ -140,7 +141,7 @@ public class AddressListDialog extends DialogFragment {
 
         @NonNull
         @Override
-        public AddressListAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(getContext()).inflate(R.layout.row_address_a, parent, false);
             return new ViewHolder(view);
         }
@@ -167,11 +168,10 @@ public class AddressListDialog extends DialogFragment {
 
         // show dialog for select home and office address
         private void showAddressCategorySelectionDialog(int position) {
-            AddressCategorySelectionDialog addressCategorySelectionDialog = AddressCategorySelectionDialog.newInstance(Utility.EDIT_PROFILE_ACTIVITY, listOfAddress,position);
+            AddressCategorySelectionDialog addressCategorySelectionDialog = AddressCategorySelectionDialog.newInstance(Utility.EDIT_PROFILE_ACTIVITY, true, listOfAddress, position);
             addressCategorySelectionDialog.show(((BaseAppCompatActivity) getContext()).getSupportFragmentManager(),
                     AddressCategorySelectionDialog.TAG);
         }
-
         @Override
         public int getItemCount() {
 
