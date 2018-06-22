@@ -247,46 +247,59 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
         });
     }
 
-    private void showAddressDialog() {
+    private void showAddressDialog()
+    {
         boolean needToTaskAddressSize = mTaskCreationActivity.mJobCategoryModel.isSubscribed.equalsIgnoreCase(Utility.BOOLEAN.NO) && mTaskCreationActivity.mJobCategoryModel.catSlug.equalsIgnoreCase(Utility.CAT_SLUG_TYPES.PEST_CONTROL);
         Log.e(TAG, "showAddressDialog:needToTaskAddressSize  :   " + needToTaskAddressSize);
 
-        AddressListDialog addressListDialog = AddressListDialog.newInstance(subscriptionType, needToTaskAddressSize, new AddressSelectionListener() {
+        AddressListDialog addressListDialog = AddressListDialog.newInstance( needToTaskAddressSize, new AddressSelectionListener() {
             @Override
             public void onAddressSelection(AddressModel addressModel)
             {
 //                fillAddressView(addressModel);
 
-                if (addressModel.is_subscribe.equalsIgnoreCase(Utility.ADDRESS_SUBSCRIPTION_TYPE.NONE)) {
+                if (addressModel.is_subscribe.equalsIgnoreCase(Utility.ADDRESS_SUBSCRIPTION_TYPE.NONE))
+                {
                     Log.d(TAG, "onItemSelected: ");
 //                    callWS(addressModel);
                     fillAddressView(addressModel);
-                } else if (!addressModel.is_subscribe.equals(Utility.ADDRESS_SUBSCRIPTION_TYPE.NONE)) {
+                }
+                else if (!addressModel.is_subscribe.equals(Utility.ADDRESS_SUBSCRIPTION_TYPE.NONE))
+                {
                     if (!Utility.isConnected(mContext)) {
                         Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mFragmentEnterTaskDetailBinding.getRoot());
                         return;
                     }
                     showProgressDialog();
-                    WebCallClass.isCityAvailableForCare(mTaskCreationActivity, addressModel.address_id, commonErrorListener, new WebCallClass.CityAvailableCheepCareListener() {
+                    WebCallClass.isCityAvailableForCare(mTaskCreationActivity, addressModel.address_id, commonErrorListener, new WebCallClass.CityAvailableCheepCareListener()
+                    {
                         @Override
-                        public void getCityDetails(final CareCityDetail careCityDetail) {
+                        public void getCityDetails(final CareCityDetail careCityDetail)
+                        {
                             hideProgressDialog();
-                            if (TextUtils.isEmpty(careCityDetail.citySlug)) {
-                                CheepCareNotInYourCityDialog.newInstance(mContext, new AcknowledgementInteractionListener() {
+                            if (TextUtils.isEmpty(careCityDetail.citySlug))
+                            {
+                                CheepCareNotInYourCityDialog.newInstance(mContext, new AcknowledgementInteractionListener()
+                                {
                                     @Override
                                     public void onAcknowledgementAccepted() {
                                     }
                                 });
-                            } else {
-                                NotSubscribedAddressDialog.newInstance(mContext, new NotSubscribedAddressDialog.DialogInteractionListener() {
+                            } else
+                                {
+                                NotSubscribedAddressDialog.newInstance(mContext, new NotSubscribedAddressDialog.DialogInteractionListener()
+                                {
                                     @Override
-                                    public void onSubscribeClicked() {
-                                        if (!Utility.isConnected(mContext)) {
+                                    public void onSubscribeClicked()
+                                    {
+                                        if (!Utility.isConnected(mContext))
+                                        {
                                             Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mFragmentEnterTaskDetailBinding.getRoot());
                                             return;
                                         }
                                         showProgressDialog();
-                                        WebCallClass.getCityCareDetail(mContext, careCityDetail.citySlug, commonErrorListener, new WebCallClass.GetCityCareDataListener() {
+                                        WebCallClass.getCityCareDetail(mContext, careCityDetail.citySlug, commonErrorListener, new WebCallClass.GetCityCareDataListener()
+                                        {
                                             @Override
                                             public void getCityCareData(CityLandingPageModel cityLandingPageModel) {
                                                 hideProgressDialog();
@@ -296,7 +309,8 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
                                     }
 
                                     @Override
-                                    public void onNotNowClicked() {
+                                    public void onNotNowClicked()
+                                    {
 
                                     }
                                 });
@@ -308,7 +322,9 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
             }
 
         });
+
         addressListDialog.show(mTaskCreationActivity.getSupportFragmentManager(), AddressListDialog.TAG);
+
     }
 
 

@@ -925,6 +925,7 @@ public interface DIALOG_TYPE
     }
     public interface CAT_SLUG_TYPES{
         String PEST_CONTROL="pest-control";
+        String PAINTER="";
     }
 
     private static String urlEncodeUTF8(String s) {

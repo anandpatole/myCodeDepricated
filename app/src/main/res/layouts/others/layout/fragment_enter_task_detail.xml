@@ -11,9 +11,9 @@
 
         <LinearLayout
             android:id="@+id/ln_root"
-            android:layout_marginBottom="@dimen/scale_20dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/scale_20dp"
             android:orientation="vertical">
 
 
@@ -129,8 +129,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:paddingLeft="@dimen/scale_30dp"
                 android:paddingBottom="@dimen/scale_22dp"
+                android:paddingLeft="@dimen/scale_30dp"
                 android:paddingRight="@dimen/scale_30dp"
                 android:paddingTop="@dimen/scale_30dp">
 
@@ -148,13 +148,13 @@
 
                 <android.support.v7.widget.CardView
                     android:id="@+id/cv_address"
-                    android:visibility="visible"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/scale_20dp"
                     android:layout_marginLeft="@dimen/scale_20dp"
                     android:layout_marginRight="@dimen/scale_10dp"
                     android:layout_marginTop="@dimen/scale_10dp"
+                    android:visibility="visible"
                     app:cardCornerRadius="@dimen/scale_8dp">
 
                     <LinearLayout
@@ -172,7 +172,6 @@
                             android:id="@+id/ll_address_meta_data"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:gravity="center"
                             android:orientation="horizontal">
 
                             <ImageView
@@ -194,17 +193,6 @@
                                 app:layout_constraintStart_toEndOf="@id/iv_home"
                                 app:layout_constraintTop_toTopOf="@+id/view_dot"/>
 
-                            <View
-                                android:id="@+id/view_dot"
-                                android:layout_width="@dimen/scale_4dp"
-                                android:layout_height="@dimen/scale_4dp"
-                                android:layout_gravity="center"
-                                android:layout_marginLeft="@dimen/scale_4dp"
-                                android:background="@drawable/gray_dot"
-                                android:includeFontPadding="false"
-                                app:layout_constraintBottom_toBottomOf="@+id/tv_label_address_subscribed"
-                                app:layout_constraintStart_toEndOf="@id/tv_address_nickname"
-                                app:layout_constraintTop_toTopOf="@+id/tv_label_address_subscribed"/>
 
                             <com.cheep.custom_view.CFTextViewRegular
                                 android:id="@+id/tv_label_address_subscribed"
@@ -214,21 +202,21 @@
                                 android:layout_weight="1"
                                 android:includeFontPadding="false"
                                 android:paddingRight="@dimen/scale_12dp"
-                                android:text="Subscribed under CHEEP care"
+                                android:visibility="invisible"
                                 android:textColor="@color/grey_varient_17"
                                 android:textSize="@dimen/text_size_11sp"
                                 app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintStart_toEndOf="@id/view_dot"/>
+                                app:layout_constraintStart_toEndOf="@id/tv_address_nickname"/>
 
                             <com.cheep.custom_view.CFTextViewSemiBold
                                 android:id="@+id/tv_change"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:includeFontPadding="false"
-                                android:textSize="@dimen/text_size_12sp"
                                 android:text="@string/label_change"
                                 android:textColor="@color/splash_gradient_end"
-                                app:layout_constraintBottom_toBottomOf="@+id/view_dot"
+                                android:textSize="@dimen/text_size_12sp"
+                                app:layout_constraintBottom_toBottomOf="@+id/tv_address_nickname"
                                 app:layout_constraintStart_toEndOf="@id/iv_home"
                                 app:layout_constraintTop_toTopOf="@+id/view_dot"/>
 
@@ -236,9 +224,9 @@
 
                         <com.cheep.custom_view.CFTextViewRegular
                             android:id="@+id/tv_address"
-                            android:layout_marginLeft="@dimen/scale_22dp"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/scale_22dp"
                             android:layout_marginTop="@dimen/scale_8dp"
                             android:includeFontPadding="false"
                             android:text="1202/1204 UniWorld Towers, Next to Palladium Mall, Opp Jijabai Kantabai Library, Mahatma Gandhi Phule Road, Elphinstone Road (West) Mumbai"

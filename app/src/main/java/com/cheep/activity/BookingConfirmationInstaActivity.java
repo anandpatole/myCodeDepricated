@@ -24,6 +24,7 @@ import com.cheep.custom_view.BottomAlertDialog;
 import com.cheep.custom_view.CFEditTextRegular;
 import com.cheep.databinding.ActivityBookingConfirmationInstaBinding;
 import com.cheep.model.AddressModel;
+import com.cheep.model.JobCategoryModel;
 import com.cheep.model.MessageEvent;
 import com.cheep.model.TaskDetailModel;
 import com.cheep.model.UserDetails;
@@ -35,6 +36,7 @@ import com.cheep.utils.GlideUtility;
 import com.cheep.utils.GsonUtility;
 import com.cheep.utils.LogUtils;
 import com.cheep.utils.PreferenceUtility;
+
 import com.cheep.utils.Utility;
 import com.cheep.utils.WebCallClass;
 
@@ -48,6 +50,7 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.cheep.utils.Utility.Extra.DATA_2;
 import static com.cheep.utils.Utility.getSpannableString;
 
 
@@ -62,7 +65,7 @@ public class BookingConfirmationInstaActivity extends BaseAppCompatActivity {
     private double subTotal;
     private static final String TAG = LogUtils.makeLogTag(BookingConfirmationInstaActivity.class);
     private Map<String, Object> mTaskCreationParams;
-
+    private JobCategoryModel mJobCategoryModel;
 
     private double usedWalletBalance = 0;
 
@@ -75,10 +78,11 @@ public class BookingConfirmationInstaActivity extends BaseAppCompatActivity {
     private String payableAmount;
 
 
-    public static void newInstance(Context context, TaskDetailModel taskDetailModel, AddressModel mSelectedAddressModel) {
+    public static void newInstance(Context context, TaskDetailModel taskDetailModel,   AddressModel mSelectedAddressModel) {
         Intent intent = new Intent(context, BookingConfirmationInstaActivity.class);
         intent.putExtra(Utility.Extra.DATA, GsonUtility.getJsonStringFromObject(taskDetailModel));
         intent.putExtra(Utility.Extra.SELECTED_ADDRESS_MODEL, GsonUtility.getJsonStringFromObject(mSelectedAddressModel));
+       // intent.putExtra(Utility.Extra.DATA_2,GsonUtility.getJsonStringFromObject(taskDetailModel));
         context.startActivity(intent);
     }
 
@@ -102,12 +106,15 @@ public class BookingConfirmationInstaActivity extends BaseAppCompatActivity {
             //This is only when provider profile view for specific task (provider gives quote to specific task)
             taskDetailModel = (TaskDetailModel) GsonUtility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA), TaskDetailModel.class);
         }
-
+//        if (getIntent().hasExtra(Utility.Extra.DATA_2)) {
+//            //This is only when provider profile view for specific task (provider gives quote to specific task)
+//            mJobCategoryModel = (JobCategoryModel) GsonUtility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA_2), JobCategoryModel.class);
+//        }
         if (getIntent().hasExtra(Utility.Extra.SELECTED_ADDRESS_MODEL)) {
             mSelectedAddressModel = (AddressModel) GsonUtility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.SELECTED_ADDRESS_MODEL), AddressModel.class);
         }
 
-       setSupportActionBar(mBinding.toolbar);
+        setSupportActionBar(mBinding.toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setTitle(Utility.EMPTY_STRING);
@@ -119,9 +126,9 @@ public class BookingConfirmationInstaActivity extends BaseAppCompatActivity {
                 }
             });
         }
-mBinding.textStepDesc.setText("Please check details below and book");
+        mBinding.textStepDesc.setText("Please check details below and book");
         // Enable Step Three Unverified state
-       setTaskState(STEP_THREE_UNVERIFIED);
+        setTaskState(STEP_THREE_UNVERIFIED);
 
         double subTotal=0;
         double subServiceTotal = 0;
@@ -140,68 +147,235 @@ mBinding.textStepDesc.setText("Please check details below and book");
 
         mBinding.tvTaskDescription.setText(spannableStringBuilder);
         mBinding.tvLabelCategory.setText(taskDetailModel.categoryModel.catName);
-        if(mSelectedAddressModel.is_subscribe.equalsIgnoreCase(Utility.ADDRESS_SUBSCRIPTION_TYPE.PREMIUM)|| mSelectedAddressModel.is_subscribe.equalsIgnoreCase(Utility.ADDRESS_SUBSCRIPTION_TYPE.NORMAL))
+        if (taskDetailModel.categoryModel.isSubscribed.equalsIgnoreCase(Utility.BOOLEAN.YES))
+        {
+
+            if(mSelectedAddressModel.is_subscribe.equalsIgnoreCase(Utility.ADDRESS_SUBSCRIPTION_TYPE.PREMIUM)|| mSelectedAddressModel.is_subscribe.equalsIgnoreCase(Utility.ADDRESS_SUBSCRIPTION_TYPE.NORMAL))
+            {
+                if(taskDetailModel.categoryModel.catSlug.equalsIgnoreCase(Utility.CAT_SLUG_TYPES.PEST_CONTROL))
+                {
+                    if(mSelectedAddressModel.is_subscribe.equalsIgnoreCase(Utility.ADDRESS_SUBSCRIPTION_TYPE.NORMAL))
+                    {
+                        mBinding.tvLabelCategoryPrices.setText(getString(R.string.rupee_symbol_x, Utility.getQuotePriceFormatter(taskDetailModel.catPrice)));
+                        subServiceTotal=Double.valueOf(taskDetailModel.catPrice);
+                    }
+                    else
+                    {
+                        mBinding.tvLabelCategoryPrices.setText(getString(R.string.free));
+                        subServiceTotal=0;
+                    }
+                }
+                else
+                {
+                    mBinding.tvLabelCategoryPrices.setText(getString(R.string.free));
+                    subServiceTotal=0;
+                }
+                if(taskDetailModel.additionalChargeReason.equalsIgnoreCase(Utility.DIALOG_TYPE.NONE))
+                {
+
+                    mBinding.lnPayLaterPayNowButtons.setVisibility(View.GONE);
+                    mBinding.tvGotcha.setVisibility(View.VISIBLE);
+                    mBinding.rlAdditionalCharges.setVisibility(View.GONE);
+                    additionalCharge=0;
+                    mBinding.viewLine2.setVisibility(View.GONE);
+
+                }
+                else
+                {
+
+                    mBinding.lnPayLaterPayNowButtons.setVisibility(View.VISIBLE);
+                    mBinding.tvGotcha.setVisibility(View.GONE);
+                    mBinding.viewLine2.setVisibility(View.VISIBLE);
+                    mBinding.rlAdditionalCharges.setVisibility(View.VISIBLE);
+                    // mBinding.tvLabelAdditionalCharge.setText(taskDetailModel.additionalChargeReason);
+                    mBinding.tvAdditionalChargeReason.setText(taskDetailModel.additionalChargeReason);
+                    if(taskDetailModel.additionalChargeReason.equalsIgnoreCase(Utility.DIALOG_TYPE.OUT_OF_OFFICE_HOURS))
+                    {
+                        mBinding.tvAdditionalChargeSubreason.setText(getString(R.string.out_of_off_info));
+                    }
+                    else
+                    {
+                        mBinding.tvAdditionalChargeSubreason.setText(getString(R.string.urgent_booking_info));
+                    }
+
+                    mBinding.tvAdditionalCharge.setText(getString(R.string.rupee_symbol_x, Utility.getQuotePriceFormatter(PreferenceUtility.getInstance(mContext).getAdminSettings().additionalChargeForSelectingSpecificTime)));
+                    additionalCharge=Double.valueOf(PreferenceUtility.getInstance(mContext).getAdminSettings().additionalChargeForSelectingSpecificTime);
+                }
+                if (!taskDetailModel.subCatList.isEmpty()) {
+                    mBinding.recyclerViewPaid.setVisibility(View.VISIBLE);
+                    mBinding.recyclerViewPaid.setLayoutManager(new LinearLayoutManager(this));
+                    mBinding.recyclerViewPaid.setAdapter(new SelectedSubServiceAdapter(taskDetailModel.subCatList));
+                    mBinding.viewLine1.setVisibility(View.VISIBLE);
+                    mBinding.categoryTick.setVisibility(View.GONE);
+                } else {
+                    mBinding.categoryTick.setVisibility(View.VISIBLE);
+                    mBinding.recyclerViewPaid.setVisibility(View.GONE);
+                    mBinding.viewLine1.setVisibility(View.GONE);
+                }
+
+            }
+            else
+            {
+                if(taskDetailModel.additionalChargeReason.equalsIgnoreCase(Utility.DIALOG_TYPE.NONE))
+                {
+
+                    mBinding.lnPayLaterPayNowButtons.setVisibility(View.GONE);
+                    mBinding.tvGotcha.setVisibility(View.VISIBLE);
+                    mBinding.rlAdditionalCharges.setVisibility(View.GONE);
+                    additionalCharge=0;
+                    mBinding.viewLine2.setVisibility(View.GONE);
+
+                }
+                else
+                {
+
+                    mBinding.lnPayLaterPayNowButtons.setVisibility(View.VISIBLE);
+                    mBinding.tvGotcha.setVisibility(View.GONE);
+                    mBinding.viewLine2.setVisibility(View.VISIBLE);
+                    mBinding.rlAdditionalCharges.setVisibility(View.VISIBLE);
+                    // mBinding.tvLabelAdditionalCharge.setText(taskDetailModel.additionalChargeReason);
+                    mBinding.tvAdditionalChargeReason.setText(taskDetailModel.additionalChargeReason);
+                    if(taskDetailModel.additionalChargeReason.equalsIgnoreCase(Utility.DIALOG_TYPE.OUT_OF_OFFICE_HOURS))
+                    {
+                        mBinding.tvAdditionalChargeSubreason.setText(getString(R.string.out_of_off_info));
+                    }
+                    else
+                    {
+                        mBinding.tvAdditionalChargeSubreason.setText(getString(R.string.urgent_booking_info));
+                    }
+
+                    mBinding.tvAdditionalCharge.setText(getString(R.string.rupee_symbol_x, Utility.getQuotePriceFormatter(PreferenceUtility.getInstance(mContext).getAdminSettings().additionalChargeForSelectingSpecificTime)));
+                    additionalCharge=Double.valueOf(PreferenceUtility.getInstance(mContext).getAdminSettings().additionalChargeForSelectingSpecificTime);
+                }
+                mBinding.lnPayLaterPayNowButtons.setVisibility(View.VISIBLE);
+                mBinding.tvGotcha.setVisibility(View.GONE);
+                mBinding.tvLabelCategoryPrices.setText(getString(R.string.rupee_symbol_x, Utility.getQuotePriceFormatter(taskDetailModel.catPrice)));
+                subServiceTotal=Double.valueOf(taskDetailModel.catPrice);
+            }
+            if (!taskDetailModel.subCatList.isEmpty()) {
+                mBinding.recyclerViewPaid.setVisibility(View.VISIBLE);
+                mBinding.recyclerViewPaid.setLayoutManager(new LinearLayoutManager(this));
+                mBinding.recyclerViewPaid.setAdapter(new SelectedSubServiceAdapter(taskDetailModel.subCatList));
+                mBinding.viewLine1.setVisibility(View.VISIBLE);
+                mBinding.categoryTick.setVisibility(View.GONE);
+            } else {
+                mBinding.categoryTick.setVisibility(View.VISIBLE);
+                mBinding.recyclerViewPaid.setVisibility(View.GONE);
+                mBinding.viewLine1.setVisibility(View.GONE);
+            }
+
+        }
+        else
         {
             if(taskDetailModel.additionalChargeReason.equalsIgnoreCase(Utility.DIALOG_TYPE.NONE))
             {
-
-                mBinding.lnPayLaterPayNowButtons.setVisibility(View.GONE);
-               mBinding.tvGotcha.setVisibility(View.VISIBLE);
-
+                mBinding.rlAdditionalCharges.setVisibility(View.GONE);
+                additionalCharge=0;
+                mBinding.viewLine2.setVisibility(View.GONE);
             }
             else
             {
-                mBinding.lnPayLaterPayNowButtons.setVisibility(View.VISIBLE);
-                mBinding.tvGotcha.setVisibility(View.GONE);
+                mBinding.viewLine2.setVisibility(View.VISIBLE);
+                mBinding.rlAdditionalCharges.setVisibility(View.VISIBLE);
+                // mBinding.tvLabelAdditionalCharge.setText(taskDetailModel.additionalChargeReason);
+                mBinding.tvAdditionalChargeReason.setText(taskDetailModel.additionalChargeReason);
+                if(taskDetailModel.additionalChargeReason.equalsIgnoreCase(Utility.DIALOG_TYPE.OUT_OF_OFFICE_HOURS))
+                {
+                    mBinding.tvAdditionalChargeSubreason.setText(getString(R.string.out_of_off_info));
+                }
+                else
+                {
+                    mBinding.tvAdditionalChargeSubreason.setText(getString(R.string.urgent_booking_info));
+                }
+
+                mBinding.tvAdditionalCharge.setText(getString(R.string.rupee_symbol_x, Utility.getQuotePriceFormatter(PreferenceUtility.getInstance(mContext).getAdminSettings().additionalChargeForSelectingSpecificTime)));
+                additionalCharge=Double.valueOf(PreferenceUtility.getInstance(mContext).getAdminSettings().additionalChargeForSelectingSpecificTime);
             }
-            mBinding.tvLabelCategoryPrices.setText(getString(R.string.free));
-            subServiceTotal=0;
-        }
-        else
-        {
-            mBinding.lnPayLaterPayNowButtons.setVisibility(View.VISIBLE);
             mBinding.tvGotcha.setVisibility(View.GONE);
+            mBinding.lnPayLaterPayNowButtons.setVisibility(View.VISIBLE);
+
             mBinding.tvLabelCategoryPrices.setText(getString(R.string.rupee_symbol_x, Utility.getQuotePriceFormatter(taskDetailModel.catPrice)));
             subServiceTotal=Double.valueOf(taskDetailModel.catPrice);
-        }
-        if(taskDetailModel.additionalChargeReason.equalsIgnoreCase(Utility.DIALOG_TYPE.NONE))
-        {
-            mBinding.rlAdditionalCharges.setVisibility(View.GONE);
-            additionalCharge=0;
-            mBinding.viewLine2.setVisibility(View.GONE);
-        }
-        else
-        {
-            mBinding.viewLine2.setVisibility(View.VISIBLE);
-            mBinding.rlAdditionalCharges.setVisibility(View.VISIBLE);
-           // mBinding.tvLabelAdditionalCharge.setText(taskDetailModel.additionalChargeReason);
-            mBinding.tvAdditionalChargeReason.setText(taskDetailModel.additionalChargeReason);
-            if(taskDetailModel.additionalChargeReason.equalsIgnoreCase(Utility.DIALOG_TYPE.OUT_OF_OFFICE_HOURS))
-            {
-                mBinding.tvAdditionalChargeSubreason.setText(getString(R.string.out_of_off_info));
+            if (!taskDetailModel.subCatList.isEmpty()) {
+                mBinding.recyclerViewPaid.setVisibility(View.VISIBLE);
+                mBinding.recyclerViewPaid.setLayoutManager(new LinearLayoutManager(this));
+                mBinding.recyclerViewPaid.setAdapter(new SelectedSubServiceAdapter(taskDetailModel.subCatList));
+                mBinding.viewLine1.setVisibility(View.VISIBLE);
+                mBinding.categoryTick.setVisibility(View.GONE);
+            } else {
+                mBinding.categoryTick.setVisibility(View.VISIBLE);
+                mBinding.recyclerViewPaid.setVisibility(View.GONE);
+                mBinding.viewLine1.setVisibility(View.GONE);
             }
-            else
-            {
-                mBinding.tvAdditionalChargeSubreason.setText(getString(R.string.urgent_booking_info));
-            }
-
-            mBinding.tvAdditionalCharge.setText(getString(R.string.rupee_symbol_x, Utility.getQuotePriceFormatter(PreferenceUtility.getInstance(mContext).getAdminSettings().additionalChargeForSelectingSpecificTime)));
-            additionalCharge=Double.valueOf(PreferenceUtility.getInstance(mContext).getAdminSettings().additionalChargeForSelectingSpecificTime);
         }
-        // banner image of cat
-        //GlideUtility.loadImageView(mContext, mBinding.imgService, taskDetailModel.categoryModel.catImageExtras.original, R.drawable.gradient_black);
 
-        if (!taskDetailModel.subCatList.isEmpty()) {
-            mBinding.recyclerViewPaid.setVisibility(View.VISIBLE);
-            mBinding.recyclerViewPaid.setLayoutManager(new LinearLayoutManager(this));
-            mBinding.recyclerViewPaid.setAdapter(new SelectedSubServiceAdapter(taskDetailModel.subCatList));
-            mBinding.viewLine1.setVisibility(View.VISIBLE);
-            mBinding.categoryTick.setVisibility(View.GONE);
-        } else {
-            mBinding.categoryTick.setVisibility(View.VISIBLE);
-            mBinding.recyclerViewPaid.setVisibility(View.GONE);
-            mBinding.viewLine1.setVisibility(View.GONE);
-        }
+        ///old
+//        if(mSelectedAddressModel.is_subscribe.equalsIgnoreCase(Utility.ADDRESS_SUBSCRIPTION_TYPE.PREMIUM)|| mSelectedAddressModel.is_subscribe.equalsIgnoreCase(Utility.ADDRESS_SUBSCRIPTION_TYPE.NORMAL))
+//        {
+//
+//            if(taskDetailModel.additionalChargeReason.equalsIgnoreCase(Utility.DIALOG_TYPE.NONE))
+//            {
+//
+//                mBinding.lnPayLaterPayNowButtons.setVisibility(View.GONE);
+//                mBinding.tvGotcha.setVisibility(View.VISIBLE);
+//
+//            }
+//            else
+//            {
+//
+//                mBinding.lnPayLaterPayNowButtons.setVisibility(View.VISIBLE);
+//                mBinding.tvGotcha.setVisibility(View.GONE);
+//            }
+//            mBinding.tvLabelCategoryPrices.setText(getString(R.string.free));
+//            subServiceTotal=0;
+//        }
+//        else
+//        {
+//            mBinding.lnPayLaterPayNowButtons.setVisibility(View.VISIBLE);
+//            mBinding.tvGotcha.setVisibility(View.GONE);
+//            mBinding.tvLabelCategoryPrices.setText(getString(R.string.rupee_symbol_x, Utility.getQuotePriceFormatter(taskDetailModel.catPrice)));
+//            subServiceTotal=Double.valueOf(taskDetailModel.catPrice);
+//        }
+//
+//
+//        if(taskDetailModel.additionalChargeReason.equalsIgnoreCase(Utility.DIALOG_TYPE.NONE))
+//        {
+//            mBinding.rlAdditionalCharges.setVisibility(View.GONE);
+//            additionalCharge=0;
+//            mBinding.viewLine2.setVisibility(View.GONE);
+//        }
+//        else
+//        {
+//            mBinding.viewLine2.setVisibility(View.VISIBLE);
+//            mBinding.rlAdditionalCharges.setVisibility(View.VISIBLE);
+//            // mBinding.tvLabelAdditionalCharge.setText(taskDetailModel.additionalChargeReason);
+//            mBinding.tvAdditionalChargeReason.setText(taskDetailModel.additionalChargeReason);
+//            if(taskDetailModel.additionalChargeReason.equalsIgnoreCase(Utility.DIALOG_TYPE.OUT_OF_OFFICE_HOURS))
+//            {
+//                mBinding.tvAdditionalChargeSubreason.setText(getString(R.string.out_of_off_info));
+//            }
+//            else
+//            {
+//                mBinding.tvAdditionalChargeSubreason.setText(getString(R.string.urgent_booking_info));
+//            }
+//
+//            mBinding.tvAdditionalCharge.setText(getString(R.string.rupee_symbol_x, Utility.getQuotePriceFormatter(PreferenceUtility.getInstance(mContext).getAdminSettings().additionalChargeForSelectingSpecificTime)));
+//            additionalCharge=Double.valueOf(PreferenceUtility.getInstance(mContext).getAdminSettings().additionalChargeForSelectingSpecificTime);
+//        }
+//        // banner image of cat
+//        //GlideUtility.loadImageView(mContext, mBinding.imgService, taskDetailModel.categoryModel.catImageExtras.original, R.drawable.gradient_black);
+//
+//        if (!taskDetailModel.subCatList.isEmpty()) {
+//            mBinding.recyclerViewPaid.setVisibility(View.VISIBLE);
+//            mBinding.recyclerViewPaid.setLayoutManager(new LinearLayoutManager(this));
+//            mBinding.recyclerViewPaid.setAdapter(new SelectedSubServiceAdapter(taskDetailModel.subCatList));
+//            mBinding.viewLine1.setVisibility(View.VISIBLE);
+//            mBinding.categoryTick.setVisibility(View.GONE);
+//        } else {
+//            mBinding.categoryTick.setVisibility(View.VISIBLE);
+//            mBinding.recyclerViewPaid.setVisibility(View.GONE);
+//            mBinding.viewLine1.setVisibility(View.GONE);
+//        }
 
         //
         mBinding.ivTermsTick.setSelected(true);
@@ -227,7 +401,7 @@ mBinding.textStepDesc.setText("Please check details below and book");
 
         mBinding.tvTotal.setText(getString(R.string.rupee_symbol_x, Utility.getQuotePriceFormatter(String.valueOf(subTotal))));
 
-       // mBinding.lnPayNow.setVisibility(View.GONE);
+        // mBinding.lnPayNow.setVisibility(View.GONE);
         //mBinding.lnPayLaterPayNowButtons.setVisibility(View.VISIBLE);
 
         //initUIForReferDiscountAndPromoCode();
@@ -252,7 +426,7 @@ mBinding.textStepDesc.setText("Please check details below and book");
     protected void setListeners() {
         mBinding.rlPayNow.setOnClickListener(onPayNowClickListener);
         mBinding.rlPayLater.setOnClickListener(onPayLaterClickListener);
-mBinding.tvGotcha.setOnClickListener(onGotchaClickListener);
+        mBinding.tvGotcha.setOnClickListener(onGotchaClickListener);
         mBinding.ivTermsTick.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -685,7 +859,7 @@ mBinding.tvGotcha.setOnClickListener(onGotchaClickListener);
         showProgressDialog();
 
         WebCallClass.createInstaBookingTask(BookingConfirmationInstaActivity.this,
-                taskDetailModel, mSelectedAddressModel, String.valueOf(total), payableAmount, Utility.TASK_STATUS.PAY_LATER, Utility.EMPTY_STRING, Utility.EMPTY_STRING, new WebCallClass.CommonResponseListener() {
+                taskDetailModel, mSelectedAddressModel, String.valueOf(total), payableAmount, NetworkUtility.PAYMENT_METHOD_TYPE.PAY_LATER, Utility.EMPTY_STRING, Utility.EMPTY_STRING, new WebCallClass.CommonResponseListener() {
                     @Override
                     public void volleyError(VolleyError error) {
 
