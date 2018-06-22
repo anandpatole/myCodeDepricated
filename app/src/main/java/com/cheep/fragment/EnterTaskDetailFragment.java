@@ -252,7 +252,7 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
         boolean needToTaskAddressSize = mTaskCreationActivity.mJobCategoryModel.isSubscribed.equalsIgnoreCase(Utility.BOOLEAN.NO) && mTaskCreationActivity.mJobCategoryModel.catSlug.equalsIgnoreCase(Utility.CAT_SLUG_TYPES.PEST_CONTROL);
         Log.e(TAG, "showAddressDialog:needToTaskAddressSize  :   " + needToTaskAddressSize);
 
-        AddressListDialog addressListDialog = AddressListDialog.newInstance( needToTaskAddressSize, new AddressSelectionListener() {
+        AddressListDialog addressListDialog = AddressListDialog.newInstance( true,needToTaskAddressSize, new AddressSelectionListener() {
             @Override
             public void onAddressSelection(AddressModel addressModel)
             {
@@ -263,6 +263,7 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
                     Log.d(TAG, "onItemSelected: ");
 //                    callWS(addressModel);
                     fillAddressView(addressModel);
+
                 }
                 else if (!addressModel.is_subscribe.equals(Utility.ADDRESS_SUBSCRIPTION_TYPE.NONE))
                 {

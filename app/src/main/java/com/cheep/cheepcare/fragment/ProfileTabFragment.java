@@ -34,9 +34,9 @@ public class ProfileTabFragment extends BaseFragment {
     public static final String TAG = "ProfileTabFragment";
     private static final int DETAILS_TAB = 0;
     private static final int REVIEWS_TAB = 1;
-   // private static final int PAYMENT_HISTORY_TAB = 2;
+    // private static final int PAYMENT_HISTORY_TAB = 2;
     private FragmentProfileTabBinding mBinding;
-    private PagerAdapter mPagerAdapter;
+    public PagerAdapter mPagerAdapter;
     private DrawerLayoutInteractionListener mListener;
 
     public static ProfileTabFragment newInstance() {
@@ -174,6 +174,10 @@ public class ProfileTabFragment extends BaseFragment {
         public void addFragment(String title) {
             mTitleList.add(title);
         }
+    }
+    public Fragment getObject(){
+
+        return mPagerAdapter.getItem(0);
     }
 
     private final View.OnClickListener mOnClickListener =

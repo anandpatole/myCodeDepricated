@@ -22,6 +22,7 @@ import com.android.volley.VolleyError;
 import com.cheep.R;
 import com.cheep.activity.BaseAppCompatActivity;
 import com.cheep.cheepcarenew.activities.AddressActivity;
+import com.cheep.cheepcarenew.dialogs.EditAddressDialog;
 import com.cheep.databinding.DialogAddNewAddressBinding;
 import com.cheep.model.AddressModel;
 import com.cheep.model.GuestUserDetails;
@@ -50,12 +51,13 @@ import java.util.Map;
 
 import static android.app.Activity.RESULT_OK;
 
-public class AddNewAddressDialog extends DialogFragment {
+public class AddNewAddressDialog extends DialogFragment  {
 
 
     private String category;
     private AddressModel mAddressModel;
     private AddressSelectionListener listener;
+    private boolean isWhiteTheme;
 
     public void setListener(AddressSelectionListener listener) {
         this.listener = listener;
@@ -65,11 +67,12 @@ public class AddNewAddressDialog extends DialogFragment {
     //    private ToolTipView toolTipView;
     public static final String TAG = "AddNewAddressDialog";
 
-    public static AddNewAddressDialog newInstance(String category, AddressSelectionListener listener) {
+    public static AddNewAddressDialog newInstance(String category, boolean isWhiteTheme, AddressSelectionListener listener) {
         Bundle args = new Bundle();
         AddNewAddressDialog fragment = new AddNewAddressDialog();
         fragment.setListener(listener);
         args.putString(Utility.Extra.DATA, category);
+        args.putBoolean(Utility.Extra.DATA_2, isWhiteTheme);
         fragment.setArguments(args);
         return fragment;
     }
@@ -88,6 +91,15 @@ public class AddNewAddressDialog extends DialogFragment {
         if (getArguments() == null)
             return;
         category = getArguments().getString(Utility.Extra.DATA);
+        isWhiteTheme= getArguments().getBoolean(Utility.Extra.DATA_2);
+
+        if (isWhiteTheme) {
+            mBinding.imgBack.setImageResource(R.drawable.icon_arrow_back_blue);
+            mBinding.rlTop.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.white));
+            mBinding.tvTitle.setTextColor(ContextCompat.getColor(getContext(), R.color.splash_gradient_end));
+        }
+
+
         mBinding.editAddressCity.setHint(getSpannableStringForHint(getString(R.string.hint_address_city)));
         mBinding.editAddressPincode.setHint(getSpannableStringForHint(getString(R.string.hint_pincode)));
         mBinding.editAddressInitials.setHint(getSpannableStringForHint(getString(R.string.hint_address_initials)));
@@ -382,6 +394,5 @@ public class AddNewAddressDialog extends DialogFragment {
             Utility.showToast(getContext(), getContext().getString(R.string.label_something_went_wrong));
         }
     };
-
 
 }

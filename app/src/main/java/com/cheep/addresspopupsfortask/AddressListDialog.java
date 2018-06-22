@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,14 +32,16 @@ public class AddressListDialog extends DialogFragment implements AddressSelectio
     private ArrayList<AddressModel> addressList = new ArrayList<>();
     private boolean needsAskForAddressSize;
     private AddressSelectionListener addressSelectionListener;
+    private boolean isWhiteTheme;
 
     public void setAddressSelectionListener(AddressSelectionListener addressSelectionListener) {
         this.addressSelectionListener = addressSelectionListener;
     }
 
-    public static AddressListDialog newInstance(boolean needsAskForAddressSize, AddressSelectionListener addressSelectionListener) {
+    public static AddressListDialog newInstance(boolean isWhiteTheme, boolean needsAskForAddressSize, AddressSelectionListener addressSelectionListener) {
         Bundle args = new Bundle();
 //        args.putString(Utility.Extra.DATA, subscriptionType);
+        args.putBoolean(Utility.Extra.DATA, isWhiteTheme);
         args.putBoolean(Utility.Extra.DATA_2, needsAskForAddressSize);
         AddressListDialog dialog = new AddressListDialog();
         dialog.setAddressSelectionListener(addressSelectionListener);
@@ -66,8 +69,13 @@ public class AddressListDialog extends DialogFragment implements AddressSelectio
         addressList.clear();
         if (getArguments() == null)
             return;
+        isWhiteTheme = getArguments().getBoolean(Utility.Extra.DATA);
         needsAskForAddressSize = getArguments().getBoolean(Utility.Extra.DATA_2);
-
+        if (isWhiteTheme) {
+            mBinding.imgBack.setImageResource(R.drawable.icon_arrow_back_blue);
+            mBinding.rlTop.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.white));
+            mBinding.tvTitle.setTextColor(ContextCompat.getColor(getContext(), R.color.splash_gradient_end));
+        }
         UserDetails userDetails = PreferenceUtility.getInstance(getContext()).getUserDetails();
         if (userDetails != null && userDetails.addressList != null && !userDetails.addressList.isEmpty()) {
             addressList.addAll(userDetails.addressList);
@@ -130,7 +138,7 @@ public class AddressListDialog extends DialogFragment implements AddressSelectio
 
 
     private void openAddAddressDialog() {
-        AddressCategorySelectionDialog addressCategorySelectionDialog = AddressCategorySelectionDialog.newInstance(this);
+        AddressCategorySelectionDialog addressCategorySelectionDialog = AddressCategorySelectionDialog.newInstance(isWhiteTheme,this);
         addressCategorySelectionDialog.show(((BaseAppCompatActivity) getContext()).getSupportFragmentManager(), AddressCategorySelectionDialog.TAG);
     }
 

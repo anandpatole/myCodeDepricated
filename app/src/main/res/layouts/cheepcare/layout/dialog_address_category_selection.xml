@@ -36,14 +36,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
-                    android:layout_toEndOf="@+id/img_back"
-                    android:layout_toRightOf="@+id/img_back"
                     android:gravity="center"
                     android:paddingBottom="25dp"
                     android:paddingEnd="15dp"
                     android:paddingRight="15dp"
+                    android:paddingLeft="46dp"
                     android:paddingTop="25dp"
-                    android:text="@string/label_please_tell_us_where_do_you_need_the_amc_for"
+                    android:text="sdadasdsdlabel_please_tell_us_where_do_you_need_the_amc_for"
                     android:textColor="@color/black"/>
             </RelativeLayout>
 

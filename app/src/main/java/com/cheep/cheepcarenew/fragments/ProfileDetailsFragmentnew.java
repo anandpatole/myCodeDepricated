@@ -19,6 +19,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -27,6 +28,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -38,9 +40,9 @@ import com.cheep.activity.VerificationActivity;
 import com.cheep.adapter.AddressRecyclerViewAdapterProfile;
 import com.cheep.adapter.EmergencyContactRecyclerViewAdapter;
 import com.cheep.addresspopupsfortask.AddressCategorySelectionDialog;
+import com.cheep.addresspopupsfortask.AddressSelectionListener;
 import com.cheep.cheepcare.dialogs.BottomAddAddressDialog;
-import com.cheep.cheepcarenew.dialogs.AddressListDialog;
-import com.cheep.cheepcarenew.dialogs.EditAddressDialog;
+import com.cheep.cheepcarenew.dialogs.AddressListProfileDialog;
 import com.cheep.custom_view.BottomAlertDialog;
 import com.cheep.custom_view.DividerItemDecoration;
 import com.cheep.databinding.DialogChangePhoneNumberBinding;
@@ -94,7 +96,6 @@ import static com.cheep.utils.Utility.REQUEST_CODE_IMAGE_CAPTURE_ADD_PROFILE;
 public class ProfileDetailsFragmentnew extends BaseFragment implements
         EmergencyContactRecyclerViewAdapter.EmergencyInteractionListener,
         WebCallClass.UpdateEmergencyContactResponseListener,
-
         WebCallClass.CommonResponseListener,
         View.OnClickListener {
 
@@ -111,7 +112,7 @@ public class ProfileDetailsFragmentnew extends BaseFragment implements
 
     // dialog
     private AddressCategorySelectionDialog addressCategorySelectionDialog;
-    private AddressListDialog addressListDialog;
+    private AddressListProfileDialog addressListDialog;
     private UserDetails userDetails;
 
     //    private String mCurrentPhotoPath;
@@ -129,9 +130,7 @@ public class ProfileDetailsFragmentnew extends BaseFragment implements
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         mBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_profile_details_new, container, false);
-
         callGetProfileWS();
-
         return mBinding.getRoot();
     }
 
@@ -142,6 +141,7 @@ public class ProfileDetailsFragmentnew extends BaseFragment implements
         setListener();
 
     }
+
 
     @Override
     public void onAttach(Context context) {
@@ -237,6 +237,7 @@ public class ProfileDetailsFragmentnew extends BaseFragment implements
         mBinding.emailProfileEdit.setOnClickListener(onClickListener);
         mBinding.mainProfileEdit.setOnClickListener(onClickListener);
         mBinding.tvEdit.setOnClickListener(this);
+        mBinding.tvDelete.setOnClickListener(this);
 
 
     }
@@ -294,8 +295,14 @@ public class ProfileDetailsFragmentnew extends BaseFragment implements
                     //showAddressDialog();
                     break;
                 case R.id.label_add_new_address:
-                    showBottomAddressDialog(null);
-
+//                    showBottomAddressDialog(null);
+                    AddressCategorySelectionDialog addressCategorySelectionDialog = AddressCategorySelectionDialog.newInstance(true, new AddressSelectionListener() {
+                        @Override
+                        public void onAddressSelection(AddressModel addressModel) {
+                            addressList.add(addressModel);
+                        }
+                    });
+                    addressCategorySelectionDialog.show(((AppCompatActivity) mContext).getSupportFragmentManager(), AddressCategorySelectionDialog.TAG);
                     break;
                 case R.id.text_emergency_contact:
                     showChangeEmergencyContactDialog();
@@ -452,7 +459,7 @@ public class ProfileDetailsFragmentnew extends BaseFragment implements
                 Uri photoURI = FileProvider.getUriForFile(getActivity(),
                         BuildConfig.FILE_PROVIDER_URL,
                         photoFile);
-          /*   Uri  photoURI= Uri.parse(photoFile.toString());*/
+                /*   Uri  photoURI= Uri.parse(photoFile.toString());*/
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
 
                 // Grant URI permission START
@@ -908,7 +915,7 @@ public class ProfileDetailsFragmentnew extends BaseFragment implements
 
         @Override
         public void onDeleteClicked(AddressModel model, int position) {
-            showAddressDeletionConfirmationDialog(model);
+            //showAddressDeletionConfirmationDialog(model);
         }
 
         @Override
@@ -991,30 +998,23 @@ public class ProfileDetailsFragmentnew extends BaseFragment implements
             addressListDialog.dismissAllowingStateLoss();
             addressListDialog = null;
         }
-        addressListDialog = AddressListDialog.newInstance(addressList);
-        addressListDialog.show(getActivity().getSupportFragmentManager(), TAG);
+        addressListDialog = AddressListProfileDialog.newInstance(addressList);
+        addressListDialog.show(((AppCompatActivity) mContext).getSupportFragmentManager(), AddressListProfileDialog.TAG);
     }
 
     // show dialog for select home and office address
     private void showAddressCategorySelectionDialog() {
-        addressCategorySelectionDialog = AddressCategorySelectionDialog.newInstance(Utility.EDIT_PROFILE_ACTIVITY ,addressList);
+        addressCategorySelectionDialog = AddressCategorySelectionDialog.newInstance(Utility.EDIT_PROFILE_ACTIVITY,true ,addressList,Utility.EDIT_ADDRESD_POSITION);
+
         addressCategorySelectionDialog.show(((BaseAppCompatActivity) getContext()).getSupportFragmentManager(),
                 AddressCategorySelectionDialog.TAG);
     }
-
-    //View.OnClickListener
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.tv_edit:
-                showAddressCategorySelectionDialog();
-                break;
-        }
+    public void getDataFromEditAddressDialog(){
+        callGetProfileWS();
     }
+    ///////////////////////////// DELETE CONFIRMATION DIALOG//////////////////////////////////////
 
-///////////////////////////// DELETE CONFIRMATION DIALOG//////////////////////////////////////
-
-    private void showAddressDeletionConfirmationDialog(final AddressModel model) {
+    private void showAddressDeletionConfirmationDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext, R.style.MyAlertDialogStyle);
         builder.setCancelable(false);
         builder.setTitle(getString(R.string.cheep_all_caps));
@@ -1023,8 +1023,8 @@ public class ProfileDetailsFragmentnew extends BaseFragment implements
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 Log.d(TAG, "onClick() called with: dialogInterface = [" + dialogInterface + "], i = [" + i + "]");
-                TEMP_ADDRESS_ID = model.address_id;
-                callDeleteAddressWS(model.address_id);
+                TEMP_ADDRESS_ID = addressList.get(0).address_id;
+                callDeleteAddressWS(TEMP_ADDRESS_ID);
             }
         });
         builder.setNegativeButton(getString(R.string.label_cancel), new DialogInterface.OnClickListener() {
@@ -1036,7 +1036,22 @@ public class ProfileDetailsFragmentnew extends BaseFragment implements
         builder.show();
     }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //View.OnClickListener
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.tv_edit:
+                showAddressCategorySelectionDialog();
+                break;
+            case R.id.tv_delete:
+                showAddressDeletionConfirmationDialog();
+                break;
+        }
+    }
+
+
+
+     /////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////// PageContent[START]/////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -1182,20 +1197,11 @@ public class ProfileDetailsFragmentnew extends BaseFragment implements
                 Log.i(TAG, "onResponse: " + jsonObject.toString());
                 int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
                 String error_message;
-//                if (addAddressDialog != null) {
-//                    addAddressDialog.dismiss();
-//                }
+
                 switch (statusCode) {
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
-                        if (adapterAddressRecyclerView != null) {
-                            adapterAddressRecyclerView.delete(TEMP_ADDRESS_ID);
-                            if (mBinding.textViewMore.getVisibility() == View.VISIBLE) {
-                                //fillAddressRecyclerView(mBinding.textAddressRecyclerNew);
-                                //fillAddressRecyclerView1(mBinding.textAddressRecyclerNew);
-
-                            }
-
-                        }
+                        addressList.remove(0);
+                        setAddress();
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
                         // Show Toast
@@ -1964,43 +1970,11 @@ public class ProfileDetailsFragmentnew extends BaseFragment implements
 
     private void loadImage(String selectedImagePath) {
         GlideUtility.showCircularImageView(mContext, TAG, mBinding.imgProfileNew, selectedImagePath, Utility.DEFAULT_PROFILE_SRC, true);
-
-//        if (!TextUtils.isEmpty(selectedImagePath))
-//        {
-//            Glide
-//                    .with(mContext)
-//                    .load(selectedImagePath)
-//                    .asBitmap()
-//                    .into(new SimpleTarget<Bitmap>() {
-//                        @Override
-//                        public void onResourceReady(Bitmap originalBitmap, GlideAnimation<? super Bitmap> glideAnimation) {
-//                            // you can do something with loaded bitmap here
-//
-//                            Bitmap U8_4Bitmap;
-//                            if (originalBitmap.getConfig() == Bitmap.Config.ARGB_8888) {
-//                                U8_4Bitmap = originalBitmap;
-//                            } else {
-//                                U8_4Bitmap = originalBitmap.copy(Bitmap.Config.ARGB_8888, true);
-//                            }
-//
-//                            mBinding.imgBanner.setImageBitmap(originalBitmap);
-//                        }
-//                    });
-//        }
     }
-
     private void loadCoverImage(String selectedImagePath) {
         GlideUtility.loadImageView(mContext, mBinding.imgProfileNew, selectedImagePath, R.drawable.icon_profile_img_solid);
     }
 
-   /* @Override
-    public void getRelationShipList(JSONArray relationshipList)
-    {
-hideProgressDialog();
-    relationShipScreenFragment = RelationShipScreenFragment.newInstance();
-        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.content, relationShipScreenFragment, RelationShipScreenFragment.TAG).commitAllowingStateLoss();
-
-    }*/
 
     @Override
     public void volleyError(VolleyError error) {

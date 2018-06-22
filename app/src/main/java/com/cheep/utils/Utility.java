@@ -100,6 +100,7 @@ public class Utility {
     public static final String EDIT_PROFILE_ACTIVITY = "EditProfile";
 
     public static final String TAG = "Utility";
+    public static final String POSITION = "findPosition";
     public static final String EMPTY_STRING = "";
     public static final String ZERO_STRING = "0";
     public static final String ONE_CHARACTER_SPACE = " ";
@@ -224,6 +225,7 @@ public class Utility {
 
     public static final String REMOVE = "remove";
     public static final String ADD = "add";
+    public static final int  EDIT_ADDRESD_POSITION = 0;
 
     //Different Types of Braoadcast Actions
     public static final String BR_ON_TASK_CREATED = "com.cheep.ontaskcreated";

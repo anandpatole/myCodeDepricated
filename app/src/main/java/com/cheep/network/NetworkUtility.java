@@ -359,7 +359,6 @@ public class NetworkUtility {
         String USER_ID = "user_id";
         String PAGE_ID = "page_id";
         String NUMBER = "number";
-        String NAME = "name";
         String EMERGENCY_DATA = "emergency_data";
         String CITY_NAME = "city_name";
         String COUNTRY = "country";
@@ -468,6 +467,7 @@ public class NetworkUtility {
         String CARE_PACKAGE_ID = "care_package_id";
         String LANDMARK = "landmark";
         String PINCODE = "pincode";
+        String NAME = "name";
         String NICKNAME = "nickname";
         String PACKAGE_OPTION_DETAILS = "package_option_details";
         String CHEEP_CARE_CODE = "cheepcarecode";
