@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.cheep.R;
+import com.cheep.addresspopupsfortask.AddressListDialog;
 import com.cheep.custom_view.DividerItemDecoration;
 import com.cheep.databinding.DialogAddressListProfileBinding;
 import com.cheep.model.AddressModel;
@@ -23,19 +24,19 @@ import com.cheep.utils.Utility;
 
 import java.util.ArrayList;
 
-public class AddressListDialog extends DialogFragment {
+public class AddressListProfileDialog extends DialogFragment {
 
     public static final String TAG = AddressListDialog.class.getSimpleName();
     private DialogAddressListProfileBinding mBinding;
     private ArrayList<AddressModel> listOfAddress;
     private AddressListAdapter adapter;
 
-    public AddressListDialog() {
+    public AddressListProfileDialog() {
         // Required empty public constructor
     }
 
-    public static AddressListDialog newInstance(ArrayList<AddressModel> addressList) {
-        AddressListDialog fragment = new AddressListDialog();
+    public static AddressListProfileDialog newInstance(ArrayList<AddressModel> addressList) {
+        AddressListProfileDialog fragment = new AddressListProfileDialog();
         Bundle args = new Bundle();
         args.putString(Utility.Extra.DATA, GsonUtility.getJsonStringFromObject(addressList));
         fragment.setArguments(args);
@@ -105,7 +106,7 @@ public class AddressListDialog extends DialogFragment {
         public void onBindViewHolder(@NonNull AddressListAdapter.ViewHolder holder, int position) {
             holder.imgAddress.setImageResource(Utility.getAddressCategoryBlueIcon(listOfAddress.get(0).category));
             holder.tvAddressCategory.setText(listOfAddress.get(0).category);
-            holder.textFullAddress.setText(listOfAddress.get(position).address);
+            holder.textFullAddress.setText(listOfAddress.get(position).getAddressWithInitials());
         }
 
         @Override

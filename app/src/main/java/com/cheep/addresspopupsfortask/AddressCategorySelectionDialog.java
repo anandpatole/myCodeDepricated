@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,24 +34,27 @@ public class AddressCategorySelectionDialog extends DialogFragment {
     private String comingForm = Utility.EMPTY_STRING;
     private ArrayList<AddressModel> listOfAddress;
     private EditAddressDialog editAddressDialog;
+    private boolean isWhiteTheme;
 
     public void setListener(AddressSelectionListener listener) {
         this.listener = listener;
     }
 
-    public static AddressCategorySelectionDialog newInstance(AddressSelectionListener listener) {
+    public static AddressCategorySelectionDialog newInstance(boolean isWhiteTheme, AddressSelectionListener listener) {
         Bundle args = new Bundle();
         AddressCategorySelectionDialog fragment = new AddressCategorySelectionDialog();
+        args.putBoolean(Utility.Extra.DATA_3, isWhiteTheme);
         fragment.setArguments(args);
         fragment.setListener(listener);
         return fragment;
     }
 
-    public static AddressCategorySelectionDialog newInstance(String comingFrom, ArrayList<AddressModel> addressList) {
+    public static AddressCategorySelectionDialog newInstance(String comingFrom, boolean isWhiteTheme, ArrayList<AddressModel> addressList) {
         Bundle args = new Bundle();
         AddressCategorySelectionDialog fragment = new AddressCategorySelectionDialog();
         args.putString(Utility.Extra.DATA, GsonUtility.getJsonStringFromObject(addressList));
         args.putString(Utility.Extra.DATA_2, comingFrom);
+        args.putBoolean(Utility.Extra.DATA_3, isWhiteTheme);
         fragment.setArguments(args);
         return fragment;
     }
@@ -59,16 +63,6 @@ public class AddressCategorySelectionDialog extends DialogFragment {
         this.addressModel = addressModel;
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            if (getArguments().getString(Utility.Extra.DATA_2) != null)
-                comingForm = getArguments().getString(Utility.Extra.DATA_2);
-            if (getArguments().getString(Utility.Extra.DATA) != null)
-                listOfAddress = GsonUtility.getObjectListFromJsonString(getArguments().getString(Utility.Extra.DATA), AddressModel[].class);
-        }
-    }
 
     @Nullable
     @Override
@@ -81,6 +75,19 @@ public class AddressCategorySelectionDialog extends DialogFragment {
 
     public void initiateUI() {
         Log.e(TAG, "initiateUI: ********************");
+        if (getArguments() != null) {
+            if (getArguments().getString(Utility.Extra.DATA_2) != null)
+                comingForm = getArguments().getString(Utility.Extra.DATA_2);
+            if (getArguments().getString(Utility.Extra.DATA) != null)
+                listOfAddress = GsonUtility.getObjectListFromJsonString(getArguments().getString(Utility.Extra.DATA), AddressModel[].class);
+                isWhiteTheme = getArguments().getBoolean(Utility.Extra.DATA_3);
+        }
+
+        if (isWhiteTheme) {
+            mBinding.imgBack.setImageResource(R.drawable.icon_arrow_back_blue);
+            mBinding.rlTop.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.white));
+            mBinding.tvTitle.setTextColor(ContextCompat.getColor(getContext(), R.color.splash_gradient_end));
+        }
         if (comingForm.equalsIgnoreCase(Utility.EDIT_PROFILE_ACTIVITY)) {
             mBinding.tvTitle.setText(R.string.label_please_tell_us_where_do_you_need_the_amc_for);
             if (listOfAddress != null) {
@@ -88,7 +95,6 @@ public class AddressCategorySelectionDialog extends DialogFragment {
                     if (listOfAddress.get(0).category.equalsIgnoreCase(NetworkUtility.TAGS.HOME)) {
                         mBinding.cvHome.setSelected(true);
                         mBinding.cvOffice.setSelected(false);
-
                     } else if (listOfAddress.get(0).category.equalsIgnoreCase(NetworkUtility.TAGS.OFFICE)) {
                         mBinding.cvOffice.setSelected(false);
                         mBinding.cvHome.setSelected(true);
@@ -99,10 +105,7 @@ public class AddressCategorySelectionDialog extends DialogFragment {
         } else {
             mBinding.tvTitle.setText(R.string.select_category);
         }
-
         setListeners();
-
-
     }
 
 
@@ -148,8 +151,7 @@ public class AddressCategorySelectionDialog extends DialogFragment {
     }
 
     private void openAddNewAddressDialog(String category) {
-
-        AddNewAddressDialog addNewAddressDialog = AddNewAddressDialog.newInstance(category, listener);
+        AddNewAddressDialog addNewAddressDialog = AddNewAddressDialog.newInstance(category,isWhiteTheme, listener);
         addNewAddressDialog.show(((BaseAppCompatActivity) getContext()).getSupportFragmentManager(), AddNewAddressDialog.TAG);
         dismiss();
     }

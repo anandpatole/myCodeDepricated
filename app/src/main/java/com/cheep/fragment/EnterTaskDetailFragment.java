@@ -269,7 +269,7 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
         boolean needToTaskAddressSize = !catIsSubscribed && isPestControl;
         Log.e(TAG, "showAddressDialog:needToTaskAddressSize  :   " + needToTaskAddressSize);
 
-        AddressListDialog addressListDialog = AddressListDialog.newInstance(needToTaskAddressSize, new AddressSelectionListener() {
+        AddressListDialog addressListDialog = AddressListDialog.newInstance(true,needToTaskAddressSize, new AddressSelectionListener() {
             @Override
             public void onAddressSelection(AddressModel addressModel) {
 
