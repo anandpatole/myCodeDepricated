@@ -284,7 +284,8 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
                             checkCheepCareIsAvailableInCity(addressModel);
                         }
                     } else {
-                        if (addressModel.is_subscribe.equalsIgnoreCase(Utility.ADDRESS_SUBSCRIPTION_TYPE.PREMIUM) || addressModel.is_subscribe.equalsIgnoreCase(Utility.ADDRESS_SUBSCRIPTION_TYPE.NORMAL)) {
+                        if (addressModel.is_subscribe.equalsIgnoreCase(Utility.ADDRESS_SUBSCRIPTION_TYPE.PREMIUM)
+                                || addressModel.is_subscribe.equalsIgnoreCase(Utility.ADDRESS_SUBSCRIPTION_TYPE.NORMAL)) {
                             fillAddressView(addressModel);
                         } else {
                             checkCheepCareIsAvailableInCity(addressModel);
