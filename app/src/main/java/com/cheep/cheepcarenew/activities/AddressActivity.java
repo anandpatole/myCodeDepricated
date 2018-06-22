@@ -229,7 +229,6 @@ public class AddressActivity extends BaseAppCompatActivity {
 
                             break;
                         case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
-                            // Show Toast
                             Utility.showToast(AddressActivity.this, getString(R.string.label_something_went_wrong));
                             break;
                         case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:

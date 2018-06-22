@@ -29,7 +29,6 @@ public class AddressListDialog extends DialogFragment implements AddressSelectio
     DialogAddressListBinding mBinding;
     AddressListRecyclerViewAdapter adapter;
     private ArrayList<AddressModel> addressList = new ArrayList<>();
-    private String subscriptionType = Utility.ADDRESS_SUBSCRIPTION_TYPE.NONE;
     private boolean needsAskForAddressSize;
     private AddressSelectionListener addressSelectionListener;
 
@@ -37,9 +36,9 @@ public class AddressListDialog extends DialogFragment implements AddressSelectio
         this.addressSelectionListener = addressSelectionListener;
     }
 
-    public static AddressListDialog newInstance(String subscriptionType, boolean needsAskForAddressSize, AddressSelectionListener addressSelectionListener) {
+    public static AddressListDialog newInstance(boolean needsAskForAddressSize, AddressSelectionListener addressSelectionListener) {
         Bundle args = new Bundle();
-        args.putString(Utility.Extra.DATA, subscriptionType);
+//        args.putString(Utility.Extra.DATA, subscriptionType);
         args.putBoolean(Utility.Extra.DATA_2, needsAskForAddressSize);
         AddressListDialog dialog = new AddressListDialog();
         dialog.setAddressSelectionListener(addressSelectionListener);
@@ -67,41 +66,39 @@ public class AddressListDialog extends DialogFragment implements AddressSelectio
         addressList.clear();
         if (getArguments() == null)
             return;
-        subscriptionType = getArguments().getString(Utility.Extra.DATA);
         needsAskForAddressSize = getArguments().getBoolean(Utility.Extra.DATA_2);
 
         UserDetails userDetails = PreferenceUtility.getInstance(getContext()).getUserDetails();
-        ArrayList<AddressModel> arrayList = new ArrayList<>();
         if (userDetails != null && userDetails.addressList != null && !userDetails.addressList.isEmpty()) {
-            arrayList = userDetails.addressList;
+            addressList.addAll(userDetails.addressList);
         } else {
             GuestUserDetails guestUserDetails = PreferenceUtility.getInstance(getContext()).getGuestUserDetails();
             if (guestUserDetails != null && guestUserDetails.addressList != null && !guestUserDetails.addressList.isEmpty()) {
-                arrayList = guestUserDetails.addressList;
+                addressList.addAll(guestUserDetails.addressList);
             }
         }
 
-        // if is_subscribe is yes than
-        if (subscriptionType.equalsIgnoreCase(Utility.ADDRESS_SUBSCRIPTION_TYPE.PREMIUM)) {
-            for (AddressModel addressModel : arrayList) {
-                if (addressModel.is_subscribe.equalsIgnoreCase(subscriptionType)) {
-                    addressList.add(addressModel);
-                }
-            }
-
-        } else if (subscriptionType.equalsIgnoreCase(Utility.ADDRESS_SUBSCRIPTION_TYPE.NORMAL)) {
-            for (AddressModel addressModel : arrayList) {
-                if (!addressModel.is_subscribe.equalsIgnoreCase(Utility.ADDRESS_SUBSCRIPTION_TYPE.NONE)) {
-                    addressList.add(addressModel);
-                }
-            }
-        } else {
-            for (AddressModel addressModel : arrayList) {
-                if (addressModel.is_subscribe.equalsIgnoreCase(subscriptionType)) {
-                    addressList.add(addressModel);
-                }
-            }
-        }
+//        // if is_subscribe is yes than
+//        if (subscriptionType.equalsIgnoreCase(Utility.ADDRESS_SUBSCRIPTION_TYPE.PREMIUM)) {
+//            for (AddressModel addressModel : arrayList) {
+//                if (addressModel.is_subscribe.equalsIgnoreCase(subscriptionType)) {
+//                    addressList.add(addressModel);
+//                }
+//            }
+//
+//        } else if (subscriptionType.equalsIgnoreCase(Utility.ADDRESS_SUBSCRIPTION_TYPE.NORMAL)) {
+//            for (AddressModel addressModel : arrayList) {
+//                if (!addressModel.is_subscribe.equalsIgnoreCase(Utility.ADDRESS_SUBSCRIPTION_TYPE.NONE)) {
+//                    addressList.add(addressModel);
+//                }
+//            }
+//        } else {
+//            for (AddressModel addressModel : arrayList) {
+//                if (addressModel.is_subscribe.equalsIgnoreCase(subscriptionType)) {
+//                    addressList.add(addressModel);
+//                }
+//            }
+//        }
 
         mBinding.rvAddress.setNestedScrollingEnabled(false);
         mBinding.rvAddress.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));

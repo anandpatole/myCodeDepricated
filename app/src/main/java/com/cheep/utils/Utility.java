@@ -726,8 +726,8 @@ public interface  cat
 
 public interface DIALOG_TYPE
 {
-    String OUT_OF_OFFICE_HOURS="Out-of-Office Hours";
-    String URGENT_BOOKING="Urgent Booking";
+    String OUT_OF_OFFICE_HOURS="Out-of-Office Hours Fee";
+    String URGENT_BOOKING="Urgent Booking Fee";
     String NONE="none";
 }
 

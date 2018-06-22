@@ -9,7 +9,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.cheep.R;
 import com.cheep.activity.BaseAppCompatActivity;
@@ -31,7 +30,7 @@ public class AddressCategorySelectionDialog extends DialogFragment {
     private ArrayList<AddressModel> addressModelArrayList;
     private ViewTooltip.TooltipView tooltipView;
     private AddressSelectionListener listener;
-    private String COMING_FORM;
+    private String COMING_FORM = Utility.EMPTY_STRING;
     private ArrayList<AddressModel> listOfAddress;
     private EditAddressDialog editAddressDialog;
     int addressPosition = 0;
@@ -101,7 +100,7 @@ public class AddressCategorySelectionDialog extends DialogFragment {
                     position++;
                 }
             }
-        } else {
+        }else {
             mBinding.tvTitle.setText(R.string.select_category);
         }
 

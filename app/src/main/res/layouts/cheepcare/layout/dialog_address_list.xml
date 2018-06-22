@@ -32,7 +32,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:contentDescription="TODO"
+                tools:contentDescription="TODO"
                 android:padding="15dp"
                 android:src="@drawable/ic_back_arrow_black"/>
 
@@ -43,8 +43,9 @@
                 android:gravity="center"
                 android:paddingBottom="25dp"
                 android:paddingRight="15dp"
+                android:paddingEnd="15dp"
                 android:paddingTop="25dp"
-                android:text="Select Address"
+                android:text="@string/label_select_address"
                 android:textColor="@color/black"/>
         </RelativeLayout>
 

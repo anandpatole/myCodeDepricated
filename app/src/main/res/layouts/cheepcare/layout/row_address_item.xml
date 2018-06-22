@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+        xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/ll_address_container"
@@ -27,7 +27,7 @@
 
         <com.cheep.custom_view.CFTextViewSemiBold
             android:id="@+id/tv_address_nickname"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/scale_10dp"
             android:includeFontPadding="false"
@@ -41,6 +41,25 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0"
             app:layout_constraintVertical_chainStyle="packed"/>
+
+
+        <com.cheep.custom_view.CFTextViewRegular
+            android:id="@+id/tv_label_address_subscribed"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/scale_4dp"
+            android:layout_weight="1"
+            android:includeFontPadding="false"
+            android:paddingRight="@dimen/scale_12dp"
+            android:text="Subscribed under CHEEP care"
+            android:textColor="@color/grey_varient_17"
+            android:textSize="@dimen/text_size_9sp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@+id/tv_address"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/tv_address_nickname"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.2"/>
 
 
         <com.cheep.custom_view.CFTextViewRegular

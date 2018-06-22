@@ -3,7 +3,6 @@ package com.cheep.fragment;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -23,8 +22,8 @@ import com.cheep.activity.BaseAppCompatActivity;
 import com.cheep.activity.TaskCreationActivity;
 import com.cheep.addresspopupsfortask.AddressListDialog;
 import com.cheep.addresspopupsfortask.AddressSelectionListener;
+import com.cheep.addresspopupsfortask.AddressSizeForHomeOfficeDialog;
 import com.cheep.cheepcare.adapter.SelectedSubServiceAdapter;
-import com.cheep.cheepcare.dialogs.BottomAddAddressDialog;
 import com.cheep.cheepcare.dialogs.CheepCareNotInYourCityDialog;
 import com.cheep.cheepcare.dialogs.NotSubscribedAddressDialog;
 import com.cheep.cheepcare.model.AdminSettingModel;
@@ -36,6 +35,7 @@ import com.cheep.dialogs.AcknowledgementInteractionListener;
 import com.cheep.dialogs.OutOfOfficeHoursDialog;
 import com.cheep.dialogs.UrgentBookingDialog;
 import com.cheep.model.AddressModel;
+import com.cheep.model.GuestUserDetails;
 import com.cheep.utils.CalendarUtility;
 import com.cheep.utils.GsonUtility;
 import com.cheep.utils.PreferenceUtility;
@@ -60,15 +60,15 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
     public boolean isTaskWhenVerified = false;
     public boolean isTaskWhereVerified = false;
     public SuperCalendar startDateTimeSuperCalendar = SuperCalendar.getInstance();
-    private BottomAddAddressDialog dialog;
     private ArrayList<AddressModel> mAddressList;
-    private boolean isClicked = false;
+    public SuperCalendar superCalendar;
     public AddressModel mSelectedAddress;
-    UrgentBookingDialog ugent_dialog;
-    OutOfOfficeHoursDialog out_of_office_dialog;
-    private String subscriptionType = Utility.ADDRESS_SUBSCRIPTION_TYPE.NONE;
+    private UrgentBookingDialog ugent_dialog;
+    private OutOfOfficeHoursDialog out_of_office_dialog;
     public String additionalChargeReason = Utility.DIALOG_TYPE.NONE;
-    AdminSettingModel model;
+    private AdminSettingModel model;
+
+
     private WebCallClass.CommonResponseListener commonErrorListener = new WebCallClass.CommonResponseListener() {
         @Override
         public void volleyError(VolleyError error) {
@@ -92,6 +92,11 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
             mTaskCreationActivity.finish();
         }
     };
+    private boolean isPestControl = false;
+    private boolean catIsSubscribed = false;
+
+    public EnterTaskDetailFragment() {
+    }
 
     @SuppressWarnings("unused")
     public static EnterTaskDetailFragment newInstance() {
@@ -127,11 +132,25 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
         if (!isVisibleToUser || mTaskCreationActivity == null) {
             return;
         }
-        if (isVisibleToUser)
-            mTaskCreationActivity.showPostTaskButton(false, isTotalVerified);
+        mTaskCreationActivity.showPostTaskButton(false, isTotalVerified);
 
         // Update Task related details
         updateTaskDetails();
+
+        catIsSubscribed = mTaskCreationActivity.mJobCategoryModel.isSubscribed.equalsIgnoreCase(Utility.BOOLEAN.YES);
+        isPestControl = mTaskCreationActivity.mJobCategoryModel.catSlug.equalsIgnoreCase(Utility.CAT_SLUG_TYPES.PEST_CONTROL);
+
+        boolean needToTaskAddressSize = !catIsSubscribed && isPestControl && mSelectedAddress != null && mSelectedAddress.addressSizeModel == null;
+        if (needToTaskAddressSize) {
+            AddressSizeForHomeOfficeDialog addressSizeForHomeOfficeDialog = AddressSizeForHomeOfficeDialog.newInstance(mAddressList.get(0), new AddressSelectionListener() {
+                @Override
+                public void onAddressSelection(AddressModel addressModel) {
+                    mSelectedAddress = addressModel;
+                }
+            });
+            addressSizeForHomeOfficeDialog.show(mTaskCreationActivity.getSupportFragmentManager(), AddressSizeForHomeOfficeDialog.TAG);
+        }
+
 
         // Manage Task Verification
         updateTaskVerificationFlags();
@@ -247,25 +266,32 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
     }
 
     private void showAddressDialog() {
-        boolean needToTaskAddressSize = mTaskCreationActivity.mJobCategoryModel.isSubscribed.equalsIgnoreCase(Utility.BOOLEAN.YES) && mTaskCreationActivity.mJobCategoryModel.catSlug.equalsIgnoreCase(Utility.CAT_SLUG_TYPES.PEST_CONTROL);
+        boolean needToTaskAddressSize = !catIsSubscribed && isPestControl;
         Log.e(TAG, "showAddressDialog:needToTaskAddressSize  :   " + needToTaskAddressSize);
-        AddressListDialog addressListDialog = AddressListDialog.newInstance(subscriptionType, needToTaskAddressSize, new AddressSelectionListener() {
+
+        AddressListDialog addressListDialog = AddressListDialog.newInstance(needToTaskAddressSize, new AddressSelectionListener() {
             @Override
             public void onAddressSelection(AddressModel addressModel) {
-//                fillAddressView(addressModel);
 
-                if (!addressModel.is_subscribe.equalsIgnoreCase(Utility.ADDRESS_SUBSCRIPTION_TYPE.NONE)) {
-                    Log.d(TAG, "onItemSelected: ");
-//                    callWS(addressModel);
-                    fillAddressView(addressModel);
-                } else if (addressModel.is_subscribe.equals(Utility.ADDRESS_SUBSCRIPTION_TYPE.NONE)) {
-                    if (mTaskCreationActivity.mJobCategoryModel.isSubscribed.equalsIgnoreCase(Utility.BOOLEAN.YES)) {
-                        // this is scribed task
-                        checkAddressForCheepCareCity(addressModel);
+
+                if (catIsSubscribed) {
+                    if (isPestControl) {
+                        if (addressModel.is_subscribe.equalsIgnoreCase(Utility.ADDRESS_SUBSCRIPTION_TYPE.PREMIUM)) {
+                            fillAddressView(addressModel);
+                        } else if (addressModel.is_subscribe.equalsIgnoreCase(Utility.ADDRESS_SUBSCRIPTION_TYPE.NORMAL)) {
+                            Utility.showToast(mTaskCreationActivity, "Please upgrade this package to Cheep Premium care package");
+                        } else {
+                            checkCheepCareIsAvailableInCity(addressModel);
+                        }
                     } else {
-                        // this is Ad hoc t
-                        fillAddressView(addressModel);
+                        if (addressModel.is_subscribe.equalsIgnoreCase(Utility.ADDRESS_SUBSCRIPTION_TYPE.PREMIUM) || addressModel.is_subscribe.equalsIgnoreCase(Utility.ADDRESS_SUBSCRIPTION_TYPE.NORMAL)) {
+                            fillAddressView(addressModel);
+                        } else {
+                            checkCheepCareIsAvailableInCity(addressModel);
+                        }
                     }
+                } else {
+                    fillAddressView(addressModel);
                 }
             }
 
@@ -273,7 +299,7 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
         addressListDialog.show(mTaskCreationActivity.getSupportFragmentManager(), AddressListDialog.TAG);
     }
 
-    private void checkAddressForCheepCareCity(final AddressModel addressModel) {
+    private void checkCheepCareIsAvailableInCity(AddressModel addressModel) {
         if (!Utility.isConnected(mContext)) {
             Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mFragmentEnterTaskDetailBinding.getRoot());
             return;
@@ -287,43 +313,6 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
                     CheepCareNotInYourCityDialog.newInstance(mContext, new AcknowledgementInteractionListener() {
                         @Override
                         public void onAcknowledgementAccepted() {
-                            showProgressDialog();
-                            WebCallClass.isCityAvailableForCare(mTaskCreationActivity, addressModel.address_id, commonErrorListener, new WebCallClass.CityAvailableCheepCareListener() {
-                                @Override
-                                public void getCityDetails(final CareCityDetail careCityDetail) {
-                                    hideProgressDialog();
-                                    if (TextUtils.isEmpty(careCityDetail.citySlug)) {
-                                        CheepCareNotInYourCityDialog.newInstance(mContext, new AcknowledgementInteractionListener() {
-                                            @Override
-                                            public void onAcknowledgementAccepted() {
-                                            }
-                                        });
-                                    } else {
-                                        NotSubscribedAddressDialog.newInstance(mContext, new NotSubscribedAddressDialog.DialogInteractionListener() {
-                                            @Override
-                                            public void onSubscribeClicked() {
-                                                if (!Utility.isConnected(mContext)) {
-                                                    Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mFragmentEnterTaskDetailBinding.getRoot());
-                                                    return;
-                                                }
-                                                showProgressDialog();
-                                                WebCallClass.getCityCareDetail(mContext, careCityDetail.citySlug, commonErrorListener, new WebCallClass.GetCityCareDataListener() {
-                                                    @Override
-                                                    public void getCityCareData(CityLandingPageModel cityLandingPageModel) {
-                                                        hideProgressDialog();
-                                                        LandingScreenPickPackageActivity.newInstance(mContext, cityLandingPageModel.careCityDetail, GsonUtility.getJsonStringFromObject(cityLandingPageModel.packageDetailList));
-                                                    }
-                                                });
-                                            }
-
-                                            @Override
-                                            public void onNotNowClicked() {
-
-                                            }
-                                        });
-                                    }
-                                }
-                            });
                         }
                     });
                 } else {
@@ -346,12 +335,12 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
 
                         @Override
                         public void onNotNowClicked() {
+
                         }
                     });
                 }
             }
         });
-
     }
 
 
@@ -378,17 +367,6 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
     }
 
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == Utility.PLACE_PICKER_REQUEST) {
-            dialog.onActivityResult(resultCode, data);
-            hideProgressDialog();
-        }
-
-    }
-
-
     private void showDateTimePickerDialog() {
 // Get Current Date
         final Calendar c = Calendar.getInstance();
@@ -412,7 +390,6 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
         datePickerDialog.getDatePicker().setMinDate(superCalendar.getTimeInMillis());
     }
 
-    public SuperCalendar superCalendar;
 
     private void showTimePickerDialog() {
 // Get Current Time
@@ -440,7 +417,8 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
 
 //                            TODO: This needs to Be UNCOMMENTED DO NOT FORGET
 //                            if (!BuildConfig.BUILD_TYPE.equalsIgnoreCase(Utility.DEBUG)) {
-                            if (mSelectedAddress != null) {
+                            if (mTaskCreationActivity.mJobCategoryModel.isSubscribed.equalsIgnoreCase(Utility.BOOLEAN.YES)) {
+
                                 if (!(mSelectedAddress.is_subscribe.equalsIgnoreCase(Utility.ADDRESS_SUBSCRIPTION_TYPE.PREMIUM))) {
                                     if (System.currentTimeMillis() < startDateTimeSuperCalendar.getTimeInMillis()) {
                                         if (superCalendar.getTimeInMillis() < calAfter3Hours.getTimeInMillis()) {
@@ -451,7 +429,6 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
                                             // mFragmentEnterTaskDetailBinding.textTaskWhen.setVisibility(View.GONE);
                                             String selectedDateTime = startDateTimeSuperCalendar.format(Utility.DATE_FORMAT_DD_MMM)
                                                     + getString(R.string.label_between)
-                                                    + "-"
                                                     + CalendarUtility.get2HourTimeSlots(Long.toString(startDateTimeSuperCalendar.getTimeInMillis()));
 
 
@@ -478,7 +455,6 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
                                             if (isTimeBetweenTwoTime(startDateTimeSuperCalendar.format(Utility.DATE_FORMAT_HH_MM_SS))) {
                                                 String selectedDateTime = startDateTimeSuperCalendar.format(Utility.DATE_FORMAT_DD_MMM)
                                                         + getString(R.string.label_between)
-                                                        + "-"
                                                         + CalendarUtility.get2HourTimeSlots(Long.toString(startDateTimeSuperCalendar.getTimeInMillis()));
                                                 mFragmentEnterTaskDetailBinding.textTaskWhen.setText(selectedDateTime);
                                                 mFragmentEnterTaskDetailBinding.textTaskWhen.setVisibility(View.VISIBLE);
@@ -505,7 +481,6 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
 
                                         String selectedDateTime = startDateTimeSuperCalendar.format(Utility.DATE_FORMAT_DD_MMM)
                                                 + getString(R.string.label_between)
-                                                + "-"
                                                 + CalendarUtility.get2HourTimeSlots(Long.toString(startDateTimeSuperCalendar.getTimeInMillis()));
 
                                         mFragmentEnterTaskDetailBinding.textTaskWhen.setText(selectedDateTime);
@@ -521,7 +496,6 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
                                     if (System.currentTimeMillis() < startDateTimeSuperCalendar.getTimeInMillis()) {
                                         String selectedDateTime = startDateTimeSuperCalendar.format(Utility.DATE_FORMAT_DD_MMM)
                                                 + getString(R.string.label_between)
-                                                + "-"
                                                 + CalendarUtility.get2HourTimeSlots(Long.toString(startDateTimeSuperCalendar.getTimeInMillis()));
 
                                         mFragmentEnterTaskDetailBinding.textTaskWhen.setText(selectedDateTime);
@@ -534,17 +508,91 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
                                         updateTaskVerificationFlags();
                                     }
                                 }
-                            }
+                            } else {
 
+                                if (System.currentTimeMillis() < startDateTimeSuperCalendar.getTimeInMillis()) {
+                                    if (superCalendar.getTimeInMillis() < calAfter3Hours.getTimeInMillis()) {
+
+
+                                        //    Utility.showSnackBar(getString(R.string.can_only_start_task_after_3_hours, "3"), mFragmentEnterTaskDetailBinding.getRoot());
+                                        // mFragmentEnterTaskDetailBinding.textTaskWhen.setText(Utility.EMPTY_STRING);
+                                        // mFragmentEnterTaskDetailBinding.textTaskWhen.setVisibility(View.GONE);
+                                        String selectedDateTime = startDateTimeSuperCalendar.format(Utility.DATE_FORMAT_DD_MMM)
+                                                + getString(R.string.label_between)
+                                                + CalendarUtility.get2HourTimeSlots(Long.toString(startDateTimeSuperCalendar.getTimeInMillis()));
+
+
+                                        mFragmentEnterTaskDetailBinding.textTaskWhen.setText(selectedDateTime);
+                                        mFragmentEnterTaskDetailBinding.textTaskWhen.setVisibility(View.VISIBLE);
+                                        updateTaskVerificationFlags();
+
+                                        ugent_dialog = UrgentBookingDialog.newInstance(model.additionalChargeForSelectingSpecificTime, EnterTaskDetailFragment.this);
+                                        ugent_dialog.show(getFragmentManager(), Utility.DIALOG_TYPE.URGENT_BOOKING);
+                                        ugent_dialog.setCancelable(false);
+                                        return;
+                                    }
+                                } else {
+                                    mFragmentEnterTaskDetailBinding.textTaskWhen.setText(Utility.EMPTY_STRING);
+                                    mFragmentEnterTaskDetailBinding.textTaskWhen.setVisibility(View.GONE);
+                                    Utility.showSnackBar(getString(R.string.validate_future_date), mFragmentEnterTaskDetailBinding.getRoot());
+                                    updateTaskVerificationFlags();
+                                    return;
+
+                                }
+//                            }
+                                try {
+                                    if (System.currentTimeMillis() < startDateTimeSuperCalendar.getTimeInMillis()) {
+                                        if (isTimeBetweenTwoTime(startDateTimeSuperCalendar.format(Utility.DATE_FORMAT_HH_MM_SS))) {
+                                            String selectedDateTime = startDateTimeSuperCalendar.format(Utility.DATE_FORMAT_DD_MMM)
+                                                    + getString(R.string.label_between)
+                                                    + CalendarUtility.get2HourTimeSlots(Long.toString(startDateTimeSuperCalendar.getTimeInMillis()));
+                                            mFragmentEnterTaskDetailBinding.textTaskWhen.setText(selectedDateTime);
+                                            mFragmentEnterTaskDetailBinding.textTaskWhen.setVisibility(View.VISIBLE);
+                                            updateTaskVerificationFlags();
+                                            out_of_office_dialog = OutOfOfficeHoursDialog.newInstance(model.additionalChargeForSelectingSpecificTime, EnterTaskDetailFragment.this);
+                                            out_of_office_dialog.show(getFragmentManager(), Utility.DIALOG_TYPE.OUT_OF_OFFICE_HOURS);
+                                            out_of_office_dialog.setCancelable(false);
+                                            return;
+                                        }
+                                    } else {
+                                        mFragmentEnterTaskDetailBinding.textTaskWhen.setText(Utility.EMPTY_STRING);
+                                        mFragmentEnterTaskDetailBinding.textTaskWhen.setVisibility(View.GONE);
+                                        Utility.showSnackBar(getString(R.string.validate_future_date), mFragmentEnterTaskDetailBinding.getRoot());
+                                        updateTaskVerificationFlags();
+                                        return;
+                                    }
+                                } catch (ParseException e) {
+                                    e.printStackTrace();
+                                }
+                                if (System.currentTimeMillis() < startDateTimeSuperCalendar.getTimeInMillis()) {
+                                    String selectedDateTime = startDateTimeSuperCalendar.format(Utility.DATE_FORMAT_DD_MMM)
+                                            + getString(R.string.label_between)
+                                            + CalendarUtility.get2HourTimeSlots(Long.toString(startDateTimeSuperCalendar.getTimeInMillis()));
+
+                                    mFragmentEnterTaskDetailBinding.textTaskWhen.setText(selectedDateTime);
+                                    mFragmentEnterTaskDetailBinding.textTaskWhen.setVisibility(View.VISIBLE);
+                                    updateTaskVerificationFlags();
+                                } else {
+                                    mFragmentEnterTaskDetailBinding.textTaskWhen.setText(Utility.EMPTY_STRING);
+                                    mFragmentEnterTaskDetailBinding.textTaskWhen.setVisibility(View.GONE);
+                                    Utility.showSnackBar(getString(R.string.validate_future_date), mFragmentEnterTaskDetailBinding.getRoot());
+                                    updateTaskVerificationFlags();
+                                }
+                            }
                         }
+
+
                     }
                 }, c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE), false);
         timePickerDialog.show();
 
+
     }
-///////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////WHEN Feature [END]//////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////
+
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////WHEN Feature [END]                  //////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////////////
 
 
     @Override
@@ -556,40 +604,34 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
 
         mAddressList = new ArrayList<>();
         if (PreferenceUtility.getInstance(mContext).getUserDetails() != null) {
-            ArrayList<AddressModel> subscibedAddressList = new ArrayList<>();
-            if (mTaskCreationActivity.mJobCategoryModel.catSlug.equalsIgnoreCase(Utility.CAT_SLUG_TYPES.PEST_CONTROL)) {
-                subscriptionType = Utility.ADDRESS_SUBSCRIPTION_TYPE.PREMIUM;
-                ArrayList<AddressModel> userAddressList = PreferenceUtility.getInstance(mContext).getUserDetails().addressList;
-                for (AddressModel addressModel : userAddressList) {
-                    if (addressModel.is_subscribe.equalsIgnoreCase(subscriptionType)) {
-                        subscibedAddressList.add(addressModel);
-                    }
-                }
+            ArrayList<AddressModel> userAddressList = PreferenceUtility.getInstance(mContext).getUserDetails().addressList;
+            ArrayList<AddressModel> subscribedAddressList = new ArrayList<>();
+            ArrayList<AddressModel> premiumSubscribedAddressList = new ArrayList<>();
+            ArrayList<AddressModel> nonSubscribedAddressList = new ArrayList<>();
 
-            } else if (mTaskCreationActivity.mJobCategoryModel.isSubscribed.equalsIgnoreCase(Utility.BOOLEAN.YES)) {
-                subscriptionType = Utility.ADDRESS_SUBSCRIPTION_TYPE.NORMAL;
-                ArrayList<AddressModel> userAddressList = PreferenceUtility.getInstance(mContext).getUserDetails().addressList;
-                for (AddressModel addressModel : userAddressList) {
-                    if (!addressModel.is_subscribe.equalsIgnoreCase(Utility.ADDRESS_SUBSCRIPTION_TYPE.NONE)) {
-                        subscibedAddressList.add(addressModel);
-                    }
-                }
-
-            } else {
-                subscriptionType = Utility.ADDRESS_SUBSCRIPTION_TYPE.NONE;
-                ArrayList<AddressModel> userAddressList = PreferenceUtility.getInstance(mContext).getUserDetails().addressList;
-                for (AddressModel addressModel : userAddressList) {
-                    if (addressModel.is_subscribe.equalsIgnoreCase(subscriptionType)) {
-                        subscibedAddressList.add(addressModel);
-                    }
-                }
+            for (AddressModel addressModel : userAddressList) {
+                if (addressModel.is_subscribe.equalsIgnoreCase(Utility.ADDRESS_SUBSCRIPTION_TYPE.PREMIUM))
+                    premiumSubscribedAddressList.add(addressModel);
+                else if (addressModel.is_subscribe.equalsIgnoreCase(Utility.ADDRESS_SUBSCRIPTION_TYPE.NORMAL))
+                    subscribedAddressList.add(addressModel);
+                else
+                    nonSubscribedAddressList.add(addressModel);
             }
 
-            mAddressList.addAll(subscibedAddressList);
+            mAddressList.addAll(premiumSubscribedAddressList);
+            mAddressList.addAll(subscribedAddressList);
+            mAddressList.addAll(nonSubscribedAddressList);
+
+        } else {
+            GuestUserDetails guestUserDetails = PreferenceUtility.getInstance(mContext).getGuestUserDetails();
+            if (guestUserDetails != null && guestUserDetails.addressList != null) {
+                mAddressList = guestUserDetails.addressList;
+            }
         }
 
-        if (!mAddressList.isEmpty())
+        if (!mAddressList.isEmpty()) {
             fillAddressView(mAddressList.get(0));
+        }
 
         // add dummy select adderss at last position for "Add new Address" row
         mAddressList.add(new AddressModel() {{
@@ -609,12 +651,19 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
         // show address's nick name or nick name is null then show category
 
         mFragmentEnterTaskDetailBinding.tvAddressNickname.setText(model.getNicknameString(mTaskCreationActivity));
-        mFragmentEnterTaskDetailBinding.tvLabelAddressSubscribed.setText(!model.is_subscribe.equalsIgnoreCase(Utility.ADDRESS_SUBSCRIPTION_TYPE.NONE)
-                ? getString(R.string.label_address_subscribed)
-                : Utility.EMPTY_STRING);
 
         mFragmentEnterTaskDetailBinding.tvAddress.setText(model.getAddressWithInitials());
         mSelectedAddress = model;
+        if (model.is_subscribe.equalsIgnoreCase(Utility.ADDRESS_SUBSCRIPTION_TYPE.NONE)) {
+            mFragmentEnterTaskDetailBinding.tvLabelAddressSubscribed.setVisibility(View.INVISIBLE);
+        } else if (model.is_subscribe.equalsIgnoreCase(Utility.ADDRESS_SUBSCRIPTION_TYPE.NORMAL)) {
+            mFragmentEnterTaskDetailBinding.tvLabelAddressSubscribed.setVisibility(View.VISIBLE);
+            mFragmentEnterTaskDetailBinding.tvLabelAddressSubscribed.setText(R.string.label_subscribed_under_cheep_care);
+        } else {
+            mFragmentEnterTaskDetailBinding.tvLabelAddressSubscribed.setVisibility(View.VISIBLE);
+            mFragmentEnterTaskDetailBinding.tvLabelAddressSubscribed.setText(R.string.label_subscribed_under_cheep_care_premium);
+        }
+
     }
 
     @Override
@@ -630,9 +679,10 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
 
     @Override
     public void onUrgentCanWait() {
-
+        mFragmentEnterTaskDetailBinding.textTaskWhen.setText(Utility.EMPTY_STRING);
+        mFragmentEnterTaskDetailBinding.textTaskWhen.setVisibility(View.GONE);
+        updateTaskVerificationFlags();
     }
-
 
     public boolean isTimeBetweenTwoTime(String argCurrentTime) throws ParseException {
         String reg = "^([0-1][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])$";

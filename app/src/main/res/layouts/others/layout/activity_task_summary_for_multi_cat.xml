@@ -876,7 +876,7 @@
                             android:textColorHint="@color/grey_dark_color_2"
                             android:textSize="@dimen/text_size_12sp"
                             android:visibility="gone"
-                            android:text="@string/subscribed_under_cheep_care" />
+                            android:text="@string/label_subscribed_under_cheep_care" />
 
                     </LinearLayout>
 

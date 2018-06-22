@@ -47,10 +47,21 @@ public class AddressListRecyclerViewAdapter extends RecyclerView.Adapter<Address
     public void onBindViewHolder(final AddressListRecyclerViewAdapter.ViewHolder holder, int position) {
 
         final AddressModel model = mList.get(holder.getAdapterPosition());
+
         holder.mRowAddressBinding.tvAddressNickname.setText(holder.mView.getContext().getString(Utility.getAddressCategoryString(model.category))
                 + (position > 0 ? (Utility.ONE_CHARACTER_SPACE + position) : ""));
         holder.mRowAddressBinding.ivHome.setImageResource(Utility.getAddressCategoryIcon(model.category));
         holder.mRowAddressBinding.tvAddress.setText(model.getAddressWithInitials());
+
+        if (model.is_subscribe.equalsIgnoreCase(Utility.ADDRESS_SUBSCRIPTION_TYPE.NORMAL)) {
+            holder.mRowAddressBinding.tvLabelAddressSubscribed.setVisibility(View.VISIBLE);
+            holder.mRowAddressBinding.tvLabelAddressSubscribed.setText(R.string.label_subscribed_under_cheep_care);
+        } else if (model.is_subscribe.equalsIgnoreCase(Utility.ADDRESS_SUBSCRIPTION_TYPE.PREMIUM)) {
+            holder.mRowAddressBinding.tvLabelAddressSubscribed.setVisibility(View.VISIBLE);
+            holder.mRowAddressBinding.tvLabelAddressSubscribed.setText(R.string.label_subscribed_under_cheep_care_premium);
+        } else {
+            holder.mRowAddressBinding.tvLabelAddressSubscribed.setVisibility(View.GONE);
+        }
     }
 
     @Override
