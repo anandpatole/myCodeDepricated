@@ -22,6 +22,7 @@ import com.android.volley.VolleyError;
 import com.cheep.R;
 import com.cheep.activity.BaseAppCompatActivity;
 import com.cheep.cheepcarenew.activities.AddressActivity;
+import com.cheep.cheepcarenew.dialogs.EditAddressDialog;
 import com.cheep.databinding.DialogAddNewAddressBinding;
 import com.cheep.model.AddressModel;
 import com.cheep.model.GuestUserDetails;
@@ -50,7 +51,7 @@ import java.util.Map;
 
 import static android.app.Activity.RESULT_OK;
 
-public class AddNewAddressDialog extends DialogFragment {
+public class AddNewAddressDialog extends DialogFragment  {
 
 
     private String category;
@@ -382,6 +383,5 @@ public class AddNewAddressDialog extends DialogFragment {
             Utility.showToast(getContext(), getContext().getString(R.string.label_something_went_wrong));
         }
     };
-
 
 }

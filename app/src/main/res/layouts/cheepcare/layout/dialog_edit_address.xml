@@ -76,6 +76,7 @@
                         android:padding="@dimen/scale_10dp"
                         android:textColor="@color/black"
                         android:textSize="@dimen/text_size_13sp"
+                        android:focusable="false"
                         android:theme="@style/EditTextWhiteBG"
                         android:visibility="visible"/>
 

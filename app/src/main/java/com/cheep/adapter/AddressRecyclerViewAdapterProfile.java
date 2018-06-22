@@ -78,7 +78,7 @@ int flag;
 //                }
 //            }
 //        });
-        holder.mRowAddressBinding.imgEdit.setOnClickListener(new View.OnClickListener() {
+        /*holder.mRowAddressBinding.imgEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (listener != null) {
@@ -93,7 +93,7 @@ int flag;
                     listener.onDeleteClicked(model, holder.getAdapterPosition());
                 }
             }
-        });
+        });*/
 
        /* holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override

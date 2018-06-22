@@ -363,7 +363,7 @@
                             tools:ignore="ContentDescription" />
 
                         <com.cheep.custom_view.CFTextViewSemiBold
-                            android:id="@+id/img_delete"
+                            android:id="@+id/tv_delete"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
