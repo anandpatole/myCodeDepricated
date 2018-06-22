@@ -796,7 +796,6 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_chat_now">Chat Now</string>
     <!--https:\/\/s3.ap-south-1.amazonaws.com\/cheepapp\/advertise\/banner_image\/thumb\/vlcc_banner_image.jpg-->
     <string name="validation_message_same_address_for_same_group_of_care">You can\'t purchase care package home, biz and soci for same address</string>
-    <string name="label_address_subscribed">Subscribed under CHEEP care</string>
     <string name="msg_task_confirmed_cheep_care_no_time_specified">As per our guarantee, our PRO will be at your home
         within 24 hours. CHEEP will inform you of the exact time shortly. </string>
     <string name="msg_notif_confirm_availability">Hey %1s, our Cheep PRO will be arriving at your location between %2s hrs -
@@ -949,7 +948,8 @@ without any hidden charges. Try it now!</string>
     <string name="view_more">View more</string>
     <string name="view_less">View less</string>
     <string name="label_task_details">Task Details</string>
-    <string name="subscribed_under_cheep_care">• Subscribed under Cheep Care</string>
+    <string name="label_subscribed_under_cheep_care">• Subscribed under Cheep Care</string>
+    <string name="label_subscribed_under_cheep_care_premium">• Subscribed under Cheep Care Premium</string>
     <string name="please_select_your_address">Please select your address</string>
     <string name="label_auto_renew_deactivated">Auto renewal deactivated</string>
     <string name="message_coundnot_find_current_location">oops! could noy find your current location! Please try again.</string>
