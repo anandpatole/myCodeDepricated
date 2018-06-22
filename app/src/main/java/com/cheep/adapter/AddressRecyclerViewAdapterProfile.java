@@ -49,7 +49,7 @@ int flag;
 
       // holder.mRowAddressBinding.textAddressNickname.setText(model.name);
 
-            holder.mRowAddressBinding.textFullAddress.setText(model.getAddressWithInitials());
+           // holder.mRowAddressBinding.textFullAddress.setText(model.getAddressWithInitials());
 
 //        if (TextUtils.isEmpty(selected) && position == 0) {
 //            selected = model.address_id;
@@ -62,8 +62,8 @@ int flag;
 //            holder.mRowAddressBinding.radioButton.setChecked(false);
 //        }
 
-        holder.mRowAddressBinding.textAddressCategory.setText(Utility.getAddressCategoryString(model.category));
-        holder.mRowAddressBinding.textAddressCategory.setCompoundDrawablesWithIntrinsicBounds(Utility.getAddressCategoryBlueIcon(model.category), 0, 0, 0);
+        //holder.mRowAddressBinding.textAddressCategory.setText(Utility.getAddressCategoryString(model.category));
+       // holder.mRowAddressBinding.textAddressCategory.setCompoundDrawablesWithIntrinsicBounds(Utility.getAddressCategoryBlueIcon(model.category), 0, 0, 0);
 
 //       holder.mRowAddressBinding.radioButton.setOnClickListener(new View.OnClickListener() {
 //           @Override
