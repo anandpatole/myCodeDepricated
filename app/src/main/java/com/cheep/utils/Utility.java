@@ -99,7 +99,7 @@ public class Utility {
 
     public static final String EDIT_PROFILE_ACTIVITY = "EditProfile";
 
-    public static final String TAG = "Utility";
+//    public static final String TAG = "Utility";
     public static final String POSITION = "findPosition";
     public static final String EMPTY_STRING = "";
     public static final String ZERO_STRING = "0";
