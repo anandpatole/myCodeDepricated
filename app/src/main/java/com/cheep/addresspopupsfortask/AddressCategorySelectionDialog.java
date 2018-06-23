@@ -71,11 +71,14 @@ public class AddressCategorySelectionDialog extends DialogFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mBinding = DataBindingUtil.inflate(inflater, R.layout.dialog_address_category_selection, container, false);
         initiateUI();
+        setListeners();
         return mBinding.getRoot();
     }
 
 
     public void initiateUI() {
+        int position = 0;
+
         setListeners();
         if (getArguments() != null) {
 
@@ -85,19 +88,20 @@ public class AddressCategorySelectionDialog extends DialogFragment {
 
             if (getArguments().getString(Utility.Extra.DATA) != null)
                 listOfAddress = GsonUtility.getObjectListFromJsonString(getArguments().getString(Utility.Extra.DATA), AddressModel[].class);
-
             addressPosition = getArguments().getInt(Utility.Extra.POSITION);
             isWhiteTheme = getArguments().getBoolean(Utility.Extra.DATA_3);
 
         }
+
+        Log.e(TAG, "initiateUI: ********************");
+
         mBinding.tvTitle.setText(R.string.select_category);
         if (isWhiteTheme) {
             mBinding.imgBack.setImageResource(R.drawable.icon_arrow_back_blue);
             mBinding.rlTop.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.white));
             mBinding.tvTitle.setTextColor(ContextCompat.getColor(getContext(), R.color.splash_gradient_end));
         }
-        int position = 0;
-        Log.e(TAG, "initiateUI: ********************");
+
         if (COMING_FORM.equalsIgnoreCase(Utility.EDIT_PROFILE_ACTIVITY)) {
             mBinding.tvTitle.setText(R.string.label_please_tell_us_where_do_you_need_the_amc_for);
             if (listOfAddress != null) {
