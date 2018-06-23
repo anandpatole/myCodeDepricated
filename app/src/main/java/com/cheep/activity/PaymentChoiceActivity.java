@@ -172,7 +172,6 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
             }
             isPayNow = getIntent().getBooleanExtra(Utility.Extra.IS_PAY_NOW, false);
 
-
             if (taskDetailModel != null && taskDetailModel.taskStatus.equalsIgnoreCase(Utility.TASK_STATUS.PENDING))
                 mBinding.llCashPayment.setVisibility(View.GONE);
             else

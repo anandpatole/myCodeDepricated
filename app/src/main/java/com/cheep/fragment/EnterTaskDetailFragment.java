@@ -420,8 +420,11 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
 //                            if (!BuildConfig.BUILD_TYPE.equalsIgnoreCase(Utility.DEBUG)) {
                             if (mTaskCreationActivity.mJobCategoryModel.isSubscribed.equalsIgnoreCase(Utility.BOOLEAN.YES)) {
 
-                                if (!(mSelectedAddress.is_subscribe.equalsIgnoreCase(Utility.ADDRESS_SUBSCRIPTION_TYPE.PREMIUM))) {
-                                    if (System.currentTimeMillis() < startDateTimeSuperCalendar.getTimeInMillis()) {
+                                if (!(mSelectedAddress.is_subscribe.equalsIgnoreCase(Utility.ADDRESS_SUBSCRIPTION_TYPE.PREMIUM)))
+                                {
+
+                                    if (System.currentTimeMillis() < startDateTimeSuperCalendar.getTimeInMillis())
+                                    {
                                         if (superCalendar.getTimeInMillis() < calAfter3Hours.getTimeInMillis()) {
 
 
@@ -652,7 +655,9 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
     }
 
 
-    private void fillAddressView(AddressModel model) {
+    private void fillAddressView(AddressModel model)
+    {
+        mFragmentEnterTaskDetailBinding.textTaskWhen.setText(Utility.EMPTY_STRING);
         updateWhereLabelWithIcon(true);
 
         mFragmentEnterTaskDetailBinding.ivHome.setImageDrawable(ContextCompat.getDrawable(mContext
@@ -684,7 +689,7 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
             return;
         }
         additionalChargeReason = Utility.DIALOG_TYPE.URGENT_BOOKING;
-        mTaskCreationActivity.onInstaBookClickedNew();
+        //mTaskCreationActivity.onInstaBookClickedNew();
     }
 
     @Override
@@ -779,7 +784,7 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
             return;
         }
         additionalChargeReason = Utility.DIALOG_TYPE.OUT_OF_OFFICE_HOURS;
-        mTaskCreationActivity.onInstaBookClickedNew();
+       // mTaskCreationActivity.onInstaBookClickedNew();
     }
 
     @Override

@@ -825,7 +825,7 @@ public class BookingConfirmationInstaActivity extends BaseAppCompatActivity {
     View.OnClickListener onPayLaterClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            callCreateInstaTaskBooking();
+            callCreateInstaTaskBooking(NetworkUtility.PAYMENT_METHOD_TYPE.PAY_LATER);
         }
 
     };
@@ -842,7 +842,7 @@ public class BookingConfirmationInstaActivity extends BaseAppCompatActivity {
         @Override
         public void onClick(View view)
         {
-            callCreateInstaTaskBooking();
+            callCreateInstaTaskBooking(NetworkUtility.PAYMENT_METHOD_TYPE.FREE);
         }
     };
 
@@ -850,7 +850,7 @@ public class BookingConfirmationInstaActivity extends BaseAppCompatActivity {
      * TODO: Add apps flyer events for task creation and also add event for coupan dunia code
      */
 
-    private void callCreateInstaTaskBooking() {
+    private void callCreateInstaTaskBooking(String payment_method) {
 
         // Check Internet connection
         if (!Utility.isConnected(mContext)) {
@@ -861,7 +861,7 @@ public class BookingConfirmationInstaActivity extends BaseAppCompatActivity {
         showProgressDialog();
 
         WebCallClass.createInstaBookingTask(BookingConfirmationInstaActivity.this,
-                taskDetailModel, mSelectedAddressModel, String.valueOf(total), payableAmount, NetworkUtility.PAYMENT_METHOD_TYPE.PAY_LATER, Utility.EMPTY_STRING, Utility.EMPTY_STRING, new WebCallClass.CommonResponseListener() {
+                taskDetailModel, mSelectedAddressModel, String.valueOf(total), payableAmount, payment_method, Utility.EMPTY_STRING, Utility.EMPTY_STRING, new WebCallClass.CommonResponseListener() {
                     @Override
                     public void volleyError(VolleyError error) {
 
@@ -887,6 +887,7 @@ public class BookingConfirmationInstaActivity extends BaseAppCompatActivity {
 
 
     private void openPaymentChoiceActivity() {
+
         PaymentChoiceActivity.newInstance(BookingConfirmationInstaActivity.this, taskDetailModel, null, String.valueOf(total), payableAmount, mSelectedAddressModel);
     }
 
