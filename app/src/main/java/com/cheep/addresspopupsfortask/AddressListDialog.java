@@ -40,7 +40,6 @@ public class AddressListDialog extends DialogFragment implements AddressSelectio
 
     public static AddressListDialog newInstance(boolean isWhiteTheme, boolean needsAskForAddressSize, AddressSelectionListener addressSelectionListener) {
         Bundle args = new Bundle();
-//        args.putString(Utility.Extra.DATA, subscriptionType);
         args.putBoolean(Utility.Extra.DATA, isWhiteTheme);
         args.putBoolean(Utility.Extra.DATA_2, needsAskForAddressSize);
         AddressListDialog dialog = new AddressListDialog();
