@@ -53,7 +53,6 @@ public class AddressCategorySelectionDialog extends DialogFragment {
     public static AddressCategorySelectionDialog newInstance(String comingFrom, boolean isWhiteTheme, ArrayList<AddressModel> addressList, int addressPosition) {
         Bundle args = new Bundle();
         AddressCategorySelectionDialog fragment = new AddressCategorySelectionDialog();
-        args.putString(Utility.TAG, comingFrom);
         args.putString(Utility.Extra.DATA, GsonUtility.getJsonStringFromObject(addressList));
         args.putInt(Utility.Extra.POSITION, addressPosition);
         args.putString(Utility.Extra.DATA_2, comingFrom);
@@ -66,28 +65,6 @@ public class AddressCategorySelectionDialog extends DialogFragment {
         this.addressModel = addressModel;
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-
-
-            if (getArguments().getString(Utility.Extra.DATA_2) != null)
-                COMING_FORM = getArguments().getString(Utility.Extra.DATA_2);
-
-            if (getArguments().getString(Utility.Extra.DATA) != null)
-                listOfAddress = GsonUtility.getObjectListFromJsonString(getArguments().getString(Utility.Extra.DATA), AddressModel[].class);
-
-            COMING_FORM = getArguments().getString(Utility.TAG);
-            listOfAddress = GsonUtility.getObjectListFromJsonString(getArguments().getString(Utility.Extra.DATA), AddressModel[].class);
-            addressPosition = getArguments().getInt(Utility.Extra.POSITION);
-            isWhiteTheme = getArguments().getBoolean(Utility.Extra.DATA_3);
-
-        }
-    }
-
-
-
 
     @Nullable
     @Override
@@ -99,6 +76,26 @@ public class AddressCategorySelectionDialog extends DialogFragment {
 
 
     public void initiateUI() {
+        setListeners();
+        if (getArguments() != null) {
+
+
+            if (getArguments().getString(Utility.Extra.DATA_2) != null)
+                COMING_FORM = getArguments().getString(Utility.Extra.DATA_2);
+
+            if (getArguments().getString(Utility.Extra.DATA) != null)
+                listOfAddress = GsonUtility.getObjectListFromJsonString(getArguments().getString(Utility.Extra.DATA), AddressModel[].class);
+
+            addressPosition = getArguments().getInt(Utility.Extra.POSITION);
+            isWhiteTheme = getArguments().getBoolean(Utility.Extra.DATA_3);
+
+        }
+        mBinding.tvTitle.setText(R.string.select_category);
+        if (isWhiteTheme) {
+            mBinding.imgBack.setImageResource(R.drawable.icon_arrow_back_blue);
+            mBinding.rlTop.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.white));
+            mBinding.tvTitle.setTextColor(ContextCompat.getColor(getContext(), R.color.splash_gradient_end));
+        }
         int position = 0;
         Log.e(TAG, "initiateUI: ********************");
         if (COMING_FORM.equalsIgnoreCase(Utility.EDIT_PROFILE_ACTIVITY)) {
@@ -114,20 +111,10 @@ public class AddressCategorySelectionDialog extends DialogFragment {
                             mBinding.cvOffice.setSelected(false);
                             mBinding.cvHome.setSelected(true);
                         }
-                        if (isWhiteTheme) {
-                            mBinding.imgBack.setImageResource(R.drawable.icon_arrow_back_blue);
-                            mBinding.rlTop.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.white));
-                            mBinding.tvTitle.setTextColor(ContextCompat.getColor(getContext(), R.color.splash_gradient_end));
-                        }
-                        mBinding.tvTitle.setText(R.string.label_please_tell_us_where_do_you_need_the_amc_for);
-
                     }
                 }
             }
-        } else {
-            mBinding.tvTitle.setText(R.string.select_category);
         }
-
     }
 
     protected void setListeners() {
