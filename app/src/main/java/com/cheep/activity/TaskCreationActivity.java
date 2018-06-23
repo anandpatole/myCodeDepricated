@@ -396,7 +396,7 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
 //                    model.taskImage = mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mCurrentPhotoPath;
 //        taskDetailModel.mMediaModelList = mTaskCreationPagerAdapter.mEnterTaskDetailFragment.getMediaList();
 
-        taskDetailModel.taskType = Utility.TASK_TYPE.INSTA_BOOK;
+        taskDetailModel.taskType = Utility.TASK_TYPE.NORMAL;
         taskDetailModel.taskStatus = Utility.TASK_STATUS.PENDING;
 
         BookingConfirmationInstaActivity.newInstance(TaskCreationActivity.this, taskDetailModel, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddress);

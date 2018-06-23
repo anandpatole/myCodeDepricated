@@ -240,7 +240,7 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
                 if (!mTaskCreationActivity.isValidationCompleted()) {
                     return;
                 }
-                additionalChargeReason = Utility.DIALOG_TYPE.NONE;
+               // additionalChargeReason = Utility.DIALOG_TYPE.NONE;
                 mTaskCreationActivity.onInstaBookClickedNew();
 
             }
