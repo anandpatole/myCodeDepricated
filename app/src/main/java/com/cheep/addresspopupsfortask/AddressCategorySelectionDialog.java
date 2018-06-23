@@ -82,6 +82,7 @@ public class AddressCategorySelectionDialog extends DialogFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mBinding = DataBindingUtil.inflate(inflater, R.layout.dialog_address_category_selection, container, false);
         initiateUI();
+        setListeners();
         return mBinding.getRoot();
     }
 
