@@ -832,15 +832,17 @@ public class BookingConfirmationInstaActivity extends BaseAppCompatActivity {
     View.OnClickListener onPayNowClickListener = new View.OnClickListener() {
 
         @Override
-        public void onClick(View view) {
+        public void onClick(View view)
+        {
             openPaymentChoiceActivity();
         }
     };
     View.OnClickListener onGotchaClickListener = new View.OnClickListener() {
 
         @Override
-        public void onClick(View view) {
-            openPaymentChoiceActivity();
+        public void onClick(View view)
+        {
+            callCreateInstaTaskBooking();
         }
     };
 
