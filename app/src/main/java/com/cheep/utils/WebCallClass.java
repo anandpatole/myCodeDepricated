@@ -378,15 +378,16 @@ public class WebCallClass {
 
         Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequestForCategoryList, NetworkUtility.WS.CARE_CREATE_TASK);
     }
+
     //////////////////////////Create task Cheep care call end//////////////////////////
 ///////Need Help ///////
-    public interface GetNeedHelpResponseListener
-    {
+    public interface GetNeedHelpResponseListener {
 
         void getNeedHelp();
     }
+
     public static void getNeedHelp(final Context mContext, final CommonResponseListener commonListener
-            , final GetNeedHelpResponseListener successListener,String cat_id) {
+            , final GetNeedHelpResponseListener successListener, String cat_id) {
 
         final Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
@@ -445,12 +446,14 @@ public class WebCallClass {
 
         //Add Header parameters
         Map<String, String> mHeaderParams = new HashMap<>();
-        mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
-        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().userID);
+        if (PreferenceUtility.getInstance(mContext).getUserDetails() != null) {
+            mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
+            mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().userID);
+        }
 
         //Add Params
         Map<String, String> mParams = new HashMap<>();
-mParams.put(NetworkUtility.TAGS.CAT_ID,cat_id);
+        mParams.put(NetworkUtility.TAGS.CAT_ID, cat_id);
         //noinspection unchecked
         VolleyNetworkRequest mVolleyNetworkRequest = new VolleyNetworkRequest(NetworkUtility.WS.NEED_HELP
                 , errorListener
@@ -461,6 +464,7 @@ mParams.put(NetworkUtility.TAGS.CAT_ID,cat_id);
 
         Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest, NetworkUtility.WS.NEED_HELP);
     }
+
     ////////////////////////// Get Profile call start     //////////////////////////
     public interface GetProfileDetailResponseListener {
 

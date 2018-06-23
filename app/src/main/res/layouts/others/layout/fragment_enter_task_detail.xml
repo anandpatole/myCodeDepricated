@@ -202,9 +202,9 @@
                                 android:layout_weight="1"
                                 android:includeFontPadding="false"
                                 android:paddingRight="@dimen/scale_12dp"
-                                android:visibility="invisible"
                                 android:textColor="@color/grey_varient_17"
                                 android:textSize="@dimen/text_size_11sp"
+                                android:visibility="invisible"
                                 app:layout_constraintEnd_toEndOf="parent"
                                 app:layout_constraintStart_toEndOf="@id/tv_address_nickname"/>
 
@@ -327,6 +327,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/scale_15dp"
+                    android:layout_marginBottom="@dimen/scale_15dp"
                     android:paddingLeft="@dimen/scale_10dp">
 
                     <ImageView
