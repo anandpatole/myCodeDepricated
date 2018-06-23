@@ -70,8 +70,6 @@ public class AddressCategorySelectionDialog extends DialogFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-
-
             if (getArguments().getString(Utility.Extra.DATA_2) != null)
                 COMING_FORM = getArguments().getString(Utility.Extra.DATA_2);
 
