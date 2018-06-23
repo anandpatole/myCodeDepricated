@@ -1163,7 +1163,8 @@ public interface DIALOG_TYPE
         }
         TaskConfirmedCCInstaBookDialog taskConfirmedCCInstaBookDialog = TaskConfirmedCCInstaBookDialog.newInstance(new TaskConfirmedCCInstaBookDialog.TaskConfirmActionListener() {
             @Override
-            public void onAcknowledgementAccepted() {
+            public void onAcknowledgementAccepted()
+            {
                 MessageEvent messageEvent = new MessageEvent();
                 messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.TASK_PAID_FOR_INSTA_BOOKING;
                 EventBus.getDefault().post(messageEvent);

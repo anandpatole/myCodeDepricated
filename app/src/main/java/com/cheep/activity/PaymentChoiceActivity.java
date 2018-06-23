@@ -172,7 +172,6 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
             }
             isPayNow = getIntent().getBooleanExtra(Utility.Extra.IS_PAY_NOW, false);
 
-
             if (taskDetailModel != null && taskDetailModel.taskStatus.equalsIgnoreCase(Utility.TASK_STATUS.PENDING))
                 mBinding.llCashPayment.setVisibility(View.GONE);
             else
@@ -1291,7 +1290,33 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
                 mParams = NetworkUtility.addGuestAddressParams(mParams, mSelectedAddressModel);
 
             }
+            //new
+      //  mParams.put(NetworkUtility.TAGS.CITY_ID, taskDetailModel.categoryModel.);
 
+//        cat_id:17
+//        start_datetime:1529753847374
+//        task_subcategories:305,306
+//        country:India
+//        address:Mumbai, Maharashtra, India
+//        lng:72.8776559
+//        address_initials:123
+//        city_name:Mumbai
+//        state:Maharashtra
+//        lat:19.0759837
+//        category:home
+//        total_amount:250.0
+//        payment_method:pay_later
+//        payment_status:completed
+//        task_type:normal
+//        cheepcode:
+//        payable_amount:250.0
+//        promocode_price:0
+//        landmark:Sdfsdfsd
+//        pincode:789789
+//                *payment_log:
+//        payment_log:(optional)
+//                non_office_hours_charge:0.0
+//        urgent_booking_charge:0.0 *
         mParams.put(NetworkUtility.TAGS.CAT_ID, taskDetailModel.categoryModel.catId);
         mParams.put(NetworkUtility.TAGS.START_DATETIME, String.valueOf(superCalendar.getTimeInMillis()));
         mParams.put(NetworkUtility.TAGS.TASK_SUB_CATEGORIES, subCategoryDetail);
@@ -1485,6 +1510,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
         Map<String, String> mParams = new HashMap<>();
         mParams.put(NetworkUtility.TAGS.TASK_ID, taskDetailModel.taskId);
         mParams.put(NetworkUtility.TAGS.STATUS, status);
+
 
         //Sending end datetime millis in GMT timezone
         mParams.put(NetworkUtility.TAGS.TASK_ENDDATE, String.valueOf(superCalendar.getTimeInMillis()));

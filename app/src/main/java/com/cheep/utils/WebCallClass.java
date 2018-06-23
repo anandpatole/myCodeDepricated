@@ -1115,10 +1115,13 @@ public class WebCallClass {
 
         //Add Params
         Map<String, Object> mParams = new HashMap<>();
+
+
         mParams.put(NetworkUtility.TAGS.TASK_DESC, taskDetailModel.taskDesc);
         if (Integer.parseInt(mSelectedAddressModel.address_id) > 0) {
             mParams.put(NetworkUtility.TAGS.ADDRESS_ID, mSelectedAddressModel.address_id);
-        } else {
+        } else
+            {
             // In case its negative then provide other address information
             mParams = NetworkUtility.addGuestAddressParams(mParams, mSelectedAddressModel);
 
@@ -1128,23 +1131,23 @@ public class WebCallClass {
         mParams.put(NetworkUtility.TAGS.START_DATETIME, taskDetailModel.taskStartdate);
         String selectedServices = new Gson().toJson(taskDetailModel.subCatList);
         mParams.put(NetworkUtility.TAGS.TASK_SUB_CATEGORIES, selectedServices);
-        mParams.put(NetworkUtility.TAGS.PAYMENT_STATUS, Utility.PAYMENT_STATUS.COMPLETED);
+        mParams.put(NetworkUtility.TAGS.COUNTRY, userDetails.mCountry);
+       // mParams.put(NetworkUtility.TAGS.PAYMENT_STATUS, Utility.PAYMENT_STATUS.COMPLETED);
 
         if (!TextUtils.isEmpty(taskDetailModel.cheepCode)) {
             mParams.put(NetworkUtility.TAGS.CHEEPCODE, taskDetailModel.cheepCode);
             mParams.put(NetworkUtility.TAGS.PROMOCODE_PRICE, taskDetailModel.taskDiscountAmount);
         } else {
             mParams.put(NetworkUtility.TAGS.CHEEPCODE, Utility.EMPTY_STRING);
-            mParams.put(NetworkUtility.TAGS.PROMOCODE_PRICE, Utility.ZERO_STRING);
-        }
-
+            mParams.put(NetworkUtility.TAGS.PROMOCODE_PRICE, Utility.ZERO_STRING);        }
+         mParams.put(NetworkUtility.TAGS.PAYABLE_AMOUNT,payableAmount);
         mParams.put(NetworkUtility.TAGS.QUOTE_AMOUNT, quoteAmount);// this is total of selected sub categories price which are with gst
-        mParams.put(NetworkUtility.TAGS.PAYABLE_AMOUNT, payableAmount);
+        mParams.put(NetworkUtility.TAGS.TOTAL_AMOUNT, payableAmount);
         mParams.put(NetworkUtility.TAGS.IS_REFER_CODE, taskDetailModel.isReferCode);
         mParams.put(NetworkUtility.TAGS.USED_WALLET_BALANCE, taskDetailModel.usedWalletAmount);
         String media_file = Utility.getSelectedMediaJsonString(taskDetailModel.mMediaModelList);
-        mParams.put(NetworkUtility.TAGS.MEDIA_FILE, media_file);
-        mParams.put(NetworkUtility.TAGS.TASK_TYPE, Utility.TASK_TYPE.INSTA_BOOK);
+      mParams.put(NetworkUtility.TAGS.MEDIA_FILE, media_file);
+        mParams.put(NetworkUtility.TAGS.TASK_TYPE, Utility.TASK_TYPE.NORMAL);
 
         if (!TextUtils.isEmpty(txnId))
             mParams.put(NetworkUtility.TAGS.TRANSACTION_ID, txnId);
@@ -1152,7 +1155,21 @@ public class WebCallClass {
         mParams.put(NetworkUtility.TAGS.PAYMENT_LOG, paymentLog);
         mParams.put(NetworkUtility.TAGS.PAYMENT_METHOD, paymentMethod);
         mParams.put(NetworkUtility.TAGS.PAYMENT_STATUS, Utility.PAYMENT_STATUS.COMPLETED);
-
+        if(taskDetailModel.additionalChargeReason.equalsIgnoreCase(Utility.DIALOG_TYPE.OUT_OF_OFFICE_HOURS))
+        {
+            mParams.put(NetworkUtility.TAGS.OUT_OF_OFFICE_CHARGES, PreferenceUtility.getInstance(mContext).getAdminSettings().additionalChargeForSelectingSpecificTime);
+            mParams.put(NetworkUtility.TAGS.URGENT_BOOKING_CHARGES, Utility.ZERO_STRING);
+        }
+        else if(taskDetailModel.additionalChargeReason.equalsIgnoreCase(Utility.DIALOG_TYPE.URGENT_BOOKING))
+        {
+            mParams.put(NetworkUtility.TAGS.OUT_OF_OFFICE_CHARGES, Utility.ZERO_STRING);
+            mParams.put(NetworkUtility.TAGS.URGENT_BOOKING_CHARGES, PreferenceUtility.getInstance(mContext).getAdminSettings().additionalChargeForSelectingSpecificTime);
+        }
+        else
+        {
+            mParams.put(NetworkUtility.TAGS.OUT_OF_OFFICE_CHARGES, Utility.ZERO_STRING);
+            mParams.put(NetworkUtility.TAGS.URGENT_BOOKING_CHARGES, Utility.ZERO_STRING);
+        }
         //noinspection unchecked
         VolleyNetworkRequest mVolleyNetworkRequest = new VolleyNetworkRequest(NetworkUtility.WS.CREATE_TASK
                 , errorListener

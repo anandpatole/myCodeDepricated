@@ -400,8 +400,8 @@ public class NetworkUtility {
         String REPORT_ABUSE = "report_abuse";
         String CHEEPCODE = "cheepcode";
         String TRANSACTION_ID = "txnid";
-
-
+String OUT_OF_OFFICE_CHARGES="non_office_hours_charge";
+       String URGENT_BOOKING_CHARGES ="urgent_booking_charge";
         String REASON = "reason";
         String MONTHLY_SAVED_TOTAL = "monthly_saved_total";
         String TOTAL_EARNED = "total_earned";
