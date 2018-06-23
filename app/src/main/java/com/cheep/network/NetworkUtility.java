@@ -17,7 +17,6 @@ public class NetworkUtility {
 
         private static final String BASE_URL_API = BuildConfig.BASE_URL_API;
 
-
         // Endpoints
 
         public static final String GET_RELATIONSHIP_LIST=BASE_URL+"customers/profile/getRelationshipList";
