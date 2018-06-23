@@ -105,7 +105,7 @@ public class AddressCategorySelectionFragment extends BaseFragment {
         }
 
 
-        if (!addressModelArrayList.isEmpty()) {
+        if (!addressModelArrayList.isEmpty() ) {
             addressModel = addressModelArrayList.get(0);
             setAddress();
             mBinding.tvAddressTitle.setVisibility(View.VISIBLE);
@@ -134,7 +134,9 @@ public class AddressCategorySelectionFragment extends BaseFragment {
     }
 
     @Override
-    public void setListener() {
+    public void setListener()
+    {
+
     }
 
     protected void setListeners() {

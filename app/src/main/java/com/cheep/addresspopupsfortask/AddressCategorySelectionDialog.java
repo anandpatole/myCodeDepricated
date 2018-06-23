@@ -70,12 +70,24 @@ public class AddressCategorySelectionDialog extends DialogFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
+
+
+            if (getArguments().getString(Utility.Extra.DATA_2) != null)
+                COMING_FORM = getArguments().getString(Utility.Extra.DATA_2);
+
+            if (getArguments().getString(Utility.Extra.DATA) != null)
+                listOfAddress = GsonUtility.getObjectListFromJsonString(getArguments().getString(Utility.Extra.DATA), AddressModel[].class);
+
             COMING_FORM = getArguments().getString(Utility.TAG);
             listOfAddress = GsonUtility.getObjectListFromJsonString(getArguments().getString(Utility.Extra.DATA), AddressModel[].class);
             addressPosition = getArguments().getInt(Utility.Extra.POSITION);
             isWhiteTheme = getArguments().getBoolean(Utility.Extra.DATA_3);
+
         }
     }
+
+
+
 
     @Nullable
     @Override
