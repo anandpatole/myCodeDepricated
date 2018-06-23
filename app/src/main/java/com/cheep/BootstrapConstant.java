@@ -15,8 +15,8 @@ public class BootstrapConstant {
 //    public static final String CC_DETAILS = "4012001037141112";
     public static final String CC_DETAILS = "5123456789012346";
 //    Card Number: 5123 4567 8901 2346
-//    CVV: 245
-//    Expiry: 05/2020
+////    CVV: 245
+////    Expiry: 05/2020
 
 
     /**
