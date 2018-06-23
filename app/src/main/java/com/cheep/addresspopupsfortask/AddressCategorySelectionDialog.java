@@ -79,7 +79,6 @@ public class AddressCategorySelectionDialog extends DialogFragment {
                 listOfAddress = GsonUtility.getObjectListFromJsonString(getArguments().getString(Utility.Extra.DATA), AddressModel[].class);
 
             COMING_FORM = getArguments().getString(Utility.TAG);
-            listOfAddress = GsonUtility.getObjectListFromJsonString(getArguments().getString(Utility.Extra.DATA), AddressModel[].class);
             addressPosition = getArguments().getInt(Utility.Extra.POSITION);
             isWhiteTheme = getArguments().getBoolean(Utility.Extra.DATA_3);
 
