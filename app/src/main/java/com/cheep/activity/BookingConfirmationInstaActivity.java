@@ -32,11 +32,9 @@ import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
 import com.cheep.utils.CalendarUtility;
-import com.cheep.utils.GlideUtility;
 import com.cheep.utils.GsonUtility;
 import com.cheep.utils.LogUtils;
 import com.cheep.utils.PreferenceUtility;
-
 import com.cheep.utils.Utility;
 import com.cheep.utils.WebCallClass;
 
@@ -50,7 +48,6 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.cheep.utils.Utility.Extra.DATA_2;
 import static com.cheep.utils.Utility.getSpannableString;
 
 
@@ -862,6 +859,7 @@ public class BookingConfirmationInstaActivity extends BaseAppCompatActivity {
 
         WebCallClass.createInstaBookingTask(BookingConfirmationInstaActivity.this,
                 taskDetailModel, mSelectedAddressModel, String.valueOf(total), payableAmount, payment_method, Utility.EMPTY_STRING, Utility.EMPTY_STRING, new WebCallClass.CommonResponseListener() {
+
                     @Override
                     public void volleyError(VolleyError error) {
 
@@ -880,7 +878,7 @@ public class BookingConfirmationInstaActivity extends BaseAppCompatActivity {
                     @Override
                     public void successOfInstaBookTaskCreation()
                     {
-
+                        hideProgressDialog();
                     }
                 });
     }
