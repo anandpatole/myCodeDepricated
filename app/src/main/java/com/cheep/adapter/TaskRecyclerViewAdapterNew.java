@@ -395,18 +395,18 @@ public class TaskRecyclerViewAdapterNew extends LoadMoreSwipeRecyclerAdapter<Tas
                         int pT = holder.mUpcomingTaskBinding.tvViewQuotes.getPaddingTop();
                         int pR = holder.mUpcomingTaskBinding.tvViewQuotes.getPaddingRight();
                         int pB = holder.mUpcomingTaskBinding.tvViewQuotes.getPaddingBottom();
-                        if (model.providerCount.equals(Utility.ZERO_STRING)) {
-                            holder.mUpcomingTaskBinding.tvTaskResponseStatus.setText(holder.mView.getContext().getString(R.string.label_awaiting_response));
-                            holder.mUpcomingTaskBinding.tvViewQuotes.setBackground(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.img_grey_rounded));
-                            holder.mUpcomingTaskBinding.tvViewQuotes.setEnabled(false);
-                            holder.mUpcomingTaskBinding.tvViewQuotes.setPadding(pL, pT, pR, pB);
-                        } else {
-                            int providerCount = Integer.parseInt(model.providerCount);
-                            holder.mUpcomingTaskBinding.tvTaskResponseStatus.setText(holder.mView.getContext().getResources().getQuantityText(R.plurals.getResponseReceivedString, providerCount));
-                            holder.mUpcomingTaskBinding.tvViewQuotes.setBackground(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.img_blue_rounded));
-                            holder.mUpcomingTaskBinding.tvViewQuotes.setEnabled(true);
-                            holder.mUpcomingTaskBinding.tvViewQuotes.setPadding(pL, pT, pR, pB);
-                        }
+//                        if (model.providerCount.equals(Utility.ZERO_STRING)) {
+//                            holder.mUpcomingTaskBinding.tvTaskResponseStatus.setText(holder.mView.getContext().getString(R.string.label_awaiting_response));
+//                            holder.mUpcomingTaskBinding.tvViewQuotes.setBackground(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.img_grey_rounded));
+//                            holder.mUpcomingTaskBinding.tvViewQuotes.setEnabled(false);
+//                            holder.mUpcomingTaskBinding.tvViewQuotes.setPadding(pL, pT, pR, pB);
+//                        } else {
+//                            int providerCount = Integer.parseInt(model.providerCount);
+//                            holder.mUpcomingTaskBinding.tvTaskResponseStatus.setText(holder.mView.getContext().getResources().getQuantityText(R.plurals.getResponseReceivedString, providerCount));
+//                            holder.mUpcomingTaskBinding.tvViewQuotes.setBackground(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.img_blue_rounded));
+//                            holder.mUpcomingTaskBinding.tvViewQuotes.setEnabled(true);
+//                            holder.mUpcomingTaskBinding.tvViewQuotes.setPadding(pL, pT, pR, pB);
+//                        }
 
                     }
                     holder.mUpcomingTaskBinding.tvProviderName.setText(model.categoryModel.catName);

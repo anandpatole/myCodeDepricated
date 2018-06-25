@@ -1125,9 +1125,10 @@ mParams.put(NetworkUtility.TAGS.CAT_ID,cat_id);
         mParams.put(NetworkUtility.TAGS.CITY_ID, userDetails.CityID);
         mParams.put(NetworkUtility.TAGS.CAT_ID, taskDetailModel.categoryModel.catId);
         mParams.put(NetworkUtility.TAGS.START_DATETIME, taskDetailModel.taskStartdate);
+
         String selectedServices = new Gson().toJson(taskDetailModel.subCatList);
         mParams.put(NetworkUtility.TAGS.TASK_SUB_CATEGORIES, selectedServices);
-        //mParams.put(NetworkUtility.TAGS.COUNTRY, userDetails.mCountry);
+        mParams.put(NetworkUtility.TAGS.COUNTRY, mSelectedAddressModel.countryName);
        // mParams.put(NetworkUtility.TAGS.PAYMENT_STATUS, Utility.PAYMENT_STATUS.COMPLETED);
 
         if (!TextUtils.isEmpty(taskDetailModel.cheepCode)) {

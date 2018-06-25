@@ -552,7 +552,8 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
                     //success
                     if (data != null) {
                         LogUtils.LOGE(TAG, "onActivityResult() called with success: result= [" + data.getStringExtra(Utility.Extra.PAYU_RESPONSE) + "]");
-                        onSuccessOfAnyPaymentMode(data.getStringExtra(Utility.Extra.PAYU_RESPONSE));
+                      callCreateInstaTaskBooking(Utility.Extra.PAYU_RESPONSE);
+                       // onSuccessOfAnyPaymentMode(data.getStringExtra(Utility.Extra.PAYU_RESPONSE));
                     }
                 }
                 if (resultCode == RESULT_CANCELED) {
