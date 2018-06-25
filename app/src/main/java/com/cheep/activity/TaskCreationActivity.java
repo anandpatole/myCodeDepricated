@@ -395,8 +395,29 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
 
 //                    model.taskImage = mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mCurrentPhotoPath;
 //        taskDetailModel.mMediaModelList = mTaskCreationPagerAdapter.mEnterTaskDetailFragment.getMediaList();
+if(mJobCategoryModel.isSubscribed.equalsIgnoreCase(Utility.BOOLEAN.YES))
+{
+    if(mJobCategoryModel.catSlug.equalsIgnoreCase(Utility.CAT_SLUG_TYPES.PEST_CONTROL))
+    {
+        if (taskDetailModel.taskAddress.is_subscribe.equalsIgnoreCase(Utility.ADDRESS_SUBSCRIPTION_TYPE.PREMIUM))
+        {
+            taskDetailModel.taskType = Utility.TASK_TYPE.SUBSCRIBED;
+        }
+        else
+        {
+            taskDetailModel.taskType=Utility.TASK_TYPE.NORMAL;
+        }
+    }
+    else
+        {
+            taskDetailModel.taskType = Utility.TASK_TYPE.SUBSCRIBED;
+    }
+}
+else
+{
+    taskDetailModel.taskType = Utility.TASK_TYPE.NORMAL;
+}
 
-        taskDetailModel.taskType = Utility.TASK_TYPE.NORMAL;
         taskDetailModel.taskStatus = Utility.TASK_STATUS.PENDING;
 
         BookingConfirmationInstaActivity.newInstance(TaskCreationActivity.this, taskDetailModel, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddress);
