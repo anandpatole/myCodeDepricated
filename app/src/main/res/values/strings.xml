@@ -433,9 +433,9 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_book">Book</string>
     <string name="label_pros_available">PROs\nAvailable</string>
     <string name="label_popular">Popular</string>
-<!--
-    <string name="label_featured">Featured</string>
--->
+    <!--
+        <string name="label_featured">Featured</string>
+    -->
     <string name="label_featured">All Services</string>
     <string name="empty_favourited_list_1">Haven\'t favourited a service\ncategory yet?</string>
     <string name="empty_favourited_list_2">If you like a service which you often use,\njust tap the heart on it.</string>
@@ -753,12 +753,21 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_presentation">Presentation</string>
     <string name="msg_would_you_recommend_pro">Would you like to recommend this PRO to your friends?</string>
     <string name="label_all_done">All Done!</string>
-    <string name="label_title_cheep_is_here">Don\'t worry, Cheep is here</string>
+    <!--<string name="label_title_cheep_is_here">Don\'t worry, Cheep is here</string>-->
+    <string name="label_title_cheep_is_here">Cheep Care will SOON be in your city</string>
     <string name="label_title_we_hear_you">We hear you</string>
     <string name="label_desc_cheep_is_here_1">Hey there, while Cheep Care isn\'t in your city as yet, you can still get all your tasks done through Cheep by booking your task below</string>
     <string name="label_desc_cheep_is_here_2">If you want Cheep Care to come to your city as much as we do, please vote now</string>
+
     <string name="label_desc_we_hear_you">Your vote means Cheep Care will come to your city even sooner! Until we bring Cheep Care to you, go ahead and book using Cheep now.</string>
+
+
+    <string name="label_desc_cheep_care_not_in_city_1">India has truly loved our affordable Cheep Care AMC services \u0020\u0020\u0020</string>
+    <string name="label_desc_cheep_care_not_in_city_2">If you have heard of us and want us in your city, please vote and give us your love below. Thanks\u0020\u0020\u0020</string>
+
+
     <string name="label_book_task">Book Task</string>
+
     <string name="label_vote">Vote</string>
     <string name="hint_enter_your_mobile_number_to_vote">Enter your mobile number to vote</string>
     <string name="hint_select_city">Select your city name</string>
@@ -789,7 +798,9 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="validate_person_name">Please enter the name of the person who will coordinate with the PRO</string>
     <string name="msg_task_confirmed_cheep_care">Our Cheep PRO will be arriving at your location on %1s. Heads up! We will also ask you to confirm your availability %2s prior to the task, please confirm for a smooth experience on Cheep.</string>
     <string name="msg_task_confirmed_instabook_1">Your task has been confirmed</string>
-    <string name="msg_task_confirmed_instabook_2">Our Cheep PRO will be arriving at your location on %1s.</string>
+    <!--<string name="msg_task_confirmed_instabook_2">Our Cheep PRO will be arriving at your location on %1s.</string>-->
+    <string name="msg_task_confirmed_instabook_2">Our PRO will be arriving at your selected location on %1s. If you need to change the time, simply inform us or reschedule the appointment 12 hours prior! We hate wasting your or our time. Thank you </string>
+    <string name="label_your_pro_is_booked">Your PRO is booked!</string>
     <string name="number_of_services">( x%1s )</string>
     <string name="label_free">FREE</string>
     <string name="label_add_media">Add media</string>

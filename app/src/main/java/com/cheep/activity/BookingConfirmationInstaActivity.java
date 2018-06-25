@@ -75,11 +75,11 @@ public class BookingConfirmationInstaActivity extends BaseAppCompatActivity {
     private String payableAmount;
 
 
-    public static void newInstance(Context context, TaskDetailModel taskDetailModel,   AddressModel mSelectedAddressModel) {
+    public static void newInstance(Context context, TaskDetailModel taskDetailModel, AddressModel mSelectedAddressModel) {
         Intent intent = new Intent(context, BookingConfirmationInstaActivity.class);
         intent.putExtra(Utility.Extra.DATA, GsonUtility.getJsonStringFromObject(taskDetailModel));
         intent.putExtra(Utility.Extra.SELECTED_ADDRESS_MODEL, GsonUtility.getJsonStringFromObject(mSelectedAddressModel));
-       // intent.putExtra(Utility.Extra.DATA_2,GsonUtility.getJsonStringFromObject(taskDetailModel));
+        // intent.putExtra(Utility.Extra.DATA_2,GsonUtility.getJsonStringFromObject(taskDetailModel));
         context.startActivity(intent);
     }
 
@@ -127,10 +127,10 @@ public class BookingConfirmationInstaActivity extends BaseAppCompatActivity {
         // Enable Step Three Unverified state
         setTaskState(STEP_THREE_UNVERIFIED);
 
-        double subTotal=0;
+        double subTotal = 0;
         double subServiceTotal = 0;
         double subServiceTotalWithGST = 0;
-        double additionalCharge=0;
+        double additionalCharge = 0;
         // address and time UI
         SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder();
         spannableStringBuilder.append(getSpannableString(getString(R.string.msg_task_description), ContextCompat.getColor(this, R.color.splash_gradient_end), true));
@@ -144,41 +144,30 @@ public class BookingConfirmationInstaActivity extends BaseAppCompatActivity {
 
         mBinding.tvTaskDescription.setText(spannableStringBuilder);
         mBinding.tvLabelCategory.setText(taskDetailModel.categoryModel.catName);
-        if (taskDetailModel.categoryModel.isSubscribed.equalsIgnoreCase(Utility.BOOLEAN.YES))
-        {
+        if (taskDetailModel.categoryModel.isSubscribed.equalsIgnoreCase(Utility.BOOLEAN.YES)) {
 
-            if(mSelectedAddressModel.is_subscribe.equalsIgnoreCase(Utility.ADDRESS_SUBSCRIPTION_TYPE.PREMIUM)|| mSelectedAddressModel.is_subscribe.equalsIgnoreCase(Utility.ADDRESS_SUBSCRIPTION_TYPE.NORMAL))
-            {
-                if(taskDetailModel.categoryModel.catSlug.equalsIgnoreCase(Utility.CAT_SLUG_TYPES.PEST_CONTROL))
-                {
-                    if(mSelectedAddressModel.is_subscribe.equalsIgnoreCase(Utility.ADDRESS_SUBSCRIPTION_TYPE.NORMAL))
-                    {
+            if (mSelectedAddressModel.is_subscribe.equalsIgnoreCase(Utility.ADDRESS_SUBSCRIPTION_TYPE.PREMIUM) || mSelectedAddressModel.is_subscribe.equalsIgnoreCase(Utility.ADDRESS_SUBSCRIPTION_TYPE.NORMAL)) {
+                if (taskDetailModel.categoryModel.catSlug.equalsIgnoreCase(Utility.CAT_SLUG_TYPES.PEST_CONTROL)) {
+                    if (mSelectedAddressModel.is_subscribe.equalsIgnoreCase(Utility.ADDRESS_SUBSCRIPTION_TYPE.NORMAL)) {
                         mBinding.tvLabelCategoryPrices.setText(getString(R.string.rupee_symbol_x, Utility.getQuotePriceFormatter(taskDetailModel.catPrice)));
-                        subServiceTotal=Double.valueOf(taskDetailModel.catPrice);
-                    }
-                    else
-                    {
+                        subServiceTotal = Double.valueOf(taskDetailModel.catPrice);
+                    } else {
                         mBinding.tvLabelCategoryPrices.setText(getString(R.string.free));
-                        subServiceTotal=0;
+                        subServiceTotal = 0;
                     }
-                }
-                else
-                {
+                } else {
                     mBinding.tvLabelCategoryPrices.setText(getString(R.string.free));
-                    subServiceTotal=0;
+                    subServiceTotal = 0;
                 }
-                if(taskDetailModel.additionalChargeReason.equalsIgnoreCase(Utility.DIALOG_TYPE.NONE))
-                {
+                if (taskDetailModel.additionalChargeReason.equalsIgnoreCase(Utility.ADDITION_CHARGES_DIALOG_TYPE.NONE)) {
 
                     mBinding.lnPayLaterPayNowButtons.setVisibility(View.GONE);
                     mBinding.tvGotcha.setVisibility(View.VISIBLE);
                     mBinding.rlAdditionalCharges.setVisibility(View.GONE);
-                    additionalCharge=0;
+                    additionalCharge = 0;
                     mBinding.viewLine2.setVisibility(View.GONE);
 
-                }
-                else
-                {
+                } else {
 
                     mBinding.lnPayLaterPayNowButtons.setVisibility(View.VISIBLE);
                     mBinding.tvGotcha.setVisibility(View.GONE);
@@ -186,17 +175,14 @@ public class BookingConfirmationInstaActivity extends BaseAppCompatActivity {
                     mBinding.rlAdditionalCharges.setVisibility(View.VISIBLE);
                     // mBinding.tvLabelAdditionalCharge.setText(taskDetailModel.additionalChargeReason);
                     mBinding.tvAdditionalChargeReason.setText(taskDetailModel.additionalChargeReason);
-                    if(taskDetailModel.additionalChargeReason.equalsIgnoreCase(Utility.DIALOG_TYPE.OUT_OF_OFFICE_HOURS))
-                    {
+                    if (taskDetailModel.additionalChargeReason.equalsIgnoreCase(Utility.ADDITION_CHARGES_DIALOG_TYPE.OUT_OF_OFFICE_HOURS)) {
                         mBinding.tvAdditionalChargeSubreason.setText(getString(R.string.out_of_off_info));
-                    }
-                    else
-                    {
+                    } else {
                         mBinding.tvAdditionalChargeSubreason.setText(getString(R.string.urgent_booking_info));
                     }
 
                     mBinding.tvAdditionalCharge.setText(getString(R.string.rupee_symbol_x, Utility.getQuotePriceFormatter(PreferenceUtility.getInstance(mContext).getAdminSettings().additionalChargeForSelectingSpecificTime)));
-                    additionalCharge=Double.valueOf(PreferenceUtility.getInstance(mContext).getAdminSettings().additionalChargeForSelectingSpecificTime);
+                    additionalCharge = Double.valueOf(PreferenceUtility.getInstance(mContext).getAdminSettings().additionalChargeForSelectingSpecificTime);
                 }
                 if (!taskDetailModel.subCatList.isEmpty()) {
                     mBinding.recyclerViewPaid.setVisibility(View.VISIBLE);
@@ -210,44 +196,33 @@ public class BookingConfirmationInstaActivity extends BaseAppCompatActivity {
                     mBinding.viewLine1.setVisibility(View.GONE);
                 }
 
-            }
-            else
-            {
-                if(taskDetailModel.additionalChargeReason.equalsIgnoreCase(Utility.DIALOG_TYPE.NONE))
-                {
-
+            } else {
+                if (taskDetailModel.additionalChargeReason.equalsIgnoreCase(Utility.ADDITION_CHARGES_DIALOG_TYPE.NONE)) {
                     mBinding.lnPayLaterPayNowButtons.setVisibility(View.GONE);
                     mBinding.tvGotcha.setVisibility(View.VISIBLE);
                     mBinding.rlAdditionalCharges.setVisibility(View.GONE);
-                    additionalCharge=0;
+                    additionalCharge = 0;
                     mBinding.viewLine2.setVisibility(View.GONE);
-
-                }
-                else
-                {
-
+                } else {
                     mBinding.lnPayLaterPayNowButtons.setVisibility(View.VISIBLE);
                     mBinding.tvGotcha.setVisibility(View.GONE);
                     mBinding.viewLine2.setVisibility(View.VISIBLE);
                     mBinding.rlAdditionalCharges.setVisibility(View.VISIBLE);
                     // mBinding.tvLabelAdditionalCharge.setText(taskDetailModel.additionalChargeReason);
                     mBinding.tvAdditionalChargeReason.setText(taskDetailModel.additionalChargeReason);
-                    if(taskDetailModel.additionalChargeReason.equalsIgnoreCase(Utility.DIALOG_TYPE.OUT_OF_OFFICE_HOURS))
-                    {
+                    if (taskDetailModel.additionalChargeReason.equalsIgnoreCase(Utility.ADDITION_CHARGES_DIALOG_TYPE.OUT_OF_OFFICE_HOURS)) {
                         mBinding.tvAdditionalChargeSubreason.setText(getString(R.string.out_of_off_info));
-                    }
-                    else
-                    {
+                    } else {
                         mBinding.tvAdditionalChargeSubreason.setText(getString(R.string.urgent_booking_info));
                     }
 
                     mBinding.tvAdditionalCharge.setText(getString(R.string.rupee_symbol_x, Utility.getQuotePriceFormatter(PreferenceUtility.getInstance(mContext).getAdminSettings().additionalChargeForSelectingSpecificTime)));
-                    additionalCharge=Double.valueOf(PreferenceUtility.getInstance(mContext).getAdminSettings().additionalChargeForSelectingSpecificTime);
+                    additionalCharge = Double.valueOf(PreferenceUtility.getInstance(mContext).getAdminSettings().additionalChargeForSelectingSpecificTime);
                 }
                 mBinding.lnPayLaterPayNowButtons.setVisibility(View.VISIBLE);
                 mBinding.tvGotcha.setVisibility(View.GONE);
                 mBinding.tvLabelCategoryPrices.setText(getString(R.string.rupee_symbol_x, Utility.getQuotePriceFormatter(taskDetailModel.catPrice)));
-                subServiceTotal=Double.valueOf(taskDetailModel.catPrice);
+                subServiceTotal = Double.valueOf(taskDetailModel.catPrice);
             }
             if (!taskDetailModel.subCatList.isEmpty()) {
                 mBinding.recyclerViewPaid.setVisibility(View.VISIBLE);
@@ -261,38 +236,30 @@ public class BookingConfirmationInstaActivity extends BaseAppCompatActivity {
                 mBinding.viewLine1.setVisibility(View.GONE);
             }
 
-        }
-        else
-        {
-            if(taskDetailModel.additionalChargeReason.equalsIgnoreCase(Utility.DIALOG_TYPE.NONE))
-            {
+        } else {
+            if (taskDetailModel.additionalChargeReason.equalsIgnoreCase(Utility.ADDITION_CHARGES_DIALOG_TYPE.NONE)) {
                 mBinding.rlAdditionalCharges.setVisibility(View.GONE);
-                additionalCharge=0;
+                additionalCharge = 0;
                 mBinding.viewLine2.setVisibility(View.GONE);
-            }
-            else
-            {
+            } else {
                 mBinding.viewLine2.setVisibility(View.VISIBLE);
                 mBinding.rlAdditionalCharges.setVisibility(View.VISIBLE);
                 // mBinding.tvLabelAdditionalCharge.setText(taskDetailModel.additionalChargeReason);
                 mBinding.tvAdditionalChargeReason.setText(taskDetailModel.additionalChargeReason);
-                if(taskDetailModel.additionalChargeReason.equalsIgnoreCase(Utility.DIALOG_TYPE.OUT_OF_OFFICE_HOURS))
-                {
+                if (taskDetailModel.additionalChargeReason.equalsIgnoreCase(Utility.ADDITION_CHARGES_DIALOG_TYPE.OUT_OF_OFFICE_HOURS)) {
                     mBinding.tvAdditionalChargeSubreason.setText(getString(R.string.out_of_off_info));
-                }
-                else
-                {
+                } else {
                     mBinding.tvAdditionalChargeSubreason.setText(getString(R.string.urgent_booking_info));
                 }
 
                 mBinding.tvAdditionalCharge.setText(getString(R.string.rupee_symbol_x, Utility.getQuotePriceFormatter(PreferenceUtility.getInstance(mContext).getAdminSettings().additionalChargeForSelectingSpecificTime)));
-                additionalCharge=Double.valueOf(PreferenceUtility.getInstance(mContext).getAdminSettings().additionalChargeForSelectingSpecificTime);
+                additionalCharge = Double.valueOf(PreferenceUtility.getInstance(mContext).getAdminSettings().additionalChargeForSelectingSpecificTime);
             }
             mBinding.tvGotcha.setVisibility(View.GONE);
             mBinding.lnPayLaterPayNowButtons.setVisibility(View.VISIBLE);
 
             mBinding.tvLabelCategoryPrices.setText(getString(R.string.rupee_symbol_x, Utility.getQuotePriceFormatter(taskDetailModel.catPrice)));
-            subServiceTotal=Double.valueOf(taskDetailModel.catPrice);
+            subServiceTotal = Double.valueOf(taskDetailModel.catPrice);
             if (!taskDetailModel.subCatList.isEmpty()) {
                 mBinding.recyclerViewPaid.setVisibility(View.VISIBLE);
                 mBinding.recyclerViewPaid.setLayoutManager(new LinearLayoutManager(this));
@@ -310,7 +277,7 @@ public class BookingConfirmationInstaActivity extends BaseAppCompatActivity {
 //        if(mSelectedAddressModel.is_subscribe.equalsIgnoreCase(Utility.ADDRESS_SUBSCRIPTION_TYPE.PREMIUM)|| mSelectedAddressModel.is_subscribe.equalsIgnoreCase(Utility.ADDRESS_SUBSCRIPTION_TYPE.NORMAL))
 //        {
 //
-//            if(taskDetailModel.additionalChargeReason.equalsIgnoreCase(Utility.DIALOG_TYPE.NONE))
+//            if(taskDetailModel.additionalChargeReason.equalsIgnoreCase(Utility.ADDITION_CHARGES_DIALOG_TYPE.NONE))
 //            {
 //
 //                mBinding.lnPayLaterPayNowButtons.setVisibility(View.GONE);
@@ -335,7 +302,7 @@ public class BookingConfirmationInstaActivity extends BaseAppCompatActivity {
 //        }
 //
 //
-//        if(taskDetailModel.additionalChargeReason.equalsIgnoreCase(Utility.DIALOG_TYPE.NONE))
+//        if(taskDetailModel.additionalChargeReason.equalsIgnoreCase(Utility.ADDITION_CHARGES_DIALOG_TYPE.NONE))
 //        {
 //            mBinding.rlAdditionalCharges.setVisibility(View.GONE);
 //            additionalCharge=0;
@@ -347,7 +314,7 @@ public class BookingConfirmationInstaActivity extends BaseAppCompatActivity {
 //            mBinding.rlAdditionalCharges.setVisibility(View.VISIBLE);
 //            // mBinding.tvLabelAdditionalCharge.setText(taskDetailModel.additionalChargeReason);
 //            mBinding.tvAdditionalChargeReason.setText(taskDetailModel.additionalChargeReason);
-//            if(taskDetailModel.additionalChargeReason.equalsIgnoreCase(Utility.DIALOG_TYPE.OUT_OF_OFFICE_HOURS))
+//            if(taskDetailModel.additionalChargeReason.equalsIgnoreCase(Utility.ADDITION_CHARGES_DIALOG_TYPE.OUT_OF_OFFICE_HOURS))
 //            {
 //                mBinding.tvAdditionalChargeSubreason.setText(getString(R.string.out_of_off_info));
 //            }
@@ -385,7 +352,7 @@ public class BookingConfirmationInstaActivity extends BaseAppCompatActivity {
 //            subServiceTotalWithGST += subServiceDetailModel.selected_unit * Double.parseDouble(subServiceDetailModel.unitPriceWithGST);
 //            LogUtils.LOGE(TAG, "initiateUI:unitPriceWithGST " + subServiceDetailModel.unitPriceWithGST);
 //        }
-        subTotal=subServiceTotal+additionalCharge;
+        subTotal = subServiceTotal + additionalCharge;
         total = new BigDecimal(subServiceTotal).doubleValue();
         LogUtils.LOGE(TAG, "initiateUI:total " + total);
         subTotal = new BigDecimal(subTotal).doubleValue();
@@ -829,16 +796,14 @@ public class BookingConfirmationInstaActivity extends BaseAppCompatActivity {
     View.OnClickListener onPayNowClickListener = new View.OnClickListener() {
 
         @Override
-        public void onClick(View view)
-        {
+        public void onClick(View view) {
             openPaymentChoiceActivity();
         }
     };
     View.OnClickListener onGotchaClickListener = new View.OnClickListener() {
 
         @Override
-        public void onClick(View view)
-        {
+        public void onClick(View view) {
             callCreateInstaTaskBooking(NetworkUtility.PAYMENT_METHOD_TYPE.FREE);
         }
     };
@@ -881,8 +846,7 @@ public class BookingConfirmationInstaActivity extends BaseAppCompatActivity {
                     }
                 }, new WebCallClass.InstaBookTaskCreationListener() {
                     @Override
-                    public void successOfInstaBookTaskCreation()
-                    {
+                    public void successOfInstaBookTaskCreation() {
                         hideProgressDialog();
                     }
                 });

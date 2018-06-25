@@ -11,4 +11,5 @@
    <!-- <string name="urgent_booking_info">Service Booked within 3 hrs</string>-->
    <!-- <string name="select_address">Please Select Address First</string>-->
 
+    <string name="label_thanks">Thanks</string>
 </resources>

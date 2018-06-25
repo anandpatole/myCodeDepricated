@@ -78,7 +78,7 @@ import static com.cheep.utils.SuperCalendar.SuperFormatter;
 
 public class Utility {
 
-    public static final String NEED_HELP="need help";
+    public static final String NEED_HELP = "need help";
     public static final String MERCHANT = "merchant";
     public static final String EMAIL = "email";
     public static final String PUBLIC_PROFILE = "public_profile";
@@ -99,7 +99,7 @@ public class Utility {
 
     public static final String EDIT_PROFILE_ACTIVITY = "EditProfile";
 
-//    public static final String TAG = "Utility";
+    //    public static final String TAG = "Utility";
     public static final String POSITION = "findPosition";
     public static final String EMPTY_STRING = "";
     public static final String ZERO_STRING = "0";
@@ -121,9 +121,9 @@ public class Utility {
     public static final String PPI = "PPI";
     public static final String USRPWD = "USRPWD";
     // new type for subscription
-    public static final String SUBSCRIBE= "SUBSCRIBE";
-    public static final String RENEW_SUBSCRIPTION= "RENEW_SUBSCRIPTION";
-    public static final String TYPE_OF_PACKAGE= "packageType";
+    public static final String SUBSCRIBE = "SUBSCRIBE";
+    public static final String RENEW_SUBSCRIPTION = "RENEW_SUBSCRIPTION";
+    public static final String TYPE_OF_PACKAGE = "packageType";
 
     //Date Formats
 
@@ -168,8 +168,8 @@ public class Utility {
     public static final String ACTION_CALL = "call";
     public static final String ACTION_CHAT = "chat";
     /*
-    * chat types
-    * */
+     * chat types
+     * */
     public static final String CHAT_TYPE_DATE = "date";
     public static final String CHAT_TYPE_MESSAGE = "message";
     public static final String CHAT_TYPE_MEDIA = "media";
@@ -202,9 +202,9 @@ public class Utility {
 //    public static final int REQUEST_CODE_TASK_CREATION_CHEEP_CARE = 1115;
 
     /*
-    * @Sanjay
-    * Chat image chooser constants
-    * */
+     * @Sanjay
+     * Chat image chooser constants
+     * */
     public static final int REQUEST_CODE_IMAGE_CAPTURE_CHAT_MEDIA = 121;
     public static final int REQUEST_CODE_GET_FILE_CHAT_MEDIA_GALLERY = 122;
     public static final int REQUEST_CODE_READ_EXTERNAL_STORAGE_CHAT_MEDIA = 123;
@@ -225,7 +225,7 @@ public class Utility {
 
     public static final String REMOVE = "remove";
     public static final String ADD = "add";
-    public static final int  EDIT_ADDRESD_POSITION = 0;
+    public static final int EDIT_ADDRESD_POSITION = 0;
 
     //Different Types of Braoadcast Actions
     public static final String BR_ON_TASK_CREATED = "com.cheep.ontaskcreated";
@@ -288,6 +288,7 @@ public class Utility {
         else
             return R.string.label_other;
     }
+
     public static int getAddressCategoryIcon(String category) {
         if (TextUtils.isEmpty(category))
             return R.drawable.ic_address_home;
@@ -612,16 +613,17 @@ public class Utility {
         }
     }
 
-    public interface CHEEP_CARE{
-        String SAVE="Save ₹";
-        String RS="₹";
+    public interface CHEEP_CARE {
+        String SAVE = "Save ₹";
+        String RS = "₹";
     }
 
     //Bundle Extra parameters
-    public interface ReviewByMe{
+    public interface ReviewByMe {
         String YES = "1";
         String NO = "0";
     }
+
     public interface Extra {
         String WHICH_FRAG = "which_frag";
         String USER_DETAILS = "userdetails";
@@ -689,10 +691,10 @@ public class Utility {
         String IS_SUBSCRIPTION = "is_subscription";
     }
 
-public interface  cat
-{
-    String PESTCONTROL="pest-control";
-}
+    public interface cat {
+        String PESTCONTROL = "pest-control";
+    }
+
     /*1 for platinum
     2 for Gold
     3 for Silver
@@ -718,18 +720,18 @@ public interface  cat
         String NO = "no";
         String NA = "na";
     }
-    public interface ADDRESS_SUBSCRIPTION_TYPE{
-        String PREMIUM= "premium";
-        String NONE= "none";
-        String NORMAL= "normal";
+
+    public interface ADDRESS_SUBSCRIPTION_TYPE {
+        String PREMIUM = "premium";
+        String NONE = "none";
+        String NORMAL = "normal";
     }
 
-public interface DIALOG_TYPE
-{
-    String OUT_OF_OFFICE_HOURS="Out-of-Office Hours Fee";
-    String URGENT_BOOKING="Urgent Booking Fee";
-    String NONE="none";
-}
+    public interface ADDITION_CHARGES_DIALOG_TYPE {
+        String OUT_OF_OFFICE_HOURS = "Out-of-Office Hours Fee";
+        String URGENT_BOOKING = "Urgent Booking Fee";
+        String NONE = "none";
+    }
 
     public interface BROADCAST_TYPE {
         int UPDATE_FAVOURITE = 1;
@@ -882,7 +884,8 @@ public interface DIALOG_TYPE
         String INSTA_BOOK = "instabook";
         String SUBSCRIBED = "subscribed";
     }
-    public  static String removeFirstChar(String s){
+
+    public static String removeFirstChar(String s) {
         return s.substring(1);
     }
 
@@ -921,13 +924,14 @@ public interface DIALOG_TYPE
         String USERNAME = "Guest";
     }
 
-    public interface CAR_PACKAGE_TYPE{
-        String PREMIUM="premium";
-        String NORMAL="normal";
+    public interface CAR_PACKAGE_TYPE {
+        String PREMIUM = "premium";
+        String NORMAL = "normal";
     }
-    public interface CAT_SLUG_TYPES{
-        String PEST_CONTROL="pest-control";
-        String PAINTER="";
+
+    public interface CAT_SLUG_TYPES {
+        String PEST_CONTROL = "pest-control";
+        String PAINTER = "";
     }
 
     private static String urlEncodeUTF8(String s) {
@@ -1090,9 +1094,9 @@ public interface DIALOG_TYPE
     }
 
     /*
-        * Update finalized sp id on firebase.
-        * @Sanjay 20 Feb 2016
-        * */
+     * Update finalized sp id on firebase.
+     * @Sanjay 20 Feb 2016
+     * */
     public static void updateSelectedSpOnFirebase(final Context context,
                                                   final TaskDetailModel taskDetailModel,
                                                   final ProviderModel providerModel,
@@ -1125,9 +1129,9 @@ public interface DIALOG_TYPE
                     }
 
                     if (isInstaBooking) {
-        /* * Add new task detail on firebase
-         * @Giteeka sep 7 2017 for insta booking
-         */
+                        /* * Add new task detail on firebase
+                         * @Giteeka sep 7 2017 for insta booking
+                         */
                         ChatTaskModel chatTaskModel = new ChatTaskModel();
                         chatTaskModel.taskId = FirebaseUtils.getPrefixTaskId(taskDetailModel.taskId);
                         chatTaskModel.taskDesc = taskDetailModel.taskDesc;
@@ -1163,8 +1167,7 @@ public interface DIALOG_TYPE
         }
         TaskConfirmedCCInstaBookDialog taskConfirmedCCInstaBookDialog = TaskConfirmedCCInstaBookDialog.newInstance(new TaskConfirmedCCInstaBookDialog.TaskConfirmActionListener() {
             @Override
-            public void onAcknowledgementAccepted()
-            {
+            public void onAcknowledgementAccepted() {
                 MessageEvent messageEvent = new MessageEvent();
                 messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.TASK_PAID_FOR_INSTA_BOOKING;
                 EventBus.getDefault().post(messageEvent);

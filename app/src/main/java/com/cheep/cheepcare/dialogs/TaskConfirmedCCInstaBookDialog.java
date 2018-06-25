@@ -3,15 +3,16 @@ package com.cheep.cheepcare.dialogs;
 import android.databinding.DataBindingUtil;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
-import android.text.TextUtils;
 import android.text.style.ImageSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -87,25 +88,30 @@ public class TaskConfirmedCCInstaBookDialog extends DialogFragment {
 
         DialogTaskConfirmedCheepCareInstabookBinding mBinding = DataBindingUtil.inflate(inflater, R.layout.dialog_task_confirmed_cheep_care_instabook, container, false);
 
-        if (isInstaBookingTask) {
-            String text1 = getString(R.string.msg_task_confirmed_instabook_1) + Utility.ONE_CHARACTER_SPACE;
-            String text2 = Utility.ONE_CHARACTER_SPACE + getString(R.string.msg_task_confirmed_instabook_2, dateTime);
-            SpannableStringBuilder spanDesc1 = new SpannableStringBuilder(text1 + text2);
-            ImageSpan span1 = new ImageSpan(getContext(), R.drawable.emoji_thumbs_up, ImageSpan.ALIGN_BASELINE);
-            spanDesc1.setSpan(span1, text1.length() - 1
-                    , text1.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+//        if (isInstaBookingTask) {
+//            String text1 = getString(R.string.msg_task_confirmed_instabook_1) + Utility.ONE_CHARACTER_SPACE;
+        String text2 = getString(R.string.msg_task_confirmed_instabook_2, dateTime) + Utility.ONE_CHARACTER_SPACE + Utility.ONE_CHARACTER_SPACE;
+        SpannableStringBuilder spanDesc1 = new SpannableStringBuilder(text2);
+        Drawable drawable = ContextCompat.getDrawable(getContext(), R.drawable.emoji_folded_hands);
+        drawable.setBounds(0,0,30,30);
+        ImageSpan span1 = new ImageSpan(drawable, ImageSpan.ALIGN_BASELINE);
+//            spanDesc1.setSpan(span1, text1.length() - 1
+//                    , text1.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+        spanDesc1.setSpan(span1, text2.length() - 1
+                , text2.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
 
-            mBinding.textTaskCreationAcknowledgment.setText(spanDesc1);
-        } else {
-
-            final String message;
-            if (!TextUtils.isEmpty(dateTime)) {
-                message = getString(R.string.msg_task_confirmed_cheep_care, dateTime, "3");
-            } else {
-                message = getString(R.string.msg_task_confirmed_cheep_care_no_time_specified);
-            }
-            mBinding.textTaskCreationAcknowledgment.setText(message);
-        }
+        mBinding.textTaskCreationAcknowledgment.setText(spanDesc1);
+        mBinding.title.setText(R.string.label_your_pro_is_booked);
+//        } else {
+//
+//            final String message;
+//            if (!TextUtils.isEmpty(dateTime)) {
+//                message = getString(R.string.msg_task_confirmed_cheep_care, dateTime, "3");
+//            } else {
+//                message = getString(R.string.msg_task_confirmed_cheep_care_no_time_specified);
+//            }
+//            mBinding.textTaskCreationAcknowledgment.setText(message);
+//        }
         // Click event of Okay button
         mBinding.tvOkay.setOnClickListener(new View.OnClickListener() {
             @Override

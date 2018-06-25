@@ -280,15 +280,17 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
         if (isSubscribedTask) {
             callCreateSubscribedTaskWS(paymentLog);
         } else if (isPayNow) {
-            if (taskDetailModel.taskType.equalsIgnoreCase(Utility.TASK_TYPE.NORMAL))
-                callBookProAndPayForNormalTaskWS(paymentLog);
-            else if (taskDetailModel.taskType.equalsIgnoreCase(Utility.TASK_TYPE.INSTA_BOOK)) {
+
                 callCreateInstaTaskBooking(paymentLog);
-            } else {
-                callCreateStrategicPartnerTaskWS(paymentLog);
-            }
+               // callBookProAndPayForNormalTaskWS(paymentLog);
+//            else if (taskDetailModel.taskType.equalsIgnoreCase(Utility.TASK_TYPE.INSTA_BOOK)) {
+//                callCreateInstaTaskBooking(paymentLog);
+//            } else {
+//                callCreateStrategicPartnerTaskWS(paymentLog);
+//            }
         } else
-            callPayTaskPaymentWS(paymentLog);
+            callCreateInstaTaskBooking(paymentLog);
+            //callPayTaskPaymentWS(paymentLog);
     }
 
 
@@ -550,7 +552,8 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
                     //success
                     if (data != null) {
                         LogUtils.LOGE(TAG, "onActivityResult() called with success: result= [" + data.getStringExtra(Utility.Extra.PAYU_RESPONSE) + "]");
-                        onSuccessOfAnyPaymentMode(data.getStringExtra(Utility.Extra.PAYU_RESPONSE));
+                      callCreateInstaTaskBooking(Utility.Extra.PAYU_RESPONSE);
+                       // onSuccessOfAnyPaymentMode(data.getStringExtra(Utility.Extra.PAYU_RESPONSE));
                     }
                 }
                 if (resultCode == RESULT_CANCELED) {

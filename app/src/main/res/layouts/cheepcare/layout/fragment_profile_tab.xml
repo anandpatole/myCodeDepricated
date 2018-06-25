@@ -49,7 +49,7 @@
 
             <com.cheep.custom_view.CFTextViewSemiBold
                 android:id="@+id/tv_details"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:background="@drawable/selector_background_stroke_blue_transparent"
@@ -73,7 +73,7 @@
 
             <com.cheep.custom_view.CFTextViewSemiBold
                 android:id="@+id/tv_reviews"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:background="@drawable/selector_background_stroke_blue_transparent"
