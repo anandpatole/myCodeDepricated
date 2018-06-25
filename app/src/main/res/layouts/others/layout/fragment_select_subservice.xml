@@ -12,6 +12,7 @@
             android:id="@+id/cv_cheep_tip"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:cardBackgroundColor="@color/white"
             app:cardCornerRadius="@dimen/scale_0dp"
             app:cardElevation="@dimen/scale_5dp">
 
@@ -83,6 +84,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/scale_15dp"
             android:layout_marginTop="@dimen/scale_9dp"
+            android:background="@color/white"
             android:paddingEnd="@dimen/scale_30dp"
             android:paddingLeft="@dimen/scale_24dp"
             android:paddingRight="@dimen/scale_30dp"
@@ -103,16 +105,18 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:drawablePadding="@dimen/scale_8dp"
-                android:ellipsize="marquee"
+                android:ellipsize="end"
+                android:singleLine="false"
+                android:maxLines="2"
                 android:gravity="center_vertical"
                 android:paddingLeft="@dimen/scale_15dp"
                 android:paddingStart="@dimen/scale_15dp"
                 android:textColor="@color/grey_varient_8"
-                android:textSize="@dimen/text_size_20sp"
+                android:textSize="@dimen/text_size_18sp"
                 app:layout_constraintEnd_toStartOf="@id/img_down_arrow"
                 app:layout_constraintHorizontal_weight="6"
                 app:layout_constraintStart_toEndOf="@id/img_icon_correct"
-                tools:text="Restaurant"/>
+                tools:text="Restaurant Restaurant Restaurant Restaurant Restaurant Restaurant Restaurant Restaurant Restaurant "/>
 
 
         </android.support.constraint.ConstraintLayout>

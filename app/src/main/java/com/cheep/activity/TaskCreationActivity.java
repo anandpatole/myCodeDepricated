@@ -71,6 +71,7 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
 
     public static void getInstance(Context mContext, JobCategoryModel model) {
         Intent intent = new Intent(mContext, TaskCreationActivity.class);
+        Log.e(TAG, "getInstance: " + GsonUtility.getJsonStringFromObject(model));
         intent.putExtra(Utility.Extra.DATA, GsonUtility.getJsonStringFromObject(model));
         mContext.startActivity(intent);
     }
@@ -255,14 +256,18 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
         super.onBackPressed();
     }
 
-    public void showPostTaskButton(boolean needsToShow, boolean isEnabled) {
+    public void showPostTaskButton(final boolean needsToShow, boolean isEnabled) {
 
-        if (needsToShow) {
-            mActivityTaskCreateBinding.textPostTask.setVisibility(View.VISIBLE);
-        } else {
-            mActivityTaskCreateBinding.textPostTask.setVisibility(View.GONE);
-        }
-
+        mActivityTaskCreateBinding.textPostTask.post(new Runnable() {
+            @Override
+            public void run() {
+                if (needsToShow) {
+                    mActivityTaskCreateBinding.textPostTask.setVisibility(View.VISIBLE);
+                } else {
+                    mActivityTaskCreateBinding.textPostTask.setVisibility(View.GONE);
+                }
+            }
+        });
 
         if (isEnabled) {
             mActivityTaskCreateBinding.textPostTask.setSelected(true);
@@ -273,6 +278,7 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
             mActivityTaskCreateBinding.textPostTask.setEnabled(false);
             mActivityTaskCreateBinding.textPostTask.setBackgroundColor(ContextCompat.getColor(mContext, R.color.grey_varient_12));
         }
+
     }
 
     public int getPostButtonHeight() {
@@ -782,7 +788,7 @@ else
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    ////////////////////////////// Fetch SubService Listing[START] ////////////////////////////////////////
+    ////////////////////////////// Fetch SubService Listing[START] /////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////
     private void fetchListOfSubCategory(String catId) {
         Log.d(TAG, "fetchListOfSubCategory() called with: catId = [" + catId + "]");

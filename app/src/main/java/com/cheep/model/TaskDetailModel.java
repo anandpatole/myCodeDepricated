@@ -76,8 +76,8 @@ public class TaskDetailModel implements Serializable {
     @SerializedName("task_cancel_reason")
     public String taskCancelReason;
 
-    @SerializedName("sp_counts")
-    public String providerCount;
+//    @SerializedName("sp_counts")
+//    public String providerCount;
 
     @SerializedName("task_reschedule_datetime")
     public String taskRescheduleDateTime;
@@ -173,7 +173,7 @@ public class TaskDetailModel implements Serializable {
         this.taskAddress = taskAddress;
         this.selectedProvider = selectedProvider;
         this.categoryModel = categoryName;
-        this.providerCount = providerCount;
+//        this.providerCount = providerCount;
     }
 
 

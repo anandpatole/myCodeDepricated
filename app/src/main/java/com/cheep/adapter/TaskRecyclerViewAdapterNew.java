@@ -396,10 +396,10 @@ public class TaskRecyclerViewAdapterNew extends LoadMoreSwipeRecyclerAdapter<Tas
                         int pR = holder.mUpcomingTaskBinding.tvViewQuotes.getPaddingRight();
                         int pB = holder.mUpcomingTaskBinding.tvViewQuotes.getPaddingBottom();
 //                        if (model.providerCount.equals(Utility.ZERO_STRING)) {
-//                            holder.mUpcomingTaskBinding.tvTaskResponseStatus.setText(holder.mView.getContext().getString(R.string.label_awaiting_response));
-//                            holder.mUpcomingTaskBinding.tvViewQuotes.setBackground(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.img_grey_rounded));
-//                            holder.mUpcomingTaskBinding.tvViewQuotes.setEnabled(false);
-//                            holder.mUpcomingTaskBinding.tvViewQuotes.setPadding(pL, pT, pR, pB);
+                            holder.mUpcomingTaskBinding.tvTaskResponseStatus.setText(holder.mView.getContext().getString(R.string.label_awaiting_response));
+                            holder.mUpcomingTaskBinding.tvViewQuotes.setBackground(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.img_grey_rounded));
+                            holder.mUpcomingTaskBinding.tvViewQuotes.setEnabled(false);
+                            holder.mUpcomingTaskBinding.tvViewQuotes.setPadding(pL, pT, pR, pB);
 //                        } else {
 //                            int providerCount = Integer.parseInt(model.providerCount);
 //                            holder.mUpcomingTaskBinding.tvTaskResponseStatus.setText(holder.mView.getContext().getResources().getQuantityText(R.plurals.getResponseReceivedString, providerCount));
@@ -487,7 +487,7 @@ public class TaskRecyclerViewAdapterNew extends LoadMoreSwipeRecyclerAdapter<Tas
                 holder.mRowTaskGroupBinding.textCategoryName.setText(model.categoryModel.catName);
                 setSubcategoryTitle(model, holder.mRowTaskGroupBinding.textSubCategoryName);
 
-                if (model.providerCount.equals(Utility.ZERO_STRING)) {
+/*                if (model.providerCount.equals(Utility.ZERO_STRING)) {
                     holder.mRowTaskGroupBinding.textResponseCounter.setText(String.valueOf(model.providerCount));
                     holder.mRowTaskGroupBinding.textTaskResponseStatus.setText(holder.mView.getContext().getString(R.string.label_responses));
                 } else {
@@ -498,7 +498,7 @@ public class TaskRecyclerViewAdapterNew extends LoadMoreSwipeRecyclerAdapter<Tas
                         holder.mRowTaskGroupBinding.textResponseCounter.setText("+" + String.valueOf(providerCount - 1));
                     }
                     holder.mRowTaskGroupBinding.textTaskResponseStatus.setText(holder.mView.getContext().getString(R.string.label_responses));
-                }
+                }*/
 
                 if (Utility.TASK_STATUS.CANCELLED_CUSTOMER.equalsIgnoreCase(model.taskStatus)) {
                     holder.mRowTaskGroupBinding.lnTaskStatusWithQuote.setVisibility(View.VISIBLE);
@@ -865,7 +865,7 @@ public class TaskRecyclerViewAdapterNew extends LoadMoreSwipeRecyclerAdapter<Tas
             for (TaskDetailModel providerModel : mList) {
                 if (providerModel.taskId.equalsIgnoreCase(task_id)) {
                     providerModel.maxQuotePrice = max_quote_price;
-                    providerModel.providerCount = sp_counts;
+//                    providerModel.providerCount = sp_counts;
                     if (providerModel.profile_img_arr == null)
                         providerModel.profile_img_arr = new ArrayList<>();
                     // Only add if already not added.
@@ -962,7 +962,7 @@ public class TaskRecyclerViewAdapterNew extends LoadMoreSwipeRecyclerAdapter<Tas
             for (TaskDetailModel taskDetailModel : mList) {
                 if (taskDetailModel.taskId.equalsIgnoreCase(event.id)) {
                     taskDetailModel.profile_img_arr.remove(event.quoted_sp_image_url);
-                    taskDetailModel.providerCount = String.valueOf(taskDetailModel.profile_img_arr.size());
+//                    taskDetailModel.providerCount = String.valueOf(taskDetailModel.profile_img_arr.size());
                     notifyItemChanged(i);
                     break;
                 }
@@ -975,7 +975,7 @@ public class TaskRecyclerViewAdapterNew extends LoadMoreSwipeRecyclerAdapter<Tas
         if (mList != null) {
             for (TaskDetailModel providerModel : mList) {
                 if (providerModel.taskId.equalsIgnoreCase(id)) {
-                    providerModel.providerCount = sp_counts;
+//                    providerModel.providerCount = sp_counts;
                     if (providerModel.profile_img_arr == null) {
                         providerModel.profile_img_arr = new ArrayList<>();
                     }

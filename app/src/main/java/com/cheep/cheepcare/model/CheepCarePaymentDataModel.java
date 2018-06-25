@@ -71,6 +71,8 @@ public class CheepCarePaymentDataModel {
     @SerializedName("address_id")
     @Expose
     public String addressId;
+    // address size id
+    public String addressAssetTypeId;
 
     @Override
     public String toString() {

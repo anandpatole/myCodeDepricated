@@ -345,6 +345,7 @@ public class HomeTabFragment extends BaseFragment {
                     careCityDetail.isSubscribed = Utility.BOOLEAN.YES;
             }
             cheepCareBannerViewPagerAdapter.notifyDataSetChanged();
+            getCategoryListFromServer();
         }
     }
 

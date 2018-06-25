@@ -110,31 +110,37 @@ public class CheepCareNotInYourCityDialog extends DialogFragment {
         callGetListWS();
 
         mDialogCheepCareNotInCityBinding.tvVote.setVisibility(View.VISIBLE);
-        mDialogCheepCareNotInCityBinding.viewVertical.setVisibility(View.VISIBLE);
+//        mDialogCheepCareNotInCityBinding.viewVertical.setVisibility(View.VISIBLE);
         mDialogCheepCareNotInCityBinding.edtMobileNumber.setVisibility(View.VISIBLE);
 
         SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(getString(R.string.label_title_cheep_is_here));
         spannableStringBuilder.append(Utility.ONE_CHARACTER_SPACE).append(Utility.ONE_CHARACTER_SPACE);
 
-        Drawable img = ContextCompat.getDrawable(getContext(), R.drawable.emoji_bird);
-        img.setBounds(0, 0, 25, 25);
+//        Drawable img = ContextCompat.getDrawable(getContext(), R.drawable.emoji_bird);
+//        img.setBounds(0, 0, 25, 25);
 
 
-        ImageSpan span = new ImageSpan(img, ImageSpan.ALIGN_BOTTOM);
-        spannableStringBuilder.setSpan(span, spannableStringBuilder.length() - 1
-                , spannableStringBuilder.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+//        ImageSpan span = new ImageSpan(img, ImageSpan.ALIGN_BOTTOM);
+//        spannableStringBuilder.setSpan(span, spannableStringBuilder.length() - 1
+//                , spannableStringBuilder.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+//
+//        mDialogCheepCareNotInCityBinding.title.setText(spannableStringBuilder);
 
-        mDialogCheepCareNotInCityBinding.title.setText(spannableStringBuilder);
-
-        String text1 = getString(R.string.label_desc_cheep_is_here_1) + Utility.ONE_CHARACTER_SPACE + Utility.ONE_CHARACTER_SPACE;
-        String text2 = Utility.NEW_LINE + getString(R.string.label_desc_cheep_is_here_2) + Utility.ONE_CHARACTER_SPACE + Utility.ONE_CHARACTER_SPACE;
+        String text1 = getString(R.string.label_desc_cheep_care_not_in_city_1) ;
+        String text2 = getString(R.string.label_desc_cheep_care_not_in_city_2);
 
         SpannableStringBuilder spanDesc1 = new SpannableStringBuilder(text1 + text2);
-        ImageSpan span1 = new ImageSpan(getContext(), R.drawable.emoji_thumbs_up, ImageSpan.ALIGN_BASELINE);
-        spanDesc1.setSpan(span1, text1.length() - 1
-                , text1.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+        Drawable heartImg = ContextCompat.getDrawable(getContext(), R.drawable.emoji_heart);
+        heartImg.setBounds(0, 0, 30, 30);
+        ImageSpan span1 = new ImageSpan(heartImg, ImageSpan.ALIGN_BASELINE);
 
-        ImageSpan span2 = new ImageSpan(getContext(), R.drawable.emoji_blue_heart, ImageSpan.ALIGN_BASELINE);
+        spanDesc1.setSpan(span1, text1.length() - 2
+                , text1.length()-1, Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+
+
+        Drawable handsImg = ContextCompat.getDrawable(getContext(), R.drawable.emoji_folded_hands);
+        handsImg.setBounds(0, 0, 30, 30);
+        ImageSpan span2 = new ImageSpan(handsImg, ImageSpan.ALIGN_BASELINE);
         spanDesc1.setSpan(span2, spanDesc1.length() - 1
                 , spanDesc1.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
 

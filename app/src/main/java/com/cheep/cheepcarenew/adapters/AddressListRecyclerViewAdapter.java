@@ -48,8 +48,8 @@ public class AddressListRecyclerViewAdapter extends RecyclerView.Adapter<Address
 
         final AddressModel model = mList.get(holder.getAdapterPosition());
 
-        holder.mRowAddressBinding.tvAddressNickname.setText(holder.mView.getContext().getString(Utility.getAddressCategoryString(model.category))
-                + (position > 0 ? (Utility.ONE_CHARACTER_SPACE + position) : ""));
+        holder.mRowAddressBinding.tvAddressNickname.setText(holder.mView.getContext().getString(Utility.getAddressCategoryString(model.category))/*
+                + (position > 0 ? (Utility.ONE_CHARACTER_SPACE + position) : "")*/);
         holder.mRowAddressBinding.ivHome.setImageResource(Utility.getAddressCategoryIcon(model.category));
         holder.mRowAddressBinding.tvAddress.setText(model.getAddressWithInitials());
 

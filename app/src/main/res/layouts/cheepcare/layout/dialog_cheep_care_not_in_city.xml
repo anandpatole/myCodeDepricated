@@ -131,7 +131,7 @@
                         android:textColor="@color/grey_varient_17"
                         android:textSize="@dimen/text_size_16sp"/>
 
-                    <View
+                    <!--  <View
                         android:id="@+id/viewVertical"
                         android:layout_width="@dimen/scale_1dp"
                         android:layout_height="match_parent"
@@ -139,7 +139,7 @@
                         android:layout_marginTop="@dimen/scale_8dp"
                         android:background="@color/grey_dark_color_8"/>
 
-                  <!--  <com.cheep.custom_view.CFTextViewSemiBold
+                  <com.cheep.custom_view.CFTextViewSemiBold
                         android:id="@+id/tv_book_task"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
