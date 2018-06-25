@@ -29,7 +29,7 @@
                     android:padding="@dimen/scale_10dp"
                     android:singleLine="true"
                     android:maxLines="1"
-                    android:text="@string/label_my_task"
+                    android:text="@string/my_services"
                     android:textAllCaps="false"
                     android:textColor="@color/white"
                     android:textSize="@dimen/toolbar_title_text_size"

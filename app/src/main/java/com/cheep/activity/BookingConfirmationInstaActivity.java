@@ -158,11 +158,13 @@ public class BookingConfirmationInstaActivity extends BaseAppCompatActivity {
                     {
                         mBinding.tvLabelCategoryPrices.setText(getString(R.string.rupee_symbol_x, Utility.getQuotePriceFormatter(taskDetailModel.catPrice)));
                         subServiceTotal=Double.valueOf(taskDetailModel.catPrice);
+
                     }
                     else
                     {
                         mBinding.tvLabelCategoryPrices.setText(getString(R.string.free));
                         subServiceTotal=0;
+
                     }
                 }
                 else
@@ -170,9 +172,10 @@ public class BookingConfirmationInstaActivity extends BaseAppCompatActivity {
                     mBinding.tvLabelCategoryPrices.setText(getString(R.string.free));
                     subServiceTotal=0;
                 }
+                /////////////
                 if(taskDetailModel.additionalChargeReason.equalsIgnoreCase(Utility.DIALOG_TYPE.NONE))
                 {
-
+                    mBinding.tvPaynow.setVisibility(View.GONE);
                     mBinding.lnPayLaterPayNowButtons.setVisibility(View.GONE);
                     mBinding.tvGotcha.setVisibility(View.VISIBLE);
                     mBinding.rlAdditionalCharges.setVisibility(View.GONE);
@@ -182,8 +185,8 @@ public class BookingConfirmationInstaActivity extends BaseAppCompatActivity {
                 }
                 else
                 {
-
-                    mBinding.lnPayLaterPayNowButtons.setVisibility(View.VISIBLE);
+mBinding.tvPaynow.setVisibility(View.VISIBLE);
+                    mBinding.lnPayLaterPayNowButtons.setVisibility(View.GONE);
                     mBinding.tvGotcha.setVisibility(View.GONE);
                     mBinding.viewLine2.setVisibility(View.VISIBLE);
                     mBinding.rlAdditionalCharges.setVisibility(View.VISIBLE);
@@ -201,6 +204,7 @@ public class BookingConfirmationInstaActivity extends BaseAppCompatActivity {
                     mBinding.tvAdditionalCharge.setText(getString(R.string.rupee_symbol_x, Utility.getQuotePriceFormatter(PreferenceUtility.getInstance(mContext).getAdminSettings().additionalChargeForSelectingSpecificTime)));
                     additionalCharge=Double.valueOf(PreferenceUtility.getInstance(mContext).getAdminSettings().additionalChargeForSelectingSpecificTime);
                 }
+                ///////////
                 if (!taskDetailModel.subCatList.isEmpty()) {
                     mBinding.recyclerViewPaid.setVisibility(View.VISIBLE);
                     mBinding.recyclerViewPaid.setLayoutManager(new LinearLayoutManager(this));
@@ -219,8 +223,8 @@ public class BookingConfirmationInstaActivity extends BaseAppCompatActivity {
                 if(taskDetailModel.additionalChargeReason.equalsIgnoreCase(Utility.DIALOG_TYPE.NONE))
                 {
 
-                    mBinding.lnPayLaterPayNowButtons.setVisibility(View.GONE);
-                    mBinding.tvGotcha.setVisibility(View.VISIBLE);
+                   // mBinding.lnPayLaterPayNowButtons.setVisibility(View.GONE);
+                   // mBinding.tvGotcha.setVisibility(View.VISIBLE);
                     mBinding.rlAdditionalCharges.setVisibility(View.GONE);
                     additionalCharge=0;
                     mBinding.viewLine2.setVisibility(View.GONE);
@@ -229,8 +233,8 @@ public class BookingConfirmationInstaActivity extends BaseAppCompatActivity {
                 else
                 {
 
-                    mBinding.lnPayLaterPayNowButtons.setVisibility(View.VISIBLE);
-                    mBinding.tvGotcha.setVisibility(View.GONE);
+                   // mBinding.lnPayLaterPayNowButtons.setVisibility(View.VISIBLE);
+                   // mBinding.tvGotcha.setVisibility(View.GONE);
                     mBinding.viewLine2.setVisibility(View.VISIBLE);
                     mBinding.rlAdditionalCharges.setVisibility(View.VISIBLE);
                     // mBinding.tvLabelAdditionalCharge.setText(taskDetailModel.additionalChargeReason);
@@ -247,6 +251,7 @@ public class BookingConfirmationInstaActivity extends BaseAppCompatActivity {
                     mBinding.tvAdditionalCharge.setText(getString(R.string.rupee_symbol_x, Utility.getQuotePriceFormatter(PreferenceUtility.getInstance(mContext).getAdminSettings().additionalChargeForSelectingSpecificTime)));
                     additionalCharge=Double.valueOf(PreferenceUtility.getInstance(mContext).getAdminSettings().additionalChargeForSelectingSpecificTime);
                 }
+                mBinding.tvPaynow.setVisibility(View.GONE);
                 mBinding.lnPayLaterPayNowButtons.setVisibility(View.VISIBLE);
                 mBinding.tvGotcha.setVisibility(View.GONE);
                 mBinding.tvLabelCategoryPrices.setText(getString(R.string.rupee_symbol_x, Utility.getQuotePriceFormatter(taskDetailModel.catPrice)));
@@ -293,7 +298,7 @@ public class BookingConfirmationInstaActivity extends BaseAppCompatActivity {
             }
             mBinding.tvGotcha.setVisibility(View.GONE);
             mBinding.lnPayLaterPayNowButtons.setVisibility(View.VISIBLE);
-
+            mBinding.tvPaynow.setVisibility(View.GONE);
             mBinding.tvLabelCategoryPrices.setText(getString(R.string.rupee_symbol_x, Utility.getQuotePriceFormatter(taskDetailModel.catPrice)));
             subServiceTotal=Double.valueOf(taskDetailModel.catPrice);
             if (!taskDetailModel.subCatList.isEmpty()) {
@@ -427,6 +432,7 @@ public class BookingConfirmationInstaActivity extends BaseAppCompatActivity {
         mBinding.rlPayNow.setOnClickListener(onPayNowClickListener);
         mBinding.rlPayLater.setOnClickListener(onPayLaterClickListener);
         mBinding.tvGotcha.setOnClickListener(onGotchaClickListener);
+        mBinding.tvPaynow.setOnClickListener(onPaynowClickListener);
         mBinding.ivTermsTick.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -845,6 +851,15 @@ public class BookingConfirmationInstaActivity extends BaseAppCompatActivity {
             callCreateInstaTaskBooking(NetworkUtility.PAYMENT_METHOD_TYPE.FREE);
         }
     };
+    View.OnClickListener onPaynowClickListener = new View.OnClickListener() {
+
+        @Override
+        public void onClick(View view)
+        {
+            openPaymentChoiceActivity();
+        }
+    };
+
 
     /**
      * TODO: Add apps flyer events for task creation and also add event for coupan dunia code
@@ -880,7 +895,7 @@ public class BookingConfirmationInstaActivity extends BaseAppCompatActivity {
                     @Override
                     public void successOfInstaBookTaskCreation()
                     {
-
+                        hideProgressDialog();
                     }
                 });
     }
