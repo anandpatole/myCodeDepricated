@@ -425,7 +425,7 @@
                         android:paddingLeft="@dimen/scale_8dp"
                         android:paddingRight="@dimen/scale_8dp"
                         android:paddingTop="@dimen/scale_5dp"
-                        android:text="@string/label_view_quotes"
+                        android:text="@string/view_service"
                         android:textAllCaps="false"
                         android:textColor="@color/white"
                         android:textSize="@dimen/text_size_11sp"

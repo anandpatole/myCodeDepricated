@@ -113,6 +113,8 @@
         <item>Name</item>
         <item>Email Id</item>
     </string-array>
+    <string name="my_services">My Services</string>
+    <string name="view_service">View Service</string>
     <string name="label_address_subscribed">subscribed address</string>
     <string name="label_submit">Submit</string>
     <string name="start_time">19:00:00</string>
@@ -973,5 +975,6 @@ without any hidden charges. Try it now!</string>
     <string name="select_category">Select Category</string>
     <string name="label_i_want_cheep_care_in_my_city">I want Cheep care in my city</string>
     <string name="label_select_service">Select %1$s service</string>
+    <string name="label_thanks">Thanks</string>
 
 </resources>
