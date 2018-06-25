@@ -280,8 +280,8 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
         if (isSubscribedTask) {
             callCreateSubscribedTaskWS(paymentLog);
         } else if (isPayNow) {
-            if (taskDetailModel.taskType.equalsIgnoreCase(Utility.TASK_TYPE.NORMAL))
-                callPayTaskPaymentWS(paymentLog);
+
+                callCreateInstaTaskBooking(paymentLog);
                // callBookProAndPayForNormalTaskWS(paymentLog);
 //            else if (taskDetailModel.taskType.equalsIgnoreCase(Utility.TASK_TYPE.INSTA_BOOK)) {
 //                callCreateInstaTaskBooking(paymentLog);
@@ -289,7 +289,8 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
 //                callCreateStrategicPartnerTaskWS(paymentLog);
 //            }
         } else
-            callPayTaskPaymentWS(paymentLog);
+            callCreateInstaTaskBooking(paymentLog);
+            //callPayTaskPaymentWS(paymentLog);
     }
 
 
