@@ -395,6 +395,7 @@ public class PaymentSummaryCheepCareActivity extends BaseAppCompatActivity imple
         paymentDataModel.paidAmount = Double.parseDouble(Utility.removeFirstChar(mBinding.tvMeanPackageAmount.getText().toString()));
         paymentDataModel.packageId = packageId;
         paymentDataModel.addressId = addressModel.address_id;
+        paymentDataModel.addressAssetTypeId = addressModel.addressSizeModel.id;
 
     }
 

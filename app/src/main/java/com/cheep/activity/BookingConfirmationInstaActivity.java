@@ -862,16 +862,21 @@ public class BookingConfirmationInstaActivity extends BaseAppCompatActivity {
 
                     @Override
                     public void volleyError(VolleyError error) {
+                        hideProgressDialog();
+                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
 
                     }
 
                     @Override
                     public void showSpecificMessage(String message) {
+                        hideProgressDialog();
+                        Utility.showSnackBar(message, mBinding.getRoot());
 
                     }
 
                     @Override
                     public void forceLogout() {
+                        hideProgressDialog();
 
                     }
                 }, new WebCallClass.InstaBookTaskCreationListener() {

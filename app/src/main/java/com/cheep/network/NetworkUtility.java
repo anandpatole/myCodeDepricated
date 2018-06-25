@@ -520,6 +520,8 @@ String OUT_OF_OFFICE_CHARGES="non_office_hours_charge";
         String RESTORE_ID="restore_id";
 
         String IS_RENEW= "is_renew";
+        String ASSET_TYPE_ID= "asset_type_id";
+
 
         String TEXT= "text";
         String CATEGORY_TIP= "category_tip";
