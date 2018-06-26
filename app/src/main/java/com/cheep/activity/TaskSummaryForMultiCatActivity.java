@@ -394,11 +394,13 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
         String time = CalendarUtility.get2HourTimeSlots(mTaskDetailModel.taskStartdate);
         mBinding.textTaskWhen.setText(task_original_date + time);
 
-        if (mTaskDetailModel.taskStatus.equalsIgnoreCase(Utility.TASK_STATUS.PENDING) && mTaskDetailModel.taskType.equalsIgnoreCase(Utility.TASK_TYPE.SUBSCRIBED)) {
-            setConfirmAvailabilityVisible(true);
-        } else {
-            setConfirmAvailabilityVisible(false);
-        }
+
+        //commented anand
+//        if (mTaskDetailModel.taskStatus.equalsIgnoreCase(Utility.TASK_STATUS.PENDING) && mTaskDetailModel.taskType.equalsIgnoreCase(Utility.TASK_TYPE.SUBSCRIBED)) {
+//            setConfirmAvailabilityVisible(true);
+//        } else {
+//            setConfirmAvailabilityVisible(false);
+//        }
     }
 
     private void setTaskWhere() {

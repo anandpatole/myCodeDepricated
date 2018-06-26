@@ -151,13 +151,13 @@ public class TaskRecyclerViewAdapterNew extends LoadMoreSwipeRecyclerAdapter<Tas
                     superStartDateTimeCalendar.setTimeZone(SuperCalendar.SuperTimeZone.GMT.GMT);
                     superStartDateTimeCalendar.setTimeInMillis(Long.parseLong(model.taskStartdate));
                     superStartDateTimeCalendar.setLocaleTimeZone();
-                    final String mBookingDate = holder.mView.getContext().getString(R.string.format_task_book_date
+                    final String mBookingDate = holder.mView.getContext().getString(R.string.format_service_book_date
                             , superStartDateTimeCalendar.format(Utility.DATE_FORMAT_DD_MMM) + " " + CalendarUtility.get2HourTimeSlots(model.taskStartdate));
                     holder.mUpcomingTaskBinding.tvTaskBookedDateTime.setText(mBookingDate);
 
                     holder.mUpcomingTaskBinding.tvTaskStartedTime.setText(CalendarUtility.getDateDifference(holder.mView.getContext(), superStartDateTimeCalendar.format(Utility.DATE_FORMAT_FULL_DATE), model.taskType));
                 } else {
-                    final String mBookingDate = holder.mView.getContext().getString(R.string.format_task_book_date
+                    final String mBookingDate = holder.mView.getContext().getString(R.string.format_service_book_date
                             , " " + " " + " ");
                     holder.mUpcomingTaskBinding.tvTaskBookedDateTime.setText(mBookingDate);
                     holder.mUpcomingTaskBinding.tvTaskStartedTime.setText(CalendarUtility.getDateDifference(holder.mView.getContext(), "", model.taskType));
