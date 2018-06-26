@@ -240,7 +240,7 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
                 if (!mTaskCreationActivity.isValidationCompleted()) {
                     return;
                 }
-               // additionalChargeReason = Utility.ADDITION_CHARGES_DIALOG_TYPE.NONE;
+                // additionalChargeReason = Utility.ADDITION_CHARGES_DIALOG_TYPE.NONE;
                 mTaskCreationActivity.onInstaBookClickedNew();
 
             }
@@ -269,7 +269,7 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
         boolean needToTaskAddressSize = !catIsSubscribed && isPestControl;
         Log.e(TAG, "showAddressDialog:needToTaskAddressSize  :   " + needToTaskAddressSize);
 
-        AddressListDialog addressListDialog = AddressListDialog.newInstance(true,needToTaskAddressSize, new AddressSelectionListener() {
+        AddressListDialog addressListDialog = AddressListDialog.newInstance(true, needToTaskAddressSize, new AddressSelectionListener() {
             @Override
             public void onAddressSelection(AddressModel addressModel) {
 
@@ -279,9 +279,12 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
                         if (addressModel.is_subscribe.equalsIgnoreCase(Utility.ADDRESS_SUBSCRIPTION_TYPE.PREMIUM)) {
                             fillAddressView(addressModel);
                         } else if (addressModel.is_subscribe.equalsIgnoreCase(Utility.ADDRESS_SUBSCRIPTION_TYPE.NORMAL)) {
-                            Utility.showToast(mTaskCreationActivity, "Please upgrade this package to Cheep Premium care package");
-                        } else {
-                            checkCheepCareIsAvailableInCity(addressModel);
+                            fillAddressView(addressModel);
+
+                            //                            Utility.showToast(mTaskCreationActivity, "Please upgrade this package to Cheep Premium care package");
+//                        } else {
+//                            checkCheepCareIsAvailableInCity(addressModel);
+//                        }
                         }
                     } else {
                         if (addressModel.is_subscribe.equalsIgnoreCase(Utility.ADDRESS_SUBSCRIPTION_TYPE.PREMIUM)
@@ -336,10 +339,6 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
 
                         @Override
                         public void onNotNowClicked() {
-                            if (mTaskCreationActivity.mJobCategoryModel.isSubscribed.equalsIgnoreCase(Utility.BOOLEAN.YES) && addressModel.is_subscribe.equalsIgnoreCase(Utility.ADDRESS_SUBSCRIPTION_TYPE.PREMIUM))
-                            {
-                                fillAddressView(addressModel);
-                            }
                         }
                     });
                 }
@@ -423,11 +422,9 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
 //                            if (!BuildConfig.BUILD_TYPE.equalsIgnoreCase(Utility.DEBUG)) {
                             if (mTaskCreationActivity.mJobCategoryModel.isSubscribed.equalsIgnoreCase(Utility.BOOLEAN.YES)) {
 
-                                if (!(mSelectedAddress.is_subscribe.equalsIgnoreCase(Utility.ADDRESS_SUBSCRIPTION_TYPE.PREMIUM)))
-                                {
+                                if (!(mSelectedAddress.is_subscribe.equalsIgnoreCase(Utility.ADDRESS_SUBSCRIPTION_TYPE.PREMIUM))) {
 
-                                    if (System.currentTimeMillis() < startDateTimeSuperCalendar.getTimeInMillis())
-                                    {
+                                    if (System.currentTimeMillis() < startDateTimeSuperCalendar.getTimeInMillis()) {
                                         if (superCalendar.getTimeInMillis() < calAfter3Hours.getTimeInMillis()) {
 
 
@@ -658,8 +655,7 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
     }
 
 
-    private void fillAddressView(AddressModel model)
-    {
+    private void fillAddressView(AddressModel model) {
         mFragmentEnterTaskDetailBinding.textTaskWhen.setText(Utility.EMPTY_STRING);
         updateWhereLabelWithIcon(true);
 
@@ -681,6 +677,8 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
             mFragmentEnterTaskDetailBinding.tvLabelAddressSubscribed.setVisibility(View.VISIBLE);
             mFragmentEnterTaskDetailBinding.tvLabelAddressSubscribed.setText(R.string.label_subscribed_under_cheep_care_premium);
         }
+
+        mTaskCreationActivity.mTaskCreationPagerAdapter.mSelectSubCategoryFragment.showHideToolTip();
 
     }
 
@@ -787,7 +785,7 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
             return;
         }
         additionalChargeReason = Utility.ADDITION_CHARGES_DIALOG_TYPE.OUT_OF_OFFICE_HOURS;
-       // mTaskCreationActivity.onInstaBookClickedNew();
+        // mTaskCreationActivity.onInstaBookClickedNew();
     }
 
     @Override

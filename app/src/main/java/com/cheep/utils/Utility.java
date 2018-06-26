@@ -691,9 +691,9 @@ public class Utility {
         String IS_SUBSCRIPTION = "is_subscription";
     }
 
-    public interface cat {
-        String PESTCONTROL = "pest-control";
-    }
+//    public interface cat {
+//        String PESTCONTROL = "pest-control";
+//    }
 
     /*1 for platinum
     2 for Gold
@@ -931,7 +931,7 @@ public class Utility {
 
     public interface CAT_SLUG_TYPES {
         String PEST_CONTROL = "pest-control";
-        String PAINTER = "";
+        String PAINTER = "painters";
     }
 
     private static String urlEncodeUTF8(String s) {

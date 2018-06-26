@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import android.view.Window;
 
 import com.cheep.R;
-import com.cheep.cheepcarenew.activities.LandingScreenPickPackageActivity;
 import com.cheep.databinding.AcknowledgementPopupDialogBinding;
 
 public class AcknowledgementPopupDialog extends DialogFragment implements View.OnClickListener {
@@ -77,8 +76,8 @@ public class AcknowledgementPopupDialog extends DialogFragment implements View.O
 
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
-        dialog.setCanceledOnTouchOutside(true);
-        this.setCancelable(true);
+        dialog.setCanceledOnTouchOutside(false);
+        this.setCancelable(false);
 
         dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         dialog.getWindow().getAttributes().windowAnimations = R.style.AlertAnimation;
