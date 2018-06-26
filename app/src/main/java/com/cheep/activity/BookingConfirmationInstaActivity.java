@@ -4,12 +4,16 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
+import android.text.style.ImageSpan;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -141,6 +145,7 @@ public class BookingConfirmationInstaActivity extends BaseAppCompatActivity {
         }
         spannableStringBuilder.append(getSpannableString(getString(R.string.label_at), ContextCompat.getColor(this, R.color.grey_varient_8), false));
         spannableStringBuilder.append(getSpannableString(mSelectedAddressModel.getAddressWithInitials(), ContextCompat.getColor(this, R.color.splash_gradient_end), true));
+
 
         mBinding.tvTaskDescription.setText(spannableStringBuilder);
         mBinding.tvLabelCategory.setText(taskDetailModel.categoryModel.catName);
@@ -378,7 +383,16 @@ public class BookingConfirmationInstaActivity extends BaseAppCompatActivity {
             //mBinding.lnPayLaterPayNowButtons.setVisibility(View.VISIBLE);
 
             //initUIForReferDiscountAndPromoCode();
-
+        String text = getString(R.string.description_pay_now);
+        StringBuilder description = new StringBuilder(text);
+        // appending two space for two smiley at the end of description
+        description.append(Utility.ONE_CHARACTER_SPACE + Utility.ONE_CHARACTER_SPACE );
+        Spannable span = new SpannableString(description);
+        Drawable img = ContextCompat.getDrawable(this, R.drawable.emoji_blue_heart);
+        img.setBounds(0, 0, img.getIntrinsicWidth(), img.getIntrinsicHeight());
+        ImageSpan image = new ImageSpan(img, ImageSpan.ALIGN_BOTTOM);
+        span.setSpan(image, span.length() - 1, span.length(), Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
+        mBinding.textDescPayNow.setText(span);
         }
 
         private void initUIForReferDiscountAndPromoCode () {

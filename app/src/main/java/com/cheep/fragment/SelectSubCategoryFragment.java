@@ -1,5 +1,6 @@
 package com.cheep.fragment;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
@@ -17,6 +18,7 @@ import com.cheep.activity.TaskCreationActivity;
 import com.cheep.adapter.SubServiceRecyclerViewAdapter;
 import com.cheep.databinding.FragmentSelectSubserviceBinding;
 import com.cheep.dialogs.PestControlHelpDialog;
+import com.cheep.model.AddressModel;
 import com.cheep.model.JobCategoryModel;
 import com.cheep.model.SubServiceDetailModel;
 import com.cheep.network.NetworkUtility;
@@ -117,8 +119,43 @@ public class SelectSubCategoryFragment extends BaseFragment implements WebCallCl
         }
     }
 
+    @SuppressLint("StringFormatMatches")
+    public void showHideToolTip() {
+
+
+        AddressModel addressModel = mTaskCreationActivity.mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddress;
+
+        if (mJobCategoryModel.catSlug.equalsIgnoreCase(Utility.CAT_SLUG_TYPES.PEST_CONTROL) && addressModel != null) {
+            if (mTaskCreationActivity.pestControlPackageDataList != null && mTaskCreationActivity.pestControlPackageDataList.size() > 0) {
+                for (SubServiceDetailModel.PackageData packageData : mTaskCreationActivity.pestControlPackageDataList) {
+                    if (packageData != null && packageData.address_id.equalsIgnoreCase(addressModel.address_id)) {
+                        try {
+                            int totalCount = 4;
+                            int remainingCount = Integer.valueOf(packageData.pestcontrolCnt);
+                            int usedServiceCount = totalCount - remainingCount;
+                            mFragmentSelectSubserviceBinding.lnPestControlToolTip.setVisibility(View.VISIBLE);
+                            mFragmentSelectSubserviceBinding.tvDescription.setText(getString(R.string.label_tooltip_pest_control_description, totalCount, usedServiceCount, remainingCount));
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            } else {
+                mFragmentSelectSubserviceBinding.lnPestControlToolTip.setVisibility(View.GONE);
+            }
+        } else {
+            mFragmentSelectSubserviceBinding.lnPestControlToolTip.setVisibility(View.GONE);
+        }
+    }
+
     @Override
     public void setListener() {
+        mFragmentSelectSubserviceBinding.imgCross.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mFragmentSelectSubserviceBinding.lnPestControlToolTip.setVisibility(View.GONE);
+            }
+        });
     }
 
 

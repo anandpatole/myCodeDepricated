@@ -45,7 +45,6 @@ import com.cheep.adapter.ChatTabRecyclerViewAdapter;
 import com.cheep.adapter.FAQRecyclerViewAdapter;
 import com.cheep.adapter.FavouriteRecyclerViewAdapter;
 import com.cheep.adapter.SlideMenuAdapter;
-import com.cheep.cheepcare.activity.NotificationCcActivity;
 import com.cheep.cheepcare.adapter.PaymentHistoryCCAdapter;
 import com.cheep.cheepcare.fragment.ProfileTabFragment;
 import com.cheep.cheepcarenew.dialogs.ServiceDetailModalDialog;
@@ -282,7 +281,6 @@ public class HomeActivity extends BaseAppCompatActivity
         //Inflate header view
         navHeaderHomeBinding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.nav_header_home, mBinding.slideListview, false);
 
-
         /*// Setting width of listview
         mBinding.slideListview.getLayoutParams().width = (int) (Utility.getDeviceWidthHeight(HomeActivity.this)[0] * 0.75);*/
 
@@ -290,7 +288,9 @@ public class HomeActivity extends BaseAppCompatActivity
         new setUpSlideMenuListAsync(mContext, mBinding.slideListview, navHeaderHomeBinding).execute();
 
         getTaskForPendingReview();
+        setListeners();
     }
+
 
     private void getTaskForPendingReview() {
 
@@ -308,7 +308,20 @@ public class HomeActivity extends BaseAppCompatActivity
 
     @Override
     protected void setListeners() {
-
+        navHeaderHomeBinding.lnProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (PreferenceUtility.getInstance(HomeActivity.this).getUserDetails() != null) {
+                    Fragment mFragment = getSupportFragmentManager().findFragmentByTag(ProfileTabFragment.TAG);
+                    if (mFragment == null) {
+                        loadFragment(ProfileTabFragment.TAG, ProfileTabFragment.newInstance());
+                    } else {
+                        Log.i(TAG, "Me is there");
+                    }
+                    closeDrawer();
+                }
+            }
+        });
     }
 
     /**
@@ -324,8 +337,8 @@ public class HomeActivity extends BaseAppCompatActivity
         list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.label_payment_history), R.drawable.icon_history, false, false));
         list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.Label_cheep_care_rate_card), R.drawable.icon_rate, false, false));
         // TODO: Icon change Refer And Earn
-        if (PreferenceUtility.getInstance(mContext).getUserDetails() != null)
-            list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.tab_me), R.drawable.icon_logout, false, false));
+//        if (PreferenceUtility.getInstance(mContext).getUserDetails() != null)
+//            list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.tab_me), R.drawable.icon_logout, false, false));
         list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.label_refer_and_earn), R.drawable.icon_help, false, false));
         list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.label_help), R.drawable.icon_help, false, true));
         list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.label_faq), R.drawable.icon_faq, false, false));
@@ -440,6 +453,10 @@ public class HomeActivity extends BaseAppCompatActivity
                 Log.i(TAG, "onSlideMenuListItemClicked: " + slideMenuListModel.title + " is there");
             }
         }
+        closeDrawer();
+    }
+
+    private void closeDrawer() {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -764,8 +781,8 @@ public class HomeActivity extends BaseAppCompatActivity
      */
     @Override
     public void onNotificationIconClicked() {
-        NotificationCcActivity.newInstance(mContext);
-//        SubscriptionActivity.newInstance(mContext);
+//        NotificationCcActivity.newInstance(mContext);
+        NotificationActivity.newInstance(mContext);
     }
 
     /**
@@ -778,7 +795,7 @@ public class HomeActivity extends BaseAppCompatActivity
     public void onCategoryRowClicked(JobCategoryModel model, int position) {
         // Changes on 27thApril,2017
 //        HireNewJobActivity.newInstance(mContext, model);
-        if (model.isSubscribed.equalsIgnoreCase(Utility.BOOLEAN.NO)) {
+        if (model.isSubscribed.equalsIgnoreCase(Utility.BOOLEAN.NO) && !model.catSlug.equalsIgnoreCase(Utility.CAT_SLUG_TYPES.PAINTER)) {
             ServiceDetailModalDialog.newInstance(mContext, model).show(this.getSupportFragmentManager(), ServiceDetailModalDialog.TAG);
             //new ServiceDetailModalDialog().show();
         } else {
