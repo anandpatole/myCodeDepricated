@@ -4,14 +4,15 @@
         xmlns:tools="http://schemas.android.com/tools">
 
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
         <android.support.v7.widget.CardView
             android:id="@+id/cv_cheep_tip"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:cardBackgroundColor="@color/white"
             app:cardCornerRadius="@dimen/scale_0dp"
             app:cardElevation="@dimen/scale_5dp">
 
@@ -65,7 +66,7 @@
                     android:textSize="@dimen/text_size_12sp"
                     app:layout_constraintStart_toEndOf="@id/img_cheep_tips"
                     app:layout_constraintTop_toBottomOf="@+id/tv_landing_screen_tip_title"
-                        tools:text="dasdsadasdasd dasdsadasdasd dasdsadasdasd dasdsadasdasd dasdsadasdasd dasdsadasdasd dasdsadasdasd "/>
+                    tools:text="dasdsadasdasd dasdsadasdasd dasdsadasdasd dasdsadasdasd dasdsadasdasd dasdsadasdasd dasdsadasdasd "/>
 
                 <TextView
                     android:id="@+id/tv_divider"
@@ -83,6 +84,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/scale_15dp"
             android:layout_marginTop="@dimen/scale_9dp"
+            android:background="@color/white"
             android:paddingEnd="@dimen/scale_30dp"
             android:paddingLeft="@dimen/scale_24dp"
             android:paddingRight="@dimen/scale_30dp"
@@ -103,16 +105,18 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:drawablePadding="@dimen/scale_8dp"
-                android:ellipsize="marquee"
+                android:ellipsize="end"
                 android:gravity="center_vertical"
+                android:maxLines="2"
                 android:paddingLeft="@dimen/scale_15dp"
                 android:paddingStart="@dimen/scale_15dp"
+                android:singleLine="false"
                 android:textColor="@color/grey_varient_8"
-                android:textSize="@dimen/text_size_20sp"
+                android:textSize="@dimen/text_size_18sp"
                 app:layout_constraintEnd_toStartOf="@id/img_down_arrow"
                 app:layout_constraintHorizontal_weight="6"
                 app:layout_constraintStart_toEndOf="@id/img_icon_correct"
-                tools:text="Restaurant"/>
+                tools:text="Restaurant Restaurant Restaurant Restaurant Restaurant Restaurant Restaurant Restaurant Restaurant "/>
 
 
         </android.support.constraint.ConstraintLayout>
@@ -122,8 +126,10 @@
             android:layout_height="match_parent"
             android:background="@color/white_translucent_ninety">
 
+
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recycler_view"
+                tools:itemCount="120"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:layoutManager="android.support.v7.widget.LinearLayoutManager"/>
@@ -196,6 +202,66 @@
                         android:layout_width="wrap_content"
                         android:layout_gravity="center|bottom"
                         android:layout_height="wrap_content"/>-->
+            <LinearLayout
+                android:id="@+id/ln_pest_control_tool_tip"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:orientation="vertical"
+                android:padding="@dimen/scale_10dp">
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/background_blue_refer_and_earn_bottom"
+                    android:padding="@dimen/scale_10dp"
+                    >
+
+                    <ImageView
+                        android:id="@+id/img_cross"
+                        android:layout_width="@dimen/scale_15dp"
+                        android:layout_height="@dimen/scale_15dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_gravity="center_vertical"
+                        android:src="@drawable/icon_cross_white"
+                        tools:ignore="ContentDescription"/>
+
+                    <com.cheep.custom_view.CFTextViewRegular
+                        android:id="@+id/tvTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+
+                        android:layout_marginLeft="@dimen/scale_15dp"
+                        android:layout_marginRight="@dimen/scale_15dp"
+                        android:text="@string/label_tooltip_pest_control_title"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/text_size_16sp"/>
+
+                    <com.cheep.custom_view.CFTextViewRegular
+                        android:id="@+id/tvDescription"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/tvTitle"
+                        android:layout_marginLeft="@dimen/scale_15dp"
+                        android:layout_marginRight="@dimen/scale_15dp"
+                        android:layout_marginTop="@dimen/scale_5dp"
+                        android:text="@string/label_tooltip_pest_control_description"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/text_size_11sp"/>
+
+
+                </RelativeLayout>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:rotation="180"
+                    android:src="@drawable/tool_tip_up_arrow"/>
+
+            </LinearLayout>
         </FrameLayout>
     </LinearLayout>
 

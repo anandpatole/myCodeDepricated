@@ -87,10 +87,10 @@ public class CalendarUtility {
         String timespan = DateUtils.getRelativeTimeSpanString(mFutureDate != null ? mFutureDate.getTime() : 0, System.currentTimeMillis(), DateUtils.SECOND_IN_MILLIS).toString();
         LogUtils.LOGD(TAG, "getDateDifference() returned: " + timespan);
         if (diff > 0) {
-            return (taskType.equalsIgnoreCase(Utility.TASK_TYPE.SUBSCRIBED) ? mContext.getString(R.string.cheep_care) : "") + mContext.getString(R.string.format_task_start_time, timespan);
+            return (taskType.equalsIgnoreCase(Utility.TASK_TYPE.SUBSCRIBED) ? mContext.getString(R.string.cheep_care) : "") + mContext.getString(R.string.format_service_start_time, timespan);
         } else {
             return (taskType.equalsIgnoreCase(Utility.TASK_TYPE.SUBSCRIBED) ? mContext.getString(R.string.cheep_care) : "") +
-                    mContext.getString(R.string.format_task_start_soon);
+                    mContext.getString(R.string.format_service_start_soon);
         }
     }
 

@@ -378,15 +378,16 @@ public class WebCallClass {
 
         Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequestForCategoryList, NetworkUtility.WS.CARE_CREATE_TASK);
     }
+
     //////////////////////////Create task Cheep care call end//////////////////////////
 ///////Need Help ///////
-    public interface GetNeedHelpResponseListener
-    {
+    public interface GetNeedHelpResponseListener {
 
         void getNeedHelp();
     }
+
     public static void getNeedHelp(final Context mContext, final CommonResponseListener commonListener
-            , final GetNeedHelpResponseListener successListener,String cat_id) {
+            , final GetNeedHelpResponseListener successListener, String cat_id) {
 
         final Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
@@ -445,12 +446,14 @@ public class WebCallClass {
 
         //Add Header parameters
         Map<String, String> mHeaderParams = new HashMap<>();
-        mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
-        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().userID);
+        if (PreferenceUtility.getInstance(mContext).getUserDetails() != null) {
+            mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
+            mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().userID);
+        }
 
         //Add Params
         Map<String, String> mParams = new HashMap<>();
-mParams.put(NetworkUtility.TAGS.CAT_ID,cat_id);
+        mParams.put(NetworkUtility.TAGS.CAT_ID, cat_id);
         //noinspection unchecked
         VolleyNetworkRequest mVolleyNetworkRequest = new VolleyNetworkRequest(NetworkUtility.WS.NEED_HELP
                 , errorListener
@@ -461,6 +464,7 @@ mParams.put(NetworkUtility.TAGS.CAT_ID,cat_id);
 
         Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest, NetworkUtility.WS.NEED_HELP);
     }
+
     ////////////////////////// Get Profile call start     //////////////////////////
     public interface GetProfileDetailResponseListener {
 
@@ -1111,20 +1115,21 @@ mParams.put(NetworkUtility.TAGS.CAT_ID,cat_id);
 
         //Add Params
         Map<String, Object> mParams = new HashMap<>();
-        mParams.put(NetworkUtility.TAGS.TASK_DESC, taskDetailModel.taskDesc);
+
+
+        //mParams.put(NetworkUtility.TAGS.TASK_DESC, taskDetailModel.taskDesc);
         if (Integer.parseInt(mSelectedAddressModel.address_id) > 0) {
             mParams.put(NetworkUtility.TAGS.ADDRESS_ID, mSelectedAddressModel.address_id);
         } else {
             // In case its negative then provide other address information
             mParams = NetworkUtility.addGuestAddressParams(mParams, mSelectedAddressModel);
-
         }
         mParams.put(NetworkUtility.TAGS.CITY_ID, userDetails.CityID);
         mParams.put(NetworkUtility.TAGS.CAT_ID, taskDetailModel.categoryModel.catId);
         mParams.put(NetworkUtility.TAGS.START_DATETIME, taskDetailModel.taskStartdate);
+
         String selectedServices = new Gson().toJson(taskDetailModel.subCatList);
         mParams.put(NetworkUtility.TAGS.TASK_SUB_CATEGORIES, selectedServices);
-        mParams.put(NetworkUtility.TAGS.PAYMENT_STATUS, Utility.PAYMENT_STATUS.COMPLETED);
 
         if (!TextUtils.isEmpty(taskDetailModel.cheepCode)) {
             mParams.put(NetworkUtility.TAGS.CHEEPCODE, taskDetailModel.cheepCode);
@@ -1133,14 +1138,14 @@ mParams.put(NetworkUtility.TAGS.CAT_ID,cat_id);
             mParams.put(NetworkUtility.TAGS.CHEEPCODE, Utility.EMPTY_STRING);
             mParams.put(NetworkUtility.TAGS.PROMOCODE_PRICE, Utility.ZERO_STRING);
         }
-
-        mParams.put(NetworkUtility.TAGS.QUOTE_AMOUNT, quoteAmount);// this is total of selected sub categories price which are with gst
         mParams.put(NetworkUtility.TAGS.PAYABLE_AMOUNT, payableAmount);
-        mParams.put(NetworkUtility.TAGS.IS_REFER_CODE, taskDetailModel.isReferCode);
-        mParams.put(NetworkUtility.TAGS.USED_WALLET_BALANCE, taskDetailModel.usedWalletAmount);
-        String media_file = Utility.getSelectedMediaJsonString(taskDetailModel.mMediaModelList);
-        mParams.put(NetworkUtility.TAGS.MEDIA_FILE, media_file);
-        mParams.put(NetworkUtility.TAGS.TASK_TYPE, Utility.TASK_TYPE.INSTA_BOOK);
+        //mParams.put(NetworkUtility.TAGS.QUOTE_AMOUNT, quoteAmount);// this is total of selected sub categories price which are with gst
+        mParams.put(NetworkUtility.TAGS.TOTAL_AMOUNT, payableAmount);
+        //mParams.put(NetworkUtility.TAGS.IS_REFER_CODE, taskDetailModel.isReferCode);
+        // mParams.put(NetworkUtility.TAGS.USED_WALLET_BALANCE, taskDetailModel.usedWalletAmount);
+        // String media_file = Utility.getSelectedMediaJsonString(taskDetailModel.mMediaModelList);
+        //mParams.put(NetworkUtility.TAGS.MEDIA_FILE, media_file);
+        mParams.put(NetworkUtility.TAGS.TASK_TYPE, taskDetailModel.taskType);
 
         if (!TextUtils.isEmpty(txnId))
             mParams.put(NetworkUtility.TAGS.TRANSACTION_ID, txnId);
@@ -1148,7 +1153,16 @@ mParams.put(NetworkUtility.TAGS.CAT_ID,cat_id);
         mParams.put(NetworkUtility.TAGS.PAYMENT_LOG, paymentLog);
         mParams.put(NetworkUtility.TAGS.PAYMENT_METHOD, paymentMethod);
         mParams.put(NetworkUtility.TAGS.PAYMENT_STATUS, Utility.PAYMENT_STATUS.COMPLETED);
-
+        if (taskDetailModel.additionalChargeReason.equalsIgnoreCase(Utility.ADDITION_CHARGES_DIALOG_TYPE.OUT_OF_OFFICE_HOURS)) {
+            mParams.put(NetworkUtility.TAGS.OUT_OF_OFFICE_CHARGES, PreferenceUtility.getInstance(mContext).getAdminSettings().additionalChargeForSelectingSpecificTime);
+            mParams.put(NetworkUtility.TAGS.URGENT_BOOKING_CHARGES, Utility.ZERO_STRING);
+        } else if (taskDetailModel.additionalChargeReason.equalsIgnoreCase(Utility.ADDITION_CHARGES_DIALOG_TYPE.URGENT_BOOKING)) {
+            mParams.put(NetworkUtility.TAGS.OUT_OF_OFFICE_CHARGES, Utility.ZERO_STRING);
+            mParams.put(NetworkUtility.TAGS.URGENT_BOOKING_CHARGES, PreferenceUtility.getInstance(mContext).getAdminSettings().additionalChargeForSelectingSpecificTime);
+        } else {
+            mParams.put(NetworkUtility.TAGS.OUT_OF_OFFICE_CHARGES, Utility.ZERO_STRING);
+            mParams.put(NetworkUtility.TAGS.URGENT_BOOKING_CHARGES, Utility.ZERO_STRING);
+        }
         //noinspection unchecked
         VolleyNetworkRequest mVolleyNetworkRequest = new VolleyNetworkRequest(NetworkUtility.WS.CREATE_TASK
                 , errorListener
@@ -1158,37 +1172,36 @@ mParams.put(NetworkUtility.TAGS.CAT_ID,cat_id);
                 , null);
 
         Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest, NetworkUtility.WS.CREATE_TASK);
-
-        mTaskCreationParams.put(NetworkUtility.TAGS.TASK_DESC, taskDetailModel.taskDesc);
-        if (Integer.parseInt(mSelectedAddressModel.address_id) > 0) {
-            mTaskCreationParams.put(NetworkUtility.TAGS.ADDRESS_ID, mSelectedAddressModel.address_id);
-        } else {
-            // In case its negative then provide other address information
-            mTaskCreationParams = NetworkUtility.addGuestAddressParams(mParams, mSelectedAddressModel);
-
-        }
-        mTaskCreationParams.put(NetworkUtility.TAGS.CITY_ID, userDetails.CityID);
-        mTaskCreationParams.put(NetworkUtility.TAGS.CAT_ID, taskDetailModel.categoryModel.catId);
-        mTaskCreationParams.put(NetworkUtility.TAGS.START_DATETIME, taskDetailModel.taskStartdate);
-        mTaskCreationParams.put(NetworkUtility.TAGS.TASK_SUB_CATEGORIES, selectedServices);
-
-        if (!TextUtils.isEmpty(taskDetailModel.cheepCode)) {
-            mTaskCreationParams.put(NetworkUtility.TAGS.CHEEPCODE, taskDetailModel.cheepCode);
-            mTaskCreationParams.put(NetworkUtility.TAGS.PROMOCODE_PRICE, taskDetailModel.taskDiscountAmount);
-        } else {
-            mTaskCreationParams.put(NetworkUtility.TAGS.CHEEPCODE, Utility.EMPTY_STRING);
-            mTaskCreationParams.put(NetworkUtility.TAGS.PROMOCODE_PRICE, Utility.ZERO_STRING);
-        }
-        mTaskCreationParams.put(NetworkUtility.TAGS.IS_REFER_CODE, taskDetailModel.isReferCode);
-        mTaskCreationParams.put(NetworkUtility.TAGS.QUOTE_AMOUNT, quoteAmount);
-        mTaskCreationParams.put(NetworkUtility.TAGS.PAYABLE_AMOUNT, payableAmount);
-        mTaskCreationParams.put(NetworkUtility.TAGS.TRANSACTION_ID, mParams.get(NetworkUtility.TAGS.TRANSACTION_ID));
-        mTaskCreationParams.put(NetworkUtility.TAGS.TASK_TYPE, Utility.TASK_TYPE.INSTA_BOOK);
-        mTaskCreationParams.put(NetworkUtility.TAGS.MEDIA_FILE, media_file);
-        mTaskCreationParams.put(NetworkUtility.TAGS.USED_WALLET_BALANCE, taskDetailModel.usedWalletAmount);
-        mTaskCreationParams.put(NetworkUtility.TAGS.PAYMENT_LOG, paymentLog);
-        mTaskCreationParams.put(NetworkUtility.TAGS.PAYMENT_METHOD, paymentMethod);
-        mTaskCreationParams.put(NetworkUtility.TAGS.PAYMENT_STATUS, Utility.PAYMENT_STATUS.COMPLETED);
+//        mTaskCreationParams.put(NetworkUtility.TAGS.TASK_DESC, taskDetailModel.taskDesc);
+//        if (Integer.parseInt(mSelectedAddressModel.address_id) > 0) {
+//            mTaskCreationParams.put(NetworkUtility.TAGS.ADDRESS_ID, mSelectedAddressModel.address_id);
+//        } else {
+//            // In case its negative then provide other address information
+//            mTaskCreationParams = NetworkUtility.addGuestAddressParams(mParams, mSelectedAddressModel);
+//
+//        }
+//        mTaskCreationParams.put(NetworkUtility.TAGS.CITY_ID, userDetails.CityID);
+//        mTaskCreationParams.put(NetworkUtility.TAGS.CAT_ID, taskDetailModel.categoryModel.catId);
+//        mTaskCreationParams.put(NetworkUtility.TAGS.START_DATETIME, taskDetailModel.taskStartdate);
+//        mTaskCreationParams.put(NetworkUtility.TAGS.TASK_SUB_CATEGORIES, selectedServices);
+//
+//        if (!TextUtils.isEmpty(taskDetailModel.cheepCode)) {
+//            mTaskCreationParams.put(NetworkUtility.TAGS.CHEEPCODE, taskDetailModel.cheepCode);
+//            mTaskCreationParams.put(NetworkUtility.TAGS.PROMOCODE_PRICE, taskDetailModel.taskDiscountAmount);
+//        } else {
+//            mTaskCreationParams.put(NetworkUtility.TAGS.CHEEPCODE, Utility.EMPTY_STRING);
+//            mTaskCreationParams.put(NetworkUtility.TAGS.PROMOCODE_PRICE, Utility.ZERO_STRING);
+//        }
+//        mTaskCreationParams.put(NetworkUtility.TAGS.IS_REFER_CODE, taskDetailModel.isReferCode);
+//        mTaskCreationParams.put(NetworkUtility.TAGS.QUOTE_AMOUNT, quoteAmount);
+//        mTaskCreationParams.put(NetworkUtility.TAGS.PAYABLE_AMOUNT, payableAmount);
+//        mTaskCreationParams.put(NetworkUtility.TAGS.TRANSACTION_ID, mParams.get(NetworkUtility.TAGS.TRANSACTION_ID));
+//        mTaskCreationParams.put(NetworkUtility.TAGS.TASK_TYPE, taskDetailModel.taskType);
+//       // mTaskCreationParams.put(NetworkUtility.TAGS.MEDIA_FILE, media_file);
+//        mTaskCreationParams.put(NetworkUtility.TAGS.USED_WALLET_BALANCE, taskDetailModel.usedWalletAmount);
+//        mTaskCreationParams.put(NetworkUtility.TAGS.PAYMENT_LOG, paymentLog);
+//        mTaskCreationParams.put(NetworkUtility.TAGS.PAYMENT_METHOD, paymentMethod);
+//        mTaskCreationParams.put(NetworkUtility.TAGS.PAYMENT_STATUS, Utility.PAYMENT_STATUS.COMPLETED);
     }
     ////////////////////////// Create insta task booking call end     //////////////////////////
 

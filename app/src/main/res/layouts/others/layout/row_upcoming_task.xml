@@ -200,6 +200,7 @@
                         android:ellipsize="end"
                         android:gravity="start|top"
                         android:lines="2"
+
                         android:text="@string/dummy_chat"
                         android:textColor="@color/black"
                         android:textSize="@dimen/text_size_11sp"/>
@@ -375,14 +376,14 @@
                         android:id="@+id/tv_subscribed"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical|end"
-                        android:layout_marginEnd="@dimen/scale_8dp"
-                        android:layout_marginRight="@dimen/scale_8dp"
+                        android:layout_gravity="bottom|start"
+                        android:layout_marginLeft="@dimen/scale_15dp"
                         android:layout_marginTop="@dimen/scale_8dp"
                         android:background="@drawable/ic_subscribed_text"
                         android:paddingEnd="@dimen/scale_16dp"
                         android:paddingLeft="@dimen/scale_4dp"
                         android:paddingRight="@dimen/scale_16dp"
+
                         android:paddingStart="@dimen/scale_4dp"
                         android:visibility="visible"
                         tools:ignore="ContentDescription"/>
@@ -425,7 +426,7 @@
                         android:paddingLeft="@dimen/scale_8dp"
                         android:paddingRight="@dimen/scale_8dp"
                         android:paddingTop="@dimen/scale_5dp"
-                        android:text="@string/label_view_quotes"
+                        android:text="@string/view_service"
                         android:textAllCaps="false"
                         android:textColor="@color/white"
                         android:textSize="@dimen/text_size_11sp"

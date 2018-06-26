@@ -231,6 +231,7 @@ public class AddNewAddressFragment extends BaseFragment {
 
         try {
             Utility.hideKeyboard(mContext);
+            showProgressDialog();
             PlacePicker.IntentBuilder intentBuilder = new PlacePicker.IntentBuilder();
             Intent intent = intentBuilder.build((Activity) mContext);
             startActivityForResult(intent, Utility.PLACE_PICKER_REQUEST);

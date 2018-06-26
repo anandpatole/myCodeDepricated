@@ -65,7 +65,7 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
     public AddressModel mSelectedAddress;
     private UrgentBookingDialog ugent_dialog;
     private OutOfOfficeHoursDialog out_of_office_dialog;
-    public String additionalChargeReason = Utility.DIALOG_TYPE.NONE;
+    public String additionalChargeReason = Utility.ADDITION_CHARGES_DIALOG_TYPE.NONE;
     private AdminSettingModel model;
 
 
@@ -240,7 +240,7 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
                 if (!mTaskCreationActivity.isValidationCompleted()) {
                     return;
                 }
-                additionalChargeReason = Utility.DIALOG_TYPE.NONE;
+                // additionalChargeReason = Utility.ADDITION_CHARGES_DIALOG_TYPE.NONE;
                 mTaskCreationActivity.onInstaBookClickedNew();
 
             }
@@ -269,7 +269,7 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
         boolean needToTaskAddressSize = !catIsSubscribed && isPestControl;
         Log.e(TAG, "showAddressDialog:needToTaskAddressSize  :   " + needToTaskAddressSize);
 
-        AddressListDialog addressListDialog = AddressListDialog.newInstance(true,needToTaskAddressSize, new AddressSelectionListener() {
+        AddressListDialog addressListDialog = AddressListDialog.newInstance(true, needToTaskAddressSize, new AddressSelectionListener() {
             @Override
             public void onAddressSelection(AddressModel addressModel) {
 
@@ -279,9 +279,12 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
                         if (addressModel.is_subscribe.equalsIgnoreCase(Utility.ADDRESS_SUBSCRIPTION_TYPE.PREMIUM)) {
                             fillAddressView(addressModel);
                         } else if (addressModel.is_subscribe.equalsIgnoreCase(Utility.ADDRESS_SUBSCRIPTION_TYPE.NORMAL)) {
-                            Utility.showToast(mTaskCreationActivity, "Please upgrade this package to Cheep Premium care package");
-                        } else {
-                            checkCheepCareIsAvailableInCity(addressModel);
+                            fillAddressView(addressModel);
+
+                            //                            Utility.showToast(mTaskCreationActivity, "Please upgrade this package to Cheep Premium care package");
+//                        } else {
+//                            checkCheepCareIsAvailableInCity(addressModel);
+//                        }
                         }
                     } else {
                         if (addressModel.is_subscribe.equalsIgnoreCase(Utility.ADDRESS_SUBSCRIPTION_TYPE.PREMIUM)
@@ -300,7 +303,7 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
         addressListDialog.show(mTaskCreationActivity.getSupportFragmentManager(), AddressListDialog.TAG);
     }
 
-    private void checkCheepCareIsAvailableInCity(AddressModel addressModel) {
+    private void checkCheepCareIsAvailableInCity(final AddressModel addressModel) {
         if (!Utility.isConnected(mContext)) {
             Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mFragmentEnterTaskDetailBinding.getRoot());
             return;
@@ -336,7 +339,6 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
 
                         @Override
                         public void onNotNowClicked() {
-
                         }
                     });
                 }
@@ -421,6 +423,7 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
                             if (mTaskCreationActivity.mJobCategoryModel.isSubscribed.equalsIgnoreCase(Utility.BOOLEAN.YES)) {
 
                                 if (!(mSelectedAddress.is_subscribe.equalsIgnoreCase(Utility.ADDRESS_SUBSCRIPTION_TYPE.PREMIUM))) {
+
                                     if (System.currentTimeMillis() < startDateTimeSuperCalendar.getTimeInMillis()) {
                                         if (superCalendar.getTimeInMillis() < calAfter3Hours.getTimeInMillis()) {
 
@@ -436,14 +439,14 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
                                             mFragmentEnterTaskDetailBinding.textTaskWhen.setText(selectedDateTime);
                                             mFragmentEnterTaskDetailBinding.textTaskWhen.setVisibility(View.VISIBLE);
                                             updateTaskVerificationFlags();
-                                            additionalChargeReason = Utility.DIALOG_TYPE.URGENT_BOOKING;
+                                            additionalChargeReason = Utility.ADDITION_CHARGES_DIALOG_TYPE.URGENT_BOOKING;
                                             ugent_dialog = UrgentBookingDialog.newInstance(model.additionalChargeForSelectingSpecificTime, EnterTaskDetailFragment.this);
-                                            ugent_dialog.show(getFragmentManager(), Utility.DIALOG_TYPE.URGENT_BOOKING);
+                                            ugent_dialog.show(getFragmentManager(), Utility.ADDITION_CHARGES_DIALOG_TYPE.URGENT_BOOKING);
                                             ugent_dialog.setCancelable(false);
                                             return;
                                         }
                                     } else {
-                                        additionalChargeReason = Utility.DIALOG_TYPE.NONE;
+                                        additionalChargeReason = Utility.ADDITION_CHARGES_DIALOG_TYPE.NONE;
                                         mFragmentEnterTaskDetailBinding.textTaskWhen.setText(Utility.EMPTY_STRING);
                                         mFragmentEnterTaskDetailBinding.textTaskWhen.setVisibility(View.GONE);
                                         Utility.showSnackBar(getString(R.string.validate_future_date), mFragmentEnterTaskDetailBinding.getRoot());
@@ -461,14 +464,14 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
                                                 mFragmentEnterTaskDetailBinding.textTaskWhen.setText(selectedDateTime);
                                                 mFragmentEnterTaskDetailBinding.textTaskWhen.setVisibility(View.VISIBLE);
                                                 updateTaskVerificationFlags();
-                                                additionalChargeReason = Utility.DIALOG_TYPE.OUT_OF_OFFICE_HOURS;
+                                                additionalChargeReason = Utility.ADDITION_CHARGES_DIALOG_TYPE.OUT_OF_OFFICE_HOURS;
                                                 out_of_office_dialog = OutOfOfficeHoursDialog.newInstance(model.additionalChargeForSelectingSpecificTime, EnterTaskDetailFragment.this);
-                                                out_of_office_dialog.show(getFragmentManager(), Utility.DIALOG_TYPE.OUT_OF_OFFICE_HOURS);
+                                                out_of_office_dialog.show(getFragmentManager(), Utility.ADDITION_CHARGES_DIALOG_TYPE.OUT_OF_OFFICE_HOURS);
                                                 out_of_office_dialog.setCancelable(false);
                                                 return;
                                             }
                                         } else {
-                                            additionalChargeReason = Utility.DIALOG_TYPE.NONE;
+                                            additionalChargeReason = Utility.ADDITION_CHARGES_DIALOG_TYPE.NONE;
                                             mFragmentEnterTaskDetailBinding.textTaskWhen.setText(Utility.EMPTY_STRING);
                                             mFragmentEnterTaskDetailBinding.textTaskWhen.setVisibility(View.GONE);
                                             Utility.showSnackBar(getString(R.string.validate_future_date), mFragmentEnterTaskDetailBinding.getRoot());
@@ -486,12 +489,12 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
                                         String selectedDateTime = startDateTimeSuperCalendar.format(Utility.DATE_FORMAT_DD_MMM)
                                                 + getString(R.string.label_between)
                                                 + CalendarUtility.get2HourTimeSlots(Long.toString(startDateTimeSuperCalendar.getTimeInMillis()));
-                                        additionalChargeReason = Utility.DIALOG_TYPE.NONE;
+                                        additionalChargeReason = Utility.ADDITION_CHARGES_DIALOG_TYPE.NONE;
                                         mFragmentEnterTaskDetailBinding.textTaskWhen.setText(selectedDateTime);
                                         mFragmentEnterTaskDetailBinding.textTaskWhen.setVisibility(View.VISIBLE);
                                         updateTaskVerificationFlags();
                                     } else {
-                                        additionalChargeReason = Utility.DIALOG_TYPE.NONE;
+                                        additionalChargeReason = Utility.ADDITION_CHARGES_DIALOG_TYPE.NONE;
                                         mFragmentEnterTaskDetailBinding.textTaskWhen.setText(Utility.EMPTY_STRING);
                                         mFragmentEnterTaskDetailBinding.textTaskWhen.setVisibility(View.GONE);
                                         Utility.showSnackBar(getString(R.string.validate_future_date), mFragmentEnterTaskDetailBinding.getRoot());
@@ -502,12 +505,12 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
                                         String selectedDateTime = startDateTimeSuperCalendar.format(Utility.DATE_FORMAT_DD_MMM)
                                                 + getString(R.string.label_between)
                                                 + CalendarUtility.get2HourTimeSlots(Long.toString(startDateTimeSuperCalendar.getTimeInMillis()));
-                                        additionalChargeReason = Utility.DIALOG_TYPE.NONE;
+                                        additionalChargeReason = Utility.ADDITION_CHARGES_DIALOG_TYPE.NONE;
                                         mFragmentEnterTaskDetailBinding.textTaskWhen.setText(selectedDateTime);
                                         mFragmentEnterTaskDetailBinding.textTaskWhen.setVisibility(View.VISIBLE);
                                         updateTaskVerificationFlags();
                                     } else {
-                                        additionalChargeReason = Utility.DIALOG_TYPE.NONE;
+                                        additionalChargeReason = Utility.ADDITION_CHARGES_DIALOG_TYPE.NONE;
                                         mFragmentEnterTaskDetailBinding.textTaskWhen.setText(Utility.EMPTY_STRING);
                                         mFragmentEnterTaskDetailBinding.textTaskWhen.setVisibility(View.GONE);
                                         Utility.showSnackBar(getString(R.string.validate_future_date), mFragmentEnterTaskDetailBinding.getRoot());
@@ -531,14 +534,14 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
                                         mFragmentEnterTaskDetailBinding.textTaskWhen.setText(selectedDateTime);
                                         mFragmentEnterTaskDetailBinding.textTaskWhen.setVisibility(View.VISIBLE);
                                         updateTaskVerificationFlags();
-                                        additionalChargeReason = Utility.DIALOG_TYPE.URGENT_BOOKING;
+                                        additionalChargeReason = Utility.ADDITION_CHARGES_DIALOG_TYPE.URGENT_BOOKING;
                                         ugent_dialog = UrgentBookingDialog.newInstance(model.additionalChargeForSelectingSpecificTime, EnterTaskDetailFragment.this);
-                                        ugent_dialog.show(getFragmentManager(), Utility.DIALOG_TYPE.URGENT_BOOKING);
+                                        ugent_dialog.show(getFragmentManager(), Utility.ADDITION_CHARGES_DIALOG_TYPE.URGENT_BOOKING);
                                         ugent_dialog.setCancelable(false);
                                         return;
                                     }
                                 } else {
-                                    additionalChargeReason = Utility.DIALOG_TYPE.NONE;
+                                    additionalChargeReason = Utility.ADDITION_CHARGES_DIALOG_TYPE.NONE;
                                     mFragmentEnterTaskDetailBinding.textTaskWhen.setText(Utility.EMPTY_STRING);
                                     mFragmentEnterTaskDetailBinding.textTaskWhen.setVisibility(View.GONE);
                                     Utility.showSnackBar(getString(R.string.validate_future_date), mFragmentEnterTaskDetailBinding.getRoot());
@@ -556,14 +559,14 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
                                             mFragmentEnterTaskDetailBinding.textTaskWhen.setText(selectedDateTime);
                                             mFragmentEnterTaskDetailBinding.textTaskWhen.setVisibility(View.VISIBLE);
                                             updateTaskVerificationFlags();
-                                            additionalChargeReason = Utility.DIALOG_TYPE.OUT_OF_OFFICE_HOURS;
+                                            additionalChargeReason = Utility.ADDITION_CHARGES_DIALOG_TYPE.OUT_OF_OFFICE_HOURS;
                                             out_of_office_dialog = OutOfOfficeHoursDialog.newInstance(model.additionalChargeForSelectingSpecificTime, EnterTaskDetailFragment.this);
-                                            out_of_office_dialog.show(getFragmentManager(), Utility.DIALOG_TYPE.OUT_OF_OFFICE_HOURS);
+                                            out_of_office_dialog.show(getFragmentManager(), Utility.ADDITION_CHARGES_DIALOG_TYPE.OUT_OF_OFFICE_HOURS);
                                             out_of_office_dialog.setCancelable(false);
                                             return;
                                         }
                                     } else {
-                                        additionalChargeReason = Utility.DIALOG_TYPE.NONE;
+                                        additionalChargeReason = Utility.ADDITION_CHARGES_DIALOG_TYPE.NONE;
                                         mFragmentEnterTaskDetailBinding.textTaskWhen.setText(Utility.EMPTY_STRING);
                                         mFragmentEnterTaskDetailBinding.textTaskWhen.setVisibility(View.GONE);
                                         Utility.showSnackBar(getString(R.string.validate_future_date), mFragmentEnterTaskDetailBinding.getRoot());
@@ -577,12 +580,12 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
                                     String selectedDateTime = startDateTimeSuperCalendar.format(Utility.DATE_FORMAT_DD_MMM)
                                             + getString(R.string.label_between)
                                             + CalendarUtility.get2HourTimeSlots(Long.toString(startDateTimeSuperCalendar.getTimeInMillis()));
-                                    additionalChargeReason = Utility.DIALOG_TYPE.NONE;
+                                    additionalChargeReason = Utility.ADDITION_CHARGES_DIALOG_TYPE.NONE;
                                     mFragmentEnterTaskDetailBinding.textTaskWhen.setText(selectedDateTime);
                                     mFragmentEnterTaskDetailBinding.textTaskWhen.setVisibility(View.VISIBLE);
                                     updateTaskVerificationFlags();
                                 } else {
-                                    additionalChargeReason = Utility.DIALOG_TYPE.NONE;
+                                    additionalChargeReason = Utility.ADDITION_CHARGES_DIALOG_TYPE.NONE;
                                     mFragmentEnterTaskDetailBinding.textTaskWhen.setText(Utility.EMPTY_STRING);
                                     mFragmentEnterTaskDetailBinding.textTaskWhen.setVisibility(View.GONE);
                                     Utility.showSnackBar(getString(R.string.validate_future_date), mFragmentEnterTaskDetailBinding.getRoot());
@@ -653,6 +656,7 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
 
 
     private void fillAddressView(AddressModel model) {
+        mFragmentEnterTaskDetailBinding.textTaskWhen.setText(Utility.EMPTY_STRING);
         updateWhereLabelWithIcon(true);
 
         mFragmentEnterTaskDetailBinding.ivHome.setImageDrawable(ContextCompat.getDrawable(mContext
@@ -674,6 +678,8 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
             mFragmentEnterTaskDetailBinding.tvLabelAddressSubscribed.setText(R.string.label_subscribed_under_cheep_care_premium);
         }
 
+        mTaskCreationActivity.mTaskCreationPagerAdapter.mSelectSubCategoryFragment.showHideToolTip();
+
     }
 
     @Override
@@ -683,8 +689,8 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
         if (!mTaskCreationActivity.isValidationCompleted()) {
             return;
         }
-        additionalChargeReason = Utility.DIALOG_TYPE.URGENT_BOOKING;
-        mTaskCreationActivity.onInstaBookClickedNew();
+        additionalChargeReason = Utility.ADDITION_CHARGES_DIALOG_TYPE.URGENT_BOOKING;
+        //mTaskCreationActivity.onInstaBookClickedNew();
     }
 
     @Override
@@ -778,8 +784,8 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
         if (!mTaskCreationActivity.isValidationCompleted()) {
             return;
         }
-        additionalChargeReason = Utility.DIALOG_TYPE.OUT_OF_OFFICE_HOURS;
-        mTaskCreationActivity.onInstaBookClickedNew();
+        additionalChargeReason = Utility.ADDITION_CHARGES_DIALOG_TYPE.OUT_OF_OFFICE_HOURS;
+        // mTaskCreationActivity.onInstaBookClickedNew();
     }
 
     @Override

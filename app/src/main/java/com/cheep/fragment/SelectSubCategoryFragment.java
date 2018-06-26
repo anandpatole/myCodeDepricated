@@ -1,7 +1,7 @@
 package com.cheep.fragment;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -18,6 +18,7 @@ import com.cheep.activity.TaskCreationActivity;
 import com.cheep.adapter.SubServiceRecyclerViewAdapter;
 import com.cheep.databinding.FragmentSelectSubserviceBinding;
 import com.cheep.dialogs.PestControlHelpDialog;
+import com.cheep.model.AddressModel;
 import com.cheep.model.JobCategoryModel;
 import com.cheep.model.SubServiceDetailModel;
 import com.cheep.network.NetworkUtility;
@@ -25,7 +26,6 @@ import com.cheep.network.Volley;
 import com.cheep.utils.GsonUtility;
 import com.cheep.utils.Utility;
 import com.cheep.utils.WebCallClass;
-import com.payu.magicretry.MainActivity;
 
 import java.util.ArrayList;
 
@@ -33,7 +33,7 @@ import java.util.ArrayList;
  * Created by bhavesh on 28/4/17.
  */
 
-public class SelectSubCategoryFragment extends BaseFragment implements  WebCallClass.GetNeedHelpResponseListener,WebCallClass.CommonResponseListener,PestControlHelpDialog.PestControlHelpListener{
+public class SelectSubCategoryFragment extends BaseFragment implements WebCallClass.GetNeedHelpResponseListener, WebCallClass.CommonResponseListener, PestControlHelpDialog.PestControlHelpListener {
     public static final String TAG = SelectSubCategoryFragment.class.getSimpleName();
     private FragmentSelectSubserviceBinding mFragmentSelectSubserviceBinding;
     private SubServiceRecyclerViewAdapter mSubServiceRecyclerViewAdapter;
@@ -41,6 +41,7 @@ public class SelectSubCategoryFragment extends BaseFragment implements  WebCallC
     public boolean isVerified = false;
     public JobCategoryModel mJobCategoryModel;
     PestControlHelpDialog dialog;
+
     @SuppressWarnings("unused")
     public static SelectSubCategoryFragment newInstance() {
         SelectSubCategoryFragment fragment = new SelectSubCategoryFragment();
@@ -68,12 +69,12 @@ public class SelectSubCategoryFragment extends BaseFragment implements  WebCallC
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        initiateUI();
-        setListener();
         if (getActivity().getIntent().getExtras() != null) {
             // Fetch JobCategory Model
             mJobCategoryModel = (JobCategoryModel) GsonUtility.getObjectFromJsonString(getActivity().getIntent().getStringExtra(Utility.Extra.DATA), JobCategoryModel.class);
         }
+        initiateUI();
+        setListener();
     }
 
 
@@ -103,13 +104,11 @@ public class SelectSubCategoryFragment extends BaseFragment implements  WebCallC
     @Override
     public void initiateUI() {
         Log.d(TAG, "initiateUI() called");
-
         mTaskCreationActivity.showPostTaskButton(true, false);
         //Setting recycler view
-
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mContext);
         mFragmentSelectSubserviceBinding.recyclerView.setLayoutManager(linearLayoutManager);
-
+        mFragmentSelectSubserviceBinding.tvServiceName.setText(getString(R.string.label_select_service, mJobCategoryModel.catName));
         mSubServiceRecyclerViewAdapter = new SubServiceRecyclerViewAdapter(mSubServiceListInteractionListener);
         mSubServiceRecyclerViewAdapter.addList(mTaskCreationActivity.allSubCategoryList);
         mFragmentSelectSubserviceBinding.recyclerView.setAdapter(mSubServiceRecyclerViewAdapter);
@@ -120,8 +119,43 @@ public class SelectSubCategoryFragment extends BaseFragment implements  WebCallC
         }
     }
 
+    @SuppressLint("StringFormatMatches")
+    public void showHideToolTip() {
+
+
+        AddressModel addressModel = mTaskCreationActivity.mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddress;
+
+        if (mJobCategoryModel.catSlug.equalsIgnoreCase(Utility.CAT_SLUG_TYPES.PEST_CONTROL) && addressModel != null) {
+            if (mTaskCreationActivity.pestControlPackageDataList != null && mTaskCreationActivity.pestControlPackageDataList.size() > 0) {
+                for (SubServiceDetailModel.PackageData packageData : mTaskCreationActivity.pestControlPackageDataList) {
+                    if (packageData != null && packageData.address_id.equalsIgnoreCase(addressModel.address_id)) {
+                        try {
+                            int totalCount = 4;
+                            int remainingCount = Integer.valueOf(packageData.pestcontrolCnt);
+                            int usedServiceCount = totalCount - remainingCount;
+                            mFragmentSelectSubserviceBinding.lnPestControlToolTip.setVisibility(View.VISIBLE);
+                            mFragmentSelectSubserviceBinding.tvDescription.setText(getString(R.string.label_tooltip_pest_control_description, totalCount, usedServiceCount, remainingCount));
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            } else {
+                mFragmentSelectSubserviceBinding.lnPestControlToolTip.setVisibility(View.GONE);
+            }
+        } else {
+            mFragmentSelectSubserviceBinding.lnPestControlToolTip.setVisibility(View.GONE);
+        }
+    }
+
     @Override
     public void setListener() {
+        mFragmentSelectSubserviceBinding.imgCross.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mFragmentSelectSubserviceBinding.lnPestControlToolTip.setVisibility(View.GONE);
+            }
+        });
     }
 
 
@@ -144,14 +178,15 @@ public class SelectSubCategoryFragment extends BaseFragment implements  WebCallC
     @Override
     public void getNeedHelp() {
         hideProgressDialog();
-dialog.dismiss();
+        dialog.dismiss();
 
     }
 
     @Override
     public void onHelpClick() {
-        WebCallClass.getNeedHelp(mContext,SelectSubCategoryFragment.this,SelectSubCategoryFragment.this,mJobCategoryModel.catId);
+        WebCallClass.getNeedHelp(mContext, SelectSubCategoryFragment.this, SelectSubCategoryFragment.this, mJobCategoryModel.catId);
     }
+
     public interface SubServiceListInteractionListener {
         void onSubCategoryRowItemClicked(SubServiceDetailModel subServiceDetailModel);
     }
@@ -164,24 +199,23 @@ dialog.dismiss();
 //            {
 //                for (SubServiceDetailModel model: subServiceDetailModel)
 //                {
-                    //SubServiceDetailModel model= allSubCategoryList.get(0);
+            //SubServiceDetailModel model= allSubCategoryList.get(0);
 //                    if(subServiceDetailModel.isSelected)
 //                    {
-                        String s = subServiceDetailModel.name;
-                        if(subServiceDetailModel.name.equalsIgnoreCase(Utility.NEED_HELP))
-                        {
-                            subServiceDetailModel.isSelected=false;
-                            mSubServiceRecyclerViewAdapter.notifyDataSetChanged();
-                            dialog= PestControlHelpDialog.newInstance(SelectSubCategoryFragment.this);
-                            dialog.show(getFragmentManager(),"PestControlHelp");
-                         // return;
-                           // showProgressDialog();
-                           // WebCallClass.getNeedHelp(mContext,TaskCreationActivity.this,TaskCreationActivity.this,mJobCategoryModel.catId);
-                           // return;
-                        }
-               //     }
-               // }
-         //   }
+            String s = subServiceDetailModel.name;
+            if (subServiceDetailModel.name.equalsIgnoreCase(Utility.NEED_HELP)) {
+                subServiceDetailModel.isSelected = false;
+                mSubServiceRecyclerViewAdapter.notifyDataSetChanged();
+                dialog = PestControlHelpDialog.newInstance(SelectSubCategoryFragment.this);
+                dialog.show(getFragmentManager(), PestControlHelpDialog.TAG);
+                // return;
+                // showProgressDialog();
+                // WebCallClass.getNeedHelp(mContext,TaskCreationActivity.this,TaskCreationActivity.this,mJobCategoryModel.catId);
+                // return;
+            }
+            //     }
+            // }
+            //   }
 
             Log.d(TAG, "onSubCategoryRowItemClicked() called with: subServiceDetailModel = [" + subServiceDetailModel.name + "]");
             // Make the status Verified

@@ -55,6 +55,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.cheep.network.NetworkUtility.TAGS.CAT_ID;
+import static com.cheep.network.NetworkUtility.TAGS.CAT_SLUG;
 
 /**
  * Created by bhavesh on 26/4/17.
@@ -63,14 +64,16 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
     private static final String TAG = TaskCreationActivity.class.getSimpleName();
     private ActivityTaskCreateBinding mActivityTaskCreateBinding;
     public JobCategoryModel mJobCategoryModel;
-    TaskCreationPagerAdapter mTaskCreationPagerAdapter;
+    public TaskCreationPagerAdapter mTaskCreationPagerAdapter;
     Map<String, Object> mTaskCreationParams;
     CustomLoadingDialog mDialog;
     public ArrayList<SubServiceDetailModel> allSubCategoryList;
+    public ArrayList<SubServiceDetailModel.PackageData> pestControlPackageDataList;
     String additionalChargeReason;
 
     public static void getInstance(Context mContext, JobCategoryModel model) {
         Intent intent = new Intent(mContext, TaskCreationActivity.class);
+        Log.e(TAG, "getInstance: " + GsonUtility.getJsonStringFromObject(model));
         intent.putExtra(Utility.Extra.DATA, GsonUtility.getJsonStringFromObject(model));
         mContext.startActivity(intent);
     }
@@ -114,7 +117,7 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
         // Change description
         mActivityTaskCreateBinding.textStepDesc.setText(getString(R.string.step_1_desc));
 
-        fetchListOfSubCategory(mJobCategoryModel.catId);
+        fetchListOfSubCategory(mJobCategoryModel.catId, mJobCategoryModel.catSlug);
 
     }
 
@@ -255,14 +258,18 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
         super.onBackPressed();
     }
 
-    public void showPostTaskButton(boolean needsToShow, boolean isEnabled) {
+    public void showPostTaskButton(final boolean needsToShow, boolean isEnabled) {
 
-        if (needsToShow) {
-            mActivityTaskCreateBinding.textPostTask.setVisibility(View.VISIBLE);
-        } else {
-            mActivityTaskCreateBinding.textPostTask.setVisibility(View.GONE);
-        }
-
+        mActivityTaskCreateBinding.textPostTask.post(new Runnable() {
+            @Override
+            public void run() {
+                if (needsToShow) {
+                    mActivityTaskCreateBinding.textPostTask.setVisibility(View.VISIBLE);
+                } else {
+                    mActivityTaskCreateBinding.textPostTask.setVisibility(View.GONE);
+                }
+            }
+        });
 
         if (isEnabled) {
             mActivityTaskCreateBinding.textPostTask.setSelected(true);
@@ -273,6 +280,7 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
             mActivityTaskCreateBinding.textPostTask.setEnabled(false);
             mActivityTaskCreateBinding.textPostTask.setBackgroundColor(ContextCompat.getColor(mContext, R.color.grey_varient_12));
         }
+
     }
 
     public int getPostButtonHeight() {
@@ -389,8 +397,20 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
 
 //                    model.taskImage = mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mCurrentPhotoPath;
 //        taskDetailModel.mMediaModelList = mTaskCreationPagerAdapter.mEnterTaskDetailFragment.getMediaList();
+        if (mJobCategoryModel.isSubscribed.equalsIgnoreCase(Utility.BOOLEAN.YES)) {
+            if (mJobCategoryModel.catSlug.equalsIgnoreCase(Utility.CAT_SLUG_TYPES.PEST_CONTROL)) {
+                if (taskDetailModel.taskAddress.is_subscribe.equalsIgnoreCase(Utility.ADDRESS_SUBSCRIPTION_TYPE.PREMIUM)) {
+                    taskDetailModel.taskType = Utility.TASK_TYPE.SUBSCRIBED;
+                } else {
+                    taskDetailModel.taskType = Utility.TASK_TYPE.NORMAL;
+                }
+            } else {
+                taskDetailModel.taskType = Utility.TASK_TYPE.SUBSCRIBED;
+            }
+        } else {
+            taskDetailModel.taskType = Utility.TASK_TYPE.NORMAL;
+        }
 
-        taskDetailModel.taskType = Utility.TASK_TYPE.INSTA_BOOK;
         taskDetailModel.taskStatus = Utility.TASK_STATUS.PENDING;
 
         BookingConfirmationInstaActivity.newInstance(TaskCreationActivity.this, taskDetailModel, mTaskCreationPagerAdapter.mEnterTaskDetailFragment.mSelectedAddress);
@@ -761,9 +781,9 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    ////////////////////////////// Fetch SubService Listing[START] ////////////////////////////////////////
+    ////////////////////////////// Fetch SubService Listing[START] /////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    private void fetchListOfSubCategory(String catId) {
+    private void fetchListOfSubCategory(String catId, String catSlug) {
         Log.d(TAG, "fetchListOfSubCategory() called with: catId = [" + catId + "]");
         if (!Utility.isConnected(mContext)) {
             Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityTaskCreateBinding.getRoot());
@@ -782,6 +802,7 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
         //Add Params
         Map<String, String> mParams = new HashMap<>();
         mParams.put(CAT_ID, catId);
+        mParams.put(CAT_SLUG, catSlug);
 
         VolleyNetworkRequest mVolleyNetworkRequestForCategoryList = new VolleyNetworkRequest(NetworkUtility.WS.FETCH_SUB_SERVICE_LIST
                 , mCallFetchSubServiceListingWSErrorListener
@@ -810,12 +831,14 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
                         JSONObject jsonObject1 = jsonObject.optJSONObject(NetworkUtility.TAGS.DATA);
                         JSONArray jsonArray = jsonObject1.optJSONArray(NetworkUtility.TAGS.SUB_CATS);
                         JSONObject cheepTip = jsonObject1.optJSONObject(NetworkUtility.TAGS.CATEGORY_TIP);
+                        JSONArray packageData = jsonObject1.optJSONArray(NetworkUtility.TAGS.PACKAGE_DATA);
 
                         String title = cheepTip.optString(NetworkUtility.TAGS.TITLE);
                         String subTitle = cheepTip.optString(NetworkUtility.TAGS.SUBTITLE);
 
                         allSubCategoryList = GsonUtility.getObjectListFromJsonString(jsonArray.toString(), SubServiceDetailModel[].class);
-                        if (mJobCategoryModel.catSlug.equalsIgnoreCase(Utility.cat.PESTCONTROL)) {
+                        pestControlPackageDataList = GsonUtility.getObjectListFromJsonString(packageData.toString(), SubServiceDetailModel.PackageData[].class);
+                        if (mJobCategoryModel.catSlug.equalsIgnoreCase(Utility.CAT_SLUG_TYPES.PEST_CONTROL)) {
                             SubServiceDetailModel additional = new SubServiceDetailModel();
                             additional.catId = "-1";
                             additional.isSelected = false;
@@ -825,6 +848,7 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
                         }
                         // Setting viewpager
                         setupViewPager(mActivityTaskCreateBinding.viewpager, title, subTitle);
+
 
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:

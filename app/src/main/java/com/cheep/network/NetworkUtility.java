@@ -17,7 +17,6 @@ public class NetworkUtility {
 
         private static final String BASE_URL_API = BuildConfig.BASE_URL_API;
 
-
         // Endpoints
 
         public static final String GET_RELATIONSHIP_LIST=BASE_URL+"customers/profile/getRelationshipList";
@@ -400,8 +399,8 @@ public class NetworkUtility {
         String REPORT_ABUSE = "report_abuse";
         String CHEEPCODE = "cheepcode";
         String TRANSACTION_ID = "txnid";
-
-
+String OUT_OF_OFFICE_CHARGES="non_office_hours_charge";
+       String URGENT_BOOKING_CHARGES ="urgent_booking_charge";
         String REASON = "reason";
         String MONTHLY_SAVED_TOTAL = "monthly_saved_total";
         String TOTAL_EARNED = "total_earned";
@@ -521,12 +520,15 @@ public class NetworkUtility {
         String RESTORE_ID="restore_id";
 
         String IS_RENEW= "is_renew";
+        String ASSET_TYPE_ID= "asset_type_id";
+
 
         String TEXT= "text";
         String CATEGORY_TIP= "category_tip";
 
         String FEATURE_LIST = "feature_list";
         String PRICE_LIST = "price_list";
+        String PACKAGE_DATA = "packageData";
 
         interface VERSION_CHANGE_TYPE {
             int NORMAL = 0;

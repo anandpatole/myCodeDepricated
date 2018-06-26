@@ -27,6 +27,8 @@ public class SubServiceDetailModel implements Parent<SubSubCatModel>, Serializab
     public boolean isSelected = false;
     @SerializedName("all_sub_sub_cats")
     public List<SubSubCatModel> subSubCatModels = null;
+    @SerializedName("packageData")
+    public List<PackageData> packageData = null;
 
     @Override
     public List<SubSubCatModel> getChildList() {
@@ -36,5 +38,15 @@ public class SubServiceDetailModel implements Parent<SubSubCatModel>, Serializab
     @Override
     public boolean isInitiallyExpanded() {
         return false;
+    }
+
+
+    public class PackageData {
+        // remaining count out of 4 service
+        @SerializedName("pestcontrol_cnt")
+        public String pestcontrolCnt;
+
+        @SerializedName("address_id")
+        public String address_id;
     }
 }
