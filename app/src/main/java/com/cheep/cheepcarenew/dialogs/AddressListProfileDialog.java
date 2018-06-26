@@ -164,6 +164,8 @@ public class AddressListProfileDialog extends DialogFragment {
                     showAddressDeletionConfirmationDialog(listOfAddress.get(position).address_id,position);
                 }
             });
+
+            hideAndShowView(listOfAddress.get(position).is_subscribe,holder.tvEdit,holder.tvDelete);
         }
 
         // show dialog for select home and office address
@@ -171,6 +173,17 @@ public class AddressListProfileDialog extends DialogFragment {
             AddressCategorySelectionDialog addressCategorySelectionDialog = AddressCategorySelectionDialog.newInstance(Utility.EDIT_PROFILE_ACTIVITY, true, listOfAddress, position);
             addressCategorySelectionDialog.show(((BaseAppCompatActivity) getContext()).getSupportFragmentManager(),
                     AddressCategorySelectionDialog.TAG);
+        }
+
+        private void hideAndShowView(String isSubscribe,TextView tvEdit ,TextView tvDelete){
+            if(isSubscribe.equalsIgnoreCase(Utility.ADDRESS_SUBSCRIPTION_TYPE.NONE)){
+                tvEdit.setVisibility(View.VISIBLE);
+                tvDelete.setVisibility(View.VISIBLE);
+            }else {
+                tvEdit.setVisibility(View.INVISIBLE);
+                tvDelete.setVisibility(View.INVISIBLE);
+            }
+
         }
         @Override
         public int getItemCount() {

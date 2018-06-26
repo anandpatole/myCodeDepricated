@@ -705,6 +705,11 @@ public class Utility {
         String SILVER = "3";
         String BRONZE = "4";
     }
+    public interface ZERO_VALUE {
+        String ONE_ZERO = "0";
+        String TWO_ZERO = "0.0";
+        String THREE_ZERO = "0.00";
+    }
 
     public interface FILTER_TYPES {
         // for backend team featured and all service are same

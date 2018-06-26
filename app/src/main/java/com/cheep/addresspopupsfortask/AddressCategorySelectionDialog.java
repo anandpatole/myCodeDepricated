@@ -81,8 +81,6 @@ public class AddressCategorySelectionDialog extends DialogFragment {
 
         setListeners();
         if (getArguments() != null) {
-
-
             if (getArguments().getString(Utility.Extra.DATA_2) != null)
                 COMING_FORM = getArguments().getString(Utility.Extra.DATA_2);
 
