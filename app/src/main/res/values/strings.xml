@@ -432,9 +432,9 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_book">Book</string>
     <string name="label_pros_available">PROs\nAvailable</string>
     <string name="label_popular">Popular</string>
-<!--
-    <string name="label_featured">Featured</string>
--->
+    <!--
+        <string name="label_featured">Featured</string>
+    -->
     <string name="label_featured">All Services</string>
     <string name="empty_favourited_list_1">Haven\'t favourited a service\ncategory yet?</string>
     <string name="empty_favourited_list_2">If you like a service which you often use,\njust tap the heart on it.</string>
@@ -605,7 +605,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_enter_amount">Enter Amount</string>
     <string name="label_amount_payable">Amount Payable</string>
     <string name="label_notify_paying_by_wallet">You are about to pay using your %1s wallet</string>
-    <string name="no_pro_available_title"/>
+    <string name="no_pro_available_title" />
     <string name="no_pro_available_description">No PROs is available for this address</string>
     <string name="validate_comment">Please provide valid comment.</string>
     <string name="title_booking_confimation">Booking Confirmation</string>
@@ -691,7 +691,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
 
     <string name="hint_apply_cheep_promo_code">Apply CHEEP Promo code?</string>
     <string name="hint_apply_cheep_mate_code">Have a CHEEP Mate Code?</string>
-    <string name="label_empty_string"/>
+    <string name="label_empty_string" />
     <string name="label_proceed_to_checkout">Proceed to Checkout</string>
     <string name="add_package_to_cart">Add Package to Cart</string>
     <string name="label_appliance">%1d Appliances</string>
@@ -926,6 +926,7 @@ without any hidden charges. Try it now!</string>
     <string name="wowieee_all_done">Wowieee. All done!</string>
     <string name="acknowledgement_details">Congrats on taking the first step towards making your home healthy &amp; happy. Your Cheep Care AMC package is now activated and we are available 24x7 to help you maintain your home. Thank you </string>
     <string name="thanks">Thanks</string>
+    <string name="cheep_care_value">Cheep Care</string>
     <string name="label_add_new_address">Add new address</string>
     <string name="label_get_current_location">Get current location</string>
     <string name="hint_address_locality">Locality</string>

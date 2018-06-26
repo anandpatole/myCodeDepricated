@@ -236,8 +236,6 @@ public class ProfileDetailsFragmentnew extends BaseFragment implements
         mBinding.usernameProfileEdit.setOnClickListener(onClickListener);
         mBinding.emailProfileEdit.setOnClickListener(onClickListener);
         mBinding.mainProfileEdit.setOnClickListener(onClickListener);
-        mBinding.tvEdit.setOnClickListener(this);
-        mBinding.tvDelete.setOnClickListener(this);
 
 
     }
@@ -981,15 +979,38 @@ public class ProfileDetailsFragmentnew extends BaseFragment implements
     }
 
     // set  first address form list on view
+    /* need to show only one address then i
+     take zero position data from list*/
     private void setAddress() {
         if (addressList != null) {
             for (int i = 0; i < addressList.size(); i++) {
                 mBinding.imgAddress.setImageResource(Utility.getAddressCategoryBlueIcon(addressList.get(0).category));
                 mBinding.tvAddressCategory.setText(addressList.get(0).category);
-                mBinding.tvFullAddress.setText(addressList.get(0).address);
+                mBinding.tvFullAddress.setText(addressList.get(0).getAddressWithInitials());
+                hideAndShowView(addressList.get(0).is_subscribe);
                 break;
             }
         }
+    }
+    /*this method is used , when address is  subscribe
+     then edit and delete text view not visible */
+    /* In AddressModel have one variable is_subscribe if this variable is none this mens
+     * address is not subscribe */
+    private void hideAndShowView(String isSubscribe){
+        if(isSubscribe.equalsIgnoreCase(Utility.ADDRESS_SUBSCRIPTION_TYPE.NONE)){
+            mBinding.tvEdit.setVisibility(View.VISIBLE);
+            mBinding.tvEdit.setOnClickListener(this);
+
+            mBinding.tvDelete.setVisibility(View.VISIBLE);
+            mBinding.tvDelete.setOnClickListener(this);
+        }else {
+            mBinding.tvEdit.setVisibility(View.INVISIBLE);
+            mBinding.tvEdit.setOnClickListener(null);
+
+            mBinding.tvDelete.setVisibility(View.INVISIBLE);
+            mBinding.tvDelete.setOnClickListener(null);
+        }
+
     }
 
     // open show address list Dialog
@@ -1009,6 +1030,7 @@ public class ProfileDetailsFragmentnew extends BaseFragment implements
         addressCategorySelectionDialog.show(((BaseAppCompatActivity) getContext()).getSupportFragmentManager(),
                 AddressCategorySelectionDialog.TAG);
     }
+    /* this method is used , when edit Address Api has success*/
     public void getDataFromEditAddressDialog(){
         callGetProfileWS();
     }

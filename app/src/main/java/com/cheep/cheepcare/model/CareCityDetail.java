@@ -12,13 +12,6 @@ import java.util.List;
 @Keep
 public class CareCityDetail implements Serializable {
 
-   /* @SerializedName("landing_screen_tip_title")
-    @Expose
-    public String landingScreenTipTitle;
-    @SerializedName("landing_screen_tip_subtitle")
-    @Expose
-    public String landingScreenTipSubtitle;*/
-
     @SerializedName("landing_screen_title_1")
     @Expose
     public String landingScreenTitle1;
@@ -59,5 +52,14 @@ public class CareCityDetail implements Serializable {
     @SerializedName("is_subscribed")
     @Expose
     public String isSubscribed = Utility.BOOLEAN.NO;
+
+
+    @SerializedName("old_price")
+    @Expose
+    public String oldPrice;
+    @SerializedName("new_price")
+    @Expose
+    public String newPrice;
+
 
 }

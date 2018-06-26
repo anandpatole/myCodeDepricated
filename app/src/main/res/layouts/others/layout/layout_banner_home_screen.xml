@@ -39,10 +39,16 @@
             </RelativeLayout>
         </LinearLayout>
 
+      <!--  <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/home_screen_divider_height"
+            android:background="@color/grey_dark_color_4"
+            android:visibility="visible"/>-->
         <View
             android:layout_width="match_parent"
             android:layout_height="@dimen/home_screen_divider_height"
-            android:background="@color/grey_dark_color_4"/>
+            android:background="@color/white"
+            android:visibility="visible"/>
 
         <RelativeLayout
             android:layout_width="match_parent"

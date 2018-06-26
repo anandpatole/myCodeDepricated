@@ -1,5 +1,6 @@
 package com.cheep.cheepcarenew.dialogs;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.Fragment;
@@ -7,15 +8,19 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
+import android.text.Editable;
 import android.text.Html;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.EditText;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -129,7 +134,7 @@ public class EditAddressDialog extends DialogFragment implements View.OnClickLis
         if (listOfAddress != null) {
             for (int i = 0; i < listOfAddress.size(); i++) {
                 if (addressPosition == position) {
-                    mBinding.tvAddress.setText(listOfAddress.get(i).address);
+                    mBinding.tvAddress.setText(listOfAddress.get(i).getAddressWithInitials());
                     mBinding.editAddressInitials.setText(listOfAddress.get(i).address_initials);
                     mBinding.editAddressLandmark.setText(listOfAddress.get(i).landmark);
                     mBinding.editAddressPincode.setText(listOfAddress.get(i).pincode);
@@ -143,16 +148,35 @@ public class EditAddressDialog extends DialogFragment implements View.OnClickLis
                 position++;
             }
         }
+        mBinding.editAddressInitials.addTextChangedListener(new EditAddressDialog.TextWatcherForeAddressInitials(mBinding.editAddressInitials));
+        mBinding.editAddressLandmark.addTextChangedListener(new EditAddressDialog.TextWatcherForLandMarks(mBinding.editAddressLandmark));
+        mBinding.editAddressPincode.addTextChangedListener(new EditAddressDialog.TextWatcherForPinCode(mBinding.editAddressPincode));
+        continueTextEnableWhenFillAllField();
     }
 
     private void setListener() {
-        mBinding.tvContinue.setOnClickListener(this);
         mBinding.tvAddress.setOnClickListener(this);
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
+
+    }
+
+    @SuppressLint("ResourceType")
+    private void continueTextEnableWhenFillAllField() {
+        if (mBinding.editAddressInitials.getText().toString().isEmpty() ||
+                mBinding.editAddressLandmark.getText().toString().isEmpty() ||
+                mBinding.editAddressPincode.getText().toString().isEmpty()) {
+
+            mBinding.tvContinue.setOnClickListener(null);
+            mBinding.tvContinue.setTextColor(Color.parseColor(getResources().getString(R.color.grey_dark_color)));
+        } else {
+            mBinding.tvContinue.setOnClickListener(this);
+            mBinding.tvContinue.setTextColor(Color.parseColor(getResources().getString(R.color.splash_gradient_end)));
+        }
+
 
     }
 
@@ -180,6 +204,81 @@ public class EditAddressDialog extends DialogFragment implements View.OnClickLis
 
             e.printStackTrace();
             Utility.showToast(getContext(), getContext().getString(R.string.label_playservice_not_available));
+        }
+    }
+
+    private class TextWatcherForeAddressInitials implements TextWatcher {
+        final EditText editText;
+
+        private TextWatcherForeAddressInitials(EditText editText) {
+            this.editText = editText;
+        }
+
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            Log.e("TextWatcherForPinCode", "onText Changed: " + s.toString());
+            continueTextEnableWhenFillAllField();
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+
+        }
+    }
+
+    private class TextWatcherForLandMarks implements TextWatcher {
+        final EditText editText;
+
+        private TextWatcherForLandMarks(EditText editText) {
+            this.editText = editText;
+        }
+
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            Log.e("TextWatcherForLandMarks", "onText Changed: " + s.toString());
+            continueTextEnableWhenFillAllField();
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+
+        }
+    }
+
+    private class TextWatcherForPinCode implements TextWatcher {
+        final EditText editText;
+
+        private TextWatcherForPinCode(EditText editText) {
+            this.editText = editText;
+        }
+
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            Log.e("TextWatcherForPinCode", "onText Changed: " + s.toString());
+            continueTextEnableWhenFillAllField();
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+
         }
     }
 

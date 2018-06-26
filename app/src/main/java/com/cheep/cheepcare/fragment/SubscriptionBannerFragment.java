@@ -2,8 +2,25 @@ package com.cheep.cheepcare.fragment;
 
 import android.annotation.SuppressLint;
 import android.databinding.DataBindingUtil;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.style.DrawableMarginSpan;
+import android.text.style.DynamicDrawableSpan;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.ImageSpan;
+import android.text.style.StrikethroughSpan;
+import android.text.style.StyleSpan;
+import android.util.Log;
+import android.util.StringBuilderPrinter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +36,7 @@ import com.cheep.fragment.HomeFragment;
 import com.cheep.fragment.HomeTabFragment;
 import com.cheep.network.NetworkUtility;
 import com.cheep.utils.GsonUtility;
+import com.cheep.utils.LogUtils;
 import com.cheep.utils.Utility;
 
 import java.util.ArrayList;
@@ -28,6 +46,8 @@ public class SubscriptionBannerFragment extends BaseFragment {
     private static final String TAG = "SubscriptionBannerFragm";
     private CareCityDetail bannerImageModel;
     private FragmentSubscriptionBannerImageBinding binding;
+    SpannableString oldPrice = null, newPrice = null;
+    boolean isPriceIsZero;
 
 
     public ArrayList<CareCityDetail> cheepCareBannerModels;
@@ -62,8 +82,7 @@ public class SubscriptionBannerFragment extends BaseFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_subscription_banner_image, container, false);
         init();
@@ -91,7 +110,17 @@ public class SubscriptionBannerFragment extends BaseFragment {
 
             /*LogUtils.LOGE(TAG, "init: " + bannerImageModel.cityName);*/
             binding.tvTitle.setText(bannerImageModel.title);
-            binding.tvSubTitle.setText(bannerImageModel.subtitle);
+            String subtitle = addingSubtitleWithOldAndNewPrice(bannerImageModel.subtitle);
+            if(isPriceIsZero){
+                SpannableStringBuilder ss= drawLineOnText(subtitle);
+                binding.tvSubTitle.setText(ss);
+                LogUtils.LOGE(TAG, "SUBTITLE WITH LINE: " + drawLineOnText(subtitle));
+            }else {
+                binding.tvSubTitle.setText(subtitle);
+                LogUtils.LOGE(TAG, "SUBTITLE: " + subtitle);
+            }
+
+            //binding.tvSubTitle.setText(subtitle);
             binding.tvCityName.setText(bannerImageModel.cityName);
             // set banner image
 
@@ -148,6 +177,32 @@ public class SubscriptionBannerFragment extends BaseFragment {
         } else {
             binding.progress.setVisibility(View.GONE);
         }
+
+    }
+
+
+    private String addingSubtitleWithOldAndNewPrice(String subTitle) {
+        if (!bannerImageModel.oldPrice.equals(Utility.ZERO_VALUE.THREE_ZERO)) {
+            isPriceIsZero = true;
+            oldPrice = Utility.getCheepCarePackageMonthlyPrice(binding.tvSubTitle.getContext()
+                    , R.string.rupee_symbol_x_package_price, bannerImageModel.oldPrice);
+        } else {
+            isPriceIsZero = false;
+            oldPrice = SpannableString.valueOf("");
+        }
+        newPrice = Utility.getCheepCarePackageMonthlyPrice(binding.tvSubTitle.getContext()
+                , R.string.rupee_symbol_x_package_price, bannerImageModel.newPrice);
+
+        return subTitle + " " + oldPrice + " " + newPrice;
+
+    }
+
+    private SpannableStringBuilder drawLineOnText(String subTitle) {
+        SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(subTitle);
+        StrikethroughSpan strikethroughSpan = new StrikethroughSpan();
+        spannableStringBuilder.setSpan(strikethroughSpan,49,57, Paint.STRIKE_THRU_TEXT_FLAG);
+
+        return spannableStringBuilder;
 
     }
 

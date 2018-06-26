@@ -19,6 +19,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
+import android.text.SpannableString;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
@@ -731,6 +732,31 @@ public class HomeTabFragment extends BaseFragment {
                                 break;
                             }
                         }
+                        /*SpannableString oldPrice = null,newPrice= null;
+                        for(int i=0; i<careBannerModelArrayList.size(); i++){
+                            if(!careBannerModelArrayList.get(i).oldPrice.equals("0")){
+                                oldPrice = Utility.getCheepCarePackageMonthlyPrice(binding.tvSubTitle.getContext()
+                                        , R.string.rupee_symbol_x_package_price, bannerImageModel.oldPrice);
+                            }else {
+                                oldPrice= SpannableString.valueOf("");
+                            }
+                        }
+*/
+                      /*  private String addingSubtitleWithOldAndNewPrice(String subTitle){
+
+                        if(!bannerImageModel.oldPrice.equals("0")){
+                            oldPrice = Utility.getCheepCarePackageMonthlyPrice(binding.tvSubTitle.getContext()
+                                    , R.string.rupee_symbol_x_package_price, bannerImageModel.oldPrice);
+                        }else {
+                            oldPrice= SpannableString.valueOf("");
+                        }
+
+                        newPrice = Utility.getCheepCarePackageMonthlyPrice(binding.tvSubTitle.getContext()
+                                , R.string.rupee_symbol_x_package_price, bannerImageModel.newPrice);
+
+                        return subTitle+" "+oldPrice+" "+newPrice;
+
+                    }*/
 
 
                         getCategoryListFromServer();
