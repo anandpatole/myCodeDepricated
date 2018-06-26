@@ -100,7 +100,8 @@ public class TaskRecyclerViewAdapterNew extends LoadMoreSwipeRecyclerAdapter<Tas
         if (whichFrag == TaskFragment.TAB_PAST_TASK) {
             if (mList.get(position).taskType.equalsIgnoreCase(Utility.TASK_TYPE.STRATEGIC)) {
                 return VIEW_TYPE_INDIVIDUAL;
-            } else {
+            } else
+                {
                 if (mList.get(position).selectedProvider != null && !TextUtils.isEmpty(mList.get(position).selectedProvider.providerId)) {
                     return VIEW_TYPE_INDIVIDUAL;
                 } else {
@@ -110,7 +111,8 @@ public class TaskRecyclerViewAdapterNew extends LoadMoreSwipeRecyclerAdapter<Tas
                     return VIEW_TYPE_GROUP;
                 }
             }
-        } else {
+        } else
+            {
             return VIEW_TYPE_UPCOMING;
         }
     }
