@@ -10,6 +10,7 @@ import com.android.volley.VolleyError;
 import com.appsflyer.AppsFlyerLib;
 import com.cheep.BuildConfig;
 import com.cheep.R;
+import com.cheep.cheepcare.dialogs.TaskConfirmedCCInstaBookDialog;
 import com.cheep.cheepcare.model.AdminSettingModel;
 import com.cheep.cheepcare.model.CareCityDetail;
 import com.cheep.cheepcare.model.CityLandingPageModel;
@@ -1049,7 +1050,7 @@ public class WebCallClass {
     }
 
     public static void createInstaBookingTask(final Context mContext, final TaskDetailModel taskDetailModel, AddressModel mSelectedAddressModel, String quoteAmount, String payableAmount, String paymentMethod, String paymentLog, String txnId, final CommonResponseListener commonListener
-            , final InstaBookTaskCreationListener successListener) {
+            , final InstaBookTaskCreationListener successListener, final TaskConfirmedCCInstaBookDialog.TaskConfirmActionListener listener) {
         Map<String, Object> mTaskCreationParams = new HashMap<>();
 
         final Response.ErrorListener errorListener = new Response.ErrorListener() {
@@ -1080,7 +1081,7 @@ public class WebCallClass {
                                     AppsFlyerLib.getInstance().trackEvent(mContext, NetworkUtility.TAGS.APPSFLYER_CUSTOM_TRACK_EVENTS.COUPON_DUNIA_TASK_DEBUG, finalMTaskCreationParams);
                                 else
                                     AppsFlyerLib.getInstance().trackEvent(mContext, NetworkUtility.TAGS.APPSFLYER_CUSTOM_TRACK_EVENTS.COUPON_DUNIA_TASK_LIVE, finalMTaskCreationParams);
-                            Utility.onSuccessfulInstaBookingTaskCompletion(mContext, jsonObject);
+                            Utility.onSuccessfulInstaBookingTaskCompletion(mContext, jsonObject,listener);
                             successListener.successOfInstaBookTaskCreation();
                             break;
                         case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:

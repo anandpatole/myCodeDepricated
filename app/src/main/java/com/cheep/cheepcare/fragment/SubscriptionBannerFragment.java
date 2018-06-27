@@ -2,25 +2,12 @@ package com.cheep.cheepcare.fragment;
 
 import android.annotation.SuppressLint;
 import android.databinding.DataBindingUtil;
-import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
-import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
-import android.text.Spanned;
-import android.text.style.DrawableMarginSpan;
-import android.text.style.DynamicDrawableSpan;
-import android.text.style.ForegroundColorSpan;
-import android.text.style.ImageSpan;
 import android.text.style.StrikethroughSpan;
-import android.text.style.StyleSpan;
-import android.util.Log;
-import android.util.StringBuilderPrinter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -201,7 +188,6 @@ public class SubscriptionBannerFragment extends BaseFragment {
         SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(subTitle);
         StrikethroughSpan strikethroughSpan = new StrikethroughSpan();
         spannableStringBuilder.setSpan(strikethroughSpan,49,57, Paint.STRIKE_THRU_TEXT_FLAG);
-
         return spannableStringBuilder;
 
     }
