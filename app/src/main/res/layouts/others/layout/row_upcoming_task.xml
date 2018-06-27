@@ -321,7 +321,7 @@ android:visibility="gone"
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_gravity="center_vertical"
+
                     android:layout_weight="1.5"
                     android:orientation="vertical">
 
@@ -376,25 +376,29 @@ android:visibility="gone"
                         android:textSize="@dimen/text_size_12sp"
                         android:visibility="gone"
                         tools:text="-40% Cheeper"/>
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-                    <ImageView
+    <ImageView
                         android:id="@+id/tv_subscribed"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/scale_15dp"
-
                         android:background="@drawable/ic_subscribed_text"
                         android:layout_gravity="bottom"
                         android:visibility="visible"
                         tools:ignore="ContentDescription" />
+</LinearLayout>
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="@dimen/scale_0dp"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="bottom"
+                    android:layout_gravity="bottom|start"
                     android:layout_weight="1"
                     android:gravity="bottom"
+                    android:layout_marginTop="@dimen/scale_5dp"
                     android:minHeight="@dimen/scale_50dp"
                     android:orientation="vertical">
 
