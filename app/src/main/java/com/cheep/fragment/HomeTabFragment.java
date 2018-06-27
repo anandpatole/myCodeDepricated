@@ -723,7 +723,7 @@ public class HomeTabFragment extends BaseFragment {
                         JSONObject dataObject = jsonObject.optJSONObject(NetworkUtility.TAGS.DATA);
                         bannerImageModelArrayList = GsonUtility.getObjectListFromJsonString(dataObject.getString(NetworkUtility.TAGS.NORMAL_BANNER), BannerImageModel[].class);
                         careBannerModelArrayList = GsonUtility.getObjectListFromJsonString(dataObject.getString(NetworkUtility.TAGS.CARE_BANNER), CareCityDetail[].class);
-                        // Call Category listing webservice.
+                        //                        // Call Category listing webservice.
 
                         for (CareCityDetail careCityDetail : careBannerModelArrayList) {
                             if (careCityDetail.isSubscribed.equalsIgnoreCase(Utility.BOOLEAN.YES)) {

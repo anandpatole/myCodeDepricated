@@ -1138,6 +1138,7 @@ public class WebCallClass {
             mParams.put(NetworkUtility.TAGS.CHEEPCODE, Utility.EMPTY_STRING);
             mParams.put(NetworkUtility.TAGS.PROMOCODE_PRICE, Utility.ZERO_STRING);
         }
+
         mParams.put(NetworkUtility.TAGS.PAYABLE_AMOUNT, payableAmount);
         //mParams.put(NetworkUtility.TAGS.QUOTE_AMOUNT, quoteAmount);// this is total of selected sub categories price which are with gst
         mParams.put(NetworkUtility.TAGS.TOTAL_AMOUNT, payableAmount);

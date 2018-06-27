@@ -2,6 +2,7 @@ package com.cheep.cheepcarenew.fragments;
 
 import android.content.Context;
 import android.databinding.DataBindingUtil;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -174,7 +175,9 @@ public class UpgradeSubscriptionFragment extends BaseFragment
         month.setText("6 Months");
         newprice.setText(" ₹3000");
         oldprice.setText(" ₹3400");
-        oldprice.setPaintFlags(oldprice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+        oldprice.setPaintFlags(oldprice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG );
+
+
         saveprie.setText(" ₹400");
     }
 
