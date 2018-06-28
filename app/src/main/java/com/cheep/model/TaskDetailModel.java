@@ -117,6 +117,9 @@ public class TaskDetailModel implements Serializable {
     @SerializedName("quoted_sp_list")
     public ArrayList<ProviderModel> mQuotedSPList;
 
+    @SerializedName("packageData")
+    public List<SubServiceDetailModel.PackageData> packageData = null;
+
 //    @SerializedName("task_sub_sub_category")
 //    public ArrayList<ServiceTaskDetailModel> subSubCategoryList;
 
