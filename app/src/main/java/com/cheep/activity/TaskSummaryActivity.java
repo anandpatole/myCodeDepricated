@@ -52,7 +52,6 @@ import com.cheep.utils.CalendarUtility;
 import com.cheep.utils.FreshChatHelper;
 import com.cheep.utils.GlideUtility;
 import com.cheep.utils.GsonUtility;
-import com.cheep.utils.HotlineHelper;
 import com.cheep.utils.LogUtils;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.RoundedBackgroundSpan;
@@ -590,7 +589,7 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
 
     }
 
-    private void setUpUI(){
+    private void setUpUI() {
         //set appbar type section
         setAppBarSection();
 
@@ -712,13 +711,13 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
                     }
                     LogUtils.LOGE(TAG, "showTaskCompletionDialog: pendingAmount :: " + pendingAmount);
 
-                    if (pendingAmount > 0) {
-//                        PaymentChoiceActivity.newInstance(mContext, mTaskDetailModel);
-                        PaymentDetailsActivity.newInstance(mContext, mTaskDetailModel);
-                    } else {
+//                    if (pendingAmount > 0) {
+////                        PaymentChoiceActivity.newInstance(mContext, mTaskDetailModel);
+//                        PaymentDetailsActivity.newInstance(mContext, mTaskDetailModel);
+//                    } else {
 //                        mBinding.textTaskCompletionYes.setText(R.string.label_yes);
-                        PaymentSummaryActivity.newInstance(TaskSummaryActivity.this, mTaskDetailModel);
-                    }
+                        PaymentSummaryActivity.newInstance(TaskSummaryActivity.this, mTaskDetailModel,false);
+//                    }
                 }
             });
 
@@ -803,7 +802,7 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
         try {
             superCalendar.setTimeInMillis(Long.parseLong(mTaskDetailModel.taskStartdate));
             superCalendar.setLocaleTimeZone();
-            task_original_date = superCalendar.format(Utility.DATE_FORMAT_DD_MMM) + getString(R.string.label_between) ;
+            task_original_date = superCalendar.format(Utility.DATE_FORMAT_DD_MMM) + getString(R.string.label_between);
         } catch (NumberFormatException e) {
             e.printStackTrace();
         }
@@ -1038,7 +1037,7 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
             mBinding.textContactCheepViaChat.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                //    HotlineHelper.getInstance(mContext).showConversation(mContext);
+                    //    HotlineHelper.getInstance(mContext).showConversation(mContext);
                     FreshChatHelper.getInstance(mContext).showConversation(mContext);
                 }
             });
@@ -1148,8 +1147,8 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
                     LogUtils.LOGE(TAG, "showTaskCompletionDialog: pendingAmount :: " + pendingAmount);
 
                     if (pendingAmount > 0) {
-//                        PaymentChoiceActivity.newInstance(mContext, mTaskDetailModel);
-                        PaymentDetailsActivity.newInstance(mContext, mTaskDetailModel);
+//                        PaymentDetailsActivity.newInstance(mContext, mTaskDetailModel);
+                        PaymentSummaryActivity.newInstance(mContext, mTaskDetailModel, false);
                     } else {
                         callCompleteTaskWS(Utility.TASK_STATUS.COMPLETION_CONFIRM);
 //                        mBinding.textTaskCompletionYes.setText(R.string.label_yes);
@@ -1419,7 +1418,7 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
         dialog.addNegativeButton(getString(R.string.label_chat), new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-             //   HotlineHelper.getInstance(mContext).showConversation(mContext);
+                //   HotlineHelper.getInstance(mContext).showConversation(mContext);
                 FreshChatHelper.getInstance(mContext).showConversation(mContext);
                 dialog.dismiss();
             }

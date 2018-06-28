@@ -418,8 +418,6 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
                             // Get date-time for next 3 hours
                             SuperCalendar calAfter3Hours = SuperCalendar.getInstance().getNext3HoursTime(false);
 
-//                            TODO: This needs to Be UNCOMMENTED DO NOT FORGET
-//                            if (!BuildConfig.BUILD_TYPE.equalsIgnoreCase(Utility.DEBUG)) {
                             if (mTaskCreationActivity.mJobCategoryModel.isSubscribed.equalsIgnoreCase(Utility.BOOLEAN.YES)) {
 
                                 if (!(mSelectedAddress.is_subscribe.equalsIgnoreCase(Utility.ADDRESS_SUBSCRIPTION_TYPE.PREMIUM))) {
@@ -616,7 +614,7 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
     private void initAddressUI() {
 
         mAddressList = new ArrayList<>();
-        if (PreferenceUtility.getInstance(mContext).getUserDetails() != null) {
+        if (PreferenceUtility.getInstance(mContext).getUserDetails() != null && PreferenceUtility.getInstance(mContext).getUserDetails().addressList != null) {
             ArrayList<AddressModel> userAddressList = PreferenceUtility.getInstance(mContext).getUserDetails().addressList;
             ArrayList<AddressModel> subscribedAddressList = new ArrayList<>();
             ArrayList<AddressModel> premiumSubscribedAddressList = new ArrayList<>();
@@ -699,7 +697,6 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
         mFragmentEnterTaskDetailBinding.textTaskWhen.setVisibility(View.GONE);
         updateTaskVerificationFlags();
     }
-
 
 
     @Override
@@ -796,4 +793,82 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
             return false;
         }
     }
+
+    public boolean isTimeBetweenTwoTime(String argCurrentTime) throws ParseException {
+        String reg = "^([0-1][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])$";
+        //
+        String argStartTime = mContext.getResources().getString(R.string.start_time);
+        String argEndTime = mContext.getString(R.string.end_time);
+        if (argStartTime.matches(reg) && argEndTime.matches(reg)
+                && argCurrentTime.matches(reg)) {
+            boolean valid = false;
+            // Start Time
+            java.util.Date startTime = new SimpleDateFormat(Utility.DATE_FORMAT_HH_MM_SS)
+                    .parse(argStartTime);
+            Calendar startCalendar = Calendar.getInstance();
+            startCalendar.setTime(startTime);
+
+            // Current Time
+            java.util.Date currentTime = new SimpleDateFormat(Utility.DATE_FORMAT_HH_MM_SS)
+                    .parse(argCurrentTime);
+            Calendar currentCalendar = Calendar.getInstance();
+            currentCalendar.setTime(currentTime);
+
+            // End Time
+            java.util.Date endTime = new SimpleDateFormat(Utility.DATE_FORMAT_HH_MM_SS)
+                    .parse(argEndTime);
+            Calendar endCalendar = Calendar.getInstance();
+            endCalendar.setTime(endTime);
+
+            //
+            if (currentTime.compareTo(endTime) < 0) {
+
+                currentCalendar.add(Calendar.DATE, 1);
+                currentTime = currentCalendar.getTime();
+
+            }
+
+            if (startTime.compareTo(endTime) < 0) {
+
+                startCalendar.add(Calendar.DATE, 1);
+                startTime = startCalendar.getTime();
+
+            }
+            //
+            if (currentTime.before(startTime)) {
+
+                System.out.println(" Time is Lesser ");
+
+                valid = false;
+            } else {
+
+                if (currentTime.after(endTime)) {
+                    endCalendar.add(Calendar.DATE, 1);
+                    endTime = endCalendar.getTime();
+
+                }
+
+                System.out.println("Comparing , Start Time /n " + startTime);
+                System.out.println("Comparing , End Time /n " + endTime);
+                System.out
+                        .println("Comparing , Current Time /n " + currentTime);
+
+                if (currentTime.before(endTime)) {
+                    System.out.println("RESULT, Time lies b/w");
+                    valid = true;
+                } else {
+                    valid = false;
+                    System.out.println("RESULT, Time does not lies b/w");
+                }
+
+            }
+            return valid;
+
+        } else {
+            throw new IllegalArgumentException(
+                    "Not a valid time, expecting HH:MM:SS format");
+        }
+
+    }
+
 }

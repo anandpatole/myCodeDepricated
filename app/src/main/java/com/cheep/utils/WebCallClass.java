@@ -16,11 +16,11 @@ import com.cheep.cheepcare.model.CareCityDetail;
 import com.cheep.cheepcare.model.CityLandingPageModel;
 import com.cheep.cheepcare.model.PackageDetail;
 import com.cheep.cheepcare.model.RatingModel;
-import com.cheep.cheepcare.model.SubscribedTaskDetailModel;
 import com.cheep.model.AddressModel;
 import com.cheep.model.CityModel;
 import com.cheep.model.HistoryModel;
 import com.cheep.model.JobCategoryModel;
+import com.cheep.model.MessageEvent;
 import com.cheep.model.NotificationModel;
 import com.cheep.model.ProviderModel;
 import com.cheep.model.RateAndReviewModel;
@@ -32,6 +32,7 @@ import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
 import com.google.gson.Gson;
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -49,8 +50,7 @@ import static com.cheep.network.NetworkUtility.TAGS.DETAIL;
 import static com.cheep.network.NetworkUtility.TAGS.FINAL_EXTRA_CHARGE;
 import static com.cheep.network.NetworkUtility.TAGS.HOME;
 import static com.cheep.network.NetworkUtility.TAGS.OFFICE;
-import static com.cheep.network.NetworkUtility.TAGS.PACKAGE_TYPE;
-import static com.cheep.network.NetworkUtility.TAGS.START_DATETIME;
+import static com.cheep.network.NetworkUtility.TAGS.TASK_ID;
 
 /**
  * Created by bhavesh on 24/1/18.
@@ -258,130 +258,8 @@ public class WebCallClass {
     }
     //////////////////////////Fetch List Of Sub Category call end//////////////////////////
 
-    //////////////////////////Create task Cheep care call start//////////////////////////
 
-    public interface SuccessOfTaskCreationResponseListener {
-        void onSuccessOfTaskCreate(String startdateTimeTimeStamp);
-    }
-
-    public static void createCheepCareTask(final Context mContext, SubscribedTaskDetailModel subscribedTaskDetailModel,
-                                           final CommonResponseListener commonListener,
-                                           final SuccessOfTaskCreationResponseListener successListener) {
-
-        Map<String, String> mHeaderParams = new HashMap<>();
-        mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
-        if (PreferenceUtility.getInstance(mContext).getUserDetails() != null) {
-            mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().userID);
-        }
-
-        final Response.ErrorListener errorListener = new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
-                commonListener.volleyError(error);
-            }
-        };
-
-        final Response.Listener responseListener = new Response.Listener() {
-            @Override
-            public void onResponse(Object response) {
-                Log.d(TAG, "onResponse() called with: response = [" + response + "]");
-                try {
-                    JSONObject jsonObject = new JSONObject(response.toString());
-                    int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
-
-                    String error_message;
-                    switch (statusCode) {
-                        case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
-                            String startdateTimeTimeStamp = jsonObject.optJSONObject(DATA).optString(START_DATETIME);
-                            successListener.onSuccessOfTaskCreate(startdateTimeTimeStamp);
-                            break;
-                        case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
-                            // Show Toast
-                            commonListener.showSpecificMessage(mContext.getString(R.string.label_something_went_wrong));
-                            break;
-                        case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
-                            error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
-                            // Show message
-                            commonListener.showSpecificMessage(error_message);
-                            break;
-                        case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
-                        case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
-                            //Logout and finish the current activity
-                            Utility.logout(mContext, true, statusCode);
-                            commonListener.forceLogout();
-                            break;
-                    }
-                } catch (JSONException e) {
-                    commonListener.showSpecificMessage(mContext.getString(R.string.label_something_went_wrong));
-                    e.printStackTrace();
-                }
-            }
-        };
-        //Add Params
-        Map<String, String> mParams = new HashMap<>();
-
-        //0
-        mParams.put(NetworkUtility.TAGS.CARE_PACKAGE_ID, subscribedTaskDetailModel.taskType.equalsIgnoreCase(Utility.TASK_TYPE.NORMAL) ? Utility.ZERO_STRING : subscribedTaskDetailModel.carePackageId);
-
-        mParams.put(NetworkUtility.TAGS.CAT_ID, subscribedTaskDetailModel.jobCategoryModel.catId);
-        String freeServicejson = new Gson().toJson(subscribedTaskDetailModel.freeServiceList);
-
-        mParams.put(NetworkUtility.TAGS.FREE_SERVICE, freeServicejson);
-
-        String paidServicejson = new Gson().toJson(subscribedTaskDetailModel.paidServiceList);
-
-        mParams.put(NetworkUtility.TAGS.PAID_SERVICE, paidServicejson);
-
-        mParams.put(NetworkUtility.TAGS.ADDRESS_ID, subscribedTaskDetailModel.addressModel.address_id);
-
-        mParams.put(NetworkUtility.TAGS.TOTAL_AMOUNT, String.valueOf(subscribedTaskDetailModel.total));
-
-        mParams.put(NetworkUtility.TAGS.PAYABLE_AMOUNT, subscribedTaskDetailModel.paybleAmount);
-
-        mParams.put(NetworkUtility.TAGS.START_DATETIME, subscribedTaskDetailModel.startDateTime);
-
-        mParams.put(NetworkUtility.TAGS.IS_REFER_CODE, Utility.BOOLEAN.NO);
-
-        mParams.put(NetworkUtility.TAGS.TASK_TYPE, subscribedTaskDetailModel.taskType);
-
-//        mParams.put(NetworkUtility.TAGS.TASK_DESC, subscribedTaskDetailModel.taskDesc);
-
-        mParams.put(NetworkUtility.TAGS.MEDIA_FILE, Utility.getSelectedMediaJsonString(subscribedTaskDetailModel.mediaFileList));
-
-        mParams.put(NetworkUtility.TAGS.PROMOCODE_PRICE, Utility.ZERO_STRING);
-
-
-        mParams.put(NetworkUtility.TAGS.USED_WALLET_BALANCE, Utility.ZERO_STRING);
-
-        mParams.put(NetworkUtility.TAGS.CHEEPCODE, Utility.EMPTY_STRING);
-
-        // PENDING
-        mParams.put(NetworkUtility.TAGS.PAYMENT_METHOD, subscribedTaskDetailModel.taskType.equalsIgnoreCase(Utility.TASK_TYPE.NORMAL) ? Utility.TASK_STATUS.PENDING : subscribedTaskDetailModel.paymentMethod);
-
-
-        mParams.put(NetworkUtility.TAGS.PAYMENT_LOG, subscribedTaskDetailModel.paymentLog);
-
-        mParams.put(NetworkUtility.TAGS.CHARGE_SPECIFIC_TIME, String.valueOf(subscribedTaskDetailModel.nonWorkingHourFees));
-
-        mParams.put(NetworkUtility.TAGS.CHARGE_EXCEED_LIMIT, String.valueOf(subscribedTaskDetailModel.taskExcessLimitFees));
-
-        Log.d(TAG, "VolleyNetworkRequest() called with: url = [" + "url" + "], errorListener = [" + "errorListener" + "]" +
-                ", listener = [" + "listener" + "], headers = [" + mHeaderParams + "], stringData = [" + mParams + "], fileParam = [" + null + "]");
-
-        //noinspection unchecked
-        VolleyNetworkRequest mVolleyNetworkRequestForCategoryList = new VolleyNetworkRequest(NetworkUtility.WS.CARE_CREATE_TASK
-                , errorListener
-                , responseListener
-                , mHeaderParams
-                , mParams
-                , null);
-
-        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequestForCategoryList, NetworkUtility.WS.CARE_CREATE_TASK);
-    }
-
-    //////////////////////////Create task Cheep care call end//////////////////////////
-///////Need Help ///////
+    ///////Need Help ///////
     public interface GetNeedHelpResponseListener {
 
         void getNeedHelp();
@@ -1081,7 +959,7 @@ public class WebCallClass {
                                     AppsFlyerLib.getInstance().trackEvent(mContext, NetworkUtility.TAGS.APPSFLYER_CUSTOM_TRACK_EVENTS.COUPON_DUNIA_TASK_DEBUG, finalMTaskCreationParams);
                                 else
                                     AppsFlyerLib.getInstance().trackEvent(mContext, NetworkUtility.TAGS.APPSFLYER_CUSTOM_TRACK_EVENTS.COUPON_DUNIA_TASK_LIVE, finalMTaskCreationParams);
-                            Utility.onSuccessfulInstaBookingTaskCompletion(mContext, jsonObject,listener);
+                            Utility.onSuccessfulInstaBookingTaskCompletion(mContext, jsonObject, listener);
                             successListener.successOfInstaBookTaskCreation();
                             break;
                         case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
@@ -1127,6 +1005,7 @@ public class WebCallClass {
         }
         mParams.put(NetworkUtility.TAGS.CITY_ID, userDetails.CityID);
         mParams.put(NetworkUtility.TAGS.CAT_ID, taskDetailModel.categoryModel.catId);
+        mParams.put(NetworkUtility.TAGS.CAT_PRICE, taskDetailModel.categoryModel.catPrice);
         mParams.put(NetworkUtility.TAGS.START_DATETIME, taskDetailModel.taskStartdate);
 
         String selectedServices = new Gson().toJson(taskDetailModel.subCatList);
@@ -1153,7 +1032,11 @@ public class WebCallClass {
 
         mParams.put(NetworkUtility.TAGS.PAYMENT_LOG, paymentLog);
         mParams.put(NetworkUtility.TAGS.PAYMENT_METHOD, paymentMethod);
-        mParams.put(NetworkUtility.TAGS.PAYMENT_STATUS, Utility.PAYMENT_STATUS.COMPLETED);
+        if (paymentMethod.equalsIgnoreCase(NetworkUtility.PAYMENT_METHOD_TYPE.PAY_LATER))
+            mParams.put(NetworkUtility.TAGS.PAYMENT_STATUS, Utility.PAYMENT_STATUS.PENDING);
+        else
+            mParams.put(NetworkUtility.TAGS.PAYMENT_STATUS, Utility.PAYMENT_STATUS.COMPLETED);
+
         if (taskDetailModel.additionalChargeReason.equalsIgnoreCase(Utility.ADDITION_CHARGES_DIALOG_TYPE.OUT_OF_OFFICE_HOURS)) {
             mParams.put(NetworkUtility.TAGS.OUT_OF_OFFICE_CHARGES, PreferenceUtility.getInstance(mContext).getAdminSettings().additionalChargeForSelectingSpecificTime);
             mParams.put(NetworkUtility.TAGS.URGENT_BOOKING_CHARGES, Utility.ZERO_STRING);
@@ -2098,11 +1981,11 @@ public class WebCallClass {
 
     ////////////////////////// identifyAddressIfSubscribed call start //////////////////////////
 
-    public interface GetAddressPackageTypeListener {
-        void getPackageTypeOfAddress(String packageType);
+    public interface RescheduleTaskListener {
+        void onSuccessOfReschedule();
     }
 
-    public static void identifyAddressIfSubscribedWS(final Context mContext, String addressId, final GetAddressPackageTypeListener getAddressPackageTypeListener, final CommonResponseListener commonListener) {
+    public static void rescheduleTask(final Context mContext, String taskId, String startDateTimeTimeStamp, final RescheduleTaskListener rescheduleTaskListener, final CommonResponseListener commonListener) {
 
         final Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
@@ -2124,8 +2007,15 @@ public class WebCallClass {
                     switch (statusCode) {
                         case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
                             JSONObject jsonData = jsonObject.getJSONObject(DATA);
-                            String packageType = jsonData.optString(PACKAGE_TYPE);
-                            getAddressPackageTypeListener.getPackageTypeOfAddress(packageType);
+                            String pro_username = jsonData.optString(NetworkUtility.TAGS.SP_USER_NAME);
+                            Log.i(TAG, "onResponse: Pro name" + pro_username);
+                            Utility.showToast(mContext, mContext.getString(R.string.task_reschedule_task_success, pro_username));
+                            MessageEvent messageEvent = new MessageEvent();
+                            messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.TASK_RESCHEDULED;
+                            messageEvent.id = jsonData.getString(NetworkUtility.TAGS.TASK_ID);
+                            messageEvent.taskStartdate = jsonData.getString(NetworkUtility.TAGS.RESCHEDULE_DATETIME);
+                            EventBus.getDefault().post(messageEvent);
+                            rescheduleTaskListener.onSuccessOfReschedule();
                             break;
 
                         case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
@@ -2161,19 +2051,20 @@ public class WebCallClass {
         }
 
         Map<String, String> bodyParams = new HashMap<>();
-        bodyParams.put(ADDRESS_ID, addressId);
+        bodyParams.put(TASK_ID, taskId);
+        bodyParams.put(NetworkUtility.TAGS.START_DATETIME, startDateTimeTimeStamp);
 
 
         //noinspection unchecked
         VolleyNetworkRequest mVolleyNetworkRequest = new VolleyNetworkRequest(
-                NetworkUtility.WS.IDENTIFY_ADDRESS_IF_SUBSCRIBED
+                NetworkUtility.WS.RESCHEDULE_TASK
                 , errorListener
                 , responseListener
                 , mHeaderParams
                 , bodyParams
                 , null);
 
-        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest, NetworkUtility.WS.IDENTIFY_ADDRESS_IF_SUBSCRIBED);
+        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest, NetworkUtility.WS.RESCHEDULE_TASK);
     }
 
     ////////////////////////// identifyAddressIfSubscribed call end //////////////////////////

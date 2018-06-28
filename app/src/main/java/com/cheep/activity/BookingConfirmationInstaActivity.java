@@ -1,6 +1,8 @@
 package com.cheep.activity;
 
 import android.annotation.TargetApi;
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
@@ -18,16 +20,21 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.widget.DatePicker;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.cheep.R;
 import com.cheep.adapter.SelectedSubServiceAdapter;
 import com.cheep.cheepcare.dialogs.TaskConfirmedCCInstaBookDialog;
+import com.cheep.cheepcare.model.AdminSettingModel;
 import com.cheep.custom_view.BottomAlertDialog;
 import com.cheep.custom_view.CFEditTextRegular;
 import com.cheep.databinding.ActivityBookingConfirmationInstaBinding;
+import com.cheep.dialogs.OutOfOfficeHoursDialog;
+import com.cheep.dialogs.UrgentBookingDialog;
 import com.cheep.model.AddressModel;
 import com.cheep.model.JobCategoryModel;
 import com.cheep.model.MessageEvent;
@@ -40,6 +47,7 @@ import com.cheep.utils.CalendarUtility;
 import com.cheep.utils.GsonUtility;
 import com.cheep.utils.LogUtils;
 import com.cheep.utils.PreferenceUtility;
+import com.cheep.utils.SuperCalendar;
 import com.cheep.utils.Utility;
 import com.cheep.utils.WebCallClass;
 
@@ -50,6 +58,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.math.BigDecimal;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -64,27 +73,24 @@ public class BookingConfirmationInstaActivity extends BaseAppCompatActivity {
     private AddressModel mSelectedAddressModel;
     private double total;
     private double totalWithGST;
-    private double subTotal;
     private static final String TAG = LogUtils.makeLogTag(BookingConfirmationInstaActivity.class);
     private Map<String, Object> mTaskCreationParams;
     private JobCategoryModel mJobCategoryModel;
-
     private double usedWalletBalance = 0;
-
     private String referralBalance;
     private String maxReferDiscount;
-
     private CFEditTextRegular edtCheepcode;
     private BottomAlertDialog cheepCodeDialog;
     private String cheepCode;
     private String payableAmount;
-
+    private SuperCalendar startDateTimeSuperCalendar = SuperCalendar.getInstance();
+    private SuperCalendar superCalendar;
+    private String additionalChargeReason = Utility.EMPTY_STRING;
 
     public static void newInstance(Context context, TaskDetailModel taskDetailModel, AddressModel mSelectedAddressModel) {
         Intent intent = new Intent(context, BookingConfirmationInstaActivity.class);
         intent.putExtra(Utility.Extra.DATA, GsonUtility.getJsonStringFromObject(taskDetailModel));
         intent.putExtra(Utility.Extra.SELECTED_ADDRESS_MODEL, GsonUtility.getJsonStringFromObject(mSelectedAddressModel));
-        // intent.putExtra(Utility.Extra.DATA_2,GsonUtility.getJsonStringFromObject(taskDetailModel));
         context.startActivity(intent);
     }
 
@@ -105,13 +111,8 @@ public class BookingConfirmationInstaActivity extends BaseAppCompatActivity {
 
 
         if (getIntent().hasExtra(Utility.Extra.DATA)) {
-            //This is only when provider profile view for specific task (provider gives quote to specific task)
             taskDetailModel = (TaskDetailModel) GsonUtility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA), TaskDetailModel.class);
         }
-//        if (getIntent().hasExtra(Utility.Extra.DATA_2)) {
-//            //This is only when provider profile view for specific task (provider gives quote to specific task)
-//            mJobCategoryModel = (JobCategoryModel) GsonUtility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA_2), JobCategoryModel.class);
-//        }
         if (getIntent().hasExtra(Utility.Extra.SELECTED_ADDRESS_MODEL)) {
             mSelectedAddressModel = (AddressModel) GsonUtility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.SELECTED_ADDRESS_MODEL), AddressModel.class);
         }
@@ -160,7 +161,6 @@ public class BookingConfirmationInstaActivity extends BaseAppCompatActivity {
                     } else {
                         mBinding.tvLabelCategoryPrices.setText(getString(R.string.free));
                         subServiceTotal = 0;
-
                     }
                 } else {
                     mBinding.tvLabelCategoryPrices.setText(getString(R.string.free));
@@ -285,86 +285,8 @@ public class BookingConfirmationInstaActivity extends BaseAppCompatActivity {
                 mBinding.viewLine1.setVisibility(View.GONE);
             }
         }
-
-        ///old
-//        if(mSelectedAddressModel.is_subscribe.equalsIgnoreCase(Utility.ADDRESS_SUBSCRIPTION_TYPE.PREMIUM)|| mSelectedAddressModel.is_subscribe.equalsIgnoreCase(Utility.ADDRESS_SUBSCRIPTION_TYPE.NORMAL))
-//        {
-//
-//            if(taskDetailModel.additionalChargeReason.equalsIgnoreCase(Utility.ADDITION_CHARGES_DIALOG_TYPE.NONE))
-//            {
-//
-//                mBinding.lnPayLaterPayNowButtons.setVisibility(View.GONE);
-//                mBinding.tvGotcha.setVisibility(View.VISIBLE);
-//
-//            }
-//            else
-//            {
-//
-//                mBinding.lnPayLaterPayNowButtons.setVisibility(View.VISIBLE);
-//                mBinding.tvGotcha.setVisibility(View.GONE);
-//            }
-//            mBinding.tvLabelCategoryPrices.setText(getString(R.string.free));
-//            subServiceTotal=0;
-//        }
-//        else
-//        {
-//            mBinding.lnPayLaterPayNowButtons.setVisibility(View.VISIBLE);
-//            mBinding.tvGotcha.setVisibility(View.GONE);
-//            mBinding.tvLabelCategoryPrices.setText(getString(R.string.rupee_symbol_x, Utility.getQuotePriceFormatter(taskDetailModel.catPrice)));
-//            subServiceTotal=Double.valueOf(taskDetailModel.catPrice);
-//        }
-//
-//
-//        if(taskDetailModel.additionalChargeReason.equalsIgnoreCase(Utility.ADDITION_CHARGES_DIALOG_TYPE.NONE))
-//        {
-//            mBinding.rlAdditionalCharges.setVisibility(View.GONE);
-//            additionalCharge=0;
-//            mBinding.viewLine2.setVisibility(View.GONE);
-//        }
-//        else
-//        {
-//            mBinding.viewLine2.setVisibility(View.VISIBLE);
-//            mBinding.rlAdditionalCharges.setVisibility(View.VISIBLE);
-//            // mBinding.tvLabelAdditionalCharge.setText(taskDetailModel.additionalChargeReason);
-//            mBinding.tvAdditionalChargeReason.setText(taskDetailModel.additionalChargeReason);
-//            if(taskDetailModel.additionalChargeReason.equalsIgnoreCase(Utility.ADDITION_CHARGES_DIALOG_TYPE.OUT_OF_OFFICE_HOURS))
-//            {
-//                mBinding.tvAdditionalChargeSubreason.setText(getString(R.string.out_of_off_info));
-//            }
-//            else
-//            {
-//                mBinding.tvAdditionalChargeSubreason.setText(getString(R.string.urgent_booking_info));
-//            }
-//
-//            mBinding.tvAdditionalCharge.setText(getString(R.string.rupee_symbol_x, Utility.getQuotePriceFormatter(PreferenceUtility.getInstance(mContext).getAdminSettings().additionalChargeForSelectingSpecificTime)));
-//            additionalCharge=Double.valueOf(PreferenceUtility.getInstance(mContext).getAdminSettings().additionalChargeForSelectingSpecificTime);
-//        }
-//        // banner image of cat
-//        //GlideUtility.loadImageView(mContext, mBinding.imgService, taskDetailModel.categoryModel.catImageExtras.original, R.drawable.gradient_black);
-//
-//        if (!taskDetailModel.subCatList.isEmpty()) {
-//            mBinding.recyclerViewPaid.setVisibility(View.VISIBLE);
-//            mBinding.recyclerViewPaid.setLayoutManager(new LinearLayoutManager(this));
-//            mBinding.recyclerViewPaid.setAdapter(new SelectedSubServiceAdapter(taskDetailModel.subCatList));
-//            mBinding.viewLine1.setVisibility(View.VISIBLE);
-//            mBinding.categoryTick.setVisibility(View.GONE);
-//        } else {
-//            mBinding.categoryTick.setVisibility(View.VISIBLE);
-//            mBinding.recyclerViewPaid.setVisibility(View.GONE);
-//            mBinding.viewLine1.setVisibility(View.GONE);
-//        }
-
-        //
         mBinding.ivTermsTick.setSelected(true);
-
         setPayButtonSelection();
-
-//        for (SubServiceDetailModel subServiceDetailModel : taskDetailModel.subCatList) {
-//            subServiceTotal += subServiceDetailModel.selected_unit * Double.parseDouble(subServiceDetailModel.unitPrice);
-//            LogUtils.LOGE(TAG, "initiateUI:unitPrice " + subServiceDetailModel.unitPrice);
-//            subServiceTotalWithGST += subServiceDetailModel.selected_unit * Double.parseDouble(subServiceDetailModel.unitPriceWithGST);
-//            LogUtils.LOGE(TAG, "initiateUI:unitPriceWithGST " + subServiceDetailModel.unitPriceWithGST);
-//        }
         subTotal = subServiceTotal + additionalCharge;
         total = new BigDecimal(subServiceTotal).doubleValue();
         LogUtils.LOGE(TAG, "initiateUI:total " + total);
@@ -377,11 +299,6 @@ public class BookingConfirmationInstaActivity extends BaseAppCompatActivity {
         mBinding.tvSubTotal.setText(getString(R.string.rupee_symbol_x, Utility.getQuotePriceFormatter(String.valueOf(subTotal))));
 
         mBinding.tvTotal.setText(getString(R.string.rupee_symbol_x, Utility.getQuotePriceFormatter(String.valueOf(subTotal))));
-
-        // mBinding.lnPayNow.setVisibility(View.GONE);
-        //mBinding.lnPayLaterPayNowButtons.setVisibility(View.VISIBLE);
-
-        //initUIForReferDiscountAndPromoCode();
         String text = getString(R.string.description_pay_now);
         StringBuilder description = new StringBuilder(text);
         // appending two space for two smiley at the end of description
@@ -604,13 +521,11 @@ public class BookingConfirmationInstaActivity extends BaseAppCompatActivity {
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
                         // Show Toast
-//                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityJobSummaryBinding.getRoot());
                         Utility.showToast(mContext, getString(R.string.label_something_went_wrong));
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
                         error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
                         // Show message
-//                        Utility.showSnackBar(error_message, mActivityJobSummaryBinding.getRoot());
                         Utility.showToast(mContext, error_message);
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
@@ -679,7 +594,6 @@ public class BookingConfirmationInstaActivity extends BaseAppCompatActivity {
                         }
                     }
 
-                    // todo : remove commented (logic pending)
                     getAmountWithGstWS(String.valueOf(usedWalletBalance));
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -839,10 +753,6 @@ public class BookingConfirmationInstaActivity extends BaseAppCompatActivity {
     };
 
 
-    /**
-     * TODO: Add apps flyer events for task creation and also add event for coupan dunia code
-     */
-
     private void callCreateInstaTaskBooking(String payment_method) {
 
         // Check Internet connection
@@ -854,28 +764,7 @@ public class BookingConfirmationInstaActivity extends BaseAppCompatActivity {
         showProgressDialog();
 
         WebCallClass.createInstaBookingTask(BookingConfirmationInstaActivity.this,
-                taskDetailModel, mSelectedAddressModel, String.valueOf(total), payableAmount, payment_method, Utility.EMPTY_STRING, Utility.EMPTY_STRING, new WebCallClass.CommonResponseListener() {
-
-                    @Override
-                    public void volleyError(VolleyError error) {
-                        hideProgressDialog();
-                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
-
-                    }
-
-                    @Override
-                    public void showSpecificMessage(String message) {
-                        hideProgressDialog();
-                        Utility.showSnackBar(message, mBinding.getRoot());
-
-                    }
-
-                    @Override
-                    public void forceLogout() {
-                        hideProgressDialog();
-
-                    }
-                }, new WebCallClass.InstaBookTaskCreationListener() {
+                taskDetailModel, mSelectedAddressModel, String.valueOf(total), payableAmount, payment_method, Utility.EMPTY_STRING, Utility.EMPTY_STRING, commonResponseListener, new WebCallClass.InstaBookTaskCreationListener() {
                     @Override
                     public void successOfInstaBookTaskCreation() {
                         hideProgressDialog();
@@ -890,12 +779,187 @@ public class BookingConfirmationInstaActivity extends BaseAppCompatActivity {
                     }
 
                     @Override
-                    public void rescheduleTask() {
-
+                    public void rescheduleTask(String taskId) {
+                        showDateTimePickerDialog(taskId);
                     }
                 });
     }
 
+    private void showDateTimePickerDialog(final String taskId) {
+// Get Current Date
+        final Calendar c = Calendar.getInstance();
+
+        DatePickerDialog datePickerDialog = new DatePickerDialog(mContext, new DatePickerDialog.OnDateSetListener() {
+
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                if (view.isShown()) {
+                    Log.d(TAG, "onDateSet() called with: view = [" + view + "], year = [" + year + "], monthOfYear = [" + monthOfYear + "], dayOfMonth = [" + dayOfMonth + "]");
+                    startDateTimeSuperCalendar.set(Calendar.YEAR, year);
+                    startDateTimeSuperCalendar.set(Calendar.MONTH, monthOfYear);
+                    startDateTimeSuperCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                    showTimePickerDialog(taskId);
+                }
+            }
+        }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH));
+
+        datePickerDialog.show();
+        superCalendar = SuperCalendar.getInstance();
+        datePickerDialog.getDatePicker().setMinDate(superCalendar.getTimeInMillis());
+    }
+
+
+    private void showTimePickerDialog(final String taskId) {
+        // Get Current Time
+        final Calendar c = Calendar.getInstance();
+        // Launch Time Picker Dialog
+        TimePickerDialog timePickerDialog = new TimePickerDialog(mContext,
+                new TimePickerDialog.OnTimeSetListener() {
+
+                    @Override
+                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                        if (view.isShown()) {
+                            Log.d(TAG, "onTimeSet() called with: view = [" + view + "], hourOfDay = [" + hourOfDay + "], minute = [" + minute + "]");
+
+                            startDateTimeSuperCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                            startDateTimeSuperCalendar.set(Calendar.MINUTE, minute);
+
+                            superCalendar = SuperCalendar.getInstance();
+                            superCalendar.setTimeInMillis(startDateTimeSuperCalendar.getTimeInMillis());
+                            superCalendar.setTimeZone(SuperCalendar.SuperTimeZone.GMT.GMT);
+
+                            // Get date-time for next 3 hours
+                            SuperCalendar calAfter3Hours = SuperCalendar.getInstance().getNext3HoursTime(false);
+
+                            AdminSettingModel model = null;
+                            model = PreferenceUtility.getInstance(mContext).getAdminSettings();
+
+
+                            if (System.currentTimeMillis() < startDateTimeSuperCalendar.getTimeInMillis()) {
+                                if (taskDetailModel.categoryModel.isSubscribed.equalsIgnoreCase(Utility.BOOLEAN.YES) && mSelectedAddressModel.is_subscribe.equalsIgnoreCase(Utility.ADDRESS_SUBSCRIPTION_TYPE.PREMIUM)) {
+                                    String selectedDateTime = startDateTimeSuperCalendar.format(Utility.DATE_FORMAT_DD_MMM)
+                                            + getString(R.string.label_between)
+                                            + CalendarUtility.get2HourTimeSlots(Long.toString(startDateTimeSuperCalendar.getTimeInMillis()));
+                                    Log.e(TAG, "onTimeSet: selectedDateTime:: " + selectedDateTime);
+                                    additionalChargeReason = Utility.ADDITION_CHARGES_DIALOG_TYPE.NONE;
+                                } else if (startDateTimeSuperCalendar.getTimeInMillis() < calAfter3Hours.getTimeInMillis()) {
+                                    if (taskDetailModel.additionalChargeReason.equalsIgnoreCase(Utility.ADDITION_CHARGES_DIALOG_TYPE.NONE)) {
+                                        showUrgentBookingDialog(model);
+                                    } else {
+                                        Log.e(TAG, "onTimeSet:call direct reschedule web service");
+                                        callRescheduleTaskWS(taskId);
+                                    }
+                                } else if (!startDateTimeSuperCalendar.isWorkingHour(model.starttime, model.endtime)) {
+                                    if (taskDetailModel.additionalChargeReason.equalsIgnoreCase(Utility.ADDITION_CHARGES_DIALOG_TYPE.NONE)) {
+                                        showOutOfOfficeHours(model);
+                                    } else {
+                                        callRescheduleTaskWS(taskId);
+                                    }
+                                } else {
+                                    String selectedDateTime = startDateTimeSuperCalendar.format(Utility.DATE_FORMAT_DD_MMM)
+                                            + getString(R.string.label_between)
+                                            + CalendarUtility.get2HourTimeSlots(Long.toString(startDateTimeSuperCalendar.getTimeInMillis()));
+                                    additionalChargeReason = Utility.ADDITION_CHARGES_DIALOG_TYPE.NONE;
+                                    Log.e(TAG, "onTimeSet: selectedDateTime:: " + selectedDateTime);
+                                }
+                            } else {
+                                additionalChargeReason = Utility.ADDITION_CHARGES_DIALOG_TYPE.NONE;
+                                Utility.showSnackBar(getString(R.string.validate_future_date), mBinding.getRoot());
+                            }
+                        }
+                    }
+                }, c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE), false);
+        timePickerDialog.show();
+    }
+
+    private void showOutOfOfficeHours(AdminSettingModel model) {
+        final String selectedDateTime = startDateTimeSuperCalendar.format(Utility.DATE_FORMAT_DD_MMM)
+                + getString(R.string.label_between)
+                + CalendarUtility.get2HourTimeSlots(Long.toString(startDateTimeSuperCalendar.getTimeInMillis()));
+        additionalChargeReason = Utility.ADDITION_CHARGES_DIALOG_TYPE.OUT_OF_OFFICE_HOURS;
+        OutOfOfficeHoursDialog out_of_office_dialog = OutOfOfficeHoursDialog.newInstance(model.additionalChargeForSelectingSpecificTime, new OutOfOfficeHoursDialog.OutOfOfficeHoursListener() {
+            @Override
+            public void onOutofOfficePayNow() {
+                PaymentSummaryActivity.newInstance(mContext, taskDetailModel, true);
+                Log.e(TAG, "onOutofOfficePayNow: selectedDateTime:: " + selectedDateTime);
+            }
+
+            @Override
+            public void onOutofOfficeCanWait() {
+                Log.e(TAG, "onOutofOfficeCanWait: selectedDateTime:: " + selectedDateTime);
+
+            }
+        });
+        out_of_office_dialog.show(getSupportFragmentManager(), Utility.ADDITION_CHARGES_DIALOG_TYPE.OUT_OF_OFFICE_HOURS);
+        out_of_office_dialog.setCancelable(false);
+    }
+
+    private void showUrgentBookingDialog(AdminSettingModel model) {
+        final String selectedDateTime = startDateTimeSuperCalendar.format(Utility.DATE_FORMAT_DD_MMM)
+                + getString(R.string.label_between)
+                + CalendarUtility.get2HourTimeSlots(Long.toString(startDateTimeSuperCalendar.getTimeInMillis()));
+        additionalChargeReason = Utility.ADDITION_CHARGES_DIALOG_TYPE.URGENT_BOOKING;
+        UrgentBookingDialog ugent_dialog = UrgentBookingDialog.newInstance(model.additionalChargeForSelectingSpecificTime, new UrgentBookingDialog.UrgentBookingListener() {
+            @Override
+            public void onUrgentPayNow() {
+                Log.e(TAG, "onUrgentPayNow: selectedDateTime:: " + selectedDateTime);
+                PaymentSummaryActivity.newInstance(mContext, taskDetailModel, true);
+            }
+
+            @Override
+            public void onUrgentCanWait() {
+                Log.e(TAG, "onUrgentCanWait: selectedDateTime:: " + selectedDateTime);
+            }
+        });
+        ugent_dialog.show(getSupportFragmentManager(), Utility.ADDITION_CHARGES_DIALOG_TYPE.URGENT_BOOKING);
+        ugent_dialog.setCancelable(false);
+    }
+
+    private void callRescheduleTaskWS(String taskId) {
+        if (!Utility.isConnected(mContext)) {
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mBinding.getRoot());
+            return;
+        }
+        showProgressDialog();
+
+        SuperCalendar superCalendar = SuperCalendar.getInstance();
+        superCalendar.setTimeInMillis(startDateTimeSuperCalendar.getTimeInMillis());
+        superCalendar.setTimeZone(SuperCalendar.SuperTimeZone.GMT.GMT);
+
+
+        WebCallClass.rescheduleTask(mContext, taskId, String.valueOf(superCalendar.getCalendar().getTimeInMillis()), new WebCallClass.RescheduleTaskListener() {
+            @Override
+            public void onSuccessOfReschedule() {
+                MessageEvent messageEvent = new MessageEvent();
+                messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.TASK_PAID_FOR_INSTA_BOOKING;
+                EventBus.getDefault().post(messageEvent);
+                finish();
+            }
+        }, commonResponseListener);
+    }
+
+    WebCallClass.CommonResponseListener commonResponseListener = new WebCallClass.CommonResponseListener() {
+
+        @Override
+        public void volleyError(VolleyError error) {
+            hideProgressDialog();
+            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
+
+        }
+
+        @Override
+        public void showSpecificMessage(String message) {
+            hideProgressDialog();
+            Utility.showSnackBar(message, mBinding.getRoot());
+
+        }
+
+        @Override
+        public void forceLogout() {
+            hideProgressDialog();
+
+        }
+    };
 
     private void openPaymentChoiceActivity() {
 

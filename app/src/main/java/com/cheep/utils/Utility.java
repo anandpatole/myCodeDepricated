@@ -61,10 +61,7 @@ import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.URLEncoder;
 import java.text.DecimalFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -632,8 +629,8 @@ public class Utility {
         String DATA = "DATA";
         String IS_FIRST_TIME = "isFirstTime";
         String DATA_2 = "DATA_2";
-        String DATA_3 = "DATA_3";
         String DATA_4 = "DATA_4";
+        String DATA_3 = "DATA_3";
         String PASSWORD = "password";
         String SELECTED_IMAGE_PATH = "selectedImagePath";
         String CORRECT_OTP = "correctOTP";
@@ -811,6 +808,7 @@ public class Utility {
         String PAYMENT_INITIATED = "payment_initiated";//not using it
         String PROCESSING = "processing";//not using it
         String COMPLETED = "completed";
+        String PENDING= "pending";
         String FAILED = "failed";
     }
 
@@ -1171,7 +1169,7 @@ public class Utility {
         } catch (NumberFormatException e) {
             e.printStackTrace();
         }
-        TaskConfirmedCCInstaBookDialog taskConfirmedCCInstaBookDialog = TaskConfirmedCCInstaBookDialog.newInstance(listener, true, dateTime);
+        TaskConfirmedCCInstaBookDialog taskConfirmedCCInstaBookDialog = TaskConfirmedCCInstaBookDialog.newInstance(listener, true, dateTime,taskDetailModel.taskId);
         taskConfirmedCCInstaBookDialog.show(((AppCompatActivity) context).getSupportFragmentManager(), TaskConfirmedCCInstaBookDialog.TAG);
         // TODO : commented code for nor this chat module will be added when pro will accepts from market place
         //-- by gieeka
@@ -1240,80 +1238,4 @@ public class Utility {
         return spannableString;
     }
 
-    public boolean isTimeBetweenTwoTime(Context context,String argCurrentTime) throws ParseException {
-        String reg = "^([0-1][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])$";
-        //
-        String argStartTime = context.getResources().getString(R.string.start_time);
-        String argEndTime = context.getString(R.string.end_time);
-        if (argStartTime.matches(reg) && argEndTime.matches(reg)
-                && argCurrentTime.matches(reg)) {
-            boolean valid = false;
-            // Start Time
-            java.util.Date startTime = new SimpleDateFormat(Utility.DATE_FORMAT_HH_MM_SS)
-                    .parse(argStartTime);
-            Calendar startCalendar = Calendar.getInstance();
-            startCalendar.setTime(startTime);
-
-            // Current Time
-            java.util.Date currentTime = new SimpleDateFormat(Utility.DATE_FORMAT_HH_MM_SS)
-                    .parse(argCurrentTime);
-            Calendar currentCalendar = Calendar.getInstance();
-            currentCalendar.setTime(currentTime);
-
-            // End Time
-            java.util.Date endTime = new SimpleDateFormat(Utility.DATE_FORMAT_HH_MM_SS)
-                    .parse(argEndTime);
-            Calendar endCalendar = Calendar.getInstance();
-            endCalendar.setTime(endTime);
-
-            //
-            if (currentTime.compareTo(endTime) < 0) {
-
-                currentCalendar.add(Calendar.DATE, 1);
-                currentTime = currentCalendar.getTime();
-
-            }
-
-            if (startTime.compareTo(endTime) < 0) {
-
-                startCalendar.add(Calendar.DATE, 1);
-                startTime = startCalendar.getTime();
-
-            }
-            //
-            if (currentTime.before(startTime)) {
-
-                System.out.println(" Time is Lesser ");
-
-                valid = false;
-            } else {
-
-                if (currentTime.after(endTime)) {
-                    endCalendar.add(Calendar.DATE, 1);
-                    endTime = endCalendar.getTime();
-
-                }
-
-                System.out.println("Comparing , Start Time /n " + startTime);
-                System.out.println("Comparing , End Time /n " + endTime);
-                System.out
-                        .println("Comparing , Current Time /n " + currentTime);
-
-                if (currentTime.before(endTime)) {
-                    System.out.println("RESULT, Time lies b/w");
-                    valid = true;
-                } else {
-                    valid = false;
-                    System.out.println("RESULT, Time does not lies b/w");
-                }
-
-            }
-            return valid;
-
-        } else {
-            throw new IllegalArgumentException(
-                    "Not a valid time, expecting HH:MM:SS format");
-        }
-
-    }
 }

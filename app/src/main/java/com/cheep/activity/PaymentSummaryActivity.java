@@ -1,10 +1,8 @@
 package com.cheep.activity;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.text.SpannableStringBuilder;
@@ -22,7 +20,6 @@ import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
 import com.cheep.utils.CalendarUtility;
-import com.cheep.utils.GlideUtility;
 import com.cheep.utils.GsonUtility;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.Utility;
@@ -39,9 +36,10 @@ import static com.cheep.utils.Utility.getSpannableString;
 public class PaymentSummaryActivity extends BaseAppCompatActivity {
 
     private static final String TAG = "PaymentSummaryCheepCareActivity";
-    private ActivityPaymentSummaryBinding mActivityPaymentDetailBinding;
+    private ActivityPaymentSummaryBinding activityPaymentSummaryBinding;
     private TaskDetailModel taskDetailModel;
     private PaymentSummaryModel paymentSummaryModel;
+    private boolean isForReschedule = false;
 
     /**
      * view summary
@@ -49,20 +47,20 @@ public class PaymentSummaryActivity extends BaseAppCompatActivity {
      * @param context         context
      * @param taskDetailModel task detail for summary
      */
-    public static void newInstance(Context context, TaskDetailModel taskDetailModel) {
+    public static void newInstance(Context context, TaskDetailModel taskDetailModel, boolean isForReschedule) {
         Intent intent = new Intent(context, PaymentSummaryActivity.class);
-        intent.putExtra(Utility.Extra.DATA_2, GsonUtility.getJsonStringFromObject(taskDetailModel));
+        intent.putExtra(Utility.Extra.DATA, GsonUtility.getJsonStringFromObject(taskDetailModel));
+        intent.putExtra(Utility.Extra.DATA_2, isForReschedule);
         context.startActivity(intent);
     }
 
-    @TargetApi(Build.VERSION_CODES.KITKAT)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         /*
           when the device runing out of memory we dont want the user to restart the payment. rather we close it and redirect them to previous activity.
          */
-        mActivityPaymentDetailBinding = DataBindingUtil.setContentView(this, R.layout.activity_payment_summary);
+        activityPaymentSummaryBinding = DataBindingUtil.setContentView(this, R.layout.activity_payment_summary);
 
         initiateUI();
         setListeners();
@@ -71,11 +69,11 @@ public class PaymentSummaryActivity extends BaseAppCompatActivity {
     @Override
     protected void initiateUI() {
 
-        setSupportActionBar(mActivityPaymentDetailBinding.toolbar);
+        setSupportActionBar(activityPaymentSummaryBinding.toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setTitle(Utility.EMPTY_STRING);
-            mActivityPaymentDetailBinding.toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            activityPaymentSummaryBinding.toolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Utility.hideKeyboard(mContext);
@@ -85,16 +83,33 @@ public class PaymentSummaryActivity extends BaseAppCompatActivity {
         }
 
 
+        if (getIntent().hasExtra(Utility.Extra.DATA)) {
+            //This is only when provider profile view for specific task (provider gives quote to specific task)
+            taskDetailModel = (TaskDetailModel) GsonUtility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA), TaskDetailModel.class);
+        }
         if (getIntent().hasExtra(Utility.Extra.DATA_2)) {
             //This is only when provider profile view for specific task (provider gives quote to specific task)
-            taskDetailModel = (TaskDetailModel) GsonUtility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA_2), TaskDetailModel.class);
+            isForReschedule = getIntent().getBooleanExtra(Utility.Extra.DATA_2, false);
+        }
+
+        if (isForReschedule) {
+            activityPaymentSummaryBinding.rlPayNow.setSelected(true);
+            activityPaymentSummaryBinding.rlPayNow.setEnabled(true);
+            activityPaymentSummaryBinding.rlPayLater.setSelected(true);
+            activityPaymentSummaryBinding.rlPayLater.setEnabled(true);
+
+            activityPaymentSummaryBinding.lnPayLaterPayNowButtons.setVisibility(View.VISIBLE);
+            activityPaymentSummaryBinding.tvPaynow.setVisibility(View.GONE);
+        } else {
+            activityPaymentSummaryBinding.lnPayLaterPayNowButtons.setVisibility(View.GONE);
+            activityPaymentSummaryBinding.tvPaynow.setVisibility(View.VISIBLE);
         }
 
         if (taskDetailModel != null) {
             callPaymentSummaryWS();
-            GlideUtility.loadImageView(mContext, mActivityPaymentDetailBinding.imgService, taskDetailModel.categoryModel.catImageExtras.original, R.drawable.gradient_black);
+//            GlideUtility.loadImageView(mContext, activityPaymentSummaryBinding.imgService, taskDetailModel.categoryModel.catImageExtras.original, R.drawable.gradient_black);
             if (taskDetailModel.selectedProvider != null) {
-                GlideUtility.showCircularImageViewWithColorBorder(mContext, TAG, mActivityPaymentDetailBinding.imgProfile, taskDetailModel.selectedProvider.profileUrl, Utility.DEFAULT_CHEEP_LOGO, R.color.dark_blue_variant_1, true);
+//                GlideUtility.showCircularImageViewWithColorBorder(mContext, TAG, activityPaymentSummaryBinding.imgProfile, taskDetailModel.selectedProvider.profileUrl, Utility.DEFAULT_CHEEP_LOGO, R.color.dark_blue_variant_1, true);
                 String dateTime = "";
                 if (!TextUtils.isEmpty(taskDetailModel.taskStartdate)) {
                     dateTime = CalendarUtility.getDate(Long.parseLong(taskDetailModel.taskStartdate), Utility.DATE_TIME_DD_MMMM_HH_MM);
@@ -109,7 +124,7 @@ public class PaymentSummaryActivity extends BaseAppCompatActivity {
                 spannableStringBuilder.append(getSpannableString(dateTime, ContextCompat.getColor(this, R.color.splash_gradient_end), true));
                 spannableStringBuilder.append(getSpannableString(getString(R.string.label_at), ContextCompat.getColor(this, R.color.grey_varient_8), false));
                 spannableStringBuilder.append(getSpannableString(taskDetailModel.taskAddress.address, ContextCompat.getColor(this, R.color.splash_gradient_end), true));
-                mActivityPaymentDetailBinding.txtdesc.setText(spannableStringBuilder);
+                activityPaymentSummaryBinding.txtdesc.setText(spannableStringBuilder);
             }
         }
 
@@ -124,26 +139,26 @@ public class PaymentSummaryActivity extends BaseAppCompatActivity {
     public void viewPaymentDetails() {
         if (paymentSummaryModel != null) {
             if (paymentSummaryModel.totalAmountStatus.equalsIgnoreCase(Utility.TASK_STATUS.PENDING))
-                mActivityPaymentDetailBinding.textLabelTotalPaid.setText(getString(R.string.label_total_pay));
+                activityPaymentSummaryBinding.textLabelTotalPaid.setText(getString(R.string.label_total_pay));
             else
-                mActivityPaymentDetailBinding.textLabelTotalPaid.setText(getString(R.string.label_total_paid));
+                activityPaymentSummaryBinding.textLabelTotalPaid.setText(getString(R.string.label_total_paid));
 
-            mActivityPaymentDetailBinding.txtprofee.setText(getRuppeAmount(paymentSummaryModel.proPaymentAmount));
-            mActivityPaymentDetailBinding.txtadditionalcharge.setText(getRuppeAmount(paymentSummaryModel.additionalPaidAmount));
-            mActivityPaymentDetailBinding.txtsubtotal.setText(getRuppeAmount(paymentSummaryModel.subTotalAmount));
-            mActivityPaymentDetailBinding.txttotal.setText(getRuppeAmount(paymentSummaryModel.totalAmount));
-            mActivityPaymentDetailBinding.txtreferraldiscount.setText(getRuppeAmount(paymentSummaryModel.walletBalanceUsed));
-            mActivityPaymentDetailBinding.txtpromocode.setText(getRuppeAmount(paymentSummaryModel.promoCodePrice));
+            activityPaymentSummaryBinding.txtprofee.setText(getRuppeAmount(paymentSummaryModel.proPaymentAmount));
+            activityPaymentSummaryBinding.txtadditionalcharge.setText(getRuppeAmount(paymentSummaryModel.additionalPaidAmount));
+            activityPaymentSummaryBinding.txtsubtotal.setText(getRuppeAmount(paymentSummaryModel.subTotalAmount));
+            activityPaymentSummaryBinding.txttotal.setText(getRuppeAmount(paymentSummaryModel.totalAmount));
+//            activityPaymentSummaryBinding.txtreferraldiscount.setText(getRuppeAmount(paymentSummaryModel.walletBalanceUsed));
+//            activityPaymentSummaryBinding.txtpromocode.setText(getRuppeAmount(paymentSummaryModel.promoCodePrice));
 
-            if (getQuotePriceInInteger(paymentSummaryModel.walletBalanceUsed) > 0) {
-                mActivityPaymentDetailBinding.lnPromoCodeDisclaimer.setVisibility(View.VISIBLE);
-                mActivityPaymentDetailBinding.txtPromoCodeDisclaimer.setText(R.string.disclaimer_referral);
-            } else if (getQuotePriceInInteger(paymentSummaryModel.promoCodePrice) > 0) {
-                mActivityPaymentDetailBinding.lnPromoCodeDisclaimer.setVisibility(View.VISIBLE);
-                mActivityPaymentDetailBinding.txtPromoCodeDisclaimer.setText(R.string.disclaimer_promo_code);
-            } else {
-                mActivityPaymentDetailBinding.lnPromoCodeDisclaimer.setVisibility(View.GONE);
-            }
+//            if (getQuotePriceInInteger(paymentSummaryModel.walletBalanceUsed) > 0) {
+//                activityPaymentSummaryBinding.lnPromoCodeDisclaimer.setVisibility(View.VISIBLE);
+//                activityPaymentSummaryBinding.txtPromoCodeDisclaimer.setText(R.string.disclaimer_referral);
+//            } else if (getQuotePriceInInteger(paymentSummaryModel.promoCodePrice) > 0) {
+//                activityPaymentSummaryBinding.lnPromoCodeDisclaimer.setVisibility(View.VISIBLE);
+//                activityPaymentSummaryBinding.txtPromoCodeDisclaimer.setText(R.string.disclaimer_promo_code);
+//            } else {
+//                activityPaymentSummaryBinding.lnPromoCodeDisclaimer.setVisibility(View.GONE);
+//            }
 
         }
     }
@@ -175,7 +190,7 @@ public class PaymentSummaryActivity extends BaseAppCompatActivity {
      */
     private void callPaymentSummaryWS() {
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mActivityPaymentDetailBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, activityPaymentSummaryBinding.getRoot());
             return;
         }
 
@@ -219,12 +234,12 @@ public class PaymentSummaryActivity extends BaseAppCompatActivity {
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
                         // Show Toast
-                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityPaymentDetailBinding.getRoot());
+                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), activityPaymentSummaryBinding.getRoot());
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
                         error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
                         // Show message
-                        Utility.showSnackBar(error_message, mActivityPaymentDetailBinding.getRoot());
+                        Utility.showSnackBar(error_message, activityPaymentSummaryBinding.getRoot());
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
                     case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
@@ -249,7 +264,7 @@ public class PaymentSummaryActivity extends BaseAppCompatActivity {
             // Close Progressbar
             showProgressBar(false);
 
-            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityPaymentDetailBinding.getRoot());
+            Utility.showSnackBar(getString(R.string.label_something_went_wrong), activityPaymentSummaryBinding.getRoot());
 
         }
     };
@@ -259,8 +274,8 @@ public class PaymentSummaryActivity extends BaseAppCompatActivity {
     /////////////////////////////////////////////////////////////////////////////////////////////////
 
     private void showProgressBar(boolean flag) {
-        mActivityPaymentDetailBinding.progress.setVisibility(flag ? View.VISIBLE : View.GONE);
-        mActivityPaymentDetailBinding.lnRoot.setVisibility(flag ? View.GONE : View.VISIBLE);
+        activityPaymentSummaryBinding.progress.setVisibility(flag ? View.VISIBLE : View.GONE);
+        activityPaymentSummaryBinding.lnRoot.setVisibility(flag ? View.GONE : View.VISIBLE);
     }
 
     @Override

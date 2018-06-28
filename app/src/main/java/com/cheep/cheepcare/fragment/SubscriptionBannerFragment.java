@@ -23,7 +23,6 @@ import com.cheep.fragment.HomeFragment;
 import com.cheep.fragment.HomeTabFragment;
 import com.cheep.network.NetworkUtility;
 import com.cheep.utils.GsonUtility;
-import com.cheep.utils.LogUtils;
 import com.cheep.utils.Utility;
 
 import java.util.ArrayList;
@@ -101,10 +100,8 @@ public class SubscriptionBannerFragment extends BaseFragment {
             if(isPriceIsZero){
                 SpannableStringBuilder ss= drawLineOnText(subtitle);
                 binding.tvSubTitle.setText(ss);
-                LogUtils.LOGE(TAG, "SUBTITLE WITH LINE: " + drawLineOnText(subtitle));
             }else {
                 binding.tvSubTitle.setText(subtitle);
-                LogUtils.LOGE(TAG, "SUBTITLE: " + subtitle);
             }
 
             //binding.tvSubTitle.setText(subtitle);
